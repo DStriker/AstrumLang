@@ -361,3 +361,12 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Astrum filters
+*.g4
+*.dll
+*.lib
+*.interp
+*.tokens
+*.exe
+*.idb

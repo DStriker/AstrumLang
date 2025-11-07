@@ -193,6 +193,7 @@
     <ClCompile Include="CppAdvanceParserErrorListener.cpp" />
     <ClCompile Include="CppAdvanceParserListener.cpp" />
     <ClCompile Include="CppAdvanceSema.cpp" />
+    <None Include=".gitignore" />
     <None Include="FirstProgram.cpp" />
     <ClCompile Include="CppSymbolParser.cpp" />
     <ClCompile Include="MyLanguage.cpp" />
