@@ -1,0 +1,199 @@
+﻿unsafe {
+	volatile globalVar : *const char;
+	let globalVar1 :*i32 = null;
+	type cstring = *const byte;
+	extern externalUnsafePtr: i32;
+}
+
+protected type Test111 = Test1.Test2.TestClass;
+protected type Test112 = Test1.Test2.Class2;
+public version WINDOWS = default 167;
+protected version Linux = default true;
+
+if debug {
+NORMAL_CONSTANT :<T> T == 45;
+INT_CONSTANT :== NORMAL_CONSTANT<i32>;
+LONG_CONSTANT :== NORMAL_CONSTANT<i64>;
+}
+
+square: (a) ==> a * a;
+
+printParams: (s: str, params: i32...) {
+	print(s);
+	for param in params {
+		print(param);
+	}
+}
+
+printParams: (s: str, params: str...) {
+	for param in params {
+		print(param);
+	}
+}
+
+testt: (x: i32) -> (i: i32,t: Test1.Test2.TestClass,b: bool) {
+	i = x;
+	t = Test1.Test2.TestClass();
+	b = true;
+}
+
+type SimpleTuple <A,C> = (A, bool, C);
+type ImportantOptions = (i: i32,f: f64,s: str);
+
+//sum: (in a, in b) ==> a + b;
+sum: <T, U: i32> (a: T, b: T) -> forward;
+sum<i32, 15>: (a: i32, b: i32) ==> a + b + 15;
+extern externalFunc: (a: i32, b: str) -> str;
+
+public ref struct Span
+{
+	public &data: f32;
+	public length: i32;
+}
+
+public struct Vector3 : IEquatable, IFormattable
+{
+	public {
+		x, y, z: f32;
+		t: NestedStruct { get; private set; }
+
+		//if debug _version: i32;
+	}
+
+	public static Count: i32 = 1 {
+		get {
+			print("Read");
+			return field * 10;
+		}
+		set {
+			print("Write");
+			if (value > 10) field = value / 10;
+			else field = value;
+		}
+	}
+
+	public Name: str ==> "Vector3";
+
+	tls Count2: i32 = 123;
+	BYTES :== 24;
+	public static const ZERO :Vector3 = Vector3(0,0,0);
+	type Coords = (x: i32,y: i32,z: i32);
+
+	public struct NestedStruct {
+		public {
+		x: f32;
+		y: f32;
+		z: f32;
+		t: Test111 { get; private set; }
+
+		//if debug _version: i32;
+		}
+	}
+
+	this() == default;
+
+	public this(x: f32, y: f32, z: f32) noexcept == {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+
+	implicit this<U>(f: U) == {
+		this(f,f,f);
+		this.x = f;
+	}
+
+	public implicit operator f32 noexcept ==> y;
+
+	public operator+: (in ref other: self) ==> self(this.x + other.x, this.y + other.y, this.z + other.z);
+
+	public mut operator++: () -> ref self = {
+		++x;
+		++y;
+		++z;
+		++Count;
+		//t = Test111();
+		return this;
+	}
+
+	public this[idx: i32] -> Test111 {
+		get = {
+			print("Read");
+			return GetTest();
+		}
+		public set = {
+			if (value < 10) return;
+			x = 5;
+		}
+	}
+	public this[idx: i32, idx2: i32, idx3: i32] -> f32 ==> y + z;
+
+	public getX: () -> f32 ==> x;
+
+	public {
+		inline static Method: (x: i32, y: i32, z: i32) -> i32 == {
+			return y + z;
+		}
+
+		inline static GetTest: () -> Test111 ==> Test111();
+
+		mut TemplateMethod: <U> (x: U, y: U, z: U) -> Coords == {
+			this[0] = 13;
+			//print(this[0]);
+			return {x,y,z};
+		}
+	}
+}
+
+//ZERO_VECTOR : Vector3 == {0,0,0};
+
+private main: (iparam: i32, in jparam: f64 = 3.5) -> int
+{
+	/*extern externalFunc: (a: i32, b: str) -> str;
+	ii := k := l := 15;
+	j :i64 = void;
+	//x[2] += 15;
+	//x[3] += k;
+	LOCAL_CONSTANT :== 120;
+	&ri := ii;
+	let &rj := l;
+	//forward j := rj;
+
+	unsafe {
+		type Test = Test1.Test2.TestClass;
+		tc: Test111;
+		ic:*Test1.Test2.TestClass= tc&;
+		volatile ic2 :*Test = ic;
+		gjf: cstring;
+		s1: std.string.iterator;
+		cb:= (*void).unsafeNarrowToPointer(123456u);
+		//globalVar2 = 5;
+		if (ic == tc&) ic2*.x.x = 245;
+		print(ic2*.x.x);
+	}
+	getClass2 := ttt.getClass2(4,5);*/
+	//result := ss.sum(400i64);
+	vv: Vector3(2,3,4);
+	//ttt: Test1.Test2.TestClass = vv.GetTest();
+	print(vv.GetTest().getClassExt(c=4,b=2,a=1,b2=true).x);
+	ss:=300;
+	//result2 := ss.sum<i32,15>(400);
+	v: Vector3(2,7,4);
+	print(v.TemplateMethod(3,4,5).x);
+	fv: Vector3 = v;
+	print(fv.Name);
+	print(Vector3.NestedStruct.Count);
+	Vector3.NestedStruct.setCount(30);
+	Vector3.NestedStruct.Count = 30;
+	print(Vector3.NestedStruct.Count);
+	print(fv.t.Name);
+	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);
+}
+
+private {
+	PRIVATE_CONSTANT : usize == 34;
+	globalVar2 :i32 = 8;
+	let globalVar3 :i32 = 456;
+	xyz :IntArray = {{{1,2,3},{4,5,6},{7,8,9}},{{11,12,13},{14,15,16},{17,18,19}},{{21,22,23},{24,25,26},{27,28,29}}};
+	type IntArray = i64[3][3][3];
+}

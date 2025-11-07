@@ -1,0 +1,3858 @@
+#include "CppAdvanceSema.h"
+#include "StringUtils.h"
+#include <optional>
+#include <filesystem>
+using namespace std::literals::string_literals;
+
+const char* CurrentCppAdvanceCompilingFile{};
+std::string DLLName{};
+std::string CurrentCppAdvanceCompilingFileSource;
+
+void CppAdvanceCompilerError(std::string_view output, const Token* token)
+{
+	SourcePosition position = {token->getLine(),token->getCharPositionInLine()};
+	std::cout << "\x1b[1m\x1b[34m" << CurrentCppAdvanceCompilingFile << ":" << position.toString() << ":\x1b[31m error: \x1b[22m" << output << "\x1b[33m" << std::endl;
+	if (!CurrentCppAdvanceCompilingFileSource.empty()) {
+		auto txt = StringSplit(CurrentCppAdvanceCompilingFileSource, '\n')[position.line - 1];
+		StringReplace(txt, "\t", " ");
+		std::cout << std::format("{:>5}", position.line) << " | " << txt << std::endl;
+	}
+	std::cout << std::string(5,' ') << " | " << std::string(position.column, ' ') << "^" << std::string(token->getStopIndex()-token->getStartIndex(),'~') << "\x1b[0m" << std::endl;
+	std::exit(-1);
+}
+
+void CppAdvanceCompilerError(std::string_view output, SourcePosition position)
+{
+	std::cout << "\x1b[1m\x1b[34m" << CurrentCppAdvanceCompilingFile << ":" << position.toString() << ":\x1b[31m error: \x1b[22m" << output << "\x1b[33m" << std::endl;
+	if (!CurrentCppAdvanceCompilingFileSource.empty()) {
+		auto txt = StringSplit(CurrentCppAdvanceCompilingFileSource, '\n')[position.line - 1];
+		StringReplace(txt, "\t", " ");
+		std::cout << std::format("{:>5}", position.line) << " | " << txt << std::endl;
+	}
+	std::cout << std::string(5, ' ') << " | " << std::string(position.column, ' ') << "^" << "\x1b[0m" << std::endl;
+	std::exit(-1);
+}
+
+std::string FindFileInIncludePaths(const std::string& fileName) {
+	// Сначала проверяем в текущей директории
+	if (std::filesystem::exists(fileName)) {
+		return fileName;
+	}
+
+	// Затем ищем в путях include
+	for (const auto& path : cppParserArgs) {
+		std::filesystem::path fullPath = std::filesystem::path(std::string_view(path).substr(2)) / fileName;
+		if (std::filesystem::exists(fullPath)) {
+			return fullPath.string();
+		}
+	}
+
+	throw std::runtime_error("File not found: " + fileName);
+}
+
+std::string CppAdvanceSema::getCurrentCompilationCondition()
+{
+	const auto& conditions = getStackUnderlyingContainer(conditionStack);
+	std::string result;
+	bool first = true;
+	for (const auto& cond : conditions)
+	{
+		if (!first) result += " && ";
+		result += "(";
+		result += cond;
+		result += ")";
+		first = false;
+	}
+	return result;
+}
+
+CppAdvanceParser::TemplateParamsContext* CppAdvanceSema::getLastTypeTemplateParams()
+{
+	const auto& structs = getStackUnderlyingContainer(structStack);
+	for (auto it = structs.rbegin(); it != structs.rend(); ++it)
+	{
+		auto params = it->get()->templateParams;
+		if (params)
+			return params;
+	}
+	return nullptr;
+}
+
+CppAdvanceParser::TemplateArgumentListContext* CppAdvanceSema::getLastTypeTemplateSpecializationArgs()
+{
+	const auto& structs = getStackUnderlyingContainer(structStack);
+	for (auto it = structs.rbegin(); it != structs.rend(); ++it)
+	{
+		auto params = it->get()->templateSpecializationArgs;
+		if (params)
+			return params;
+	}
+	return nullptr;
+}
+
+std::string CppAdvanceSema::getCurrentFullTypeName()
+{
+	const auto& structs = getStackUnderlyingContainer(currentTypeWithTemplate);
+	std::string result;
+	bool first = true;
+	for (const auto& type : structs)
+	{
+		if (!first) result += ".";
+		first = false;
+        result += type;
+	}
+	return result;
+}
+
+std::string CppAdvanceSema::getNamedTupleId(std::string_view tuple)
+{
+	constexpr uint64_t FNV_PRIME = 1099511628211ULL;
+	constexpr uint64_t FNV_OFFSET_BASIS = 14695981039346656037ULL;
+	std::string result{ tuple };
+	StringReplace(result, " ", "");
+	StringReplace(result, "\t", "");
+	StringReplace(result, "\r", "");
+	StringReplace(result, "\n", "");
+	uint64_t hash = FNV_OFFSET_BASIS;
+	for (char c : result) {
+		hash ^= c;
+		hash *= FNV_PRIME;
+	}
+	return std::format("__ntuples.NamedTuple_{:016x}",hash);
+}
+
+void CppAdvanceSema::enterProgram(CppAdvanceParser::ProgramContext* ctx)
+{
+	ast = ctx;
+	if (firstPass) {
+		while(!initStates.empty()) initStates.pop();
+		while(!ifContexts.empty()) ifContexts.pop();
+		globalVariables.clear();
+		globalConstants.clear();
+		globalTypeAliases.clear();
+		globalFunctions.clear();
+		protectedSymbols.clear();
+		protectedVersions.clear();
+		while (!conditionStack.empty()) conditionStack.pop();
+		while (!currentAccessSpecifier.empty()) currentAccessSpecifier.pop();
+		while (!currentTypeKind.empty()) currentTypeKind.pop();
+		cppParser.parse(FindFileInIncludePaths("CppAdvance.h"));
+	}
+	while (!symbolContexts.empty()) symbolContexts.pop();
+	symbolContexts.push({});
+	currentAccessSpecifier.push(std::nullopt);
+	/*for (const auto& [k, v] : cppParser.parametersTable)
+	{
+		for (const auto& value : v)
+		{
+			std::cout << k << ":\t" << value << "\n";
+		}
+	}
+	abort();*/
+}
+
+void CppAdvanceSema::exitProgram(CppAdvanceParser::ProgramContext* ctx)
+{
+	firstPass = false;
+	while (!symbolContexts.empty()) symbolContexts.pop();
+	while (!currentAccessSpecifier.empty()) currentAccessSpecifier.pop();
+	while (!currentTypeKind.empty()) currentTypeKind.pop();
+}
+
+void CppAdvanceSema::enterStat(CppAdvanceParser::StatContext* ctx)
+{
+	//if (firstPass && functionBody) return;
+	currentStatement = ctx;
+	if (ctx->Unsafe())
+	{
+		if (++unsafeDepth > 1)
+			CppAdvanceCompilerError("Unsafe context recursion", ctx->Unsafe()->getSymbol());
+	}
+}
+
+void CppAdvanceSema::exitStat(CppAdvanceParser::StatContext* ctx)
+{
+	//if (firstPass && functionBody) return;
+	if (ctx->Unsafe()) --unsafeDepth;
+	while (!typeStack.empty()) typeStack.pop();
+	currentTemplateArgs.clear();
+	currentSubtype.clear();
+}
+
+void CppAdvanceSema::enterExpr(CppAdvanceParser::ExprContext* ctx)
+{
+	
+}
+
+void CppAdvanceSema::exitExpr(CppAdvanceParser::ExprContext* ctx)
+{
+	
+}
+
+void CppAdvanceSema::checkIntegerLiteral(TerminalNode* literal, bool minus)
+{
+	if (firstPass == functionBody) return;
+	std::string txt = literal->getText();
+	if (txt.empty()) return;
+	auto base = 10;
+	if (txt.length() > 2 && txt[0] == '0') {
+		if (txt[1] == 'b') base = 2;
+		else if (txt[1] == 'o') base = 8;
+		else if (txt[1] == 'x') base = 16;
+		txt = txt.substr(2);
+	}
+	auto suffix = ""s;
+	auto spos = txt.find_last_of("big");
+	if (spos != txt.npos) {
+        suffix = "big";
+	}
+	else {
+		spos = txt.find_last_of('u');
+		if (spos != txt.npos) {
+            suffix = txt.substr(spos);
+		}
+		else {
+			spos = txt.find_last_of('i');
+			if (spos != txt.npos) {
+				suffix = txt.substr(spos);
+			}
+		}
+	}
+	StringReplace(txt, "_", "");
+	if (suffix.empty() || suffix == "big") {
+		
+	}
+	else if (suffix == "u") {
+		if (minus) {
+			CppAdvanceCompilerError("Cannot assign a signed value to the unsigned type", literal->getSymbol());
+		}
+	}
+	else if (suffix == "i8") {
+		auto value = 0ull;
+		auto result = std::from_chars(txt.c_str(),txt.c_str()+txt.length(),value,base);
+		if ((int)result.ec || value > 128 || (value == 128 && !minus)) {
+			CppAdvanceCompilerError(std::format("The value {} is out of range for the type i8", txt), literal->getSymbol());
+		}
+	}
+	else if (suffix == "i16") {
+		auto value = 0ull;
+		auto result = std::from_chars(txt.c_str(), txt.c_str() + txt.length(), value, base);
+		if ((int)result.ec || value > 32768 || (value == 32768 && !minus)) {
+			CppAdvanceCompilerError(std::format("The value {} is out of range for the type i16", txt), literal->getSymbol());
+		}
+	}
+	else if (suffix == "i32") {
+		auto value = 0ull;
+		auto result = std::from_chars(txt.c_str(), txt.c_str() + txt.length(), value, base);
+		if ((int)result.ec || value > 2147483648 || (value == 2147483648 && !minus)) {
+			CppAdvanceCompilerError(std::format("The value {} is out of range for the type i32", txt), literal->getSymbol());
+		}
+	}
+	else if (suffix == "i64") {
+		auto value = 0ull;
+		auto result = std::from_chars(txt.c_str(), txt.c_str() + txt.length(), value, base);
+		if ((int)result.ec || value > 9223372036854775808ULL || (value == 9223372036854775808ULL && !minus)) {
+			CppAdvanceCompilerError(std::format("The value {} is out of range for the type i64", txt), literal->getSymbol());
+		}
+	}
+	else if (suffix == "u8") {
+		if (minus) {
+			CppAdvanceCompilerError("Cannot assign a signed value to the type u8", literal->getSymbol());
+		}
+		auto value = 0ull;
+		auto result = std::from_chars(txt.c_str(), txt.c_str() + txt.length(), value, base);
+		if ((int)result.ec || value > UINT8_MAX) {
+			CppAdvanceCompilerError(std::format("The value {} is out of range for the type u8", txt), literal->getSymbol());
+		}
+	}
+	else if (suffix == "u16") {
+		if (minus) {
+			CppAdvanceCompilerError("Cannot assign a signed value to the type u16", literal->getSymbol());
+		}
+		auto value = 0ull;
+		auto result = std::from_chars(txt.c_str(), txt.c_str() + txt.length(), value, base);
+		if ((int)result.ec || value > UINT16_MAX) {
+			CppAdvanceCompilerError(std::format("The value {} is out of range for the type u16", txt), literal->getSymbol());
+		}
+	}
+	else if (suffix == "u32") {
+		if (minus) {
+			CppAdvanceCompilerError("Cannot assign a signed value to the type u32", literal->getSymbol());
+		}
+		auto value = 0ull;
+		auto result = std::from_chars(txt.c_str(), txt.c_str() + txt.length(), value, base);
+		if ((int)result.ec || value > UINT32_MAX) {
+			CppAdvanceCompilerError(std::format("The value {} is out of range for the type u32", txt), literal->getSymbol());
+		}
+	}
+	else if (suffix == "u64") {
+		if (minus) {
+			CppAdvanceCompilerError("Cannot assign a signed value to the type u64", literal->getSymbol());
+		}
+		auto value = 0ull;
+		auto result = std::from_chars(txt.c_str(), txt.c_str() + txt.length(), value, base);
+		if ((int)result.ec) {
+			CppAdvanceCompilerError(std::format("The value {} is out of range for the type u64", txt), literal->getSymbol());
+		}
+	}
+	else if (suffix == "iz") {
+		auto value = 0ull;
+		auto result = std::from_chars(txt.c_str(), txt.c_str() + txt.length(), value, base);
+		if ((int)result.ec || value > (static_cast<size_t>(INTPTR_MAX) + 1) || (value == (static_cast<size_t>(INTPTR_MAX) + 1) && !minus)) {
+			CppAdvanceCompilerError(std::format("The value {} is out of range for the type isize", txt), literal->getSymbol());
+		}
+	}
+	else if (suffix == "uz") {
+		if (minus) {
+			CppAdvanceCompilerError("Cannot assign a signed value to the type usize", literal->getSymbol());
+		}
+		auto value = 0ull;
+		auto result = std::from_chars(txt.c_str(), txt.c_str() + txt.length(), value, base);
+		if ((int)result.ec || value > UINTPTR_MAX) {
+			CppAdvanceCompilerError(std::format("The value {} is out of range for the type usize", txt), literal->getSymbol());
+		}
+	}
+	else if (suffix == "i128") {
+		if (txt.length() < 32) return;
+		auto value = 0ull;
+		auto result = std::from_chars(txt.c_str(), txt.c_str() + txt.length(), value, base);
+		if ((int)result.ec) {
+			if (base == 10 && (txt.length() > 43
+				|| (txt.length() == 43 &&
+					((txt == "170141183460469231731687303715884105728i128" && !minus) || (txt > "170141183460469231731687303715884105728i128"))))) {
+				CppAdvanceCompilerError(std::format("The value {} is out of range for the type i128", txt), literal->getSymbol());
+			}
+			else if (base == 2 && (txt.length() > 132 || (txt.length() == 132 && txt[0] != '0'))) {
+				CppAdvanceCompilerError(std::format("The value {} is out of range for the type i128", txt), literal->getSymbol());
+			}
+			else if (base == 16 && (txt.length() > 36 || (txt.length() == 36 && txt[0] > '7'))) {
+				CppAdvanceCompilerError(std::format("The value {} is out of range for the type i128", txt), literal->getSymbol());
+			}
+			else if (base == 8 && txt.length() > 44) {
+				CppAdvanceCompilerError(std::format("The value {} is out of range for the type i128", txt), literal->getSymbol());
+			}
+		}
+	}
+	else if (suffix == "u128") {
+		if (minus) {
+			CppAdvanceCompilerError("Cannot assign a signed value to the type u128", literal->getSymbol());
+		}
+		auto value = 0ull;
+		auto result = std::from_chars(txt.c_str(), txt.c_str() + txt.length(), value, base);
+		if ((int)result.ec) {
+			if (base == 10 && (txt.length() > 43
+				|| (txt.length() == 43 && txt > "340282366920938463463374607431768211455u128"))) {
+				CppAdvanceCompilerError(std::format("The value {} is out of range for the type u128", txt), literal->getSymbol());
+			}
+			else if (base == 2 && txt.length() > 132) {
+				CppAdvanceCompilerError(std::format("The value {} is out of range for the type u128", txt), literal->getSymbol());
+			}
+			else if (base == 16 && txt.length() > 36) {
+				CppAdvanceCompilerError(std::format("The value {} is out of range for the type u128", txt), literal->getSymbol());
+			}
+			else if (base == 8 && txt.length() > 44) {
+				CppAdvanceCompilerError(std::format("The value {} is out of range for the type u128", txt), literal->getSymbol());
+			}
+		}
+	}
+	else {
+		assert(false);
+	}
+}
+
+void CppAdvanceSema::checkAsciiLiteral(TerminalNode* literal)
+{
+	if (firstPass == functionBody) return;
+	std::string txt = literal->getText();
+	if (txt.starts_with('b')) {
+		if (txt.length() > 5 || (txt.length() == 5 && txt[2] != '\\'))
+		{
+			CppAdvanceCompilerError(std::format("The value {} is out of range for the type byte", txt), literal->getSymbol());
+		}
+	}
+}
+
+void CppAdvanceSema::enterUnaryExpression(CppAdvanceParser::UnaryExpressionContext* ctx)
+{
+	if (firstPass == functionBody) return;
+	if (auto upo = ctx->unaryPrefixOperator())
+	{
+		literalMinus = upo->Minus();
+	}
+	else if (ctx->Out())
+	{
+		isOutExpression = true;
+		auto id = ctx->unaryExpression()->getText();
+		initStates.top().definitelyAssigned.insert(id);
+	}
+}
+
+void CppAdvanceSema::exitUnaryExpression(CppAdvanceParser::UnaryExpressionContext* ctx)
+{
+	literalMinus = false;
+	isOutExpression = false;
+	if (ctx->Sizeof() || ctx->Alignof())
+	{
+		typeStack.push("usize");
+	}
+}
+
+void CppAdvanceSema::enterLiteral(CppAdvanceParser::LiteralContext* ctx)
+{
+	if (firstPass == functionBody) return;
+	if (auto literal = ctx->IntegerLiteral()) {
+		checkIntegerLiteral(literal, literalMinus);
+		typeStack.push("i32");
+		//std::cout << typeStack.top() << std::endl;
+	}
+	else if (ctx->FloatingLiteral())
+	{
+		typeStack.push("f64");
+		//std::cout << typeStack.top() << std::endl;
+	}
+	else if (ctx->BooleanLiteral())
+	{
+		typeStack.push("bool");
+		//std::cout << typeStack.top() << std::endl;
+	}
+	else if (auto literal = ctx->CharacterLiteral()) {
+		checkAsciiLiteral(literal);
+		typeStack.push("char");
+		//std::cout << typeStack.top() << std::endl;
+	}
+	else if (ctx->StringLiteral() || ctx->MultilineStringLiteral())
+	{
+		typeStack.push("Str");
+		//std::cout << typeStack.top() << std::endl;
+	}
+	else if (ctx->Null())
+	{
+		typeStack.push("null");
+		//std::cout << typeStack.top() << std::endl;
+	}
+}
+
+void CppAdvanceSema::enterFunctionBody(CppAdvanceParser::FunctionBodyContext*)
+{
+	functionBody = true;
+	++depth;
+}
+
+void CppAdvanceSema::exitFunctionBody(CppAdvanceParser::FunctionBodyContext*)
+{
+	if (--depth == 0)
+		functionBody = false;
+}
+
+void CppAdvanceSema::exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationContext* ctx)
+{
+	if (firstPass && functionBody) return;
+	bool isConst = false;
+	bool isVolatile = false;
+	bool isThreadLocal = false;
+	bool isStatic = false;
+	bool isMutable = false;
+
+	if (auto spec = ctx->declSpecifierSeq())
+	{
+		for (auto d : spec->declSpecifier())
+		{
+			if (d->Const() || d->Let()) isConst = true;
+			else if (d->Volatile()) isVolatile = true;
+			else if (d->Thread_local()) isThreadLocal = true;
+			else if (d->Static()) {
+				isStatic = true;
+				if (!functionBody && !isTypeDefinitionBody()) CppAdvanceCompilerError("Global variables and constants are implicitly static, explicit declaration is not required", d->Static()->getSymbol());
+			}
+			else if (d->Mutable()) {
+				isMutable = true;
+				if (!functionBody && !isTypeDefinitionBody()) CppAdvanceCompilerError("Global variables and constants are implicitly mutable, explicit declaration is not required", d->Mutable()->getSymbol());
+			}
+		}
+	}
+
+	if (isConst && isMutable)
+	{
+		CppAdvanceCompilerError("Constant cannot be mutable", ctx->declSpecifierSeq()->getStart());
+	}
+	if (isConst && isVolatile)
+	{
+		CppAdvanceCompilerError("Constant is not required to be volatile", ctx->declSpecifierSeq()->getStart());
+	}
+	if (isVolatile && isThreadLocal)
+	{
+		CppAdvanceCompilerError("Thread local variable is not required to be volatile", ctx->declSpecifierSeq()->getStart());
+	}
+	if (isConst && isThreadLocal)
+	{
+		CppAdvanceCompilerError("Thread local variable cannot be constant", ctx->declSpecifierSeq()->getStart());
+	}
+	if (isConst && !ctx->initializerClause() && !ctx->initializerList() && (!isTypeDefinitionBody() || functionBody))
+	{
+		CppAdvanceCompilerError("The constant must be explicitly initialized", ctx->declSpecifierSeq()->getStart());
+	}
+	if (isVolatile && !ctx->theTypeId())
+	{
+		CppAdvanceCompilerError("The volatile variable must have an explicit type", ctx->Assign()->getSymbol());
+	}
+
+	if (ctx->Void())
+	{
+		if (!functionBody)
+		{
+			CppAdvanceCompilerError("Cannot to declare the uninitialized variable outside the function body", ctx->Void()->getSymbol());
+		}
+		else if (loopDepth > 0)
+		{
+			CppAdvanceCompilerError("Cannot to declare the uninitialized variable in the loop body", ctx->Void()->getSymbol());
+		}
+		else
+		{
+			auto id = ctx->Identifier()->getText();
+			initStates.top().potentiallyAssigned.insert(id);
+			if (initStates.top().definitelyAssigned.contains(id))
+				initStates.top().definitelyAssigned.erase(id);
+		}
+	}
+	if (ctx->Star() && unsafeDepth <= 0)
+	{
+		CppAdvanceCompilerError("Cannot to use raw pointers in the safe context", ctx->Star()->getSymbol());
+	}
+
+	if (auto t = ctx->theTypeId())
+	{
+		//symbolTable[ctx->Identifier()->getText()] = t->getText();
+		symbolTable[ctx->Identifier()->getText()] = contextTypes[t];
+		if (isTypeDefinitionBody() && !functionBody)
+		{
+			symbolTable.globalSymbolTable[currentType+"."+ ctx->Identifier()->getText()] = contextTypes[t];
+		}
+	}
+	else
+	{
+		symbolTable[ctx->Identifier()->getText()] = contextTypes[ctx->initializerClause()];
+		if (!currentSubtype.empty()) symbolTable[ctx->Identifier()->getText()] += "<"+ currentSubtype+">";
+		if (isTypeDefinitionBody() && !functionBody)
+		{
+			CppAdvanceCompilerError("A field cannot have an implicit type", ctx->Assign()->getSymbol());
+		}
+	}
+	
+	if (!functionBody && firstPass)
+	{
+		if (ctx->Star())
+		{
+			CppAdvanceCompilerError("Global variables cannot be auto pointer type, full type required", ctx->Star()->getSymbol());
+		}
+		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		std::optional<AccessSpecifier> access = std::nullopt;
+		bool isProtectedInternal = false;
+		if (auto block = dynamic_cast<CppAdvanceParser::BlockDeclarationContext*>(ctx->parent))
+		{
+			if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(block->parent))
+			{
+				acc = decl->accessSpecifier();
+			}
+		}
+		if (!acc)
+		{
+			if (auto block = dynamic_cast<CppAdvanceParser::MemberBlockDeclarationContext*>(ctx->parent))
+			{
+				if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(block->parent)) {
+					isProtectedInternal = decl->protectedInternal();
+					acc = decl->accessSpecifier();
+				}
+			}
+		}
+		if (isProtectedInternal)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", ctx->getStart());
+			if (!isStatic)
+				CppAdvanceCompilerError("Cannot to declare non-static protected internal field, use public/internal/protected/private", ctx->getStart());
+			if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+				CppAdvanceCompilerError("Cannot to declare protected field in the struct/union/enum", ctx->getStart());
+			access = AccessSpecifier::ProtectedInternal;
+		}
+		else if (acc)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (acc->Public())
+			{
+				access = AccessSpecifier::Public;
+			}
+			else if (acc->Protected())
+			{
+				access = AccessSpecifier::Protected;
+				if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+					CppAdvanceCompilerError("Cannot to declare protected field in the struct/union/enum", ctx->getStart());
+			}
+			else if (acc->Private())
+			{
+				access = AccessSpecifier::Private;
+			}
+			else if (acc->Internal())
+			{
+				access = AccessSpecifier::Internal;
+			}
+		}
+		
+		if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
+		if (isThreadLocal)
+		{
+			if (access)
+			{
+				if (*access != AccessSpecifier::Private && !isTypeDefinitionBody()) CppAdvanceCompilerError("Thread-local variables should always be private. Use getters/setters to configure access or thread-local variables", ctx->declSpecifierSeq()->getStart());
+			} else access = AccessSpecifier::Private;
+		}
+		else
+		{
+			if (!access) {
+				if (!isTypeDefinitionBody())
+					access = AccessSpecifier::Internal;
+				else
+					access = AccessSpecifier::Private;
+			}
+		}
+		auto id = ctx->Identifier();
+		if (!isTypeDefinitionBody())
+		{
+			if (*access == AccessSpecifier::Protected) protectedSymbols.insert(id->getText());
+			if (unsafeDepth > 0) cppParser.unsafeVariables.insert(id->getText());
+			globalVariables.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), ctx->initializerList(), *access, getCurrentCompilationCondition(), "", false, isConst, isVolatile, isThreadLocal, unsafeDepth > 0});
+		}
+		else
+		{
+			if (unsafeDepth > 0) cppParser.unsafeVariables.insert(currentType+"." + id->getText());
+			structStack.top()->fields.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), ctx->initializerList(), *access, getCurrentCompilationCondition(), "", isStatic, isConst, isVolatile, isThreadLocal, unsafeDepth > 0});
+			if (isStatic || isThreadLocal)
+			{
+				if (isProtectedTypeDefinition) access = AccessSpecifier::Protected;
+				else access = AccessSpecifier::Private;
+				staticFields.emplace_back(VariableDefinition{ id->getText(), getLastTypeTemplateParams(), ctx->theTypeId(), {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), ctx->initializerList(), *access, getCurrentCompilationCondition(), getCurrentFullTypeName(), isStatic, isConst, isVolatile, isThreadLocal, isUnsafeTypeDefinition, getLastTypeTemplateSpecializationArgs() != nullptr });
+			}
+		}
+	}
+}
+
+void CppAdvanceSema::enterAssignmentExpression(CppAdvanceParser::AssignmentExpressionContext* ctx)
+{
+	if (firstPass && functionBody) return;
+	if (ctx->initializerClause())
+	{
+		if (isCondition)
+			CppAdvanceCompilerError("Cannot to use assignment operators in the condition. Maybe you mean the equality operator?", ctx->assignmentOperator()->getStart());
+		if (ctx->assignmentOperator()->Assign()) {
+			isAssignment = true;
+			currentAssignment = ctx;
+		}
+		lvalue = true;
+	}
+}
+
+void CppAdvanceSema::exitAssignmentExpression(CppAdvanceParser::AssignmentExpressionContext* ctx)
+{
+	if (firstPass && functionBody) return;
+	if (ctx->initializerClause())
+	{
+		isAssignment = false;
+	}
+}
+
+void CppAdvanceSema::enterPrimaryExpression(CppAdvanceParser::PrimaryExpressionContext* ctx)
+{
+	if (ctx->Super() && (currentType.empty() || currentTypeKind.top() != TypeKind::Class))
+		CppAdvanceCompilerError("Super keyword can using only in the derived class", ctx->Super()->getSymbol());
+	if (ctx->Field() && propertyBody)
+		fieldAssignment = true;
+	if (firstPass && functionBody) return;
+	if (unsafeDepth == 0 && ctx->getText().find("__Unsafe") != std::string::npos)
+		CppAdvanceCompilerError("Cannot to use unsafe data in the safe context", ctx->getStart());
+
+	if (lvalue && ctx->idExpression() && ctx->idExpression()->unqualifiedId())
+	{
+		auto uid = ctx->idExpression()->unqualifiedId();
+		auto txt = uid->getText();
+		if (initStates.top().potentiallyAssigned.contains(txt) && !initStates.top().definitelyAssigned.contains(txt))
+		{
+			if (isAssignment && loopDepth <= 0)
+			{
+				initStates.top().definitelyAssigned.insert(txt);
+				uninitConstructs.insert(currentAssignment);
+			}
+			else
+			{
+				CppAdvanceCompilerError("Cannot to use uninitialized value", uid->getStart());
+			}
+		}
+		else if (unsafeDepth == 0)
+		{
+			if (cppParser.unsafeVariables.contains(txt))
+			{
+				CppAdvanceCompilerError("Cannot to use unsafe variable in the safe context", uid->Identifier()->getSymbol());
+			}
+			/*else if (cppParser.unsafeFunctions.contains(txt))
+			{
+				CppAdvanceCompilerError("Cannot to call unsafe function in the safe context", uid->Identifier()->getSymbol());
+			}*/
+		}
+	}
+	else if (ctx->idExpression() && ctx->idExpression()->unqualifiedId())
+	{
+		auto uid = ctx->idExpression()->unqualifiedId();
+		auto txt = uid->getText();
+		if (!isOutExpression && !initStates.empty() && initStates.top().potentiallyAssigned.contains(txt) && !initStates.top().definitelyAssigned.contains(txt))
+		{
+			CppAdvanceCompilerError("Cannot to use uninitialized value", uid->getStart());
+		}
+		else if (unsafeDepth == 0)
+		{
+			if (cppParser.unsafeVariables.contains(txt))
+			{
+				CppAdvanceCompilerError("Cannot to use unsafe variable in the safe context", uid->Identifier()->getSymbol());
+			}
+			/*else if (cppParser.unsafeFunctions.contains(txt))
+			{
+				CppAdvanceCompilerError("Cannot to call unsafe function in the safe context", uid->Identifier()->getSymbol());
+			}*/
+		}
+	}
+}
+
+void CppAdvanceSema::enterInitializerClause(CppAdvanceParser::InitializerClauseContext*)
+{
+	lvalue = false;
+}
+
+void CppAdvanceSema::enterPostfixExpression(CppAdvanceParser::PostfixExpressionContext* ctx)
+{
+	if (firstPass && functionBody) return;
+
+	if (auto upo = ctx->unaryPostfixOperator())
+	{
+		if (!upo->Star().empty() ||!upo->DoubleStar().empty())
+		{
+			if (unsafeDepth <= 0)
+				CppAdvanceCompilerError("Cannot to use dereferencing of the raw pointer in the safe context", upo->getStart());
+		}
+		else if (upo->Amp())
+		{
+			if (unsafeDepth <= 0)
+				CppAdvanceCompilerError("Cannot to get raw address in the safe context", upo->getStart());
+		}
+	}
+	else if(ctx->Dot())
+	{
+		if (unsafeDepth == 0)
+		{
+			auto txt = ctx->getText();
+			auto pos = txt.rfind('.');
+			if (cppParser.unsafeVariables.contains(txt))
+			{
+				CppAdvanceCompilerError("Cannot to use unsafe variable in the safe context", ctx->idExpression()->getStart());
+			}
+			else
+			{
+				txt = txt.substr(0, pos);
+				if (cppParser.unsafeVariables.contains(txt)) 
+					CppAdvanceCompilerError("Cannot to use unsafe variable in the safe context", ctx->postfixExpression()->getStart()); 
+				/*else if (cppParser.unsafeFunctions.contains(txt))
+				{
+					CppAdvanceCompilerError("Cannot to call unsafe function in the safe context", ctx->postfixExpression()->getStart());
+				}*/
+			}
+		}
+	}
+}
+
+void CppAdvanceSema::enterTypeSpecifierSeq(CppAdvanceParser::TypeSpecifierSeqContext* ctx)
+{
+	if (firstPass && functionBody) return;
+	if (unsafeDepth <= 0)
+	{
+		if (!ctx->pointerOperator().empty())
+		{
+			CppAdvanceCompilerError("Cannot to use raw pointers in the safe context", ctx->pointerOperator(0)->getStart());
+		}
+	}
+}
+
+void CppAdvanceSema::enterDeclaration(CppAdvanceParser::DeclarationContext* ctx)
+{
+	if (ctx->Unsafe()) {
+		if (++unsafeDepth > 1)
+            CppAdvanceCompilerError("Unsafe context recursion", ctx->Unsafe()->getSymbol());
+	}
+	else if(auto spec = ctx->symbolSpecifierSeq())
+	{
+		if (spec->Unsafe() && ++unsafeDepth > 1)
+			CppAdvanceCompilerError("Unsafe context recursion", ctx->Unsafe()->getSymbol());
+		if (auto access = spec->accessSpecifier())
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Access specifier context recursion",access->getStart());
+			if (access->Public()) currentAccessSpecifier.top() = AccessSpecifier::Public;
+			else if (access->Protected()) currentAccessSpecifier.top() = AccessSpecifier::Protected;
+			else if (access->Internal()) currentAccessSpecifier.top() = AccessSpecifier::Internal;
+			else if (access->Private()) currentAccessSpecifier.top() = AccessSpecifier::Private;
+		}
+	}
+}
+
+void CppAdvanceSema::exitDeclaration(CppAdvanceParser::DeclarationContext* ctx)
+{
+	if (ctx->Unsafe()) --unsafeDepth;
+	else if (auto spec = ctx->symbolSpecifierSeq())
+	{
+		if (spec->Unsafe()) --unsafeDepth;
+		currentAccessSpecifier.top() = std::nullopt;
+	}
+}
+
+void CppAdvanceSema::enterExternVariableDeclaration(CppAdvanceParser::ExternVariableDeclarationContext* ctx)
+{
+	if (!functionBody && unsafeDepth > 0)
+		cppParser.unsafeVariables.insert(ctx->Identifier()->getText());
+}
+
+void CppAdvanceSema::enterRefDeclaration(CppAdvanceParser::RefDeclarationContext* ctx)
+{
+	if (firstPass && functionBody) return;
+	bool isConst = ctx->Const() || ctx->Let();
+
+	if (!functionBody)
+	{
+		CppAdvanceCompilerError("Global variable cannot be the reference variable", ctx->Amp()->getSymbol());
+	}
+	if (!ctx->initializerClause())
+	{
+		CppAdvanceCompilerError("Local reference variable must be explicitly initialized", ctx->Amp()->getSymbol());
+	}
+}
+
+void CppAdvanceSema::enterMultiDeclaration(CppAdvanceParser::MultiDeclarationContext* ctx)
+{
+	if (!functionBody)
+		CppAdvanceCompilerError("Multi declarations cannot be used outside function body", ctx->Colon()[1]->getSymbol());
+}
+
+void CppAdvanceSema::enterConstantDeclaration(CppAdvanceParser::ConstantDeclarationContext* ctx)
+{
+	if (firstPass && functionBody) return;
+
+	if (ctx->theTypeId())
+	{
+		symbolTable[ctx->Identifier()->getText()] = contextTypes[ctx->theTypeId()];
+		if (!ctx->theTypeId()->typeSpecifierSeq()->pointerOperator().empty())
+			CppAdvanceCompilerError("Compile-time constant cannot be pointer", ctx->theTypeId()->typeSpecifierSeq()->pointerOperator()[0]->getStart());
+	}
+
+	if (!functionBody && firstPass)
+	{
+		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		std::optional<AccessSpecifier> access = std::nullopt;
+		if (auto block = dynamic_cast<CppAdvanceParser::BlockDeclarationContext*>(ctx->parent))
+		{
+			if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(block->parent))
+			{
+				acc = decl->accessSpecifier();
+			}
+		}
+		if (!acc)
+		{
+			if (auto block = dynamic_cast<CppAdvanceParser::MemberBlockDeclarationContext*>(ctx->parent))
+			{
+				if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(block->parent)) {
+					if (decl->protectedInternal())
+						CppAdvanceCompilerError("Cannot to declare protected internal constant", decl->protectedInternal()->getStart());
+					acc = decl->accessSpecifier();
+				}
+			}
+		}
+
+		if (acc)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (acc->Public())
+			{
+				access = AccessSpecifier::Public;
+			}
+			else if (acc->Protected())
+			{
+				if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+					CppAdvanceCompilerError("Cannot to declare protected member outside the class", acc->Protected()->getSymbol());
+				access = AccessSpecifier::Protected;
+			}
+			else if (acc->Private())
+			{
+				access = AccessSpecifier::Private;
+			}
+			else if (acc->Internal())
+			{
+				CppAdvanceCompilerError("Compile-time constant cannot be internal (use public, protected or private to the access setup)", acc->Internal()->getSymbol());
+			}
+		}
+
+		if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
+		if (!access) {
+			access = AccessSpecifier::Public;
+		}
+		if (!isTypeDefinitionBody())
+		{
+			if (*access == AccessSpecifier::Protected) protectedSymbols.insert(ctx->Identifier()->getText());
+			globalConstants.emplace_back(ConstantDefinition{ ctx->Identifier()->getText(), ctx->templateParams(), ctx->theTypeId(), {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), *access, getCurrentCompilationCondition(), ""});
+		}
+		else
+		{
+			structStack.top()->constants.emplace_back(ConstantDefinition{ ctx->Identifier()->getText(), ctx->templateParams(), ctx->theTypeId(), {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), *access, getCurrentCompilationCondition(), getCurrentFullTypeName() });
+		}
+	}
+}
+
+void CppAdvanceSema::enterAliasDeclaration(CppAdvanceParser::AliasDeclarationContext* ctx)
+{
+	//if (firstPass == functionBody) return;
+	auto name = ctx->Identifier()->getText();
+	aliasTable[name] = ctx->theTypeId()->getText();
+	typeset.insert(name);
+	if(!functionBody && !isTypeDefinitionBody())
+		typeset.globalTypes.insert(name);
+
+	if (!functionBody && firstPass)
+	{
+		if (isTypeDefinitionBody())
+		{
+			aliasTable.globalAliasTable[currentType+"." + name] = ctx->theTypeId()->getText();
+			typeset.globalTypes.insert(currentType + "." + name);
+		}
+		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		std::optional<AccessSpecifier> access = std::nullopt;
+		if (auto block = dynamic_cast<CppAdvanceParser::BlockDeclarationContext*>(ctx->parent))
+		{
+			if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(block->parent))
+			{
+				acc = decl->accessSpecifier();
+				
+			}
+		}
+		else if (auto block = dynamic_cast<CppAdvanceParser::MemberBlockDeclarationContext*>(ctx->parent))
+		{
+			if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(block->parent))
+			{
+				if (decl->protectedInternal())
+					CppAdvanceCompilerError("Cannot to declare protected internal alias", decl->protectedInternal()->getStart());
+				acc = decl->accessSpecifier();
+			}
+		}
+		if (acc)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (acc->Public())
+			{
+				access = AccessSpecifier::Public;
+			}
+			else if (acc->Protected())
+			{
+				access = AccessSpecifier::Protected;
+			}
+			else if (acc->Private())
+			{
+				access = AccessSpecifier::Private;
+			}
+			else if (acc->Internal())
+			{
+				CppAdvanceCompilerError("Type alias cannot be internal (use public, protected or private to the access setup)", acc->Internal()->getSymbol());
+			}
+		}
+
+		if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
+		if (!access) {
+			if (isTypeDefinitionBody())
+				access = AccessSpecifier::Private;
+			else
+				access = AccessSpecifier::Public;
+		}
+		if (*access == AccessSpecifier::Protected) {
+			protectedSymbols.insert(name);
+			if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+				CppAdvanceCompilerError("Cannot to declare protected member outside the class body", acc->Protected()->getSymbol());
+		}
+		if (unsafeDepth > 0) {
+			cppParser.unsafeTypes.insert(name);
+			if (isTypeDefinitionBody())
+				cppParser.unsafeTypes.insert(currentType + "." + name);
+		}
+
+		if (!isTypeDefinitionBody())
+		{
+			globalTypeAliases.emplace_back(TypeAliasDefinition{ name, ctx->templateParams(), ctx->theTypeId(), {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(), unsafeDepth > 0 });
+		}
+		else
+		{
+			structStack.top()->typeAliases.emplace_back(TypeAliasDefinition{ name, ctx->templateParams(), ctx->theTypeId(), {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(), unsafeDepth > 0 });
+		}
+	}
+}
+
+void CppAdvanceSema::enterSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpecifierContext* ctx)
+{
+	if (unsafeDepth <= 0)
+	{
+		if (ctx->typename_())
+		{
+			auto txt = ctx->getText();
+			if (txt.find('<') != txt.npos) txt = txt.substr(0, txt.rfind('<'));
+			if (cppParser.unsafeTypes.contains(txt))
+				CppAdvanceCompilerError("Cannot to use unsafe type in the safe context", ctx->typename_()->getStart());
+		}
+	}
+	if (ctx->Self() && !isTypeDefinitionBody())
+		CppAdvanceCompilerError("Cannot to use self type alias outside the type body", ctx->Self()->getSymbol());
+}
+
+void CppAdvanceSema::enterCondition(CppAdvanceParser::ConditionContext*)
+{
+	isCondition = true;
+}
+
+void CppAdvanceSema::exitCondition(CppAdvanceParser::ConditionContext*)
+{
+	isCondition = false;
+}
+
+void CppAdvanceSema::enterVersionDefinition(CppAdvanceParser::VersionDefinitionContext* ctx)
+{
+	if (firstPass)
+	{
+		std::optional<AccessSpecifier> access = std::nullopt;
+		if (currentAccessSpecifier.top()) {
+			if (ctx->accessSpecifier())
+				CppAdvanceCompilerError("Cannot to re-define access specifer", ctx->accessSpecifier()->getStart());
+			access = currentAccessSpecifier.top();
+		}
+		else if (auto acc = ctx->accessSpecifier())
+		{
+			if (acc->Public())
+			{
+				access = AccessSpecifier::Public;
+			}
+			else if (acc->Protected())
+			{
+				access = AccessSpecifier::Protected;
+				protectedVersions.insert(ctx->Identifier()->getText());
+			}
+			else if (acc->Private())
+			{
+				access = AccessSpecifier::Private;
+			}
+			else if (acc->Internal())
+			{
+				CppAdvanceCompilerError("Version cannot be internal (use public, protected or private to the access setup)", ctx->accessSpecifier()->getStart());
+			}
+		}
+		if (!access) access = AccessSpecifier::Private;
+		int64_t value = 1;
+		if (auto lit = ctx->IntegerLiteral())
+		{
+			auto txt = lit->getText();
+			std::from_chars(txt.c_str(), txt.c_str() + txt.size(), value);
+		}
+		else if (auto lit = ctx->BooleanLiteral())
+		{
+			auto txt = lit->getText();
+			if (txt == "true") value = 1;
+			else value = 0;
+		}
+		versions.emplace_back(Version{ ctx->Identifier()->getText(), value, {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(), (bool)ctx->Default() });
+	}
+}
+
+void CppAdvanceSema::enterVersionConditionalDeclaration(CppAdvanceParser::VersionConditionalDeclarationContext* ctx)
+{
+	std::string result;
+	if (auto condition = ctx->condition())
+	{
+		auto interval = condition->getSourceInterval();
+		for (size_t i = interval.a; i <= interval.b; ++i)
+		{
+			auto token = parser->getTokenStream()->get(i);
+			if (token->getType() == CppAdvanceParser::Identifier)
+			{
+				auto id = token->getText();
+				result += "ADV_VERSION_" + (protectedVersions.contains(id) ? ("__" + StringUpper(filename) + "_PROTECTED_") : "") + id;
+			}
+			else
+			{
+				result += token->getText();
+			}
+			result += " ";
+		}
+	}
+	else if (ctx->Debug())
+	{
+		if (ctx->Not()) result += "!";
+		if (auto id = ctx->Identifier())
+		{
+			result += "ADV_DEBUG_";
+			result += id->getText();
+		}
+		else
+		{
+			result += "_DEBUG";
+		}
+	}
+	conditionStack.push(result);
+}
+
+void CppAdvanceSema::exitVersionConditionalDeclaration(CppAdvanceParser::VersionConditionalDeclarationContext* ctx)
+{
+	conditionStack.pop();
+}
+
+void CppAdvanceSema::enterVersionElseDeclaration(CppAdvanceParser::VersionElseDeclarationContext* ctx)
+{
+	conditionStack.top() = "!(" +conditionStack.top()+ ")";
+}
+
+void CppAdvanceSema::enterWhileCondition(CppAdvanceParser::WhileConditionContext*)
+{
+	isCondition = true;
+}
+
+void CppAdvanceSema::exitWhileCondition(CppAdvanceParser::WhileConditionContext*)
+{
+	isCondition = false;
+}
+
+void CppAdvanceSema::enterDoWhileCondition(CppAdvanceParser::DoWhileConditionContext*)
+{
+	isCondition = true;
+}
+
+void CppAdvanceSema::exitDoWhileCondition(CppAdvanceParser::DoWhileConditionContext*)
+{
+	isCondition = false;
+}
+
+void CppAdvanceSema::enterExceptionHandler(CppAdvanceParser::ExceptionHandlerContext*)
+{
+	isCatch = true;
+}
+
+void CppAdvanceSema::exitExceptionHandler(CppAdvanceParser::ExceptionHandlerContext*)
+{
+	isCatch = false;
+}
+
+void CppAdvanceSema::enterThrowExpression(CppAdvanceParser::ThrowExpressionContext* ctx)
+{
+	if (!isCatch && !ctx->assignmentExpression())
+		CppAdvanceCompilerError("Cannot to re-throw exception outside the catch block", ctx->start);
+}
+
+void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitionContext* ctx)
+{
+	//if (firstPass == functionBody) return;
+	symbolContexts.push(symbolContexts.top());
+	bool isInline = false;
+	bool isStatic = false;
+	bool isConstexpr = false;
+	bool isConsteval = false;
+	bool isUnsafe = false;
+	bool isMutating = false;
+	bool isVirtual = false;
+	bool isOverride = false;
+	bool isFinal = false;
+	bool isRefReturn = false;
+	bool isConstReturn = false;
+	bool isForwardReturn = false;
+	int8_t varargDepth = -1;
+	CppAdvanceParser::TheTypeIdContext* returnType = nullptr;
+	CppAdvanceParser::ExprContext* expression = nullptr;
+	CppAdvanceParser::FunctionParamsContext* params = ctx->functionParams();
+	CppAdvanceParser::TemplateParamsContext* templateParams = ctx->templateParams();
+	CppAdvanceParser::TemplateArgumentListContext* templateSpecializationArgs = nullptr;
+	CppAdvanceParser::ExceptionSpecificationContext* exceptions = ctx->exceptionSpecification();
+
+	for (auto spec : ctx->functionSpecifier()) {
+		if (spec->Inline()) isInline = true;
+		else if (spec->Consteval()) isConsteval = true;
+		else if (spec->Unsafe()) {
+			isUnsafe = true;
+			if (unsafeDepth > 0)
+				CppAdvanceCompilerError("Unsafe context recursion", spec->Unsafe()->getSymbol());
+		}
+		else if (spec->Static()) {
+            isStatic = true;
+			if (!isTypeDefinitionBody())
+				CppAdvanceCompilerError("Global functions are implicitly static", spec->Static()->getSymbol());
+		}
+		else if (spec->Mutable())
+		{
+			isMutating = true;
+			if (!isTypeDefinitionBody())
+				CppAdvanceCompilerError("Global function cannot be mutating", spec->Mutable()->getSymbol());
+		}
+		else if (spec->Virtual())
+		{
+			isVirtual = true;
+			if (!isTypeDefinitionBody())
+				CppAdvanceCompilerError("Global function cannot be virtual", spec->Virtual()->getSymbol());
+			else if(currentTypeKind.top() != TypeKind::Class)
+				CppAdvanceCompilerError("Cannot to declare virtual method outside the class body", spec->Virtual()->getSymbol());
+		}
+		else if (spec->Override())
+		{
+			isOverride = true;
+			if (!isTypeDefinitionBody())
+				CppAdvanceCompilerError("Global function cannot be overrided", spec->Override()->getSymbol());
+		}
+		else if (spec->Final())
+		{
+			isFinal = true;
+			if (!isTypeDefinitionBody())
+				CppAdvanceCompilerError("Global function cannot be final", spec->Final()->getSymbol());
+			else if (currentTypeKind.top() != TypeKind::Class)
+				CppAdvanceCompilerError("Cannot to declare final method outside the class body", spec->Final()->getSymbol());
+		}
+	}
+
+	if (ctx->shortFunctionBody())
+	{
+		expression = ctx->shortFunctionBody()->expressionStatement()->expr();
+	}
+
+	if (!isUnsafe && unsafeDepth > 0) isUnsafe = true;
+    if (isUnsafe && unsafeDepth <= 0) unsafeDepth++;
+
+	if (!firstPass)
+	{
+		initStates.push(InitState{});
+		if (auto decl = params->paramDeclClause()) {
+			auto declList = decl->paramDeclList();
+			for (auto param : declList->paramDeclaration())
+			{
+				auto id = param->Identifier()->getText();
+				if (auto spec = param->paramSpecification(); spec && spec->Out()) {
+					if (ctx->shortFunctionBody())
+						CppAdvanceCompilerError("Arrow functions doesn't support out parameters", spec->Out()->getSymbol());
+					outParams.insert(id);
+					initStates.top().potentiallyAssigned.insert(id);
+				}
+			}
+		}
+
+		if (auto ret = ctx->returnType())
+		{
+			if (auto idc = ret->Identifier())
+			{
+				if (ctx->shortFunctionBody())
+					CppAdvanceCompilerError("Arrow functions doesn't support named returns", idc->getSymbol());
+				auto id = idc->getText();
+				outParams.insert(id);
+				initStates.top().potentiallyAssigned.insert(id);
+			}
+			else if (ret->theTypeId() && ret->theTypeId()->typeSpecifierSeq() && ret->theTypeId()->typeSpecifierSeq()->simpleTypeSpecifier())
+			{
+				auto tup = ret->theTypeId()->typeSpecifierSeq()->simpleTypeSpecifier()->namedTupleField();
+				for (auto element : tup)
+				{
+					auto id = element->Identifier()->getText();
+					outParams.insert(id);
+					initStates.top().potentiallyAssigned.insert(id);
+				}
+			}
+		}
+	}
+
+	if (firstPass && !functionBody) {
+		if (isStatic) {
+			if (isMutating)
+				CppAdvanceCompilerError("Static method cannot be mutating", ctx->getStart());
+			if (isVirtual || isOverride || isFinal)
+				CppAdvanceCompilerError("Static method cannot be virtual, override or final", ctx->getStart());
+		}
+
+		int lifetimes = 0;
+		if (auto decl = params->paramDeclClause())
+		{
+			bool isDefault = false;
+			auto declList = decl->paramDeclList();
+			if (decl->Ellipsis() && !templateParams) {
+				if (ctx->Identifier()) {
+					varargDepth = declList->paramDeclaration().size() - 1;
+					cppParser.varargFunctions[ctx->Identifier()->getText()] = varargDepth;
+				}
+				else
+				{
+					CppAdvanceCompilerError("Operator function cannot to have a variadic arguments length", decl->Ellipsis()->getSymbol());
+				}
+			}
+			for (auto param : declList->paramDeclaration())
+			{
+				if (param->LifetimeAnnotation()) ++lifetimes;
+				if (param->initializerClause())
+				{
+					isDefault = true;
+					if (auto spec = param->paramSpecification()) {
+						if (spec->Inout() || spec->Ref() || spec->Out())
+							CppAdvanceCompilerError("Mutable reference parameters cannot have default value", param->initializerClause()->getStart());
+					}
+				}
+				else if (isDefault)
+				{
+					CppAdvanceCompilerError("Default function parameters must be located at the end of the parameter list", param->Identifier()->getSymbol());
+				}
+			}
+		}
+
+		if (auto ret = ctx->returnType())
+		{
+			if (isTypeDefinitionBody() && ctx->LifetimeAnnotation()) lifetimes++;
+			returnType = ret->theTypeId();
+			if (ret->Const()) isConstReturn = true;
+			if (ret->Ref()) {
+				isRefReturn = true;
+				//if (lifetimes <= 1 && ctx->functionParams()->paramDeclClause())
+					//CppAdvanceCompilerError("A function that returns a reference must have object lifetime annotations (for arguments or method owner).", ret->Ref()->getSymbol());
+			}
+			if (ret->Forward())
+				isForwardReturn = true;
+		}
+
+		if (auto body = ctx->functionBody())
+		{
+			if (body->Assign()) isInline = true;
+			else if (body->Equal()) isConstexpr = true;
+		}
+		else if (auto body = ctx->shortFunctionBody())
+		{
+			if (body->Assign()) isInline = true;
+			else if (body->Equal()) isConstexpr = true;
+		}
+
+		if (auto tid = ctx->simpleTemplateId())
+		{
+			templateSpecializationArgs = tid->templateArgumentList();
+		}
+
+		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		std::optional<AccessSpecifier> access = std::nullopt;
+		bool isProtectedInternal = false;
+		if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(ctx->parent))
+		{
+			if (decl->accessSpecifier())
+			{
+				acc = decl->accessSpecifier();
+			}
+		}
+		if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
+		{
+			isProtectedInternal = decl->protectedInternal();
+			if (decl->accessSpecifier())
+			{
+				acc = decl->accessSpecifier();
+			}
+		}
+		
+		if (acc)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (acc->Public())
+			{
+				access = AccessSpecifier::Public;
+			}
+			else if (acc->Protected())
+			{
+				if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+					CppAdvanceCompilerError("Cannot to declare protected member outside the class body", acc->getStart());
+				access = AccessSpecifier::Protected;
+			}
+			else if (acc->Private())
+			{
+				access = AccessSpecifier::Private;
+			}
+			else if (acc->Internal())
+			{
+				access = AccessSpecifier::Internal;
+			}
+		}
+		else if (isProtectedInternal)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+				CppAdvanceCompilerError("Cannot to declare protected internal member outside the class body", acc->getStart());
+			access = AccessSpecifier::ProtectedInternal;
+		}
+
+		if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
+		if (!access) access = AccessSpecifier::Internal;
+		std::string id;
+		bool isOperator = false;
+		if (ctx->Identifier()) id = ctx->Identifier()->getText();
+		else if (ctx->simpleTemplateId()) id = ctx->simpleTemplateId()->templateName()->Identifier()->getText();
+		else if (ctx->operatorFunctionId()) {
+			id = ctx->operatorFunctionId()->getText();
+			StringReplace(id, "operator", "operator ");
+			isOperator = true;
+			if (ctx->operatorFunctionId()->operator_()->New())
+			{
+				if (isTypeDefinitionBody() && !isStatic)
+					CppAdvanceCompilerError("Operator new/delete overloading must be static", ctx->operatorFunctionId()->getStop());
+				if (!returnType || returnType->getText() != "Pointer")
+					CppAdvanceCompilerError("Operator new must return Pointer", ctx->operatorFunctionId()->getStop());
+				if (params->paramDeclClause()) {
+					auto paramsDecl = params->paramDeclClause()->paramDeclList()->paramDeclaration();
+					if (paramsDecl.size() > 1 || paramsDecl[0]->theTypeId() && paramsDecl[0]->theTypeId()->getText() != "usize")
+						CppAdvanceCompilerError("Operator can receive only one parameter of the type usize", ctx->operatorFunctionId()->getStop());
+				}
+			} else if (ctx->operatorFunctionId()->operator_()->Delete())
+			{
+				if (isTypeDefinitionBody() && !isStatic)
+					CppAdvanceCompilerError("Operator new/delete overloading must be static", ctx->operatorFunctionId()->getStop());
+				if (returnType)
+					CppAdvanceCompilerError("Operator delete cannot return nothing", ctx->returnType()->getStop());
+				if (params->paramDeclClause()) {
+					auto paramsDecl = params->paramDeclClause()->paramDeclList()->paramDeclaration();
+					if (paramsDecl.size() > 2 || paramsDecl[0]->theTypeId() && paramsDecl[0]->theTypeId()->getText() != "Pointer")
+						CppAdvanceCompilerError("Operator delete must receive parameter of the type Pointer", ctx->operatorFunctionId()->getStop());
+				}
+				else {
+					CppAdvanceCompilerError("Operator delete must receive parameter of the type Pointer", ctx->operatorFunctionId()->getStop());
+				}
+			}
+		}
+		if (isOperator && !id.ends_with("new") && !id.ends_with("delete"))
+			StringReplace(id, " ", "");
+		if (!isTypeDefinitionBody())
+		{
+			if (*access == AccessSpecifier::Protected && !isOperator) protectedSymbols.insert(id);
+			globalFunctions.emplace_back(
+				FunctionDefinition{ id, templateParams, templateSpecializationArgs, params, returnType, expression, exceptions, 
+				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(), 
+				isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth });
+		}
+		else
+		{
+			auto lastTparams = getLastTypeTemplateParams();
+			auto lastSpec = getLastTypeTemplateSpecializationArgs();
+			auto fullType = getCurrentFullTypeName();
+			structStack.top()->methods.emplace_back(
+				MethodDefinition{ id, templateParams, templateSpecializationArgs, params, returnType, expression, exceptions, 
+				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(), 
+				isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth, 
+				currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, isMutating, isStatic, isVirtual, 
+				isOverride, false, isFinal});
+			methods.insert_or_assign(SourcePosition{ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine()},
+				MethodDefinition{ id, templateParams, templateSpecializationArgs, params, returnType, expression, exceptions,
+				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, 
+				isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
+				isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth,
+				currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, isMutating, isStatic, isVirtual,
+				isOverride && currentTypeKind.top() == TypeKind::Class, false, isFinal && currentTypeKind.top() == TypeKind::Class });
+		}
+	}
+}
+
+void CppAdvanceSema::enterShortFunctionBody(CppAdvanceParser::ShortFunctionBodyContext*)
+{
+	functionBody = true;
+	++depth;
+}
+
+void CppAdvanceSema::exitShortFunctionBody(CppAdvanceParser::ShortFunctionBodyContext*)
+{
+	if (--depth == 0)
+		functionBody = false;
+}
+
+void CppAdvanceSema::exitFunctionDefinition(CppAdvanceParser::FunctionDefinitionContext* ctx)
+{
+	//if (firstPass == functionBody) return;
+	if (firstPass != functionBody) {
+		std::string funcname;
+		if (!currentType.empty()) funcname += currentType + ".";
+		if (ctx->Identifier())
+			funcname += ctx->Identifier()->getText();
+		else if (ctx->simpleTemplateId())
+			funcname += ctx->simpleTemplateId()->templateName()->Identifier()->getText();
+		else if (ctx->operatorFunctionId())
+			funcname += ctx->operatorFunctionId()->getText();
+		if (ctx->returnType())
+		{
+			/*auto ret = ctx->returnType()->getText();
+			StringReplace(ret, "const ", "");
+			StringReplace(ret, "ref ", "");*/
+			functionTable[funcname] = contextTypes[ctx->returnType()];
+		}
+		else if (ctx->functionBody()) {
+			functionTable[funcname] = "void";
+		}
+		auto funcnameWithParams = funcname + "/";
+		if (auto params = ctx->functionParams()->paramDeclClause()) {
+			std::string args;
+			bool first = true;
+			for (auto param : params->paramDeclList()->paramDeclaration()) {
+				if (!first) {
+					args += ",,";
+					funcnameWithParams += ",,";
+				}
+				auto id = param->Identifier()->getText();
+				args += id;
+				funcnameWithParams += contextTypes[param->theTypeId()];
+				activeDefaultParams[funcname].insert_or_assign(id, param->initializerClause());
+				first = false;
+			}
+			if (!args.empty())
+				cppParser.parametersTable[funcname].insert(args);
+		}
+		if (unsafeDepth > 0)
+			cppParser.unsafeFunctions.insert(funcnameWithParams);
+	}
+	auto specs = ctx->functionSpecifier();
+	if (std::any_of(specs.begin(), specs.end(), [&](auto spec) ->bool { return spec->Unsafe(); }))
+        --unsafeDepth;
+
+	if (!firstPass)
+	{
+		auto currentState = initStates.top();
+		for (const auto& param : outParams)
+		{
+			if (currentState.definitelyAssigned.find(param) == currentState.definitelyAssigned.end())
+			{
+				CppAdvanceCompilerError(std::format("Out parameter {} was not initialized on all execution flow", param), ctx->getStop());
+			}
+		}
+		initStates.pop();
+	}
+	outParams.clear();
+	symbolContexts.pop();
+}
+
+void CppAdvanceSema::exitPrimaryExpression(CppAdvanceParser::PrimaryExpressionContext* ctx)
+{
+	if (ctx->This()) typeStack.push(currentType);
+	
+}
+
+void CppAdvanceSema::exitNestedNameSpecifier(CppAdvanceParser::NestedNameSpecifierContext* ctx)
+{
+	if (firstPass && functionBody) return;
+	if (auto name = ctx->typename_()) {
+		auto txt = name->getText();
+		auto pos = txt.find('<');
+		if (pos != txt.npos && !txt.starts_with("std.tuple<")) {
+			currentSubtype = txt.substr(pos+1,txt.rfind('>')-pos-1);
+			txt = txt.substr(0, pos);
+		}
+		if (aliasTable.contains(txt))
+		{
+			txt = aliasTable[txt];
+			pos = txt.find('<');
+			if (pos != txt.npos && !txt.starts_with("std.tuple<")) {
+				currentSubtype = txt.substr(pos + 1, txt.rfind('>') - pos - 1);
+				currentSubtype = currentSubtype.substr(0, currentSubtype.find(','));
+				txt = txt.substr(0, pos);
+			}
+			typeStack.push(txt);
+			//std::cout << typeStack.top() << std::endl;
+		}
+		else if (typeset.contains(txt)) {
+			typeStack.push(txt);
+			//std::cout << typeStack.top() << std::endl;
+		}
+		else if (symbolTable.contains(txt))
+		{
+			txt = symbolTable[txt];
+			pos = txt.find('<');
+			if (pos != txt.npos && !txt.starts_with("std.tuple<")) {
+				currentSubtype = txt.substr(pos + 1, txt.rfind('>') - pos - 1);
+				currentSubtype = currentSubtype.substr(0, currentSubtype.find(','));
+				txt = txt.substr(0, pos);
+			}
+			typeStack.push(txt);
+			//std::cout << typeStack.top() << std::endl;
+		}
+	}
+	else if (auto name = ctx->namespaceName()) {
+		auto txt = name->getText();
+		if (aliasTable.contains(txt))
+		{
+			typeStack.push(aliasTable[txt]);
+			//std::cout << typeStack.top() << std::endl;
+		}
+		else if (typeset.contains(txt)) {
+			typeStack.push(txt);
+			//std::cout << typeStack.top() << std::endl;
+		}
+		else if (symbolTable.contains(txt))
+		{
+			typeStack.push(symbolTable[txt]);
+			//std::cout << typeStack.top() << std::endl;
+		}
+	}
+	else if (auto id = ctx->Identifier())
+	{
+		auto txt = ctx->getText();
+		txt = txt.substr(0, txt.rfind('.'));
+		if (aliasTable.contains(txt))
+		{
+			typeStack.push(aliasTable[txt]);
+			//std::cout << typeStack.top() << std::endl;
+		}
+		else if (typeset.contains(txt)) {
+			typeStack.push(txt);
+			//std::cout << typeStack.top() << std::endl;
+		}
+		else if(symbolTable.contains(txt))
+		{
+			txt = symbolTable[txt];
+			auto pos = txt.find('<');
+			if (pos != txt.npos && !txt.starts_with("std.tuple<")) {
+				currentSubtype = txt.substr(pos + 1, txt.rfind('>') - pos - 1);
+				currentSubtype = currentSubtype.substr(0, currentSubtype.find(','));
+				txt = txt.substr(0, pos);
+			}
+			typeStack.push(txt);
+			//std::cout << typeStack.top() << std::endl;
+		}
+		else if (!typeStack.empty())
+		{
+			if (symbolTable.contains(typeStack.top() + "." + id->getText()))
+			{
+				txt = symbolTable[typeStack.top() + "." + id->getText()];
+				auto pos = txt.find('<');
+				if (pos != txt.npos && !txt.starts_with("std.tuple<")) {
+					currentSubtype = txt.substr(pos + 1, txt.rfind('>') - pos - 1);
+					currentSubtype = currentSubtype.substr(0, currentSubtype.find(','));
+					txt = txt.substr(0, pos);
+				}
+				typeStack.push(txt);
+				//std::cout << typeStack.top() << std::endl;
+			}
+		}
+	}
+	else if (auto id = ctx->simpleTemplateId())
+	{
+		auto txt = ctx->getText();
+		txt = txt.substr(0, txt.rfind('.'));
+		auto pos = txt.find('<');
+		if (pos != txt.npos) {
+			currentSubtype = txt.substr(pos+1,txt.rfind('>')-pos-1);
+			txt = txt.substr(0, pos);
+		}
+		if (aliasTable.contains(txt))
+		{
+			typeStack.push(aliasTable[txt]);
+			//std::cout << typeStack.top() << std::endl;
+		}
+		else if (typeset.contains(txt)) {
+			typeStack.push(txt);
+			//std::cout << typeStack.top() << std::endl;
+		}
+		else if (symbolTable.contains(txt))
+		{
+			txt = symbolTable[txt];
+			auto pos = txt.find('<');
+			if (pos != txt.npos) {
+				currentSubtype = txt.substr(pos + 1, txt.rfind('>') - pos - 1);
+				currentSubtype = currentSubtype.substr(0, currentSubtype.find(','));
+				txt = txt.substr(0, pos);
+			}
+			typeStack.push(symbolTable[txt]);
+			//std::cout << typeStack.top() << std::endl;
+		}
+		else if (!typeStack.empty())
+		{
+			if (symbolTable.contains(typeStack.top() + "." + id->templateName()->getText()))
+			{
+				txt = symbolTable[typeStack.top() + "." + id->templateName()->getText()];
+				auto pos = txt.find('<');
+				if (pos != txt.npos) {
+					currentSubtype = txt.substr(pos + 1, txt.rfind('>') - pos - 1);
+					currentSubtype = currentSubtype.substr(0, currentSubtype.find(','));
+					txt = txt.substr(0, pos);
+				}
+				typeStack.push(txt);
+				//std::cout << typeStack.top() << std::endl;
+			}
+		}
+	}
+}
+
+void CppAdvanceSema::enterNestedNameSpecifier(CppAdvanceParser::NestedNameSpecifierContext* ctx)
+{
+	
+}
+
+void CppAdvanceSema::enterIdExpression(CppAdvanceParser::IdExpressionContext*)
+{
+	
+}
+
+void CppAdvanceSema::exitIdExpression(CppAdvanceParser::IdExpressionContext* ctx)
+{
+	if (firstPass && functionBody) return;
+	if (auto uq = ctx->unqualifiedId())
+	{
+		std::string txt;
+		if (auto id = uq->Identifier()) txt = id->getText();
+		else if (auto tid = uq->templateId())
+		{
+			CppAdvanceParser::TemplateArgumentListContext* args = nullptr;
+			if (auto stid = tid->simpleTemplateId())
+			{
+				txt = stid->templateName()->getText();
+				args = stid->templateArgumentList();
+			}
+			else
+			{
+				txt = tid->operatorTemplateId()->operatorFunctionId()->getText();
+				if (!txt.ends_with("new") && !txt.ends_with("delete")) StringReplace(txt, " ", "");
+				args = tid->operatorTemplateId()->templateArgumentList();
+			}
+			if (args)
+			{
+				currentSubtype = args->templateArgument(0)->getText();
+				currentSubtype = currentSubtype.substr(0, currentSubtype.find(','));
+			}
+		}
+		else if (auto op = uq->operatorFunctionId())
+		{
+			txt = op->getText();
+			if (!txt.ends_with("new") && !txt.ends_with("delete")) StringReplace(txt, " ", "");
+		}
+		else if (auto op = uq->conversionFunctionId())
+		{
+			txt = op->getText();
+		}
+		else if (uq->Tilde()) {
+			if (auto name = uq->className())
+			{
+				txt = uq->getText();
+			}
+		}
+		if (aliasTable.contains(txt))
+		{
+			txt = aliasTable[txt];
+			auto pos = txt.find('<');
+			if (pos != txt.npos && !txt.starts_with("std.tuple<")) {
+				currentSubtype = txt.substr(pos + 1, txt.rfind('>') - pos - 1);
+				currentSubtype = currentSubtype.substr(0, currentSubtype.find(','));
+				txt = txt.substr(0, pos);
+			}
+			typeStack.push(txt);
+			//std::cout << typeStack.top() << std::endl;
+		}
+		else if (typeset.contains(txt)) {
+			typeStack.push(txt);
+			//std::cout << typeStack.top() << std::endl;
+		}
+		else if (symbolTable.contains(txt)) {
+			txt = symbolTable[txt];
+			if (aliasTable.contains(txt)) txt = aliasTable[txt];
+			auto pos = txt.find('<');
+			if (pos != txt.npos && !txt.starts_with("std.tuple<")) {
+				currentSubtype = txt.substr(pos + 1, txt.rfind('>') - pos - 1);
+				currentSubtype = currentSubtype.substr(0, currentSubtype.find(','));
+				txt = txt.substr(0, pos);
+			}
+			typeStack.push(txt);
+			//std::cout << typeStack.top() << std::endl;
+		}
+	}
+	//else if (auto q = ctx->qualifiedId()) {
+	//	auto uq = q->unqualifiedId();
+	//	auto txt = q->getText();
+	//	if (aliasTable.contains(txt))
+	//	{
+	//		typeStack.push(aliasTable[txt]);
+	//		//std::cout << typeStack.top() << std::endl;
+	//	}
+	//	else if (typeset.contains(txt)) {
+	//		typeStack.push(txt);
+	//		//std::cout << typeStack.top() << std::endl;
+	//	}
+	//	else if (symbolTable.contains(txt)) {
+	//		txt = symbolTable[txt];
+	//		if (aliasTable.contains(txt)) txt = aliasTable[txt];
+	//		typeStack.push(txt);
+	//		//std::cout << typeStack.top() << std::endl;
+	//	}
+	//	else if (symbolTable.contains(typeStack.top() + "." + uq->getText())) {
+	//		typeStack.push(symbolTable[typeStack.top() + "." + uq->getText()]);
+	//		//std::cout << typeStack.top() << std::endl;
+	//	}
+	//}
+	if (!typeStack.empty()) {
+		contextTypes[ctx] = typeStack.top();
+		//std::cout << "ctx " << ctx << ": " << typeStack.top() << std::endl;
+	}
+}
+
+void CppAdvanceSema::exitPostfixExpression(CppAdvanceParser::PostfixExpressionContext* ctx)
+{
+	if (firstPass && functionBody) return;
+	if (auto upo = ctx->unaryPostfixOperator())
+	{
+		if (!upo->Star().empty() || !upo->DoubleStar().empty())
+		{
+			if (!typeStack.empty()) {
+				if (typeStack.top().starts_with('*'))
+					typeStack.push(typeStack.top().substr(typeStack.top().find_first_not_of('*')));
+				else {
+					if (!currentSubtype.empty())
+						typeStack.push(currentSubtype);
+					else 
+						typeStack.push(functionTable[typeStack.top() + ".operator*"]);
+				}
+			}
+		}
+		if (upo->Amp())
+		{
+			typeStack.push("*" + typeStack.top());
+		}
+	}
+	else if (ctx->Dot())
+	{
+		if (unsafeDepth == 0)
+		{
+			std::string txt = contextTypes[ctx->postfixExpression()] + "." + ctx->getText().substr(ctx->getText().rfind('.') + 1);
+			if (cppParser.unsafeVariables.contains(txt))
+				CppAdvanceCompilerError("Cannot to use unsafe variable in the safe context", ctx->getStop());
+			/*else if (cppParser.unsafeFunctions.contains(txt))
+			{
+				CppAdvanceCompilerError("Cannot to call unsafe function in the safe context", ctx->getStop());
+			}*/
+		}
+		if (auto literal = ctx->IntegerLiteral())
+		{
+			if (!typeStack.empty()) {
+				if (typeStack.top().starts_with("std.tuple<")) {
+					auto typestr = typeStack.top().substr(typeStack.top().find('<')+1);
+					typestr = typestr.substr(0, typestr.rfind('>'));
+					auto types = StringSplit(typestr, ',');
+					auto index = std::stoi(literal->getText());
+					if (types.size() > index)
+					{
+						auto type = types[index];
+						StringTrim(type);
+						auto pos = type.find('<');
+						if (pos != type.npos && !type.starts_with("std.tuple")) {
+							auto subtype = type.substr(pos + 1, type.rfind('>') - pos - 1);
+							subtype = subtype.substr(0, subtype.find(','));
+							currentSubtype = subtype;
+							type = type.substr(0, pos);
+						}
+						typeStack.push(type);
+					}
+				}
+				else
+				{
+					auto type = symbolTable[typeStack.top() + "." + literal->getText()];
+					auto pos = type.find('<');
+					if (pos != type.npos && !type.starts_with("std.tuple")) {
+						auto subtype = type.substr(pos + 1, type.rfind('>') - pos - 1);
+						subtype = subtype.substr(0, subtype.find(','));
+						currentSubtype = subtype;
+						type = type.substr(0, pos);
+					}
+					typeStack.push(type);
+				}
+			}
+		}
+		else
+		{
+			auto txt = ctx->getText();
+			auto id = txt;
+			auto dotpos = id.rfind('.');
+			if (dotpos != id.npos) id = id.substr(dotpos + 1);
+			auto tplpos = id.find('<');
+			if (tplpos != id.npos) {
+				auto ptplpos = id.rfind('>');
+				auto tpl = id.substr(tplpos + 1, ptplpos - tplpos - 1);
+				currentTemplateArgs = StringSplit(tpl, ',');
+				for (auto& arg : currentTemplateArgs)
+				{
+					auto atplpos = arg.find('<');
+					if (atplpos != arg.npos) arg = arg.substr(0, atplpos);
+					StringTrim(arg);
+				}
+				id = id.substr(0, tplpos);
+			}
+			else
+			{
+				currentTemplateArgs.clear();
+			}
+
+			if (aliasTable.contains(txt))
+			{
+				typeStack.push(aliasTable[txt]);
+				//std::cout << typeStack.top() << std::endl;
+			}
+			else if (typeset.contains(txt)) {
+				typeStack.push(txt);
+				//std::cout << typeStack.top() << std::endl;
+			}
+			else if (symbolTable.contains(txt)) {
+				txt = symbolTable[txt];
+				auto pos = txt.find('<');
+				if (pos != txt.npos && !txt.starts_with("std.tuple")) {
+					auto subtype = txt.substr(pos + 1, txt.rfind('>') - pos - 1);
+					subtype = subtype.substr(0, subtype.find(','));
+					currentSubtype = subtype;
+					txt = txt.substr(0, pos);
+				}
+				if (aliasTable.contains(txt)) txt = aliasTable[txt];
+				pos = txt.find('<');
+				if (pos != txt.npos && !txt.starts_with("std.tuple")) {
+					auto subtype = txt.substr(pos + 1, txt.rfind('>') - pos - 1);
+					subtype = subtype.substr(0, subtype.find(','));
+					currentSubtype = subtype;
+					txt = txt.substr(0, pos);
+				}
+				typeStack.push(txt);
+				//std::cout << typeStack.top() << std::endl;
+			}
+			else if (!typeStack.empty() && ctx->idExpression()) {
+				txt = symbolTable[typeStack.top() + "." + id];
+				auto pos = txt.find('<');
+				if (pos != txt.npos && !txt.starts_with("std.tuple")) {
+					auto subtype = txt.substr(pos + 1, txt.rfind('>') - pos - 1);
+					subtype = subtype.substr(0, subtype.find(','));
+					currentSubtype = subtype;
+					txt = txt.substr(0, pos);
+				}
+				if (aliasTable.contains(txt)) txt = aliasTable[txt];
+				pos = txt.find('<');
+				if (pos != txt.npos && !txt.starts_with("std.tuple")) {
+					auto subtype = txt.substr(pos + 1, txt.rfind('>') - pos - 1);
+					subtype = subtype.substr(0, subtype.find(','));
+					currentSubtype = subtype;
+					txt = txt.substr(0, pos);
+				}
+				typeStack.push(txt);
+				//std::cout << typeStack.top() << std::endl;
+			}
+		}
+	}
+	else if (ctx->LeftParen() && ctx->postfixExpression())
+	{
+		std::string funcname;
+		auto txt = ctx->postfixExpression()->getText();
+		auto dotpos = txt.rfind('.');
+		auto tplpos = txt.npos;
+		if (dotpos != txt.npos)
+		{
+			tplpos = txt.find('<', dotpos + 1);
+		}
+		else
+		{
+			tplpos = txt.find('<');
+		}
+		if (tplpos != txt.npos) {
+			auto ptplpos = txt.rfind('>');
+			auto tpl = txt.substr(tplpos + 1, ptplpos - tplpos - 1);
+			currentTemplateArgs = StringSplit(tpl, ',');
+			for (auto& arg : currentTemplateArgs)
+			{
+				auto atplpos = arg.find('<');
+				if (atplpos != arg.npos) arg = arg.substr(0, atplpos);
+				StringTrim(arg);
+			}
+		}
+		else
+		{
+			currentTemplateArgs.clear();
+		}
+		if (dotpos != txt.npos && tplpos != txt.npos && dotpos < tplpos || dotpos == txt.npos && tplpos != txt.npos) txt = txt.substr(0, tplpos);
+		auto txt2 = txt;
+		auto txt3 = txt;
+		bool found = true;
+		if (dotpos != std::string::npos) txt2 = txt2.substr(dotpos+1);
+		if (!typeStack.empty()) {
+			if (auto expr = ctx->postfixExpression()->postfixExpression()) {
+				if (contextTypes.contains(expr))
+					typeStack.push(contextTypes[expr]);
+				txt3 = typeStack.top() + "." + txt2;
+			}
+		}
+		if (aliasTable.contains(txt))
+		{
+			typeStack.push(aliasTable[txt]);
+			funcname = txt;
+			//std::cout << typeStack.top() << std::endl;
+		}
+		else if (typeset.contains(txt)) {
+			typeStack.push(txt);
+			funcname = txt;
+			//std::cout << typeStack.top() << std::endl;
+		}
+		else if (functionTable.contains(txt)) {
+			funcname = txt;
+			txt = functionTable[txt];
+			if (aliasTable.contains(txt)) txt = aliasTable[txt];
+			else if (!typeset.contains(txt) && txt != "void") {
+				auto pos = txt.find('<');
+				if (pos != txt.npos && !txt.starts_with("std.tuple")) {
+					txt = txt.substr(0, pos);
+					auto subtype = txt.substr(pos + 1, txt.rfind('>') - pos - 1);
+					subtype = subtype.substr(0, subtype.find(','));
+					StringTrim(subtype);
+					if (!typeset.contains(subtype)) {
+						if (!currentTemplateArgs.empty()) subtype = currentTemplateArgs[0].substr(0, currentTemplateArgs[0].find('<'));
+						if (!typeset.contains(subtype)) subtype = currentSubtype;
+					}
+					if (typeset.contains(subtype)) currentSubtype = subtype;
+				}
+				if (!typeset.contains(txt)) {
+					if (!currentTemplateArgs.empty()) txt = currentTemplateArgs[0].substr(0, currentTemplateArgs[0].find('<'));
+					if (!typeset.contains(txt) && !currentSubtype.empty()) txt = currentSubtype;
+					if (!typeset.contains(txt) && !txt.starts_with("std.tuple"))
+						found = false;
+				}
+				if (aliasTable.contains(txt)) txt = aliasTable[txt];
+			}
+			typeStack.push(txt);
+			//std::cout << typeStack.top() << std::endl;
+		}
+		else if (!typeStack.empty() && functionTable.contains(txt2)) {
+			funcname = txt2;
+			txt2 = functionTable[txt2];
+			if (aliasTable.contains(txt2)) txt2 = aliasTable[txt2];
+			else if (!typeset.contains(txt2) && txt2 != "void") {
+				auto pos = txt2.find('<');
+				if (pos != txt2.npos && !txt.starts_with("std.tuple")) {
+					txt2 = txt2.substr(0, pos);
+					auto subtype = txt2.substr(pos + 1, txt2.rfind('>') - pos - 1);
+					subtype = subtype.substr(0, subtype.find(','));
+					StringTrim(subtype);
+					if (!typeset.contains(subtype)) {
+						if (!currentTemplateArgs.empty()) subtype = currentTemplateArgs[0].substr(0, currentTemplateArgs[0].find('<'));
+						if (!typeset.contains(subtype)) subtype = currentSubtype;
+					}
+					if (typeset.contains(subtype)) currentSubtype = subtype;
+				}
+				if (!typeset.contains(txt2)) {
+					if (!currentTemplateArgs.empty()) txt2 = currentTemplateArgs[0].substr(0, currentTemplateArgs[0].find('<'));
+					if (!typeset.contains(txt2) && !currentSubtype.empty()) txt2 = currentSubtype;
+					if (!typeset.contains(txt2) && !txt2.starts_with("std.tuple"))
+						found = false;
+				}
+				if (aliasTable.contains(txt2)) txt2 = aliasTable[txt2];
+			}
+			typeStack.push(txt2);
+			//std::cout << typeStack.top() << std::endl;
+		}
+		else if (!typeStack.empty() && functionTable.contains(txt3)) {
+			funcname = txt3;
+			txt3 = functionTable[txt3];
+			if (aliasTable.contains(txt3)) txt3 = aliasTable[txt3];
+			else if (!typeset.contains(txt3) && txt3 != "void") {
+				auto pos = txt3.find('<');
+				if (pos != txt3.npos && !txt.starts_with("std.tuple")) {
+					txt3 = txt3.substr(0, pos);
+					auto subtype = txt3.substr(pos + 1, txt3.rfind('>') - pos - 1);
+					subtype = subtype.substr(0, subtype.find(','));
+					StringTrim(subtype);
+					if (!typeset.contains(subtype)) {
+						if (!currentTemplateArgs.empty()) subtype = currentTemplateArgs[0].substr(0, currentTemplateArgs[0].find('<'));
+						if (!typeset.contains(subtype)) subtype = currentSubtype;
+					}
+					if (typeset.contains(subtype)) currentSubtype = subtype;
+				}
+				if (!typeset.contains(txt3)) {
+					if (!currentTemplateArgs.empty()) txt3 = currentTemplateArgs[0].substr(0, currentTemplateArgs[0].find('<'));
+					if (!typeset.contains(txt3) && !currentSubtype.empty()) txt3 = currentSubtype;
+					if (!typeset.contains(txt3) && !txt3.starts_with("std.tuple"))
+						found = false;
+				}
+				if (aliasTable.contains(txt3)) txt3 = aliasTable[txt3];
+			}
+			typeStack.push(txt3);
+			//std::cout << typeStack.top() << std::endl;
+		}
+
+		if (auto exprs = ctx->expressionList())
+		{
+			bool named = false;
+			std::unordered_set<std::string> knownParams;
+			if (cppParser.parametersTable.contains(funcname))
+			{
+				for (const auto& func : cppParser.parametersTable[funcname])
+				{
+					auto params = StringSplit(func, ",,");
+					for (const auto& param : params) {
+                        knownParams.insert(param.substr(0,param.find('=')));
+					}
+				}
+			}
+			if (activeDefaultParams.contains(funcname))
+			{
+				for (const auto& param : activeDefaultParams[funcname])
+				{
+					knownParams.insert(param.first);
+				}
+			}
+			funcname += "/";
+			bool first = true;
+			for (auto part : exprs->expressionListPart()) {
+				std::string paramType;
+				if (contextTypes.contains(part->conditionalExpression()))
+					paramType = contextTypes[part->conditionalExpression()];
+
+				if (!first)
+				{
+					funcname += ",,";
+				}
+
+				first = false;
+				funcname += paramType;
+				if (cppParser.unsafeFunctions.contains(funcname))
+				{
+					CppAdvanceCompilerError("Cannot to call unsafe function in safe context", ctx->LeftParen()->getSymbol());
+				}
+
+				if (!found)
+				{
+					found = true;
+					typeStack.push(paramType);
+				}
+
+				if (auto id = part->Identifier()) {
+					if (part->Out())
+					{
+						prerequisites[currentStatement].emplace_back(id->getText(),part->theTypeId());
+					}
+					else {
+						named = true;
+						if (!knownParams.contains(id->getText()))
+							CppAdvanceCompilerError("Unknown argument name", id->getSymbol());
+					}
+				}
+				else if (named) {
+					CppAdvanceCompilerError("Named arguments can only appear after positional arguments", part->getStart());
+				}
+			}
+		}
+	}
+	else if (ctx->LeftBracket() && !typeStack.empty())
+	{
+		typeStack.push(contextTypes[ctx->postfixExpression()]);
+		if (functionTable.contains(typeStack.top() + ".operator[]")) {
+			auto type = functionTable[typeStack.top() + ".operator[]"];
+            if (aliasTable.contains(type)) type = aliasTable[type];
+			if (!typeset.contains(type) && !currentSubtype.empty())
+				type = currentSubtype;
+			typeStack.push(type);
+		}
+	}
+	if (!typeStack.empty() && !typeStack.top().empty())
+	{
+		contextTypes[ctx] = typeStack.top();
+		//std::cout << "ctx pe " << ctx << ": " << typeStack.top() << std::endl;
+	}
+}
+
+void CppAdvanceSema::exitRefDeclaration(CppAdvanceParser::RefDeclarationContext* ctx)
+{
+	auto seq = ctx->identifierSeq();
+	for (auto id : seq->Identifier())
+	{
+		symbolTable[id->getText()] = contextTypes[ctx->initializerClause()];
+		if (!currentSubtype.empty()) symbolTable[id->getText()] += "<" + currentSubtype + ">";
+	}
+}
+
+void CppAdvanceSema::exitMultiDeclaration(CppAdvanceParser::MultiDeclarationContext* ctx)
+{
+	for (auto id : ctx->Identifier())
+	{
+		symbolTable[id->getText()] = contextTypes[ctx->initializerClause()];
+		if (!currentSubtype.empty()) symbolTable[id->getText()] += "<" + currentSubtype + ">";
+	}
+}
+
+void CppAdvanceSema::exitConstantDeclaration(CppAdvanceParser::ConstantDeclarationContext* ctx)
+{
+	if (!ctx->theTypeId())
+	{
+		auto id = ctx->Identifier()->getText();
+		auto t = contextTypes[ctx->initializerClause()];
+		if (!currentSubtype.empty()) t += "<" + currentSubtype + ">";
+		symbolTable[id] = t;
+		if (isTypeDefinitionBody() && !functionBody)
+		{
+			symbolTable.globalSymbolTable[currentType + "." + id] = t;
+		}
+	}
+	if (functionBody && ctx->templateParams())
+	{
+		CppAdvanceCompilerError("Cannot to use variable template in the function body", ctx->templateParams()->getStart());
+	}
+}
+
+void CppAdvanceSema::exitInitializerClause(CppAdvanceParser::InitializerClauseContext* ctx)
+{
+	if (!typeStack.empty())
+		contextTypes[ctx] = typeStack.top();
+}
+
+void CppAdvanceSema::exitRelationalExpression(CppAdvanceParser::RelationalExpressionContext* ctx)
+{
+	if (ctx->relationalBranch())
+	{
+		typeStack.push("bool");
+	}
+}
+
+void CppAdvanceSema::exitEqualityExpression(CppAdvanceParser::EqualityExpressionContext* ctx)
+{
+	if (!ctx->equalityBranch().empty())
+	{
+		typeStack.push("bool");
+	}
+}
+
+void CppAdvanceSema::exitLogicalAndExpression(CppAdvanceParser::LogicalAndExpressionContext* ctx)
+{
+	if (!ctx->And().empty())
+	{
+		typeStack.push("bool");
+	}
+}
+
+void CppAdvanceSema::exitLogicalOrExpression(CppAdvanceParser::LogicalOrExpressionContext* ctx)
+{
+	if (!ctx->Or().empty())
+	{
+		typeStack.push("bool");
+	}
+}
+
+void CppAdvanceSema::enterForwardVarDeclaration(CppAdvanceParser::ForwardVarDeclarationContext* ctx)
+{
+	if (!functionBody)
+		CppAdvanceCompilerError("Forward variable declarations cannot be used outside function body", ctx->Forward()->getSymbol());
+}
+
+void CppAdvanceSema::exitForwardVarDeclaration(CppAdvanceParser::ForwardVarDeclarationContext* ctx)
+{
+	if (firstPass) return;
+	symbolTable[ctx->Identifier()->getText()] = contextTypes[ctx->initializerClause()];
+	if (!currentSubtype.empty()) symbolTable[ctx->Identifier()->getText()] += "<" + currentSubtype + ">";
+}
+
+void CppAdvanceSema::exitJumpStatement(CppAdvanceParser::JumpStatementContext* ctx)
+{
+	if (firstPass) return;
+	if (ctx->Return() && std::any_of(outParams.begin(), outParams.end(), [&](const auto& param) { return !initStates.top().definitelyAssigned.contains(param); }))
+	{
+		CppAdvanceCompilerError("Each branch of a function must initialize all out parameters", ctx->Return()->getSymbol());
+	}
+}
+
+void CppAdvanceSema::enterSelectionStatement(CppAdvanceParser::SelectionStatementContext* ctx)
+{
+	if (firstPass) return;
+	IfContext ictx;
+	ictx.before = initStates.top();
+	ictx.hasElse = ctx->Else();
+	initStates.push(ictx.before);
+	ifContexts.push(ictx);
+}
+
+void CppAdvanceSema::exitSelectionStatement(CppAdvanceParser::SelectionStatementContext*)
+{
+	if (firstPass) return;
+	auto& ictx = ifContexts.top();
+	InitState elseState;
+	if (ictx.hasElse)
+	{
+		elseState = ictx.otherwise;
+	}
+	else
+	{
+		elseState = ictx.before;
+		ictx.then = initStates.top();
+	}
+
+	initStates.pop();
+	auto& currentState = initStates.top();
+	currentState.definitelyAssigned = ictx.then.intersect(elseState.definitelyAssigned);
+    currentState.potentiallyAssigned = ictx.then.unite(elseState.potentiallyAssigned);
+
+	ifContexts.pop();
+}
+
+void CppAdvanceSema::enterElseBranch(CppAdvanceParser::ElseBranchContext*)
+{
+	if (firstPass) return;
+	ifContexts.top().then = initStates.top();
+	initStates.pop();
+	initStates.push(ifContexts.top().before);
+}
+
+void CppAdvanceSema::exitElseBranch(CppAdvanceParser::ElseBranchContext*)
+{
+	if (firstPass) return;
+	ifContexts.top().otherwise = initStates.top();
+}
+
+void CppAdvanceSema::enterLabeledStatement(CppAdvanceParser::LabeledStatementContext*)
+{
+	if (firstPass) return;
+	initStates.push(initStates.top());
+}
+
+void CppAdvanceSema::exitLabeledStatement(CppAdvanceParser::LabeledStatementContext*)
+{
+	if (firstPass) return;
+	initStates.pop();
+}
+
+void CppAdvanceSema::enterTryBlock(CppAdvanceParser::TryBlockContext*)
+{
+	if (firstPass) return;
+	initStates.push(initStates.top());
+}
+
+void CppAdvanceSema::exitTryBlock(CppAdvanceParser::TryBlockContext*)
+{
+	if (firstPass) return;
+	initStates.pop();
+}
+
+void CppAdvanceSema::enterFunctionTemplateDeclaration(CppAdvanceParser::FunctionTemplateDeclarationContext* ctx)
+{
+	bool isInline = false;
+	bool isConstexpr = false;
+	bool isConsteval = false;
+	bool isUnsafe = false;
+	bool isRefReturn = false;
+	bool isConstReturn = false;
+	bool isForwardReturn = false;
+	int8_t varargDepth = -1;
+	CppAdvanceParser::TheTypeIdContext* returnType = nullptr;
+	CppAdvanceParser::ExprContext* expression = nullptr;
+	CppAdvanceParser::FunctionParamsContext* params = ctx->functionParams();
+	CppAdvanceParser::TemplateParamsContext* templateParams = ctx->templateParams();
+	CppAdvanceParser::TemplateArgumentListContext* templateSpecializationArgs = nullptr;
+	CppAdvanceParser::ExceptionSpecificationContext* exceptions = ctx->exceptionSpecification();
+
+	for (auto spec : ctx->functionSpecifier()) {
+		if (spec->Inline()) isInline = true;
+		else if (spec->Consteval()) isConsteval = true;
+		else if (spec->Unsafe()) {
+			isUnsafe = true;
+			if (unsafeDepth > 0)
+				CppAdvanceCompilerError("Unsafe context recursion", spec->Unsafe()->getSymbol());
+		}
+	}
+
+	if (!isUnsafe && unsafeDepth > 0) isUnsafe = true;
+	if (isUnsafe && unsafeDepth <= 0) unsafeDepth++;
+
+	if (firstPass && !functionBody) {
+		int lifetimes = 0;
+		if (auto decl = params->paramDeclClause())
+		{
+			bool isDefault = false;
+			auto declList = decl->paramDeclList();
+			if (decl->Ellipsis() && !templateParams) {
+				varargDepth = declList->paramDeclaration().size() - 1;
+				cppParser.varargFunctions[ctx->Identifier()->getText()] = varargDepth;
+			}
+			for (auto param : declList->paramDeclaration())
+			{
+				if (param->LifetimeAnnotation()) ++lifetimes;
+				if (param->initializerClause())
+				{
+					isDefault = true;
+					if (auto spec = param->paramSpecification()) {
+						if (spec->Inout() || spec->Ref() || spec->Out())
+							CppAdvanceCompilerError("Mutable reference parameters cannot have default value", param->initializerClause()->getStart());
+					}
+				}
+				else if (isDefault)
+				{
+					CppAdvanceCompilerError("Default function parameters must be located at the end of the parameter list", param->Identifier()->getSymbol());
+				}
+			}
+		}
+
+		if (auto ret = ctx->returnType())
+		{
+			returnType = ret->theTypeId();
+			if (ret->Const()) isConstReturn = true;
+			if (ret->Ref()) {
+				isRefReturn = true;
+				if (lifetimes == 0 && ctx->functionParams()->paramDeclClause())
+					CppAdvanceCompilerError("A function that returns a reference must have object lifetime annotations (for arguments or method owner).", ret->Ref()->getSymbol());
+			}
+			if (ret->Forward())
+				isForwardReturn = true;
+		}
+
+		std::optional<AccessSpecifier> access = std::nullopt;
+		if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(ctx->parent))
+		{
+			if (auto acc = decl->accessSpecifier())
+			{
+				if (currentAccessSpecifier.top())
+					CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+				if (acc->Public())
+				{
+					access = AccessSpecifier::Public;
+				}
+				else if (acc->Protected())
+				{
+					access = AccessSpecifier::Protected;
+				}
+				else if (acc->Private())
+				{
+					access = AccessSpecifier::Private;
+				}
+				else if (acc->Internal())
+				{
+					access = AccessSpecifier::Internal;
+				}
+			}
+		}
+
+		if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
+		if (!access) access = AccessSpecifier::Internal;
+		auto id = ctx->Identifier();
+		if (*access == AccessSpecifier::Protected) protectedSymbols.insert(id->getText());
+		globalFunctions.emplace_back(FunctionDefinition{ id->getText(), templateParams, templateSpecializationArgs, params, returnType, expression, exceptions, {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(), isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth });
+	}
+}
+
+void CppAdvanceSema::exitFunctionTemplateDeclaration(CppAdvanceParser::FunctionTemplateDeclarationContext* ctx)
+{
+	if (firstPass != functionBody) {
+		auto idc = ctx->Identifier();
+		auto funcname = idc->getText();
+		if (ctx->returnType())
+		{
+			/*auto ret = ctx->returnType()->getText();
+			StringReplace(ret, "const ", "");
+			StringReplace(ret, "ref ", "");*/
+			functionTable[funcname] = contextTypes[ctx->returnType()];
+		}
+		else {
+			functionTable[funcname] = "void";
+		}
+		if (auto params = ctx->functionParams()->paramDeclClause()) {
+			std::string args;
+			bool first = true;
+			for (auto param : params->paramDeclList()->paramDeclaration()) {
+				if (!first) args += ",,";
+				auto id = param->Identifier()->getText();
+				args += id;
+				activeDefaultParams[funcname].insert_or_assign(id, param->initializerClause());
+				first = false;
+			}
+			if (!args.empty())
+				cppParser.parametersTable[funcname].insert(args);
+		}
+	}
+	auto specs = ctx->functionSpecifier();
+	if (std::any_of(specs.begin(), specs.end(), [&](auto spec) ->bool { return spec->Unsafe(); }))
+		--unsafeDepth;
+}
+
+void CppAdvanceSema::enterExternFunctionDeclaration(CppAdvanceParser::ExternFunctionDeclarationContext* ctx)
+{
+	if (!functionBody && unsafeDepth > 0 || ctx->Unsafe())
+		cppParser.unsafeFunctions.insert(ctx->Identifier()->getText());
+}
+
+void CppAdvanceSema::exitConditionalExpression(CppAdvanceParser::ConditionalExpressionContext* ctx)
+{
+	if (!typeStack.empty())
+		contextTypes[ctx] = typeStack.top();
+}
+
+void CppAdvanceSema::exitReturnType(CppAdvanceParser::ReturnTypeContext* ctx)
+{
+	if (!typeStack.empty()) {
+		contextTypes[ctx] = typeStack.top();
+		if (!currentSubtype.empty()) contextTypes[ctx] += "<"+currentSubtype+">";
+		if (auto id = ctx->Identifier())
+		{
+			symbolTable[id->getText()] = contextTypes[ctx->theTypeId()];
+		}
+		else if (auto t = ctx->theTypeId())
+		{
+			if (auto st = t->typeSpecifierSeq()->simpleTypeSpecifier()) {
+				for (auto f : st->namedTupleField())
+				{
+					symbolTable[f->Identifier()->getText()] = contextTypes[f->theTypeId()];
+				}
+			}
+		}
+	}
+}
+
+void CppAdvanceSema::exitTheTypeId(CppAdvanceParser::TheTypeIdContext* ctx)
+{
+	if (!typeStack.empty()) {
+		contextTypes[ctx] = typeStack.top();
+		if (!currentSubtype.empty()) contextTypes[ctx] += "<" + currentSubtype + ">";
+	}
+}
+
+void CppAdvanceSema::exitSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpecifierContext* ctx)
+{
+	if (!ctx->namedTupleField().empty())
+	{
+		auto tuple = getNamedTupleId(ctx->getText());
+		typeStack.push(tuple);
+		if (!typeset.contains(tuple))
+		{
+			typeset.insert(tuple);
+			auto access = (currentAccessSpecifier.top() ? *currentAccessSpecifier.top() : AccessSpecifier::Public);
+			forwardDeclarations.push_back({ tuple,{},access,"" });
+			auto id = tuple;
+			if (id.find('.') != id.npos) id = id.substr(id.rfind('.') + 1);
+			std::vector<std::pair<std::string, CppAdvanceParser::TheTypeIdContext*>> fields;
+			int i = 0;
+			for (auto field : ctx->namedTupleField()) {
+				auto fieldName = field->Identifier()->getText();
+				auto fieldTypeId = field->theTypeId();
+				fields.emplace_back(fieldName, fieldTypeId);
+				symbolTable.globalSymbolTable[tuple + "." + fieldName] = contextTypes[fieldTypeId];
+				symbolTable.globalSymbolTable[tuple + "." + std::to_string(i++)] = contextTypes[fieldTypeId];
+			}
+			namedTuples[tuple] = NamedTuple{ std::move(id),std::move(fields),access };
+		}
+	}
+	else if (!ctx->theTypeId().empty())
+	{
+		std::string type = "std.tuple<";
+		bool first = true;
+		for (auto t : ctx->theTypeId())
+		{
+			if (!first) type += ",";
+			first = false;
+			type += contextTypes[t];
+		}
+		type += ">";
+		typeStack.push(type);
+	}
+	else if (auto t = ctx->typename_())
+	{
+		std::string id;
+		if (ctx->nestedNameSpecifier()) id = ctx->nestedNameSpecifier()->getText();
+		if (auto cls = t->className()) {
+			if (cls->Identifier())
+				id += cls->Identifier()->getText();
+			else
+				id += cls->simpleTemplateId()->templateName()->Identifier()->getText();
+		}
+		else id += t->simpleTemplateId()->templateName()->Identifier()->getText();
+		typeStack.push(id);
+	}
+	else
+	{
+		typeStack.push(ctx->getText());
+	}
+}
+
+void CppAdvanceSema::exitDeconstructionDeclaration(CppAdvanceParser::DeconstructionDeclarationContext* ctx)
+{
+	currentSubtype.clear();
+	if (!typeStack.empty()) {
+		if (typeStack.top().starts_with("std.tuple<")) {
+			auto typestr = typeStack.top().substr(typeStack.top().find('<') + 1);
+			typestr = typestr.substr(0, typestr.rfind('>'));
+			auto types = StringSplit(typestr, ',');
+			auto index = 0;
+			for (auto id : ctx->identifierSeq()->Identifier()) {
+				if (types.size() > index)
+				{
+					auto type = types[index++];
+					StringTrim(type);
+					auto pos = type.find('<');
+					if (pos != type.npos && !type.starts_with("std.tuple")) {
+						auto subtype = type.substr(pos + 1, type.rfind('>') - pos - 1);
+						subtype = subtype.substr(0, subtype.find(','));
+						currentSubtype = subtype;
+						type = type.substr(0, pos);
+					}
+					if (!currentSubtype.empty()) type += "<" + currentSubtype + ">";
+					symbolTable[id->getText()] = type;
+				}
+			}
+			
+		}
+		else
+		{
+			auto index = 0;
+			for (auto id : ctx->identifierSeq()->Identifier()) {
+				auto type = symbolTable[typeStack.top() + "." + std::to_string(index++)];
+				auto pos = type.find('<');
+				if (pos != type.npos && !type.starts_with("std.tuple")) {
+					auto subtype = type.substr(pos + 1, type.rfind('>') - pos - 1);
+					subtype = subtype.substr(0, subtype.find(','));
+					currentSubtype = subtype;
+					type = type.substr(0, pos);
+				}
+				if (!currentSubtype.empty()) type += "<" + currentSubtype + ">";
+				symbolTable[id->getText()] = type;
+			}
+		}
+	}
+}
+
+void CppAdvanceSema::exitParamDeclaration(CppAdvanceParser::ParamDeclarationContext* ctx)
+{
+	if (auto t = ctx->theTypeId())
+	{
+		symbolTable[ctx->Identifier()->getText()] = contextTypes[t];
+	}
+}
+
+void CppAdvanceSema::enterCompoundStatement(CppAdvanceParser::CompoundStatementContext*)
+{
+	symbolContexts.push(symbolContexts.top());
+}
+
+void CppAdvanceSema::exitCompoundStatement(CppAdvanceParser::CompoundStatementContext*)
+{
+	symbolContexts.pop();
+}
+
+void CppAdvanceSema::enterStructDefinition(CppAdvanceParser::StructDefinitionContext* ctx)
+{
+	symbolContexts.push(symbolContexts.top());
+	currentAccessSpecifier.push(std::nullopt);
+	if (ctx->structHead()->Ref()) currentTypeKind.push(TypeKind::RefStruct);
+	else currentTypeKind.push(TypeKind::Struct);
+
+	if (ctx->structHead()->Ref() && ctx->structHead()->baseClause())
+		CppAdvanceCompilerError("Ref struct cannot inherit other types or implement interfaces", ctx->structHead()->baseClause()->getStart());
+
+	auto namectx = ctx->structHead()->className();
+	bool primaryType = true;
+	if (!currentType.empty()) {
+		currentType += ".";
+		primaryType = false;
+	}
+	std::string name;
+	if (namectx->Identifier()) name = namectx->Identifier()->getText();
+	else name = namectx->simpleTemplateId()->templateName()->getText();
+	currentType += name; 
+	typeset.insert(name);
+	if (ctx->structHead()->Unsafe())
+	{
+		unsafeDepth++;
+	}
+
+	if (firstPass && !functionBody)
+	{
+		typeset.globalTypes.insert(currentType);
+		CppAdvanceParser::TemplateParamsContext* tparams = ctx->structHead()->templateParams();
+		CppAdvanceParser::TemplateArgumentListContext* tspec = nullptr;
+		CppAdvanceParser::BaseSpecifierListContext* interfaces = nullptr;
+
+		if (auto t = namectx->simpleTemplateId())
+		{
+			tspec = t->templateArgumentList();
+		}
+
+		if (auto b = ctx->structHead()->baseClause())
+		{
+			interfaces = b->baseSpecifierList();
+		}
+
+		bool isUnsafe = unsafeDepth > 0;
+
+		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		std::optional<AccessSpecifier> access;
+		if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(ctx->parent))
+		{
+			acc = decl->accessSpecifier();
+			
+		}
+		else if(auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
+		{
+			acc = decl->accessSpecifier();
+
+		}
+
+		if (acc)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (acc->Public())
+			{
+				access = AccessSpecifier::Public;
+			}
+			else if (acc->Protected())
+			{
+				access = AccessSpecifier::Protected;
+			}
+			else if (acc->Private())
+			{
+				access = AccessSpecifier::Private;
+			}
+			else if (acc->Internal())
+			{
+				access = AccessSpecifier::Internal;
+			}
+		}
+
+		if (!access) {
+			if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
+			else access = AccessSpecifier::Internal;
+		}
+
+		if (isUnsafe) {
+			cppParser.unsafeTypes.insert(currentType);
+			if (primaryType) isUnsafeTypeDefinition = true;
+		}
+
+		if (primaryType) {
+			if (*access == AccessSpecifier::Protected)
+				isProtectedTypeDefinition = true;
+			else if (*access == AccessSpecifier::Private)
+				isPrivateTypeDefinition = true;
+		}
+
+		auto def = std::make_shared<StructDefinition>( 
+			name, tparams, tspec, *access,getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
+			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, interfaces, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
+			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{},isUnsafe,ctx->structHead()->Ref() );
+		if (!structStack.empty())
+			structStack.top()->nestedStructs.push_back(def);
+		structStack.push(def);
+		if (namectx->simpleTemplateId()) {
+			if (namectx->simpleTemplateId()->templateArgumentList())
+			{
+				name += "<{{specialization}}>";
+			}
+		}
+		else if (auto tparams = ctx->structHead()->templateParams())
+		{
+			name += "<";
+			bool first = true;
+			for (auto param : tparams->templateParamDeclaration())
+			{
+				if (param->Identifier()) {
+					if (!first) name += ", ";
+					first = false;
+					name += param->Identifier()->getText();
+				}
+			}
+			name += ">";
+		}
+		currentTypeWithTemplate.push(name);
+	}
+}
+
+void CppAdvanceSema::exitStructDefinition(CppAdvanceParser::StructDefinitionContext* ctx)
+{
+	auto pos = currentType.rfind('.');
+	if (firstPass && !functionBody) {
+		if (pos == currentType.npos) {
+			isUnsafeTypeDefinition = false;
+			isProtectedTypeDefinition = false;
+			isPrivateTypeDefinition = false;
+			auto& top = structStack.top();
+			if (top->access == AccessSpecifier::Protected) protectedSymbols.insert(top->id);
+			if (!top->templateSpecializationArgs)
+				forwardDeclarations.push_back({top->id,top->templateParams,top->access,top->compilationCondition,top->isUnsafe});
+			globalStructs.push_back(top);
+		}
+		int idx = 0;
+		for (const auto& field : structStack.top()->fields)
+		{
+			if (!field.isStatic && !field.isThreadLocal)
+				symbolTable.globalSymbolTable[currentType + "." + std::to_string(idx++)] = contextTypes[field.type];
+		}
+		structStack.pop();
+		currentTypeWithTemplate.pop();
+	}
+
+	if (ctx->structHead()->Unsafe())
+	{
+		unsafeDepth--;
+	}
+
+	if (pos != currentType.npos)
+	{
+		currentType = currentType.substr(0,pos);
+	}
+	else
+	{
+		currentType.clear();
+	}
+	currentAccessSpecifier.pop();
+	currentTypeKind.pop();
+	symbolContexts.pop();
+}
+
+void CppAdvanceSema::enterStructMemberDeclaration(CppAdvanceParser::StructMemberDeclarationContext* ctx)
+{
+	if (auto spec = ctx->symbolSpecifierSeq())
+	{
+		if (spec->Unsafe() && ++unsafeDepth > 1)
+			CppAdvanceCompilerError("Unsafe context recursion", spec->Unsafe()->getSymbol());
+		if (auto access = spec->accessSpecifier())
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Access specifier context recursion", access->getStart());
+			if (access->Public()) currentAccessSpecifier.top() = AccessSpecifier::Public;
+			else if (access->Protected()) currentAccessSpecifier.top() = AccessSpecifier::Protected;
+			else if (access->Internal()) currentAccessSpecifier.top() = AccessSpecifier::Internal;
+			else if (access->Private()) currentAccessSpecifier.top() = AccessSpecifier::Private;
+		}
+	}
+}
+
+void CppAdvanceSema::exitStructMemberDeclaration(CppAdvanceParser::StructMemberDeclarationContext* ctx)
+{
+	if (auto spec = ctx->symbolSpecifierSeq())
+	{
+		if (spec->Unsafe()) --unsafeDepth;
+		currentAccessSpecifier.top() = std::nullopt;
+	}
+}
+
+void CppAdvanceSema::enterMemberVersionConditionalDeclaration(CppAdvanceParser::MemberVersionConditionalDeclarationContext* ctx)
+{
+	std::string result;
+	if (auto condition = ctx->condition())
+	{
+		auto interval = condition->getSourceInterval();
+		for (size_t i = interval.a; i <= interval.b; ++i)
+		{
+			auto token = parser->getTokenStream()->get(i);
+			if (token->getType() == CppAdvanceParser::Identifier)
+			{
+				auto id = token->getText();
+				result += "ADV_VERSION_" + (protectedVersions.contains(id) ? ("__" + StringUpper(filename) + "_PROTECTED_") : "") + id;
+			}
+			else
+			{
+				result += token->getText();
+			}
+			result += " ";
+		}
+	}
+	else if (ctx->Debug())
+	{
+		if (ctx->Not()) result += "!";
+		if (auto id = ctx->Identifier())
+		{
+			result += "ADV_DEBUG_";
+			result += id->getText();
+		}
+		else
+		{
+			result += "_DEBUG";
+		}
+	}
+	conditionStack.push(result);
+}
+
+void CppAdvanceSema::exitMemberVersionConditionalDeclaration(CppAdvanceParser::MemberVersionConditionalDeclarationContext*)
+{
+	conditionStack.pop();
+}
+
+void CppAdvanceSema::enterMemberRefDeclaration(CppAdvanceParser::MemberRefDeclarationContext* ctx)
+{
+	if (firstPass && functionBody) return;
+
+	if (currentTypeKind.empty() || currentTypeKind.top() != TypeKind::RefStruct)
+		CppAdvanceCompilerError("Cannot to declare reference field outside the ref struct", ctx->Amp()->getSymbol());
+}
+
+void CppAdvanceSema::exitMemberRefDeclaration(CppAdvanceParser::MemberRefDeclarationContext* ctx)
+{
+	if (firstPass && !functionBody)
+	{
+		bool isConst = ctx->Const() || ctx->Let();
+		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		std::optional<AccessSpecifier> access = std::nullopt;
+		if (auto block = dynamic_cast<CppAdvanceParser::MemberBlockDeclarationContext*>(ctx->parent))
+		{
+			if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(block->parent)) {
+				if(decl->protectedInternal())
+					CppAdvanceCompilerError("Cannot to declare protected internal reference variable", decl->protectedInternal()->getStart());
+				acc = decl->accessSpecifier();
+			}
+		}
+		if (acc)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (acc->Public())
+			{
+				access = AccessSpecifier::Public;
+			}
+			else if (acc->Private())
+			{
+				access = AccessSpecifier::Private;
+			}
+		}
+
+		if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
+		if (!access) access = AccessSpecifier::Private;
+		auto id = ctx->Identifier();
+		if (unsafeDepth > 0) cppParser.unsafeVariables.insert(currentType + "." + id->getText());
+		structStack.top()->fields.emplace_back(VariableDefinition{ "& "+id->getText(), nullptr, ctx->theTypeId(), {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr, *access, getCurrentCompilationCondition(), "", false, isConst, false, false, unsafeDepth > 0, false});
+	}
+}
+
+void CppAdvanceSema::exitTupleExpression(CppAdvanceParser::TupleExpressionContext* ctx)
+{
+	if (!ctx->conditionalExpression().empty()) {
+		std::string type = "std.tuple<";
+		bool first = true;
+		for (auto expr : ctx->conditionalExpression())
+		{
+			if (!first) type += ",";
+			first = false;
+			type += contextTypes[expr];
+		}
+		type += ">";
+		typeStack.push(type);
+	}
+}
+
+void CppAdvanceSema::enterConstructor(CppAdvanceParser::ConstructorContext* ctx)
+{
+	symbolContexts.push(symbolContexts.top());
+	bool isInline = ctx->Inline();
+	bool isConstexpr = false;
+	bool isUnsafe = false;
+	bool isDefault = ctx->Default();
+	int8_t varargDepth = -1;
+	CppAdvanceParser::FunctionParamsContext* params = ctx->functionParams();
+	CppAdvanceParser::TemplateParamsContext* templateParams = ctx->templateParams();
+	CppAdvanceParser::ExceptionSpecificationContext* exceptions = ctx->exceptionSpecification();
+	CppAdvanceParser::ImplicitSpecificationContext* implicit = ctx->implicitSpecification();
+
+	if (ctx->Unsafe()) {
+		isUnsafe = true;
+		if (unsafeDepth > 0)
+			CppAdvanceCompilerError("Unsafe context recursion", ctx->Unsafe()->getSymbol());
+	}
+
+	if (!isUnsafe && unsafeDepth > 0) isUnsafe = true;
+	if (isUnsafe && unsafeDepth <= 0) unsafeDepth++;
+
+	if (firstPass && !functionBody) {
+		if (isDefault) isInline = true;
+		if (ctx->Equal()) isConstexpr = true;
+		if (auto decl = params->paramDeclClause())
+		{
+			bool isDefaultParam = false;
+			auto declList = decl->paramDeclList();
+			if (decl->Ellipsis() && !templateParams) {
+				varargDepth = declList->paramDeclaration().size() - 1;
+				cppParser.varargFunctions[currentType] = varargDepth;
+			}
+			for (auto param : declList->paramDeclaration())
+			{
+				auto spec = param->paramSpecification();
+				if (spec && spec->Out())
+					CppAdvanceCompilerError("Cannot to use out parameters in the constructor", spec->Out()->getSymbol());
+				if (param->initializerClause())
+				{
+					isDefaultParam = true;
+					if (spec) {
+						if (spec->Inout() || spec->Ref() || spec->Out())
+							CppAdvanceCompilerError("Mutable reference parameters cannot have default value", param->initializerClause()->getStart());
+					}
+				}
+				else if (isDefaultParam)
+				{
+					CppAdvanceCompilerError("Default function parameters must be located at the end of the parameter list", param->Identifier()->getSymbol());
+				}
+			}
+		}
+
+		if (auto body = ctx->constructorBody())
+		{
+			if (body->Assign()) isInline = true;
+			else if (body->Equal()) isConstexpr = true;
+		}
+		else if (auto body = ctx->delegatingConstructorBody())
+		{
+			if (body->Assign()) isInline = true;
+			else if (body->Equal()) isConstexpr = true;
+		}
+
+		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		std::optional<AccessSpecifier> access = std::nullopt;
+		bool isProtectedInternal = false;
+		if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
+		{
+			isProtectedInternal = decl->protectedInternal();
+			if (decl->accessSpecifier())
+			{
+				acc = decl->accessSpecifier();
+			}
+		}
+
+		if (acc)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (acc->Public())
+			{
+				access = AccessSpecifier::Public;
+			}
+			else if (acc->Protected())
+			{
+				if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+					CppAdvanceCompilerError("Cannot to declare protected member outside the class body", acc->getStart());
+				access = AccessSpecifier::Protected;
+			}
+			else if (acc->Private())
+			{
+				access = AccessSpecifier::Private;
+			}
+			else if (acc->Internal())
+			{
+				access = AccessSpecifier::Internal;
+			}
+		}
+		else if (isProtectedInternal)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+				CppAdvanceCompilerError("Cannot to declare protected internal member outside the class body", acc->getStart());
+			access = AccessSpecifier::ProtectedInternal;
+		}
+
+		if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
+		if (!access) access = AccessSpecifier::Internal;
+		std::string id = structStack.top()->id;
+		
+		auto lastTparams = getLastTypeTemplateParams();
+		auto lastSpec = getLastTypeTemplateSpecializationArgs();
+		auto fullType = getCurrentFullTypeName();
+		structStack.top()->methods.emplace_back(
+			MethodDefinition{ id, templateParams, nullptr, params, nullptr, nullptr, exceptions,
+			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(),
+			isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, varargDepth,
+			currentType, fullType, lastTparams, lastSpec, implicit, isProtectedTypeDefinition, isUnsafeTypeDefinition, isDefault, true, false, false,
+			false, false, false, true });
+		methods.insert_or_assign(SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() },
+			MethodDefinition{ id, templateParams, nullptr, params, nullptr, nullptr, exceptions,
+			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
+			isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
+			isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, varargDepth,
+			currentType, fullType, lastTparams, lastSpec, implicit, isProtectedTypeDefinition, isUnsafeTypeDefinition, isDefault, true, false, false,
+			false, false, false, true });
+	}
+}
+
+void CppAdvanceSema::exitConstructor(CppAdvanceParser::ConstructorContext* ctx)
+{
+	if (ctx->Unsafe())
+		--unsafeDepth;
+
+	outParams.clear();
+	symbolContexts.pop();
+}
+
+void CppAdvanceSema::enterConstructorBody(CppAdvanceParser::ConstructorBodyContext* ctx)
+{
+	++depth;
+	functionBody = true;
+
+	if (firstPass)
+	{
+		for (const auto& field : structStack.top()->fields)
+		{
+			if (!field.isStatic && !field.isThreadLocal) {
+				auto id = field.id;
+				StringReplace(id, "& ", "");
+				currentFields[ctx].insert(id);
+			}
+		}
+		for (const auto& prop : structStack.top()->properties)
+		{
+			if (!prop.isStatic) {
+				auto id = prop.id;
+				StringReplace(id, "& ", "");
+				currentFields[ctx].insert("p_" + id);
+			}
+		}
+	}
+}
+
+void CppAdvanceSema::exitConstructorBody(CppAdvanceParser::ConstructorBodyContext*)
+{
+	if (--depth == 0)
+		functionBody = false;
+}
+
+void CppAdvanceSema::enterDelegatingConstructorBody(CppAdvanceParser::DelegatingConstructorBodyContext*)
+{
+	++depth;
+	functionBody = true;
+}
+
+void CppAdvanceSema::exitDelegatingConstructorBody(CppAdvanceParser::DelegatingConstructorBodyContext*)
+{
+	if (--depth == 0)
+		functionBody = false;
+}
+
+void CppAdvanceSema::enterDelegatingConstructorStatement(CppAdvanceParser::DelegatingConstructorStatementContext* ctx)
+{
+	if (ctx->Super() && currentTypeKind.top() != TypeKind::Class)
+		CppAdvanceCompilerError("Cannot to delegate constructor of a superclass outside the class body", ctx->Super()->getSymbol());
+}
+
+void CppAdvanceSema::exitDelegatingConstructorStatement(CppAdvanceParser::DelegatingConstructorStatementContext*)
+{
+	while (!typeStack.empty()) typeStack.pop();
+	currentTemplateArgs.clear();
+	currentSubtype.clear();
+}
+
+void CppAdvanceSema::enterMemberInitializationStatement(CppAdvanceParser::MemberInitializationStatementContext*)
+{
+	
+}
+
+void CppAdvanceSema::exitMemberInitializationStatement(CppAdvanceParser::MemberInitializationStatementContext*)
+{
+	while (!typeStack.empty()) typeStack.pop();
+	currentTemplateArgs.clear();
+	currentSubtype.clear();
+}
+
+void CppAdvanceSema::enterConversionFunction(CppAdvanceParser::ConversionFunctionContext* ctx)
+{
+	symbolContexts.push(symbolContexts.top());
+	bool isInline = false;
+	bool isConstexpr = false;
+	bool isConsteval = false;
+	bool isUnsafe = false;
+	bool isVirtual = false;
+	bool isOverride = false;
+	bool isFinal = false;
+	CppAdvanceParser::TheTypeIdContext* returnType = ctx->conversionFunctionId()->theTypeId();
+	CppAdvanceParser::ExprContext* expression = nullptr;
+	CppAdvanceParser::TemplateParamsContext* templateParams = ctx->templateParams();
+	CppAdvanceParser::ExceptionSpecificationContext* exceptions = ctx->exceptionSpecification();
+	CppAdvanceParser::ImplicitSpecificationContext* implicit = ctx->implicitSpecification();
+
+	for (auto spec : ctx->functionSpecifier()) {
+		if (spec->Inline()) isInline = true;
+		else if (spec->Consteval()) isConsteval = true;
+		else if (spec->Unsafe()) {
+			isUnsafe = true;
+			if (unsafeDepth > 0)
+				CppAdvanceCompilerError("Unsafe context recursion", spec->Unsafe()->getSymbol());
+		}
+		else if (spec->Static()) {
+			CppAdvanceCompilerError("Conversion method cannot be static", spec->Static()->getSymbol());
+		}
+		else if (spec->Mutable())
+		{
+			CppAdvanceCompilerError("Conversion method cannot be mutating", spec->Mutable()->getSymbol());
+		}
+		else if (spec->Virtual())
+		{
+			isVirtual = true;
+			if (currentTypeKind.top() != TypeKind::Class)
+				CppAdvanceCompilerError("Cannot to declare virtual method outside the class body", spec->Virtual()->getSymbol());
+		}
+		else if (spec->Override())
+		{
+			isOverride = true;
+		}
+		else if (spec->Final())
+		{
+			isFinal = true;
+			if (currentTypeKind.top() != TypeKind::Class)
+				CppAdvanceCompilerError("Cannot to declare final method outside the class body", spec->Final()->getSymbol());
+		}
+	}
+
+	if (ctx->shortFunctionBody())
+	{
+		expression = ctx->shortFunctionBody()->expressionStatement()->expr();
+	}
+
+	if (!isUnsafe && unsafeDepth > 0) isUnsafe = true;
+	if (isUnsafe && unsafeDepth <= 0) unsafeDepth++;
+
+	if (firstPass && !functionBody) {
+		if (auto body = ctx->functionBody())
+		{
+			if (body->Assign()) isInline = true;
+			else if (body->Equal()) isConstexpr = true;
+		}
+		else if (auto body = ctx->shortFunctionBody())
+		{
+			if (body->Assign()) isInline = true;
+			else if (body->Equal()) isConstexpr = true;
+		}
+
+		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		std::optional<AccessSpecifier> access = std::nullopt;
+		bool isProtectedInternal = false;
+		if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
+		{
+			isProtectedInternal = decl->protectedInternal();
+			if (decl->accessSpecifier())
+			{
+				acc = decl->accessSpecifier();
+			}
+		}
+
+		if (acc)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (acc->Public())
+			{
+				access = AccessSpecifier::Public;
+			}
+			else if (acc->Protected())
+			{
+				if (currentTypeKind.top() != TypeKind::Class)
+					CppAdvanceCompilerError("Cannot to declare protected member outside the class body", acc->getStart());
+				access = AccessSpecifier::Protected;
+			}
+			else if (acc->Private())
+			{
+				access = AccessSpecifier::Private;
+			}
+			else if (acc->Internal())
+			{
+				access = AccessSpecifier::Internal;
+			}
+		}
+		else if (isProtectedInternal)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (currentTypeKind.top() != TypeKind::Class)
+				CppAdvanceCompilerError("Cannot to declare protected internal member outside the class body", acc->getStart());
+			access = AccessSpecifier::ProtectedInternal;
+		}
+
+		if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
+		if (!access) access = AccessSpecifier::Internal;
+		std::string id;
+		auto lastTparams = getLastTypeTemplateParams();
+		auto lastSpec = getLastTypeTemplateSpecializationArgs();
+		auto fullType = getCurrentFullTypeName();
+		bool isRefReturn = ctx->conversionFunctionId()->Ref();
+		bool isConstReturn = ctx->conversionFunctionId()->Const();
+		structStack.top()->methods.emplace_back(
+			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions,
+			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(),
+			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, false, -1,
+			currentType, fullType, lastTparams, lastSpec, implicit, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, false, false, isVirtual,
+			isOverride, false, isFinal, false, false, true });
+		methods.insert_or_assign(SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() },
+			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions,
+			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
+			isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
+			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, false, -1,
+			currentType, fullType, lastTparams, lastSpec, implicit, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, false, false, isVirtual,
+			isOverride && currentTypeKind.top() == TypeKind::Class, false, isFinal && currentTypeKind.top() == TypeKind::Class, false, false, true });
+	}
+}
+
+void CppAdvanceSema::exitConversionFunction(CppAdvanceParser::ConversionFunctionContext* ctx)
+{
+	auto specs = ctx->functionSpecifier();
+	if (std::any_of(specs.begin(), specs.end(), [&](auto spec) ->bool { return spec->Unsafe(); }))
+		--unsafeDepth;
+	symbolContexts.pop();
+}
+
+void CppAdvanceSema::exitThreeWayComparisonExpression(CppAdvanceParser::ThreeWayComparisonExpressionContext* ctx)
+{
+	if (ctx->Spaceship())
+	{
+		typeStack.push("std.strong_ordering");
+	}
+}
+
+void CppAdvanceSema::enterIndexer(CppAdvanceParser::IndexerContext* ctx)
+{
+	symbolContexts.push(symbolContexts.top());
+	bool isInline = false;
+	bool isStatic = false;
+	bool isConstexpr = false;
+	bool isConsteval = false;
+	bool isUnsafe = false;
+	bool isMutating = false;
+	bool isVirtual = false;
+	bool isOverride = false;
+	bool isFinal = false;
+	bool isRefReturn = false;
+	bool isConstReturn = false;
+	bool isForwardReturn = false;
+	int8_t varargDepth = -1;
+	CppAdvanceParser::TheTypeIdContext* returnType = ctx->returnType()->theTypeId();
+	CppAdvanceParser::ExprContext* expression = nullptr;
+	CppAdvanceParser::ParamDeclClauseContext* params = ctx->paramDeclClause();
+	CppAdvanceParser::TemplateParamsContext* templateParams = ctx->templateParams();
+	CppAdvanceParser::ExceptionSpecificationContext* exceptions = ctx->exceptionSpecification();
+	CppAdvanceParser::IndexerGetterContext* getter = nullptr;
+	CppAdvanceParser::IndexerSetterContext* setter = nullptr;
+
+	for (auto spec : ctx->functionSpecifier()) {
+		if (spec->Inline()) isInline = true;
+		else if (spec->Consteval()) isConsteval = true;
+		else if (spec->Unsafe()) {
+			isUnsafe = true;
+			if (unsafeDepth > 0)
+				CppAdvanceCompilerError("Unsafe context recursion", spec->Unsafe()->getSymbol());
+		}
+		else if (spec->Static()) {
+			isStatic = true;
+		}
+		else if (spec->Mutable())
+		{
+			isMutating = true;
+		}
+		else if (spec->Virtual())
+		{
+			isVirtual = true;
+			if (currentTypeKind.top() != TypeKind::Class)
+				CppAdvanceCompilerError("Cannot to declare virtual method outside the class body", spec->Virtual()->getSymbol());
+		}
+		else if (spec->Override())
+		{
+			isOverride = true;
+		}
+		else if (spec->Final())
+		{
+			isFinal = true;
+			if (currentTypeKind.top() != TypeKind::Class)
+				CppAdvanceCompilerError("Cannot to declare final method outside the class body", spec->Final()->getSymbol());
+		}
+	}
+
+	if (ctx->shortFunctionBody())
+	{
+		expression = ctx->shortFunctionBody()->expressionStatement()->expr();
+	}
+
+	if (!isUnsafe && unsafeDepth > 0) isUnsafe = true;
+	if (isUnsafe && unsafeDepth <= 0) unsafeDepth++;
+
+	if (!firstPass)
+	{
+		if (!setter) initStates.push(InitState{});
+		auto declList = params->paramDeclList();
+		for (auto param : declList->paramDeclaration())
+		{
+			auto id = param->Identifier()->getText();
+			if (auto spec = param->paramSpecification(); spec && spec->Out()) {
+				if (ctx->shortFunctionBody())
+					CppAdvanceCompilerError("Arrow functions doesn't support out parameters", spec->Out()->getSymbol());
+				outParams.insert(id);
+				initStates.top().potentiallyAssigned.insert(id);
+			}
+		}
+
+		if (auto ret = ctx->returnType())
+		{
+			if (auto idc = ret->Identifier())
+			{
+				if (ctx->shortFunctionBody())
+					CppAdvanceCompilerError("Arrow functions doesn't support named returns", idc->getSymbol());
+				auto id = idc->getText();
+				outParams.insert(id);
+				initStates.top().potentiallyAssigned.insert(id);
+			}
+			else if (ret->theTypeId() && ret->theTypeId()->typeSpecifierSeq() && ret->theTypeId()->typeSpecifierSeq()->simpleTypeSpecifier())
+			{
+				auto tup = ret->theTypeId()->typeSpecifierSeq()->simpleTypeSpecifier()->namedTupleField();
+				for (auto element : tup)
+				{
+					auto id = element->Identifier()->getText();
+					outParams.insert(id);
+					initStates.top().potentiallyAssigned.insert(id);
+				}
+			}
+		}
+	}
+
+	if (firstPass && !functionBody) {
+		if (isStatic) {
+			if (isMutating)
+				CppAdvanceCompilerError("Static method cannot be mutating", ctx->getStart());
+			if (isVirtual || isOverride || isFinal)
+				CppAdvanceCompilerError("Static method cannot be virtual, override or final", ctx->getStart());
+		}
+
+		int lifetimes = 0;
+		bool isDefault = false;
+		auto declList = params->paramDeclList();
+		if (params->Ellipsis() && !templateParams) {
+			CppAdvanceCompilerError("Operator function cannot to have a variadic arguments length", params->Ellipsis()->getSymbol());
+		}
+		for (auto param : declList->paramDeclaration())
+		{
+			if (param->LifetimeAnnotation()) ++lifetimes;
+			if (param->initializerClause())
+			{
+				isDefault = true;
+				if (auto spec = param->paramSpecification()) {
+					if (spec->Inout() || spec->Ref() || spec->Out())
+						CppAdvanceCompilerError("Mutable reference parameters cannot have default value", param->initializerClause()->getStart());
+				}
+			}
+			else if (isDefault)
+			{
+				CppAdvanceCompilerError("Default function parameters must be located at the end of the parameter list", param->Identifier()->getSymbol());
+			}
+		}
+
+		if (auto ret = ctx->returnType())
+		{
+			if (ret->Const()) isConstReturn = true;
+			if (ret->Ref()) 
+				isRefReturn = true;			
+			if (ret->Forward())
+				isForwardReturn = true;
+		}
+
+		if (auto prop = ctx->indexerProperty())
+		{
+			getter = prop->indexerGetter();
+			setter = prop->indexerSetter();
+		}
+
+		if (auto body = ctx->functionBody())
+		{
+			if (body->Assign()) isInline = true;
+			else if (body->Equal()) isConstexpr = true;
+		}
+		else if (auto body = ctx->shortFunctionBody())
+		{
+			if (body->Assign()) isInline = true;
+			else if (body->Equal()) isConstexpr = true;
+		}
+
+		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		std::optional<AccessSpecifier> access = std::nullopt;
+		bool isProtectedInternal = false;
+		if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
+		{
+			isProtectedInternal = decl->protectedInternal();
+			if (decl->accessSpecifier())
+			{
+				acc = decl->accessSpecifier();
+			}
+		}
+
+		if (acc)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (acc->Public())
+			{
+				access = AccessSpecifier::Public;
+			}
+			else if (acc->Protected())
+			{
+				if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+					CppAdvanceCompilerError("Cannot to declare protected member outside the class body", acc->getStart());
+				access = AccessSpecifier::Protected;
+			}
+			else if (acc->Private())
+			{
+				access = AccessSpecifier::Private;
+			}
+			else if (acc->Internal())
+			{
+				access = AccessSpecifier::Internal;
+			}
+		}
+		else if (isProtectedInternal)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+				CppAdvanceCompilerError("Cannot to declare protected internal member outside the class body", acc->getStart());
+			access = AccessSpecifier::ProtectedInternal;
+		}
+
+		if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
+		if (!access) access = AccessSpecifier::Internal;
+		std::string id;
+		if (params->paramDeclList()->paramDeclaration().size() == 1)
+			id = "operator[]";
+		else
+			id = "_operator_subscript";
+		
+		auto lastTparams = getLastTypeTemplateParams();
+		auto lastSpec = getLastTypeTemplateSpecializationArgs();
+		auto fullType = getCurrentFullTypeName();
+		structStack.top()->methods.emplace_back(
+			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions,
+			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(),
+			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth,
+			currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, isMutating, isStatic, isVirtual,
+			isOverride, false, isFinal, false,false,false,params, getter, setter });
+		methods.insert_or_assign(SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() },
+			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions,
+			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
+			isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
+			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth,
+			currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, isMutating, isStatic, isVirtual,
+			isOverride && currentTypeKind.top() == TypeKind::Class, false, isFinal && currentTypeKind.top() == TypeKind::Class, false,false,false,params, getter, setter });
+	}
+}
+
+void CppAdvanceSema::exitIndexer(CppAdvanceParser::IndexerContext* ctx)
+{
+	if (firstPass != functionBody) {
+		std::string funcname;
+		if (!currentType.empty()) funcname += currentType + ".";
+		funcname += ctx->paramDeclClause()->paramDeclList()->paramDeclaration().size() == 1 ? "operator[]" : "_operator_subscript";
+		functionTable[funcname] = contextTypes[ctx->returnType()];
+		std::string args;
+		bool first = true;
+		auto funcnameWithParams = funcname + "/";
+		for (auto param : ctx->paramDeclClause()->paramDeclList()->paramDeclaration()) {
+			if (!first) {
+				args += ",,";
+				funcnameWithParams += ",,";
+			}
+			auto id = param->Identifier()->getText();
+			args += id;
+			funcnameWithParams += contextTypes[param->theTypeId()];
+			activeDefaultParams[funcname].insert_or_assign(id, param->initializerClause());
+			first = false;
+		}
+		if (!args.empty())
+			cppParser.parametersTable[funcname].insert(args);
+		if (unsafeDepth > 0)
+			cppParser.unsafeFunctions.insert(funcnameWithParams);
+	}
+	if (!firstPass && ctx->indexerProperty() && !ctx->indexerProperty()->indexerSetter())
+		initStates.pop();
+	auto specs = ctx->functionSpecifier();
+	if (std::any_of(specs.begin(), specs.end(), [&](auto spec) ->bool { return spec->Unsafe(); }))
+		--unsafeDepth;
+	symbolContexts.pop();
+}
+
+void CppAdvanceSema::enterIndexerGetter(CppAdvanceParser::IndexerGetterContext* ctx)
+{
+	symbolContexts.push(symbolContexts.top());
+	if (currentTypeKind.top() != TypeKind::Class) {
+		if (auto spec = ctx->accessSpecifier())
+		{
+			if (spec->Protected())
+				CppAdvanceCompilerError("Cannot to declare protected member outside the class", spec->Protected()->getSymbol());
+		}
+		else if (ctx->protectedInternal())
+		{
+			CppAdvanceCompilerError("Cannot to declare protected internal member outside the class", spec->Protected()->getSymbol());
+		}
+	}
+	functionBody = true;
+	++depth;
+	if (!firstPass)
+	{
+		initStates.push(InitState{});
+	}
+}
+
+void CppAdvanceSema::enterIndexerSetter(CppAdvanceParser::IndexerSetterContext* ctx)
+{
+	symbolContexts.push(symbolContexts.top());
+	if (currentTypeKind.top() != TypeKind::Class) {
+		if (auto spec = ctx->accessSpecifier())
+		{
+			if (spec->Protected())
+				CppAdvanceCompilerError("Cannot to declare protected member outside the class", spec->Protected()->getSymbol());
+		}
+		else if (ctx->protectedInternal())
+		{
+			CppAdvanceCompilerError("Cannot to declare protected internal member outside the class", spec->Protected()->getSymbol());
+		}
+	}
+	functionBody = true;
+	++depth;
+	if (!firstPass)
+	{
+		initStates.push(InitState{});
+	}
+}
+
+void CppAdvanceSema::exitIndexerGetter(CppAdvanceParser::IndexerGetterContext*)
+{
+	functionBody = false;
+	--depth;
+	if (!firstPass)
+	{
+		initStates.pop();
+	}
+	symbolContexts.pop();
+}
+
+void CppAdvanceSema::exitIndexerSetter(CppAdvanceParser::IndexerSetterContext*)
+{
+	functionBody = false;
+	--depth;
+	if (!firstPass)
+	{
+		initStates.pop();
+	}
+	symbolContexts.pop();
+}
+
+void CppAdvanceSema::enterProperty(CppAdvanceParser::PropertyContext* ctx)
+{
+	symbolContexts.push(symbolContexts.top());
+	propertyBody = true;
+	bool isStatic = ctx->Static();
+	bool isUnsafe = ctx->Unsafe();
+	bool isVirtual = ctx->Virtual();
+	bool isOverride = ctx->Override();
+	bool isFinal = ctx->Final();
+	bool isRefReturn = ctx->Ref();
+	bool isConstReturn = ctx->Const();
+	isRefProperty = isRefReturn;
+	CppAdvanceParser::TheTypeIdContext* propertyType = ctx->theTypeId();
+	CppAdvanceParser::PropertyGetterContext* getter = nullptr;
+	CppAdvanceParser::PropertySetterContext* setter = nullptr;
+	CppAdvanceParser::ExprContext* expression = nullptr;
+	CppAdvanceParser::InitializerClauseContext* initializer = ctx->initializerClause();
+
+	if (isUnsafe)
+	{
+		if (unsafeDepth > 0)
+			CppAdvanceCompilerError("Unsafe context recursion", ctx->Unsafe()->getSymbol());
+		++unsafeDepth;
+	}
+	else if (unsafeDepth > 0)
+	{
+		isUnsafe = true;
+	}
+
+	if (currentTypeKind.top() != TypeKind::Class)
+	{
+		if (isVirtual)
+			CppAdvanceCompilerError("Cannot to declare virtual property outside the class body", ctx->Virtual()->getSymbol());
+		if (isFinal)
+			CppAdvanceCompilerError("Cannot to declare final property outside the class body", ctx->Final()->getSymbol());
+	}
+
+	if (ctx->shortFunctionBody())
+	{
+		expression = ctx->shortFunctionBody()->expressionStatement()->expr();
+	}
+
+	if (firstPass) {
+		bool isInline = false;
+		bool isConstexpr = false;
+
+		if (auto body = ctx->propertyBody())
+		{
+			getter = body->propertyGetter();
+			setter = body->propertySetter();
+		}
+		else if (auto body = ctx->functionBody())
+		{
+			if (body->Equal()) isConstexpr = true;
+			else if (body->Assign()) isInline = true;
+		}
+		else if (auto body = ctx->shortFunctionBody())
+		{
+			if (body->Equal()) isConstexpr = true;
+			else if (body->Assign()) isInline = true;
+		}
+
+		CppAdvanceParser::AccessSpecifierContext* acc = ctx->accessSpecifier();
+		std::optional<AccessSpecifier> access = std::nullopt;
+
+		if (acc)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (acc->Public())
+			{
+				access = AccessSpecifier::Public;
+			}
+			else if (acc->Protected())
+			{
+				if (currentTypeKind.top() != TypeKind::Class)
+					CppAdvanceCompilerError("Cannot to declare protected member outside the class body", acc->getStart());
+				access = AccessSpecifier::Protected;
+			}
+			else if (acc->Private())
+			{
+				access = AccessSpecifier::Private;
+			}
+			else if (acc->Internal())
+			{
+				access = AccessSpecifier::Internal;
+			}
+		}
+
+		if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
+		if (!access) access = AccessSpecifier::Public;
+		std::string id = ctx->Identifier()->getText();
+		auto lastTparams = getLastTypeTemplateParams();
+		auto lastSpec = getLastTypeTemplateSpecializationArgs();
+		auto fullType = getCurrentFullTypeName();
+		auto pos = SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() };
+		auto property = PropertyDefinition{ id, propertyType, pos, initializer, getter, setter, expression, *access, getCurrentCompilationCondition(),
+			currentType, fullType, lastTparams, lastSpec, isStatic, isConstReturn, isRefReturn, isUnsafe, isPrivateTypeDefinition,
+			isProtectedTypeDefinition, isUnsafeTypeDefinition, isVirtual, isOverride && currentTypeKind.top() == TypeKind::Class, false,
+			isFinal && currentTypeKind.top() == TypeKind::Class, isInline, isConstexpr };
+		structStack.top()->properties.emplace_back(property);
+		properties.insert_or_assign(pos,property);
+	}
+}
+
+void CppAdvanceSema::exitProperty(CppAdvanceParser::PropertyContext* ctx)
+{
+	propertyBody = false;
+	isRefProperty = false;
+	if (firstPass != functionBody) {
+		std::string funcname;
+		std::string prefix;
+		if (!currentType.empty()) prefix = currentType + ".";
+		std::string propertyName = ctx->Identifier()->getText();
+		if (auto body = ctx->propertyBody())
+		{
+			if (body->propertySetter())
+			{
+				if (ctx->Static())
+					functionTable[prefix + "set" + propertyName] = "void";
+				else
+					functionTable[prefix + "set" + propertyName] = currentType;
+			}
+			else
+			{
+				functionTable[prefix + "get" + propertyName] = contextTypes[ctx->theTypeId()];
+			}
+		}
+		else
+		{
+			functionTable[prefix + "get" + propertyName] = contextTypes[ctx->theTypeId()];
+		}
+		symbolTable.globalSymbolTable.insert_or_assign(prefix + propertyName, contextTypes[ctx->theTypeId()]);
+		if (unsafeDepth > 0) {
+			cppParser.unsafeVariables.insert(prefix + propertyName);
+			cppParser.unsafeVariables.insert(prefix + "p_" + propertyName);
+			cppParser.unsafeFunctions.insert(prefix + "set" + propertyName + "/" + contextTypes[ctx->theTypeId()]);
+			cppParser.unsafeFunctions.insert(prefix + "get" + propertyName + "/");
+		}
+	}
+	if (ctx->Unsafe())
+		--unsafeDepth;
+
+	symbolContexts.pop();
+}
+
+void CppAdvanceSema::enterPropertyGetter(CppAdvanceParser::PropertyGetterContext* ctx)
+{
+	symbolContexts.push(symbolContexts.top());
+	if (currentTypeKind.top() != TypeKind::Class)
+	{
+		if (auto spec = ctx->accessSpecifier())
+		{
+			if (spec->Protected())
+				CppAdvanceCompilerError("Cannot to declare protected member outside the class", spec->Protected()->getSymbol());
+		}
+		else if (ctx->protectedInternal())
+		{
+			CppAdvanceCompilerError("Cannot to declare protected internal member outside the class", spec->Protected()->getSymbol());
+		}
+	}
+	
+	functionBody = true;
+	++depth;
+	if (!firstPass)
+	{
+		initStates.push(InitState{});
+	}
+}
+
+void CppAdvanceSema::exitPropertyGetter(CppAdvanceParser::PropertyGetterContext* ctx)
+{
+	functionBody = false;
+	--depth;
+	if (!firstPass)
+	{
+		initStates.pop();
+	}
+	symbolContexts.pop();
+}
+
+void CppAdvanceSema::enterPropertySetter(CppAdvanceParser::PropertySetterContext* ctx)
+{
+	symbolContexts.push(symbolContexts.top());
+	if (currentTypeKind.top() != TypeKind::Class)
+	{
+		if (auto spec = ctx->accessSpecifier())
+		{
+			if (spec->Protected())
+				CppAdvanceCompilerError("Cannot to declare protected member outside the class", spec->Protected()->getSymbol());
+		}
+		else if (ctx->protectedInternal())
+		{
+			CppAdvanceCompilerError("Cannot to declare protected internal member outside the class", spec->Protected()->getSymbol());
+		}
+	}
+
+	functionBody = true;
+	fieldAssignment = ctx->Semi();
+	++depth;
+	if (!firstPass)
+	{
+		initStates.push(InitState{});
+	}
+}
+
+void CppAdvanceSema::exitPropertySetter(CppAdvanceParser::PropertySetterContext* ctx)
+{
+	functionBody = false;
+	if (fieldAssignment) {
+		if (isRefProperty && currentTypeKind.top() != TypeKind::RefStruct)
+            CppAdvanceCompilerError("Cannot to use reference data property outside the ref struct body", ctx->getStart());
+		propertiesNeedField.insert(ctx);
+	}
+	fieldAssignment = false;
+	--depth;
+	if (!firstPass)
+	{
+		initStates.pop();
+	}
+	symbolContexts.pop();
+}
+
+void CppAdvanceSema::enterIterationStatement(CppAdvanceParser::IterationStatementContext*)
+{
+	if (firstPass) return;
+	++loopDepth;
+}
+
+void CppAdvanceSema::exitIterationStatement(CppAdvanceParser::IterationStatementContext*)
+{
+	if (firstPass) return;
+	--loopDepth;
+}
