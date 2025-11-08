@@ -35,6 +35,7 @@ class CppAdvanceCodegen
 	mutable std::string currentShortType;
 	mutable std::string currentTypeWithTemplate;
 	mutable std::string currentPropertyField;
+	mutable std::optional <AccessSpecifier> currentAccessSpecifier;
 	std::string filename;
 
 	class StreamSwitcher {
@@ -131,6 +132,7 @@ public:
 	void printConversionFunction(CppAdvanceParser::ConversionFunctionContext* ctx) const;
 	void printIndexer(CppAdvanceParser::IndexerContext* ctx) const;
 	void printProperty(CppAdvanceParser::PropertyContext* ctx) const;
+	void printFunctionTemplateDeclaration(CppAdvanceParser::FunctionTemplateDeclarationContext* ctx) const;
 	void printFunctionDefinition(CppAdvanceParser::FunctionDefinitionContext* ctx) const;
 	void printFunctionParameters(CppAdvanceParser::FunctionParamsContext* ctx) const;
 	void printParamDeclClause(CppAdvanceParser::ParamDeclClauseContext* ctx) const;
@@ -139,10 +141,12 @@ public:
 	void printImplicitSpecification(CppAdvanceParser::ImplicitSpecificationContext* ctx) const;
 	void printFunctionBody(CppAdvanceParser::FunctionBodyContext* ctx) const;
 	void printShortFunctionBody(CppAdvanceParser::ShortFunctionBodyContext* ctx) const;
+	void printMemberBlockDeclaration(CppAdvanceParser::MemberBlockDeclarationContext* ctx) const;
 	void printSimpleDeclaration(CppAdvanceParser::SimpleDeclarationContext* ctx) const;
 	void printDeconstructionDeclaration(CppAdvanceParser::DeconstructionDeclarationContext* ctx) const;
 	void printSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpecifierContext* ctx) const;
 	void printRefDeclaration(CppAdvanceParser::RefDeclarationContext* ctx) const;
+	void printMemberRefDeclaration(CppAdvanceParser::MemberRefDeclarationContext* ctx) const;
 	void printMultiDeclaration(CppAdvanceParser::MultiDeclarationContext* ctx) const;
 	void printConstantDeclaration(CppAdvanceParser::ConstantDeclarationContext* ctx) const;
 	void printForwardVarDeclaration(CppAdvanceParser::ForwardVarDeclarationContext* ctx) const;

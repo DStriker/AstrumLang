@@ -2636,8 +2636,13 @@ void CppAdvanceSema::enterStructDefinition(CppAdvanceParser::StructDefinitionCon
 	if (ctx->structHead()->Ref()) currentTypeKind.push(TypeKind::RefStruct);
 	else currentTypeKind.push(TypeKind::Struct);
 
-	if (ctx->structHead()->Ref() && ctx->structHead()->baseClause())
-		CppAdvanceCompilerError("Ref struct cannot inherit other types or implement interfaces", ctx->structHead()->baseClause()->getStart());
+	if (ctx->structHead()->baseClause())
+	{
+		if (ctx->structHead()->Ref())
+			CppAdvanceCompilerError("Ref struct cannot inherit other types or implement interfaces", ctx->structHead()->baseClause()->getStart());
+		/*if (functionBody)
+			CppAdvanceCompilerError("Local struct cannot inherit other types or implement interfaces", ctx->structHead()->baseClause()->getStart());*/
+	}
 
 	auto namectx = ctx->structHead()->className();
 	bool primaryType = true;

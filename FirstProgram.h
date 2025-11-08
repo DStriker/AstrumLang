@@ -465,7 +465,50 @@ inline constexpr auto Vector3::GetTest()  -> __FirstProgram_Protected::Test111
 template<class U> inline constexpr auto Vector3::TemplateMethod(U x, U y, U z)  -> typename Vector3::Coords
 {
 	#line 143 "FirstProgram.adv"
+	struct LocalStruct : public CppAdvance::Struct
+	{
+		private: using __self = LocalStruct;
+		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		#line 144 "FirstProgram.adv"
+		public: CppAdvance::i32 x{}; 
+		#line 145 "FirstProgram.adv"
+		public: CppAdvance::i32 y{}; 
+		#line 146 "FirstProgram.adv"
+		public: CppAdvance::i32 z{}; 
+		#line 148 "FirstProgram.adv"
+		
+		#line 154 "FirstProgram.adv"
+		#line 154 "FirstProgram.adv"
+		private: inline auto hidden() const  -> CppAdvance::i32
+		{
+			#line 156 "FirstProgram.adv"
+			print(CppAdvance::Str{u"hidden"});
+			#line 157 "FirstProgram.adv"
+			return CppAdvance::i32(0);
+		}
+
+		
+		#line 161 "FirstProgram.adv"
+		#line 161 "FirstProgram.adv"
+		public: inline auto printt() const  -> void
+		{
+			#line 163 "FirstProgram.adv"
+			print(x);
+			#line 164 "FirstProgram.adv"
+			print(y);
+			#line 165 "FirstProgram.adv"
+			print(z);
+		}
+
+		
+		
+	};
+	#line 169 "FirstProgram.adv"
 	(*this)[CppAdvance::i32(0)] = CppAdvance::i32(13);
-	#line 145 "FirstProgram.adv"
+	#line 171 "FirstProgram.adv"
+	LocalStruct ls{ CppAdvance::i32(5), CppAdvance::i32(3), CppAdvance::i32(10) }; 
+	#line 172 "FirstProgram.adv"
+	ADV_UFCS(printt)(ls.__ref());
+	#line 173 "FirstProgram.adv"
 	return { x, y, z };
 }

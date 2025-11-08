@@ -1,20 +1,20 @@
 #include "FirstProgram.h"
 
-#line 200 "FirstProgram.adv"
+#line 228 "FirstProgram.adv"
 using IntArray = CppAdvance::i64[size_t(CppAdvance::i32(3))][size_t(CppAdvance::i32(3))][size_t(CppAdvance::i32(3))];
-#line 152 "FirstProgram.adv"
+#line 180 "FirstProgram.adv"
 auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam = CppAdvance::f64(3.5))  -> int;
-#line 196 "FirstProgram.adv"
+#line 224 "FirstProgram.adv"
 inline constexpr CppAdvance::usize PRIVATE_CONSTANT = CppAdvance::usize(34U);
 #line 2 "FirstProgram.adv"
 volatile CppAdvance::Unsafe::__VolatileRawPtr<const CppAdvance::char16> globalVar{};
 #line 3 "FirstProgram.adv"
 extern const CppAdvance::Unsafe::__RawPtr<CppAdvance::i32> globalVar1 = nullptr;
-#line 197 "FirstProgram.adv"
+#line 225 "FirstProgram.adv"
 static CppAdvance::i32 globalVar2 = CppAdvance::i32(8);
-#line 198 "FirstProgram.adv"
+#line 226 "FirstProgram.adv"
 static const CppAdvance::i32 globalVar3 = CppAdvance::i32(456);
-#line 199 "FirstProgram.adv"
+#line 227 "FirstProgram.adv"
 static IntArray xyz = { { { CppAdvance::i32(1), CppAdvance::i32(2), CppAdvance::i32(3) }, { CppAdvance::i32(4), CppAdvance::i32(5), CppAdvance::i32(6) }, { CppAdvance::i32(7), CppAdvance::i32(8), CppAdvance::i32(9) } }, { { CppAdvance::i32(11), CppAdvance::i32(12), CppAdvance::i32(13) }, { CppAdvance::i32(14), CppAdvance::i32(15), CppAdvance::i32(16) }, { CppAdvance::i32(17), CppAdvance::i32(18), CppAdvance::i32(19) } }, { { CppAdvance::i32(21), CppAdvance::i32(22), CppAdvance::i32(23) }, { CppAdvance::i32(24), CppAdvance::i32(25), CppAdvance::i32(26) }, { CppAdvance::i32(27), CppAdvance::i32(28), CppAdvance::i32(29) } } };
 #line 79 "FirstProgram.adv"
 thread_local CppAdvance::i32 Vector3::Count2 = CppAdvance::i32(123);
@@ -96,34 +96,32 @@ auto Vector3::getCount()  -> CppAdvance::i32
 	return p_Count * CppAdvance::i32(10);
 }
 
-#line 152 "FirstProgram.adv"
+
+
+#line 180 "FirstProgram.adv"
 auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam)  -> int
 {
-	#line 178 "FirstProgram.adv"
+	#line 206 "FirstProgram.adv"
 	Vector3 vv{ CppAdvance::i32(2), CppAdvance::i32(3), CppAdvance::i32(4) }; 
-	#line 180 "FirstProgram.adv"
+	#line 208 "FirstProgram.adv"
 	print(ADV_UFCS(getClassExt)(ADV_UFCS(GetTest)(vv.__ref()).__ref(), CppAdvance::i32(1), CppAdvance::i32(2), CppAdvance::i32(4),  8,  true, true,  false).__ref().x);
-	#line 181 "FirstProgram.adv"
+	#line 209 "FirstProgram.adv"
 	auto ss = CppAdvance::i32(300); 
-	#line 183 "FirstProgram.adv"
+	#line 211 "FirstProgram.adv"
 	Vector3 v{ CppAdvance::i32(2), CppAdvance::i32(7), CppAdvance::i32(4) }; 
-	#line 184 "FirstProgram.adv"
+	#line 212 "FirstProgram.adv"
 	print(ADV_UFCS(TemplateMethod)(v.__ref(), CppAdvance::i32(3), CppAdvance::i32(4), CppAdvance::i32(5)).__ref().x);
-	#line 185 "FirstProgram.adv"
+	#line 213 "FirstProgram.adv"
 	Vector3 fv = v; 
-	#line 186 "FirstProgram.adv"
-	print(fv.__ref().Name);
-	#line 187 "FirstProgram.adv"
-	print(Vector3::NestedStruct::Count);
-	#line 188 "FirstProgram.adv"
-	Vector3::NestedStruct::setCount(CppAdvance::i32(30));
-	#line 189 "FirstProgram.adv"
-	Vector3::NestedStruct::Count = CppAdvance::i32(30);
-	#line 190 "FirstProgram.adv"
-	print(Vector3::NestedStruct::Count);
-	#line 191 "FirstProgram.adv"
-	print(fv.__ref().t.__ref().Name);
-	#line 192 "FirstProgram.adv"
+	#line 215 "FirstProgram.adv"
+	print(Vector3::Count);
+	#line 216 "FirstProgram.adv"
+	Vector3::setCount(CppAdvance::i32(30));
+	#line 217 "FirstProgram.adv"
+	Vector3::Count = CppAdvance::i32(30);
+	#line 218 "FirstProgram.adv"
+	print(Vector3::Count);
+	#line 220 "FirstProgram.adv"
 	print(Test1::Test2::TestClass::makeTestClass(CppAdvance::i32(3), CppAdvance::f32(3.14f)).__ref().x.__ref().x);
 }
 
