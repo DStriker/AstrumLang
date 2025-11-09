@@ -114,6 +114,7 @@ public struct Vector3 : IEquatable, IFormattable
 		++y;
 		++z;
 		++Count;
+		t : Test111;
 		//t = Test111();
 		return this;
 	}
@@ -160,11 +161,26 @@ public struct Vector3 : IEquatable, IFormattable
 
 				public {
 				printt: ()= {
+					j: i32;
 					print(x);
 					print(y);
 					print(z);
 				}
 				}
+
+				public Count: i32 = 1 {
+					get {
+						print("Read");
+						return field * 10;
+					}
+					set {
+						print("Write");
+						if (value > 10) field = value / 10;
+						else field = value;
+					}
+				}
+
+				public Name: str ==> "Vector3";
 			}
 			this[0] = 13;
 			//print(this[0]);

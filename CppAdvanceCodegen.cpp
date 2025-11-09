@@ -2679,6 +2679,7 @@ void CppAdvanceCodegen::printStructDefinition(CppAdvanceParser::StructDefinition
 {
 	isStructDeclaration = functionBody;
 	currentAccessSpecifier = std::nullopt;
+	auto prevTypeName = currentShortType;
 	if (isStructDeclaration)
 	{
 		printStructHead(ctx->structHead());
@@ -2695,6 +2696,8 @@ void CppAdvanceCodegen::printStructDefinition(CppAdvanceParser::StructDefinition
 		if (depth > 0) --depth;
 		out << "\n" << std::string(depth, '\t') << "};";
 	}
+
+	currentShortType = prevTypeName;
 }
 
 void CppAdvanceCodegen::printStructHead(CppAdvanceParser::StructHeadContext* ctx) const
@@ -2714,6 +2717,7 @@ void CppAdvanceCodegen::printStructHead(CppAdvanceParser::StructHeadContext* ctx
 	}
 	out << "struct ";
 	printClassName(ctx->className());
+	currentShortType = ctx->className()->getText();
 	if (ctx->Ref())
 	{
 		out << " : public CppAdvance::RefStruct";
@@ -2721,6 +2725,7 @@ void CppAdvanceCodegen::printStructHead(CppAdvanceParser::StructHeadContext* ctx
 	else
 	{
 		out << " : public CppAdvance::Struct";
+		checkForRefStruct = true;
 	}
 }
 
@@ -2737,6 +2742,8 @@ void CppAdvanceCodegen::printStructMemberSpecification(CppAdvanceParser::StructM
 void CppAdvanceCodegen::printStructMemberDeclaration(CppAdvanceParser::StructMemberDeclarationContext* ctx) const
 {
 	auto prevAccess = currentAccessSpecifier;
+	auto prevCheckForRefStruct = checkForRefStruct;
+	checkForRefStruct = false;
 	if (ctx->protectedInternal()) {
 		currentAccessSpecifier = AccessSpecifier::ProtectedInternal;
 	}
@@ -2762,6 +2769,7 @@ void CppAdvanceCodegen::printStructMemberDeclaration(CppAdvanceParser::StructMem
 	{
 		if (isStructDeclaration)
 		{
+			checkForRefStruct = prevCheckForRefStruct;
 			printMemberBlockDeclaration(member);
 		}
 	}
@@ -2771,18 +2779,11 @@ void CppAdvanceCodegen::printStructMemberDeclaration(CppAdvanceParser::StructMem
 	}
 	else if (auto func = ctx->constructor())
 	{
-		if (!isStructDeclaration) printConstructor(func);
+		printConstructor(func);
 	}
 	else if (auto func = ctx->conversionFunction())
 	{
-		if (isStructDeclaration)
-		{
-
-		}
-		else
-		{
-			printConversionFunction(func);
-		}
+		printConversionFunction(func);
 	}
 	else if (auto func = ctx->indexer())
 	{
@@ -3032,8 +3033,86 @@ void CppAdvanceCodegen::printConstructor(CppAdvanceParser::ConstructorContext* c
 		{
 			out << "#endif " << std::endl;
 		}
+		out.switchTo(false);
 	}
-	out.switchTo(false);
+	else
+	{
+		if (!currentAccessSpecifier) currentAccessSpecifier = AccessSpecifier::Private;
+		switch (*currentAccessSpecifier)
+		{
+		case AccessSpecifier::Public:
+		case AccessSpecifier::Internal:
+			out << "public: ";
+			break;
+		case AccessSpecifier::Protected:
+		case AccessSpecifier::ProtectedInternal:
+			out << "protected: ";
+			break;
+		case AccessSpecifier::Private:
+			out << "private: ";
+			break;
+		}
+
+		if (auto tparams = ctx->templateParams())
+		{
+			printTemplateParams(tparams);
+			out << " ";
+		}
+
+		bool isInline = false;
+		bool isConstexpr = false;
+		isUnsafe = ctx->Unsafe();
+		if (ctx->Inline()) isInline = true;
+
+		if (auto body = ctx->constructorBody())
+		{
+			if (body->Equal()) isConstexpr = true;
+			else if (body->Assign()) isInline = true;
+		}
+		else if (auto body = ctx->delegatingConstructorBody())
+		{
+			if (body->Equal()) isConstexpr = true;
+			else if (body->Assign()) isInline = true;
+		}
+
+		if (isConstexpr)
+		{
+			out << "inline constexpr ";
+		}
+		else if (isInline)
+		{
+			out << "inline ";
+		}
+
+		if (ctx->implicitSpecification())
+		{
+			printImplicitSpecification(ctx->implicitSpecification());
+		}
+		else if (ctx->functionParams()->paramDeclClause() && ctx->functionParams()->paramDeclClause()->paramDeclList()->paramDeclaration().size() == 1)
+		{
+			out << "explicit ";
+		}
+
+		out << currentShortType;
+
+		printFunctionParameters(ctx->functionParams());
+		isVariadicTemplate = false;
+		out << " ";
+		if (ctx->exceptionSpecification()) printExceptionSpecification(ctx->exceptionSpecification());
+		if (auto body = ctx->constructorBody())
+		{
+			printConstructorBody(body);
+		}
+		else if (auto body = ctx->delegatingConstructorBody())
+		{
+			printDelegatingConstructorBody(ctx->delegatingConstructorBody());
+		}
+		else
+		{
+			out << " = default;";
+		}
+		out << std::endl;
+	}
 	isUnsafe = prevUnsafe;
 	refParameters.clear();
 	sema.symbolContexts.pop();
@@ -3258,8 +3337,95 @@ void CppAdvanceCodegen::printConversionFunction(CppAdvanceParser::ConversionFunc
 		{
 			out << "#endif " << std::endl;
 		}
+		out.switchTo(false);
 	}
-	out.switchTo(false);
+	else
+	{
+		if (!currentAccessSpecifier) currentAccessSpecifier = AccessSpecifier::Private;
+		switch (*currentAccessSpecifier)
+		{
+		case AccessSpecifier::Public:
+		case AccessSpecifier::Internal:
+			out << "public: ";
+			break;
+		case AccessSpecifier::Protected:
+		case AccessSpecifier::ProtectedInternal:
+			out << "protected: ";
+			break;
+		case AccessSpecifier::Private:
+			out << "private: ";
+			break;
+		}
+
+		if (ctx->templateParams())
+		{
+			printTemplateParams(ctx->templateParams());
+			out << " ";
+		}
+
+		bool isInline = false;
+		bool isConstexpr = false;
+		bool isVirtual = false;
+		bool isOverride = false;
+		bool isFinal = false;
+		isUnsafe = false;
+		for (auto spec : ctx->functionSpecifier())
+		{
+			if (spec->Inline()) isInline = true;
+			if (spec->Virtual()) isVirtual = true;
+			if (spec->Override()) isOverride = true;
+			if (spec->Final()) isFinal = true;
+			if (spec->Unsafe()) isUnsafe = true;
+		}
+
+		if (auto body = ctx->functionBody())
+		{
+			if (body->Equal()) isConstexpr = true;
+			else if (body->Assign()) isInline = true;
+		}
+		else if (auto body = ctx->shortFunctionBody())
+		{
+			if (body->Equal()) isConstexpr = true;
+			else if (body->Assign()) isInline = true;
+		}
+
+		if (isConstexpr)
+		{
+			out << "inline constexpr ";
+		}
+		else if (isInline)
+		{
+			out << "inline ";
+		}
+
+		if (ctx->implicitSpecification())
+		{
+			printImplicitSpecification(ctx->implicitSpecification());
+		}
+		else
+		{
+			out << "explicit ";
+		}
+
+		printConversionFunctionId(ctx->conversionFunctionId());
+		out << "() const ";
+		isVariadicTemplate = false;
+		if (isOverride) out << "override ";
+		if (isFinal) out << "final ";
+		if (ctx->exceptionSpecification()) printExceptionSpecification(ctx->exceptionSpecification());
+		currentShortType.clear();
+		currentTypeWithTemplate.clear();
+		if (auto body = ctx->functionBody())
+		{
+			functionProlog = true;
+			printFunctionBody(body);
+		}
+		else
+		{
+			printShortFunctionBody(ctx->shortFunctionBody());
+		}
+		out << std::endl;
+	}
 	isUnsafe = prevUnsafe;
 	sema.symbolContexts.pop();
 }
@@ -4515,6 +4681,7 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 				if (spec->Virtual()) isVirtual = true;
 				if (spec->Override()) isOverride = true;
 				if (spec->Final()) isFinal = true;
+				if (spec->Unsafe()) isUnsafe = true;
 			}
 
 			if (auto body = ctx->functionBody())
@@ -4903,6 +5070,14 @@ void CppAdvanceCodegen::printSimpleDeclaration(CppAdvanceParser::SimpleDeclarati
 			{
 				out << " = " << id;
 			}
+		}
+		else if (checkForRefStruct)
+		{
+			out << "; ADV_CHECK_REF_STRUCT(";
+			printTypeId(ctx->theTypeId());
+			auto t = ctx->theTypeId()->getText();
+			StringReplace(t, "\"", "\\\"");
+			out << ", \"" << t << "\")";
 		}
 		else
 		{
