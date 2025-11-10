@@ -173,7 +173,7 @@ public struct Vector3 : IEquatable, IFormattable
 						print("Read");
 						return field * 10;
 					}
-					set {
+					private set {
 						print("Write");
 						if (value > 10) field = value / 10;
 						else field = value;
@@ -185,7 +185,7 @@ public struct Vector3 : IEquatable, IFormattable
 			this[0] = 13;
 			//print(this[0]);
 			ls: LocalStruct(5,3,10);
-			ls.printt();
+			print(ls.Count);
 			return {x,y,z};
 		}
 	}

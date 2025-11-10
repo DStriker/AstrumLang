@@ -458,6 +458,7 @@ public:
 	bool firstPass = true;
 	bool literalMinus = false;
 	bool functionBody = false;
+	bool prevFunctionBody = false;
 	bool propertyBody = false;
 	bool isAssignment = false;
 	bool fieldAssignment = false;

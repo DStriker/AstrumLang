@@ -2787,25 +2787,11 @@ void CppAdvanceCodegen::printStructMemberDeclaration(CppAdvanceParser::StructMem
 	}
 	else if (auto func = ctx->indexer())
 	{
-		if (isStructDeclaration)
-		{
-
-		}
-		else
-		{
-			printIndexer(func);
-		}
+		printIndexer(func);
 	}
 	else if (auto prop = ctx->property())
 	{
-		if (isStructDeclaration)
-		{
-
-		}
-		else
-		{
-			printProperty(prop);
-		}
+		printProperty(prop);
 	}
 	else if (auto func = ctx->functionTemplateDeclaration())
 	{
@@ -4286,8 +4272,383 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 		{
 			out << "#endif " << std::endl;
 		}
+		out.switchTo(false);
 	}
-	out.switchTo(false);
+	else
+	{
+		auto id = ctx->Identifier()->getText();
+		currentPropertyField = "p_" + id;
+		isUnsafe = ctx->Unsafe();
+
+		CppAdvanceParser::PropertyGetterContext* getter = nullptr;
+		CppAdvanceParser::PropertySetterContext* setter = nullptr;
+		if (auto body = ctx->propertyBody())
+		{
+			getter = body->propertyGetter();
+			setter = body->propertySetter();
+		}
+
+		if (setter && (setter->Semi() || sema.propertiesNeedField.contains(setter)))
+		{
+			out << "private: ";
+			if (ctx->Const()) out << "const ";
+            printTypeId(ctx->theTypeId());
+			if (ctx->Ref()) out << "&";
+			out << " " << currentPropertyField;
+			if (ctx->initializerClause())
+			{
+				out << " = ";
+				printInitializerClause(ctx->initializerClause());
+			}
+			out << ";" << std::endl << std::string(depth, '\t');
+		}
+
+		if (!currentAccessSpecifier) {
+			if (auto acc = ctx->accessSpecifier()) {
+				if (acc->Public()) currentAccessSpecifier = AccessSpecifier::Public;
+				else if (acc->Internal()) currentAccessSpecifier = AccessSpecifier::Internal;
+				else if (acc->Protected()) currentAccessSpecifier = AccessSpecifier::Protected;
+				else if (acc->Private()) currentAccessSpecifier = AccessSpecifier::Private;
+			}
+			else {
+				currentAccessSpecifier = AccessSpecifier::Private;
+			}
+		}
+		AccessSpecifier getAccess;
+		AccessSpecifier setAccess;
+		if (setter)
+		{
+			if (auto body = setter->functionBody())
+			{
+				if (body->Equal()) isConstexpr = true;
+				else if (body->Assign()) isInline = true;
+			}
+			else if (auto body = setter->shortFunctionBody())
+			{
+				if (body->Equal()) isConstexpr = true;
+				else if (body->Assign()) isInline = true;
+			}
+			else
+			{
+				isInline = true;
+			}
+
+			out << "#line " << setter->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+
+			setAccess = *currentAccessSpecifier;
+			if (setter->protectedInternal()) setAccess = AccessSpecifier::ProtectedInternal;
+			if (auto acc = setter->accessSpecifier()) {
+				if (acc->Public()) setAccess = AccessSpecifier::Public;
+				else if (acc->Internal()) setAccess = AccessSpecifier::Internal;
+				else if (acc->Protected()) setAccess = AccessSpecifier::Protected;
+				else if (acc->Private()) setAccess = AccessSpecifier::Private;
+			}
+			switch (setAccess)
+			{
+			case AccessSpecifier::Public:
+			case AccessSpecifier::Internal:
+				out << "public: ";
+				break;
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected: ";
+				break;
+			case AccessSpecifier::Private:
+				out << "private: ";
+				break;
+			}
+
+			if (isConstexpr)
+			{
+				out << "inline constexpr ";
+			}
+			else if (isInline)
+			{
+				out << "inline ";
+			}
+
+			out << "auto ";
+			out << "set" << id << "(const ";
+			printTypeId(ctx->theTypeId());
+			out << "& value) ";
+			if (ctx->Override()) out << "override ";
+			if (ctx->Final()) out << "final ";
+			isPropertySetter = true;
+			out << "-> __self& ";
+
+			if (auto body = setter->functionBody())
+			{
+				functionProlog = true;
+				printFunctionBody(body);
+			}
+			else if (auto body = setter->shortFunctionBody())
+			{
+				printShortFunctionBody(setter->shortFunctionBody());
+			}
+			else
+			{
+				out << "{ p_" << id << " = value; return *this; }";
+			}
+
+			isPropertySetter = false;
+			out << std::endl << std::string(depth, '\t');
+		}
+		if (getter)
+		{
+			isInline = false;
+			isConstexpr = false;
+			if (auto body = getter->functionBody())
+			{
+				if (body->Equal()) isConstexpr = true;
+				else if (body->Assign()) isInline = true;
+			}
+			else if (auto body = getter->shortFunctionBody())
+			{
+				if (body->Equal()) isConstexpr = true;
+				else if (body->Assign()) isInline = true;
+			}
+			else
+			{
+				isInline = true;
+			}
+
+			out << "#line " << getter->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			getAccess = *currentAccessSpecifier;
+			if (getter->protectedInternal()) getAccess = AccessSpecifier::ProtectedInternal;
+			if (auto acc = getter->accessSpecifier()) {
+				if (acc->Public()) getAccess = AccessSpecifier::Public;
+				else if (acc->Internal()) getAccess = AccessSpecifier::Internal;
+				else if (acc->Protected()) getAccess = AccessSpecifier::Protected;
+				else if (acc->Private()) getAccess = AccessSpecifier::Private;
+			}
+			switch (getAccess)
+			{
+			case AccessSpecifier::Public:
+			case AccessSpecifier::Internal:
+				out << "public: ";
+				break;
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected: ";
+				break;
+			case AccessSpecifier::Private:
+				out << "private: ";
+				break;
+			}
+
+			if (isConstexpr)
+			{
+				out << "inline constexpr ";
+			}
+			else if (isInline)
+			{
+				out << "inline ";
+			}
+
+			out << "auto ";
+			out << "get" << id << "() const ";
+			if (ctx->Override()) out << "override ";
+			if (ctx->Final()) out << "final ";
+
+			out << " -> ";
+			if (ctx->Const()) out << "const ";
+			printTypeId(ctx->theTypeId());
+			if (ctx->Ref()) out << "&";
+			out << " ";
+
+			if (auto body = getter->functionBody())
+			{
+				functionProlog = true;
+				printFunctionBody(body);
+			}
+			else if (auto body = getter->shortFunctionBody())
+			{
+				printShortFunctionBody(getter->shortFunctionBody());
+			}
+			else
+			{
+				out << "{ return p_" << id << "; }";
+			}
+
+			out << std::endl << std::string(depth, '\t');
+		}
+		else if (!setter)
+		{
+			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+
+			getAccess = *currentAccessSpecifier;
+			switch (*currentAccessSpecifier)
+			{
+			case AccessSpecifier::Public:
+			case AccessSpecifier::Internal:
+				out << "public: ";
+				break;
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected: ";
+				break;
+			case AccessSpecifier::Private:
+				out << "private: ";
+				break;
+			}
+
+			isInline = false;
+			isConstexpr = false;
+			if (auto body = ctx->functionBody())
+			{
+				if (body->Equal()) isConstexpr = true;
+				else if (body->Assign()) isInline = true;
+			}
+			else if (auto body = ctx->shortFunctionBody())
+			{
+				if (body->Equal()) isConstexpr = true;
+				else if (body->Assign()) isInline = true;
+			}
+
+			if (isConstexpr)
+			{
+				out << "inline constexpr ";
+			}
+			else if (isInline)
+			{
+				out << "inline ";
+			}
+
+			out << "auto ";
+			out << "get" << id << "() const ";
+			if (ctx->Override()) out << "override ";
+			if (ctx->Final()) out << "final ";
+
+			out << " -> ";
+			if (ctx->Const()) out << "const ";
+			printTypeId(ctx->theTypeId());
+			if (ctx->Ref()) out << "&";
+			out << " ";
+
+			if (auto body = ctx->functionBody())
+			{
+				functionProlog = true;
+				printFunctionBody(body);
+			}
+			else if (auto body = ctx->shortFunctionBody())
+			{
+				printShortFunctionBody(body);
+			}
+
+			out << std::endl << std::string(depth, '\t');
+		}
+
+		out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		if (setter)
+		{
+			if (getter)
+			{
+				out << "ADV_PROPERTY_GETTER_SETTER";
+				out << "(";
+				switch (*currentAccessSpecifier)
+				{
+				case AccessSpecifier::Public:
+				case AccessSpecifier::Internal:
+					out << "public";
+					break;
+				case AccessSpecifier::Protected:
+				case AccessSpecifier::ProtectedInternal:
+					out << "protected";
+					break;
+				case AccessSpecifier::Private:
+					out << "private";
+					break;
+				}
+
+				out << ", __self, ";
+				if (ctx->Const()) out << "const ";
+				printTypeId(ctx->theTypeId());
+				if (ctx->Ref()) out << "&";
+				out << ", " << id << ", ";
+				switch (getAccess)
+				{
+				case AccessSpecifier::Public:
+				case AccessSpecifier::Internal:
+					out << "public";
+					break;
+				case AccessSpecifier::Protected:
+				case AccessSpecifier::ProtectedInternal:
+					out << "protected";
+					break;
+				case AccessSpecifier::Private:
+					out << "private";
+					break;
+				}
+				out << ", get" << id << ", ";
+				switch (setAccess)
+				{
+				case AccessSpecifier::Public:
+				case AccessSpecifier::Internal:
+					out << "public";
+					break;
+				case AccessSpecifier::Protected:
+				case AccessSpecifier::ProtectedInternal:
+					out << "protected";
+					break;
+				case AccessSpecifier::Private:
+					out << "private";
+					break;
+				}
+				out << ", set" << id << ")";
+			}
+			else
+			{
+				out << "ADV_PROPERTY_SETTER";
+				out << "(";
+				switch (setAccess)
+				{
+				case AccessSpecifier::Public:
+				case AccessSpecifier::Internal:
+					out << "public";
+					break;
+				case AccessSpecifier::Protected:
+				case AccessSpecifier::ProtectedInternal:
+					out << "protected";
+					break;
+				case AccessSpecifier::Private:
+					out << "private";
+					break;
+				}
+
+				out << ", __self, ";
+				if (ctx->Const()) out << "const ";
+				printTypeId(ctx->theTypeId());
+				if (ctx->Ref()) out << "&";
+				out << ", " << id << ", set" << id << ")";
+			}
+		}
+		else
+		{
+			out << "ADV_PROPERTY_GETTER";
+			out << "(";
+			switch (getAccess)
+			{
+			case AccessSpecifier::Public:
+			case AccessSpecifier::Internal:
+				out << "public";
+				break;
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected";
+				break;
+			case AccessSpecifier::Private:
+				out << "private";
+				break;
+			}
+
+			out << ", __self, ";
+			if (ctx->Const()) out << "const ";
+			printTypeId(ctx->theTypeId());
+			if (ctx->Ref()) out << "&";
+			out << ", " << id << ", get" << id << ")";
+		}
+		out << ";";
+	}
 	isUnsafe = prevUnsafe;
 	currentPropertyField.clear();
 	sema.symbolContexts.pop();

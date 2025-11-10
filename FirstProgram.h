@@ -110,18 +110,6 @@ struct Vector3 {
 	public: inline constexpr auto getName() const  -> CppAdvance::Str;
 	#line 9999 "FirstProgram.adv"
 	ADV_PROPERTY_GETTER(public, Vector3, CppAdvance::Str, Name, getName);
-	#line 177 "FirstProgram.adv"
-	private: CppAdvance::i32 p_Count = CppAdvance::i32(1); ADV_CHECK_REF_STRUCT(CppAdvance::i32, "i32");
-	#line 182 "FirstProgram.adv"
-	public: TESTDLL_API auto setCount(const CppAdvance::i32& value) -> __self&;
-	#line 178 "FirstProgram.adv"
-	public: TESTDLL_API auto getCount() const  -> CppAdvance::i32;
-	#line 9999 "FirstProgram.adv"
-	ADV_PROPERTY_GETTER_SETTER(public, Vector3, CppAdvance::i32, Count, public, getCount, public, setCount);
-	#line 189 "FirstProgram.adv"
-	public: inline constexpr auto getName() const  -> CppAdvance::Str;
-	#line 9999 "FirstProgram.adv"
-	ADV_PROPERTY_GETTER(public, Vector3, CppAdvance::Str, Name, getName);
 	#line 95 "FirstProgram.adv"
 	public: inline constexpr Vector3()  = default;
 	#line 97 "FirstProgram.adv"
@@ -501,54 +489,75 @@ template<class U> inline constexpr auto Vector3::TemplateMethod(U x, U y, U z)  
 		}
 
 		#line 155 "FirstProgram.adv"
-		public: inline constexpr LocalStruct(CppAdvance::i32 x)  : 
-		#line 156 "FirstProgram.adv"
-		x{x}, 
-		#line 157 "FirstProgram.adv"
-		y{x}, 
-		#line 158 "FirstProgram.adv"
-		z{x}
-		{
-		}
-
-		#line 161 "FirstProgram.adv"
-		#line 161 "FirstProgram.adv"
+		#line 155 "FirstProgram.adv"
 		private: inline auto hidden() const  -> CppAdvance::i32
 		{
-			#line 163 "FirstProgram.adv"
+			#line 157 "FirstProgram.adv"
 			print(CppAdvance::Str{u"hidden"});
-			#line 164 "FirstProgram.adv"
+			#line 158 "FirstProgram.adv"
 			return CppAdvance::i32(0);
 		}
 
 		
-		#line 168 "FirstProgram.adv"
-		#line 168 "FirstProgram.adv"
+		#line 162 "FirstProgram.adv"
+		#line 162 "FirstProgram.adv"
 		public: inline auto printt() const  -> void
 		{
-			#line 170 "FirstProgram.adv"
+			#line 164 "FirstProgram.adv"
 			CppAdvance::i32 j{}; 
-			#line 171 "FirstProgram.adv"
+			#line 165 "FirstProgram.adv"
 			print(x);
-			#line 172 "FirstProgram.adv"
+			#line 166 "FirstProgram.adv"
 			print(y);
-			#line 173 "FirstProgram.adv"
+			#line 167 "FirstProgram.adv"
 			print(z);
 		}
 
 		
-		#line 177 "FirstProgram.adv"
-		
-		#line 189 "FirstProgram.adv"
-		
+		#line 171 "FirstProgram.adv"
+		private: CppAdvance::i32 p_Count = CppAdvance::i32(1);
+		#line 176 "FirstProgram.adv"
+		private: auto setCount(const CppAdvance::i32& value) -> __self& 
+		{
+			#line 177 "FirstProgram.adv"
+			print(CppAdvance::Str{u"Write"});
+			#line 178 "FirstProgram.adv"
+			if (value > CppAdvance::i32(10)) {
+				#line 178 "FirstProgram.adv"
+				p_Count = value / CppAdvance::i32(10);
+			} else {
+				#line 179 "FirstProgram.adv"
+				p_Count = value;
+			}
+			return *this;
+		}
+		#line 172 "FirstProgram.adv"
+		public: auto getCount() const  -> CppAdvance::i32 
+		{
+			#line 173 "FirstProgram.adv"
+			print(CppAdvance::Str{u"Read"});
+			#line 174 "FirstProgram.adv"
+			return p_Count * CppAdvance::i32(10);
+		}
+		#line 9999 "FirstProgram.adv"
+		ADV_PROPERTY_GETTER_SETTER(public, __self, CppAdvance::i32, Count, public, getCount, private, setCount);
+		#line 183 "FirstProgram.adv"
+		#line 183 "FirstProgram.adv"
+		public: inline constexpr auto getName() const  -> CppAdvance::Str 
+		{
+			#line 183 "FirstProgram.adv"
+			ADV_EXPRESSION_BODY(CppAdvance::Str{u"Vector3"}); 
+		}
+		#line 9999 "FirstProgram.adv"
+		ADV_PROPERTY_GETTER(public, __self, CppAdvance::Str, Name, getName);
 		
 	};
-	#line 191 "FirstProgram.adv"
+	#line 185 "FirstProgram.adv"
 	(*this)[CppAdvance::i32(0)] = CppAdvance::i32(13);
-	#line 193 "FirstProgram.adv"
+	#line 187 "FirstProgram.adv"
 	LocalStruct ls{ CppAdvance::i32(5), CppAdvance::i32(3), CppAdvance::i32(10) }; 
-	#line 194 "FirstProgram.adv"
-	ADV_UFCS(printt)(ls.__ref());
-	#line 195 "FirstProgram.adv"
+	#line 188 "FirstProgram.adv"
+	print(ls.__ref().Count);
+	#line 189 "FirstProgram.adv"
 	return { x, y, z };
 }

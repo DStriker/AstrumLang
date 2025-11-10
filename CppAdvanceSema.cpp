@@ -3631,6 +3631,7 @@ void CppAdvanceSema::enterProperty(CppAdvanceParser::PropertyContext* ctx)
 {
 	symbolContexts.push(symbolContexts.top());
 	propertyBody = true;
+	prevFunctionBody = functionBody;
 	bool isStatic = ctx->Static();
 	bool isUnsafe = ctx->Unsafe();
 	bool isVirtual = ctx->Virtual();
@@ -3669,7 +3670,7 @@ void CppAdvanceSema::enterProperty(CppAdvanceParser::PropertyContext* ctx)
 		expression = ctx->shortFunctionBody()->expressionStatement()->expr();
 	}
 
-	if (firstPass) {
+	if (firstPass && !functionBody) {
 		bool isInline = false;
 		bool isConstexpr = false;
 
@@ -3736,6 +3737,7 @@ void CppAdvanceSema::exitProperty(CppAdvanceParser::PropertyContext* ctx)
 {
 	propertyBody = false;
 	isRefProperty = false;
+	functionBody = prevFunctionBody;
 	if (firstPass != functionBody) {
 		std::string funcname;
 		std::string prefix;
@@ -3799,7 +3801,7 @@ void CppAdvanceSema::enterPropertyGetter(CppAdvanceParser::PropertyGetterContext
 
 void CppAdvanceSema::exitPropertyGetter(CppAdvanceParser::PropertyGetterContext* ctx)
 {
-	functionBody = false;
+	//functionBody = false;
 	--depth;
 	if (!firstPass)
 	{
@@ -3835,7 +3837,7 @@ void CppAdvanceSema::enterPropertySetter(CppAdvanceParser::PropertySetterContext
 
 void CppAdvanceSema::exitPropertySetter(CppAdvanceParser::PropertySetterContext* ctx)
 {
-	functionBody = false;
+	//functionBody = false;
 	if (fieldAssignment) {
 		if (isRefProperty && currentTypeKind.top() != TypeKind::RefStruct)
             CppAdvanceCompilerError("Cannot to use reference data property outside the ref struct body", ctx->getStart());
