@@ -124,7 +124,7 @@ struct Vector3 {
 	public: inline auto operator++()  -> __self& LIFETIMEBOUND;
 	public: inline auto operator++(int)  -> Vector3;
 	#line 9999 "FirstProgram.adv"
-	private: template<class __IdxT = __FirstProgram_Protected::Test111> struct __IndexerAccessor_122 {
+	private: template<class __IdxT = CppAdvance::f32> struct __IndexerAccessor_122 {
 		private:
 		Vector3& _parent;
 		CppAdvance::i32 _idx;
@@ -181,13 +181,13 @@ struct Vector3 {
 		
 	};
 
-	friend struct __IndexerAccessor_122<__FirstProgram_Protected::Test111>;
-	inline __FirstProgram_Protected::Test111 getAt(CppAdvance::i32 idx);
-	inline const __FirstProgram_Protected::Test111 getAt(CppAdvance::i32 idx) const;
-	template<class _ElemRight> inline void setAt(CppAdvance::i32 idx, const _ElemRight& value);
+	friend struct __IndexerAccessor_122<CppAdvance::f32>;
+	inline CppAdvance::f32 getAt(CppAdvance::i32 idx);
+	inline const CppAdvance::f32 getAt(CppAdvance::i32 idx) const;
+	inline void setAt(CppAdvance::i32 idx, const CppAdvance::f32& value);
 	#line 122 "FirstProgram.adv"
-	public: inline auto operator[](CppAdvance::i32 idx)  -> __IndexerAccessor_122<__FirstProgram_Protected::Test111>;
-	public: inline auto operator[](CppAdvance::i32 idx) const  -> const __IndexerAccessor_122<__FirstProgram_Protected::Test111>;
+	public: inline auto operator[](CppAdvance::i32 idx)  -> __IndexerAccessor_122<CppAdvance::f32>;
+	public: inline auto operator[](CppAdvance::i32 idx) const  -> const __IndexerAccessor_122<CppAdvance::f32>;
 	#line 132 "FirstProgram.adv"
 	public: inline constexpr auto _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  -> CppAdvance::f32;
 	public: inline constexpr auto _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const  -> const CppAdvance::f32;
@@ -395,35 +395,35 @@ inline auto Vector3::operator++()  -> __self&
 #line 112 "FirstProgram.adv"
 inline auto Vector3::operator++(int)  -> Vector3 { auto copy = *this; ++(*this); return copy; }
 #line 122 "FirstProgram.adv"
-auto Vector3::operator[](CppAdvance::i32 idx)  -> __IndexerAccessor_122<__FirstProgram_Protected::Test111>
+auto Vector3::operator[](CppAdvance::i32 idx)  -> __IndexerAccessor_122<CppAdvance::f32>
 {
-	return __IndexerAccessor_122<__FirstProgram_Protected::Test111>{ *this, idx };
+	return __IndexerAccessor_122<CppAdvance::f32>{ *this, idx };
 }
 
 #line 122 "FirstProgram.adv"
-auto Vector3::operator[](CppAdvance::i32 idx)  const  -> const __IndexerAccessor_122<__FirstProgram_Protected::Test111>
+auto Vector3::operator[](CppAdvance::i32 idx)  const  -> const __IndexerAccessor_122<CppAdvance::f32>
 {
-	return __IndexerAccessor_122<__FirstProgram_Protected::Test111>{ *this, idx };
+	return __IndexerAccessor_122<CppAdvance::f32>{ *this, idx };
 }
 
 #line 123 "FirstProgram.adv"
-auto Vector3::getAt(CppAdvance::i32 idx)  -> __FirstProgram_Protected::Test111
+auto Vector3::getAt(CppAdvance::i32 idx)  -> CppAdvance::f32
 {
 	#line 124 "FirstProgram.adv"
 	print(CppAdvance::Str{u"Read"});
 	#line 125 "FirstProgram.adv"
-	return GetTest();
+	return x;
 }
 #line 123 "FirstProgram.adv"
-auto Vector3::getAt(CppAdvance::i32 idx) const  -> const __FirstProgram_Protected::Test111
+auto Vector3::getAt(CppAdvance::i32 idx) const  -> const CppAdvance::f32
 {
 	#line 124 "FirstProgram.adv"
 	print(CppAdvance::Str{u"Read"});
 	#line 125 "FirstProgram.adv"
-	return GetTest();
+	return x;
 }
 #line 127 "FirstProgram.adv"
-template<class _ElemRight> auto Vector3::setAt(CppAdvance::i32 idx, const _ElemRight& value)  -> void 
+auto Vector3::setAt(CppAdvance::i32 idx, const CppAdvance::f32& value)  -> void 
 {
 	#line 128 "FirstProgram.adv"
 	if (value < CppAdvance::i32(10)) {
@@ -515,49 +515,33 @@ template<class U> inline constexpr auto Vector3::TemplateMethod(U x, U y, U z)  
 
 		
 		#line 171 "FirstProgram.adv"
-		private: CppAdvance::i32 p_Count = CppAdvance::i32(1);
-		#line 176 "FirstProgram.adv"
-		private: auto setCount(const CppAdvance::i32& value) -> __self& 
+		#line 171 "FirstProgram"
+		public: inline auto operator[](CppAdvance::i32 idx) -> CppAdvance::f32 
+		#line 171 "FirstProgram"
+		public: inline auto operator[](CppAdvance::i32 idx) const -> const CppAdvance::f32 
+		
+		#line 181 "FirstProgram.adv"
+		#line 181 "FirstProgram"
+		public: inline auto _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) -> CppAdvance::f32 
 		{
-			#line 177 "FirstProgram.adv"
-			print(CppAdvance::Str{u"Write"});
-			#line 178 "FirstProgram.adv"
-			if (value > CppAdvance::i32(10)) {
-				#line 178 "FirstProgram.adv"
-				p_Count = value / CppAdvance::i32(10);
-			} else {
-				#line 179 "FirstProgram.adv"
-				p_Count = value;
-			}
-			return *this;
+			#line 181 "FirstProgram.adv"
+			ADV_EXPRESSION_BODY(y + z); 
 		}
-		#line 172 "FirstProgram.adv"
-		public: auto getCount() const  -> CppAdvance::i32 
+		#line 181 "FirstProgram"
+		public: inline auto _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const -> const CppAdvance::f32 
 		{
-			#line 173 "FirstProgram.adv"
-			print(CppAdvance::Str{u"Read"});
-			#line 174 "FirstProgram.adv"
-			return p_Count * CppAdvance::i32(10);
+			#line 181 "FirstProgram.adv"
+			ADV_EXPRESSION_BODY(y + z); 
 		}
-		#line 9999 "FirstProgram.adv"
-		ADV_PROPERTY_GETTER_SETTER(public, __self, CppAdvance::i32, Count, public, getCount, private, setCount);
-		#line 183 "FirstProgram.adv"
-		#line 183 "FirstProgram.adv"
-		public: inline constexpr auto getName() const  -> CppAdvance::Str 
-		{
-			#line 183 "FirstProgram.adv"
-			ADV_EXPRESSION_BODY(CppAdvance::Str{u"Vector3"}); 
-		}
-		#line 9999 "FirstProgram.adv"
-		ADV_PROPERTY_GETTER(public, __self, CppAdvance::Str, Name, getName);
+		
 		
 	};
-	#line 185 "FirstProgram.adv"
+	#line 183 "FirstProgram.adv"
 	(*this)[CppAdvance::i32(0)] = CppAdvance::i32(13);
-	#line 187 "FirstProgram.adv"
+	#line 185 "FirstProgram.adv"
 	LocalStruct ls{ CppAdvance::i32(5), CppAdvance::i32(3), CppAdvance::i32(10) }; 
-	#line 188 "FirstProgram.adv"
+	#line 186 "FirstProgram.adv"
 	print(ls.__ref().Count);
-	#line 189 "FirstProgram.adv"
+	#line 187 "FirstProgram.adv"
 	return { x, y, z };
 }

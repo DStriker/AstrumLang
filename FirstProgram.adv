@@ -119,10 +119,10 @@ public struct Vector3 : IEquatable, IFormattable
 		return this;
 	}
 
-	public this[idx: i32] -> Test111 {
+	public this[idx: i32] -> f32 {
 		get = {
 			print("Read");
-			return GetTest();
+			return x;
 		}
 		public set = {
 			if (value < 10) return;
@@ -168,19 +168,7 @@ public struct Vector3 : IEquatable, IFormattable
 				}
 				}
 
-				public Count: i32 = 1 {
-					get {
-						print("Read");
-						return field * 10;
-					}
-					private set {
-						print("Write");
-						if (value > 10) field = value / 10;
-						else field = value;
-					}
-				}
-
-				public Name: str ==> "Vector3";
+				public this[idx: i32, idx2: i32, idx3: i32] -> f32 ==> y + z;
 			}
 			this[0] = 13;
 			//print(this[0]);

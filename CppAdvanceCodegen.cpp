@@ -2,7 +2,7 @@
 #include "StringUtils.h"
 
 #define GET_ELEMENT_AT out << "_parent.getAt(";\
-for (auto param : func.indexerParams->paramDeclList()->paramDeclaration())\
+for (auto param : params)\
 {\
 	bool first = true;\
 	if (auto t = param->theTypeId())\
@@ -13,6 +13,51 @@ for (auto param : func.indexerParams->paramDeclList()->paramDeclaration())\
 	}\
 }\
 out << ")";
+
+#define INDEXER_WRITE_METHODS \
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator+=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t+=u;} { return *this = __ref() += std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator-=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t-=u;} { return *this = __ref() -= std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator*=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t*=u;} { return *this = __ref() *= std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator/=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t/=u;} { return *this = __ref() /= std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator%=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t%=u;} { return *this = __ref() %= std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator&=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t&=u;} { return *this = __ref() &= std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator|=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t|=u;} { return *this = __ref() |= std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator^=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t^=u;} { return *this = __ref() ^= std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator<<=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t<<=u;} { return *this = __ref() <<= std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator>>=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t>>=u;} { return *this = __ref() >>= std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "FORCE_INLINE decltype(auto) operator++() requires requires(__IdxT t) {++t;} { return *this = ++__ref(); }\n" << std::string(depth, '\t');\
+out << "FORCE_INLINE decltype(auto) operator++(int) requires requires(__IdxT t) {t++;} { auto copy = __ref(); *this = ++__ref(); return copy; }\n" << std::string(depth, '\t');\
+out << "FORCE_INLINE decltype(auto) operator--() requires requires(__IdxT t) {--t;} { return *this = --__ref(); }\n" << std::string(depth, '\t');\
+out << "FORCE_INLINE decltype(auto) operator--(int) requires requires(__IdxT t) {t--;} { auto copy = __ref(); *this = --__ref(); return copy; }\n" << std::string(depth, '\t');
+
+#define INDEXER_READ_METHODS(line) \
+out << "FORCE_INLINE decltype(auto) operator+() const requires requires(__IdxT t) {t = +t;} { return +__ref(); }\n" << std::string(depth, '\t');\
+out << "FORCE_INLINE decltype(auto) operator-() const requires requires(__IdxT t) {t = -t;} { return -__ref(); }\n" << std::string(depth, '\t');\
+out << "FORCE_INLINE decltype(auto) operator~() const requires requires(__IdxT t) {t = ~t;} { return ~__ref(); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator+(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t+u;} { return __ref() + std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator-(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t-u;} { return __ref() - std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator*(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t*u;} { return __ref() * std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator/(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t/u;} { return __ref() / std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator%(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t%u;} { return __ref() % std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator&(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t&u;} { return __ref() & std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator|(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t|u;} { return __ref() | std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator^(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t^u;} { return __ref() ^ std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator<<(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t<<u;} { return __ref() << std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator>>(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t>>u;} { return __ref() >> std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator[](_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) { t[u];} { return __ref()[std::forward<_ElemRight>(other)]; }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator[](_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t[u];} { return __ref()[std::forward<_ElemRight>(other)]; }\n" << std::string(depth, '\t');\
+out << "template<class... Args> FORCE_INLINE decltype(auto) operator()(Args&&... other) { return __ref()(std::forward<Args>(other)...); }\n" << std::string(depth, '\t');\
+out << "template<class... Args> FORCE_INLINE decltype(auto) operator()(Args&&... other) const { return __ref()(std::forward<Args>(other)...); }\n" << std::string(depth, '\t');\
+out << "template<class Ch> friend FORCE_INLINE decltype(auto) operator<<(std::basic_ostream<Ch>& stream, const __IndexerAccessor_" << line << "<__IdxT>& elem) { return stream << elem.__ref(); }\n" << std::string(depth, '\t');\
+out << "FORCE_INLINE decltype(auto) operator*() requires requires(__IdxT t) {*t;} { return *__ref(); }\n" << std::string(depth, '\t');\
+out << "FORCE_INLINE decltype(auto) operator&() requires requires(__IdxT t) {&t;} { return &__ref(); }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE bool operator==(const _ElemRight& other) const requires requires(__IdxT t, _ElemRight u) {t==u;} { return __ref() == other; }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE bool operator!=(const _ElemRight& other) const requires requires(__IdxT t, _ElemRight u) {t!=u;} { return __ref() != other; }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE bool operator<(const _ElemRight& other) const requires requires(__IdxT t, _ElemRight u) {t<u;} { return __ref() < other; }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE bool operator<=(const _ElemRight& other) const requires requires(__IdxT t, _ElemRight u) {t<=u;} { return __ref() <= other; }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE bool operator>(const _ElemRight& other) const requires requires(__IdxT t, _ElemRight u) {t>u;} { return __ref() > other; }\n" << std::string(depth, '\t');\
+out << "template<class _ElemRight> FORCE_INLINE bool operator>=(const _ElemRight& other) const requires requires(__IdxT t, _ElemRight u) {t>=u;} { return __ref() >= other; }\n" << std::string(depth, '\t');\
+out << "FORCE_INLINE explicit operator bool() const requires(!std::is_same_v<__IdxT,bool>) { return static_cast<bool>(__ref()); }\n" << std::string(depth, '\t');
 
 void CppAdvanceCodegen::printGlobalVariables() const
 {
@@ -1155,21 +1200,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				}
 			}
 			out << "std::forward<_ElemRight>(other)); return *this; }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator+=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t+=u;} { return *this = __ref() += std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator-=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t-=u;} { return *this = __ref() -= std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator*=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t*=u;} { return *this = __ref() *= std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator/=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t/=u;} { return *this = __ref() /= std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator%=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t%=u;} { return *this = __ref() %= std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator&=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t&=u;} { return *this = __ref() &= std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator|=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t|=u;} { return *this = __ref() |= std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator^=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t^=u;} { return *this = __ref() ^= std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator<<=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t<<=u;} { return *this = __ref() <<= std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator>>=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t>>=u;} { return *this = __ref() >>= std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "FORCE_INLINE decltype(auto) operator++() requires requires(__IdxT t) {++t;} { return *this = ++__ref(); }\n" << std::string(depth, '\t');
-			out << "FORCE_INLINE decltype(auto) operator++(int) requires requires(__IdxT t) {t++;} { auto copy = __ref(); *this = ++__ref(); return copy; }\n" << std::string(depth, '\t');
-			out << "FORCE_INLINE decltype(auto) operator--() requires requires(__IdxT t) {--t;} { return *this = --__ref(); }\n" << std::string(depth, '\t');
-			out << "FORCE_INLINE decltype(auto) operator--(int) requires requires(__IdxT t) {t--;} { auto copy = __ref(); *this = --__ref(); return copy; }\n" << std::string(depth, '\t');
-
+			INDEXER_WRITE_METHODS;
 			isPrivate = false;
 			if (auto spec = func.indexerGetter->accessSpecifier())
 				isPrivate = spec->Private() || spec->Protected();
@@ -1177,6 +1208,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				isPrivate = true;
 			if (isPrivate) out << "private: ";
 			else out << "public: ";
+			auto params = func.indexerParams->paramDeclList()->paramDeclaration();
 			if (!func.isConstReturn)
 			{
 				out << "FORCE_INLINE operator __IdxT() { return ";
@@ -1195,7 +1227,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			out << "FORCE_INLINE decltype(auto) __ref() { return "; GET_ELEMENT_AT; out << "; }\n" << std::string(depth, '\t');
 			out << "FORCE_INLINE decltype(auto) __ref() const { return ";
 			out << "const_cast<std::remove_cvref_t<decltype(_parent)> const&>(_parent).getAt(";
-			for (auto param : func.indexerParams->paramDeclList()->paramDeclaration())
+			for (auto param : params)
 			{
 				bool first = true;
 				if (auto t = param->theTypeId())
@@ -1206,33 +1238,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				}
 			}
 			out << "); }\n" << std::string(depth, '\t');
-			out << "FORCE_INLINE decltype(auto) operator+() const requires requires(__IdxT t) {t = +t;} { return +__ref(); }\n" << std::string(depth, '\t');
-			out << "FORCE_INLINE decltype(auto) operator-() const requires requires(__IdxT t) {t = -t;} { return -__ref(); }\n" << std::string(depth, '\t');
-			out << "FORCE_INLINE decltype(auto) operator~() const requires requires(__IdxT t) {t = ~t;} { return ~__ref(); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator+(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t+u;} { return __ref() + std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator-(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t-u;} { return __ref() - std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator*(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t*u;} { return __ref() * std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator/(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t/u;} { return __ref() / std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator%(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t%u;} { return __ref() % std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator&(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t&u;} { return __ref() & std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator|(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t|u;} { return __ref() | std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator^(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t^u;} { return __ref() ^ std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator<<(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t<<u;} { return __ref() << std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator>>(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t>>u;} { return __ref() >> std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator[](_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) { t[u];} { return __ref()[std::forward<_ElemRight>(other)]; }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator[](_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t[u];} { return __ref()[std::forward<_ElemRight>(other)]; }\n" << std::string(depth, '\t');
-			out << "template<class... Args> FORCE_INLINE decltype(auto) operator()(Args&&... other) { return __ref()(std::forward<Args>(other)...); }\n" << std::string(depth, '\t');
-			out << "template<class... Args> FORCE_INLINE decltype(auto) operator()(Args&&... other) const { return __ref()(std::forward<Args>(other)...); }\n" << std::string(depth, '\t');
-			out << "template<class Ch> friend FORCE_INLINE decltype(auto) operator<<(std::basic_ostream<Ch>& stream, const __IndexerAccessor_" << func.pos.line << "<__IdxT>& elem) { return stream << elem.__ref(); }\n" << std::string(depth, '\t');
-			out << "FORCE_INLINE decltype(auto) operator*() requires requires(__IdxT t) {*t;} { return *__ref(); }\n" << std::string(depth, '\t');
-			out << "FORCE_INLINE decltype(auto) operator&() requires requires(__IdxT t) {&t;} { return &__ref(); }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE bool operator==(const _ElemRight& other) const requires requires(__IdxT t, _ElemRight u) {t==u;} { return __ref() == other; }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE bool operator!=(const _ElemRight& other) const requires requires(__IdxT t, _ElemRight u) {t!=u;} { return __ref() != other; }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE bool operator<(const _ElemRight& other) const requires requires(__IdxT t, _ElemRight u) {t<u;} { return __ref() < other; }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE bool operator<=(const _ElemRight& other) const requires requires(__IdxT t, _ElemRight u) {t<=u;} { return __ref() <= other; }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE bool operator>(const _ElemRight& other) const requires requires(__IdxT t, _ElemRight u) {t>u;} { return __ref() > other; }\n" << std::string(depth, '\t');
-			out << "template<class _ElemRight> FORCE_INLINE bool operator>=(const _ElemRight& other) const requires requires(__IdxT t, _ElemRight u) {t>=u;} { return __ref() >= other; }\n" << std::string(depth, '\t');
-			out << "FORCE_INLINE explicit operator bool() const requires(!std::is_same_v<__IdxT,bool>) { return static_cast<bool>(__ref()); }\n" << std::string(depth, '\t');
+			INDEXER_READ_METHODS(func.pos.line);
 
 			out << "\n" << std::string(--depth, '\t') << "};\n\n" << std::string(depth, '\t');
 			out << "friend struct __IndexerAccessor_" << func.pos.line << "<";
@@ -1340,7 +1346,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 					isInline = true;
 				}
 			}
-			out << "template<class _ElemRight> ";
+			
 			if (isUnsafe)
 			{
 				out << "[[clang::annotate(\"unsafe\")]] ";
@@ -1360,7 +1366,9 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			}
 			out << "void setAt(";
 			printParamDeclClause(func.indexerParams);
-			out << ", const _ElemRight& value)";
+			out << ", const ";
+			printTypeId(func.returnType);
+			out << "& value)";
 			if (func.isOverride) out << " override";
 			if (func.isFinal) out << " final";
 			out << ";\n" << std::string(depth, '\t');
@@ -3420,6 +3428,7 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 {
 	sema.symbolContexts.push(sema.symbolContexts.top());
 	bool prevUnsafe = isUnsafe;
+	bool prevFunctionBody = functionBody;
 	
 	SourcePosition pos = { ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() };
 	if (sema.methods.contains(pos))
@@ -3909,7 +3918,7 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			{
 				out << "template<> ";
 			}
-			out << "template<class _ElemRight> ";
+			
 			if (func.isConstexpr)
 			{
 				out << "inline constexpr ";
@@ -3941,7 +3950,9 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			isUnsafe = func.isUnsafe;
 			out << "(";
 			printParamDeclClause(func.indexerParams);
-			out << ", const _ElemRight& value) ";
+			out << ", const ";
+			printTypeId(func.returnType);
+			out << "& value) ";
 			isVariadicTemplate = false;
 			if (!func.isStatic) {
 				if (func.isOverride) out << "override ";
@@ -3969,9 +3980,110 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 		{
 			out << "#endif " << std::endl;
 		}
+		out.switchTo(false);
 	}
-	out.switchTo(false);
+	else
+	{
+		CppAdvanceParser::IndexerGetterContext* getter = nullptr;
+		CppAdvanceParser::IndexerSetterContext* setter = nullptr;
+
+		if (auto prop = ctx->indexerProperty())
+		{
+			getter = prop->indexerGetter();
+			setter = prop->indexerSetter();
+		}
+
+		if (!currentAccessSpecifier) currentAccessSpecifier = AccessSpecifier::Private; std::string funcname;
+
+		auto params = ctx->paramDeclClause()->paramDeclList()->paramDeclaration();
+		if (params.size() == 1) {
+			funcname = "operator[]";
+		}
+		else
+		{
+			funcname = "_operator_subscript";
+		}
+		
+		
+		if (!ctx->returnType()->Const()) {
+			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << "\"";
+			out << "\n" << std::string(depth, '\t');
+
+			switch (*currentAccessSpecifier)
+			{
+			case AccessSpecifier::Public:
+			case AccessSpecifier::Internal:
+				out << "public: ";
+				break;
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected: ";
+				break;
+			case AccessSpecifier::Private:
+				out << "private: ";
+				break;
+			default:
+				break;
+			}
+
+			out << "inline auto " << funcname << "(";
+			printParamDeclClause(ctx->paramDeclClause());
+			out << ") -> ";
+			printTypeId(ctx->returnType()->theTypeId());
+			if (ctx->returnType()->Ref()) out << "&";
+			out << " ";
+			if (auto body = ctx->functionBody())
+			{
+				functionProlog = true;
+				printFunctionBody(body);
+			}
+			else if (auto body = ctx->shortFunctionBody())
+			{
+				functionProlog = true;
+				printShortFunctionBody(body);
+			}
+			out << "\n" << std::string(depth, '\t');
+		}
+		out << "#line " << ctx->getStart()->getLine() << " \"" << filename << "\"";
+		out << "\n" << std::string(depth, '\t');
+
+		switch (*currentAccessSpecifier)
+		{
+		case AccessSpecifier::Public:
+		case AccessSpecifier::Internal:
+			out << "public: ";
+			break;
+		case AccessSpecifier::Protected:
+		case AccessSpecifier::ProtectedInternal:
+			out << "protected: ";
+			break;
+		case AccessSpecifier::Private:
+			out << "private: ";
+			break;
+		default:
+			break;
+		}
+
+		out << "inline auto " << funcname << "(";
+		printParamDeclClause(ctx->paramDeclClause());
+		out << ") const -> const ";
+		printTypeId(ctx->returnType()->theTypeId());
+		if (ctx->returnType()->Ref()) out << "&";
+		out << " ";
+		if (auto body = ctx->functionBody())
+		{
+			functionProlog = true;
+			printFunctionBody(body);
+		}
+		else if (auto body = ctx->shortFunctionBody())
+		{
+			functionProlog = true;
+			printShortFunctionBody(body);
+		}
+		out << "\n" << std::string(depth, '\t');
+	}
 	isUnsafe = prevUnsafe;
+	functionBody = prevFunctionBody;
 	refParameters.clear();
 	namedReturns.clear();
 	sema.symbolContexts.pop();

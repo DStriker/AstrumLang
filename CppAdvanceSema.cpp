@@ -3319,6 +3319,7 @@ void CppAdvanceSema::enterIndexer(CppAdvanceParser::IndexerContext* ctx)
 	CppAdvanceParser::ExceptionSpecificationContext* exceptions = ctx->exceptionSpecification();
 	CppAdvanceParser::IndexerGetterContext* getter = nullptr;
 	CppAdvanceParser::IndexerSetterContext* setter = nullptr;
+	prevFunctionBody = functionBody;
 
 	for (auto spec : ctx->functionSpecifier()) {
 		if (spec->Inline()) isInline = true;
@@ -3399,6 +3400,15 @@ void CppAdvanceSema::enterIndexer(CppAdvanceParser::IndexerContext* ctx)
 		}
 	}
 
+	if (auto prop = ctx->indexerProperty())
+	{
+		getter = prop->indexerGetter();
+		setter = prop->indexerSetter();
+	}
+
+	if (setter && functionBody)
+		CppAdvanceCompilerError("Cannot to declare indexer property in the local type", setter->Set()->getSymbol());
+
 	if (firstPass && !functionBody) {
 		if (isStatic) {
 			if (isMutating)
@@ -3437,12 +3447,6 @@ void CppAdvanceSema::enterIndexer(CppAdvanceParser::IndexerContext* ctx)
 				isRefReturn = true;			
 			if (ret->Forward())
 				isForwardReturn = true;
-		}
-
-		if (auto prop = ctx->indexerProperty())
-		{
-			getter = prop->indexerGetter();
-			setter = prop->indexerSetter();
 		}
 
 		if (auto body = ctx->functionBody())
@@ -3529,7 +3533,8 @@ void CppAdvanceSema::enterIndexer(CppAdvanceParser::IndexerContext* ctx)
 
 void CppAdvanceSema::exitIndexer(CppAdvanceParser::IndexerContext* ctx)
 {
-	if (firstPass != functionBody) {
+	functionBody = prevFunctionBody;
+	if (firstPass && ! functionBody) {
 		std::string funcname;
 		if (!currentType.empty()) funcname += currentType + ".";
 		funcname += ctx->paramDeclClause()->paramDeclList()->paramDeclaration().size() == 1 ? "operator[]" : "_operator_subscript";
