@@ -54,9 +54,7 @@ public ref struct Span
 public struct Vector3 : IEquatable, IFormattable
 {
 	public {
-		x: f32;
-		y: f32;
-		z: f32;
+		x, y, z: f32;
 		t: NestedStruct { get; private set; }
 
 		//if debug _version: i32;
@@ -141,39 +139,8 @@ public struct Vector3 : IEquatable, IFormattable
 		inline static GetTest: () -> Test111 ==> Test111();
 
 		mut TemplateMethod: <U> (x: U, y: U, z: U) -> Coords == {
-			struct LocalStruct {
-				public x: i32;
-				public y: i32;
-				public z: i32;
-
-				public this(x: i32, y: i32, z: i32) == {
-					this.x = x;
-					this.y = y;
-					this.z = z;
-				}
-
-				private {
-				hidden: () -> i32 = {
-					print("hidden");
-					return 0;
-				}
-				} 
-
-				public {
-				printt: ()= {
-					j: i32;
-					print(x);
-					print(y);
-					print(z);
-				}
-				}
-
-				public this[idx: i32, idx2: i32, idx3: i32] -> f32 ==> y + z;
-			}
 			this[0] = 13;
 			//print(this[0]);
-			ls: LocalStruct(5,3,10);
-			print(ls.Count);
 			return {x,y,z};
 		}
 	}
@@ -216,7 +183,8 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 	print(v.TemplateMethod(3,4,5).x);
 	fv: Vector3 = v;
 	//print(fv.Name);
-	print(Vector3.Count);
+	x, y, z: f32;
+	print(z);
 	Vector3.setCount(30);
 	Vector3.Count = 30;
 	print(Vector3.Count);

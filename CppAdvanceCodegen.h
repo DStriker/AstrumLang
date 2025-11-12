@@ -144,6 +144,7 @@ public:
 	void printShortFunctionBody(CppAdvanceParser::ShortFunctionBodyContext* ctx) const;
 	void printMemberBlockDeclaration(CppAdvanceParser::MemberBlockDeclarationContext* ctx) const;
 	void printSimpleDeclaration(CppAdvanceParser::SimpleDeclarationContext* ctx) const;
+	void printSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDeclarationContext* ctx) const;
 	void printDeconstructionDeclaration(CppAdvanceParser::DeconstructionDeclarationContext* ctx) const;
 	void printSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpecifierContext* ctx) const;
 	void printRefDeclaration(CppAdvanceParser::RefDeclarationContext* ctx) const;

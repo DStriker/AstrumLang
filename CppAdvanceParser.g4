@@ -39,6 +39,7 @@ externVariableDeclaration: Extern Identifier Colon theTypeId Semi;
 
 blockDeclaration:
 	  simpleDeclaration
+	| simpleMultiDeclaration
 	| deconstructionDeclaration
 	| refDeclaration
 	| multiDeclaration
@@ -49,6 +50,7 @@ blockDeclaration:
 
 memberBlockDeclaration:
 	  simpleDeclaration
+	| simpleMultiDeclaration
 	| memberRefDeclaration
 	| constantDeclaration
 	| aliasDeclaration
@@ -221,6 +223,8 @@ deconstructionDeclaration: (Const | Let)? identifierSeq Colon Assign initializer
 refDeclaration: (Const | Let)? Amp identifierSeq Colon (typeSpecifierSeq | Assign initializerClause) Semi;
 
 memberRefDeclaration: (Const | Let)? Amp Identifier Colon theTypeId Semi;
+
+simpleMultiDeclaration: declSpecifierSeq? Identifier (Comma Identifier)* Colon theTypeId Semi;
 
 multiDeclaration: declSpecifierSeq? (Identifier Colon Assign)+ initializerClause Semi;
 

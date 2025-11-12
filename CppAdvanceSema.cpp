@@ -3857,6 +3857,174 @@ void CppAdvanceSema::exitPropertySetter(CppAdvanceParser::PropertySetterContext*
 	symbolContexts.pop();
 }
 
+void CppAdvanceSema::enterSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDeclarationContext*)
+{
+	
+}
+
+void CppAdvanceSema::exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDeclarationContext* ctx)
+{
+	if (firstPass && functionBody) return;
+	bool isConst = false;
+	bool isVolatile = false;
+	bool isThreadLocal = false;
+	bool isStatic = false;
+	bool isMutable = false;
+
+	if (auto spec = ctx->declSpecifierSeq())
+	{
+		for (auto d : spec->declSpecifier())
+		{
+			if (d->Const() || d->Let()) isConst = true;
+			else if (d->Volatile()) isVolatile = true;
+			else if (d->Thread_local()) isThreadLocal = true;
+			else if (d->Static()) {
+				isStatic = true;
+				if (!functionBody && !isTypeDefinitionBody()) CppAdvanceCompilerError("Global variables and constants are implicitly static, explicit declaration is not required", d->Static()->getSymbol());
+			}
+			else if (d->Mutable()) {
+				isMutable = true;
+				if (!functionBody && !isTypeDefinitionBody()) CppAdvanceCompilerError("Global variables and constants are implicitly mutable, explicit declaration is not required", d->Mutable()->getSymbol());
+			}
+		}
+	}
+
+	if (isConst && isMutable)
+	{
+		CppAdvanceCompilerError("Constant cannot be mutable", ctx->declSpecifierSeq()->getStart());
+	}
+	if (isConst && isVolatile)
+	{
+		CppAdvanceCompilerError("Constant is not required to be volatile", ctx->declSpecifierSeq()->getStart());
+	}
+	if (isVolatile && isThreadLocal)
+	{
+		CppAdvanceCompilerError("Thread local variable is not required to be volatile", ctx->declSpecifierSeq()->getStart());
+	}
+	if (isConst && isThreadLocal)
+	{
+		CppAdvanceCompilerError("Thread local variable cannot be constant", ctx->declSpecifierSeq()->getStart());
+	}
+	if (isConst && (!isTypeDefinitionBody() || functionBody))
+	{
+		CppAdvanceCompilerError("The constant must be explicitly initialized", ctx->declSpecifierSeq()->getStart());
+	}
+
+	auto ids = ctx->Identifier();
+	for (auto id : ids)
+	{
+		auto txt = id->getText();
+		symbolTable[txt] = contextTypes[ctx->theTypeId()];
+		if (isTypeDefinitionBody() && !functionBody)
+		{
+			symbolTable.globalSymbolTable[currentType + "." + txt] = contextTypes[ctx->theTypeId()];
+		}
+	}
+
+	if (!functionBody && firstPass)
+	{
+		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		std::optional<AccessSpecifier> access = std::nullopt;
+		bool isProtectedInternal = false;
+		if (auto block = dynamic_cast<CppAdvanceParser::BlockDeclarationContext*>(ctx->parent))
+		{
+			if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(block->parent))
+			{
+				acc = decl->accessSpecifier();
+			}
+		}
+		if (!acc)
+		{
+			if (auto block = dynamic_cast<CppAdvanceParser::MemberBlockDeclarationContext*>(ctx->parent))
+			{
+				if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(block->parent)) {
+					isProtectedInternal = decl->protectedInternal();
+					acc = decl->accessSpecifier();
+				}
+			}
+		}
+		if (isProtectedInternal)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", ctx->getStart());
+			if (!isStatic)
+				CppAdvanceCompilerError("Cannot to declare non-static protected internal field, use public/internal/protected/private", ctx->getStart());
+			if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+				CppAdvanceCompilerError("Cannot to declare protected field in the struct/union/enum", ctx->getStart());
+			access = AccessSpecifier::ProtectedInternal;
+		}
+		else if (acc)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (acc->Public())
+			{
+				access = AccessSpecifier::Public;
+			}
+			else if (acc->Protected())
+			{
+				access = AccessSpecifier::Protected;
+				if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+					CppAdvanceCompilerError("Cannot to declare protected field in the struct/union/enum", ctx->getStart());
+			}
+			else if (acc->Private())
+			{
+				access = AccessSpecifier::Private;
+			}
+			else if (acc->Internal())
+			{
+				access = AccessSpecifier::Internal;
+			}
+		}
+
+		if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
+		if (isThreadLocal)
+		{
+			if (access)
+			{
+				if (*access != AccessSpecifier::Private && !isTypeDefinitionBody()) CppAdvanceCompilerError("Thread-local variables should always be private. Use getters/setters to configure access or thread-local variables", ctx->declSpecifierSeq()->getStart());
+			}
+			else access = AccessSpecifier::Private;
+		}
+		else
+		{
+			if (!access) {
+				if (!isTypeDefinitionBody())
+					access = AccessSpecifier::Internal;
+				else
+					access = AccessSpecifier::Private;
+			}
+		}
+		for (auto id : ids)
+		{
+			if (!isTypeDefinitionBody())
+			{
+				if (*access == AccessSpecifier::Protected) protectedSymbols.insert(id->getText());
+				if (unsafeDepth > 0) cppParser.unsafeVariables.insert(id->getText());
+				globalVariables.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), 
+					{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr, *access, 
+					getCurrentCompilationCondition(), "", false, isConst, isVolatile, isThreadLocal, unsafeDepth > 0 });
+			}
+			else
+			{
+				if (unsafeDepth > 0) cppParser.unsafeVariables.insert(currentType + "." + id->getText());
+				structStack.top()->fields.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), 
+					{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr, *access, 
+					getCurrentCompilationCondition(), "", isStatic, isConst, isVolatile, isThreadLocal, unsafeDepth > 0 });
+				if (isStatic || isThreadLocal)
+				{
+					if (isProtectedTypeDefinition) access = AccessSpecifier::Protected;
+					else access = AccessSpecifier::Private;
+					staticFields.emplace_back(VariableDefinition{ id->getText(), getLastTypeTemplateParams(), ctx->theTypeId(), 
+						{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr, *access, 
+						getCurrentCompilationCondition(), getCurrentFullTypeName(), isStatic, isConst, isVolatile, isThreadLocal, 
+						isUnsafeTypeDefinition, getLastTypeTemplateSpecializationArgs() != nullptr });
+				}
+			}
+		}
+	}
+}
+
 void CppAdvanceSema::enterIterationStatement(CppAdvanceParser::IterationStatementContext*)
 {
 	if (firstPass) return;

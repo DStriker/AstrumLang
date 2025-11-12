@@ -256,6 +256,9 @@ public:
   virtual void enterMemberRefDeclaration(CppAdvanceParser::MemberRefDeclarationContext * /*ctx*/) override { }
   virtual void exitMemberRefDeclaration(CppAdvanceParser::MemberRefDeclarationContext * /*ctx*/) override { }
 
+  virtual void enterSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDeclarationContext * /*ctx*/) override { }
+  virtual void exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDeclarationContext * /*ctx*/) override { }
+
   virtual void enterMultiDeclaration(CppAdvanceParser::MultiDeclarationContext * /*ctx*/) override { }
   virtual void exitMultiDeclaration(CppAdvanceParser::MultiDeclarationContext * /*ctx*/) override { }
 

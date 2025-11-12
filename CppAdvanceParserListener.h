@@ -254,6 +254,9 @@ public:
   virtual void enterMemberRefDeclaration(CppAdvanceParser::MemberRefDeclarationContext *ctx) = 0;
   virtual void exitMemberRefDeclaration(CppAdvanceParser::MemberRefDeclarationContext *ctx) = 0;
 
+  virtual void enterSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDeclarationContext *ctx) = 0;
+  virtual void exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDeclarationContext *ctx) = 0;
+
   virtual void enterMultiDeclaration(CppAdvanceParser::MultiDeclarationContext *ctx) = 0;
   virtual void exitMultiDeclaration(CppAdvanceParser::MultiDeclarationContext *ctx) = 0;
 

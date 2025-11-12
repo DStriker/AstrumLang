@@ -1882,6 +1882,10 @@ void CppAdvanceCodegen::printBlockDeclaration(CppAdvanceParser::BlockDeclaration
 	{
 		printSimpleDeclaration(decl);
 	}
+	else if (auto decl = ctx->simpleMultiDeclaration())
+	{
+		printSimpleMultiDeclaration(decl);
+	}
 	else if (auto decl = ctx->deconstructionDeclaration())
 	{
 		printDeconstructionDeclaration(decl);
@@ -5446,6 +5450,10 @@ void CppAdvanceCodegen::printMemberBlockDeclaration(CppAdvanceParser::MemberBloc
 	{
 		printSimpleDeclaration(decl);
 	}
+	else if (auto decl = ctx->simpleMultiDeclaration())
+	{
+		printSimpleMultiDeclaration(decl);
+	}
 	else if (auto decl = ctx->memberRefDeclaration())
 	{
 		printMemberRefDeclaration(decl);
@@ -5560,6 +5568,56 @@ void CppAdvanceCodegen::printSimpleDeclaration(CppAdvanceParser::SimpleDeclarati
 
 	out << "; ";
 	first = false;
+	isUnsafe = prevUnsafe;
+	currentDeclarationName.clear();
+}
+
+void CppAdvanceCodegen::printSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDeclarationContext* ctx) const
+{
+	if (!functionBody) {
+		emptyLine = true;
+		return;
+	}
+	bool prevUnsafe = isUnsafe;
+
+	bool first = true;
+	bool isArray = false;
+	auto ids = ctx->Identifier();
+	if (auto spec = ctx->declSpecifierSeq())
+	{
+		printDeclSpecifierSeq(spec);
+	}
+	isDeclaration = true;
+	printTypeId(ctx->theTypeId());
+	isDeclaration = false;
+	isArray = ctx->theTypeId()->arrayDeclarator();
+	out << " ";
+	for (auto id : ids)
+	{
+		auto txt = id->getText();
+		currentDeclarationName = txt;
+		symbolTable[txt] = ctx->theTypeId()->getText();
+		currentType = symbolTable[txt];
+		
+		if (!first) out << ", ";
+		first = false;
+		out << txt;
+		if (isArray) printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
+		
+		if (functionBody && !checkForRefStruct)
+		{
+			out << "{}";
+		}
+	}
+	out << "; ";
+	if (checkForRefStruct)
+	{
+		out << "ADV_CHECK_REF_STRUCT(";
+		printTypeId(ctx->theTypeId());
+		auto t = ctx->theTypeId()->getText();
+		StringReplace(t, "\"", "\\\"");
+		out << ", \"" << t << "\");";
+	}
 	isUnsafe = prevUnsafe;
 	currentDeclarationName.clear();
 }

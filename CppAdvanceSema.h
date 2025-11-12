@@ -829,4 +829,10 @@ public:
 
 	void exitPropertySetter(CppAdvanceParser::PropertySetterContext*) override;
 
+
+	void enterSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDeclarationContext*) override;
+
+
+	void exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDeclarationContext*) override;
+
 };
