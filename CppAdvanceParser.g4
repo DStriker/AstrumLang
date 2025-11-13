@@ -97,6 +97,7 @@ structMemberDeclaration:
 	| (accessSpecifier | protectedInternal)? indexer
 	| property
 	| accessSpecifier? functionTemplateDeclaration
+	| friendDeclaration
 	;
 
 baseClause: Colon baseSpecifierList;
@@ -177,6 +178,12 @@ declSpecifierSeq: declSpecifier+?;
 
 identifierSeq: Identifier (Comma Identifier)*?;
 
+friendDeclaration: 
+	  Friend Identifier templateParams? Semi
+	| Friend Identifier Colon functionParams returnType LifetimeAnnotation? exceptionSpecification? Semi
+	| Friend functionDefinition
+	;
+
 selectionStatement: 
 	  Static? If LeftParen condition RightParen stat (Else elseBranch)?
 	| Static? If (Not? Consteval | condition) compoundStatement (Else elseBranch)?;
@@ -224,7 +231,7 @@ refDeclaration: (Const | Let)? Amp identifierSeq Colon (typeSpecifierSeq | Assig
 
 memberRefDeclaration: (Const | Let)? Amp Identifier Colon theTypeId Semi;
 
-simpleMultiDeclaration: declSpecifierSeq? Identifier (Comma Identifier)* Colon theTypeId Semi;
+simpleMultiDeclaration: declSpecifierSeq? Identifier (Comma Identifier)+ Colon theTypeId Semi;
 
 multiDeclaration: declSpecifierSeq? (Identifier Colon Assign)+ initializerClause Semi;
 

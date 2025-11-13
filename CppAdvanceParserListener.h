@@ -206,6 +206,9 @@ public:
   virtual void enterIdentifierSeq(CppAdvanceParser::IdentifierSeqContext *ctx) = 0;
   virtual void exitIdentifierSeq(CppAdvanceParser::IdentifierSeqContext *ctx) = 0;
 
+  virtual void enterFriendDeclaration(CppAdvanceParser::FriendDeclarationContext *ctx) = 0;
+  virtual void exitFriendDeclaration(CppAdvanceParser::FriendDeclarationContext *ctx) = 0;
+
   virtual void enterSelectionStatement(CppAdvanceParser::SelectionStatementContext *ctx) = 0;
   virtual void exitSelectionStatement(CppAdvanceParser::SelectionStatementContext *ctx) = 0;
 

@@ -56,39 +56,47 @@ struct Vector3 {
 	private: using __self = Vector3;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 	public: 
-	#line 82 "FirstProgram.adv"
+	#line 89 "FirstProgram.adv"
 	struct NestedStruct {
 		private: using __self = NestedStruct;
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-		#line 84 "FirstProgram.adv"
+		#line 91 "FirstProgram.adv"
 		public: CppAdvance::f32 x; ADV_CHECK_REF_STRUCT(CppAdvance::f32, "f32");
-		#line 85 "FirstProgram.adv"
+		#line 92 "FirstProgram.adv"
 		public: CppAdvance::f32 y; ADV_CHECK_REF_STRUCT(CppAdvance::f32, "f32");
-		#line 86 "FirstProgram.adv"
+		#line 93 "FirstProgram.adv"
 		public: CppAdvance::f32 z; ADV_CHECK_REF_STRUCT(CppAdvance::f32, "f32");
-		#line 87 "FirstProgram.adv"
+		#line 94 "FirstProgram.adv"
 		private: __FirstProgram_Protected::Test111 p_t; ADV_CHECK_REF_STRUCT(__FirstProgram_Protected::Test111, "Test111");
-		#line 87 "FirstProgram.adv"
+		#line 94 "FirstProgram.adv"
 		private: inline auto sett(const __FirstProgram_Protected::Test111& value) -> __self&;
-		#line 87 "FirstProgram.adv"
+		#line 94 "FirstProgram.adv"
 		public: inline auto gett() const  -> __FirstProgram_Protected::Test111;
 		#line 9999 "FirstProgram.adv"
 		ADV_PROPERTY_GETTER_SETTER(public, Vector3::NestedStruct, __FirstProgram_Protected::Test111, t, public, gett, private, sett);
 		
 	};
+	#line 63 "FirstProgram.adv"
+	private: friend class TestStruct;
+	#line 64 "FirstProgram.adv"
+	private: template<class T> friend class TestStruct2;
+	#line 65 "FirstProgram.adv"
+	private: friend CppAdvance::i32 func3(CppAdvance::i32 x);
+	#line 66 "FirstProgram.adv"
+	private: friend CppAdvance::i32 func4(CppAdvance::i32 x);
 	#line 57 "FirstProgram.adv"
 	public: CppAdvance::f32 x; ADV_CHECK_REF_STRUCT(CppAdvance::f32, "f32");
 	#line 57 "FirstProgram.adv"
 	public: CppAdvance::f32 y; ADV_CHECK_REF_STRUCT(CppAdvance::f32, "f32");
 	#line 57 "FirstProgram.adv"
 	public: CppAdvance::f32 z; ADV_CHECK_REF_STRUCT(CppAdvance::f32, "f32");
-	#line 77 "FirstProgram.adv"
+	#line 84 "FirstProgram.adv"
 	private: TESTDLL_HIDDEN static thread_local CppAdvance::i32 Count2; ADV_CHECK_REF_STRUCT(CppAdvance::i32, "i32");
-	#line 79 "FirstProgram.adv"
+	#line 86 "FirstProgram.adv"
 	public: TESTDLL_API static const Vector3 ZERO;
-	#line 78 "FirstProgram.adv"
+	#line 85 "FirstProgram.adv"
 	public: static constexpr auto BYTES = CppAdvance::i32(24);
-	#line 80 "FirstProgram.adv"
+	#line 87 "FirstProgram.adv"
 	private: using Coords = __ntuples::NamedTuple_6893f862d6c49683;
 	#line 58 "FirstProgram.adv"
 	private: NestedStruct p_t; ADV_CHECK_REF_STRUCT(NestedStruct, "NestedStruct");
@@ -98,40 +106,40 @@ struct Vector3 {
 	public: inline auto gett() const  -> NestedStruct;
 	#line 9999 "FirstProgram.adv"
 	ADV_PROPERTY_GETTER_SETTER(public, Vector3, NestedStruct, t, public, gett, private, sett);
-	#line 63 "FirstProgram.adv"
+	#line 70 "FirstProgram.adv"
 	private: static CppAdvance::i32 p_Count; ADV_CHECK_REF_STRUCT(CppAdvance::i32, "i32");
-	#line 68 "FirstProgram.adv"
+	#line 75 "FirstProgram.adv"
 	public: TESTDLL_API static auto setCount(const CppAdvance::i32& value) -> void;
-	#line 64 "FirstProgram.adv"
+	#line 71 "FirstProgram.adv"
 	public: TESTDLL_API static auto getCount()  -> CppAdvance::i32;
 	#line 9999 "FirstProgram.adv"
 	ADV_PROPERTY_GETTER_SETTER_STATIC(public, Vector3, CppAdvance::i32, Count, public, getCount, public, setCount);
-	#line 75 "FirstProgram.adv"
+	#line 82 "FirstProgram.adv"
 	public: inline constexpr auto getName() const  -> CppAdvance::Str;
 	#line 9999 "FirstProgram.adv"
 	ADV_PROPERTY_GETTER(public, Vector3, CppAdvance::Str, Name, getName);
-	#line 93 "FirstProgram.adv"
+	#line 100 "FirstProgram.adv"
 	public: inline constexpr Vector3()  = default;
-	#line 95 "FirstProgram.adv"
+	#line 102 "FirstProgram.adv"
 	public: inline constexpr Vector3(CppAdvance::f32 x, CppAdvance::f32 y, CppAdvance::f32 z) noexcept;
-	#line 101 "FirstProgram.adv"
-	public: template<class U> inline constexpr  Vector3(U f) ;
-	#line 106 "FirstProgram.adv"
-	public: inline constexpr  operator CppAdvance::f32() const noexcept;
 	#line 108 "FirstProgram.adv"
+	public: template<class U> inline constexpr  Vector3(U f) ;
+	#line 113 "FirstProgram.adv"
+	public: inline constexpr  operator CppAdvance::f32() const noexcept;
+	#line 115 "FirstProgram.adv"
 	public: inline constexpr auto operator+(const __self& other) const  -> decltype(auto);
-	#line 110 "FirstProgram.adv"
+	#line 117 "FirstProgram.adv"
 	public: inline auto operator++()  -> __self& LIFETIMEBOUND;
 	public: inline auto operator++(int)  -> Vector3;
 	#line 9999 "FirstProgram.adv"
-	private: template<class __IdxT = CppAdvance::f32> struct __IndexerAccessor_120 {
+	private: template<class __IdxT = CppAdvance::f32> struct __IndexerAccessor_127 {
 		private:
 		Vector3& _parent;
 		CppAdvance::i32 _idx;
 		 friend class Vector3;
 		public:
-		FORCE_INLINE __IndexerAccessor_120(Vector3& parent, CppAdvance::i32 idx) : _parent(parent), _idx(idx) {}
-		FORCE_INLINE __IndexerAccessor_120(Vector3 const& parent, CppAdvance::i32 idx) : _parent(const_cast<std::remove_cvref_t<decltype(parent)>&>(parent)), _idx(idx) {}
+		FORCE_INLINE __IndexerAccessor_127(Vector3& parent, CppAdvance::i32 idx) : _parent(parent), _idx(idx) {}
+		FORCE_INLINE __IndexerAccessor_127(Vector3 const& parent, CppAdvance::i32 idx) : _parent(const_cast<std::remove_cvref_t<decltype(parent)>&>(parent)), _idx(idx) {}
 		template<class _ElemRight> FORCE_INLINE auto& operator=(_ElemRight&& other) { _parent.setAt(_idx, std::forward<_ElemRight>(other)); return *this; }
 		template<class _ElemRight> FORCE_INLINE decltype(auto) operator+=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t+=u;} { return *this = __ref() += std::forward<_ElemRight>(other); }
 		template<class _ElemRight> FORCE_INLINE decltype(auto) operator-=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t-=u;} { return *this = __ref() -= std::forward<_ElemRight>(other); }
@@ -168,7 +176,7 @@ struct Vector3 {
 		template<class _ElemRight> FORCE_INLINE decltype(auto) operator[](_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t[u];} { return __ref()[std::forward<_ElemRight>(other)]; }
 		template<class... Args> FORCE_INLINE decltype(auto) operator()(Args&&... other) { return __ref()(std::forward<Args>(other)...); }
 		template<class... Args> FORCE_INLINE decltype(auto) operator()(Args&&... other) const { return __ref()(std::forward<Args>(other)...); }
-		template<class Ch> friend FORCE_INLINE decltype(auto) operator<<(std::basic_ostream<Ch>& stream, const __IndexerAccessor_120<__IdxT>& elem) { return stream << elem.__ref(); }
+		template<class Ch> friend FORCE_INLINE decltype(auto) operator<<(std::basic_ostream<Ch>& stream, const __IndexerAccessor_127<__IdxT>& elem) { return stream << elem.__ref(); }
 		FORCE_INLINE decltype(auto) operator*() requires requires(__IdxT t) {*t;} { return *__ref(); }
 		FORCE_INLINE decltype(auto) operator&() requires requires(__IdxT t) {&t;} { return &__ref(); }
 		template<class _ElemRight> FORCE_INLINE bool operator==(const _ElemRight& other) const requires requires(__IdxT t, _ElemRight u) {t==u;} { return __ref() == other; }
@@ -181,23 +189,23 @@ struct Vector3 {
 		
 	};
 
-	friend struct __IndexerAccessor_120<CppAdvance::f32>;
+	friend struct __IndexerAccessor_127<CppAdvance::f32>;
 	inline CppAdvance::f32 getAt(CppAdvance::i32 idx);
 	inline const CppAdvance::f32 getAt(CppAdvance::i32 idx) const;
 	inline void setAt(CppAdvance::i32 idx, const CppAdvance::f32& value);
-	#line 120 "FirstProgram.adv"
-	public: inline auto operator[](CppAdvance::i32 idx)  -> __IndexerAccessor_120<CppAdvance::f32>;
-	public: inline auto operator[](CppAdvance::i32 idx) const  -> const __IndexerAccessor_120<CppAdvance::f32>;
-	#line 130 "FirstProgram.adv"
+	#line 127 "FirstProgram.adv"
+	public: inline auto operator[](CppAdvance::i32 idx)  -> __IndexerAccessor_127<CppAdvance::f32>;
+	public: inline auto operator[](CppAdvance::i32 idx) const  -> const __IndexerAccessor_127<CppAdvance::f32>;
+	#line 137 "FirstProgram.adv"
 	public: inline constexpr auto _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  -> CppAdvance::f32;
 	public: inline constexpr auto _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const  -> const CppAdvance::f32;
-	#line 132 "FirstProgram.adv"
-	public: inline constexpr auto getX() const  -> CppAdvance::f32;
-	#line 135 "FirstProgram.adv"
-	public: inline constexpr static auto Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z)  -> CppAdvance::i32;
 	#line 139 "FirstProgram.adv"
+	public: inline constexpr auto getX() const  -> CppAdvance::f32;
+	#line 142 "FirstProgram.adv"
+	public: inline constexpr static auto Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z)  -> CppAdvance::i32;
+	#line 146 "FirstProgram.adv"
 	public: inline constexpr static auto GetTest()  -> __FirstProgram_Protected::Test111;
-	#line 141 "FirstProgram.adv"
+	#line 148 "FirstProgram.adv"
 	public: template<class U> inline constexpr auto TemplateMethod(U x, U y, U z)  -> Coords;
 	
 };
@@ -291,6 +299,8 @@ TESTDLL_HIDDEN auto testt(CppAdvance::i32 x)  -> __ntuples::NamedTuple_ffda88e0b
 template<class T, int32_t U> auto sum(T a, T b)  -> decltype(auto);
 #line 45 "FirstProgram.adv"
 template<> inline constexpr auto sum<CppAdvance::i32, CppAdvance::i32(15)>(CppAdvance::i32 a, CppAdvance::i32 b)  -> decltype(auto);
+#line 66 "FirstProgram.adv"
+inline auto func4(CppAdvance::i32 x)  -> CppAdvance::i32;
 //###############################################################################
 //# Global compile-time constants
 //###############################################################################
@@ -334,140 +344,146 @@ inline auto Vector3::sett(const typename Vector3::NestedStruct& value) -> __self
 #line 58 "FirstProgram.adv"
 inline auto Vector3::gett() const  -> typename Vector3::NestedStruct { return p_t; }
 
-#line 75 "FirstProgram.adv"
+#line 66 "FirstProgram.adv"
+inline auto func4(CppAdvance::i32 x)  -> CppAdvance::i32
+{
+	#line 67 "FirstProgram.adv"
+	return CppAdvance::i32(0);
+}
+#line 82 "FirstProgram.adv"
 inline constexpr auto Vector3::getName() const  -> CppAdvance::Str 
 {
-	#line 75 "FirstProgram.adv"
+	#line 82 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::Str{u"Vector3"}); 
 }
 
-#line 87 "FirstProgram.adv"
+#line 94 "FirstProgram.adv"
 inline auto Vector3::NestedStruct::sett(const __FirstProgram_Protected::Test111& value) -> __self& { p_t = value; return *this;}
-#line 87 "FirstProgram.adv"
+#line 94 "FirstProgram.adv"
 inline auto Vector3::NestedStruct::gett() const  -> __FirstProgram_Protected::Test111 { return p_t; }
 
-#line 95 "FirstProgram.adv"
+#line 102 "FirstProgram.adv"
 inline constexpr Vector3::Vector3(CppAdvance::f32 x, CppAdvance::f32 y, CppAdvance::f32 z) noexcept : 
-#line 96 "FirstProgram.adv"
+#line 103 "FirstProgram.adv"
 x{x}, 
-#line 97 "FirstProgram.adv"
+#line 104 "FirstProgram.adv"
 y{y}, 
-#line 98 "FirstProgram.adv"
+#line 105 "FirstProgram.adv"
 z{z}
 {
 }
-#line 101 "FirstProgram.adv"
+#line 108 "FirstProgram.adv"
 template<class U> inline constexpr Vector3::Vector3(U f)  :
-#line 102 "FirstProgram.adv"
+#line 109 "FirstProgram.adv"
 Vector3(f, f, f)
 {
-	#line 103 "FirstProgram.adv"
+	#line 110 "FirstProgram.adv"
 	this->x = f;
 }
-#line 106 "FirstProgram.adv"
+#line 113 "FirstProgram.adv"
 inline constexpr Vector3::operator CppAdvance::f32() const noexcept
 {
-	#line 106 "FirstProgram.adv"
+	#line 113 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(y); 
 }
-#line 108 "FirstProgram.adv"
+#line 115 "FirstProgram.adv"
 inline constexpr auto Vector3::operator+(const __self& other) const  -> decltype(auto)
 {
-	#line 108 "FirstProgram.adv"
+	#line 115 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(__self{(*this).__ref().x + other.__ref().x, (*this).__ref().y + other.__ref().y, (*this).__ref().z + other.__ref().z}); 
 }
-#line 110 "FirstProgram.adv"
+#line 117 "FirstProgram.adv"
 inline auto Vector3::operator++()  -> __self&
 {
-	#line 111 "FirstProgram.adv"
+	#line 118 "FirstProgram.adv"
 	++x;
-	#line 112 "FirstProgram.adv"
+	#line 119 "FirstProgram.adv"
 	++y;
-	#line 113 "FirstProgram.adv"
+	#line 120 "FirstProgram.adv"
 	++z;
-	#line 114 "FirstProgram.adv"
+	#line 121 "FirstProgram.adv"
 	++Count;
-	#line 115 "FirstProgram.adv"
+	#line 122 "FirstProgram.adv"
 	__FirstProgram_Protected::Test111 t{}; 
-	#line 117 "FirstProgram.adv"
+	#line 124 "FirstProgram.adv"
 	return (*this);
 }
-#line 110 "FirstProgram.adv"
+#line 117 "FirstProgram.adv"
 inline auto Vector3::operator++(int)  -> Vector3 { auto copy = *this; ++(*this); return copy; }
-#line 120 "FirstProgram.adv"
-auto Vector3::operator[](CppAdvance::i32 idx)  -> __IndexerAccessor_120<CppAdvance::f32>
+#line 127 "FirstProgram.adv"
+auto Vector3::operator[](CppAdvance::i32 idx)  -> __IndexerAccessor_127<CppAdvance::f32>
 {
-	return __IndexerAccessor_120<CppAdvance::f32>{ *this, idx };
+	return __IndexerAccessor_127<CppAdvance::f32>{ *this, idx };
 }
 
-#line 120 "FirstProgram.adv"
-auto Vector3::operator[](CppAdvance::i32 idx)  const  -> const __IndexerAccessor_120<CppAdvance::f32>
+#line 127 "FirstProgram.adv"
+auto Vector3::operator[](CppAdvance::i32 idx)  const  -> const __IndexerAccessor_127<CppAdvance::f32>
 {
-	return __IndexerAccessor_120<CppAdvance::f32>{ *this, idx };
+	return __IndexerAccessor_127<CppAdvance::f32>{ *this, idx };
 }
 
-#line 121 "FirstProgram.adv"
+#line 128 "FirstProgram.adv"
 auto Vector3::getAt(CppAdvance::i32 idx)  -> CppAdvance::f32
 {
-	#line 122 "FirstProgram.adv"
+	#line 129 "FirstProgram.adv"
 	print(CppAdvance::Str{u"Read"});
-	#line 123 "FirstProgram.adv"
+	#line 130 "FirstProgram.adv"
 	return x;
 }
-#line 121 "FirstProgram.adv"
+#line 128 "FirstProgram.adv"
 auto Vector3::getAt(CppAdvance::i32 idx) const  -> const CppAdvance::f32
 {
-	#line 122 "FirstProgram.adv"
+	#line 129 "FirstProgram.adv"
 	print(CppAdvance::Str{u"Read"});
-	#line 123 "FirstProgram.adv"
+	#line 130 "FirstProgram.adv"
 	return x;
 }
-#line 125 "FirstProgram.adv"
+#line 132 "FirstProgram.adv"
 auto Vector3::setAt(CppAdvance::i32 idx, const CppAdvance::f32& value)  -> void 
 {
-	#line 126 "FirstProgram.adv"
+	#line 133 "FirstProgram.adv"
 	if (value < CppAdvance::i32(10)) {
-		#line 126 "FirstProgram.adv"
+		#line 133 "FirstProgram.adv"
 		return ;
 	}
-	#line 127 "FirstProgram.adv"
+	#line 134 "FirstProgram.adv"
 	x = CppAdvance::i32(5);
 }
-#line 130 "FirstProgram.adv"
+#line 137 "FirstProgram.adv"
 inline constexpr auto Vector3::_operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  -> CppAdvance::f32
 {
-	#line 130 "FirstProgram.adv"
+	#line 137 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(y + z); 
 }
-#line 130 "FirstProgram.adv"
+#line 137 "FirstProgram.adv"
 inline constexpr auto Vector3::_operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  const  -> const CppAdvance::f32
 {
-	#line 130 "FirstProgram.adv"
+	#line 137 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(y + z); 
 }
-#line 132 "FirstProgram.adv"
+#line 139 "FirstProgram.adv"
 inline constexpr auto Vector3::getX() const  -> CppAdvance::f32
 {
-	#line 132 "FirstProgram.adv"
+	#line 139 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(x); 
 }
-#line 135 "FirstProgram.adv"
+#line 142 "FirstProgram.adv"
 inline constexpr auto Vector3::Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z)  -> CppAdvance::i32
 {
-	#line 136 "FirstProgram.adv"
+	#line 143 "FirstProgram.adv"
 	return y + z;
 }
-#line 139 "FirstProgram.adv"
+#line 146 "FirstProgram.adv"
 inline constexpr auto Vector3::GetTest()  -> __FirstProgram_Protected::Test111
 {
-	#line 139 "FirstProgram.adv"
+	#line 146 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(__FirstProgram_Protected::Test111{}); 
 }
-#line 141 "FirstProgram.adv"
+#line 148 "FirstProgram.adv"
 template<class U> inline constexpr auto Vector3::TemplateMethod(U x, U y, U z)  -> typename Vector3::Coords
 {
-	#line 142 "FirstProgram.adv"
+	#line 149 "FirstProgram.adv"
 	(*this)[CppAdvance::i32(0)] = CppAdvance::i32(13);
-	#line 144 "FirstProgram.adv"
+	#line 151 "FirstProgram.adv"
 	return { x, y, z };
 }

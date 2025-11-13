@@ -1187,19 +1187,19 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 		}
 		else if (spec->Static()) {
             isStatic = true;
-			if (!isTypeDefinitionBody())
+			if (!isTypeDefinitionBody() || isFriendDefinition)
 				CppAdvanceCompilerError("Global functions are implicitly static", spec->Static()->getSymbol());
 		}
 		else if (spec->Mutable())
 		{
 			isMutating = true;
-			if (!isTypeDefinitionBody())
+			if (!isTypeDefinitionBody() || isFriendDefinition)
 				CppAdvanceCompilerError("Global function cannot be mutating", spec->Mutable()->getSymbol());
 		}
 		else if (spec->Virtual())
 		{
 			isVirtual = true;
-			if (!isTypeDefinitionBody())
+			if (!isTypeDefinitionBody() || isFriendDefinition)
 				CppAdvanceCompilerError("Global function cannot be virtual", spec->Virtual()->getSymbol());
 			else if(currentTypeKind.top() != TypeKind::Class)
 				CppAdvanceCompilerError("Cannot to declare virtual method outside the class body", spec->Virtual()->getSymbol());
@@ -1207,13 +1207,13 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 		else if (spec->Override())
 		{
 			isOverride = true;
-			if (!isTypeDefinitionBody())
+			if (!isTypeDefinitionBody() || isFriendDefinition)
 				CppAdvanceCompilerError("Global function cannot be overrided", spec->Override()->getSymbol());
 		}
 		else if (spec->Final())
 		{
 			isFinal = true;
-			if (!isTypeDefinitionBody())
+			if (!isTypeDefinitionBody() || isFriendDefinition)
 				CppAdvanceCompilerError("Global function cannot be final", spec->Final()->getSymbol());
 			else if (currentTypeKind.top() != TypeKind::Class)
 				CppAdvanceCompilerError("Cannot to declare final method outside the class body", spec->Final()->getSymbol());
@@ -1390,8 +1390,14 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 			access = AccessSpecifier::ProtectedInternal;
 		}
 
-		if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
-		if (!access) access = AccessSpecifier::Internal;
+		if (!isFriendDefinition) {
+			if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
+			if (!access) access = AccessSpecifier::Internal;
+		}
+		else
+		{
+			access = structStack.top()->access;
+		}
 		std::string id;
 		bool isOperator = false;
 		if (ctx->Identifier()) id = ctx->Identifier()->getText();
@@ -1429,13 +1435,18 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 		}
 		if (isOperator && !id.ends_with("new") && !id.ends_with("delete"))
 			StringReplace(id, " ", "");
-		if (!isTypeDefinitionBody())
+		if (!isTypeDefinitionBody() || isFriendDefinition)
 		{
 			if (*access == AccessSpecifier::Protected && !isOperator) protectedSymbols.insert(id);
-			globalFunctions.emplace_back(
-				FunctionDefinition{ id, templateParams, templateSpecializationArgs, params, returnType, expression, exceptions, 
-				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(), 
-				isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth });
+			if (isFriendDefinition) isInline = true;
+			auto def = FunctionDefinition{ id, templateParams, templateSpecializationArgs, params, returnType, expression, exceptions,
+				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(),
+				isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth };
+			if (isFriendDefinition)
+			{
+				structStack.top()->friendFuncDefinitions.emplace_back(def);
+			}
+			globalFunctions.emplace_back(def);
 		}
 		else
 		{
@@ -1476,7 +1487,7 @@ void CppAdvanceSema::exitFunctionDefinition(CppAdvanceParser::FunctionDefinition
 	//if (firstPass == functionBody) return;
 	if (firstPass != functionBody) {
 		std::string funcname;
-		if (!currentType.empty()) funcname += currentType + ".";
+		if (!currentType.empty() && !isFriendDefinition) funcname += currentType + ".";
 		if (ctx->Identifier())
 			funcname += ctx->Identifier()->getText();
 		else if (ctx->simpleTemplateId())
@@ -2518,7 +2529,7 @@ void CppAdvanceSema::exitSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpecifi
 		{
 			typeset.insert(tuple);
 			auto access = (currentAccessSpecifier.top() ? *currentAccessSpecifier.top() : AccessSpecifier::Public);
-			forwardDeclarations.push_back({ tuple,{},access,"" });
+			forwardDeclarations.push_back({ tuple,{},access,{0,0},"" });
 			auto id = tuple;
 			if (id.find('.') != id.npos) id = id.substr(id.rfind('.') + 1);
 			std::vector<std::pair<std::string, CppAdvanceParser::TheTypeIdContext*>> fields;
@@ -2734,7 +2745,8 @@ void CppAdvanceSema::enterStructDefinition(CppAdvanceParser::StructDefinitionCon
 		auto def = std::make_shared<StructDefinition>( 
 			name, tparams, tspec, *access,getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, interfaces, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
-			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{},isUnsafe,ctx->structHead()->Ref() );
+			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
+			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, ctx->structHead()->Ref());
 		if (!structStack.empty())
 			structStack.top()->nestedStructs.push_back(def);
 		structStack.push(def);
@@ -2773,7 +2785,7 @@ void CppAdvanceSema::exitStructDefinition(CppAdvanceParser::StructDefinitionCont
 			auto& top = structStack.top();
 			if (top->access == AccessSpecifier::Protected) protectedSymbols.insert(top->id);
 			if (!top->templateSpecializationArgs)
-				forwardDeclarations.push_back({top->id,top->templateParams,top->access,top->compilationCondition,top->isUnsafe});
+				forwardDeclarations.push_back({ top->id,top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
 			globalStructs.push_back(top);
 		}
 		int idx = 0;
@@ -4022,6 +4034,34 @@ void CppAdvanceSema::exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDec
 				}
 			}
 		}
+	}
+}
+
+void CppAdvanceSema::enterFriendDeclaration(CppAdvanceParser::FriendDeclarationContext*)
+{
+	isFriendDefinition = true;
+}
+
+void CppAdvanceSema::exitFriendDeclaration(CppAdvanceParser::FriendDeclarationContext* ctx)
+{
+	isFriendDefinition = false;
+	if (!firstPass || functionBody) return;
+
+	if (ctx->functionDefinition())
+	{
+		//do nothing
+	}
+	else if (ctx->functionParams())
+	{
+		structStack.top()->friendFuncDeclarations.emplace_back(FunctionDeclaration{ctx->Identifier()->getText(), ctx->functionParams(),
+			ctx->returnType(), ctx->exceptionSpecification(), { ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() }, 
+			getCurrentCompilationCondition()});
+	}
+	else
+	{
+		structStack.top()->friendTypes.emplace_back(ForwardDeclaration{ ctx->Identifier()->getText(), ctx->templateParams(), 
+			AccessSpecifier::Internal,{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
+			getCurrentCompilationCondition(), false });
 	}
 }
 

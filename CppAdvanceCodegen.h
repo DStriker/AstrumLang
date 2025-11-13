@@ -142,6 +142,7 @@ public:
 	void printImplicitSpecification(CppAdvanceParser::ImplicitSpecificationContext* ctx) const;
 	void printFunctionBody(CppAdvanceParser::FunctionBodyContext* ctx) const;
 	void printShortFunctionBody(CppAdvanceParser::ShortFunctionBodyContext* ctx) const;
+	void printFriendDeclaration(CppAdvanceParser::FriendDeclarationContext* ctx) const;
 	void printMemberBlockDeclaration(CppAdvanceParser::MemberBlockDeclarationContext* ctx) const;
 	void printSimpleDeclaration(CppAdvanceParser::SimpleDeclarationContext* ctx) const;
 	void printSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDeclarationContext* ctx) const;

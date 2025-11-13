@@ -592,6 +592,85 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		printType(nested.get());
 		out << "\n" << std::string(depth, '\t');
 	}
+	for (const auto& friendType: type->friendTypes)
+	{
+		if (!friendType.compilationCondition.empty())
+		{
+			out << "#if " << friendType.compilationCondition << std::endl << std::string(depth, '\t');
+		}
+		out << "#line " << friendType.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t') << "private: ";
+		if (friendType.templateParams)
+		{
+			printTemplateParams(friendType.templateParams);
+			out << " ";
+		}
+		out << "friend class ";
+		out << friendType.id;
+		out << ";\n" << std::string(depth, '\t');
+		if (!friendType.compilationCondition.empty())
+		{
+			out << "#endif " << std::endl << std::string(depth, '\t');
+		}
+	}
+	for (const auto& decl : type->friendFuncDeclarations)
+	{
+		if (!decl.compilationCondition.empty())
+		{
+			out << "#if " << decl.compilationCondition << std::endl << std::string(depth, '\t');
+		}
+		out << "#line " << decl.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t') << "private: ";
+		out << "friend ";
+		if (auto t = decl.returnType)
+		{
+			if (t->Const()) out << "const ";
+			printTypeId(t->theTypeId());
+			if (t->Ref()) out << "&";
+		}
+		else
+		{
+			out << "void";
+		}
+		
+		out << " " << decl.id;
+		printFunctionParameters(decl.params);
+		out << ";\n" << std::string(depth, '\t');
+		if (!decl.compilationCondition.empty())
+		{
+			out << "#endif " << std::endl << std::string(depth, '\t');
+		}
+	}
+	for (const auto& decl : type->friendFuncDefinitions)
+	{
+		if (!decl.compilationCondition.empty())
+		{
+			out << "#if " << decl.compilationCondition << std::endl << std::string(depth, '\t');
+		}
+		out << "#line " << decl.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t') << "private: ";
+		out << "friend ";
+		if (decl.isConstReturn) out << "const ";
+		if (auto t = decl.returnType)
+		{
+			printTypeId(decl.returnType);
+		}
+		else if (decl.expression)
+		{
+			out << "decltype(auto)";
+		}
+		else
+		{
+			out << "void";
+		}
+
+		if (decl.isRefReturn) out << "&";
+
+		out << " " << decl.id;
+		printFunctionParameters(decl.params);
+		out << ";\n" << std::string(depth, '\t');
+		if (!decl.compilationCondition.empty())
+		{
+			out << "#endif " << std::endl << std::string(depth, '\t');
+		}
+	}
 	for (const auto& field : type->fields)
 	{
 		bool prevUnsafe = isUnsafe;
@@ -2804,6 +2883,10 @@ void CppAdvanceCodegen::printStructMemberDeclaration(CppAdvanceParser::StructMem
 	else if (auto prop = ctx->property())
 	{
 		printProperty(prop);
+	}
+	else if (auto fr = ctx->friendDeclaration())
+	{
+		printFriendDeclaration(fr);
 	}
 	else if (auto func = ctx->functionTemplateDeclaration())
 	{
@@ -5426,6 +5509,46 @@ void CppAdvanceCodegen::printShortFunctionBody(CppAdvanceParser::ShortFunctionBo
 		out << "\n" << std::string(--depth, '\t') << "}";
 	}
 	functionBody = prev;
+}
+
+void CppAdvanceCodegen::printFriendDeclaration(CppAdvanceParser::FriendDeclarationContext* ctx) const
+{
+	if (isStructDeclaration) out << "private: friend ";
+	if (auto def = ctx->functionDefinition())
+	{
+		printFunctionDefinition(def);
+	}
+	else if (isStructDeclaration)
+	{
+		if (ctx->functionParams())
+		{
+			if (auto t = ctx->returnType())
+			{
+				if (t->Const()) out << "const ";
+				printTypeId(t->theTypeId());
+				if (t->Ref()) out << "&";
+			}
+			else
+			{
+				out << "void";
+			}
+
+			out << " " << ctx->Identifier()->getText();
+			printFunctionParameters(ctx->functionParams());
+			out << ";";
+		}
+		else
+		{
+			if (auto tparams = ctx->templateParams())
+			{
+				printTemplateParams(tparams);
+				out << " ";
+			}
+			out << "friend class ";
+			out << ctx->Identifier()->getText();
+			out << ";";
+		}
+	}
 }
 
 void CppAdvanceCodegen::printMemberBlockDeclaration(CppAdvanceParser::MemberBlockDeclarationContext* ctx) const

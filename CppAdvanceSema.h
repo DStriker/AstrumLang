@@ -309,8 +309,18 @@ struct ForwardDeclaration {
 	std::string id;
 	CppAdvanceParser::TemplateParamsContext* templateParams;
 	AccessSpecifier access = AccessSpecifier::Internal;
+	SourcePosition pos;
 	std::string compilationCondition;
 	bool isUnsafe = false;
+};
+
+struct FunctionDeclaration {
+	std::string id;
+	CppAdvanceParser::FunctionParamsContext* params;
+	CppAdvanceParser::ReturnTypeContext* returnType;
+	CppAdvanceParser::ExceptionSpecificationContext* exceptions;
+	SourcePosition pos;
+	std::string compilationCondition;
 };
 
 struct StructDefinition {
@@ -327,16 +337,22 @@ struct StructDefinition {
 	std::vector<PropertyDefinition> properties;
 	std::vector<MethodDefinition> methods;
 	std::vector<std::shared_ptr<StructDefinition>> nestedStructs;
+	std::vector<ForwardDeclaration> friendTypes;
+	std::vector<FunctionDeclaration> friendFuncDeclarations;
+	std::vector<FunctionDefinition> friendFuncDefinitions;
+
 	bool isUnsafe = false;
 	bool isRefStruct = false;
 
 	StructDefinition(std::string _id, CppAdvanceParser::TemplateParamsContext* _targs, CppAdvanceParser::TemplateArgumentListContext* _tspec, AccessSpecifier _access, std::string _ccond, SourcePosition _pos,
 		const std::vector<VariableDefinition>& _fields, const std::vector<ConstantDefinition>& _constants, CppAdvanceParser::BaseSpecifierListContext* _bases,
 		const std::vector<TypeAliasDefinition>& _typeAliases, const std::vector<PropertyDefinition>& _properties, const std::vector<MethodDefinition>& _methods,
-		const std::vector<std::shared_ptr<StructDefinition>>& _nestedStructs, bool _isUnsafe, bool _isRefStruct)
+		const std::vector<std::shared_ptr<StructDefinition>>& _nestedStructs, const std::vector<ForwardDeclaration>& _friendTypes,
+		const std::vector<FunctionDeclaration>& _friendDecls, const std::vector<FunctionDefinition>& _friendDefs, bool _isUnsafe, bool _isRefStruct)
 		: id{ std::move(_id) }, templateParams{ _targs }, templateSpecializationArgs{_tspec}, access{ _access }, compilationCondition{ std::move(_ccond) }, pos{_pos},
 		interfaces{_bases}, fields{ _fields }, constants{ _constants }, typeAliases{ typeAliases }, properties{_properties},
-		methods{_methods}, nestedStructs{ _nestedStructs }, isUnsafe{ _isUnsafe }, isRefStruct{_isRefStruct} {}
+		methods{ _methods }, nestedStructs{ _nestedStructs }, friendTypes{ _friendTypes }, friendFuncDeclarations{_friendDecls},
+		friendFuncDefinitions{_friendDefs}, isUnsafe{ _isUnsafe }, isRefStruct{ _isRefStruct } {}
 };
 
 struct SymbolContext {
@@ -470,6 +486,7 @@ public:
 	bool isPrivateTypeDefinition = false;
 	bool isUnsafeTypeDefinition = false;
 	bool isRefProperty = false;
+	bool isFriendDefinition = false;
 	int depth = 0;
 	int unsafeDepth = 0;
 	int loopDepth = 0;
@@ -834,5 +851,11 @@ public:
 
 
 	void exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDeclarationContext*) override;
+
+
+	void exitFriendDeclaration(CppAdvanceParser::FriendDeclarationContext*) override;
+
+
+	void enterFriendDeclaration(CppAdvanceParser::FriendDeclarationContext*) override;
 
 };

@@ -208,6 +208,9 @@ public:
   virtual void enterIdentifierSeq(CppAdvanceParser::IdentifierSeqContext * /*ctx*/) override { }
   virtual void exitIdentifierSeq(CppAdvanceParser::IdentifierSeqContext * /*ctx*/) override { }
 
+  virtual void enterFriendDeclaration(CppAdvanceParser::FriendDeclarationContext * /*ctx*/) override { }
+  virtual void exitFriendDeclaration(CppAdvanceParser::FriendDeclarationContext * /*ctx*/) override { }
+
   virtual void enterSelectionStatement(CppAdvanceParser::SelectionStatementContext * /*ctx*/) override { }
   virtual void exitSelectionStatement(CppAdvanceParser::SelectionStatementContext * /*ctx*/) override { }
 
