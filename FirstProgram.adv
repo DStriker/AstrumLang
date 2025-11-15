@@ -91,7 +91,7 @@ public struct Vector3 : IEquatable, IFormattable
 		x: f32;
 		y: f32;
 		z: f32;
-		t: Test111 { get; private set; }
+		tt: Test111 { get; private set; }
 
 		//if debug _version: i32;
 		}
@@ -137,6 +137,7 @@ public struct Vector3 : IEquatable, IFormattable
 	public this[idx: i32, idx2: i32, idx3: i32] -> f32 ==> y + z;
 
 	public getX: () -> f32 ==> x;
+	public getNext: () -> Next ==> Next(6);
 
 	public {
 		inline static Method: (x: i32, y: i32, z: i32) -> i32 == {
@@ -146,10 +147,28 @@ public struct Vector3 : IEquatable, IFormattable
 		inline static GetTest: () -> Test111 ==> Test111();
 
 		mut TemplateMethod: <U> (x: U, y: U, z: U) -> Coords == {
+			struct LocalStruct {
+				public {
+				x: f32;
+				y: f32;
+				z: f32;
+				tt: Test111 { get; private set; }
+
+				//if debug _version: i32;
+				}
+			}
 			this[0] = 13;
 			//print(this[0]);
 			return {x,y,z};
 		}
+	}
+}
+
+public struct Next {
+	public i: i32;
+
+	public this(i: i32) == {
+		this.i = i;
 	}
 }
 

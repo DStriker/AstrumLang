@@ -47,16 +47,16 @@
     <None Include="FirstProgram.adv" />
     <None Include="CppAdvanceLexer.g4" />
     <None Include="CppAdvanceParser.g4" />
-    <None Include="FirstProgram.cpp">
-      <Filter>Исходные файлы</Filter>
-    </None>
     <None Include="TESTDLL_export.h">
       <Filter>Файлы заголовков</Filter>
+    </None>
+    <None Include=".gitignore" />
+    <None Include="FirstProgram.cpp">
+      <Filter>Исходные файлы</Filter>
     </None>
     <None Include="FirstProgram.h">
       <Filter>Файлы заголовков</Filter>
     </None>
-    <None Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CppAdvanceSema.h">

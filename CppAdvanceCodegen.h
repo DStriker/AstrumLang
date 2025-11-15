@@ -71,6 +71,7 @@ class CppAdvanceCodegen
 	void printGlobalFunctions() const;
 	void printForwardDeclarations() const;
 	void printType(StructDefinition* type) const;
+	void printStructWrapper(StructDefinition* type) const;
 	void printTypeDefinitions() const;
 	void printVersions() const;
 
