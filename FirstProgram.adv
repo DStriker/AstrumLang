@@ -55,7 +55,7 @@ public struct Vector3 : IEquatable, IFormattable
 {
 	public {
 		x, y, z: f32;
-		t: NestedStruct { get; private set; }
+		t: Test111 { get; private set; }
 
 		//if debug _version: i32;
 	}
@@ -66,6 +66,9 @@ public struct Vector3 : IEquatable, IFormattable
 	friend func4: (x: i32) -> i32 {
 		return 0;
 	}
+
+	public override Equals: (in ref other: IEquatable) -> bool noexcept ==> true;
+	public override format: () -> str noexcept ==> "test";
 
 	public static Count: i32 = 1 {
 		get {

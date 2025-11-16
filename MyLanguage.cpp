@@ -68,37 +68,6 @@ void preprocessDLL() {
 
 namespace fs = std::filesystem;
 
-struct Base {
-
-private: int _count;
-
-public: int getCount() {
-		return _count;
-	}
-
-public: Base& setCount(int value) {
-	_count = value;
-	return *this;
-}
-
-ADV_PROPERTY_GETTER_SETTER(public, Base, int, Count, public, getCount, public, setCount);
-
-int getCountt2() {
-	//Count = 5;
-	return Count;
-}
-};
-
-//int Base::_count = 1;
-//Base::__Property_Count<> Base::Count;
-
-struct Derived : public Base {
-	int getCountt() {
-		this->setCount(5);
-		return Count;
-	}
-};
-
 int main(int argc, const char* argv[])
 {
 #ifdef _WIN32

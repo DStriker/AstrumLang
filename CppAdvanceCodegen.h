@@ -74,6 +74,7 @@ class CppAdvanceCodegen
 	void printStructWrapper(StructDefinition* type) const;
 	void printTypeDefinitions() const;
 	void printVersions() const;
+	void printRefStructCheck(CppAdvanceParser::TheTypeIdContext* type) const;
 
 public:
 	/*const*/ CppAdvanceSema& sema;

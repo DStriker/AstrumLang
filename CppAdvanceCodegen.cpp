@@ -795,11 +795,8 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		out << ";";
 		if (!type->isRefStruct || field.isStatic || field.isThreadLocal) {
 			if (!sema.contextTypes.contains(field.type) || !sema.contextTypes[field.type].ends_with(type->id)) {
-				out << " ADV_CHECK_REF_STRUCT(";
-				printTypeId(field.type);
-				auto t = field.type->getText();
-				StringReplace(t, "\"", "\\\"");
-				out << ", \"" << t << "\");";
+				printRefStructCheck(field.type);
+				out << ";";
 			}
 		}
 		out << "\n" << std::string(depth, '\t');
@@ -941,12 +938,9 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 					out << " = ";
 					printInitializerClause(prop.initializer);
 				}
-				out << "; ADV_CHECK_REF_STRUCT(";
-				printTypeId(prop.type);
-				auto t = prop.type->getText();
-				StringReplace(t, "\"", "\\\"");
-				out << ", \"" << t << "\");";
-				out << std::endl << std::string(depth, '\t');
+				out << ";";
+				printRefStructCheck(prop.type);
+				out << ";" << std::endl << std::string(depth, '\t');
 			}
 
 			out << "#line " << prop.setter->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
@@ -1137,10 +1131,6 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 					break;
 				}
 
-				out << ", " << parent << ", ";
-				if (prop.isConst) out << "const ";
-				printTypeId(prop.type);
-				if (prop.isRef) out << "&";
 				out << ", " << prop.id << ", ";
 				switch (getAccess)
 				{
@@ -1163,7 +1153,11 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 					out << "private";
 					break;
 				}
-				out << ", set" << prop.id << ")";
+				out << ", set" << prop.id << ", ";
+				if (prop.isConst) out << "const ";
+				printTypeId(prop.type);
+				if (prop.isRef) out << "&";
+				out << ")";
 			}
 			else
 			{
@@ -1181,11 +1175,11 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 					break;
 				}
 
-				out << ", " << parent << ", ";
+				out << ", " << prop.id << ", set" << prop.id << ", ";
 				if (prop.isConst) out << "const ";
 				printTypeId(prop.type);
 				if (prop.isRef) out << "&";
-				out << ", " << prop.id << ", set" << prop.id << ")";
+				out << ")";
 			}
 		}
 		else
@@ -1204,11 +1198,11 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				break;
 			}
 
-			out << ", " << parent << ", ";
+			out << ", " << prop.id << ", get" << prop.id << ", ";
 			if (prop.isConst) out << "const ";
 			printTypeId(prop.type);
 			if (prop.isRef) out << "&";
-			out << ", " << prop.id << ", get" << prop.id << ")";
+			out << ")";
 		}
 		out << ";" << std::endl << std::string(depth, '\t');
 	}
@@ -1774,13 +1768,13 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 			for (auto iface : type->interfaces->baseSpecifier())
 			{
 				out << "#line " << iface->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-				out << "ADV_CHECK_INTERFACE(";
+				out << "ADV_CHECK_INTERFACE(" << iface->getText()  << ", ";
 				if (iface->nestedNameSpecifier())
 				{
 					printNestedNameSpecifier(iface->nestedNameSpecifier());
 				}
 				printClassName(iface->className());
-				out << ", " << iface->getText() << ");\n" << std::string(depth, '\t');
+				out << ");\n" << std::string(depth, '\t');
 			}
 		}
 		out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
@@ -1842,7 +1836,9 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 			{
 				out << "__underlying& set" << prop.id << "(const ";
 				printTypeId(prop.type);
-				out << "& value) { return __value.set" << prop.id << "(value); }\n" << std::string(depth, '\t');
+				out << "& value) "; 
+				if (prop.isOverride) out << "override ";
+				out << "{ return __value.set" << prop.id << "(value); }\n" << std::string(depth, '\t');
 			}
 			if (prop.getter && !prop.getter->accessSpecifier() && !prop.getter->protectedInternal() || !prop.setter && !prop.getter)
 			{
@@ -1850,6 +1846,7 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 				if (prop.isConst) out << "const ";
 				printTypeId(prop.type);
 				if (prop.isRef) out << "&";
+				if (prop.isOverride) out << " override";
 				out << " { return __value.get" << prop.id << "(); }\n" << std::string(depth, '\t');
 			}
 
@@ -1875,11 +1872,74 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 				out << "() ";
 				if (!method.isMutating) out << "const ";
 				if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
+				if (method.isOverride) out << " override";
 				out << " { return static_cast<";
 				printTypeId(method.returnType);
 				if (method.isConstReturn) out << " const&";
 				else if (method.isRefReturn) out << " &";
 				out << ">(__value); }\n" << std::string(depth, '\t');
+			}
+			else if (method.indexerParams)
+			{
+				std::string funcname = "operator[]";
+				if (method.indexerParams->paramDeclList()->paramDeclaration().size() > 1)
+					funcname = "_operator_subscript";
+				if (method.indexerSetter && (!method.indexerSetter->accessSpecifier() || method.indexerSetter->accessSpecifier()->Public())
+					&& !method.indexerSetter->protectedInternal()
+					|| !method.indexerSetter && !method.indexerGetter && !method.isConstReturn)
+				{
+					out << "void setAt(";
+					printParamDeclClause(method.indexerParams);
+					out << ", const ";
+					printTypeId(method.returnType);
+					out << "& value) ";
+					if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
+					if (method.isOverride) out << " override";
+					out << " { __value." << funcname << "(";
+					bool first = true;
+					for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
+					{
+						if (!first) out << ", ";
+						first = false;
+						out << param->Identifier()->getText();
+					}
+
+					out << ") = value; }\n" << std::string(depth, '\t');
+				}
+				if (!method.isConstReturn)
+				{
+					out << "decltype(auto) getAt(";
+					printParamDeclClause(method.indexerParams);
+					out << ") ";
+					if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
+					if (method.isOverride) out << " override";
+					out << " { return __value." << funcname << "(";
+					bool first = true;
+					for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
+					{
+						if (!first) out << ", ";
+						first = false;
+						out << param->Identifier()->getText();
+					}
+
+					out << "); }\n" << std::string(depth, '\t');
+				}
+				
+				out << "decltype(auto) getAt(";
+				printParamDeclClause(method.indexerParams);
+				out << ") const ";
+				if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
+				if (method.isOverride) out << " override";
+				out << " { return __value." << funcname << "(";
+				bool first = true;
+				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					out << param->Identifier()->getText();
+				}
+
+				out << "); }\n" << std::string(depth, '\t');
 			}
 			else if (method.params)
 			{
@@ -1898,6 +1958,7 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 				{
 					out << "void";
 				}
+				if (method.isOverride) out << " override";
 				out << " { ADV_EXPRESSION_BODY(__value." << method.id << "(";
 				bool first = true;
 				if (auto params = method.params->paramDeclClause())
@@ -1917,10 +1978,16 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 				out << "#endif " << std::endl << std::string(depth, '\t');
 			}
 		}
-		out << "\n" << std::string(--depth, '\t') << "};";
+		out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
+		if (!type->templateSpecializationArgs && !type->templateParams)
+		{
+			out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << "ADV_CHECK_FOR_CONCRETE(" << type->id << ");";
+		}
+		
 		if (!type->compilationCondition.empty())
 		{
-			out << "\n#endif " << std::endl;
+			out << "#endif " << std::endl;
 		}
 	}
 }
@@ -2108,6 +2175,16 @@ void CppAdvanceCodegen::printVersions() const
 			out << "#endif " << std::endl;
 		}
 	}
+}
+
+void CppAdvanceCodegen::printRefStructCheck(CppAdvanceParser::TheTypeIdContext* type) const
+{
+	out << " ADV_CHECK_REF_STRUCT(";
+	auto t = type->getText();
+	StringReplace(t, "\"", "\\\"");
+	out << "\"" << t << "\", ";
+	printTypeId(type);
+	out << ")";
 }
 
 void CppAdvanceCodegen::print() const
@@ -3105,13 +3182,13 @@ void CppAdvanceCodegen::printStructDefinition(CppAdvanceParser::StructDefinition
 				for (auto iface : ctx->structHead()->baseClause()->baseSpecifierList()->baseSpecifier())
 				{
 					out << "#line " << iface->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-					out << "ADV_CHECK_INTERFACE(";
+					out << "ADV_CHECK_INTERFACE(" << iface->getText() << ", ";
 					if (iface->nestedNameSpecifier())
 					{
 						printNestedNameSpecifier(iface->nestedNameSpecifier());
 					}
 					printClassName(iface->className());
-					out << ", " << iface->getText() << ");\n" << std::string(depth, '\t');
+					out << ");\n" << std::string(depth, '\t');
 				}
 			}
 			out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
@@ -3903,9 +3980,9 @@ void CppAdvanceCodegen::printConversionFunction(CppAdvanceParser::ConversionFunc
 		else if (func.isRefReturn) out << " &";
 		out << "() const ";
 		isVariadicTemplate = false;
-		if (func.isOverride) out << "override ";
-		if (func.isFinal) out << "final ";
 		if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
+		if (func.isOverride) out << " override ";
+		if (func.isFinal) out << " final ";
 		isUnsafe = func.isUnsafe;
 		currentShortType.clear();
 		currentTypeWithTemplate.clear();
@@ -3997,9 +4074,9 @@ void CppAdvanceCodegen::printConversionFunction(CppAdvanceParser::ConversionFunc
 		printConversionFunctionId(ctx->conversionFunctionId());
 		out << "() const ";
 		isVariadicTemplate = false;
-		if (isOverride) out << "override ";
-		if (isFinal) out << "final ";
 		if (ctx->exceptionSpecification()) printExceptionSpecification(ctx->exceptionSpecification());
+		if (isOverride) out << " override ";
+		if (isFinal) out << " final ";
 		currentShortType.clear();
 		currentTypeWithTemplate.clear();
 		if (auto body = ctx->functionBody())
@@ -4099,8 +4176,6 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 		isVariadicTemplate = false;
 		if (!func.isStatic) {
 			if (func.isConstReturn) out << "const ";
-			if (func.isOverride) out << "override ";
-			if (func.isFinal) out << "final ";
 		}
 		if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
 		out << " -> ";
@@ -4149,6 +4224,8 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 		{
 			out << "void";
 		}
+		if (func.isOverride) out << " override ";
+		if (func.isFinal) out << " final ";
 		currentShortType.clear();
 		currentTypeWithTemplate.clear();
 
@@ -4234,8 +4311,6 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			out << ") ";
 			isVariadicTemplate = false;
 			out << " const ";
-			if (func.isOverride) out << "override ";
-			if (func.isFinal) out << "final ";
 			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
 			out << " -> const ";
 			if (func.indexerSetter)
@@ -4282,6 +4357,8 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			{
 				out << "void";
 			}
+			if (func.isOverride) out << " override ";
+			if (func.isFinal) out << " final ";
 			currentShortType.clear();
 			currentTypeWithTemplate.clear();
 
@@ -4388,14 +4465,14 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			isVariadicTemplate = false;
 			if (!func.isStatic) {
 				if (func.isConstReturn) out << "const ";
-				if (func.isOverride) out << "override ";
-				if (func.isFinal) out << "final ";
 			}
 			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
 			out << " -> ";
 			if (func.isConstReturn) out << "const ";
 			printTypeId(func.returnType);
 			if (func.isRefReturn) out << "&";
+			if (func.isOverride) out << " override ";
+			if (func.isFinal) out << " final ";
 
 			if (auto body = func.indexerGetter->functionBody())
 			{
@@ -4459,13 +4536,13 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 				printParamDeclClause(func.indexerParams);
 				out << ") const ";
 				isVariadicTemplate = false;
-				if (func.isOverride) out << "override ";
-				if (func.isFinal) out << "final ";
 				if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
 				out << " -> ";
 				out << "const ";
 				printTypeId(func.returnType);
 				if (func.isRefReturn) out << "&";
+				if (func.isOverride) out << " override ";
+				if (func.isFinal) out << " final ";
 
 				if (auto body = func.indexerGetter->functionBody())
 				{
@@ -4547,12 +4624,12 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			printTypeId(func.returnType);
 			out << "& value) ";
 			isVariadicTemplate = false;
+			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
+			out << " -> void ";
 			if (!func.isStatic) {
 				if (func.isOverride) out << "override ";
 				if (func.isFinal) out << "final ";
 			}
-			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
-			out << " -> void ";
 
 			if (auto body = func.indexerSetter->functionBody())
 			{
@@ -4777,8 +4854,6 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			printTypeId(prop.type);
 			out << "& value) ";
 			if (!prop.isStatic) {
-				if (prop.isOverride) out << "override ";
-				if (prop.isFinal) out << "final ";
 				isPropertySetter = true;
 				out << "-> __self& ";
 			}
@@ -4786,6 +4861,8 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			{
 				out << "-> void ";
 			}
+			if (prop.isOverride) out << "override ";
+			if (prop.isFinal) out << "final ";
 
 			currentShortType.clear();
 			currentTypeWithTemplate.clear();
@@ -4873,8 +4950,6 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			out << "::get" << prop.id << "() ";
 			if (!prop.isStatic) {
 				out << "const ";
-				if (prop.isOverride) out << "override ";
-				if (prop.isFinal) out << "final ";
 			}
 
 			out << " -> ";
@@ -4882,6 +4957,8 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			printTypeId(prop.type);
 			if (prop.isRef) out << "&";
 			out << " ";
+			if (prop.isOverride) out << "override ";
+			if (prop.isFinal) out << "final ";
 
 			currentShortType.clear();
 			currentTypeWithTemplate.clear();
@@ -4945,8 +5022,6 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			out << "::get" << prop.id << "() ";
 			if (!prop.isStatic) {
 				out << "const ";
-				if (prop.isOverride) out << "override ";
-				if (prop.isFinal) out << "final ";
 			}
 
 			out << " -> ";
@@ -4954,6 +5029,8 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			printTypeId(prop.type);
 			if (prop.isRef) out << "&";
 			out << " ";
+			if (prop.isOverride) out << "override ";
+			if (prop.isFinal) out << "final ";
 
 			currentShortType.clear();
 			currentTypeWithTemplate.clear();
@@ -5076,10 +5153,10 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			out << "set" << id << "(const ";
 			printTypeId(ctx->theTypeId());
 			out << "& value) ";
-			if (ctx->Override()) out << "override ";
-			if (ctx->Final()) out << "final ";
 			isPropertySetter = true;
 			out << "-> __self& ";
+			if (ctx->Override()) out << "override ";
+			if (ctx->Final()) out << "final ";
 
 			if (auto body = setter->functionBody())
 			{
@@ -5152,14 +5229,14 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 
 			out << "auto ";
 			out << "get" << id << "() const ";
-			if (ctx->Override()) out << "override ";
-			if (ctx->Final()) out << "final ";
 
 			out << " -> ";
 			if (ctx->Const()) out << "const ";
 			printTypeId(ctx->theTypeId());
 			if (ctx->Ref()) out << "&";
 			out << " ";
+			if (ctx->Override()) out << "override ";
+			if (ctx->Final()) out << "final ";
 
 			if (auto body = getter->functionBody())
 			{
@@ -5221,14 +5298,14 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 
 			out << "auto ";
 			out << "get" << id << "() const ";
-			if (ctx->Override()) out << "override ";
-			if (ctx->Final()) out << "final ";
 
 			out << " -> ";
 			if (ctx->Const()) out << "const ";
 			printTypeId(ctx->theTypeId());
 			if (ctx->Ref()) out << "&";
 			out << " ";
+			if (ctx->Override()) out << "override ";
+			if (ctx->Final()) out << "final ";
 
 			if (auto body = ctx->functionBody())
 			{
@@ -5265,10 +5342,6 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 					break;
 				}
 
-				out << ", __self, ";
-				if (ctx->Const()) out << "const ";
-				printTypeId(ctx->theTypeId());
-				if (ctx->Ref()) out << "&";
 				out << ", " << id << ", ";
 				switch (getAccess)
 				{
@@ -5299,7 +5372,11 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 					out << "private";
 					break;
 				}
-				out << ", set" << id << ")";
+				out << ", set" << id << ", ";
+				if (ctx->Const()) out << "const ";
+				printTypeId(ctx->theTypeId());
+				if (ctx->Ref()) out << "&";
+				out << ")";
 			}
 			else
 			{
@@ -5320,11 +5397,11 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 					break;
 				}
 
-				out << ", __self, ";
+				out << ", " << id << ", set" << id << ", ";
 				if (ctx->Const()) out << "const ";
 				printTypeId(ctx->theTypeId());
 				if (ctx->Ref()) out << "&";
-				out << ", " << id << ", set" << id << ")";
+				out << ")";
 			}
 		}
 		else
@@ -5346,11 +5423,11 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 				break;
 			}
 
-			out << ", __self, ";
+			out << ", " << id << ", get" << id << ", ";
 			if (ctx->Const()) out << "const ";
 			printTypeId(ctx->theTypeId());
 			if (ctx->Ref()) out << "&";
-			out << ", " << id << ", get" << id << ")";
+			out << ")";
 		}
 		out << ";";
 	}
@@ -5601,8 +5678,6 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 			out << " ";
 			if (!func.isStatic) {
 				if (!func.isMutating) out << "const ";
-				if (func.isOverride) out << "override ";
-				if (func.isFinal) out << "final ";
 			}
 			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
 			out << " -> ";
@@ -5644,6 +5719,8 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 				out << "void";
 			}
 			if (func.isRefReturn) out << "&";
+			if (func.isOverride) out << " override ";
+			if (func.isFinal) out << " final ";
 			currentShortType.clear();
 			currentTypeWithTemplate.clear();
 
@@ -5791,8 +5868,6 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 			isVariadicTemplate = false;
 			out << " ";
 			if (!isMut) out << "const ";
-			if (isOverride) out << "override ";
-			if (isFinal) out << "final ";
 			if (ctx->exceptionSpecification()) printExceptionSpecification(ctx->exceptionSpecification());
 			out << " -> ";
 			if (auto ret = ctx->returnType())
@@ -5837,6 +5912,8 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 			{
 				out << "void";
 			}
+			if (isOverride) out << " override ";
+			if (isFinal) out << " final ";
 			isNewDeleteOperator = false;
 			if (auto body = ctx->functionBody())
 			{
@@ -6183,11 +6260,8 @@ void CppAdvanceCodegen::printSimpleDeclaration(CppAdvanceParser::SimpleDeclarati
 		}
 		else if (checkForRefStruct)
 		{
-			out << "; ADV_CHECK_REF_STRUCT(";
-			printTypeId(ctx->theTypeId());
-			auto t = ctx->theTypeId()->getText();
-			StringReplace(t, "\"", "\\\"");
-			out << ", \"" << t << "\")";
+			out << ";";
+			printRefStructCheck(ctx->theTypeId());
 		}
 		else
 		{
@@ -6241,11 +6315,8 @@ void CppAdvanceCodegen::printSimpleMultiDeclaration(CppAdvanceParser::SimpleMult
 	out << "; ";
 	if (checkForRefStruct)
 	{
-		out << "ADV_CHECK_REF_STRUCT(";
-		printTypeId(ctx->theTypeId());
-		auto t = ctx->theTypeId()->getText();
-		StringReplace(t, "\"", "\\\"");
-		out << ", \"" << t << "\");";
+		printRefStructCheck(ctx->theTypeId());
+		out << ";";
 	}
 	isUnsafe = prevUnsafe;
 	currentDeclarationName.clear();
