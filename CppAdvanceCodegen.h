@@ -135,6 +135,7 @@ public:
 	void printConstructorBody(CppAdvanceParser::ConstructorBodyContext* ctx) const;
 	void printDelegatingConstructorBody(CppAdvanceParser::DelegatingConstructorBodyContext* ctx) const;
 	void printDelegatingConstructorStatement(CppAdvanceParser::DelegatingConstructorStatementContext* ctx) const;
+	void printDestructor(CppAdvanceParser::DestructorContext* ctx) const;
 	void printMemberInitializationStatement(CppAdvanceParser::MemberInitializationStatementContext* ctx, bool insideBody = false) const;
 	void printConversionFunction(CppAdvanceParser::ConversionFunctionContext* ctx) const;
 	void printIndexer(CppAdvanceParser::IndexerContext* ctx) const;

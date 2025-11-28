@@ -2166,7 +2166,7 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 	}
 	for (const auto& method : type->methods)
 	{
-		if (method.templateParams || method.templateSpecializationArgs || method.isStatic || method.isConstructor
+		if (method.templateParams || method.templateSpecializationArgs || method.isStatic || method.isConstructor || method.isDestructor
 			|| method.access != AccessSpecifier::Public || method.params && !method.returnType && method.expression) continue;
 		if (!method.compilationCondition.empty())
 		{
@@ -4680,6 +4680,10 @@ void CppAdvanceCodegen::printStructMemberDeclaration(CppAdvanceParser::StructMem
 	{
 		printConstructor(func);
 	}
+	else if (auto func = ctx->destructor())
+	{
+		printDestructor(func);
+	}
 	else if (auto func = ctx->conversionFunction())
 	{
 		printConversionFunction(func);
@@ -5121,6 +5125,138 @@ void CppAdvanceCodegen::printDelegatingConstructorStatement(CppAdvanceParser::De
 	out << "(";
 	printExpressionList(ctx->expressionList());
 	out << ")";
+}
+
+void CppAdvanceCodegen::printDestructor(CppAdvanceParser::DestructorContext* ctx) const
+{
+	sema.symbolContexts.push(sema.symbolContexts.top());
+	bool prevUnsafe = isUnsafe;
+	SourcePosition pos = { ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() };
+	if (sema.methods.contains(pos))
+	{
+		const MethodDefinition& func = sema.methods[pos];
+		if (func.access != AccessSpecifier::Private &&
+			(func.isInline || func.parentTemplateParams || func.parentTemplateSpecializationArgs)) {
+			out.switchTo(true);
+			emptyLine = true;
+		}
+		if (!func.compilationCondition.empty())
+		{
+			out << "#if " << func.compilationCondition << std::endl;
+		}
+		if (func.isProtectedType) {
+			out << "namespace __" << filename << "_Protected" << (func.isUnsafeType ? "__Unsafe" : "") << " {\n" << std::string(++depth, '\t');
+		}
+		else if (func.isUnsafeType)
+		{
+			out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n" << std::string(++depth, '\t');
+		}
+
+		out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		if (func.parentTemplateParams)
+		{
+			printTemplateParams(func.parentTemplateParams);
+			out << " ";
+		}
+		else if (func.parentTemplateSpecializationArgs)
+		{
+			out << "template<> ";
+		}
+		if (func.isConstexpr)
+		{
+			out << "inline constexpr ";
+		}
+		else if (func.isInline)
+		{
+			out << "inline ";
+		}
+
+		auto parent = func.parentType;
+		StringReplace(parent, ".", "::");
+		auto pos = parent.find("<{{specialization}}>");
+		if (pos != parent.npos)
+		{
+			out << parent.substr(0, pos);
+			out << "<";
+			printTemplateArgumentList(func.parentTemplateSpecializationArgs);
+			out << ">";
+			out << parent.substr(pos + 20);
+		}
+		else
+		{
+			out << parent;
+		}
+		currentShortType = func.shortType;
+		currentTypeWithTemplate = parent;
+		out << "::" << func.id;
+		isUnsafe = func.isUnsafe;
+		isVariadicTemplate = false;
+		out << "() ";
+		if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
+		isUnsafe = func.isUnsafe;
+		currentShortType.clear();
+		currentTypeWithTemplate.clear();
+		currentType = func.id;
+		if (auto body = ctx->functionBody())
+		{
+			functionProlog = true;
+			printFunctionBody(body);
+		}
+		else
+		{
+			printShortFunctionBody(ctx->shortFunctionBody());
+		}
+		if (func.isProtectedType || func.isUnsafeType) out << "\n" << std::string(--depth, '\t') << "}";
+		out << std::endl;
+		if (!func.compilationCondition.empty())
+		{
+			out << "#endif " << std::endl;
+		}
+		out.switchTo(false);
+	}
+	else
+	{
+		out << "public: ";
+
+		bool isInline = false;
+		bool isConstexpr = false;
+		if (ctx->Inline()) isInline = true;
+
+		if (auto body = ctx->functionBody())
+		{
+			if (body->Equal()) isConstexpr = true;
+			else if (body->Assign()) isInline = true;
+		}
+		else if (auto body = ctx->shortFunctionBody())
+		{
+			if (body->Equal()) isConstexpr = true;
+			else if (body->Assign()) isInline = true;
+		}
+
+		if (isConstexpr)
+		{
+			out << "inline constexpr ";
+		}
+		else if (isInline)
+		{
+			out << "inline ";
+		}
+
+		out << "~" << currentShortType << "() ";
+		if (ctx->exceptionSpecification()) printExceptionSpecification(ctx->exceptionSpecification());
+		if (auto body = ctx->functionBody())
+		{
+			functionProlog = true;
+			printFunctionBody(body);
+		}
+		else
+		{
+			printShortFunctionBody(ctx->shortFunctionBody());
+		}
+		out << std::endl;
+	}
+	isUnsafe = prevUnsafe;
+	sema.symbolContexts.pop();
 }
 
 void CppAdvanceCodegen::printMemberInitializationStatement(CppAdvanceParser::MemberInitializationStatementContext* ctx, bool insideBody) const

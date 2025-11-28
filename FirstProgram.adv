@@ -237,6 +237,11 @@ public class VectorClass : BaseClass, IEquatable, IFormattable
 		this(other.x, other.y, other.z);
 	}
 
+	~this => print("VectorClass deiniting");
+	/*~this = {
+		print("VectorClass deiniting");
+	}*/
+
 	public implicit operator f32 noexcept ==> y;
 
 	public operator+: (in other: self) -> self => new self(this.x + other.x, this.y + other.y, this.z + other.z);

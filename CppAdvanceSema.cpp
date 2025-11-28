@@ -4223,6 +4223,54 @@ void CppAdvanceSema::exitNewExpression(CppAdvanceParser::NewExpressionContext* c
 	typeStack.push(contextTypes[ctx->theTypeId()]);
 }
 
+void CppAdvanceSema::enterDestructor(CppAdvanceParser::DestructorContext* ctx)
+{
+	if (currentTypeKind.top() != TypeKind::Class)
+		CppAdvanceCompilerError("Cannot to define destructor outside the class body", ctx->Tilde()->getSymbol());
+
+	symbolContexts.push(symbolContexts.top());
+	if (functionBody || !firstPass) return;
+	std::string id = "~__Class_" + structStack.top()->id;
+	auto lastTparams = getLastTypeTemplateParams();
+	auto lastSpec = getLastTypeTemplateSpecializationArgs();
+	auto fullType = getCurrentFullTypeName();
+	auto pos = SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() };
+	CppAdvanceParser::ExprContext* expression = nullptr;
+	bool isInline = ctx->Inline();
+	bool isConstexpr = false;
+	bool isUnsafe = unsafeDepth > 0;
+
+	if (auto body = ctx->functionBody())
+	{
+		if (body->Equal()) isConstexpr = true;
+		else if (body->Assign()) isInline = true;
+	}
+	else if (auto body = ctx->shortFunctionBody())
+	{
+		expression = body->expressionStatement()->expr();
+		if (body->Equal()) isConstexpr = true;
+		else if (body->Assign()) isInline = true;
+	}
+
+	structStack.top()->methods.emplace_back(
+		MethodDefinition{ id, nullptr, nullptr, nullptr, nullptr, expression, ctx->exceptionSpecification(),
+		pos, AccessSpecifier::Public, getCurrentCompilationCondition(),
+		isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, -1,
+		currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, true, false, false,
+		false, false, false, false, true });
+	methods.insert_or_assign(pos,
+		MethodDefinition{ id, nullptr, nullptr, nullptr, nullptr, expression, ctx->exceptionSpecification(),
+		pos, isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
+		isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, -1,
+		currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, true, false, false,
+		false, false, false, false, true });
+}
+
+void CppAdvanceSema::exitDestructor(CppAdvanceParser::DestructorContext*)
+{
+	symbolContexts.pop();
+}
+
 void CppAdvanceSema::exitFriendDeclaration(CppAdvanceParser::FriendDeclarationContext* ctx)
 {
 	isFriendDefinition = false;

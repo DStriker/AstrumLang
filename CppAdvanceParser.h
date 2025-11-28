@@ -720,6 +720,7 @@ public:
     PropertyContext *property();
     FunctionTemplateDeclarationContext *functionTemplateDeclaration();
     FriendDeclarationContext *friendDeclaration();
+    DestructorContext *destructor();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

@@ -100,6 +100,7 @@ structMemberDeclaration:
 	| property
 	| accessSpecifier? functionTemplateDeclaration
 	| friendDeclaration
+	| destructor
 	;
 
 classDefinition: classHead LeftBrace structMemberSpecification? RightBrace;

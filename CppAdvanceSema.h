@@ -870,4 +870,10 @@ public:
 
 	void exitNewExpression(CppAdvanceParser::NewExpressionContext*) override;
 
+
+	void enterDestructor(CppAdvanceParser::DestructorContext*) override;
+
+
+	void exitDestructor(CppAdvanceParser::DestructorContext*) override;
+
 };
