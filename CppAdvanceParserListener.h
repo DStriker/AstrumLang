@@ -89,6 +89,12 @@ public:
   virtual void enterStructMemberDeclaration(CppAdvanceParser::StructMemberDeclarationContext *ctx) = 0;
   virtual void exitStructMemberDeclaration(CppAdvanceParser::StructMemberDeclarationContext *ctx) = 0;
 
+  virtual void enterClassDefinition(CppAdvanceParser::ClassDefinitionContext *ctx) = 0;
+  virtual void exitClassDefinition(CppAdvanceParser::ClassDefinitionContext *ctx) = 0;
+
+  virtual void enterClassHead(CppAdvanceParser::ClassHeadContext *ctx) = 0;
+  virtual void exitClassHead(CppAdvanceParser::ClassHeadContext *ctx) = 0;
+
   virtual void enterBaseClause(CppAdvanceParser::BaseClauseContext *ctx) = 0;
   virtual void exitBaseClause(CppAdvanceParser::BaseClauseContext *ctx) = 0;
 
@@ -472,6 +478,12 @@ public:
 
   virtual void enterUnaryExpression(CppAdvanceParser::UnaryExpressionContext *ctx) = 0;
   virtual void exitUnaryExpression(CppAdvanceParser::UnaryExpressionContext *ctx) = 0;
+
+  virtual void enterNewExpression(CppAdvanceParser::NewExpressionContext *ctx) = 0;
+  virtual void exitNewExpression(CppAdvanceParser::NewExpressionContext *ctx) = 0;
+
+  virtual void enterNewInitializer(CppAdvanceParser::NewInitializerContext *ctx) = 0;
+  virtual void exitNewInitializer(CppAdvanceParser::NewInitializerContext *ctx) = 0;
 
   virtual void enterPostfixExpression(CppAdvanceParser::PostfixExpressionContext *ctx) = 0;
   virtual void exitPostfixExpression(CppAdvanceParser::PostfixExpressionContext *ctx) = 0;

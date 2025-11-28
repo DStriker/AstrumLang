@@ -8,7 +8,7 @@
 #include "CppAdvanceSema.h";
 #include "CppAdvanceCodegen.h";
 #include "CppAdvanceParserErrorListener.h"
-#define CPPADVANCE_OVERFLOW_CHECKS
+//#define CPPADVANCE_OVERFLOW_CHECKS
 #include "CppAdvance.h"
 #include <array>
 #ifdef _WIN32
@@ -67,6 +67,17 @@ void preprocessDLL() {
 }
 
 namespace fs = std::filesystem;
+class ClassTest;
+struct Test : public CppAdvance::Struct {
+	using __class = ClassTest;
+	int i;
+};
+
+class ClassTest : public CppAdvance::ValueType {
+	Test t;
+public:
+	ClassTest(const Test& value) : t{value} {}
+};
 
 int main(int argc, const char* argv[])
 {
@@ -86,6 +97,12 @@ int main(int argc, const char* argv[])
 		}
 	}
 	using namespace CppAdvance;
+		//Test tt;
+		//tt.i = 5;
+		//ObjectRef obj = tt;
+		//std::cout << &obj.__ref() << "\n";
+		//std::cout << &(obj.__ref()._refCounts) << "\n";
+		//std::cout << size_t(obj.__ref().GetStrongReferenceCount()) << "\n";
 	preprocessDLL();
 	CurrentCppAdvanceCompilingFile = "FirstProgram.adv";
 	std::ifstream stream;

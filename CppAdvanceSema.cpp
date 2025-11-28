@@ -137,6 +137,7 @@ void CppAdvanceSema::enterProgram(CppAdvanceParser::ProgramContext* ctx)
 		while (!currentAccessSpecifier.empty()) currentAccessSpecifier.pop();
 		while (!currentTypeKind.empty()) currentTypeKind.pop();
 		cppParser.parse(FindFileInIncludePaths("CppAdvance.h"));
+		typeset.globalTypes.insert("super");
 	}
 	while (!symbolContexts.empty()) symbolContexts.pop();
 	symbolContexts.push({});
@@ -625,7 +626,7 @@ void CppAdvanceSema::exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationCo
 		else
 		{
 			if (unsafeDepth > 0) cppParser.unsafeVariables.insert(currentType+"." + id->getText());
-			structStack.top()->fields.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), ctx->initializerList(), *access, getCurrentCompilationCondition(), "", isStatic, isConst, isVolatile, isThreadLocal, unsafeDepth > 0});
+			structStack.top()->fields.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), ctx->initializerList(), *access, getCurrentCompilationCondition(), getCurrentFullTypeName(), isStatic, isConst, isVolatile, isThreadLocal, unsafeDepth > 0});
 			if (isStatic || isThreadLocal)
 			{
 				if (isProtectedTypeDefinition) access = AccessSpecifier::Protected;
@@ -2742,11 +2743,11 @@ void CppAdvanceSema::enterStructDefinition(CppAdvanceParser::StructDefinitionCon
 				isPrivateTypeDefinition = true;
 		}
 
-		auto def = std::make_shared<StructDefinition>( 
+		auto def = std::make_shared<StructDefinition>( ctx->structHead()->Ref() ? TypeKind::RefStruct : TypeKind::Struct,
 			name, tparams, tspec, *access,getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, interfaces, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
 			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
-			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, ctx->structHead()->Ref());
+			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, false, false, false);
 		if (!structStack.empty())
 			structStack.top()->nestedStructs.push_back(def);
 		structStack.push(def);
@@ -3057,6 +3058,7 @@ void CppAdvanceSema::enterConstructor(CppAdvanceParser::ConstructorContext* ctx)
 		if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
 		if (!access) access = AccessSpecifier::Internal;
 		std::string id = structStack.top()->id;
+		if (currentTypeKind.top() == TypeKind::Class) id = "__Class_" + id;
 		
 		auto lastTparams = getLastTypeTemplateParams();
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
@@ -4040,6 +4042,185 @@ void CppAdvanceSema::exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDec
 void CppAdvanceSema::enterFriendDeclaration(CppAdvanceParser::FriendDeclarationContext*)
 {
 	isFriendDefinition = true;
+}
+
+void CppAdvanceSema::enterClassDefinition(CppAdvanceParser::ClassDefinitionContext* ctx)
+{
+	symbolContexts.push(symbolContexts.top());
+	currentAccessSpecifier.push(std::nullopt);
+	currentTypeKind.push(TypeKind::Class);
+
+	if (ctx->classHead()->baseClause())
+	{
+		if (ctx->classHead()->Static())
+			CppAdvanceCompilerError("Static class cannot inherit other types or implement interfaces", ctx->classHead()->baseClause()->getStart());
+	}
+
+	auto namectx = ctx->classHead()->className();
+	bool primaryType = true;
+	if (!currentType.empty()) {
+		currentType += ".";
+		primaryType = false;
+	}
+	std::string name;
+	if (namectx->Identifier()) name = namectx->Identifier()->getText();
+	else name = namectx->simpleTemplateId()->templateName()->getText();
+	currentType += name;
+	typeset.insert(name);
+	if (ctx->classHead()->Unsafe())
+	{
+		unsafeDepth++;
+	}
+
+	if (firstPass && !functionBody)
+	{
+		typeset.globalTypes.insert(currentType);
+		CppAdvanceParser::TemplateParamsContext* tparams = ctx->classHead()->templateParams();
+		CppAdvanceParser::TemplateArgumentListContext* tspec = nullptr;
+		CppAdvanceParser::BaseSpecifierListContext* bases = nullptr;
+
+		if (auto t = namectx->simpleTemplateId())
+		{
+			tspec = t->templateArgumentList();
+		}
+
+		if (auto b = ctx->classHead()->baseClause())
+		{
+			bases = b->baseSpecifierList();
+		}
+
+		bool isUnsafe = unsafeDepth > 0;
+
+		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		std::optional<AccessSpecifier> access;
+		if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(ctx->parent))
+		{
+			acc = decl->accessSpecifier();
+
+		}
+		else if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
+		{
+			acc = decl->accessSpecifier();
+
+		}
+
+		if (acc)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (acc->Public())
+			{
+				access = AccessSpecifier::Public;
+			}
+			else if (acc->Protected())
+			{
+				access = AccessSpecifier::Protected;
+			}
+			else if (acc->Private())
+			{
+				access = AccessSpecifier::Private;
+			}
+			else if (acc->Internal())
+			{
+				access = AccessSpecifier::Internal;
+			}
+		}
+
+		if (!access) {
+			if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
+			else access = AccessSpecifier::Internal;
+		}
+
+		if (isUnsafe) {
+			cppParser.unsafeTypes.insert(currentType);
+			if (primaryType) isUnsafeTypeDefinition = true;
+		}
+
+		if (primaryType) {
+			if (*access == AccessSpecifier::Protected)
+				isProtectedTypeDefinition = true;
+			else if (*access == AccessSpecifier::Private)
+				isPrivateTypeDefinition = true;
+		}
+
+		auto def = std::make_shared<StructDefinition>(TypeKind::Class,
+			name, tparams, tspec, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
+			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, bases, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
+			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
+			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, ctx->classHead()->Abstract(), ctx->classHead()->Final(),
+			ctx->classHead()->Static());
+		if (!structStack.empty())
+			structStack.top()->nestedStructs.push_back(def);
+		structStack.push(def);
+		if (namectx->simpleTemplateId()) {
+			if (namectx->simpleTemplateId()->templateArgumentList())
+			{
+				name += "<{{specialization}}>";
+			}
+		}
+		else if (auto tparams = ctx->classHead()->templateParams())
+		{
+			name += "<";
+			bool first = true;
+			for (auto param : tparams->templateParamDeclaration())
+			{
+				if (param->Identifier()) {
+					if (!first) name += ", ";
+					first = false;
+					name += param->Identifier()->getText();
+				}
+			}
+			name += ">";
+		}
+		currentTypeWithTemplate.push("__Class_" + name);
+	}
+}
+
+void CppAdvanceSema::exitClassDefinition(CppAdvanceParser::ClassDefinitionContext* ctx)
+{
+	auto pos = currentType.rfind('.');
+	if (firstPass && !functionBody) {
+		if (pos == currentType.npos) {
+			isUnsafeTypeDefinition = false;
+			isProtectedTypeDefinition = false;
+			isPrivateTypeDefinition = false;
+			auto& top = structStack.top();
+			if (top->access == AccessSpecifier::Protected) protectedSymbols.insert(top->id);
+			if (!top->templateSpecializationArgs)
+				forwardDeclarations.push_back({ top->id,top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+			globalStructs.push_back(top);
+		}
+		int idx = 0;
+		for (const auto& field : structStack.top()->fields)
+		{
+			if (!field.isStatic && !field.isThreadLocal)
+				symbolTable.globalSymbolTable[currentType + "." + std::to_string(idx++)] = contextTypes[field.type];
+		}
+		structStack.pop();
+		currentTypeWithTemplate.pop();
+	}
+
+	if (ctx->classHead()->Unsafe())
+	{
+		unsafeDepth--;
+	}
+
+	if (pos != currentType.npos)
+	{
+		currentType = currentType.substr(0, pos);
+	}
+	else
+	{
+		currentType.clear();
+	}
+	currentAccessSpecifier.pop();
+	currentTypeKind.pop();
+	symbolContexts.pop();
+}
+
+void CppAdvanceSema::exitNewExpression(CppAdvanceParser::NewExpressionContext* ctx)
+{
+	typeStack.push(contextTypes[ctx->theTypeId()]);
 }
 
 void CppAdvanceSema::exitFriendDeclaration(CppAdvanceParser::FriendDeclarationContext* ctx)

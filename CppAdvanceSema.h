@@ -323,7 +323,17 @@ struct FunctionDeclaration {
 	std::string compilationCondition;
 };
 
+enum class TypeKind {
+	Struct,
+	Class,
+	Interface,
+	Enum,
+	Union,
+	RefStruct
+};
+
 struct StructDefinition {
+	TypeKind kind;
 	std::string id;
 	CppAdvanceParser::TemplateParamsContext* templateParams;
 	CppAdvanceParser::TemplateArgumentListContext* templateSpecializationArgs;
@@ -342,17 +352,19 @@ struct StructDefinition {
 	std::vector<FunctionDefinition> friendFuncDefinitions;
 
 	bool isUnsafe = false;
-	bool isRefStruct = false;
+	bool isAbstract = false;
+	bool isFinal = false;
+	bool isStatic = false;
 
-	StructDefinition(std::string _id, CppAdvanceParser::TemplateParamsContext* _targs, CppAdvanceParser::TemplateArgumentListContext* _tspec, AccessSpecifier _access, std::string _ccond, SourcePosition _pos,
+	StructDefinition(TypeKind _kind, std::string _id, CppAdvanceParser::TemplateParamsContext* _targs, CppAdvanceParser::TemplateArgumentListContext* _tspec, AccessSpecifier _access, std::string _ccond, SourcePosition _pos,
 		const std::vector<VariableDefinition>& _fields, const std::vector<ConstantDefinition>& _constants, CppAdvanceParser::BaseSpecifierListContext* _bases,
 		const std::vector<TypeAliasDefinition>& _typeAliases, const std::vector<PropertyDefinition>& _properties, const std::vector<MethodDefinition>& _methods,
 		const std::vector<std::shared_ptr<StructDefinition>>& _nestedStructs, const std::vector<ForwardDeclaration>& _friendTypes,
-		const std::vector<FunctionDeclaration>& _friendDecls, const std::vector<FunctionDefinition>& _friendDefs, bool _isUnsafe, bool _isRefStruct)
-		: id{ std::move(_id) }, templateParams{ _targs }, templateSpecializationArgs{_tspec}, access{ _access }, compilationCondition{ std::move(_ccond) }, pos{_pos},
+		const std::vector<FunctionDeclaration>& _friendDecls, const std::vector<FunctionDefinition>& _friendDefs, bool _isUnsafe, bool _isAbstract, bool _isFinal, bool _isStatic)
+		: kind{_kind},id { std::move(_id) }, templateParams{ _targs }, templateSpecializationArgs{ _tspec }, access{ _access }, compilationCondition{ std::move(_ccond) }, pos{ _pos },
 		interfaces{_bases}, fields{ _fields }, constants{ _constants }, typeAliases{ typeAliases }, properties{_properties},
 		methods{ _methods }, nestedStructs{ _nestedStructs }, friendTypes{ _friendTypes }, friendFuncDeclarations{_friendDecls},
-		friendFuncDefinitions{_friendDefs}, isUnsafe{ _isUnsafe }, isRefStruct{ _isRefStruct } {}
+		friendFuncDefinitions{ _friendDefs }, isUnsafe{ _isUnsafe }, isAbstract{ _isAbstract }, isFinal{ _isFinal }, isStatic{_isStatic} {}
 };
 
 struct SymbolContext {
@@ -361,15 +373,6 @@ struct SymbolContext {
 	std::unordered_set<std::string> types;
 	/*std::unordered_map<std::string, std::string> functionTable;
 	std::unordered_map<std::string, std::unordered_map<std::string, CppAdvanceParser::InitializerClauseContext*>> activeDefaultParams;*/
-};
-
-enum class TypeKind {
-	Struct,
-	Class,
-	Interface,
-	Enum,
-	Union,
-	RefStruct
 };
 
 class CppAdvanceSema : public CppAdvanceParserBaseListener
@@ -857,5 +860,14 @@ public:
 
 
 	void enterFriendDeclaration(CppAdvanceParser::FriendDeclarationContext*) override;
+
+
+	void enterClassDefinition(CppAdvanceParser::ClassDefinitionContext*) override;
+
+
+	void exitClassDefinition(CppAdvanceParser::ClassDefinitionContext*) override;
+
+
+	void exitNewExpression(CppAdvanceParser::NewExpressionContext*) override;
 
 };

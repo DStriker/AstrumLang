@@ -72,6 +72,7 @@ class CppAdvanceCodegen
 	void printForwardDeclarations() const;
 	void printType(StructDefinition* type) const;
 	void printStructWrapper(StructDefinition* type) const;
+	void printClassRef(StructDefinition* type) const;
 	void printTypeDefinitions() const;
 	void printVersions() const;
 	void printRefStructCheck(CppAdvanceParser::TheTypeIdContext* type) const;
@@ -118,6 +119,8 @@ public:
 	void printClassName(CppAdvanceParser::ClassNameContext* ctx) const;
 	void printStructDefinition(CppAdvanceParser::StructDefinitionContext* ctx) const;
 	void printStructHead(CppAdvanceParser::StructHeadContext* ctx) const;
+	void printClassDefinition(CppAdvanceParser::ClassDefinitionContext* ctx) const;
+	void printClassHead(CppAdvanceParser::ClassHeadContext* ctx) const;
 	void printStructMemberSpecification(CppAdvanceParser::StructMemberSpecificationContext* ctx) const;
 	void printStructMemberDeclaration(CppAdvanceParser::StructMemberDeclarationContext* ctx) const;
 	void printMemberDeclarationCompoundStatement(CppAdvanceParser::MemberDeclarationCompoundStatementContext* ctx) const;
@@ -127,6 +130,7 @@ public:
 	void printConversionFunctionId(CppAdvanceParser::ConversionFunctionIdContext* ctx) const;
 	void printTemplateArgumentList(CppAdvanceParser::TemplateArgumentListContext* ctx) const;
 	void printTemplateArgument(CppAdvanceParser::TemplateArgumentContext* ctx) const;
+	void printBaseSpecifier(CppAdvanceParser::BaseSpecifierContext* ctx) const;
 	void printConstructor(CppAdvanceParser::ConstructorContext* ctx) const;
 	void printConstructorBody(CppAdvanceParser::ConstructorBodyContext* ctx) const;
 	void printDelegatingConstructorBody(CppAdvanceParser::DelegatingConstructorBodyContext* ctx) const;
@@ -181,6 +185,7 @@ public:
 	void printAdditiveExpression(CppAdvanceParser::AdditiveExpressionContext* ctx) const;
 	void printMultiplicativeExpression(CppAdvanceParser::MultiplicativeExpressionContext* ctx) const;
 	void printUnaryExpression(CppAdvanceParser::UnaryExpressionContext* ctx) const;
+	void printNewExpression(CppAdvanceParser::NewExpressionContext* ctx) const;
 	void printPostfixExpression(CppAdvanceParser::PostfixExpressionContext* ctx) const;
 	void printPrimaryExpression(CppAdvanceParser::PrimaryExpressionContext* ctx) const;
 	void printTupleExpression(CppAdvanceParser::TupleExpressionContext* ctx) const;

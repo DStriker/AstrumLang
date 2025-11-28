@@ -22,6 +22,7 @@ declarationSeq: declaration+;
 declaration:
 	  accessSpecifier? Unsafe? blockDeclaration
 	| accessSpecifier? structDefinition
+	| accessSpecifier? classDefinition
 	| symbolSpecifierSeq declarationCompoundStatement
 	| externVariableDeclaration 
 	| versionDefinition
@@ -58,7 +59,7 @@ memberBlockDeclaration:
 
 labeledStatement: Identifier Colon (iterationStatement | selectionStatement | compoundStatement);
 
-declarationStatement: blockDeclaration | structDefinition | externVariableDeclaration | externFunctionDeclaration;
+declarationStatement: blockDeclaration | structDefinition | classDefinition | externVariableDeclaration | externFunctionDeclaration;
 
 expressionStatement: expr? Semi;
 
@@ -89,6 +90,7 @@ memberVersionElseDeclaration: structMemberDeclaration | memberDeclarationCompoun
 structMemberDeclaration: 
 	  (accessSpecifier | protectedInternal)? memberBlockDeclaration
 	| accessSpecifier? structDefinition
+	| accessSpecifier? classDefinition
 	| symbolSpecifierSeq memberDeclarationCompoundStatement
 	| memberVersionConditionalDeclaration
 	| (accessSpecifier | protectedInternal)? functionDefinition
@@ -99,6 +101,10 @@ structMemberDeclaration:
 	| accessSpecifier? functionTemplateDeclaration
 	| friendDeclaration
 	;
+
+classDefinition: classHead LeftBrace structMemberSpecification? RightBrace;
+
+classHead: Unsafe? (Abstract | Final | Static)? Class templateParams? className baseClause?;
 
 baseClause: Colon baseSpecifierList;
 
@@ -433,8 +439,13 @@ unaryExpression:
 	| Alignof LeftParen theTypeId RightParen
 	;
 
+newExpression: New theTypeId newInitializer?;
+
+newInitializer: LeftParen expressionList? RightParen | bracedInitList;
+
 postfixExpression:
 	  primaryExpression
+	| newExpression
 	| postfixExpression LeftBracket expressionList RightBracket
 	| postfixExpression LeftParen expressionList? RightParen
 	| (simpleTypeSpecifier) LeftParen expressionList? RightParen

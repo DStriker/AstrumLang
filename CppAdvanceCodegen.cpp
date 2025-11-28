@@ -140,7 +140,7 @@ void CppAdvanceCodegen::printGlobalVariables() const
 		if (var.access == AccessSpecifier::Protected) out << "namespace __" << filename << "_Protected { ";
 		if (var.isUnsafe) out << "[[clang::annotate(\"unsafe\")]] ";
 		out << "extern ";
-		if (!DLLName.empty()) {
+		if (!var.isThreadLocal && !DLLName.empty()) {
 			if (var.access == AccessSpecifier::Public) out << DLLName << "_API ";
 			else out << DLLName << "_HIDDEN ";
 		}
@@ -534,14 +534,42 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		out << "#if " << type->compilationCondition << std::endl;
 	}
 
-	if (!type->isRefStruct && !type->templateSpecializationArgs)
+	if (!type->templateSpecializationArgs)
 	{
-		if (type->templateParams)
+		if (type->kind != TypeKind::RefStruct && type->templateParams)
 		{
 			printTemplateParams(type->templateParams);
 			out << " ";
 		}
-		out << "class __Class_" << type->id << ";\n" << std::string(depth, '\t');
+		out << "class "; 
+		if (type->kind == TypeKind::Struct) out << "__Class_";
+		out << type->id << ";\n" << std::string(depth, '\t');
+		if (type->kind == TypeKind::Class)
+		{
+			if (type->templateParams)
+			{
+				printTemplateParams(type->templateParams);
+				out << " ";
+			}
+			else
+			{
+				out << "template<> ";
+			}
+			out << "inline constexpr bool CppAdvance::__details::cheapCopy<" << type->id;
+			if (type->templateParams)
+			{
+				out << "<";
+				bool first = true;
+				for (auto tparam : type->templateParams->templateParamDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					out << tparam->Identifier()->getText();
+				}
+				out << ">";
+			}
+			out << "> = false;\n" << std::string(depth, '\t');
+		}
 	}
 	out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 	if (type->templateParams)
@@ -553,9 +581,11 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 	{
 		out << "template<> ";
 	}
-	out << "struct ";
+	if (type->kind == TypeKind::Class) out << "class ";
+	else out << "struct ";
 	if (isUnsafe) out << "[[clang::annotate(\"unsafe\")]] ";
-	if (type->isRefStruct) out << "[[clang::annotate(\"ref_struct\")]] ";
+	if (type->kind == TypeKind::RefStruct) out << "[[clang::annotate(\"ref_struct\")]] ";
+	if (type->kind == TypeKind::Class && !type->isStatic) out << "__Class_";
 	out << type->id;
 	if (type->templateSpecializationArgs)
 	{
@@ -563,10 +593,66 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		printTemplateArgumentList(type->templateSpecializationArgs);
 		out << ">";
 	}
-	if (type->isRefStruct)
-		out << " : CppAdvance::RefStruct";
-	else
-		out << " : CppAdvance::Struct";
+	switch (type->kind)
+	{
+	case TypeKind::Struct:
+		out << " final : public CppAdvance::Struct";
+		break;
+	case TypeKind::RefStruct:
+		out << " final : public CppAdvance::RefStruct";
+		break;
+	case TypeKind::Class: 
+	{
+		if (type->isFinal || type->isStatic) out << " final";
+		if (!type->isStatic)
+		{
+			out << " : ";
+			if (!type->interfaces)
+			{
+				out << "public CppAdvance::Object";
+			}
+			else
+			{
+				bool first = true;
+				CppAdvanceParser::BaseSpecifierContext* prev = nullptr;
+				CppAdvanceParser::BaseSpecifierContext* firstBase = type->interfaces->baseSpecifier(0);
+				for (auto base : type->interfaces->baseSpecifier())
+				{
+					if (!first) out << ", ";
+					out << "public CppAdvance::ClassParent<";
+					printBaseSpecifier(firstBase);
+					out << ", ";
+					if (first) {
+						out << "CppAdvance::Object";
+					}
+					else {
+						printBaseSpecifier(prev);
+					}
+					out << ", ";
+					printBaseSpecifier(base);
+					out << ">";
+					prev = base;
+					first = false;
+				}
+				if (!first) out << ", ";
+				out << "public CppAdvance::ClassParent<";
+				printBaseSpecifier(firstBase);
+				out << ", ";
+				if (first) {
+					out << "CppAdvance::Object";
+				}
+				else {
+					printBaseSpecifier(prev);
+				}
+				out << ", CppAdvance::EmptyType>";
+			}
+		}
+	}
+		break;
+	default:
+		break;
+	}
+	
 	out << " {\n" << std::string(++depth, '\t') << "private: using __self = " << type->id;
 	if (type->templateSpecializationArgs)
 	{
@@ -587,7 +673,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		out << ">";
 	}
 	out << ";\n" << std::string(depth, '\t');
-	if (!type->isRefStruct) {
+	if (type->kind == TypeKind::Struct) {
 		out << "public: using __class = __Class_" << type->id;
 		if (type->templateSpecializationArgs)
 		{
@@ -609,6 +695,63 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		}
 		out << ";\n" << std::string(depth, '\t');
 	}
+	else if (type->kind == TypeKind::Class && !type->isStatic)
+	{
+		out << "private: using ___super = ";
+		if (!type->interfaces)
+		{
+			out << "CppAdvance::Object";
+		}
+		else
+		{
+			out << "CppAdvance::ClassParent<";
+			printBaseSpecifier(type->interfaces->baseSpecifier(0));
+			out << ", CppAdvance::Object, ";
+			printBaseSpecifier(type->interfaces->baseSpecifier(0));
+			out << ">";
+		}
+		out << ";\n" << std::string(depth, '\t');
+		out << "private: using __selfClass = __Class_" << type->id;
+		if (type->templateSpecializationArgs)
+		{
+			out << "<";
+			printTemplateArgumentList(type->templateSpecializationArgs);
+			out << ">";
+		}
+		else if (type->templateParams)
+		{
+			out << "<";
+			bool first = true;
+			for (auto param : type->templateParams->templateParamDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				out << param->Identifier()->getText();
+			}
+			out << ">";
+		}
+		out << ";\n" << std::string(depth, '\t');
+		out << "friend class __self;\n" << std::string(depth, '\t');
+		out << "#define ADV_PROPERTY_SELF __selfClass\n" << std::string(depth, '\t');
+		if (type->interfaces) {
+			bool first = true;
+			for (auto iface : type->interfaces->baseSpecifier())
+			{
+				if (first) {
+					first = false;
+					continue;
+				}
+				out << "#line " << iface->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+				out << "ADV_CHECK_INTERFACE(" << iface->getText() << ", ";
+				if (iface->nestedNameSpecifier())
+				{
+					printNestedNameSpecifier(iface->nestedNameSpecifier());
+				}
+				printClassName(iface->className());
+				out << ");\n" << std::string(depth, '\t');
+			}
+		}
+	}
 	out << "public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }\n" << std::string(depth, '\t');
 	sema.symbolContexts.push(sema.symbolContexts.top());
 	for (const auto& nested : type->nestedStructs)
@@ -616,6 +759,10 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		if (nested->access == AccessSpecifier::Private)
 		{
 			out << "private: ";
+		}
+		else if (nested->access == AccessSpecifier::Protected)
+		{
+			out << "protected: ";
 		}
 		else
 		{
@@ -627,16 +774,26 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 	}
 	for (const auto& nested : type->nestedStructs)
 	{
+		if (nested->kind == TypeKind::RefStruct) continue;
 		if (nested->access == AccessSpecifier::Private)
 		{
 			out << "private: ";
+		}
+		else if (nested->access == AccessSpecifier::Protected)
+		{
+			out << "protected: ";
 		}
 		else
 		{
 			out << "public: ";
 		}
 		out << "\n" << std::string(depth, '\t');
-		printStructWrapper(nested.get());
+		if (nested->kind == TypeKind::Struct) {
+			printStructWrapper(nested.get());
+		}
+		else if(nested->kind == TypeKind::Class) {
+			//
+		}
 		out << "\n" << std::string(depth, '\t');
 	}
 	for (const auto& friendType: type->friendTypes)
@@ -652,6 +809,14 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			out << " ";
 		}
 		out << "friend class ";
+		out << friendType.id;
+		out << "; ";
+		if (friendType.templateParams)
+		{
+			printTemplateParams(friendType.templateParams);
+			out << " ";
+		}
+		out << "friend class __Class_";
 		out << friendType.id;
 		out << ";\n" << std::string(depth, '\t');
 		if (!friendType.compilationCondition.empty())
@@ -730,19 +895,28 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			out << "#if " << field.compilationCondition << std::endl << std::string(depth, '\t');
 		}
 		out << "#line " << field.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		bool hasVisibility = !isPrivateStruct && field.isStatic && !DLLName.empty();
 		switch (field.access)
 		{
 		case AccessSpecifier::Public:
 			out << "public: ";
-			if (!isPrivateStruct && (field.isStatic || field.isThreadLocal) && !DLLName.empty()) out << DLLName << "_API ";
+			if (hasVisibility) out << DLLName << "_API ";
 			break;
 		case AccessSpecifier::Internal:
 			out << "public: ";
-			if (!isPrivateStruct && (field.isStatic || field.isThreadLocal) && !DLLName.empty()) out << DLLName << "_HIDDEN ";
+			if (hasVisibility) out << DLLName << "_HIDDEN ";
+			break;
+		case AccessSpecifier::Protected:
+			out << "protected: ";
+			if (hasVisibility) out << DLLName << "_API ";
+			break;
+		case AccessSpecifier::ProtectedInternal:
+			out << "protected: ";
+			if (hasVisibility) out << DLLName << "_HIDDEN ";
 			break;
 		case AccessSpecifier::Private:
 			out << "private: ";
-			if (!isPrivateStruct && (field.isStatic || field.isThreadLocal) && !DLLName.empty()) out << DLLName << "_HIDDEN ";
+			if (hasVisibility) out << DLLName << "_API ";
 			break;
 		}
 		if (field.isUnsafe) {
@@ -793,7 +967,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		}
 
 		out << ";";
-		if (!type->isRefStruct || field.isStatic || field.isThreadLocal) {
+		if (type->kind != TypeKind::RefStruct || field.isStatic || field.isThreadLocal) {
 			if (!sema.contextTypes.contains(field.type) || !sema.contextTypes[field.type].ends_with(type->id)) {
 				printRefStructCheck(field.type);
 				out << ";";
@@ -820,6 +994,9 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		{
 		case AccessSpecifier::Public:
 			out << "public: ";
+			break;
+		case AccessSpecifier::Protected:
+			out << "protected: ";
 			break;
 		case AccessSpecifier::Private:
 			out << "private: ";
@@ -886,6 +1063,9 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		case AccessSpecifier::Public:
 			out << "public: ";
 			break;
+		case AccessSpecifier::Protected:
+			out << "protected: ";
+			break;
 		case AccessSpecifier::Private:
 			out << "private: ";
 			break;
@@ -948,13 +1128,19 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			{
 				if (acc->Public()) setAccess = AccessSpecifier::Public;
 				else if (acc->Internal()) setAccess = AccessSpecifier::Internal;
+				else if (acc->Protected()) setAccess = AccessSpecifier::Protected;
 				else if (acc->Private()) setAccess = AccessSpecifier::Private;
 			}
+			if (prop.setter->protectedInternal()) setAccess = AccessSpecifier::ProtectedInternal;
 			switch (setAccess)
 			{
 			case AccessSpecifier::Public:
 			case AccessSpecifier::Internal:
 				out << "public: ";
+				break;
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected: ";
 				break;
 			case AccessSpecifier::Private:
 				out << "private: ";
@@ -991,7 +1177,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			}
 			else if (!DLLName.empty() && !type->templateParams)
 			{
-				if (setAccess == AccessSpecifier::Public) out << DLLName << "_API ";
+				if (setAccess == AccessSpecifier::Public || setAccess == AccessSpecifier::Protected || setAccess == AccessSpecifier::Private) out << DLLName << "_API ";
 				else out << DLLName << "_HIDDEN ";
 			}
 
@@ -999,7 +1185,11 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			out << "auto set" << prop.id << "(const ";
 			printTypeId(prop.type);
 			out << "& value) ";
-			if (!prop.isStatic) out << "-> __self&;";
+			if (!prop.isStatic) {
+				out << "-> __self";
+				if (type->kind == TypeKind::Class) out << "Class";
+				out << "&;";
+			}
 			else out << "-> void;";
 			out << std::endl << std::string(depth, '\t');
 		}
@@ -1010,13 +1200,19 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			{
 				if (acc->Public()) getAccess = AccessSpecifier::Public;
 				else if (acc->Internal()) getAccess = AccessSpecifier::Internal;
+				else if (acc->Protected()) getAccess = AccessSpecifier::Protected;
 				else if (acc->Private()) getAccess = AccessSpecifier::Private;
 			}
+			if (prop.getter->protectedInternal()) getAccess = AccessSpecifier::ProtectedInternal;
 			switch (getAccess)
 			{
 			case AccessSpecifier::Public:
 			case AccessSpecifier::Internal:
 				out << "public: ";
+				break;
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected: ";
 				break;
 			case AccessSpecifier::Private:
 				out << "private: ";
@@ -1055,7 +1251,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			}
 			else if (!DLLName.empty() && !type->templateParams)
 			{
-				if (getAccess == AccessSpecifier::Public) out << DLLName << "_API ";
+				if (getAccess == AccessSpecifier::Public || getAccess == AccessSpecifier::Protected || getAccess == AccessSpecifier::Private) out << DLLName << "_API ";
 				else out << DLLName << "_HIDDEN ";
 			}
 
@@ -1076,6 +1272,10 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			case AccessSpecifier::Public:
 			case AccessSpecifier::Internal:
 				out << "public: ";
+				break;
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected: ";
 				break;
 			case AccessSpecifier::Private:
 				out << "private: ";
@@ -1098,7 +1298,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			}
 			else if (!DLLName.empty() && !type->templateParams)
 			{
-				if (prop.access == AccessSpecifier::Public) out << DLLName << "_API ";
+				if (prop.access == AccessSpecifier::Public || prop.access == AccessSpecifier::Protected || prop.access == AccessSpecifier::Private) out << DLLName << "_API ";
 				else out << DLLName << "_HIDDEN ";
 			}
 
@@ -1126,17 +1326,41 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				case AccessSpecifier::Internal:
 					out << "public";
 					break;
+				case AccessSpecifier::Protected:
+				case AccessSpecifier::ProtectedInternal:
+					out << "protected";
+					break;
 				case AccessSpecifier::Private:
 					out << "private";
 					break;
 				}
 
+				if (prop.isStatic)
+				{
+					out << ", ";
+					if (!DLLName.empty())
+					{
+						out << DLLName;
+						if (prop.access == AccessSpecifier::Internal || prop.access == AccessSpecifier::ProtectedInternal)
+						{
+							out << "_HIDDEN";
+						}
+						else
+						{
+							out << "_API";
+						}
+					}
+				}
 				out << ", " << prop.id << ", ";
 				switch (getAccess)
 				{
 				case AccessSpecifier::Public:
 				case AccessSpecifier::Internal:
 					out << "public";
+					break;
+				case AccessSpecifier::Protected:
+				case AccessSpecifier::ProtectedInternal:
+					out << "protected";
 					break;
 				case AccessSpecifier::Private:
 					out << "private";
@@ -1148,6 +1372,10 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				case AccessSpecifier::Public:
 				case AccessSpecifier::Internal:
 					out << "public";
+					break;
+				case AccessSpecifier::Protected:
+				case AccessSpecifier::ProtectedInternal:
+					out << "protected";
 					break;
 				case AccessSpecifier::Private:
 					out << "private";
@@ -1170,11 +1398,31 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				case AccessSpecifier::Internal:
 					out << "public";
 					break;
+				case AccessSpecifier::Protected:
+				case AccessSpecifier::ProtectedInternal:
+					out << "protected";
+					break;
 				case AccessSpecifier::Private:
 					out << "private";
 					break;
 				}
 
+				if (prop.isStatic)
+				{
+					out << ", ";
+					if (!DLLName.empty())
+					{
+						out << DLLName;
+						if (prop.access == AccessSpecifier::Internal || prop.access == AccessSpecifier::ProtectedInternal)
+						{
+							out << "_HIDDEN";
+						}
+						else
+						{
+							out << "_API";
+						}
+					}
+				}
 				out << ", " << prop.id << ", set" << prop.id << ", ";
 				if (prop.isConst) out << "const ";
 				printTypeId(prop.type);
@@ -1193,11 +1441,31 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			case AccessSpecifier::Internal:
 				out << "public";
 				break;
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected";
+				break;
 			case AccessSpecifier::Private:
 				out << "private";
 				break;
 			}
 
+			if (prop.isStatic)
+			{
+				out << ", ";
+				if (!DLLName.empty())
+				{
+					out << DLLName;
+					if (prop.access == AccessSpecifier::Internal || prop.access == AccessSpecifier::ProtectedInternal)
+					{
+						out << "_HIDDEN";
+					}
+					else
+					{
+						out << "_API";
+					}
+				}
+			}
 			out << ", " << prop.id << ", get" << prop.id << ", ";
 			if (prop.isConst) out << "const ";
 			printTypeId(prop.type);
@@ -1405,7 +1673,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			}
 			else if (!DLLName.empty() && !func.templateParams && !type->templateParams)
 			{
-				if (func.access == AccessSpecifier::Public) out << DLLName << "_API ";
+				if (func.access == AccessSpecifier::Public || func.access == AccessSpecifier::Protected || func.access == AccessSpecifier::Private) out << DLLName << "_API ";
 				else out << DLLName << "_HIDDEN ";
 			}
 			printTypeId(func.returnType);
@@ -1430,7 +1698,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			}
 			else if (!DLLName.empty() && !func.templateParams)
 			{
-				if (func.access == AccessSpecifier::Public) out << DLLName << "_API ";
+				if (func.access == AccessSpecifier::Public || func.access == AccessSpecifier::Protected || func.access == AccessSpecifier::Private) out << DLLName << "_API ";
 				else out << DLLName << "_HIDDEN ";
 			}
 			if (!func.isConstReturn) out << "const ";
@@ -1481,7 +1749,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			}
 			else if (!DLLName.empty() && !func.templateParams)
 			{
-				if (func.access == AccessSpecifier::Public) out << DLLName << "_API ";
+				if (func.access == AccessSpecifier::Public || func.access == AccessSpecifier::Protected || func.access == AccessSpecifier::Private) out << DLLName << "_API ";
 				else out << DLLName << "_HIDDEN ";
 			}
 			out << "void setAt(";
@@ -1499,6 +1767,10 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		case AccessSpecifier::Public:
 		case AccessSpecifier::Internal:
 			out << "public: ";
+			break;
+		case AccessSpecifier::Protected:
+		case AccessSpecifier::ProtectedInternal:
+			out << "protected: ";
 			break;
 		case AccessSpecifier::Private:
 			out << "private: ";
@@ -1539,11 +1811,16 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		}
 		else if (!DLLName.empty() && !func.templateParams)
 		{
-			if (func.access == AccessSpecifier::Public) out << DLLName << "_API ";
+			if (func.access == AccessSpecifier::Public || func.access == AccessSpecifier::Protected || func.access == AccessSpecifier::Private) out << DLLName << "_API ";
 			else out << DLLName << "_HIDDEN ";
 		}
 
-		if (func.isStatic) out << "static ";
+		if (func.isStatic) {
+			out << "static ";
+		}
+		else if (func.isVirtual || func.isFinal) {
+			out << "virtual ";
+		}
 
 		bool isRegularMethod = !func.isConstructor && !func.isDestructor && !func.isConverter;
 		if (isRegularMethod) out << "auto ";
@@ -1599,7 +1876,15 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			}
 			else if (func.returnType)
 			{
-				printTypeId(func.returnType);
+				if (type->kind == TypeKind::Class && func.returnType->getText() == "self" && func.isRefReturn)
+				{
+					out << "__selfClass";
+				}
+				else
+				{
+					printTypeId(func.returnType);
+				}
+				
 				if (func.isRefReturn) out << "&";
 			}
 			else if (func.isForwardReturn)
@@ -1622,6 +1907,13 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 
 		if (!func.isStatic && func.isRefReturn)
 			out << " LIFETIMEBOUND";
+
+		if (type->kind == TypeKind::Class)
+		{
+			if (func.isOverride) out << " override";
+			if (func.isFinal) out << " final";
+		}
+
 		out << ";";
 		out << std::endl << std::string(depth, '\t');
 		if (func.id == "operator++" || func.id == "operator--")
@@ -1631,6 +1923,10 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			case AccessSpecifier::Public:
 			case AccessSpecifier::Internal:
 				out << "public: ";
+				break;
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected: ";
 				break;
 			case AccessSpecifier::Private:
 				out << "private: ";
@@ -1664,6 +1960,10 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			case AccessSpecifier::Public:
 			case AccessSpecifier::Internal:
 				out << "public: ";
+				break; 
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected: ";
 				break;
 			case AccessSpecifier::Private:
 				out << "private: ";
@@ -1685,7 +1985,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			}
 			else if (!DLLName.empty() && !func.templateParams)
 			{
-				if (func.access == AccessSpecifier::Public) out << DLLName << "_API ";
+				if (func.access == AccessSpecifier::Public || func.access == AccessSpecifier::Protected || func.access == AccessSpecifier::Private) out << DLLName << "_API ";
 				else out << DLLName << "_HIDDEN ";
 			}
 
@@ -1715,7 +2015,17 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		}
 		isNewDeleteOperator = false;
 	}
+	if (type->kind == TypeKind::Class && !type->isStatic)
+	{
+		out << "\n#define ADV_PROPERTY_SELF __self";
+	}
 	out << "\n" << std::string(--depth, '\t') << "};";
+
+	if (type->kind == TypeKind::Class && !type->isStatic)
+	{
+		out << "\n" << std::string(depth, '\t');
+		printClassRef(type);
+	}
 
 	if (!type->compilationCondition.empty())
 	{
@@ -1725,72 +2035,93 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 
 void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 {
-	if (!type->isRefStruct)
+	out << "\n" << std::string(depth, '\t');
+	if (!type->compilationCondition.empty())
 	{
-		out << "\n" << std::string(depth, '\t');
-		if (!type->compilationCondition.empty())
+		out << "#if " << type->compilationCondition << std::endl << std::string(depth, '\t');
+	}
+	out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+	if (type->templateParams)
+	{
+		printTemplateParams(type->templateParams);
+		out << " ";
+	}
+	else if (type->templateSpecializationArgs)
+	{
+		out << "template<> ";
+	}
+	out << "class __Class_" << type->id;
+	if (type->templateSpecializationArgs)
+	{
+		out << "<";
+		printTemplateArgumentList(type->templateSpecializationArgs);
+		out << ">";
+	}
+
+	out << " final : public CppAdvance::ValueType";
+	if (type->interfaces) {
+		for (auto iface : type->interfaces->baseSpecifier())
 		{
-			out << "#if " << type->compilationCondition << std::endl << std::string(depth, '\t');
+			out << ", public ";
+			if (iface->nestedNameSpecifier())
+			{
+				printNestedNameSpecifier(iface->nestedNameSpecifier());
+			}
+			printClassName(iface->className());
+			out << "::__class";
 		}
-		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-		if (type->templateParams)
+	}
+
+	out << "\n" << std::string(depth++, '\t') << "{\n" << std::string(depth, '\t');
+	if (type->interfaces) {
+		for (auto iface : type->interfaces->baseSpecifier())
 		{
-			printTemplateParams(type->templateParams);
+			out << "#line " << iface->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << "ADV_CHECK_INTERFACE(" << iface->getText() << ", ";
+			if (iface->nestedNameSpecifier())
+			{
+				printNestedNameSpecifier(iface->nestedNameSpecifier());
+			}
+			printClassName(iface->className());
+			out << ");\n" << std::string(depth, '\t');
+		}
+	}
+	out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+	out << type->id << " " << "__value;\n" << std::string(depth, '\t');
+	out << "public: using __underlying = " << type->id;
+	if (type->templateSpecializationArgs)
+	{
+		out << "<";
+		printTemplateArgumentList(type->templateSpecializationArgs);
+		out << ">";
+	}
+	else if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << param->Identifier()->getText();
+		}
+		out << ">";
+	}
+	out << "; using __self = __underlying;\n" << std::string(depth, '\t');
+	for (const auto& nested : type->nestedStructs)
+	{
+		if (nested->access != AccessSpecifier::Public) continue;
+		if (auto tparams = nested->templateParams)
+		{
+			printTemplateParams(tparams);
 			out << " ";
 		}
-		else if (type->templateSpecializationArgs)
-		{
-			out << "template<> ";
-		}
-		out << "class __Class_" << type->id;
-		if (type->templateSpecializationArgs)
-		{
-			out << "<";
-			printTemplateArgumentList(type->templateSpecializationArgs);
-			out << ">";
-		}
-
-		out << " : public CppAdvance::ValueType";
-		if (type->interfaces) {
-			for (auto iface : type->interfaces->baseSpecifier())
-			{
-				out << ", public ";
-				if (iface->nestedNameSpecifier())
-				{
-					printNestedNameSpecifier(iface->nestedNameSpecifier());
-				}
-				printClassName(iface->className());
-			}
-		}
-
-		out << "\n" << std::string(depth++, '\t') << "{\n" << std::string(depth, '\t');
-		if (type->interfaces) {
-			for (auto iface : type->interfaces->baseSpecifier())
-			{
-				out << "#line " << iface->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-				out << "ADV_CHECK_INTERFACE(" << iface->getText()  << ", ";
-				if (iface->nestedNameSpecifier())
-				{
-					printNestedNameSpecifier(iface->nestedNameSpecifier());
-				}
-				printClassName(iface->className());
-				out << ");\n" << std::string(depth, '\t');
-			}
-		}
-		out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-		out << type->id << " " << "__value;\n" << std::string(depth, '\t');
-		out << "public: using __underlying = " << type->id;
-		if (type->templateSpecializationArgs)
-		{
-			out << "<";
-			printTemplateArgumentList(type->templateSpecializationArgs);
-			out << ">";
-		}
-		else if (type->templateParams)
+		out << "using " << nested->id << " = __self::" << nested->id;
+		if (auto tparams = nested->templateParams)
 		{
 			out << "<";
 			bool first = true;
-			for (auto param : type->templateParams->templateParamDeclaration())
+			for (auto param : tparams->templateParamDeclaration())
 			{
 				if (!first) out << ", ";
 				first = false;
@@ -1798,136 +2129,97 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 			}
 			out << ">";
 		}
-		out << "; using __self = __underlying;\n" << std::string(depth, '\t');
-		for (const auto& nested : type->nestedStructs)
+		out << ";\n" << std::string(depth, '\t');
+	}
+	out << "__Class_" << type->id << "(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>)"
+		<< " : __value{value} {}\n" << std::string(depth, '\t');
+	out << "operator __underlying() const noexcept { return __value; }\n" << std::string(depth, '\t');
+	for (const auto& prop : type->properties)
+	{
+		if (prop.isStatic || prop.access != AccessSpecifier::Public) continue;
+		if (!prop.compilationCondition.empty())
 		{
-			if (nested->access != AccessSpecifier::Public) continue;
-			if (auto tparams = nested->templateParams)
+			out << "#if " << prop.compilationCondition << std::endl << std::string(depth, '\t');
+		}
+		if (prop.setter && (!prop.setter->accessSpecifier() && !prop.setter->protectedInternal()))
+		{
+			out << "__underlying& set" << prop.id << "(const ";
+			printTypeId(prop.type);
+			out << "& value) ";
+			if (prop.isOverride) out << "override ";
+			out << "{ return __value.set" << prop.id << "(value); }\n" << std::string(depth, '\t');
+		}
+		if (prop.getter && !prop.getter->accessSpecifier() && !prop.getter->protectedInternal() || !prop.setter && !prop.getter)
+		{
+			out << "auto get" << prop.id << "() const -> ";
+			if (prop.isConst) out << "const ";
+			printTypeId(prop.type);
+			if (prop.isRef) out << "&";
+			if (prop.isOverride) out << " override";
+			out << " { return __value.get" << prop.id << "(); }\n" << std::string(depth, '\t');
+		}
+
+		if (!prop.compilationCondition.empty())
+		{
+			out << "#endif " << std::endl;
+		}
+	}
+	for (const auto& method : type->methods)
+	{
+		if (method.templateParams || method.templateSpecializationArgs || method.isStatic || method.isConstructor
+			|| method.access != AccessSpecifier::Public || method.params && !method.returnType && method.expression) continue;
+		if (!method.compilationCondition.empty())
+		{
+			out << "#if " << method.compilationCondition << std::endl << std::string(depth, '\t');
+		}
+		if (method.isConverter)
+		{
+			out << "operator ";
+			printTypeId(method.returnType);
+			if (method.isConstReturn) out << " const&";
+			else if (method.isRefReturn) out << " &";
+			out << "() ";
+			if (!method.isMutating) out << "const ";
+			if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
+			if (method.isOverride) out << " override";
+			out << " { return static_cast<";
+			printTypeId(method.returnType);
+			if (method.isConstReturn) out << " const&";
+			else if (method.isRefReturn) out << " &";
+			out << ">(__value); }\n" << std::string(depth, '\t');
+		}
+		else if (method.indexerParams)
+		{
+			std::string funcname = "operator[]";
+			if (method.indexerParams->paramDeclList()->paramDeclaration().size() > 1)
+				funcname = "_operator_subscript";
+			if (method.indexerSetter && (!method.indexerSetter->accessSpecifier() || method.indexerSetter->accessSpecifier()->Public())
+				&& !method.indexerSetter->protectedInternal()
+				|| !method.indexerSetter && !method.indexerGetter && !method.isConstReturn)
 			{
-				printTemplateParams(tparams);
-				out << " ";
-			}
-			out << "using " << nested->id << " = __self::" << nested->id; 
-			if (auto tparams = nested->templateParams)
-			{
-				out << "<";
+				out << "void setAt(";
+				printParamDeclClause(method.indexerParams);
+				out << ", const ";
+				printTypeId(method.returnType);
+				out << "& value) ";
+				if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
+				if (method.isOverride) out << " override";
+				out << " { __value." << funcname << "(";
 				bool first = true;
-				for (auto param : tparams->templateParamDeclaration())
+				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
 				{
 					if (!first) out << ", ";
 					first = false;
 					out << param->Identifier()->getText();
 				}
-				out << ">";
-			}
-			out << ";\n" << std::string(depth, '\t');
-		}
-		out << "__Class_" << type->id << "(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>)"
-			<< " : __value{value} {}\n" << std::string(depth, '\t');
-		out << "operator __underlying() const noexcept { return __value; }\n" << std::string(depth, '\t');
-		for (const auto& prop : type->properties)
-		{
-			if (prop.isStatic || prop.access != AccessSpecifier::Public) continue;
-			if (!prop.compilationCondition.empty())
-			{
-				out << "#if " << prop.compilationCondition << std::endl << std::string(depth, '\t');
-			}
-			if (prop.setter && (!prop.setter->accessSpecifier() && !prop.setter->protectedInternal()))
-			{
-				out << "__underlying& set" << prop.id << "(const ";
-				printTypeId(prop.type);
-				out << "& value) "; 
-				if (prop.isOverride) out << "override ";
-				out << "{ return __value.set" << prop.id << "(value); }\n" << std::string(depth, '\t');
-			}
-			if (prop.getter && !prop.getter->accessSpecifier() && !prop.getter->protectedInternal() || !prop.setter && !prop.getter)
-			{
-				out << "auto get" << prop.id << "() const -> ";
-				if (prop.isConst) out << "const ";
-				printTypeId(prop.type);
-				if (prop.isRef) out << "&";
-				if (prop.isOverride) out << " override";
-				out << " { return __value.get" << prop.id << "(); }\n" << std::string(depth, '\t');
-			}
 
-			if (!prop.compilationCondition.empty())
-			{
-				out << "#endif " << std::endl;
+				out << ") = value; }\n" << std::string(depth, '\t');
 			}
-		}
-		for (const auto& method : type->methods)
-		{
-			if (method.templateParams || method.templateSpecializationArgs || method.isStatic || method.isConstructor
-				|| method.access != AccessSpecifier::Public || method.params && !method.returnType && method.expression) continue;
-			if (!method.compilationCondition.empty())
+			if (!method.isConstReturn)
 			{
-				out << "#if " << method.compilationCondition << std::endl << std::string(depth, '\t');
-			}
-			if (method.isConverter)
-			{
-				out << "operator ";
-				printTypeId(method.returnType);
-				if (method.isConstReturn) out << " const&";
-				else if (method.isRefReturn) out << " &";
-				out << "() ";
-				if (!method.isMutating) out << "const ";
-				if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
-				if (method.isOverride) out << " override";
-				out << " { return static_cast<";
-				printTypeId(method.returnType);
-				if (method.isConstReturn) out << " const&";
-				else if (method.isRefReturn) out << " &";
-				out << ">(__value); }\n" << std::string(depth, '\t');
-			}
-			else if (method.indexerParams)
-			{
-				std::string funcname = "operator[]";
-				if (method.indexerParams->paramDeclList()->paramDeclaration().size() > 1)
-					funcname = "_operator_subscript";
-				if (method.indexerSetter && (!method.indexerSetter->accessSpecifier() || method.indexerSetter->accessSpecifier()->Public())
-					&& !method.indexerSetter->protectedInternal()
-					|| !method.indexerSetter && !method.indexerGetter && !method.isConstReturn)
-				{
-					out << "void setAt(";
-					printParamDeclClause(method.indexerParams);
-					out << ", const ";
-					printTypeId(method.returnType);
-					out << "& value) ";
-					if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
-					if (method.isOverride) out << " override";
-					out << " { __value." << funcname << "(";
-					bool first = true;
-					for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
-					{
-						if (!first) out << ", ";
-						first = false;
-						out << param->Identifier()->getText();
-					}
-
-					out << ") = value; }\n" << std::string(depth, '\t');
-				}
-				if (!method.isConstReturn)
-				{
-					out << "decltype(auto) getAt(";
-					printParamDeclClause(method.indexerParams);
-					out << ") ";
-					if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
-					if (method.isOverride) out << " override";
-					out << " { return __value." << funcname << "(";
-					bool first = true;
-					for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
-					{
-						if (!first) out << ", ";
-						first = false;
-						out << param->Identifier()->getText();
-					}
-
-					out << "); }\n" << std::string(depth, '\t');
-				}
-				
 				out << "decltype(auto) getAt(";
 				printParamDeclClause(method.indexerParams);
-				out << ") const ";
+				out << ") ";
 				if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
 				if (method.isOverride) out << " override";
 				out << " { return __value." << funcname << "(";
@@ -1941,61 +2233,901 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 
 				out << "); }\n" << std::string(depth, '\t');
 			}
-			else if (method.params)
+
+			out << "decltype(auto) getAt(";
+			printParamDeclClause(method.indexerParams);
+			out << ") const ";
+			if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
+			if (method.isOverride) out << " override";
+			out << " { return __value." << funcname << "(";
+			bool first = true;
+			for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
 			{
-				out << "auto " << method.id;
-				printFunctionParameters(method.params);
-				if (!method.isMutating) out << " const ";
-				if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
-				out << " -> ";
-				if (method.returnType)
+				if (!first) out << ", ";
+				first = false;
+				out << param->Identifier()->getText();
+			}
+
+			out << "); }\n" << std::string(depth, '\t');
+		}
+		else if (method.params)
+		{
+			out << "auto " << method.id;
+			printFunctionParameters(method.params);
+			if (!method.isMutating) out << " const ";
+			if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
+			out << " -> ";
+			if (method.returnType)
+			{
+				if (type->kind == TypeKind::Class && method.returnType->getText() == "self" && method.isRefReturn)
 				{
-					printTypeId(method.returnType);
-					if (method.isConstReturn) out << " const&";
-					else if (method.isRefReturn) out << " &";
+					out << "__selfClass";
 				}
 				else
 				{
-					out << "void";
+					printTypeId(method.returnType);
 				}
-				if (method.isOverride) out << " override";
-				out << " { ADV_EXPRESSION_BODY(__value." << method.id << "(";
-				bool first = true;
-				if (auto params = method.params->paramDeclClause())
-				{
-					for (auto param : params->paramDeclList()->paramDeclaration())
-					{
-						if (!first) out << ", ";
-						first = false;
-						out << param->Identifier()->getText();
-					}
-				}
-
-				out << ")); }\n" << std::string(depth, '\t');
+				if (method.isConstReturn) out << " const&";
+				else if (method.isRefReturn) out << " &";
 			}
-			if (!method.compilationCondition.empty())
+			else
 			{
-				out << "#endif " << std::endl << std::string(depth, '\t');
+				out << "void";
 			}
+			if (method.isOverride) out << " override";
+			out << " { ADV_EXPRESSION_BODY(__value." << method.id << "(";
+			bool first = true;
+			if (auto params = method.params->paramDeclClause())
+			{
+				for (auto param : params->paramDeclList()->paramDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					out << param->Identifier()->getText();
+				}
+			}
+
+			out << ")); }\n" << std::string(depth, '\t');
 		}
-		out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
-		if (!type->templateSpecializationArgs && !type->templateParams)
+		if (!method.compilationCondition.empty())
 		{
-			out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-			out << "ADV_CHECK_FOR_CONCRETE(" << type->id << ");";
-		}
-		
-		if (!type->compilationCondition.empty())
-		{
-			out << "#endif " << std::endl;
+			out << "#endif " << std::endl << std::string(depth, '\t');
 		}
 	}
+	out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
+	if (!type->templateSpecializationArgs && !type->templateParams)
+	{
+		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "ADV_CHECK_FOR_CONCRETE(" << type->id << ");";
+	}
+
+	if (!type->compilationCondition.empty())
+	{
+		out << "#endif " << std::endl;
+	}
+}
+
+void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
+{
+	out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+	if (type->templateParams)
+	{
+		printTemplateParams(type->templateParams);
+		out << " ";
+	}
+	else if (type->templateSpecializationArgs)
+	{
+		out << "template<> ";
+	}
+	out << "class ";
+	if (isUnsafe) out << "[[clang::annotate(\"unsafe\")]] ";
+	out << type->id;
+	if (type->templateSpecializationArgs)
+	{
+		out << "<";
+		printTemplateArgumentList(type->templateSpecializationArgs);
+		out << ">";
+	}
+	if (type->isFinal) out << " final";
+	out << " : ";
+	if (!type->interfaces)
+	{
+		out << "public CppAdvance::ObjectRef";
+	}
+	else
+	{
+		out << "public CppAdvance::ClassRefParent<";
+		printBaseSpecifier(type->interfaces->baseSpecifier(0));
+		out << ">";
+	}
+
+	out << " {\n" << std::string(++depth, '\t') << "private: using __self = " << type->id;
+	if (type->templateSpecializationArgs)
+	{
+		out << "<";
+		printTemplateArgumentList(type->templateSpecializationArgs);
+		out << ">";
+	}
+	else if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << param->Identifier()->getText();
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	if (!type->interfaces)
+	{
+		out << "private: using ___super = CppAdvance::ObjectRef";
+	}
+	else
+	{
+		out << "private: using ___super = CppAdvance::ClassRefParent<";
+		printBaseSpecifier(type->interfaces->baseSpecifier(0));
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+
+	out << "public: using __class = __Class_" << type->id;
+	if (type->templateSpecializationArgs)
+	{
+		out << "<";
+		printTemplateArgumentList(type->templateSpecializationArgs);
+		out << ">";
+	}
+	else if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << param->Identifier()->getText();
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "public: FORCE_INLINE decltype(auto) __ref() noexcept { return *static_cast<__class*>(_obj); } FORCE_INLINE decltype(auto) __ref() const noexcept { return *static_cast<__class*>(_obj); }\n" << std::string(depth, '\t');
+	if (type->isAbstract)
+	{
+		out << "private: " << type->id << "() = delete;\n" << std::string(depth, '\t');
+		out << type->id << "(__class*, InitTag) = delete;\n" << std::string(depth, '\t');
+	}
+	else
+	{
+		out << "ADV_CLASS_DEFAULT_CTOR(" << type->id << ")\n" << std::string(depth,'\t');
+		out << "ADV_CLASS_INIT(" << type->id << ")\n" << std::string(depth, '\t');
+	}
+	out << "ADV_CLASS_COMMON_CTORS(" << type->id << ")\n" << std::string(depth, '\t');
+	for (const auto& nested : type->nestedStructs)
+	{
+		if (!nested->compilationCondition.empty())
+		{
+			out << "#if " << nested->compilationCondition << std::endl << std::string(depth, '\t');
+		}
+		switch (nested->access)
+		{
+		case AccessSpecifier::Public:
+		case AccessSpecifier::Internal:
+			out << "public: ";
+			break;
+		case AccessSpecifier::Protected:
+		case AccessSpecifier::ProtectedInternal:
+			out << "protected: ";
+			break;
+		case AccessSpecifier::Private:
+			out << "private: ";
+			break;
+		}
+		if (nested->templateParams)
+		{
+			printTemplateParams(nested->templateParams);
+			out << " ";
+		}
+		out << "using " << nested->id << " = __class::" << nested->id;
+		if (nested->templateParams)
+		{
+			out << "<";
+			bool first = true;
+			for (auto param : nested->templateParams->templateParamDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				out << param->Identifier()->getText();
+			}
+			out << ">";
+		}
+		out << ";\n" << std::string(depth, '\t');
+		if (!nested->compilationCondition.empty())
+		{
+			out << "#endif " << std::endl << std::string(depth, '\t');
+		}
+	}
+	for (const auto& field : type->fields)
+	{
+		if (!field.isStatic && !field.isThreadLocal) continue;
+
+		if (!field.compilationCondition.empty())
+		{
+			out << "#if " << field.compilationCondition << std::endl << std::string(depth, '\t');
+		}
+		switch (field.access)
+		{
+		case AccessSpecifier::Public:
+		case AccessSpecifier::Internal:
+			out << "public: ";
+			break;
+		case AccessSpecifier::Protected:
+		case AccessSpecifier::ProtectedInternal:
+			out << "protected: ";
+			break;
+		case AccessSpecifier::Private:
+			out << "private: ";
+			break;
+		}
+		out << "static decltype(auto) get" << field.id << "() { return __class::" << field.id << "; }\n" << std::string(depth, '\t');
+		if (!field.isConst)
+		{
+			out << "static void set" << field.id << "(const ";
+			printTypeId(field.type);
+			out << "& value) { __class::" << field.id << " = value; }\n" << std::string(depth, '\t');
+			out << "ADV_PROPERTY_GETTER_SETTER_STATIC(";
+			switch (field.access)
+			{
+			case AccessSpecifier::Public:
+			case AccessSpecifier::Internal:
+				out << "public";
+				break;
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected";
+				break;
+			case AccessSpecifier::Private:
+				out << "private";
+				break;
+			}
+			out << ", ";
+			if (!field.isThreadLocal && !DLLName.empty())
+			{
+				out << DLLName;
+				if (field.access == AccessSpecifier::Internal || field.access == AccessSpecifier::ProtectedInternal)
+				{
+					out << "_HIDDEN";
+				}
+				else
+				{
+					out << "_API";
+				}
+			}
+			out << ", " << field.id << ", ";
+			switch (field.access)
+			{
+			case AccessSpecifier::Public:
+			case AccessSpecifier::Internal:
+				out << "public";
+				break;
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected";
+				break;
+			case AccessSpecifier::Private:
+				out << "private";
+				break;
+			}
+			out << ", get" << field.id << ", ";
+			switch (field.access)
+			{
+			case AccessSpecifier::Public:
+			case AccessSpecifier::Internal:
+				out << "public";
+				break;
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected";
+				break;
+			case AccessSpecifier::Private:
+				out << "private";
+				break;
+			}
+			out << ", set" << field.id << ", ";
+            printTypeId(field.type);
+			out << ")";
+		}
+		else
+		{
+			out << "ADV_PROPERTY_GETTER_STATIC(";
+			switch (field.access)
+			{
+			case AccessSpecifier::Public:
+			case AccessSpecifier::Internal:
+				out << "public";
+				break;
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected";
+				break;
+			case AccessSpecifier::Private:
+				out << "private";
+				break;
+			}
+			out << ", ";
+			if (!DLLName.empty())
+			{
+				out << DLLName;
+				if (field.access == AccessSpecifier::Internal || field.access == AccessSpecifier::ProtectedInternal)
+				{
+					out << "_HIDDEN";
+				}
+				else
+				{
+					out << "_API";
+				}
+			}
+			
+			out << ", " << field.id << ", get" << field.id << ", ";
+			printTypeId(field.type);
+			out << ")";
+		}
+		out << ";\n" << std::string(depth, '\t');
+		if (!field.compilationCondition.empty())
+		{
+			out << "#endif " << std::endl << std::string(depth, '\t');
+		}
+		sema.properties.insert_or_assign(field.pos, PropertyDefinition{ field.id, field.type, field.pos, nullptr, nullptr, nullptr, nullptr, field.access, field.compilationCondition,
+			"", field.parentType + "::__self", type->templateParams, type->templateSpecializationArgs, true, field.isConst, false, isUnsafe, type->access == AccessSpecifier::Private,
+			type->access == AccessSpecifier::Protected, type->isUnsafe, false, false, false,
+			false, false, false });
+	}
+	out << "#define ADV_PROPERTY_SELF __class\n" << std::string(depth, '\t');
+	for (const auto& prop : type->properties)
+	{
+		if (!prop.isStatic) continue;
+
+		if (!prop.compilationCondition.empty())
+		{
+			out << "#if " << prop.compilationCondition << std::endl << std::string(depth, '\t');
+		}
+		switch (prop.access)
+		{
+		case AccessSpecifier::Public:
+		case AccessSpecifier::Internal:
+			out << "public: ";
+			break;
+		case AccessSpecifier::Protected:
+		case AccessSpecifier::ProtectedInternal:
+			out << "protected: ";
+			break;
+		case AccessSpecifier::Private:
+			out << "private: ";
+			break;
+		}
+
+		AccessSpecifier getAccess = prop.access;
+		AccessSpecifier setAccess = prop.access;
+		if (prop.setter)
+		{
+			if (prop.getter) {
+				out << "ADV_PROPERTY_GETTER_SETTER_STATIC(";
+				switch (prop.access)
+				{
+				case AccessSpecifier::Public:
+				case AccessSpecifier::Internal:
+					out << "public";
+					break;
+				case AccessSpecifier::Protected:
+				case AccessSpecifier::ProtectedInternal:
+					out << "protected";
+					break;
+				case AccessSpecifier::Private:
+					out << "private";
+					break;
+				}
+
+				out << ", ";
+				if (!DLLName.empty())
+				{
+					out << DLLName;
+					if (prop.access == AccessSpecifier::Internal || prop.access == AccessSpecifier::ProtectedInternal)
+					{
+						out << "_HIDDEN";
+					}
+					else
+					{
+						out << "_API";
+					}
+				}
+				out << ", " << prop.id << ", ";
+
+				if (auto acc = prop.setter->accessSpecifier())
+				{
+					if (acc->Public()) setAccess = AccessSpecifier::Public;
+					else if (acc->Internal()) setAccess = AccessSpecifier::Internal;
+					else if (acc->Protected()) setAccess = AccessSpecifier::Protected;
+					else if (acc->Private()) setAccess = AccessSpecifier::Private;
+				}
+				if (prop.setter->protectedInternal()) setAccess = AccessSpecifier::ProtectedInternal;
+				if (auto acc = prop.getter->accessSpecifier())
+				{
+					if (acc->Public()) getAccess = AccessSpecifier::Public;
+					else if (acc->Internal()) getAccess = AccessSpecifier::Internal;
+					else if (acc->Protected()) getAccess = AccessSpecifier::Protected;
+					else if (acc->Private()) getAccess = AccessSpecifier::Private;
+				}
+				if (prop.getter->protectedInternal()) getAccess = AccessSpecifier::ProtectedInternal;
+
+				switch (getAccess)
+				{
+				case AccessSpecifier::Public:
+				case AccessSpecifier::Internal:
+					out << "public";
+					break;
+				case AccessSpecifier::Protected:
+				case AccessSpecifier::ProtectedInternal:
+					out << "protected";
+					break;
+				case AccessSpecifier::Private:
+					out << "private";
+					break;
+				}
+				out << ", get" << prop.id << ", ";
+				switch (setAccess)
+				{
+				case AccessSpecifier::Public:
+				case AccessSpecifier::Internal:
+					out << "public";
+					break;
+				case AccessSpecifier::Protected:
+				case AccessSpecifier::ProtectedInternal:
+					out << "protected";
+					break;
+				case AccessSpecifier::Private:
+					out << "private";
+					break;
+				}
+				out << ", set" << prop.id << ", ";
+				if (prop.isConst) out << "const ";
+				printTypeId(prop.type);
+				if (prop.isRef) out << "&";
+				out << ")";
+			}
+			else
+			{
+				out << "ADV_PROPERTY_SETTER_STATIC(";
+				switch (prop.access)
+				{
+				case AccessSpecifier::Public:
+				case AccessSpecifier::Internal:
+					out << "public";
+					break;
+				case AccessSpecifier::Protected:
+				case AccessSpecifier::ProtectedInternal:
+					out << "protected";
+					break;
+				case AccessSpecifier::Private:
+					out << "private";
+					break;
+				}
+
+				out << ", ";
+				if (!DLLName.empty())
+				{
+					out << DLLName;
+					if (prop.access == AccessSpecifier::Internal || prop.access == AccessSpecifier::ProtectedInternal)
+					{
+						out << "_HIDDEN";
+					}
+					else
+					{
+						out << "_API";
+					}
+				}
+				out << ", " << prop.id << ", set" << prop.id << ", ";
+				if (prop.isConst) out << "const ";
+				printTypeId(prop.type);
+				if (prop.isRef) out << "&";
+				out << ")";
+			}
+		}
+		else
+		{
+			out << "ADV_PROPERTY_GETTER_STATIC(";
+			switch (prop.access)
+			{
+			case AccessSpecifier::Public:
+			case AccessSpecifier::Internal:
+				out << "public";
+				break;
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected";
+				break;
+			case AccessSpecifier::Private:
+				out << "private";
+				break;
+			}
+
+			out << ", ";
+			if (!DLLName.empty())
+			{
+				out << DLLName;
+				if (prop.access == AccessSpecifier::Internal || prop.access == AccessSpecifier::ProtectedInternal)
+				{
+					out << "_HIDDEN";
+				}
+				else
+				{
+					out << "_API";
+				}
+			}
+			out << ", " << prop.id << ", get" << prop.id << ", ";
+			if (prop.isConst) out << "const ";
+			printTypeId(prop.type);
+			if (prop.isRef) out << "&";
+			out << ")";
+		}
+		out << ";\n" << std::string(depth, '\t');
+		if (!prop.compilationCondition.empty())
+		{
+			out << "#endif " << std::endl << std::string(depth, '\t');
+		}
+		sema.properties.insert_or_assign(SourcePosition{prop.pos.line, prop.pos.column+1}, PropertyDefinition{ prop.id, prop.type, prop.pos, nullptr, nullptr, nullptr, nullptr, prop.access, prop.compilationCondition,
+			"", prop.parentType + "::__self", type->templateParams, type->templateSpecializationArgs, true, prop.isConst, false, isUnsafe, type->access == AccessSpecifier::Private,
+			type->access == AccessSpecifier::Protected, type->isUnsafe, false, false, false,
+			false, false, false });
+	}
+	for (const auto& func : type->methods)
+	{
+		if (!func.isStatic && !func.isConverter && !func.id.starts_with("operator") && !func.id.starts_with("_operator")) continue;
+		if (!func.compilationCondition.empty())
+		{
+			out << "#if " << func.compilationCondition << std::endl << std::string(depth, '\t');
+		}
+		out << "#line " << func.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		switch (func.access)
+		{
+		case AccessSpecifier::Public:
+		case AccessSpecifier::Internal:
+			out << "public: ";
+			break;
+		case AccessSpecifier::Protected:
+		case AccessSpecifier::ProtectedInternal:
+			out << "protected: ";
+			break;
+		case AccessSpecifier::Private:
+			out << "private: ";
+			break;
+		}
+		isUnsafe = func.isUnsafe;
+		if (isUnsafe)
+		{
+			out << "[[clang::annotate(\"unsafe\")]] ";
+		}
+
+		if (func.varargs >= 0)
+		{
+			out << "[[clang::annotate(\"varargs:" << (int)func.varargs << "\")]] ";
+		}
+
+		isFunctionDeclaration = true;
+		if (func.templateParams) {
+			printTemplateParams(func.templateParams);
+			out << " ";
+		}
+		else if (func.templateSpecializationArgs)
+		{
+			out << "template<> ";
+		}
+
+		if (func.isConsteval)
+		{
+			out << "inline consteval ";
+		}
+		else if (func.isConstexpr)
+		{
+			out << "inline constexpr ";
+		}
+		else if (func.isInline || func.indexerSetter)
+		{
+			out << "inline ";
+		}
+
+		if (func.isStatic) out << "static ";
+
+		bool isRegularMethod = !func.isConstructor && !func.isDestructor && !func.isConverter;
+		if (isRegularMethod) out << "decltype(auto) ";
+		else if (func.implicitSpecification)
+		{
+			printImplicitSpecification(func.implicitSpecification);
+			out << " ";
+		}
+		else if (func.isConverter)
+		{
+			out << "explicit ";
+		}
+		if (func.isConverter)
+		{
+			out << "operator ";
+			printTypeId(func.returnType);
+			if (func.isConstReturn) out << " const&";
+			else if (func.isRefReturn) out << " &";
+		}
+		else out << func.id;
+		if (func.id.ends_with(" new") || func.id.ends_with(" delete")) isNewDeleteOperator = true;
+		if (func.templateSpecializationArgs) {
+			out << "<";
+			printTemplateArgumentList(func.templateSpecializationArgs);
+			out << ">";
+		}
+		bool isIndexer = func.indexerParams;
+		if (func.params) printFunctionParameters(func.params);
+		else if (isIndexer)
+		{
+			out << "(";
+			printParamDeclClause(func.indexerParams);
+			out << ")";
+		}
+		else out << "()";
+		isVariadicTemplate = false;
+		isFunctionDeclaration = false;
+		out << " ";
+		if (!func.isStatic) {
+			out << "const ";
+		}
+		if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
+
+		if (!func.isStatic && func.isRefReturn)
+			out << " LIFETIMEBOUND";
+
+		out << "{ ADV_EXPRESSION_BODY(";
+		if (func.isStatic) out << "__class::";
+		else out << "__ref().";
+		if (func.templateParams) out << "template ";
+		if (func.isConverter)
+		{
+			out << "operator ";
+			if (func.isConstReturn) out << "const ";
+			printTypeId(func.returnType);
+			if (func.isRefReturn) out << "&";
+		}
+		else
+		{
+			out << func.id;
+		}
+		
+		if (func.templateSpecializationArgs) 
+		{
+			out << "<";
+			bool first = true;
+			for (auto tparam : func.templateSpecializationArgs->templateArgument())
+			{
+				if (!first) out << ", ";
+				first = false;
+				printTemplateArgument(tparam);
+			}
+			out << ">";
+		}
+		else if (func.templateParams)
+		{
+			out << "<";
+			bool first = true;
+			for (auto tparam : func.templateParams->templateParamDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				out << tparam->Identifier()->getText();
+			}
+			out << ">";
+		}
+		out << "(";
+		if (func.params)
+		{
+			if (auto clause = func.params->paramDeclClause()) {
+				bool first = true;
+				for (auto param : clause->paramDeclList()->paramDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					out << param->Identifier()->getText();
+				}
+			}
+		}
+		else if (func.indexerParams)
+		{
+			bool first = true;
+			for (auto param : func.indexerParams->paramDeclList()->paramDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				out << param->Identifier()->getText();
+			}
+		}
+		out << ")); }" << std::endl << std::string(depth, '\t');
+		if (func.id == "operator++" || func.id == "operator--")
+		{
+			switch (func.access)
+			{
+			case AccessSpecifier::Public:
+			case AccessSpecifier::Internal:
+				out << "public: ";
+				break;
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected: ";
+				break;
+			case AccessSpecifier::Private:
+				out << "private: ";
+				break;
+			}
+
+			isFunctionDeclaration = true;
+			if (func.isConsteval)
+			{
+				out << "inline consteval ";
+			}
+			else if (func.isConstexpr)
+			{
+				out << "inline constexpr ";
+			}
+			else
+			{
+				out << "inline ";
+			}
+
+			out << "auto " << func.id << "(int) ";
+			isVariadicTemplate = false;
+			isFunctionDeclaration = false;
+			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
+			out << " -> " << type->id << " { return ";
+			if (func.isStatic) out << "__class::";
+			else out << "__ref().";
+			out << func.id << "(1); }" << std::endl << std::string(depth, '\t');
+		}
+		if (!func.compilationCondition.empty())
+		{
+			out << "#endif " << std::endl << std::string(depth, '\t');
+		}
+		isNewDeleteOperator = false;
+	}
+	for (const auto& constant : type->constants)
+	{
+		if (!constant.compilationCondition.empty())
+		{
+			out << "#if " << constant.compilationCondition << std::endl << std::string(depth, '\t');
+		}
+		switch (constant.access)
+		{
+		case AccessSpecifier::Public:
+		case AccessSpecifier::Internal:
+			out << "public: ";
+			break;
+		case AccessSpecifier::Protected:
+		case AccessSpecifier::ProtectedInternal:
+			out << "protected: ";
+			break;
+		case AccessSpecifier::Private:
+			out << "private: ";
+			break;
+		}
+		if (constant.templateParams)
+		{
+			printTemplateParams(constant.templateParams);
+			out << " ";
+		}
+		out << "static constexpr decltype(auto) " << constant.id << " = __class::" << constant.id << ";\n" << std::string(depth, '\t');
+		if (!constant.compilationCondition.empty())
+		{
+			out << "#endif " << std::endl << std::string(depth, '\t');
+		}
+	}
+	for (const auto& alias : type->typeAliases)
+	{
+		if (!alias.compilationCondition.empty())
+		{
+			out << "#if " << alias.compilationCondition << std::endl << std::string(depth, '\t');
+		}
+		switch (alias.access)
+		{
+		case AccessSpecifier::Public:
+		case AccessSpecifier::Internal:
+			out << "public: ";
+			break;
+		case AccessSpecifier::Protected:
+		case AccessSpecifier::ProtectedInternal:
+			out << "protected: ";
+			break;
+		case AccessSpecifier::Private:
+			out << "private: ";
+			break;
+		}
+		if (alias.templateParams)
+		{
+			printTemplateParams(alias.templateParams);
+			out << " ";
+		}
+		out << "using " << alias.id << " = __class::" << alias.id;
+		if (alias.templateParams)
+		{
+			out << "<";
+			bool first = true;
+			for (auto tparam : alias.templateParams->templateParamDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				out << tparam->Identifier()->getText();
+			}
+			out << ">";
+		}
+		out << ";\n" << std::string(depth, '\t');
+		if (!alias.compilationCondition.empty())
+		{
+			out << "#endif " << std::endl << std::string(depth, '\t');
+		}
+	}
+	for (const auto& friendType : type->friendTypes)
+	{
+		if (!friendType.compilationCondition.empty())
+		{
+			out << "#if " << friendType.compilationCondition << std::endl << std::string(depth, '\t');
+		}
+		if (friendType.templateParams)
+		{
+			printTemplateParams(friendType.templateParams);
+			out << " ";
+		}
+		out << "friend class " << friendType.id << ";\n" << std::string(depth, '\t');
+		if (friendType.templateParams)
+		{
+			printTemplateParams(friendType.templateParams);
+			out << " ";
+		}
+		out << "friend class __Class_" << friendType.id << ";\n" << std::string(depth, '\t');
+		if (!friendType.compilationCondition.empty())
+		{
+			out << "#endif " << std::endl << std::string(depth, '\t');
+		}
+	}
+	for (const auto& func : type->friendFuncDeclarations)
+	{
+		if (!func.compilationCondition.empty())
+		{
+			out << "#if " << func.compilationCondition << std::endl << std::string(depth, '\t');
+		}
+		out << "friend ";
+		if (auto t = func.returnType)
+		{
+			if (t->Const()) out << "const ";
+			printTypeId(t->theTypeId());
+			if (t->Ref()) out << "&";
+		}
+		else
+		{
+			out << "void";
+		}
+
+		out << " " << func.id;
+		printFunctionParameters(func.params);
+		out << ";\n" << std::string(depth, '\t');
+		if (!func.compilationCondition.empty())
+		{
+			out << "#endif " << std::endl << std::string(depth, '\t');
+		}
+	}
+	
+	out << "#define ADV_PROPERTY_SELF __self";
+	out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
+	sema.symbolContexts.push(sema.symbolContexts.top());
 }
 
 void CppAdvanceCodegen::printTypeDefinitions() const
 {
 	out.switchTo(true);
-	if (!sema.namedTuples.empty())
+	if (!sema.namedTuples.empty() || !sema.globalStructs.empty())
 	{
 		out << "//###############################################################################\n";
 		out << "//# Type definitions\n";
@@ -2068,6 +3200,7 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 	}
 	for (const auto& type : sema.globalStructs)
 	{
+		if (type->kind == TypeKind::RefStruct || type->kind == TypeKind::Class) continue;
 		out.switchTo(true);
 		if (type->access == AccessSpecifier::Private) {
 			out.switchTo(false);
@@ -2088,7 +3221,10 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 		}
 
 		selfConstants.clear();
-		printStructWrapper(type.get());
+		if (type->kind == TypeKind::Struct)
+		{
+			printStructWrapper(type.get());
+		}
 		
 		if (type->access == AccessSpecifier::Protected || type->isUnsafe) out << "\n" << std::string(--depth, '\t') << "}";
 		out << std::endl;
@@ -2105,14 +3241,34 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 		}
 		out << "namespace __ntuples {\n" << std::string(++depth, '\t');
 		out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-        out << "struct " << tuple.id << " {";
-		++depth;
+        out << "struct " << tuple.id << " final : public CppAdvance::Struct { \n" << std::string(++depth, '\t');
+		out << "using __class = CppAdvance::__Class_Basic<" << tuple.id << ">;";
 		for (const auto& [field,type] : tuple.fields)
 		{
 			out << "\n" << std::string(depth, '\t');
 			printTypeId(type);
 			out << " " << field << ";";
 		}
+		out << "\n" << std::string(depth, '\t') << tuple.id << "() = default;";
+		out << "\n" << std::string(depth, '\t') << tuple.id << "(";
+		bool first = true;
+		for (const auto& [field, type] : tuple.fields)
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << "CppAdvance::In<";
+			printTypeId(type);
+			out << "> _" << field;
+		}
+		out << ") : ";
+		first = true;
+		for (const auto& [field, type] : tuple.fields)
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << field << "{_" << field << "}";
+		}
+		out << " {}";
 		out << "\n" << std::string(depth, '\t') << "FORCE_INLINE decltype(auto) __ref() noexcept { return *this; }";
 		out << "\n" << std::string(depth, '\t') << "FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }";
 		out << "\n" << std::string(--depth, '\t') << "};" << "\n" << std::string(--depth,'\t') << "}";
@@ -2260,6 +3416,10 @@ void CppAdvanceCodegen::printDeclaration(CppAdvanceParser::DeclarationContext* c
 	else if (auto type = ctx->structDefinition())
 	{
 		printStructDefinition(type);
+	}
+	else if (auto type = ctx->classDefinition())
+	{
+		printClassDefinition(type);
 	}
 	else if (auto func = ctx->functionDefinition())
 	{
@@ -2478,6 +3638,10 @@ void CppAdvanceCodegen::printDeclarationStatement(CppAdvanceParser::DeclarationS
 	else if (auto def = ctx->structDefinition())
 	{
 		printStructDefinition(def);
+	}
+	else if (auto def = ctx->classDefinition())
+	{
+		printClassDefinition(def);
 	}
 }
 
@@ -3174,6 +4338,7 @@ void CppAdvanceCodegen::printStructDefinition(CppAdvanceParser::StructDefinition
 						printNestedNameSpecifier(iface->nestedNameSpecifier());
 					}
 					printClassName(iface->className());
+					out << "::__class";
 				}
 			}
 
@@ -3403,6 +4568,66 @@ void CppAdvanceCodegen::printStructHead(CppAdvanceParser::StructHeadContext* ctx
 	}
 }
 
+void CppAdvanceCodegen::printClassDefinition(CppAdvanceParser::ClassDefinitionContext* ctx) const
+{
+	isStructDeclaration = functionBody;
+	currentAccessSpecifier = std::nullopt;
+	auto prevTypeName = currentShortType;
+	if (isStructDeclaration)
+	{
+		/*if (!ctx->structHead()->Ref() && !ctx->structHead()->className()->simpleTemplateId())
+		{
+			if (auto tparams = ctx->structHead()->templateParams())
+			{
+				printTemplateParams(tparams);
+				out << " ";
+			}
+			out << "class __Class_" << ctx->structHead()->className()->getText() << ";\n" << std::string(depth, '\t');
+		}
+		out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		printStructHead(ctx->structHead());
+		out << "\n" << std::string(depth++, '\t') << "{" << "\n" << std::string(depth, '\t');
+		out << "private: using __self = ";
+		printClassName(ctx->structHead()->className());
+		out << ";\n" << std::string(depth, '\t');
+		if (!ctx->structHead()->Ref()) {
+			out << "public: using __class = __Class_";
+			printClassName(ctx->structHead()->className());
+			out << ";\n" << std::string(depth, '\t');
+		}
+		out << "public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }\n" << std::string(depth, '\t');*/
+	}
+
+	if (ctx->structMemberSpecification())
+		printStructMemberSpecification(ctx->structMemberSpecification());
+
+	if (functionBody) {
+
+	}
+
+	currentShortType = prevTypeName;
+}
+
+void CppAdvanceCodegen::printClassHead(CppAdvanceParser::ClassHeadContext* ctx) const
+{
+	if (!isStructDeclaration) return;
+	if (auto tparams = ctx->templateParams())
+	{
+		printTemplateParams(tparams);
+		out << " ";
+	}
+	else if (auto name = ctx->className())
+	{
+		if (name->simpleTemplateId())
+		{
+			out << "template<> ";
+		}
+	}
+	out << "class ";
+	printClassName(ctx->className());
+	currentShortType = ctx->className()->getText();
+}
+
 void CppAdvanceCodegen::printStructMemberSpecification(CppAdvanceParser::StructMemberSpecificationContext* ctx) const
 {
 	for (auto decl : ctx->structMemberDeclaration())
@@ -3531,6 +4756,10 @@ void CppAdvanceCodegen::printStructMemberDeclaration(CppAdvanceParser::StructMem
 	{
 		printStructDefinition(type);
 	}
+	else if (auto type = ctx->classDefinition())
+	{
+		printClassDefinition(type);
+	}
 	currentAccessSpecifier = prevAccess;
 }
 
@@ -3598,6 +4827,15 @@ void CppAdvanceCodegen::printTemplateArgument(CppAdvanceParser::TemplateArgument
 		printIdExpression(id);
 	}
 	if (ctx->Ellipsis()) out << "...";
+}
+
+void CppAdvanceCodegen::printBaseSpecifier(CppAdvanceParser::BaseSpecifierContext* ctx) const
+{
+	if (ctx->nestedNameSpecifier())
+	{
+		printNestedNameSpecifier(ctx->nestedNameSpecifier());
+	}
+	printClassName(ctx->className());
 }
 
 void CppAdvanceCodegen::printConstructor(CppAdvanceParser::ConstructorContext* ctx) const
@@ -3981,8 +5219,8 @@ void CppAdvanceCodegen::printConversionFunction(CppAdvanceParser::ConversionFunc
 		out << "() const ";
 		isVariadicTemplate = false;
 		if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
-		if (func.isOverride) out << " override ";
-		if (func.isFinal) out << " final ";
+		/*if (func.isOverride) out << " override ";
+		if (func.isFinal) out << " final ";*/
 		isUnsafe = func.isUnsafe;
 		currentShortType.clear();
 		currentTypeWithTemplate.clear();
@@ -4075,8 +5313,8 @@ void CppAdvanceCodegen::printConversionFunction(CppAdvanceParser::ConversionFunc
 		out << "() const ";
 		isVariadicTemplate = false;
 		if (ctx->exceptionSpecification()) printExceptionSpecification(ctx->exceptionSpecification());
-		if (isOverride) out << " override ";
-		if (isFinal) out << " final ";
+		/*if (isOverride) out << " override ";
+		if (isFinal) out << " final ";*/
 		currentShortType.clear();
 		currentTypeWithTemplate.clear();
 		if (auto body = ctx->functionBody())
@@ -4224,8 +5462,8 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 		{
 			out << "void";
 		}
-		if (func.isOverride) out << " override ";
-		if (func.isFinal) out << " final ";
+		/*if (func.isOverride) out << " override ";
+		if (func.isFinal) out << " final ";*/
 		currentShortType.clear();
 		currentTypeWithTemplate.clear();
 
@@ -4357,8 +5595,8 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			{
 				out << "void";
 			}
-			if (func.isOverride) out << " override ";
-			if (func.isFinal) out << " final ";
+			/*if (func.isOverride) out << " override ";
+			if (func.isFinal) out << " final ";*/
 			currentShortType.clear();
 			currentTypeWithTemplate.clear();
 
@@ -4471,8 +5709,8 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			if (func.isConstReturn) out << "const ";
 			printTypeId(func.returnType);
 			if (func.isRefReturn) out << "&";
-			if (func.isOverride) out << " override ";
-			if (func.isFinal) out << " final ";
+			/*if (func.isOverride) out << " override ";
+			if (func.isFinal) out << " final ";*/
 
 			if (auto body = func.indexerGetter->functionBody())
 			{
@@ -4627,8 +5865,8 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
 			out << " -> void ";
 			if (!func.isStatic) {
-				if (func.isOverride) out << "override ";
-				if (func.isFinal) out << "final ";
+				/*if (func.isOverride) out << "override ";
+				if (func.isFinal) out << "final ";*/
 			}
 
 			if (auto body = func.indexerSetter->functionBody())
@@ -4855,7 +6093,10 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			out << "& value) ";
 			if (!prop.isStatic) {
 				isPropertySetter = true;
-				out << "-> __self& ";
+				out << "-> __self";
+				auto shortParent = StringSplit(parent, "::").back();
+				if (shortParent.starts_with("__Class_")) out << "Class";
+				out << "& ";
 			}
 			else
 			{
@@ -4957,8 +6198,8 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			printTypeId(prop.type);
 			if (prop.isRef) out << "&";
 			out << " ";
-			if (prop.isOverride) out << "override ";
-			if (prop.isFinal) out << "final ";
+			/*if (prop.isOverride) out << "override ";
+			if (prop.isFinal) out << "final ";*/
 
 			currentShortType.clear();
 			currentTypeWithTemplate.clear();
@@ -5029,8 +6270,8 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			printTypeId(prop.type);
 			if (prop.isRef) out << "&";
 			out << " ";
-			if (prop.isOverride) out << "override ";
-			if (prop.isFinal) out << "final ";
+			/*if (prop.isOverride) out << "override ";
+			if (prop.isFinal) out << "final ";*/
 
 			currentShortType.clear();
 			currentTypeWithTemplate.clear();
@@ -5154,9 +6395,11 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			printTypeId(ctx->theTypeId());
 			out << "& value) ";
 			isPropertySetter = true;
-			out << "-> __self& ";
-			if (ctx->Override()) out << "override ";
-			if (ctx->Final()) out << "final ";
+			out << "-> __self";
+			if (currentShortType.starts_with("__Class_")) out << "Class";
+			out << "& ";
+			/*if (ctx->Override()) out << "override ";
+			if (ctx->Final()) out << "final ";*/
 
 			if (auto body = setter->functionBody())
 			{
@@ -5235,8 +6478,8 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			printTypeId(ctx->theTypeId());
 			if (ctx->Ref()) out << "&";
 			out << " ";
-			if (ctx->Override()) out << "override ";
-			if (ctx->Final()) out << "final ";
+			/*if (ctx->Override()) out << "override ";
+			if (ctx->Final()) out << "final ";*/
 
 			if (auto body = getter->functionBody())
 			{
@@ -5304,8 +6547,8 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			printTypeId(ctx->theTypeId());
 			if (ctx->Ref()) out << "&";
 			out << " ";
-			if (ctx->Override()) out << "override ";
-			if (ctx->Final()) out << "final ";
+			/*if (ctx->Override()) out << "override ";
+			if (ctx->Final()) out << "final ";*/
 
 			if (auto body = ctx->functionBody())
 			{
@@ -5685,7 +6928,16 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 			if (func.returnType)
 			{
 				auto ret = func.returnType;
-				printTypeId(ret);
+				
+				auto shortParent = StringSplit(parent, "::").back();
+				if (shortParent.starts_with("__Class_") && ret->getText() == "self" && func.isRefReturn)
+				{
+					out << "__selfClass";
+				}
+				else
+				{
+					printTypeId(ret);
+				}
 				if (auto idc = ctx->returnType()->Identifier()) {
 					auto id = idc->getText();
 					namedReturns.emplace_back(id, ret);
@@ -5719,8 +6971,8 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 				out << "void";
 			}
 			if (func.isRefReturn) out << "&";
-			if (func.isOverride) out << " override ";
-			if (func.isFinal) out << " final ";
+			/*if (func.isOverride) out << " override ";
+			if (func.isFinal) out << " final ";*/
 			currentShortType.clear();
 			currentTypeWithTemplate.clear();
 
@@ -5768,11 +7020,7 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 				out << "::" << func.id << "(int) ";
 				isVariadicTemplate = false;
 				if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
-				out << " -> ";
-				auto pos = currentShortType.rfind('.');
-				if (pos != currentShortType.npos)
-					currentShortType = currentShortType.substr(pos + 1);
-				out << currentShortType << " { auto copy = *this; ++(*this); return copy; }";
+				out << " -> __self { auto copy = CppAdvance::New<__self>(__self(*this)); ++(*this); return copy; }";
 				currentShortType.clear();
 				currentTypeWithTemplate.clear();
 			}
@@ -5873,8 +7121,16 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 			if (auto ret = ctx->returnType())
 			{
 				if (ret->Const()) out << "const ";
-				if (ret->theTypeId())
-					printTypeId(ret->theTypeId());
+				if (ret->theTypeId()) {
+					if (currentShortType.starts_with("__Class_") && ret->theTypeId()->getText() == "self" && ctx->returnType()->Ref())
+					{
+						out << "__selfClass";
+					}
+					else
+					{
+						printTypeId(ret->theTypeId());
+					}
+				}
 				if (auto idc = ctx->returnType()->Identifier()) {
 					auto id = idc->getText();
 					namedReturns.emplace_back(id, ret->theTypeId());
@@ -5912,8 +7168,8 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 			{
 				out << "void";
 			}
-			if (isOverride) out << " override ";
-			if (isFinal) out << " final ";
+			/*if (isOverride) out << " override ";
+			if (isFinal) out << " final ";*/
 			isNewDeleteOperator = false;
 			if (auto body = ctx->functionBody())
 			{
@@ -7115,8 +8371,32 @@ void CppAdvanceCodegen::printUnaryExpression(CppAdvanceParser::UnaryExpressionCo
 		printTypeId(ctx->theTypeId());
 		out << "))";
 	}
+	/*else if (ctx->newExpression())
+	{
+		printNewExpression(ctx->newExpression());
+	}*/
 	
 	literalMinus = false;
+}
+
+void CppAdvanceCodegen::printNewExpression(CppAdvanceParser::NewExpressionContext* ctx) const
+{
+	out << "CppAdvance::New<";
+	printTypeId(ctx->theTypeId());
+	out << ">(";
+	if (auto init = ctx->newInitializer())
+	{
+		if (auto expr = init->expressionList())
+		{
+			printExpressionList(expr);
+		}
+		else if (auto braced = init->bracedInitList())
+		{
+			out << "std::initializer_list";
+			printBracedInitList(braced);
+		}
+	}
+	out << ")";
 }
 
 void CppAdvanceCodegen::printPostfixExpression(CppAdvanceParser::PostfixExpressionContext* ctx) const
@@ -7451,6 +8731,10 @@ void CppAdvanceCodegen::printPostfixExpression(CppAdvanceParser::PostfixExpressi
 		printPostfixExpression(ctx->postfixExpression());
 		out << ")";
 	}
+	else if (ctx->newExpression())
+	{
+	printNewExpression(ctx->newExpression());
+	}
 }
 
 void CppAdvanceCodegen::printPrimaryExpression(CppAdvanceParser::PrimaryExpressionContext* ctx) const
@@ -7496,7 +8780,7 @@ void CppAdvanceCodegen::printPrimaryExpression(CppAdvanceParser::PrimaryExpressi
 	}
 	else if (ctx->Super())
 	{
-		out << "__super";
+		out << "___super";
 	}
 	else if (ctx->Field())
 	{

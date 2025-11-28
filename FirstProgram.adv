@@ -32,9 +32,11 @@ printParams: (s: str, params: str...) {
 }
 
 testt: (x: i32) -> (i: i32,t: Test1.Test2.TestClass,b: bool) {
+//testt: (x: i32) -> Vector3 {
 	i = x;
 	t = Test1.Test2.TestClass();
 	b = true;
+	return {i,t,b};
 }
 
 type SimpleTuple <A,C> = (A, bool, C);
@@ -55,7 +57,7 @@ public struct Vector3 : IEquatable, IFormattable
 {
 	public {
 		x, y, z: f32;
-		t: Test111 { get; private set; }
+		//t: Test111 { get; private set; }
 
 		//if debug _version: i32;
 	}
@@ -69,6 +71,7 @@ public struct Vector3 : IEquatable, IFormattable
 
 	public override Equals: (in ref other: IEquatable) -> bool noexcept ==> true;
 	public override format: () -> str noexcept ==> "test";
+	public HashCode: () -> usize ==> 654321u;
 
 	public static Count: i32 = 1 {
 		get {
@@ -167,6 +170,137 @@ public struct Vector3 : IEquatable, IFormattable
 	}
 }
 
+public class BaseClass {
+	public virtual getNext: () -> Next => Next(5);
+}
+
+public class VectorClass : BaseClass, IEquatable, IFormattable
+{
+	public {
+		x, y, z: f32;
+		t: Test111 { get; private set; }
+
+		//if debug _version: i32;
+	}
+	
+	friend TestStruct;
+	friend TestStruct2<T>;
+	friend func3: (x: i32) -> i32;
+
+	public override Equals: (in ref other: IEquatable) -> bool noexcept ==> true;
+	public override format: () -> str noexcept ==> "test";
+
+	public static Count: i32 = 1 {
+		get {
+			print("Read");
+			return field * 10;
+		}
+		private set {
+			print("Write");
+			if (value > 10) field = value / 10;
+			else field = value;
+		}
+	}
+
+	public Name: str ==> "VectorClass";
+
+	public static Count2: i32 = 123;
+	public BYTES :== 24;
+	public static const ZERO :Vector3 = Vector3(0,0,0);
+	public type Coords = (x: i32,y: i32,z: i32);
+
+	public struct NestedStruct {
+		public {
+		x: f32;
+		y: f32;
+		z: f32;
+		tt: Test111 { get; private set; }
+
+		//if debug _version: i32;
+		}
+	}
+
+	this() == default;
+
+	public this(x: f32, y: f32, z: f32) noexcept == {
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
+
+	implicit this<U>(f: U) == {
+		this(f,f,f);
+		this.x = f;
+	}
+
+	public implicit this(in other: self) = {
+		this(other.x, other.y, other.z);
+	}
+
+	public implicit operator f32 noexcept ==> y;
+
+	public operator+: (in other: self) -> self => new self(this.x + other.x, this.y + other.y, this.z + other.z);
+
+	public mut increment: () -> ref self = {
+		++x;
+		++y;
+		++z;
+		++Count;
+		t : Test111;
+		//t = Test111();
+		return this;
+	}
+
+	public mut operator++: () -> ref self = {
+		++x;
+		++y;
+		++z;
+		++Count;
+		t : Test111;
+		//t = Test111();
+		return this;
+	}
+
+	public this[idx: i32] -> f32 {
+		get = {
+			print("Read");
+			return x;
+		}
+		public set = {
+			if (value < 10) return;
+			x = 5;
+		}
+	}
+	public this[idx: i32, idx2: i32, idx3: i32] -> f32 ==> y + z;
+
+	public virtual getX: () -> f32 ==> x;
+	public final getNext: () -> Next => super.getNext();
+
+	public {
+		inline static Method: (x: i32, y: i32, z: i32) -> i32 == {
+			return y + z;
+		}
+
+		inline static GetTest: () -> Test111 ==> Test111();
+
+		mut TemplateMethod: <U> (x: U, y: U, z: U) -> Coords == {
+			struct LocalStruct {
+				public {
+				x: f32;
+				y: f32;
+				z: f32;
+				tt: Test111 { get; private set; }
+
+				//if debug _version: i32;
+				}
+			}
+			this[0] = 13;
+			//print(this[0]);
+			return {x,y,z};
+		}
+	}
+}
+
 public struct Next {
 	public i: i32;
 
@@ -175,7 +309,7 @@ public struct Next {
 	}
 }
 
-//ZERO_VECTOR : Vector3 == {0,0,0};
+testvec: () -> VectorClass => new VectorClass(13,4,5);
 
 private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 {
@@ -208,16 +342,23 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 	print(vv.GetTest().getClassExt(c=4,b=2,a=1,b2=true).x);
 	ss:=300;
 	//result2 := ss.sum<i32,15>(400);
-	v: Vector3(2,7,4);
+	v: Vector3 = {2,7,4};
 	print(v.TemplateMethod(3,4,5).x);
 	fv: Vector3 = v;
 	//print(fv.Name);
-	x, z: f32;
-	print(z);
+	x, y, z := fv;
+	print(fv.ToString());
+	print(fv.HashCode());
 	Vector3.setCount(30);
 	Vector3.Count = 30;
-	print(Vector3.Count);
-	//print(fv.t.Name);
+	//vc: VectorClass;
+	vc :VectorClass= new VectorClass(13,4,15).increment().increment().increment();
+	//vc = Vector3(2,3,4);
+	print(VectorClass.BYTES);
+	vc = new VectorClass;
+	vcx: VectorClass.Coords;
+	//print(VectorClass.Method(1,2,3));
+	print(vc.GetStrongReferenceCount());
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);
 }
 

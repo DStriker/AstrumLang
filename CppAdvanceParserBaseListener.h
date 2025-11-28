@@ -91,6 +91,12 @@ public:
   virtual void enterStructMemberDeclaration(CppAdvanceParser::StructMemberDeclarationContext * /*ctx*/) override { }
   virtual void exitStructMemberDeclaration(CppAdvanceParser::StructMemberDeclarationContext * /*ctx*/) override { }
 
+  virtual void enterClassDefinition(CppAdvanceParser::ClassDefinitionContext * /*ctx*/) override { }
+  virtual void exitClassDefinition(CppAdvanceParser::ClassDefinitionContext * /*ctx*/) override { }
+
+  virtual void enterClassHead(CppAdvanceParser::ClassHeadContext * /*ctx*/) override { }
+  virtual void exitClassHead(CppAdvanceParser::ClassHeadContext * /*ctx*/) override { }
+
   virtual void enterBaseClause(CppAdvanceParser::BaseClauseContext * /*ctx*/) override { }
   virtual void exitBaseClause(CppAdvanceParser::BaseClauseContext * /*ctx*/) override { }
 
@@ -474,6 +480,12 @@ public:
 
   virtual void enterUnaryExpression(CppAdvanceParser::UnaryExpressionContext * /*ctx*/) override { }
   virtual void exitUnaryExpression(CppAdvanceParser::UnaryExpressionContext * /*ctx*/) override { }
+
+  virtual void enterNewExpression(CppAdvanceParser::NewExpressionContext * /*ctx*/) override { }
+  virtual void exitNewExpression(CppAdvanceParser::NewExpressionContext * /*ctx*/) override { }
+
+  virtual void enterNewInitializer(CppAdvanceParser::NewInitializerContext * /*ctx*/) override { }
+  virtual void exitNewInitializer(CppAdvanceParser::NewInitializerContext * /*ctx*/) override { }
 
   virtual void enterPostfixExpression(CppAdvanceParser::PostfixExpressionContext * /*ctx*/) override { }
   virtual void exitPostfixExpression(CppAdvanceParser::PostfixExpressionContext * /*ctx*/) override { }
