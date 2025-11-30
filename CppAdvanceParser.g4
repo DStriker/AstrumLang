@@ -99,6 +99,8 @@ structMemberDeclaration:
 	| (accessSpecifier | protectedInternal)? indexer
 	| property
 	| accessSpecifier? functionTemplateDeclaration
+	| abstractMethodDeclaration
+	| abstractProperty
 	| friendDeclaration
 	| destructor
 	;
@@ -117,15 +119,25 @@ property: accessSpecifier? Unsafe? (Static | Virtual | Override | Final)? Identi
 
 propertyBody: LeftBrace (propertyGetter | propertySetter | propertyGetter propertySetter) RightBrace;
 
+abstractProperty: accessSpecifier? Abstract Identifier Colon Const? Ref? theTypeId propertyBody;
+
+abstractPropertyBody: LeftBrace (abstractPropertyGetter | abstractPropertySetter | abstractPropertyGetter abstractPropertySetter) RightBrace;
+
 propertyGetter: (accessSpecifier | protectedInternal)? Get (functionBody | shortFunctionBody | Semi);
 
 propertySetter: (accessSpecifier | protectedInternal)? Set (functionBody | shortFunctionBody | Semi);
+
+abstractPropertyGetter: (accessSpecifier | protectedInternal)? Get Semi;
+
+abstractPropertySetter: (accessSpecifier | protectedInternal)? Set Semi;
 
 externFunctionDeclaration: Extern Unsafe? Identifier Colon functionParams returnType LifetimeAnnotation? exceptionSpecification? Semi;
 
 functionTemplateDeclaration: functionSpecifier* Identifier Colon templateParams functionParams returnType? LifetimeAnnotation? exceptionSpecification? Semi;
 
 functionDefinition: functionSpecifier* (Identifier | simpleTemplateId | operatorFunctionId) Colon templateParams? functionParams returnType? LifetimeAnnotation? exceptionSpecification? (functionBody | shortFunctionBody);
+
+abstractMethodDeclaration: (accessSpecifier | protectedInternal)? Abstract Mutable? (Identifier | operatorFunctionId) Colon functionParams returnType? LifetimeAnnotation? exceptionSpecification? Semi;
 
 constructor: Inline? Unsafe? implicitSpecification? This templateParams? functionParams exceptionSpecification? (constructorBody | delegatingConstructorBody | ((Assign | Equal) Default Semi));
 
@@ -179,7 +191,7 @@ shortFunctionBody: (Assign | Equal) Greater expressionStatement;
 
 exceptionSpecification: Noexcept (LeftParen constantExpression RightParen)?;
 
-declSpecifier: Static | Thread_local | Mutable | Const | Volatile | Let;
+declSpecifier: Static | Thread_local | Mutable | Const | Volatile | Let | Unowned | Weak;
 
 declSpecifierSeq: declSpecifier+?;
 

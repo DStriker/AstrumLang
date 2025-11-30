@@ -876,4 +876,16 @@ public:
 
 	void exitDestructor(CppAdvanceParser::DestructorContext*) override;
 
+
+	void enterAbstractProperty(CppAdvanceParser::AbstractPropertyContext*) override;
+
+
+	void exitAbstractProperty(CppAdvanceParser::AbstractPropertyContext*) override;
+
+
+	void enterAbstractMethodDeclaration(CppAdvanceParser::AbstractMethodDeclarationContext*) override;
+
+
+	void exitAbstractMethodDeclaration(CppAdvanceParser::AbstractMethodDeclarationContext*) override;
+
 };

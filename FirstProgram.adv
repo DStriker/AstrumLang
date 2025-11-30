@@ -174,7 +174,7 @@ public class BaseClass {
 	public virtual getNext: () -> Next => Next(5);
 }
 
-public class VectorClass : BaseClass, IEquatable, IFormattable
+public abstract class VectorClass : BaseClass, IEquatable, IFormattable
 {
 	public {
 		x, y, z: f32;
@@ -190,7 +190,7 @@ public class VectorClass : BaseClass, IEquatable, IFormattable
 	public override Equals: (in ref other: IEquatable) -> bool noexcept ==> true;
 	public override format: () -> str noexcept ==> "test";
 
-	public static Count: i32 = 1 {
+	/*public static Count: i32 = 1 {
 		get {
 			print("Read");
 			return field * 10;
@@ -200,9 +200,11 @@ public class VectorClass : BaseClass, IEquatable, IFormattable
 			if (value > 10) field = value / 10;
 			else field = value;
 		}
-	}
+	}*/
+	public abstract Count: i32 { get; set; }
 
-	public Name: str ==> "VectorClass";
+	//public Name: str ==> "VectorClass";
+	public abstract Name: str { get; }
 
 	public static Count2: i32 = 123;
 	public BYTES :== 24;
@@ -220,31 +222,29 @@ public class VectorClass : BaseClass, IEquatable, IFormattable
 		}
 	}
 
-	this() == default;
+	protected this() == default;
 
-	public this(x: f32, y: f32, z: f32) noexcept == {
+	protected this(x: f32, y: f32, z: f32) noexcept == {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 	}
 
-	implicit this<U>(f: U) == {
+	protected implicit this<U>(f: U) == {
 		this(f,f,f);
 		this.x = f;
 	}
 
-	public implicit this(in other: self) = {
+	protected implicit this(in other: self) = {
 		this(other.x, other.y, other.z);
 	}
 
-	~this => print("VectorClass deiniting");
-	/*~this = {
+	inline ~this noexcept => print("VectorClass deiniting");
+	/*~this {
 		print("VectorClass deiniting");
 	}*/
 
 	public implicit operator f32 noexcept ==> y;
-
-	public operator+: (in other: self) -> self => new self(this.x + other.x, this.y + other.y, this.z + other.z);
 
 	public mut increment: () -> ref self = {
 		++x;
@@ -256,7 +256,7 @@ public class VectorClass : BaseClass, IEquatable, IFormattable
 		return this;
 	}
 
-	public mut operator++: () -> ref self = {
+	/*public mut operator++: () -> ref self = {
 		++x;
 		++y;
 		++z;
@@ -264,7 +264,7 @@ public class VectorClass : BaseClass, IEquatable, IFormattable
 		t : Test111;
 		//t = Test111();
 		return this;
-	}
+	}*/
 
 	public this[idx: i32] -> f32 {
 		get = {
@@ -278,7 +278,7 @@ public class VectorClass : BaseClass, IEquatable, IFormattable
 	}
 	public this[idx: i32, idx2: i32, idx3: i32] -> f32 ==> y + z;
 
-	public virtual getX: () -> f32 ==> x;
+	public abstract getX: () -> f32;
 	public final getNext: () -> Next => super.getNext();
 
 	public {
@@ -306,6 +306,32 @@ public class VectorClass : BaseClass, IEquatable, IFormattable
 	}
 }
 
+public class ConcreteVectorClass : VectorClass {
+	this() == default;
+
+	public this(x: f32, y: f32, z: f32) noexcept == {
+		super(x, y, z);
+	}
+
+	public Name: str ==> "VectorClass";
+
+	public final Count: i32 = 1 {
+		get {
+			print("Read");
+			return field * 10;
+		}
+		private set {
+			print("Write");
+			if (value > 10) field = value / 10;
+			else field = value;
+		}
+	}
+
+	public final getX: () -> f32 => x;
+
+	public operator+: (in other: self) -> self => new self(this.x + other.x, this.y + other.y, this.z + other.z);
+}
+
 public struct Next {
 	public i: i32;
 
@@ -314,7 +340,7 @@ public struct Next {
 	}
 }
 
-testvec: () -> VectorClass => new VectorClass(13,4,5);
+//testvec: () -> VectorClass => new VectorClass(13,4,5);
 
 private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 {
@@ -356,14 +382,18 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 	print(fv.HashCode());
 	Vector3.setCount(30);
 	Vector3.Count = 30;
-	//vc: VectorClass;
-	vc :VectorClass= new VectorClass(13,4,15).increment().increment().increment();
+	//vc: ConcreteVectorClass;
+	vc :VectorClass= new ConcreteVectorClass(13,4,15)/*.increment().increment().increment()*/;
+	print(vc.Name);
+	print(vc.Count);
+	print(vc.getX());
 	//vc = Vector3(2,3,4);
 	print(VectorClass.BYTES);
-	vc = new VectorClass;
-	vcx: VectorClass.Coords;
-	//print(VectorClass.Method(1,2,3));
-	print(vc.GetStrongReferenceCount());
+	//vc = new VectorClass;
+	unowned vcu: VectorClass = vc;
+	print(VectorClass.Method(1,2,3));
+	print(vcu.GetStrongReferenceCount());
+	print(vcu.GetUnownedReferenceCount());
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);
 }
 

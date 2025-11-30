@@ -234,6 +234,8 @@ Typeof: 'typeof';
 
 Union: 'union';
 
+Unowned: 'unowned';
+
 Using: 'using';
 
 U8: 'u8';
@@ -257,6 +259,8 @@ Virtual: 'virtual';
 Void: 'void';
 
 Volatile: 'volatile';
+
+Weak: 'weak';
 
 While: 'while';
 

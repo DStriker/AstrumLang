@@ -585,7 +585,10 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 	else out << "struct ";
 	if (isUnsafe) out << "[[clang::annotate(\"unsafe\")]] ";
 	if (type->kind == TypeKind::RefStruct) out << "[[clang::annotate(\"ref_struct\")]] ";
-	if (type->kind == TypeKind::Class && !type->isStatic) out << "__Class_";
+	if (type->kind == TypeKind::Class && !type->isStatic) {
+		if (type->isAbstract) out << "ADV_NOVTABLE ";
+		out << "__Class_";
+	}
 	out << type->id;
 	if (type->templateSpecializationArgs)
 	{
@@ -604,6 +607,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 	case TypeKind::Class: 
 	{
 		if (type->isFinal || type->isStatic) out << " final";
+		if (type->isAbstract) out << " ADV_ABSTRACT";
 		if (!type->isStatic)
 		{
 			out << " : ";
@@ -1163,7 +1167,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				if (body->Equal()) isConstexpr = true;
 				else if (body->Assign()) isInline = true;
 			}
-			else
+			else if (!prop.isAbstract)
 			{
 				isInline = true;
 			}
@@ -1175,23 +1179,36 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			{
 				out << "inline ";
 			}
-			else if (!DLLName.empty() && !type->templateParams)
+			else if (!DLLName.empty() && !type->templateParams && !prop.isAbstract)
 			{
 				if (setAccess == AccessSpecifier::Public || setAccess == AccessSpecifier::Protected || setAccess == AccessSpecifier::Private) out << DLLName << "_API ";
 				else out << DLLName << "_HIDDEN ";
 			}
 
-			if (prop.isStatic) out << "static ";
+			if (prop.isStatic) {
+				out << "static ";
+			}
+			else if (prop.isVirtual || prop.isFinal || prop.isAbstract)
+			{
+				out << "virtual ";
+			}
 			out << "auto set" << prop.id << "(const ";
 			printTypeId(prop.type);
 			out << "& value) ";
 			if (!prop.isStatic) {
 				out << "-> __self";
 				if (type->kind == TypeKind::Class) out << "Class";
-				out << "&;";
+				out << "&";
+				if (type->kind == TypeKind::Class) {
+					if (prop.isOverride) out << " override";
+					else if (prop.isFinal) out << " final";
+					else if (prop.isAbstract) out << " = 0";
+				}
 			}
-			else out << "-> void;";
-			out << std::endl << std::string(depth, '\t');
+			else {
+				out << "-> void";
+			}
+			out << ";" << std::endl << std::string(depth, '\t');
 		}
 		if (prop.getter)
 		{
@@ -1237,7 +1254,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				if (body->Equal()) isConstexpr = true;
 				else if (body->Assign()) isInline = true;
 			}
-			else
+			else if (!prop.isAbstract)
 			{
 				isInline = true;
 			}
@@ -1249,19 +1266,30 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			{
 				out << "inline ";
 			}
-			else if (!DLLName.empty() && !type->templateParams)
+			else if (!DLLName.empty() && !type->templateParams && !prop.isAbstract)
 			{
 				if (getAccess == AccessSpecifier::Public || getAccess == AccessSpecifier::Protected || getAccess == AccessSpecifier::Private) out << DLLName << "_API ";
 				else out << DLLName << "_HIDDEN ";
 			}
 
-			if (prop.isStatic) out << "static ";
+			if (prop.isStatic) {
+				out << "static ";
+			}
+			else if (prop.isVirtual || prop.isFinal || prop.isAbstract)
+			{
+				out << "virtual ";
+			}
 			out << "auto get" << prop.id << "() ";
 			if (!prop.isStatic) out << "const ";
 			out << " -> ";
 			if (prop.isConst) out << "const ";
 			printTypeId(prop.type);
 			if (prop.isRef) out << "&";
+			if (type->kind == TypeKind::Class) {
+				if (prop.isOverride) out << " override";
+				else if (prop.isFinal) out << " final";
+				else if (prop.isAbstract) out << " = 0";
+			}
 			out << ";" << std::endl << std::string(depth, '\t');
 		}
 		else if (!prop.setter)
@@ -1296,19 +1324,30 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			{
 				out << "inline ";
 			}
-			else if (!DLLName.empty() && !type->templateParams)
+			else if (!DLLName.empty() && !type->templateParams && !prop.isAbstract)
 			{
 				if (prop.access == AccessSpecifier::Public || prop.access == AccessSpecifier::Protected || prop.access == AccessSpecifier::Private) out << DLLName << "_API ";
 				else out << DLLName << "_HIDDEN ";
 			}
 
-			if (prop.isStatic) out << "static ";
+			if (prop.isStatic) {
+				out << "static ";
+			}
+			else if (prop.isVirtual || prop.isFinal || prop.isAbstract)
+			{
+				out << "virtual ";
+			}
 			out << "auto get" << prop.id << "() ";
 			if (!prop.isStatic) out << "const ";
 			out << " -> ";
 			if (prop.isConst) out << "const ";
 			printTypeId(prop.type);
 			if (prop.isRef) out << "&";
+			if (type->kind == TypeKind::Class) {
+				if (prop.isOverride) out << " override";
+				else if (prop.isFinal) out << " final";
+				else if (prop.isAbstract) out << " = 0";
+			}
 			out << ";" << std::endl << std::string(depth, '\t');
 		}
 		out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
@@ -1809,7 +1848,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		{
 			out << "inline ";
 		}
-		else if (!DLLName.empty() && !func.templateParams)
+		else if (!DLLName.empty() && !func.templateParams && !func.isAbstract)
 		{
 			if (func.access == AccessSpecifier::Public || func.access == AccessSpecifier::Protected || func.access == AccessSpecifier::Private) out << DLLName << "_API ";
 			else out << DLLName << "_HIDDEN ";
@@ -1818,7 +1857,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		if (func.isStatic) {
 			out << "static ";
 		}
-		else if (func.isVirtual || func.isFinal) {
+		else if (func.isVirtual || func.isFinal || func.isAbstract) {
 			out << "virtual ";
 		}
 
@@ -1912,6 +1951,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		{
 			if (func.isOverride) out << " override";
 			if (func.isFinal) out << " final";
+			if (func.isAbstract) out << " = 0";
 		}
 
 		out << ";";
@@ -2024,6 +2064,20 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 	if (type->kind == TypeKind::Class && !type->isStatic)
 	{
 		out << "\n" << std::string(depth, '\t');
+		if (!type->templateSpecializationArgs && !type->templateParams)
+		{
+			out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			if (type->isAbstract)
+			{
+				out << "ADV_CHECK_FOR_ABSTRACT(" << type->id << ");";
+			}
+			else
+			{
+				out << "ADV_CHECK_FOR_CONCRETE(" << type->id << ");";
+			}
+			
+			out << "\n" << std::string(depth, '\t');
+		}
 		printClassRef(type);
 	}
 
@@ -2398,6 +2452,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 	{
 		out << "private: " << type->id << "() = delete;\n" << std::string(depth, '\t');
 		out << type->id << "(__class*, InitTag) = delete;\n" << std::string(depth, '\t');
+		out << "protected: " << type->id << "(CppAdvance::Object* obj) : ___super(obj) {}\n" << std::string(depth, '\t');
 	}
 	else
 	{
@@ -5120,7 +5175,7 @@ void CppAdvanceCodegen::printDelegatingConstructorStatement(CppAdvanceParser::De
 	}
 	else if (ctx->Super())
 	{
-		//TODO
+		out << "___super";
 	}
 	out << "(";
 	printExpressionList(ctx->expressionList());
@@ -6238,8 +6293,6 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			{
 				out << "-> void ";
 			}
-			if (prop.isOverride) out << "override ";
-			if (prop.isFinal) out << "final ";
 
 			currentShortType.clear();
 			currentTypeWithTemplate.clear();
@@ -6334,8 +6387,6 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			printTypeId(prop.type);
 			if (prop.isRef) out << "&";
 			out << " ";
-			/*if (prop.isOverride) out << "override ";
-			if (prop.isFinal) out << "final ";*/
 
 			currentShortType.clear();
 			currentTypeWithTemplate.clear();
@@ -6406,8 +6457,6 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			printTypeId(prop.type);
 			if (prop.isRef) out << "&";
 			out << " ";
-			/*if (prop.isOverride) out << "override ";
-			if (prop.isFinal) out << "final ";*/
 
 			currentShortType.clear();
 			currentTypeWithTemplate.clear();

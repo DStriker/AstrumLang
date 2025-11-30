@@ -110,11 +110,23 @@ public:
   virtual void enterPropertyBody(CppAdvanceParser::PropertyBodyContext *ctx) = 0;
   virtual void exitPropertyBody(CppAdvanceParser::PropertyBodyContext *ctx) = 0;
 
+  virtual void enterAbstractProperty(CppAdvanceParser::AbstractPropertyContext *ctx) = 0;
+  virtual void exitAbstractProperty(CppAdvanceParser::AbstractPropertyContext *ctx) = 0;
+
+  virtual void enterAbstractPropertyBody(CppAdvanceParser::AbstractPropertyBodyContext *ctx) = 0;
+  virtual void exitAbstractPropertyBody(CppAdvanceParser::AbstractPropertyBodyContext *ctx) = 0;
+
   virtual void enterPropertyGetter(CppAdvanceParser::PropertyGetterContext *ctx) = 0;
   virtual void exitPropertyGetter(CppAdvanceParser::PropertyGetterContext *ctx) = 0;
 
   virtual void enterPropertySetter(CppAdvanceParser::PropertySetterContext *ctx) = 0;
   virtual void exitPropertySetter(CppAdvanceParser::PropertySetterContext *ctx) = 0;
+
+  virtual void enterAbstractPropertyGetter(CppAdvanceParser::AbstractPropertyGetterContext *ctx) = 0;
+  virtual void exitAbstractPropertyGetter(CppAdvanceParser::AbstractPropertyGetterContext *ctx) = 0;
+
+  virtual void enterAbstractPropertySetter(CppAdvanceParser::AbstractPropertySetterContext *ctx) = 0;
+  virtual void exitAbstractPropertySetter(CppAdvanceParser::AbstractPropertySetterContext *ctx) = 0;
 
   virtual void enterExternFunctionDeclaration(CppAdvanceParser::ExternFunctionDeclarationContext *ctx) = 0;
   virtual void exitExternFunctionDeclaration(CppAdvanceParser::ExternFunctionDeclarationContext *ctx) = 0;
@@ -124,6 +136,9 @@ public:
 
   virtual void enterFunctionDefinition(CppAdvanceParser::FunctionDefinitionContext *ctx) = 0;
   virtual void exitFunctionDefinition(CppAdvanceParser::FunctionDefinitionContext *ctx) = 0;
+
+  virtual void enterAbstractMethodDeclaration(CppAdvanceParser::AbstractMethodDeclarationContext *ctx) = 0;
+  virtual void exitAbstractMethodDeclaration(CppAdvanceParser::AbstractMethodDeclarationContext *ctx) = 0;
 
   virtual void enterConstructor(CppAdvanceParser::ConstructorContext *ctx) = 0;
   virtual void exitConstructor(CppAdvanceParser::ConstructorContext *ctx) = 0;
