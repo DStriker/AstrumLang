@@ -226,7 +226,7 @@ struct Vector3 final : public CppAdvance::Struct {
 	#line 145 "FirstProgram.adv"
 	public: inline constexpr auto getX() const  -> CppAdvance::f32;
 	#line 146 "FirstProgram.adv"
-	public: inline constexpr auto getNext() const  -> Next;
+	public: inline auto getNext() const  -> Next;
 	#line 149 "FirstProgram.adv"
 	public: inline constexpr static auto Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z)  -> CppAdvance::i32;
 	#line 153 "FirstProgram.adv"
@@ -252,16 +252,45 @@ class __Class_BaseClass : public CppAdvance::Object {
 };
 #line 173 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(BaseClass);
+class BaseClass__Unowned;
+class BaseClass__Weak;
 #line 173 "FirstProgram.adv"
 class BaseClass : public CppAdvance::ObjectRef {
 	private: using __self = BaseClass;
 	private: using ___super = CppAdvance::ObjectRef;
 	public: using __class = __Class_BaseClass;
-	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *static_cast<__class*>(_obj); } FORCE_INLINE decltype(auto) __ref() const noexcept { return *static_cast<__class*>(_obj); }
+	private: friend class BaseClass__Unowned;
+	friend class BaseClass__Weak;
+	public: using __unowned_ref = BaseClass__Unowned;
+	public: using __weak_ref = BaseClass__Weak;
+	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *static_cast<__class*>(_obj); }
+	ADV_CLASS_FROM_PTR(BaseClass)
 	ADV_CLASS_DEFAULT_CTOR(BaseClass)
 	ADV_CLASS_INIT(BaseClass)
-	ADV_CLASS_COMMON_CTORS(BaseClass)
+	ADV_CLASS_STRONG_COMMON_CTORS(BaseClass)
 	#define ADV_PROPERTY_SELF __class
+	#define ADV_PROPERTY_SELF __self
+};
+#line 173 "FirstProgram.adv"
+class BaseClass__Unowned : public CppAdvance::ObjectRef__Unowned {
+	private: using __self = BaseClass;
+	public: using __strong_ref = BaseClass;
+	private: using ___super = CppAdvance::ObjectRef__Unowned;
+	public: using __class = __Class_BaseClass;
+	public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *static_cast<__class*>(_obj); }
+	ADV_CLASS_FROM_PTR(BaseClass__Unowned)
+	ADV_CLASS_UNOWNED_COMMON_CTORS(BaseClass__Unowned)
+	
+};
+#line 173 "FirstProgram.adv"
+class BaseClass__Weak : public CppAdvance::ObjectRef__Weak {
+	private: using __self = BaseClass;
+	public: using __strong_ref = BaseClass;
+	private: using ___super = CppAdvance::ObjectRef__Weak;
+	public: using __class = __Class_BaseClass;
+	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *static_cast<__class*>(_obj); }
+	ADV_CLASS_FROM_PTR(BaseClass__Weak)
+	ADV_CLASS_UNOWNED_COMMON_CTORS(BaseClass__Weak)
 	#define ADV_PROPERTY_SELF __self
 };
 
@@ -458,16 +487,22 @@ class ADV_NOVTABLE __Class_VectorClass ADV_ABSTRACT : public CppAdvance::ClassPa
 };
 #line 177 "FirstProgram.adv"
 ADV_CHECK_FOR_ABSTRACT(VectorClass);
+class VectorClass__Unowned;
+class VectorClass__Weak;
 #line 177 "FirstProgram.adv"
 class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
 	private: using __self = VectorClass;
 	private: using ___super = CppAdvance::ClassRefParent<BaseClass>;
 	public: using __class = __Class_VectorClass;
-	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *static_cast<__class*>(_obj); } FORCE_INLINE decltype(auto) __ref() const noexcept { return *static_cast<__class*>(_obj); }
+	private: friend class VectorClass__Unowned;
+	friend class VectorClass__Weak;
+	public: using __unowned_ref = VectorClass__Unowned;
+	public: using __weak_ref = VectorClass__Weak;
+	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *static_cast<__class*>(_obj); }
+	ADV_CLASS_FROM_PTR(VectorClass)
 	private: VectorClass() = delete;
 	VectorClass(__class*, InitTag) = delete;
-	protected: VectorClass(CppAdvance::Object* obj) : ___super(obj) {}
-	ADV_CLASS_COMMON_CTORS(VectorClass)
+	ADV_CLASS_STRONG_COMMON_CTORS(VectorClass)
 	public: using NestedStruct = __class::NestedStruct;
 	public: static decltype(auto) getCount2() { return __class::Count2; }
 	static void setCount2(const CppAdvance::i32& value) { __class::Count2 = value; }
@@ -492,6 +527,40 @@ class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
 	template<class T> friend class TestStruct2;
 	template<class T> friend class __Class_TestStruct2;
 	friend CppAdvance::i32 func3(CppAdvance::i32 x);
+	#define ADV_PROPERTY_SELF __self
+};
+#line 177 "FirstProgram.adv"
+class VectorClass__Unowned : public CppAdvance::ClassRefParentUnowned<BaseClass> {
+	private: using __self = VectorClass;
+	public: using __strong_ref = VectorClass;
+	private: using ___super = CppAdvance::ClassRefParentUnowned<BaseClass>;
+	public: using __class = __Class_VectorClass;
+	public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *static_cast<__class*>(_obj); }
+	ADV_CLASS_FROM_PTR(VectorClass__Unowned)
+	ADV_CLASS_UNOWNED_COMMON_CTORS(VectorClass__Unowned)
+	#line 247 "FirstProgram.adv"
+	public: inline constexpr  operator CppAdvance::f32() const noexcept{ ADV_EXPRESSION_BODY(__ref().operator CppAdvance::f32()); }
+	#line 269 "FirstProgram.adv"
+	public: inline decltype(auto) operator[](CppAdvance::i32 idx) const { ADV_EXPRESSION_BODY(__ref().operator[](idx)); }
+	#line 279 "FirstProgram.adv"
+	public: inline constexpr decltype(auto) _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const { ADV_EXPRESSION_BODY(__ref()._operator_subscript(idx, idx2, idx3)); }
+	
+};
+#line 177 "FirstProgram.adv"
+class VectorClass__Weak : public CppAdvance::ClassRefParentWeak<BaseClass> {
+	private: using __self = VectorClass;
+	public: using __strong_ref = VectorClass;
+	private: using ___super = CppAdvance::ClassRefParentWeak<BaseClass>;
+	public: using __class = __Class_VectorClass;
+	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *static_cast<__class*>(_obj); }
+	ADV_CLASS_FROM_PTR(VectorClass__Weak)
+	ADV_CLASS_UNOWNED_COMMON_CTORS(VectorClass__Weak)
+	#line 247 "FirstProgram.adv"
+	public: inline constexpr  operator CppAdvance::f32() const noexcept{ ADV_EXPRESSION_BODY(__ref().operator CppAdvance::f32()); }
+	#line 269 "FirstProgram.adv"
+	public: inline decltype(auto) operator[](CppAdvance::i32 idx) const { ADV_EXPRESSION_BODY(__ref().operator[](idx)); }
+	#line 279 "FirstProgram.adv"
+	public: inline constexpr decltype(auto) _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const { ADV_EXPRESSION_BODY(__ref()._operator_subscript(idx, idx2, idx3)); }
 	#define ADV_PROPERTY_SELF __self
 };
 
@@ -530,33 +599,123 @@ class __Class_ConcreteVectorClass : public CppAdvance::ClassParent<VectorClass, 
 };
 #line 309 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(ConcreteVectorClass);
+class ConcreteVectorClass__Unowned;
+class ConcreteVectorClass__Weak;
 #line 309 "FirstProgram.adv"
 class ConcreteVectorClass : public CppAdvance::ClassRefParent<VectorClass> {
 	private: using __self = ConcreteVectorClass;
 	private: using ___super = CppAdvance::ClassRefParent<VectorClass>;
 	public: using __class = __Class_ConcreteVectorClass;
-	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *static_cast<__class*>(_obj); } FORCE_INLINE decltype(auto) __ref() const noexcept { return *static_cast<__class*>(_obj); }
+	private: friend class ConcreteVectorClass__Unowned;
+	friend class ConcreteVectorClass__Weak;
+	public: using __unowned_ref = ConcreteVectorClass__Unowned;
+	public: using __weak_ref = ConcreteVectorClass__Weak;
+	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *static_cast<__class*>(_obj); }
+	ADV_CLASS_FROM_PTR(ConcreteVectorClass)
 	ADV_CLASS_DEFAULT_CTOR(ConcreteVectorClass)
 	ADV_CLASS_INIT(ConcreteVectorClass)
-	ADV_CLASS_COMMON_CTORS(ConcreteVectorClass)
+	ADV_CLASS_STRONG_COMMON_CTORS(ConcreteVectorClass)
 	#define ADV_PROPERTY_SELF __class
 	#line 332 "FirstProgram.adv"
 	public: inline decltype(auto) operator+(CppAdvance::In<__self> other) const { ADV_EXPRESSION_BODY(__ref().operator+(other)); }
 	#define ADV_PROPERTY_SELF __self
 };
+#line 309 "FirstProgram.adv"
+class ConcreteVectorClass__Unowned : public CppAdvance::ClassRefParentUnowned<VectorClass> {
+	private: using __self = ConcreteVectorClass;
+	public: using __strong_ref = ConcreteVectorClass;
+	private: using ___super = CppAdvance::ClassRefParentUnowned<VectorClass>;
+	public: using __class = __Class_ConcreteVectorClass;
+	public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *static_cast<__class*>(_obj); }
+	ADV_CLASS_FROM_PTR(ConcreteVectorClass__Unowned)
+	ADV_CLASS_UNOWNED_COMMON_CTORS(ConcreteVectorClass__Unowned)
+	#line 332 "FirstProgram.adv"
+	public: inline decltype(auto) operator+(CppAdvance::In<__self> other) const { ADV_EXPRESSION_BODY(__ref().operator+(other)); }
+	
+};
+#line 309 "FirstProgram.adv"
+class ConcreteVectorClass__Weak : public CppAdvance::ClassRefParentWeak<VectorClass> {
+	private: using __self = ConcreteVectorClass;
+	public: using __strong_ref = ConcreteVectorClass;
+	private: using ___super = CppAdvance::ClassRefParentWeak<VectorClass>;
+	public: using __class = __Class_ConcreteVectorClass;
+	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *static_cast<__class*>(_obj); }
+	ADV_CLASS_FROM_PTR(ConcreteVectorClass__Weak)
+	ADV_CLASS_UNOWNED_COMMON_CTORS(ConcreteVectorClass__Weak)
+	#line 332 "FirstProgram.adv"
+	public: inline decltype(auto) operator+(CppAdvance::In<__self> other) const { ADV_EXPRESSION_BODY(__ref().operator+(other)); }
+	#define ADV_PROPERTY_SELF __self
+};
 
-class __Class_Next;
+class Next;
+template<> inline constexpr bool CppAdvance::__details::cheapCopy<Next> = false;
 #line 335 "FirstProgram.adv"
-struct Next final : public CppAdvance::Struct {
+class __Class_Next : public CppAdvance::Object {
 	private: using __self = Next;
-	public: using __class = __Class_Next;
+	private: using ___super = CppAdvance::Object;
+	private: using __selfClass = __Class_Next;
+	friend class __self;
+	#define ADV_PROPERTY_SELF __selfClass
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 	#line 336 "FirstProgram.adv"
 	public: CppAdvance::i32 i; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
-	#line 338 "FirstProgram.adv"
-	public: inline constexpr explicit Next(CppAdvance::i32 i) ;
+	#line 337 "FirstProgram.adv"
+	public: typename CppAdvance::ObjectRef::__unowned_ref v; ADV_CHECK_REF_STRUCT("CppAdvance.ObjectRef", typename CppAdvance::ObjectRef);
+	#line 339 "FirstProgram.adv"
+	public: inline __Class_Next()  = default;
+	#line 341 "FirstProgram.adv"
+	public: inline ~__Class_Next() ;
+	#line 343 "FirstProgram.adv"
+	public: inline explicit __Class_Next(CppAdvance::i32 i) ;
+	#line 348 "FirstProgram.adv"
+	public: inline explicit __Class_Next(CppAdvance::In<__self> other) ;
+	
+#define ADV_PROPERTY_SELF __self
+};
+#line 335 "FirstProgram.adv"
+ADV_CHECK_FOR_CONCRETE(Next);
+class Next__Unowned;
+class Next__Weak;
+#line 335 "FirstProgram.adv"
+class Next : public CppAdvance::ObjectRef {
+	private: using __self = Next;
+	private: using ___super = CppAdvance::ObjectRef;
+	public: using __class = __Class_Next;
+	private: friend class Next__Unowned;
+	friend class Next__Weak;
+	public: using __unowned_ref = Next__Unowned;
+	public: using __weak_ref = Next__Weak;
+	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *static_cast<__class*>(_obj); }
+	ADV_CLASS_FROM_PTR(Next)
+	ADV_CLASS_DEFAULT_CTOR(Next)
+	ADV_CLASS_INIT(Next)
+	ADV_CLASS_STRONG_COMMON_CTORS(Next)
+	#define ADV_PROPERTY_SELF __class
+	#define ADV_PROPERTY_SELF __self
+};
+#line 335 "FirstProgram.adv"
+class Next__Unowned : public CppAdvance::ObjectRef__Unowned {
+	private: using __self = Next;
+	public: using __strong_ref = Next;
+	private: using ___super = CppAdvance::ObjectRef__Unowned;
+	public: using __class = __Class_Next;
+	public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *static_cast<__class*>(_obj); }
+	ADV_CLASS_FROM_PTR(Next__Unowned)
+	ADV_CLASS_UNOWNED_COMMON_CTORS(Next__Unowned)
 	
 };
+#line 335 "FirstProgram.adv"
+class Next__Weak : public CppAdvance::ObjectRef__Weak {
+	private: using __self = Next;
+	public: using __strong_ref = Next;
+	private: using ___super = CppAdvance::ObjectRef__Weak;
+	public: using __class = __Class_Next;
+	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *static_cast<__class*>(_obj); }
+	ADV_CLASS_FROM_PTR(Next__Weak)
+	ADV_CLASS_UNOWNED_COMMON_CTORS(Next__Weak)
+	#define ADV_PROPERTY_SELF __self
+};
+
 
 #line 56 "FirstProgram.adv"
 class __Class_Vector3 final : public CppAdvance::ValueType, public IEquatable::__class, public IFormattable::__class
@@ -589,19 +748,6 @@ class __Class_Vector3 final : public CppAdvance::ValueType, public IEquatable::_
 };
 #line 56 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(Vector3);
-
-#line 335 "FirstProgram.adv"
-class __Class_Next final : public CppAdvance::ValueType
-{
-	#line 9999 "FirstProgram.adv"
-	Next __value;
-	public: using __underlying = Next; using __self = __underlying;
-	__Class_Next(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>) : __value{value} {}
-	operator __underlying() const noexcept { return __value; }
-	
-};
-#line 335 "FirstProgram.adv"
-ADV_CHECK_FOR_CONCRETE(Next);
 namespace __ntuples {
 	#line 9999 "FirstProgram.adv"
 	struct NamedTuple_ffda88e0b5252a0a final : public CppAdvance::Struct { 
@@ -883,10 +1029,10 @@ inline constexpr auto Vector3::getX() const  -> CppAdvance::f32
 	ADV_EXPRESSION_BODY(x); 
 }
 #line 146 "FirstProgram.adv"
-inline constexpr auto Vector3::getNext() const  -> Next
+inline auto Vector3::getNext() const  -> Next
 {
 	#line 146 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(Next{CppAdvance::i32(6)}); 
+	ADV_EXPRESSION_BODY(CppAdvance::New<Next>(CppAdvance::i32(6))); 
 }
 #line 149 "FirstProgram.adv"
 inline constexpr auto Vector3::Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z)  -> CppAdvance::i32
@@ -949,7 +1095,7 @@ template<class U> inline constexpr auto Vector3::TemplateMethod(U x, U y, U z)  
 inline auto __Class_BaseClass::getNext() const  -> Next
 {
 	#line 174 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(Next{CppAdvance::i32(5)}); 
+	ADV_EXPRESSION_BODY(CppAdvance::New<Next>(CppAdvance::i32(5))); 
 }
 #line 181 "FirstProgram.adv"
 inline auto __Class_VectorClass::sett(const __FirstProgram_Protected::Test111& value) -> __selfClass& { p_t = value; return *this;}
@@ -1164,9 +1310,25 @@ inline auto __Class_ConcreteVectorClass::operator+(CppAdvance::In<__self> other)
 	#line 332 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::New<__self>((*this).__ref().x + other.__ref().x, (*this).__ref().y + other.__ref().y, (*this).__ref().z + other.__ref().z)); 
 }
-#line 338 "FirstProgram.adv"
-inline constexpr Next::Next(CppAdvance::i32 i)  : 
-#line 339 "FirstProgram.adv"
-i{i}
+#line 341 "FirstProgram.adv"
+inline __Class_Next::~__Class_Next() 
+{
+	#line 341 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(print(CppAdvance::Str{u"Next deiniting"})); 
+}
+#line 343 "FirstProgram.adv"
+inline __Class_Next::__Class_Next(CppAdvance::i32 i)  : 
+#line 344 "FirstProgram.adv"
+i{i}, 
+#line 345 "FirstProgram.adv"
+v{CppAdvance::New<Next>(Next{(*this)})}
+{
+}
+#line 348 "FirstProgram.adv"
+inline __Class_Next::__Class_Next(CppAdvance::In<__self> other)  : 
+#line 349 "FirstProgram.adv"
+i{CppAdvance::i32(0)}, 
+#line 350 "FirstProgram.adv"
+v{other}
 {
 }

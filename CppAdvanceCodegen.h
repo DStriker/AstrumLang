@@ -8,6 +8,8 @@ class CppAdvanceCodegen
 	mutable bool functionBody = false;
 	mutable bool isUnsafe = false;
 	mutable bool isVolatile = false;
+	mutable bool isUnowned = false;
+	mutable bool isWeak = false;
 	mutable bool isPtr = false;
 	mutable bool emptyLine = false;
 	mutable bool isDeclaration = false;

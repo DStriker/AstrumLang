@@ -143,7 +143,7 @@ public struct Vector3 : IEquatable, IFormattable
 	public this[idx: i32, idx2: i32, idx3: i32] -> f32 ==> y + z;
 
 	public getX: () -> f32 ==> x;
-	public getNext: () -> Next ==> Next(6);
+	public getNext: () -> Next => new Next(6);
 
 	public {
 		inline static Method: (x: i32, y: i32, z: i32) -> i32 == {
@@ -171,7 +171,7 @@ public struct Vector3 : IEquatable, IFormattable
 }
 
 public class BaseClass {
-	public virtual getNext: () -> Next => Next(5);
+	public virtual getNext: () -> Next => new Next(5);
 }
 
 public abstract class VectorClass : BaseClass, IEquatable, IFormattable
@@ -332,11 +332,22 @@ public class ConcreteVectorClass : VectorClass {
 	public operator+: (in other: self) -> self => new self(this.x + other.x, this.y + other.y, this.z + other.z);
 }
 
-public struct Next {
+public class Next {
 	public i: i32;
+	public unowned v: CppAdvance.ObjectRef;
 
-	public this(i: i32) == {
+	this() = default;
+
+	~this => print("Next deiniting");
+
+	public this(i: i32) = {
 		this.i = i;
+		this.v = new Next(Next(this));
+	}
+
+	public this(in other: self) = {
+		this.i = 0;
+		this.v = other;
 	}
 }
 
@@ -383,17 +394,19 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 	Vector3.setCount(30);
 	Vector3.Count = 30;
 	//vc: ConcreteVectorClass;
-	vc :VectorClass= new ConcreteVectorClass(13,4,15)/*.increment().increment().increment()*/;
+	vc :ConcreteVectorClass= new ConcreteVectorClass(13,4,15)/*.increment().increment().increment()*/;
 	print(vc.Name);
 	print(vc.Count);
 	print(vc.getX());
 	//vc = Vector3(2,3,4);
 	print(VectorClass.BYTES);
-	//vc = new VectorClass;
-	unowned vcu: VectorClass = vc;
-	print(VectorClass.Method(1,2,3));
-	print(vcu.GetStrongReferenceCount());
-	print(vcu.GetUnownedReferenceCount());
+	//vc = new ConcreteVectorClass;
+	{
+	nxt:= new Next(10);
+	print(nxt.i);
+	print(nxt.GetStrongReferenceCount());
+	print(nxt.GetUnownedReferenceCount());
+	}
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);
 }
 

@@ -163,6 +163,8 @@ struct VariableDefinition
 	bool isThreadLocal = false;
 	bool isUnsafe = false;
 	bool isTypeSpecialization = false;
+	bool isUnowned = false;
+	bool isWeak = false;
 };
 
 struct ConstantDefinition 

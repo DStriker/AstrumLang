@@ -453,6 +453,8 @@ void CppAdvanceSema::exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationCo
 	bool isThreadLocal = false;
 	bool isStatic = false;
 	bool isMutable = false;
+	bool isUnowned = false;
+	bool isWeak = false;
 
 	if (auto spec = ctx->declSpecifierSeq())
 	{
@@ -469,6 +471,8 @@ void CppAdvanceSema::exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationCo
 				isMutable = true;
 				if (!functionBody && !isTypeDefinitionBody()) CppAdvanceCompilerError("Global variables and constants are implicitly mutable, explicit declaration is not required", d->Mutable()->getSymbol());
 			}
+			else if (d->Unowned()) isUnowned = true;
+			else if (d->Weak()) isWeak = true;
 		}
 	}
 
@@ -621,17 +625,25 @@ void CppAdvanceSema::exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationCo
 		{
 			if (*access == AccessSpecifier::Protected) protectedSymbols.insert(id->getText());
 			if (unsafeDepth > 0) cppParser.unsafeVariables.insert(id->getText());
-			globalVariables.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), ctx->initializerList(), *access, getCurrentCompilationCondition(), "", false, isConst, isVolatile, isThreadLocal, unsafeDepth > 0});
+			globalVariables.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), 
+				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), ctx->initializerList(), 
+				*access, getCurrentCompilationCondition(), "", false, isConst, isVolatile, isThreadLocal, unsafeDepth > 0, false, isUnowned, isWeak});
 		}
 		else
 		{
 			if (unsafeDepth > 0) cppParser.unsafeVariables.insert(currentType+"." + id->getText());
-			structStack.top()->fields.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), ctx->initializerList(), *access, getCurrentCompilationCondition(), getCurrentFullTypeName(), isStatic, isConst, isVolatile, isThreadLocal, unsafeDepth > 0});
+			structStack.top()->fields.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), 
+				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), ctx->initializerList(), *access, 
+				getCurrentCompilationCondition(), getCurrentFullTypeName(), isStatic, isConst, isVolatile, isThreadLocal, unsafeDepth > 0,
+				false, isUnowned, isWeak});
 			if (isStatic || isThreadLocal)
 			{
 				if (isProtectedTypeDefinition) access = AccessSpecifier::Protected;
 				else access = AccessSpecifier::Private;
-				staticFields.emplace_back(VariableDefinition{ id->getText(), getLastTypeTemplateParams(), ctx->theTypeId(), {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), ctx->initializerList(), *access, getCurrentCompilationCondition(), getCurrentFullTypeName(), isStatic, isConst, isVolatile, isThreadLocal, isUnsafeTypeDefinition, getLastTypeTemplateSpecializationArgs() != nullptr });
+				staticFields.emplace_back(VariableDefinition{ id->getText(), getLastTypeTemplateParams(), ctx->theTypeId(), 
+					{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), ctx->initializerList(), 
+					*access, getCurrentCompilationCondition(), getCurrentFullTypeName(), isStatic, isConst, isVolatile, isThreadLocal, 
+					isUnsafeTypeDefinition, getLastTypeTemplateSpecializationArgs() != nullptr, isUnowned, isWeak });
 			}
 		}
 	}
@@ -3890,6 +3902,8 @@ void CppAdvanceSema::exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDec
 	bool isThreadLocal = false;
 	bool isStatic = false;
 	bool isMutable = false;
+	bool isUnowned = false;
+	bool isWeak = false;
 
 	if (auto spec = ctx->declSpecifierSeq())
 	{
@@ -3906,6 +3920,8 @@ void CppAdvanceSema::exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDec
 				isMutable = true;
 				if (!functionBody && !isTypeDefinitionBody()) CppAdvanceCompilerError("Global variables and constants are implicitly mutable, explicit declaration is not required", d->Mutable()->getSymbol());
 			}
+			else if (d->Unowned()) isUnowned = true;
+			else if (d->Weak()) isWeak = true;
 		}
 	}
 
@@ -3928,6 +3944,10 @@ void CppAdvanceSema::exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDec
 	if (isConst && (!isTypeDefinitionBody() || functionBody))
 	{
 		CppAdvanceCompilerError("The constant must be explicitly initialized", ctx->declSpecifierSeq()->getStart());
+	}
+	if (isUnowned && isWeak)
+	{
+		CppAdvanceCompilerError("The reference cannot be unowned and weak at the same time", ctx->declSpecifierSeq()->getStart());
 	}
 
 	auto ids = ctx->Identifier();
@@ -4023,14 +4043,14 @@ void CppAdvanceSema::exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDec
 				if (unsafeDepth > 0) cppParser.unsafeVariables.insert(id->getText());
 				globalVariables.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), 
 					{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr, *access, 
-					getCurrentCompilationCondition(), "", false, isConst, isVolatile, isThreadLocal, unsafeDepth > 0 });
+					getCurrentCompilationCondition(), "", false, isConst, isVolatile, isThreadLocal, unsafeDepth > 0, false, isUnowned, isWeak });
 			}
 			else
 			{
 				if (unsafeDepth > 0) cppParser.unsafeVariables.insert(currentType + "." + id->getText());
 				structStack.top()->fields.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), 
 					{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr, *access, 
-					getCurrentCompilationCondition(), "", isStatic, isConst, isVolatile, isThreadLocal, unsafeDepth > 0 });
+					getCurrentCompilationCondition(), "", isStatic, isConst, isVolatile, isThreadLocal, unsafeDepth > 0, false, isUnowned, isWeak });
 				if (isStatic || isThreadLocal)
 				{
 					if (isProtectedTypeDefinition) access = AccessSpecifier::Protected;
@@ -4038,7 +4058,7 @@ void CppAdvanceSema::exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDec
 					staticFields.emplace_back(VariableDefinition{ id->getText(), getLastTypeTemplateParams(), ctx->theTypeId(), 
 						{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr, *access, 
 						getCurrentCompilationCondition(), getCurrentFullTypeName(), isStatic, isConst, isVolatile, isThreadLocal, 
-						isUnsafeTypeDefinition, getLastTypeTemplateSpecializationArgs() != nullptr });
+						isUnsafeTypeDefinition, getLastTypeTemplateSpecializationArgs() != nullptr, isUnowned, isWeak });
 				}
 			}
 		}
