@@ -105,12 +105,6 @@ public struct Vector3 : IEquatable, IFormattable
 
 	this() == default;
 
-	public this(x: f32, y: f32, z: f32) noexcept == {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-	}
-
 	implicit this<U>(f: U) == {
 		this(f,f,f);
 		this.x = f;
@@ -244,7 +238,7 @@ public abstract class VectorClass : BaseClass, IEquatable, IFormattable
 		print("VectorClass deiniting");
 	}*/
 
-	public implicit operator f32 noexcept ==> y;
+	public implicit operator f32 noexcept => y;
 
 	public mut increment: () -> ref self = {
 		++x;
@@ -276,7 +270,7 @@ public abstract class VectorClass : BaseClass, IEquatable, IFormattable
 			x = 5;
 		}
 	}
-	public this[idx: i32, idx2: i32, idx3: i32] -> f32 ==> y + z;
+	public this[idx: i32, idx2: i32, idx3: i32] -> f32 => y + z;
 
 	public abstract getX: () -> f32;
 	public final getNext: () -> Next => super.getNext();
@@ -334,15 +328,15 @@ public class ConcreteVectorClass : VectorClass {
 
 public class Next {
 	public i: i32;
-	public unowned v: CppAdvance.ObjectRef;
+	public weak v: Next;
 
-	this() = default;
+	//this() = default;
 
 	~this => print("Next deiniting");
 
 	public this(i: i32) = {
 		this.i = i;
-		this.v = new Next(Next(this));
+		this.v = new Next(this);
 	}
 
 	public this(in other: self) = {
@@ -350,8 +344,6 @@ public class Next {
 		this.v = other;
 	}
 }
-
-//testvec: () -> VectorClass => new VectorClass(13,4,5);
 
 private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 {
@@ -385,7 +377,8 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 	ss:=300;
 	//result2 := ss.sum<i32,15>(400);
 	v: Vector3 = {2,7,4};
-	print(v.TemplateMethod(3,4,5).x);
+	v = {6,53,9};
+	print(v.y);
 	fv: Vector3 = v;
 	//print(fv.Name);
 	x, y, z := fv;
@@ -393,19 +386,22 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 	print(fv.HashCode());
 	Vector3.setCount(30);
 	Vector3.Count = 30;
-	//vc: ConcreteVectorClass;
+	vcc: ConcreteVectorClass;
 	vc :ConcreteVectorClass= new ConcreteVectorClass(13,4,15)/*.increment().increment().increment()*/;
 	print(vc.Name);
 	print(vc.Count);
 	print(vc.getX());
 	//vc = Vector3(2,3,4);
 	print(VectorClass.BYTES);
-	//vc = new ConcreteVectorClass;
+	weak nxtw: Next;
 	{
 	nxt:= new Next(10);
+	unowned nxtu := nxt;
+	nxtw = nxt;
 	print(nxt.i);
 	print(nxt.GetStrongReferenceCount());
 	print(nxt.GetUnownedReferenceCount());
+	print(nxt.GetWeakReferenceCount());
 	}
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);
 }

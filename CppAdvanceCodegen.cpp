@@ -1,5 +1,6 @@
 #include "CppAdvanceCodegen.h"
 #include "StringUtils.h"
+#include <ranges>
 
 #define GET_ELEMENT_AT out << "_parent.getAt(";\
 for (auto param : params)\
@@ -540,39 +541,16 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 
 	if (!type->templateSpecializationArgs)
 	{
-		if (type->kind != TypeKind::RefStruct && type->templateParams)
+		if (type->kind != TypeKind::Class)
 		{
-			printTemplateParams(type->templateParams);
-			out << " ";
-		}
-		out << "class "; 
-		if (type->kind == TypeKind::Struct) out << "__Class_";
-		out << type->id << ";\n" << std::string(depth, '\t');
-		if (type->kind == TypeKind::Class)
-		{
-			if (type->templateParams)
+			if (type->kind != TypeKind::RefStruct && type->templateParams)
 			{
 				printTemplateParams(type->templateParams);
 				out << " ";
 			}
-			else
-			{
-				out << "template<> ";
-			}
-			out << "inline constexpr bool CppAdvance::__details::cheapCopy<" << type->id;
-			if (type->templateParams)
-			{
-				out << "<";
-				bool first = true;
-				for (auto tparam : type->templateParams->templateParamDeclaration())
-				{
-					if (!first) out << ", ";
-					first = false;
-					out << tparam->Identifier()->getText();
-				}
-				out << ">";
-			}
-			out << "> = false;\n" << std::string(depth, '\t');
+			out << "class ";
+			if (type->kind == TypeKind::Struct) out << "__Class_";
+			out << type->id << ";\n" << std::string(depth, '\t');
 		}
 	}
 	out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
@@ -740,6 +718,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		}
 		out << ";\n" << std::string(depth, '\t');
 		out << "friend class __self;\n" << std::string(depth, '\t');
+		out << "friend class __self::__weak_ref;\n" << std::string(depth, '\t');
 		out << "#define ADV_PROPERTY_SELF __selfClass\n" << std::string(depth, '\t');
 		if (type->interfaces) {
 			bool first = true;
@@ -762,47 +741,102 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 	}
 	out << "public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }\n" << std::string(depth, '\t');
 	sema.symbolContexts.push(sema.symbolContexts.top());
-	for (const auto& nested : type->nestedStructs)
+	if (type->kind == TypeKind::Class)
 	{
-		if (nested->access == AccessSpecifier::Private)
+		for (const auto& nested : type->nestedStructs)
 		{
-			out << "private: ";
+			if (!nested->compilationCondition.empty())
+			{
+				out << "#if " << nested->compilationCondition << std::endl << std::string(depth, '\t');
+			}
+			switch (nested->access)
+			{
+			case AccessSpecifier::Public:
+			case AccessSpecifier::Internal:
+				out << "public: ";
+				break;
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected: ";
+				break;
+			case AccessSpecifier::Private:
+				out << "private: ";
+				break;
+			}
+			if (nested->templateParams)
+			{
+				printTemplateParams(nested->templateParams);
+				out << " ";
+			}
+			out << "using " << nested->id << " = __self::" << nested->id;
+			if (nested->templateParams)
+			{
+				out << "<";
+				bool first = true;
+				for (auto param : nested->templateParams->templateParamDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					out << param->Identifier()->getText();
+				}
+				out << ">";
+			}
+			out << ";\n" << std::string(depth, '\t');
+			if (!nested->compilationCondition.empty())
+			{
+				out << "#endif " << std::endl << std::string(depth, '\t');
+			}
 		}
-		else if (nested->access == AccessSpecifier::Protected)
-		{
-			out << "protected: ";
-		}
-		else
-		{
-			out << "public: ";
-		}
-		out << "\n" << std::string(depth, '\t');
-		printType(nested.get());
-		out << "\n" << std::string(depth, '\t');
 	}
-	for (const auto& nested : type->nestedStructs)
-	{
-		if (nested->kind == TypeKind::RefStruct) continue;
-		if (nested->access == AccessSpecifier::Private)
+	else {
+		for (const auto& nested : type->nestedStructs)
 		{
-			out << "private: ";
+			if (nested->access == AccessSpecifier::Private)
+			{
+				out << "private: ";
+			}
+			else if (nested->access == AccessSpecifier::Protected)
+			{
+				out << "protected: ";
+			}
+			else
+			{
+				out << "public: ";
+			}
+			out << "\n" << std::string(depth, '\t');
+			if (nested->kind == TypeKind::Class)
+			{
+				printClassRef(nested.get());
+			}
+			else {
+				printType(nested.get());
+			}
+			out << "\n" << std::string(depth, '\t');
 		}
-		else if (nested->access == AccessSpecifier::Protected)
+		for (const auto& nested : type->nestedStructs)
 		{
-			out << "protected: ";
+			if (nested->kind == TypeKind::RefStruct) continue;
+			if (nested->access == AccessSpecifier::Private)
+			{
+				out << "private: ";
+			}
+			else if (nested->access == AccessSpecifier::Protected)
+			{
+				out << "protected: ";
+			}
+			else
+			{
+				out << "public: ";
+			}
+			out << "\n" << std::string(depth, '\t');
+			if (nested->kind == TypeKind::Struct) {
+				printStructWrapper(nested.get());
+			}
+			else if (nested->kind == TypeKind::Class) {
+				printType(nested.get());
+			}
+			out << "\n" << std::string(depth, '\t');
 		}
-		else
-		{
-			out << "public: ";
-		}
-		out << "\n" << std::string(depth, '\t');
-		if (nested->kind == TypeKind::Struct) {
-			printStructWrapper(nested.get());
-		}
-		else if(nested->kind == TypeKind::Class) {
-			//
-		}
-		out << "\n" << std::string(depth, '\t');
 	}
 	for (const auto& friendType: type->friendTypes)
 	{
@@ -990,6 +1024,34 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		if (!field.compilationCondition.empty())
 		{
 			out << "#endif " << std::endl << std::string(depth, '\t');
+		}
+	}
+
+	if (type->kind == TypeKind::Struct && !type->fields.empty() && !type->hasAggregateInit)
+	{
+		auto regularFields = type->fields | std::views::filter([](const auto& field) 
+			{ return !field.isStatic && !field.isThreadLocal && field.compilationCondition.empty(); });
+		if (!regularFields.empty()) {
+			out << "public: ";
+			if (type->isConstexpr) out << "constexpr ";
+			out << type->id << "(";
+			bool first = true;
+			for (const auto& field : regularFields) {
+				if (field.isStatic || field.isThreadLocal || !field.compilationCondition.empty()) continue;
+				if (!first) out << ", ";
+				first = false;
+				printTypeId(field.type);
+				out << " _" << field.id;
+			}
+			out << ") : ";
+			first = true;
+			for (const auto& field : regularFields) {
+				if (field.isStatic || field.isThreadLocal || !field.compilationCondition.empty()) continue;
+				if (!first) out << ", ";
+				first = false;
+				out << field.id << "{_" << field.id << "}";
+			}
+			out << " {}\n" << std::string(depth, '\t');
 		}
 	}
 
@@ -1999,6 +2061,21 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
 			out << " -> " << type->id << ";" << std::endl << std::string(depth, '\t');
 		}
+		else if (func.isConstructor && func.params->paramDeclClause())
+		{
+			auto params = func.params->paramDeclClause()->paramDeclList()->paramDeclaration();
+			if (params.size() == 1)
+			{
+				if (auto paramType = params[0]->theTypeId())
+				{
+					auto txt = paramType->getText();
+					if (txt == "self" || txt == type->id)
+					{
+						out << "inline __Class_" << type->id << "(__selfClass& copy) : __Class_" << type->id << "(__self(copy)) {}\n" << std::string(depth, '\t');
+					}
+				}
+			}
+		}
 		else if (isIndexer && !func.isStatic && !func.isConstReturn && !func.isMutating)
 		{
 			switch (func.access)
@@ -2084,7 +2161,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			
 			out << "\n" << std::string(depth, '\t');
 		}
-		printClassRef(type);
+		//printClassRef(type);
 	}
 
 	if (!type->compilationCondition.empty())
@@ -2369,18 +2446,32 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 
 void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 {
-	if (type->templateParams)
+	if (!type->templateSpecializationArgs)
 	{
-		printTemplateParams(type->templateParams);
-		out << " ";
+		if (type->templateParams)
+		{
+			printTemplateParams(type->templateParams);
+			out << " ";
+		}
+		else
+		{
+			out << "template<> ";
+		}
+		out << "inline constexpr bool CppAdvance::__details::cheapCopy<" << type->id;
+		if (type->templateParams)
+		{
+			out << "<";
+			bool first = true;
+			for (auto tparam : type->templateParams->templateParamDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				out << tparam->Identifier()->getText();
+			}
+			out << ">";
+		}
+		out << "> = false;\n" << std::string(depth, '\t');
 	}
-	out << "class " << type->id << "__Unowned;\n" << std::string(depth, '\t');
-	if (type->templateParams)
-	{
-		printTemplateParams(type->templateParams);
-		out << " ";
-	}
-	out << "class " << type->id << "__Weak;\n" << std::string(depth, '\t');
 	out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 	if (type->templateParams)
 	{
@@ -2545,7 +2636,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 		out << ">";
 	}
 	out << ";\n" << std::string(depth, '\t');
-	out << "public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *static_cast<__class*>(_obj); }\n" << std::string(depth, '\t');
+	out << "public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *reinterpret_cast<__class*>(_obj); }\n" << std::string(depth, '\t');
 	out << "ADV_CLASS_FROM_PTR(" << type->id << ")\n" << std::string(depth, '\t');
 	if (type->isAbstract)
 	{
@@ -2554,53 +2645,58 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 	}
 	else
 	{
-		out << "ADV_CLASS_DEFAULT_CTOR(" << type->id << ")\n" << std::string(depth,'\t');
+		if (type->isDefaultConstructible)
+			out << "public: inline " << type->id << "();\n" << std::string(depth, '\t');
 		out << "ADV_CLASS_INIT(" << type->id << ")\n" << std::string(depth, '\t');
 	}
 	out << "ADV_CLASS_STRONG_COMMON_CTORS(" << type->id << ")\n" << std::string(depth, '\t');
 	for (const auto& nested : type->nestedStructs)
 	{
-		if (!nested->compilationCondition.empty())
+		if (nested->access == AccessSpecifier::Private)
 		{
-			out << "#if " << nested->compilationCondition << std::endl << std::string(depth, '\t');
-		}
-		switch (nested->access)
-		{
-		case AccessSpecifier::Public:
-		case AccessSpecifier::Internal:
-			out << "public: ";
-			break;
-		case AccessSpecifier::Protected:
-		case AccessSpecifier::ProtectedInternal:
-			out << "protected: ";
-			break;
-		case AccessSpecifier::Private:
 			out << "private: ";
-			break;
 		}
-		if (nested->templateParams)
+		else if (nested->access == AccessSpecifier::Protected)
 		{
-			printTemplateParams(nested->templateParams);
-			out << " ";
+			out << "protected: ";
 		}
-		out << "using " << nested->id << " = __class::" << nested->id;
-		if (nested->templateParams)
+		else
 		{
-			out << "<";
-			bool first = true;
-			for (auto param : nested->templateParams->templateParamDeclaration())
-			{
-				if (!first) out << ", ";
-				first = false;
-				out << param->Identifier()->getText();
-			}
-			out << ">";
+			out << "public: ";
 		}
-		out << ";\n" << std::string(depth, '\t');
-		if (!nested->compilationCondition.empty())
+		out << "\n" << std::string(depth, '\t');
+		if (nested->kind == TypeKind::Class)
 		{
-			out << "#endif " << std::endl << std::string(depth, '\t');
+			printClassRef(nested.get());
 		}
+		else {
+			printType(nested.get());
+		}
+		out << "\n" << std::string(depth, '\t');
+	}
+	for (const auto& nested : type->nestedStructs)
+	{
+		if (nested->kind == TypeKind::RefStruct) continue;
+		if (nested->access == AccessSpecifier::Private)
+		{
+			out << "private: ";
+		}
+		else if (nested->access == AccessSpecifier::Protected)
+		{
+			out << "protected: ";
+		}
+		else
+		{
+			out << "public: ";
+		}
+		out << "\n" << std::string(depth, '\t');
+		if (nested->kind == TypeKind::Struct) {
+			printStructWrapper(nested.get());
+		}
+		else if (nested->kind == TypeKind::Class) {
+			printType(nested.get());
+		}
+		out << "\n" << std::string(depth, '\t');
 	}
 	for (const auto& field : type->fields)
 	{
@@ -2624,12 +2720,12 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			out << "private: ";
 			break;
 		}
-		out << "static decltype(auto) get" << field.id << "() { return __class::" << field.id << "; }\n" << std::string(depth, '\t');
+		out << "static decltype(auto) get" << field.id << "();\n" << std::string(depth, '\t');
 		if (!field.isConst)
 		{
 			out << "static void set" << field.id << "(const ";
 			printTypeId(field.type);
-			out << "& value) { __class::" << field.id << " = value; }\n" << std::string(depth, '\t');
+			out << "& value);\n" << std::string(depth, '\t');
 			out << "ADV_PROPERTY_GETTER_SETTER_STATIC(";
 			switch (field.access)
 			{
@@ -3037,70 +3133,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 		if (!func.isStatic && func.isRefReturn)
 			out << " LIFETIMEBOUND";
 
-		out << "{ ADV_EXPRESSION_BODY(";
-		if (func.isStatic) out << "__class::";
-		else out << "__ref().";
-		if (func.templateParams) out << "template ";
-		if (func.isConverter)
-		{
-			out << "operator ";
-			if (func.isConstReturn) out << "const ";
-			printTypeId(func.returnType);
-			if (func.isRefReturn) out << "&";
-		}
-		else
-		{
-			out << func.id;
-		}
-		
-		if (func.templateSpecializationArgs) 
-		{
-			out << "<";
-			bool first = true;
-			for (auto tparam : func.templateSpecializationArgs->templateArgument())
-			{
-				if (!first) out << ", ";
-				first = false;
-				printTemplateArgument(tparam);
-			}
-			out << ">";
-		}
-		else if (func.templateParams)
-		{
-			out << "<";
-			bool first = true;
-			for (auto tparam : func.templateParams->templateParamDeclaration())
-			{
-				if (!first) out << ", ";
-				first = false;
-				out << tparam->Identifier()->getText();
-			}
-			out << ">";
-		}
-		out << "(";
-		if (func.params)
-		{
-			if (auto clause = func.params->paramDeclClause()) {
-				bool first = true;
-				for (auto param : clause->paramDeclList()->paramDeclaration())
-				{
-					if (!first) out << ", ";
-					first = false;
-					out << param->Identifier()->getText();
-				}
-			}
-		}
-		else if (func.indexerParams)
-		{
-			bool first = true;
-			for (auto param : func.indexerParams->paramDeclList()->paramDeclaration())
-			{
-				if (!first) out << ", ";
-				first = false;
-				out << param->Identifier()->getText();
-			}
-		}
-		out << ")); }" << std::endl << std::string(depth, '\t');
+		out << ";" << std::endl << std::string(depth, '\t');
 		if (func.id == "operator++" || func.id == "operator--")
 		{
 			switch (func.access)
@@ -3136,10 +3169,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			isVariadicTemplate = false;
 			isFunctionDeclaration = false;
 			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
-			out << " -> " << type->id << " { return ";
-			if (func.isStatic) out << "__class::";
-			else out << "__ref().";
-			out << func.id << "(1); }" << std::endl << std::string(depth, '\t');
+			out << " -> " << type->id <<";" << std::endl << std::string(depth, '\t');
 		}
 		if (!func.compilationCondition.empty())
 		{
@@ -3172,7 +3202,18 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			printTemplateParams(constant.templateParams);
 			out << " ";
 		}
-		out << "static constexpr decltype(auto) " << constant.id << " = __class::" << constant.id << ";\n" << std::string(depth, '\t');
+		out << "static constexpr ";
+		if (constant.type)
+		{
+			printTypeId(constant.type);
+		}
+		else
+		{
+			out << "decltype(auto) ";
+		}
+		out << constant.id << " = ";
+		printInitializerClause(constant.initializer);
+		out << ";\n" << std::string(depth, '\t');
 		if (!constant.compilationCondition.empty())
 		{
 			out << "#endif " << std::endl << std::string(depth, '\t');
@@ -3203,7 +3244,8 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			printTemplateParams(alias.templateParams);
 			out << " ";
 		}
-		out << "using " << alias.id << " = __class::" << alias.id;
+		out << "using " << alias.id << " = ";
+		printTypeId(alias.type);
 		if (alias.templateParams)
 		{
 			out << "<";
@@ -3379,7 +3421,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 		out << ">";
 	}
 	out << ";\n" << std::string(depth, '\t');
-	out << "public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *static_cast<__class*>(_obj); }\n" << std::string(depth, '\t');
+	out << "public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *reinterpret_cast<__class*>(_obj); }\n" << std::string(depth, '\t');
 	out << "ADV_CLASS_FROM_PTR(" << type->id << "__Unowned)\n" << std::string(depth, '\t');
 	out << "ADV_CLASS_UNOWNED_COMMON_CTORS(" << type->id << "__Unowned)\n" << std::string(depth, '\t');
 	
@@ -3481,68 +3523,8 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 		if (!func.isStatic && func.isRefReturn)
 			out << " LIFETIMEBOUND";
 
-		out << "{ ADV_EXPRESSION_BODY(__ref().";
-		if (func.templateParams) out << "template ";
-		if (func.isConverter)
-		{
-			out << "operator ";
-			if (func.isConstReturn) out << "const ";
-			printTypeId(func.returnType);
-			if (func.isRefReturn) out << "&";
-		}
-		else
-		{
-			out << func.id;
-		}
-
-		if (func.templateSpecializationArgs)
-		{
-			out << "<";
-			bool first = true;
-			for (auto tparam : func.templateSpecializationArgs->templateArgument())
-			{
-				if (!first) out << ", ";
-				first = false;
-				printTemplateArgument(tparam);
-			}
-			out << ">";
-		}
-		else if (func.templateParams)
-		{
-			out << "<";
-			bool first = true;
-			for (auto tparam : func.templateParams->templateParamDeclaration())
-			{
-				if (!first) out << ", ";
-				first = false;
-				out << tparam->Identifier()->getText();
-			}
-			out << ">";
-		}
-		out << "(";
-		if (func.params)
-		{
-			if (auto clause = func.params->paramDeclClause()) {
-				bool first = true;
-				for (auto param : clause->paramDeclList()->paramDeclaration())
-				{
-					if (!first) out << ", ";
-					first = false;
-					out << param->Identifier()->getText();
-				}
-			}
-		}
-		else if (func.indexerParams)
-		{
-			bool first = true;
-			for (auto param : func.indexerParams->paramDeclList()->paramDeclaration())
-			{
-				if (!first) out << ", ";
-				first = false;
-				out << param->Identifier()->getText();
-			}
-		}
-		out << ")); }" << std::endl << std::string(depth, '\t');
+		
+		out << ";" << std::endl << std::string(depth, '\t');
 		if (func.id == "operator++" || func.id == "operator--")
 		{
 			switch (func.access)
@@ -3578,10 +3560,8 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			isVariadicTemplate = false;
 			isFunctionDeclaration = false;
 			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
-			out << " -> " << type->id << " { return ";
-			if (func.isStatic) out << "__class::";
-			else out << "__ref().";
-			out << func.id << "(1); }" << std::endl << std::string(depth, '\t');
+			out << " -> " << type->id;
+			out << ";" << std::endl << std::string(depth, '\t');
 		}
 		if (!func.compilationCondition.empty())
 		{
@@ -3695,216 +3675,9 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 		out << ">";
 	}
 	out << ";\n" << std::string(depth, '\t');
-	out << "public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *static_cast<__class*>(_obj); }\n" << std::string(depth, '\t');
-	out << "ADV_CLASS_FROM_PTR(" << type->id << "__Weak)\n" << std::string(depth, '\t');
-	out << "ADV_CLASS_UNOWNED_COMMON_CTORS(" << type->id << "__Weak)\n" << std::string(depth, '\t');
-
-	for (const auto& func : type->methods)
-	{
-		if (!func.isConverter && !func.id.starts_with("operator") && !func.id.starts_with("_operator")) continue;
-		if (!func.compilationCondition.empty())
-		{
-			out << "#if " << func.compilationCondition << std::endl << std::string(depth, '\t');
-		}
-		out << "#line " << func.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-		switch (func.access)
-		{
-		case AccessSpecifier::Public:
-		case AccessSpecifier::Internal:
-			out << "public: ";
-			break;
-		case AccessSpecifier::Protected:
-		case AccessSpecifier::ProtectedInternal:
-			out << "protected: ";
-			break;
-		case AccessSpecifier::Private:
-			out << "private: ";
-			break;
-		}
-		isUnsafe = func.isUnsafe;
-		if (isUnsafe)
-		{
-			out << "[[clang::annotate(\"unsafe\")]] ";
-		}
-
-		if (func.varargs >= 0)
-		{
-			out << "[[clang::annotate(\"varargs:" << (int)func.varargs << "\")]] ";
-		}
-
-		isFunctionDeclaration = true;
-		if (func.templateParams) {
-			printTemplateParams(func.templateParams);
-			out << " ";
-		}
-		else if (func.templateSpecializationArgs)
-		{
-			out << "template<> ";
-		}
-
-		if (func.isConsteval)
-		{
-			out << "inline consteval ";
-		}
-		else if (func.isConstexpr)
-		{
-			out << "inline constexpr ";
-		}
-		else if (func.isInline || func.indexerSetter)
-		{
-			out << "inline ";
-		}
-
-		bool isRegularMethod = !func.isConverter;
-		if (isRegularMethod) out << "decltype(auto) ";
-		else if (func.implicitSpecification)
-		{
-			printImplicitSpecification(func.implicitSpecification);
-			out << " ";
-		}
-		else if (func.isConverter)
-		{
-			out << "explicit ";
-		}
-		if (func.isConverter)
-		{
-			out << "operator ";
-			printTypeId(func.returnType);
-			if (func.isConstReturn) out << " const&";
-			else if (func.isRefReturn) out << " &";
-		}
-		else out << func.id;
-		if (func.id.ends_with(" new") || func.id.ends_with(" delete")) isNewDeleteOperator = true;
-		if (func.templateSpecializationArgs) {
-			out << "<";
-			printTemplateArgumentList(func.templateSpecializationArgs);
-			out << ">";
-		}
-		bool isIndexer = func.indexerParams;
-		if (func.params) printFunctionParameters(func.params);
-		else if (isIndexer)
-		{
-			out << "(";
-			printParamDeclClause(func.indexerParams);
-			out << ")";
-		}
-		else out << "()";
-		isVariadicTemplate = false;
-		isFunctionDeclaration = false;
-		out << " const ";
-		if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
-
-		if (!func.isStatic && func.isRefReturn)
-			out << " LIFETIMEBOUND";
-
-		out << "{ ADV_EXPRESSION_BODY(__ref().";
-		if (func.templateParams) out << "template ";
-		if (func.isConverter)
-		{
-			out << "operator ";
-			if (func.isConstReturn) out << "const ";
-			printTypeId(func.returnType);
-			if (func.isRefReturn) out << "&";
-		}
-		else
-		{
-			out << func.id;
-		}
-
-		if (func.templateSpecializationArgs)
-		{
-			out << "<";
-			bool first = true;
-			for (auto tparam : func.templateSpecializationArgs->templateArgument())
-			{
-				if (!first) out << ", ";
-				first = false;
-				printTemplateArgument(tparam);
-			}
-			out << ">";
-		}
-		else if (func.templateParams)
-		{
-			out << "<";
-			bool first = true;
-			for (auto tparam : func.templateParams->templateParamDeclaration())
-			{
-				if (!first) out << ", ";
-				first = false;
-				out << tparam->Identifier()->getText();
-			}
-			out << ">";
-		}
-		out << "(";
-		if (func.params)
-		{
-			if (auto clause = func.params->paramDeclClause()) {
-				bool first = true;
-				for (auto param : clause->paramDeclList()->paramDeclaration())
-				{
-					if (!first) out << ", ";
-					first = false;
-					out << param->Identifier()->getText();
-				}
-			}
-		}
-		else if (func.indexerParams)
-		{
-			bool first = true;
-			for (auto param : func.indexerParams->paramDeclList()->paramDeclaration())
-			{
-				if (!first) out << ", ";
-				first = false;
-				out << param->Identifier()->getText();
-			}
-		}
-		out << ")); }" << std::endl << std::string(depth, '\t');
-		if (func.id == "operator++" || func.id == "operator--")
-		{
-			switch (func.access)
-			{
-			case AccessSpecifier::Public:
-			case AccessSpecifier::Internal:
-				out << "public: ";
-				break;
-			case AccessSpecifier::Protected:
-			case AccessSpecifier::ProtectedInternal:
-				out << "protected: ";
-				break;
-			case AccessSpecifier::Private:
-				out << "private: ";
-				break;
-			}
-
-			isFunctionDeclaration = true;
-			if (func.isConsteval)
-			{
-				out << "inline consteval ";
-			}
-			else if (func.isConstexpr)
-			{
-				out << "inline constexpr ";
-			}
-			else
-			{
-				out << "inline ";
-			}
-
-			out << "auto " << func.id << "(int) ";
-			isVariadicTemplate = false;
-			isFunctionDeclaration = false;
-			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
-			out << " -> " << type->id << " { return ";
-			if (func.isStatic) out << "__class::";
-			else out << "__ref().";
-			out << func.id << "(1); }" << std::endl << std::string(depth, '\t');
-		}
-		if (!func.compilationCondition.empty())
-		{
-			out << "#endif " << std::endl << std::string(depth, '\t');
-		}
-		isNewDeleteOperator = false;
-	}
+	out << "public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }\n" << std::string(depth, '\t');
+	out << "ADV_CLASS_WEAK_FROM_PTR(" << type->id << "__Weak)\n" << std::string(depth, '\t');
+	out << "ADV_CLASS_WEAK_COMMON_CTORS(" << type->id << "__Weak)\n" << std::string(depth, '\t');
 
 	out << "#define ADV_PROPERTY_SELF __self";
 	out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
@@ -3942,7 +3715,15 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 		}
 
 		selfConstants.clear();
-		printType(type.get());
+		if (type->kind == TypeKind::Class)
+		{
+			printClassRef(type.get());
+		}
+		else
+		{
+			printType(type.get());
+		}
+		
 		if (!type->compilationCondition.empty())
 		{
 			out << "#if " << type->compilationCondition << std::endl;
@@ -3987,7 +3768,7 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 	}
 	for (const auto& type : sema.globalStructs)
 	{
-		if (type->kind == TypeKind::RefStruct || type->kind == TypeKind::Class) continue;
+		if (type->kind == TypeKind::RefStruct) continue;
 		out.switchTo(true);
 		if (type->access == AccessSpecifier::Private) {
 			out.switchTo(false);
@@ -4011,6 +3792,10 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 		if (type->kind == TypeKind::Struct)
 		{
 			printStructWrapper(type.get());
+		}
+		else if (type->kind == TypeKind::Class)
+		{
+			printType(type.get());
 		}
 		
 		if (type->access == AccessSpecifier::Protected || type->isUnsafe) out << "\n" << std::string(--depth, '\t') << "}";
@@ -4130,6 +3915,782 @@ void CppAdvanceCodegen::printRefStructCheck(CppAdvanceParser::TheTypeIdContext* 
 	out << ")";
 }
 
+void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
+{
+	for (const auto& type : sema.globalStructs)
+	{
+		if (type->kind != TypeKind::Class) continue;
+		if (type->access != AccessSpecifier::Private) {
+			out.switchTo(true);
+			emptyLine = true;
+		}
+		else
+		{
+			out.switchTo(false);
+		}
+		if (!type->compilationCondition.empty())
+		{
+			out << "#if " << type->compilationCondition << std::endl;
+		}
+		if (type->access == AccessSpecifier::Protected) {
+			out << "namespace __" << filename << "_Protected" << (type->isUnsafe ? "__Unsafe" : "") << " {\n" << std::string(++depth, '\t');
+		}
+		else if (type->isUnsafe)
+		{
+			out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n" << std::string(++depth, '\t');
+		}
+
+		out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+
+		if (!type->isAbstract && type->isDefaultConstructible)
+		{
+			if (type->templateParams)
+			{
+				printTemplateParams(type->templateParams);
+				out << " ";
+			}
+			else if (type->templateSpecializationArgs)
+			{
+				out << "template<> ";
+			}
+			out << "inline " << type->id;
+			if (type->templateSpecializationArgs)
+			{
+				out << "<";
+				printTemplateArgumentList(type->templateSpecializationArgs);
+				out << ">";
+			}
+			else if (type->templateParams)
+			{
+				out << "<";
+				bool first = true;
+				for (auto tparam : type->templateParams->templateParamDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					out << tparam->Identifier()->getText();
+				}
+				out << ">";
+			}
+			
+			out << "::ADV_CLASS_DEFAULT_CTOR(" << type->id << ")\n" << std::string(depth, '\t');
+		}
+
+		if (type->templateParams)
+		{
+			printTemplateParams(type->templateParams);
+			out << " ";
+		}
+		else if (type->templateSpecializationArgs)
+		{
+			out << "template<> ";
+		}
+		out << "inline " << type->id;
+		if (type->templateSpecializationArgs)
+		{
+			out << "<";
+			printTemplateArgumentList(type->templateSpecializationArgs);
+			out << ">";
+		}
+		else if (type->templateParams)
+		{
+			out << "<";
+			bool first = true;
+			for (auto tparam : type->templateParams->templateParamDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				out << tparam->Identifier()->getText();
+			}
+			out << ">";
+		}
+
+		out << "::ADV_CLASS_STRONG_CTOR_REF(" << type->id << ")\n" << std::string(depth, '\t');
+
+		if (type->templateParams)
+		{
+			printTemplateParams(type->templateParams);
+			out << " ";
+		}
+		else if (type->templateSpecializationArgs)
+		{
+			out << "template<> ";
+		}
+		out << "inline " << type->id;
+		if (type->templateSpecializationArgs)
+		{
+			out << "<";
+			printTemplateArgumentList(type->templateSpecializationArgs);
+			out << ">";
+		}
+		else if (type->templateParams)
+		{
+			out << "<";
+			bool first = true;
+			for (auto tparam : type->templateParams->templateParamDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				out << tparam->Identifier()->getText();
+			}
+			out << ">";
+		}
+
+		out << "& " << type->id;
+		if (type->templateSpecializationArgs)
+		{
+			out << "<";
+			printTemplateArgumentList(type->templateSpecializationArgs);
+			out << ">";
+		}
+		else if (type->templateParams)
+		{
+			out << "<";
+			bool first = true;
+			for (auto tparam : type->templateParams->templateParamDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				out << tparam->Identifier()->getText();
+			}
+			out << ">";
+		}
+		out << "::ADV_CLASS_STRONG_ASSIGN_REF(" << type->id << ")\n" << std::string(depth, '\t');
+
+		if (type->templateParams)
+		{
+			printTemplateParams(type->templateParams);
+			out << " ";
+		}
+		else if (type->templateSpecializationArgs)
+		{
+			out << "template<> ";
+		}
+		out << "inline " << type->id << "__Unowned";
+		if (type->templateSpecializationArgs)
+		{
+			out << "<";
+			printTemplateArgumentList(type->templateSpecializationArgs);
+			out << ">";
+		}
+		else if (type->templateParams)
+		{
+			out << "<";
+			bool first = true;
+			for (auto tparam : type->templateParams->templateParamDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				out << tparam->Identifier()->getText();
+			}
+			out << ">";
+		}
+
+		out << "::ADV_CLASS_UNOWNED_CTOR_REF(" << type->id << "__Unowned)\n" << std::string(depth, '\t');
+
+		if (type->templateParams)
+		{
+			printTemplateParams(type->templateParams);
+			out << " ";
+		}
+		else if (type->templateSpecializationArgs)
+		{
+			out << "template<> ";
+		}
+		out << "inline " << type->id << "__Unowned";
+		if (type->templateSpecializationArgs)
+		{
+			out << "<";
+			printTemplateArgumentList(type->templateSpecializationArgs);
+			out << ">";
+		}
+		else if (type->templateParams)
+		{
+			out << "<";
+			bool first = true;
+			for (auto tparam : type->templateParams->templateParamDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				out << tparam->Identifier()->getText();
+			}
+			out << ">";
+		}
+
+		out << "& " << type->id << "__Unowned";
+		if (type->templateSpecializationArgs)
+		{
+			out << "<";
+			printTemplateArgumentList(type->templateSpecializationArgs);
+			out << ">";
+		}
+		else if (type->templateParams)
+		{
+			out << "<";
+			bool first = true;
+			for (auto tparam : type->templateParams->templateParamDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				out << tparam->Identifier()->getText();
+			}
+			out << ">";
+		}
+		out << "::ADV_CLASS_UNOWNED_ASSIGN_REF(" << type->id << "__Unowned)\n" << std::string(depth, '\t');
+
+		if (type->templateParams)
+		{
+			printTemplateParams(type->templateParams);
+			out << " ";
+		}
+		else if (type->templateSpecializationArgs)
+		{
+			out << "template<> ";
+		}
+		out << "inline " << type->id << "__Weak";
+		if (type->templateSpecializationArgs)
+		{
+			out << "<";
+			printTemplateArgumentList(type->templateSpecializationArgs);
+			out << ">";
+		}
+		else if (type->templateParams)
+		{
+			out << "<";
+			bool first = true;
+			for (auto tparam : type->templateParams->templateParamDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				out << tparam->Identifier()->getText();
+			}
+			out << ">";
+		}
+
+		out << "::ADV_CLASS_WEAK_CTOR_REF(" << type->id << "__Weak)\n" << std::string(depth, '\t');
+
+		if (type->templateParams)
+		{
+			printTemplateParams(type->templateParams);
+			out << " ";
+		}
+		else if (type->templateSpecializationArgs)
+		{
+			out << "template<> ";
+		}
+		out << "inline " << type->id << "__Weak";
+		if (type->templateSpecializationArgs)
+		{
+			out << "<";
+			printTemplateArgumentList(type->templateSpecializationArgs);
+			out << ">";
+		}
+		else if (type->templateParams)
+		{
+			out << "<";
+			bool first = true;
+			for (auto tparam : type->templateParams->templateParamDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				out << tparam->Identifier()->getText();
+			}
+			out << ">";
+		}
+
+		out << "& " << type->id << "__Weak";
+		if (type->templateSpecializationArgs)
+		{
+			out << "<";
+			printTemplateArgumentList(type->templateSpecializationArgs);
+			out << ">";
+		}
+		else if (type->templateParams)
+		{
+			out << "<";
+			bool first = true;
+			for (auto tparam : type->templateParams->templateParamDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				out << tparam->Identifier()->getText();
+			}
+			out << ">";
+		}
+		out << "::ADV_CLASS_WEAK_ASSIGN_REF(" << type->id << "__Weak)\n" << std::string(depth, '\t');
+
+		for (const auto& field : type->fields)
+		{
+			if (!field.isStatic && !field.isThreadLocal) continue;
+
+			if (!field.compilationCondition.empty())
+			{
+				out << "#if " << field.compilationCondition << std::endl << std::string(depth, '\t');
+			}
+			
+			if (type->templateParams)
+			{
+				printTemplateParams(type->templateParams);
+				out << " ";
+			}
+			else if (type->templateSpecializationArgs)
+			{
+				out << "template<> ";
+			}
+			out << "inline decltype(auto) ";
+			out << type->id;
+			if (type->templateSpecializationArgs)
+			{
+				out << "<";
+				printTemplateArgumentList(type->templateSpecializationArgs);
+				out << ">";
+			}
+			else if (type->templateParams)
+			{
+				out << "<";
+				bool first = true;
+				for (auto tparam : type->templateParams->templateParamDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					out << tparam->Identifier()->getText();
+				}
+				out << ">";
+			}
+			out << "::get" << field.id << "() { return __class::" << field.id << "; }\n" << std::string(depth, '\t');
+			if (!field.isConst)
+			{
+				if (type->templateParams)
+				{
+					printTemplateParams(type->templateParams);
+					out << " ";
+				}
+				else if (type->templateSpecializationArgs)
+				{
+					out << "template<> ";
+				}
+				out << "inline void ";
+				out << type->id;
+				if (type->templateSpecializationArgs)
+				{
+					out << "<";
+					printTemplateArgumentList(type->templateSpecializationArgs);
+					out << ">";
+				}
+				else if (type->templateParams)
+				{
+					out << "<";
+					bool first = true;
+					for (auto tparam : type->templateParams->templateParamDeclaration())
+					{
+						if (!first) out << ", ";
+						first = false;
+						out << tparam->Identifier()->getText();
+					}
+					out << ">";
+				}
+				out << "::set" << field.id << "(const ";
+				printTypeId(field.type);
+				out << "& value) { __class::" << field.id << " = value; }\n" << std::string(depth, '\t');
+			}
+			if (!field.compilationCondition.empty())
+			{
+				out << "#endif " << std::endl << std::string(depth, '\t');
+			}
+		}
+
+		for (const auto& func : type->methods)
+		{
+			if (!func.isConverter && !func.id.starts_with("operator") && !func.id.starts_with("_operator")) continue;
+			if (!func.compilationCondition.empty())
+			{
+				out << "#if " << func.compilationCondition << std::endl << std::string(depth, '\t');
+			}
+			out << "#line " << func.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+
+			isFunctionDeclaration = true;
+			if (type->templateParams)
+			{
+				printTemplateParams(type->templateParams);
+				out << " ";
+			}
+			else if (type->templateSpecializationArgs)
+			{
+				out << "template<> ";
+			}
+			if (func.templateParams) {
+				printTemplateParams(func.templateParams);
+				out << " ";
+			}
+			else if (func.templateSpecializationArgs)
+			{
+				out << "template<> ";
+			}
+
+			out << "inline ";
+			if (func.isConstexpr) "constexpr ";
+
+			bool isRegularMethod = !func.isConverter;
+			if (isRegularMethod) out << "decltype(auto) ";
+			out << type->id;
+			if (type->templateSpecializationArgs)
+			{
+				out << "<";
+				printTemplateArgumentList(type->templateSpecializationArgs);
+				out << ">";
+			}
+			else if (type->templateParams)
+			{
+				out << "<";
+				bool first = true;
+				for (auto tparam : type->templateParams->templateParamDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					out << tparam->Identifier()->getText();
+				}
+				out << ">";
+			}
+			out << "::";
+			if (func.isConverter)
+			{
+				out << "operator ";
+				printTypeId(func.returnType);
+				if (func.isConstReturn) out << " const&";
+				else if (func.isRefReturn) out << " &";
+			}
+			else out << func.id;
+			if (func.id.ends_with(" new") || func.id.ends_with(" delete")) isNewDeleteOperator = true;
+			if (func.templateSpecializationArgs) {
+				out << "<";
+				printTemplateArgumentList(func.templateSpecializationArgs);
+				out << ">";
+			}
+			bool isIndexer = func.indexerParams;
+			if (func.params) printFunctionParameters(func.params);
+			else if (isIndexer)
+			{
+				out << "(";
+				printParamDeclClause(func.indexerParams);
+				out << ")";
+			}
+			else out << "()";
+			isVariadicTemplate = false;
+			isFunctionDeclaration = false;
+			out << " const ";
+			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
+
+			if (!func.isStatic && func.isRefReturn)
+				out << " LIFETIMEBOUND";
+
+			out << "{ ADV_EXPRESSION_BODY(__ref().";
+			if (func.templateParams) out << "template ";
+			if (func.isConverter)
+			{
+				out << "operator ";
+				if (func.isConstReturn) out << "const ";
+				printTypeId(func.returnType);
+				if (func.isRefReturn) out << "&";
+			}
+			else
+			{
+				out << func.id;
+			}
+
+			if (func.templateSpecializationArgs)
+			{
+				out << "<";
+				bool first = true;
+				for (auto tparam : func.templateSpecializationArgs->templateArgument())
+				{
+					if (!first) out << ", ";
+					first = false;
+					printTemplateArgument(tparam);
+				}
+				out << ">";
+			}
+			else if (func.templateParams)
+			{
+				out << "<";
+				bool first = true;
+				for (auto tparam : func.templateParams->templateParamDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					out << tparam->Identifier()->getText();
+				}
+				out << ">";
+			}
+			out << "(";
+			if (func.params)
+			{
+				if (auto clause = func.params->paramDeclClause()) {
+					bool first = true;
+					for (auto param : clause->paramDeclList()->paramDeclaration())
+					{
+						if (!first) out << ", ";
+						first = false;
+						out << param->Identifier()->getText();
+					}
+				}
+			}
+			else if (func.indexerParams)
+			{
+				bool first = true;
+				for (auto param : func.indexerParams->paramDeclList()->paramDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					out << param->Identifier()->getText();
+				}
+			}
+			out << ")); }" << std::endl << std::string(depth, '\t');
+			if (func.id == "operator++" || func.id == "operator--")
+			{
+				if (type->templateParams)
+				{
+					printTemplateParams(type->templateParams);
+					out << " ";
+				}
+				else if (type->templateSpecializationArgs)
+				{
+					out << "template<> ";
+				}
+
+				isFunctionDeclaration = true;
+				out << "inline ";
+				if (func.isConstexpr) "constexpr ";
+
+				out << "auto ";
+				out << type->id;
+				if (type->templateSpecializationArgs)
+				{
+					out << "<";
+					printTemplateArgumentList(type->templateSpecializationArgs);
+					out << ">";
+				}
+				else if (type->templateParams)
+				{
+					out << "<";
+					bool first = true;
+					for (auto tparam : type->templateParams->templateParamDeclaration())
+					{
+						if (!first) out << ", ";
+						first = false;
+						out << tparam->Identifier()->getText();
+					}
+					out << ">";
+				}
+				out << "::";
+				out << func.id << "(int) ";
+				isVariadicTemplate = false;
+				isFunctionDeclaration = false;
+				if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
+				out << " -> " << type->id << " { return ";
+				if (func.isStatic) out << "__class::";
+				else out << "__ref().";
+				out << func.id << "(1); }" << std::endl << std::string(depth, '\t');
+			}
+
+			if (type->templateParams)
+			{
+				printTemplateParams(type->templateParams);
+				out << " ";
+			}
+			else if (type->templateSpecializationArgs)
+			{
+				out << "template<> ";
+			}
+			if (func.templateParams) {
+				printTemplateParams(func.templateParams);
+				out << " ";
+			}
+			else if (func.templateSpecializationArgs)
+			{
+				out << "template<> ";
+			}
+
+			out << "inline ";
+			if (func.isConstexpr) "constexpr ";
+
+			isRegularMethod = !func.isConverter;
+			if (isRegularMethod) out << "decltype(auto) ";
+			out << type->id << "__Unowned";
+			if (type->templateSpecializationArgs)
+			{
+				out << "<";
+				printTemplateArgumentList(type->templateSpecializationArgs);
+				out << ">";
+			}
+			else if (type->templateParams)
+			{
+				out << "<";
+				bool first = true;
+				for (auto tparam : type->templateParams->templateParamDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					out << tparam->Identifier()->getText();
+				}
+				out << ">";
+			}
+			out << "::";
+			if (func.isConverter)
+			{
+				out << "operator ";
+				printTypeId(func.returnType);
+				if (func.isConstReturn) out << " const&";
+				else if (func.isRefReturn) out << " &";
+			}
+			else out << func.id;
+			if (func.id.ends_with(" new") || func.id.ends_with(" delete")) isNewDeleteOperator = true;
+			if (func.templateSpecializationArgs) {
+				out << "<";
+				printTemplateArgumentList(func.templateSpecializationArgs);
+				out << ">";
+			}
+			isIndexer = func.indexerParams;
+			if (func.params) printFunctionParameters(func.params);
+			else if (isIndexer)
+			{
+				out << "(";
+				printParamDeclClause(func.indexerParams);
+				out << ")";
+			}
+			else out << "()";
+			isVariadicTemplate = false;
+			isFunctionDeclaration = false;
+			out << " const ";
+			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
+
+			if (!func.isStatic && func.isRefReturn)
+				out << " LIFETIMEBOUND";
+
+			out << "{ ADV_EXPRESSION_BODY(__ref().";
+			if (func.templateParams) out << "template ";
+			if (func.isConverter)
+			{
+				out << "operator ";
+				if (func.isConstReturn) out << "const ";
+				printTypeId(func.returnType);
+				if (func.isRefReturn) out << "&";
+			}
+			else
+			{
+				out << func.id;
+			}
+
+			if (func.templateSpecializationArgs)
+			{
+				out << "<";
+				bool first = true;
+				for (auto tparam : func.templateSpecializationArgs->templateArgument())
+				{
+					if (!first) out << ", ";
+					first = false;
+					printTemplateArgument(tparam);
+				}
+				out << ">";
+			}
+			else if (func.templateParams)
+			{
+				out << "<";
+				bool first = true;
+				for (auto tparam : func.templateParams->templateParamDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					out << tparam->Identifier()->getText();
+				}
+				out << ">";
+			}
+			out << "(";
+			if (func.params)
+			{
+				if (auto clause = func.params->paramDeclClause()) {
+					bool first = true;
+					for (auto param : clause->paramDeclList()->paramDeclaration())
+					{
+						if (!first) out << ", ";
+						first = false;
+						out << param->Identifier()->getText();
+					}
+				}
+			}
+			else if (func.indexerParams)
+			{
+				bool first = true;
+				for (auto param : func.indexerParams->paramDeclList()->paramDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					out << param->Identifier()->getText();
+				}
+			}
+			out << ")); }" << std::endl << std::string(depth, '\t');
+			if (func.id == "operator++" || func.id == "operator--")
+			{
+				if (type->templateParams)
+				{
+					printTemplateParams(type->templateParams);
+					out << " ";
+				}
+				else if (type->templateSpecializationArgs)
+				{
+					out << "template<> ";
+				}
+
+				isFunctionDeclaration = true;
+				out << "inline ";
+				if (func.isConstexpr) "constexpr ";
+
+				out << "auto ";
+				out << type->id << "__Unowned";
+				if (type->templateSpecializationArgs)
+				{
+					out << "<";
+					printTemplateArgumentList(type->templateSpecializationArgs);
+					out << ">";
+				}
+				else if (type->templateParams)
+				{
+					out << "<";
+					bool first = true;
+					for (auto tparam : type->templateParams->templateParamDeclaration())
+					{
+						if (!first) out << ", ";
+						first = false;
+						out << tparam->Identifier()->getText();
+					}
+					out << ">";
+				}
+				out << "::";
+				out << func.id << "(int) ";
+				isVariadicTemplate = false;
+				isFunctionDeclaration = false;
+				if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
+				out << " -> " << type->id << " { return ";
+				if (func.isStatic) out << "__class::";
+				else out << "__ref().";
+				out << func.id << "(1); }" << std::endl << std::string(depth, '\t');
+			}
+
+			if (!func.compilationCondition.empty())
+			{
+				out << "#endif " << std::endl << std::string(depth, '\t');
+			}
+			isNewDeleteOperator = false;
+		}
+
+		if (type->access == AccessSpecifier::Protected || type->isUnsafe) out << "\n" << std::string(--depth, '\t') << "}";
+		out << std::endl;
+		if (!type->compilationCondition.empty())
+		{
+			out << "#endif " << std::endl;
+		}
+	}
+}
+
 void CppAdvanceCodegen::print() const
 {
 	symbolTable.clear();
@@ -4180,6 +4741,7 @@ void CppAdvanceCodegen::print() const
 	out.switchTo(false);
 	depth = 0;
 	printDeclarationSeq(sema.ast->declarationSeq());
+	printSpecialFunctionDefinitions();
 	sema.symbolContexts.pop();
 }
 
@@ -4328,7 +4890,7 @@ void CppAdvanceCodegen::printDeclSpecifier(CppAdvanceParser::DeclSpecifierContex
 	{
 		isUnowned = true;
 	}
-	else if (ctx->Static())
+	else if (ctx->Weak())
 	{
 		isWeak = true;
 	}
@@ -5650,6 +6212,7 @@ void CppAdvanceCodegen::printConstructor(CppAdvanceParser::ConstructorContext* c
 	if (sema.methods.contains(pos))
 	{
 		const MethodDefinition& func = sema.methods[pos];
+
 		if (func.access != AccessSpecifier::Private &&
 			(func.isInline || func.templateParams
 				|| func.parentTemplateParams || func.parentTemplateSpecializationArgs)) {
@@ -5931,6 +6494,7 @@ void CppAdvanceCodegen::printDestructor(CppAdvanceParser::DestructorContext* ctx
 	sema.symbolContexts.push(sema.symbolContexts.top());
 	bool prevUnsafe = isUnsafe;
 	SourcePosition pos = { ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() };
+	isDestructor = true;
 	if (sema.methods.contains(pos))
 	{
 		const MethodDefinition& func = sema.methods[pos];
@@ -6054,6 +6618,7 @@ void CppAdvanceCodegen::printDestructor(CppAdvanceParser::DestructorContext* ctx
 		}
 		out << std::endl;
 	}
+	isDestructor = false;
 	isUnsafe = prevUnsafe;
 	sema.symbolContexts.pop();
 }
@@ -8270,9 +8835,10 @@ void CppAdvanceCodegen::printShortFunctionBody(CppAdvanceParser::ShortFunctionBo
 			out << "& " << id << " = __" << id << "__;";
 		}
 		out << "\n" << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-		out << "ADV_EXPRESSION_BODY(";
+		if (!isDestructor) out << "ADV_EXPRESSION_BODY(";
 		printExpression(stat->expr());
-		out << "); ";
+		if (!isDestructor) out << ")";
+		out << "; ";
 		if (isPropertySetter) out << "return *this;";
 		out << "\n" << std::string(--depth, '\t') << "}";
 	}

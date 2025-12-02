@@ -356,17 +356,20 @@ struct StructDefinition {
 	bool isUnsafe = false;
 	bool isAbstract = false;
 	bool isFinal = false;
+	bool hasAggregateInit = false;
+	bool isConstexpr = false;
+	bool isDefaultConstructible = false;
 	bool isStatic = false;
 
 	StructDefinition(TypeKind _kind, std::string _id, CppAdvanceParser::TemplateParamsContext* _targs, CppAdvanceParser::TemplateArgumentListContext* _tspec, AccessSpecifier _access, std::string _ccond, SourcePosition _pos,
 		const std::vector<VariableDefinition>& _fields, const std::vector<ConstantDefinition>& _constants, CppAdvanceParser::BaseSpecifierListContext* _bases,
 		const std::vector<TypeAliasDefinition>& _typeAliases, const std::vector<PropertyDefinition>& _properties, const std::vector<MethodDefinition>& _methods,
 		const std::vector<std::shared_ptr<StructDefinition>>& _nestedStructs, const std::vector<ForwardDeclaration>& _friendTypes,
-		const std::vector<FunctionDeclaration>& _friendDecls, const std::vector<FunctionDefinition>& _friendDefs, bool _isUnsafe, bool _isAbstract, bool _isFinal, bool _isStatic)
+		const std::vector<FunctionDeclaration>& _friendDecls, const std::vector<FunctionDefinition>& _friendDefs, bool _isUnsafe, bool _isAbstract, bool _isFinal, bool _hasAggregateInit)
 		: kind{_kind},id { std::move(_id) }, templateParams{ _targs }, templateSpecializationArgs{ _tspec }, access{ _access }, compilationCondition{ std::move(_ccond) }, pos{ _pos },
 		interfaces{_bases}, fields{ _fields }, constants{ _constants }, typeAliases{ typeAliases }, properties{_properties},
 		methods{ _methods }, nestedStructs{ _nestedStructs }, friendTypes{ _friendTypes }, friendFuncDeclarations{_friendDecls},
-		friendFuncDefinitions{ _friendDefs }, isUnsafe{ _isUnsafe }, isAbstract{ _isAbstract }, isFinal{ _isFinal }, isStatic{_isStatic} {}
+		friendFuncDefinitions{ _friendDefs }, isUnsafe{ _isUnsafe }, isAbstract{ _isAbstract }, isFinal{ _isFinal }, hasAggregateInit{_hasAggregateInit } {}
 };
 
 struct SymbolContext {
@@ -474,6 +477,7 @@ public:
 	std::stack<std::string> conditionStack;
 	std::stack<std::optional<AccessSpecifier>> currentAccessSpecifier;
 	std::stack<TypeKind> currentTypeKind;
+	std::stack<int> constructorCounts;
 	CppAdvanceParser::AssignmentExpressionContext* currentAssignment{};
 	CppAdvanceParser::StatContext* currentStatement{};
 	bool firstPass = true;

@@ -24,6 +24,7 @@ class CppAdvanceCodegen
 	mutable bool isNewDeleteOperator = false;
 	mutable bool isPropertySetter = false;
 	mutable bool isPrivateStruct = false;
+	mutable bool isDestructor = false;
 	mutable bool functionProlog = false;
 	mutable bool checkForRefStruct = false;
 	mutable int depth = 0;
@@ -78,6 +79,7 @@ class CppAdvanceCodegen
 	void printTypeDefinitions() const;
 	void printVersions() const;
 	void printRefStructCheck(CppAdvanceParser::TheTypeIdContext* type) const;
+	void printSpecialFunctionDefinitions() const;
 
 public:
 	/*const*/ CppAdvanceSema& sema;

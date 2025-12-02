@@ -2984,6 +2984,8 @@ void CppAdvanceSema::enterConstructor(CppAdvanceParser::ConstructorContext* ctx)
 	if (isUnsafe && unsafeDepth <= 0) unsafeDepth++;
 
 	if (firstPass && !functionBody) {
+		if (currentTypeKind.top() == TypeKind::Class) constructorCounts.top()++;
+
 		if (isDefault) isInline = true;
 		if (ctx->Equal()) isConstexpr = true;
 		if (auto decl = params->paramDeclClause())
@@ -3013,6 +3015,10 @@ void CppAdvanceSema::enterConstructor(CppAdvanceParser::ConstructorContext* ctx)
 				}
 			}
 		}
+		else
+		{
+			structStack.top()->isDefaultConstructible = true;
+		}
 
 		if (auto body = ctx->constructorBody())
 		{
@@ -3024,6 +3030,8 @@ void CppAdvanceSema::enterConstructor(CppAdvanceParser::ConstructorContext* ctx)
 			if (body->Assign()) isInline = true;
 			else if (body->Equal()) isConstexpr = true;
 		}
+
+		if (isConstexpr) structStack.top()->isConstexpr = true;
 
 		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
 		std::optional<AccessSpecifier> access = std::nullopt;
@@ -3102,6 +3110,16 @@ void CppAdvanceSema::exitConstructor(CppAdvanceParser::ConstructorContext* ctx)
 	if (ctx->Unsafe())
 		--unsafeDepth;
 
+	if (firstPass && !functionBody) {
+		if (auto params = ctx->functionParams()->paramDeclClause())
+		{
+			if (params->paramDeclList()->paramDeclaration().size() == currentFields[ctx->constructorBody()].size())
+			{
+				structStack.top()->hasAggregateInit = true;
+			}
+		}
+	}
+
 	outParams.clear();
 	symbolContexts.pop();
 }
@@ -3123,7 +3141,7 @@ void CppAdvanceSema::enterConstructorBody(CppAdvanceParser::ConstructorBodyConte
 		}
 		for (const auto& prop : structStack.top()->properties)
 		{
-			if (!prop.isStatic) {
+			if (!prop.isStatic && prop.setter && propertiesNeedField.contains(prop.setter)) {
 				auto id = prop.id;
 				StringReplace(id, "& ", "");
 				currentFields[ctx].insert("p_" + id);
@@ -4101,6 +4119,7 @@ void CppAdvanceSema::enterClassDefinition(CppAdvanceParser::ClassDefinitionConte
 	if (firstPass && !functionBody)
 	{
 		typeset.globalTypes.insert(currentType);
+		constructorCounts.push(0);
 		CppAdvanceParser::TemplateParamsContext* tparams = ctx->classHead()->templateParams();
 		CppAdvanceParser::TemplateArgumentListContext* tspec = nullptr;
 		CppAdvanceParser::BaseSpecifierListContext* bases = nullptr;
@@ -4174,7 +4193,7 @@ void CppAdvanceSema::enterClassDefinition(CppAdvanceParser::ClassDefinitionConte
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, bases, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
 			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
 			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, ctx->classHead()->Abstract(), ctx->classHead()->Final(),
-			ctx->classHead()->Static());
+			false);
 		if (!structStack.empty())
 			structStack.top()->nestedStructs.push_back(def);
 		structStack.push(def);
@@ -4212,8 +4231,14 @@ void CppAdvanceSema::exitClassDefinition(CppAdvanceParser::ClassDefinitionContex
 			isPrivateTypeDefinition = false;
 			auto& top = structStack.top();
 			if (top->access == AccessSpecifier::Protected) protectedSymbols.insert(top->id);
-			if (!top->templateSpecializationArgs)
+			if (constructorCounts.top() == 0) top->isDefaultConstructible = true;
+			constructorCounts.pop();
+			if (!top->templateSpecializationArgs) {
 				forwardDeclarations.push_back({ top->id,top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+				forwardDeclarations.push_back({ top->id + "__Unowned",top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe});
+				forwardDeclarations.push_back({ top->id + "__Weak",top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe});
+				forwardDeclarations.push_back({ "__Class_" + top->id,top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe});
+			}
 			globalStructs.push_back(top);
 		}
 		int idx = 0;
