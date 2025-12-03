@@ -1,10 +1,12 @@
 #include "CppSymbolParser.h"
 #include <clang-c/Index.h>
+#include <clang-c/Documentation.h>
 #include <ostream>
 #include <iostream>
 #include "StringUtils.h"
 #include <unordered_map>
 #include <set>
+#include <assert.h>
 #pragma comment(lib,"libclang.lib")
 
 std::vector < const char* > cppParserArgs = { "-std=c++20" };
@@ -53,7 +55,7 @@ bool ContainsRawPointer(std::string typeStr) {
 }
 
 std::string GetDefaultValue(CXCursor paramCursor) {
-	CXSourceRange range = clang_getCursorExtent(paramCursor);
+	/*CXSourceRange range = clang_getCursorExtent(paramCursor);
 
 	CXToken* tokens;
 	unsigned numTokens;
@@ -82,6 +84,117 @@ std::string GetDefaultValue(CXCursor paramCursor) {
 		defaultValue.pop_back();
 	}
 
+	if (foundEquals && defaultValue.length() == 1) {
+
+	}
+
+	return defaultValue;*/
+	// 1. Получаем родительский курсор (функцию, метод и т.д.)
+	CXCursor parentFunction = clang_getCursorSemanticParent(paramCursor);
+	if (clang_Cursor_isNull(parentFunction)) {
+		return "";
+	}
+
+	// 2. Получаем диапазон всей функции
+	CXSourceRange functionRange = clang_getCursorExtent(parentFunction);
+
+	// 3. Токенизируем всю функцию
+	CXToken* allTokens = nullptr;
+	unsigned numAllTokens = 0;
+	clang_tokenize(unit, functionRange, &allTokens, &numAllTokens);
+
+	if (numAllTokens == 0) {
+		return "";
+	}
+
+	std::string paramName = clang_getCString(clang_getCursorSpelling(paramCursor));
+	bool foundParam = false;
+	std::vector<std::string> defaultValueTokens;
+
+	// 4. Ищем наш параметр в полном списке токенов функции
+	int parentheses = 0;
+	int brackets = 0;
+	bool startParent = false;
+	for (unsigned i = 0; i < numAllTokens; ++i) {
+		CXToken currentToken = allTokens[i];
+		std::string tokenSpelling = clang_getCString(clang_getTokenSpelling(unit, currentToken));
+
+		if (tokenSpelling == paramName && !foundParam) {
+			foundParam = true;
+			// Мы нашли имя параметра.
+			// Теперь ищем следующий токен — это должен быть '='
+			if (i + 1 < numAllTokens) {
+				std::string nextTokenSpelling = clang_getCString(clang_getTokenSpelling(unit, allTokens[i + 1]));
+
+				if (nextTokenSpelling == "=") {
+					// Мы нашли '='. Все последующие токены до следующей запятой или закрывающей скобки — 
+					// это токены значения по умолчанию.
+					brackets = 0;
+					parentheses = 0;
+					startParent = false;
+					for (unsigned j = i + 2; j < numAllTokens; ++j) {
+						std::string valueToken = clang_getCString(clang_getTokenSpelling(unit, allTokens[j]));
+
+						if (valueToken == "(") {
+							parentheses++;
+							startParent = true;
+						}
+
+						else if (valueToken == "<") {
+							brackets++;
+						}
+
+						else if (valueToken == "{") {
+							brackets++;
+						}
+
+						else if (valueToken == "[") {
+							brackets++;
+						}
+
+						else if (valueToken == ")") {
+							if (parentheses > 0) parentheses--;
+						}
+
+						else if (valueToken == "}") {
+							brackets--;
+						}
+
+						else if (valueToken == ">") {
+							brackets--;
+						}
+
+						else if (valueToken == "]") {
+							brackets--;
+						}
+
+						if ((valueToken == "," || valueToken == ")") && brackets == 0 && parentheses == 0) {
+							if (startParent) defaultValueTokens.push_back(")");
+							// Достигли конца значения по умолчанию
+							break;
+						}
+						defaultValueTokens.push_back(valueToken);
+					}
+				}
+			}
+			break; // Закончили поиск, как только нашли значение по умолчанию
+		}
+
+		// Освобождение временной памяти, если нужно, внутри цикла
+		// clang_disposeString(clang_getTokenSpelling(tu, currentToken)); 
+	}
+
+	// 5. Обработка найденных токенов значения по умолчанию
+	std::string defaultValue = "=";
+	if (!defaultValueTokens.empty()) {
+		for (const std::string& token : defaultValueTokens) {
+			defaultValue += token;
+		}
+	}
+
+	// 6. Обязательная очистка
+	clang_disposeTokens(unit, allTokens, numAllTokens);
+	clang_disposeString(clang_getCursorSpelling(paramCursor));
 	return defaultValue;
 }
 

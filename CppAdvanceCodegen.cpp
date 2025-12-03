@@ -102,7 +102,7 @@ void CppAdvanceCodegen::printGlobalVariables() const
 			isDeclaration = true;
 			printTypeId(var.type);
 			isDeclaration = false;
-			isArray = var.type->arrayDeclarator();
+			//isArray = var.type->arrayDeclarator();
 		}
 		else
 		{
@@ -115,7 +115,7 @@ void CppAdvanceCodegen::printGlobalVariables() const
 		out << " ";
 		currentType = symbolTable[var.id];
 		out << var.id;
-		if (isArray) printArrayDeclarator(var.type->arrayDeclarator());
+		//if (isArray) printArrayDeclarator(var.type->arrayDeclarator());
 		if (var.initializer)
 		{
 			out << " = ";
@@ -165,7 +165,7 @@ void CppAdvanceCodegen::printGlobalVariables() const
 		}
 		//if (var.isVolatile) out << ">";
 		out << " " << var.id;
-		if (isArray) printArrayDeclarator(var.type->arrayDeclarator());
+		//if (isArray) printArrayDeclarator(var.type->arrayDeclarator());
 		out << ";";
 		if (var.access == AccessSpecifier::Protected) out << " }";
 		out << std::endl;
@@ -197,7 +197,7 @@ void CppAdvanceCodegen::printGlobalVariables() const
 		isDeclaration = true;
 		printTypeId(field.type);
 		isDeclaration = false;
-		isArray = field.type->arrayDeclarator();
+		//isArray = field.type->arrayDeclarator();
 		currentType = field.type->getText();
 		if (field.isUnowned) out << "::__unowned_ref";
 		else if (field.isWeak) out << "::__weak_ref";
@@ -212,7 +212,7 @@ void CppAdvanceCodegen::printGlobalVariables() const
 		auto parent = field.parentType;
 		StringReplace(parent,".", "::");
 		out << parent << "::" << field.id;
-		if (isArray) printArrayDeclarator(field.type->arrayDeclarator());
+		//if (isArray) printArrayDeclarator(field.type->arrayDeclarator());
 		currentDeclarationName = field.id;
 		if (field.initializer)
 		{
@@ -310,7 +310,7 @@ void CppAdvanceCodegen::printGlobalConstants() const
 			isDeclaration = true;
 			printTypeId(var.type);
 			isDeclaration = false;
-			isArray = var.type->arrayDeclarator();
+			//isArray = var.type->arrayDeclarator();
 			currentType = var.type->getText();
 		}
 		else
@@ -318,7 +318,7 @@ void CppAdvanceCodegen::printGlobalConstants() const
 			out << "auto";
 		}
 		out << " " << var.id;
-		if (isArray) printArrayDeclarator(var.type->arrayDeclarator());
+		//if (isArray) printArrayDeclarator(var.type->arrayDeclarator());
 		out << " = ";
 		currentDeclarationName = var.id;
 		printInitializerClause(var.initializer);
@@ -987,14 +987,14 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			isDeclaration = true;
 			printTypeId(t);
 			isDeclaration = false;
-			isArray = t->arrayDeclarator();
+			//isArray = t->arrayDeclarator();
 			if (field.isUnowned) out << "::__unowned_ref";
 			else if (field.isWeak) out << "::__weak_ref";
 			out << " ";
 		}
 		currentType = symbolTable[id];
 		out << id;
-		if (isArray) printArrayDeclarator(field.type->arrayDeclarator());
+		//if (isArray) printArrayDeclarator(field.type->arrayDeclarator());
 		if (!field.isStatic && !field.isThreadLocal)
 		{
 			if (auto expr = field.initializer)
@@ -1095,7 +1095,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			isDeclaration = true;
 			printTypeId(constant.type);
 			isDeclaration = false;
-			isArray = constant.type->arrayDeclarator();
+			//isArray = constant.type->arrayDeclarator();
 			currentType = constant.type->getText();
 		}
 		else if (isSelfType)
@@ -1107,7 +1107,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			out << "auto";
 		}
 		out << " " << constant.id;
-		if (isArray) printArrayDeclarator(constant.type->arrayDeclarator());
+		//if (isArray) printArrayDeclarator(constant.type->arrayDeclarator());
 		if (!isSelfType)
 		{
 			out << " = ";
@@ -2596,6 +2596,26 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 		out << ">";
 	}
 	out << ";\n" << std::string(depth, '\t');
+	out << "public: using __strong_ref = " << type->id;
+	if (type->templateSpecializationArgs)
+	{
+		out << "<";
+		printTemplateArgumentList(type->templateSpecializationArgs);
+		out << ">";
+	}
+	else if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << param->Identifier()->getText();
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
 	out << "public: using __unowned_ref = " << type->id << "__Unowned";
 	if (type->templateSpecializationArgs)
 	{
@@ -3389,6 +3409,46 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 		out << ">";
 	}
 	out << ";\n" << std::string(depth, '\t');
+	out << "public: using __unowned_ref = " << type->id << "__Unowned";
+	if (type->templateSpecializationArgs)
+	{
+		out << "<";
+		printTemplateArgumentList(type->templateSpecializationArgs);
+		out << ">";
+	}
+	else if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << param->Identifier()->getText();
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "public: using __weak_ref = " << type->id << "__Weak";
+	if (type->templateSpecializationArgs)
+	{
+		out << "<";
+		printTemplateArgumentList(type->templateSpecializationArgs);
+		out << ">";
+	}
+	else if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << param->Identifier()->getText();
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
 	if (!type->interfaces)
 	{
 		out << "private: using ___super = CppAdvance::ObjectRef__Unowned";
@@ -3624,6 +3684,46 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 	}
 	out << ";\n" << std::string(depth, '\t');
 	out << "public: using __strong_ref = " << type->id;
+	if (type->templateSpecializationArgs)
+	{
+		out << "<";
+		printTemplateArgumentList(type->templateSpecializationArgs);
+		out << ">";
+	}
+	else if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << param->Identifier()->getText();
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "public: using __unowned_ref = " << type->id << "__Unowned";
+	if (type->templateSpecializationArgs)
+	{
+		out << "<";
+		printTemplateArgumentList(type->templateSpecializationArgs);
+		out << ">";
+	}
+	else if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << param->Identifier()->getText();
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "public: using __weak_ref = " << type->id << "__Weak";
 	if (type->templateSpecializationArgs)
 	{
 		out << "<";
@@ -4904,7 +5004,7 @@ void CppAdvanceCodegen::printExternVariableDeclaration(CppAdvanceParser::ExternV
 	printTypeId(ctx->theTypeId());
 	isDeclaration = false;
 	out << " " << ctx->Identifier()->getText();
-	if (ctx->theTypeId()->arrayDeclarator()) printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
+	//if (ctx->theTypeId()->arrayDeclarator()) printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
 	out << ";";
 }
 
@@ -5112,7 +5212,7 @@ void CppAdvanceCodegen::printSelectionStatement(CppAdvanceParser::SelectionState
 	{
 		out << "if " << (ctx->Static() || ctx->Consteval() ? "constexpr " : "") << "(";
 		if (ctx->Consteval()) {
-			if (ctx->Not()) out << "!";
+			if (ctx->not_()) out << "!";
 			out << "std::is_constant_evaluated()";
 		}
 		else {
@@ -5308,7 +5408,7 @@ void CppAdvanceCodegen::printVersionSelectionStatement(CppAdvanceParser::Version
 	}
 	else if (ctx->Debug())
 	{
-		if (ctx->Not()) out << "!";
+		if (ctx->not_()) out << "!";
 		if (auto id = ctx->Identifier())
 		{
 			out << "ADV_DEBUG_" << id->getText();
@@ -5517,7 +5617,7 @@ void CppAdvanceCodegen::printDeclarator(CppAdvanceParser::DeclaratorContext* ctx
 			isDeclaration = true;
 			printTypeId(t);
 			isDeclaration = false;
-			isArray = t->arrayDeclarator();
+			//isArray = t->arrayDeclarator();
 			out << " ";
 		}
 		else
@@ -5527,7 +5627,7 @@ void CppAdvanceCodegen::printDeclarator(CppAdvanceParser::DeclaratorContext* ctx
 		}
 		currentType = symbolTable[id];
 		out << id;
-		if (isArray) printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
+		//if (isArray) printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
 		if (auto expr = ctx->initializerClause())
 		{
 			out << " = ";
@@ -6081,7 +6181,7 @@ void CppAdvanceCodegen::printStructMemberDeclaration(CppAdvanceParser::StructMem
 
 			if (vdecl->Debug())
 			{
-				if (vdecl->Not()) out << "!";
+				if (vdecl->not_()) out << "!";
 				if (auto id = vdecl->Identifier())
 				{
 					out << "ADV_DEBUG_" << id->getText();
@@ -8958,7 +9058,7 @@ void CppAdvanceCodegen::printSimpleDeclaration(CppAdvanceParser::SimpleDeclarati
 		isDeclaration = false;
 		if (isUnowned) out << "::__unowned_ref";
 		else if (isWeak) out << "::__weak_ref";
-		isArray = t->arrayDeclarator();
+		//isArray = t->arrayDeclarator();
 		if (ctx->Void()) out << ">";
 		out << " ";
 	}
@@ -8997,7 +9097,7 @@ void CppAdvanceCodegen::printSimpleDeclaration(CppAdvanceParser::SimpleDeclarati
 	}
 	currentType = symbolTable[id];
 	out << id;
-	if (isArray) printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
+	//if (isArray) printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
 	if (!ctx->Void())
 	{
 		if (auto expr = ctx->initializerClause())
@@ -9062,7 +9162,7 @@ void CppAdvanceCodegen::printSimpleMultiDeclaration(CppAdvanceParser::SimpleMult
 	if (isUnowned) out << "::__unowned_ref";
 	else if (isWeak) out << "::__weak_ref";
 	isDeclaration = false;
-	isArray = ctx->theTypeId()->arrayDeclarator();
+	//isArray = ctx->theTypeId()->arrayDeclarator();
 	out << " ";
 	for (auto id : ids)
 	{
@@ -9074,7 +9174,7 @@ void CppAdvanceCodegen::printSimpleMultiDeclaration(CppAdvanceParser::SimpleMult
 		if (!first) out << ", ";
 		first = false;
 		out << txt;
-		if (isArray) printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
+		//if (isArray) printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
 		
 		if (functionBody && !checkForRefStruct)
 		{
@@ -9449,7 +9549,7 @@ void CppAdvanceCodegen::printConstantDeclaration(CppAdvanceParser::ConstantDecla
 			isDeclaration = true;
 			printTypeId(t);
 			isDeclaration = false;
-			isArray = t->arrayDeclarator();
+			//isArray = t->arrayDeclarator();
 			currentType = t->getText();
 		}
 		else
@@ -9458,7 +9558,7 @@ void CppAdvanceCodegen::printConstantDeclaration(CppAdvanceParser::ConstantDecla
 		}
 
 		out << " " << ctx->Identifier()->getText();
-		if (isArray) printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
+		//if (isArray) printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
 		out << " = ";
 		currentDeclarationName = ctx->Identifier()->getText();
 		printInitializerClause(ctx->initializerClause());
@@ -9857,7 +9957,7 @@ void CppAdvanceCodegen::printUnaryExpression(CppAdvanceParser::UnaryExpressionCo
 				out << "+";
 			else if (upo->Tilde())
 				out << "~";
-			else if (upo->Not())
+			else if (upo->not_())
 				out << "!";
 		}
 		else if (ctx->PlusPlus())
@@ -10234,6 +10334,11 @@ void CppAdvanceCodegen::printPostfixExpression(CppAdvanceParser::PostfixExpressi
 			out << (isUnsafe ? "CppAdvance::Unsafe::" : "") << "__RawPtr(std::addressof(";
 			parens += 2;
 		}
+		else if (op->Exclamation())
+		{
+			out << "*(";
+			++parens;
+		}
 		else
 		{
 			for (auto a : op->Star())
@@ -10382,21 +10487,46 @@ void CppAdvanceCodegen::printTypeSpecifierSeq(CppAdvanceParser::TypeSpecifierSeq
 
 void CppAdvanceCodegen::printTypeId(CppAdvanceParser::TheTypeIdContext* ctx) const
 {
-	printTypeSpecifierSeq(ctx->typeSpecifierSeq());
-	if (auto arr = ctx->arrayDeclarator())
+	//printTypeSpecifierSeq(ctx->typeSpecifierSeq());
+	int brackets = 0;
+	if (auto post = ctx->typePostfix())
 	{
-		if (isDeclaration) return;
-		printArrayDeclarator(arr);
+		//if (isDeclaration) return;
+		//printTypePostfix(arr);
+		for (auto decl : post->arrayDeclarator())
+		{
+			if (decl->Question()) out << "CppAdvance::Nullable<";
+			printArrayDeclarator(decl);
+			brackets += 1 + bool(decl->Question());
+		}
+	}
+
+	if (ctx->Question()) out << "CppAdvance::Nullable<";
+	printTypeSpecifierSeq(ctx->typeSpecifierSeq());
+	if (ctx->Question()) out << ">";
+
+	out << std::string(brackets, '>');
+}
+
+void CppAdvanceCodegen::printTypePostfix(CppAdvanceParser::TypePostfixContext* ctx) const
+{
+	for (auto decl : ctx->arrayDeclarator())
+	{
+		printArrayDeclarator(decl);
 	}
 }
 
 void CppAdvanceCodegen::printArrayDeclarator(CppAdvanceParser::ArrayDeclaratorContext* ctx) const
 {
-	for (auto expr : ctx->constantExpression())
+	if (ctx->constantExpression())
 	{
-		out << "[size_t(";
-		printConstantExpression(expr);
-		out << ")]";
+		out << "CppAdvance::InlineArray<";
+		printConstantExpression(ctx->constantExpression());
+		out << ", ";
+	}
+	else
+	{
+		out << "CppAdvance::Array<";
 	}
 }
 

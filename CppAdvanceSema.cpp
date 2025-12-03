@@ -1106,7 +1106,7 @@ void CppAdvanceSema::enterVersionConditionalDeclaration(CppAdvanceParser::Versio
 	}
 	else if (ctx->Debug())
 	{
-		if (ctx->Not()) result += "!";
+		if (ctx->not_()) result += "!";
 		if (auto id = ctx->Identifier())
 		{
 			result += "ADV_DEBUG_";
@@ -1416,7 +1416,8 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 		if (ctx->Identifier()) id = ctx->Identifier()->getText();
 		else if (ctx->simpleTemplateId()) id = ctx->simpleTemplateId()->templateName()->Identifier()->getText();
 		else if (ctx->operatorFunctionId()) {
-			id = ctx->operatorFunctionId()->getText();
+			id = ctx->operatorFunctionId()->getText(); 
+			if (ctx->operatorFunctionId()->operator_()->Exclamation()) id = "operator*";
 			StringReplace(id, "operator", "operator ");
 			isOperator = true;
 			if (ctx->operatorFunctionId()->operator_()->New())
@@ -2881,7 +2882,7 @@ void CppAdvanceSema::enterMemberVersionConditionalDeclaration(CppAdvanceParser::
 	}
 	else if (ctx->Debug())
 	{
-		if (ctx->Not()) result += "!";
+		if (ctx->not_()) result += "!";
 		if (auto id = ctx->Identifier())
 		{
 			result += "ADV_DEBUG_";
@@ -4537,6 +4538,7 @@ void CppAdvanceSema::enterAbstractMethodDeclaration(CppAdvanceParser::AbstractMe
 		if (ctx->Identifier()) id = ctx->Identifier()->getText();
 		else if (ctx->operatorFunctionId()) {
 			id = ctx->operatorFunctionId()->getText();
+			if (ctx->operatorFunctionId()->operator_()->Exclamation()) id = "operator*";
 			StringReplace(id, "operator", "operator ");
 			isOperator = true;
 		}

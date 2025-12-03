@@ -43,11 +43,12 @@ public:
     OrAssign = 155, LeftShiftAssign = 156, RightShiftAssign = 157, SignedLeftShiftAssign = 158, 
     SignedRightShiftAssign = 159, Equal = 160, NotEqual = 161, Spaceship = 162, 
     LessEqual = 163, GreaterEqual = 164, PlusPlus = 165, MinusMinus = 166, 
-    Comma = 167, Arrow = 168, Question = 169, DoubleQuestion = 170, DoubleQuestionEqual = 171, 
-    Doublecolon = 172, Semi = 173, Dot = 174, DoubleDot = 175, DoubleDotLess = 176, 
-    Dollar = 177, Ellipsis = 178, Apostroph = 179, AtSign = 180, DOUBLE_CURLY_INSIDE = 181, 
-    FORMAT_STRING = 182, DecimalLiteral = 183, OctalLiteral = 184, HexadecimalLiteral = 185, 
-    BinaryLiteral = 186, Integersuffix = 187, DOUBLE_CURLY_CLOSE_INSIDE = 188
+    Comma = 167, Arrow = 168, Exclamation = 169, Question = 170, DoubleQuestion = 171, 
+    DoubleQuestionEqual = 172, Doublecolon = 173, Semi = 174, Dot = 175, 
+    DoubleDot = 176, DoubleDotLess = 177, Dollar = 178, Ellipsis = 179, 
+    Apostroph = 180, AtSign = 181, DOUBLE_CURLY_INSIDE = 182, FORMAT_STRING = 183, 
+    DecimalLiteral = 184, OctalLiteral = 185, HexadecimalLiteral = 186, 
+    BinaryLiteral = 187, Integersuffix = 188, DOUBLE_CURLY_CLOSE_INSIDE = 189
   };
 
   enum {
@@ -98,16 +99,17 @@ public:
     RuleNamespaceName = 131, RuleTemplateName = 132, RuleSimpleTemplateId = 133, 
     RuleOperatorTemplateId = 134, RuleTemplateId = 135, RuleTemplateArgumentList = 136, 
     RuleTemplateArgument = 137, RuleIdExpression = 138, RuleQualifiedId = 139, 
-    RuleUnqualifiedId = 140, RuleTheTypeId = 141, RuleArrayDeclarator = 142, 
-    RulePointerOperator = 143, RulePointerOperatorSeq = 144, RuleTypeSpecifierSeq = 145, 
-    RuleTypeSpecifier = 146, RuleTrailingTypeSpecifier = 147, RuleTypeNameSpecifier = 148, 
-    RuleCvQualifierSeq = 149, RuleCvQualifier = 150, RuleTypename = 151, 
-    RuleClassName = 152, RuleDecltypeSpecifier = 153, RuleEnumName = 154, 
-    RuleAccessSpecifier = 155, RuleProtectedInternal = 156, RuleOperatorFunctionId = 157, 
-    RuleConversionFunctionId = 158, RuleUnaryExpression = 159, RuleNewExpression = 160, 
-    RuleNewInitializer = 161, RulePostfixExpression = 162, RuleTupleExpression = 163, 
-    RulePrimaryExpression = 164, RuleUnaryPrefixOperator = 165, RuleRefCaptureOperator = 166, 
-    RuleUnaryPostfixOperator = 167, RuleOperator = 168, RuleLiteral = 169
+    RuleUnqualifiedId = 140, RuleTheTypeId = 141, RuleTypePostfix = 142, 
+    RuleArrayDeclarator = 143, RulePointerOperator = 144, RulePointerOperatorSeq = 145, 
+    RuleTypeSpecifierSeq = 146, RuleTypeSpecifier = 147, RuleTrailingTypeSpecifier = 148, 
+    RuleTypeNameSpecifier = 149, RuleCvQualifierSeq = 150, RuleCvQualifier = 151, 
+    RuleTypename = 152, RuleClassName = 153, RuleDecltypeSpecifier = 154, 
+    RuleEnumName = 155, RuleAccessSpecifier = 156, RuleProtectedInternal = 157, 
+    RuleOperatorFunctionId = 158, RuleConversionFunctionId = 159, RuleUnaryExpression = 160, 
+    RuleNewExpression = 161, RuleNewInitializer = 162, RulePostfixExpression = 163, 
+    RuleTupleExpression = 164, RulePrimaryExpression = 165, RuleUnaryPrefixOperator = 166, 
+    RuleRefCaptureOperator = 167, RuleUnaryPostfixOperator = 168, RuleNot = 169, 
+    RuleOperator = 170, RuleLiteral = 171
   };
 
   explicit CppAdvanceParser(antlr4::TokenStream *input);
@@ -269,6 +271,7 @@ public:
   class QualifiedIdContext;
   class UnqualifiedIdContext;
   class TheTypeIdContext;
+  class TypePostfixContext;
   class ArrayDeclaratorContext;
   class PointerOperatorContext;
   class PointerOperatorSeqContext;
@@ -295,6 +298,7 @@ public:
   class UnaryPrefixOperatorContext;
   class RefCaptureOperatorContext;
   class UnaryPostfixOperatorContext;
+  class NotContext;
   class OperatorContext;
   class LiteralContext; 
 
@@ -538,7 +542,7 @@ public:
     antlr4::tree::TerminalNode *Debug();
     antlr4::tree::TerminalNode *Else();
     VersionElseDeclarationContext *versionElseDeclaration();
-    antlr4::tree::TerminalNode *Not();
+    NotContext *not_();
     antlr4::tree::TerminalNode *Identifier();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -669,7 +673,7 @@ public:
     antlr4::tree::TerminalNode *Debug();
     antlr4::tree::TerminalNode *Else();
     MemberVersionElseDeclarationContext *memberVersionElseDeclaration();
-    antlr4::tree::TerminalNode *Not();
+    NotContext *not_();
     antlr4::tree::TerminalNode *Identifier();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -1603,7 +1607,7 @@ public:
     ElseBranchContext *elseBranch();
     CompoundStatementContext *compoundStatement();
     antlr4::tree::TerminalNode *Consteval();
-    antlr4::tree::TerminalNode *Not();
+    NotContext *not_();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -1987,7 +1991,7 @@ public:
     antlr4::tree::TerminalNode *Else();
     antlr4::tree::TerminalNode *Debug();
     ScopeSafeCompoundStatementContext *scopeSafeCompoundStatement();
-    antlr4::tree::TerminalNode *Not();
+    NotContext *not_();
     antlr4::tree::TerminalNode *Identifier();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2765,7 +2769,8 @@ public:
     TheTypeIdContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     TypeSpecifierSeqContext *typeSpecifierSeq();
-    ArrayDeclaratorContext *arrayDeclarator();
+    antlr4::tree::TerminalNode *Question();
+    TypePostfixContext *typePostfix();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2774,16 +2779,28 @@ public:
 
   TheTypeIdContext* theTypeId();
 
+  class  TypePostfixContext : public antlr4::ParserRuleContext {
+  public:
+    TypePostfixContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<ArrayDeclaratorContext *> arrayDeclarator();
+    ArrayDeclaratorContext* arrayDeclarator(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  TypePostfixContext* typePostfix();
+
   class  ArrayDeclaratorContext : public antlr4::ParserRuleContext {
   public:
     ArrayDeclaratorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    std::vector<antlr4::tree::TerminalNode *> LeftBracket();
-    antlr4::tree::TerminalNode* LeftBracket(size_t i);
-    std::vector<antlr4::tree::TerminalNode *> RightBracket();
-    antlr4::tree::TerminalNode* RightBracket(size_t i);
-    std::vector<ConstantExpressionContext *> constantExpression();
-    ConstantExpressionContext* constantExpression(size_t i);
+    antlr4::tree::TerminalNode *LeftBracket();
+    antlr4::tree::TerminalNode *RightBracket();
+    ConstantExpressionContext *constantExpression();
+    antlr4::tree::TerminalNode *Question();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -3162,7 +3179,7 @@ public:
     antlr4::tree::TerminalNode *Plus();
     antlr4::tree::TerminalNode *Minus();
     antlr4::tree::TerminalNode *Tilde();
-    antlr4::tree::TerminalNode *Not();
+    NotContext *not_();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -3194,6 +3211,7 @@ public:
     std::vector<antlr4::tree::TerminalNode *> DoubleStar();
     antlr4::tree::TerminalNode* DoubleStar(size_t i);
     antlr4::tree::TerminalNode *Amp();
+    antlr4::tree::TerminalNode *Exclamation();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -3201,6 +3219,20 @@ public:
   };
 
   UnaryPostfixOperatorContext* unaryPostfixOperator();
+
+  class  NotContext : public antlr4::ParserRuleContext {
+  public:
+    NotContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Exclamation();
+    antlr4::tree::TerminalNode *Not();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  NotContext* not_();
 
   class  OperatorContext : public antlr4::ParserRuleContext {
   public:
@@ -3215,6 +3247,7 @@ public:
     antlr4::tree::TerminalNode *Mod();
     antlr4::tree::TerminalNode *Caret();
     antlr4::tree::TerminalNode *Amp();
+    antlr4::tree::TerminalNode *Exclamation();
     antlr4::tree::TerminalNode *VertLine();
     antlr4::tree::TerminalNode *Tilde();
     std::vector<antlr4::tree::TerminalNode *> Greater();

@@ -440,6 +440,9 @@ public:
   virtual void enterTheTypeId(CppAdvanceParser::TheTypeIdContext *ctx) = 0;
   virtual void exitTheTypeId(CppAdvanceParser::TheTypeIdContext *ctx) = 0;
 
+  virtual void enterTypePostfix(CppAdvanceParser::TypePostfixContext *ctx) = 0;
+  virtual void exitTypePostfix(CppAdvanceParser::TypePostfixContext *ctx) = 0;
+
   virtual void enterArrayDeclarator(CppAdvanceParser::ArrayDeclaratorContext *ctx) = 0;
   virtual void exitArrayDeclarator(CppAdvanceParser::ArrayDeclaratorContext *ctx) = 0;
 
@@ -517,6 +520,9 @@ public:
 
   virtual void enterUnaryPostfixOperator(CppAdvanceParser::UnaryPostfixOperatorContext *ctx) = 0;
   virtual void exitUnaryPostfixOperator(CppAdvanceParser::UnaryPostfixOperatorContext *ctx) = 0;
+
+  virtual void enterNot(CppAdvanceParser::NotContext *ctx) = 0;
+  virtual void exitNot(CppAdvanceParser::NotContext *ctx) = 0;
 
   virtual void enterOperator(CppAdvanceParser::OperatorContext *ctx) = 0;
   virtual void exitOperator(CppAdvanceParser::OperatorContext *ctx) = 0;

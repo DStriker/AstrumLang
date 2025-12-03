@@ -196,6 +196,7 @@ public:
 	void printTupleExpression(CppAdvanceParser::TupleExpressionContext* ctx) const;
 	void printTypeSpecifierSeq(CppAdvanceParser::TypeSpecifierSeqContext* ctx) const;
 	void printTypeId(CppAdvanceParser::TheTypeIdContext* ctx) const;
+	void printTypePostfix(CppAdvanceParser::TypePostfixContext* ctx) const;
 	void printArrayDeclarator(CppAdvanceParser::ArrayDeclaratorContext* ctx) const;
 	void printIdExpression(CppAdvanceParser::IdExpressionContext* ctx) const;
 	void printQualifiedId(CppAdvanceParser::QualifiedIdContext* ctx) const;

@@ -255,6 +255,7 @@ class BaseClass : public CppAdvance::ObjectRef {
 	public: using __class = __Class_BaseClass;
 	private: friend class BaseClass__Unowned;
 	friend class BaseClass__Weak;
+	public: using __strong_ref = BaseClass;
 	public: using __unowned_ref = BaseClass__Unowned;
 	public: using __weak_ref = BaseClass__Weak;
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *reinterpret_cast<__class*>(_obj); }
@@ -269,6 +270,8 @@ class BaseClass : public CppAdvance::ObjectRef {
 class BaseClass__Unowned : public CppAdvance::ObjectRef__Unowned {
 	private: using __self = BaseClass;
 	public: using __strong_ref = BaseClass;
+	public: using __unowned_ref = BaseClass__Unowned;
+	public: using __weak_ref = BaseClass__Weak;
 	private: using ___super = CppAdvance::ObjectRef__Unowned;
 	public: using __class = __Class_BaseClass;
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *reinterpret_cast<__class*>(_obj); }
@@ -280,6 +283,8 @@ class BaseClass__Unowned : public CppAdvance::ObjectRef__Unowned {
 class BaseClass__Weak : public CppAdvance::ObjectRef__Weak {
 	private: using __self = BaseClass;
 	public: using __strong_ref = BaseClass;
+	public: using __unowned_ref = BaseClass__Unowned;
+	public: using __weak_ref = BaseClass__Weak;
 	private: using ___super = CppAdvance::ObjectRef__Weak;
 	public: using __class = __Class_BaseClass;
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
@@ -296,6 +301,7 @@ class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
 	public: using __class = __Class_VectorClass;
 	private: friend class VectorClass__Unowned;
 	friend class VectorClass__Weak;
+	public: using __strong_ref = VectorClass;
 	public: using __unowned_ref = VectorClass__Unowned;
 	public: using __weak_ref = VectorClass__Weak;
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *reinterpret_cast<__class*>(_obj); }
@@ -371,6 +377,8 @@ class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
 class VectorClass__Unowned : public CppAdvance::ClassRefParentUnowned<BaseClass> {
 	private: using __self = VectorClass;
 	public: using __strong_ref = VectorClass;
+	public: using __unowned_ref = VectorClass__Unowned;
+	public: using __weak_ref = VectorClass__Weak;
 	private: using ___super = CppAdvance::ClassRefParentUnowned<BaseClass>;
 	public: using __class = __Class_VectorClass;
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *reinterpret_cast<__class*>(_obj); }
@@ -388,6 +396,8 @@ class VectorClass__Unowned : public CppAdvance::ClassRefParentUnowned<BaseClass>
 class VectorClass__Weak : public CppAdvance::ClassRefParentWeak<BaseClass> {
 	private: using __self = VectorClass;
 	public: using __strong_ref = VectorClass;
+	public: using __unowned_ref = VectorClass__Unowned;
+	public: using __weak_ref = VectorClass__Weak;
 	private: using ___super = CppAdvance::ClassRefParentWeak<BaseClass>;
 	public: using __class = __Class_VectorClass;
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
@@ -404,6 +414,7 @@ class ConcreteVectorClass : public CppAdvance::ClassRefParent<VectorClass> {
 	public: using __class = __Class_ConcreteVectorClass;
 	private: friend class ConcreteVectorClass__Unowned;
 	friend class ConcreteVectorClass__Weak;
+	public: using __strong_ref = ConcreteVectorClass;
 	public: using __unowned_ref = ConcreteVectorClass__Unowned;
 	public: using __weak_ref = ConcreteVectorClass__Weak;
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *reinterpret_cast<__class*>(_obj); }
@@ -420,6 +431,8 @@ class ConcreteVectorClass : public CppAdvance::ClassRefParent<VectorClass> {
 class ConcreteVectorClass__Unowned : public CppAdvance::ClassRefParentUnowned<VectorClass> {
 	private: using __self = ConcreteVectorClass;
 	public: using __strong_ref = ConcreteVectorClass;
+	public: using __unowned_ref = ConcreteVectorClass__Unowned;
+	public: using __weak_ref = ConcreteVectorClass__Weak;
 	private: using ___super = CppAdvance::ClassRefParentUnowned<VectorClass>;
 	public: using __class = __Class_ConcreteVectorClass;
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *reinterpret_cast<__class*>(_obj); }
@@ -433,6 +446,8 @@ class ConcreteVectorClass__Unowned : public CppAdvance::ClassRefParentUnowned<Ve
 class ConcreteVectorClass__Weak : public CppAdvance::ClassRefParentWeak<VectorClass> {
 	private: using __self = ConcreteVectorClass;
 	public: using __strong_ref = ConcreteVectorClass;
+	public: using __unowned_ref = ConcreteVectorClass__Unowned;
+	public: using __weak_ref = ConcreteVectorClass__Weak;
 	private: using ___super = CppAdvance::ClassRefParentWeak<VectorClass>;
 	public: using __class = __Class_ConcreteVectorClass;
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
@@ -442,37 +457,47 @@ class ConcreteVectorClass__Weak : public CppAdvance::ClassRefParentWeak<VectorCl
 };
 
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<Next> = false;
-#line 329 "FirstProgram.adv"
+#line 330 "FirstProgram.adv"
 class Next : public CppAdvance::ObjectRef {
 	private: using __self = Next;
 	private: using ___super = CppAdvance::ObjectRef;
 	public: using __class = __Class_Next;
 	private: friend class Next__Unowned;
 	friend class Next__Weak;
+	public: using __strong_ref = Next;
 	public: using __unowned_ref = Next__Unowned;
 	public: using __weak_ref = Next__Weak;
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *reinterpret_cast<__class*>(_obj); }
 	ADV_CLASS_FROM_PTR(Next)
+	public: inline Next();
 	ADV_CLASS_INIT(Next)
 	ADV_CLASS_STRONG_COMMON_CTORS(Next)
 	#define ADV_PROPERTY_SELF __class
+	#line 347 "FirstProgram.adv"
+	public: inline decltype(auto) operator*() const ;
 	#define ADV_PROPERTY_SELF __self
 };
-#line 329 "FirstProgram.adv"
+#line 330 "FirstProgram.adv"
 class Next__Unowned : public CppAdvance::ObjectRef__Unowned {
 	private: using __self = Next;
 	public: using __strong_ref = Next;
+	public: using __unowned_ref = Next__Unowned;
+	public: using __weak_ref = Next__Weak;
 	private: using ___super = CppAdvance::ObjectRef__Unowned;
 	public: using __class = __Class_Next;
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *reinterpret_cast<__class*>(_obj); }
 	ADV_CLASS_FROM_PTR(Next__Unowned)
 	ADV_CLASS_UNOWNED_COMMON_CTORS(Next__Unowned)
+	#line 347 "FirstProgram.adv"
+	public: inline decltype(auto) operator*() const ;
 	
 };
-#line 329 "FirstProgram.adv"
+#line 330 "FirstProgram.adv"
 class Next__Weak : public CppAdvance::ObjectRef__Weak {
 	private: using __self = Next;
 	public: using __strong_ref = Next;
+	public: using __unowned_ref = Next__Unowned;
+	public: using __weak_ref = Next__Weak;
 	private: using ___super = CppAdvance::ObjectRef__Weak;
 	public: using __class = __Class_Next;
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
@@ -722,7 +747,7 @@ class __Class_ConcreteVectorClass : public CppAdvance::ClassParent<VectorClass, 
 #line 303 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(ConcreteVectorClass);
 
-#line 329 "FirstProgram.adv"
+#line 330 "FirstProgram.adv"
 class __Class_Next : public CppAdvance::Object {
 	private: using __self = Next;
 	private: using ___super = CppAdvance::Object;
@@ -731,21 +756,23 @@ class __Class_Next : public CppAdvance::Object {
 	friend class __self::__weak_ref;
 	#define ADV_PROPERTY_SELF __selfClass
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 330 "FirstProgram.adv"
-	public: CppAdvance::i32 i; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
 	#line 331 "FirstProgram.adv"
-	public: Next::__weak_ref v;
-	#line 335 "FirstProgram.adv"
+	public: CppAdvance::i32 i; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
+	#line 334 "FirstProgram.adv"
+	public: inline __Class_Next()  = default;
+	#line 336 "FirstProgram.adv"
 	public: inline ~__Class_Next() ;
-	#line 337 "FirstProgram.adv"
+	#line 338 "FirstProgram.adv"
 	public: inline explicit __Class_Next(CppAdvance::i32 i) ;
-	#line 342 "FirstProgram.adv"
+	#line 343 "FirstProgram.adv"
 	public: inline explicit __Class_Next(CppAdvance::In<__self> other) ;
 	inline __Class_Next(__selfClass& copy) : __Class_Next(__self(copy)) {}
+	#line 347 "FirstProgram.adv"
+	public: inline auto operator*() const  -> CppAdvance::i32;
 	
 #define ADV_PROPERTY_SELF __self
 };
-#line 329 "FirstProgram.adv"
+#line 330 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(Next);
 
 namespace __ntuples {
@@ -1300,27 +1327,29 @@ inline auto __Class_ConcreteVectorClass::operator+(CppAdvance::In<__self> other)
 	#line 326 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::New<__self>((*this).__ref().x + other.__ref().x, (*this).__ref().y + other.__ref().y, (*this).__ref().z + other.__ref().z)); 
 }
-#line 335 "FirstProgram.adv"
+#line 336 "FirstProgram.adv"
 inline __Class_Next::~__Class_Next() 
 {
-	#line 335 "FirstProgram.adv"
+	#line 336 "FirstProgram.adv"
 	print(CppAdvance::Str{u"Next deiniting"}); 
 }
-#line 337 "FirstProgram.adv"
-inline __Class_Next::__Class_Next(CppAdvance::i32 i)  : 
 #line 338 "FirstProgram.adv"
-i{i}, 
+inline __Class_Next::__Class_Next(CppAdvance::i32 i)  : 
 #line 339 "FirstProgram.adv"
-v{CppAdvance::New<Next>((*this))}
+i{i}
 {
 }
-#line 342 "FirstProgram.adv"
-inline __Class_Next::__Class_Next(CppAdvance::In<__self> other)  : 
 #line 343 "FirstProgram.adv"
-i{CppAdvance::i32(0)}, 
+inline __Class_Next::__Class_Next(CppAdvance::In<__self> other)  : 
 #line 344 "FirstProgram.adv"
-v{other}
+i{CppAdvance::i32(0)}
 {
+}
+#line 347 "FirstProgram.adv"
+inline auto __Class_Next::operator*() const  -> CppAdvance::i32
+{
+	#line 347 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(i); 
 }
 #line 9999 "FirstProgram.adv"
 inline BaseClass::ADV_CLASS_DEFAULT_CTOR(BaseClass)
@@ -1364,10 +1393,14 @@ inline decltype(auto) ConcreteVectorClass::operator+(CppAdvance::In<__self> othe
 inline decltype(auto) ConcreteVectorClass__Unowned::operator+(CppAdvance::In<__self> other) const { ADV_EXPRESSION_BODY(__ref().operator+(other)); }
 
 #line 9999 "FirstProgram.adv"
+inline Next::ADV_CLASS_DEFAULT_CTOR(Next)
 inline Next::ADV_CLASS_STRONG_CTOR_REF(Next)
 inline Next& Next::ADV_CLASS_STRONG_ASSIGN_REF(Next)
 inline Next__Unowned::ADV_CLASS_UNOWNED_CTOR_REF(Next__Unowned)
 inline Next__Unowned& Next__Unowned::ADV_CLASS_UNOWNED_ASSIGN_REF(Next__Unowned)
 inline Next__Weak::ADV_CLASS_WEAK_CTOR_REF(Next__Weak)
 inline Next__Weak& Next__Weak::ADV_CLASS_WEAK_ASSIGN_REF(Next__Weak)
+#line 347 "FirstProgram.adv"
+inline decltype(auto) Next::operator*() const { ADV_EXPRESSION_BODY(__ref().operator*()); }
+inline decltype(auto) Next__Unowned::operator*() const { ADV_EXPRESSION_BODY(__ref().operator*()); }
 

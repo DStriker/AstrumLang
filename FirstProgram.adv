@@ -324,25 +324,27 @@ public class ConcreteVectorClass : VectorClass {
 	public final getX: () -> f32 => x;
 
 	public operator+: (in other: self) -> self => new self(this.x + other.x, this.y + other.y, this.z + other.z);
+	
 }
 
 public class Next {
 	public i: i32;
-	public weak v: Next;
+	//public weak v: Next;
 
-	//this() = default;
+	this() = default;
 
 	~this => print("Next deiniting");
 
 	public this(i: i32) = {
 		this.i = i;
-		this.v = new Next(this);
+		//this.v = new Next(this);
 	}
 
 	public this(in other: self) = {
 		this.i = 0;
-		this.v = other;
+		//this.v = other;
 	}
+	public operator!: () -> i32 => i;
 }
 
 private main: (iparam: i32, in jparam: f64 = 3.5) -> int
@@ -393,16 +395,26 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 	print(vc.getX());
 	//vc = Vector3(2,3,4);
 	print(VectorClass.BYTES);
-	weak nxtw: Next;
+	weak nxtw: Next?;
 	{
-	nxt:= new Next(10);
-	unowned nxtu := nxt;
-	nxtw = nxt;
-	print(nxt.i);
-	print(nxt.GetStrongReferenceCount());
-	print(nxt.GetUnownedReferenceCount());
-	print(nxt.GetWeakReferenceCount());
+		nxt:Next? = new Next(10);
+		nxtunwrapped := nxt!;
+		unowned nxtu: Next? = nxt;
+		nxtw = nxt;
+		print(nxt!.i);
+		print(nxt!.GetStrongReferenceCount());
+		print(nxt!.GetUnownedReferenceCount());
+		print(nxt!.GetWeakReferenceCount());
+		print(nxtu!.i);
+		print(nxtu!.GetStrongReferenceCount());
+		print(nxtu!.GetUnownedReferenceCount());
+		print(nxtu!.GetWeakReferenceCount());
+		print(nxtw!.i);
+		print(nxtw!.GetStrongReferenceCount());
+		print(nxtw!.GetUnownedReferenceCount());
+		print(nxtw ? nxtw!.GetWeakReferenceCount() : 10000u);
 	}
+		print(nxtw ? nxtw!.GetWeakReferenceCount() : 10000u);
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);
 }
 
@@ -410,6 +422,6 @@ private {
 	PRIVATE_CONSTANT : usize == 34;
 	globalVar2 :i32 = 8;
 	let globalVar3 :i32 = 456;
-	xyz :IntArray = {{{1,2,3},{4,5,6},{7,8,9}},{{11,12,13},{14,15,16},{17,18,19}},{{21,22,23},{24,25,26},{27,28,29}}};
-	type IntArray = i64[3][3][3];
+	//xyz :IntArray = {{{1,2,3},{4,5,6},{7,8,9}},{{11,12,13},{14,15,16},{17,18,19}},{{21,22,23},{24,25,26},{27,28,29}}};
+	//type IntArray = i64[3][3][3];
 }

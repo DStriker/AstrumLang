@@ -43,11 +43,12 @@ public:
     OrAssign = 155, LeftShiftAssign = 156, RightShiftAssign = 157, SignedLeftShiftAssign = 158, 
     SignedRightShiftAssign = 159, Equal = 160, NotEqual = 161, Spaceship = 162, 
     LessEqual = 163, GreaterEqual = 164, PlusPlus = 165, MinusMinus = 166, 
-    Comma = 167, Arrow = 168, Question = 169, DoubleQuestion = 170, DoubleQuestionEqual = 171, 
-    Doublecolon = 172, Semi = 173, Dot = 174, DoubleDot = 175, DoubleDotLess = 176, 
-    Dollar = 177, Ellipsis = 178, Apostroph = 179, AtSign = 180, DOUBLE_CURLY_INSIDE = 181, 
-    FORMAT_STRING = 182, DecimalLiteral = 183, OctalLiteral = 184, HexadecimalLiteral = 185, 
-    BinaryLiteral = 186, Integersuffix = 187, DOUBLE_CURLY_CLOSE_INSIDE = 188
+    Comma = 167, Arrow = 168, Exclamation = 169, Question = 170, DoubleQuestion = 171, 
+    DoubleQuestionEqual = 172, Doublecolon = 173, Semi = 174, Dot = 175, 
+    DoubleDot = 176, DoubleDotLess = 177, Dollar = 178, Ellipsis = 179, 
+    Apostroph = 180, AtSign = 181, DOUBLE_CURLY_INSIDE = 182, FORMAT_STRING = 183, 
+    DecimalLiteral = 184, OctalLiteral = 185, HexadecimalLiteral = 186, 
+    BinaryLiteral = 187, Integersuffix = 188, DOUBLE_CURLY_CLOSE_INSIDE = 189
   };
 
   enum {

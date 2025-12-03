@@ -266,7 +266,7 @@ While: 'while';
 
 Yield: 'yield';
 
-Not: '!' | 'not';
+Not: 'not';
 
 And: '&&' | 'and';
 
@@ -359,6 +359,8 @@ MinusMinus: '--';
 Comma: ',';
 
 Arrow: '->';
+
+Exclamation: '!';
 
 Question: '?';
 

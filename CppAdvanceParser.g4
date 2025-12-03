@@ -65,7 +65,7 @@ expressionStatement: expr? Semi;
 
 declarationCompoundStatement: LeftBrace declaration+ RightBrace;
 
-versionConditionalDeclaration: If (Version LeftParen condition RightParen | Not? Debug (LeftParen Identifier RightParen)?) versionIfDeclaration (Else versionElseDeclaration)?;
+versionConditionalDeclaration: If (Version LeftParen condition RightParen | not? Debug (LeftParen Identifier RightParen)?) versionIfDeclaration (Else versionElseDeclaration)?;
 
 versionIfDeclaration: declaration | declarationCompoundStatement;
 
@@ -81,7 +81,7 @@ structMemberSpecification: structMemberDeclaration+;
 
 memberDeclarationCompoundStatement: LeftBrace structMemberDeclaration+ RightBrace;
 
-memberVersionConditionalDeclaration: If (Version LeftParen condition RightParen | Not? Debug (LeftParen Identifier RightParen)?) memberVersionIfDeclaration (Else memberVersionElseDeclaration)?;
+memberVersionConditionalDeclaration: If (Version LeftParen condition RightParen | not? Debug (LeftParen Identifier RightParen)?) memberVersionIfDeclaration (Else memberVersionElseDeclaration)?;
 
 memberVersionIfDeclaration: structMemberDeclaration | memberDeclarationCompoundStatement;
 
@@ -205,7 +205,7 @@ friendDeclaration:
 
 selectionStatement: 
 	  Static? If LeftParen condition RightParen stat (Else elseBranch)?
-	| Static? If (Not? Consteval | condition) compoundStatement (Else elseBranch)?;
+	| Static? If (not? Consteval | condition) compoundStatement (Else elseBranch)?;
 
 condition: simpleDeclaration? logicalOrExpression | declarator ;
 
@@ -261,7 +261,7 @@ forwardVarDeclaration: Forward Identifier Colon Assign initializerClause Semi;
 aliasDeclaration: Type Identifier templateParams? Assign theTypeId Semi;
 
 versionSelectionStatement: If Version LeftParen condition RightParen versionSelectionStatementBlock (Else versionSelectionStatementBlock)?
-	| If Not? Debug (LeftParen Identifier RightParen)? scopeSafeCompoundStatement (Else versionSelectionStatementBlock)?;
+	| If not? Debug (LeftParen Identifier RightParen)? scopeSafeCompoundStatement (Else versionSelectionStatementBlock)?;
 
 versionSelectionStatementBlock: scopeSafeCompoundStatement | stat;
 
@@ -403,9 +403,11 @@ unqualifiedId:
 	| Tilde (className | decltypeSpecifier)
 	| templateId;
 
-theTypeId: typeSpecifierSeq arrayDeclarator?;
+theTypeId: typeSpecifierSeq Question? typePostfix?;
 
-arrayDeclarator: (LeftBracket constantExpression? RightBracket)+;
+typePostfix: arrayDeclarator+;
+
+arrayDeclarator: LeftBracket constantExpression? RightBracket Question?;
 
 pointerOperator
     : Star | DoubleStar
@@ -488,7 +490,7 @@ unaryPrefixOperator:
 	  Plus
 	| Minus
 	| Tilde
-	| Not
+	| not
 	;
 
 refCaptureOperator: Amp | Ref;
@@ -496,7 +498,10 @@ refCaptureOperator: Amp | Ref;
 unaryPostfixOperator:
 	  (Star | DoubleStar)+
 	| Amp
+	| Exclamation
 	;
+
+not: Exclamation | Not;
 
 operator:
 	  New
@@ -508,6 +513,7 @@ operator:
 	| Mod
 	| Caret
 	| Amp
+	| Exclamation
 	| VertLine
 	| Tilde
 	| Greater

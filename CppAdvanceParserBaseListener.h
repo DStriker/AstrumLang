@@ -442,6 +442,9 @@ public:
   virtual void enterTheTypeId(CppAdvanceParser::TheTypeIdContext * /*ctx*/) override { }
   virtual void exitTheTypeId(CppAdvanceParser::TheTypeIdContext * /*ctx*/) override { }
 
+  virtual void enterTypePostfix(CppAdvanceParser::TypePostfixContext * /*ctx*/) override { }
+  virtual void exitTypePostfix(CppAdvanceParser::TypePostfixContext * /*ctx*/) override { }
+
   virtual void enterArrayDeclarator(CppAdvanceParser::ArrayDeclaratorContext * /*ctx*/) override { }
   virtual void exitArrayDeclarator(CppAdvanceParser::ArrayDeclaratorContext * /*ctx*/) override { }
 
@@ -519,6 +522,9 @@ public:
 
   virtual void enterUnaryPostfixOperator(CppAdvanceParser::UnaryPostfixOperatorContext * /*ctx*/) override { }
   virtual void exitUnaryPostfixOperator(CppAdvanceParser::UnaryPostfixOperatorContext * /*ctx*/) override { }
+
+  virtual void enterNot(CppAdvanceParser::NotContext * /*ctx*/) override { }
+  virtual void exitNot(CppAdvanceParser::NotContext * /*ctx*/) override { }
 
   virtual void enterOperator(CppAdvanceParser::OperatorContext * /*ctx*/) override { }
   virtual void exitOperator(CppAdvanceParser::OperatorContext * /*ctx*/) override { }
