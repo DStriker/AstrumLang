@@ -3775,6 +3775,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 		out << ">";
 	}
 	out << ";\n" << std::string(depth, '\t');
+	out << "static constexpr bool __IS_ADV_NULLABLE = true;\n" << std::string(depth, '\t');
 	out << "public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }\n" << std::string(depth, '\t');
 	out << "ADV_CLASS_WEAK_FROM_PTR(" << type->id << "__Weak)\n" << std::string(depth, '\t');
 	out << "ADV_CLASS_WEAK_COMMON_CTORS(" << type->id << "__Weak)\n" << std::string(depth, '\t');
@@ -5041,6 +5042,20 @@ void CppAdvanceCodegen::printStatement(CppAdvanceParser::StatContext* ctx) const
 			out << "> " << id << "; ";
 		}
 		out << "\n" << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+	}
+	if (sema.conditionalPrerequisites.contains(ctx))
+	{
+		const auto& prerequisites = sema.conditionalPrerequisites[ctx];
+		lvalue = true;
+		auto last = prerequisites.size() - 1;
+		out << "if (";
+		for (int i = last; i >= 0; --i)
+		{
+			if (i < last) out << " && ";
+			printPostfixExpression(prerequisites[i]);
+		}
+		out << ") ";
+		lvalue = false;
 	}
 	if (auto decl = ctx->declarationStatement())
 	{
@@ -9948,6 +9963,7 @@ void CppAdvanceCodegen::printMultiplicativeExpression(CppAdvanceParser::Multipli
 
 void CppAdvanceCodegen::printUnaryExpression(CppAdvanceParser::UnaryExpressionContext* ctx) const
 {
+	unaryExpressions.push(ctx);
 	if (auto expr = ctx->unaryExpression())
 	{
 		if (auto upo = ctx->unaryPrefixOperator())
@@ -10013,6 +10029,14 @@ void CppAdvanceCodegen::printUnaryExpression(CppAdvanceParser::UnaryExpressionCo
 		printNewExpression(ctx->newExpression());
 	}*/
 	
+	if (!lvalue && sema.optionalChains.contains(ctx))
+	{
+		for (int i = 0; i < sema.optionalChains[ctx]; ++i)
+		{
+			out << "); })";
+		}
+	}
+	unaryExpressions.pop();
 	literalMinus = false;
 }
 
@@ -10038,6 +10062,7 @@ void CppAdvanceCodegen::printNewExpression(CppAdvanceParser::NewExpressionContex
 
 void CppAdvanceCodegen::printPostfixExpression(CppAdvanceParser::PostfixExpressionContext* ctx) const
 {
+	if (ignoredExpressions.contains(ctx)) return;
 	if (ctx->LeftParen())
 	{
 		if (auto expr = ctx->postfixExpression())
@@ -10100,12 +10125,50 @@ void CppAdvanceCodegen::printPostfixExpression(CppAdvanceParser::PostfixExpressi
 						std::string ufcs = "ADV_UFCS";
 						if (tpl) ufcs += "_TEMPLATE";
 						if (!functionBody) ufcs += "_NONLOCAL";
-						out << ufcs << "(";
-						printIdExpression(expr->idExpression());
-						out << ")(";
-                        printPostfixExpression(expr->postfixExpression());
-						out << ".__ref()";
-						if(ctx->expressionList()) out << ", ";;
+						if (sema.optionalChains.contains(expr->postfixExpression()))
+						{
+							if (expr->Question())
+							{
+								if (!ignoredExpressions.contains(expr->postfixExpression())) {
+									printPostfixExpression(expr->postfixExpression());
+									out << ".andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
+								}
+								out << ufcs << "(";
+								printIdExpression(expr->idExpression());
+								out << ")(value.__ref()";
+							}
+							else
+							{
+								auto innerExpr = expr;
+								while (innerExpr && !innerExpr->Question())
+								{
+									innerExpr = innerExpr->postfixExpression();
+								}
+								innerExpr = innerExpr->postfixExpression();
+								if (!ignoredExpressions.contains(innerExpr))
+								{
+									printPostfixExpression(innerExpr);
+									ignoredExpressions.insert(innerExpr);
+									out << ".andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
+								}
+								
+								out << ufcs << "(";
+								printIdExpression(expr->idExpression());
+								out << ")(";
+								printPostfixExpression(expr->postfixExpression());
+								out << ".__ref()";
+							}
+						}
+						else
+						{
+							out << ufcs << "(";
+							printIdExpression(expr->idExpression());
+							out << ")(";
+							printPostfixExpression(expr->postfixExpression());
+							out << ".__ref()";
+						}
+						
+						if(ctx->expressionList()) out << ", ";
 						varargDepth = prev;
 						startDone = true;
 						if (extension) ++currentArg;
@@ -10286,7 +10349,27 @@ void CppAdvanceCodegen::printPostfixExpression(CppAdvanceParser::PostfixExpressi
 				StringReplace(txt, ".", "::");
 				if (sema.protectedSymbols.contains(txt)) txt = "__" + filename + "_Protected::" + txt;
 				out << txt;
-				//printIdExpression(ctx->idExpression());
+			}
+			else if (ctx->Question())
+			{
+				if (lvalue)
+				{
+					printPostfixExpression(ctx->postfixExpression());
+					out << ".operator*().__ref().";
+				}
+				else {
+					if (!ignoredExpressions.contains(ctx->postfixExpression()))
+					{
+						printPostfixExpression(ctx->postfixExpression());
+						out << ".andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(value.__ref().";
+					}
+					else
+					{
+						out << "value.__ref().";
+					}
+				}
+				
+				printIdExpression(ctx->idExpression());
 			}
 			else {
 				txt = txt.substr(0, dotpos);
@@ -10299,8 +10382,6 @@ void CppAdvanceCodegen::printPostfixExpression(CppAdvanceParser::PostfixExpressi
 				if (sema.typeset.contains(txtName) || sema.cppParser.namespaces.contains(txtName))
 				{
 					StringReplace(txt, ".", "::");
-					//if (sema.protectedSymbols.contains(txt)) out << "__" + filename + "_Protected::";
-					//out << txt;
 					printPostfixExpression(ctx->postfixExpression());
 					out << "::";
 					printIdExpression(ctx->idExpression());

@@ -329,7 +329,7 @@ public class ConcreteVectorClass : VectorClass {
 
 public class Next {
 	public i: i32;
-	//public weak v: Next;
+	public weak v: Next?;
 
 	this() = default;
 
@@ -337,14 +337,18 @@ public class Next {
 
 	public this(i: i32) = {
 		this.i = i;
-		//this.v = new Next(this);
+		this.v = new Next(this);
 	}
 
 	public this(in other: self) = {
 		this.i = 0;
-		//this.v = other;
+		this.v = other;
 	}
 	public operator!: () -> i32 => i;
+
+	public printNext: () = {
+		print("This is printNext function in optional chaining call");
+	}
 }
 
 private main: (iparam: i32, in jparam: f64 = 3.5) -> int
@@ -401,7 +405,6 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		nxtunwrapped := nxt!;
 		unowned nxtu: Next? = nxt;
 		nxtw = nxt;
-		print(nxt!.i);
 		print(nxt!.GetStrongReferenceCount());
 		print(nxt!.GetUnownedReferenceCount());
 		print(nxt!.GetWeakReferenceCount());
@@ -409,12 +412,20 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		print(nxtu!.GetStrongReferenceCount());
 		print(nxtu!.GetUnownedReferenceCount());
 		print(nxtu!.GetWeakReferenceCount());
-		print(nxtw!.i);
+		nxt2 := new Next(29);
+		
+		nxtw?.printNext();
+		nxt?.v = nxt2;
+		nxtw = nxt?.v;
+		//print(ii!.i);
 		print(nxtw!.GetStrongReferenceCount());
 		print(nxtw!.GetUnownedReferenceCount());
-		print(nxtw ? nxtw!.GetWeakReferenceCount() : 10000u);
+		print(nxtw!.GetWeakReferenceCount());
+		print(nxtw ? nxtw!.i : 10000);
 	}
+		nxtw?.printNext();
 		print(nxtw ? nxtw!.GetWeakReferenceCount() : 10000u);
+		nxtw?.printNext();
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);
 }
 

@@ -3118,6 +3118,7 @@ public:
     antlr4::tree::TerminalNode *Dot();
     antlr4::tree::TerminalNode *IntegerLiteral();
     IdExpressionContext *idExpression();
+    antlr4::tree::TerminalNode *Question();
     antlr4::tree::TerminalNode *Greater();
     antlr4::tree::TerminalNode *PlusPlus();
     antlr4::tree::TerminalNode *MinusMinus();

@@ -375,6 +375,7 @@ void CppAdvanceSema::checkAsciiLiteral(TerminalNode* literal)
 
 void CppAdvanceSema::enterUnaryExpression(CppAdvanceParser::UnaryExpressionContext* ctx)
 {
+	if (firstPass) unaryExpressions.push(ctx);
 	if (firstPass == functionBody) return;
 	if (auto upo = ctx->unaryPrefixOperator())
 	{
@@ -390,6 +391,7 @@ void CppAdvanceSema::enterUnaryExpression(CppAdvanceParser::UnaryExpressionConte
 
 void CppAdvanceSema::exitUnaryExpression(CppAdvanceParser::UnaryExpressionContext* ctx)
 {
+	if (firstPass) unaryExpressions.pop();
 	literalMinus = false;
 	isOutExpression = false;
 	if (ctx->Sizeof() || ctx->Alignof())
@@ -500,6 +502,10 @@ void CppAdvanceSema::exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationCo
 	{
 		CppAdvanceCompilerError("The volatile variable must have an explicit type", ctx->Assign()->getSymbol());
 	}
+	if (isUnowned && isWeak)
+	{
+		CppAdvanceCompilerError("The reference cannot be unowned and weak at the same time", ctx->declSpecifierSeq()->getStart());
+	}
 
 	if (ctx->Void())
 	{
@@ -531,6 +537,18 @@ void CppAdvanceSema::exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationCo
 		if (isTypeDefinitionBody() && !functionBody)
 		{
 			symbolTable.globalSymbolTable[currentType+"."+ ctx->Identifier()->getText()] = contextTypes[t];
+		}
+		if (isWeak)
+		{
+			if (auto post = t->typePostfix())
+			{
+				if (!post->arrayDeclarator().back()->Question())
+					CppAdvanceCompilerError("Weak reference must be optional", ctx->declSpecifierSeq()->getStart());
+			}
+			else if (!t->Question())
+			{
+				CppAdvanceCompilerError("Weak reference must be optional", ctx->declSpecifierSeq()->getStart());
+			}
 		}
 	}
 	else
@@ -651,7 +669,7 @@ void CppAdvanceSema::exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationCo
 
 void CppAdvanceSema::enterAssignmentExpression(CppAdvanceParser::AssignmentExpressionContext* ctx)
 {
-	if (firstPass && functionBody) return;
+	//if (firstPass && functionBody) return;
 	if (ctx->initializerClause())
 	{
 		if (isCondition)
@@ -666,7 +684,7 @@ void CppAdvanceSema::enterAssignmentExpression(CppAdvanceParser::AssignmentExpre
 
 void CppAdvanceSema::exitAssignmentExpression(CppAdvanceParser::AssignmentExpressionContext* ctx)
 {
-	if (firstPass && functionBody) return;
+	//if (firstPass && functionBody) return;
 	if (ctx->initializerClause())
 	{
 		isAssignment = false;
@@ -740,6 +758,30 @@ void CppAdvanceSema::enterInitializerClause(CppAdvanceParser::InitializerClauseC
 
 void CppAdvanceSema::enterPostfixExpression(CppAdvanceParser::PostfixExpressionContext* ctx)
 {
+	if (firstPass && ctx->Question()) {
+		if (lvalue)
+		{
+			conditionalPrerequisites[currentStatement].push_back(ctx->postfixExpression());
+		}
+		else {
+			if (!optionalChains.contains(unaryExpressions.top()))
+			{
+				optionalChains.insert_or_assign(unaryExpressions.top(), 1);
+			}
+			else
+			{
+				optionalChains[unaryExpressions.top()]++;
+			}
+			if (!optionalChains.contains(ctx->postfixExpression()))
+			{
+				optionalChains.insert_or_assign(ctx->postfixExpression(), 1);
+			}
+			else
+			{
+				optionalChains[ctx->postfixExpression()]++;
+			}
+		}
+	}
 	if (firstPass && functionBody) return;
 
 	if (auto upo = ctx->unaryPostfixOperator())
@@ -1824,7 +1866,24 @@ void CppAdvanceSema::exitIdExpression(CppAdvanceParser::IdExpressionContext* ctx
 
 void CppAdvanceSema::exitPostfixExpression(CppAdvanceParser::PostfixExpressionContext* ctx)
 {
-	if (firstPass && functionBody) return;
+	if (firstPass) {
+		if (auto expr = ctx->postfixExpression())
+		{
+			if (optionalChains.contains(expr))
+			{
+				if (!optionalChains.contains(ctx))
+				{
+					optionalChains.insert_or_assign(ctx, 1);
+				}
+				else
+				{
+					optionalChains[ctx]++;
+				}
+			}
+		}
+		if (functionBody) return;
+	}
+	
 	if (auto upo = ctx->unaryPostfixOperator())
 	{
 		if (!upo->Star().empty() || !upo->DoubleStar().empty())
@@ -3977,6 +4036,22 @@ void CppAdvanceSema::exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDec
 		if (isTypeDefinitionBody() && !functionBody)
 		{
 			symbolTable.globalSymbolTable[currentType + "." + txt] = contextTypes[ctx->theTypeId()];
+		}
+	}
+
+	if (isWeak)
+	{
+		if (auto type = ctx->theTypeId())
+		{
+			if (auto post = type->typePostfix())
+			{
+				if (!post->arrayDeclarator().back()->Question())
+					CppAdvanceCompilerError("Weak reference must be optional", ctx->declSpecifierSeq()->getStart());
+			}
+			else if (!type->Question())
+			{
+				CppAdvanceCompilerError("Weak reference must be optional", ctx->declSpecifierSeq()->getStart());
+			}
 		}
 	}
 

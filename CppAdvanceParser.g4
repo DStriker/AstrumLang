@@ -467,7 +467,7 @@ postfixExpression:
 	| Move postfixExpression
 	| Forward postfixExpression
 	| postfixExpression Dot IntegerLiteral
-	| postfixExpression Dot Greater? idExpression
+	| postfixExpression Question? Dot Greater? idExpression
 	| postfixExpression (PlusPlus | MinusMinus | unaryPostfixOperator)
 	;
 

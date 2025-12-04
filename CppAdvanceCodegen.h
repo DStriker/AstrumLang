@@ -31,8 +31,10 @@ class CppAdvanceCodegen
 	mutable int varargDepth = -1;
 	mutable std::unordered_map<std::string,std::string> symbolTable;
 	mutable std::unordered_map<std::string, CppAdvanceParser::TheTypeIdContext*> refParameters;
+	mutable std::unordered_set<CppAdvanceParser::PostfixExpressionContext*> ignoredExpressions;
 	mutable std::vector<std::pair<std::string, CppAdvanceParser::TheTypeIdContext*>> namedReturns;
 	mutable std::vector<ConstantDefinition> selfConstants;
+	mutable std::stack<CppAdvanceParser::UnaryExpressionContext*> unaryExpressions;
 	mutable std::string currentType;
 	mutable std::string currentLabel;
 	mutable std::string currentDeclarationName;

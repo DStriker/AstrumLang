@@ -468,9 +468,11 @@ public:
 	std::unordered_set<std::string> outParams;
 	std::unordered_set<CppAdvanceParser::AssignmentExpressionContext*> uninitConstructs;
 	std::unordered_map<CppAdvanceParser::StatContext*, std::vector<std::pair<std::string, CppAdvanceParser::TheTypeIdContext*>>> prerequisites;
+	std::unordered_map<CppAdvanceParser::StatContext*, std::vector<CppAdvanceParser::PostfixExpressionContext*>> conditionalPrerequisites;
 	std::unordered_map<std::string,NamedTuple> namedTuples;
 	std::unordered_map<CppAdvanceParser::ConstructorBodyContext*, std::unordered_set<std::string>> currentFields;
 	std::unordered_set<CppAdvanceParser::PropertySetterContext*> propertiesNeedField;
+	std::unordered_map<antlr4::tree::ParseTree*, int> optionalChains;
 	std::map<SourcePosition, MethodDefinition> methods;
 	std::map<SourcePosition, PropertyDefinition> properties;
 	std::stack<std::string> typeStack;
@@ -478,6 +480,7 @@ public:
 	std::stack<std::optional<AccessSpecifier>> currentAccessSpecifier;
 	std::stack<TypeKind> currentTypeKind;
 	std::stack<int> constructorCounts;
+	std::stack<CppAdvanceParser::UnaryExpressionContext*> unaryExpressions;
 	CppAdvanceParser::AssignmentExpressionContext* currentAssignment{};
 	CppAdvanceParser::StatContext* currentStatement{};
 	bool firstPass = true;

@@ -287,6 +287,7 @@ class BaseClass__Weak : public CppAdvance::ObjectRef__Weak {
 	public: using __weak_ref = BaseClass__Weak;
 	private: using ___super = CppAdvance::ObjectRef__Weak;
 	public: using __class = __Class_BaseClass;
+	static constexpr bool __IS_ADV_NULLABLE = true;
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 	ADV_CLASS_WEAK_FROM_PTR(BaseClass__Weak)
 	ADV_CLASS_WEAK_COMMON_CTORS(BaseClass__Weak)
@@ -400,6 +401,7 @@ class VectorClass__Weak : public CppAdvance::ClassRefParentWeak<BaseClass> {
 	public: using __weak_ref = VectorClass__Weak;
 	private: using ___super = CppAdvance::ClassRefParentWeak<BaseClass>;
 	public: using __class = __Class_VectorClass;
+	static constexpr bool __IS_ADV_NULLABLE = true;
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 	ADV_CLASS_WEAK_FROM_PTR(VectorClass__Weak)
 	ADV_CLASS_WEAK_COMMON_CTORS(VectorClass__Weak)
@@ -450,6 +452,7 @@ class ConcreteVectorClass__Weak : public CppAdvance::ClassRefParentWeak<VectorCl
 	public: using __weak_ref = ConcreteVectorClass__Weak;
 	private: using ___super = CppAdvance::ClassRefParentWeak<VectorClass>;
 	public: using __class = __Class_ConcreteVectorClass;
+	static constexpr bool __IS_ADV_NULLABLE = true;
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 	ADV_CLASS_WEAK_FROM_PTR(ConcreteVectorClass__Weak)
 	ADV_CLASS_WEAK_COMMON_CTORS(ConcreteVectorClass__Weak)
@@ -500,6 +503,7 @@ class Next__Weak : public CppAdvance::ObjectRef__Weak {
 	public: using __weak_ref = Next__Weak;
 	private: using ___super = CppAdvance::ObjectRef__Weak;
 	public: using __class = __Class_Next;
+	static constexpr bool __IS_ADV_NULLABLE = true;
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 	ADV_CLASS_WEAK_FROM_PTR(Next__Weak)
 	ADV_CLASS_WEAK_COMMON_CTORS(Next__Weak)
@@ -758,6 +762,8 @@ class __Class_Next : public CppAdvance::Object {
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 	#line 331 "FirstProgram.adv"
 	public: CppAdvance::i32 i; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
+	#line 332 "FirstProgram.adv"
+	public: CppAdvance::Nullable<Next>::__weak_ref v;
 	#line 334 "FirstProgram.adv"
 	public: inline __Class_Next()  = default;
 	#line 336 "FirstProgram.adv"
@@ -769,6 +775,8 @@ class __Class_Next : public CppAdvance::Object {
 	inline __Class_Next(__selfClass& copy) : __Class_Next(__self(copy)) {}
 	#line 347 "FirstProgram.adv"
 	public: inline auto operator*() const  -> CppAdvance::i32;
+	#line 349 "FirstProgram.adv"
+	public: inline auto printNext() const  -> void;
 	
 #define ADV_PROPERTY_SELF __self
 };
@@ -1336,13 +1344,17 @@ inline __Class_Next::~__Class_Next()
 #line 338 "FirstProgram.adv"
 inline __Class_Next::__Class_Next(CppAdvance::i32 i)  : 
 #line 339 "FirstProgram.adv"
-i{i}
+i{i}, 
+#line 340 "FirstProgram.adv"
+v{CppAdvance::New<Next>((*this))}
 {
 }
 #line 343 "FirstProgram.adv"
 inline __Class_Next::__Class_Next(CppAdvance::In<__self> other)  : 
 #line 344 "FirstProgram.adv"
-i{CppAdvance::i32(0)}
+i{CppAdvance::i32(0)}, 
+#line 345 "FirstProgram.adv"
+v{other}
 {
 }
 #line 347 "FirstProgram.adv"
@@ -1350,6 +1362,12 @@ inline auto __Class_Next::operator*() const  -> CppAdvance::i32
 {
 	#line 347 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(i); 
+}
+#line 349 "FirstProgram.adv"
+inline auto __Class_Next::printNext() const  -> void
+{
+	#line 350 "FirstProgram.adv"
+	print(CppAdvance::Str{u"This is printNext function in optional chaining call"});
 }
 #line 9999 "FirstProgram.adv"
 inline BaseClass::ADV_CLASS_DEFAULT_CTOR(BaseClass)
