@@ -2,15 +2,15 @@
 
 #line 354 "FirstProgram.adv"
 auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam = CppAdvance::f64(3.5))  -> int;
-#line 440 "FirstProgram.adv"
+#line 441 "FirstProgram.adv"
 inline constexpr CppAdvance::usize PRIVATE_CONSTANT = CppAdvance::usize(34U);
 #line 2 "FirstProgram.adv"
 volatile CppAdvance::Unsafe::__VolatileRawPtr<const CppAdvance::char16> globalVar{};
 #line 3 "FirstProgram.adv"
 extern const CppAdvance::Unsafe::__RawPtr<CppAdvance::i32> globalVar1 = nullptr;
-#line 441 "FirstProgram.adv"
-static CppAdvance::i32 globalVar2 = CppAdvance::i32(8);
 #line 442 "FirstProgram.adv"
+static CppAdvance::i32 globalVar2 = CppAdvance::i32(8);
+#line 443 "FirstProgram.adv"
 static const CppAdvance::i32 globalVar3 = CppAdvance::i32(456);
 #line 90 "FirstProgram.adv"
 thread_local CppAdvance::i32 Vector3::Count2 = CppAdvance::i32(123);
@@ -193,7 +193,9 @@ auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam)  -> in
 		#line 414 "FirstProgram.adv"
 		print(ADV_UFCS(GetWeakReferenceCount)((*(nxtu)).__ref()));
 		#line 415 "FirstProgram.adv"
-		CppAdvance::Nullable<Next> nxt2 = CppAdvance::New<Next>(CppAdvance::i32(29)); 
+		CppAdvance::Nullable<Next> nxt2 = CppAdvance::New<Next>(CppAdvance::i32(0)); 
+		#line 417 "FirstProgram.adv"
+		nxt = nullptr;
 		#line 418 "FirstProgram.adv"
 		nxtw.andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(ADV_UFCS(printNext)(value.__ref())); });
 		#line 419 "FirstProgram.adv"
@@ -202,30 +204,28 @@ auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam)  -> in
 		if (nxt) nxt.operator*().__ref().v.assignIfNull([&](){ return nxt2; });
 		#line 422 "FirstProgram.adv"
 		vv = nxt.andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(value.__ref().v); });
-		#line 423 "FirstProgram.adv"
-		print((*(vv)).__ref().i);
 		#line 424 "FirstProgram.adv"
 		auto nxt3 = CppAdvance::New<Next>(CppAdvance::i32(18)); 
-		#line 425 "FirstProgram.adv"
-		nxtw = nxt.valueOr([&](){ return nxt2.valueOr([&](){ return (*(nxt3)); }); });
-		#line 427 "FirstProgram.adv"
-		print(ADV_UFCS(GetStrongReferenceCount)((*(nxtw)).__ref()));
+		#line 426 "FirstProgram.adv"
+		nxtw = nxt.valueOr([&](){ return nxt2.valueOr([&](){ CppAdvance::Throw(CppAdvance::IntegerOverflowException{}); return *(nxt); }); });
 		#line 428 "FirstProgram.adv"
-		print(ADV_UFCS(GetUnownedReferenceCount)((*(nxtw)).__ref()));
+		print(ADV_UFCS(GetStrongReferenceCount)((*(nxtw)).__ref()));
 		#line 429 "FirstProgram.adv"
-		print(ADV_UFCS(GetWeakReferenceCount)((*(nxtw)).__ref()));
+		print(ADV_UFCS(GetUnownedReferenceCount)((*(nxtw)).__ref()));
 		#line 430 "FirstProgram.adv"
-		print(nxtw ? (*(nxtw)).__ref().i : CppAdvance::i32(10000));
+		print(ADV_UFCS(GetWeakReferenceCount)((*(nxtw)).__ref()));
+		#line 431 "FirstProgram.adv"
+		print(CppAdvance::ElvisOperator((*(nxtw)).__ref().i, [&](){ return CppAdvance::i32(333); }));
 	}
-	#line 432 "FirstProgram.adv"
-	if (nxtw) nxtw.operator*().__ref().v = CppAdvance::New<Next>(CppAdvance::i32(45));
 	#line 433 "FirstProgram.adv"
-	nxtw.andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(ADV_UFCS(printNext)(value.__ref())); });
+	if (nxtw) nxtw.operator*().__ref().v = CppAdvance::New<Next>(CppAdvance::i32(45));
 	#line 434 "FirstProgram.adv"
-	print(nxtw ? ADV_UFCS(GetWeakReferenceCount)((*(nxtw)).__ref()) : CppAdvance::u32(10000U));
-	#line 435 "FirstProgram.adv"
 	nxtw.andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(ADV_UFCS(printNext)(value.__ref())); });
+	#line 435 "FirstProgram.adv"
+	print(nxtw ? ADV_UFCS(GetWeakReferenceCount)((*(nxtw)).__ref()) : CppAdvance::u32(10000U));
 	#line 436 "FirstProgram.adv"
+	nxtw.andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(ADV_UFCS(printNext)(value.__ref())); });
+	#line 437 "FirstProgram.adv"
 	print(Test1::Test2::TestClass::makeTestClass(CppAdvance::i32(3), CppAdvance::f32(3.14f)).__ref().x.__ref().x);
 }
 

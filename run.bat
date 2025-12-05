@@ -1,2 +1,3 @@
 set ASAN_SAVE_DUMPS=FirstProgram.dmp
 FirstProgram.exe
+pause

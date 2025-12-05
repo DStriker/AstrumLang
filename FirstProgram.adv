@@ -412,22 +412,23 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		print(nxtu!.GetStrongReferenceCount());
 		print(nxtu!.GetUnownedReferenceCount());
 		print(nxtu!.GetWeakReferenceCount());
-		nxt2 :Next? = new Next(29);
+		nxt2 :Next? = new Next(0);
 		
-		//nxt = null;
+		nxt = null;
 		nxtw?.printNext();
 		vv := nxt?.v;
 		//print(vv!.i);
 		nxt?.v ??= nxt2;
 		vv = nxt?.v;
-		print(vv!.i);
+		//print(vv!.i);
 		nxt3 := new Next(18);
-		nxtw = nxt ?? nxt2 ?? nxt3;
+		//nxt2 = null;
+		nxtw = nxt ?? nxt2 ?? throw CppAdvance.IntegerOverflowException();
 		//print(ii!.i);
 		print(nxtw!.GetStrongReferenceCount());
 		print(nxtw!.GetUnownedReferenceCount());
 		print(nxtw!.GetWeakReferenceCount());
-		print(nxtw ? nxtw!.i : 10000);
+		print(nxtw!.i ?: 333);
 	}
 		nxtw?.v = new Next(45);
 		nxtw?.printNext();

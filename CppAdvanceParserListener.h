@@ -356,6 +356,9 @@ public:
   virtual void enterNullCoalescingExpression(CppAdvanceParser::NullCoalescingExpressionContext *ctx) = 0;
   virtual void exitNullCoalescingExpression(CppAdvanceParser::NullCoalescingExpressionContext *ctx) = 0;
 
+  virtual void enterNullCoalescingBranch(CppAdvanceParser::NullCoalescingBranchContext *ctx) = 0;
+  virtual void exitNullCoalescingBranch(CppAdvanceParser::NullCoalescingBranchContext *ctx) = 0;
+
   virtual void enterConditionalExpression(CppAdvanceParser::ConditionalExpressionContext *ctx) = 0;
   virtual void exitConditionalExpression(CppAdvanceParser::ConditionalExpressionContext *ctx) = 0;
 

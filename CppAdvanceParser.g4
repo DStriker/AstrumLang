@@ -301,9 +301,11 @@ logicalAndExpression: inclusiveOrExpression (And inclusiveOrExpression)*;
 
 logicalOrExpression: logicalAndExpression (Or logicalAndExpression)*;
 
-nullCoalescingExpression: logicalOrExpression (DoubleQuestion logicalOrExpression)*;
+nullCoalescingExpression: logicalOrExpression (DoubleQuestion nullCoalescingBranch)*;
 
-conditionalExpression: nullCoalescingExpression (Question expr Colon assignmentExpression)?;
+nullCoalescingBranch: logicalOrExpression | throwExpression;
+
+conditionalExpression: nullCoalescingExpression (Question expr? Colon assignmentExpression)?;
 
 constantExpression: conditionalExpression;
 

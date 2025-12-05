@@ -9704,7 +9704,7 @@ void CppAdvanceCodegen::printAssignmentOperator(CppAdvanceParser::AssignmentOper
 	}
 	else if (ctx->DoubleQuestionAssign())
 	{
-		out << ".assignIfNull([&](){ return ";
+		out << ".assignIfNull([&]() FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { return ";
 	}
 }
 
@@ -9820,28 +9820,53 @@ void CppAdvanceCodegen::printConstantExpression(CppAdvanceParser::ConstantExpres
 void CppAdvanceCodegen::printConditionalExpression(CppAdvanceParser::ConditionalExpressionContext* ctx) const
 {
 	lvalue = false;
-	printNullCoalescingExpression(ctx->nullCoalescingExpression());
-	if (auto expr1 = ctx->expr())
+	if (ctx->assignmentExpression())
 	{
-		out << " ? ";
-		printExpression(expr1);
-		out << " : ";
-		printAssignmentExpression(ctx->assignmentExpression());
+		if (!ctx->expr())
+		{
+			out << "CppAdvance::ElvisOperator(";
+			printNullCoalescingExpression(ctx->nullCoalescingExpression());
+			out << ", [&]() FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { return ";
+			printAssignmentExpression(ctx->assignmentExpression());
+			out << "; })";
+		}
+		else
+		{
+			printNullCoalescingExpression(ctx->nullCoalescingExpression());
+			out << " ? ";
+			printExpression(ctx->expr());
+			out << " : ";
+			printAssignmentExpression(ctx->assignmentExpression());
+		}
+	}
+	else
+	{
+		printNullCoalescingExpression(ctx->nullCoalescingExpression());
 	}
 }
 
 void CppAdvanceCodegen::printNullCoalescingExpression(CppAdvanceParser::NullCoalescingExpressionContext* ctx) const
 {
 	lvalue = false;
-	bool first = true;
-	auto expressions = ctx->logicalOrExpression();
+	printLogicalOrExpression(ctx->logicalOrExpression());
+	auto expressions = ctx->nullCoalescingBranch();
 	for (auto orExpr : expressions)
 	{
-		if (!first) out << ".valueOr([&](){ return ";
-		first = false;
-		printLogicalOrExpression(orExpr);
+		out << ".valueOr([&]() FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ";
+		if (auto expr = orExpr->logicalOrExpression())
+		{
+			out << "return ";
+			printLogicalOrExpression(expr);
+		}
+		else
+		{
+			printThrowExpression(orExpr->throwExpression());
+			out << "; return *(";
+			printLogicalOrExpression(ctx->logicalOrExpression());
+			out << ")";
+		}
 	}
-	for (int i = 1; i < expressions.size(); ++i)
+	for (int i = 0; i < expressions.size(); ++i)
 	{
 		out << "; })";
 	}
