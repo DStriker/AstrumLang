@@ -180,6 +180,7 @@ public:
 	void printExpressionSeq(CppAdvanceParser::ExpressionSeqContext* ctx) const;
 	void printConstantExpression(CppAdvanceParser::ConstantExpressionContext* ctx) const;
 	void printConditionalExpression(CppAdvanceParser::ConditionalExpressionContext* ctx) const;
+	void printNullCoalescingExpression(CppAdvanceParser::NullCoalescingExpressionContext* ctx) const;
 	void printLogicalOrExpression(CppAdvanceParser::LogicalOrExpressionContext* ctx) const;
 	void printLogicalAndExpression(CppAdvanceParser::LogicalAndExpressionContext* ctx) const;
 	void printInclusiveOrExpression(CppAdvanceParser::InclusiveOrExpressionContext* ctx) const;

@@ -44,7 +44,7 @@ public:
     SignedRightShiftAssign = 159, Equal = 160, NotEqual = 161, Spaceship = 162, 
     LessEqual = 163, GreaterEqual = 164, PlusPlus = 165, MinusMinus = 166, 
     Comma = 167, Arrow = 168, Exclamation = 169, Question = 170, DoubleQuestion = 171, 
-    DoubleQuestionEqual = 172, Doublecolon = 173, Semi = 174, Dot = 175, 
+    DoubleQuestionAssign = 172, Doublecolon = 173, Semi = 174, Dot = 175, 
     DoubleDot = 176, DoubleDotLess = 177, Dollar = 178, Ellipsis = 179, 
     Apostroph = 180, AtSign = 181, DOUBLE_CURLY_INSIDE = 182, FORMAT_STRING = 183, 
     DecimalLiteral = 184, OctalLiteral = 185, HexadecimalLiteral = 186, 
@@ -90,26 +90,26 @@ public:
     RuleRelationalExpression = 104, RuleRelationalBranch = 105, RuleEqualityExpression = 106, 
     RuleEqualityBranch = 107, RuleAndExpression = 108, RuleExclusiveOrExpression = 109, 
     RuleInclusiveOrExpression = 110, RuleLogicalAndExpression = 111, RuleLogicalOrExpression = 112, 
-    RuleConditionalExpression = 113, RuleConstantExpression = 114, RuleAssignmentExpression = 115, 
-    RuleInitializerClause = 116, RuleBracedInitList = 117, RuleInitializerList = 118, 
-    RuleInitializerPart = 119, RuleExpressionList = 120, RuleExpressionListPart = 121, 
-    RuleAssignmentOperator = 122, RuleShiftOperator = 123, RuleTryBlock = 124, 
-    RuleExceptionHandler = 125, RuleExceptionDeclaration = 126, RuleThrowExpression = 127, 
-    RuleSimpleTypeSpecifier = 128, RuleNamedTupleField = 129, RuleNestedNameSpecifier = 130, 
-    RuleNamespaceName = 131, RuleTemplateName = 132, RuleSimpleTemplateId = 133, 
-    RuleOperatorTemplateId = 134, RuleTemplateId = 135, RuleTemplateArgumentList = 136, 
-    RuleTemplateArgument = 137, RuleIdExpression = 138, RuleQualifiedId = 139, 
-    RuleUnqualifiedId = 140, RuleTheTypeId = 141, RuleTypePostfix = 142, 
-    RuleArrayDeclarator = 143, RulePointerOperator = 144, RulePointerOperatorSeq = 145, 
-    RuleTypeSpecifierSeq = 146, RuleTypeSpecifier = 147, RuleTrailingTypeSpecifier = 148, 
-    RuleTypeNameSpecifier = 149, RuleCvQualifierSeq = 150, RuleCvQualifier = 151, 
-    RuleTypename = 152, RuleClassName = 153, RuleDecltypeSpecifier = 154, 
-    RuleEnumName = 155, RuleAccessSpecifier = 156, RuleProtectedInternal = 157, 
-    RuleOperatorFunctionId = 158, RuleConversionFunctionId = 159, RuleUnaryExpression = 160, 
-    RuleNewExpression = 161, RuleNewInitializer = 162, RulePostfixExpression = 163, 
-    RuleTupleExpression = 164, RulePrimaryExpression = 165, RuleUnaryPrefixOperator = 166, 
-    RuleRefCaptureOperator = 167, RuleUnaryPostfixOperator = 168, RuleNot = 169, 
-    RuleOperator = 170, RuleLiteral = 171
+    RuleNullCoalescingExpression = 113, RuleConditionalExpression = 114, 
+    RuleConstantExpression = 115, RuleAssignmentExpression = 116, RuleInitializerClause = 117, 
+    RuleBracedInitList = 118, RuleInitializerList = 119, RuleInitializerPart = 120, 
+    RuleExpressionList = 121, RuleExpressionListPart = 122, RuleAssignmentOperator = 123, 
+    RuleShiftOperator = 124, RuleTryBlock = 125, RuleExceptionHandler = 126, 
+    RuleExceptionDeclaration = 127, RuleThrowExpression = 128, RuleSimpleTypeSpecifier = 129, 
+    RuleNamedTupleField = 130, RuleNestedNameSpecifier = 131, RuleNamespaceName = 132, 
+    RuleTemplateName = 133, RuleSimpleTemplateId = 134, RuleOperatorTemplateId = 135, 
+    RuleTemplateId = 136, RuleTemplateArgumentList = 137, RuleTemplateArgument = 138, 
+    RuleIdExpression = 139, RuleQualifiedId = 140, RuleUnqualifiedId = 141, 
+    RuleTheTypeId = 142, RuleTypePostfix = 143, RuleArrayDeclarator = 144, 
+    RulePointerOperator = 145, RulePointerOperatorSeq = 146, RuleTypeSpecifierSeq = 147, 
+    RuleTypeSpecifier = 148, RuleTrailingTypeSpecifier = 149, RuleTypeNameSpecifier = 150, 
+    RuleCvQualifierSeq = 151, RuleCvQualifier = 152, RuleTypename = 153, 
+    RuleClassName = 154, RuleDecltypeSpecifier = 155, RuleEnumName = 156, 
+    RuleAccessSpecifier = 157, RuleProtectedInternal = 158, RuleOperatorFunctionId = 159, 
+    RuleConversionFunctionId = 160, RuleUnaryExpression = 161, RuleNewExpression = 162, 
+    RuleNewInitializer = 163, RulePostfixExpression = 164, RuleTupleExpression = 165, 
+    RulePrimaryExpression = 166, RuleUnaryPrefixOperator = 167, RuleRefCaptureOperator = 168, 
+    RuleUnaryPostfixOperator = 169, RuleNot = 170, RuleOperator = 171, RuleLiteral = 172
   };
 
   explicit CppAdvanceParser(antlr4::TokenStream *input);
@@ -242,6 +242,7 @@ public:
   class InclusiveOrExpressionContext;
   class LogicalAndExpressionContext;
   class LogicalOrExpressionContext;
+  class NullCoalescingExpressionContext;
   class ConditionalExpressionContext;
   class ConstantExpressionContext;
   class AssignmentExpressionContext;
@@ -2290,11 +2291,27 @@ public:
 
   LogicalOrExpressionContext* logicalOrExpression();
 
+  class  NullCoalescingExpressionContext : public antlr4::ParserRuleContext {
+  public:
+    NullCoalescingExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<LogicalOrExpressionContext *> logicalOrExpression();
+    LogicalOrExpressionContext* logicalOrExpression(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> DoubleQuestion();
+    antlr4::tree::TerminalNode* DoubleQuestion(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  NullCoalescingExpressionContext* nullCoalescingExpression();
+
   class  ConditionalExpressionContext : public antlr4::ParserRuleContext {
   public:
     ConditionalExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    LogicalOrExpressionContext *logicalOrExpression();
+    NullCoalescingExpressionContext *nullCoalescingExpression();
     antlr4::tree::TerminalNode *Question();
     ExprContext *expr();
     antlr4::tree::TerminalNode *Colon();
@@ -2448,6 +2465,7 @@ public:
     antlr4::tree::TerminalNode *AndAssign();
     antlr4::tree::TerminalNode *XorAssign();
     antlr4::tree::TerminalNode *OrAssign();
+    antlr4::tree::TerminalNode *DoubleQuestionAssign();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

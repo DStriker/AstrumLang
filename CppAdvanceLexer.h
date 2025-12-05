@@ -44,7 +44,7 @@ public:
     SignedRightShiftAssign = 159, Equal = 160, NotEqual = 161, Spaceship = 162, 
     LessEqual = 163, GreaterEqual = 164, PlusPlus = 165, MinusMinus = 166, 
     Comma = 167, Arrow = 168, Exclamation = 169, Question = 170, DoubleQuestion = 171, 
-    DoubleQuestionEqual = 172, Doublecolon = 173, Semi = 174, Dot = 175, 
+    DoubleQuestionAssign = 172, Doublecolon = 173, Semi = 174, Dot = 175, 
     DoubleDot = 176, DoubleDotLess = 177, Dollar = 178, Ellipsis = 179, 
     Apostroph = 180, AtSign = 181, DOUBLE_CURLY_INSIDE = 182, FORMAT_STRING = 183, 
     DecimalLiteral = 184, OctalLiteral = 185, HexadecimalLiteral = 186, 

@@ -9651,6 +9651,7 @@ void CppAdvanceCodegen::printAssignmentExpression(CppAdvanceParser::AssignmentEx
 		lvalue = false; 
 		printInitializerClause(ctx->initializerClause());
 		if (paren) out << ")";
+		if (ctx->assignmentOperator()->DoubleQuestionAssign()) out << "; })";
 		isAssignment = false;
 	}
 }
@@ -9700,6 +9701,10 @@ void CppAdvanceCodegen::printAssignmentOperator(CppAdvanceParser::AssignmentOper
 	else if (ctx->RightShiftAssign())
 	{
 		out << " >>= ";
+	}
+	else if (ctx->DoubleQuestionAssign())
+	{
+		out << ".assignIfNull([&](){ return ";
 	}
 }
 
@@ -9815,13 +9820,30 @@ void CppAdvanceCodegen::printConstantExpression(CppAdvanceParser::ConstantExpres
 void CppAdvanceCodegen::printConditionalExpression(CppAdvanceParser::ConditionalExpressionContext* ctx) const
 {
 	lvalue = false;
-	printLogicalOrExpression(ctx->logicalOrExpression());
+	printNullCoalescingExpression(ctx->nullCoalescingExpression());
 	if (auto expr1 = ctx->expr())
 	{
 		out << " ? ";
 		printExpression(expr1);
 		out << " : ";
 		printAssignmentExpression(ctx->assignmentExpression());
+	}
+}
+
+void CppAdvanceCodegen::printNullCoalescingExpression(CppAdvanceParser::NullCoalescingExpressionContext* ctx) const
+{
+	lvalue = false;
+	bool first = true;
+	auto expressions = ctx->logicalOrExpression();
+	for (auto orExpr : expressions)
+	{
+		if (!first) out << ".valueOr([&](){ return ";
+		first = false;
+		printLogicalOrExpression(orExpr);
+	}
+	for (int i = 1; i < expressions.size(); ++i)
+	{
+		out << "; })";
 	}
 }
 

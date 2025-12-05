@@ -83,7 +83,7 @@ void cppadvancelexerLexerInitialize() {
       "RightShiftAssign", "SignedLeftShiftAssign", "SignedRightShiftAssign", 
       "Equal", "NotEqual", "Spaceship", "LessEqual", "GreaterEqual", "PlusPlus", 
       "MinusMinus", "Comma", "Arrow", "Exclamation", "Question", "DoubleQuestion", 
-      "DoubleQuestionEqual", "Doublecolon", "Semi", "Dot", "DoubleDot", 
+      "DoubleQuestionAssign", "Doublecolon", "Semi", "Dot", "DoubleDot", 
       "DoubleDotLess", "Dollar", "Ellipsis", "Apostroph", "AtSign", "DOUBLE_CURLY_INSIDE", 
       "DOUBLE_CURLY_CLOSE_INSIDE", "FORMAT_STRING", "MultilineStringItem", 
       "MultilineStringChar", "StringEscape", "Hexquad", "Universalcharactername", 
@@ -157,7 +157,7 @@ void cppadvancelexerLexerInitialize() {
       "RightShiftAssign", "SignedLeftShiftAssign", "SignedRightShiftAssign", 
       "Equal", "NotEqual", "Spaceship", "LessEqual", "GreaterEqual", "PlusPlus", 
       "MinusMinus", "Comma", "Arrow", "Exclamation", "Question", "DoubleQuestion", 
-      "DoubleQuestionEqual", "Doublecolon", "Semi", "Dot", "DoubleDot", 
+      "DoubleQuestionAssign", "Doublecolon", "Semi", "Dot", "DoubleDot", 
       "DoubleDotLess", "Dollar", "Ellipsis", "Apostroph", "AtSign", "DOUBLE_CURLY_INSIDE", 
       "FORMAT_STRING", "DecimalLiteral", "OctalLiteral", "HexadecimalLiteral", 
       "BinaryLiteral", "Integersuffix", "DOUBLE_CURLY_CLOSE_INSIDE"

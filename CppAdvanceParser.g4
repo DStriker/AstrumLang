@@ -301,7 +301,9 @@ logicalAndExpression: inclusiveOrExpression (And inclusiveOrExpression)*;
 
 logicalOrExpression: logicalAndExpression (Or logicalAndExpression)*;
 
-conditionalExpression: logicalOrExpression (Question expr Colon assignmentExpression)?;
+nullCoalescingExpression: logicalOrExpression (DoubleQuestion logicalOrExpression)*;
+
+conditionalExpression: nullCoalescingExpression (Question expr Colon assignmentExpression)?;
 
 constantExpression: conditionalExpression;
 
@@ -331,6 +333,7 @@ assignmentOperator:
 	| AndAssign
 	| XorAssign
 	| OrAssign
+	| DoubleQuestionAssign
 	;
 
 shiftOperator:

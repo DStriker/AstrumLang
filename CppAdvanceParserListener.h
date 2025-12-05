@@ -353,6 +353,9 @@ public:
   virtual void enterLogicalOrExpression(CppAdvanceParser::LogicalOrExpressionContext *ctx) = 0;
   virtual void exitLogicalOrExpression(CppAdvanceParser::LogicalOrExpressionContext *ctx) = 0;
 
+  virtual void enterNullCoalescingExpression(CppAdvanceParser::NullCoalescingExpressionContext *ctx) = 0;
+  virtual void exitNullCoalescingExpression(CppAdvanceParser::NullCoalescingExpressionContext *ctx) = 0;
+
   virtual void enterConditionalExpression(CppAdvanceParser::ConditionalExpressionContext *ctx) = 0;
   virtual void exitConditionalExpression(CppAdvanceParser::ConditionalExpressionContext *ctx) = 0;
 

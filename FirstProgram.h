@@ -1344,17 +1344,13 @@ inline __Class_Next::~__Class_Next()
 #line 338 "FirstProgram.adv"
 inline __Class_Next::__Class_Next(CppAdvance::i32 i)  : 
 #line 339 "FirstProgram.adv"
-i{i}, 
-#line 340 "FirstProgram.adv"
-v{CppAdvance::New<Next>((*this))}
+i{i}
 {
 }
 #line 343 "FirstProgram.adv"
 inline __Class_Next::__Class_Next(CppAdvance::In<__self> other)  : 
 #line 344 "FirstProgram.adv"
-i{CppAdvance::i32(0)}, 
-#line 345 "FirstProgram.adv"
-v{other}
+i{CppAdvance::i32(0)}
 {
 }
 #line 347 "FirstProgram.adv"

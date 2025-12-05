@@ -337,12 +337,12 @@ public class Next {
 
 	public this(i: i32) = {
 		this.i = i;
-		this.v = new Next(this);
+		//this.v = new Next(this);
 	}
 
 	public this(in other: self) = {
 		this.i = 0;
-		this.v = other;
+		//this.v = other;
 	}
 	public operator!: () -> i32 => i;
 
@@ -404,7 +404,7 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		nxt:Next? = new Next(10);
 		nxtunwrapped := nxt!;
 		unowned nxtu: Next? = nxt;
-		nxtw = nxt;
+		//nxtw = nxt;
 		print(nxt!.GetStrongReferenceCount());
 		print(nxt!.GetUnownedReferenceCount());
 		print(nxt!.GetWeakReferenceCount());
@@ -412,17 +412,24 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		print(nxtu!.GetStrongReferenceCount());
 		print(nxtu!.GetUnownedReferenceCount());
 		print(nxtu!.GetWeakReferenceCount());
-		nxt2 := new Next(29);
+		nxt2 :Next? = new Next(29);
 		
+		//nxt = null;
 		nxtw?.printNext();
-		nxt?.v = nxt2;
-		nxtw = nxt?.v;
+		vv := nxt?.v;
+		//print(vv!.i);
+		nxt?.v ??= nxt2;
+		vv = nxt?.v;
+		print(vv!.i);
+		nxt3 := new Next(18);
+		nxtw = nxt ?? nxt2 ?? nxt3;
 		//print(ii!.i);
 		print(nxtw!.GetStrongReferenceCount());
 		print(nxtw!.GetUnownedReferenceCount());
 		print(nxtw!.GetWeakReferenceCount());
 		print(nxtw ? nxtw!.i : 10000);
 	}
+		nxtw?.v = new Next(45);
 		nxtw?.printNext();
 		print(nxtw ? nxtw!.GetWeakReferenceCount() : 10000u);
 		nxtw?.printNext();

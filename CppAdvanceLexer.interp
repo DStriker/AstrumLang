@@ -363,7 +363,7 @@ Arrow
 Exclamation
 Question
 DoubleQuestion
-DoubleQuestionEqual
+DoubleQuestionAssign
 Doublecolon
 Semi
 Dot
@@ -554,7 +554,7 @@ Arrow
 Exclamation
 Question
 DoubleQuestion
-DoubleQuestionEqual
+DoubleQuestionAssign
 Doublecolon
 Semi
 Dot

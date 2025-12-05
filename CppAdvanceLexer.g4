@@ -366,7 +366,7 @@ Question: '?';
 
 DoubleQuestion: '??';
 
-DoubleQuestionEqual: '??=';
+DoubleQuestionAssign: '??=';
 
 Doublecolon: '::';
 
