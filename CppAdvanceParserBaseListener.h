@@ -508,6 +508,9 @@ public:
   virtual void enterNewExpression(CppAdvanceParser::NewExpressionContext * /*ctx*/) override { }
   virtual void exitNewExpression(CppAdvanceParser::NewExpressionContext * /*ctx*/) override { }
 
+  virtual void enterStackallocExpression(CppAdvanceParser::StackallocExpressionContext * /*ctx*/) override { }
+  virtual void exitStackallocExpression(CppAdvanceParser::StackallocExpressionContext * /*ctx*/) override { }
+
   virtual void enterNewInitializer(CppAdvanceParser::NewInitializerContext * /*ctx*/) override { }
   virtual void exitNewInitializer(CppAdvanceParser::NewInitializerContext * /*ctx*/) override { }
 

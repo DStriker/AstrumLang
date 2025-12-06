@@ -5058,18 +5058,151 @@ void CppAdvanceCodegen::printExternFunctionDeclaration(CppAdvanceParser::ExternF
 	out << ";";
 }
 
+std::string GetStackObjectVarName(CppAdvanceParser::TheTypeIdContext* type) {
+	return "__obj_" + std::to_string(type->getStart()->getLine()) + "_" + std::to_string(type->getStart()->getCharPositionInLine());
+}
+
+void CppAdvanceCodegen::printClassInitializer(CppAdvanceParser::TheTypeIdContext* type, CppAdvanceParser::NewInitializerContext* init) const {
+	if (auto expressions = init->expressionList())
+	{
+		//printExpressionList(expr);
+		int paramCount = expressions->expressionListPart().size();
+		std::set<std::string> namedArgs;
+		for (auto param : expressions->expressionListPart())
+		{
+			if (auto id = param->Identifier())
+			{
+				namedArgs.insert(id->getText());
+			}
+		}
+		auto txt = type->getText();
+		auto txt2 = txt;
+		auto pos = txt.rfind('.');
+		if (pos != txt.npos) txt2 = txt.substr(pos + 1);
+		pos = txt.rfind('<');
+		if (pos != txt.npos) txt = txt.substr(0, pos);
+		txt2 = txt + "." + txt2;
+		bool params = sema.cppParser.parametersTable.contains(txt2);
+		bool printed = false;
+		if (!namedArgs.empty() && params)
+		{
+			std::string signature;
+			if (params)
+			{
+				for (const auto& signatures : sema.cppParser.parametersTable[txt2])
+				{
+					auto args = StringSplit(signatures, ",,");
+					if (args.size() >= paramCount) {
+						int i = 0;
+						for (const auto& arg : args) {
+							if (namedArgs.contains(arg.substr(0, arg.find('='))))
+								++i;
+							if (namedArgs.size() == i) {
+								signature = signatures;
+								break;
+							}
+						}
+					}
+					if (!signature.empty()) break;
+				}
+			}
+
+			if (signature.empty())
+				out << "Signature not found!";
+			else
+			{
+				printed = true;
+				auto args = StringSplit(signature, ",,");
+				paramCount = args.size();
+				std::unordered_map<int, std::string> argOrder;
+				std::unordered_map<std::string, std::string> defaultValues;
+				int i = 0;
+				for (const auto& arg : args) {
+					auto pos = arg.find('=');
+					argOrder[i++] = arg.substr(0, pos);
+					if (pos != arg.npos)
+						defaultValues[arg.substr(0, pos)] = arg.substr(pos + 1);
+				}
+
+				int currentArg = 0;
+				while (auto param = expressions->expressionListPart(currentArg))
+				{
+					if (param->Identifier()) break;
+					if (currentArg > 0) out << ", ";
+					printExpressionListPart(param);
+					++currentArg;
+				}
+
+				std::unordered_map<std::string, CppAdvanceParser::ExpressionListPartContext*> namedArgValues;
+				for (i = currentArg; i < expressions->expressionListPart().size(); ++i)
+				{
+					auto param = expressions->expressionListPart(i);
+					if (param->Identifier())
+					{
+						namedArgValues[param->Identifier()->getText()] = param;
+					}
+				}
+
+				while (currentArg < paramCount)
+				{
+					if (currentArg > 0) out << ", ";
+					auto arg = argOrder[currentArg];
+					if (namedArgValues.contains(arg))
+					{
+						printExpressionListPart(namedArgValues[arg]);
+					}
+					else if (defaultValues.contains(arg))
+					{
+						out << defaultValues[arg];
+					}
+					else if (sema.activeDefaultParams.contains(txt) && sema.activeDefaultParams[txt].contains(arg))
+					{
+						printInitializerClause(sema.activeDefaultParams[txt][arg]);
+					}
+					++currentArg;
+				}
+			}
+		}
+		else
+		{
+			printExpressionList(init->expressionList());
+		}
+	}
+	else if (auto braced = init->bracedInitList())
+	{
+		out << "std::initializer_list";
+		printBracedInitList(braced);
+	}
+}
+
 void CppAdvanceCodegen::printStatement(CppAdvanceParser::StatContext* ctx) const
 {
 	out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-	if (sema.prerequisites.contains(ctx))
+	if (sema.parameterPrerequisites.contains(ctx))
 	{
-		for (const auto&[id, type] : sema.prerequisites[ctx])
+		for (const auto&[id, type] : sema.parameterPrerequisites[ctx])
 		{
 			out << "CppAdvance::DeferredInit<";
 			printTypeId(type);
 			out << "> " << id << "; ";
 		}
 		out << "\n" << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+	}
+	if (sema.stackallocPrerequisites.contains(ctx))
+	{
+		for (const auto& [type, init] : sema.stackallocPrerequisites[ctx])
+		{
+			out << "#line " << type->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			auto varName = GetStackObjectVarName(type);
+			printTypeId(type);
+			out << "::__class " << varName << "(";
+			if (init)
+			{
+				printClassInitializer(type, init);
+			}
+			out << "); CppAdvance::InitStackObject(&" << varName << ");\n" << std::string(depth, '\t');
+		}
+		out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 	}
 	if (sema.conditionalPrerequisites.contains(ctx))
 	{
@@ -10122,118 +10255,16 @@ void CppAdvanceCodegen::printNewExpression(CppAdvanceParser::NewExpressionContex
 	out << ">(";
 	if (auto init = ctx->newInitializer())
 	{
-		if (auto expressions = init->expressionList())
-		{
-			//printExpressionList(expr);
-			int paramCount = expressions->expressionListPart().size();
-			std::set<std::string> namedArgs;
-			for (auto param : expressions->expressionListPart())
-			{
-				if (auto id = param->Identifier())
-				{
-					namedArgs.insert(id->getText());
-				}
-			}
-			auto txt = ctx->theTypeId()->getText();
-			auto txt2 = txt;
-			auto pos = txt.rfind('.');
-			if (pos != txt.npos) txt2 = txt.substr(pos+1);
-			pos = txt.rfind('<');
-			if (pos != txt.npos) txt = txt.substr(0, pos);
-			txt2 = txt + "." + txt2;
-			bool params = sema.cppParser.parametersTable.contains(txt2);
-			bool printed = false;
-			if (!namedArgs.empty() && params)
-			{
-				std::string signature;
-				if (params)
-				{
-					for (const auto& signatures : sema.cppParser.parametersTable[txt2])
-					{
-						auto args = StringSplit(signatures, ",,");
-						if (args.size() >= paramCount) {
-							int i = 0;
-							for (const auto& arg : args) {
-								if (namedArgs.contains(arg.substr(0, arg.find('='))))
-									++i;
-								if (namedArgs.size() == i) {
-									signature = signatures;
-									break;
-								}
-							}
-						}
-						if (!signature.empty()) break;
-					}
-				}
-
-				if (signature.empty())
-					out << "Signature not found!";
-				else
-				{
-					printed = true;
-					auto args = StringSplit(signature, ",,");
-					paramCount = args.size();
-					std::unordered_map<int, std::string> argOrder;
-					std::unordered_map<std::string, std::string> defaultValues;
-					int i = 0;
-					for (const auto& arg : args) {
-						auto pos = arg.find('=');
-						argOrder[i++] = arg.substr(0, pos);
-						if (pos != arg.npos)
-							defaultValues[arg.substr(0, pos)] = arg.substr(pos + 1);
-					}
-
-					int currentArg = 0;
-					while (auto param = expressions->expressionListPart(currentArg))
-					{
-						if (param->Identifier()) break;
-						if (currentArg > 0) out << ", ";
-						printExpressionListPart(param);
-						++currentArg;
-					}
-
-					std::unordered_map<std::string, CppAdvanceParser::ExpressionListPartContext*> namedArgValues;
-					for (i = currentArg; i < expressions->expressionListPart().size(); ++i)
-					{
-						auto param = expressions->expressionListPart(i);
-						if (param->Identifier())
-						{
-							namedArgValues[param->Identifier()->getText()] = param;
-						}
-					}
-
-					while (currentArg < paramCount)
-					{
-						if (currentArg > 0) out << ", ";
-						auto arg = argOrder[currentArg];
-						if (namedArgValues.contains(arg))
-						{
-							printExpressionListPart(namedArgValues[arg]);
-						}
-						else if (defaultValues.contains(arg))
-						{
-							out << defaultValues[arg];
-						}
-						else if (sema.activeDefaultParams.contains(txt) && sema.activeDefaultParams[txt].contains(arg))
-						{
-							printInitializerClause(sema.activeDefaultParams[txt][arg]);
-						}
-						++currentArg;
-					}
-				}
-			}
-			else
-			{
-				printExpressionList(init->expressionList());
-			}
-		}
-		else if (auto braced = init->bracedInitList())
-		{
-			out << "std::initializer_list";
-			printBracedInitList(braced);
-		}
+		printClassInitializer(ctx->theTypeId(), init);
 	}
 	out << ")";
+}
+
+void CppAdvanceCodegen::printStackallocExpression(CppAdvanceParser::StackallocExpressionContext* ctx) const
+{
+	out << "CppAdvance::Stackalloc<";
+	printTypeId(ctx->theTypeId());
+	out << ">(" << GetStackObjectVarName(ctx->theTypeId()) << ")";
 }
 
 void CppAdvanceCodegen::printPostfixExpression(CppAdvanceParser::PostfixExpressionContext* ctx) const
@@ -10632,7 +10663,11 @@ void CppAdvanceCodegen::printPostfixExpression(CppAdvanceParser::PostfixExpressi
 	}
 	else if (ctx->newExpression())
 	{
-	printNewExpression(ctx->newExpression());
+		printNewExpression(ctx->newExpression());
+	}
+	else if (ctx->stackallocExpression())
+	{
+		printStackallocExpression(ctx->stackallocExpression());
 	}
 }
 

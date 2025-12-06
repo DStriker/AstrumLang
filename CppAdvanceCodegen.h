@@ -194,6 +194,8 @@ public:
 	void printMultiplicativeExpression(CppAdvanceParser::MultiplicativeExpressionContext* ctx) const;
 	void printUnaryExpression(CppAdvanceParser::UnaryExpressionContext* ctx) const;
 	void printNewExpression(CppAdvanceParser::NewExpressionContext* ctx) const;
+	void printStackallocExpression(CppAdvanceParser::StackallocExpressionContext* ctx) const;
+	void printClassInitializer(CppAdvanceParser::TheTypeIdContext* type, CppAdvanceParser::NewInitializerContext* init) const;
 	void printPostfixExpression(CppAdvanceParser::PostfixExpressionContext* ctx) const;
 	void printPrimaryExpression(CppAdvanceParser::PrimaryExpressionContext* ctx) const;
 	void printTupleExpression(CppAdvanceParser::TupleExpressionContext* ctx) const;

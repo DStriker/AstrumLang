@@ -208,6 +208,8 @@ Set: 'set';
 
 Sizeof: 'sizeof';
 
+Stackalloc: 'stackalloc';
+
 Static: 'static';
 
 Str: 'str';

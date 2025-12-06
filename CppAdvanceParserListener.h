@@ -506,6 +506,9 @@ public:
   virtual void enterNewExpression(CppAdvanceParser::NewExpressionContext *ctx) = 0;
   virtual void exitNewExpression(CppAdvanceParser::NewExpressionContext *ctx) = 0;
 
+  virtual void enterStackallocExpression(CppAdvanceParser::StackallocExpressionContext *ctx) = 0;
+  virtual void exitStackallocExpression(CppAdvanceParser::StackallocExpressionContext *ctx) = 0;
+
   virtual void enterNewInitializer(CppAdvanceParser::NewInitializerContext *ctx) = 0;
   virtual void exitNewInitializer(CppAdvanceParser::NewInitializerContext *ctx) = 0;
 

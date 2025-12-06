@@ -462,11 +462,14 @@ unaryExpression:
 
 newExpression: New theTypeId newInitializer?;
 
+stackallocExpression: Stackalloc theTypeId newInitializer?;
+
 newInitializer: LeftParen expressionList? RightParen | bracedInitList;
 
 postfixExpression:
 	  primaryExpression
 	| newExpression
+	| stackallocExpression
 	| postfixExpression LeftBracket expressionList RightBracket
 	| postfixExpression LeftParen expressionList? RightParen
 	| (simpleTypeSpecifier) LeftParen expressionList? RightParen

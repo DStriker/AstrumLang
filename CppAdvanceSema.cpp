@@ -2213,7 +2213,7 @@ void CppAdvanceSema::exitPostfixExpression(CppAdvanceParser::PostfixExpressionCo
 				if (auto id = part->Identifier()) {
 					if (part->Out())
 					{
-						prerequisites[currentStatement].emplace_back(id->getText(),part->theTypeId());
+						parameterPrerequisites[currentStatement].emplace_back(id->getText(),part->theTypeId());
 					}
 					else {
 						named = true;
@@ -4689,6 +4689,16 @@ void CppAdvanceSema::exitAbstractMethodDeclaration(CppAdvanceParser::AbstractMet
 	}
 
 	symbolContexts.pop();
+}
+
+void CppAdvanceSema::exitStackallocExpression(CppAdvanceParser::StackallocExpressionContext* ctx)
+{
+	typeStack.push(contextTypes[ctx->theTypeId()]);
+	if (firstPass) return;
+	if (!functionBody)
+		CppAdvanceCompilerError("Stackalloc expression can be used only in the function body", ctx->Stackalloc()->getSymbol());
+
+	stackallocPrerequisites[currentStatement].emplace_back(std::make_pair(ctx->theTypeId(), ctx->newInitializer()));
 }
 
 void CppAdvanceSema::exitFriendDeclaration(CppAdvanceParser::FriendDeclarationContext* ctx)

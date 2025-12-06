@@ -467,8 +467,12 @@ public:
 	std::stack<SymbolContext> symbolContexts;
 	std::unordered_set<std::string> outParams;
 	std::unordered_set<CppAdvanceParser::AssignmentExpressionContext*> uninitConstructs;
-	std::unordered_map<CppAdvanceParser::StatContext*, std::vector<std::pair<std::string, CppAdvanceParser::TheTypeIdContext*>>> prerequisites;
-	std::unordered_map<CppAdvanceParser::StatContext*, std::vector<CppAdvanceParser::PostfixExpressionContext*>> conditionalPrerequisites;
+	std::unordered_map<CppAdvanceParser::StatContext*, 
+		std::vector<std::pair<std::string, CppAdvanceParser::TheTypeIdContext*>>> parameterPrerequisites;
+	std::unordered_map<CppAdvanceParser::StatContext*, 
+		std::vector<std::pair<CppAdvanceParser::TheTypeIdContext*, CppAdvanceParser::NewInitializerContext*>>> stackallocPrerequisites;
+	std::unordered_map<CppAdvanceParser::StatContext*, 
+		std::vector<CppAdvanceParser::PostfixExpressionContext*>> conditionalPrerequisites;
 	std::unordered_map<std::string,NamedTuple> namedTuples;
 	std::unordered_map<CppAdvanceParser::ConstructorBodyContext*, std::unordered_set<std::string>> currentFields;
 	std::unordered_set<CppAdvanceParser::PropertySetterContext*> propertiesNeedField;
@@ -896,5 +900,8 @@ public:
 
 
 	void exitAbstractMethodDeclaration(CppAdvanceParser::AbstractMethodDeclarationContext*) override;
+
+
+	void exitStackallocExpression(CppAdvanceParser::StackallocExpressionContext*) override;
 
 };

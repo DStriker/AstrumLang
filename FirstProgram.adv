@@ -403,21 +403,20 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 	print(vc.getX());
 	//vc = Vector3(2,3,4);
 	print(VectorClass.BYTES);
-	o: object;
-	o = true;
-	o = ss;
-	o = 'r';
-	o = "12345";
-	o = v;
-	o = vc;
-	print(o.GetStrongReferenceCount());
-	print(o.GetUnownedReferenceCount());
-	print(o.GetWeakReferenceCount());
-	print(i32(o.IsStackAllocated()));
+	nxt: Next?;
+	{
+	nxt2:= stackalloc Next(34);
+	nxt = nxt2;
+	print(nxt2.GetStrongReferenceCount());
+	print(nxt2.GetUnownedReferenceCount());
+	print(nxt2.GetWeakReferenceCount());
+	print(i32(nxt2.IsStackAllocated()));
+	}
 	on: object? = null;
 	on = 10;
 	on = v;
 	on = vc;
+	print(nxt!.GetStrongReferenceCount());
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);
 }
 
