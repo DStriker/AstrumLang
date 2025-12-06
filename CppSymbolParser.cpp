@@ -279,7 +279,7 @@ CXChildVisitResult VisitCursor(CXCursor cursor, const std::string& parentNamespa
 		return CXChildVisit_Continue;
 	}
 
-	if (kind == CXCursor_FunctionDecl || kind == CXCursor_FunctionTemplate || kind == CXCursor_CXXMethod)
+	if (kind == CXCursor_FunctionDecl || kind == CXCursor_FunctionTemplate || kind == CXCursor_CXXMethod || kind == CXCursor_Constructor)
 	{
 		isUnsafe = false;
 		varargDepth = -1;

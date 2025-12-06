@@ -3044,7 +3044,11 @@ void CppAdvanceSema::enterConstructor(CppAdvanceParser::ConstructorContext* ctx)
 	if (isUnsafe && unsafeDepth <= 0) unsafeDepth++;
 
 	if (firstPass && !functionBody) {
-		if (currentTypeKind.top() == TypeKind::Class) constructorCounts.top()++;
+		if (currentTypeKind.top() == TypeKind::Class) {
+			if (structStack.top()->isAbstract && implicit)
+				CppAdvanceCompilerError("Abstract class cannot have an implicit constructor", implicit->getStart());
+			constructorCounts.top()++;
+		}
 
 		if (isDefault) isInline = true;
 		if (ctx->Equal()) isConstexpr = true;
@@ -3177,6 +3181,20 @@ void CppAdvanceSema::exitConstructor(CppAdvanceParser::ConstructorContext* ctx)
 			{
 				structStack.top()->hasAggregateInit = true;
 			}
+			std::string args;
+			bool first = true;
+			auto funcname = currentType + "." + currentType;
+			for (auto param : params->paramDeclList()->paramDeclaration()) {
+				if (!first) {
+					args += ",,";
+				}
+				auto id = param->Identifier()->getText();
+				args += id;
+				activeDefaultParams[funcname].insert_or_assign(id, param->initializerClause());
+				first = false;
+			}
+			if (!args.empty())
+				cppParser.parametersTable[funcname].insert(args);
 		}
 	}
 

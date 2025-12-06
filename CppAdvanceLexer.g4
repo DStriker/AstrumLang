@@ -180,6 +180,8 @@ Noexcept: 'noexcept';
 
 Null: 'null';
 
+Object: 'object';
+
 Operator_: 'operator';
 
 Out: 'out';

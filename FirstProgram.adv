@@ -31,13 +31,13 @@ printParams: (s: str, params: str...) {
 	}
 }
 
-testt: (x: i32) -> (i: i32,t: Test1.Test2.TestClass,b: bool) {
+/*testt: (x: i32) -> (i: i32,t: Test1.Test2.TestClass,b: bool) {
 //testt: (x: i32) -> Vector3 {
 	i = x;
-	t = Test1.Test2.TestClass();
+	//t = Test1.Test2.TestClass();
 	b = true;
 	return {i,t,b};
-}
+}*/
 
 type SimpleTuple <A,C> = (A, bool, C);
 type ImportantOptions = (i: i32,f: f64,s: str);
@@ -97,7 +97,7 @@ public struct Vector3 : IEquatable, IFormattable
 		x: f32;
 		y: f32;
 		z: f32;
-		tt: Test111 { get; private set; }
+		//tt: Test111 { get; private set; }
 
 		//if debug _version: i32;
 		}
@@ -119,7 +119,7 @@ public struct Vector3 : IEquatable, IFormattable
 		++y;
 		++z;
 		++Count;
-		t : Test111;
+		//t : Test111;
 		//t = Test111();
 		return this;
 	}
@@ -144,7 +144,7 @@ public struct Vector3 : IEquatable, IFormattable
 			return y + z;
 		}
 
-		inline static GetTest: () -> Test111 ==> Test111();
+		//inline static GetTest: () -> Test111 ==> Test111();
 
 		mut TemplateMethod: <U> (x: U, y: U, z: U) -> Coords == {
 			struct LocalStruct {
@@ -172,7 +172,7 @@ public abstract class VectorClass : BaseClass, IEquatable, IFormattable
 {
 	public {
 		x, y, z: f32;
-		t: Test111 { get; private set; }
+		//t: Test111 { get; private set; }
 
 		//if debug _version: i32;
 	}
@@ -210,7 +210,7 @@ public abstract class VectorClass : BaseClass, IEquatable, IFormattable
 		x: f32;
 		y: f32;
 		z: f32;
-		tt: Test111 { get; private set; }
+		//tt: Test111 { get; private set; }
 
 		//if debug _version: i32;
 		}
@@ -224,12 +224,12 @@ public abstract class VectorClass : BaseClass, IEquatable, IFormattable
 		this.z = z;
 	}
 
-	protected implicit this<U>(f: U) == {
+	protected this<U>(f: U) == {
 		this(f,f,f);
 		this.x = f;
 	}
 
-	protected implicit this(in other: self) = {
+	protected this(in other: self) = {
 		this(other.x, other.y, other.z);
 	}
 
@@ -245,7 +245,7 @@ public abstract class VectorClass : BaseClass, IEquatable, IFormattable
 		++y;
 		++z;
 		++Count;
-		t : Test111;
+		//t : Test111;
 		//t = Test111();
 		return this;
 	}
@@ -280,7 +280,7 @@ public abstract class VectorClass : BaseClass, IEquatable, IFormattable
 			return y + z;
 		}
 
-		inline static GetTest: () -> Test111 ==> Test111();
+	//	inline static GetTest: () -> Test111 ==> Test111();
 
 		mut TemplateMethod: <U> (x: U, y: U, z: U) -> Coords == {
 			struct LocalStruct {
@@ -288,7 +288,7 @@ public abstract class VectorClass : BaseClass, IEquatable, IFormattable
 				x: f32;
 				y: f32;
 				z: f32;
-				tt: Test111 { get; private set; }
+				//tt: Test111 { get; private set; }
 
 				//if debug _version: i32;
 				}
@@ -305,6 +305,10 @@ public class ConcreteVectorClass : VectorClass {
 
 	public this(x: f32, y: f32, z: f32) noexcept == {
 		super(x, y, z);
+	}
+
+	public implicit this(i: i32) noexcept == {
+		super(f32(i), f32(i), f32(i));
 	}
 
 	public Name: str ==> "VectorClass";
@@ -379,7 +383,7 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 	//result := ss.sum(400i64);
 	vv: Vector3(2,3,4);
 	//ttt: Test1.Test2.TestClass = vv.GetTest();
-	print(vv.GetTest().getClassExt(c=4,b=2,a=1,b2=true).x);
+	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).getClassExt(c=4,b=2,a=1,b2=true).x);
 	ss:=300;
 	//result2 := ss.sum<i32,15>(400);
 	v: Vector3 = {2,7,4};
@@ -393,47 +397,27 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 	Vector3.setCount(30);
 	Vector3.Count = 30;
 	vcc: ConcreteVectorClass;
-	vc :ConcreteVectorClass= new ConcreteVectorClass(13,4,15)/*.increment().increment().increment()*/;
+	vc :ConcreteVectorClass= 15;
 	print(vc.Name);
 	print(vc.Count);
 	print(vc.getX());
 	//vc = Vector3(2,3,4);
 	print(VectorClass.BYTES);
-	weak nxtw: Next?;
-	{
-		nxt:Next? = new Next(10);
-		nxtunwrapped := nxt!;
-		unowned nxtu: Next? = nxt;
-		//nxtw = nxt;
-		print(nxt!.GetStrongReferenceCount());
-		print(nxt!.GetUnownedReferenceCount());
-		print(nxt!.GetWeakReferenceCount());
-		print(nxtu!.i);
-		print(nxtu!.GetStrongReferenceCount());
-		print(nxtu!.GetUnownedReferenceCount());
-		print(nxtu!.GetWeakReferenceCount());
-		nxt2 :Next? = new Next(0);
-		
-		nxt = null;
-		nxtw?.printNext();
-		vv := nxt?.v;
-		//print(vv!.i);
-		nxt?.v ??= nxt2;
-		vv = nxt?.v;
-		//print(vv!.i);
-		nxt3 := new Next(18);
-		//nxt2 = null;
-		nxtw = nxt ?? nxt2 ?? throw CppAdvance.IntegerOverflowException();
-		//print(ii!.i);
-		print(nxtw!.GetStrongReferenceCount());
-		print(nxtw!.GetUnownedReferenceCount());
-		print(nxtw!.GetWeakReferenceCount());
-		print(nxtw!.i ?: 333);
-	}
-		nxtw?.v = new Next(45);
-		nxtw?.printNext();
-		print(nxtw ? nxtw!.GetWeakReferenceCount() : 10000u);
-		nxtw?.printNext();
+	o: object;
+	o = true;
+	o = ss;
+	o = 'r';
+	o = "12345";
+	o = v;
+	o = vc;
+	print(o.GetStrongReferenceCount());
+	print(o.GetUnownedReferenceCount());
+	print(o.GetWeakReferenceCount());
+	print(i32(o.IsStackAllocated()));
+	on: object? = null;
+	on = 10;
+	on = v;
+	on = vc;
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);
 }
 

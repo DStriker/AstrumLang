@@ -3052,7 +3052,8 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 	}
 	for (const auto& func : type->methods)
 	{
-		if (!func.isStatic && !func.isConverter && !func.id.starts_with("operator") && !func.id.starts_with("_operator")) continue;
+		if (!func.isStatic && !func.isConverter && !func.id.starts_with("operator") && !func.id.starts_with("_operator") 
+			&& !(func.isConstructor && func.implicitSpecification)) continue;
 		if (!func.compilationCondition.empty())
 		{
 			out << "#if " << func.compilationCondition << std::endl << std::string(depth, '\t');
@@ -3097,7 +3098,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 		{
 			out << "inline consteval ";
 		}
-		else if (func.isConstexpr)
+		else if (func.isConstexpr && !func.isConstructor)
 		{
 			out << "inline constexpr ";
 		}
@@ -3126,6 +3127,10 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			if (func.isConstReturn) out << " const&";
 			else if (func.isRefReturn) out << " &";
 		}
+		else if (func.isConstructor)
+		{
+			out << type->id;
+		}
 		else out << func.id;
 		if (func.id.ends_with(" new") || func.id.ends_with(" delete")) isNewDeleteOperator = true;
 		if (func.templateSpecializationArgs) {
@@ -3145,7 +3150,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 		isVariadicTemplate = false;
 		isFunctionDeclaration = false;
 		out << " ";
-		if (!func.isStatic) {
+		if (!func.isStatic && !func.isConstructor) {
 			out << "const ";
 		}
 		if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
@@ -4402,7 +4407,8 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 
 		for (const auto& func : type->methods)
 		{
-			if (!func.isConverter && !func.id.starts_with("operator") && !func.id.starts_with("_operator")) continue;
+			if (!func.isConverter && !func.id.starts_with("operator") && !func.id.starts_with("_operator") 
+				&& !(func.isConstructor && func.implicitSpecification)) continue;
 			if (!func.compilationCondition.empty())
 			{
 				out << "#if " << func.compilationCondition << std::endl << std::string(depth, '\t');
@@ -4431,7 +4437,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 			out << "inline ";
 			if (func.isConstexpr) "constexpr ";
 
-			bool isRegularMethod = !func.isConverter;
+			bool isRegularMethod = !func.isConverter && !func.isConstructor;
 			if (isRegularMethod) out << "decltype(auto) ";
 			out << type->id;
 			if (type->templateSpecializationArgs)
@@ -4460,6 +4466,10 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 				if (func.isConstReturn) out << " const&";
 				else if (func.isRefReturn) out << " &";
 			}
+			else if (func.isConstructor)
+			{
+				out << type->id;
+			}
 			else out << func.id;
 			if (func.id.ends_with(" new") || func.id.ends_with(" delete")) isNewDeleteOperator = true;
 			if (func.templateSpecializationArgs) {
@@ -4478,53 +4488,15 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 			else out << "()";
 			isVariadicTemplate = false;
 			isFunctionDeclaration = false;
-			out << " const ";
+			if (!func.isConstructor) out << " const ";
 			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
 
 			if (!func.isStatic && func.isRefReturn)
 				out << " LIFETIMEBOUND";
 
-			out << "{ ADV_EXPRESSION_BODY(__ref().";
-			if (func.templateParams) out << "template ";
-			if (func.isConverter)
+			if (func.isConstructor)
 			{
-				out << "operator ";
-				if (func.isConstReturn) out << "const ";
-				printTypeId(func.returnType);
-				if (func.isRefReturn) out << "&";
-			}
-			else
-			{
-				out << func.id;
-			}
-
-			if (func.templateSpecializationArgs)
-			{
-				out << "<";
-				bool first = true;
-				for (auto tparam : func.templateSpecializationArgs->templateArgument())
-				{
-					if (!first) out << ", ";
-					first = false;
-					printTemplateArgument(tparam);
-				}
-				out << ">";
-			}
-			else if (func.templateParams)
-			{
-				out << "<";
-				bool first = true;
-				for (auto tparam : func.templateParams->templateParamDeclaration())
-				{
-					if (!first) out << ", ";
-					first = false;
-					out << tparam->Identifier()->getText();
-				}
-				out << ">";
-			}
-			out << "(";
-			if (func.params)
-			{
+				out << " : ___super(new (::operator new(sizeof(__class))) __class(";
 				if (auto clause = func.params->paramDeclClause()) {
 					bool first = true;
 					for (auto param : clause->paramDeclList()->paramDeclaration())
@@ -4534,18 +4506,74 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 						out << param->Identifier()->getText();
 					}
 				}
+				out << ")) {}";
 			}
-			else if (func.indexerParams)
-			{
-				bool first = true;
-				for (auto param : func.indexerParams->paramDeclList()->paramDeclaration())
+			else {
+				out << "{ ADV_EXPRESSION_BODY(__ref().";
+				if (func.templateParams) out << "template ";
+				if (func.isConverter)
 				{
-					if (!first) out << ", ";
-					first = false;
-					out << param->Identifier()->getText();
+					out << "operator ";
+					if (func.isConstReturn) out << "const ";
+					printTypeId(func.returnType);
+					if (func.isRefReturn) out << "&";
 				}
+				else
+				{
+					out << func.id;
+				}
+
+				if (func.templateSpecializationArgs)
+				{
+					out << "<";
+					bool first = true;
+					for (auto tparam : func.templateSpecializationArgs->templateArgument())
+					{
+						if (!first) out << ", ";
+						first = false;
+						printTemplateArgument(tparam);
+					}
+					out << ">";
+				}
+				else if (func.templateParams)
+				{
+					out << "<";
+					bool first = true;
+					for (auto tparam : func.templateParams->templateParamDeclaration())
+					{
+						if (!first) out << ", ";
+						first = false;
+						out << tparam->Identifier()->getText();
+					}
+					out << ">";
+				}
+				out << "(";
+				if (func.params)
+				{
+					if (auto clause = func.params->paramDeclClause()) {
+						bool first = true;
+						for (auto param : clause->paramDeclList()->paramDeclaration())
+						{
+							if (!first) out << ", ";
+							first = false;
+							out << param->Identifier()->getText();
+						}
+					}
+				}
+				else if (func.indexerParams)
+				{
+					bool first = true;
+					for (auto param : func.indexerParams->paramDeclList()->paramDeclaration())
+					{
+						if (!first) out << ", ";
+						first = false;
+						out << param->Identifier()->getText();
+					}
+				}
+				out << ")); }";
 			}
-			out << ")); }" << std::endl << std::string(depth, '\t');
+			out << std::endl << std::string(depth, '\t');
+			if (func.isConstructor) continue;
 			if (func.id == "operator++" || func.id == "operator--")
 			{
 				if (type->templateParams)
@@ -9373,6 +9401,10 @@ void CppAdvanceCodegen::printSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpe
 	{
 		out << "CppAdvance::Str";
 	}
+	else if (ctx->Object())
+	{
+		out << "CppAdvance::ObjectRef";
+	}
 	else if (ctx->Self())
 	{
 	out << "__self";
@@ -10071,10 +10103,6 @@ void CppAdvanceCodegen::printUnaryExpression(CppAdvanceParser::UnaryExpressionCo
 		printTypeId(ctx->theTypeId());
 		out << "))";
 	}
-	/*else if (ctx->newExpression())
-	{
-		printNewExpression(ctx->newExpression());
-	}*/
 	
 	if (!lvalue && sema.optionalChains.contains(ctx))
 	{
@@ -10094,9 +10122,110 @@ void CppAdvanceCodegen::printNewExpression(CppAdvanceParser::NewExpressionContex
 	out << ">(";
 	if (auto init = ctx->newInitializer())
 	{
-		if (auto expr = init->expressionList())
+		if (auto expressions = init->expressionList())
 		{
-			printExpressionList(expr);
+			//printExpressionList(expr);
+			int paramCount = expressions->expressionListPart().size();
+			std::set<std::string> namedArgs;
+			for (auto param : expressions->expressionListPart())
+			{
+				if (auto id = param->Identifier())
+				{
+					namedArgs.insert(id->getText());
+				}
+			}
+			auto txt = ctx->theTypeId()->getText();
+			auto txt2 = txt;
+			auto pos = txt.rfind('.');
+			if (pos != txt.npos) txt2 = txt.substr(pos+1);
+			pos = txt.rfind('<');
+			if (pos != txt.npos) txt = txt.substr(0, pos);
+			txt2 = txt + "." + txt2;
+			bool params = sema.cppParser.parametersTable.contains(txt2);
+			bool printed = false;
+			if (!namedArgs.empty() && params)
+			{
+				std::string signature;
+				if (params)
+				{
+					for (const auto& signatures : sema.cppParser.parametersTable[txt2])
+					{
+						auto args = StringSplit(signatures, ",,");
+						if (args.size() >= paramCount) {
+							int i = 0;
+							for (const auto& arg : args) {
+								if (namedArgs.contains(arg.substr(0, arg.find('='))))
+									++i;
+								if (namedArgs.size() == i) {
+									signature = signatures;
+									break;
+								}
+							}
+						}
+						if (!signature.empty()) break;
+					}
+				}
+
+				if (signature.empty())
+					out << "Signature not found!";
+				else
+				{
+					printed = true;
+					auto args = StringSplit(signature, ",,");
+					paramCount = args.size();
+					std::unordered_map<int, std::string> argOrder;
+					std::unordered_map<std::string, std::string> defaultValues;
+					int i = 0;
+					for (const auto& arg : args) {
+						auto pos = arg.find('=');
+						argOrder[i++] = arg.substr(0, pos);
+						if (pos != arg.npos)
+							defaultValues[arg.substr(0, pos)] = arg.substr(pos + 1);
+					}
+
+					int currentArg = 0;
+					while (auto param = expressions->expressionListPart(currentArg))
+					{
+						if (param->Identifier()) break;
+						if (currentArg > 0) out << ", ";
+						printExpressionListPart(param);
+						++currentArg;
+					}
+
+					std::unordered_map<std::string, CppAdvanceParser::ExpressionListPartContext*> namedArgValues;
+					for (i = currentArg; i < expressions->expressionListPart().size(); ++i)
+					{
+						auto param = expressions->expressionListPart(i);
+						if (param->Identifier())
+						{
+							namedArgValues[param->Identifier()->getText()] = param;
+						}
+					}
+
+					while (currentArg < paramCount)
+					{
+						if (currentArg > 0) out << ", ";
+						auto arg = argOrder[currentArg];
+						if (namedArgValues.contains(arg))
+						{
+							printExpressionListPart(namedArgValues[arg]);
+						}
+						else if (defaultValues.contains(arg))
+						{
+							out << defaultValues[arg];
+						}
+						else if (sema.activeDefaultParams.contains(txt) && sema.activeDefaultParams[txt].contains(arg))
+						{
+							printInitializerClause(sema.activeDefaultParams[txt][arg]);
+						}
+						++currentArg;
+					}
+				}
+			}
+			else
+			{
+				printExpressionList(init->expressionList());
+			}
 		}
 		else if (auto braced = init->bracedInitList())
 		{

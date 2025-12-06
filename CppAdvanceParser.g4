@@ -374,6 +374,7 @@ simpleTypeSpecifier:
 	| Bool
 	| Str
 	| Self
+	| Object
 	| decltypeSpecifier
 	| LeftParen theTypeId (Comma theTypeId)+ RightParen
 	| LeftParen namedTupleField (Comma namedTupleField)+ RightParen
