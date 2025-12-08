@@ -21,6 +21,7 @@ class CppAdvanceCodegen
 	mutable bool isTemplateParamDeclaration = false;
 	mutable bool isVariadicTemplate = false;
 	mutable bool isStructDeclaration = false;
+	mutable bool isNested = false;
 	mutable bool isNewDeleteOperator = false;
 	mutable bool isPropertySetter = false;
 	mutable bool isPrivateStruct = false;
@@ -207,6 +208,7 @@ public:
 	void printQualifiedId(CppAdvanceParser::QualifiedIdContext* ctx) const;
 	void printUnqualifiedId(CppAdvanceParser::UnqualifiedIdContext* ctx) const;
 	void printNestedNameSpecifier(CppAdvanceParser::NestedNameSpecifierContext* ctx) const;
+	void printIdentifier(antlr4::tree::TerminalNode* node) const;
 	void printLiteral(CppAdvanceParser::LiteralContext* ctx) const;
 	void printIntegerLiteral(std::string txt, bool minus) const;
 	void printFloatLiteral(std::string txt, bool minus) const;

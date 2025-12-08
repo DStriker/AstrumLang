@@ -460,9 +460,11 @@ unaryExpression:
 	| Alignof LeftParen theTypeId RightParen
 	;
 
-newExpression: New theTypeId newInitializer?;
+newExpression: New memorySpaceSetter? theTypeId newInitializer?;
 
-stackallocExpression: Stackalloc theTypeId newInitializer?;
+stackallocExpression: Stackalloc memorySpaceSetter? theTypeId newInitializer?;
+
+memorySpaceSetter: Less constantExpression Greater;
 
 newInitializer: LeftParen expressionList? RightParen | bracedInitList;
 

@@ -94,11 +94,11 @@ std::string CppAdvanceSema::getCurrentFullTypeName()
 {
 	const auto& structs = getStackUnderlyingContainer(currentTypeWithTemplate);
 	std::string result;
-	bool first = true;
-	for (const auto& type : structs)
+	for (int i = 0; i < structs.size(); ++i)
 	{
-		if (!first) result += ".";
-		first = false;
+		if (i > 0) result += ".";
+		auto type = structs[i];
+		if (i < (structs.size() - 1) && type.starts_with("__Class_")) type = type.substr(8);
         result += type;
 	}
 	return result;
@@ -566,6 +566,10 @@ void CppAdvanceSema::exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationCo
 		if (ctx->Star())
 		{
 			CppAdvanceCompilerError("Global variables cannot be auto pointer type, full type required", ctx->Star()->getSymbol());
+		}
+		if (isTypeDefinitionBody() && currentTypeKind.top() == TypeKind::StaticClass)
+		{
+			isStatic = true;
 		}
 		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
 		std::optional<AccessSpecifier> access = std::nullopt;
@@ -1250,6 +1254,8 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 			isMutating = true;
 			if (!isTypeDefinitionBody() || isFriendDefinition)
 				CppAdvanceCompilerError("Global function cannot be mutating", spec->Mutable()->getSymbol());
+			if (currentTypeKind.top() == TypeKind::StaticClass)
+				CppAdvanceCompilerError("Static class method cannot be mutating", spec->Mutable()->getSymbol());
 		}
 		else if (spec->Virtual())
 		{
@@ -1264,6 +1270,8 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 			isOverride = true;
 			if (!isTypeDefinitionBody() || isFriendDefinition)
 				CppAdvanceCompilerError("Global function cannot be overrided", spec->Override()->getSymbol());
+			if (currentTypeKind.top() == TypeKind::StaticClass)
+				CppAdvanceCompilerError("Static class method cannot be overrided", spec->Override()->getSymbol());
 		}
 		else if (spec->Final())
 		{
@@ -1324,6 +1332,11 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 	}
 
 	if (firstPass && !functionBody) {
+		if (isTypeDefinitionBody() && currentTypeKind.top() == TypeKind::StaticClass)
+		{
+			isStatic = true;
+		}
+
 		if (isStatic) {
 			if (isMutating)
 				CppAdvanceCompilerError("Static method cannot be mutating", ctx->getStart());
@@ -1458,6 +1471,8 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 		if (ctx->Identifier()) id = ctx->Identifier()->getText();
 		else if (ctx->simpleTemplateId()) id = ctx->simpleTemplateId()->templateName()->Identifier()->getText();
 		else if (ctx->operatorFunctionId()) {
+			if (currentTypeKind.top() == TypeKind::StaticClass)
+				CppAdvanceCompilerError("Static class cannot overload operators", ctx->operatorFunctionId()->getStart());
 			id = ctx->operatorFunctionId()->getText(); 
 			if (ctx->operatorFunctionId()->operator_()->Exclamation()) id = "operator*";
 			StringReplace(id, "operator", "operator ");
@@ -3023,6 +3038,8 @@ void CppAdvanceSema::exitTupleExpression(CppAdvanceParser::TupleExpressionContex
 
 void CppAdvanceSema::enterConstructor(CppAdvanceParser::ConstructorContext* ctx)
 {
+	if (currentTypeKind.top() == TypeKind::StaticClass)
+		CppAdvanceCompilerError("Static class cannot have a constructor", ctx->This()->getSymbol());
 	symbolContexts.push(symbolContexts.top());
 	bool isInline = ctx->Inline();
 	bool isConstexpr = false;
@@ -3273,6 +3290,8 @@ void CppAdvanceSema::exitMemberInitializationStatement(CppAdvanceParser::MemberI
 
 void CppAdvanceSema::enterConversionFunction(CppAdvanceParser::ConversionFunctionContext* ctx)
 {
+	if (isTypeDefinitionBody() && currentTypeKind.top() == TypeKind::StaticClass)
+		CppAdvanceCompilerError("Static class cannot define type conversions", ctx->conversionFunctionId()->getStart());
 	symbolContexts.push(symbolContexts.top());
 	bool isInline = false;
 	bool isConstexpr = false;
@@ -3426,6 +3445,8 @@ void CppAdvanceSema::exitThreeWayComparisonExpression(CppAdvanceParser::ThreeWay
 
 void CppAdvanceSema::enterIndexer(CppAdvanceParser::IndexerContext* ctx)
 {
+	if (currentTypeKind.top() == TypeKind::StaticClass)
+		CppAdvanceCompilerError("Static class cannot have an indexer", ctx->getStart());
 	symbolContexts.push(symbolContexts.top());
 	bool isInline = false;
 	bool isStatic = false;
@@ -3823,6 +3844,9 @@ void CppAdvanceSema::enterProperty(CppAdvanceParser::PropertyContext* ctx)
 			else if (body->Assign()) isInline = true;
 		}
 
+		if (currentTypeKind.top() == TypeKind::StaticClass)
+			isStatic = true;
+
 		CppAdvanceParser::AccessSpecifierContext* acc = ctx->accessSpecifier();
 		std::optional<AccessSpecifier> access = std::nullopt;
 
@@ -3993,6 +4017,9 @@ void CppAdvanceSema::enterSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDe
 void CppAdvanceSema::exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDeclarationContext* ctx)
 {
 	if (firstPass && functionBody) return;
+	if (isTypeDefinitionBody() && currentTypeKind.top() == TypeKind::StaticClass && !functionBody)
+		CppAdvanceCompilerError("Static class cannot have multiple fields with one definition", ctx->getStart());
+
 	bool isConst = false;
 	bool isVolatile = false;
 	bool isThreadLocal = false;
@@ -4186,12 +4213,14 @@ void CppAdvanceSema::enterClassDefinition(CppAdvanceParser::ClassDefinitionConte
 {
 	symbolContexts.push(symbolContexts.top());
 	currentAccessSpecifier.push(std::nullopt);
-	currentTypeKind.push(TypeKind::Class);
-
-	if (ctx->classHead()->baseClause())
+	bool isStatic = ctx->classHead()->Static();
+	if (isStatic)
 	{
-		if (ctx->classHead()->Static())
-			CppAdvanceCompilerError("Static class cannot inherit other types or implement interfaces", ctx->classHead()->baseClause()->getStart());
+		currentTypeKind.push(TypeKind::StaticClass);
+	}
+	else
+	{
+		currentTypeKind.push(TypeKind::Class);
 	}
 
 	auto namectx = ctx->classHead()->className();
@@ -4226,6 +4255,8 @@ void CppAdvanceSema::enterClassDefinition(CppAdvanceParser::ClassDefinitionConte
 		if (auto b = ctx->classHead()->baseClause())
 		{
 			bases = b->baseSpecifierList();
+			if (isStatic && bases->baseSpecifier().size() > 1)
+				CppAdvanceCompilerError("Static class can be inherited only from other static classes", b->getStart());
 		}
 
 		bool isUnsafe = unsafeDepth > 0;
@@ -4282,7 +4313,7 @@ void CppAdvanceSema::enterClassDefinition(CppAdvanceParser::ClassDefinitionConte
 				isPrivateTypeDefinition = true;
 		}
 
-		auto def = std::make_shared<StructDefinition>(TypeKind::Class,
+		auto def = std::make_shared<StructDefinition>(currentTypeKind.top(),
 			name, tparams, tspec, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, bases, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
 			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
@@ -4311,7 +4342,8 @@ void CppAdvanceSema::enterClassDefinition(CppAdvanceParser::ClassDefinitionConte
 			}
 			name += ">";
 		}
-		currentTypeWithTemplate.push("__Class_" + name);
+		if (!isStatic) name = "__Class_" + name;
+		currentTypeWithTemplate.push(name);
 	}
 }
 
@@ -4329,9 +4361,11 @@ void CppAdvanceSema::exitClassDefinition(CppAdvanceParser::ClassDefinitionContex
 			constructorCounts.pop();
 			if (!top->templateSpecializationArgs) {
 				forwardDeclarations.push_back({ top->id,top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
-				forwardDeclarations.push_back({ top->id + "__Unowned",top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe});
-				forwardDeclarations.push_back({ top->id + "__Weak",top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe});
-				forwardDeclarations.push_back({ "__Class_" + top->id,top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe});
+				if (currentTypeKind.top() != TypeKind::StaticClass) {
+					forwardDeclarations.push_back({ top->id + "__Unowned",top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+					forwardDeclarations.push_back({ top->id + "__Weak",top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+					forwardDeclarations.push_back({ "__Class_" + top->id,top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+				}
 			}
 			globalStructs.push_back(top);
 		}
@@ -4698,7 +4732,7 @@ void CppAdvanceSema::exitStackallocExpression(CppAdvanceParser::StackallocExpres
 	if (!functionBody)
 		CppAdvanceCompilerError("Stackalloc expression can be used only in the function body", ctx->Stackalloc()->getSymbol());
 
-	stackallocPrerequisites[currentStatement].emplace_back(std::make_pair(ctx->theTypeId(), ctx->newInitializer()));
+	stackallocPrerequisites[currentStatement].emplace_back(ctx);
 }
 
 void CppAdvanceSema::exitFriendDeclaration(CppAdvanceParser::FriendDeclarationContext* ctx)

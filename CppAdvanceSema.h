@@ -327,11 +327,12 @@ struct FunctionDeclaration {
 
 enum class TypeKind {
 	Struct,
+	RefStruct,
 	Class,
+	StaticClass,
 	Interface,
 	Enum,
-	Union,
-	RefStruct
+	Union
 };
 
 struct StructDefinition {
@@ -359,7 +360,7 @@ struct StructDefinition {
 	bool hasAggregateInit = false;
 	bool isConstexpr = false;
 	bool isDefaultConstructible = false;
-	bool isStatic = false;
+	//bool isStatic = false;
 
 	StructDefinition(TypeKind _kind, std::string _id, CppAdvanceParser::TemplateParamsContext* _targs, CppAdvanceParser::TemplateArgumentListContext* _tspec, AccessSpecifier _access, std::string _ccond, SourcePosition _pos,
 		const std::vector<VariableDefinition>& _fields, const std::vector<ConstantDefinition>& _constants, CppAdvanceParser::BaseSpecifierListContext* _bases,
@@ -470,7 +471,7 @@ public:
 	std::unordered_map<CppAdvanceParser::StatContext*, 
 		std::vector<std::pair<std::string, CppAdvanceParser::TheTypeIdContext*>>> parameterPrerequisites;
 	std::unordered_map<CppAdvanceParser::StatContext*, 
-		std::vector<std::pair<CppAdvanceParser::TheTypeIdContext*, CppAdvanceParser::NewInitializerContext*>>> stackallocPrerequisites;
+		std::vector<CppAdvanceParser::StackallocExpressionContext*>> stackallocPrerequisites;
 	std::unordered_map<CppAdvanceParser::StatContext*, 
 		std::vector<CppAdvanceParser::PostfixExpressionContext*>> conditionalPrerequisites;
 	std::unordered_map<std::string,NamedTuple> namedTuples;

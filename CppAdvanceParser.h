@@ -107,10 +107,10 @@ public:
     RuleTypename = 154, RuleClassName = 155, RuleDecltypeSpecifier = 156, 
     RuleEnumName = 157, RuleAccessSpecifier = 158, RuleProtectedInternal = 159, 
     RuleOperatorFunctionId = 160, RuleConversionFunctionId = 161, RuleUnaryExpression = 162, 
-    RuleNewExpression = 163, RuleStackallocExpression = 164, RuleNewInitializer = 165, 
-    RulePostfixExpression = 166, RuleTupleExpression = 167, RulePrimaryExpression = 168, 
-    RuleUnaryPrefixOperator = 169, RuleRefCaptureOperator = 170, RuleUnaryPostfixOperator = 171, 
-    RuleNot = 172, RuleOperator = 173, RuleLiteral = 174
+    RuleNewExpression = 163, RuleStackallocExpression = 164, RuleMemorySpaceSetter = 165, 
+    RuleNewInitializer = 166, RulePostfixExpression = 167, RuleTupleExpression = 168, 
+    RulePrimaryExpression = 169, RuleUnaryPrefixOperator = 170, RuleRefCaptureOperator = 171, 
+    RuleUnaryPostfixOperator = 172, RuleNot = 173, RuleOperator = 174, RuleLiteral = 175
   };
 
   explicit CppAdvanceParser(antlr4::TokenStream *input);
@@ -295,6 +295,7 @@ public:
   class UnaryExpressionContext;
   class NewExpressionContext;
   class StackallocExpressionContext;
+  class MemorySpaceSetterContext;
   class NewInitializerContext;
   class PostfixExpressionContext;
   class TupleExpressionContext;
@@ -3112,6 +3113,7 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *New();
     TheTypeIdContext *theTypeId();
+    MemorySpaceSetterContext *memorySpaceSetter();
     NewInitializerContext *newInitializer();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -3127,6 +3129,7 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *Stackalloc();
     TheTypeIdContext *theTypeId();
+    MemorySpaceSetterContext *memorySpaceSetter();
     NewInitializerContext *newInitializer();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -3135,6 +3138,21 @@ public:
   };
 
   StackallocExpressionContext* stackallocExpression();
+
+  class  MemorySpaceSetterContext : public antlr4::ParserRuleContext {
+  public:
+    MemorySpaceSetterContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Less();
+    ConstantExpressionContext *constantExpression();
+    antlr4::tree::TerminalNode *Greater();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  MemorySpaceSetterContext* memorySpaceSetter();
 
   class  NewInitializerContext : public antlr4::ParserRuleContext {
   public:

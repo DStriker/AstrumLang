@@ -92,14 +92,12 @@ public struct Vector3 : IEquatable, IFormattable
 	public static const ZERO :Vector3 = Vector3(0,0,0);
 	type Coords = (x: i32,y: i32,z: i32);
 
-	public struct NestedStruct {
+	public class NestedStruct {
 		public {
 		x: f32;
 		y: f32;
 		z: f32;
-		//tt: Test111 { get; private set; }
-
-		//if debug _version: i32;
+		static count: (i: i32) -> i32 ==> i * 10;
 		}
 	}
 
@@ -205,14 +203,18 @@ public abstract class VectorClass : BaseClass, IEquatable, IFormattable
 	public static const ZERO :Vector3 = Vector3(0,0,0);
 	public type Coords = (x: i32,y: i32,z: i32);
 
-	public struct NestedStruct {
+	public class NestedClass {
 		public {
 		x: f32;
 		y: f32;
 		z: f32;
-		//tt: Test111 { get; private set; }
 
-		//if debug _version: i32;
+		this(x: f32, y: f32, z: f32) noexcept == {
+			this.x = x;
+			this.y = y;
+			this.z = z;
+		}
+		static count: (i: i32) -> i32 ==> i * 10;
 		}
 	}
 
@@ -355,6 +357,53 @@ public class Next {
 	}
 }
 
+public static class Utils {
+	public {
+		v: ConcreteVectorClass;
+		let vv: Vector3 = {1,2,3};
+
+		BYTES :== 24;
+		if debug type Color = (r: i32, g: i32, b: i32);
+
+		Count: i32 = 1 {
+			get {
+				print("Read");
+				return field * 10;
+			}
+			private set {
+				print("Write");
+				if (value > 10) field = value / 10;
+				else field = value;
+			}
+		}
+
+		class NestedClass {
+			public x,y,z: i32;
+		}
+
+		printUtils: () = {
+			print("This is printUtils function");
+		}
+
+		TemplateMethod: <U> (x: U, y: U, z: U) -> Color == {
+			struct LocalStruct {
+				public {
+				x: f32;
+				y: f32;
+				z: f32;
+				}
+			}
+			return {x,y,z};
+		}
+	}
+}
+
+public static class Utils2 : Utils {
+	public printUtils: () = {
+		print("This is printUtils2 function");
+	}
+}
+
 private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 {
 	/*extern externalFunc: (a: i32, b: str) -> str;
@@ -379,18 +428,15 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		if (ic == tc&) ic2*.x.x = 245;
 		print(ic2*.x.x);
 	}
-	getClass2 := ttt.getClass2(4,5);*/
+	getClass2 := ttt.getClass2(4,5);
 	//result := ss.sum(400i64);
 	vv: Vector3(2,3,4);
-	//ttt: Test1.Test2.TestClass = vv.GetTest();
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).getClassExt(c=4,b=2,a=1,b2=true).x);
 	ss:=300;
-	//result2 := ss.sum<i32,15>(400);
 	v: Vector3 = {2,7,4};
 	v = {6,53,9};
 	print(v.y);
 	fv: Vector3 = v;
-	//print(fv.Name);
 	x, y, z := fv;
 	print(fv.ToString());
 	print(fv.HashCode());
@@ -401,21 +447,20 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 	print(vc.Name);
 	print(vc.Count);
 	print(vc.getX());
-	//vc = Vector3(2,3,4);
-	print(VectorClass.BYTES);
-	nxt: Next?;
+	print(VectorClass.BYTES);*/
+	nxt: VectorClass.NestedClass?;
 	{
-	nxt2:= stackalloc Next(34);
+	nxt2:= new VectorClass.NestedClass(3.14f,4.15f,6.73f);
 	nxt = nxt2;
-	print(nxt2.GetStrongReferenceCount());
-	print(nxt2.GetUnownedReferenceCount());
-	print(nxt2.GetWeakReferenceCount());
-	print(i32(nxt2.IsStackAllocated()));
+	print(Utils.Count);
+	print(Utils2.Count);
+	x,y,z := Utils2.TemplateMethod(1,2,3);
+	print(x);
+	print(y);
+	print(z);
+	Utils.printUtils();
+	Utils2.printUtils();
 	}
-	on: object? = null;
-	on = 10;
-	on = v;
-	on = vc;
 	print(nxt!.GetStrongReferenceCount());
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);
 }
