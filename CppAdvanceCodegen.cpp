@@ -597,38 +597,9 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		}
 		else
 		{
-			bool first = true;
-			CppAdvanceParser::BaseSpecifierContext* prev = nullptr;
-			CppAdvanceParser::BaseSpecifierContext* firstBase = type->interfaces->baseSpecifier(0);
-			for (auto base : type->interfaces->baseSpecifier())
-			{
-				if (!first) out << ", ";
-				out << "public CppAdvance::ClassParent<";
-				printBaseSpecifier(firstBase);
-				out << ", ";
-				if (first) {
-					out << "CppAdvance::Object";
-				}
-				else {
-					printBaseSpecifier(prev);
-				}
-				out << ", ";
-				printBaseSpecifier(base);
-				out << ">";
-				prev = base;
-				first = false;
-			}
-			if (!first) out << ", ";
 			out << "public CppAdvance::ClassParent<";
-			printBaseSpecifier(firstBase);
-			out << ", ";
-			if (first) {
-				out << "CppAdvance::Object";
-			}
-			else {
-				printBaseSpecifier(prev);
-			}
-			out << ", CppAdvance::EmptyType>";
+			printBaseSpecifier(type->interfaces->baseSpecifier(0));
+			out << ">";
 		}
 	}
 		break;
@@ -698,8 +669,6 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		else
 		{
 			out << "CppAdvance::ClassParent<";
-			printBaseSpecifier(type->interfaces->baseSpecifier(0));
-			out << ", CppAdvance::Object, ";
 			printBaseSpecifier(type->interfaces->baseSpecifier(0));
 			out << ">";
 		}
@@ -2213,6 +2182,21 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			}
 			
 			out << "\n" << std::string(depth, '\t');
+			if (type->interfaces) {
+				for (auto iface : type->interfaces->baseSpecifier())
+				{
+					out << "#line " << iface->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+					out << "ADV_CHECK_INTERFACE_IMPLEMENTATION(" << type->id << ", ";
+					auto name = iface->className()->Identifier();
+					auto tid = iface->className()->simpleTemplateId();
+					if (tid) name = tid->templateName()->Identifier();
+					printIdentifier(name);
+					out << ", ";
+					printBaseSpecifier(iface);
+					out << ", " << type->id;
+					out << ");\n" << std::string(depth, '\t');
+				}
+			}
 		}
 		//printClassRef(type);
 	}
@@ -2249,18 +2233,6 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 	}
 
 	out << " final : public CppAdvance::ValueType";
-	if (type->interfaces) {
-		for (auto iface : type->interfaces->baseSpecifier())
-		{
-			out << ", public ";
-			if (iface->nestedNameSpecifier())
-			{
-				printNestedNameSpecifier(iface->nestedNameSpecifier());
-			}
-			printClassName(iface->className());
-			out << "::__class";
-		}
-	}
 
 	out << "\n" << std::string(depth++, '\t') << "{\n" << std::string(depth, '\t');
 	if (type->interfaces) {
@@ -2488,7 +2460,22 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 	if (!type->templateSpecializationArgs && !type->templateParams)
 	{
 		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-		out << "ADV_CHECK_FOR_CONCRETE(" << type->id << ");";
+		out << "ADV_CHECK_FOR_CONCRETE(" << type->id << ");\n" << std::string(depth, '\t');
+		if (type->interfaces) {
+			for (auto iface : type->interfaces->baseSpecifier())
+			{
+				out << "#line " << iface->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+				out << "ADV_CHECK_INTERFACE_IMPLEMENTATION(" << type->id << ", ";
+				auto name = iface->className()->Identifier();
+				auto tid = iface->className()->simpleTemplateId();
+				if (tid) name = tid->templateName()->Identifier();
+				printIdentifier(name);
+				out << ", ";
+				printBaseSpecifier(iface);
+				out << ", " << type->id;
+				out << ");\n" << std::string(depth, '\t');
+			}
+		}
 	}
 
 	if (!type->compilationCondition.empty())
@@ -3868,6 +3855,1603 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 	sema.symbolContexts.push(sema.symbolContexts.top());
 }
 
+void CppAdvanceCodegen::printInterface(StructDefinition* type) const
+{
+	if (!type->compilationCondition.empty())
+	{
+		out << "#if " << type->compilationCondition << std::endl;
+	}
+	if (type->templateParams)
+	{
+		printTemplateParams(type->templateParams);
+		out << " ";
+	}
+
+	out << "template<> inline constexpr bool CppAdvance::__details::cheapCopy<" << type->id;
+	if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto tparam : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printIdentifier(tparam->Identifier());
+		}
+		out << ">";
+	}
+	out << "> = false;\n" << std::string(depth, '\t');
+	//concepts for method implementations
+	std::map<const MethodDefinition*, std::string> methodIds;
+	std::map<const PropertyDefinition*, std::string> propertyIds;
+	std::vector<std::string> interfaceRequirements;
+	for (const auto& method : type->methods) {
+		if (method.indexerParams)
+		{
+			methodIds[&method] = sema.getInterfaceMethodId(type->id + "_" + method.id, method.indexerParams);
+		}
+		else
+		{
+			methodIds[&method] = sema.getInterfaceMethodId(type->id + "_" + method.id, method.params->paramDeclClause());
+		}
+		out << "#line " << method.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "template<class __AnyType";
+		if (type->templateParams)
+		{
+			for (auto param : type->templateParams->templateParamDeclaration())
+			{
+				out << ", ";
+				printTemplateParamDeclaration(param);
+			}
+		}
+		auto id = method.id;
+		if (method.indexerParams) id = "getAt";
+		if (!method.isDefault) interfaceRequirements.emplace_back("__HasMethodImplementation_" + methodIds[&method]);
+		out << "> concept __HasMethodImplementation_" << methodIds[&method] << " = requires(typename __AnyType::__class t) { {t." << id << "(";
+		if (method.indexerParams)
+		{
+			bool first = true;
+			for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				out << "std::declval<";
+				printTypeId(param->theTypeId());
+				out << ">()";
+			}
+		}
+		else if (method.params->paramDeclClause()) {
+			bool first = true;
+			for (auto param : method.params->paramDeclClause()->paramDeclList()->paramDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				out << "std::declval<";
+				printTypeId(param->theTypeId());
+				out << ">()";
+			}
+		}
+		out << ")} -> ";
+		if (method.returnType)
+		{
+			out << "std::convertible_to<";
+			printTypeId(method.returnType);
+			out << ">";
+		}
+		else
+		{
+			out << "std::same_as<void>";
+		}
+		
+		out << "; } || requires(typename __AnyType::__class t) { {" << method.id << "(t";
+		if (method.params->paramDeclClause()) {
+			for (auto param : method.params->paramDeclClause()->paramDeclList()->paramDeclaration())
+			{
+				out << ", ";
+				out << "std::declval<";
+				printTypeId(param->theTypeId());
+				out << ">()";
+			}
+		}
+		out << ")} -> ";
+		if (method.returnType)
+		{
+			out << "std::convertible_to<";
+			printTypeId(method.returnType);
+			out << ">";
+		}
+		else
+		{
+			out << "std::same_as<void>";
+		}
+
+		out << "; };\n" << std::string(depth, '\t');
+		if (method.indexerSetter)
+		{
+			out << "#line " << method.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << "template<class __AnyType";
+			if (type->templateParams)
+			{
+				for (auto param : type->templateParams->templateParamDeclaration())
+				{
+					out << ", ";
+					printTemplateParamDeclaration(param);
+				}
+			}
+
+			interfaceRequirements.emplace_back("__HasMethodImplementation_set" + methodIds[&method]);
+			out << "> concept __HasMethodImplementation_set" << methodIds[&method] << " = requires(typename __AnyType::__class t) { {t.__ref().setAt(";
+			if (method.indexerParams) {
+				bool first = true;
+				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					out << "std::declval<";
+					printTypeId(param->theTypeId());
+					out << ">()";
+				}
+			}
+			out << ",std::declval<";
+			printTypeId(method.returnType);
+			out << ">())} -> std::same_as<void>; } || requires(typename __AnyType::__class t) { {setAt(t";
+			if (method.params->paramDeclClause()) {
+				for (auto param : method.params->paramDeclClause()->paramDeclList()->paramDeclaration())
+				{
+					out << ", ";
+					out << "std::declval<";
+					printTypeId(param->theTypeId());
+					out << ">()";
+				}
+			}
+			out << ")} -> ";
+			if (method.returnType)
+			{
+				out << "std::convertible_to<";
+				printTypeId(method.returnType);
+				out << ">";
+			}
+			else
+			{
+				out << "std::same_as<void>";
+			}
+
+			out << "; };\n" << std::string(depth, '\t');
+		}
+	}
+	for (const auto& prop : type->properties) {
+		propertyIds[&prop] = sema.getInterfaceMethodId(type->id + "_" + prop.id, nullptr);
+		auto id = propertyIds[&prop];
+		out << "#line " << prop.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "template<class __AnyType";
+		if (type->templateParams)
+		{
+			for (auto param : type->templateParams->templateParamDeclaration())
+			{
+				out << ", ";
+				printTemplateParamDeclaration(param);
+			}
+		}
+
+		interfaceRequirements.emplace_back("__HasMethodImplementation_get" + id);
+		out << "> concept __HasMethodImplementation_get" << id << " = requires(typename __AnyType::__class t) { {t.__ref().get" << prop.id 
+			<< "()} -> std::convertible_to<";
+		printTypeId(prop.type);
+		out << ">; } || requires(__AnyType t) { {get" << prop.id << "(t)} -> std::convertible_to<";
+		printTypeId(prop.type);
+		out << ">; };\n" << std::string(depth, '\t');
+		if (prop.setter)
+		{
+			out << "#line " << prop.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << "template<class __AnyType";
+			if (type->templateParams)
+			{
+				for (auto param : type->templateParams->templateParamDeclaration())
+				{
+					out << ", ";
+					printTemplateParamDeclaration(param);
+				}
+			}
+			interfaceRequirements.emplace_back("__HasMethodImplementation_set" + id);
+			out << "> concept __HasMethodImplementation_set" << id << " = requires(typename __AnyType::__class t) { t.__ref().set" << prop.id
+				<< "(std::declval<";
+			printTypeId(prop.type);
+			out << ">()); } || requires(__AnyType t) { set"
+				<< prop.id << "(t, std::declval<";
+			printTypeId(prop.type);
+			out << ">()); };\n" << std::string(depth, '\t');
+		}
+	}
+	//print interface virtual table
+	out << "namespace __vtables {\n" << std::string(++depth, '\t');
+	out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+	if (type->templateParams)
+	{
+		printTemplateParams(type->templateParams);
+		out << " ";
+	}
+	out << "struct __vtable_" << type->id;
+	if (type->interfaces)
+	{
+		out << " : ";
+		bool first = true;
+		for (auto parent : type->interfaces->baseSpecifier())
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << "public ";
+			printBaseSpecifier(parent);
+			out << "::__vtable";
+		}
+	}
+	out << "\n" << std::string(depth, '\t') << "{\n" << std::string(++depth, '\t');
+	for (const auto& method : type->methods)
+	{
+		auto id = methodIds[&method];
+		out << "using fn_" << id << " = ";
+		if (method.returnType) {
+			if (method.isConstReturn) out << "const ";
+			printTypeId(method.returnType);
+			if (method.isRefReturn) out << "&";
+		}
+		else
+		{
+			out << "void";
+		}
+		out << "(CppAdvance::Object*";
+		if (method.indexerParams)
+		{
+			out << ", ";
+			printParamDeclClause(method.indexerParams);
+		}
+		else if (auto params = method.params->paramDeclClause()) {
+			out << ", ";
+			printParamDeclClause(params);
+		}
+		out << ");\n" << std::string(depth, '\t');
+		out << "fn_" << id << "* fnptr_" << id << ";\n" << std::string(depth, '\t');
+		out << "#line " << method.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "template<class __AnyType> static ";
+		if (method.returnType) {
+			if (method.isConstReturn) out << "const ";
+			printTypeId(method.returnType);
+			if (method.isRefReturn) out << "&";
+		}
+		else
+		{
+			out << "void";
+		}
+		out << " impl_" << id << "(CppAdvance::Object* obj";
+		if (method.indexerParams)
+		{
+			out << ", ";
+			printParamDeclClause(method.indexerParams);
+			out << ") { return ADV_UFCS(getAt)(*static_cast<typename __AnyType::__class*>(obj)";
+			if (method.params->paramDeclClause()) {
+				for (auto param : method.params->paramDeclClause()->paramDeclList()->paramDeclaration())
+				{
+					out << ", ";
+					printIdentifier(param->Identifier());
+				}
+			}
+			out << "); }";
+		}
+		else
+		{
+			if (auto params = method.params->paramDeclClause()) {
+				out << ", ";
+				printParamDeclClause(params);
+			}
+			out << ") { ";
+			if (method.isDefault)
+			{
+				out << "\n" << std::string(++depth, '\t');
+				out << "if constexpr(__HasMethodImplementation_" << methodIds[&method] << "<__AnyType";
+				if (type->templateParams)
+				{
+					for (auto param : type->templateParams->templateParamDeclaration())
+					{
+						out << ", ";
+						printIdentifier(param->Identifier());
+					}
+				}
+				out << ">) {\n" << std::string(++depth, '\t');
+			}
+			out << "ADV_EXPRESSION_BODY(ADV_UFCS(" << method.id << ")(*static_cast<typename __AnyType::__class*>(obj)";
+			if (method.params->paramDeclClause()) {
+				for (auto param : method.params->paramDeclClause()->paramDeclList()->paramDeclaration())
+				{
+					out << ", ";
+					printIdentifier(param->Identifier());
+				}
+			}
+			out << ")); ";
+			if (method.isDefault)
+			{
+				out << "\n" << std::string(--depth, '\t') << "} else { throw 0; }\n" << std::string(--depth, '\t') << "}";
+			}
+			else
+			{
+				out << "}";
+			}
+		}
+		out << "\n" << std::string(depth, '\t');
+		if (method.indexerSetter) {
+			out << "using fn_set" << id << " = void(CppAdvance::Object*, ";
+			printParamDeclClause(method.indexerParams);
+			out << ", const ";
+			printTypeId(method.returnType);
+			out << "&);\n" << std::string(depth, '\t');
+			out << "fn_set" << id << "* fnptr_set" << id << ";\n" << std::string(depth, '\t');
+			out << "#line " << method.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << "template<class __AnyType> static void impl_set" << id << "(CppAdvance::Object* obj, ";
+			printParamDeclClause(method.indexerParams);
+			out << ", const ";
+			printTypeId(method.returnType);
+			out << "& value) { ADV_UFCS(setAt)(*static_cast<typename __AnyType::__class*>(obj)";
+			for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
+			{
+				out << ", ";
+				printIdentifier(param->Identifier());
+			}
+			out << ", value); }\n" << std::string(depth, '\t');
+		}
+	}
+	for (const auto& prop : type->properties)
+	{
+		out << "using fn_get" << prop.id << " = ";
+		if (prop.isConst) out << "const ";
+		printTypeId(prop.type);
+		if (prop.isRef) out << "&";
+		out << "(CppAdvance::Object*);\n" << std::string(depth, '\t');
+		
+		out << "fn_get" << prop.id << "* fnptr_get" << prop.id << ";\n" << std::string(depth, '\t');
+		out << "#line " << prop.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "template<class __AnyType> static ";
+		if (prop.isConst) out << "const ";
+		printTypeId(prop.type);
+		if (prop.isRef) out << "&";
+		out << " impl_get" << prop.id 
+			<< "(CppAdvance::Object* obj) { return ADV_UFCS(get" << prop.id << ")(*static_cast<typename __AnyType::__class*>(obj)); }\n" 
+			<< std::string(depth, '\t');
+
+		if (prop.setter)
+		{
+			out << "using fn_set" << prop.id << " = void(CppAdvance::Object*, const ";
+			printTypeId(prop.type);
+			out << "&);\n" << std::string(depth, '\t');
+			out << "fn_set" << prop.id << "* fnptr_set" << prop.id << ";\n" << std::string(depth, '\t');
+			out << "#line " << prop.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << "template<class __AnyType> static void impl_set" << prop.id << "(CppAdvance::Object* obj, const ";
+			printTypeId(prop.type);
+			out << "& value) { ADV_UFCS(set" << prop.id << ")(*static_cast<typename __AnyType::__class*>(obj), value); }\n" << std::string(depth, '\t');
+		}
+	}
+	out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(--depth, '\t') << "}\n" << std::string(depth,'\t');
+	//virtual table instantiation
+	out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+	out << "template<class __AnyType";
+	if (type->templateParams)
+	{
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			out << ", ";
+			printTemplateParamDeclaration(param);
+		}
+	}
+	out << "> inline constexpr __vtables::__vtable_" << type->id;
+	if (type->templateParams)
+	{
+		bool first = true;
+		out << "<";
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printIdentifier(param->Identifier());
+		}
+		out << ">";
+	}
+	out << " __vtable_" << type->id << "_for = {";
+	bool first = true;
+	if (type->interfaces)
+	{
+		for (auto parent : type->interfaces->baseSpecifier())
+		{
+			if (!first) out << ", ";
+			first = false;
+			auto name = parent->className()->Identifier();
+			CppAdvanceParser::TemplateArgumentListContext* targs = nullptr;
+			if (auto tid = parent->className()->simpleTemplateId())
+			{
+				name = tid->templateName()->Identifier();
+				targs = tid->templateArgumentList();
+			}
+			if (parent->nestedNameSpecifier())
+			{
+				printNestedNameSpecifier(parent->nestedNameSpecifier());
+			}
+			out << "__vtables::__vtable_" << name->getText() << "_for<__AnyType";
+			if (targs) {
+				out << ", ";
+				printTemplateArgumentList(targs);
+			}
+			out << ">\n" << std::string(depth + 1,'\t');
+		}
+	}
+	for (const auto& method : type->methods) {
+        if (!first) out << ", ";
+		first = false;
+		if (method.isDefault) {
+			out << "__HasMethodImplementation_" << methodIds[&method] << "<__AnyType";
+			if (type->templateParams)
+			{
+				for (auto param : type->templateParams->templateParamDeclaration())
+				{
+					out << ", ";
+					printIdentifier(param->Identifier());
+				}
+			}
+			out << "> ? ";
+		}
+		out << "&__vtables::__vtable_" << type->id;
+		if (type->templateParams)
+		{
+			bool first2 = true;
+			out << "<";
+			for (auto param : type->templateParams->templateParamDeclaration())
+			{
+				if (!first2) out << ", ";
+				first2 = false;
+				printIdentifier(param->Identifier());
+			}
+			out << ">";
+		}
+		out << "::template impl_" << methodIds[&method] << "<__AnyType>";
+		if (method.isDefault)
+		{
+			out << " : nullptr";
+		}
+		if (method.indexerSetter)
+		{
+			out << ", &__vtables::__vtable_" << type->id;
+			if (type->templateParams)
+			{
+				bool first2 = true;
+				out << "<";
+				for (auto param : type->templateParams->templateParamDeclaration())
+				{
+					if (!first2) out << ", ";
+					first2 = false;
+					printIdentifier(param->Identifier());
+				}
+				out << ">";
+			}
+			out << "::template impl_set" << methodIds[&method] << "<__AnyType>";
+		}
+		out << "\n" << std::string(depth + 1,'\t');
+	}
+	for (const auto& prop : type->properties) {
+		if (!first) out << ", ";
+		first = false;
+		out << "&__vtables::__vtable_" << type->id;
+		if (type->templateParams)
+		{
+			bool first2 = true;
+			out << "<";
+			for (auto param : type->templateParams->templateParamDeclaration())
+			{
+				if (!first2) out << ", ";
+				first2 = false;
+				printIdentifier(param->Identifier());
+			}
+			out << ">";
+		}
+		out << "::template impl_get" << prop.id << "<__AnyType>";
+		if (prop.setter)
+		{
+			out << ", &__vtables::__vtable_" << type->id;
+			if (type->templateParams)
+			{
+				bool first2 = true;
+				out << "<";
+				for (auto param : type->templateParams->templateParamDeclaration())
+				{
+					if (!first2) out << ", ";
+					first2 = false;
+					printIdentifier(param->Identifier());
+				}
+				out << ">";
+			}
+			out << "::template impl_set" << prop.id << "<__AnyType>";
+		}
+		out << "\n" << std::string(depth + 1, '\t');
+	}
+	out << "};\n" << std::string(depth, '\t');
+	//print concept for static polymorphism
+	out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+	out << "template<class __AnyType";
+	if (type->templateParams)
+	{
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			out << ", ";
+			printTemplateParamDeclaration(param);
+		}
+	}
+	out << "> concept __ImplementsInterface_" << type->id << " = ";
+	first = true;
+	if (type->interfaces)
+	{
+		for (auto base : type->interfaces->baseSpecifier())
+		{
+			if (!first) out << " && ";
+			first = false;
+			if (base->nestedNameSpecifier())
+			{
+				printNestedNameSpecifier(base->nestedNameSpecifier());
+			}
+			out << "__ImplementsInterface_";
+            auto name = base->className()->Identifier();
+            CppAdvanceParser::TemplateArgumentListContext* targs = nullptr;
+			if (auto tid = base->className()->simpleTemplateId())
+			{
+				targs = tid->templateArgumentList();
+				name = tid->templateName()->Identifier();
+			}
+            out << name->getText() << "<__AnyType";
+			if (targs)
+			{
+				out << ", ";
+				printTemplateArgumentList(targs);
+			}
+			out << ">";
+		}
+	}
+	for (const auto& constraint : interfaceRequirements)
+	{
+		if (!first) out << " && ";
+		first = false;
+		out << constraint << "<__AnyType";
+		if (type->templateParams) {
+			for (auto param : type->templateParams->templateParamDeclaration())
+			{
+				out << ", ";
+				printIdentifier(param->Identifier());
+			}
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	//print interface reference
+	out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+	if (type->templateParams)
+	{
+		printTemplateParams(type->templateParams);
+		out << " ";
+	}
+	out << "class ";
+	if (isUnsafe) out << "[[clang::annotate(\"unsafe\")]] ";
+	out << type->id;
+	out << " final : public CppAdvance::InterfaceRef {\n" << std::string(++depth, '\t') << "private: using __self = " << type->id;
+	if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printIdentifier(param->Identifier());
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "public: using __vtable = __vtables::__vtable_" << type->id;
+	if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printIdentifier(param->Identifier());
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "public: using __class = CppAdvance::Object;\n" << std::string(depth, '\t');
+	out << "public: using ___super = CppAdvance::InterfaceRef;\n" << std::string(depth, '\t');
+	out << "private: friend class " << type->id << "__Unowned";
+	if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printIdentifier(param->Identifier());
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "friend class " << type->id << "__Weak";
+	if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printIdentifier(param->Identifier());
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "public: using __strong_ref = __self;\n" << std::string(depth, '\t');
+	out << "public: using __unowned_ref = " << type->id << "__Unowned";
+	if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printIdentifier(param->Identifier());
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "public: using __weak_ref = " << type->id << "__Weak";
+	if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printIdentifier(param->Identifier());
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "public: template<class __AnyType> static constexpr bool __ImplementsInterface = __ImplementsInterface_" << type->id << "<__AnyType";
+	if (type->templateParams)
+	for (auto param : type->templateParams->templateParamDeclaration())
+	{
+		out << ", ";
+		printIdentifier(param->Identifier());
+		if (param->Ellipsis()) out << "...";
+	}
+	out << ">;\n" << std::string(depth, '\t');
+	out << "public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }\n" << std::string(depth, '\t');
+	out << "private: const __vtable* _vtable;\n" << std::string(depth, '\t');
+	out << "ADV_INTERFACE_STRONG_COMMON_CTORS(" << type->id << ");\n" << std::string(depth, '\t');
+	if (type->templateParams)
+	{
+		out << "public: template<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			if (auto t = param->templateTypename())
+			{
+				if (auto name = t->theTypeId())
+				{
+					printTypeId(name);
+				}
+				else
+				{
+					out << "class";
+				}
+			}
+			if (param->Ellipsis())
+			{
+				out << "...";
+			};
+		}
+		out << "> friend class" << type->id << ";\n" << std::string(depth,'\t');
+		out << "public: template<";
+		first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			if (auto t = param->templateTypename())
+			{
+				if (auto name = t->theTypeId())
+				{
+					printTypeId(name);
+				}
+				else
+				{
+					out << "class";
+				}
+			}
+			if (param->Ellipsis())
+			{
+				out << "...";
+			};
+		}
+		out << "> friend class" << type->id << "__Unowned;\n" << std::string(depth, '\t');
+		out << "public: template<";
+		first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			if (auto t = param->templateTypename())
+			{
+				if (auto name = t->theTypeId())
+				{
+					printTypeId(name);
+				}
+				else
+				{
+					out << "class";
+				}
+			}
+			if (param->Ellipsis())
+			{
+				out << "...";
+			};
+		}
+		out << "> friend class" << type->id << "__Weak;\n" << std::string(depth, '\t');
+#define CTOR_TEMPLATE_PARAMS out << "public: template<";\
+		first = true;\
+		for (auto param : type->templateParams->templateParamDeclaration())\
+		{\
+			if (!first) out << ", ";\
+			first = false;\
+			if (auto t = param->templateTypename())\
+			{\
+				if (auto name = t->theTypeId())\
+				{\
+					printTypeId(name);\
+				}\
+				else\
+				{\
+					out << "class";\
+				}\
+			}\
+			if (param->Ellipsis())\
+			{\
+				out << "...";\
+			}\
+			out << " Other__";\
+			printIdentifier(param->Identifier());\
+		}\
+		out << "> requires ";\
+		first = true;\
+		for (auto param : type->templateParams->templateParamDeclaration())\
+		{\
+			bool inParam = param->In();\
+			bool outParam = param->Out();\
+			if (!first) out << " && ";\
+			first = false;\
+			if (inParam)\
+			{\
+				out << "std::derived_from<";\
+				printIdentifier(param->Identifier());\
+				out << ", Other__";\
+				printIdentifier(param->Identifier());\
+				out << ">";\
+			}\
+			else if (outParam)\
+			{\
+				out << "std::derived_from<Other__";\
+				printIdentifier(param->Identifier());\
+				out << ", ";\
+				printIdentifier(param->Identifier());\
+				out << ">";\
+			}\
+			else\
+			{\
+				out << "std::same_as<Other__";\
+				printIdentifier(param->Identifier());\
+				out << ", ";\
+				printIdentifier(param->Identifier());\
+				out << ">";\
+			}\
+		}
+		CTOR_TEMPLATE_PARAMS;
+		out << " " << type->id << "(const " << type->id << "<";
+		first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << "Other__";
+			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
+		}
+		out << ">& other) : ___super(other._obj), _vtable{ reinterpret_cast<const __vtable*>(other._vtable) } { CppAdvance::Retain(_obj); }\n" << std::string(depth, '\t');
+		
+		CTOR_TEMPLATE_PARAMS;
+		out << " " << type->id << " & operator=(const " << type->id << " < ";
+		first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << "Other__";
+			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
+		}
+		out << ">& other) { if (_obj) CppAdvance::Release(_obj); _obj = other._obj; \n" << std::string(depth,'\t');
+		out << "_vtable = reinterpret_cast<const __vtable*>(other._vtable); CppAdvance::Retain(_obj); return *this; }\n" << std::string(depth, '\t');
+		
+		CTOR_TEMPLATE_PARAMS;
+		out << " " << type->id << "(" << type->id << " < ";
+		first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << "Other__";
+			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
+		}
+		out << ">&& other) : ___super(other._obj), _vtable{ reinterpret_cast<const __vtable*>(other._vtable) } { other._obj = nullptr; other._vtable = nullptr; }\n" << std::string(depth, '\t');
+
+		CTOR_TEMPLATE_PARAMS;
+		out << " " << type->id << " & operator=(" << type->id << " < ";
+		first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << "Other__";
+			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
+		}
+		out << ">&& other) { if (_obj) CppAdvance::Release(_obj); _obj = other._obj; \n" << std::string(depth, '\t');
+		out << "_vtable = reinterpret_cast<const __vtable*>(other._vtable); other._obj = nullptr; other._vtable = nullptr; return *this; }\n" << std::string(depth, '\t');
+	}
+	out << "public: template<class __AnyType> requires __ImplementsInterface_" << type->id << "<__AnyType";
+	if (type->templateParams)
+	{
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			out << ", ";
+			printIdentifier(param->Identifier());
+		}
+	}
+	out << "> " << type->id << "(const __AnyType& value) : ___super(nullptr), _vtable{ nullptr } \n" << std::string(depth++, '\t') << "{\n" << std::string(depth, '\t');
+	out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::Retain(_obj); "
+		<< "if constexpr(std::is_base_of_v<__vtable,typename std::remove_cvref_t<__AnyType>::__vtable>) _vtable = CppAdvance::GetVTableFromInterface(&value);\n" << std::string(depth, '\t')
+		<< "else static_assert(false, \"Incompatible interfaces\");\n" << std::string(--depth, '\t');
+	out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::Retain(_obj);\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef__Unowned, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value)); CppAdvance::Retain(_obj);\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else if constexpr (std::is_base_of_v<CppAdvance::Object, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = &value; CppAdvance::Retain(_obj); _vtable = &__vtable_" << type->id << "_for<typename std::remove_cvref_t<__AnyType>::__self>;\n" << std::string(--depth, '\t')
+		<< "} else if constexpr (std::is_base_of_v<CppAdvance::Struct, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = new (::operator new(sizeof(typename std::remove_cvref_t<__AnyType>::__class))) typename std::remove_cvref_t<__AnyType>::__class(value);\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else static_assert(false,\"Not implemented yet\");\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+	out << "public: template<class __AnyType> requires __ImplementsInterface_" << type->id << "<__AnyType";
+	if (type->templateParams)
+	{
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			out << ", ";
+			printIdentifier(param->Identifier());
+		}
+	}
+	out << "> " << type->id << "(__AnyType&& value) : ___super(nullptr), _vtable{ nullptr } \n" << std::string(depth++, '\t') << "{\n" << std::string(depth, '\t');
+	out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::ClearObjectReference(&value); "
+		<< "if constexpr(std::is_base_of_v<__vtable,typename std::remove_cvref_t<__AnyType>::__vtable>) _vtable = CppAdvance::GetVTableFromInterface(&value);\n" << std::string(depth, '\t')
+		<< "else static_assert(false, \"Incompatible interfaces\");\n" << std::string(--depth, '\t');
+	out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::ClearObjectReference(&value);\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef__Unowned, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value)); CppAdvance::Retain(_obj);\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else if constexpr (std::is_base_of_v<CppAdvance::Object, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = &value; CppAdvance::Retain(_obj);_vtable = &__vtable_" << type->id << "_for<typename std::remove_cvref_t<__AnyType>::__self>;\n" << std::string(--depth, '\t')
+		<< "} else if constexpr (std::is_base_of_v<CppAdvance::Struct, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = new (::operator new(sizeof(typename std::remove_cvref_t<__AnyType>::__class))) typename std::remove_cvref_t<__AnyType>::__class(value);\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else static_assert(false,\"Not implemented yet\");\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+	out << "public: template<class __AnyType> requires __ImplementsInterface_" << type->id << "<__AnyType";
+	if (type->templateParams)
+	{
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			out << ", ";
+			printIdentifier(param->Identifier());
+		}
+	}
+	out << "> " << type->id << "& operator=(const __AnyType& value) {\n" << std::string(++depth, '\t');
+	out << "if (_obj) CppAdvance::Release(_obj);\n" << std::string(depth, '\t');
+	out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::Retain(_obj); "
+		<< "if constexpr(std::is_base_of_v<__vtable,typename std::remove_cvref_t<__AnyType>::__vtable>) _vtable = CppAdvance::GetVTableFromInterface(&value);\n" << std::string(depth, '\t')
+		<< "else static_assert(false, \"Incompatible interfaces\");\n" << std::string(--depth, '\t');
+	out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::Retain(_obj);\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef__Unowned, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value)); CppAdvance::Retain(_obj);\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else if constexpr (std::is_base_of_v<CppAdvance::Object, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = &value; CppAdvance::Retain(_obj);_vtable = &__vtable_" << type->id << "_for<typename std::remove_cvref_t<__AnyType>::__self>;\n" << std::string(--depth, '\t')
+		<< "} else if constexpr (std::is_base_of_v<CppAdvance::Struct, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = new (::operator new(sizeof(typename std::remove_cvref_t<__AnyType>::__class))) typename std::remove_cvref_t<__AnyType>::__class(value);\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else static_assert(false,\"Not implemented yet\"); return *this;\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+	out << "public: template<class __AnyType> requires __ImplementsInterface_" << type->id << "<__AnyType";
+	if (type->templateParams)
+	{
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			out << ", ";
+			printIdentifier(param->Identifier());
+		}
+	}
+	out << "> " << type->id << "& operator=(__AnyType&& value) {\n" << std::string(++depth, '\t');
+	out << "if (_obj) CppAdvance::Release(_obj);\n" << std::string(depth, '\t');
+	out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::ClearObjectReference(&value); "
+		<< "if constexpr(std::is_base_of_v<__vtable,typename std::remove_cvref_t<__AnyType>::__vtable>) _vtable = CppAdvance::GetVTableFromInterface(&value);\n" << std::string(depth, '\t')
+		<< "else static_assert(false, \"Incompatible interfaces\");\n" << std::string(--depth, '\t');
+	out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::ClearObjectReference(&value);\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef__Unowned, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value)); CppAdvance::Retain(_obj);\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else if constexpr (std::is_base_of_v<CppAdvance::Object, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = &value; CppAdvance::Retain(_obj);_vtable = &__vtable_" << type->id << "_for<typename std::remove_cvref_t<__AnyType>::__self>;\n" << std::string(--depth, '\t')
+		<< "} else if constexpr (std::is_base_of_v<CppAdvance::Struct, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = new (::operator new(sizeof(typename std::remove_cvref_t<__AnyType>::__class))) typename std::remove_cvref_t<__AnyType>::__class(value);\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else static_assert(false,\"Not implemented yet\"); return *this;\n"  << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+	//method default implementations
+	for (const auto& method : type->methods)
+	{
+		if (!method.isDefault) continue;
+		out << "public: ";
+
+		if (method.isConstReturn) out << "const ";
+		if (method.returnType)
+		{
+			printTypeId(method.returnType);
+		}
+		else
+		{
+			out << "void";
+		}
+		if (method.isRefReturn) out << "&";
+		auto id = "__default_" + method.id;
+		out << " " << id << "(";
+		first = true;
+		if (method.params)
+		{
+			if (auto params = method.params->paramDeclClause())
+			{
+				if (!first) out << ", ";
+				first = false;
+				printParamDeclClause(params);
+			}
+		}
+		out << ") ";
+		if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
+		auto func = static_cast<CppAdvanceParser::FunctionDefinitionContext*>(method.params->parent);
+		if (func->functionBody())
+		{
+			functionProlog = true;
+			printFunctionBody(func->functionBody());
+		}
+		else if (func->shortFunctionBody())
+		{
+			printShortFunctionBody(func->shortFunctionBody());
+		}
+		out << "\n" << std::string(depth, '\t');
+	}
+	out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
+	//unowned interface reference
+	if (type->templateParams)
+	{
+		printTemplateParams(type->templateParams);
+		out << " ";
+	}
+	out << "class ";
+	if (isUnsafe) out << "[[clang::annotate(\"unsafe\")]] ";
+	out << type->id << "__Unowned final : public CppAdvance::InterfaceRef__Unowned {\n" << std::string(++depth, '\t') 
+		<< "private: using __self = " << type->id << "__Unowned";
+	if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printIdentifier(param->Identifier());
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "public: using __vtable = __vtables::__vtable_" << type->id;
+	if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printIdentifier(param->Identifier());
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "public: using __class = CppAdvance::Object;\n" << std::string(depth, '\t');
+	out << "public: using ___super = CppAdvance::InterfaceRef__Unowned;\n" << std::string(depth, '\t');
+	out << "private: friend class " << type->id;
+	if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printIdentifier(param->Identifier());
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "public: using __strong_ref = " << type->id;
+	if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printIdentifier(param->Identifier());
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "public: using __unowned_ref = __self;\n" << std::string(depth, '\t');
+	out << "public: using __weak_ref = " << type->id << "__Weak";
+	if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printIdentifier(param->Identifier());
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "public: FORCE_INLINE decltype(auto) __ref() noexcept { UnownedCheck(_obj); return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { UnownedCheck(_obj); return *this; }\n" << std::string(depth, '\t');
+	out << "private: const __vtable* _vtable;\n" << std::string(depth, '\t');
+	out << "ADV_INTERFACE_UNOWNED_COMMON_CTORS(" << type->id << "__Unowned);\n" << std::string(depth, '\t');
+	if (type->templateParams)
+	{
+		out << "public: template<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			if (auto t = param->templateTypename())
+			{
+				if (auto name = t->theTypeId())
+				{
+					printTypeId(name);
+				}
+				else
+				{
+					out << "class";
+				}
+			}
+			if (param->Ellipsis())
+			{
+				out << "...";
+			};
+		}
+		out << "> friend class" << type->id << ";\n" << std::string(depth, '\t');
+
+		CTOR_TEMPLATE_PARAMS;
+		out << " " << type->id << "__Unowned(const " << type->id << "<";
+		first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << "Other__";
+			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
+		}
+		out << ">& other) : ___super(other._obj), _vtable{ reinterpret_cast<const __vtable*>(other._vtable) } { CppAdvance::UnownedRetain(_obj); }\n" << std::string(depth, '\t');
+
+		CTOR_TEMPLATE_PARAMS;
+		out << " " << type->id << "__Unowned& operator=(const " << type->id << " < ";
+		first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << "Other__";
+			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
+		}
+		out << ">& other) { if (_obj) CppAdvance::UnownedRelease(_obj); _obj = other._obj; \n" << std::string(depth, '\t');
+		out << "_vtable = reinterpret_cast<const __vtable*>(other._vtable); CppAdvance::UnownedRetain(_obj); return *this; }\n" << std::string(depth, '\t');
+
+		CTOR_TEMPLATE_PARAMS;
+		out << " " << type->id << "__Unowned(" << type->id << " < ";
+		first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << "Other__";
+			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
+		}
+		out << ">&& other) : ___super(other._obj), _vtable{ reinterpret_cast<const __vtable*>(other._vtable) } { other._obj = nullptr; other._vtable = nullptr; }\n" << std::string(depth, '\t');
+
+		CTOR_TEMPLATE_PARAMS;
+		out << " " << type->id << "__Unowned& operator=(" << type->id << " < ";
+		first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << "Other__";
+			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
+		}
+		out << ">&& other) { if (_obj) CppAdvance::UnownedRelease(_obj); _obj = other._obj; \n" << std::string(depth, '\t');
+		out << "_vtable = reinterpret_cast<const __vtable*>(other._vtable); other._obj = nullptr; other._vtable = nullptr; return *this; }\n" << std::string(depth, '\t');
+	}
+	out << "public: template<class __AnyType> requires __ImplementsInterface_" << type->id << "<__AnyType";
+	if (type->templateParams)
+	{
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			out << ", ";
+			printIdentifier(param->Identifier());
+		}
+	}
+	out << "> " << type->id << "__Unowned(const __AnyType& value) : ___super(nullptr), _vtable{ nullptr } \n" << std::string(depth++, '\t') << "{\n" << std::string(depth, '\t');
+	out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReferenceFromInterface(&value); CppAdvance::UnownedRetain(_obj); "
+		<< "if constexpr(std::is_base_of_v<__vtable,typename std::remove_cvref_t<__AnyType>::__vtable>) _vtable = CppAdvance::GetVTableFromInterface(&value);\n" << std::string(depth, '\t')
+		<< "else static_assert(false, \"Incompatible interfaces\");\n" << std::string(--depth, '\t');
+	out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::UnownedRetain(_obj);\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef__Unowned, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value)); CppAdvance::UnownedRetain(_obj);\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else static_assert(false,\"Cannot to create unowned reference from this object\");\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+	out << "public: template<class __AnyType> requires __ImplementsInterface_" << type->id << "<__AnyType";
+	if (type->templateParams)
+	{
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			out << ", ";
+			printIdentifier(param->Identifier());
+		}
+	}
+	out << "> " << type->id << "__Unowned(__AnyType&& value) : ___super(nullptr), _vtable{ nullptr } \n" << std::string(depth++, '\t') << "{\n" << std::string(depth, '\t');
+	out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReferenceFromInterface(&value); CppAdvance::UnownedRetain(_obj);"
+		<< "if constexpr(std::is_base_of_v<__vtable,typename std::remove_cvref_t<__AnyType>::__vtable>) _vtable = CppAdvance::GetVTableFromInterface(&value);\n" << std::string(depth, '\t')
+		<< "else static_assert(false, \"Incompatible interfaces\");\n" << std::string(--depth, '\t');
+	out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::UnownedRetain(_obj);\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef__Unowned, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value)); CppAdvance::ClearObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value));\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else static_assert(false,\"Cannot to create unowned reference from this object\");\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+	out << "public: template<class __AnyType> requires __ImplementsInterface_" << type->id << "<__AnyType";
+	if (type->templateParams)
+	{
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			out << ", ";
+			printIdentifier(param->Identifier());
+		}
+	}
+	out << "> " << type->id << "__Unowned& operator=(const __AnyType& value) {\n" << std::string(++depth, '\t');
+	out << "if (_obj) CppAdvance::Release(_obj);\n" << std::string(depth, '\t');
+	out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReferenceFromInterface(&value); CppAdvance::UnownedRetain(_obj); "
+		<< "if constexpr(std::is_base_of_v<__vtable,typename std::remove_cvref_t<__AnyType>::__vtable>) _vtable = CppAdvance::GetVTableFromInterface(&value);\n" << std::string(depth, '\t')
+		<< "else static_assert(false, \"Incompatible interfaces\");\n" << std::string(--depth, '\t');
+	out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::UnownedRetain(_obj);\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef__Unowned, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value)); CppAdvance::UnownedRetain(_obj);\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else static_assert(false,\"Cannot to create unowned reference from this object\"); return *this;\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+	out << "public: template<class __AnyType> requires __ImplementsInterface_" << type->id << "<__AnyType";
+	if (type->templateParams)
+	{
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			out << ", ";
+			printIdentifier(param->Identifier());
+		}
+	}
+	out << "> " << type->id << "__Unowned& operator=(__AnyType&& value) {\n" << std::string(++depth, '\t');
+	out << "if (_obj) CppAdvance::Release(_obj);\n" << std::string(depth, '\t');
+	out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReferenceFromInterface(&value); CppAdvance::UnownedRetain(_obj); "
+		<< "if constexpr(std::is_base_of_v<__vtable,typename std::remove_cvref_t<__AnyType>::__vtable>) _vtable = CppAdvance::GetVTableFromInterface(&value);\n" << std::string(depth, '\t')
+		<< "else static_assert(false, \"Incompatible interfaces\");\n" << std::string(--depth, '\t');
+	out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::UnownedRetain(_obj);\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef__Unowned, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = CppAdvance::GetObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value)); CppAdvance::ClearObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value));\n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else static_assert(false,\"Cannot to create unowned reference from this object\"); return *this;\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+	out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
+	//weak interface reference
+	if (type->templateParams)
+	{
+		printTemplateParams(type->templateParams);
+		out << " ";
+	}
+	out << "class ";
+	if (isUnsafe) out << "[[clang::annotate(\"unsafe\")]] ";
+	out << type->id << "__Weak final : public CppAdvance::ObjectRef__Weak {\n" << std::string(++depth, '\t')
+		<< "private: using __self = " << type->id << "__Weak";
+	if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printIdentifier(param->Identifier());
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "public: using __vtable = __vtables::__vtable_" << type->id;
+	if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printIdentifier(param->Identifier());
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "public: using __class = CppAdvance::Object;\n" << std::string(depth, '\t');
+	out << "public: using ___super = CppAdvance::ObjectRef__Weak;\n" << std::string(depth, '\t');
+	out << "private: friend class " << type->id;
+	if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printIdentifier(param->Identifier());
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "public: using __strong_ref = " << type->id;
+	if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printIdentifier(param->Identifier());
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "public: using __unowned_ref = " << type->id << "__Unowned";
+	if (type->templateParams)
+	{
+		out << "<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printIdentifier(param->Identifier());
+		}
+		out << ">";
+	}
+	out << ";\n" << std::string(depth, '\t');
+	out << "public: using __weak_ref = __self;\n" << std::string(depth, '\t');
+	out << "public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }\n" << std::string(depth, '\t');
+	out << "private: const __vtable* _vtable;\n" << std::string(depth, '\t');
+	out << "ADV_INTERFACE_WEAK_COMMON_CTORS(" << type->id << "__Weak);\n" << std::string(depth, '\t');
+	if (type->templateParams)
+	{
+		out << "public: template<";
+		bool first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			if (auto t = param->templateTypename())
+			{
+				if (auto name = t->theTypeId())
+				{
+					printTypeId(name);
+				}
+				else
+				{
+					out << "class";
+				}
+			}
+			if (param->Ellipsis())
+			{
+				out << "...";
+			};
+		}
+		out << "> friend class" << type->id << ";\n" << std::string(depth, '\t');
+
+		CTOR_TEMPLATE_PARAMS;
+		out << " " << type->id << "__Weak(const " << type->id << "<";
+		first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << "Other__";
+			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
+		}
+		out << ">& other) : ___super(formWeakRef(other._obj)), _vtable{ reinterpret_cast<const __vtable*>(other._vtable) } {}\n" << std::string(depth, '\t');
+
+		CTOR_TEMPLATE_PARAMS;
+		out << " " << type->id << "__Weak& operator=(const " << type->id << " < ";
+		first = true;
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << "Other__";
+			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
+		}
+		out << ">& other) { if (!_obj || other._obj != _obj->unsafeGetObject()) { if (_obj) _obj->decrementWeak(); _obj = formWeakRef(other._obj); \n" << std::string(depth, '\t');
+		out << "_vtable = reinterpret_cast<const __vtable*>(other._vtable); } return *this; }\n" << std::string(depth, '\t');
+	}
+	out << "public: template<class __AnyType> requires __ImplementsInterface_" << type->id << "<__AnyType";
+	if (type->templateParams)
+	{
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			out << ", ";
+			printIdentifier(param->Identifier());
+		}
+	}
+	out << "> " << type->id << "__Weak(const __AnyType& value) : ___super(nullptr), _vtable{ nullptr } \n" << std::string(depth++, '\t') << "{\n" << std::string(depth, '\t');
+	out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = formWeakRef(CppAdvance::GetObjectReferenceFromInterface(&value)); "
+		<< "if constexpr(std::is_base_of_v<__vtable,typename std::remove_cvref_t<__AnyType>::__vtable>) _vtable = CppAdvance::GetVTableFromInterface(&value);\n" << std::string(depth, '\t')
+		<< "else static_assert(false, \"Incompatible interfaces\");\n" << std::string(--depth, '\t');
+	out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = formWeakRef(CppAdvance::GetObjectReference(&value)); \n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else static_assert(false,\"Cannot to create unowned reference from this object\");\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+	
+	out << "public: template<class __AnyType> requires __ImplementsInterface_" << type->id << "<__AnyType";
+	if (type->templateParams)
+	{
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			out << ", ";
+			printIdentifier(param->Identifier());
+		}
+	}
+	out << "> " << type->id << "__Weak& operator=(const __AnyType& value) {\n" << std::string(++depth, '\t');
+	out << "if (_obj) _obj->decrementWeak();\n" << std::string(depth, '\t');
+	out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = formWeakRef(CppAdvance::GetObjectReferenceFromInterface(&value)); "
+		<< "if constexpr(std::is_base_of_v<__vtable,typename std::remove_cvref_t<__AnyType>::__vtable>) _vtable = CppAdvance::GetVTableFromInterface(&value);\n" << std::string(depth, '\t')
+		<< "else static_assert(false, \"Incompatible interfaces\");\n" << std::string(--depth, '\t');
+	out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, std::remove_cvref_t<__AnyType>>) {\n" << std::string(depth++, '\t');
+	out << "_obj = formWeakRef(CppAdvance::GetObjectReference(&value)); \n" << std::string(depth, '\t')
+		<< "_vtable = &__vtable_" << type->id << "_for<std::remove_cvref_t<__AnyType>>;\n" << std::string(--depth, '\t')
+		<< "} else static_assert(false,\"Cannot to create unowned reference from this object\"); return *this;\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+	
+	out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
+	//interface methods
+	for (const auto& method : type->methods)
+	{
+		if (method.isDefault)
+		{
+			if (type->templateParams)
+			{
+				printTemplateParams(type->templateParams);
+				out << " ";
+			}
+			out << "inline ";
+
+			if (method.isConstReturn) out << "const ";
+			if (method.returnType)
+			{
+				printTypeId(method.returnType);
+			}
+			else
+			{
+				out << "void";
+			}
+			if (method.isRefReturn) out << "&";
+			auto id = "__default_" + method.id;
+			out << " " << id << "(" << type->id;
+			if (type->templateParams)
+			{
+				out << "<";
+				first = true;
+				for (auto param : type->templateParams->templateParamDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					printIdentifier(param->Identifier());
+					if (param->Ellipsis()) out << "...";
+				}
+				out << ">";
+			}
+			out << " iface";
+			if (method.params)
+			{
+				if (auto params = method.params->paramDeclClause())
+				{
+					out << ", ";
+					printParamDeclClause(params);
+				}
+			}
+			out << ") ";
+			if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
+			out << ";\n" << std::string(depth, '\t');
+		}
+		if (type->templateParams)
+		{
+			printTemplateParams(type->templateParams);
+			out << " ";
+		}
+		out << "FORCE_INLINE ";
+		
+		if (method.isConstReturn) out << "const ";
+		if (method.returnType)
+		{
+			printTypeId(method.returnType);
+		}
+		else
+		{
+			out << "void";
+		}
+		if (method.isRefReturn) out << "&";
+		auto id = method.id;
+		if (method.indexerParams) id = "getAt";
+        out << " " << id << "(" << type->id;
+		if (type->templateParams)
+		{
+			out << "<";
+			first = true;
+			for (auto param : type->templateParams->templateParamDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				printIdentifier(param->Identifier());
+				if (param->Ellipsis()) out << "...";
+			}
+			out << ">";
+		}
+		out << " iface";
+		if (method.params)
+		{
+			if (auto params = method.params->paramDeclClause())
+			{
+				out << ", ";
+				printParamDeclClause(params);
+			}
+		}
+		if (method.indexerParams)
+		{
+			out << ", ";
+			printParamDeclClause(method.indexerParams);
+		}
+		out << ") ";
+		if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
+		if (method.isDefault) {
+			out << ";\n" << std::string(depth, '\t');
+			continue;
+		}
+
+		if (method.isDefault)
+		{
+			out << " {\n" << std::string(++depth,'\t');
+			out << "auto func = CppAdvance::GetVTableFromInterface(&iface)->fnptr_" << methodIds[&method] << ";\n" << std::string(depth, '\t');
+			out << "if (func) { ADV_EXPRESSION_BODY(func";
+		}
+		else {
+			out << " { ADV_EXPRESSION_BODY(CppAdvance::GetVTableFromInterface(&iface)->fnptr_" << methodIds[&method];
+		}
+		out << "(CppAdvance::GetObjectReferenceFromInterface(&iface)";
+		if (method.params)
+		{
+			if (auto params = method.params->paramDeclClause())
+			{
+				for (auto param : params->paramDeclList()->paramDeclaration())
+				{
+					out << ", ";
+					printIdentifier(param->Identifier());
+				}
+			}
+		}
+		if (auto params = method.indexerParams)
+		{
+			for (auto param : params->paramDeclList()->paramDeclaration())
+			{
+				out << ", ";
+				printIdentifier(param->Identifier());
+			}
+		}
+		out << ")); ";
+		if (method.isDefault)
+		{
+			out << "}\n" << std::string(depth, '\t');
+			out << "else { ADV_EXPRESSION_BODY(iface.__default_" << method.id << "(";
+			if (auto params = method.params->paramDeclClause())
+			{
+				first = true;
+				for (auto param : params->paramDeclList()->paramDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					printIdentifier(param->Identifier());
+				}
+			}
+			out << ")); }\n" << std::string(--depth, '\t');
+		}
+		out << "}\n" << std::string(depth, '\t');
+	}
+	if (!type->compilationCondition.empty())
+	{
+		out << "#endif " << std::endl;
+	}
+#undef CTOR_TEMPLATE_PARAMS
+}
+
 void CppAdvanceCodegen::printTypeDefinitions() const
 {
 	out.switchTo(true);
@@ -3903,6 +5487,10 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 		if (type->kind == TypeKind::Class)
 		{
 			printClassRef(type.get());
+		}
+		else if (type->kind == TypeKind::Interface)
+		{
+			printInterface(type.get());
 		}
 		else
 		{
@@ -3953,7 +5541,7 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 	}
 	for (const auto& type : sema.globalStructs)
 	{
-		if (type->kind == TypeKind::RefStruct || type->kind == TypeKind::StaticClass) continue;
+		if (type->kind == TypeKind::RefStruct || type->kind == TypeKind::StaticClass || type->kind == TypeKind::Interface) continue;
 		out.switchTo(true);
 		if (type->access == AccessSpecifier::Private) {
 			out.switchTo(false);
@@ -5380,10 +6968,6 @@ void CppAdvanceCodegen::printDeclarationStatement(CppAdvanceParser::DeclarationS
 	else if (auto def = ctx->structDefinition())
 	{
 		printStructDefinition(def);
-	}
-	else if (auto def = ctx->classDefinition())
-	{
-		printClassDefinition(def);
 	}
 }
 

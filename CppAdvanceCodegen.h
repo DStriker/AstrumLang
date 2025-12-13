@@ -79,6 +79,7 @@ class CppAdvanceCodegen
 	void printType(StructDefinition* type) const;
 	void printStructWrapper(StructDefinition* type) const;
 	void printClassRef(StructDefinition* type) const;
+	void printInterface(StructDefinition* type) const;
 	void printTypeDefinitions() const;
 	void printVersions() const;
 	void printRefStructCheck(CppAdvanceParser::TheTypeIdContext* type) const;

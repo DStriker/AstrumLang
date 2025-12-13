@@ -97,6 +97,18 @@ public:
   virtual void enterClassHead(CppAdvanceParser::ClassHeadContext * /*ctx*/) override { }
   virtual void exitClassHead(CppAdvanceParser::ClassHeadContext * /*ctx*/) override { }
 
+  virtual void enterInterfaceDefinition(CppAdvanceParser::InterfaceDefinitionContext * /*ctx*/) override { }
+  virtual void exitInterfaceDefinition(CppAdvanceParser::InterfaceDefinitionContext * /*ctx*/) override { }
+
+  virtual void enterInterfaceHead(CppAdvanceParser::InterfaceHeadContext * /*ctx*/) override { }
+  virtual void exitInterfaceHead(CppAdvanceParser::InterfaceHeadContext * /*ctx*/) override { }
+
+  virtual void enterInterfaceMemberSpecification(CppAdvanceParser::InterfaceMemberSpecificationContext * /*ctx*/) override { }
+  virtual void exitInterfaceMemberSpecification(CppAdvanceParser::InterfaceMemberSpecificationContext * /*ctx*/) override { }
+
+  virtual void enterInterfaceMemberDeclaration(CppAdvanceParser::InterfaceMemberDeclarationContext * /*ctx*/) override { }
+  virtual void exitInterfaceMemberDeclaration(CppAdvanceParser::InterfaceMemberDeclarationContext * /*ctx*/) override { }
+
   virtual void enterBaseClause(CppAdvanceParser::BaseClauseContext * /*ctx*/) override { }
   virtual void exitBaseClause(CppAdvanceParser::BaseClauseContext * /*ctx*/) override { }
 
@@ -115,8 +127,8 @@ public:
   virtual void enterAbstractProperty(CppAdvanceParser::AbstractPropertyContext * /*ctx*/) override { }
   virtual void exitAbstractProperty(CppAdvanceParser::AbstractPropertyContext * /*ctx*/) override { }
 
-  virtual void enterAbstractPropertyBody(CppAdvanceParser::AbstractPropertyBodyContext * /*ctx*/) override { }
-  virtual void exitAbstractPropertyBody(CppAdvanceParser::AbstractPropertyBodyContext * /*ctx*/) override { }
+  virtual void enterInterfaceProperty(CppAdvanceParser::InterfacePropertyContext * /*ctx*/) override { }
+  virtual void exitInterfaceProperty(CppAdvanceParser::InterfacePropertyContext * /*ctx*/) override { }
 
   virtual void enterPropertyGetter(CppAdvanceParser::PropertyGetterContext * /*ctx*/) override { }
   virtual void exitPropertyGetter(CppAdvanceParser::PropertyGetterContext * /*ctx*/) override { }
@@ -141,6 +153,9 @@ public:
 
   virtual void enterAbstractMethodDeclaration(CppAdvanceParser::AbstractMethodDeclarationContext * /*ctx*/) override { }
   virtual void exitAbstractMethodDeclaration(CppAdvanceParser::AbstractMethodDeclarationContext * /*ctx*/) override { }
+
+  virtual void enterInterfaceMethodDeclaration(CppAdvanceParser::InterfaceMethodDeclarationContext * /*ctx*/) override { }
+  virtual void exitInterfaceMethodDeclaration(CppAdvanceParser::InterfaceMethodDeclarationContext * /*ctx*/) override { }
 
   virtual void enterConstructor(CppAdvanceParser::ConstructorContext * /*ctx*/) override { }
   virtual void exitConstructor(CppAdvanceParser::ConstructorContext * /*ctx*/) override { }
@@ -177,6 +192,9 @@ public:
 
   virtual void enterIndexerSetter(CppAdvanceParser::IndexerSetterContext * /*ctx*/) override { }
   virtual void exitIndexerSetter(CppAdvanceParser::IndexerSetterContext * /*ctx*/) override { }
+
+  virtual void enterInterfaceIndexer(CppAdvanceParser::InterfaceIndexerContext * /*ctx*/) override { }
+  virtual void exitInterfaceIndexer(CppAdvanceParser::InterfaceIndexerContext * /*ctx*/) override { }
 
   virtual void enterFunctionSpecifier(CppAdvanceParser::FunctionSpecifierContext * /*ctx*/) override { }
   virtual void exitFunctionSpecifier(CppAdvanceParser::FunctionSpecifierContext * /*ctx*/) override { }

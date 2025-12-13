@@ -53,7 +53,7 @@ public ref struct Span
 	public length: i32;
 }
 
-public struct Vector3 : IEquatable, IFormattable
+public struct Vector3 : IInterface
 {
 	public {
 		x, y, z: f32;
@@ -69,8 +69,8 @@ public struct Vector3 : IEquatable, IFormattable
 		return 0;
 	}
 
-	public override Equals: (in ref other: IEquatable) -> bool noexcept ==> true;
-	public override format: () -> str noexcept ==> "test";
+	public Equals: (in ref other: IEquatable) -> bool noexcept ==> true;
+	public format: () -> str noexcept ==> "test";
 	public HashCode: () -> usize ==> 654321u;
 
 	public static Count: i32 = 1 {
@@ -142,6 +142,13 @@ public struct Vector3 : IEquatable, IFormattable
 			return y + z;
 		}
 
+		GetMagicNumber: (i: f32) -> f32 ==> i * x;
+		mut Reset: () == {
+			x = 0;
+			y = 0;
+			z = 0;
+		}
+
 		//inline static GetTest: () -> Test111 ==> Test111();
 
 		mut TemplateMethod: <U> (x: U, y: U, z: U) -> Coords == {
@@ -166,7 +173,7 @@ public class BaseClass {
 	public virtual getNext: () -> Next => new Next(5);
 }
 
-public abstract class VectorClass : BaseClass, IEquatable, IFormattable
+public abstract class VectorClass : BaseClass
 {
 	public {
 		x, y, z: f32;
@@ -179,8 +186,8 @@ public abstract class VectorClass : BaseClass, IEquatable, IFormattable
 	friend TestStruct2<T>;
 	friend func3: (x: i32) -> i32;
 
-	public override Equals: (in ref other: IEquatable) -> bool noexcept ==> true;
-	public override format: () -> str noexcept ==> "test";
+	public Equals: (in ref other: IEquatable) -> bool noexcept ==> true;
+	public format: () -> str noexcept ==> "test";
 
 	/*public static Count: i32 = 1 {
 		get {
@@ -282,6 +289,12 @@ public abstract class VectorClass : BaseClass, IEquatable, IFormattable
 			return y + z;
 		}
 
+		mut Reset: () == {
+			x = 0;
+			y = 0;
+			z = 0;
+		}
+
 	//	inline static GetTest: () -> Test111 ==> Test111();
 
 		mut TemplateMethod: <U> (x: U, y: U, z: U) -> Coords == {
@@ -301,6 +314,8 @@ public abstract class VectorClass : BaseClass, IEquatable, IFormattable
 		}
 	}
 }
+
+public GetMagicNumber: (in vec: VectorClass, i: f32) -> f32 ==> i * vec.x * 10;
 
 public class ConcreteVectorClass : VectorClass {
 	this() == default;
@@ -357,51 +372,13 @@ public class Next {
 	}
 }
 
-public static class Utils {
-	public {
-		v: ConcreteVectorClass;
-		let vv: Vector3 = {1,2,3};
+public interface IInterface {
+	GetMagicNumber: (f: i32) -> f32;
+	Reset: ();
+	DefaultMethod: (f: f32) -> f32 => f * 10;
 
-		BYTES :== 24;
-		if debug type Color = (r: i32, g: i32, b: i32);
-
-		Count: i32 = 1 {
-			get {
-				print("Read");
-				return field * 10;
-			}
-			private set {
-				print("Write");
-				if (value > 10) field = value / 10;
-				else field = value;
-			}
-		}
-
-		class NestedClass {
-			public x,y,z: i32;
-		}
-
-		printUtils: () = {
-			print("This is printUtils function");
-		}
-
-		TemplateMethod: <U> (x: U, y: U, z: U) -> Color == {
-			struct LocalStruct {
-				public {
-				x: f32;
-				y: f32;
-				z: f32;
-				}
-			}
-			return {x,y,z};
-		}
-	}
-}
-
-public static class Utils2 : Utils {
-	public printUtils: () = {
-		print("This is printUtils2 function");
-	}
+	//Name: str { get; set; }
+	//this[i: usize] -> object { get; }
 }
 
 private main: (iparam: i32, in jparam: f64 = 3.5) -> int
@@ -448,18 +425,18 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 	print(vc.Count);
 	print(vc.getX());
 	print(VectorClass.BYTES);*/
-	nxt: VectorClass.NestedClass?;
+	nxt: IInterface? = new ConcreteVectorClass(1,2,3);
 	{
-	nxt2:= new VectorClass.NestedClass(3.14f,4.15f,6.73f);
-	nxt = nxt2;
-	print(Utils.Count);
-	print(Utils2.Count);
-	x,y,z := Utils2.TemplateMethod(1,2,3);
-	print(x);
-	print(y);
-	print(z);
-	Utils.printUtils();
-	Utils2.printUtils();
+		nxt2:= new ConcreteVectorClass(3,4,5);
+		vec: Vector3 = {12,13,14};
+		nxt = nxt2;
+		print(nxt!.GetMagicNumber(3));
+		print(nxt!.GetMagicNumber(5));
+		nxt!.Reset();
+		print(nxt!.GetMagicNumber(3));
+		o: object = nxt!;
+		on: object? = nxt;
+		print(nxt!.GetStrongReferenceCount());
 	}
 	print(nxt!.GetStrongReferenceCount());
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);

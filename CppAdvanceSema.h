@@ -511,6 +511,7 @@ public:
 	CppAdvanceSema(CppAdvanceParser* parser, std::string_view file) : parser{ parser }, filename{ file }, symbolTable{ cppParser.symbolTable, symbolContexts }, aliasTable{ cppParser.aliasTable, symbolContexts }, typeset{cppParser.types,symbolContexts}, functionTable{ cppParser.functionTable } {}
 
 	std::string getNamedTupleId(std::string_view tuple);
+	std::string getInterfaceMethodId(std::string_view name, CppAdvanceParser::ParamDeclClauseContext* params);
 
 	inline bool isTypeDefinitionBody() {
 		return !currentType.empty();
@@ -904,5 +905,32 @@ public:
 
 
 	void exitStackallocExpression(CppAdvanceParser::StackallocExpressionContext*) override;
+
+
+	void enterInterfaceDefinition(CppAdvanceParser::InterfaceDefinitionContext*) override;
+
+
+	void exitInterfaceDefinition(CppAdvanceParser::InterfaceDefinitionContext*) override;
+
+
+	void enterInterfaceProperty(CppAdvanceParser::InterfacePropertyContext*) override;
+
+
+	void exitInterfaceProperty(CppAdvanceParser::InterfacePropertyContext*) override;
+
+
+	void enterInterfaceMethodDeclaration(CppAdvanceParser::InterfaceMethodDeclarationContext*) override;
+
+
+	void exitInterfaceMethodDeclaration(CppAdvanceParser::InterfaceMethodDeclarationContext*) override;
+
+
+	void enterInterfaceIndexer(CppAdvanceParser::InterfaceIndexerContext*) override;
+
+
+	void exitInterfaceIndexer(CppAdvanceParser::InterfaceIndexerContext*) override;
+
+
+	void enterTemplateParamDeclaration(CppAdvanceParser::TemplateParamDeclarationContext*) override;
 
 };

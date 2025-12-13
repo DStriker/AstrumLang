@@ -95,6 +95,18 @@ public:
   virtual void enterClassHead(CppAdvanceParser::ClassHeadContext *ctx) = 0;
   virtual void exitClassHead(CppAdvanceParser::ClassHeadContext *ctx) = 0;
 
+  virtual void enterInterfaceDefinition(CppAdvanceParser::InterfaceDefinitionContext *ctx) = 0;
+  virtual void exitInterfaceDefinition(CppAdvanceParser::InterfaceDefinitionContext *ctx) = 0;
+
+  virtual void enterInterfaceHead(CppAdvanceParser::InterfaceHeadContext *ctx) = 0;
+  virtual void exitInterfaceHead(CppAdvanceParser::InterfaceHeadContext *ctx) = 0;
+
+  virtual void enterInterfaceMemberSpecification(CppAdvanceParser::InterfaceMemberSpecificationContext *ctx) = 0;
+  virtual void exitInterfaceMemberSpecification(CppAdvanceParser::InterfaceMemberSpecificationContext *ctx) = 0;
+
+  virtual void enterInterfaceMemberDeclaration(CppAdvanceParser::InterfaceMemberDeclarationContext *ctx) = 0;
+  virtual void exitInterfaceMemberDeclaration(CppAdvanceParser::InterfaceMemberDeclarationContext *ctx) = 0;
+
   virtual void enterBaseClause(CppAdvanceParser::BaseClauseContext *ctx) = 0;
   virtual void exitBaseClause(CppAdvanceParser::BaseClauseContext *ctx) = 0;
 
@@ -113,8 +125,8 @@ public:
   virtual void enterAbstractProperty(CppAdvanceParser::AbstractPropertyContext *ctx) = 0;
   virtual void exitAbstractProperty(CppAdvanceParser::AbstractPropertyContext *ctx) = 0;
 
-  virtual void enterAbstractPropertyBody(CppAdvanceParser::AbstractPropertyBodyContext *ctx) = 0;
-  virtual void exitAbstractPropertyBody(CppAdvanceParser::AbstractPropertyBodyContext *ctx) = 0;
+  virtual void enterInterfaceProperty(CppAdvanceParser::InterfacePropertyContext *ctx) = 0;
+  virtual void exitInterfaceProperty(CppAdvanceParser::InterfacePropertyContext *ctx) = 0;
 
   virtual void enterPropertyGetter(CppAdvanceParser::PropertyGetterContext *ctx) = 0;
   virtual void exitPropertyGetter(CppAdvanceParser::PropertyGetterContext *ctx) = 0;
@@ -139,6 +151,9 @@ public:
 
   virtual void enterAbstractMethodDeclaration(CppAdvanceParser::AbstractMethodDeclarationContext *ctx) = 0;
   virtual void exitAbstractMethodDeclaration(CppAdvanceParser::AbstractMethodDeclarationContext *ctx) = 0;
+
+  virtual void enterInterfaceMethodDeclaration(CppAdvanceParser::InterfaceMethodDeclarationContext *ctx) = 0;
+  virtual void exitInterfaceMethodDeclaration(CppAdvanceParser::InterfaceMethodDeclarationContext *ctx) = 0;
 
   virtual void enterConstructor(CppAdvanceParser::ConstructorContext *ctx) = 0;
   virtual void exitConstructor(CppAdvanceParser::ConstructorContext *ctx) = 0;
@@ -175,6 +190,9 @@ public:
 
   virtual void enterIndexerSetter(CppAdvanceParser::IndexerSetterContext *ctx) = 0;
   virtual void exitIndexerSetter(CppAdvanceParser::IndexerSetterContext *ctx) = 0;
+
+  virtual void enterInterfaceIndexer(CppAdvanceParser::InterfaceIndexerContext *ctx) = 0;
+  virtual void exitInterfaceIndexer(CppAdvanceParser::InterfaceIndexerContext *ctx) = 0;
 
   virtual void enterFunctionSpecifier(CppAdvanceParser::FunctionSpecifierContext *ctx) = 0;
   virtual void exitFunctionSpecifier(CppAdvanceParser::FunctionSpecifierContext *ctx) = 0;

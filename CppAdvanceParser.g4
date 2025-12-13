@@ -23,6 +23,7 @@ declaration:
 	  accessSpecifier? Unsafe? blockDeclaration
 	| accessSpecifier? structDefinition
 	| accessSpecifier? classDefinition
+	| accessSpecifier? interfaceDefinition
 	| symbolSpecifierSeq declarationCompoundStatement
 	| externVariableDeclaration 
 	| versionDefinition
@@ -59,7 +60,7 @@ memberBlockDeclaration:
 
 labeledStatement: Identifier Colon (iterationStatement | selectionStatement | compoundStatement);
 
-declarationStatement: blockDeclaration | structDefinition | classDefinition | externVariableDeclaration | externFunctionDeclaration;
+declarationStatement: blockDeclaration | structDefinition | externVariableDeclaration | externFunctionDeclaration;
 
 expressionStatement: expr? Semi;
 
@@ -109,6 +110,19 @@ classDefinition: classHead LeftBrace structMemberSpecification? RightBrace;
 
 classHead: Unsafe? (Abstract | Final | Static)? Class templateParams? className baseClause?;
 
+interfaceDefinition: interfaceHead LeftBrace interfaceMemberSpecification? RightBrace;
+
+interfaceHead: Unsafe? Interface Identifier templateParams? baseClause?;
+
+interfaceMemberSpecification: interfaceMemberDeclaration+;
+
+interfaceMemberDeclaration: 
+	  functionDefinition 
+	| interfaceMethodDeclaration
+	| interfaceIndexer
+	| interfaceProperty
+	;
+
 baseClause: Colon baseSpecifierList;
 
 baseSpecifierList: baseSpecifier (Comma baseSpecifier)*;
@@ -121,7 +135,7 @@ propertyBody: LeftBrace (propertyGetter | propertySetter | propertyGetter proper
 
 abstractProperty: accessSpecifier? Abstract Identifier Colon Const? Ref? theTypeId propertyBody;
 
-abstractPropertyBody: LeftBrace (abstractPropertyGetter | abstractPropertySetter | abstractPropertyGetter abstractPropertySetter) RightBrace;
+interfaceProperty: Identifier Colon Const? Ref? theTypeId propertyBody;
 
 propertyGetter: (accessSpecifier | protectedInternal)? Get (functionBody | shortFunctionBody | Semi);
 
@@ -138,6 +152,8 @@ functionTemplateDeclaration: functionSpecifier* Identifier Colon templateParams 
 functionDefinition: functionSpecifier* (Identifier | simpleTemplateId | operatorFunctionId) Colon templateParams? functionParams returnType? LifetimeAnnotation? exceptionSpecification? (functionBody | shortFunctionBody);
 
 abstractMethodDeclaration: (accessSpecifier | protectedInternal)? Abstract Mutable? (Identifier | operatorFunctionId) Colon functionParams returnType? LifetimeAnnotation? exceptionSpecification? Semi;
+
+interfaceMethodDeclaration: Mutable? (Identifier | operatorFunctionId) Colon functionParams returnType? LifetimeAnnotation? exceptionSpecification? Semi;
 
 constructor: Inline? Unsafe? implicitSpecification? This templateParams? functionParams exceptionSpecification? (constructorBody | delegatingConstructorBody | ((Assign | Equal) Default Semi));
 
@@ -163,13 +179,15 @@ indexerGetter: (accessSpecifier | protectedInternal)? Get (functionBody | shortF
 
 indexerSetter: (accessSpecifier | protectedInternal)? Set (functionBody | shortFunctionBody);
 
+interfaceIndexer: This LeftBracket paramDeclClause RightBracket returnType exceptionSpecification? LeftBrace Get Semi (Set Semi)? RightBrace;
+
 functionSpecifier: Inline | Unsafe | Consteval | Mutable | Static | Virtual | Override | Final;
 
 implicitSpecification: Implicit (LeftParen constantExpression RightParen)?;
 
 templateParams: Less templateParamDeclaration (Comma templateParamDeclaration)* Greater;
 
-templateParamDeclaration: Identifier templateParams? (Ellipsis | Colon (templateTypename Ellipsis? | templateTypename? Assign (theTypeId | conditionalExpression)))?;
+templateParamDeclaration: (In | Out)? Identifier templateParams? (Ellipsis | Colon (templateTypename Ellipsis? | templateTypename? Assign (theTypeId | conditionalExpression)))?;
 
 templateTypename: Type | theTypeId;
 
