@@ -53,7 +53,7 @@ public ref struct Span
 	public length: i32;
 }
 
-public struct Vector3 : IInterface
+public struct Vector3
 {
 	public {
 		x, y, z: f32;
@@ -143,6 +143,7 @@ public struct Vector3 : IInterface
 		}
 
 		GetMagicNumber: (i: f32) -> f32 ==> i * x;
+		DefaultMethod: (f: f32) -> f32 => f * 15;
 		mut Reset: () == {
 			x = 0;
 			y = 0;
@@ -288,6 +289,7 @@ public abstract class VectorClass : BaseClass
 		inline static Method: (x: i32, y: i32, z: i32) -> i32 == {
 			return y + z;
 		}
+		//DefaultMethod: (f: f32) -> f32 => f * 15;
 
 		mut Reset: () == {
 			x = 0;
@@ -315,9 +317,8 @@ public abstract class VectorClass : BaseClass
 	}
 }
 
-public GetMagicNumber: (in vec: VectorClass, i: f32) -> f32 ==> i * vec.x * 10;
 
-public class ConcreteVectorClass : VectorClass {
+public class ConcreteVectorClass : VectorClass, IInterface<ConcreteVectorClass> {
 	this() == default;
 
 	public this(x: f32, y: f32, z: f32) noexcept == {
@@ -345,8 +346,11 @@ public class ConcreteVectorClass : VectorClass {
 	public final getX: () -> f32 => x;
 
 	public operator+: (in other: self) -> self => new self(this.x + other.x, this.y + other.y, this.z + other.z);
+	public GetMagicNumber: (in i: ConcreteVectorClass) -> f32 => y * i.y;
 	
 }
+public GetMagicNumber: (in vec: VectorClass, i: VectorClass) -> f32 => vec.x * i.x;
+//public GetMagicNumber: (in vec: ConcreteVectorClass, i: ConcreteVectorClass) -> f32 => vec.y * i.y;
 
 public class Next {
 	public i: i32;
@@ -372,10 +376,16 @@ public class Next {
 	}
 }
 
-public interface IInterface {
-	GetMagicNumber: (f: i32) -> f32;
+public interface IMagicNumber<in T> {
+	GetMagicNumber: (f: T) -> f32;
+}
+
+public interface IResettable {
 	Reset: ();
-	DefaultMethod: (f: f32) -> f32 => f * 10;
+}
+
+public interface IInterface<in T> : IMagicNumber<T>, IResettable {
+	DefaultMethod: (f: T) -> f32 => this.GetMagicNumber<T>(f);
 
 	//Name: str { get; set; }
 	//this[i: usize] -> object { get; }
@@ -425,15 +435,20 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 	print(vc.Count);
 	print(vc.getX());
 	print(VectorClass.BYTES);*/
-	nxt: IInterface? = new ConcreteVectorClass(1,2,3);
+	//nxtm: IInterface? = new ConcreteVectorClass(1,2,3);
+	nxtm :IInterface<VectorClass> = new ConcreteVectorClass(11,12,13);
+	nxt :IInterface<ConcreteVectorClass>? = nxtm;
 	{
 		nxt2:= new ConcreteVectorClass(3,4,5);
 		vec: Vector3 = {12,13,14};
+		print(nxt!.GetStrongReferenceCount());
+		//nxt = vec;
+		print(nxt!.GetMagicNumber<ConcreteVectorClass>(nxt2));
+		print(nxt!.GetMagicNumber<ConcreteVectorClass>(nxt2));
+		print(nxt!.DefaultMethod(nxt2));
 		nxt = nxt2;
-		print(nxt!.GetMagicNumber(3));
-		print(nxt!.GetMagicNumber(5));
-		nxt!.Reset();
-		print(nxt!.GetMagicNumber(3));
+		nxt?.Reset();
+		print(nxt!.GetMagicNumber<ConcreteVectorClass>(nxt2));
 		o: object = nxt!;
 		on: object? = nxt;
 		print(nxt!.GetStrongReferenceCount());
