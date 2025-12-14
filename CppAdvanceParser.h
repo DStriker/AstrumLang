@@ -1149,7 +1149,6 @@ public:
     antlr4::tree::TerminalNode *Semi();
     antlr4::tree::TerminalNode *Identifier();
     OperatorFunctionIdContext *operatorFunctionId();
-    antlr4::tree::TerminalNode *Mutable();
     ReturnTypeContext *returnType();
     antlr4::tree::TerminalNode *LifetimeAnnotation();
     ExceptionSpecificationContext *exceptionSpecification();

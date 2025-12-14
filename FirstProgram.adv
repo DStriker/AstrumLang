@@ -51,6 +51,7 @@ public ref struct Span
 {
 	public &data: f32;
 	public length: i32;
+	inline ~this noexcept => print("Span deiniting");
 }
 
 public struct Vector3
@@ -108,9 +109,11 @@ public struct Vector3
 		this.x = f;
 	}
 
+	inline ~this noexcept => print("Vector3 deiniting");
+
 	public implicit operator f32 noexcept ==> y;
 
-	public operator+: (in ref other: self) ==> self(this.x + other.x, this.y + other.y, this.z + other.z);
+	public operator+: (in ref other: self) => self(this.x + other.x, this.y + other.y, this.z + other.z);
 
 	public mut operator++: () -> ref self = {
 		++x;
@@ -349,7 +352,7 @@ public class ConcreteVectorClass : VectorClass, IInterface<ConcreteVectorClass> 
 	public GetMagicNumber: (in i: ConcreteVectorClass) -> f32 => y * i.y;
 	
 }
-public GetMagicNumber: (in vec: VectorClass, i: VectorClass) -> f32 => vec.x * i.x;
+public GetMagicNumber: (in vec: VectorClass, in i: VectorClass) -> f32 => vec.x * i.x;
 //public GetMagicNumber: (in vec: ConcreteVectorClass, i: ConcreteVectorClass) -> f32 => vec.y * i.y;
 
 public class Next {
@@ -377,7 +380,7 @@ public class Next {
 }
 
 public interface IMagicNumber<in T> {
-	GetMagicNumber: (f: T) -> f32;
+	GetMagicNumber: (in ref f: T) -> f32;
 }
 
 public interface IResettable {
@@ -385,7 +388,7 @@ public interface IResettable {
 }
 
 public interface IInterface<in T> : IMagicNumber<T>, IResettable {
-	DefaultMethod: (f: T) -> f32 => this.GetMagicNumber<T>(f);
+	DefaultMethod: (in ref f: T) -> f32 => this.GetMagicNumber(f);
 
 	//Name: str { get; set; }
 	//this[i: usize] -> object { get; }
@@ -443,12 +446,12 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		vec: Vector3 = {12,13,14};
 		print(nxt!.GetStrongReferenceCount());
 		//nxt = vec;
-		print(nxt!.GetMagicNumber<ConcreteVectorClass>(nxt2));
-		print(nxt!.GetMagicNumber<ConcreteVectorClass>(nxt2));
+		print(nxt!.GetMagicNumber(nxt2));
+		print(nxt!.GetMagicNumber(nxt2));
 		print(nxt!.DefaultMethod(nxt2));
 		nxt = nxt2;
 		nxt?.Reset();
-		print(nxt!.GetMagicNumber<ConcreteVectorClass>(nxt2));
+		print(nxt!.GetMagicNumber(nxt2));
 		o: object = nxt!;
 		on: object? = nxt;
 		print(nxt!.GetStrongReferenceCount());

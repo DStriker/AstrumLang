@@ -4536,8 +4536,12 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	out << "public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }\n" << std::string(depth, '\t');
 	out << "private: const __vtable* _vtable;\n" << std::string(depth, '\t');
 	out << "ADV_INTERFACE_STRONG_COMMON_CTORS(" << type->id << ");\n" << std::string(depth, '\t');
+	bool isCovariant = false;
 	if (type->templateParams)
 	{
+		out << "public: using ElementType = ";
+		printIdentifier(type->templateParams->templateParamDeclaration(0)->Identifier());
+		out << ";\n" << std::string(depth, '\t');
 		out << "public: template<";
 		bool first = true;
 		for (auto param : type->templateParams->templateParamDeclaration())
@@ -4665,6 +4669,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			}\
 			else if (outParam)\
 			{\
+				isCovariant = true;\
 				out << "std::derived_from<Other__";\
 				printIdentifier(param->Identifier());\
 				out << ", ";\
@@ -5022,7 +5027,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 				printParamDeclClause(params);
 			}
 		}
-		out << ") ";
+		out << ") const ";
 		if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
 		out << ";\n" << std::string(depth, '\t');
 	}
@@ -5569,36 +5574,63 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	{
 		if (type->templateParams)
 		{
-			printTemplateParams(type->templateParams);
-			out << " ";
+			out << "template<class __AnyInterface";
+			if (!isCovariant) {
+				for (auto param : type->templateParams->templateParamDeclaration())
+				{
+					out << ", ";
+					if (auto t = param->templateTypename())
+					{
+						if (auto name = t->theTypeId())
+						{
+							printTypeId(name);
+						}
+						else
+						{
+							out << "class";
+						}
+					}
+					else
+					{
+						out << "class";
+					}
+					if (param->Ellipsis())
+					{
+						out << "...";
+					}
+					out << " ";
+					printIdentifier(param->Identifier());
+				}
+			}
+			out << "> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> ";
 		}
 		out << "FORCE_INLINE ";
 		
-		if (method.isConstReturn) out << "const ";
-		if (method.returnType)
+		if (isCovariant) {
+			out << "decltype(auto)";
+		}
+		else {
+			if (method.isConstReturn) out << "const ";
+			if (method.returnType)
+			{
+				printTypeId(method.returnType);
+			}
+			else
+			{
+				out << "void";
+			}
+			if (method.isRefReturn) out << "&";
+		}
+		auto id = method.id;
+		if (method.indexerParams) id = "getAt";
+		out << " " << id << "(";
+		if (type->templateParams)
 		{
-			printTypeId(method.returnType);
+			out << "const __AnyInterface&";
 		}
 		else
 		{
-			out << "void";
-		}
-		if (method.isRefReturn) out << "&";
-		auto id = method.id;
-		if (method.indexerParams) id = "getAt";
-        out << " " << id << "(" << type->id;
-		if (type->templateParams)
-		{
-			out << "<";
-			first = true;
-			for (auto param : type->templateParams->templateParamDeclaration())
-			{
-				if (!first) out << ", ";
-				first = false;
-				printIdentifier(param->Identifier());
-				if (param->Ellipsis()) out << "...";
-			}
-			out << ">";
+			out << "const " << type->id << "&";
 		}
 		out << " iface";
 		if (method.params)
@@ -5650,7 +5682,27 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		if (method.isDefault)
 		{
 			out << "}\n" << std::string(depth, '\t');
-			out << "else { ADV_EXPRESSION_BODY(iface.__default_" << method.id << "(";
+			out << "else { ADV_EXPRESSION_BODY(reinterpret_cast<const " << type->id;
+			if (type->templateParams)
+			{
+				first = true;
+				out << "<";
+				if (isCovariant)
+				{
+					out << "typename __AnyInterface::ElementType";
+				}
+				else {
+					for (auto param : type->templateParams->templateParamDeclaration())
+					{
+						if (!first) out << ", ";
+						first = false;
+						printIdentifier(param->Identifier());
+						if (param->Ellipsis()) out << "...";
+					}
+				}
+				out << ">";
+			};
+			out << "*>(&iface)->__default_" << method.id << "(";
 			if (auto params = method.params->paramDeclClause())
 			{
 				first = true;
@@ -5959,7 +6011,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 						printParamDeclClause(params);
 					}
 				}
-				out << ") ";
+				out << ") const ";
 				if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
 				auto func = static_cast<CppAdvanceParser::FunctionDefinitionContext*>(method.params->parent);
 				if (func->functionBody())

@@ -75,17 +75,19 @@ struct [[clang::annotate("ref_struct")]] Span final : public CppAdvance::RefStru
 	public: CppAdvance::f32 & data;
 	#line 53 "FirstProgram.adv"
 	public: CppAdvance::i32 length;
+	#line 54 "FirstProgram.adv"
+	public: inline ~Span() noexcept;
 	
 };
 class __Class_Vector3;
-#line 56 "FirstProgram.adv"
+#line 57 "FirstProgram.adv"
 struct Vector3 final : public CppAdvance::Struct {
 	private: using __self = Vector3;
 	public: using __class = __Class_Vector3;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 	public: 
 	class NestedStruct; class NestedStruct__Unowned; class NestedStruct__Weak; class __Class_NestedStruct;
-	#line 95 "FirstProgram.adv"
+	#line 96 "FirstProgram.adv"
 	class NestedStruct : public CppAdvance::ObjectRef {
 		private: using __self = NestedStruct;
 		private: using ___super = CppAdvance::ObjectRef;
@@ -100,11 +102,11 @@ struct Vector3 final : public CppAdvance::Struct {
 		ADV_CLASS_INIT(NestedStruct)
 		ADV_CLASS_STRONG_COMMON_CTORS(NestedStruct)
 		#define ADV_PROPERTY_SELF __class
-		#line 100 "FirstProgram.adv"
+		#line 101 "FirstProgram.adv"
 		public: inline constexpr static decltype(auto) count(CppAdvance::i32 i) ;
 		#define ADV_PROPERTY_SELF __self
 	};
-	#line 95 "FirstProgram.adv"
+	#line 96 "FirstProgram.adv"
 	class NestedStruct__Unowned : public CppAdvance::ObjectRef__Unowned {
 		private: using __self = NestedStruct;
 		public: using __strong_ref = NestedStruct;
@@ -117,7 +119,7 @@ struct Vector3 final : public CppAdvance::Struct {
 		ADV_CLASS_UNOWNED_COMMON_CTORS(NestedStruct__Unowned)
 		
 	};
-	#line 95 "FirstProgram.adv"
+	#line 96 "FirstProgram.adv"
 	class NestedStruct__Weak : public CppAdvance::ObjectRef__Weak {
 		private: using __self = NestedStruct;
 		public: using __strong_ref = NestedStruct;
@@ -133,7 +135,7 @@ struct Vector3 final : public CppAdvance::Struct {
 	};
 	
 	public: 
-	#line 95 "FirstProgram.adv"
+	#line 96 "FirstProgram.adv"
 	class __Class_NestedStruct : public CppAdvance::Object {
 		private: using __self = NestedStruct;
 		private: using ___super = CppAdvance::Object;
@@ -142,81 +144,83 @@ struct Vector3 final : public CppAdvance::Struct {
 		friend class __self::__weak_ref;
 		#define ADV_PROPERTY_SELF __selfClass
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-		#line 97 "FirstProgram.adv"
-		public: CppAdvance::f32 x; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
 		#line 98 "FirstProgram.adv"
-		public: CppAdvance::f32 y; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
+		public: CppAdvance::f32 x; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
 		#line 99 "FirstProgram.adv"
-		public: CppAdvance::f32 z; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
+		public: CppAdvance::f32 y; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
 		#line 100 "FirstProgram.adv"
+		public: CppAdvance::f32 z; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
+		#line 101 "FirstProgram.adv"
 		public: inline constexpr static auto count(CppAdvance::i32 i)  -> CppAdvance::i32;
 		
 #define ADV_PROPERTY_SELF __self
 	};
-	#line 95 "FirstProgram.adv"
+	#line 96 "FirstProgram.adv"
 	ADV_CHECK_FOR_CONCRETE(NestedStruct);
 	
-	#line 65 "FirstProgram.adv"
-	private: friend class TestStruct; friend class __Class_TestStruct;
 	#line 66 "FirstProgram.adv"
-	private: template<class T> friend class TestStruct2; template<class T> friend class __Class_TestStruct2;
+	private: friend class TestStruct; friend class __Class_TestStruct;
 	#line 67 "FirstProgram.adv"
-	private: friend CppAdvance::i32 func3(CppAdvance::i32 x);
+	private: template<class T> friend class TestStruct2; template<class T> friend class __Class_TestStruct2;
 	#line 68 "FirstProgram.adv"
+	private: friend CppAdvance::i32 func3(CppAdvance::i32 x);
+	#line 69 "FirstProgram.adv"
 	private: friend CppAdvance::i32 func4(CppAdvance::i32 x);
-	#line 59 "FirstProgram.adv"
+	#line 60 "FirstProgram.adv"
 	public: CppAdvance::f32 x; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-	#line 59 "FirstProgram.adv"
+	#line 60 "FirstProgram.adv"
 	public: CppAdvance::f32 y; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-	#line 59 "FirstProgram.adv"
+	#line 60 "FirstProgram.adv"
 	public: CppAdvance::f32 z; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-	#line 90 "FirstProgram.adv"
+	#line 91 "FirstProgram.adv"
 	private: static thread_local CppAdvance::i32 Count2; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
-	#line 92 "FirstProgram.adv"
+	#line 93 "FirstProgram.adv"
 	public: TESTDLL_API static const Vector3 ZERO;
 	public: constexpr Vector3(CppAdvance::f32 _x, CppAdvance::f32 _y, CppAdvance::f32 _z) : x{_x}, y{_y}, z{_z} {}
-	#line 91 "FirstProgram.adv"
+	#line 92 "FirstProgram.adv"
 	public: static constexpr auto BYTES = CppAdvance::i32(24);
-	#line 93 "FirstProgram.adv"
+	#line 94 "FirstProgram.adv"
 	private: using Coords = __ntuples::NamedTuple_6893f862d6c49683;
-	#line 76 "FirstProgram.adv"
-	private: static CppAdvance::i32 p_Count; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
-	#line 81 "FirstProgram.adv"
-	public: TESTDLL_API static auto setCount(const CppAdvance::i32& value) -> void;
 	#line 77 "FirstProgram.adv"
+	private: static CppAdvance::i32 p_Count; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
+	#line 82 "FirstProgram.adv"
+	public: TESTDLL_API static auto setCount(const CppAdvance::i32& value) -> void;
+	#line 78 "FirstProgram.adv"
 	public: TESTDLL_API static auto getCount()  -> CppAdvance::i32;
 	#line 9999 "FirstProgram.adv"
 	ADV_PROPERTY_GETTER_SETTER_STATIC(public, TESTDLL_API, Count, public, getCount, public, setCount, CppAdvance::i32);
-	#line 88 "FirstProgram.adv"
+	#line 89 "FirstProgram.adv"
 	public: inline constexpr auto getName() const  -> CppAdvance::Str;
 	#line 9999 "FirstProgram.adv"
 	ADV_PROPERTY_GETTER(public, Name, getName, CppAdvance::Str);
-	#line 72 "FirstProgram.adv"
-	public: inline constexpr auto Equals(const IEquatable& other) const noexcept -> bool;
 	#line 73 "FirstProgram.adv"
-	public: inline constexpr auto format() const noexcept -> CppAdvance::Str;
+	public: inline constexpr auto Equals(const IEquatable& other) const noexcept -> bool;
 	#line 74 "FirstProgram.adv"
+	public: inline constexpr auto format() const noexcept -> CppAdvance::Str;
+	#line 75 "FirstProgram.adv"
 	public: inline constexpr auto HashCode() const  -> CppAdvance::usize;
-	#line 104 "FirstProgram.adv"
+	#line 105 "FirstProgram.adv"
 	public: inline constexpr Vector3()  = default;
-	#line 106 "FirstProgram.adv"
+	#line 107 "FirstProgram.adv"
 	public: template<class U> inline constexpr  Vector3(U f) ;
-	#line 111 "FirstProgram.adv"
+	#line 112 "FirstProgram.adv"
+	public: inline ~Vector3() noexcept;
+	#line 114 "FirstProgram.adv"
 	public: inline constexpr  operator CppAdvance::f32() const noexcept;
-	#line 113 "FirstProgram.adv"
-	public: inline constexpr auto operator+(const __self& other) const  -> decltype(auto);
-	#line 115 "FirstProgram.adv"
+	#line 116 "FirstProgram.adv"
+	public: inline auto operator+(const __self& other) const  -> decltype(auto);
+	#line 118 "FirstProgram.adv"
 	public: inline auto operator++()  -> __self& LIFETIMEBOUND;
 	public: inline auto operator++(int)  -> Vector3;
 	#line 9999 "FirstProgram.adv"
-	private: template<class __IdxT = CppAdvance::f32> struct __IndexerAccessor_125 {
+	private: template<class __IdxT = CppAdvance::f32> struct __IndexerAccessor_128 {
 		private:
 		Vector3& _parent;
 		CppAdvance::i32 _idx;
 		 friend class Vector3;
 		public:
-		FORCE_INLINE __IndexerAccessor_125(Vector3& parent, CppAdvance::i32 idx) : _parent(parent), _idx(idx) {}
-		FORCE_INLINE __IndexerAccessor_125(Vector3 const& parent, CppAdvance::i32 idx) : _parent(const_cast<std::remove_cvref_t<decltype(parent)>&>(parent)), _idx(idx) {}
+		FORCE_INLINE __IndexerAccessor_128(Vector3& parent, CppAdvance::i32 idx) : _parent(parent), _idx(idx) {}
+		FORCE_INLINE __IndexerAccessor_128(Vector3 const& parent, CppAdvance::i32 idx) : _parent(const_cast<std::remove_cvref_t<decltype(parent)>&>(parent)), _idx(idx) {}
 		template<class _ElemRight> FORCE_INLINE auto& operator=(_ElemRight&& other) { _parent.setAt(_idx, std::forward<_ElemRight>(other)); return *this; }
 		template<class _ElemRight> FORCE_INLINE decltype(auto) operator+=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t+=u;} { return *this = __ref() += std::forward<_ElemRight>(other); }
 		template<class _ElemRight> FORCE_INLINE decltype(auto) operator-=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t-=u;} { return *this = __ref() -= std::forward<_ElemRight>(other); }
@@ -253,7 +257,7 @@ struct Vector3 final : public CppAdvance::Struct {
 		template<class _ElemRight> FORCE_INLINE decltype(auto) operator[](_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t[u];} { return __ref()[std::forward<_ElemRight>(other)]; }
 		template<class... Args> FORCE_INLINE decltype(auto) operator()(Args&&... other) { return __ref()(std::forward<Args>(other)...); }
 		template<class... Args> FORCE_INLINE decltype(auto) operator()(Args&&... other) const { return __ref()(std::forward<Args>(other)...); }
-		template<class Ch> friend FORCE_INLINE decltype(auto) operator<<(std::basic_ostream<Ch>& stream, const __IndexerAccessor_125<__IdxT>& elem) { return stream << elem.__ref(); }
+		template<class Ch> friend FORCE_INLINE decltype(auto) operator<<(std::basic_ostream<Ch>& stream, const __IndexerAccessor_128<__IdxT>& elem) { return stream << elem.__ref(); }
 		FORCE_INLINE decltype(auto) operator*() requires requires(__IdxT t) {*t;} { return *__ref(); }
 		FORCE_INLINE decltype(auto) operator&() requires requires(__IdxT t) {&t;} { return &__ref(); }
 		template<class _ElemRight> FORCE_INLINE bool operator==(const _ElemRight& other) const requires requires(__IdxT t, _ElemRight u) {t==u;} { return __ref() == other; }
@@ -266,34 +270,34 @@ struct Vector3 final : public CppAdvance::Struct {
 		
 	};
 
-	friend struct __IndexerAccessor_125<CppAdvance::f32>;
+	friend struct __IndexerAccessor_128<CppAdvance::f32>;
 	inline CppAdvance::f32 getAt(CppAdvance::i32 idx);
 	inline const CppAdvance::f32 getAt(CppAdvance::i32 idx) const;
 	inline void setAt(CppAdvance::i32 idx, const CppAdvance::f32& value);
-	#line 125 "FirstProgram.adv"
-	public: inline auto operator[](CppAdvance::i32 idx)  -> __IndexerAccessor_125<CppAdvance::f32>;
-	public: inline auto operator[](CppAdvance::i32 idx) const  -> const __IndexerAccessor_125<CppAdvance::f32>;
-	#line 135 "FirstProgram.adv"
+	#line 128 "FirstProgram.adv"
+	public: inline auto operator[](CppAdvance::i32 idx)  -> __IndexerAccessor_128<CppAdvance::f32>;
+	public: inline auto operator[](CppAdvance::i32 idx) const  -> const __IndexerAccessor_128<CppAdvance::f32>;
+	#line 138 "FirstProgram.adv"
 	public: inline constexpr auto _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  -> CppAdvance::f32;
 	public: inline constexpr auto _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const  -> const CppAdvance::f32;
-	#line 137 "FirstProgram.adv"
+	#line 140 "FirstProgram.adv"
 	public: inline constexpr auto getX() const  -> CppAdvance::f32;
-	#line 138 "FirstProgram.adv"
-	public: inline auto getNext() const  -> Next;
 	#line 141 "FirstProgram.adv"
+	public: inline auto getNext() const  -> Next;
+	#line 144 "FirstProgram.adv"
 	public: inline constexpr static auto Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z)  -> CppAdvance::i32;
-	#line 145 "FirstProgram.adv"
+	#line 148 "FirstProgram.adv"
 	public: inline constexpr auto GetMagicNumber(CppAdvance::f32 i) const  -> CppAdvance::f32;
-	#line 146 "FirstProgram.adv"
+	#line 149 "FirstProgram.adv"
 	public: inline auto DefaultMethod(CppAdvance::f32 f) const  -> CppAdvance::f32;
-	#line 147 "FirstProgram.adv"
+	#line 150 "FirstProgram.adv"
 	public: inline constexpr auto Reset()  -> void;
-	#line 155 "FirstProgram.adv"
+	#line 158 "FirstProgram.adv"
 	public: template<class U> inline constexpr auto TemplateMethod(U x, U y, U z)  -> Coords;
 	
 };
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<BaseClass> = false;
-#line 173 "FirstProgram.adv"
+#line 176 "FirstProgram.adv"
 class BaseClass : public CppAdvance::ObjectRef {
 	private: using __self = BaseClass;
 	private: using ___super = CppAdvance::ObjectRef;
@@ -311,7 +315,7 @@ class BaseClass : public CppAdvance::ObjectRef {
 	#define ADV_PROPERTY_SELF __class
 	#define ADV_PROPERTY_SELF __self
 };
-#line 173 "FirstProgram.adv"
+#line 176 "FirstProgram.adv"
 class BaseClass__Unowned : public CppAdvance::ObjectRef__Unowned {
 	private: using __self = BaseClass;
 	public: using __strong_ref = BaseClass;
@@ -324,7 +328,7 @@ class BaseClass__Unowned : public CppAdvance::ObjectRef__Unowned {
 	ADV_CLASS_UNOWNED_COMMON_CTORS(BaseClass__Unowned)
 	
 };
-#line 173 "FirstProgram.adv"
+#line 176 "FirstProgram.adv"
 class BaseClass__Weak : public CppAdvance::ObjectRef__Weak {
 	private: using __self = BaseClass;
 	public: using __strong_ref = BaseClass;
@@ -340,7 +344,7 @@ class BaseClass__Weak : public CppAdvance::ObjectRef__Weak {
 };
 
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<VectorClass> = false;
-#line 177 "FirstProgram.adv"
+#line 180 "FirstProgram.adv"
 class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
 	private: using __self = VectorClass;
 	private: using ___super = CppAdvance::ClassRefParent<BaseClass>;
@@ -357,7 +361,7 @@ class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
 	ADV_CLASS_STRONG_COMMON_CTORS(VectorClass)
 	public: 
 	class NestedClass; class NestedClass__Unowned; class NestedClass__Weak; class __Class_NestedClass;
-	#line 214 "FirstProgram.adv"
+	#line 217 "FirstProgram.adv"
 	class NestedClass : public CppAdvance::ObjectRef {
 		private: using __self = NestedClass;
 		private: using ___super = CppAdvance::ObjectRef;
@@ -372,11 +376,11 @@ class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
 		ADV_CLASS_INIT(NestedClass)
 		ADV_CLASS_STRONG_COMMON_CTORS(NestedClass)
 		#define ADV_PROPERTY_SELF __class
-		#line 225 "FirstProgram.adv"
+		#line 228 "FirstProgram.adv"
 		public: inline constexpr static decltype(auto) count(CppAdvance::i32 i) ;
 		#define ADV_PROPERTY_SELF __self
 	};
-	#line 214 "FirstProgram.adv"
+	#line 217 "FirstProgram.adv"
 	class NestedClass__Unowned : public CppAdvance::ObjectRef__Unowned {
 		private: using __self = NestedClass;
 		public: using __strong_ref = NestedClass;
@@ -389,7 +393,7 @@ class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
 		ADV_CLASS_UNOWNED_COMMON_CTORS(NestedClass__Unowned)
 		
 	};
-	#line 214 "FirstProgram.adv"
+	#line 217 "FirstProgram.adv"
 	class NestedClass__Weak : public CppAdvance::ObjectRef__Weak {
 		private: using __self = NestedClass;
 		public: using __strong_ref = NestedClass;
@@ -405,7 +409,7 @@ class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
 	};
 	
 	public: 
-	#line 214 "FirstProgram.adv"
+	#line 217 "FirstProgram.adv"
 	class __Class_NestedClass : public CppAdvance::Object {
 		private: using __self = NestedClass;
 		private: using ___super = CppAdvance::Object;
@@ -414,20 +418,20 @@ class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
 		friend class __self::__weak_ref;
 		#define ADV_PROPERTY_SELF __selfClass
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-		#line 216 "FirstProgram.adv"
+		#line 219 "FirstProgram.adv"
 		public: CppAdvance::f32 x; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-		#line 217 "FirstProgram.adv"
-		public: CppAdvance::f32 y; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-		#line 218 "FirstProgram.adv"
-		public: CppAdvance::f32 z; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
 		#line 220 "FirstProgram.adv"
+		public: CppAdvance::f32 y; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
+		#line 221 "FirstProgram.adv"
+		public: CppAdvance::f32 z; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
+		#line 223 "FirstProgram.adv"
 		public: inline constexpr __Class_NestedClass(CppAdvance::f32 x, CppAdvance::f32 y, CppAdvance::f32 z) noexcept;
-		#line 225 "FirstProgram.adv"
+		#line 228 "FirstProgram.adv"
 		public: inline constexpr static auto count(CppAdvance::i32 i)  -> CppAdvance::i32;
 		
 #define ADV_PROPERTY_SELF __self
 	};
-	#line 214 "FirstProgram.adv"
+	#line 217 "FirstProgram.adv"
 	ADV_CHECK_FOR_CONCRETE(NestedClass);
 	
 	public: static decltype(auto) getCount2();
@@ -436,13 +440,13 @@ class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
 	public: static decltype(auto) getZERO();
 	ADV_PROPERTY_GETTER_STATIC(public, TESTDLL_API, ZERO, getZERO, Vector3);
 	#define ADV_PROPERTY_SELF __class
-	#line 251 "FirstProgram.adv"
+	#line 254 "FirstProgram.adv"
 	public: inline  operator CppAdvance::f32() const noexcept;
-	#line 273 "FirstProgram.adv"
+	#line 276 "FirstProgram.adv"
 	public: inline decltype(auto) operator[](CppAdvance::i32 idx) const ;
-	#line 283 "FirstProgram.adv"
+	#line 286 "FirstProgram.adv"
 	public: inline decltype(auto) _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const ;
-	#line 289 "FirstProgram.adv"
+	#line 292 "FirstProgram.adv"
 	public: inline constexpr static decltype(auto) Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z) ;
 	public: static constexpr decltype(auto) BYTES = CppAdvance::i32(24);
 	public: using Coords = __ntuples::NamedTuple_6893f862d6c49683;
@@ -453,7 +457,7 @@ class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
 	friend CppAdvance::i32 func3(CppAdvance::i32 x);
 	#define ADV_PROPERTY_SELF __self
 };
-#line 177 "FirstProgram.adv"
+#line 180 "FirstProgram.adv"
 class VectorClass__Unowned : public CppAdvance::ClassRefParentUnowned<BaseClass> {
 	private: using __self = VectorClass;
 	public: using __strong_ref = VectorClass;
@@ -464,15 +468,15 @@ class VectorClass__Unowned : public CppAdvance::ClassRefParentUnowned<BaseClass>
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *reinterpret_cast<__class*>(_obj); }
 	ADV_CLASS_FROM_PTR(VectorClass__Unowned)
 	ADV_CLASS_UNOWNED_COMMON_CTORS(VectorClass__Unowned)
-	#line 251 "FirstProgram.adv"
+	#line 254 "FirstProgram.adv"
 	public: inline  operator CppAdvance::f32() const noexcept;
-	#line 273 "FirstProgram.adv"
+	#line 276 "FirstProgram.adv"
 	public: inline decltype(auto) operator[](CppAdvance::i32 idx) const ;
-	#line 283 "FirstProgram.adv"
+	#line 286 "FirstProgram.adv"
 	public: inline decltype(auto) _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const ;
 	
 };
-#line 177 "FirstProgram.adv"
+#line 180 "FirstProgram.adv"
 class VectorClass__Weak : public CppAdvance::ClassRefParentWeak<BaseClass> {
 	private: using __self = VectorClass;
 	public: using __strong_ref = VectorClass;
@@ -488,7 +492,7 @@ class VectorClass__Weak : public CppAdvance::ClassRefParentWeak<BaseClass> {
 };
 
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<ConcreteVectorClass> = false;
-#line 321 "FirstProgram.adv"
+#line 324 "FirstProgram.adv"
 class ConcreteVectorClass : public CppAdvance::ClassRefParent<VectorClass> {
 	private: using __self = ConcreteVectorClass;
 	private: using ___super = CppAdvance::ClassRefParent<VectorClass>;
@@ -504,13 +508,13 @@ class ConcreteVectorClass : public CppAdvance::ClassRefParent<VectorClass> {
 	ADV_CLASS_INIT(ConcreteVectorClass)
 	ADV_CLASS_STRONG_COMMON_CTORS(ConcreteVectorClass)
 	#define ADV_PROPERTY_SELF __class
-	#line 328 "FirstProgram.adv"
+	#line 331 "FirstProgram.adv"
 	public: inline  ConcreteVectorClass(CppAdvance::i32 i) noexcept;
-	#line 348 "FirstProgram.adv"
+	#line 351 "FirstProgram.adv"
 	public: inline decltype(auto) operator+(CppAdvance::In<__self> other) const ;
 	#define ADV_PROPERTY_SELF __self
 };
-#line 321 "FirstProgram.adv"
+#line 324 "FirstProgram.adv"
 class ConcreteVectorClass__Unowned : public CppAdvance::ClassRefParentUnowned<VectorClass> {
 	private: using __self = ConcreteVectorClass;
 	public: using __strong_ref = ConcreteVectorClass;
@@ -521,11 +525,11 @@ class ConcreteVectorClass__Unowned : public CppAdvance::ClassRefParentUnowned<Ve
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *reinterpret_cast<__class*>(_obj); }
 	ADV_CLASS_FROM_PTR(ConcreteVectorClass__Unowned)
 	ADV_CLASS_UNOWNED_COMMON_CTORS(ConcreteVectorClass__Unowned)
-	#line 348 "FirstProgram.adv"
+	#line 351 "FirstProgram.adv"
 	public: inline decltype(auto) operator+(CppAdvance::In<__self> other) const ;
 	
 };
-#line 321 "FirstProgram.adv"
+#line 324 "FirstProgram.adv"
 class ConcreteVectorClass__Weak : public CppAdvance::ClassRefParentWeak<VectorClass> {
 	private: using __self = ConcreteVectorClass;
 	public: using __strong_ref = ConcreteVectorClass;
@@ -541,7 +545,7 @@ class ConcreteVectorClass__Weak : public CppAdvance::ClassRefParentWeak<VectorCl
 };
 
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<Next> = false;
-#line 355 "FirstProgram.adv"
+#line 358 "FirstProgram.adv"
 class Next : public CppAdvance::ObjectRef {
 	private: using __self = Next;
 	private: using ___super = CppAdvance::ObjectRef;
@@ -557,11 +561,11 @@ class Next : public CppAdvance::ObjectRef {
 	ADV_CLASS_INIT(Next)
 	ADV_CLASS_STRONG_COMMON_CTORS(Next)
 	#define ADV_PROPERTY_SELF __class
-	#line 372 "FirstProgram.adv"
+	#line 375 "FirstProgram.adv"
 	public: inline decltype(auto) operator*() const ;
 	#define ADV_PROPERTY_SELF __self
 };
-#line 355 "FirstProgram.adv"
+#line 358 "FirstProgram.adv"
 class Next__Unowned : public CppAdvance::ObjectRef__Unowned {
 	private: using __self = Next;
 	public: using __strong_ref = Next;
@@ -572,11 +576,11 @@ class Next__Unowned : public CppAdvance::ObjectRef__Unowned {
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *reinterpret_cast<__class*>(_obj); }
 	ADV_CLASS_FROM_PTR(Next__Unowned)
 	ADV_CLASS_UNOWNED_COMMON_CTORS(Next__Unowned)
-	#line 372 "FirstProgram.adv"
+	#line 375 "FirstProgram.adv"
 	public: inline decltype(auto) operator*() const ;
 	
 };
-#line 355 "FirstProgram.adv"
+#line 358 "FirstProgram.adv"
 class Next__Weak : public CppAdvance::ObjectRef__Weak {
 	private: using __self = Next;
 	public: using __strong_ref = Next;
@@ -592,25 +596,25 @@ class Next__Weak : public CppAdvance::ObjectRef__Weak {
 };
 
 template<class T> inline constexpr bool CppAdvance::__details::cheapCopy<IMagicNumber<T>> = false;
-#line 380 "FirstProgram.adv"
+#line 383 "FirstProgram.adv"
 template<class __AnyType, class T> concept __HasMethodImplementation_61fc0fee41f68054 = requires(typename __AnyType::__class t) { {t.GetMagicNumber(std::declval<T>())} -> std::convertible_to<CppAdvance::f32>; } || requires(typename __AnyType::__class t) { {GetMagicNumber(t, std::declval<T>())} -> std::convertible_to<CppAdvance::f32>; };
 namespace __vtables {
-	#line 379 "FirstProgram.adv"
+	#line 382 "FirstProgram.adv"
 	template<class T> struct __vtable_IMagicNumber
 	{
-		using fn_61fc0fee41f68054 = CppAdvance::f32(CppAdvance::Object*, T f);
+		using fn_61fc0fee41f68054 = CppAdvance::f32(CppAdvance::Object*, const T& f);
 		fn_61fc0fee41f68054* fnptr_61fc0fee41f68054;
-		#line 380 "FirstProgram.adv"
-		template<class __AnyType> static CppAdvance::f32 impl_61fc0fee41f68054(CppAdvance::Object* obj, T f) { ADV_EXPRESSION_BODY(ADV_UFCS(GetMagicNumber)(*static_cast<typename __AnyType::__class*>(obj), f)); }
+		#line 383 "FirstProgram.adv"
+		template<class __AnyType> static CppAdvance::f32 impl_61fc0fee41f68054(CppAdvance::Object* obj, const T& f) { ADV_EXPRESSION_BODY(ADV_UFCS(GetMagicNumber)(*static_cast<typename __AnyType::__class*>(obj), f)); }
 		
 	};
 }
-#line 379 "FirstProgram.adv"
+#line 382 "FirstProgram.adv"
 template<class __AnyType, class T> inline constexpr __vtables::__vtable_IMagicNumber<T> __vtable_IMagicNumber_for = {&__vtables::__vtable_IMagicNumber<T>::template impl_61fc0fee41f68054<__AnyType>
 	};
-#line 379 "FirstProgram.adv"
+#line 382 "FirstProgram.adv"
 template<class __AnyType, class T> concept __ImplementsInterface_IMagicNumber = __HasMethodImplementation_61fc0fee41f68054<__AnyType, T>;
-#line 379 "FirstProgram.adv"
+#line 382 "FirstProgram.adv"
 template<class T> class IMagicNumber final : public CppAdvance::InterfaceRef {
 	private: using __self = IMagicNumber<T>;
 	public: using __vtable = __vtables::__vtable_IMagicNumber<T>;
@@ -625,6 +629,7 @@ template<class T> class IMagicNumber final : public CppAdvance::InterfaceRef {
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 	private: const __vtable* _vtable;
 	ADV_INTERFACE_STRONG_COMMON_CTORS(IMagicNumber);
+	public: using ElementType = T;
 	public: template<class> friend class IMagicNumber;
 	public: template<class> friend class IMagicNumber__Unowned;
 	public: template<class> friend class IMagicNumber__Weak;
@@ -845,28 +850,28 @@ template<class T> class IMagicNumber__Weak final : public CppAdvance::ObjectRef_
 	}
 	
 };
-template<class T> FORCE_INLINE CppAdvance::f32 GetMagicNumber(IMagicNumber<T> iface, T f)  { ADV_EXPRESSION_BODY(CppAdvance::GetVTableFromInterface(&iface)->fnptr_61fc0fee41f68054(CppAdvance::GetObjectReferenceFromInterface(&iface), f)); }
+template<class __AnyInterface, class T> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> FORCE_INLINE CppAdvance::f32 GetMagicNumber(const __AnyInterface& iface, const T& f)  { ADV_EXPRESSION_BODY(CppAdvance::GetVTableFromInterface(&iface)->fnptr_61fc0fee41f68054(CppAdvance::GetObjectReferenceFromInterface(&iface), f)); }
 
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<IResettable> = false;
-#line 384 "FirstProgram.adv"
+#line 387 "FirstProgram.adv"
 template<class __AnyType> concept __HasMethodImplementation_565bebff34b81aa1 = requires(typename __AnyType::__class t) { {t.Reset()} -> std::same_as<void>; } || requires(typename __AnyType::__class t) { {Reset(t)} -> std::same_as<void>; };
 namespace __vtables {
-	#line 383 "FirstProgram.adv"
+	#line 386 "FirstProgram.adv"
 	struct __vtable_IResettable
 	{
 		using fn_565bebff34b81aa1 = void(CppAdvance::Object*);
 		fn_565bebff34b81aa1* fnptr_565bebff34b81aa1;
-		#line 384 "FirstProgram.adv"
+		#line 387 "FirstProgram.adv"
 		template<class __AnyType> static void impl_565bebff34b81aa1(CppAdvance::Object* obj) { ADV_EXPRESSION_BODY(ADV_UFCS(Reset)(*static_cast<typename __AnyType::__class*>(obj))); }
 		
 	};
 }
-#line 383 "FirstProgram.adv"
+#line 386 "FirstProgram.adv"
 template<class __AnyType> inline constexpr __vtables::__vtable_IResettable __vtable_IResettable_for = {&__vtables::__vtable_IResettable::template impl_565bebff34b81aa1<__AnyType>
 	};
-#line 383 "FirstProgram.adv"
+#line 386 "FirstProgram.adv"
 template<class __AnyType> concept __ImplementsInterface_IResettable = __HasMethodImplementation_565bebff34b81aa1<__AnyType>;
-#line 383 "FirstProgram.adv"
+#line 386 "FirstProgram.adv"
 class IResettable final : public CppAdvance::InterfaceRef {
 	private: using __self = IResettable;
 	public: using __vtable = __vtables::__vtable_IResettable;
@@ -1081,19 +1086,19 @@ class IResettable__Weak final : public CppAdvance::ObjectRef__Weak {
 	}
 	
 };
-FORCE_INLINE void Reset(IResettable iface)  { ADV_EXPRESSION_BODY(CppAdvance::GetVTableFromInterface(&iface)->fnptr_565bebff34b81aa1(CppAdvance::GetObjectReferenceFromInterface(&iface))); }
+FORCE_INLINE void Reset(const IResettable& iface)  { ADV_EXPRESSION_BODY(CppAdvance::GetVTableFromInterface(&iface)->fnptr_565bebff34b81aa1(CppAdvance::GetObjectReferenceFromInterface(&iface))); }
 
 template<class T> inline constexpr bool CppAdvance::__details::cheapCopy<IInterface<T>> = false;
-#line 388 "FirstProgram.adv"
+#line 391 "FirstProgram.adv"
 template<class __AnyType, class T> concept __HasMethodImplementation_5d97f8870752785f = requires(typename __AnyType::__class t) { {t.DefaultMethod(std::declval<T>())} -> std::convertible_to<CppAdvance::f32>; } || requires(typename __AnyType::__class t) { {DefaultMethod(t, std::declval<T>())} -> std::convertible_to<CppAdvance::f32>; };
 namespace __vtables {
-	#line 387 "FirstProgram.adv"
+	#line 390 "FirstProgram.adv"
 	template<class T> struct __vtable_IInterface : public IMagicNumber<T>::__vtable, public IResettable::__vtable
 	{
-		using fn_5d97f8870752785f = CppAdvance::f32(CppAdvance::Object*, T f);
+		using fn_5d97f8870752785f = CppAdvance::f32(CppAdvance::Object*, const T& f);
 		fn_5d97f8870752785f* fnptr_5d97f8870752785f;
-		#line 388 "FirstProgram.adv"
-		template<class __AnyType> static CppAdvance::f32 impl_5d97f8870752785f(CppAdvance::Object* obj, T f) { 
+		#line 391 "FirstProgram.adv"
+		template<class __AnyType> static CppAdvance::f32 impl_5d97f8870752785f(CppAdvance::Object* obj, const T& f) { 
 			if constexpr(__HasMethodImplementation_5d97f8870752785f<__AnyType, T>) {
 				ADV_EXPRESSION_BODY(ADV_UFCS(DefaultMethod)(*static_cast<typename __AnyType::__class*>(obj), f)); 
 			} else { throw 0; }
@@ -1101,14 +1106,14 @@ namespace __vtables {
 		
 	};
 }
-#line 387 "FirstProgram.adv"
+#line 390 "FirstProgram.adv"
 template<class __AnyType, class T> inline constexpr __vtables::__vtable_IInterface<T> __vtable_IInterface_for = {__vtable_IMagicNumber_for<__AnyType, T>
 	, __vtable_IResettable_for<__AnyType>
 	, __HasMethodImplementation_5d97f8870752785f<__AnyType, T> ? &__vtables::__vtable_IInterface<T>::template impl_5d97f8870752785f<__AnyType> : nullptr
 	};
-#line 387 "FirstProgram.adv"
+#line 390 "FirstProgram.adv"
 template<class __AnyType, class T> concept __ImplementsInterface_IInterface = __ImplementsInterface_IMagicNumber<__AnyType, T> && __ImplementsInterface_IResettable<__AnyType>;
-#line 387 "FirstProgram.adv"
+#line 390 "FirstProgram.adv"
 template<class T> class IInterface final : public CppAdvance::InterfaceRef {
 	private: using __self = IInterface<T>;
 	public: using __vtable = __vtables::__vtable_IInterface<T>;
@@ -1123,6 +1128,7 @@ template<class T> class IInterface final : public CppAdvance::InterfaceRef {
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 	private: const __vtable* _vtable;
 	ADV_INTERFACE_STRONG_COMMON_CTORS(IInterface);
+	public: using ElementType = T;
 	public: template<class> friend class IInterface;
 	public: template<class> friend class IInterface__Unowned;
 	public: template<class> friend class IInterface__Weak;
@@ -1218,7 +1224,7 @@ template<class T> class IInterface final : public CppAdvance::InterfaceRef {
 			_vtable = &__vtable_IInterface_for<std::remove_cvref_t<__AnyType>, T>;
 		} else static_assert(false,"Not implemented yet"); return *this;
 	}
-	public: CppAdvance::f32 __default_DefaultMethod(T f) ;
+	public: CppAdvance::f32 __default_DefaultMethod(const T& f) const ;
 	
 };
 template<class T> class IInterface__Unowned final : public CppAdvance::InterfaceRef__Unowned {
@@ -1344,14 +1350,14 @@ template<class T> class IInterface__Weak final : public CppAdvance::ObjectRef__W
 	}
 	
 };
-template<class T> FORCE_INLINE CppAdvance::f32 DefaultMethod(IInterface<T> iface, T f)  {
+template<class __AnyInterface, class T> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> FORCE_INLINE CppAdvance::f32 DefaultMethod(const __AnyInterface& iface, const T& f)  {
 	auto func = CppAdvance::GetVTableFromInterface(&iface)->fnptr_5d97f8870752785f;
 	if (func) { ADV_EXPRESSION_BODY(func(CppAdvance::GetObjectReferenceFromInterface(&iface), f)); }
-	else { ADV_EXPRESSION_BODY(iface.__default_DefaultMethod(f)); }
+	else { ADV_EXPRESSION_BODY(reinterpret_cast<const IInterface<T>*>(&iface)->__default_DefaultMethod(f)); }
 }
 
 
-#line 56 "FirstProgram.adv"
+#line 57 "FirstProgram.adv"
 class __Class_Vector3 final : public CppAdvance::ValueType
 {
 	#line 9999 "FirstProgram.adv"
@@ -1379,10 +1385,10 @@ class __Class_Vector3 final : public CppAdvance::ValueType
 	auto Reset() -> void { ADV_EXPRESSION_BODY(__value.Reset()); }
 	
 };
-#line 56 "FirstProgram.adv"
+#line 57 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(Vector3);
 
-#line 173 "FirstProgram.adv"
+#line 176 "FirstProgram.adv"
 class __Class_BaseClass : public CppAdvance::Object {
 	private: using __self = BaseClass;
 	private: using ___super = CppAdvance::Object;
@@ -1391,15 +1397,15 @@ class __Class_BaseClass : public CppAdvance::Object {
 	friend class __self::__weak_ref;
 	#define ADV_PROPERTY_SELF __selfClass
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 174 "FirstProgram.adv"
+	#line 177 "FirstProgram.adv"
 	public: inline virtual auto getNext() const  -> Next;
 	
 #define ADV_PROPERTY_SELF __self
 };
-#line 173 "FirstProgram.adv"
+#line 176 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(BaseClass);
 
-#line 177 "FirstProgram.adv"
+#line 180 "FirstProgram.adv"
 class ADV_NOVTABLE __Class_VectorClass ADV_ABSTRACT : public CppAdvance::ClassParent<BaseClass> {
 	private: using __self = VectorClass;
 	private: using ___super = CppAdvance::ClassParent<BaseClass>;
@@ -1409,66 +1415,66 @@ class ADV_NOVTABLE __Class_VectorClass ADV_ABSTRACT : public CppAdvance::ClassPa
 	#define ADV_PROPERTY_SELF __selfClass
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 	public: using NestedClass = __self::NestedClass;
-	#line 186 "FirstProgram.adv"
+	#line 189 "FirstProgram.adv"
 	private: friend class TestStruct; friend class __Class_TestStruct;
-	#line 187 "FirstProgram.adv"
+	#line 190 "FirstProgram.adv"
 	private: template<class T> friend class TestStruct2; template<class T> friend class __Class_TestStruct2;
-	#line 188 "FirstProgram.adv"
+	#line 191 "FirstProgram.adv"
 	private: friend CppAdvance::i32 func3(CppAdvance::i32 x);
-	#line 180 "FirstProgram.adv"
+	#line 183 "FirstProgram.adv"
 	public: CppAdvance::f32 x; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-	#line 180 "FirstProgram.adv"
+	#line 183 "FirstProgram.adv"
 	public: CppAdvance::f32 y; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-	#line 180 "FirstProgram.adv"
+	#line 183 "FirstProgram.adv"
 	public: CppAdvance::f32 z; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-	#line 209 "FirstProgram.adv"
-	public: TESTDLL_API static CppAdvance::i32 Count2; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
-	#line 211 "FirstProgram.adv"
-	public: TESTDLL_API static const Vector3 ZERO; ADV_CHECK_REF_STRUCT("Vector3", Vector3);
-	#line 210 "FirstProgram.adv"
-	public: static constexpr auto BYTES = CppAdvance::i32(24);
 	#line 212 "FirstProgram.adv"
+	public: TESTDLL_API static CppAdvance::i32 Count2; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
+	#line 214 "FirstProgram.adv"
+	public: TESTDLL_API static const Vector3 ZERO; ADV_CHECK_REF_STRUCT("Vector3", Vector3);
+	#line 213 "FirstProgram.adv"
+	public: static constexpr auto BYTES = CppAdvance::i32(24);
+	#line 215 "FirstProgram.adv"
 	public: using Coords = __ntuples::NamedTuple_6893f862d6c49683;
-	#line 204 "FirstProgram.adv"
+	#line 207 "FirstProgram.adv"
 	private: CppAdvance::i32 p_Count; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
-	#line 204 "FirstProgram.adv"
+	#line 207 "FirstProgram.adv"
 	public: virtual auto setCount(const CppAdvance::i32& value) -> __selfClass& = 0;
-	#line 204 "FirstProgram.adv"
+	#line 207 "FirstProgram.adv"
 	public: virtual auto getCount() const  -> CppAdvance::i32 = 0;
 	#line 9999 "FirstProgram.adv"
 	ADV_PROPERTY_GETTER_SETTER(public, Count, public, getCount, public, setCount, CppAdvance::i32);
-	#line 207 "FirstProgram.adv"
+	#line 210 "FirstProgram.adv"
 	public: virtual auto getName() const  -> CppAdvance::Str = 0;
 	#line 9999 "FirstProgram.adv"
 	ADV_PROPERTY_GETTER(public, Name, getName, CppAdvance::Str);
-	#line 190 "FirstProgram.adv"
+	#line 193 "FirstProgram.adv"
 	public: inline constexpr auto Equals(const IEquatable& other) const noexcept -> bool;
-	#line 191 "FirstProgram.adv"
+	#line 194 "FirstProgram.adv"
 	public: inline constexpr auto format() const noexcept -> CppAdvance::Str;
-	#line 229 "FirstProgram.adv"
+	#line 232 "FirstProgram.adv"
 	protected: inline constexpr __Class_VectorClass()  = default;
-	#line 231 "FirstProgram.adv"
+	#line 234 "FirstProgram.adv"
 	protected: inline constexpr __Class_VectorClass(CppAdvance::f32 x, CppAdvance::f32 y, CppAdvance::f32 z) noexcept;
-	#line 237 "FirstProgram.adv"
+	#line 240 "FirstProgram.adv"
 	protected: template<class U> inline constexpr explicit __Class_VectorClass(U f) ;
-	#line 242 "FirstProgram.adv"
+	#line 245 "FirstProgram.adv"
 	protected: inline explicit __Class_VectorClass(CppAdvance::In<__self> other) ;
 	inline __Class_VectorClass(__selfClass& copy) : __Class_VectorClass(__self(copy)) {}
-	#line 246 "FirstProgram.adv"
+	#line 249 "FirstProgram.adv"
 	public: inline ~__Class_VectorClass() noexcept;
-	#line 251 "FirstProgram.adv"
+	#line 254 "FirstProgram.adv"
 	public: inline  operator CppAdvance::f32() const noexcept;
-	#line 253 "FirstProgram.adv"
+	#line 256 "FirstProgram.adv"
 	public: inline auto increment()  -> __selfClass& LIFETIMEBOUND;
 	#line 9999 "FirstProgram.adv"
-	private: template<class __IdxT = CppAdvance::f32> struct __IndexerAccessor_273 {
+	private: template<class __IdxT = CppAdvance::f32> struct __IndexerAccessor_276 {
 		private:
 		__Class_VectorClass& _parent;
 		CppAdvance::i32 _idx;
 		 friend class VectorClass;
 		public:
-		FORCE_INLINE __IndexerAccessor_273(__Class_VectorClass& parent, CppAdvance::i32 idx) : _parent(parent), _idx(idx) {}
-		FORCE_INLINE __IndexerAccessor_273(__Class_VectorClass const& parent, CppAdvance::i32 idx) : _parent(const_cast<std::remove_cvref_t<decltype(parent)>&>(parent)), _idx(idx) {}
+		FORCE_INLINE __IndexerAccessor_276(__Class_VectorClass& parent, CppAdvance::i32 idx) : _parent(parent), _idx(idx) {}
+		FORCE_INLINE __IndexerAccessor_276(__Class_VectorClass const& parent, CppAdvance::i32 idx) : _parent(const_cast<std::remove_cvref_t<decltype(parent)>&>(parent)), _idx(idx) {}
 		template<class _ElemRight> FORCE_INLINE auto& operator=(_ElemRight&& other) { _parent.setAt(_idx, std::forward<_ElemRight>(other)); return *this; }
 		template<class _ElemRight> FORCE_INLINE decltype(auto) operator+=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t+=u;} { return *this = __ref() += std::forward<_ElemRight>(other); }
 		template<class _ElemRight> FORCE_INLINE decltype(auto) operator-=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t-=u;} { return *this = __ref() -= std::forward<_ElemRight>(other); }
@@ -1505,7 +1511,7 @@ class ADV_NOVTABLE __Class_VectorClass ADV_ABSTRACT : public CppAdvance::ClassPa
 		template<class _ElemRight> FORCE_INLINE decltype(auto) operator[](_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t[u];} { return __ref()[std::forward<_ElemRight>(other)]; }
 		template<class... Args> FORCE_INLINE decltype(auto) operator()(Args&&... other) { return __ref()(std::forward<Args>(other)...); }
 		template<class... Args> FORCE_INLINE decltype(auto) operator()(Args&&... other) const { return __ref()(std::forward<Args>(other)...); }
-		template<class Ch> friend FORCE_INLINE decltype(auto) operator<<(std::basic_ostream<Ch>& stream, const __IndexerAccessor_273<__IdxT>& elem) { return stream << elem.__ref(); }
+		template<class Ch> friend FORCE_INLINE decltype(auto) operator<<(std::basic_ostream<Ch>& stream, const __IndexerAccessor_276<__IdxT>& elem) { return stream << elem.__ref(); }
 		FORCE_INLINE decltype(auto) operator*() requires requires(__IdxT t) {*t;} { return *__ref(); }
 		FORCE_INLINE decltype(auto) operator&() requires requires(__IdxT t) {&t;} { return &__ref(); }
 		template<class _ElemRight> FORCE_INLINE bool operator==(const _ElemRight& other) const requires requires(__IdxT t, _ElemRight u) {t==u;} { return __ref() == other; }
@@ -1518,35 +1524,35 @@ class ADV_NOVTABLE __Class_VectorClass ADV_ABSTRACT : public CppAdvance::ClassPa
 		
 	};
 
-	friend struct __IndexerAccessor_273<CppAdvance::f32>;
+	friend struct __IndexerAccessor_276<CppAdvance::f32>;
 	inline CppAdvance::f32 getAt(CppAdvance::i32 idx);
 	inline const CppAdvance::f32 getAt(CppAdvance::i32 idx) const;
 	inline void setAt(CppAdvance::i32 idx, const CppAdvance::f32& value);
-	#line 273 "FirstProgram.adv"
-	public: inline auto operator[](CppAdvance::i32 idx)  -> __IndexerAccessor_273<CppAdvance::f32>;
-	public: inline auto operator[](CppAdvance::i32 idx) const  -> const __IndexerAccessor_273<CppAdvance::f32>;
-	#line 283 "FirstProgram.adv"
+	#line 276 "FirstProgram.adv"
+	public: inline auto operator[](CppAdvance::i32 idx)  -> __IndexerAccessor_276<CppAdvance::f32>;
+	public: inline auto operator[](CppAdvance::i32 idx) const  -> const __IndexerAccessor_276<CppAdvance::f32>;
+	#line 286 "FirstProgram.adv"
 	public: inline auto _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  -> CppAdvance::f32;
 	public: inline auto _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const  -> const CppAdvance::f32;
-	#line 285 "FirstProgram.adv"
+	#line 288 "FirstProgram.adv"
 	public: virtual auto getX() const  -> CppAdvance::f32 = 0;
-	#line 286 "FirstProgram.adv"
-	public: inline virtual auto getNext() const  -> Next final;
 	#line 289 "FirstProgram.adv"
+	public: inline virtual auto getNext() const  -> Next final;
+	#line 292 "FirstProgram.adv"
 	public: inline constexpr static auto Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z)  -> CppAdvance::i32;
-	#line 294 "FirstProgram.adv"
+	#line 297 "FirstProgram.adv"
 	public: inline constexpr auto Reset()  -> void;
-	#line 302 "FirstProgram.adv"
+	#line 305 "FirstProgram.adv"
 	public: template<class U> inline constexpr auto TemplateMethod(U x, U y, U z)  -> Coords;
 	
 #define ADV_PROPERTY_SELF __self
 };
-#line 177 "FirstProgram.adv"
+#line 180 "FirstProgram.adv"
 ADV_CHECK_FOR_ABSTRACT(VectorClass);
-#line 177 "FirstProgram.adv"
+#line 180 "FirstProgram.adv"
 ADV_CHECK_INTERFACE_IMPLEMENTATION(VectorClass, BaseClass, BaseClass, VectorClass);
 
-#line 321 "FirstProgram.adv"
+#line 324 "FirstProgram.adv"
 class __Class_ConcreteVectorClass : public CppAdvance::ClassParent<VectorClass> {
 	private: using __self = ConcreteVectorClass;
 	private: using ___super = CppAdvance::ClassParent<VectorClass>;
@@ -1554,44 +1560,44 @@ class __Class_ConcreteVectorClass : public CppAdvance::ClassParent<VectorClass> 
 	friend class __self;
 	friend class __self::__weak_ref;
 	#define ADV_PROPERTY_SELF __selfClass
-	#line 321 "FirstProgram.adv"
+	#line 324 "FirstProgram.adv"
 	ADV_CHECK_INTERFACE(IInterface<ConcreteVectorClass>, IInterface<ConcreteVectorClass>);
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 332 "FirstProgram.adv"
+	#line 335 "FirstProgram.adv"
 	public: inline constexpr auto getName() const  -> CppAdvance::Str;
 	#line 9999 "FirstProgram.adv"
 	ADV_PROPERTY_GETTER(public, Name, getName, CppAdvance::Str);
-	#line 334 "FirstProgram.adv"
+	#line 337 "FirstProgram.adv"
 	private: CppAdvance::i32 p_Count = CppAdvance::i32(1); ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
-	#line 339 "FirstProgram.adv"
+	#line 342 "FirstProgram.adv"
 	private: TESTDLL_API virtual auto setCount(const CppAdvance::i32& value) -> __selfClass& final;
-	#line 335 "FirstProgram.adv"
+	#line 338 "FirstProgram.adv"
 	public: TESTDLL_API virtual auto getCount() const  -> CppAdvance::i32 final;
 	#line 9999 "FirstProgram.adv"
 	ADV_PROPERTY_GETTER_SETTER(public, Count, public, getCount, private, setCount, CppAdvance::i32);
-	#line 322 "FirstProgram.adv"
+	#line 325 "FirstProgram.adv"
 	public: inline constexpr __Class_ConcreteVectorClass()  = default;
-	#line 324 "FirstProgram.adv"
+	#line 327 "FirstProgram.adv"
 	public: inline constexpr __Class_ConcreteVectorClass(CppAdvance::f32 x, CppAdvance::f32 y, CppAdvance::f32 z) noexcept;
-	#line 328 "FirstProgram.adv"
+	#line 331 "FirstProgram.adv"
 	public: inline constexpr  __Class_ConcreteVectorClass(CppAdvance::i32 i) noexcept;
-	#line 346 "FirstProgram.adv"
-	public: inline virtual auto getX() const  -> CppAdvance::f32 final;
-	#line 348 "FirstProgram.adv"
-	public: inline auto operator+(CppAdvance::In<__self> other) const  -> __self;
 	#line 349 "FirstProgram.adv"
+	public: inline virtual auto getX() const  -> CppAdvance::f32 final;
+	#line 351 "FirstProgram.adv"
+	public: inline auto operator+(CppAdvance::In<__self> other) const  -> __self;
+	#line 352 "FirstProgram.adv"
 	public: inline auto GetMagicNumber(CppAdvance::In<ConcreteVectorClass> i) const  -> CppAdvance::f32;
 	
 #define ADV_PROPERTY_SELF __self
 };
-#line 321 "FirstProgram.adv"
+#line 324 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(ConcreteVectorClass);
-#line 321 "FirstProgram.adv"
+#line 324 "FirstProgram.adv"
 ADV_CHECK_INTERFACE_IMPLEMENTATION(ConcreteVectorClass, VectorClass, VectorClass, ConcreteVectorClass);
-#line 321 "FirstProgram.adv"
+#line 324 "FirstProgram.adv"
 ADV_CHECK_INTERFACE_IMPLEMENTATION(ConcreteVectorClass, IInterface, IInterface<ConcreteVectorClass>, ConcreteVectorClass);
 
-#line 355 "FirstProgram.adv"
+#line 358 "FirstProgram.adv"
 class __Class_Next : public CppAdvance::Object {
 	private: using __self = Next;
 	private: using ___super = CppAdvance::Object;
@@ -1600,27 +1606,27 @@ class __Class_Next : public CppAdvance::Object {
 	friend class __self::__weak_ref;
 	#define ADV_PROPERTY_SELF __selfClass
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 356 "FirstProgram.adv"
-	public: CppAdvance::i32 i; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
-	#line 357 "FirstProgram.adv"
-	public: CppAdvance::Nullable<Next>::__weak_ref v;
 	#line 359 "FirstProgram.adv"
+	public: CppAdvance::i32 i; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
+	#line 360 "FirstProgram.adv"
+	public: CppAdvance::Nullable<Next>::__weak_ref v;
+	#line 362 "FirstProgram.adv"
 	public: inline __Class_Next()  = default;
-	#line 361 "FirstProgram.adv"
+	#line 364 "FirstProgram.adv"
 	public: inline ~__Class_Next() ;
-	#line 363 "FirstProgram.adv"
+	#line 366 "FirstProgram.adv"
 	public: inline explicit __Class_Next(CppAdvance::i32 i) ;
-	#line 368 "FirstProgram.adv"
+	#line 371 "FirstProgram.adv"
 	public: inline explicit __Class_Next(CppAdvance::In<__self> other) ;
 	inline __Class_Next(__selfClass& copy) : __Class_Next(__self(copy)) {}
-	#line 372 "FirstProgram.adv"
+	#line 375 "FirstProgram.adv"
 	public: inline auto operator*() const  -> CppAdvance::i32;
-	#line 374 "FirstProgram.adv"
+	#line 377 "FirstProgram.adv"
 	public: inline auto printNext() const  -> void;
 	
 #define ADV_PROPERTY_SELF __self
 };
-#line 355 "FirstProgram.adv"
+#line 358 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(Next);
 
 namespace __ntuples {
@@ -1692,10 +1698,10 @@ inline constexpr auto square(auto a)  -> decltype(auto);
 template<class T, int32_t U> auto sum(T a, T b)  -> decltype(auto);
 #line 47 "FirstProgram.adv"
 template<> inline constexpr auto sum<CppAdvance::i32, CppAdvance::i32(15)>(CppAdvance::i32 a, CppAdvance::i32 b)  -> decltype(auto);
-#line 68 "FirstProgram.adv"
+#line 69 "FirstProgram.adv"
 inline auto func4(CppAdvance::i32 x)  -> CppAdvance::i32;
-#line 352 "FirstProgram.adv"
-inline auto GetMagicNumber(CppAdvance::In<VectorClass> vec, VectorClass i)  -> CppAdvance::f32;
+#line 355 "FirstProgram.adv"
+inline auto GetMagicNumber(CppAdvance::In<VectorClass> vec, CppAdvance::In<VectorClass> i)  -> CppAdvance::f32;
 //###############################################################################
 //# Global compile-time constants
 //###############################################################################
@@ -1734,200 +1740,212 @@ template<> inline constexpr auto sum<CppAdvance::i32, CppAdvance::i32(15)>(CppAd
 	#line 47 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(a + b + CppAdvance::i32(15)); 
 }
-#line 68 "FirstProgram.adv"
+#line 54 "FirstProgram.adv"
+inline Span::~Span() noexcept
+{
+	#line 54 "FirstProgram.adv"
+	print(CppAdvance::Str{u"Span deiniting"}); 
+}
+#line 69 "FirstProgram.adv"
 inline auto func4(CppAdvance::i32 x)  -> CppAdvance::i32
 {
-	#line 69 "FirstProgram.adv"
+	#line 70 "FirstProgram.adv"
 	return CppAdvance::i32(0);
 }
-#line 72 "FirstProgram.adv"
+#line 73 "FirstProgram.adv"
 inline constexpr auto Vector3::Equals(const IEquatable& other) const noexcept -> bool
 {
-	#line 72 "FirstProgram.adv"
+	#line 73 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(true); 
 }
-#line 73 "FirstProgram.adv"
+#line 74 "FirstProgram.adv"
 inline constexpr auto Vector3::format() const noexcept -> CppAdvance::Str
 {
-	#line 73 "FirstProgram.adv"
+	#line 74 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::Str{u"test"}); 
 }
-#line 74 "FirstProgram.adv"
+#line 75 "FirstProgram.adv"
 inline constexpr auto Vector3::HashCode() const  -> CppAdvance::usize
 {
-	#line 74 "FirstProgram.adv"
+	#line 75 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::u32(654321U)); 
 }
-#line 88 "FirstProgram.adv"
+#line 89 "FirstProgram.adv"
 inline constexpr auto Vector3::getName() const  -> CppAdvance::Str 
 {
-	#line 88 "FirstProgram.adv"
+	#line 89 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::Str{u"Vector3"}); 
 }
 
-#line 100 "FirstProgram.adv"
+#line 101 "FirstProgram.adv"
 inline constexpr auto Vector3::__Class_NestedStruct::count(CppAdvance::i32 i)  -> CppAdvance::i32
 {
-	#line 100 "FirstProgram.adv"
+	#line 101 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(i * CppAdvance::i32(10)); 
 }
-#line 106 "FirstProgram.adv"
-template<class U> inline constexpr Vector3::Vector3(U f)  :
 #line 107 "FirstProgram.adv"
+template<class U> inline constexpr Vector3::Vector3(U f)  :
+#line 108 "FirstProgram.adv"
 Vector3(f, f, f)
 {
-	#line 108 "FirstProgram.adv"
+	#line 109 "FirstProgram.adv"
 	this->x = f;
 }
-#line 111 "FirstProgram.adv"
+#line 112 "FirstProgram.adv"
+inline Vector3::~Vector3() noexcept
+{
+	#line 112 "FirstProgram.adv"
+	print(CppAdvance::Str{u"Vector3 deiniting"}); 
+}
+#line 114 "FirstProgram.adv"
 inline constexpr Vector3::operator CppAdvance::f32() const noexcept
 {
-	#line 111 "FirstProgram.adv"
+	#line 114 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(y); 
 }
-#line 113 "FirstProgram.adv"
-inline constexpr auto Vector3::operator+(const __self& other) const  -> decltype(auto)
-{
-	#line 113 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(__self{(*this).__ref().x + other.__ref().x, (*this).__ref().y + other.__ref().y, (*this).__ref().z + other.__ref().z}); 
-}
-#line 115 "FirstProgram.adv"
-inline auto Vector3::operator++()  -> __self&
+#line 116 "FirstProgram.adv"
+inline auto Vector3::operator+(const __self& other) const  -> decltype(auto)
 {
 	#line 116 "FirstProgram.adv"
-	++x;
-	#line 117 "FirstProgram.adv"
-	++y;
-	#line 118 "FirstProgram.adv"
-	++z;
+	ADV_EXPRESSION_BODY(__self{(*this).__ref().x + other.__ref().x, (*this).__ref().y + other.__ref().y, (*this).__ref().z + other.__ref().z}); 
+}
+#line 118 "FirstProgram.adv"
+inline auto Vector3::operator++()  -> __self&
+{
 	#line 119 "FirstProgram.adv"
-	++Count;
+	++x;
+	#line 120 "FirstProgram.adv"
+	++y;
+	#line 121 "FirstProgram.adv"
+	++z;
 	#line 122 "FirstProgram.adv"
+	++Count;
+	#line 125 "FirstProgram.adv"
 	return (*this);
 }
-#line 115 "FirstProgram.adv"
+#line 118 "FirstProgram.adv"
 inline auto Vector3::operator++(int)  -> __self { auto copy = CppAdvance::New<__self>(__self(*this)); ++(*this); return copy; }
-#line 125 "FirstProgram.adv"
-auto Vector3::operator[](CppAdvance::i32 idx)  -> __IndexerAccessor_125<CppAdvance::f32>
+#line 128 "FirstProgram.adv"
+auto Vector3::operator[](CppAdvance::i32 idx)  -> __IndexerAccessor_128<CppAdvance::f32>
 {
-	return __IndexerAccessor_125<CppAdvance::f32>{ *this, idx };
+	return __IndexerAccessor_128<CppAdvance::f32>{ *this, idx };
 }
 
-#line 125 "FirstProgram.adv"
-auto Vector3::operator[](CppAdvance::i32 idx)  const  -> const __IndexerAccessor_125<CppAdvance::f32>
+#line 128 "FirstProgram.adv"
+auto Vector3::operator[](CppAdvance::i32 idx)  const  -> const __IndexerAccessor_128<CppAdvance::f32>
 {
-	return __IndexerAccessor_125<CppAdvance::f32>{ *this, idx };
+	return __IndexerAccessor_128<CppAdvance::f32>{ *this, idx };
 }
 
-#line 126 "FirstProgram.adv"
+#line 129 "FirstProgram.adv"
 auto Vector3::getAt(CppAdvance::i32 idx)  -> CppAdvance::f32
 {
-	#line 127 "FirstProgram.adv"
+	#line 130 "FirstProgram.adv"
 	print(CppAdvance::Str{u"Read"});
-	#line 128 "FirstProgram.adv"
+	#line 131 "FirstProgram.adv"
 	return x;
 }
-#line 126 "FirstProgram.adv"
+#line 129 "FirstProgram.adv"
 auto Vector3::getAt(CppAdvance::i32 idx) const  -> const CppAdvance::f32
 {
-	#line 127 "FirstProgram.adv"
+	#line 130 "FirstProgram.adv"
 	print(CppAdvance::Str{u"Read"});
-	#line 128 "FirstProgram.adv"
+	#line 131 "FirstProgram.adv"
 	return x;
 }
-#line 130 "FirstProgram.adv"
+#line 133 "FirstProgram.adv"
 auto Vector3::setAt(CppAdvance::i32 idx, const CppAdvance::f32& value)  -> void 
 {
-	#line 131 "FirstProgram.adv"
+	#line 134 "FirstProgram.adv"
 	if (value < CppAdvance::i32(10)) {
-		#line 131 "FirstProgram.adv"
+		#line 134 "FirstProgram.adv"
 		return ;
 	}
-	#line 132 "FirstProgram.adv"
+	#line 135 "FirstProgram.adv"
 	x = CppAdvance::i32(5);
 }
-#line 135 "FirstProgram.adv"
+#line 138 "FirstProgram.adv"
 inline constexpr auto Vector3::_operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  -> CppAdvance::f32
 {
-	#line 135 "FirstProgram.adv"
+	#line 138 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(y + z); 
-}
-#line 135 "FirstProgram.adv"
-inline constexpr auto Vector3::_operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  const  -> const CppAdvance::f32
-{
-	#line 135 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(y + z); 
-}
-#line 137 "FirstProgram.adv"
-inline constexpr auto Vector3::getX() const  -> CppAdvance::f32
-{
-	#line 137 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(x); 
 }
 #line 138 "FirstProgram.adv"
-inline auto Vector3::getNext() const  -> Next
+inline constexpr auto Vector3::_operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  const  -> const CppAdvance::f32
 {
 	#line 138 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(CppAdvance::New<Next>(CppAdvance::i32(6))); 
+	ADV_EXPRESSION_BODY(y + z); 
+}
+#line 140 "FirstProgram.adv"
+inline constexpr auto Vector3::getX() const  -> CppAdvance::f32
+{
+	#line 140 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(x); 
 }
 #line 141 "FirstProgram.adv"
+inline auto Vector3::getNext() const  -> Next
+{
+	#line 141 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(CppAdvance::New<Next>(CppAdvance::i32(6))); 
+}
+#line 144 "FirstProgram.adv"
 inline constexpr auto Vector3::Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z)  -> CppAdvance::i32
 {
-	#line 142 "FirstProgram.adv"
+	#line 145 "FirstProgram.adv"
 	return y + z;
 }
-#line 145 "FirstProgram.adv"
+#line 148 "FirstProgram.adv"
 inline constexpr auto Vector3::GetMagicNumber(CppAdvance::f32 i) const  -> CppAdvance::f32
 {
-	#line 145 "FirstProgram.adv"
+	#line 148 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(i * x); 
 }
-#line 146 "FirstProgram.adv"
+#line 149 "FirstProgram.adv"
 inline auto Vector3::DefaultMethod(CppAdvance::f32 f) const  -> CppAdvance::f32
 {
-	#line 146 "FirstProgram.adv"
+	#line 149 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(f * CppAdvance::i32(15)); 
 }
-#line 147 "FirstProgram.adv"
+#line 150 "FirstProgram.adv"
 inline constexpr auto Vector3::Reset()  -> void
 {
-	#line 148 "FirstProgram.adv"
+	#line 151 "FirstProgram.adv"
 	x = CppAdvance::i32(0);
-	#line 149 "FirstProgram.adv"
+	#line 152 "FirstProgram.adv"
 	y = CppAdvance::i32(0);
-	#line 150 "FirstProgram.adv"
+	#line 153 "FirstProgram.adv"
 	z = CppAdvance::i32(0);
 }
-#line 155 "FirstProgram.adv"
+#line 158 "FirstProgram.adv"
 template<class U> inline constexpr auto Vector3::TemplateMethod(U x, U y, U z)  -> typename Vector3::Coords
 {
-	#line 156 "FirstProgram.adv"
+	#line 159 "FirstProgram.adv"
 	class __Class_LocalStruct;
-	#line 156 "FirstProgram.adv"
+	#line 159 "FirstProgram.adv"
 	struct LocalStruct : public CppAdvance::Struct
 	{
 		private: using __self = LocalStruct;
 		public: using __class = __Class_LocalStruct;
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-		#line 157 "FirstProgram.adv"
-		#line 157 "FirstProgram.adv"
+		#line 160 "FirstProgram.adv"
+		#line 160 "FirstProgram.adv"
 		public: CppAdvance::f32 x{}; 
-		#line 157 "FirstProgram.adv"
+		#line 160 "FirstProgram.adv"
 		public: CppAdvance::f32 y{}; 
-		#line 157 "FirstProgram.adv"
+		#line 160 "FirstProgram.adv"
 		public: CppAdvance::f32 z{}; 
-		#line 157 "FirstProgram.adv"
+		#line 160 "FirstProgram.adv"
 		private: __FirstProgram_Protected::Test111 p_tt;
-		#line 161 "FirstProgram.adv"
+		#line 164 "FirstProgram.adv"
 		private: inline auto settt(const __FirstProgram_Protected::Test111& value) -> __self& { p_tt = value; return *this; }
-		#line 161 "FirstProgram.adv"
+		#line 164 "FirstProgram.adv"
 		public: inline auto gettt() const  -> __FirstProgram_Protected::Test111 { return p_tt; }
 		#line 9999 "FirstProgram.adv"
 		ADV_PROPERTY_GETTER_SETTER(public, tt, public, gettt, private, settt, __FirstProgram_Protected::Test111);
 		
 		
 	};
-	#line 156 "FirstProgram.adv"
+	#line 159 "FirstProgram.adv"
 	class __Class_LocalStruct : public CppAdvance::ValueType
 	{
 		#line 9999 "FirstProgram.adv"
@@ -1938,190 +1956,190 @@ template<class U> inline constexpr auto Vector3::TemplateMethod(U x, U y, U z)  
 		auto gettt() const -> __FirstProgram_Protected::Test111 { return __value.gettt(); }
 		
 	};
-	#line 166 "FirstProgram.adv"
+	#line 169 "FirstProgram.adv"
 	(*this)[CppAdvance::i32(0)] = CppAdvance::i32(13);
-	#line 168 "FirstProgram.adv"
+	#line 171 "FirstProgram.adv"
 	return { x, y, z };
 }
-#line 174 "FirstProgram.adv"
+#line 177 "FirstProgram.adv"
 inline auto __Class_BaseClass::getNext() const  -> Next
 {
-	#line 174 "FirstProgram.adv"
+	#line 177 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::New<Next>(CppAdvance::i32(5))); 
 }
-#line 190 "FirstProgram.adv"
+#line 193 "FirstProgram.adv"
 inline constexpr auto __Class_VectorClass::Equals(const IEquatable& other) const noexcept -> bool
 {
-	#line 190 "FirstProgram.adv"
+	#line 193 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(true); 
 }
-#line 191 "FirstProgram.adv"
+#line 194 "FirstProgram.adv"
 inline constexpr auto __Class_VectorClass::format() const noexcept -> CppAdvance::Str
 {
-	#line 191 "FirstProgram.adv"
+	#line 194 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::Str{u"test"}); 
 }
-#line 220 "FirstProgram.adv"
-inline constexpr VectorClass::__Class_NestedClass::__Class_NestedClass(CppAdvance::f32 x, CppAdvance::f32 y, CppAdvance::f32 z) noexcept : 
-#line 221 "FirstProgram.adv"
-x{x}, 
-#line 222 "FirstProgram.adv"
-y{y}, 
 #line 223 "FirstProgram.adv"
+inline constexpr VectorClass::__Class_NestedClass::__Class_NestedClass(CppAdvance::f32 x, CppAdvance::f32 y, CppAdvance::f32 z) noexcept : 
+#line 224 "FirstProgram.adv"
+x{x}, 
+#line 225 "FirstProgram.adv"
+y{y}, 
+#line 226 "FirstProgram.adv"
 z{z}
 {
 }
-#line 225 "FirstProgram.adv"
+#line 228 "FirstProgram.adv"
 inline constexpr auto VectorClass::__Class_NestedClass::count(CppAdvance::i32 i)  -> CppAdvance::i32
 {
-	#line 225 "FirstProgram.adv"
+	#line 228 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(i * CppAdvance::i32(10)); 
 }
-#line 231 "FirstProgram.adv"
-inline constexpr __Class_VectorClass::__Class_VectorClass(CppAdvance::f32 x, CppAdvance::f32 y, CppAdvance::f32 z) noexcept : 
-#line 232 "FirstProgram.adv"
-x{x}, 
-#line 233 "FirstProgram.adv"
-y{y}, 
 #line 234 "FirstProgram.adv"
+inline constexpr __Class_VectorClass::__Class_VectorClass(CppAdvance::f32 x, CppAdvance::f32 y, CppAdvance::f32 z) noexcept : 
+#line 235 "FirstProgram.adv"
+x{x}, 
+#line 236 "FirstProgram.adv"
+y{y}, 
+#line 237 "FirstProgram.adv"
 z{z}
 {
 }
-#line 237 "FirstProgram.adv"
+#line 240 "FirstProgram.adv"
 template<class U> inline constexpr __Class_VectorClass::__Class_VectorClass(U f)  :
-#line 238 "FirstProgram.adv"
+#line 241 "FirstProgram.adv"
 __Class_VectorClass(f, f, f)
 {
-	#line 239 "FirstProgram.adv"
+	#line 242 "FirstProgram.adv"
 	this->x = f;
 }
-#line 242 "FirstProgram.adv"
+#line 245 "FirstProgram.adv"
 inline __Class_VectorClass::__Class_VectorClass(CppAdvance::In<__self> other)  :
-#line 243 "FirstProgram.adv"
+#line 246 "FirstProgram.adv"
 __Class_VectorClass(other.__ref().x, other.__ref().y, other.__ref().z)
 {
 }
-#line 246 "FirstProgram.adv"
+#line 249 "FirstProgram.adv"
 inline __Class_VectorClass::~__Class_VectorClass() noexcept
 {
-	#line 246 "FirstProgram.adv"
+	#line 249 "FirstProgram.adv"
 	print(CppAdvance::Str{u"VectorClass deiniting"}); 
 }
-#line 251 "FirstProgram.adv"
+#line 254 "FirstProgram.adv"
 inline __Class_VectorClass::operator CppAdvance::f32() const noexcept
 {
-	#line 251 "FirstProgram.adv"
+	#line 254 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(y); 
 }
-#line 253 "FirstProgram.adv"
+#line 256 "FirstProgram.adv"
 inline auto __Class_VectorClass::increment()  -> __selfClass&
 {
-	#line 254 "FirstProgram.adv"
-	++x;
-	#line 255 "FirstProgram.adv"
-	++y;
-	#line 256 "FirstProgram.adv"
-	++z;
 	#line 257 "FirstProgram.adv"
-	++Count;
+	++x;
+	#line 258 "FirstProgram.adv"
+	++y;
+	#line 259 "FirstProgram.adv"
+	++z;
 	#line 260 "FirstProgram.adv"
+	++Count;
+	#line 263 "FirstProgram.adv"
 	return (*this);
 }
-#line 273 "FirstProgram.adv"
-auto __Class_VectorClass::operator[](CppAdvance::i32 idx)  -> __IndexerAccessor_273<CppAdvance::f32>
+#line 276 "FirstProgram.adv"
+auto __Class_VectorClass::operator[](CppAdvance::i32 idx)  -> __IndexerAccessor_276<CppAdvance::f32>
 {
-	return __IndexerAccessor_273<CppAdvance::f32>{ *this, idx };
+	return __IndexerAccessor_276<CppAdvance::f32>{ *this, idx };
 }
 
-#line 273 "FirstProgram.adv"
-auto __Class_VectorClass::operator[](CppAdvance::i32 idx)  const  -> const __IndexerAccessor_273<CppAdvance::f32>
+#line 276 "FirstProgram.adv"
+auto __Class_VectorClass::operator[](CppAdvance::i32 idx)  const  -> const __IndexerAccessor_276<CppAdvance::f32>
 {
-	return __IndexerAccessor_273<CppAdvance::f32>{ *this, idx };
+	return __IndexerAccessor_276<CppAdvance::f32>{ *this, idx };
 }
 
-#line 274 "FirstProgram.adv"
+#line 277 "FirstProgram.adv"
 auto __Class_VectorClass::getAt(CppAdvance::i32 idx)  -> CppAdvance::f32
 {
-	#line 275 "FirstProgram.adv"
+	#line 278 "FirstProgram.adv"
 	print(CppAdvance::Str{u"Read"});
-	#line 276 "FirstProgram.adv"
+	#line 279 "FirstProgram.adv"
 	return x;
 }
-#line 274 "FirstProgram.adv"
+#line 277 "FirstProgram.adv"
 auto __Class_VectorClass::getAt(CppAdvance::i32 idx) const  -> const CppAdvance::f32
 {
-	#line 275 "FirstProgram.adv"
+	#line 278 "FirstProgram.adv"
 	print(CppAdvance::Str{u"Read"});
-	#line 276 "FirstProgram.adv"
+	#line 279 "FirstProgram.adv"
 	return x;
 }
-#line 278 "FirstProgram.adv"
+#line 281 "FirstProgram.adv"
 auto __Class_VectorClass::setAt(CppAdvance::i32 idx, const CppAdvance::f32& value)  -> void 
 {
-	#line 279 "FirstProgram.adv"
+	#line 282 "FirstProgram.adv"
 	if (value < CppAdvance::i32(10)) {
-		#line 279 "FirstProgram.adv"
+		#line 282 "FirstProgram.adv"
 		return ;
 	}
-	#line 280 "FirstProgram.adv"
+	#line 283 "FirstProgram.adv"
 	x = CppAdvance::i32(5);
 }
-#line 283 "FirstProgram.adv"
+#line 286 "FirstProgram.adv"
 inline auto __Class_VectorClass::_operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  -> CppAdvance::f32
 {
-	#line 283 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(y + z); 
-}
-#line 283 "FirstProgram.adv"
-inline auto __Class_VectorClass::_operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  const  -> const CppAdvance::f32
-{
-	#line 283 "FirstProgram.adv"
+	#line 286 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(y + z); 
 }
 #line 286 "FirstProgram.adv"
-inline auto __Class_VectorClass::getNext() const  -> Next
+inline auto __Class_VectorClass::_operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  const  -> const CppAdvance::f32
 {
 	#line 286 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(___super::getNext()); 
+	ADV_EXPRESSION_BODY(y + z); 
 }
 #line 289 "FirstProgram.adv"
+inline auto __Class_VectorClass::getNext() const  -> Next
+{
+	#line 289 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(___super::getNext()); 
+}
+#line 292 "FirstProgram.adv"
 inline constexpr auto __Class_VectorClass::Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z)  -> CppAdvance::i32
 {
-	#line 290 "FirstProgram.adv"
+	#line 293 "FirstProgram.adv"
 	return y + z;
 }
-#line 294 "FirstProgram.adv"
+#line 297 "FirstProgram.adv"
 inline constexpr auto __Class_VectorClass::Reset()  -> void
 {
-	#line 295 "FirstProgram.adv"
+	#line 298 "FirstProgram.adv"
 	x = CppAdvance::i32(0);
-	#line 296 "FirstProgram.adv"
+	#line 299 "FirstProgram.adv"
 	y = CppAdvance::i32(0);
-	#line 297 "FirstProgram.adv"
+	#line 300 "FirstProgram.adv"
 	z = CppAdvance::i32(0);
 }
-#line 302 "FirstProgram.adv"
+#line 305 "FirstProgram.adv"
 template<class U> inline constexpr auto __Class_VectorClass::TemplateMethod(U x, U y, U z)  -> typename __Class_VectorClass::Coords
 {
-	#line 303 "FirstProgram.adv"
+	#line 306 "FirstProgram.adv"
 	class __Class_LocalStruct;
-	#line 303 "FirstProgram.adv"
+	#line 306 "FirstProgram.adv"
 	struct LocalStruct : public CppAdvance::Struct
 	{
 		private: using __self = LocalStruct;
 		public: using __class = __Class_LocalStruct;
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-		#line 304 "FirstProgram.adv"
-		#line 304 "FirstProgram.adv"
+		#line 307 "FirstProgram.adv"
+		#line 307 "FirstProgram.adv"
 		public: CppAdvance::f32 x{}; 
-		#line 304 "FirstProgram.adv"
+		#line 307 "FirstProgram.adv"
 		public: CppAdvance::f32 y{}; 
-		#line 304 "FirstProgram.adv"
+		#line 307 "FirstProgram.adv"
 		public: CppAdvance::f32 z{}; 
 		
 		
 	};
-	#line 303 "FirstProgram.adv"
+	#line 306 "FirstProgram.adv"
 	class __Class_LocalStruct : public CppAdvance::ValueType
 	{
 		#line 9999 "FirstProgram.adv"
@@ -2131,82 +2149,82 @@ template<class U> inline constexpr auto __Class_VectorClass::TemplateMethod(U x,
 		operator __underlying() const noexcept { return __value; }
 		
 	};
-	#line 313 "FirstProgram.adv"
+	#line 316 "FirstProgram.adv"
 	(*this)[CppAdvance::i32(0)] = CppAdvance::i32(13);
-	#line 315 "FirstProgram.adv"
+	#line 318 "FirstProgram.adv"
 	return { x, y, z };
 }
-#line 324 "FirstProgram.adv"
+#line 327 "FirstProgram.adv"
 inline constexpr __Class_ConcreteVectorClass::__Class_ConcreteVectorClass(CppAdvance::f32 x, CppAdvance::f32 y, CppAdvance::f32 z) noexcept :
-#line 325 "FirstProgram.adv"
+#line 328 "FirstProgram.adv"
 ___super(x, y, z)
 {
 }
-#line 328 "FirstProgram.adv"
+#line 331 "FirstProgram.adv"
 inline constexpr __Class_ConcreteVectorClass::__Class_ConcreteVectorClass(CppAdvance::i32 i) noexcept :
-#line 329 "FirstProgram.adv"
+#line 332 "FirstProgram.adv"
 ___super(CppAdvance::f32{i}, CppAdvance::f32{i}, CppAdvance::f32{i})
 {
 }
-#line 332 "FirstProgram.adv"
+#line 335 "FirstProgram.adv"
 inline constexpr auto __Class_ConcreteVectorClass::getName() const  -> CppAdvance::Str 
 {
-	#line 332 "FirstProgram.adv"
+	#line 335 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::Str{u"VectorClass"}); 
 }
 
-#line 346 "FirstProgram.adv"
+#line 349 "FirstProgram.adv"
 inline auto __Class_ConcreteVectorClass::getX() const  -> CppAdvance::f32
 {
-	#line 346 "FirstProgram.adv"
+	#line 349 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(x); 
 }
-#line 348 "FirstProgram.adv"
+#line 351 "FirstProgram.adv"
 inline auto __Class_ConcreteVectorClass::operator+(CppAdvance::In<__self> other) const  -> __self
 {
-	#line 348 "FirstProgram.adv"
+	#line 351 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::New<__self>((*this).__ref().x + other.__ref().x, (*this).__ref().y + other.__ref().y, (*this).__ref().z + other.__ref().z)); 
 }
-#line 349 "FirstProgram.adv"
+#line 352 "FirstProgram.adv"
 inline auto __Class_ConcreteVectorClass::GetMagicNumber(CppAdvance::In<ConcreteVectorClass> i) const  -> CppAdvance::f32
 {
-	#line 349 "FirstProgram.adv"
+	#line 352 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(y * i.__ref().y); 
 }
-#line 352 "FirstProgram.adv"
-inline auto GetMagicNumber(CppAdvance::In<VectorClass> vec, VectorClass i)  -> CppAdvance::f32
+#line 355 "FirstProgram.adv"
+inline auto GetMagicNumber(CppAdvance::In<VectorClass> vec, CppAdvance::In<VectorClass> i)  -> CppAdvance::f32
 {
-	#line 352 "FirstProgram.adv"
+	#line 355 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(vec.__ref().x * i.__ref().x); 
 }
-#line 361 "FirstProgram.adv"
+#line 364 "FirstProgram.adv"
 inline __Class_Next::~__Class_Next() 
 {
-	#line 361 "FirstProgram.adv"
+	#line 364 "FirstProgram.adv"
 	print(CppAdvance::Str{u"Next deiniting"}); 
 }
-#line 363 "FirstProgram.adv"
+#line 366 "FirstProgram.adv"
 inline __Class_Next::__Class_Next(CppAdvance::i32 i)  : 
-#line 364 "FirstProgram.adv"
+#line 367 "FirstProgram.adv"
 i{i}
 {
 }
-#line 368 "FirstProgram.adv"
+#line 371 "FirstProgram.adv"
 inline __Class_Next::__Class_Next(CppAdvance::In<__self> other)  : 
-#line 369 "FirstProgram.adv"
+#line 372 "FirstProgram.adv"
 i{CppAdvance::i32(0)}
 {
 }
-#line 372 "FirstProgram.adv"
+#line 375 "FirstProgram.adv"
 inline auto __Class_Next::operator*() const  -> CppAdvance::i32
 {
-	#line 372 "FirstProgram.adv"
+	#line 375 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(i); 
 }
-#line 374 "FirstProgram.adv"
+#line 377 "FirstProgram.adv"
 inline auto __Class_Next::printNext() const  -> void
 {
-	#line 375 "FirstProgram.adv"
+	#line 378 "FirstProgram.adv"
 	print(CppAdvance::Str{u"This is printNext function in optional chaining call"});
 }
 #line 9999 "FirstProgram.adv"
@@ -2228,13 +2246,13 @@ inline VectorClass__Weak& VectorClass__Weak::ADV_CLASS_WEAK_ASSIGN_REF(VectorCla
 inline decltype(auto) VectorClass::getCount2() { return __class::Count2; }
 inline void VectorClass::setCount2(const CppAdvance::i32& value) { __class::Count2 = value; }
 inline decltype(auto) VectorClass::getZERO() { return __class::ZERO; }
-#line 251 "FirstProgram.adv"
+#line 254 "FirstProgram.adv"
 inline VectorClass::operator CppAdvance::f32() const noexcept{ ADV_EXPRESSION_BODY(__ref().operator CppAdvance::f32()); }
 inline VectorClass__Unowned::operator CppAdvance::f32() const noexcept{ ADV_EXPRESSION_BODY(__ref().operator CppAdvance::f32()); }
-#line 273 "FirstProgram.adv"
+#line 276 "FirstProgram.adv"
 inline decltype(auto) VectorClass::operator[](CppAdvance::i32 idx) const { ADV_EXPRESSION_BODY(__ref().operator[](idx)); }
 inline decltype(auto) VectorClass__Unowned::operator[](CppAdvance::i32 idx) const { ADV_EXPRESSION_BODY(__ref().operator[](idx)); }
-#line 283 "FirstProgram.adv"
+#line 286 "FirstProgram.adv"
 inline decltype(auto) VectorClass::_operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const { ADV_EXPRESSION_BODY(__ref()._operator_subscript(idx, idx2, idx3)); }
 inline decltype(auto) VectorClass__Unowned::_operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const { ADV_EXPRESSION_BODY(__ref()._operator_subscript(idx, idx2, idx3)); }
 
@@ -2246,9 +2264,9 @@ inline ConcreteVectorClass__Unowned::ADV_CLASS_UNOWNED_CTOR_REF(ConcreteVectorCl
 inline ConcreteVectorClass__Unowned& ConcreteVectorClass__Unowned::ADV_CLASS_UNOWNED_ASSIGN_REF(ConcreteVectorClass__Unowned)
 inline ConcreteVectorClass__Weak::ADV_CLASS_WEAK_CTOR_REF(ConcreteVectorClass__Weak)
 inline ConcreteVectorClass__Weak& ConcreteVectorClass__Weak::ADV_CLASS_WEAK_ASSIGN_REF(ConcreteVectorClass__Weak)
-#line 328 "FirstProgram.adv"
+#line 331 "FirstProgram.adv"
 inline ConcreteVectorClass::ConcreteVectorClass(CppAdvance::i32 i)noexcept : ___super(new (::operator new(sizeof(__class))) __class(i)) {}
-#line 348 "FirstProgram.adv"
+#line 351 "FirstProgram.adv"
 inline decltype(auto) ConcreteVectorClass::operator+(CppAdvance::In<__self> other) const { ADV_EXPRESSION_BODY(__ref().operator+(other)); }
 inline decltype(auto) ConcreteVectorClass__Unowned::operator+(CppAdvance::In<__self> other) const { ADV_EXPRESSION_BODY(__ref().operator+(other)); }
 
@@ -2260,12 +2278,12 @@ inline Next__Unowned::ADV_CLASS_UNOWNED_CTOR_REF(Next__Unowned)
 inline Next__Unowned& Next__Unowned::ADV_CLASS_UNOWNED_ASSIGN_REF(Next__Unowned)
 inline Next__Weak::ADV_CLASS_WEAK_CTOR_REF(Next__Weak)
 inline Next__Weak& Next__Weak::ADV_CLASS_WEAK_ASSIGN_REF(Next__Weak)
-#line 372 "FirstProgram.adv"
+#line 375 "FirstProgram.adv"
 inline decltype(auto) Next::operator*() const { ADV_EXPRESSION_BODY(__ref().operator*()); }
 inline decltype(auto) Next__Unowned::operator*() const { ADV_EXPRESSION_BODY(__ref().operator*()); }
 
-template<class T> inline CppAdvance::f32 IInterface<T>::__default_DefaultMethod(T f) 
+template<class T> inline CppAdvance::f32 IInterface<T>::__default_DefaultMethod(const T& f) const 
 {
-	#line 388 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(ADV_UFCS_TEMPLATE(GetMagicNumber<T>)((*this).__ref(), f)); 
+	#line 391 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(ADV_UFCS(GetMagicNumber)((*this).__ref(), f)); 
 }

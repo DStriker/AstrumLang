@@ -4444,12 +4444,13 @@ void CppAdvanceSema::exitNewExpression(CppAdvanceParser::NewExpressionContext* c
 
 void CppAdvanceSema::enterDestructor(CppAdvanceParser::DestructorContext* ctx)
 {
-	if (currentTypeKind.top() != TypeKind::Class)
-		CppAdvanceCompilerError("Cannot to define destructor outside the class body", ctx->Tilde()->getSymbol());
+	if (currentTypeKind.top() != TypeKind::Class && currentTypeKind.top() != TypeKind::Struct && currentTypeKind.top() != TypeKind::RefStruct)
+		CppAdvanceCompilerError("Cannot to define destructor outside the class or struct body", ctx->Tilde()->getSymbol());
 
 	symbolContexts.push(symbolContexts.top());
 	if (functionBody || !firstPass) return;
-	std::string id = "~__Class_" + structStack.top()->id;
+	std::string id = "~" + structStack.top()->id;
+	if (currentTypeKind.top() == TypeKind::Class) id.insert(1, "__Class_");
 	auto lastTparams = getLastTypeTemplateParams();
 	auto lastSpec = getLastTypeTemplateSpecializationArgs();
 	auto fullType = getCurrentFullTypeName();
@@ -5014,7 +5015,6 @@ void CppAdvanceSema::exitInterfaceProperty(CppAdvanceParser::InterfacePropertyCo
 void CppAdvanceSema::enterInterfaceMethodDeclaration(CppAdvanceParser::InterfaceMethodDeclarationContext* ctx)
 {
 	symbolContexts.push(symbolContexts.top());
-	bool isMutating = ctx->Mutable();
 	bool isRefReturn = false;
 	bool isConstReturn = false;
 	int8_t varargDepth = -1;
@@ -5078,7 +5078,7 @@ void CppAdvanceSema::enterInterfaceMethodDeclaration(CppAdvanceParser::Interface
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, AccessSpecifier::Public, getCurrentCompilationCondition(),
 			false, false, false, false, isRefReturn, isConstReturn, false, varargDepth,
 			currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false,
-			isMutating, false, false, false, true, false };
+			false, false, false, false, true, false };
 		structStack.top()->methods.emplace_back(def);
 		//methods.insert_or_assign(SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() }, def);
 	}
