@@ -113,7 +113,7 @@ public struct Vector3
 
 	public implicit operator f32 noexcept ==> y;
 
-	public operator+: (in ref other: self) => self(this.x + other.x, this.y + other.y, this.z + other.z);
+	public operator+: (in ref other: self) -> self => self(this.x + other.x, this.y + other.y, this.z + other.z);
 
 	public mut operator++: () -> ref self = {
 		++x;
@@ -161,7 +161,7 @@ public struct Vector3
 				x: f32;
 				y: f32;
 				z: f32;
-				tt: Test111 { get; private set; }
+				//tt: Test111 { get; private set; }
 
 				//if debug _version: i32;
 				}
@@ -207,7 +207,7 @@ public abstract class VectorClass : BaseClass
 	public abstract Count: i32 { get; set; }
 
 	//public Name: str ==> "VectorClass";
-	public abstract Name: str { get; }
+	public abstract Name: str { get; set; }
 
 	public static Count2: i32 = 123;
 	public BYTES :== 24;
@@ -253,7 +253,7 @@ public abstract class VectorClass : BaseClass
 
 	public implicit operator f32 noexcept => y;
 
-	public mut increment: () -> ref self = {
+	/*public increment: () -> ref self = {
 		++x;
 		++y;
 		++z;
@@ -261,7 +261,7 @@ public abstract class VectorClass : BaseClass
 		//t : Test111;
 		//t = Test111();
 		return this;
-	}
+	}*/
 
 	/*public mut operator++: () -> ref self = {
 		++x;
@@ -294,7 +294,7 @@ public abstract class VectorClass : BaseClass
 		}
 		//DefaultMethod: (f: f32) -> f32 => f * 15;
 
-		mut Reset: () == {
+		Reset: () == {
 			x = 0;
 			y = 0;
 			z = 0;
@@ -302,7 +302,7 @@ public abstract class VectorClass : BaseClass
 
 	//	inline static GetTest: () -> Test111 ==> Test111();
 
-		mut TemplateMethod: <U> (x: U, y: U, z: U) -> Coords == {
+		TemplateMethod: <U> (x: U, y: U, z: U) -> Coords == {
 			struct LocalStruct {
 				public {
 				x: f32;
@@ -321,7 +321,7 @@ public abstract class VectorClass : BaseClass
 }
 
 
-public class ConcreteVectorClass : VectorClass, IInterface<ConcreteVectorClass> {
+public class ConcreteVectorClass : VectorClass, IInterface {
 	this() == default;
 
 	public this(x: f32, y: f32, z: f32) noexcept == {
@@ -332,7 +332,9 @@ public class ConcreteVectorClass : VectorClass, IInterface<ConcreteVectorClass> 
 		super(f32(i), f32(i), f32(i));
 	}
 
-	public Name: str ==> "VectorClass";
+	public Name: str = "ConcreteVectorClass" { get; set; }
+
+	public ZZ: i32 = 5 {get;set;}
 
 	public final Count: i32 = 1 {
 		get {
@@ -349,11 +351,10 @@ public class ConcreteVectorClass : VectorClass, IInterface<ConcreteVectorClass> 
 	public final getX: () -> f32 => x;
 
 	public operator+: (in other: self) -> self => new self(this.x + other.x, this.y + other.y, this.z + other.z);
-	public GetMagicNumber: (in i: ConcreteVectorClass) -> f32 => y * i.y;
+	public GetMagicNumber: (in i: VectorClass) -> f32 => x * i.x;
 	
 }
-public GetMagicNumber: (in vec: VectorClass, in i: VectorClass) -> f32 => vec.x * i.x;
-//public GetMagicNumber: (in vec: ConcreteVectorClass, i: ConcreteVectorClass) -> f32 => vec.y * i.y;
+public GetMagicNumber: (in vec: VectorClass, i: VectorClass) -> f32 => vec.y * i.y;
 
 public class Next {
 	public i: i32;
@@ -379,20 +380,23 @@ public class Next {
 	}
 }
 
-public interface IMagicNumber<in T> {
-	GetMagicNumber: (in ref f: T) -> f32;
+public interface IMagicNumber {
+	GetMagicNumber: (in f: VectorClass) -> f32;
 }
 
 public interface IResettable {
 	Reset: ();
 }
 
-public interface IInterface<in T> : IMagicNumber<T>, IResettable {
-	DefaultMethod: (in ref f: T) -> f32 => this.GetMagicNumber(f);
+public interface IInterface : IMagicNumber, IResettable {
+	DefaultMethod: (in ref f: VectorClass) -> f32 => this.GetMagicNumber(f);
+	operator+: (in ref f: ConcreteVectorClass) -> ConcreteVectorClass;
 
-	//Name: str { get; set; }
+	Name: str { get; }
 	//this[i: usize] -> object { get; }
 }
+
+public getSum: (in vec: VectorClass) -> f32 => vec.x + vec.y + vec.z;
 
 private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 {
@@ -439,22 +443,24 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 	print(vc.getX());
 	print(VectorClass.BYTES);*/
 	//nxtm: IInterface? = new ConcreteVectorClass(1,2,3);
-	nxtm :IInterface<VectorClass> = new ConcreteVectorClass(11,12,13);
-	nxt :IInterface<ConcreteVectorClass>? = nxtm;
+	nxtm :IInterface? = new ConcreteVectorClass(11,12,13);
+	nxt :IInterface? = nxtm;
 	{
 		nxt2:= new ConcreteVectorClass(3,4,5);
 		vec: Vector3 = {12,13,14};
 		print(nxt!.GetStrongReferenceCount());
-		//nxt = vec;
 		print(nxt!.GetMagicNumber(nxt2));
+		nxt = nxtm! + nxt2;
 		print(nxt!.GetMagicNumber(nxt2));
 		print(nxt!.DefaultMethod(nxt2));
+		print(nxt!.Name);
 		nxt = nxt2;
 		nxt?.Reset();
-		print(nxt!.GetMagicNumber(nxt2));
+		nxt!.Name = "12345";
+		print(nxt!.Name);
 		o: object = nxt!;
 		on: object? = nxt;
-		print(nxt!.GetStrongReferenceCount());
+		print(sizeof(__Class_ConcreteVectorClass));
 	}
 	print(nxt!.GetStrongReferenceCount());
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);

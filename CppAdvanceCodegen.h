@@ -33,6 +33,7 @@ class CppAdvanceCodegen
 	mutable std::unordered_map<std::string,std::string> symbolTable;
 	mutable std::unordered_map<std::string, CppAdvanceParser::TheTypeIdContext*> refParameters;
 	mutable std::unordered_set<CppAdvanceParser::PostfixExpressionContext*> ignoredExpressions;
+	mutable std::unordered_set<CppAdvanceParser::IdExpressionContext*> functionCallExpressions;
 	mutable std::vector<std::pair<std::string, CppAdvanceParser::TheTypeIdContext*>> namedReturns;
 	mutable std::vector<ConstantDefinition> selfConstants;
 	mutable std::stack<CppAdvanceParser::UnaryExpressionContext*> unaryExpressions;

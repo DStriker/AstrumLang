@@ -789,7 +789,7 @@ void CppAdvanceSema::enterPostfixExpression(CppAdvanceParser::PostfixExpressionC
 		{
 			conditionalPrerequisites[currentStatement].push_back(ctx->postfixExpression());
 		}
-		else {
+		//else {
 			if (!optionalChains.contains(unaryExpressions.top()))
 			{
 				optionalChains.insert_or_assign(unaryExpressions.top(), 1);
@@ -806,7 +806,7 @@ void CppAdvanceSema::enterPostfixExpression(CppAdvanceParser::PostfixExpressionC
 			{
 				optionalChains[ctx->postfixExpression()]++;
 			}
-		}
+		//}
 	}
 	if (firstPass && functionBody) return;
 
@@ -1270,16 +1270,16 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
             isStatic = true;
 			if (!isTypeDefinitionBody() || isFriendDefinition)
 				CppAdvanceCompilerError("Global functions are implicitly static", spec->Static()->getSymbol());
-			if (currentTypeKind.top() == TypeKind::Interface)
-				CppAdvanceCompilerError("Interface method cannot be static", spec->Static()->getSymbol());
 		}
 		else if (spec->Mutable())
 		{
 			isMutating = true;
 			if (!isTypeDefinitionBody() || isFriendDefinition)
 				CppAdvanceCompilerError("Global function cannot be mutating", spec->Mutable()->getSymbol());
-			if (currentTypeKind.top() == TypeKind::StaticClass)
-				CppAdvanceCompilerError("Static class method cannot be mutating", spec->Mutable()->getSymbol());
+			if (currentTypeKind.top() == TypeKind::Class || 
+				currentTypeKind.top() == TypeKind::StaticClass ||
+				currentTypeKind.top() == TypeKind::Interface)
+				CppAdvanceCompilerError("Method of the reference type is implicitly mutating", spec->Mutable()->getSymbol());
 		}
 		else if (spec->Virtual())
 		{
@@ -4444,7 +4444,8 @@ void CppAdvanceSema::exitNewExpression(CppAdvanceParser::NewExpressionContext* c
 
 void CppAdvanceSema::enterDestructor(CppAdvanceParser::DestructorContext* ctx)
 {
-	if (currentTypeKind.top() != TypeKind::Class && currentTypeKind.top() != TypeKind::Struct && currentTypeKind.top() != TypeKind::RefStruct)
+	if (currentTypeKind.top() != TypeKind::Class && currentTypeKind.top() != TypeKind::Struct && currentTypeKind.top() != TypeKind::RefStruct
+		&& currentTypeKind.top() != TypeKind::Union)
 		CppAdvanceCompilerError("Cannot to define destructor outside the class or struct body", ctx->Tilde()->getSymbol());
 
 	symbolContexts.push(symbolContexts.top());
