@@ -15,6 +15,19 @@ for (auto param : params)\
 }\
 out << ")";
 
+#define GET_ELEMENT_AT_EXTERNAL out << "getAt(_parent, ";\
+for (auto param : params)\
+{\
+	bool first = true;\
+	if (auto t = param->theTypeId())\
+	{\
+		if (!first) out << ", ";\
+		first = false;\
+		out << "_"; printIdentifier(param->Identifier());\
+	}\
+}\
+out << ")";
+
 #define INDEXER_WRITE_METHODS \
 out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator+=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t+=u;} { return *this = __ref() += std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
 out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator-=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t-=u;} { return *this = __ref() -= std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
@@ -45,8 +58,8 @@ out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator|(_ElemRi
 out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator^(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t^u;} { return __ref() ^ std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
 out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator<<(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t<<u;} { return __ref() << std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
 out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator>>(_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t>>u;} { return __ref() >> std::forward<_ElemRight>(other); }\n" << std::string(depth, '\t');\
-out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator[](_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) { t[u];} { return __ref()[std::forward<_ElemRight>(other)]; }\n" << std::string(depth, '\t');\
-out << "template<class _ElemRight> FORCE_INLINE decltype(auto) operator[](_ElemRight&& other) const requires requires(__IdxT t, _ElemRight u) { t[u];} { return __ref()[std::forward<_ElemRight>(other)]; }\n" << std::string(depth, '\t');\
+out << "template<class... _ElemRight> FORCE_INLINE decltype(auto) _operator_subscript(_ElemRight&&... other) { return __ref().__ref()._operator_subscript(std::forward<_ElemRight>(other)...); }\n" << std::string(depth, '\t');\
+out << "template<class... _ElemRight> FORCE_INLINE decltype(auto) _operator_subscript(_ElemRight&&... other) const { return __ref().__ref()._operator_subscript(std::forward<_ElemRight>(other)...); }\n" << std::string(depth, '\t');\
 out << "template<class... Args> FORCE_INLINE decltype(auto) operator()(Args&&... other) { return __ref()(std::forward<Args>(other)...); }\n" << std::string(depth, '\t');\
 out << "template<class... Args> FORCE_INLINE decltype(auto) operator()(Args&&... other) const { return __ref()(std::forward<Args>(other)...); }\n" << std::string(depth, '\t');\
 out << "template<class Ch> friend FORCE_INLINE decltype(auto) operator<<(std::basic_ostream<Ch>& stream, const __IndexerAccessor_" << line << "<__IdxT>& elem) { return stream << elem.__ref(); }\n" << std::string(depth, '\t');\
@@ -1770,38 +1783,121 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 
 			bool isInline = false;
 			bool isConstexpr = false;
-			if (auto body = func.indexerGetter->functionBody())
-			{
-				if (body->Equal()) {
-					isInline = true;
-					isConstexpr = true;
-				}
-				else if (body->Assign())
+			if (func.indexerSetter) {
+				if (auto body = func.indexerSetter->functionBody())
 				{
-					isInline = true;
+					if (body->Equal()) {
+						isInline = true;
+						isConstexpr = true;
+					}
+					else if (body->Assign())
+					{
+						isInline = true;
+					}
+				}
+				else if (auto body = func.indexerSetter->shortFunctionBody())
+				{
+					if (body->Equal()) {
+						isInline = true;
+						isConstexpr = true;
+					}
+					else if (body->Assign())
+					{
+						isInline = true;
+					}
+				}
+				auto access = func.access;
+				if (auto acc = func.indexerSetter->accessSpecifier())
+				{
+					if (acc->Public()) access = AccessSpecifier::Public;
+					else if (acc->Private()) access = AccessSpecifier::Private;
+					else if (acc->Protected()) access = AccessSpecifier::Public;
+					else if (acc->Internal()) access = AccessSpecifier::Internal;
+				}
+				else if (func.indexerSetter->protectedInternal()) access = AccessSpecifier::ProtectedInternal;
+				switch (access)
+				{
+				case AccessSpecifier::Public:
+				case AccessSpecifier::Internal:
+					out << "public: ";
+					break;
+				case AccessSpecifier::Protected:
+				case AccessSpecifier::ProtectedInternal:
+					out << "protected: ";
+					break;
+				case AccessSpecifier::Private:
+					out << "private:";
+					break;
+				}
+				if (isUnsafe)
+				{
+					out << "[[clang::annotate(\"unsafe\")]] ";
+				}
+				if (isConstexpr)
+				{
+					out << "inline constexpr ";
+				}
+				else if (isInline)
+				{
+					out << "inline ";
+				}
+				else if (!DLLName.empty() && !func.templateParams)
+				{
+					if (func.access == AccessSpecifier::Public || func.access == AccessSpecifier::Protected || func.access == AccessSpecifier::Private) out << DLLName << "_API ";
+					else out << DLLName << "_HIDDEN ";
+				}
+				out << "void setAt(";
+				printParamDeclClause(func.indexerParams);
+				out << ", const ";
+				printTypeId(func.returnType);
+				out << "& value)";
+				if (func.isOverride) out << " override";
+				if (func.isFinal) out << " final";
+				out << ";\n" << std::string(depth, '\t');
+			}
+		}
+		if (func.indexerParams)
+		{
+			bool isInline = func.isInline;
+			bool isConstexpr = func.isConstexpr;
+			if (func.indexerGetter)
+			{
+				if (auto body = func.indexerGetter->functionBody())
+				{
+					if (body->Equal()) {
+						isInline = true;
+						isConstexpr = true;
+					}
+					else if (body->Assign())
+					{
+						isInline = true;
+					}
+				}
+				else if (auto body = func.indexerGetter->shortFunctionBody())
+				{
+					if (body->Equal()) {
+						isInline = true;
+						isConstexpr = true;
+					}
+					else if (body->Assign())
+					{
+						isInline = true;
+					}
 				}
 			}
-			else if (auto body = func.indexerGetter->shortFunctionBody())
-			{
-				if (body->Equal()) {
-					isInline = true;
-					isConstexpr = true;
-				}
-				else if (body->Assign())
-				{
-					isInline = true;
-				}
-			}
+			
 			isUnsafe = func.isUnsafe;
 			auto access = func.access;
-			if (auto acc = func.indexerGetter->accessSpecifier())
-			{
-				if (acc->Public()) access = AccessSpecifier::Public;
-				else if (acc->Private()) access = AccessSpecifier::Private;
-				else if (acc->Protected()) access = AccessSpecifier::Public;
-				else if (acc->Internal()) access = AccessSpecifier::Internal;
+			if (func.indexerGetter) {
+				if (auto acc = func.indexerGetter->accessSpecifier())
+				{
+					if (acc->Public()) access = AccessSpecifier::Public;
+					else if (acc->Private()) access = AccessSpecifier::Private;
+					else if (acc->Protected()) access = AccessSpecifier::Public;
+					else if (acc->Internal()) access = AccessSpecifier::Internal;
+				}
+				else if (func.indexerGetter->protectedInternal()) access = AccessSpecifier::ProtectedInternal;
 			}
-			else if (func.indexerGetter->protectedInternal()) access = AccessSpecifier::ProtectedInternal;
 			switch (access)
 			{
 			case AccessSpecifier::Public:
@@ -1859,7 +1955,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				if (func.access == AccessSpecifier::Public || func.access == AccessSpecifier::Protected || func.access == AccessSpecifier::Private) out << DLLName << "_API ";
 				else out << DLLName << "_HIDDEN ";
 			}
-			if (func.isConstReturn || !func.isRefReturn) out << "const ";
+			out << "const ";
 			printTypeId(func.returnType);
 			if (func.isRefReturn) out << "&";
 			out << " getAt(";
@@ -1868,80 +1964,6 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			if (func.isOverride) out << " override";
 			if (func.isFinal) out << " final";
 			out << ";\n" << std::string(depth, '\t');
-			if (func.indexerSetter) {
-				isInline = false;
-				isConstexpr = false;
-				if (auto body = func.indexerSetter->functionBody())
-				{
-					if (body->Equal()) {
-						isInline = true;
-						isConstexpr = true;
-					}
-					else if (body->Assign())
-					{
-						isInline = true;
-					}
-				}
-				else if (auto body = func.indexerSetter->shortFunctionBody())
-				{
-					if (body->Equal()) {
-						isInline = true;
-						isConstexpr = true;
-					}
-					else if (body->Assign())
-					{
-						isInline = true;
-					}
-				}
-				access = func.access;
-				if (auto acc = func.indexerSetter->accessSpecifier())
-				{
-					if (acc->Public()) access = AccessSpecifier::Public;
-					else if (acc->Private()) access = AccessSpecifier::Private;
-					else if (acc->Protected()) access = AccessSpecifier::Public;
-					else if (acc->Internal()) access = AccessSpecifier::Internal;
-				}
-				else if (func.indexerSetter->protectedInternal()) access = AccessSpecifier::ProtectedInternal;
-				switch (access)
-				{
-				case AccessSpecifier::Public:
-				case AccessSpecifier::Internal:
-					out << "public: ";
-					break;
-				case AccessSpecifier::Protected:
-				case AccessSpecifier::ProtectedInternal:
-					out << "protected: ";
-					break;
-				case AccessSpecifier::Private:
-					out << "private:";
-					break;
-				}
-				if (isUnsafe)
-				{
-					out << "[[clang::annotate(\"unsafe\")]] ";
-				}
-				if (isConstexpr)
-				{
-					out << "inline constexpr ";
-				}
-				else if (isInline)
-				{
-					out << "inline ";
-				}
-				else if (!DLLName.empty() && !func.templateParams)
-				{
-					if (func.access == AccessSpecifier::Public || func.access == AccessSpecifier::Protected || func.access == AccessSpecifier::Private) out << DLLName << "_API ";
-					else out << DLLName << "_HIDDEN ";
-				}
-				out << "void setAt(";
-				printParamDeclClause(func.indexerParams);
-				out << ", const ";
-				printTypeId(func.returnType);
-				out << "& value)";
-				if (func.isOverride) out << " override";
-				if (func.isFinal) out << " final";
-				out << ";\n" << std::string(depth, '\t');
-			}
 		}
 		out << "#line " << func.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 		switch (func.access)
@@ -2406,9 +2428,7 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 		}
 		else if (method.indexerParams)
 		{
-			std::string funcname = "operator[]";
-			if (method.indexerParams->paramDeclList()->paramDeclaration().size() > 1)
-				funcname = "_operator_subscript";
+			std::string funcname = "_operator_subscript";
 			if (method.indexerSetter && (!method.indexerSetter->accessSpecifier() || method.indexerSetter->accessSpecifier()->Public())
 				&& !method.indexerSetter->protectedInternal()
 				|| !method.indexerSetter && !method.indexerGetter && !method.isConstReturn && method.isRefReturn)
@@ -4002,7 +4022,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		}
 		
 		out << "; } || requires(typename __AnyType::__class t) { {" << method.id << "(t";
-		if (method.params->paramDeclClause()) {
+		if (method.params && method.params->paramDeclClause()) {
 			for (auto param : method.params->paramDeclClause()->paramDeclList()->paramDeclaration())
 			{
 				out << ", ";
@@ -4053,7 +4073,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			out << ",std::declval<";
 			printTypeId(method.returnType);
 			out << ">())} -> std::same_as<void>; } || requires(typename __AnyType::__class t) { {setAt(t";
-			if (method.params->paramDeclClause()) {
+			if (method.params && method.params->paramDeclClause()) {
 				for (auto param : method.params->paramDeclClause()->paramDeclList()->paramDeclaration())
 				{
 					out << ", ";
@@ -4185,8 +4205,8 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			out << ", ";
 			printParamDeclClause(method.indexerParams);
 			out << ") { return ADV_UFCS(getAt)(*static_cast<typename __AnyType::__class*>(obj)";
-			if (method.params->paramDeclClause()) {
-				for (auto param : method.params->paramDeclClause()->paramDeclList()->paramDeclaration())
+			if (method.indexerParams) {
+				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
 				{
 					out << ", ";
 					printIdentifier(param->Identifier());
@@ -5629,7 +5649,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		if (type->templateParams)
 		{
 			out << "template<class __AnyInterface";
-			if (!isCovariant) {
+			if (!isCovariant && !method.indexerParams) {
 				for (auto param : type->templateParams->templateParamDeclaration())
 				{
 					out << ", ";
@@ -5733,6 +5753,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			}
 		}
 		out << ")); ";
+		//default method body
 		if (method.isDefault)
 		{
 			out << "}\n" << std::string(depth, '\t');
@@ -5768,6 +5789,162 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 				}
 			}
 			out << ")); }\n" << std::string(--depth, '\t');
+		}
+		else if (method.indexerParams)
+		{
+			out << "}\n" << std::string(depth, '\t');
+			if (method.indexerSetter)
+			{
+				//indexer setter
+				if (type->templateParams)
+				{
+					out << "template<class __AnyInterface";
+					out << "> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> ";
+				}
+				out << "FORCE_INLINE void setAt(";
+				if (type->templateParams)
+				{
+					out << "const __AnyInterface&";
+				}
+				else
+				{
+					out << "const " << type->id << "&";
+				}
+				out << " iface, ";
+				printParamDeclClause(method.indexerParams);
+				out << ", const ";
+				printTypeId(method.returnType);
+				out << "& value) ";
+				if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
+
+				out << " { CppAdvance::GetVTableFromInterface(&iface)->fnptr_set" << methodIds[&method];
+				out << "(CppAdvance::GetObjectReferenceFromInterface(&iface)";
+				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
+				{
+					out << ", ";
+					printIdentifier(param->Identifier());
+				}
+				out << ", value); }\n" << std::string(depth, '\t');
+
+				//accessor
+				out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+				out << "template<class __AnyInterface, class __IdxT = ";
+				printTypeId(method.returnType);
+				if (method.isRefReturn) out << "&";
+				out << "> struct __IndexerAccessor_" << method.pos.line << " {\n" << std::string(++depth, '\t') << "private:\n" << std::string(depth, '\t');
+				out << "__AnyInterface _parent;\n" << std::string(depth, '\t');
+				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
+				{
+					if (auto t = param->theTypeId())
+					{
+						printTypeId(t);
+						out << " _"; printIdentifier(param->Identifier());
+						out << ";\n" << std::string(depth, '\t');
+					}
+				}
+				out << "public:\n" << std::string(depth, '\t');
+				out << "FORCE_INLINE __IndexerAccessor_" << method.pos.line << "(const __AnyInterface& parent, ";
+				printParamDeclClause(method.indexerParams);
+				out << ") : _parent(parent)";
+				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
+				{
+					if (auto t = param->theTypeId())
+					{
+						out << ", _"; printIdentifier(param->Identifier()); out << "("; printIdentifier(param->Identifier()); out << ")";
+					}
+				}
+				out << " {}\n" << std::string(depth, '\t');
+				out << "template<class _ElemRight> FORCE_INLINE auto& operator=(_ElemRight&& other) { setAt(_parent, ";
+				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
+				{
+					if (auto t = param->theTypeId())
+					{
+						out << "_"; printIdentifier(param->Identifier()); out << ", ";
+					}
+				}
+				out << "std::forward<_ElemRight>(other)); return *this; }\n" << std::string(depth, '\t');
+				INDEXER_WRITE_METHODS;
+				auto params = method.indexerParams->paramDeclList()->paramDeclaration();
+				if (!method.isConstReturn)
+				{
+					out << "FORCE_INLINE operator __IdxT() { return ";
+					GET_ELEMENT_AT_EXTERNAL;
+					out << "; }\n" << std::string(depth, '\t');
+					out << "FORCE_INLINE operator const __IdxT() const { return ";
+					GET_ELEMENT_AT_EXTERNAL;
+					out << "; }\n" << std::string(depth, '\t');
+				}
+				else
+				{
+					out << "FORCE_INLINE operator __IdxT() const { return ";
+					GET_ELEMENT_AT_EXTERNAL;
+					out << "; }\n" << std::string(depth, '\t');
+				}
+				out << "FORCE_INLINE decltype(auto) __ref() { return "; GET_ELEMENT_AT_EXTERNAL; out << "; }\n" << std::string(depth, '\t');
+				out << "FORCE_INLINE decltype(auto) __ref() const { return getAt(_parent, ";
+				for (auto param : params)
+				{
+					bool first = true;
+					if (auto t = param->theTypeId())
+					{
+						if (!first) out << ", ";
+						first = false;
+						out << "_"; printIdentifier(param->Identifier());
+					}
+				}
+				out << "); }\n" << std::string(depth, '\t');
+				INDEXER_READ_METHODS(method.pos.line);
+				out << "\n" << std::string(--depth, '\t') << "};\n\n" << std::string(depth, '\t');
+			}
+
+			//indexer API
+			if (type->templateParams)
+			{
+				out << "template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> ";
+			}
+			out << "FORCE_INLINE decltype(auto) _operator_subscript(";
+			if (type->templateParams)
+			{
+				out << "const __AnyInterface&";
+			}
+			else
+			{
+				out << "const " << type->id << "&";
+			}
+			out << " iface, ";
+			printParamDeclClause(method.indexerParams);
+			out << ") ";
+			if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
+
+			if (method.indexerSetter)
+			{
+				out << "{ return __IndexerAccessor_" << method.pos.line << "<";
+				if (type->templateParams)
+				{
+					out << "std::decay_t<__AnyInterface>";
+				}
+				else
+				{
+					out << "std::decay_t<" << type->id << ">";
+				}
+				out << ">{iface";
+				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
+				{
+					out << ", ";
+					printIdentifier(param->Identifier());
+				}
+				out << "}; ";
+			}
+			else
+			{
+				out << "{ return getAt(iface";
+				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
+				{
+					out << ", ";
+					printIdentifier(param->Identifier());
+				}
+				out << "); ";
+			}
 		}
 		out << "}\n" << std::string(depth, '\t');
 	}
@@ -9604,9 +9781,9 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			currentTypeWithTemplate.clear();
 		}
 
-		if (func.indexerSetter)
+		bool isInline = func.isInline;
+		if (func.indexerGetter)
 		{
-			bool isInline = false;
 			if (auto body = func.indexerGetter->functionBody())
 			{
 				isInline = body->Assign() || body->Equal();
@@ -9615,19 +9792,106 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			{
 				isInline = body->Assign() || body->Equal();
 			}
+		}
 
-			if (func.access != AccessSpecifier::Private && isInline)
-			{
-				out.switchTo(true);
-				emptyLine = true;
-			}
-			else
-			{
-				out.switchTo(false);
-			}
+		if (func.access != AccessSpecifier::Private && isInline)
+		{
+			out.switchTo(true);
+			emptyLine = true;
+		}
+		else
+		{
+			out.switchTo(false);
+		}
 
+		out << "\n" << std::string(depth, '\t');
+		out << "#line " << func.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		if (func.parentTemplateParams)
+		{
+			printTemplateParams(func.parentTemplateParams);
+			out << " ";
+		}
+		else if (func.parentTemplateSpecializationArgs)
+		{
+			out << "template<> ";
+		}
+		if (func.templateParams)
+		{
+			printTemplateParams(func.templateParams);
+			out << " ";
+		}
+		if (func.isConstexpr)
+		{
+			out << "inline constexpr ";
+		}
+		else if (func.isInline)
+		{
+			out << "inline ";
+		}
+
+		out << "auto ";
+		parent = func.parentType;
+		StringReplace(parent, ".", "::");
+		pos = parent.find("<{{specialization}}>");
+		if (pos != parent.npos)
+		{
+			out << parent.substr(0, pos);
+			out << "<";
+			printTemplateArgumentList(func.parentTemplateSpecializationArgs);
+			out << ">";
+			out << parent.substr(pos + 20);
+		}
+		else
+		{
+			out << parent;
+		}
+		currentShortType = func.shortType;
+		currentTypeWithTemplate = parent;
+		out << "::getAt";
+		isUnsafe = func.isUnsafe;
+		out << "(";
+		printParamDeclClause(func.indexerParams);
+		out << ") ";
+		isVariadicTemplate = false;
+		if (!func.isStatic) {
+			if (func.isConstReturn) out << "const ";
+		}
+		if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
+		out << " -> ";
+		if (func.isConstReturn || !func.isRefReturn) out << "const ";
+		printTypeId(func.returnType);
+		if (func.isRefReturn) out << "&";
+		/*if (func.isOverride) out << " override ";
+		if (func.isFinal) out << " final ";*/
+
+		if (func.indexerGetter) {
+			if (auto body = func.indexerGetter->functionBody())
+			{
+				functionProlog = true;
+				printFunctionBody(body);
+			}
+			else if (auto body = func.indexerGetter->shortFunctionBody())
+			{
+				printShortFunctionBody(body);
+			}
+		}
+		else
+		{
+			out << " { return _operator_subscript(";
+			bool first = true;
+			for (auto param : func.indexerParams->paramDeclList()->paramDeclaration()) {
+				if (!first) out << ", ";
+				first = false;
+                printIdentifier(param->Identifier());
+			}
+			out << "); }";
+		}
+		currentShortType.clear();
+		currentTypeWithTemplate.clear();
+		if (!func.isConstReturn && !func.isStatic && !func.isMutating)
+		{
 			out << "\n" << std::string(depth, '\t');
-			out << "#line " << func.indexerGetter->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << "#line " << func.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 			if (func.parentTemplateParams)
 			{
 				printTemplateParams(func.parentTemplateParams);
@@ -9673,89 +9937,17 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			isUnsafe = func.isUnsafe;
 			out << "(";
 			printParamDeclClause(func.indexerParams);
-			out << ") ";
+			out << ") const ";
 			isVariadicTemplate = false;
-			if (!func.isStatic) {
-				if (func.isConstReturn) out << "const ";
-			}
 			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
 			out << " -> ";
-			if (func.isConstReturn || !func.isRefReturn) out << "const ";
+			out << "const ";
 			printTypeId(func.returnType);
 			if (func.isRefReturn) out << "&";
-			/*if (func.isOverride) out << " override ";
-			if (func.isFinal) out << " final ";*/
+			if (func.isOverride) out << " override ";
+			if (func.isFinal) out << " final ";
 
-			if (auto body = func.indexerGetter->functionBody())
-			{
-				functionProlog = true;
-				printFunctionBody(body);
-			}
-			else if (auto body = func.indexerGetter->shortFunctionBody())
-			{
-				printShortFunctionBody(body);
-			}
-			currentShortType.clear();
-			currentTypeWithTemplate.clear();
-			if (!func.isConstReturn && !func.isStatic && !func.isMutating)
-			{
-				out << "\n" << std::string(depth, '\t');
-				out << "#line " << func.indexerGetter->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-				if (func.parentTemplateParams)
-				{
-					printTemplateParams(func.parentTemplateParams);
-					out << " ";
-				}
-				else if (func.parentTemplateSpecializationArgs)
-				{
-					out << "template<> ";
-				}
-				if (func.templateParams)
-				{
-					printTemplateParams(func.templateParams);
-					out << " ";
-				}
-				if (func.isConstexpr)
-				{
-					out << "inline constexpr ";
-				}
-				else if (func.isInline)
-				{
-					out << "inline ";
-				}
-
-				out << "auto ";
-				auto parent = func.parentType;
-				StringReplace(parent, ".", "::");
-				auto pos = parent.find("<{{specialization}}>");
-				if (pos != parent.npos)
-				{
-					out << parent.substr(0, pos);
-					out << "<";
-					printTemplateArgumentList(func.parentTemplateSpecializationArgs);
-					out << ">";
-					out << parent.substr(pos + 20);
-				}
-				else
-				{
-					out << parent;
-				}
-				currentShortType = func.shortType;
-				currentTypeWithTemplate = parent;
-				out << "::getAt";
-				isUnsafe = func.isUnsafe;
-				out << "(";
-				printParamDeclClause(func.indexerParams);
-				out << ") const ";
-				isVariadicTemplate = false;
-				if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
-				out << " -> ";
-				out << "const ";
-				printTypeId(func.returnType);
-				if (func.isRefReturn) out << "&";
-				if (func.isOverride) out << " override ";
-				if (func.isFinal) out << " final ";
-
+			if (func.indexerGetter) {
 				if (auto body = func.indexerGetter->functionBody())
 				{
 					functionProlog = true;
@@ -9765,10 +9957,24 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 				{
 					printShortFunctionBody(body);
 				}
-				currentShortType.clear();
-				currentTypeWithTemplate.clear();
 			}
+			else
+			{
+				out << " { return _operator_subscript(";
+				bool first = true;
+				for (auto param : func.indexerParams->paramDeclList()->paramDeclaration()) {
+					if (!first) out << ", ";
+					first = false;
+					printIdentifier(param->Identifier());
+				}
+				out << "); }";
+			}
+			currentShortType.clear();
+			currentTypeWithTemplate.clear();
+		}
 
+		if (func.indexerSetter)
+		{
 			isInline = false;
 			if (auto body = func.indexerSetter->functionBody())
 			{
@@ -9878,13 +10084,7 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 		if (!currentAccessSpecifier) currentAccessSpecifier = AccessSpecifier::Private; std::string funcname;
 
 		auto params = ctx->paramDeclClause()->paramDeclList()->paramDeclaration();
-		if (params.size() == 1) {
-			funcname = "operator[]";
-		}
-		else
-		{
-			funcname = "_operator_subscript";
-		}
+		funcname = "_operator_subscript";
 		
 		
 		if (!ctx->returnType()->Const()) {
@@ -12738,19 +12938,49 @@ void CppAdvanceCodegen::printPostfixExpression(CppAdvanceParser::PostfixExpressi
 	}
 	else if (ctx->LeftBracket())
 	{
-		printPostfixExpression(ctx->postfixExpression());
-		auto expr = ctx->expressionList();
-		if (expr->expressionListPart().size() == 1) {
-			out << "[";
-			printExpressionList(ctx->expressionList());
-			out << "]";
+		const std::string funcname = "_operator_subscript";
+		std::string ufcs = "ADV_UFCS";
+        if (!functionBody) ufcs += "_NONLOCAL";
+
+		if (sema.optionalChains.contains(ctx->postfixExpression()))
+		{
+			if (ctx->Question())
+			{
+				if (!ignoredExpressions.contains(ctx->postfixExpression())) {
+					printPostfixExpression(ctx->postfixExpression());
+					out << ".andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
+				}
+				out << ufcs << "(" << funcname << ")(value.__ref(), ";
+			}
+			else
+			{
+				auto innerExpr = ctx->postfixExpression();
+				while (innerExpr && !innerExpr->Question())
+				{
+					innerExpr = innerExpr->postfixExpression();
+				}
+				innerExpr = innerExpr->postfixExpression();
+				if (!ignoredExpressions.contains(innerExpr))
+				{
+					printPostfixExpression(innerExpr);
+					ignoredExpressions.insert(innerExpr);
+					out << ".andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
+				}
+
+				out << ufcs << "(" << funcname << ")(";
+				printPostfixExpression(ctx->postfixExpression());
+				out << ".__ref(), ";
+			}
 		}
 		else
 		{
-			out << "._operator_subscript(";
-			printExpressionList(ctx->expressionList());
-			out << ")";
+			out << ufcs << "(" << funcname << ")(";
+			printPostfixExpression(ctx->postfixExpression());
+			out << ".__ref(), ";
 		}
+
+		printExpressionList(ctx->expressionList());
+		out << ")";
 	}
 	else if (ctx->Dot())
 	{

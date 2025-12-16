@@ -3306,10 +3306,10 @@ public:
     antlr4::tree::TerminalNode *Forward();
     antlr4::tree::TerminalNode *LeftBracket();
     antlr4::tree::TerminalNode *RightBracket();
+    antlr4::tree::TerminalNode *Question();
     antlr4::tree::TerminalNode *Dot();
     antlr4::tree::TerminalNode *IntegerLiteral();
     IdExpressionContext *idExpression();
-    antlr4::tree::TerminalNode *Question();
     antlr4::tree::TerminalNode *Greater();
     antlr4::tree::TerminalNode *PlusPlus();
     antlr4::tree::TerminalNode *MinusMinus();

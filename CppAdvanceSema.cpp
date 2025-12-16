@@ -2285,8 +2285,8 @@ void CppAdvanceSema::exitPostfixExpression(CppAdvanceParser::PostfixExpressionCo
 	else if (ctx->LeftBracket() && !typeStack.empty())
 	{
 		typeStack.push(contextTypes[ctx->postfixExpression()]);
-		if (functionTable.contains(typeStack.top() + ".operator[]")) {
-			auto type = functionTable[typeStack.top() + ".operator[]"];
+		if (functionTable.contains(typeStack.top() + "._operator_subscript")) {
+			auto type = functionTable[typeStack.top() + "._operator_subscript"];
             if (aliasTable.contains(type)) type = aliasTable[type];
 			if (!typeset.contains(type) && !currentSubtype.empty())
 				type = currentSubtype;
@@ -3695,11 +3695,7 @@ void CppAdvanceSema::enterIndexer(CppAdvanceParser::IndexerContext* ctx)
 
 		if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
 		if (!access) access = AccessSpecifier::Internal;
-		std::string id;
-		if (params->paramDeclList()->paramDeclaration().size() == 1)
-			id = "operator[]";
-		else
-			id = "_operator_subscript";
+		std::string id = "_operator_subscript";
 		
 		auto lastTparams = getLastTypeTemplateParams();
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
@@ -3726,7 +3722,7 @@ void CppAdvanceSema::exitIndexer(CppAdvanceParser::IndexerContext* ctx)
 	if (firstPass && ! functionBody) {
 		std::string funcname;
 		if (!currentType.empty()) funcname += currentType + ".";
-		funcname += ctx->paramDeclClause()->paramDeclList()->paramDeclaration().size() == 1 ? "operator[]" : "_operator_subscript";
+		funcname += "_operator_subscript";
 		functionTable[funcname] = contextTypes[ctx->returnType()];
 		std::string args;
 		bool first = true;
@@ -5162,11 +5158,7 @@ void CppAdvanceSema::enterInterfaceIndexer(CppAdvanceParser::InterfaceIndexerCon
 				isForwardReturn = true;
 		}
 
-		std::string id;
-		if (params->paramDeclList()->paramDeclaration().size() == 1)
-			id = "operator[]";
-		else
-			id = "_operator_subscript";
+		std::string id = "_operator_subscript";
 
 		auto lastTparams = getLastTypeTemplateParams();
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
@@ -5193,7 +5185,7 @@ void CppAdvanceSema::exitInterfaceIndexer(CppAdvanceParser::InterfaceIndexerCont
 	if (firstPass && !functionBody) {
 		std::string funcname;
 		if (!currentType.empty()) funcname += currentType + ".";
-		funcname += ctx->paramDeclClause()->paramDeclList()->paramDeclaration().size() == 1 ? "operator[]" : "_operator_subscript";
+		funcname += "_operator_subscript";
 		functionTable[funcname] = contextTypes[ctx->returnType()];
 		std::string args;
 		bool first = true;

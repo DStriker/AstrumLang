@@ -490,7 +490,7 @@ postfixExpression:
 	  primaryExpression
 	| newExpression
 	| stackallocExpression
-	| postfixExpression LeftBracket expressionList RightBracket
+	| postfixExpression Question? LeftBracket expressionList RightBracket
 	| postfixExpression LeftParen expressionList? RightParen
 	| (simpleTypeSpecifier) LeftParen expressionList? RightParen
 	| Move postfixExpression

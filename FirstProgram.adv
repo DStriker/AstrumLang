@@ -273,16 +273,17 @@ public abstract class VectorClass : BaseClass
 		return this;
 	}*/
 
-	public this[idx: i32] -> f32 {
+	/*public this[idx: i32] -> f32 {
 		get = {
 			print("Read");
 			return x;
 		}
-		public set = {
-			if (value < 10) return;
-			x = 5;
+		set = {
+			print("Write");
+			x = value;
 		}
-	}
+	}*/
+	public this[idx: i32] -> ref f32 => x;
 	public this[idx: i32, idx2: i32, idx3: i32] -> f32 => y + z;
 
 	public abstract getX: () -> f32;
@@ -348,6 +349,8 @@ public class ConcreteVectorClass : VectorClass, IInterface {
 		}
 	}
 
+	public Count123: i32 ==> 1500;
+
 	public final getX: () -> f32 => x;
 
 	public operator+: (in other: self) -> self => new self(this.x + other.x, this.y + other.y, this.z + other.z);
@@ -355,6 +358,8 @@ public class ConcreteVectorClass : VectorClass, IInterface {
 	
 }
 public GetMagicNumber: (in vec: VectorClass, i: VectorClass) -> f32 => vec.y * i.y;
+
+public _operator_subscript: (in vec: VectorClass, x: f32, y: f32) -> f32 => vec.x * x + vec.y * y;
 
 public class Next {
 	public i: i32;
@@ -382,6 +387,7 @@ public class Next {
 
 public interface IMagicNumber {
 	GetMagicNumber: (in f: VectorClass) -> f32;
+	Count123: i32 { get; }
 }
 
 public interface IResettable {
@@ -391,9 +397,9 @@ public interface IResettable {
 public interface IInterface : IMagicNumber, IResettable {
 	DefaultMethod: (in ref f: VectorClass) -> f32 => this.GetMagicNumber(f);
 	operator+: (in ref f: ConcreteVectorClass) -> ConcreteVectorClass;
-
+	
 	Name: str { get; }
-	//this[i: usize] -> object { get; }
+	this[i: i32] -> ref f32 { get; }
 }
 
 public getSum: (in vec: VectorClass) -> f32 => vec.x + vec.y + vec.z;
@@ -446,17 +452,20 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 	nxtm :IInterface? = new ConcreteVectorClass(11,12,13);
 	nxt :IInterface? = nxtm;
 	{
-		nxt2:= new ConcreteVectorClass(3,4,5);
+		nxt2:ConcreteVectorClass? = new ConcreteVectorClass(3,4,5);
 		vec: Vector3 = {12,13,14};
 		print(nxt!.GetStrongReferenceCount());
-		print(nxt!.GetMagicNumber(nxt2));
-		nxt = nxtm! + nxt2;
-		print(nxt!.GetMagicNumber(nxt2));
-		print(nxt!.DefaultMethod(nxt2));
-		print(nxt!.Name);
+		print(nxt!.GetMagicNumber(nxt2!));
+		nxt = nxtm! + nxt2!;
+		print(nxt!.GetMagicNumber(nxt2!));
+		print(nxt!.DefaultMethod(nxt2!));
+		print(nxt![2]);
+		nxt![2] = 10;
+		print(nxt![2]);
+		print(nxt2![2.5f,3.4f]);
 		nxt = nxt2;
 		nxt?.Reset();
-		nxt!.Name = "12345";
+		//nxt!.Name = "12345";
 		print(nxt!.Name);
 		o: object = nxt!;
 		on: object? = nxt;
