@@ -121,6 +121,8 @@ interfaceMemberDeclaration:
 	| interfaceMethodDeclaration
 	| interfaceIndexer
 	| interfaceProperty
+	| constantDeclaration
+	| aliasDeclaration
 	;
 
 baseClause: Colon baseSpecifierList;

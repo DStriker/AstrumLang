@@ -3964,6 +3964,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	std::map<const PropertyDefinition*, std::string> propertyIds;
 	std::vector<std::string> interfaceRequirements;
 	for (const auto& method : type->methods) {
+		if (method.isStatic) continue;
 		if (method.indexerParams)
 		{
 			methodIds[&method] = sema.getInterfaceMethodId(type->id + "_" + method.id, method.indexerParams);
@@ -4014,6 +4015,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << "std::convertible_to<";
 			printTypeId(method.returnType);
+			if (method.isRefReturn) out << "&";
 			out << ">";
 		}
 		else
@@ -4036,6 +4038,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << "std::convertible_to<";
 			printTypeId(method.returnType);
+			if (method.isRefReturn) out << "&";
 			out << ">";
 		}
 		else
@@ -4087,6 +4090,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			{
 				out << "std::convertible_to<";
 				printTypeId(method.returnType);
+				if (method.isRefReturn) out << "&";
 				out << ">";
 			}
 			else
@@ -4140,6 +4144,20 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			out << ">()); };\n" << std::string(depth, '\t');
 		}
 	}
+	//check base interfaces
+	if (type->interfaces) {
+		for (auto iface : type->interfaces->baseSpecifier())
+		{
+			out << "#line " << iface->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << "ADV_CHECK_INTERFACE(" << iface->getText() << ", ";
+			if (iface->nestedNameSpecifier())
+			{
+				printNestedNameSpecifier(iface->nestedNameSpecifier());
+			}
+			printClassName(iface->className());
+			out << ");\n" << std::string(depth, '\t');
+		}
+	}
 	//print interface virtual table
 	out << "namespace __vtables {\n" << std::string(++depth, '\t');
 	out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
@@ -4165,6 +4183,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	out << "\n" << std::string(depth, '\t') << "{\n" << std::string(++depth, '\t');
 	for (const auto& method : type->methods)
 	{
+		if (method.isStatic) continue;
 		auto id = methodIds[&method];
 		out << "using fn_" << id << " = ";
 		if (method.returnType) {
@@ -4358,6 +4377,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		}
 	}
 	for (const auto& method : type->methods) {
+		if (method.isStatic) continue;
         if (!first) out << ", ";
 		first = false;
 		if (method.isDefault) {
@@ -5073,10 +5093,89 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	}
 	out << ">;\n" << std::string(--depth, '\t')
 		<< "} else static_assert(false,\"Not implemented yet\"); return *this;\n"  << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
-	//method default implementations
+	//method default implementations and static methods
+	for (const auto& constant : type->constants)
+	{
+		out << "#line " << constant.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		if (constant.templateParams) {
+			isFunctionDeclaration = true;
+			printTemplateParams(constant.templateParams);
+			isFunctionDeclaration = false;
+			out << " ";
+		}
+		out << "static constexpr ";
+		bool isArray = false;
+		if (constant.type)
+		{
+			isDeclaration = true;
+			printTypeId(constant.type);
+			isDeclaration = false;
+			//isArray = constant.type->arrayDeclarator();
+			currentType = constant.type->getText();
+		}
+		else
+		{
+			out << "auto";
+		}
+		out << " " << constant.id << " = ";
+		currentDeclarationName = constant.id;
+		printInitializerClause(constant.initializer);
+		out << ";" << std::endl << std::string(depth, '\t');
+		currentDeclarationName.clear();
+	}
+	for (const auto& alias : type->typeAliases)
+	{
+		out << "#line " << alias.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		if (alias.templateParams)
+		{
+			isFunctionDeclaration = true;
+			printTemplateParams(alias.templateParams);
+			isFunctionDeclaration = false;
+			out << " ";
+		}
+		out << "using " << alias.id << (isUnsafe ? " [[clang::annotate(\"unsafe\")]]" : "") << " = ";
+		printTypeId(alias.type);
+		out << ";" << std::endl << std::string(depth, '\t');
+	}
 	for (const auto& method : type->methods)
 	{
+		if (method.isStatic)
+		{
+			out << "#line " << method.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << "public: static ";
+
+			if (method.returnType)
+			{
+				if (method.isConstReturn || !method.isRefReturn) out << "const ";
+				printTypeId(method.returnType);
+			}
+			else if (method.expression)
+			{
+				out << "decltype(auto)";
+			}
+			else
+			{
+				out << "void";
+			}
+			if (method.isRefReturn) out << "&";
+			out << " " << method.id << "(";
+			first = true;
+			if (method.params)
+			{
+				if (auto params = method.params->paramDeclClause())
+				{
+					if (!first) out << ", ";
+					first = false;
+					printParamDeclClause(params);
+				}
+			}
+			out << ") ";
+			if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
+			out << ";\n" << std::string(depth, '\t');
+			continue;
+		}
 		if (!method.isDefault) continue;
+		out << "#line " << method.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 		out << "public: ";
 
 		if (method.returnType)
@@ -5646,6 +5745,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	//interface methods
 	for (const auto& method : type->methods)
 	{
+		if (method.isStatic) continue;
 		if (type->templateParams)
 		{
 			out << "template<class __AnyInterface";
@@ -6281,7 +6381,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 			bool first = true;
 			for (const auto& method : type->methods)
 			{
-				if (!method.isDefault) continue;
+				if (!method.isDefault && !method.isStatic) continue;
 				if (first)
 				{
 					if (type->access != AccessSpecifier::Private) {
@@ -6317,6 +6417,10 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 					if (method.isConstReturn || !method.isRefReturn) out << "const ";
 					printTypeId(method.returnType);
 				}
+				else if (method.isStatic)
+				{
+					out << "decltype(auto)";
+				}
 				else
 				{
 					out << "void";
@@ -6335,7 +6439,8 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 					}
 					out << ">";
 				}
-				auto id = "__default_" + method.id;
+				auto id = method.id;
+				if (!method.isStatic) id = "__default_" + id;
 				out << "::" << id << "(";
 				first = true;
 				if (method.params)
@@ -6347,7 +6452,8 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 						printParamDeclClause(params);
 					}
 				}
-				out << ") const ";
+				out << ") ";
+				if (!method.isStatic) out << "const ";
 				if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
 				auto func = static_cast<CppAdvanceParser::FunctionDefinitionContext*>(method.params->parent);
 				if (func->functionBody())

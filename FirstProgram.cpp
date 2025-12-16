@@ -1,16 +1,16 @@
 #include "FirstProgram.h"
 
-#line 407 "FirstProgram.adv"
+#line 412 "FirstProgram.adv"
 auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam = CppAdvance::f64(3.5))  -> const int;
-#line 479 "FirstProgram.adv"
+#line 485 "FirstProgram.adv"
 inline constexpr CppAdvance::usize PRIVATE_CONSTANT = CppAdvance::usize(34U);
 #line 2 "FirstProgram.adv"
 volatile CppAdvance::Unsafe::__VolatileRawPtr<const CppAdvance::char16> globalVar{};
 #line 3 "FirstProgram.adv"
 extern const CppAdvance::Unsafe::__RawPtr<CppAdvance::i32> globalVar1 = nullptr;
-#line 480 "FirstProgram.adv"
+#line 486 "FirstProgram.adv"
 static CppAdvance::i32 globalVar2 = CppAdvance::i32(8);
-#line 481 "FirstProgram.adv"
+#line 487 "FirstProgram.adv"
 static const CppAdvance::i32 globalVar3 = CppAdvance::i32(456);
 #line 91 "FirstProgram.adv"
 thread_local CppAdvance::i32 Vector3::Count2 = CppAdvance::i32(123);
@@ -115,53 +115,55 @@ auto __Class_ConcreteVectorClass::getCount() const  -> CppAdvance::i32
 
 
 
-#line 407 "FirstProgram.adv"
+#line 412 "FirstProgram.adv"
 auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam)  -> const int
 {
-	#line 452 "FirstProgram.adv"
+	#line 457 "FirstProgram.adv"
 	CppAdvance::Nullable<IInterface> nxtm = CppAdvance::New<ConcreteVectorClass>(CppAdvance::i32(11), CppAdvance::i32(12), CppAdvance::i32(13)); 
-	#line 453 "FirstProgram.adv"
+	#line 458 "FirstProgram.adv"
 	CppAdvance::Nullable<IInterface> nxt = nxtm; 
-	#line 454 "FirstProgram.adv"
+	#line 459 "FirstProgram.adv"
 	{
-		#line 455 "FirstProgram.adv"
-		CppAdvance::Nullable<ConcreteVectorClass> nxt2 = CppAdvance::New<ConcreteVectorClass>(CppAdvance::i32(3), CppAdvance::i32(4), CppAdvance::i32(5)); 
-		#line 456 "FirstProgram.adv"
-		Vector3 vec = { CppAdvance::i32(12), CppAdvance::i32(13), CppAdvance::i32(14) }; 
-		#line 457 "FirstProgram.adv"
-		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
-		#line 458 "FirstProgram.adv"
-		print(ADV_UFCS(GetMagicNumber)((*(nxt)).__ref(), (*(nxt2))));
-		#line 459 "FirstProgram.adv"
-		nxt = (*(nxtm)) + (*(nxt2));
 		#line 460 "FirstProgram.adv"
-		print(ADV_UFCS(GetMagicNumber)((*(nxt)).__ref(), (*(nxt2))));
+		CppAdvance::Nullable<ConcreteVectorClass> nxt2 = CppAdvance::New<ConcreteVectorClass>(CppAdvance::i32(3), CppAdvance::i32(4), CppAdvance::i32(5)); 
 		#line 461 "FirstProgram.adv"
-		print(ADV_UFCS(DefaultMethod)((*(nxt)).__ref(), (*(nxt2))));
+		Vector3 vec = { CppAdvance::i32(12), CppAdvance::i32(13), CppAdvance::i32(14) }; 
 		#line 462 "FirstProgram.adv"
-		print(ADV_UFCS(_operator_subscript)((*(nxt)).__ref(), CppAdvance::i32(2)));
+		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
 		#line 463 "FirstProgram.adv"
-		ADV_UFCS(_operator_subscript)((*(nxt)).__ref(), CppAdvance::i32(2)) = CppAdvance::i32(10);
+		print(ADV_UFCS(GetMagicNumber)((*(nxt)).__ref(), (*(nxt2))));
 		#line 464 "FirstProgram.adv"
-		print(ADV_UFCS(_operator_subscript)((*(nxt)).__ref(), CppAdvance::i32(2)));
+		nxt = (*(nxtm)) + (*(nxt2));
 		#line 465 "FirstProgram.adv"
-		print(ADV_UFCS(_operator_subscript)((*(nxt2)).__ref(), CppAdvance::f32(2.5f), CppAdvance::f32(3.4f)));
+		print(ADV_UFCS(GetMagicNumber)((*(nxt)).__ref(), (*(nxt2))));
 		#line 466 "FirstProgram.adv"
-		nxt = nxt2;
+		print(ADV_UFCS(DefaultMethod)((*(nxt)).__ref(), (*(nxt2))));
 		#line 467 "FirstProgram.adv"
-		nxt.andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(ADV_UFCS(Reset)(value.__ref())); });
+		print(ADV_UFCS(_operator_subscript)((*(nxt)).__ref(), CppAdvance::i32(2)));
+		#line 468 "FirstProgram.adv"
+		typename IInterface::SomeInt xx = IInterface::VERSION; 
 		#line 469 "FirstProgram.adv"
-		print(ADV_UPCS(Name)((*(nxt)).__ref()));
+		print(xx);
 		#line 470 "FirstProgram.adv"
-		CppAdvance::ObjectRef o = (*(nxt)); 
+		print(ADV_UFCS(_operator_subscript)((*(nxt2)).__ref(), CppAdvance::f32(2.5f), CppAdvance::f32(3.4f)));
 		#line 471 "FirstProgram.adv"
-		CppAdvance::Nullable<CppAdvance::ObjectRef> on = nxt; 
+		print(IInterface::SomeStaticMethod(CppAdvance::i32(3)));
 		#line 472 "FirstProgram.adv"
+		nxt = nxt2;
+		#line 473 "FirstProgram.adv"
+		nxt.andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(ADV_UFCS(Reset)(value.__ref())); });
+		#line 475 "FirstProgram.adv"
+		print(ADV_UPCS(Name)((*(nxt)).__ref()));
+		#line 476 "FirstProgram.adv"
+		CppAdvance::ObjectRef o = (*(nxt)); 
+		#line 477 "FirstProgram.adv"
+		CppAdvance::Nullable<CppAdvance::ObjectRef> on = nxt; 
+		#line 478 "FirstProgram.adv"
 		print(CppAdvance::usize(sizeof (__Class_ConcreteVectorClass)));
 	}
-	#line 474 "FirstProgram.adv"
+	#line 480 "FirstProgram.adv"
 	print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
-	#line 475 "FirstProgram.adv"
+	#line 481 "FirstProgram.adv"
 	print(ADV_UPCS(x)(ADV_UPCS(x)(Test1::Test2::TestClass::makeTestClass(CppAdvance::i32(3), CppAdvance::f32(3.14f)).__ref()).__ref()));
 }
 

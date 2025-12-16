@@ -193,8 +193,6 @@ struct Vector3 final : public CppAdvance::Struct {
 	public: inline constexpr auto getName() const  -> CppAdvance::Str;
 	#line 9999 "FirstProgram.adv"
 	ADV_PROPERTY_GETTER(public, Name, getName, CppAdvance::Str);
-	#line 73 "FirstProgram.adv"
-	public: inline constexpr auto Equals(const IEquatable& other) const noexcept -> const bool;
 	#line 74 "FirstProgram.adv"
 	public: inline constexpr auto format() const noexcept -> const CppAdvance::Str;
 	#line 75 "FirstProgram.adv"
@@ -1078,21 +1076,25 @@ class IResettable__Weak final : public CppAdvance::ObjectRef__Weak {
 FORCE_INLINE void Reset(const IResettable& iface)  { ADV_EXPRESSION_BODY(CppAdvance::GetVTableFromInterface(&iface)->fnptr_565bebff34b81aa1(CppAdvance::GetObjectReferenceFromInterface(&iface))); }
 
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<IInterface> = false;
-#line 398 "FirstProgram.adv"
-template<class __AnyType> concept __HasMethodImplementation_6cedb65857a10a4e = requires(typename __AnyType::__class t) { {t.DefaultMethod(std::declval<VectorClass>())} -> std::convertible_to<CppAdvance::f32>; } || requires(typename __AnyType::__class t) { {DefaultMethod(t, std::declval<VectorClass>())} -> std::convertible_to<CppAdvance::f32>; };
-#line 399 "FirstProgram.adv"
-template<class __AnyType> concept __HasMethodImplementation_fbc51d6746c8ca94 = requires(typename __AnyType::__class t) { {t.operator+(std::declval<ConcreteVectorClass>())} -> std::convertible_to<ConcreteVectorClass>; } || requires(typename __AnyType::__class t) { {operator+(t, std::declval<ConcreteVectorClass>())} -> std::convertible_to<ConcreteVectorClass>; };
-#line 402 "FirstProgram.adv"
-template<class __AnyType> concept __HasMethodImplementation_921126693c79e307 = requires(typename __AnyType::__class t) { {t.getAt(std::declval<CppAdvance::i32>())} -> std::convertible_to<CppAdvance::f32>; } || requires(typename __AnyType::__class t) { {_operator_subscript(t)} -> std::convertible_to<CppAdvance::f32>; };
 #line 401 "FirstProgram.adv"
+template<class __AnyType> concept __HasMethodImplementation_6cedb65857a10a4e = requires(typename __AnyType::__class t) { {t.DefaultMethod(std::declval<VectorClass>())} -> std::convertible_to<CppAdvance::f32>; } || requires(typename __AnyType::__class t) { {DefaultMethod(t, std::declval<VectorClass>())} -> std::convertible_to<CppAdvance::f32>; };
+#line 402 "FirstProgram.adv"
+template<class __AnyType> concept __HasMethodImplementation_fbc51d6746c8ca94 = requires(typename __AnyType::__class t) { {t.operator+(std::declval<ConcreteVectorClass>())} -> std::convertible_to<ConcreteVectorClass>; } || requires(typename __AnyType::__class t) { {operator+(t, std::declval<ConcreteVectorClass>())} -> std::convertible_to<ConcreteVectorClass>; };
+#line 405 "FirstProgram.adv"
+template<class __AnyType> concept __HasMethodImplementation_921126693c79e307 = requires(typename __AnyType::__class t) { {t.getAt(std::declval<CppAdvance::i32>())} -> std::convertible_to<CppAdvance::f32&>; } || requires(typename __AnyType::__class t) { {_operator_subscript(t)} -> std::convertible_to<CppAdvance::f32&>; };
+#line 404 "FirstProgram.adv"
 template<class __AnyType> concept __HasMethodImplementation_getfd864fe31949d59b = requires(typename __AnyType::__class t) { {t.__ref().getName()} -> std::convertible_to<CppAdvance::Str>; } || requires(__AnyType t) { {getName(t)} -> std::convertible_to<CppAdvance::Str>; };
+#line 397 "FirstProgram.adv"
+ADV_CHECK_INTERFACE(IMagicNumber, IMagicNumber);
+#line 397 "FirstProgram.adv"
+ADV_CHECK_INTERFACE(IResettable, IResettable);
 namespace __vtables {
 	#line 397 "FirstProgram.adv"
 	struct __vtable_IInterface : public IMagicNumber::__vtable, public IResettable::__vtable
 	{
 		using fn_6cedb65857a10a4e = const CppAdvance::f32(CppAdvance::Object*, const VectorClass& f);
 		fn_6cedb65857a10a4e* fnptr_6cedb65857a10a4e;
-		#line 398 "FirstProgram.adv"
+		#line 401 "FirstProgram.adv"
 		template<class __AnyType> static const CppAdvance::f32 impl_6cedb65857a10a4e(CppAdvance::Object* obj, const VectorClass& f) { 
 			if constexpr(__HasMethodImplementation_6cedb65857a10a4e<__AnyType>) {
 				ADV_EXPRESSION_BODY(ADV_UFCS(DefaultMethod)(*static_cast<typename __AnyType::__class*>(obj), f)); 
@@ -1100,15 +1102,15 @@ namespace __vtables {
 		}
 		using fn_fbc51d6746c8ca94 = const ConcreteVectorClass(CppAdvance::Object*, const ConcreteVectorClass& f);
 		fn_fbc51d6746c8ca94* fnptr_fbc51d6746c8ca94;
-		#line 399 "FirstProgram.adv"
+		#line 402 "FirstProgram.adv"
 		template<class __AnyType> static const ConcreteVectorClass impl_fbc51d6746c8ca94(CppAdvance::Object* obj, const ConcreteVectorClass& f) { ADV_EXPRESSION_BODY(ADV_UFCS(operator+)(*static_cast<typename __AnyType::__class*>(obj), f)); }
 		using fn_921126693c79e307 = CppAdvance::f32&(CppAdvance::Object*, CppAdvance::i32 i);
 		fn_921126693c79e307* fnptr_921126693c79e307;
-		#line 402 "FirstProgram.adv"
+		#line 405 "FirstProgram.adv"
 		template<class __AnyType> static CppAdvance::f32& impl_921126693c79e307(CppAdvance::Object* obj, CppAdvance::i32 i) { return ADV_UFCS(getAt)(*static_cast<typename __AnyType::__class*>(obj), i); }
 		using fn_getName = CppAdvance::Str(CppAdvance::Object*);
 		fn_getName* fnptr_getName;
-		#line 401 "FirstProgram.adv"
+		#line 404 "FirstProgram.adv"
 		template<class __AnyType> static CppAdvance::Str impl_getName(CppAdvance::Object* obj) { return ADV_UFCS(getName)(*static_cast<typename __AnyType::__class*>(obj)); }
 		
 	};
@@ -1224,7 +1226,14 @@ class IInterface final : public CppAdvance::InterfaceRef {
 			_vtable = &__vtable_IInterface_for<std::remove_cvref_t<__AnyType>>;
 		} else static_assert(false,"Not implemented yet"); return *this;
 	}
+	#line 398 "FirstProgram.adv"
+	static constexpr auto VERSION = CppAdvance::i32(12345);
+	#line 399 "FirstProgram.adv"
+	using SomeInt = CppAdvance::i32;
+	#line 401 "FirstProgram.adv"
 	public: const CppAdvance::f32 __default_DefaultMethod(const VectorClass& f) const ;
+	#line 407 "FirstProgram.adv"
+	public: static const CppAdvance::i32 SomeStaticMethod(CppAdvance::i32 i) ;
 	
 };
 class IInterface__Unowned final : public CppAdvance::InterfaceRef__Unowned {
@@ -1360,7 +1369,6 @@ class __Class_Vector3 final : public CppAdvance::ValueType
 	__Class_Vector3(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>) : __value{value} {}
 	operator __underlying() const noexcept { return __value; }
 	auto getName() const -> CppAdvance::Str { return __value.getName(); }
-	auto Equals(const IEquatable& other) const noexcept -> bool const { ADV_EXPRESSION_BODY(__value.Equals(other)); }
 	auto format() const noexcept -> CppAdvance::Str const { ADV_EXPRESSION_BODY(__value.format()); }
 	auto HashCode() const  -> CppAdvance::usize const { ADV_EXPRESSION_BODY(__value.HashCode()); }
 	operator CppAdvance::f32() const noexcept { return static_cast<CppAdvance::f32>(__value); }
@@ -1444,8 +1452,6 @@ class ADV_NOVTABLE __Class_VectorClass ADV_ABSTRACT : public CppAdvance::ClassPa
 	public: virtual auto getName() const  -> CppAdvance::Str = 0;
 	#line 9999 "FirstProgram.adv"
 	ADV_PROPERTY_GETTER_SETTER(public, Name, public, getName, public, setName, CppAdvance::Str);
-	#line 193 "FirstProgram.adv"
-	public: inline constexpr auto Equals(const IEquatable& other) const noexcept -> const bool;
 	#line 194 "FirstProgram.adv"
 	public: inline constexpr auto format() const noexcept -> const CppAdvance::Str;
 	#line 232 "FirstProgram.adv"
@@ -1657,7 +1663,7 @@ inline auto func4(CppAdvance::i32 x)  -> const CppAdvance::i32;
 inline auto GetMagicNumber(CppAdvance::In<VectorClass> vec, VectorClass i)  -> const CppAdvance::f32;
 #line 362 "FirstProgram.adv"
 inline auto _operator_subscript(CppAdvance::In<VectorClass> vec, CppAdvance::f32 x, CppAdvance::f32 y)  -> const CppAdvance::f32;
-#line 405 "FirstProgram.adv"
+#line 410 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32;
 //###############################################################################
 //# Global compile-time constants
@@ -1708,12 +1714,6 @@ inline auto func4(CppAdvance::i32 x)  -> const CppAdvance::i32
 {
 	#line 70 "FirstProgram.adv"
 	return CppAdvance::i32(0);
-}
-#line 73 "FirstProgram.adv"
-inline constexpr auto Vector3::Equals(const IEquatable& other) const noexcept -> const bool
-{
-	#line 73 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(true); 
 }
 #line 74 "FirstProgram.adv"
 inline constexpr auto Vector3::format() const noexcept -> const CppAdvance::Str
@@ -1918,12 +1918,6 @@ inline auto __Class_BaseClass::getNext() const  -> const Next
 {
 	#line 177 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::New<Next>(CppAdvance::i32(5))); 
-}
-#line 193 "FirstProgram.adv"
-inline constexpr auto __Class_VectorClass::Equals(const IEquatable& other) const noexcept -> const bool
-{
-	#line 193 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(true); 
 }
 #line 194 "FirstProgram.adv"
 inline constexpr auto __Class_VectorClass::format() const noexcept -> const CppAdvance::Str
@@ -2162,10 +2156,10 @@ inline auto __Class_Next::printNext() const  -> void
 	#line 384 "FirstProgram.adv"
 	print(CppAdvance::Str{u"This is printNext function in optional chaining call"});
 }
-#line 405 "FirstProgram.adv"
+#line 410 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32
 {
-	#line 405 "FirstProgram.adv"
+	#line 410 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(ADV_UPCS(x)(vec.__ref()) + ADV_UPCS(y)(vec.__ref()) + ADV_UPCS(z)(vec.__ref())); 
 }
 #line 9999 "FirstProgram.adv"
@@ -2225,7 +2219,12 @@ inline decltype(auto) Next__Unowned::operator*() const { ADV_EXPRESSION_BODY(__r
 
 inline const CppAdvance::f32 IInterface::__default_DefaultMethod(const VectorClass& f) const 
 {
-	#line 398 "FirstProgram.adv"
+	#line 401 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(ADV_UFCS(GetMagicNumber)((*this).__ref(), f)); 
+}
+inline const CppAdvance::i32 IInterface::SomeStaticMethod(CppAdvance::i32 i) 
+{
+	#line 407 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(i * CppAdvance::i32(123)); 
 }
 
