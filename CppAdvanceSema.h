@@ -332,7 +332,8 @@ enum class TypeKind {
 	StaticClass,
 	Interface,
 	Enum,
-	Union
+	Union,
+	Extension
 };
 
 struct StructDefinition {
@@ -932,5 +933,11 @@ public:
 
 
 	void enterTemplateParamDeclaration(CppAdvanceParser::TemplateParamDeclarationContext*) override;
+
+
+	void enterExtensionDefinition(CppAdvanceParser::ExtensionDefinitionContext*) override;
+
+
+	void exitExtensionDefinition(CppAdvanceParser::ExtensionDefinitionContext*) override;
 
 };

@@ -108,6 +108,8 @@ Else: 'else';
 
 Enum: 'enum';
 
+Extension: 'extension';
+
 Extern: 'extern';
 
 False_: 'false';

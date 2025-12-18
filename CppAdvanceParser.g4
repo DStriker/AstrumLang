@@ -24,6 +24,7 @@ declaration:
 	| accessSpecifier? structDefinition
 	| accessSpecifier? classDefinition
 	| accessSpecifier? interfaceDefinition
+	| accessSpecifier? extensionDefinition
 	| symbolSpecifierSeq declarationCompoundStatement
 	| externVariableDeclaration 
 	| versionDefinition
@@ -123,6 +124,19 @@ interfaceMemberDeclaration:
 	| interfaceProperty
 	| constantDeclaration
 	| aliasDeclaration
+	;
+
+extensionDefinition: extensionHead LeftBrace extensionMemberSpecification? RightBrace;
+
+extensionHead: Unsafe? Extension templateParams? className baseClause?;
+
+extensionMemberSpecification: extensionMemberDeclaration+;
+
+extensionMemberDeclaration:
+	  functionDefinition
+	| constructor
+	| indexer
+	| property
 	;
 
 baseClause: Colon baseSpecifierList;

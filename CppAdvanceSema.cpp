@@ -1270,6 +1270,8 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
             isStatic = true;
 			if (!isTypeDefinitionBody() || isFriendDefinition)
 				CppAdvanceCompilerError("Global functions are implicitly static", spec->Static()->getSymbol());
+			else if (currentTypeKind.top() == TypeKind::Extension)
+				CppAdvanceCompilerError("Extension method cannot be static", spec->Static()->getSymbol());
 		}
 		else if (spec->Mutable())
 		{
@@ -1298,6 +1300,8 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 				CppAdvanceCompilerError("Static class method cannot be overrided", spec->Override()->getSymbol());
 			if (currentTypeKind.top() == TypeKind::Interface)
 				CppAdvanceCompilerError("Interface method cannot be overrided", spec->Static()->getSymbol());
+			if (currentTypeKind.top() == TypeKind::Extension)
+				CppAdvanceCompilerError("Extension method cannot be overrided", spec->Static()->getSymbol());
 		}
 		else if (spec->Final())
 		{
@@ -1494,9 +1498,14 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 			access = AccessSpecifier::ProtectedInternal;
 		}
 
-		if (isTypeDefinitionBody() && currentTypeKind.top() == TypeKind::Interface)
+		if (isTypeDefinitionBody())
 		{
-			access = AccessSpecifier::Public;
+			if (currentTypeKind.top() == TypeKind::Interface) {
+				access = AccessSpecifier::Public;
+			}
+			else if (currentTypeKind.top() == TypeKind::Extension) {
+				access = structStack.top()->access;
+			}
 		}
 		if (!isFriendDefinition) {
 			if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
@@ -1519,8 +1528,12 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 			isOperator = true;
 			if (ctx->operatorFunctionId()->operator_()->New())
 			{
-				if (isTypeDefinitionBody() && !isStatic)
-					CppAdvanceCompilerError("Operator new/delete overloading must be static", ctx->operatorFunctionId()->getStop());
+				if (isTypeDefinitionBody()) {
+					if (!isStatic)
+						CppAdvanceCompilerError("Operator new/delete overloading must be static", ctx->operatorFunctionId()->getStop());
+					if (currentTypeKind.top() != TypeKind::Class)
+						CppAdvanceCompilerError("Operator new/delete overloading supports only for classes", ctx->operatorFunctionId()->getStop());
+				}
 				if (!returnType || returnType->getText() != "Pointer")
 					CppAdvanceCompilerError("Operator new must return Pointer", ctx->operatorFunctionId()->getStop());
 				if (params->paramDeclClause()) {
@@ -1530,8 +1543,12 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 				}
 			} else if (ctx->operatorFunctionId()->operator_()->Delete())
 			{
-				if (isTypeDefinitionBody() && !isStatic)
-					CppAdvanceCompilerError("Operator new/delete overloading must be static", ctx->operatorFunctionId()->getStop());
+				if (isTypeDefinitionBody()) {
+					if (!isStatic)
+						CppAdvanceCompilerError("Operator new/delete overloading must be static", ctx->operatorFunctionId()->getStop());
+					if (currentTypeKind.top() != TypeKind::Class)
+						CppAdvanceCompilerError("Operator new/delete overloading supports only for classes", ctx->operatorFunctionId()->getStop());
+				}
 				if (returnType)
 					CppAdvanceCompilerError("Operator delete cannot return nothing", ctx->returnType()->getStop());
 				if (params->paramDeclClause()) {
@@ -3198,6 +3215,11 @@ void CppAdvanceSema::enterConstructor(CppAdvanceParser::ConstructorContext* ctx)
 			access = AccessSpecifier::ProtectedInternal;
 		}
 
+		if (currentTypeKind.top() == TypeKind::Extension)
+		{
+			access = structStack.top()->access;
+		}
+
 		if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
 		if (!access) access = AccessSpecifier::Internal;
 
@@ -3692,6 +3714,10 @@ void CppAdvanceSema::enterIndexer(CppAdvanceParser::IndexerContext* ctx)
 				CppAdvanceCompilerError("Cannot to declare protected internal member outside the class body", acc->getStart());
 			access = AccessSpecifier::ProtectedInternal;
 		}
+		if (currentTypeKind.top() == TypeKind::Extension)
+		{
+			access = structStack.top()->access;
+		}
 
 		if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
 		if (!access) access = AccessSpecifier::Internal;
@@ -3855,6 +3881,9 @@ void CppAdvanceSema::enterProperty(CppAdvanceParser::PropertyContext* ctx)
 			CppAdvanceCompilerError("Cannot to declare final property outside the class body", ctx->Final()->getSymbol());
 	}
 
+	if (isStatic && currentTypeKind.top() == TypeKind::Extension)
+		CppAdvanceCompilerError("Extension property cannot be static", ctx->Static()->getSymbol());
+
 	if (ctx->shortFunctionBody())
 	{
 		expression = ctx->shortFunctionBody()->expressionStatement()->expr();
@@ -3908,6 +3937,11 @@ void CppAdvanceSema::enterProperty(CppAdvanceParser::PropertyContext* ctx)
 			{
 				access = AccessSpecifier::Internal;
 			}
+		}
+
+		if (currentTypeKind.top() == TypeKind::Extension)
+		{
+			access = structStack.top()->access;
 		}
 
 		if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
@@ -5213,6 +5247,157 @@ void CppAdvanceSema::enterTemplateParamDeclaration(CppAdvanceParser::TemplatePar
 {
 	if ((ctx->In() || ctx->Out()) && (!isTypeDefinitionBody() || currentTypeKind.top() != TypeKind::Interface))
 		CppAdvanceCompilerError("In/out generic parameters enabled only in the generic interface definition", ctx->getStart());
+}
+
+void CppAdvanceSema::enterExtensionDefinition(CppAdvanceParser::ExtensionDefinitionContext* ctx)
+{
+	symbolContexts.push(symbolContexts.top());
+	currentAccessSpecifier.push(std::nullopt);
+	currentTypeKind.push(TypeKind::Extension);
+
+	bool primaryType = true;
+	if (!currentType.empty()) {
+		currentType += ".";
+		primaryType = false;
+	}
+	std::string name;
+	if (auto id = ctx->extensionHead()->className()->Identifier()) name = id->getText();
+	else name = ctx->extensionHead()->className()->simpleTemplateId()->templateName()->getText();
+	currentType += name;
+	typeset.insert(name);
+	if (ctx->extensionHead()->Unsafe())
+	{
+		unsafeDepth++;
+	}
+
+	if (firstPass && !functionBody)
+	{
+		typeset.globalTypes.insert(currentType);
+		CppAdvanceParser::TemplateParamsContext* tparams = ctx->extensionHead()->templateParams();
+		CppAdvanceParser::TemplateArgumentListContext* tspec = nullptr;
+		CppAdvanceParser::BaseSpecifierListContext* baseInterfaces = nullptr;
+
+		if (auto tid = ctx->extensionHead()->className()->simpleTemplateId()) {
+			tspec = tid->templateArgumentList();
+		}
+
+		if (auto b = ctx->extensionHead()->baseClause())
+		{
+			baseInterfaces = b->baseSpecifierList();
+		}
+
+		bool isUnsafe = unsafeDepth > 0;
+
+		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		std::optional<AccessSpecifier> access;
+		if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(ctx->parent))
+		{
+			acc = decl->accessSpecifier();
+
+		}
+
+		if (acc)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (acc->Public())
+			{
+				access = AccessSpecifier::Public;
+			}
+			else if (acc->Protected())
+			{
+				access = AccessSpecifier::Protected;
+			}
+			else if (acc->Private())
+			{
+				access = AccessSpecifier::Private;
+			}
+			else if (acc->Internal())
+			{
+				access = AccessSpecifier::Internal;
+			}
+		}
+
+		if (!access) {
+			if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
+			else access = AccessSpecifier::Internal;
+		}
+
+		if (isUnsafe) {
+			cppParser.unsafeTypes.insert(currentType);
+			if (primaryType) isUnsafeTypeDefinition = true;
+		}
+
+		if (primaryType) {
+			if (*access == AccessSpecifier::Protected)
+				isProtectedTypeDefinition = true;
+			else if (*access == AccessSpecifier::Private)
+				isPrivateTypeDefinition = true;
+		}
+
+		auto def = std::make_shared<StructDefinition>(TypeKind::Extension,
+			name, tparams, tspec, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
+			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, baseInterfaces, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
+			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
+			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, false, false, false);
+		/*if (!structStack.empty())
+			structStack.top()->nestedStructs.push_back(def);*/
+		structStack.push(def);
+		if (auto tid = ctx->extensionHead()->className()->simpleTemplateId()) {
+			if (tid->templateArgumentList())
+			{
+				name += "<{{specialization}}>";
+			}
+		}
+		else if (auto tparams = ctx->extensionHead()->templateParams())
+		{
+			name += "<";
+			bool first = true;
+			for (auto param : tparams->templateParamDeclaration())
+			{
+				if (param->Identifier()) {
+					if (!first) name += ", ";
+					first = false;
+					name += param->Identifier()->getText();
+				}
+			}
+			name += ">";
+		}
+		currentTypeWithTemplate.push(name);
+	}
+}
+
+void CppAdvanceSema::exitExtensionDefinition(CppAdvanceParser::ExtensionDefinitionContext* ctx)
+{
+	auto pos = currentType.rfind('.');
+	if (firstPass && !functionBody) {
+		if (pos == currentType.npos) {
+			isUnsafeTypeDefinition = false;
+			isProtectedTypeDefinition = false;
+			isPrivateTypeDefinition = false;
+			auto& top = structStack.top();
+			globalStructs.push_back(top);
+		}
+		structStack.pop();
+		currentTypeWithTemplate.pop();
+	}
+
+	if (ctx->extensionHead()->Unsafe())
+	{
+		unsafeDepth--;
+	}
+
+	if (pos != currentType.npos)
+	{
+		currentType = currentType.substr(0, pos);
+	}
+	else
+	{
+		currentType.clear();
+	}
+	currentAccessSpecifier.pop();
+	currentTypeKind.pop();
+	symbolContexts.pop();
 }
 
 void CppAdvanceSema::exitFriendDeclaration(CppAdvanceParser::FriendDeclarationContext* ctx)

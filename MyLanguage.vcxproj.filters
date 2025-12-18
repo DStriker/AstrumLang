@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="MyLanguage.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="CppAdvanceCodegen.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -42,6 +39,12 @@
     <ClCompile Include="CppSymbolParser.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="FirstProgram.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="MyLanguage.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="FirstProgram.adv" />
@@ -51,9 +54,6 @@
       <Filter>Файлы заголовков</Filter>
     </None>
     <None Include=".gitignore" />
-    <None Include="FirstProgram.cpp">
-      <Filter>Исходные файлы</Filter>
-    </None>
     <None Include="FirstProgram.h">
       <Filter>Файлы заголовков</Filter>
     </None>

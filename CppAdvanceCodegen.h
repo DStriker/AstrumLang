@@ -26,6 +26,7 @@ class CppAdvanceCodegen
 	mutable bool isPropertySetter = false;
 	mutable bool isPrivateStruct = false;
 	mutable bool isDestructor = false;
+	mutable bool isExtension = false;
 	mutable bool functionProlog = false;
 	mutable bool checkForRefStruct = false;
 	mutable int depth = 0;
@@ -81,6 +82,7 @@ class CppAdvanceCodegen
 	void printStructWrapper(StructDefinition* type) const;
 	void printClassRef(StructDefinition* type) const;
 	void printInterface(StructDefinition* type) const;
+	void printExtension(StructDefinition* type) const;
 	void printTypeDefinitions() const;
 	void printVersions() const;
 	void printRefStructCheck(CppAdvanceParser::TheTypeIdContext* type) const;

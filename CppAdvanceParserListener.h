@@ -107,6 +107,18 @@ public:
   virtual void enterInterfaceMemberDeclaration(CppAdvanceParser::InterfaceMemberDeclarationContext *ctx) = 0;
   virtual void exitInterfaceMemberDeclaration(CppAdvanceParser::InterfaceMemberDeclarationContext *ctx) = 0;
 
+  virtual void enterExtensionDefinition(CppAdvanceParser::ExtensionDefinitionContext *ctx) = 0;
+  virtual void exitExtensionDefinition(CppAdvanceParser::ExtensionDefinitionContext *ctx) = 0;
+
+  virtual void enterExtensionHead(CppAdvanceParser::ExtensionHeadContext *ctx) = 0;
+  virtual void exitExtensionHead(CppAdvanceParser::ExtensionHeadContext *ctx) = 0;
+
+  virtual void enterExtensionMemberSpecification(CppAdvanceParser::ExtensionMemberSpecificationContext *ctx) = 0;
+  virtual void exitExtensionMemberSpecification(CppAdvanceParser::ExtensionMemberSpecificationContext *ctx) = 0;
+
+  virtual void enterExtensionMemberDeclaration(CppAdvanceParser::ExtensionMemberDeclarationContext *ctx) = 0;
+  virtual void exitExtensionMemberDeclaration(CppAdvanceParser::ExtensionMemberDeclarationContext *ctx) = 0;
+
   virtual void enterBaseClause(CppAdvanceParser::BaseClauseContext *ctx) = 0;
   virtual void exitBaseClause(CppAdvanceParser::BaseClauseContext *ctx) = 0;
 

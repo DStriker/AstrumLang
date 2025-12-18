@@ -20,35 +20,35 @@ public:
     Case = 26, Catch = 27, Char = 28, Byte = 29, Class = 30, Concept = 31, 
     Const = 32, Consteval = 33, Continue = 34, Copy = 35, Debug = 36, Decimal = 37, 
     Decltype = 38, Default = 39, Delete = 40, Do = 41, Else = 42, Enum = 43, 
-    Extern = 44, False_ = 45, Final = 46, F32 = 47, F64 = 48, Fext = 49, 
-    Field = 50, For = 51, Forward = 52, Friend = 53, Get = 54, Goto = 55, 
-    If = 56, Import = 57, Implicit = 58, In = 59, Inout = 60, I8 = 61, I16 = 62, 
-    I32 = 63, I64 = 64, I128 = 65, Isize = 66, Inline = 67, Interface = 68, 
-    Internal = 69, Is = 70, Let = 71, Lock = 72, Module = 73, Move = 74, 
-    Mutable = 75, Namespace = 76, New = 77, Noexcept = 78, Null = 79, Object = 80, 
-    Operator_ = 81, Out = 82, Override = 83, Private = 84, Protected = 85, 
-    Public = 86, Ref = 87, Requires = 88, Return = 89, Rune = 90, Self = 91, 
-    Set = 92, Sizeof = 93, Stackalloc = 94, Static = 95, Str = 96, Struct = 97, 
-    Super = 98, Switch = 99, That = 100, This = 101, Thread_local = 102, 
-    Throw = 103, True_ = 104, Try = 105, Type = 106, Typeof = 107, Union = 108, 
-    Unowned = 109, Using = 110, U8 = 111, U16 = 112, U32 = 113, U64 = 114, 
-    U128 = 115, Unsafe = 116, Usize = 117, Version = 118, Virtual = 119, 
-    Void = 120, Volatile = 121, Weak = 122, While = 123, Yield = 124, Not = 125, 
-    And = 126, Or = 127, Identifier = 128, LeftParen = 129, RightParen = 130, 
-    LeftBracket = 131, RightBracket = 132, LeftBrace = 133, RightBrace = 134, 
-    Plus = 135, Minus = 136, Star = 137, DoubleStar = 138, Div = 139, Mod = 140, 
-    LifetimeAnnotation = 141, Caret = 142, Amp = 143, VertLine = 144, Tilde = 145, 
-    Colon = 146, Assign = 147, Less = 148, Greater = 149, PlusAssign = 150, 
-    MinusAssign = 151, StarAssign = 152, DivAssign = 153, ModAssign = 154, 
-    XorAssign = 155, AndAssign = 156, OrAssign = 157, LeftShiftAssign = 158, 
-    RightShiftAssign = 159, SignedLeftShiftAssign = 160, SignedRightShiftAssign = 161, 
-    Equal = 162, NotEqual = 163, Spaceship = 164, LessEqual = 165, GreaterEqual = 166, 
-    PlusPlus = 167, MinusMinus = 168, Comma = 169, Arrow = 170, Exclamation = 171, 
-    Question = 172, DoubleQuestion = 173, DoubleQuestionAssign = 174, Doublecolon = 175, 
-    Semi = 176, Dot = 177, DoubleDot = 178, DoubleDotLess = 179, Dollar = 180, 
-    Ellipsis = 181, Apostroph = 182, AtSign = 183, DOUBLE_CURLY_INSIDE = 184, 
-    FORMAT_STRING = 185, DecimalLiteral = 186, OctalLiteral = 187, HexadecimalLiteral = 188, 
-    BinaryLiteral = 189, Integersuffix = 190, DOUBLE_CURLY_CLOSE_INSIDE = 191
+    Extension = 44, Extern = 45, False_ = 46, Final = 47, F32 = 48, F64 = 49, 
+    Fext = 50, Field = 51, For = 52, Forward = 53, Friend = 54, Get = 55, 
+    Goto = 56, If = 57, Import = 58, Implicit = 59, In = 60, Inout = 61, 
+    I8 = 62, I16 = 63, I32 = 64, I64 = 65, I128 = 66, Isize = 67, Inline = 68, 
+    Interface = 69, Internal = 70, Is = 71, Let = 72, Lock = 73, Module = 74, 
+    Move = 75, Mutable = 76, Namespace = 77, New = 78, Noexcept = 79, Null = 80, 
+    Object = 81, Operator_ = 82, Out = 83, Override = 84, Private = 85, 
+    Protected = 86, Public = 87, Ref = 88, Requires = 89, Return = 90, Rune = 91, 
+    Self = 92, Set = 93, Sizeof = 94, Stackalloc = 95, Static = 96, Str = 97, 
+    Struct = 98, Super = 99, Switch = 100, That = 101, This = 102, Thread_local = 103, 
+    Throw = 104, True_ = 105, Try = 106, Type = 107, Typeof = 108, Union = 109, 
+    Unowned = 110, Using = 111, U8 = 112, U16 = 113, U32 = 114, U64 = 115, 
+    U128 = 116, Unsafe = 117, Usize = 118, Version = 119, Virtual = 120, 
+    Void = 121, Volatile = 122, Weak = 123, While = 124, Yield = 125, Not = 126, 
+    And = 127, Or = 128, Identifier = 129, LeftParen = 130, RightParen = 131, 
+    LeftBracket = 132, RightBracket = 133, LeftBrace = 134, RightBrace = 135, 
+    Plus = 136, Minus = 137, Star = 138, DoubleStar = 139, Div = 140, Mod = 141, 
+    LifetimeAnnotation = 142, Caret = 143, Amp = 144, VertLine = 145, Tilde = 146, 
+    Colon = 147, Assign = 148, Less = 149, Greater = 150, PlusAssign = 151, 
+    MinusAssign = 152, StarAssign = 153, DivAssign = 154, ModAssign = 155, 
+    XorAssign = 156, AndAssign = 157, OrAssign = 158, LeftShiftAssign = 159, 
+    RightShiftAssign = 160, SignedLeftShiftAssign = 161, SignedRightShiftAssign = 162, 
+    Equal = 163, NotEqual = 164, Spaceship = 165, LessEqual = 166, GreaterEqual = 167, 
+    PlusPlus = 168, MinusMinus = 169, Comma = 170, Arrow = 171, Exclamation = 172, 
+    Question = 173, DoubleQuestion = 174, DoubleQuestionAssign = 175, Doublecolon = 176, 
+    Semi = 177, Dot = 178, DoubleDot = 179, DoubleDotLess = 180, Dollar = 181, 
+    Ellipsis = 182, Apostroph = 183, AtSign = 184, DOUBLE_CURLY_INSIDE = 185, 
+    FORMAT_STRING = 186, DecimalLiteral = 187, OctalLiteral = 188, HexadecimalLiteral = 189, 
+    BinaryLiteral = 190, Integersuffix = 191, DOUBLE_CURLY_CLOSE_INSIDE = 192
   };
 
   enum {
@@ -63,57 +63,58 @@ public:
     RuleMemberVersionElseDeclaration = 23, RuleStructMemberDeclaration = 24, 
     RuleClassDefinition = 25, RuleClassHead = 26, RuleInterfaceDefinition = 27, 
     RuleInterfaceHead = 28, RuleInterfaceMemberSpecification = 29, RuleInterfaceMemberDeclaration = 30, 
-    RuleBaseClause = 31, RuleBaseSpecifierList = 32, RuleBaseSpecifier = 33, 
-    RuleProperty = 34, RulePropertyBody = 35, RuleAbstractProperty = 36, 
-    RuleInterfaceProperty = 37, RulePropertyGetter = 38, RulePropertySetter = 39, 
-    RuleAbstractPropertyGetter = 40, RuleAbstractPropertySetter = 41, RuleExternFunctionDeclaration = 42, 
-    RuleFunctionTemplateDeclaration = 43, RuleFunctionDefinition = 44, RuleAbstractMethodDeclaration = 45, 
-    RuleInterfaceMethodDeclaration = 46, RuleConstructor = 47, RuleConstructorBody = 48, 
-    RuleMemberInitializationList = 49, RuleDelegatingConstructorBody = 50, 
-    RuleDelegatingConstructorStatement = 51, RuleMemberInitializationStatement = 52, 
-    RuleDestructor = 53, RuleConversionFunction = 54, RuleIndexer = 55, 
-    RuleIndexerProperty = 56, RuleIndexerGetter = 57, RuleIndexerSetter = 58, 
-    RuleInterfaceIndexer = 59, RuleFunctionSpecifier = 60, RuleImplicitSpecification = 61, 
-    RuleTemplateParams = 62, RuleTemplateParamDeclaration = 63, RuleTemplateTypename = 64, 
-    RuleFunctionParams = 65, RuleParamDeclClause = 66, RuleParamDeclList = 67, 
-    RuleParamDeclaration = 68, RuleParamSpecification = 69, RuleReturnType = 70, 
-    RuleFunctionBody = 71, RuleShortFunctionBody = 72, RuleExceptionSpecification = 73, 
-    RuleDeclSpecifier = 74, RuleDeclSpecifierSeq = 75, RuleIdentifierSeq = 76, 
-    RuleFriendDeclaration = 77, RuleSelectionStatement = 78, RuleCondition = 79, 
-    RuleElseBranch = 80, RuleDeclarator = 81, RuleIterationStatement = 82, 
-    RuleWhileCondition = 83, RuleDoWhileCondition = 84, RuleForInitStatement = 85, 
-    RuleForRangeDeclaration = 86, RuleForRangeInitializer = 87, RuleExpressionSeq = 88, 
-    RuleJumpStatement = 89, RuleSimpleDeclaration = 90, RuleDeconstructionDeclaration = 91, 
-    RuleRefDeclaration = 92, RuleMemberRefDeclaration = 93, RuleSimpleMultiDeclaration = 94, 
-    RuleMultiDeclaration = 95, RuleConstantDeclaration = 96, RuleForwardVarDeclaration = 97, 
-    RuleAliasDeclaration = 98, RuleVersionSelectionStatement = 99, RuleVersionSelectionStatementBlock = 100, 
-    RuleScopeSafeCompoundStatement = 101, RuleExpr = 102, RuleMultiplicativeExpression = 103, 
-    RuleMultiplicativeBranch = 104, RuleAdditiveExpression = 105, RuleAdditiveBranch = 106, 
-    RuleShiftExpression = 107, RuleShiftBranch = 108, RuleThreeWayComparisonExpression = 109, 
-    RuleRelationalExpression = 110, RuleRelationalBranch = 111, RuleEqualityExpression = 112, 
-    RuleEqualityBranch = 113, RuleAndExpression = 114, RuleExclusiveOrExpression = 115, 
-    RuleInclusiveOrExpression = 116, RuleLogicalAndExpression = 117, RuleLogicalOrExpression = 118, 
-    RuleNullCoalescingExpression = 119, RuleNullCoalescingBranch = 120, 
-    RuleConditionalExpression = 121, RuleConstantExpression = 122, RuleAssignmentExpression = 123, 
-    RuleInitializerClause = 124, RuleBracedInitList = 125, RuleInitializerList = 126, 
-    RuleInitializerPart = 127, RuleExpressionList = 128, RuleExpressionListPart = 129, 
-    RuleAssignmentOperator = 130, RuleShiftOperator = 131, RuleTryBlock = 132, 
-    RuleExceptionHandler = 133, RuleExceptionDeclaration = 134, RuleThrowExpression = 135, 
-    RuleSimpleTypeSpecifier = 136, RuleNamedTupleField = 137, RuleNestedNameSpecifier = 138, 
-    RuleNamespaceName = 139, RuleTemplateName = 140, RuleSimpleTemplateId = 141, 
-    RuleOperatorTemplateId = 142, RuleTemplateId = 143, RuleTemplateArgumentList = 144, 
-    RuleTemplateArgument = 145, RuleIdExpression = 146, RuleQualifiedId = 147, 
-    RuleUnqualifiedId = 148, RuleTheTypeId = 149, RuleTypePostfix = 150, 
-    RuleArrayDeclarator = 151, RulePointerOperator = 152, RulePointerOperatorSeq = 153, 
-    RuleTypeSpecifierSeq = 154, RuleTypeSpecifier = 155, RuleTrailingTypeSpecifier = 156, 
-    RuleTypeNameSpecifier = 157, RuleCvQualifierSeq = 158, RuleCvQualifier = 159, 
-    RuleTypename = 160, RuleClassName = 161, RuleDecltypeSpecifier = 162, 
-    RuleEnumName = 163, RuleAccessSpecifier = 164, RuleProtectedInternal = 165, 
-    RuleOperatorFunctionId = 166, RuleConversionFunctionId = 167, RuleUnaryExpression = 168, 
-    RuleNewExpression = 169, RuleStackallocExpression = 170, RuleMemorySpaceSetter = 171, 
-    RuleNewInitializer = 172, RulePostfixExpression = 173, RuleTupleExpression = 174, 
-    RulePrimaryExpression = 175, RuleUnaryPrefixOperator = 176, RuleRefCaptureOperator = 177, 
-    RuleUnaryPostfixOperator = 178, RuleNot = 179, RuleOperator = 180, RuleLiteral = 181
+    RuleExtensionDefinition = 31, RuleExtensionHead = 32, RuleExtensionMemberSpecification = 33, 
+    RuleExtensionMemberDeclaration = 34, RuleBaseClause = 35, RuleBaseSpecifierList = 36, 
+    RuleBaseSpecifier = 37, RuleProperty = 38, RulePropertyBody = 39, RuleAbstractProperty = 40, 
+    RuleInterfaceProperty = 41, RulePropertyGetter = 42, RulePropertySetter = 43, 
+    RuleAbstractPropertyGetter = 44, RuleAbstractPropertySetter = 45, RuleExternFunctionDeclaration = 46, 
+    RuleFunctionTemplateDeclaration = 47, RuleFunctionDefinition = 48, RuleAbstractMethodDeclaration = 49, 
+    RuleInterfaceMethodDeclaration = 50, RuleConstructor = 51, RuleConstructorBody = 52, 
+    RuleMemberInitializationList = 53, RuleDelegatingConstructorBody = 54, 
+    RuleDelegatingConstructorStatement = 55, RuleMemberInitializationStatement = 56, 
+    RuleDestructor = 57, RuleConversionFunction = 58, RuleIndexer = 59, 
+    RuleIndexerProperty = 60, RuleIndexerGetter = 61, RuleIndexerSetter = 62, 
+    RuleInterfaceIndexer = 63, RuleFunctionSpecifier = 64, RuleImplicitSpecification = 65, 
+    RuleTemplateParams = 66, RuleTemplateParamDeclaration = 67, RuleTemplateTypename = 68, 
+    RuleFunctionParams = 69, RuleParamDeclClause = 70, RuleParamDeclList = 71, 
+    RuleParamDeclaration = 72, RuleParamSpecification = 73, RuleReturnType = 74, 
+    RuleFunctionBody = 75, RuleShortFunctionBody = 76, RuleExceptionSpecification = 77, 
+    RuleDeclSpecifier = 78, RuleDeclSpecifierSeq = 79, RuleIdentifierSeq = 80, 
+    RuleFriendDeclaration = 81, RuleSelectionStatement = 82, RuleCondition = 83, 
+    RuleElseBranch = 84, RuleDeclarator = 85, RuleIterationStatement = 86, 
+    RuleWhileCondition = 87, RuleDoWhileCondition = 88, RuleForInitStatement = 89, 
+    RuleForRangeDeclaration = 90, RuleForRangeInitializer = 91, RuleExpressionSeq = 92, 
+    RuleJumpStatement = 93, RuleSimpleDeclaration = 94, RuleDeconstructionDeclaration = 95, 
+    RuleRefDeclaration = 96, RuleMemberRefDeclaration = 97, RuleSimpleMultiDeclaration = 98, 
+    RuleMultiDeclaration = 99, RuleConstantDeclaration = 100, RuleForwardVarDeclaration = 101, 
+    RuleAliasDeclaration = 102, RuleVersionSelectionStatement = 103, RuleVersionSelectionStatementBlock = 104, 
+    RuleScopeSafeCompoundStatement = 105, RuleExpr = 106, RuleMultiplicativeExpression = 107, 
+    RuleMultiplicativeBranch = 108, RuleAdditiveExpression = 109, RuleAdditiveBranch = 110, 
+    RuleShiftExpression = 111, RuleShiftBranch = 112, RuleThreeWayComparisonExpression = 113, 
+    RuleRelationalExpression = 114, RuleRelationalBranch = 115, RuleEqualityExpression = 116, 
+    RuleEqualityBranch = 117, RuleAndExpression = 118, RuleExclusiveOrExpression = 119, 
+    RuleInclusiveOrExpression = 120, RuleLogicalAndExpression = 121, RuleLogicalOrExpression = 122, 
+    RuleNullCoalescingExpression = 123, RuleNullCoalescingBranch = 124, 
+    RuleConditionalExpression = 125, RuleConstantExpression = 126, RuleAssignmentExpression = 127, 
+    RuleInitializerClause = 128, RuleBracedInitList = 129, RuleInitializerList = 130, 
+    RuleInitializerPart = 131, RuleExpressionList = 132, RuleExpressionListPart = 133, 
+    RuleAssignmentOperator = 134, RuleShiftOperator = 135, RuleTryBlock = 136, 
+    RuleExceptionHandler = 137, RuleExceptionDeclaration = 138, RuleThrowExpression = 139, 
+    RuleSimpleTypeSpecifier = 140, RuleNamedTupleField = 141, RuleNestedNameSpecifier = 142, 
+    RuleNamespaceName = 143, RuleTemplateName = 144, RuleSimpleTemplateId = 145, 
+    RuleOperatorTemplateId = 146, RuleTemplateId = 147, RuleTemplateArgumentList = 148, 
+    RuleTemplateArgument = 149, RuleIdExpression = 150, RuleQualifiedId = 151, 
+    RuleUnqualifiedId = 152, RuleTheTypeId = 153, RuleTypePostfix = 154, 
+    RuleArrayDeclarator = 155, RulePointerOperator = 156, RulePointerOperatorSeq = 157, 
+    RuleTypeSpecifierSeq = 158, RuleTypeSpecifier = 159, RuleTrailingTypeSpecifier = 160, 
+    RuleTypeNameSpecifier = 161, RuleCvQualifierSeq = 162, RuleCvQualifier = 163, 
+    RuleTypename = 164, RuleClassName = 165, RuleDecltypeSpecifier = 166, 
+    RuleEnumName = 167, RuleAccessSpecifier = 168, RuleProtectedInternal = 169, 
+    RuleOperatorFunctionId = 170, RuleConversionFunctionId = 171, RuleUnaryExpression = 172, 
+    RuleNewExpression = 173, RuleStackallocExpression = 174, RuleMemorySpaceSetter = 175, 
+    RuleNewInitializer = 176, RulePostfixExpression = 177, RuleTupleExpression = 178, 
+    RulePrimaryExpression = 179, RuleUnaryPrefixOperator = 180, RuleRefCaptureOperator = 181, 
+    RuleUnaryPostfixOperator = 182, RuleNot = 183, RuleOperator = 184, RuleLiteral = 185
   };
 
   explicit CppAdvanceParser(antlr4::TokenStream *input);
@@ -164,6 +165,10 @@ public:
   class InterfaceHeadContext;
   class InterfaceMemberSpecificationContext;
   class InterfaceMemberDeclarationContext;
+  class ExtensionDefinitionContext;
+  class ExtensionHeadContext;
+  class ExtensionMemberSpecificationContext;
+  class ExtensionMemberDeclarationContext;
   class BaseClauseContext;
   class BaseSpecifierListContext;
   class BaseSpecifierContext;
@@ -376,6 +381,7 @@ public:
     StructDefinitionContext *structDefinition();
     ClassDefinitionContext *classDefinition();
     InterfaceDefinitionContext *interfaceDefinition();
+    ExtensionDefinitionContext *extensionDefinition();
     SymbolSpecifierSeqContext *symbolSpecifierSeq();
     DeclarationCompoundStatementContext *declarationCompoundStatement();
     ExternVariableDeclarationContext *externVariableDeclaration();
@@ -855,6 +861,69 @@ public:
   };
 
   InterfaceMemberDeclarationContext* interfaceMemberDeclaration();
+
+  class  ExtensionDefinitionContext : public antlr4::ParserRuleContext {
+  public:
+    ExtensionDefinitionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    ExtensionHeadContext *extensionHead();
+    antlr4::tree::TerminalNode *LeftBrace();
+    antlr4::tree::TerminalNode *RightBrace();
+    ExtensionMemberSpecificationContext *extensionMemberSpecification();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  ExtensionDefinitionContext* extensionDefinition();
+
+  class  ExtensionHeadContext : public antlr4::ParserRuleContext {
+  public:
+    ExtensionHeadContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Extension();
+    ClassNameContext *className();
+    antlr4::tree::TerminalNode *Unsafe();
+    TemplateParamsContext *templateParams();
+    BaseClauseContext *baseClause();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  ExtensionHeadContext* extensionHead();
+
+  class  ExtensionMemberSpecificationContext : public antlr4::ParserRuleContext {
+  public:
+    ExtensionMemberSpecificationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<ExtensionMemberDeclarationContext *> extensionMemberDeclaration();
+    ExtensionMemberDeclarationContext* extensionMemberDeclaration(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  ExtensionMemberSpecificationContext* extensionMemberSpecification();
+
+  class  ExtensionMemberDeclarationContext : public antlr4::ParserRuleContext {
+  public:
+    ExtensionMemberDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    FunctionDefinitionContext *functionDefinition();
+    ConstructorContext *constructor();
+    IndexerContext *indexer();
+    PropertyContext *property();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  ExtensionMemberDeclarationContext* extensionMemberDeclaration();
 
   class  BaseClauseContext : public antlr4::ParserRuleContext {
   public:
