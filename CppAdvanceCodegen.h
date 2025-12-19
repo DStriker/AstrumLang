@@ -38,6 +38,8 @@ class CppAdvanceCodegen
 	mutable std::vector<std::pair<std::string, CppAdvanceParser::TheTypeIdContext*>> namedReturns;
 	mutable std::vector<ConstantDefinition> selfConstants;
 	mutable std::stack<CppAdvanceParser::UnaryExpressionContext*> unaryExpressions;
+	mutable CppAdvanceParser::TemplateParamsContext* currentTemplateParams = nullptr;
+	mutable CppAdvanceParser::TemplateArgumentListContext* currentTemplateSpecArgs = nullptr;
 	mutable std::string currentType;
 	mutable std::string currentLabel;
 	mutable std::string currentDeclarationName;

@@ -422,9 +422,24 @@ private extension ConcreteVectorClass/*: IInterface*/ {
 
 	this[r: f32, g: f32, b: f32] -> f32 => r + g + b;
 
-	
+	this(x: i32, txt: str) = {
+		this(x, x, x);
+        print(txt);
+	}
+
+	this(mem: CppAdvance.MemorySpace, x: i32, txt: str) = {
+		this(x, x, x);
+        print(txt);
+	}
 	//operator+: (in ref other: ConcreteVectorClass) -> ConcreteVectorClass => new ConcreteVectorClass(this.x + other.x, this.y + other.y, this.z + other.z);
 	//GetMagicNumber: (in i: VectorClass) -> f32 => this.x * i.x;
+}
+
+private extension Vector3 {
+	this(x: i32, txt: str) = {
+		this(x, x, x);
+        print(txt);
+	}
 }
 
 public getSum: (in vec: VectorClass) -> f32 => vec.x + vec.y + vec.z;
@@ -477,8 +492,11 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 	nxtm :IInterface? = new ConcreteVectorClass(11,12,13);
 	nxt :IInterface? = nxtm;
 	{
-		nxt2:ConcreteVectorClass? = new ConcreteVectorClass(3,4,5);
-		vec: Vector3 = {12,13,14};
+		nxt2:ConcreteVectorClass? = stackalloc ConcreteVectorClass(11,"12345555555");
+		vec: Vector3 = new Vector3(12,"12344444444444");
+		print(vec.x);
+		print(vec.y);
+		print(vec.z);
 		print(nxt!.GetStrongReferenceCount());
 		print(nxt!.GetStrongReferenceCount());
 		print(nxt!.GetMagicNumber(nxt2!));
@@ -489,7 +507,6 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		xx: IInterface.SomeInt = IInterface.VERSION;
 		print(xx);
 		print(nxt2![2.5f,3.4f]);
-		print(IInterface<IInterface<ConcreteVectorClass>, VectorClass>.SomeStaticMethod(3));
 		nxt = nxt2;
 		nxt?.Reset();
 		print(nxt2!.PrintInterface(123));
@@ -501,8 +518,9 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		o: object = nxt!;
 		on: object? = nxt;
 		print(sizeof(__Class_ConcreteVectorClass));
+		nxt = null;
 	}
-	print(nxt!.GetStrongReferenceCount());
+	//print(nxt!.GetStrongReferenceCount());
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);
 }
 

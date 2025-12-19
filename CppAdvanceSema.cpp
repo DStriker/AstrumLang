@@ -3304,6 +3304,12 @@ void CppAdvanceSema::enterConstructorBody(CppAdvanceParser::ConstructorBodyConte
 				currentFields[ctx].insert("p_" + id);
 			}
 		}
+
+		if (currentTypeKind.top() == TypeKind::Extension)
+		{
+			if (!ctx->delegatingConstructorStatement() || !ctx->delegatingConstructorStatement()->This())
+				CppAdvanceCompilerError("Extension constructor must call the original type constructor", ctx->getStart());
+		}
 	}
 }
 

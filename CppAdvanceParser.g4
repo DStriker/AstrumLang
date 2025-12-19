@@ -416,7 +416,9 @@ simpleTypeSpecifier:
 
 namedTupleField: Identifier Colon theTypeId;
 
-nestedNameSpecifier: (typename | namespaceName | decltypeSpecifier)? Dot | nestedNameSpecifier (Identifier | simpleTemplateId) Dot;
+nestedNameSpecifier: 
+	  (typename | namespaceName | decltypeSpecifier) Dot 
+	| nestedNameSpecifier (Identifier | simpleTemplateId) Dot;
 
 namespaceName: Identifier;
 

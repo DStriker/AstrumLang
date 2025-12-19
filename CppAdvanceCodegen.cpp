@@ -745,7 +745,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 
 	if (type->kind != TypeKind::StaticClass)
 		out << "public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }\n" << std::string(depth, '\t');
-	sema.symbolContexts.push(sema.symbolContexts.top());
+	if (!sema.symbolContexts.empty()) sema.symbolContexts.push(sema.symbolContexts.top());
 	if (type->kind == TypeKind::Class)
 	{
 		for (const auto& nested : type->nestedStructs)
@@ -6326,30 +6326,54 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 
 		//bool isRegularMethod = !func.isConstructor;
 		out << "auto ";
-		if (func.isConstructor) out << "__construct_";
-		out << func.id;
-		if (func.templateSpecializationArgs) {
-			out << "<";
-			printTemplateArgumentList(func.templateSpecializationArgs);
-			out << ">";
+		if (func.isConstructor) {
+			out << "__construct_";
 		}
-		out << "(__extension_" << type->pos.line << "_" << type->id;
-		if (type->templateParams)
-		{
-			out << "<";
-			bool first = true;
-			for (auto param : type->templateParams->templateParamDeclaration())
-			{
-				if (!first) out << ", ";
-				first = false;
-				printIdentifier(param->Identifier());
+		else {
+			out << func.id;
+			if (func.templateSpecializationArgs) {
+				out << "<";
+				printTemplateArgumentList(func.templateSpecializationArgs);
+				out << ">";
 			}
-			out << ">";
 		}
-		out << " ";
-		if (!func.isMutating) out << "const";
-		out << "& __this ";
-		if (!func.isMutating) out << "LIFETIMEBOUND";
+		out << "(";
+		if (!func.isConstructor) {
+			out << "__extension_" << type->pos.line << "_" << type->id;
+			if (type->templateParams)
+			{
+				out << "<";
+				bool first = true;
+				for (auto param : type->templateParams->templateParamDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					printIdentifier(param->Identifier());
+				}
+				out << ">";
+			}
+			out << " ";
+			if (!func.isMutating) out << "const";
+			out << "& __this ";
+			if (!func.isMutating) out << "LIFETIMEBOUND";
+		}
+		else
+		{
+			out << "CppAdvance::ConstructorProxy<__extension_" << type->pos.line << "_" << type->id;
+			if (type->templateParams && !type->id.empty())
+			{
+				out << "<";
+				bool first = true;
+				for (auto param : type->templateParams->templateParamDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					printIdentifier(param->Identifier());
+				}
+				out << ">";
+			}
+			out << "> __ctordata";
+		}
 		if (func.params && func.params->paramDeclClause())
 		{
 			out << ", ";
@@ -6364,10 +6388,14 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 		if (func.returnType || func.isConstructor)
 		{
 			if (!func.isMutating && (!func.isRefReturn || func.isConstReturn)) out << "const ";
-			if (func.returnType->getText() == "self" || func.isConstructor)
+			if (func.isConstructor)
+			{
+				out << "decltype(auto)";
+			}
+			else if (func.returnType->getText() == "self")
 			{
 				out << "typename __extension_" << type->pos.line << "_" << type->id;
-				if (type->templateParams)
+				if (type->templateParams && !type->id.empty())
 				{
 					out << "<";
 					bool first = true;
@@ -6880,6 +6908,9 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 		else if (type->kind == TypeKind::Extension)
 		{
 			isExtension = true;
+			currentType = type->id;
+			currentTemplateParams = type->templateParams;
+			currentTemplateSpecArgs = type->templateSpecializationArgs;
 			for (const auto& func : type->methods)
 			{
 				if (type->access != AccessSpecifier::Private && (type->templateParams || func.isInline)) {
@@ -6997,30 +7028,54 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 
 				//bool isRegularMethod = !func.isConstructor;
 				out << "auto ";
-				if (func.isConstructor) out << "__construct_";
-				out << func.id;
-				if (func.templateSpecializationArgs) {
-					out << "<";
-					printTemplateArgumentList(func.templateSpecializationArgs);
-					out << ">";
+				if (func.isConstructor) {
+					out << "__construct_";
 				}
-				out << "(__extension_" << type->pos.line << "_" << type->id;
-				if (type->templateParams)
-				{
-					out << "<";
-					bool first = true;
-					for (auto param : type->templateParams->templateParamDeclaration())
-					{
-						if (!first) out << ", ";
-						first = false;
-						printIdentifier(param->Identifier());
+				else {
+					out << func.id;
+					if (func.templateSpecializationArgs) {
+						out << "<";
+						printTemplateArgumentList(func.templateSpecializationArgs);
+						out << ">";
 					}
-					out << ">";
 				}
-				out << " ";
-				if (!func.isMutating) out << "const";
-				out << "& __this ";
-				if (!func.isMutating) out << "LIFETIMEBOUND";
+				out << "(";
+				if (!func.isConstructor) {
+					out << "__extension_" << type->pos.line << "_" << type->id;
+					if (type->templateParams)
+					{
+						out << "<";
+						bool first = true;
+						for (auto param : type->templateParams->templateParamDeclaration())
+						{
+							if (!first) out << ", ";
+							first = false;
+							printIdentifier(param->Identifier());
+						}
+						out << ">";
+					}
+					out << " ";
+					if (!func.isMutating) out << "const";
+					out << "& __this ";
+					if (!func.isMutating) out << "LIFETIMEBOUND";
+				}
+				else
+				{
+					out << "CppAdvance::ConstructorProxy<__extension_" << type->pos.line << "_" << type->id;
+					if (type->templateParams && !type->id.empty())
+					{
+						out << "<";
+						bool first = true;
+						for (auto param : type->templateParams->templateParamDeclaration())
+						{
+							if (!first) out << ", ";
+							first = false;
+							printIdentifier(param->Identifier());
+						}
+						out << ">";
+					}
+					out << "> __ctordata";
+				}
 				if (func.params && func.params->paramDeclClause())
 				{
 					out << ", ";
@@ -7035,7 +7090,11 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 				if (func.returnType || func.isConstructor)
 				{
 					if (!func.isMutating && (!func.isRefReturn || func.isConstReturn)) out << "const ";
-					if (func.returnType->getText() == "self" || func.isConstructor)
+					if (func.isConstructor)
+					{
+						out << "decltype(auto)";
+					}
+					else if (func.returnType->getText() == "self")
 					{
 						out << "typename __extension_" << type->pos.line << "_" << type->id;
 						if (type->templateParams)
@@ -7084,6 +7143,10 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 				else if (parent->shortFunctionBody())
 				{
 					printShortFunctionBody(parent->shortFunctionBody());
+				}
+				else if (auto constructor = dynamic_cast<CppAdvanceParser::ConstructorContext*>(func.params->parent))
+				{
+					printConstructorBody(constructor->constructorBody());
 				}
 				out << std::endl << std::string(depth, '\t');
 				if (func.id == "operator++" || func.id == "operator--")
@@ -7207,6 +7270,8 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 				}
 				out << std::endl << std::string(depth, '\t');
 			}
+			currentTemplateParams = nullptr;
+			currentTemplateSpecArgs = nullptr;
 			isExtension = false;
 		}
 		if (type->kind != TypeKind::Class) continue;
@@ -8023,6 +8088,7 @@ void CppAdvanceCodegen::print() const
 	out << "#include \"" << filename << ".h\"\n\n";
 
 	sema.symbolContexts.push({});
+	sema.symbolContexts.push({});
 
 	//versions
 	printVersions();
@@ -8395,22 +8461,18 @@ void CppAdvanceCodegen::printStatement(CppAdvanceParser::StatContext* ctx) const
 				out << ", unsigned(";
 				printConstantExpression(mem->constantExpression());
 				out << ")> " << varName << "(";
-				if (init)
-				{
-					printClassInitializer(type, init);
-				}
-				out << "); CppAdvance::InitStackObject(&" << varName << ".obj);\n" << std::string(depth, '\t');
 			}
 			else
 			{
+				out << "CppAdvance::Stackalloc<";
 				printTypeId(type);
-				out << "::__class " << varName << "(";
-				if (init)
-				{
-					printClassInitializer(type, init);
-				}
-				out << "); CppAdvance::InitStackObject(&" << varName << ");\n" << std::string(depth, '\t');
+				out << "> " << varName << "(";			
 			}
+			if (init)
+			{
+				printClassInitializer(type, init);
+			}
+			out << "); CppAdvance::InitStackObject((CppAdvance::Object*)" << varName << ".obj);\n" << std::string(depth, '\t');
 		}
 		out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 	}
@@ -9878,7 +9940,7 @@ void CppAdvanceCodegen::printConstructorBody(CppAdvanceParser::ConstructorBodyCo
 {
 	bool isDelegating = ctx->delegatingConstructorStatement();
 	bool isDelegatingThis = false;
-	if (isDelegating)
+	if (isDelegating && !isExtension)
 	{
 		out << " :\n" << std::string(depth, '\t') << "#line " << ctx->delegatingConstructorStatement()->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 		printDelegatingConstructorStatement(ctx->delegatingConstructorStatement());
@@ -9892,7 +9954,7 @@ void CppAdvanceCodegen::printConstructorBody(CppAdvanceParser::ConstructorBodyCo
 		memberInitializationStatements = ctx->memberInitializationList()->memberInitializationStatement();
 	bool prev = functionBody;
 	functionBody = true;
-	if (!isDelegatingThis) {
+	if (!isDelegatingThis && !isExtension) {
 		for (auto init : memberInitializationStatements) {
 			auto id = init->Identifier()->getText();
 			if (sema.currentFields[ctx].contains(id) && !initializedFields.contains(id))
@@ -9938,6 +10000,11 @@ void CppAdvanceCodegen::printConstructorBody(CppAdvanceParser::ConstructorBodyCo
 	}
 
 	isUnsafe = false;
+	if (isExtension)
+	{
+		out << "\n" << std::string(depth, '\t') << "#line " << ctx->delegatingConstructorStatement()->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		printDelegatingConstructorStatement(ctx->delegatingConstructorStatement());
+	}
 	for (auto stat : memberInitializationStatements) {
 		if (initializedMemberStatements.contains(stat)) continue;
 		out << "\n" << std::string(depth, '\t') << "#line " << stat->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
@@ -9946,6 +10013,11 @@ void CppAdvanceCodegen::printConstructorBody(CppAdvanceParser::ConstructorBodyCo
 	for (auto stat : ctx->stat()) {
 		out << "\n" << std::string(depth, '\t');
 		printStatement(stat);
+	}
+	if (isExtension)
+	{
+		out << "\n" << std::string(depth, '\t');
+		out << "return __this;";
 	}
 	out << "\n" << std::string(--depth, '\t') << "}";
 	sema.symbolContexts.pop();
@@ -9964,17 +10036,46 @@ void CppAdvanceCodegen::printDelegatingConstructorBody(CppAdvanceParser::Delegat
 
 void CppAdvanceCodegen::printDelegatingConstructorStatement(CppAdvanceParser::DelegatingConstructorStatementContext* ctx) const
 {
-	if (ctx->This())
+	if (isExtension)
 	{
-		out << currentType;
+		out << "auto __this = new (__ctordata.memory) typename CppAdvance::ConstructorProxy<" << currentType;
+		bool first = true;
+		if (currentTemplateParams)
+		{
+			out << "<";
+			for (auto param: currentTemplateParams->templateParamDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				printIdentifier(param->Identifier());
+			}
+			out << ">";
+		}
+		else if (currentTemplateSpecArgs)
+		{
+			out << "<";
+			printTemplateArgumentList(currentTemplateSpecArgs);
+			out << ">";
+
+		}
+		out << ">::ConstructingType(";
+		printExpressionList(ctx->expressionList());
+		out << ");";
 	}
-	else if (ctx->Super())
+	else 
 	{
-		out << "___super";
+		if (ctx->This())
+		{
+			out << currentType;
+		}
+		else if (ctx->Super())
+		{
+			out << "___super";
+		}
+		out << "(";
+		printExpressionList(ctx->expressionList());
+		out << ")";
 	}
-	out << "(";
-	printExpressionList(ctx->expressionList());
-	out << ")";
 }
 
 void CppAdvanceCodegen::printDestructor(CppAdvanceParser::DestructorContext* ctx) const
@@ -10113,7 +10214,10 @@ void CppAdvanceCodegen::printDestructor(CppAdvanceParser::DestructorContext* ctx
 
 void CppAdvanceCodegen::printMemberInitializationStatement(CppAdvanceParser::MemberInitializationStatementContext* ctx, bool insideBody) const
 {
-	if (ctx->This() && insideBody) out << "this->";
+	if (ctx->This() && insideBody) {
+		if (isExtension) out << "__";
+		out << "this->";
+	}
 	printIdentifier(ctx->Identifier());
 	if (insideBody) out << " = ";
 	auto txt = ctx->initializerClause()->getText();
@@ -13513,9 +13617,7 @@ void CppAdvanceCodegen::printNewExpression(CppAdvanceParser::NewExpressionContex
 
 void CppAdvanceCodegen::printStackallocExpression(CppAdvanceParser::StackallocExpressionContext* ctx) const
 {
-	out << "CppAdvance::Stackalloc<";
-	printTypeId(ctx->theTypeId());
-	out << ">(" << GetStackObjectVarName(ctx->theTypeId()) << ")";
+	out << GetStackObjectVarName(ctx->theTypeId());
 }
 
 void CppAdvanceCodegen::printPostfixExpression(CppAdvanceParser::PostfixExpressionContext* ctx) const

@@ -455,7 +455,7 @@ public:
 		std::stack<SymbolContext>& symbolContexts;
 
 		bool contains(const std::string& id) {
-			return symbolContexts.top().types.contains(id) || globalTypes.contains(id);
+			return !symbolContexts.empty() && symbolContexts.top().types.contains(id) || globalTypes.contains(id);
 		}
 
 		void insert(const std::string& id) {
