@@ -4918,7 +4918,16 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
-		<< "} else static_assert(false,\"Not implemented yet\");\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+		<< "} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_" << type->id << "_for<typename __AnyType::__type";
+	if (type->templateParams)
+	{
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			out << ", ";
+			printIdentifier(param->Identifier());
+		}
+	}
+	out << ">; }\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
 
 	out << "public: template<class __AnyType> requires std::is_rvalue_reference_v<__AnyType&&> " << type->id << "(__AnyType&& value) : ___super(nullptr), _vtable{ nullptr } \n" << std::string(depth++, '\t') << "{\n" << std::string(depth, '\t');
 	out << "static_assert(__ImplementsInterface_" << type->id << "<std::decay_t<__AnyType>";
@@ -4971,7 +4980,16 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
-		<< "} else static_assert(false,\"Not implemented yet\");\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+		<< "} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_" << type->id << "_for<typename __AnyType::__type";
+	if (type->templateParams)
+	{
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			out << ", ";
+			printIdentifier(param->Identifier());
+		}
+	}
+	out << ">; }\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
 
 	out << "public: template<class __AnyType, class __FixedType = std::decay_t<__AnyType>::__self> requires std::is_base_of_v<CppAdvance::Object, std::decay_t<__AnyType>> " << type->id << "(__AnyType&& value) : ___super((CppAdvance::Object*)&value), _vtable{ &__vtable_" << type->id << "_for<__FixedType";
 	if (type->templateParams)
@@ -5046,7 +5064,16 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
-		<< "} else static_assert(false,\"Not implemented yet\"); return *this;\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+		<< "} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_" << type->id << "_for<typename __AnyType::__type";
+	if (type->templateParams)
+	{
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			out << ", ";
+			printIdentifier(param->Identifier());
+		}
+	}
+	out << ">; } return *this;\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
 	out << "public: template<class __AnyType> requires std::is_rvalue_reference_v<__AnyType&&> " << type->id << "& operator=(__AnyType&& value) {\n" << std::string(++depth, '\t');
 	out << "static_assert(__ImplementsInterface_" << type->id << "<std::decay_t<__AnyType>";
 	if (type->templateParams)
@@ -5099,7 +5126,16 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
-		<< "} else static_assert(false,\"Not implemented yet\"); return *this;\n"  << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+		<< "} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_" << type->id << "_for<typename __AnyType::__type";
+	if (type->templateParams)
+	{
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			out << ", ";
+			printIdentifier(param->Identifier());
+		}
+	}
+	out << ">; } return *this;\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
 
 	out << "public: template<class __AnyType, class __FixedType = std::decay_t<__AnyType>::__self> requires std::is_base_of_v<CppAdvance::Object, std::decay_t<__AnyType>> " << type->id << "& operator=(__AnyType&& value) { static_assert(__ImplementsInterface_"
 		<< type->id << "<__FixedType";
@@ -6146,23 +6182,27 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 	}
 	else if (type->templateParams)
 	{
-		out << "<";
-		bool first = true;
-		for (auto param : type->templateParams->templateParamDeclaration())
-		{
-			if (!first) out << ", ";
-			first = false;
-			printIdentifier(param->Identifier());
-			if (param->Ellipsis()) out << "...";
+		auto parent = static_cast<CppAdvanceParser::ExtensionHeadContext*>(type->templateParams->parent);
+		if (parent->className()) {
+			out << "<";
+			bool first = true;
+			for (auto param : type->templateParams->templateParamDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				printIdentifier(param->Identifier());
+				if (param->Ellipsis()) out << "...";
+			}
+			out << ">";
 		}
-		out << ">";
 	}
 	out << ";\n" << std::string(depth, '\t');
-	if (type->templateParams) {
-		printTemplateParams(type->templateParams);
-		out << " struct __ExtensionInterfaceChecker_" << type->pos.line << "_" << type->id << " {\n" << std::string(++depth, '\t');
-	}
-	if (type->interfaces) {
+	if (type->interfaces)
+	{
+		if (type->templateParams) {
+			printTemplateParams(type->templateParams);
+			out << " struct __ExtensionInterfaceChecker_" << type->pos.line << "_" << type->id << " {\n" << std::string(++depth, '\t');
+		}
 		for (auto iface : type->interfaces->baseSpecifier())
 		{
 			out << "#line " << iface->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
@@ -6174,9 +6214,9 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 			printClassName(iface->className());
 			out << ");\n" << std::string(depth, '\t');
 		}
-	}
-	if (type->templateParams) {
-		out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
+		if (type->templateParams) {
+			out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
+		}
 	}
 
 	for (const auto& func : type->methods)
@@ -6909,7 +6949,14 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 		{
 			isExtension = true;
 			currentType = type->id;
-			currentTemplateParams = type->templateParams;
+			currentTemplateParams = nullptr;
+			if (type->templateParams)
+			{
+				auto parent = static_cast<CppAdvanceParser::ExtensionHeadContext*>(type->templateParams->parent);
+				if(parent->className())
+					currentTemplateParams = type->templateParams;
+			}
+			
 			currentTemplateSpecArgs = type->templateSpecializationArgs;
 			for (const auto& func : type->methods)
 			{

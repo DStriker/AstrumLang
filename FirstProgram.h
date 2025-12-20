@@ -661,7 +661,7 @@ class IMagicNumber final : public CppAdvance::InterfaceRef {
 		} else if constexpr (std::is_base_of_v<CppAdvance::Struct, std::remove_cvref_t<__AnyType>>) {
 		_obj = new (::operator new(sizeof(typename std::remove_cvref_t<__AnyType>::__class))) typename std::remove_cvref_t<__AnyType>::__class(value);
 			_vtable = &__vtable_IMagicNumber_for<std::remove_cvref_t<__AnyType>>;
-		} else static_assert(false,"Not implemented yet");
+		} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_IMagicNumber_for<typename __AnyType::__type>; }
 	}
 	public: template<class __AnyType> requires std::is_rvalue_reference_v<__AnyType&&> IMagicNumber(__AnyType&& value) : ___super(nullptr), _vtable{ nullptr } 
 	{
@@ -678,7 +678,7 @@ class IMagicNumber final : public CppAdvance::InterfaceRef {
 		} else if constexpr (std::is_base_of_v<CppAdvance::Struct, std::remove_cvref_t<__AnyType>>) {
 		_obj = new (::operator new(sizeof(typename std::remove_cvref_t<__AnyType>::__class))) typename std::remove_cvref_t<__AnyType>::__class(value);
 			_vtable = &__vtable_IMagicNumber_for<std::remove_cvref_t<__AnyType>>;
-		} else static_assert(false,"Not implemented yet");
+		} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_IMagicNumber_for<typename __AnyType::__type>; }
 	}
 	public: template<class __AnyType, class __FixedType = std::decay_t<__AnyType>::__self> requires std::is_base_of_v<CppAdvance::Object, std::decay_t<__AnyType>> IMagicNumber(__AnyType&& value) : ___super((CppAdvance::Object*)&value), _vtable{ &__vtable_IMagicNumber_for<__FixedType> } { static_assert(__ImplementsInterface_IMagicNumber<__FixedType>, "Cannot initialize interface IMagicNumber from this type"); CppAdvance::Retain(_obj); }
 	public: template<class __AnyType> IMagicNumber& operator=(const __AnyType& value) {
@@ -696,7 +696,7 @@ class IMagicNumber final : public CppAdvance::InterfaceRef {
 		} else if constexpr (std::is_base_of_v<CppAdvance::Struct, std::remove_cvref_t<__AnyType>>) {
 		_obj = new (::operator new(sizeof(typename std::remove_cvref_t<__AnyType>::__class))) typename std::remove_cvref_t<__AnyType>::__class(value);
 			_vtable = &__vtable_IMagicNumber_for<std::remove_cvref_t<__AnyType>>;
-		} else static_assert(false,"Not implemented yet"); return *this;
+		} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_IMagicNumber_for<typename __AnyType::__type>; } return *this;
 	}
 	public: template<class __AnyType> requires std::is_rvalue_reference_v<__AnyType&&> IMagicNumber& operator=(__AnyType&& value) {
 		static_assert(__ImplementsInterface_IMagicNumber<std::decay_t<__AnyType>>,"Cannot initialize interface IMagicNumber from this type");
@@ -713,7 +713,7 @@ class IMagicNumber final : public CppAdvance::InterfaceRef {
 		} else if constexpr (std::is_base_of_v<CppAdvance::Struct, std::remove_cvref_t<__AnyType>>) {
 		_obj = new (::operator new(sizeof(typename std::remove_cvref_t<__AnyType>::__class))) typename std::remove_cvref_t<__AnyType>::__class(value);
 			_vtable = &__vtable_IMagicNumber_for<std::remove_cvref_t<__AnyType>>;
-		} else static_assert(false,"Not implemented yet"); return *this;
+		} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_IMagicNumber_for<typename __AnyType::__type>; } return *this;
 	}
 	public: template<class __AnyType, class __FixedType = std::decay_t<__AnyType>::__self> requires std::is_base_of_v<CppAdvance::Object, std::decay_t<__AnyType>> IMagicNumber& operator=(__AnyType&& value) { static_assert(__ImplementsInterface_IMagicNumber<__FixedType>, "Cannot initialize interface IMagicNumber from this type"); 
  	if (_obj) CppAdvance::Release(_obj); _obj = (CppAdvance::Object*)&value; CppAdvance::Retain(_obj); 
@@ -898,7 +898,7 @@ class IResettable final : public CppAdvance::InterfaceRef {
 		} else if constexpr (std::is_base_of_v<CppAdvance::Struct, std::remove_cvref_t<__AnyType>>) {
 		_obj = new (::operator new(sizeof(typename std::remove_cvref_t<__AnyType>::__class))) typename std::remove_cvref_t<__AnyType>::__class(value);
 			_vtable = &__vtable_IResettable_for<std::remove_cvref_t<__AnyType>>;
-		} else static_assert(false,"Not implemented yet");
+		} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_IResettable_for<typename __AnyType::__type>; }
 	}
 	public: template<class __AnyType> requires std::is_rvalue_reference_v<__AnyType&&> IResettable(__AnyType&& value) : ___super(nullptr), _vtable{ nullptr } 
 	{
@@ -915,7 +915,7 @@ class IResettable final : public CppAdvance::InterfaceRef {
 		} else if constexpr (std::is_base_of_v<CppAdvance::Struct, std::remove_cvref_t<__AnyType>>) {
 		_obj = new (::operator new(sizeof(typename std::remove_cvref_t<__AnyType>::__class))) typename std::remove_cvref_t<__AnyType>::__class(value);
 			_vtable = &__vtable_IResettable_for<std::remove_cvref_t<__AnyType>>;
-		} else static_assert(false,"Not implemented yet");
+		} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_IResettable_for<typename __AnyType::__type>; }
 	}
 	public: template<class __AnyType, class __FixedType = std::decay_t<__AnyType>::__self> requires std::is_base_of_v<CppAdvance::Object, std::decay_t<__AnyType>> IResettable(__AnyType&& value) : ___super((CppAdvance::Object*)&value), _vtable{ &__vtable_IResettable_for<__FixedType> } { static_assert(__ImplementsInterface_IResettable<__FixedType>, "Cannot initialize interface IResettable from this type"); CppAdvance::Retain(_obj); }
 	public: template<class __AnyType> IResettable& operator=(const __AnyType& value) {
@@ -933,7 +933,7 @@ class IResettable final : public CppAdvance::InterfaceRef {
 		} else if constexpr (std::is_base_of_v<CppAdvance::Struct, std::remove_cvref_t<__AnyType>>) {
 		_obj = new (::operator new(sizeof(typename std::remove_cvref_t<__AnyType>::__class))) typename std::remove_cvref_t<__AnyType>::__class(value);
 			_vtable = &__vtable_IResettable_for<std::remove_cvref_t<__AnyType>>;
-		} else static_assert(false,"Not implemented yet"); return *this;
+		} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_IResettable_for<typename __AnyType::__type>; } return *this;
 	}
 	public: template<class __AnyType> requires std::is_rvalue_reference_v<__AnyType&&> IResettable& operator=(__AnyType&& value) {
 		static_assert(__ImplementsInterface_IResettable<std::decay_t<__AnyType>>,"Cannot initialize interface IResettable from this type");
@@ -950,7 +950,7 @@ class IResettable final : public CppAdvance::InterfaceRef {
 		} else if constexpr (std::is_base_of_v<CppAdvance::Struct, std::remove_cvref_t<__AnyType>>) {
 		_obj = new (::operator new(sizeof(typename std::remove_cvref_t<__AnyType>::__class))) typename std::remove_cvref_t<__AnyType>::__class(value);
 			_vtable = &__vtable_IResettable_for<std::remove_cvref_t<__AnyType>>;
-		} else static_assert(false,"Not implemented yet"); return *this;
+		} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_IResettable_for<typename __AnyType::__type>; } return *this;
 	}
 	public: template<class __AnyType, class __FixedType = std::decay_t<__AnyType>::__self> requires std::is_base_of_v<CppAdvance::Object, std::decay_t<__AnyType>> IResettable& operator=(__AnyType&& value) { static_assert(__ImplementsInterface_IResettable<__FixedType>, "Cannot initialize interface IResettable from this type"); 
  	if (_obj) CppAdvance::Release(_obj); _obj = (CppAdvance::Object*)&value; CppAdvance::Retain(_obj); 
@@ -1165,7 +1165,7 @@ class IInterface final : public CppAdvance::InterfaceRef {
 		} else if constexpr (std::is_base_of_v<CppAdvance::Struct, std::remove_cvref_t<__AnyType>>) {
 		_obj = new (::operator new(sizeof(typename std::remove_cvref_t<__AnyType>::__class))) typename std::remove_cvref_t<__AnyType>::__class(value);
 			_vtable = &__vtable_IInterface_for<std::remove_cvref_t<__AnyType>>;
-		} else static_assert(false,"Not implemented yet");
+		} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_IInterface_for<typename __AnyType::__type>; }
 	}
 	public: template<class __AnyType> requires std::is_rvalue_reference_v<__AnyType&&> IInterface(__AnyType&& value) : ___super(nullptr), _vtable{ nullptr } 
 	{
@@ -1182,7 +1182,7 @@ class IInterface final : public CppAdvance::InterfaceRef {
 		} else if constexpr (std::is_base_of_v<CppAdvance::Struct, std::remove_cvref_t<__AnyType>>) {
 		_obj = new (::operator new(sizeof(typename std::remove_cvref_t<__AnyType>::__class))) typename std::remove_cvref_t<__AnyType>::__class(value);
 			_vtable = &__vtable_IInterface_for<std::remove_cvref_t<__AnyType>>;
-		} else static_assert(false,"Not implemented yet");
+		} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_IInterface_for<typename __AnyType::__type>; }
 	}
 	public: template<class __AnyType, class __FixedType = std::decay_t<__AnyType>::__self> requires std::is_base_of_v<CppAdvance::Object, std::decay_t<__AnyType>> IInterface(__AnyType&& value) : ___super((CppAdvance::Object*)&value), _vtable{ &__vtable_IInterface_for<__FixedType> } { static_assert(__ImplementsInterface_IInterface<__FixedType>, "Cannot initialize interface IInterface from this type"); CppAdvance::Retain(_obj); }
 	public: template<class __AnyType> IInterface& operator=(const __AnyType& value) {
@@ -1200,7 +1200,7 @@ class IInterface final : public CppAdvance::InterfaceRef {
 		} else if constexpr (std::is_base_of_v<CppAdvance::Struct, std::remove_cvref_t<__AnyType>>) {
 		_obj = new (::operator new(sizeof(typename std::remove_cvref_t<__AnyType>::__class))) typename std::remove_cvref_t<__AnyType>::__class(value);
 			_vtable = &__vtable_IInterface_for<std::remove_cvref_t<__AnyType>>;
-		} else static_assert(false,"Not implemented yet"); return *this;
+		} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_IInterface_for<typename __AnyType::__type>; } return *this;
 	}
 	public: template<class __AnyType> requires std::is_rvalue_reference_v<__AnyType&&> IInterface& operator=(__AnyType&& value) {
 		static_assert(__ImplementsInterface_IInterface<std::decay_t<__AnyType>>,"Cannot initialize interface IInterface from this type");
@@ -1217,7 +1217,7 @@ class IInterface final : public CppAdvance::InterfaceRef {
 		} else if constexpr (std::is_base_of_v<CppAdvance::Struct, std::remove_cvref_t<__AnyType>>) {
 		_obj = new (::operator new(sizeof(typename std::remove_cvref_t<__AnyType>::__class))) typename std::remove_cvref_t<__AnyType>::__class(value);
 			_vtable = &__vtable_IInterface_for<std::remove_cvref_t<__AnyType>>;
-		} else static_assert(false,"Not implemented yet"); return *this;
+		} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_IInterface_for<typename __AnyType::__type>; } return *this;
 	}
 	public: template<class __AnyType, class __FixedType = std::decay_t<__AnyType>::__self> requires std::is_base_of_v<CppAdvance::Object, std::decay_t<__AnyType>> IInterface& operator=(__AnyType&& value) { static_assert(__ImplementsInterface_IInterface<__FixedType>, "Cannot initialize interface IInterface from this type"); 
  	if (_obj) CppAdvance::Release(_obj); _obj = (CppAdvance::Object*)&value; CppAdvance::Retain(_obj); 
@@ -1651,7 +1651,7 @@ template<> inline constexpr auto sum<CppAdvance::i32, CppAdvance::i32(15)>(CppAd
 inline auto func4(CppAdvance::i32 x)  -> const CppAdvance::i32;
 #line 362 "FirstProgram.adv"
 inline auto _operator_subscript(CppAdvance::In<VectorClass> vec, CppAdvance::f32 x, CppAdvance::f32 y)  -> const CppAdvance::f32;
-#line 445 "FirstProgram.adv"
+#line 438 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32;
 //###############################################################################
 //# Global compile-time constants
@@ -2126,10 +2126,10 @@ inline auto __Class_Next::printNext() const  -> void
 	#line 384 "FirstProgram.adv"
 	print(CppAdvance::Str{u"This is printNext function in optional chaining call"});
 }
-#line 445 "FirstProgram.adv"
+#line 438 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32
 {
-	#line 445 "FirstProgram.adv"
+	#line 438 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(ADV_UPCS(x)(vec.__ref()) + ADV_UPCS(y)(vec.__ref()) + ADV_UPCS(z)(vec.__ref())); 
 }
 #line 9999 "FirstProgram.adv"

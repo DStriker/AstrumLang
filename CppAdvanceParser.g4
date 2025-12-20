@@ -128,7 +128,7 @@ interfaceMemberDeclaration:
 
 extensionDefinition: extensionHead LeftBrace extensionMemberSpecification? RightBrace;
 
-extensionHead: Unsafe? Extension templateParams? className baseClause?;
+extensionHead: Unsafe? Extension (templateParams (className baseClause?)? | templateParams? className baseClause?);
 
 extensionMemberSpecification: extensionMemberDeclaration+;
 

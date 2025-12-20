@@ -5267,8 +5267,19 @@ void CppAdvanceSema::enterExtensionDefinition(CppAdvanceParser::ExtensionDefinit
 		primaryType = false;
 	}
 	std::string name;
-	if (auto id = ctx->extensionHead()->className()->Identifier()) name = id->getText();
-	else name = ctx->extensionHead()->className()->simpleTemplateId()->templateName()->getText();
+	if (auto className = ctx->extensionHead()->className())
+	{
+		if (auto id = className->Identifier()) name = id->getText();
+		else name = name = className->simpleTemplateId()->templateName()->getText();
+	}
+	else if (auto params = ctx->extensionHead()->templateParams())
+	{
+		if (params->templateParamDeclaration().size() == 1)
+            name = params->templateParamDeclaration(0)->Identifier()->getText();
+		else 
+			CppAdvanceCompilerError("Generic extensions can be used only with one generic parameter", 
+				params->templateParamDeclaration(1)->Identifier()->getSymbol());
+	}
 	currentType += name;
 	typeset.insert(name);
 	if (ctx->extensionHead()->Unsafe())
@@ -5283,6 +5294,7 @@ void CppAdvanceSema::enterExtensionDefinition(CppAdvanceParser::ExtensionDefinit
 		CppAdvanceParser::TemplateArgumentListContext* tspec = nullptr;
 		CppAdvanceParser::BaseSpecifierListContext* baseInterfaces = nullptr;
 
+		if (ctx->extensionHead()->className())
 		if (auto tid = ctx->extensionHead()->className()->simpleTemplateId()) {
 			tspec = tid->templateArgumentList();
 		}
@@ -5349,10 +5361,12 @@ void CppAdvanceSema::enterExtensionDefinition(CppAdvanceParser::ExtensionDefinit
 		/*if (!structStack.empty())
 			structStack.top()->nestedStructs.push_back(def);*/
 		structStack.push(def);
-		if (auto tid = ctx->extensionHead()->className()->simpleTemplateId()) {
-			if (tid->templateArgumentList())
-			{
-				name += "<{{specialization}}>";
+		if (ctx->extensionHead()->className()) {
+			if (auto tid = ctx->extensionHead()->className()->simpleTemplateId()) {
+				if (tid->templateArgumentList())
+				{
+					name += "<{{specialization}}>";
+				}
 			}
 		}
 		else if (auto tparams = ctx->extensionHead()->templateParams())

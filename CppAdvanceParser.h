@@ -883,9 +883,9 @@ public:
     ExtensionHeadContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *Extension();
+    TemplateParamsContext *templateParams();
     ClassNameContext *className();
     antlr4::tree::TerminalNode *Unsafe();
-    TemplateParamsContext *templateParams();
     BaseClauseContext *baseClause();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
