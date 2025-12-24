@@ -177,6 +177,7 @@ struct ConstantDefinition
 	AccessSpecifier access = AccessSpecifier::Public;
 	std::string compilationCondition;
 	std::string parentType;
+	CppAdvanceParser::ConstantExpressionContext* expression = nullptr;
 };
 
 struct TypeAliasDefinition
@@ -332,7 +333,9 @@ enum class TypeKind {
 	StaticClass,
 	Interface,
 	Enum,
+	EnumClass,
 	Union,
+	UnionStruct,
 	Extension
 };
 
@@ -361,17 +364,20 @@ struct StructDefinition {
 	bool hasAggregateInit = false;
 	bool isConstexpr = false;
 	bool isDefaultConstructible = false;
+	CppAdvanceParser::EnumBaseContext* enumBase = nullptr;
 	//bool isStatic = false;
 
 	StructDefinition(TypeKind _kind, std::string _id, CppAdvanceParser::TemplateParamsContext* _targs, CppAdvanceParser::TemplateArgumentListContext* _tspec, AccessSpecifier _access, std::string _ccond, SourcePosition _pos,
 		const std::vector<VariableDefinition>& _fields, const std::vector<ConstantDefinition>& _constants, CppAdvanceParser::BaseSpecifierListContext* _bases,
 		const std::vector<TypeAliasDefinition>& _typeAliases, const std::vector<PropertyDefinition>& _properties, const std::vector<MethodDefinition>& _methods,
 		const std::vector<std::shared_ptr<StructDefinition>>& _nestedStructs, const std::vector<ForwardDeclaration>& _friendTypes,
-		const std::vector<FunctionDeclaration>& _friendDecls, const std::vector<FunctionDefinition>& _friendDefs, bool _isUnsafe, bool _isAbstract, bool _isFinal, bool _hasAggregateInit)
+		const std::vector<FunctionDeclaration>& _friendDecls, const std::vector<FunctionDefinition>& _friendDefs, bool _isUnsafe, bool _isAbstract, bool _isFinal, bool _hasAggregateInit,
+		CppAdvanceParser::EnumBaseContext* _enumBase = nullptr)
 		: kind{_kind},id { std::move(_id) }, templateParams{ _targs }, templateSpecializationArgs{ _tspec }, access{ _access }, compilationCondition{ std::move(_ccond) }, pos{ _pos },
 		interfaces{_bases}, fields{ _fields }, constants{ _constants }, typeAliases{ typeAliases }, properties{_properties},
 		methods{ _methods }, nestedStructs{ _nestedStructs }, friendTypes{ _friendTypes }, friendFuncDeclarations{_friendDecls},
-		friendFuncDefinitions{ _friendDefs }, isUnsafe{ _isUnsafe }, isAbstract{ _isAbstract }, isFinal{ _isFinal }, hasAggregateInit{_hasAggregateInit } {}
+		friendFuncDefinitions{ _friendDefs }, isUnsafe{ _isUnsafe }, isAbstract{ _isAbstract }, isFinal{ _isFinal }, hasAggregateInit{_hasAggregateInit },
+		enumBase{_enumBase} {}
 };
 
 struct SymbolContext {
@@ -939,5 +945,41 @@ public:
 
 
 	void exitExtensionDefinition(CppAdvanceParser::ExtensionDefinitionContext*) override;
+
+
+	void enterEnumDefinition(CppAdvanceParser::EnumDefinitionContext*) override;
+
+
+	void exitEnumDefinition(CppAdvanceParser::EnumDefinitionContext*) override;
+
+
+	void enterEnumeratorDefinition(CppAdvanceParser::EnumeratorDefinitionContext*) override;
+
+
+	void exitEnumeratorDefinition(CppAdvanceParser::EnumeratorDefinitionContext*) override;
+
+
+	void enterEnumClassDefinition(CppAdvanceParser::EnumClassDefinitionContext*) override;
+
+
+	void exitEnumClassDefinition(CppAdvanceParser::EnumClassDefinitionContext*) override;
+
+
+	void enterClassEnumeratorDefinition(CppAdvanceParser::ClassEnumeratorDefinitionContext*) override;
+
+
+	void exitClassEnumeratorDefinition(CppAdvanceParser::ClassEnumeratorDefinitionContext*) override;
+
+
+	void enterUnionEnumerator(CppAdvanceParser::UnionEnumeratorContext*) override;
+
+
+	void exitUnionEnumerator(CppAdvanceParser::UnionEnumeratorContext*) override;
+
+
+	void enterUnionDefinition(CppAdvanceParser::UnionDefinitionContext*) override;
+
+
+	void exitUnionDefinition(CppAdvanceParser::UnionDefinitionContext*) override;
 
 };

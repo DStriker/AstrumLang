@@ -107,6 +107,63 @@ public:
   virtual void enterInterfaceMemberDeclaration(CppAdvanceParser::InterfaceMemberDeclarationContext *ctx) = 0;
   virtual void exitInterfaceMemberDeclaration(CppAdvanceParser::InterfaceMemberDeclarationContext *ctx) = 0;
 
+  virtual void enterEnumDefinition(CppAdvanceParser::EnumDefinitionContext *ctx) = 0;
+  virtual void exitEnumDefinition(CppAdvanceParser::EnumDefinitionContext *ctx) = 0;
+
+  virtual void enterEnumHead(CppAdvanceParser::EnumHeadContext *ctx) = 0;
+  virtual void exitEnumHead(CppAdvanceParser::EnumHeadContext *ctx) = 0;
+
+  virtual void enterEnumBase(CppAdvanceParser::EnumBaseContext *ctx) = 0;
+  virtual void exitEnumBase(CppAdvanceParser::EnumBaseContext *ctx) = 0;
+
+  virtual void enterEnumList(CppAdvanceParser::EnumListContext *ctx) = 0;
+  virtual void exitEnumList(CppAdvanceParser::EnumListContext *ctx) = 0;
+
+  virtual void enterEnumeratorDefinition(CppAdvanceParser::EnumeratorDefinitionContext *ctx) = 0;
+  virtual void exitEnumeratorDefinition(CppAdvanceParser::EnumeratorDefinitionContext *ctx) = 0;
+
+  virtual void enterEnumMemberSpecification(CppAdvanceParser::EnumMemberSpecificationContext *ctx) = 0;
+  virtual void exitEnumMemberSpecification(CppAdvanceParser::EnumMemberSpecificationContext *ctx) = 0;
+
+  virtual void enterEnumMemberDeclaration(CppAdvanceParser::EnumMemberDeclarationContext *ctx) = 0;
+  virtual void exitEnumMemberDeclaration(CppAdvanceParser::EnumMemberDeclarationContext *ctx) = 0;
+
+  virtual void enterEnumClassDefinition(CppAdvanceParser::EnumClassDefinitionContext *ctx) = 0;
+  virtual void exitEnumClassDefinition(CppAdvanceParser::EnumClassDefinitionContext *ctx) = 0;
+
+  virtual void enterEnumClassHead(CppAdvanceParser::EnumClassHeadContext *ctx) = 0;
+  virtual void exitEnumClassHead(CppAdvanceParser::EnumClassHeadContext *ctx) = 0;
+
+  virtual void enterEnumClassList(CppAdvanceParser::EnumClassListContext *ctx) = 0;
+  virtual void exitEnumClassList(CppAdvanceParser::EnumClassListContext *ctx) = 0;
+
+  virtual void enterClassEnumeratorDefinition(CppAdvanceParser::ClassEnumeratorDefinitionContext *ctx) = 0;
+  virtual void exitClassEnumeratorDefinition(CppAdvanceParser::ClassEnumeratorDefinitionContext *ctx) = 0;
+
+  virtual void enterEnumClassMemberSpecification(CppAdvanceParser::EnumClassMemberSpecificationContext *ctx) = 0;
+  virtual void exitEnumClassMemberSpecification(CppAdvanceParser::EnumClassMemberSpecificationContext *ctx) = 0;
+
+  virtual void enterEnumClassMemberDeclaration(CppAdvanceParser::EnumClassMemberDeclarationContext *ctx) = 0;
+  virtual void exitEnumClassMemberDeclaration(CppAdvanceParser::EnumClassMemberDeclarationContext *ctx) = 0;
+
+  virtual void enterUnionDefinition(CppAdvanceParser::UnionDefinitionContext *ctx) = 0;
+  virtual void exitUnionDefinition(CppAdvanceParser::UnionDefinitionContext *ctx) = 0;
+
+  virtual void enterUnionHead(CppAdvanceParser::UnionHeadContext *ctx) = 0;
+  virtual void exitUnionHead(CppAdvanceParser::UnionHeadContext *ctx) = 0;
+
+  virtual void enterUnionList(CppAdvanceParser::UnionListContext *ctx) = 0;
+  virtual void exitUnionList(CppAdvanceParser::UnionListContext *ctx) = 0;
+
+  virtual void enterUnionEnumerator(CppAdvanceParser::UnionEnumeratorContext *ctx) = 0;
+  virtual void exitUnionEnumerator(CppAdvanceParser::UnionEnumeratorContext *ctx) = 0;
+
+  virtual void enterUnionEnumeratorClause(CppAdvanceParser::UnionEnumeratorClauseContext *ctx) = 0;
+  virtual void exitUnionEnumeratorClause(CppAdvanceParser::UnionEnumeratorClauseContext *ctx) = 0;
+
+  virtual void enterUnionMemberSpecification(CppAdvanceParser::UnionMemberSpecificationContext *ctx) = 0;
+  virtual void exitUnionMemberSpecification(CppAdvanceParser::UnionMemberSpecificationContext *ctx) = 0;
+
   virtual void enterExtensionDefinition(CppAdvanceParser::ExtensionDefinitionContext *ctx) = 0;
   virtual void exitExtensionDefinition(CppAdvanceParser::ExtensionDefinitionContext *ctx) = 0;
 

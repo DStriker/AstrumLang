@@ -1282,6 +1282,8 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 				currentTypeKind.top() == TypeKind::StaticClass ||
 				currentTypeKind.top() == TypeKind::Interface)
 				CppAdvanceCompilerError("Method of the reference type is implicitly mutating", spec->Mutable()->getSymbol());
+			if (currentTypeKind.top() == TypeKind::Enum || currentTypeKind.top() == TypeKind::EnumClass)
+				CppAdvanceCompilerError("Enums are immutable. They cannot contain a mutating method", spec->Mutable()->getSymbol());
 		}
 		else if (spec->Virtual())
 		{
@@ -3903,6 +3905,9 @@ void CppAdvanceSema::enterProperty(CppAdvanceParser::PropertyContext* ctx)
 		{
 			getter = body->propertyGetter();
 			setter = body->propertySetter();
+			if (currentTypeKind.top() == TypeKind::Enum || currentTypeKind.top() == TypeKind::EnumClass 
+				|| currentTypeKind.top() == TypeKind::Union || currentTypeKind.top() == TypeKind::UnionStruct)
+				CppAdvanceCompilerError("Enums and unions can only have computed properties", body->getStart());
 		}
 		else if (auto body = ctx->functionBody())
 		{
@@ -5418,6 +5423,190 @@ void CppAdvanceSema::exitExtensionDefinition(CppAdvanceParser::ExtensionDefiniti
 	currentAccessSpecifier.pop();
 	currentTypeKind.pop();
 	symbolContexts.pop();
+}
+
+void CppAdvanceSema::enterEnumDefinition(CppAdvanceParser::EnumDefinitionContext* ctx)
+{
+	symbolContexts.push(symbolContexts.top());
+	currentAccessSpecifier.push(std::nullopt);
+	currentTypeKind.push(TypeKind::Enum);
+
+	if (auto base = ctx->enumHead()->enumBase())
+	{
+		auto tbase = base->simpleTypeSpecifier();
+		if (!tbase->Bool() && !tbase->Byte() && !tbase->Char() &&
+			!tbase->F32() && !tbase->F64() && !tbase->I16() &&
+			!tbase->I32() && !tbase->I64() && !tbase->I8() &&
+			!tbase->Rune() && !tbase->Str() && !tbase->U16() &&
+			!tbase->U32() && !tbase->U64() && !tbase->U8() &&
+			!tbase->Usize() && !tbase->Isize()
+			)
+			CppAdvanceCompilerError("Enum base must be one of the built-in types", ctx->enumHead()->enumBase()->getStart());
+	}
+
+	bool primaryType = true;
+	if (!currentType.empty()) {
+		currentType += ".";
+		primaryType = false;
+	}
+	std::string name = ctx->enumHead()->Identifier()->getText();
+	currentType += name;
+	typeset.insert(name);
+
+	if (firstPass && !functionBody)
+	{
+		typeset.globalTypes.insert(currentType);
+		bool isUnsafe = unsafeDepth > 0;
+
+		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		std::optional<AccessSpecifier> access;
+		if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(ctx->parent))
+		{
+			acc = decl->accessSpecifier();
+
+		}
+		else if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
+		{
+			acc = decl->accessSpecifier();
+
+		}
+
+		if (acc)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (acc->Public())
+			{
+				access = AccessSpecifier::Public;
+			}
+			else if (acc->Protected())
+			{
+				access = AccessSpecifier::Protected;
+			}
+			else if (acc->Private())
+			{
+				access = AccessSpecifier::Private;
+			}
+			else if (acc->Internal())
+			{
+				access = AccessSpecifier::Internal;
+			}
+		}
+
+		if (!access) {
+			if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
+			else access = AccessSpecifier::Internal;
+		}
+
+		if (isUnsafe) {
+			cppParser.unsafeTypes.insert(currentType);
+			if (primaryType) isUnsafeTypeDefinition = true;
+		}
+
+		if (primaryType) {
+			if (*access == AccessSpecifier::Protected)
+				isProtectedTypeDefinition = true;
+			else if (*access == AccessSpecifier::Private)
+				isPrivateTypeDefinition = true;
+		}
+
+		auto def = std::make_shared<StructDefinition>(TypeKind::Enum,
+			name, nullptr, nullptr, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
+			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, nullptr, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
+			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
+			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, false, false, false, ctx->enumHead()->enumBase());
+		if (!structStack.empty())
+			structStack.top()->nestedStructs.push_back(def);
+		structStack.push(def);
+		currentTypeWithTemplate.push(name);
+	}
+}
+
+void CppAdvanceSema::exitEnumDefinition(CppAdvanceParser::EnumDefinitionContext* ctx)
+{
+	auto pos = currentType.rfind('.');
+	if (firstPass && !functionBody) {
+		if (pos == currentType.npos) {
+			isUnsafeTypeDefinition = false;
+			isProtectedTypeDefinition = false;
+			isPrivateTypeDefinition = false;
+			auto& top = structStack.top();
+			if (top->access == AccessSpecifier::Protected) protectedSymbols.insert(top->id);
+			forwardDeclarations.push_back({ top->id,nullptr,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+			forwardDeclarations.push_back({ "__Class_"+top->id,nullptr,top->access,{0,0},top->compilationCondition,top->isUnsafe});
+			globalStructs.push_back(top);
+		}
+		structStack.pop();
+		currentTypeWithTemplate.pop();
+	}
+
+	if (pos != currentType.npos)
+	{
+		currentType = currentType.substr(0, pos);
+	}
+	else
+	{
+		currentType.clear();
+	}
+	currentAccessSpecifier.pop();
+	currentTypeKind.pop();
+	symbolContexts.pop();
+}
+
+void CppAdvanceSema::enterEnumeratorDefinition(CppAdvanceParser::EnumeratorDefinitionContext* ctx)
+{
+	if (!functionBody && firstPass)
+	{
+		symbolTable[ctx->Identifier()->getText()] = structStack.top()->id;
+		structStack.top()->constants.emplace_back(ConstantDefinition{ ctx->Identifier()->getText(), nullptr, nullptr,
+			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, AccessSpecifier::Public,
+			getCurrentCompilationCondition(), getCurrentFullTypeName(), ctx->constantExpression() });
+	}
+}
+
+void CppAdvanceSema::exitEnumeratorDefinition(CppAdvanceParser::EnumeratorDefinitionContext* ctx)
+{
+	
+}
+
+void CppAdvanceSema::enterEnumClassDefinition(CppAdvanceParser::EnumClassDefinitionContext*)
+{
+	
+}
+
+void CppAdvanceSema::exitEnumClassDefinition(CppAdvanceParser::EnumClassDefinitionContext*)
+{
+	
+}
+
+void CppAdvanceSema::enterClassEnumeratorDefinition(CppAdvanceParser::ClassEnumeratorDefinitionContext*)
+{
+	
+}
+
+void CppAdvanceSema::exitClassEnumeratorDefinition(CppAdvanceParser::ClassEnumeratorDefinitionContext*)
+{
+	
+}
+
+void CppAdvanceSema::enterUnionEnumerator(CppAdvanceParser::UnionEnumeratorContext*)
+{
+	
+}
+
+void CppAdvanceSema::exitUnionEnumerator(CppAdvanceParser::UnionEnumeratorContext*)
+{
+	
+}
+
+void CppAdvanceSema::enterUnionDefinition(CppAdvanceParser::UnionDefinitionContext*)
+{
+	
+}
+
+void CppAdvanceSema::exitUnionDefinition(CppAdvanceParser::UnionDefinitionContext*)
+{
+	
 }
 
 void CppAdvanceSema::exitFriendDeclaration(CppAdvanceParser::FriendDeclarationContext* ctx)

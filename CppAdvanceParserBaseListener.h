@@ -109,6 +109,63 @@ public:
   virtual void enterInterfaceMemberDeclaration(CppAdvanceParser::InterfaceMemberDeclarationContext * /*ctx*/) override { }
   virtual void exitInterfaceMemberDeclaration(CppAdvanceParser::InterfaceMemberDeclarationContext * /*ctx*/) override { }
 
+  virtual void enterEnumDefinition(CppAdvanceParser::EnumDefinitionContext * /*ctx*/) override { }
+  virtual void exitEnumDefinition(CppAdvanceParser::EnumDefinitionContext * /*ctx*/) override { }
+
+  virtual void enterEnumHead(CppAdvanceParser::EnumHeadContext * /*ctx*/) override { }
+  virtual void exitEnumHead(CppAdvanceParser::EnumHeadContext * /*ctx*/) override { }
+
+  virtual void enterEnumBase(CppAdvanceParser::EnumBaseContext * /*ctx*/) override { }
+  virtual void exitEnumBase(CppAdvanceParser::EnumBaseContext * /*ctx*/) override { }
+
+  virtual void enterEnumList(CppAdvanceParser::EnumListContext * /*ctx*/) override { }
+  virtual void exitEnumList(CppAdvanceParser::EnumListContext * /*ctx*/) override { }
+
+  virtual void enterEnumeratorDefinition(CppAdvanceParser::EnumeratorDefinitionContext * /*ctx*/) override { }
+  virtual void exitEnumeratorDefinition(CppAdvanceParser::EnumeratorDefinitionContext * /*ctx*/) override { }
+
+  virtual void enterEnumMemberSpecification(CppAdvanceParser::EnumMemberSpecificationContext * /*ctx*/) override { }
+  virtual void exitEnumMemberSpecification(CppAdvanceParser::EnumMemberSpecificationContext * /*ctx*/) override { }
+
+  virtual void enterEnumMemberDeclaration(CppAdvanceParser::EnumMemberDeclarationContext * /*ctx*/) override { }
+  virtual void exitEnumMemberDeclaration(CppAdvanceParser::EnumMemberDeclarationContext * /*ctx*/) override { }
+
+  virtual void enterEnumClassDefinition(CppAdvanceParser::EnumClassDefinitionContext * /*ctx*/) override { }
+  virtual void exitEnumClassDefinition(CppAdvanceParser::EnumClassDefinitionContext * /*ctx*/) override { }
+
+  virtual void enterEnumClassHead(CppAdvanceParser::EnumClassHeadContext * /*ctx*/) override { }
+  virtual void exitEnumClassHead(CppAdvanceParser::EnumClassHeadContext * /*ctx*/) override { }
+
+  virtual void enterEnumClassList(CppAdvanceParser::EnumClassListContext * /*ctx*/) override { }
+  virtual void exitEnumClassList(CppAdvanceParser::EnumClassListContext * /*ctx*/) override { }
+
+  virtual void enterClassEnumeratorDefinition(CppAdvanceParser::ClassEnumeratorDefinitionContext * /*ctx*/) override { }
+  virtual void exitClassEnumeratorDefinition(CppAdvanceParser::ClassEnumeratorDefinitionContext * /*ctx*/) override { }
+
+  virtual void enterEnumClassMemberSpecification(CppAdvanceParser::EnumClassMemberSpecificationContext * /*ctx*/) override { }
+  virtual void exitEnumClassMemberSpecification(CppAdvanceParser::EnumClassMemberSpecificationContext * /*ctx*/) override { }
+
+  virtual void enterEnumClassMemberDeclaration(CppAdvanceParser::EnumClassMemberDeclarationContext * /*ctx*/) override { }
+  virtual void exitEnumClassMemberDeclaration(CppAdvanceParser::EnumClassMemberDeclarationContext * /*ctx*/) override { }
+
+  virtual void enterUnionDefinition(CppAdvanceParser::UnionDefinitionContext * /*ctx*/) override { }
+  virtual void exitUnionDefinition(CppAdvanceParser::UnionDefinitionContext * /*ctx*/) override { }
+
+  virtual void enterUnionHead(CppAdvanceParser::UnionHeadContext * /*ctx*/) override { }
+  virtual void exitUnionHead(CppAdvanceParser::UnionHeadContext * /*ctx*/) override { }
+
+  virtual void enterUnionList(CppAdvanceParser::UnionListContext * /*ctx*/) override { }
+  virtual void exitUnionList(CppAdvanceParser::UnionListContext * /*ctx*/) override { }
+
+  virtual void enterUnionEnumerator(CppAdvanceParser::UnionEnumeratorContext * /*ctx*/) override { }
+  virtual void exitUnionEnumerator(CppAdvanceParser::UnionEnumeratorContext * /*ctx*/) override { }
+
+  virtual void enterUnionEnumeratorClause(CppAdvanceParser::UnionEnumeratorClauseContext * /*ctx*/) override { }
+  virtual void exitUnionEnumeratorClause(CppAdvanceParser::UnionEnumeratorClauseContext * /*ctx*/) override { }
+
+  virtual void enterUnionMemberSpecification(CppAdvanceParser::UnionMemberSpecificationContext * /*ctx*/) override { }
+  virtual void exitUnionMemberSpecification(CppAdvanceParser::UnionMemberSpecificationContext * /*ctx*/) override { }
+
   virtual void enterExtensionDefinition(CppAdvanceParser::ExtensionDefinitionContext * /*ctx*/) override { }
   virtual void exitExtensionDefinition(CppAdvanceParser::ExtensionDefinitionContext * /*ctx*/) override { }
 

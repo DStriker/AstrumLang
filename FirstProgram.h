@@ -47,6 +47,10 @@ class IResettable__Weak;
 class IInterface;
 class IInterface__Unowned;
 class IInterface__Weak;
+class DayOfWeek;
+class __Class_DayOfWeek;
+class Text;
+class __Class_Text;
 namespace __ntuples { class NamedTuple_4e7be1ed49b09d71; } 
 namespace __ntuples { class NamedTuple_6893f862d6c49683; } 
 namespace __ntuples { class NamedTuple_6893f862d6c49683; } 
@@ -1354,6 +1358,134 @@ template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdv
 template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> FORCE_INLINE decltype(auto) _operator_subscript(const __AnyInterface& iface, CppAdvance::i32 i) { return getAt(iface, i); }
 template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> FORCE_INLINE const CppAdvance::Str getName(const __AnyInterface& iface) { return CppAdvance::GetVTableFromInterface(&iface)->fnptr_getName(CppAdvance::GetObjectReferenceFromInterface(&iface)); }
 
+class DayOfWeek;
+#line 410 "FirstProgram.adv"
+struct DayOfWeek final : public CppAdvance::Enum {
+	public: using __self = DayOfWeek;
+	public: using __class = __Class_DayOfWeek;
+	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+	#line 410 "FirstProgram.adv"
+	private: CppAdvance::u8 __value;
+	#line 410 "FirstProgram.adv"
+	public: auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, CppAdvance::u8)
+	#line 411 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const DayOfWeek Monday;
+	#line 412 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const DayOfWeek Tuesday;
+	#line 413 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const DayOfWeek Wednesday;
+	#line 414 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const DayOfWeek Thursday;
+	#line 415 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const DayOfWeek Friday;
+	#line 416 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const DayOfWeek Saturday;
+	#line 417 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const DayOfWeek Sunday;
+	#line 410 "FirstProgram.adv"
+	private: static constexpr CppAdvance::Str __names[] = {u"Monday", u"Tuesday", u"Wednesday", u"Thursday", u"Friday", u"Saturday", u"Sunday"};
+	#line 410 "FirstProgram.adv"
+	public: static constexpr std::span<const CppAdvance::Str> GetNames() noexcept { return __names; }
+	#line 410 "FirstProgram.adv"
+	private: static const DayOfWeek __values[];
+	#line 410 "FirstProgram.adv"
+	public: static constexpr std::span<const DayOfWeek> GetValues() noexcept;
+	#line 410 "FirstProgram.adv"
+	private: constexpr DayOfWeek(CppAdvance::u8 value) : __value(value) {}
+	
+};
+#line 411 "FirstProgram.adv"
+inline constexpr DayOfWeek DayOfWeek::Monday = CppAdvance::u8(CppAdvance::i32(1));
+
+#line 412 "FirstProgram.adv"
+inline constexpr DayOfWeek DayOfWeek::Tuesday = CppAdvance::u8(CppAdvance::i64(Monday.__value) + 1);
+
+#line 413 "FirstProgram.adv"
+inline constexpr DayOfWeek DayOfWeek::Wednesday = CppAdvance::u8(CppAdvance::i64(Tuesday.__value) + 1);
+
+#line 414 "FirstProgram.adv"
+inline constexpr DayOfWeek DayOfWeek::Thursday = CppAdvance::u8(CppAdvance::i32(7));
+
+#line 415 "FirstProgram.adv"
+inline constexpr DayOfWeek DayOfWeek::Friday = CppAdvance::u8(CppAdvance::i64(Thursday.__value) + 1);
+
+#line 416 "FirstProgram.adv"
+inline constexpr DayOfWeek DayOfWeek::Saturday = CppAdvance::u8(CppAdvance::i64(Friday.__value) + 1);
+
+#line 417 "FirstProgram.adv"
+inline constexpr DayOfWeek DayOfWeek::Sunday = CppAdvance::u8(CppAdvance::i64(Saturday.__value) + 1);
+#line 410 "FirstProgram.adv"
+inline constexpr DayOfWeek DayOfWeek::__values[] = {Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday};
+#line 410 "FirstProgram.adv"
+inline constexpr std::span<const DayOfWeek> DayOfWeek::GetValues() noexcept { return __values; } ;
+
+class Text;
+#line 437 "FirstProgram.adv"
+struct Text final : public CppAdvance::Enum {
+	public: using __self = Text;
+	public: using __class = __Class_Text;
+	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+	#line 437 "FirstProgram.adv"
+	private: CppAdvance::Str __value;
+	#line 437 "FirstProgram.adv"
+	public: auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, CppAdvance::Str)
+	#line 438 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Text Monday;
+	#line 439 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Text Tuesday;
+	#line 440 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Text Wednesday;
+	#line 441 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Text Thursday;
+	#line 442 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Text Friday;
+	#line 443 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Text Saturday;
+	#line 444 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Text Sunday;
+	#line 437 "FirstProgram.adv"
+	private: static constexpr CppAdvance::Str __names[] = {u"Monday", u"Tuesday", u"Wednesday", u"Thursday", u"Friday", u"Saturday", u"Sunday"};
+	#line 437 "FirstProgram.adv"
+	public: static constexpr std::span<const CppAdvance::Str> GetNames() noexcept { return __names; }
+	#line 437 "FirstProgram.adv"
+	private: static const Text __values[];
+	#line 437 "FirstProgram.adv"
+	public: static constexpr std::span<const Text> GetValues() noexcept;
+	#line 447 "FirstProgram.adv"
+	public: inline auto getShortString() const  -> CppAdvance::Str;
+	#line 9999 "FirstProgram.adv"
+	ADV_PROPERTY_GETTER(public, ShortString, getShortString, CppAdvance::Str);
+	#line 446 "FirstProgram.adv"
+	public: inline auto ToShortString() const  -> const CppAdvance::Str;
+	#line 437 "FirstProgram.adv"
+	private: constexpr Text(CppAdvance::Str value) : __value(value) {}
+	
+};
+#line 438 "FirstProgram.adv"
+inline constexpr Text Text::Monday = CppAdvance::Str(CppAdvance::Str{u"This is Monday"});
+
+#line 439 "FirstProgram.adv"
+inline constexpr Text Text::Tuesday = CppAdvance::Str(CppAdvance::Str{u"This is Tuesday"});
+
+#line 440 "FirstProgram.adv"
+inline constexpr Text Text::Wednesday = CppAdvance::Str(CppAdvance::Str{u"This is Wednesday"});
+
+#line 441 "FirstProgram.adv"
+inline constexpr Text Text::Thursday = CppAdvance::Str(CppAdvance::Str{u"This is Thursday"});
+
+#line 442 "FirstProgram.adv"
+inline constexpr Text Text::Friday = CppAdvance::Str(CppAdvance::Str{u"This is Friday"});
+
+#line 443 "FirstProgram.adv"
+inline constexpr Text Text::Saturday = CppAdvance::Str(CppAdvance::Str{u"This is Saturday"});
+
+#line 444 "FirstProgram.adv"
+inline constexpr Text Text::Sunday = CppAdvance::Str(CppAdvance::Str{u"This is Sunday"});
+#line 437 "FirstProgram.adv"
+inline constexpr Text Text::__values[] = {Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday};
+#line 437 "FirstProgram.adv"
+inline constexpr std::span<const Text> Text::GetValues() noexcept { return __values; } ;
+
 
 #line 57 "FirstProgram.adv"
 class __Class_Vector3 final : public CppAdvance::ValueType
@@ -1578,6 +1710,35 @@ class __Class_Next : public CppAdvance::Object {
 #line 364 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(Next);
 
+
+#line 410 "FirstProgram.adv"
+class __Class_DayOfWeek final : public CppAdvance::ValueType
+{
+	#line 9999 "FirstProgram.adv"
+	DayOfWeek __value;
+	public: using __underlying = DayOfWeek; using __self = __underlying;
+	__Class_DayOfWeek(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>) : __value{value} {}
+	operator __underlying() const noexcept { return __value; }
+	
+};
+#line 410 "FirstProgram.adv"
+ADV_CHECK_FOR_CONCRETE(DayOfWeek);
+
+
+#line 437 "FirstProgram.adv"
+class __Class_Text final : public CppAdvance::ValueType
+{
+	#line 9999 "FirstProgram.adv"
+	Text __value;
+	public: using __underlying = Text; using __self = __underlying;
+	__Class_Text(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>) : __value{value} {}
+	operator __underlying() const noexcept { return __value; }
+	auto getShortString() const -> CppAdvance::Str { return __value.getShortString(); }
+	
+};
+#line 437 "FirstProgram.adv"
+ADV_CHECK_FOR_CONCRETE(Text);
+
 namespace __ntuples {
 	#line 9999 "FirstProgram.adv"
 	struct NamedTuple_4e7be1ed49b09d71 final : public CppAdvance::Struct { 
@@ -1651,7 +1812,7 @@ template<> inline constexpr auto sum<CppAdvance::i32, CppAdvance::i32(15)>(CppAd
 inline auto func4(CppAdvance::i32 x)  -> const CppAdvance::i32;
 #line 362 "FirstProgram.adv"
 inline auto _operator_subscript(CppAdvance::In<VectorClass> vec, CppAdvance::f32 x, CppAdvance::f32 y)  -> const CppAdvance::f32;
-#line 438 "FirstProgram.adv"
+#line 478 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32;
 //###############################################################################
 //# Global compile-time constants
@@ -2126,10 +2287,10 @@ inline auto __Class_Next::printNext() const  -> void
 	#line 384 "FirstProgram.adv"
 	print(CppAdvance::Str{u"This is printNext function in optional chaining call"});
 }
-#line 438 "FirstProgram.adv"
+#line 478 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32
 {
-	#line 438 "FirstProgram.adv"
+	#line 478 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(ADV_UPCS(x)(vec.__ref()) + ADV_UPCS(y)(vec.__ref()) + ADV_UPCS(z)(vec.__ref())); 
 }
 #line 9999 "FirstProgram.adv"

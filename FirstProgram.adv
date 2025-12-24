@@ -407,6 +407,46 @@ public interface IInterface: IMagicNumber, IResettable {
 	static SomeStaticMethod: (i: i32) -> i32 ==> i * 123;
 }
 
+public enum DayOfWeek : u8 {
+	Monday = 1,
+	Tuesday,
+	Wednesday,
+	Thursday = 7,
+	Friday,
+	Saturday,
+	Sunday
+}
+
+/*@Flags
+public enum Options : u8 {
+	None = 0,
+	First = 1,
+	Second,//2
+	Third,//4
+	Fourth,//8
+	Fiveth,//16
+	Sixth,//32
+	Seventh,//64
+
+    All = First | Second | Third | Fourth | Fiveth | Sixth | Seventh,
+	Weekend = Sixth | Seventh;
+
+	IsWeekend: bool => this == Weekend;
+}*/
+
+public enum Text : str {
+	Monday = "This is Monday",
+	Tuesday = "This is Tuesday",
+	Wednesday = "This is Wednesday",
+	Thursday = "This is Thursday",
+	Friday = "This is Friday",
+	Saturday = "This is Saturday",
+	Sunday = "This is Sunday";
+
+	ToShortString: () -> str => Value.Substring(8);
+	ShortString: str => Value.Substring(8);
+}
+
 private extension <T> {
 	AsString: str => "AsString";
 
@@ -511,12 +551,17 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		//print(nxt2![1.0f, 2.0f, 3.0f]);
 		//nxt!.Name = "12345";
 		print(nxt!.Name);
-		o: object = nxt!;
-		on: object? = nxt;
 		print(sizeof(__Class_ConcreteVectorClass));
 		//nxt = null;
 		print(nxt2!.GetStrongReferenceCount());
-		print(i32(nxt2!.IsStackAllocated()));
+		day:= DayOfWeek.Wednesday;
+		day = DayOfWeek.Sunday;
+		for day in DayOfWeek.GetNames() {
+            print(day);
+		}
+		o: object = day;
+		on: object? = day;
+		print(day.Value);
 	}
 	print(nxt!.GetStrongReferenceCount());
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);

@@ -63,58 +63,65 @@ public:
     RuleMemberVersionElseDeclaration = 23, RuleStructMemberDeclaration = 24, 
     RuleClassDefinition = 25, RuleClassHead = 26, RuleInterfaceDefinition = 27, 
     RuleInterfaceHead = 28, RuleInterfaceMemberSpecification = 29, RuleInterfaceMemberDeclaration = 30, 
-    RuleExtensionDefinition = 31, RuleExtensionHead = 32, RuleExtensionMemberSpecification = 33, 
-    RuleExtensionMemberDeclaration = 34, RuleBaseClause = 35, RuleBaseSpecifierList = 36, 
-    RuleBaseSpecifier = 37, RuleProperty = 38, RulePropertyBody = 39, RuleAbstractProperty = 40, 
-    RuleInterfaceProperty = 41, RulePropertyGetter = 42, RulePropertySetter = 43, 
-    RuleAbstractPropertyGetter = 44, RuleAbstractPropertySetter = 45, RuleExternFunctionDeclaration = 46, 
-    RuleFunctionTemplateDeclaration = 47, RuleFunctionDefinition = 48, RuleAbstractMethodDeclaration = 49, 
-    RuleInterfaceMethodDeclaration = 50, RuleConstructor = 51, RuleConstructorBody = 52, 
-    RuleMemberInitializationList = 53, RuleDelegatingConstructorBody = 54, 
-    RuleDelegatingConstructorStatement = 55, RuleMemberInitializationStatement = 56, 
-    RuleDestructor = 57, RuleConversionFunction = 58, RuleIndexer = 59, 
-    RuleIndexerProperty = 60, RuleIndexerGetter = 61, RuleIndexerSetter = 62, 
-    RuleInterfaceIndexer = 63, RuleFunctionSpecifier = 64, RuleImplicitSpecification = 65, 
-    RuleTemplateParams = 66, RuleTemplateParamDeclaration = 67, RuleTemplateTypename = 68, 
-    RuleFunctionParams = 69, RuleParamDeclClause = 70, RuleParamDeclList = 71, 
-    RuleParamDeclaration = 72, RuleParamSpecification = 73, RuleReturnType = 74, 
-    RuleFunctionBody = 75, RuleShortFunctionBody = 76, RuleExceptionSpecification = 77, 
-    RuleDeclSpecifier = 78, RuleDeclSpecifierSeq = 79, RuleIdentifierSeq = 80, 
-    RuleFriendDeclaration = 81, RuleSelectionStatement = 82, RuleCondition = 83, 
-    RuleElseBranch = 84, RuleDeclarator = 85, RuleIterationStatement = 86, 
-    RuleWhileCondition = 87, RuleDoWhileCondition = 88, RuleForInitStatement = 89, 
-    RuleForRangeDeclaration = 90, RuleForRangeInitializer = 91, RuleExpressionSeq = 92, 
-    RuleJumpStatement = 93, RuleSimpleDeclaration = 94, RuleDeconstructionDeclaration = 95, 
-    RuleRefDeclaration = 96, RuleMemberRefDeclaration = 97, RuleSimpleMultiDeclaration = 98, 
-    RuleMultiDeclaration = 99, RuleConstantDeclaration = 100, RuleForwardVarDeclaration = 101, 
-    RuleAliasDeclaration = 102, RuleVersionSelectionStatement = 103, RuleVersionSelectionStatementBlock = 104, 
-    RuleScopeSafeCompoundStatement = 105, RuleExpr = 106, RuleMultiplicativeExpression = 107, 
-    RuleMultiplicativeBranch = 108, RuleAdditiveExpression = 109, RuleAdditiveBranch = 110, 
-    RuleShiftExpression = 111, RuleShiftBranch = 112, RuleThreeWayComparisonExpression = 113, 
-    RuleRelationalExpression = 114, RuleRelationalBranch = 115, RuleEqualityExpression = 116, 
-    RuleEqualityBranch = 117, RuleAndExpression = 118, RuleExclusiveOrExpression = 119, 
-    RuleInclusiveOrExpression = 120, RuleLogicalAndExpression = 121, RuleLogicalOrExpression = 122, 
-    RuleNullCoalescingExpression = 123, RuleNullCoalescingBranch = 124, 
-    RuleConditionalExpression = 125, RuleConstantExpression = 126, RuleAssignmentExpression = 127, 
-    RuleInitializerClause = 128, RuleBracedInitList = 129, RuleInitializerList = 130, 
-    RuleInitializerPart = 131, RuleExpressionList = 132, RuleExpressionListPart = 133, 
-    RuleAssignmentOperator = 134, RuleShiftOperator = 135, RuleTryBlock = 136, 
-    RuleExceptionHandler = 137, RuleExceptionDeclaration = 138, RuleThrowExpression = 139, 
-    RuleSimpleTypeSpecifier = 140, RuleNamedTupleField = 141, RuleNestedNameSpecifier = 142, 
-    RuleNamespaceName = 143, RuleTemplateName = 144, RuleSimpleTemplateId = 145, 
-    RuleOperatorTemplateId = 146, RuleTemplateId = 147, RuleTemplateArgumentList = 148, 
-    RuleTemplateArgument = 149, RuleIdExpression = 150, RuleQualifiedId = 151, 
-    RuleUnqualifiedId = 152, RuleTheTypeId = 153, RuleTypePostfix = 154, 
-    RuleArrayDeclarator = 155, RulePointerOperator = 156, RulePointerOperatorSeq = 157, 
-    RuleTypeSpecifierSeq = 158, RuleTypeSpecifier = 159, RuleTrailingTypeSpecifier = 160, 
-    RuleTypeNameSpecifier = 161, RuleCvQualifierSeq = 162, RuleCvQualifier = 163, 
-    RuleTypename = 164, RuleClassName = 165, RuleDecltypeSpecifier = 166, 
-    RuleEnumName = 167, RuleAccessSpecifier = 168, RuleProtectedInternal = 169, 
-    RuleOperatorFunctionId = 170, RuleConversionFunctionId = 171, RuleUnaryExpression = 172, 
-    RuleNewExpression = 173, RuleStackallocExpression = 174, RuleMemorySpaceSetter = 175, 
-    RuleNewInitializer = 176, RulePostfixExpression = 177, RuleTupleExpression = 178, 
-    RulePrimaryExpression = 179, RuleUnaryPrefixOperator = 180, RuleRefCaptureOperator = 181, 
-    RuleUnaryPostfixOperator = 182, RuleNot = 183, RuleOperator = 184, RuleLiteral = 185
+    RuleEnumDefinition = 31, RuleEnumHead = 32, RuleEnumBase = 33, RuleEnumList = 34, 
+    RuleEnumeratorDefinition = 35, RuleEnumMemberSpecification = 36, RuleEnumMemberDeclaration = 37, 
+    RuleEnumClassDefinition = 38, RuleEnumClassHead = 39, RuleEnumClassList = 40, 
+    RuleClassEnumeratorDefinition = 41, RuleEnumClassMemberSpecification = 42, 
+    RuleEnumClassMemberDeclaration = 43, RuleUnionDefinition = 44, RuleUnionHead = 45, 
+    RuleUnionList = 46, RuleUnionEnumerator = 47, RuleUnionEnumeratorClause = 48, 
+    RuleUnionMemberSpecification = 49, RuleExtensionDefinition = 50, RuleExtensionHead = 51, 
+    RuleExtensionMemberSpecification = 52, RuleExtensionMemberDeclaration = 53, 
+    RuleBaseClause = 54, RuleBaseSpecifierList = 55, RuleBaseSpecifier = 56, 
+    RuleProperty = 57, RulePropertyBody = 58, RuleAbstractProperty = 59, 
+    RuleInterfaceProperty = 60, RulePropertyGetter = 61, RulePropertySetter = 62, 
+    RuleAbstractPropertyGetter = 63, RuleAbstractPropertySetter = 64, RuleExternFunctionDeclaration = 65, 
+    RuleFunctionTemplateDeclaration = 66, RuleFunctionDefinition = 67, RuleAbstractMethodDeclaration = 68, 
+    RuleInterfaceMethodDeclaration = 69, RuleConstructor = 70, RuleConstructorBody = 71, 
+    RuleMemberInitializationList = 72, RuleDelegatingConstructorBody = 73, 
+    RuleDelegatingConstructorStatement = 74, RuleMemberInitializationStatement = 75, 
+    RuleDestructor = 76, RuleConversionFunction = 77, RuleIndexer = 78, 
+    RuleIndexerProperty = 79, RuleIndexerGetter = 80, RuleIndexerSetter = 81, 
+    RuleInterfaceIndexer = 82, RuleFunctionSpecifier = 83, RuleImplicitSpecification = 84, 
+    RuleTemplateParams = 85, RuleTemplateParamDeclaration = 86, RuleTemplateTypename = 87, 
+    RuleFunctionParams = 88, RuleParamDeclClause = 89, RuleParamDeclList = 90, 
+    RuleParamDeclaration = 91, RuleParamSpecification = 92, RuleReturnType = 93, 
+    RuleFunctionBody = 94, RuleShortFunctionBody = 95, RuleExceptionSpecification = 96, 
+    RuleDeclSpecifier = 97, RuleDeclSpecifierSeq = 98, RuleIdentifierSeq = 99, 
+    RuleFriendDeclaration = 100, RuleSelectionStatement = 101, RuleCondition = 102, 
+    RuleElseBranch = 103, RuleDeclarator = 104, RuleIterationStatement = 105, 
+    RuleWhileCondition = 106, RuleDoWhileCondition = 107, RuleForInitStatement = 108, 
+    RuleForRangeDeclaration = 109, RuleForRangeInitializer = 110, RuleExpressionSeq = 111, 
+    RuleJumpStatement = 112, RuleSimpleDeclaration = 113, RuleDeconstructionDeclaration = 114, 
+    RuleRefDeclaration = 115, RuleMemberRefDeclaration = 116, RuleSimpleMultiDeclaration = 117, 
+    RuleMultiDeclaration = 118, RuleConstantDeclaration = 119, RuleForwardVarDeclaration = 120, 
+    RuleAliasDeclaration = 121, RuleVersionSelectionStatement = 122, RuleVersionSelectionStatementBlock = 123, 
+    RuleScopeSafeCompoundStatement = 124, RuleExpr = 125, RuleMultiplicativeExpression = 126, 
+    RuleMultiplicativeBranch = 127, RuleAdditiveExpression = 128, RuleAdditiveBranch = 129, 
+    RuleShiftExpression = 130, RuleShiftBranch = 131, RuleThreeWayComparisonExpression = 132, 
+    RuleRelationalExpression = 133, RuleRelationalBranch = 134, RuleEqualityExpression = 135, 
+    RuleEqualityBranch = 136, RuleAndExpression = 137, RuleExclusiveOrExpression = 138, 
+    RuleInclusiveOrExpression = 139, RuleLogicalAndExpression = 140, RuleLogicalOrExpression = 141, 
+    RuleNullCoalescingExpression = 142, RuleNullCoalescingBranch = 143, 
+    RuleConditionalExpression = 144, RuleConstantExpression = 145, RuleAssignmentExpression = 146, 
+    RuleInitializerClause = 147, RuleBracedInitList = 148, RuleInitializerList = 149, 
+    RuleInitializerPart = 150, RuleExpressionList = 151, RuleExpressionListPart = 152, 
+    RuleAssignmentOperator = 153, RuleShiftOperator = 154, RuleTryBlock = 155, 
+    RuleExceptionHandler = 156, RuleExceptionDeclaration = 157, RuleThrowExpression = 158, 
+    RuleSimpleTypeSpecifier = 159, RuleNamedTupleField = 160, RuleNestedNameSpecifier = 161, 
+    RuleNamespaceName = 162, RuleTemplateName = 163, RuleSimpleTemplateId = 164, 
+    RuleOperatorTemplateId = 165, RuleTemplateId = 166, RuleTemplateArgumentList = 167, 
+    RuleTemplateArgument = 168, RuleIdExpression = 169, RuleQualifiedId = 170, 
+    RuleUnqualifiedId = 171, RuleTheTypeId = 172, RuleTypePostfix = 173, 
+    RuleArrayDeclarator = 174, RulePointerOperator = 175, RulePointerOperatorSeq = 176, 
+    RuleTypeSpecifierSeq = 177, RuleTypeSpecifier = 178, RuleTrailingTypeSpecifier = 179, 
+    RuleTypeNameSpecifier = 180, RuleCvQualifierSeq = 181, RuleCvQualifier = 182, 
+    RuleTypename = 183, RuleClassName = 184, RuleDecltypeSpecifier = 185, 
+    RuleEnumName = 186, RuleAccessSpecifier = 187, RuleProtectedInternal = 188, 
+    RuleOperatorFunctionId = 189, RuleConversionFunctionId = 190, RuleUnaryExpression = 191, 
+    RuleNewExpression = 192, RuleStackallocExpression = 193, RuleMemorySpaceSetter = 194, 
+    RuleNewInitializer = 195, RulePostfixExpression = 196, RuleTupleExpression = 197, 
+    RulePrimaryExpression = 198, RuleUnaryPrefixOperator = 199, RuleRefCaptureOperator = 200, 
+    RuleUnaryPostfixOperator = 201, RuleNot = 202, RuleOperator = 203, RuleLiteral = 204
   };
 
   explicit CppAdvanceParser(antlr4::TokenStream *input);
@@ -165,6 +172,25 @@ public:
   class InterfaceHeadContext;
   class InterfaceMemberSpecificationContext;
   class InterfaceMemberDeclarationContext;
+  class EnumDefinitionContext;
+  class EnumHeadContext;
+  class EnumBaseContext;
+  class EnumListContext;
+  class EnumeratorDefinitionContext;
+  class EnumMemberSpecificationContext;
+  class EnumMemberDeclarationContext;
+  class EnumClassDefinitionContext;
+  class EnumClassHeadContext;
+  class EnumClassListContext;
+  class ClassEnumeratorDefinitionContext;
+  class EnumClassMemberSpecificationContext;
+  class EnumClassMemberDeclarationContext;
+  class UnionDefinitionContext;
+  class UnionHeadContext;
+  class UnionListContext;
+  class UnionEnumeratorContext;
+  class UnionEnumeratorClauseContext;
+  class UnionMemberSpecificationContext;
   class ExtensionDefinitionContext;
   class ExtensionHeadContext;
   class ExtensionMemberSpecificationContext;
@@ -382,6 +408,9 @@ public:
     ClassDefinitionContext *classDefinition();
     InterfaceDefinitionContext *interfaceDefinition();
     ExtensionDefinitionContext *extensionDefinition();
+    EnumDefinitionContext *enumDefinition();
+    EnumClassDefinitionContext *enumClassDefinition();
+    UnionDefinitionContext *unionDefinition();
     SymbolSpecifierSeqContext *symbolSpecifierSeq();
     DeclarationCompoundStatementContext *declarationCompoundStatement();
     ExternVariableDeclarationContext *externVariableDeclaration();
@@ -639,9 +668,10 @@ public:
     antlr4::tree::TerminalNode *Struct();
     ClassNameContext *className();
     antlr4::tree::TerminalNode *Unsafe();
-    antlr4::tree::TerminalNode *Ref();
     TemplateParamsContext *templateParams();
     BaseClauseContext *baseClause();
+    antlr4::tree::TerminalNode *Ref();
+    antlr4::tree::TerminalNode *Union();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -740,6 +770,8 @@ public:
     ProtectedInternalContext *protectedInternal();
     StructDefinitionContext *structDefinition();
     ClassDefinitionContext *classDefinition();
+    EnumDefinitionContext *enumDefinition();
+    UnionDefinitionContext *unionDefinition();
     SymbolSpecifierSeqContext *symbolSpecifierSeq();
     MemberDeclarationCompoundStatementContext *memberDeclarationCompoundStatement();
     MemberVersionConditionalDeclarationContext *memberVersionConditionalDeclaration();
@@ -861,6 +893,317 @@ public:
   };
 
   InterfaceMemberDeclarationContext* interfaceMemberDeclaration();
+
+  class  EnumDefinitionContext : public antlr4::ParserRuleContext {
+  public:
+    EnumDefinitionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    EnumHeadContext *enumHead();
+    antlr4::tree::TerminalNode *LeftBrace();
+    EnumListContext *enumList();
+    antlr4::tree::TerminalNode *RightBrace();
+    EnumMemberSpecificationContext *enumMemberSpecification();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  EnumDefinitionContext* enumDefinition();
+
+  class  EnumHeadContext : public antlr4::ParserRuleContext {
+  public:
+    EnumHeadContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Enum();
+    antlr4::tree::TerminalNode *Identifier();
+    EnumBaseContext *enumBase();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  EnumHeadContext* enumHead();
+
+  class  EnumBaseContext : public antlr4::ParserRuleContext {
+  public:
+    EnumBaseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Colon();
+    SimpleTypeSpecifierContext *simpleTypeSpecifier();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  EnumBaseContext* enumBase();
+
+  class  EnumListContext : public antlr4::ParserRuleContext {
+  public:
+    EnumListContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<EnumeratorDefinitionContext *> enumeratorDefinition();
+    EnumeratorDefinitionContext* enumeratorDefinition(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> Comma();
+    antlr4::tree::TerminalNode* Comma(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  EnumListContext* enumList();
+
+  class  EnumeratorDefinitionContext : public antlr4::ParserRuleContext {
+  public:
+    EnumeratorDefinitionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Identifier();
+    antlr4::tree::TerminalNode *Assign();
+    ConstantExpressionContext *constantExpression();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  EnumeratorDefinitionContext* enumeratorDefinition();
+
+  class  EnumMemberSpecificationContext : public antlr4::ParserRuleContext {
+  public:
+    EnumMemberSpecificationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Semi();
+    std::vector<EnumMemberDeclarationContext *> enumMemberDeclaration();
+    EnumMemberDeclarationContext* enumMemberDeclaration(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  EnumMemberSpecificationContext* enumMemberSpecification();
+
+  class  EnumMemberDeclarationContext : public antlr4::ParserRuleContext {
+  public:
+    EnumMemberDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    FunctionDefinitionContext *functionDefinition();
+    AccessSpecifierContext *accessSpecifier();
+    ProtectedInternalContext *protectedInternal();
+    PropertyContext *property();
+    FriendDeclarationContext *friendDeclaration();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  EnumMemberDeclarationContext* enumMemberDeclaration();
+
+  class  EnumClassDefinitionContext : public antlr4::ParserRuleContext {
+  public:
+    EnumClassDefinitionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    EnumClassHeadContext *enumClassHead();
+    antlr4::tree::TerminalNode *LeftBrace();
+    EnumClassListContext *enumClassList();
+    antlr4::tree::TerminalNode *RightBrace();
+    EnumClassMemberSpecificationContext *enumClassMemberSpecification();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  EnumClassDefinitionContext* enumClassDefinition();
+
+  class  EnumClassHeadContext : public antlr4::ParserRuleContext {
+  public:
+    EnumClassHeadContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Enum();
+    antlr4::tree::TerminalNode *Class();
+    antlr4::tree::TerminalNode *Identifier();
+    antlr4::tree::TerminalNode *Unsafe();
+    BaseClauseContext *baseClause();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  EnumClassHeadContext* enumClassHead();
+
+  class  EnumClassListContext : public antlr4::ParserRuleContext {
+  public:
+    EnumClassListContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<ClassEnumeratorDefinitionContext *> classEnumeratorDefinition();
+    ClassEnumeratorDefinitionContext* classEnumeratorDefinition(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> Comma();
+    antlr4::tree::TerminalNode* Comma(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  EnumClassListContext* enumClassList();
+
+  class  ClassEnumeratorDefinitionContext : public antlr4::ParserRuleContext {
+  public:
+    ClassEnumeratorDefinitionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Identifier();
+    antlr4::tree::TerminalNode *LeftParen();
+    ExpressionListContext *expressionList();
+    antlr4::tree::TerminalNode *RightParen();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  ClassEnumeratorDefinitionContext* classEnumeratorDefinition();
+
+  class  EnumClassMemberSpecificationContext : public antlr4::ParserRuleContext {
+  public:
+    EnumClassMemberSpecificationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Semi();
+    std::vector<EnumClassMemberDeclarationContext *> enumClassMemberDeclaration();
+    EnumClassMemberDeclarationContext* enumClassMemberDeclaration(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  EnumClassMemberSpecificationContext* enumClassMemberSpecification();
+
+  class  EnumClassMemberDeclarationContext : public antlr4::ParserRuleContext {
+  public:
+    EnumClassMemberDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    AccessSpecifierContext *accessSpecifier();
+    SimpleDeclarationContext *simpleDeclaration();
+    SimpleMultiDeclarationContext *simpleMultiDeclaration();
+    FunctionDefinitionContext *functionDefinition();
+    ProtectedInternalContext *protectedInternal();
+    ConstructorContext *constructor();
+    PropertyContext *property();
+    FriendDeclarationContext *friendDeclaration();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  EnumClassMemberDeclarationContext* enumClassMemberDeclaration();
+
+  class  UnionDefinitionContext : public antlr4::ParserRuleContext {
+  public:
+    UnionDefinitionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    UnionHeadContext *unionHead();
+    antlr4::tree::TerminalNode *LeftBrace();
+    UnionListContext *unionList();
+    antlr4::tree::TerminalNode *RightBrace();
+    UnionMemberSpecificationContext *unionMemberSpecification();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  UnionDefinitionContext* unionDefinition();
+
+  class  UnionHeadContext : public antlr4::ParserRuleContext {
+  public:
+    UnionHeadContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Union();
+    ClassNameContext *className();
+    antlr4::tree::TerminalNode *Unsafe();
+    TemplateParamsContext *templateParams();
+    BaseClauseContext *baseClause();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  UnionHeadContext* unionHead();
+
+  class  UnionListContext : public antlr4::ParserRuleContext {
+  public:
+    UnionListContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<UnionEnumeratorContext *> unionEnumerator();
+    UnionEnumeratorContext* unionEnumerator(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> Comma();
+    antlr4::tree::TerminalNode* Comma(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  UnionListContext* unionList();
+
+  class  UnionEnumeratorContext : public antlr4::ParserRuleContext {
+  public:
+    UnionEnumeratorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Identifier();
+    antlr4::tree::TerminalNode *LeftParen();
+    UnionEnumeratorClauseContext *unionEnumeratorClause();
+    antlr4::tree::TerminalNode *RightParen();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  UnionEnumeratorContext* unionEnumerator();
+
+  class  UnionEnumeratorClauseContext : public antlr4::ParserRuleContext {
+  public:
+    UnionEnumeratorClauseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<TheTypeIdContext *> theTypeId();
+    TheTypeIdContext* theTypeId(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> Comma();
+    antlr4::tree::TerminalNode* Comma(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> Identifier();
+    antlr4::tree::TerminalNode* Identifier(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> Colon();
+    antlr4::tree::TerminalNode* Colon(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  UnionEnumeratorClauseContext* unionEnumeratorClause();
+
+  class  UnionMemberSpecificationContext : public antlr4::ParserRuleContext {
+  public:
+    UnionMemberSpecificationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Semi();
+    std::vector<EnumMemberDeclarationContext *> enumMemberDeclaration();
+    EnumMemberDeclarationContext* enumMemberDeclaration(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  UnionMemberSpecificationContext* unionMemberSpecification();
 
   class  ExtensionDefinitionContext : public antlr4::ParserRuleContext {
   public:

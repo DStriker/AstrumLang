@@ -25,6 +25,9 @@ declaration:
 	| accessSpecifier? classDefinition
 	| accessSpecifier? interfaceDefinition
 	| accessSpecifier? extensionDefinition
+	| accessSpecifier? enumDefinition
+	| accessSpecifier? enumClassDefinition
+	| accessSpecifier? unionDefinition
 	| symbolSpecifierSeq declarationCompoundStatement
 	| externVariableDeclaration 
 	| versionDefinition
@@ -77,7 +80,7 @@ compoundStatement: LeftBrace (stat+)? RightBrace;
 
 structDefinition: structHead LeftBrace structMemberSpecification? RightBrace;
 
-structHead: Unsafe? Ref? Struct templateParams? className baseClause?;
+structHead: Unsafe? (Ref | Union)? Struct templateParams? className baseClause?;
 
 structMemberSpecification: structMemberDeclaration+;
 
@@ -93,6 +96,8 @@ structMemberDeclaration:
 	  (accessSpecifier | protectedInternal)? memberBlockDeclaration
 	| accessSpecifier? structDefinition
 	| accessSpecifier? classDefinition
+	| accessSpecifier? enumDefinition
+	| accessSpecifier? unionDefinition
 	| symbolSpecifierSeq memberDeclarationCompoundStatement
 	| memberVersionConditionalDeclaration
 	| (accessSpecifier | protectedInternal)? functionDefinition
@@ -125,6 +130,55 @@ interfaceMemberDeclaration:
 	| constantDeclaration
 	| aliasDeclaration
 	;
+
+enumDefinition: enumHead LeftBrace enumList enumMemberSpecification? RightBrace;
+
+enumHead: Enum Identifier enumBase?;
+
+enumBase: Colon simpleTypeSpecifier;
+
+enumList: enumeratorDefinition (Comma enumeratorDefinition)*;
+
+enumeratorDefinition: Identifier (Assign constantExpression)?;
+
+enumMemberSpecification: Semi enumMemberDeclaration+;
+
+enumMemberDeclaration: 
+	  (accessSpecifier | protectedInternal)? functionDefinition
+	| property
+	| friendDeclaration
+	;
+
+enumClassDefinition: enumClassHead LeftBrace enumClassList enumClassMemberSpecification? RightBrace;
+
+enumClassHead: Unsafe? Enum Class Identifier baseClause?;
+
+enumClassList: classEnumeratorDefinition (Comma classEnumeratorDefinition)*;
+
+classEnumeratorDefinition: Identifier (LeftParen expressionList RightParen)?;
+
+enumClassMemberSpecification: Semi enumClassMemberDeclaration+;
+
+enumClassMemberDeclaration:
+	  accessSpecifier simpleDeclaration
+	| accessSpecifier simpleMultiDeclaration
+	| (accessSpecifier | protectedInternal)? functionDefinition
+	| constructor
+	| property
+	| friendDeclaration
+	;
+
+unionDefinition: unionHead LeftBrace unionList unionMemberSpecification? RightBrace;
+
+unionHead: Unsafe? Union templateParams? className baseClause?;
+
+unionList: unionEnumerator (Comma unionEnumerator)*;
+
+unionEnumerator: Identifier (LeftParen unionEnumeratorClause RightParen)?;
+
+unionEnumeratorClause: theTypeId (Comma theTypeId)* | Identifier Colon theTypeId (Comma Identifier Colon theTypeId)+;
+
+unionMemberSpecification: Semi enumMemberDeclaration+;
 
 extensionDefinition: extensionHead LeftBrace extensionMemberSpecification? RightBrace;
 

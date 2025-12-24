@@ -46,6 +46,7 @@ class CppAdvanceCodegen
 	mutable std::string currentShortType;
 	mutable std::string currentTypeWithTemplate;
 	mutable std::string currentPropertyField;
+	mutable std::string lastEnumValue;
 	mutable std::optional <AccessSpecifier> currentAccessSpecifier;
 	std::string filename;
 
