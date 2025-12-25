@@ -1,33 +1,33 @@
 #include "FirstProgram.h"
 
-#line 450 "FirstProgram.adv"
-template<class T> using __extension_450_T = T;
-#line 453 "FirstProgram.adv"
-template<class T> inline auto operator*(__extension_450_T<T> const& __this LIFETIMEBOUND, CppAdvance::In<CppAdvance::f32> f)  -> const CppAdvance::f32;
+#line 452 "FirstProgram.adv"
+template<class T> using __extension_452_T = T;
 #line 455 "FirstProgram.adv"
-template<class T> inline auto PrintInterface(__extension_450_T<T> const& __this LIFETIMEBOUND, CppAdvance::i32 x)  -> const CppAdvance::i32;
-#line 463 "FirstProgram.adv"
-template<class T> inline const CppAdvance::f32 getAt(__extension_450_T<T> const& __this LIFETIMEBOUND, CppAdvance::f32 r, CppAdvance::f32 g, CppAdvance::f32 b);
-#line 463 "FirstProgram.adv"
-template<class T> inline const CppAdvance::f32 _operator_subscript(__extension_450_T<T> const& __this LIFETIMEBOUND, CppAdvance::f32 r, CppAdvance::f32 g, CppAdvance::f32 b) { return getAt(__this, r, g, b); }
+template<class T> inline auto operator*(__extension_452_T<T> const& __this LIFETIMEBOUND, CppAdvance::In<CppAdvance::f32> f)  -> const CppAdvance::f32;
+#line 457 "FirstProgram.adv"
+template<class T> inline auto PrintInterface(__extension_452_T<T> const& __this LIFETIMEBOUND, CppAdvance::i32 x)  -> const CppAdvance::i32;
 #line 465 "FirstProgram.adv"
-template<class T> inline auto __construct_(CppAdvance::ConstructorProxy<__extension_450_T<T>> __ctordata, CppAdvance::i32 x, CppAdvance::Str txt)  -> decltype(auto);
-#line 470 "FirstProgram.adv"
-template<class T> inline auto __construct_(CppAdvance::ConstructorProxy<__extension_450_T<T>> __ctordata, typename CppAdvance::MemorySpace mem, CppAdvance::i32 x, CppAdvance::Str txt)  -> decltype(auto);
-#line 451 "FirstProgram.adv"
-template<class T> inline auto getAsString(__extension_450_T<T> const& __this ) -> const CppAdvance::Str;
+template<class T> inline const CppAdvance::f32 getAt(__extension_452_T<T> const& __this LIFETIMEBOUND, CppAdvance::f32 r, CppAdvance::f32 g, CppAdvance::f32 b);
+#line 465 "FirstProgram.adv"
+template<class T> inline const CppAdvance::f32 _operator_subscript(__extension_452_T<T> const& __this LIFETIMEBOUND, CppAdvance::f32 r, CppAdvance::f32 g, CppAdvance::f32 b) { return getAt(__this, r, g, b); }
+#line 467 "FirstProgram.adv"
+template<class T> inline auto __construct_(CppAdvance::ConstructorProxy<__extension_452_T<T>> __ctordata, CppAdvance::i32 x, CppAdvance::Str txt)  -> decltype(auto);
+#line 472 "FirstProgram.adv"
+template<class T> inline auto __construct_(CppAdvance::ConstructorProxy<__extension_452_T<T>> __ctordata, typename CppAdvance::MemorySpace mem, CppAdvance::i32 x, CppAdvance::Str txt)  -> decltype(auto);
+#line 453 "FirstProgram.adv"
+template<class T> inline auto getAsString(__extension_452_T<T> const& __this ) -> const CppAdvance::Str;
 
-#line 480 "FirstProgram.adv"
+#line 482 "FirstProgram.adv"
 auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam = CppAdvance::f64(3.5))  -> const int;
-#line 571 "FirstProgram.adv"
+#line 573 "FirstProgram.adv"
 inline constexpr CppAdvance::usize PRIVATE_CONSTANT = CppAdvance::usize(34U);
 #line 2 "FirstProgram.adv"
 volatile CppAdvance::Unsafe::__VolatileRawPtr<const CppAdvance::char16> globalVar{};
 #line 3 "FirstProgram.adv"
 extern const CppAdvance::Unsafe::__RawPtr<CppAdvance::i32> globalVar1 = nullptr;
-#line 572 "FirstProgram.adv"
+#line 574 "FirstProgram.adv"
 static CppAdvance::i32 globalVar2 = CppAdvance::i32(8);
-#line 573 "FirstProgram.adv"
+#line 575 "FirstProgram.adv"
 static const CppAdvance::i32 globalVar3 = CppAdvance::i32(456);
 #line 91 "FirstProgram.adv"
 thread_local CppAdvance::i32 Vector3::Count2 = CppAdvance::i32(123);
@@ -133,129 +133,133 @@ auto __Class_ConcreteVectorClass::getCount() const  -> CppAdvance::i32
 
 
 
+#line 449 "FirstProgram.adv"
+inline auto Text::getShortString() const  -> CppAdvance::Str 
+{
+	#line 449 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(Value); 
+}
 
 
-#line 480 "FirstProgram.adv"
+#line 482 "FirstProgram.adv"
 auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam)  -> const int
 {
-	#line 525 "FirstProgram.adv"
+	#line 527 "FirstProgram.adv"
 	CppAdvance::Nullable<IInterface> nxtm = CppAdvance::New<ConcreteVectorClass>(CppAdvance::i32(11), CppAdvance::i32(12), CppAdvance::i32(13)); 
-	#line 526 "FirstProgram.adv"
-	CppAdvance::Nullable<IInterface> nxt = nxtm; 
 	#line 528 "FirstProgram.adv"
+	CppAdvance::Nullable<IInterface> nxt = nxtm; 
+	#line 530 "FirstProgram.adv"
 	{
-		#line 529 "FirstProgram.adv"
-		#line 529 "FirstProgram.adv"
-		CppAdvance::Stackalloc<ConcreteVectorClass> __obj_529_33(CppAdvance::i32(10), CppAdvance::Str{u"123455555555"}); CppAdvance::InitStackObject((CppAdvance::Object*)__obj_529_33.obj);
-		#line 529 "FirstProgram.adv"
-		CppAdvance::Nullable<VectorClass> nxt2 = __obj_529_33; 
-		#line 530 "FirstProgram.adv"
-		Vector3 vec = CppAdvance::New<Vector3>(CppAdvance::i32(12), CppAdvance::Str{u"12344444444444"}); 
 		#line 531 "FirstProgram.adv"
-		print(ADV_UPCS(x)(vec.__ref()));
+		#line 531 "FirstProgram.adv"
+		CppAdvance::Stackalloc<ConcreteVectorClass> __obj_531_33(CppAdvance::i32(10), CppAdvance::Str{u"123455555555"}); CppAdvance::InitStackObject((CppAdvance::Object*)__obj_531_33.obj);
+		#line 531 "FirstProgram.adv"
+		CppAdvance::Nullable<VectorClass> nxt2 = __obj_531_33; 
 		#line 532 "FirstProgram.adv"
-		print(ADV_UPCS(y)(vec.__ref()));
+		Vector3 vec = CppAdvance::New<Vector3>(CppAdvance::i32(12), CppAdvance::Str{u"12344444444444"}); 
 		#line 533 "FirstProgram.adv"
-		print(ADV_UPCS(z)(vec.__ref()));
+		print(ADV_UPCS(x)(vec.__ref()));
 		#line 534 "FirstProgram.adv"
-		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt2)).__ref()));
+		print(ADV_UPCS(y)(vec.__ref()));
 		#line 535 "FirstProgram.adv"
+		print(ADV_UPCS(z)(vec.__ref()));
+		#line 536 "FirstProgram.adv"
+		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt2)).__ref()));
+		#line 537 "FirstProgram.adv"
 		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
-		#line 540 "FirstProgram.adv"
-		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt2)).__ref()));
-		#line 541 "FirstProgram.adv"
-		print(ADV_UFCS(_operator_subscript)((*(nxt)).__ref(), CppAdvance::i32(2)));
 		#line 542 "FirstProgram.adv"
-		typename IInterface::SomeInt xx = IInterface::VERSION; 
+		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt2)).__ref()));
 		#line 543 "FirstProgram.adv"
-		print(xx);
+		print(ADV_UFCS(_operator_subscript)((*(nxt)).__ref(), CppAdvance::i32(2)));
+		#line 544 "FirstProgram.adv"
+		typename IInterface::SomeInt xx = IInterface::VERSION; 
 		#line 545 "FirstProgram.adv"
-		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt2)).__ref()));
+		print(xx);
 		#line 547 "FirstProgram.adv"
-		nxt.andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(ADV_UFCS(Reset)(value.__ref())); });
-		#line 548 "FirstProgram.adv"
-		print(ADV_UFCS(PrintInterface)((*(nxt2)).__ref(), CppAdvance::i32(123)));
-		#line 553 "FirstProgram.adv"
-		print(ADV_UPCS(Name)((*(nxt)).__ref()));
-		#line 554 "FirstProgram.adv"
-		print(CppAdvance::usize(sizeof (__Class_ConcreteVectorClass)));
-		#line 556 "FirstProgram.adv"
 		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt2)).__ref()));
-		#line 557 "FirstProgram.adv"
-		auto day = DayOfWeek::Wednesday; 
+		#line 549 "FirstProgram.adv"
+		nxt.andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(ADV_UFCS(Reset)(value.__ref())); });
+		#line 550 "FirstProgram.adv"
+		print(ADV_UFCS(PrintInterface)((*(nxt2)).__ref(), CppAdvance::i32(123)));
+		#line 555 "FirstProgram.adv"
+		print(ADV_UPCS(Name)((*(nxt)).__ref()));
+		#line 556 "FirstProgram.adv"
+		print(CppAdvance::usize(sizeof (__Class_ConcreteVectorClass)));
 		#line 558 "FirstProgram.adv"
-		day = DayOfWeek::Sunday;
+		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt2)).__ref()));
 		#line 559 "FirstProgram.adv"
-		for (const auto& day : DayOfWeek::GetNames()) 
-		{
-			#line 560 "FirstProgram.adv"
-			print(day);
-		}
+		CppAdvance::u32 xi{ true }; 
+		#line 561 "FirstProgram.adv"
+		DayOfWeek day = DayOfWeek::Monday; 
 		#line 562 "FirstProgram.adv"
-		CppAdvance::ObjectRef o = day; 
+		day = decltype(day)::Wednesday;
 		#line 563 "FirstProgram.adv"
-		CppAdvance::Nullable<CppAdvance::ObjectRef> on = day; 
+		print(ADV_UPCS(Value)(day.__ref()));
 		#line 564 "FirstProgram.adv"
+		CppAdvance::ObjectRef o = day; 
+		#line 565 "FirstProgram.adv"
+		CppAdvance::Nullable<CppAdvance::ObjectRef> on = day; 
+		#line 566 "FirstProgram.adv"
 		print(ADV_UPCS(Value)(day.__ref()));
 	}
-	#line 566 "FirstProgram.adv"
+	#line 568 "FirstProgram.adv"
 	print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
-	#line 567 "FirstProgram.adv"
+	#line 569 "FirstProgram.adv"
 	print(ADV_UPCS(x)(ADV_UPCS(x)(Test1::Test2::TestClass::makeTestClass(CppAdvance::i32(3), CppAdvance::f32(3.14f)).__ref()).__ref()));
 }
 
 
-#line 453 "FirstProgram.adv"
-template<class T> inline auto operator*(__extension_450_T<T> const& __this LIFETIMEBOUND, CppAdvance::In<CppAdvance::f32> f)  -> const CppAdvance::f32
+#line 455 "FirstProgram.adv"
+template<class T> inline auto operator*(__extension_452_T<T> const& __this LIFETIMEBOUND, CppAdvance::In<CppAdvance::f32> f)  -> const CppAdvance::f32
 {
-	#line 453 "FirstProgram.adv"
+	#line 455 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(f * CppAdvance::i32(10)); 
 }
 
-#line 455 "FirstProgram.adv"
-template<class T> inline auto PrintInterface(__extension_450_T<T> const& __this LIFETIMEBOUND, CppAdvance::i32 x)  -> const CppAdvance::i32
+#line 457 "FirstProgram.adv"
+template<class T> inline auto PrintInterface(__extension_452_T<T> const& __this LIFETIMEBOUND, CppAdvance::i32 x)  -> const CppAdvance::i32
 {
-	#line 456 "FirstProgram.adv"
-	print(CppAdvance::Str{u"PrintInterface Begin"});
-	#line 457 "FirstProgram.adv"
-	print(ADV_UPCS(Name)(__this.__ref()));
 	#line 458 "FirstProgram.adv"
-	print(x);
+	print(CppAdvance::Str{u"PrintInterface Begin"});
 	#line 459 "FirstProgram.adv"
-	print(CppAdvance::Str{u"PrintInterface End"});
+	print(ADV_UPCS(Name)(__this.__ref()));
 	#line 460 "FirstProgram.adv"
+	print(x);
+	#line 461 "FirstProgram.adv"
+	print(CppAdvance::Str{u"PrintInterface End"});
+	#line 462 "FirstProgram.adv"
 	return x * CppAdvance::i32(11);
 }
 
-#line 463 "FirstProgram.adv"
-template<class T> inline const CppAdvance::f32 getAt(__extension_450_T<T> const& __this LIFETIMEBOUND, CppAdvance::f32 r, CppAdvance::f32 g, CppAdvance::f32 b)
+#line 465 "FirstProgram.adv"
+template<class T> inline const CppAdvance::f32 getAt(__extension_452_T<T> const& __this LIFETIMEBOUND, CppAdvance::f32 r, CppAdvance::f32 g, CppAdvance::f32 b)
 {
-	#line 463 "FirstProgram.adv"
+	#line 465 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(r + g + b); 
 }
-#line 465 "FirstProgram.adv"
-template<class T> inline auto __construct_(CppAdvance::ConstructorProxy<__extension_450_T<T>> __ctordata, CppAdvance::i32 x, CppAdvance::Str txt)  -> decltype(auto)
+#line 467 "FirstProgram.adv"
+template<class T> inline auto __construct_(CppAdvance::ConstructorProxy<__extension_452_T<T>> __ctordata, CppAdvance::i32 x, CppAdvance::Str txt)  -> decltype(auto)
 {
-	#line 466 "FirstProgram.adv"
+	#line 468 "FirstProgram.adv"
 	auto __this = new (__ctordata.memory) typename CppAdvance::ConstructorProxy<T>::ConstructingType(x, x, x);
-	#line 467 "FirstProgram.adv"
+	#line 469 "FirstProgram.adv"
 	print(txt);
 	return __this;
 }
 
-#line 470 "FirstProgram.adv"
-template<class T> inline auto __construct_(CppAdvance::ConstructorProxy<__extension_450_T<T>> __ctordata, typename CppAdvance::MemorySpace mem, CppAdvance::i32 x, CppAdvance::Str txt)  -> decltype(auto)
+#line 472 "FirstProgram.adv"
+template<class T> inline auto __construct_(CppAdvance::ConstructorProxy<__extension_452_T<T>> __ctordata, typename CppAdvance::MemorySpace mem, CppAdvance::i32 x, CppAdvance::Str txt)  -> decltype(auto)
 {
-	#line 471 "FirstProgram.adv"
+	#line 473 "FirstProgram.adv"
 	auto __this = new (__ctordata.memory) typename CppAdvance::ConstructorProxy<T>::ConstructingType(x, x, x);
-	#line 472 "FirstProgram.adv"
+	#line 474 "FirstProgram.adv"
 	print(txt);
 	return __this;
 }
 
-#line 451 "FirstProgram.adv"
-template<class T> inline auto getAsString(__extension_450_T<T> const& __this ) -> const CppAdvance::Str
+#line 453 "FirstProgram.adv"
+template<class T> inline auto getAsString(__extension_452_T<T> const& __this ) -> const CppAdvance::Str
 {
-	#line 451 "FirstProgram.adv"
+	#line 453 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::Str{u"AsString"}); 
 }

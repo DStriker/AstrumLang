@@ -715,6 +715,7 @@ void CppAdvanceSema::exitAssignmentExpression(CppAdvanceParser::AssignmentExpres
 	{
 		isAssignment = false;
 	}
+	currentAssignment = nullptr;
 }
 
 void CppAdvanceSema::enterPrimaryExpression(CppAdvanceParser::PrimaryExpressionContext* ctx)
@@ -1460,6 +1461,14 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 			}
 		}
 		else if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
+		{
+			isProtectedInternal = decl->protectedInternal();
+			if (decl->accessSpecifier())
+			{
+				acc = decl->accessSpecifier();
+			}
+		}
+		else if (auto decl = dynamic_cast<CppAdvanceParser::EnumMemberDeclarationContext*>(ctx->parent))
 		{
 			isProtectedInternal = decl->protectedInternal();
 			if (decl->accessSpecifier())
@@ -5457,6 +5466,7 @@ void CppAdvanceSema::enterEnumDefinition(CppAdvanceParser::EnumDefinitionContext
 	{
 		typeset.globalTypes.insert(currentType);
 		bool isUnsafe = unsafeDepth > 0;
+		bool isFlags = false;
 
 		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
 		std::optional<AccessSpecifier> access;
@@ -5514,7 +5524,7 @@ void CppAdvanceSema::enterEnumDefinition(CppAdvanceParser::EnumDefinitionContext
 			name, nullptr, nullptr, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, nullptr, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
 			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
-			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, false, false, false, ctx->enumHead()->enumBase());
+			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, isFlags, false, false, ctx->enumHead()->enumBase());
 		if (!structStack.empty())
 			structStack.top()->nestedStructs.push_back(def);
 		structStack.push(def);

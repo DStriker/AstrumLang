@@ -584,7 +584,7 @@ primaryExpression:
 	| LeftParen expr RightParen
 	| LeftParen theTypeId RightParen Dot Identifier
 	| tupleExpression
-	| idExpression
+	| Doublecolon? idExpression
 	;
 
 unaryPrefixOperator:

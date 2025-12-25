@@ -306,7 +306,7 @@ CXChildVisitResult VisitCursor(CXCursor cursor, const std::string& parentNamespa
 			CXCursor paramCursor = clang_Cursor_getArgument(cursor, i);
 			CXType paramType = clang_getCursorType(paramCursor);
 			CXString spelling = clang_getCursorSpelling(paramCursor);
-			CXString typeSpelling = clang_getTypeSpelling(returnType);
+			CXString typeSpelling = clang_getTypeSpelling(paramType);
 			std::string str = clang_getCString(spelling);
 			StringReplace(str, " ", "");
 			if (!str.empty()) {

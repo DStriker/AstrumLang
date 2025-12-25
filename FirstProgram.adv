@@ -383,6 +383,7 @@ public class Next {
 	public printNext: () = {
 		print("This is printNext function in optional chaining call");
 	}
+
 }
 
 public interface IMagicNumber {
@@ -407,11 +408,11 @@ public interface IInterface: IMagicNumber, IResettable {
 	static SomeStaticMethod: (i: i32) -> i32 ==> i * 123;
 }
 
-public enum DayOfWeek : u8 {
+public enum DayOfWeek {
 	Monday = 1,
 	Tuesday,
 	Wednesday,
-	Thursday = 7,
+	Thursday,
 	Friday,
 	Saturday,
 	Sunday
@@ -420,20 +421,19 @@ public enum DayOfWeek : u8 {
 /*@Flags
 public enum Options : u8 {
 	None = 0,
-	First = 1,
+	First,//1
 	Second,//2
 	Third,//4
 	Fourth,//8
 	Fiveth,//16
 	Sixth,//32
-	Seventh,//64
+	Seventh//64
 
     All = First | Second | Third | Fourth | Fiveth | Sixth | Seventh,
 	Weekend = Sixth | Seventh;
 
-	IsWeekend: bool => this == Weekend;
+	IsWeekend: bool => Weekend.HasFlag(this);
 }*/
-
 public enum Text : str {
 	Monday = "This is Monday",
 	Tuesday = "This is Tuesday",
@@ -443,8 +443,10 @@ public enum Text : str {
 	Saturday = "This is Saturday",
 	Sunday = "This is Sunday";
 
-	ToShortString: () -> str => Value.Substring(8);
-	ShortString: str => Value.Substring(8);
+	public ToShortString: () -> str = {
+		return Value;
+	}
+	private ShortString: str => Value;
 }
 
 private extension <T> {
@@ -554,11 +556,11 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		print(sizeof(__Class_ConcreteVectorClass));
 		//nxt = null;
 		print(nxt2!.GetStrongReferenceCount());
-		day:= DayOfWeek.Wednesday;
-		day = DayOfWeek.Sunday;
-		for day in DayOfWeek.GetNames() {
-            print(day);
-		}
+		xi: u32(true);
+		//print(map<int,map<int,string>>.StaticMethod());
+		day: DayOfWeek = ::Monday;
+		day = ::Wednesday;
+		print(day.Value);
 		o: object = day;
 		on: object? = day;
 		print(day.Value);

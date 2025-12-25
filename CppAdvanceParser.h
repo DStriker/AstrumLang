@@ -3770,6 +3770,7 @@ public:
     antlr4::tree::TerminalNode *Identifier();
     TupleExpressionContext *tupleExpression();
     IdExpressionContext *idExpression();
+    antlr4::tree::TerminalNode *Doublecolon();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

@@ -35,11 +35,14 @@ class CppAdvanceCodegen
 	mutable std::unordered_map<std::string, CppAdvanceParser::TheTypeIdContext*> refParameters;
 	mutable std::unordered_set<CppAdvanceParser::PostfixExpressionContext*> ignoredExpressions;
 	mutable std::unordered_set<CppAdvanceParser::IdExpressionContext*> functionCallExpressions;
+	mutable std::unordered_map<std::string, std::vector<std::string>> enumValues;
 	mutable std::vector<std::pair<std::string, CppAdvanceParser::TheTypeIdContext*>> namedReturns;
 	mutable std::vector<ConstantDefinition> selfConstants;
 	mutable std::stack<CppAdvanceParser::UnaryExpressionContext*> unaryExpressions;
 	mutable CppAdvanceParser::TemplateParamsContext* currentTemplateParams = nullptr;
 	mutable CppAdvanceParser::TemplateArgumentListContext* currentTemplateSpecArgs = nullptr;
+	mutable CppAdvanceParser::SimpleDeclarationContext* currentDeclaration = nullptr;
+	mutable CppAdvanceParser::AssignmentExpressionContext* currentAssignment = nullptr;
 	mutable std::string currentType;
 	mutable std::string currentLabel;
 	mutable std::string currentDeclarationName;
@@ -138,6 +141,9 @@ public:
 	void printStructMemberSpecification(CppAdvanceParser::StructMemberSpecificationContext* ctx) const;
 	void printStructMemberDeclaration(CppAdvanceParser::StructMemberDeclarationContext* ctx) const;
 	void printMemberDeclarationCompoundStatement(CppAdvanceParser::MemberDeclarationCompoundStatementContext* ctx) const;
+	void printEnumDefinition(CppAdvanceParser::EnumDefinitionContext* ctx) const;
+	void printEnumMemberSpecification(CppAdvanceParser::EnumMemberSpecificationContext* ctx) const;
+	void printEnumMemberDeclaration(CppAdvanceParser::EnumMemberDeclarationContext* ctx) const;
 	void printOperator(CppAdvanceParser::OperatorContext* ctx) const;
 	void printOperatorTemplateId(CppAdvanceParser::OperatorTemplateIdContext* ctx) const;
 	void printOperatorFunctionId(CppAdvanceParser::OperatorFunctionIdContext* ctx) const;

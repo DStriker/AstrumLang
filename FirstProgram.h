@@ -596,32 +596,32 @@ class Next__Weak : public CppAdvance::ObjectRef__Weak {
 };
 
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<IMagicNumber> = false;
-#line 389 "FirstProgram.adv"
-template<class __AnyType> concept __HasMethodImplementation_a2e2f819fa3cd789 = requires(typename __AnyType::__class t) { {t.GetMagicNumber(std::declval<VectorClass>())} -> std::convertible_to<CppAdvance::f32>; }  || requires(typename __AnyType::__class t) { {GetMagicNumber(t, std::declval<VectorClass>())} -> std::convertible_to<CppAdvance::f32>; };
 #line 390 "FirstProgram.adv"
+template<class __AnyType> concept __HasMethodImplementation_a2e2f819fa3cd789 = requires(typename __AnyType::__class t) { {t.GetMagicNumber(std::declval<VectorClass>())} -> std::convertible_to<CppAdvance::f32>; }  || requires(typename __AnyType::__class t) { {GetMagicNumber(t, std::declval<VectorClass>())} -> std::convertible_to<CppAdvance::f32>; };
+#line 391 "FirstProgram.adv"
 template<class __AnyType> concept __HasMethodImplementation_getaddd298886dbcfb6 = requires(typename __AnyType::__class t) { {t.__ref().getCount123()} -> std::convertible_to<CppAdvance::i32>; } || requires(typename __AnyType::__class t) { {getCount123(t)} -> std::convertible_to<CppAdvance::i32>; };
 namespace __vtables {
-	#line 388 "FirstProgram.adv"
+	#line 389 "FirstProgram.adv"
 	struct __vtable_IMagicNumber
 	{
 		using fn_a2e2f819fa3cd789 = const CppAdvance::f32(CppAdvance::Object*, CppAdvance::In<VectorClass> f);
 		fn_a2e2f819fa3cd789* fnptr_a2e2f819fa3cd789;
-		#line 389 "FirstProgram.adv"
+		#line 390 "FirstProgram.adv"
 		template<class __AnyType> static const CppAdvance::f32 impl_a2e2f819fa3cd789(CppAdvance::Object* obj, CppAdvance::In<VectorClass> f) { ADV_EXPRESSION_BODY(ADV_UFCS(GetMagicNumber)(*static_cast<typename __AnyType::__class*>(obj), f)); }
 		using fn_getCount123 = CppAdvance::i32(CppAdvance::Object*);
 		fn_getCount123* fnptr_getCount123;
-		#line 390 "FirstProgram.adv"
+		#line 391 "FirstProgram.adv"
 		template<class __AnyType> static CppAdvance::i32 impl_getCount123(CppAdvance::Object* obj) { return ADV_UFCS(getCount123)(*static_cast<typename __AnyType::__class*>(obj)); }
 		
 	};
 }
-#line 388 "FirstProgram.adv"
+#line 389 "FirstProgram.adv"
 template<class __AnyType> inline constexpr __vtables::__vtable_IMagicNumber __vtable_IMagicNumber_for = {&__vtables::__vtable_IMagicNumber::template impl_a2e2f819fa3cd789<__AnyType>
 	, &__vtables::__vtable_IMagicNumber::template impl_getCount123<__AnyType>
 	};
-#line 388 "FirstProgram.adv"
+#line 389 "FirstProgram.adv"
 template<class __AnyType> concept __ImplementsInterface_IMagicNumber = __HasMethodImplementation_a2e2f819fa3cd789<__AnyType> && __HasMethodImplementation_getaddd298886dbcfb6<__AnyType>;
-#line 388 "FirstProgram.adv"
+#line 389 "FirstProgram.adv"
 class IMagicNumber final : public CppAdvance::InterfaceRef {
 	public: using __self = IMagicNumber;
 	public: using __vtable = __vtables::__vtable_IMagicNumber;
@@ -840,25 +840,25 @@ template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdv
 template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> FORCE_INLINE const CppAdvance::i32 getCount123(const __AnyInterface& iface) { return CppAdvance::GetVTableFromInterface(&iface)->fnptr_getCount123(CppAdvance::GetObjectReferenceFromInterface(&iface)); }
 
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<IResettable> = false;
-#line 394 "FirstProgram.adv"
+#line 395 "FirstProgram.adv"
 template<class __AnyType> concept __HasMethodImplementation_565bebff34b81aa1 = requires(typename __AnyType::__class t) { {t.Reset()} -> std::same_as<void>; }  || requires(typename __AnyType::__class t) { {Reset(t)} -> std::same_as<void>; };
 namespace __vtables {
-	#line 393 "FirstProgram.adv"
+	#line 394 "FirstProgram.adv"
 	struct __vtable_IResettable
 	{
 		using fn_565bebff34b81aa1 = void(CppAdvance::Object*);
 		fn_565bebff34b81aa1* fnptr_565bebff34b81aa1;
-		#line 394 "FirstProgram.adv"
+		#line 395 "FirstProgram.adv"
 		template<class __AnyType> static void impl_565bebff34b81aa1(CppAdvance::Object* obj) { ADV_EXPRESSION_BODY(ADV_UFCS(Reset)(*static_cast<typename __AnyType::__class*>(obj))); }
 		
 	};
 }
-#line 393 "FirstProgram.adv"
+#line 394 "FirstProgram.adv"
 template<class __AnyType> inline constexpr __vtables::__vtable_IResettable __vtable_IResettable_for = {&__vtables::__vtable_IResettable::template impl_565bebff34b81aa1<__AnyType>
 	};
-#line 393 "FirstProgram.adv"
+#line 394 "FirstProgram.adv"
 template<class __AnyType> concept __ImplementsInterface_IResettable = __HasMethodImplementation_565bebff34b81aa1<__AnyType>;
-#line 393 "FirstProgram.adv"
+#line 394 "FirstProgram.adv"
 class IResettable final : public CppAdvance::InterfaceRef {
 	public: using __self = IResettable;
 	public: using __vtable = __vtables::__vtable_IResettable;
@@ -1076,25 +1076,25 @@ class IResettable__Weak final : public CppAdvance::ObjectRef__Weak {
 template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> FORCE_INLINE void Reset(const __AnyInterface& iface)  { ADV_EXPRESSION_BODY(CppAdvance::GetVTableFromInterface(&iface)->fnptr_565bebff34b81aa1(CppAdvance::GetObjectReferenceFromInterface(&iface))); }
 
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<IInterface> = false;
-#line 401 "FirstProgram.adv"
-template<class __AnyType> concept __HasMethodImplementation_6cedb65857a10a4e = requires(typename __AnyType::__class t) { {t.DefaultMethod(std::declval<VectorClass>())} -> std::convertible_to<CppAdvance::f32>; } ;
 #line 402 "FirstProgram.adv"
+template<class __AnyType> concept __HasMethodImplementation_6cedb65857a10a4e = requires(typename __AnyType::__class t) { {t.DefaultMethod(std::declval<VectorClass>())} -> std::convertible_to<CppAdvance::f32>; } ;
+#line 403 "FirstProgram.adv"
 template<class __AnyType> concept __HasMethodImplementation_fbc51d6746c8ca94 = requires(typename __AnyType::__class t) { {t.operator+(std::declval<ConcreteVectorClass>())} -> std::convertible_to<ConcreteVectorClass>; }  || requires(typename __AnyType::__class t) { {operator+(t, std::declval<ConcreteVectorClass>())} -> std::convertible_to<ConcreteVectorClass>; };
-#line 405 "FirstProgram.adv"
+#line 406 "FirstProgram.adv"
 template<class __AnyType> concept __HasMethodImplementation_921126693c79e307 = requires(typename __AnyType::__class t) { {t.getAt(std::declval<CppAdvance::i32>())} -> std::convertible_to<CppAdvance::f32&>; }  || requires(typename __AnyType::__class t) { {_operator_subscript(t)} -> std::convertible_to<CppAdvance::f32&>; };
-#line 404 "FirstProgram.adv"
+#line 405 "FirstProgram.adv"
 template<class __AnyType> concept __HasMethodImplementation_getfd864fe31949d59b = requires(typename __AnyType::__class t) { {t.__ref().getName()} -> std::convertible_to<CppAdvance::Str>; } || requires(typename __AnyType::__class t) { {getName(t)} -> std::convertible_to<CppAdvance::Str>; };
-#line 397 "FirstProgram.adv"
+#line 398 "FirstProgram.adv"
 ADV_CHECK_INTERFACE(IMagicNumber, IMagicNumber);
-#line 397 "FirstProgram.adv"
+#line 398 "FirstProgram.adv"
 ADV_CHECK_INTERFACE(IResettable, IResettable);
 namespace __vtables {
-	#line 397 "FirstProgram.adv"
+	#line 398 "FirstProgram.adv"
 	struct __vtable_IInterface : public IMagicNumber::__vtable, public IResettable::__vtable
 	{
 		using fn_6cedb65857a10a4e = const CppAdvance::f32(CppAdvance::Object*, CppAdvance::In<VectorClass> f);
 		fn_6cedb65857a10a4e* fnptr_6cedb65857a10a4e;
-		#line 401 "FirstProgram.adv"
+		#line 402 "FirstProgram.adv"
 		template<class __AnyType> static const CppAdvance::f32 impl_6cedb65857a10a4e(CppAdvance::Object* obj, CppAdvance::In<VectorClass> f) { 
 			if constexpr(__HasMethodImplementation_6cedb65857a10a4e<__AnyType>) {
 				ADV_EXPRESSION_BODY(ADV_UFCS(DefaultMethod)(*static_cast<typename __AnyType::__class*>(obj), f)); 
@@ -1102,20 +1102,20 @@ namespace __vtables {
 		}
 		using fn_fbc51d6746c8ca94 = const ConcreteVectorClass(CppAdvance::Object*, const ConcreteVectorClass& f);
 		fn_fbc51d6746c8ca94* fnptr_fbc51d6746c8ca94;
-		#line 402 "FirstProgram.adv"
+		#line 403 "FirstProgram.adv"
 		template<class __AnyType> static const ConcreteVectorClass impl_fbc51d6746c8ca94(CppAdvance::Object* obj, const ConcreteVectorClass& f) { ADV_EXPRESSION_BODY(ADV_UFCS(operator+)(*static_cast<typename __AnyType::__class*>(obj), f)); }
 		using fn_921126693c79e307 = CppAdvance::f32&(CppAdvance::Object*, CppAdvance::i32 i);
 		fn_921126693c79e307* fnptr_921126693c79e307;
-		#line 405 "FirstProgram.adv"
+		#line 406 "FirstProgram.adv"
 		template<class __AnyType> static CppAdvance::f32& impl_921126693c79e307(CppAdvance::Object* obj, CppAdvance::i32 i) { return ADV_UFCS(getAt)(*static_cast<typename __AnyType::__class*>(obj), i); }
 		using fn_getName = CppAdvance::Str(CppAdvance::Object*);
 		fn_getName* fnptr_getName;
-		#line 404 "FirstProgram.adv"
+		#line 405 "FirstProgram.adv"
 		template<class __AnyType> static CppAdvance::Str impl_getName(CppAdvance::Object* obj) { return ADV_UFCS(getName)(*static_cast<typename __AnyType::__class*>(obj)); }
 		
 	};
 }
-#line 397 "FirstProgram.adv"
+#line 398 "FirstProgram.adv"
 template<class __AnyType> inline constexpr __vtables::__vtable_IInterface __vtable_IInterface_for = {__vtable_IMagicNumber_for<__AnyType>
 	, __vtable_IResettable_for<__AnyType>
 	, __HasMethodImplementation_6cedb65857a10a4e<__AnyType> ? &__vtables::__vtable_IInterface::template impl_6cedb65857a10a4e<__AnyType> : nullptr
@@ -1123,9 +1123,9 @@ template<class __AnyType> inline constexpr __vtables::__vtable_IInterface __vtab
 	, &__vtables::__vtable_IInterface::template impl_921126693c79e307<__AnyType>
 	, &__vtables::__vtable_IInterface::template impl_getName<__AnyType>
 	};
-#line 397 "FirstProgram.adv"
+#line 398 "FirstProgram.adv"
 template<class __AnyType> concept __ImplementsInterface_IInterface = __ImplementsInterface_IMagicNumber<__AnyType> && __ImplementsInterface_IResettable<__AnyType> && __HasMethodImplementation_fbc51d6746c8ca94<__AnyType> && __HasMethodImplementation_921126693c79e307<__AnyType> && __HasMethodImplementation_getfd864fe31949d59b<__AnyType>;
-#line 397 "FirstProgram.adv"
+#line 398 "FirstProgram.adv"
 class IInterface final : public CppAdvance::InterfaceRef {
 	public: using __self = IInterface;
 	public: using __vtable = __vtables::__vtable_IInterface;
@@ -1226,13 +1226,13 @@ class IInterface final : public CppAdvance::InterfaceRef {
 	public: template<class __AnyType, class __FixedType = std::decay_t<__AnyType>::__self> requires std::is_base_of_v<CppAdvance::Object, std::decay_t<__AnyType>> IInterface& operator=(__AnyType&& value) { static_assert(__ImplementsInterface_IInterface<__FixedType>, "Cannot initialize interface IInterface from this type"); 
  	if (_obj) CppAdvance::Release(_obj); _obj = (CppAdvance::Object*)&value; CppAdvance::Retain(_obj); 
 	_vtable = &__vtable_IInterface_for<__FixedType>; return *this; }
-	#line 398 "FirstProgram.adv"
-	static constexpr auto VERSION = CppAdvance::i32(12345);
 	#line 399 "FirstProgram.adv"
+	static constexpr auto VERSION = CppAdvance::i32(12345);
+	#line 400 "FirstProgram.adv"
 	using SomeInt = CppAdvance::i32;
-	#line 401 "FirstProgram.adv"
+	#line 402 "FirstProgram.adv"
 	public: const CppAdvance::f32 __default_DefaultMethod(CppAdvance::In<VectorClass> f) const ;
-	#line 407 "FirstProgram.adv"
+	#line 408 "FirstProgram.adv"
 	public: static const CppAdvance::i32 SomeStaticMethod(CppAdvance::i32 i) ;
 	
 };
@@ -1358,68 +1358,79 @@ template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdv
 template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> FORCE_INLINE decltype(auto) _operator_subscript(const __AnyInterface& iface, CppAdvance::i32 i) { return getAt(iface, i); }
 template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> FORCE_INLINE const CppAdvance::Str getName(const __AnyInterface& iface) { return CppAdvance::GetVTableFromInterface(&iface)->fnptr_getName(CppAdvance::GetObjectReferenceFromInterface(&iface)); }
 
-class DayOfWeek;
-#line 410 "FirstProgram.adv"
+class __Class_DayOfWeek;
+#line 411 "FirstProgram.adv"
 struct DayOfWeek final : public CppAdvance::Enum {
 	public: using __self = DayOfWeek;
 	public: using __class = __Class_DayOfWeek;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 410 "FirstProgram.adv"
-	private: CppAdvance::u8 __value;
-	#line 410 "FirstProgram.adv"
-	public: auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, CppAdvance::u8)
 	#line 411 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const DayOfWeek Monday;
+	private: CppAdvance::i32 __value;
+	#line 411 "FirstProgram.adv"
+	public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, CppAdvance::i32)
 	#line 412 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const DayOfWeek Tuesday;
+	public: static TESTDLL_HIDDEN const DayOfWeek Monday;
 	#line 413 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const DayOfWeek Wednesday;
+	public: static TESTDLL_HIDDEN const DayOfWeek Tuesday;
 	#line 414 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const DayOfWeek Thursday;
+	public: static TESTDLL_HIDDEN const DayOfWeek Wednesday;
 	#line 415 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const DayOfWeek Friday;
+	public: static TESTDLL_HIDDEN const DayOfWeek Thursday;
 	#line 416 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const DayOfWeek Saturday;
+	public: static TESTDLL_HIDDEN const DayOfWeek Friday;
 	#line 417 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const DayOfWeek Saturday;
+	#line 418 "FirstProgram.adv"
 	public: static TESTDLL_HIDDEN const DayOfWeek Sunday;
-	#line 410 "FirstProgram.adv"
+	#line 411 "FirstProgram.adv"
 	private: static constexpr CppAdvance::Str __names[] = {u"Monday", u"Tuesday", u"Wednesday", u"Thursday", u"Friday", u"Saturday", u"Sunday"};
-	#line 410 "FirstProgram.adv"
+	#line 411 "FirstProgram.adv"
 	public: static constexpr std::span<const CppAdvance::Str> GetNames() noexcept { return __names; }
-	#line 410 "FirstProgram.adv"
+	#line 411 "FirstProgram.adv"
 	private: static const DayOfWeek __values[];
-	#line 410 "FirstProgram.adv"
+	#line 411 "FirstProgram.adv"
 	public: static constexpr std::span<const DayOfWeek> GetValues() noexcept;
-	#line 410 "FirstProgram.adv"
-	private: constexpr DayOfWeek(CppAdvance::u8 value) : __value(value) {}
+	#line 411 "FirstProgram.adv"
+	public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
+	#line 411 "FirstProgram.adv"
+	public: constexpr operator CppAdvance::i32() const noexcept { return __value; }
+	#line 411 "FirstProgram.adv"
+	private: constexpr DayOfWeek(CppAdvance::i32 value) : __value(value) {}
 	
 };
-#line 411 "FirstProgram.adv"
-inline constexpr DayOfWeek DayOfWeek::Monday = CppAdvance::u8(CppAdvance::i32(1));
-
 #line 412 "FirstProgram.adv"
-inline constexpr DayOfWeek DayOfWeek::Tuesday = CppAdvance::u8(CppAdvance::i64(Monday.__value) + 1);
+inline constexpr DayOfWeek DayOfWeek::Monday = CppAdvance::i32(CppAdvance::i32(1));
 
 #line 413 "FirstProgram.adv"
-inline constexpr DayOfWeek DayOfWeek::Wednesday = CppAdvance::u8(CppAdvance::i64(Tuesday.__value) + 1);
+inline constexpr DayOfWeek DayOfWeek::Tuesday = CppAdvance::i32(CppAdvance::i64(Monday.__value) + 1);
 
 #line 414 "FirstProgram.adv"
-inline constexpr DayOfWeek DayOfWeek::Thursday = CppAdvance::u8(CppAdvance::i32(7));
+inline constexpr DayOfWeek DayOfWeek::Wednesday = CppAdvance::i32(CppAdvance::i64(Tuesday.__value) + 1);
 
 #line 415 "FirstProgram.adv"
-inline constexpr DayOfWeek DayOfWeek::Friday = CppAdvance::u8(CppAdvance::i64(Thursday.__value) + 1);
+inline constexpr DayOfWeek DayOfWeek::Thursday = CppAdvance::i32(CppAdvance::i64(Wednesday.__value) + 1);
 
 #line 416 "FirstProgram.adv"
-inline constexpr DayOfWeek DayOfWeek::Saturday = CppAdvance::u8(CppAdvance::i64(Friday.__value) + 1);
+inline constexpr DayOfWeek DayOfWeek::Friday = CppAdvance::i32(CppAdvance::i64(Thursday.__value) + 1);
 
 #line 417 "FirstProgram.adv"
-inline constexpr DayOfWeek DayOfWeek::Sunday = CppAdvance::u8(CppAdvance::i64(Saturday.__value) + 1);
-#line 410 "FirstProgram.adv"
-inline constexpr DayOfWeek DayOfWeek::__values[] = {Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday};
-#line 410 "FirstProgram.adv"
-inline constexpr std::span<const DayOfWeek> DayOfWeek::GetValues() noexcept { return __values; } ;
+inline constexpr DayOfWeek DayOfWeek::Saturday = CppAdvance::i32(CppAdvance::i64(Friday.__value) + 1);
 
-class Text;
+#line 418 "FirstProgram.adv"
+inline constexpr DayOfWeek DayOfWeek::Sunday = CppAdvance::i32(CppAdvance::i64(Saturday.__value) + 1);
+inline constexpr DayOfWeek DayOfWeek::__values[] = {Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday};
+inline constexpr std::span<const DayOfWeek> DayOfWeek::GetValues() noexcept { return __values; }
+#define ADV_USING_ENUM_DayOfWeek \
+constexpr auto Monday = DayOfWeek::Monday;\
+constexpr auto Tuesday = DayOfWeek::Tuesday;\
+constexpr auto Wednesday = DayOfWeek::Wednesday;\
+constexpr auto Thursday = DayOfWeek::Thursday;\
+constexpr auto Friday = DayOfWeek::Friday;\
+constexpr auto Saturday = DayOfWeek::Saturday;\
+constexpr auto Sunday = DayOfWeek::Sunday;\
+
+
+class __Class_Text;
 #line 437 "FirstProgram.adv"
 struct Text final : public CppAdvance::Enum {
 	public: using __self = Text;
@@ -1428,7 +1439,7 @@ struct Text final : public CppAdvance::Enum {
 	#line 437 "FirstProgram.adv"
 	private: CppAdvance::Str __value;
 	#line 437 "FirstProgram.adv"
-	public: auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, CppAdvance::Str)
+	public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, CppAdvance::Str)
 	#line 438 "FirstProgram.adv"
 	public: static TESTDLL_HIDDEN const Text Monday;
 	#line 439 "FirstProgram.adv"
@@ -1451,12 +1462,16 @@ struct Text final : public CppAdvance::Enum {
 	private: static const Text __values[];
 	#line 437 "FirstProgram.adv"
 	public: static constexpr std::span<const Text> GetValues() noexcept;
-	#line 447 "FirstProgram.adv"
-	public: inline auto getShortString() const  -> CppAdvance::Str;
+	#line 437 "FirstProgram.adv"
+	public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
+	#line 449 "FirstProgram.adv"
+	private: inline auto getShortString() const  -> CppAdvance::Str;
 	#line 9999 "FirstProgram.adv"
-	ADV_PROPERTY_GETTER(public, ShortString, getShortString, CppAdvance::Str);
+	ADV_PROPERTY_GETTER(private, ShortString, getShortString, CppAdvance::Str);
 	#line 446 "FirstProgram.adv"
 	public: inline auto ToShortString() const  -> const CppAdvance::Str;
+	#line 437 "FirstProgram.adv"
+	public: constexpr operator CppAdvance::Str() const noexcept { return __value; }
 	#line 437 "FirstProgram.adv"
 	private: constexpr Text(CppAdvance::Str value) : __value(value) {}
 	
@@ -1481,10 +1496,17 @@ inline constexpr Text Text::Saturday = CppAdvance::Str(CppAdvance::Str{u"This is
 
 #line 444 "FirstProgram.adv"
 inline constexpr Text Text::Sunday = CppAdvance::Str(CppAdvance::Str{u"This is Sunday"});
-#line 437 "FirstProgram.adv"
 inline constexpr Text Text::__values[] = {Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday};
-#line 437 "FirstProgram.adv"
-inline constexpr std::span<const Text> Text::GetValues() noexcept { return __values; } ;
+inline constexpr std::span<const Text> Text::GetValues() noexcept { return __values; }
+#define ADV_USING_ENUM_Text \
+constexpr auto Monday = Text::Monday;\
+constexpr auto Tuesday = Text::Tuesday;\
+constexpr auto Wednesday = Text::Wednesday;\
+constexpr auto Thursday = Text::Thursday;\
+constexpr auto Friday = Text::Friday;\
+constexpr auto Saturday = Text::Saturday;\
+constexpr auto Sunday = Text::Sunday;\
+
 
 
 #line 57 "FirstProgram.adv"
@@ -1711,7 +1733,7 @@ class __Class_Next : public CppAdvance::Object {
 ADV_CHECK_FOR_CONCRETE(Next);
 
 
-#line 410 "FirstProgram.adv"
+#line 411 "FirstProgram.adv"
 class __Class_DayOfWeek final : public CppAdvance::ValueType
 {
 	#line 9999 "FirstProgram.adv"
@@ -1721,7 +1743,7 @@ class __Class_DayOfWeek final : public CppAdvance::ValueType
 	operator __underlying() const noexcept { return __value; }
 	
 };
-#line 410 "FirstProgram.adv"
+#line 411 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(DayOfWeek);
 
 
@@ -1733,7 +1755,7 @@ class __Class_Text final : public CppAdvance::ValueType
 	public: using __underlying = Text; using __self = __underlying;
 	__Class_Text(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>) : __value{value} {}
 	operator __underlying() const noexcept { return __value; }
-	auto getShortString() const -> CppAdvance::Str { return __value.getShortString(); }
+	auto ToShortString() const  -> CppAdvance::Str const { ADV_EXPRESSION_BODY(__value.ToShortString()); }
 	
 };
 #line 437 "FirstProgram.adv"
@@ -1812,7 +1834,7 @@ template<> inline constexpr auto sum<CppAdvance::i32, CppAdvance::i32(15)>(CppAd
 inline auto func4(CppAdvance::i32 x)  -> const CppAdvance::i32;
 #line 362 "FirstProgram.adv"
 inline auto _operator_subscript(CppAdvance::In<VectorClass> vec, CppAdvance::f32 x, CppAdvance::f32 y)  -> const CppAdvance::f32;
-#line 478 "FirstProgram.adv"
+#line 480 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32;
 //###############################################################################
 //# Global compile-time constants
@@ -2287,10 +2309,16 @@ inline auto __Class_Next::printNext() const  -> void
 	#line 384 "FirstProgram.adv"
 	print(CppAdvance::Str{u"This is printNext function in optional chaining call"});
 }
-#line 478 "FirstProgram.adv"
+#line 446 "FirstProgram.adv"
+inline auto Text::ToShortString() const  -> const CppAdvance::Str
+{
+	#line 447 "FirstProgram.adv"
+	return Value;
+}
+#line 480 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32
 {
-	#line 478 "FirstProgram.adv"
+	#line 480 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(ADV_UPCS(x)(vec.__ref()) + ADV_UPCS(y)(vec.__ref()) + ADV_UPCS(z)(vec.__ref())); 
 }
 #line 9999 "FirstProgram.adv"
@@ -2350,11 +2378,11 @@ inline decltype(auto) Next__Unowned::operator*() const { ADV_EXPRESSION_BODY(__r
 
 inline const CppAdvance::f32 IInterface::__default_DefaultMethod(CppAdvance::In<VectorClass> f) const 
 {
-	#line 401 "FirstProgram.adv"
+	#line 402 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(ADV_UFCS(GetMagicNumber)((*this).__ref(), f)); 
 }
 inline const CppAdvance::i32 IInterface::SomeStaticMethod(CppAdvance::i32 i) 
 {
-	#line 407 "FirstProgram.adv"
+	#line 408 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(i * CppAdvance::i32(123)); 
 }

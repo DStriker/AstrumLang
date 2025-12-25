@@ -562,7 +562,8 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				out << " ";
 			}
 			out << "class ";
-			if (type->kind == TypeKind::Struct) out << "__Class_";
+			if (type->kind == TypeKind::Struct || type->kind == TypeKind::Enum || type->kind == TypeKind::Union
+				|| type->kind == TypeKind::UnionStruct) out << "__Class_";
 			out << type->id << ";\n" << std::string(depth, '\t');
 		}
 	}
@@ -871,7 +872,8 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				out << "public: ";
 			}
 			out << "\n" << std::string(depth, '\t');
-			if (nested->kind == TypeKind::Struct) {
+			if (nested->kind == TypeKind::Struct || nested->kind == TypeKind::Enum 
+				|| nested->kind == TypeKind::Union || nested->kind == TypeKind::UnionStruct) {
 				printStructWrapper(nested.get());
 			}
 			else if (nested->kind == TypeKind::Class) {
@@ -1087,7 +1089,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		}
 		out << " __value;\n" << std::string(depth,'\t');
 		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-		out << "public: auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, ";
+		out << "public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, ";
 		if (type->enumBase)
 		{
 			printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
@@ -1185,6 +1187,9 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			out << "auto";
 		}
 		out << " " << constant.id;
+		if (type->kind == TypeKind::Enum) {
+			enumValues[constant.parentType].push_back(constant.id);
+		}
 		//if (isArray) printArrayDeclarator(constant.type->arrayDeclarator());
 		if (!isSelfType)
 		{
@@ -1217,6 +1222,29 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		out << "private: static const " << type->id << " __values[];\n" << std::string(depth, '\t');
 		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 		out << "public: static constexpr std::span<const " << type->id << "> GetValues() noexcept;\n" << std::string(depth, '\t');
+		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } \n" << std::string(depth, '\t');
+		if (type->isAbstract) //flags
+		{
+			out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << "public: constexpr " << type->id << " operator &(" << type->id << " other) const noexcept { return (__value & other.__value); }\n"
+				<< std::string(depth, '\t');
+			out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << "public: constexpr bool HasFlag(" << type->id << " other) const noexcept { return static_cast<bool>(__value & other.__value); }\n"
+				<< std::string(depth, '\t');
+			out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << "public: constexpr const " << type->id << " operator |(" << type->id << " other) const noexcept { return (__value | other.__value); }\n"
+				<< std::string(depth, '\t');
+			out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << "public: constexpr " << type->id << "& operator |=(" << type->id << " other) noexcept { __value |= other.__value; return *this; }\n"
+				<< std::string(depth, '\t');
+			out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << "public: constexpr " << type->id << "& AddFlag(" << type->id << " other) noexcept { __value |= other.__value; return *this; }\n"
+				<< std::string(depth, '\t');
+			out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << "public: constexpr " << type->id << " RemoveFlag(" << type->id << " other) noexcept { __value &=~ other.__value; return __value; }\n"
+				<< std::string(depth, '\t');
+		}
 	}
 	for (const auto& alias : type->typeAliases)
 	{
@@ -2295,6 +2323,17 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 	}
 	if (type->kind == TypeKind::Enum) {
 		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "public: constexpr operator ";
+		if (type->enumBase)
+		{
+			printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
+		}
+		else
+		{
+			out << "CppAdvance::i32";
+		}
+		out << "() const noexcept { return __value; }\n" << std::string(depth, '\t');
+		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 		out << "private: constexpr " << type->id << "(";
 		if (type->enumBase)
 		{
@@ -2919,7 +2958,8 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			out << "public: ";
 		}
 		out << "\n" << std::string(depth, '\t');
-		if (nested->kind == TypeKind::Struct) {
+		if (nested->kind == TypeKind::Struct || nested->kind == TypeKind::Enum 
+			|| nested->kind == TypeKind::Union || nested->kind == TypeKind::UnionStruct) {
 			printStructWrapper(nested.get());
 		}
 		else if (nested->kind == TypeKind::Class) {
@@ -6708,6 +6748,7 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 		}
 
 		selfConstants.clear();
+		enumValues.clear();
 		isNested = false;
 		if (type->kind == TypeKind::Class)
 		{
@@ -6759,28 +6800,59 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 				if (type->enumBase)
 				{
 					printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
-					out << "(";
 				}
+				else
+				{
+					out << "CppAdvance::i32";
+				}
+				out << "(";
 				printConstantExpression(constant.expression);
-				if (type->enumBase) out << ")";
+				out << ")";
 			} 
 			else if (lastEnumValue.empty()) {
-				if (type->enumBase)
+				if (type->isAbstract) // flags
+				{
+					if (type->enumBase)
+					{
+						printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
+						out << "(1)";
+					}
+					else out << "1";
+				} 
+				else if (type->enumBase)
 				{
 					printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
 					out << "()";
 				}
 				else out << "0";
 			}
+			else if (type->isAbstract) // flags
+			{
+				if (type->enumBase)
+				{
+					printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
+				}
+				else
+				{
+					out << "CppAdvance::i32";
+				}
+				out << "(";
+				out << "CppAdvance::i64(" << lastEnumValue << ".__value) << 1 ? CppAdvance::i64(" << lastEnumValue << ".__value) << 1 : 1";
+				out << ")";
+			}
 			else
 			{
 				if (type->enumBase)
 				{
 					printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
-					out << "(";
 				}
+				else
+				{
+					out << "CppAdvance::i32";
+				}
+				out << "(";
 				out << "CppAdvance::i64(" << lastEnumValue << ".__value) + 1";
-				if (type->enumBase) out << ")";
+				out << ")";
 			}
 			out << ";" << std::endl << std::string(depth, '\t');
 			lastEnumValue = constant.id;
@@ -6790,21 +6862,34 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 			}
 			currentDeclarationName.clear();
 		}
-		if (type->kind == TypeKind::Enum)
+		std::set<std::string> enums;
+		for (const auto& [originName, values] : enumValues)
 		{
-			out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-			out << "inline constexpr " << type->id << " " << type->id << "::" << "__values[] = {";
+			auto name = originName;
+			StringReplace(name, ".", "::");
+			enums.insert(name);
+			out << "inline constexpr " << name << " " << name << "::" << "__values[] = {";
 			bool first = true;
-			for (const auto& constant : selfConstants)
+			for (const auto& constant : values)
 			{
 				if (!first) out << ", ";
 				first = false;
-				out << constant.id;
+				out << constant;
 			}
 			out << "};\n" << std::string(depth, '\t');
-			out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-			out << "inline constexpr std::span<const " << type->id << "> " << type->id << "::" << "GetValues() noexcept { return __values; } ;\n"
+			out << "inline constexpr std::span<const " << name << "> " << name << "::" << "GetValues() noexcept { return __values; }\n"
 				<< std::string(depth, '\t');
+		}
+		for (const auto& eenum : enums)
+		{
+			auto name = eenum;
+			StringReplace(name, "::", "__");
+			out << "#define ADV_USING_ENUM_" << name << " \\\n" << std::string(depth,'\t');
+			for (const auto& constant : enumValues[eenum])
+			{
+				out << "constexpr auto " << constant << " = " << eenum << "::" << constant << ";\\\n" << std::string(depth, '\t');
+			}
+			out << "\n" << std::string(depth, '\t');
 		}
 		if (!type->compilationCondition.empty())
 		{
@@ -8315,6 +8400,10 @@ void CppAdvanceCodegen::printDeclaration(CppAdvanceParser::DeclarationContext* c
 	{
 		printClassDefinition(type);
 	}
+	else if (auto type = ctx->enumDefinition())
+	{
+		printEnumDefinition(type);
+	}
 	else if (auto func = ctx->functionDefinition())
 	{
 		printFunctionDefinition(func);
@@ -9647,37 +9736,9 @@ void CppAdvanceCodegen::printClassDefinition(CppAdvanceParser::ClassDefinitionCo
 	isStructDeclaration = functionBody;
 	currentAccessSpecifier = std::nullopt;
 	auto prevTypeName = currentShortType;
-	if (isStructDeclaration)
-	{
-		/*if (!ctx->structHead()->Ref() && !ctx->structHead()->className()->simpleTemplateId())
-		{
-			if (auto tparams = ctx->structHead()->templateParams())
-			{
-				printTemplateParams(tparams);
-				out << " ";
-			}
-			out << "class __Class_" << ctx->structHead()->className()->getText() << ";\n" << std::string(depth, '\t');
-		}
-		out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-		printStructHead(ctx->structHead());
-		out << "\n" << std::string(depth++, '\t') << "{" << "\n" << std::string(depth, '\t');
-		out << "public: using __self = ";
-		printClassName(ctx->structHead()->className());
-		out << ";\n" << std::string(depth, '\t');
-		if (!ctx->structHead()->Ref()) {
-			out << "public: using __class = __Class_";
-			printClassName(ctx->structHead()->className());
-			out << ";\n" << std::string(depth, '\t');
-		}
-		out << "public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }\n" << std::string(depth, '\t');*/
-	}
 
 	if (ctx->structMemberSpecification())
 		printStructMemberSpecification(ctx->structMemberSpecification());
-
-	if (functionBody) {
-
-	}
 
 	currentShortType = prevTypeName;
 }
@@ -9839,6 +9900,10 @@ void CppAdvanceCodegen::printStructMemberDeclaration(CppAdvanceParser::StructMem
 	{
 		printClassDefinition(type);
 	}
+	else if (auto type = ctx->enumDefinition())
+	{
+		printEnumDefinition(type);
+	}
 	currentAccessSpecifier = prevAccess;
 }
 
@@ -9849,6 +9914,36 @@ void CppAdvanceCodegen::printMemberDeclarationCompoundStatement(CppAdvanceParser
 		if (isStructDeclaration) out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 		printStructMemberDeclaration(decl);
 		if (isStructDeclaration) out << "\n" << std::string(depth, '\t');
+	}
+}
+
+void CppAdvanceCodegen::printEnumDefinition(CppAdvanceParser::EnumDefinitionContext* ctx) const
+{
+	if (isStructDeclaration || functionBody) return;
+
+	if (ctx->enumMemberSpecification())
+	{
+		printEnumMemberSpecification(ctx->enumMemberSpecification());
+	}
+}
+
+void CppAdvanceCodegen::printEnumMemberSpecification(CppAdvanceParser::EnumMemberSpecificationContext* ctx) const
+{
+	for (auto decl : ctx->enumMemberDeclaration())
+	{
+		printEnumMemberDeclaration(decl);
+	}
+}
+
+void CppAdvanceCodegen::printEnumMemberDeclaration(CppAdvanceParser::EnumMemberDeclarationContext* ctx) const
+{
+	if (ctx->functionDefinition())
+	{
+		printFunctionDefinition(ctx->functionDefinition());
+	}
+	else if (ctx->property())
+	{
+		printProperty(ctx->property());
 	}
 }
 
@@ -12723,6 +12818,7 @@ void CppAdvanceCodegen::printSimpleDeclaration(CppAdvanceParser::SimpleDeclarati
 	bool isArray = false;
 	auto id = ctx->Identifier()->getText();
 	currentDeclarationName = id;
+	currentDeclaration = ctx;
 	if (auto spec = ctx->declSpecifierSeq())
 	{
 		printDeclSpecifierSeq(spec);
@@ -12824,6 +12920,7 @@ void CppAdvanceCodegen::printSimpleDeclaration(CppAdvanceParser::SimpleDeclarati
 	first = false;
 	isUnsafe = prevUnsafe;
 	currentDeclarationName.clear();
+	currentDeclaration = nullptr;
 }
 
 void CppAdvanceCodegen::printSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDeclarationContext* ctx) const
@@ -13300,6 +13397,10 @@ void CppAdvanceCodegen::printExpression(CppAdvanceParser::ExprContext* ctx) cons
 
 void CppAdvanceCodegen::printAssignmentExpression(CppAdvanceParser::AssignmentExpressionContext* ctx) const
 {
+	if (ctx->assignmentOperator())
+	{
+		currentAssignment = ctx;
+	}
 	if (auto cond = ctx->conditionalExpression())
 	{
 		printConditionalExpression(cond);
@@ -13328,6 +13429,7 @@ void CppAdvanceCodegen::printAssignmentExpression(CppAdvanceParser::AssignmentEx
 		if (ctx->assignmentOperator()->DoubleQuestionAssign()) out << "; })";
 		isAssignment = false;
 	}
+	currentAssignment = nullptr;
 }
 
 void CppAdvanceCodegen::printAssignmentOperator(CppAdvanceParser::AssignmentOperatorContext* ctx) const
@@ -14289,6 +14391,20 @@ void CppAdvanceCodegen::printPrimaryExpression(CppAdvanceParser::PrimaryExpressi
 {
 	if (auto id = ctx->idExpression())
 	{
+		if (ctx->Doublecolon())
+		{
+			if (currentDeclaration)
+			{
+				printTypeId(currentDeclaration->theTypeId());
+			}
+			else if (currentAssignment)
+			{
+				out << "decltype(";
+				printLogicalOrExpression(currentAssignment->logicalOrExpression());
+				out << ")";
+			}
+			out << "::";
+		}
 		if (literalMinus)
 			out << "-";
 		auto txt = id->getText();
