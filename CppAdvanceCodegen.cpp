@@ -6456,6 +6456,23 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 			out << "template<> ";
 		}
 
+		if (func.isStatic) {
+			out << "template <class __TT> requires std::same_as<__TT, __extension_" << type->pos.line << "_" << type->id;
+			if (type->templateParams)
+			{
+				out << "<";
+				bool first = true;
+				for (auto param : type->templateParams->templateParamDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					printIdentifier(param->Identifier());
+				}
+				out << ">";
+			}
+			out << "> ";
+		}
+
 		if (func.isConsteval)
 		{
 			out << "inline consteval ";
@@ -6479,6 +6496,10 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 		if (func.isConstructor) {
 			out << "__construct_";
 		}
+		else if (func.isStatic)
+		{
+			out << "__static_" << func.id;
+		}
 		else {
 			out << func.id;
 			if (func.templateSpecializationArgs) {
@@ -6488,7 +6509,7 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 			}
 		}
 		out << "(";
-		if (!func.isConstructor) {
+		if (!func.isConstructor && !func.isStatic) {
 			out << "__extension_" << type->pos.line << "_" << type->id;
 			if (type->templateParams)
 			{
@@ -6507,7 +6528,7 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 			out << "& __this ";
 			if (!func.isMutating) out << "LIFETIMEBOUND";
 		}
-		else
+		else if (func.isConstructor)
 		{
 			out << "CppAdvance::ConstructorProxy<__extension_" << type->pos.line << "_" << type->id;
 			if (type->templateParams && !type->id.empty())
@@ -6526,7 +6547,7 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 		}
 		if (func.params && func.params->paramDeclClause())
 		{
-			out << ", ";
+			if (!func.isStatic) out << ", ";
 			printParamDeclClause(func.params->paramDeclClause());
 		}
 		out << ")";
@@ -6648,6 +6669,22 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 			printTemplateParams(type->templateParams);
 			out << " ";
 		}
+		if (prop.isStatic) {
+			out << "template <class __TT> requires std::same_as<__TT, __extension_" << type->pos.line << "_" << type->id;
+			if (type->templateParams)
+			{
+				out << "<";
+				bool first = true;
+				for (auto param : type->templateParams->templateParamDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					printIdentifier(param->Identifier());
+				}
+				out << ">";
+			}
+			out << "> ";
+		}
 		isUnsafe = prop.isUnsafe;
 		if (isUnsafe)
 		{
@@ -6670,21 +6707,26 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 			else out << DLLName << "_HIDDEN ";
 		}
 
-		out << "auto get" << prop.id << "(__extension_" << type->pos.line << "_" << type->id;
-		if (type->templateParams)
-		{
-			out << "<";
-			bool first = true;
-			for (auto param : type->templateParams->templateParamDeclaration())
+		out << "auto ";
+		if (prop.isStatic) out << "__static_";
+		out << "get" << prop.id << "(";
+		if (!prop.isStatic) {
+			out << "__extension_" << type->pos.line << "_" << type->id;
+			if (type->templateParams)
 			{
-				if (!first) out << ", ";
-				first = false;
-				printIdentifier(param->Identifier());
+				out << "<";
+				bool first = true;
+				for (auto param : type->templateParams->templateParamDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					printIdentifier(param->Identifier());
+				}
+				out << ">";
 			}
-			out << ">";
+			out << " const& __this ";
+			if (prop.isRef) out << "LIFETIMEBOUND";
 		}
-		out << " const& __this ";
-		if (prop.isRef) out << "LIFETIMEBOUND";
 		out << ")";
 		isVariadicTemplate = false;
 		isFunctionDeclaration = false;
@@ -7262,6 +7304,23 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 					out << "template<> ";
 				}
 
+				if (func.isStatic) {
+					out << "template <class __TT> requires std::same_as<__TT, __extension_" << type->pos.line << "_" << type->id;
+					if (type->templateParams)
+					{
+						out << "<";
+						bool first = true;
+						for (auto param : type->templateParams->templateParamDeclaration())
+						{
+							if (!first) out << ", ";
+							first = false;
+							printIdentifier(param->Identifier());
+						}
+						out << ">";
+					}
+					out << "> ";
+				}
+
 				if (func.isConsteval)
 				{
 					out << "inline consteval ";
@@ -7280,6 +7339,9 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 				if (func.isConstructor) {
 					out << "__construct_";
 				}
+				else if (func.isStatic) {
+					out << "__static_" << func.id;
+				}
 				else {
 					out << func.id;
 					if (func.templateSpecializationArgs) {
@@ -7289,7 +7351,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 					}
 				}
 				out << "(";
-				if (!func.isConstructor) {
+				if (!func.isConstructor && !func.isStatic) {
 					out << "__extension_" << type->pos.line << "_" << type->id;
 					if (type->templateParams)
 					{
@@ -7308,7 +7370,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 					out << "& __this ";
 					if (!func.isMutating) out << "LIFETIMEBOUND";
 				}
-				else
+				else if (func.isConstructor)
 				{
 					out << "CppAdvance::ConstructorProxy<__extension_" << type->pos.line << "_" << type->id;
 					if (type->templateParams && !type->id.empty())
@@ -7327,7 +7389,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 				}
 				if (func.params && func.params->paramDeclClause())
 				{
-					out << ", ";
+					if (!func.isStatic) out << ", ";
 					printParamDeclClause(func.params->paramDeclClause());
 				}
 				out << ")";
@@ -7470,6 +7532,22 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 					printTemplateParams(type->templateParams);
 					out << " ";
 				}
+				if (prop.isStatic) {
+					out << "template <class __TT> requires std::same_as<__TT, __extension_" << type->pos.line << "_" << type->id;
+					if (type->templateParams)
+					{
+						out << "<";
+						bool first = true;
+						for (auto param : type->templateParams->templateParamDeclaration())
+						{
+							if (!first) out << ", ";
+							first = false;
+							printIdentifier(param->Identifier());
+						}
+						out << ">";
+					}
+					out << "> ";
+				}
 				isUnsafe = prop.isUnsafe;
 				if (isUnsafe)
 				{
@@ -7485,21 +7563,26 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 					out << "inline ";
 				}
 
-				out << "auto get" << prop.id << "(__extension_" << type->pos.line << "_" << type->id;
-				if (type->templateParams)
-				{
-					out << "<";
-					bool first = true;
-					for (auto param : type->templateParams->templateParamDeclaration())
+				out << "auto ";
+				if (prop.isStatic) out << "__static_";
+				out << "get" << prop.id << "(";
+				if (!prop.isStatic) {
+					out << "__extension_" << type->pos.line << "_" << type->id;
+					if (type->templateParams)
 					{
-						if (!first) out << ", ";
-						first = false;
-						printIdentifier(param->Identifier());
+						out << "<";
+						bool first = true;
+						for (auto param : type->templateParams->templateParamDeclaration())
+						{
+							if (!first) out << ", ";
+							first = false;
+							printIdentifier(param->Identifier());
+						}
+						out << ">";
 					}
-					out << ">";
+					out << " const& __this ";
+					if (prop.isRef) out << "LIFETIMEBOUND";
 				}
-				out << " const& __this ";
-				if (prop.isRef) out << "LIFETIMEBOUND";
 				out << ")";
 				isVariadicTemplate = false;
 				isFunctionDeclaration = false;
@@ -7905,7 +7988,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 
 		for (const auto& func : type->methods)
 		{
-			if (!func.isConverter && !func.id.starts_with("operator") && !func.id.starts_with("_operator") 
+			if (!func.isStatic && !func.isConverter && !func.id.starts_with("operator") && !func.id.starts_with("_operator") 
 				&& !(func.isConstructor && func.implicitSpecification)) continue;
 			if (!func.compilationCondition.empty())
 			{
@@ -7933,7 +8016,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 			}
 
 			out << "inline ";
-			if (func.isConstexpr) "constexpr ";
+			if (func.isConstexpr && !func.isConstructor) out << "constexpr ";
 
 			bool isRegularMethod = !func.isConverter && !func.isConstructor;
 			if (isRegularMethod) out << "decltype(auto) ";
@@ -7986,7 +8069,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 			else out << "()";
 			isVariadicTemplate = false;
 			isFunctionDeclaration = false;
-			if (!func.isConstructor) out << " const ";
+			if (!func.isConstructor && !func.isStatic) out << " const ";
 			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
 
 			if (!func.isStatic && func.isRefReturn)
@@ -8007,7 +8090,15 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 				out << ")) {}";
 			}
 			else {
-				out << "{ ADV_EXPRESSION_BODY(__ref().";
+				out << "{ ADV_EXPRESSION_BODY(";
+				if (func.isStatic)
+				{
+					out << "__class::";
+				}
+				else
+				{
+					out << "__ref().";
+				}
 				if (func.templateParams) out << "template ";
 				if (func.isConverter)
 				{
@@ -8118,7 +8209,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 				else out << "__ref().";
 				out << func.id << "(1); }" << std::endl << std::string(depth, '\t');
 			}
-
+			if (func.isStatic) continue;
 			if (type->templateParams)
 			{
 				printTemplateParams(type->templateParams);
@@ -8187,13 +8278,21 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 			else out << "()";
 			isVariadicTemplate = false;
 			isFunctionDeclaration = false;
-			out << " const ";
+			if (!func.isStatic) out << " const ";
 			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
 
 			if (!func.isStatic && func.isRefReturn)
 				out << " LIFETIMEBOUND";
 
-			out << "{ ADV_EXPRESSION_BODY(__ref().";
+			out << "{ ADV_EXPRESSION_BODY(";
+			if (func.isStatic)
+			{
+				out << "__class::";
+			}
+			else
+			{
+				out << "__ref().";
+			}
 			if (func.templateParams) out << "template ";
 			if (func.isConverter)
 			{
@@ -13947,55 +14046,66 @@ void CppAdvanceCodegen::printPostfixExpression(CppAdvanceParser::PostfixExpressi
 						funcname = funcname.substr(0, funcname.find('<'));
 					}
 
-					if (!sema.typeset.contains(left) && !sema.cppParser.namespaces.contains(left) && funcname != currentDeclarationName && !expr->Greater())
+					if (!sema.cppParser.namespaces.contains(left) && funcname != currentDeclarationName && !expr->Greater() && left != "super")
 					{
 						std::string ufcs = "ADV_UFCS";
 						if (tpl) ufcs += "_TEMPLATE";
 						if (!functionBody) ufcs += "_NONLOCAL";
-						if (sema.optionalChains.contains(expr->postfixExpression()))
+						if (sema.typeset.contains(left))
 						{
-							if (expr->Question())
+							StringReplace(ufcs, "UFCS", "USFCS");
+							out << ufcs << "((";
+							printPostfixExpression(expr->postfixExpression());
+							out << "), ";
+							printIdExpression(expr->idExpression());
+							out << ")(";
+						}
+						else {
+							if (sema.optionalChains.contains(expr->postfixExpression()))
 							{
-								if (!ignoredExpressions.contains(expr->postfixExpression())) {
-									printPostfixExpression(expr->postfixExpression());
-									out << ".andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
+								if (expr->Question())
+								{
+									if (!ignoredExpressions.contains(expr->postfixExpression())) {
+										printPostfixExpression(expr->postfixExpression());
+										out << ".andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
+									}
+									out << ufcs << "(";
+									printIdExpression(expr->idExpression());
+									out << ")(value.__ref()";
 								}
-								out << ufcs << "(";
-								printIdExpression(expr->idExpression());
-								out << ")(value.__ref()";
+								else
+								{
+									auto innerExpr = expr;
+									while (innerExpr && !innerExpr->Question())
+									{
+										innerExpr = innerExpr->postfixExpression();
+									}
+									innerExpr = innerExpr->postfixExpression();
+									if (!ignoredExpressions.contains(innerExpr))
+									{
+										printPostfixExpression(innerExpr);
+										ignoredExpressions.insert(innerExpr);
+										out << ".andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
+									}
+
+									out << ufcs << "(";
+									printIdExpression(expr->idExpression());
+									out << ")(";
+									printPostfixExpression(expr->postfixExpression());
+									out << ".__ref()";
+								}
 							}
 							else
 							{
-								auto innerExpr = expr;
-								while (innerExpr && !innerExpr->Question())
-								{
-									innerExpr = innerExpr->postfixExpression();
-								}
-								innerExpr = innerExpr->postfixExpression();
-								if (!ignoredExpressions.contains(innerExpr))
-								{
-									printPostfixExpression(innerExpr);
-									ignoredExpressions.insert(innerExpr);
-									out << ".andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
-								}
-
 								out << ufcs << "(";
 								printIdExpression(expr->idExpression());
 								out << ")(";
 								printPostfixExpression(expr->postfixExpression());
 								out << ".__ref()";
 							}
-						}
-						else
-						{
-							out << ufcs << "(";
-							printIdExpression(expr->idExpression());
-							out << ")(";
-							printPostfixExpression(expr->postfixExpression());
-							out << ".__ref()";
-						}
 
-						if (ctx->expressionList()) out << ", ";
+							if (ctx->expressionList()) out << ", ";
+						}
 						varargDepth = prev;
 						startDone = true;
 						if (extension) ++currentArg;
@@ -14295,7 +14405,25 @@ void CppAdvanceCodegen::printPostfixExpression(CppAdvanceParser::PostfixExpressi
 				if (dotpos != txt.npos && tplpos != txt.npos && dotpos < tplpos || dotpos == txt.npos && tplpos != txt.npos) {
 					txtName = txt.substr(0, tplpos);
 				}
-				if (sema.typeset.contains(txtName) || sema.cppParser.namespaces.contains(txtName))
+				
+				if (sema.typeset.contains(txtName))
+				{
+					if (ctx->Greater() || txtName == "super")
+					{
+						printPostfixExpression(expr);
+						out << "::";
+						printIdExpression(ctx->idExpression());
+					}
+					else if (!functionCallExpressions.contains(ctx->idExpression()))
+					{
+						out << "ADV_USPCS(";
+						printIdExpression(ctx->idExpression());
+						out << ", ";
+						printPostfixExpression(expr);
+						out << ")()";
+					}
+				}
+				else if (sema.cppParser.namespaces.contains(txtName))
 				{
 					printPostfixExpression(expr);
 					out << "::";

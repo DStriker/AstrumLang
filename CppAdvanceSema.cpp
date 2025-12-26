@@ -1271,8 +1271,6 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
             isStatic = true;
 			if (!isTypeDefinitionBody() || isFriendDefinition)
 				CppAdvanceCompilerError("Global functions are implicitly static", spec->Static()->getSymbol());
-			else if (currentTypeKind.top() == TypeKind::Extension)
-				CppAdvanceCompilerError("Extension method cannot be static", spec->Static()->getSymbol());
 		}
 		else if (spec->Mutable())
 		{
@@ -1445,9 +1443,12 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 			templateSpecializationArgs = tid->templateArgumentList();
 		}
 
-		if ((templateParams || templateSpecializationArgs) && isTypeDefinitionBody() && currentTypeKind.top() == TypeKind::Interface)
+		if ((templateParams || templateSpecializationArgs) && isTypeDefinitionBody())
 		{
-			CppAdvanceCompilerError("Interface method cannot be generic", ctx->getStart());
+			if (currentTypeKind.top() == TypeKind::Interface)
+				CppAdvanceCompilerError("Interface method cannot be generic", ctx->getStart());
+			else if(currentTypeKind.top() == TypeKind::Extension && isStatic)
+				CppAdvanceCompilerError("Static extension method cannot be generic", ctx->getStart());
 		}
 
 		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
@@ -3898,8 +3899,8 @@ void CppAdvanceSema::enterProperty(CppAdvanceParser::PropertyContext* ctx)
 			CppAdvanceCompilerError("Cannot to declare final property outside the class body", ctx->Final()->getSymbol());
 	}
 
-	if (isStatic && currentTypeKind.top() == TypeKind::Extension)
-		CppAdvanceCompilerError("Extension property cannot be static", ctx->Static()->getSymbol());
+	/*if (isStatic && currentTypeKind.top() == TypeKind::Extension)
+		CppAdvanceCompilerError("Extension property cannot be static", ctx->Static()->getSymbol());*/
 
 	if (ctx->shortFunctionBody())
 	{
@@ -3976,7 +3977,7 @@ void CppAdvanceSema::enterProperty(CppAdvanceParser::PropertyContext* ctx)
 			isProtectedTypeDefinition, isUnsafeTypeDefinition, isVirtual, isOverride, false,
 			isFinal && currentTypeKind.top() == TypeKind::Class, isInline, isConstexpr };
 		structStack.top()->properties.emplace_back(property);
-		properties.insert_or_assign(pos,property);
+		if (currentTypeKind.top() != TypeKind::Extension) properties.insert_or_assign(pos,property);
 	}
 }
 

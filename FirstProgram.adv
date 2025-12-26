@@ -473,8 +473,14 @@ private extension <T> {
 		this(x, x, x);
         print(txt);
 	}
+
 	//operator+: (in ref other: ConcreteVectorClass) -> ConcreteVectorClass => new ConcreteVectorClass(this.x + other.x, this.y + other.y, this.z + other.z);
 	//GetMagicNumber: (in i: VectorClass) -> f32 => this.x * i.x;
+}
+
+public extension VectorClass {
+	static Count3: i32 ==> 333;
+	static GetSuperCount: (x: i32, y: i32) -> i32 ==> x*y + x+y;
 }
 
 public getSum: (in vec: VectorClass) -> f32 => vec.x + vec.y + vec.z;
@@ -530,15 +536,8 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 	{
 		nxt2:VectorClass? = stackalloc ConcreteVectorClass(10,"123455555555");
 		vec: Vector3 = new Vector3(12,"12344444444444");
-		print(vec.x);
-		print(vec.y);
-		print(vec.z);
 		print(nxt2!.GetStrongReferenceCount());
 		print(nxt!.GetStrongReferenceCount());
-		//print(nxt!.GetMagicNumber(nxt2!));
-		//nxt = nxtm! + nxt2!;
-		//print(nxt!.GetMagicNumber(nxt2!));
-		//print(nxt!.DefaultMethod(nxt2!));
 		print(nxt2!.GetStrongReferenceCount());
 		print(nxt![2]);
 		xx: IInterface.SomeInt = IInterface.VERSION;
@@ -548,18 +547,19 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		//nxxx = nxt2;
 		nxt?.Reset();
 		print(nxt2!.PrintInterface(123));
-		//print(nxt2! * 10.0f);
-		//print(nxt2!.AsString);
-		//print(nxt2![1.0f, 2.0f, 3.0f]);
-		//nxt!.Name = "12345";
 		print(nxt!.Name);
 		print(sizeof(__Class_ConcreteVectorClass));
 		//nxt = null;
 		print(nxt2!.GetStrongReferenceCount());
-		xi: u32(true);
 		//print(map<int,map<int,string>>.StaticMethod());
 		day: DayOfWeek = ::Monday;
 		day = ::Wednesday;
+		print(VectorClass.Count2);
+		VectorClass.Count2 = 145;
+		print(VectorClass.Count2);
+		print(VectorClass.Method(1,2,3));
+		print(VectorClass.Count3);
+		print(VectorClass.GetSuperCount(5,7));
 		print(day.Value);
 		o: object = day;
 		on: object? = day;

@@ -1508,6 +1508,13 @@ constexpr auto Saturday = Text::Saturday;\
 constexpr auto Sunday = Text::Sunday;\
 
 
+#line 481 "FirstProgram.adv"
+using __extension_481_VectorClass = VectorClass;
+#line 483 "FirstProgram.adv"
+template <class __TT> requires std::same_as<__TT, __extension_481_VectorClass> inline constexpr auto __static_GetSuperCount(CppAdvance::i32 x, CppAdvance::i32 y)  -> const CppAdvance::i32;
+#line 482 "FirstProgram.adv"
+template <class __TT> requires std::same_as<__TT, __extension_481_VectorClass> inline constexpr auto __static_getCount3() -> const CppAdvance::i32;
+
 
 #line 57 "FirstProgram.adv"
 class __Class_Vector3 final : public CppAdvance::ValueType
@@ -1834,7 +1841,7 @@ template<> inline constexpr auto sum<CppAdvance::i32, CppAdvance::i32(15)>(CppAd
 inline auto func4(CppAdvance::i32 x)  -> const CppAdvance::i32;
 #line 362 "FirstProgram.adv"
 inline auto _operator_subscript(CppAdvance::In<VectorClass> vec, CppAdvance::f32 x, CppAdvance::f32 y)  -> const CppAdvance::f32;
-#line 480 "FirstProgram.adv"
+#line 486 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32;
 //###############################################################################
 //# Global compile-time constants
@@ -2315,10 +2322,10 @@ inline auto Text::ToShortString() const  -> const CppAdvance::Str
 	#line 447 "FirstProgram.adv"
 	return Value;
 }
-#line 480 "FirstProgram.adv"
+#line 486 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32
 {
-	#line 480 "FirstProgram.adv"
+	#line 486 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(ADV_UPCS(x)(vec.__ref()) + ADV_UPCS(y)(vec.__ref()) + ADV_UPCS(z)(vec.__ref())); 
 }
 #line 9999 "FirstProgram.adv"
@@ -2349,6 +2356,8 @@ inline decltype(auto) VectorClass__Unowned::_operator_subscript(CppAdvance::i32 
 #line 287 "FirstProgram.adv"
 inline decltype(auto) VectorClass::_operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const { ADV_EXPRESSION_BODY(__ref()._operator_subscript(idx, idx2, idx3)); }
 inline decltype(auto) VectorClass__Unowned::_operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const { ADV_EXPRESSION_BODY(__ref()._operator_subscript(idx, idx2, idx3)); }
+#line 293 "FirstProgram.adv"
+inline constexpr decltype(auto) VectorClass::Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z){ ADV_EXPRESSION_BODY(__class::Method(x, y, z)); }
 
 #line 9999 "FirstProgram.adv"
 inline ConcreteVectorClass::ADV_CLASS_DEFAULT_CTOR(ConcreteVectorClass)
@@ -2385,4 +2394,17 @@ inline const CppAdvance::i32 IInterface::SomeStaticMethod(CppAdvance::i32 i)
 {
 	#line 408 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(i * CppAdvance::i32(123)); 
+}
+#line 483 "FirstProgram.adv"
+template <class __TT> requires std::same_as<__TT, __extension_481_VectorClass> inline constexpr auto __static_GetSuperCount(CppAdvance::i32 x, CppAdvance::i32 y)  -> const CppAdvance::i32
+{
+	#line 483 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(x * y + x + y); 
+}
+
+#line 482 "FirstProgram.adv"
+template <class __TT> requires std::same_as<__TT, __extension_481_VectorClass> inline constexpr auto __static_getCount3() -> const CppAdvance::i32
+{
+	#line 482 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(CppAdvance::i32(333)); 
 }
