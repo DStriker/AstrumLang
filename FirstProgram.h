@@ -51,6 +51,10 @@ class DayOfWeek;
 class __Class_DayOfWeek;
 class Text;
 class __Class_Text;
+class ComplexVariant;
+class ComplexVariant__Unowned;
+class ComplexVariant__Weak;
+class __Class_ComplexVariant;
 namespace __ntuples { class NamedTuple_4e7be1ed49b09d71; } 
 namespace __ntuples { class NamedTuple_6893f862d6c49683; } 
 namespace __ntuples { class NamedTuple_6893f862d6c49683; } 
@@ -97,6 +101,7 @@ struct Vector3 final : public CppAdvance::Struct {
 		private: using ___super = CppAdvance::ObjectRef;
 		public: using __class = __Class_NestedStruct;
 		private: friend class NestedStruct__Unowned;
+		friend class __Class_NestedStruct;
 		friend class NestedStruct__Weak;
 		public: using __strong_ref = NestedStruct;
 		public: using __unowned_ref = NestedStruct__Unowned;
@@ -106,9 +111,10 @@ struct Vector3 final : public CppAdvance::Struct {
 		ADV_CLASS_INIT(NestedStruct)
 		ADV_CLASS_STRONG_COMMON_CTORS(NestedStruct)
 		#define ADV_PROPERTY_SELF __class
+		#define ADV_PROPERTY_SELF __self
 		#line 101 "FirstProgram.adv"
 		public: inline constexpr static decltype(auto) count(CppAdvance::i32 i) ;
-		#define ADV_PROPERTY_SELF __self
+		
 	};
 	#line 96 "FirstProgram.adv"
 	class NestedStruct__Unowned : public CppAdvance::ObjectRef__Unowned {
@@ -303,6 +309,7 @@ class BaseClass : public CppAdvance::ObjectRef {
 	private: using ___super = CppAdvance::ObjectRef;
 	public: using __class = __Class_BaseClass;
 	private: friend class BaseClass__Unowned;
+	friend class __Class_BaseClass;
 	friend class BaseClass__Weak;
 	public: using __strong_ref = BaseClass;
 	public: using __unowned_ref = BaseClass__Unowned;
@@ -314,6 +321,7 @@ class BaseClass : public CppAdvance::ObjectRef {
 	ADV_CLASS_STRONG_COMMON_CTORS(BaseClass)
 	#define ADV_PROPERTY_SELF __class
 	#define ADV_PROPERTY_SELF __self
+	
 };
 #line 176 "FirstProgram.adv"
 class BaseClass__Unowned : public CppAdvance::ObjectRef__Unowned {
@@ -350,6 +358,7 @@ class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
 	private: using ___super = CppAdvance::ClassRefParent<BaseClass>;
 	public: using __class = __Class_VectorClass;
 	private: friend class VectorClass__Unowned;
+	friend class __Class_VectorClass;
 	friend class VectorClass__Weak;
 	public: using __strong_ref = VectorClass;
 	public: using __unowned_ref = VectorClass__Unowned;
@@ -367,6 +376,7 @@ class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
 		private: using ___super = CppAdvance::ObjectRef;
 		public: using __class = __Class_NestedClass;
 		private: friend class NestedClass__Unowned;
+		friend class __Class_NestedClass;
 		friend class NestedClass__Weak;
 		public: using __strong_ref = NestedClass;
 		public: using __unowned_ref = NestedClass__Unowned;
@@ -376,9 +386,10 @@ class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
 		ADV_CLASS_INIT(NestedClass)
 		ADV_CLASS_STRONG_COMMON_CTORS(NestedClass)
 		#define ADV_PROPERTY_SELF __class
+		#define ADV_PROPERTY_SELF __self
 		#line 228 "FirstProgram.adv"
 		public: inline constexpr static decltype(auto) count(CppAdvance::i32 i) ;
-		#define ADV_PROPERTY_SELF __self
+		
 	};
 	#line 217 "FirstProgram.adv"
 	class NestedClass__Unowned : public CppAdvance::ObjectRef__Unowned {
@@ -440,6 +451,7 @@ class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
 	public: static decltype(auto) getZERO();
 	ADV_PROPERTY_GETTER_STATIC(public, TESTDLL_API, ZERO, getZERO, Vector3);
 	#define ADV_PROPERTY_SELF __class
+	#define ADV_PROPERTY_SELF __self
 	#line 254 "FirstProgram.adv"
 	public: inline  operator CppAdvance::f32() const noexcept;
 	#line 286 "FirstProgram.adv"
@@ -455,7 +467,7 @@ class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
 	template<class T> friend class TestStruct2;
 	template<class T> friend class __Class_TestStruct2;
 	friend const CppAdvance::i32 func3(CppAdvance::i32 x);
-	#define ADV_PROPERTY_SELF __self
+	
 };
 #line 180 "FirstProgram.adv"
 class VectorClass__Unowned : public CppAdvance::ClassRefParentUnowned<BaseClass> {
@@ -498,6 +510,7 @@ class ConcreteVectorClass : public CppAdvance::ClassRefParent<VectorClass> {
 	private: using ___super = CppAdvance::ClassRefParent<VectorClass>;
 	public: using __class = __Class_ConcreteVectorClass;
 	private: friend class ConcreteVectorClass__Unowned;
+	friend class __Class_ConcreteVectorClass;
 	friend class ConcreteVectorClass__Weak;
 	public: using __strong_ref = ConcreteVectorClass;
 	public: using __unowned_ref = ConcreteVectorClass__Unowned;
@@ -508,11 +521,12 @@ class ConcreteVectorClass : public CppAdvance::ClassRefParent<VectorClass> {
 	ADV_CLASS_INIT(ConcreteVectorClass)
 	ADV_CLASS_STRONG_COMMON_CTORS(ConcreteVectorClass)
 	#define ADV_PROPERTY_SELF __class
+	#define ADV_PROPERTY_SELF __self
 	#line 332 "FirstProgram.adv"
 	public: inline  ConcreteVectorClass(CppAdvance::i32 i) noexcept;
 	#line 356 "FirstProgram.adv"
 	public: inline decltype(auto) operator+(const ConcreteVectorClass& other) const ;
-	#define ADV_PROPERTY_SELF __self
+	
 };
 #line 325 "FirstProgram.adv"
 class ConcreteVectorClass__Unowned : public CppAdvance::ClassRefParentUnowned<VectorClass> {
@@ -551,6 +565,7 @@ class Next : public CppAdvance::ObjectRef {
 	private: using ___super = CppAdvance::ObjectRef;
 	public: using __class = __Class_Next;
 	private: friend class Next__Unowned;
+	friend class __Class_Next;
 	friend class Next__Weak;
 	public: using __strong_ref = Next;
 	public: using __unowned_ref = Next__Unowned;
@@ -561,9 +576,10 @@ class Next : public CppAdvance::ObjectRef {
 	ADV_CLASS_INIT(Next)
 	ADV_CLASS_STRONG_COMMON_CTORS(Next)
 	#define ADV_PROPERTY_SELF __class
+	#define ADV_PROPERTY_SELF __self
 	#line 381 "FirstProgram.adv"
 	public: inline decltype(auto) operator*() const ;
-	#define ADV_PROPERTY_SELF __self
+	
 };
 #line 364 "FirstProgram.adv"
 class Next__Unowned : public CppAdvance::ObjectRef__Unowned {
@@ -1508,12 +1524,76 @@ constexpr auto Saturday = Text::Saturday;\
 constexpr auto Sunday = Text::Sunday;\
 
 
-#line 481 "FirstProgram.adv"
-using __extension_481_VectorClass = VectorClass;
-#line 483 "FirstProgram.adv"
-template <class __TT> requires std::same_as<__TT, __extension_481_VectorClass> inline constexpr auto __static_GetSuperCount(CppAdvance::i32 x, CppAdvance::i32 y)  -> const CppAdvance::i32;
-#line 482 "FirstProgram.adv"
-template <class __TT> requires std::same_as<__TT, __extension_481_VectorClass> inline constexpr auto __static_getCount3() -> const CppAdvance::i32;
+template<> inline constexpr bool CppAdvance::__details::cheapCopy<ComplexVariant> = false;
+#line 452 "FirstProgram.adv"
+class ComplexVariant final : public CppAdvance::EnumClassRef {
+	public: using __self = ComplexVariant;
+	private: using ___super = CppAdvance::EnumClassRef;
+	public: using __class = __Class_ComplexVariant;
+	private: friend class ComplexVariant__Unowned;
+	friend class __Class_ComplexVariant;
+	friend class ComplexVariant__Weak;
+	public: using __strong_ref = ComplexVariant;
+	public: using __unowned_ref = ComplexVariant__Unowned;
+	public: using __weak_ref = ComplexVariant__Weak;
+	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *reinterpret_cast<__class*>(_obj); }
+	ADV_CLASS_FROM_PTR(ComplexVariant)
+	public: inline ComplexVariant();
+	ADV_CLASS_INIT(ComplexVariant)
+	ADV_CLASS_STRONG_COMMON_CTORS(ComplexVariant)
+	#define ADV_PROPERTY_SELF __class
+	public: ADV_PROPERTY_GETTER_STATIC(public, TESTDLL_API, Count10, getCount10, CppAdvance::i32);
+	#define ADV_PROPERTY_SELF __self
+	#line 470 "FirstProgram.adv"
+	public: inline decltype(auto) operator*() const ;
+	public: FORCE_INLINE static decltype(auto) getValue1() noexcept;
+	ADV_PROPERTY_GETTER_STATIC(public, TESTDLL_API, Value1, getValue1, __self);
+	public: FORCE_INLINE static decltype(auto) getValue2() noexcept;
+	ADV_PROPERTY_GETTER_STATIC(public, TESTDLL_API, Value2, getValue2, __self);
+	public: FORCE_INLINE static decltype(auto) getValue3() noexcept;
+	ADV_PROPERTY_GETTER_STATIC(public, TESTDLL_API, Value3, getValue3, __self);
+	public: FORCE_INLINE static decltype(auto) getValue4() noexcept;
+	ADV_PROPERTY_GETTER_STATIC(public, TESTDLL_API, Value4, getValue4, __self);
+	#line 452 "FirstProgram.adv"
+	public: FORCE_INLINE static decltype(auto) GetValues() noexcept;
+	
+};
+#line 452 "FirstProgram.adv"
+class ComplexVariant__Unowned : public CppAdvance::ClassRefParentUnowned<IMagicNumber> {
+	public: using __self = ComplexVariant;
+	public: using __strong_ref = ComplexVariant;
+	public: using __unowned_ref = ComplexVariant__Unowned;
+	public: using __weak_ref = ComplexVariant__Weak;
+	private: using ___super = CppAdvance::ClassRefParentUnowned<IMagicNumber>;
+	public: using __class = __Class_ComplexVariant;
+	public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *reinterpret_cast<__class*>(_obj); }
+	ADV_CLASS_FROM_PTR(ComplexVariant__Unowned)
+	ADV_CLASS_UNOWNED_COMMON_CTORS(ComplexVariant__Unowned)
+	#line 470 "FirstProgram.adv"
+	public: inline decltype(auto) operator*() const ;
+	
+};
+#line 452 "FirstProgram.adv"
+class ComplexVariant__Weak : public CppAdvance::ClassRefParentWeak<IMagicNumber> {
+	public: using __self = ComplexVariant;
+	public: using __strong_ref = ComplexVariant;
+	public: using __unowned_ref = ComplexVariant__Unowned;
+	public: using __weak_ref = ComplexVariant__Weak;
+	private: using ___super = CppAdvance::ClassRefParentWeak<IMagicNumber>;
+	public: using __class = __Class_ComplexVariant;
+	static constexpr bool __IS_ADV_NULLABLE = true;
+	public: FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+	ADV_CLASS_WEAK_FROM_PTR(ComplexVariant__Weak)
+	ADV_CLASS_WEAK_COMMON_CTORS(ComplexVariant__Weak)
+	#define ADV_PROPERTY_SELF __self
+};
+
+#line 513 "FirstProgram.adv"
+template<class T> using __extension_513_T = T;
+#line 515 "FirstProgram.adv"
+template<class T> inline constexpr auto __static_GetSuperCount(CppAdvance::i32 x, CppAdvance::i32 y)  -> const CppAdvance::i32;
+#line 514 "FirstProgram.adv"
+template<class T> inline constexpr auto __static_getCount3() -> const CppAdvance::i32;
 
 
 #line 57 "FirstProgram.adv"
@@ -1768,6 +1848,59 @@ class __Class_Text final : public CppAdvance::ValueType
 #line 437 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(Text);
 
+#line 452 "FirstProgram.adv"
+class __Class_ComplexVariant final : public CppAdvance::EnumClass {
+	public: using __self = ComplexVariant;
+	private: using ___super = CppAdvance::EnumClass;
+	public: using __selfClass = __Class_ComplexVariant;
+	friend class __self;
+	friend class __self::__weak_ref;
+	#define ADV_PROPERTY_SELF __selfClass
+	#line 452 "FirstProgram.adv"
+	ADV_CHECK_INTERFACE(IMagicNumber, IMagicNumber);
+	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+	#line 459 "FirstProgram.adv"
+	public: const CppAdvance::i32 i; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
+	#line 460 "FirstProgram.adv"
+	public: const CppAdvance::f32 f; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
+	#line 461 "FirstProgram.adv"
+	public: const CppAdvance::Str s; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
+	#line 453 "FirstProgram.adv"
+	public: static TESTDLL_API const __self Value1;
+	#line 454 "FirstProgram.adv"
+	public: static TESTDLL_API const __self Value2;
+	#line 455 "FirstProgram.adv"
+	public: static TESTDLL_API const __self Value3;
+	#line 456 "FirstProgram.adv"
+	public: static TESTDLL_API const __self Value4;
+	#line 452 "FirstProgram.adv"
+	private: static TESTDLL_API const __self __values[];
+	#line 452 "FirstProgram.adv"
+	public: static std::span<const __self> GetValues() noexcept { return { __values, 4 }; }
+	#line 479 "FirstProgram.adv"
+	public: inline constexpr auto getCount123() const  -> CppAdvance::i32;
+	#line 9999 "FirstProgram.adv"
+	ADV_PROPERTY_GETTER(public, Count123, getCount123, CppAdvance::i32);
+	#line 481 "FirstProgram.adv"
+	public: inline constexpr static auto getCount10()  -> CppAdvance::i32;
+	#line 9999 "FirstProgram.adv"
+	ADV_PROPERTY_GETTER_STATIC(public, TESTDLL_API, Count10, getCount10, CppAdvance::i32);
+	#line 464 "FirstProgram.adv"
+	private: inline __Class_ComplexVariant(CppAdvance::i32 i, CppAdvance::f32 f, CppAdvance::Str s) ;
+	#line 470 "FirstProgram.adv"
+	public: inline auto operator*() const  -> const CppAdvance::i32;
+	#line 472 "FirstProgram.adv"
+	public: inline auto printVariant() const  -> void;
+	#line 477 "FirstProgram.adv"
+	public: inline auto GetMagicNumber(CppAdvance::In<VectorClass> f) const  -> const CppAdvance::f32;
+	
+#define ADV_PROPERTY_SELF __self
+};
+#line 452 "FirstProgram.adv"
+ADV_CHECK_FOR_CONCRETE(ComplexVariant);
+#line 452 "FirstProgram.adv"
+ADV_CHECK_INTERFACE_IMPLEMENTATION(ComplexVariant, IMagicNumber, IMagicNumber, ComplexVariant);
+
 namespace __ntuples {
 	#line 9999 "FirstProgram.adv"
 	struct NamedTuple_4e7be1ed49b09d71 final : public CppAdvance::Struct { 
@@ -1841,7 +1974,7 @@ template<> inline constexpr auto sum<CppAdvance::i32, CppAdvance::i32(15)>(CppAd
 inline auto func4(CppAdvance::i32 x)  -> const CppAdvance::i32;
 #line 362 "FirstProgram.adv"
 inline auto _operator_subscript(CppAdvance::In<VectorClass> vec, CppAdvance::f32 x, CppAdvance::f32 y)  -> const CppAdvance::f32;
-#line 486 "FirstProgram.adv"
+#line 518 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32;
 //###############################################################################
 //# Global compile-time constants
@@ -2322,10 +2455,54 @@ inline auto Text::ToShortString() const  -> const CppAdvance::Str
 	#line 447 "FirstProgram.adv"
 	return Value;
 }
-#line 486 "FirstProgram.adv"
+#line 464 "FirstProgram.adv"
+inline __Class_ComplexVariant::__Class_ComplexVariant(CppAdvance::i32 i, CppAdvance::f32 f, CppAdvance::Str s)  : 
+#line 465 "FirstProgram.adv"
+i{i}, 
+#line 466 "FirstProgram.adv"
+f{f}, 
+#line 467 "FirstProgram.adv"
+s{s}
+{
+}
+#line 470 "FirstProgram.adv"
+inline auto __Class_ComplexVariant::operator*() const  -> const CppAdvance::i32
+{
+	#line 470 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(i); 
+}
+#line 472 "FirstProgram.adv"
+inline auto __Class_ComplexVariant::printVariant() const  -> void
+{
+	#line 473 "FirstProgram.adv"
+	print(CppAdvance::Str{u"This is printVariant function in optional chaining call"});
+	#line 474 "FirstProgram.adv"
+	print(s);
+}
+#line 477 "FirstProgram.adv"
+inline auto __Class_ComplexVariant::GetMagicNumber(CppAdvance::In<VectorClass> f) const  -> const CppAdvance::f32
+{
+	#line 477 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(ADV_UPCS(f)((*this).__ref()) * ADV_UPCS(x)(f.__ref())); 
+}
+#line 479 "FirstProgram.adv"
+inline constexpr auto __Class_ComplexVariant::getCount123() const  -> CppAdvance::i32 
+{
+	#line 479 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(CppAdvance::i32(1234567890)); 
+}
+
+#line 481 "FirstProgram.adv"
+inline constexpr auto __Class_ComplexVariant::getCount10()  -> CppAdvance::i32 
+{
+	#line 481 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(CppAdvance::i32(12345)); 
+}
+
+#line 518 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32
 {
-	#line 486 "FirstProgram.adv"
+	#line 518 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(ADV_UPCS(x)(vec.__ref()) + ADV_UPCS(y)(vec.__ref()) + ADV_UPCS(z)(vec.__ref())); 
 }
 #line 9999 "FirstProgram.adv"
@@ -2395,16 +2572,32 @@ inline const CppAdvance::i32 IInterface::SomeStaticMethod(CppAdvance::i32 i)
 	#line 408 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(i * CppAdvance::i32(123)); 
 }
-#line 483 "FirstProgram.adv"
-template <class __TT> requires std::same_as<__TT, __extension_481_VectorClass> inline constexpr auto __static_GetSuperCount(CppAdvance::i32 x, CppAdvance::i32 y)  -> const CppAdvance::i32
+#line 9999 "FirstProgram.adv"
+inline ComplexVariant::ADV_CLASS_STRONG_CTOR_REF(ComplexVariant)
+inline ComplexVariant& ComplexVariant::ADV_CLASS_STRONG_ASSIGN_REF(ComplexVariant)
+inline ComplexVariant__Unowned::ADV_CLASS_UNOWNED_CTOR_REF(ComplexVariant__Unowned)
+inline ComplexVariant__Unowned& ComplexVariant__Unowned::ADV_CLASS_UNOWNED_ASSIGN_REF(ComplexVariant__Unowned)
+inline ComplexVariant__Weak::ADV_CLASS_WEAK_CTOR_REF(ComplexVariant__Weak)
+inline ComplexVariant__Weak& ComplexVariant__Weak::ADV_CLASS_WEAK_ASSIGN_REF(ComplexVariant__Weak)
+FORCE_INLINE decltype(auto) ComplexVariant::getValue1() noexcept { return __class::Value1; }
+FORCE_INLINE decltype(auto) ComplexVariant::getValue2() noexcept { return __class::Value2; }
+FORCE_INLINE decltype(auto) ComplexVariant::getValue3() noexcept { return __class::Value3; }
+FORCE_INLINE decltype(auto) ComplexVariant::getValue4() noexcept { return __class::Value4; }
+FORCE_INLINE decltype(auto) ComplexVariant::GetValues() noexcept { return __class::GetValues(); }
+#line 470 "FirstProgram.adv"
+inline decltype(auto) ComplexVariant::operator*() const { ADV_EXPRESSION_BODY(__ref().operator*()); }
+inline decltype(auto) ComplexVariant__Unowned::operator*() const { ADV_EXPRESSION_BODY(__ref().operator*()); }
+
+#line 515 "FirstProgram.adv"
+template<class T> inline constexpr auto __static_GetSuperCount(CppAdvance::i32 x, CppAdvance::i32 y)  -> const CppAdvance::i32
 {
-	#line 483 "FirstProgram.adv"
+	#line 515 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(x * y + x + y); 
 }
 
-#line 482 "FirstProgram.adv"
-template <class __TT> requires std::same_as<__TT, __extension_481_VectorClass> inline constexpr auto __static_getCount3() -> const CppAdvance::i32
+#line 514 "FirstProgram.adv"
+template<class T> inline constexpr auto __static_getCount3() -> const CppAdvance::i32
 {
-	#line 482 "FirstProgram.adv"
+	#line 514 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::i32(333)); 
 }

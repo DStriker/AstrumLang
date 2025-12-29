@@ -449,6 +449,38 @@ public enum Text : str {
 	private ShortString: str => Value;
 }
 
+public enum class ComplexVariant : IMagicNumber {
+	Value1(1, 2.13f, "Value1"),
+	Value2(2, 4.13f, "Value2"),
+	Value3(3, 6.13f, "Value3"),
+	Value4(4, 8.13f, "Value4");
+
+	public {
+		i: i32;
+		f: f32;
+		s: str;
+	}
+
+    this(i: i32, f: f32, s: str) = {
+		this.i = i;
+        this.f = f;
+        this.s = s;
+	}
+
+	public operator!: () -> i32 => i;
+
+	public printVariant: () = {
+		print("This is printVariant function in optional chaining call");
+		print(s);
+	}
+
+    public GetMagicNumber: (in f: VectorClass) -> f32 => this.f * f.x;
+
+	public Count123: i32 ==> 1234567890;
+
+	public static Count10: i32 ==> 12345;
+}
+
 private extension <T> {
 	AsString: str => "AsString";
 
@@ -478,7 +510,7 @@ private extension <T> {
 	//GetMagicNumber: (in i: VectorClass) -> f32 => this.x * i.x;
 }
 
-public extension VectorClass {
+public extension <T> {
 	static Count3: i32 ==> 333;
 	static GetSuperCount: (x: i32, y: i32) -> i32 ==> x*y + x+y;
 }
@@ -554,15 +586,23 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		//print(map<int,map<int,string>>.StaticMethod());
 		day: DayOfWeek = ::Monday;
 		day = ::Wednesday;
-		print(VectorClass.Count2);
-		VectorClass.Count2 = 145;
-		print(VectorClass.Count2);
-		print(VectorClass.Method(1,2,3));
-		print(VectorClass.Count3);
-		print(VectorClass.GetSuperCount(5,7));
 		print(day.Value);
-		o: object = day;
-		on: object? = day;
+		var: ComplexVariant = ::Value2;
+		var = ::Value3;
+		print("Value3 is:");
+		print(var.i);
+		print(var.f);
+		print(var.s);
+		var.printVariant();
+		print(var.Count123);
+		print(ComplexVariant.Count10);
+		print("Values:");
+		for val in ComplexVariant.GetValues() {
+            print(val.s);
+		}
+		print(var.GetStrongReferenceCount());
+		o: object = var;
+		on: object? = var;
 		print(day.Value);
 	}
 	print(nxt!.GetStrongReferenceCount());

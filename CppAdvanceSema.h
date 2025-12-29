@@ -178,6 +178,7 @@ struct ConstantDefinition
 	std::string compilationCondition;
 	std::string parentType;
 	CppAdvanceParser::ConstantExpressionContext* expression = nullptr;
+	CppAdvanceParser::ExpressionListContext* expressionList = nullptr;
 };
 
 struct TypeAliasDefinition

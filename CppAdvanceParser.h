@@ -771,6 +771,7 @@ public:
     StructDefinitionContext *structDefinition();
     ClassDefinitionContext *classDefinition();
     EnumDefinitionContext *enumDefinition();
+    EnumClassDefinitionContext *enumClassDefinition();
     UnionDefinitionContext *unionDefinition();
     SymbolSpecifierSeqContext *symbolSpecifierSeq();
     MemberDeclarationCompoundStatementContext *memberDeclarationCompoundStatement();
@@ -1074,8 +1075,8 @@ public:
     EnumClassMemberSpecificationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *Semi();
-    std::vector<EnumClassMemberDeclarationContext *> enumClassMemberDeclaration();
-    EnumClassMemberDeclarationContext* enumClassMemberDeclaration(size_t i);
+    std::vector<StructMemberDeclarationContext *> structMemberDeclaration();
+    StructMemberDeclarationContext* structMemberDeclaration(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -1095,6 +1096,8 @@ public:
     ProtectedInternalContext *protectedInternal();
     ConstructorContext *constructor();
     PropertyContext *property();
+    ConversionFunctionContext *conversionFunction();
+    IndexerContext *indexer();
     FriendDeclarationContext *friendDeclaration();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;

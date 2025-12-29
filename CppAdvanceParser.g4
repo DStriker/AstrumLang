@@ -97,6 +97,7 @@ structMemberDeclaration:
 	| accessSpecifier? structDefinition
 	| accessSpecifier? classDefinition
 	| accessSpecifier? enumDefinition
+	| accessSpecifier? enumClassDefinition
 	| accessSpecifier? unionDefinition
 	| symbolSpecifierSeq memberDeclarationCompoundStatement
 	| memberVersionConditionalDeclaration
@@ -157,16 +158,7 @@ enumClassList: classEnumeratorDefinition (Comma classEnumeratorDefinition)*;
 
 classEnumeratorDefinition: Identifier (LeftParen expressionList RightParen)?;
 
-enumClassMemberSpecification: Semi enumClassMemberDeclaration+;
-
-enumClassMemberDeclaration:
-	  accessSpecifier simpleDeclaration
-	| accessSpecifier simpleMultiDeclaration
-	| (accessSpecifier | protectedInternal)? functionDefinition
-	| constructor
-	| property
-	| friendDeclaration
-	;
+enumClassMemberSpecification: Semi structMemberDeclaration+;
 
 unionDefinition: unionHead LeftBrace unionList unionMemberSpecification? RightBrace;
 

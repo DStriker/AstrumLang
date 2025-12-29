@@ -144,6 +144,10 @@ public:
 	void printEnumDefinition(CppAdvanceParser::EnumDefinitionContext* ctx) const;
 	void printEnumMemberSpecification(CppAdvanceParser::EnumMemberSpecificationContext* ctx) const;
 	void printEnumMemberDeclaration(CppAdvanceParser::EnumMemberDeclarationContext* ctx) const;
+	void printEnumClassDefinition(CppAdvanceParser::EnumClassDefinitionContext* ctx) const;
+	void printEnumClassList(CppAdvanceParser::EnumClassListContext* ctx) const;
+	void printEnumClassEnumerator(CppAdvanceParser::ClassEnumeratorDefinitionContext* ctx) const;
+	void printEnumClassMemberSpecification(CppAdvanceParser::EnumClassMemberSpecificationContext* ctx) const;
 	void printOperator(CppAdvanceParser::OperatorContext* ctx) const;
 	void printOperatorTemplateId(CppAdvanceParser::OperatorTemplateIdContext* ctx) const;
 	void printOperatorFunctionId(CppAdvanceParser::OperatorFunctionIdContext* ctx) const;
