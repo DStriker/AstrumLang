@@ -179,6 +179,7 @@ struct ConstantDefinition
 	std::string parentType;
 	CppAdvanceParser::ConstantExpressionContext* expression = nullptr;
 	CppAdvanceParser::ExpressionListContext* expressionList = nullptr;
+	CppAdvanceParser::UnionEnumeratorClauseContext* unionEnumerator = nullptr;
 };
 
 struct TypeAliasDefinition
@@ -316,6 +317,7 @@ struct ForwardDeclaration {
 	SourcePosition pos;
 	std::string compilationCondition;
 	bool isUnsafe = false;
+	bool isRawUnion = false;
 };
 
 struct FunctionDeclaration {

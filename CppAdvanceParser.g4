@@ -145,7 +145,7 @@ enumeratorDefinition: Identifier (Assign constantExpression)?;
 enumMemberSpecification: Semi enumMemberDeclaration+;
 
 enumMemberDeclaration: 
-	  (accessSpecifier | protectedInternal)? functionDefinition
+	  accessSpecifier? functionDefinition
 	| property
 	| friendDeclaration
 	;
@@ -162,13 +162,13 @@ enumClassMemberSpecification: Semi structMemberDeclaration+;
 
 unionDefinition: unionHead LeftBrace unionList unionMemberSpecification? RightBrace;
 
-unionHead: Unsafe? Union templateParams? className baseClause?;
+unionHead: Unsafe? Union templateParams? Identifier baseClause?;
 
 unionList: unionEnumerator (Comma unionEnumerator)*;
 
 unionEnumerator: Identifier (LeftParen unionEnumeratorClause RightParen)?;
 
-unionEnumeratorClause: theTypeId (Comma theTypeId)* | Identifier Colon theTypeId (Comma Identifier Colon theTypeId)+;
+unionEnumeratorClause: theTypeId (Comma theTypeId)* | Identifier Colon theTypeId (Comma Identifier Colon theTypeId)*;
 
 unionMemberSpecification: Semi enumMemberDeclaration+;
 

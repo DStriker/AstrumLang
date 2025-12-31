@@ -89,10 +89,12 @@ class CppAdvanceCodegen
 	void printClassRef(StructDefinition* type) const;
 	void printInterface(StructDefinition* type) const;
 	void printExtension(StructDefinition* type) const;
+	void printEnumClassData(StructDefinition* type) const;
 	void printTypeDefinitions() const;
 	void printVersions() const;
 	void printRefStructCheck(CppAdvanceParser::TheTypeIdContext* type) const;
 	void printSpecialFunctionDefinitions() const;
+	void printTypeSpecialFunctionDefinitions(StructDefinition* type, StructDefinition* parent) const;
 
 public:
 	/*const*/ CppAdvanceSema& sema;

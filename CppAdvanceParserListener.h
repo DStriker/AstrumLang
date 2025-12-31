@@ -143,9 +143,6 @@ public:
   virtual void enterEnumClassMemberSpecification(CppAdvanceParser::EnumClassMemberSpecificationContext *ctx) = 0;
   virtual void exitEnumClassMemberSpecification(CppAdvanceParser::EnumClassMemberSpecificationContext *ctx) = 0;
 
-  virtual void enterEnumClassMemberDeclaration(CppAdvanceParser::EnumClassMemberDeclarationContext *ctx) = 0;
-  virtual void exitEnumClassMemberDeclaration(CppAdvanceParser::EnumClassMemberDeclarationContext *ctx) = 0;
-
   virtual void enterUnionDefinition(CppAdvanceParser::UnionDefinitionContext *ctx) = 0;
   virtual void exitUnionDefinition(CppAdvanceParser::UnionDefinitionContext *ctx) = 0;
 

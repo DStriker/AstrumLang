@@ -449,7 +449,7 @@ public enum Text : str {
 	private ShortString: str => Value;
 }
 
-public enum class ComplexVariant : IMagicNumber {
+public enum class ComplexVariant {
 	Value1(1, 2.13f, "Value1"),
 	Value2(2, 4.13f, "Value2"),
 	Value3(3, 6.13f, "Value3"),
@@ -459,12 +459,6 @@ public enum class ComplexVariant : IMagicNumber {
 		i: i32;
 		f: f32;
 		s: str;
-	}
-
-    this(i: i32, f: f32, s: str) = {
-		this.i = i;
-        this.f = f;
-        this.s = s;
 	}
 
 	public operator!: () -> i32 => i;
@@ -479,6 +473,58 @@ public enum class ComplexVariant : IMagicNumber {
 	public Count123: i32 ==> 1234567890;
 
 	public static Count10: i32 ==> 12345;
+}
+
+/*public union Media : IMagicNumber {
+	None,
+	String(str),
+	XYZ(i32,i32,i32),
+    Audio(name: str, len: i32, volume: f32),
+    Video(name: str, len: i32, fps: f32, lang: str),
+	Text(lang: str);
+
+	public printVariant: () = {
+		print("This is printVariant function in optional chaining call");
+		print(s);
+	}
+
+    public GetMagicNumber: (in f: VectorClass) -> f32 => this.f * f.x;
+
+	public Count123: i32 ==> 1234567890;
+
+	public static Count10: i32 ==> 12345;
+}*/
+
+public union struct RawUnion {
+    i: i32;
+    f: f32;
+    s: str;
+
+	public {
+		unsafe I: i32 => i;
+		unsafe F: f32 => f;
+		unsafe S: str => s;
+
+		implicit this(i: i32) = {
+			this.i = i;
+		}
+
+		implicit this(f: f32) = {
+			this.f = f;
+		}
+
+		implicit this(s: str) = {
+			this.s = s;
+		}
+
+		~this => print("RawUnion deiniting");
+
+        unsafe operator!: () -> i32 => i;
+
+		unsafe GetMagicNumber: (in f: VectorClass) -> f32 => this.f * f.x;
+
+		unsafe Count123: i32 ==> 1234567890;
+	}
 }
 
 private extension <T> {
@@ -584,26 +630,19 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		//nxt = null;
 		print(nxt2!.GetStrongReferenceCount());
 		//print(map<int,map<int,string>>.StaticMethod());
-		day: DayOfWeek = ::Monday;
-		day = ::Wednesday;
-		print(day.Value);
-		var: ComplexVariant = ::Value2;
-		var = ::Value3;
-		print("Value3 is:");
-		print(var.i);
-		print(var.f);
-		print(var.s);
-		var.printVariant();
-		print(var.Count123);
-		print(ComplexVariant.Count10);
-		print("Values:");
-		for val in ComplexVariant.GetValues() {
-            print(val.s);
+		ru: RawUnion = 3.14f;
+		unsafe {
+			print(ru.F);
+			print(ru.GetMagicNumber(nxt2!));
 		}
-		print(var.GetStrongReferenceCount());
-		o: object = var;
-		on: object? = var;
-		print(day.Value);
+		ru = "abc";
+		unsafe {
+			print(ru.S);
+		}
+		//print(var.GetStrongReferenceCount());
+		o: object = ru;
+		on: object? = ru;
+		//print(day.Value);
 	}
 	print(nxt!.GetStrongReferenceCount());
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);

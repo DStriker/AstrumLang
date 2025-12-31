@@ -145,9 +145,6 @@ public:
   virtual void enterEnumClassMemberSpecification(CppAdvanceParser::EnumClassMemberSpecificationContext * /*ctx*/) override { }
   virtual void exitEnumClassMemberSpecification(CppAdvanceParser::EnumClassMemberSpecificationContext * /*ctx*/) override { }
 
-  virtual void enterEnumClassMemberDeclaration(CppAdvanceParser::EnumClassMemberDeclarationContext * /*ctx*/) override { }
-  virtual void exitEnumClassMemberDeclaration(CppAdvanceParser::EnumClassMemberDeclarationContext * /*ctx*/) override { }
-
   virtual void enterUnionDefinition(CppAdvanceParser::UnionDefinitionContext * /*ctx*/) override { }
   virtual void exitUnionDefinition(CppAdvanceParser::UnionDefinitionContext * /*ctx*/) override { }
 

@@ -679,6 +679,9 @@ void CppAdvanceSema::exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationCo
 		}
 		else
 		{
+			if (currentTypeKind.top() == TypeKind::UnionStruct && *access != AccessSpecifier::Private)
+				CppAdvanceCompilerError("Raw union field must be private", ctx->getStart());
+
 			if (unsafeDepth > 0) cppParser.unsafeVariables.insert(currentType+"." + id->getText());
 			structStack.top()->fields.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), 
 				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), ctx->initializerList(), *access, 
@@ -1287,6 +1290,8 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 				CppAdvanceCompilerError("Method of the reference type is implicitly mutating", spec->Mutable()->getSymbol());
 			if (currentTypeKind.top() == TypeKind::Enum || currentTypeKind.top() == TypeKind::EnumClass)
 				CppAdvanceCompilerError("Enums are immutable. They cannot contain a mutating method", spec->Mutable()->getSymbol());
+			if (currentTypeKind.top() == TypeKind::Union)
+				CppAdvanceCompilerError("Unions are immutable. They cannot contain a mutating method", spec->Mutable()->getSymbol());
 		}
 		else if (spec->Virtual())
 		{
@@ -1367,9 +1372,14 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 	}
 
 	if (firstPass && !functionBody) {
-		if (isTypeDefinitionBody() && currentTypeKind.top() == TypeKind::StaticClass)
+		if (isTypeDefinitionBody())
 		{
-			isStatic = true;
+			if (currentTypeKind.top() == TypeKind::StaticClass) {
+				isStatic = true;
+			}
+			else if (currentTypeKind.top() == TypeKind::UnionStruct && !isStatic && !isUnsafe) {
+				CppAdvanceCompilerError("Raw union instance method cannot be safe, it requires an unsafe specifier", ctx->getStart());
+			}
 		}
 
 		if (isStatic) {
@@ -1475,7 +1485,6 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 		}
 		else if (auto decl = dynamic_cast<CppAdvanceParser::EnumMemberDeclarationContext*>(ctx->parent))
 		{
-			isProtectedInternal = decl->protectedInternal();
 			if (decl->accessSpecifier())
 			{
 				acc = decl->accessSpecifier();
@@ -2287,7 +2296,7 @@ void CppAdvanceSema::exitPostfixExpression(CppAdvanceParser::PostfixExpressionCo
 
 				first = false;
 				funcname += paramType;
-				if (cppParser.unsafeFunctions.contains(funcname))
+				if (unsafeDepth <= 0 && cppParser.unsafeFunctions.contains(funcname))
 				{
 					CppAdvanceCompilerError("Cannot to call unsafe function in safe context", ctx->LeftParen()->getSymbol());
 				}
@@ -2808,14 +2817,15 @@ void CppAdvanceSema::enterStructDefinition(CppAdvanceParser::StructDefinitionCon
 	symbolContexts.push(symbolContexts.top());
 	currentAccessSpecifier.push(std::nullopt);
 	if (ctx->structHead()->Ref()) currentTypeKind.push(TypeKind::RefStruct);
+	else if (ctx->structHead()->Union()) currentTypeKind.push(TypeKind::UnionStruct);
 	else currentTypeKind.push(TypeKind::Struct);
 
 	if (ctx->structHead()->baseClause())
 	{
 		if (ctx->structHead()->Ref())
 			CppAdvanceCompilerError("Ref struct cannot inherit other types or implement interfaces", ctx->structHead()->baseClause()->getStart());
-		/*if (functionBody)
-			CppAdvanceCompilerError("Local struct cannot inherit other types or implement interfaces", ctx->structHead()->baseClause()->getStart());*/
+		if (ctx->structHead()->Union())
+			CppAdvanceCompilerError("Raw union cannot inherit other types or implement interfaces", ctx->structHead()->baseClause()->getStart());
 	}
 
 	auto namectx = ctx->structHead()->className();
@@ -2905,7 +2915,7 @@ void CppAdvanceSema::enterStructDefinition(CppAdvanceParser::StructDefinitionCon
 				isPrivateTypeDefinition = true;
 		}
 
-		auto def = std::make_shared<StructDefinition>( ctx->structHead()->Ref() ? TypeKind::RefStruct : TypeKind::Struct,
+		auto def = std::make_shared<StructDefinition>( currentTypeKind.top(),
 			name, tparams, tspec, *access,getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, interfaces, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
 			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
@@ -2948,7 +2958,8 @@ void CppAdvanceSema::exitStructDefinition(CppAdvanceParser::StructDefinitionCont
 			auto& top = structStack.top();
 			if (top->access == AccessSpecifier::Protected) protectedSymbols.insert(top->id);
 			if (!top->templateSpecializationArgs)
-				forwardDeclarations.push_back({ top->id,top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+				forwardDeclarations.push_back({ top->id,top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe, 
+					currentTypeKind.top() == TypeKind::UnionStruct });
 			globalStructs.push_back(top);
 		}
 		int idx = 0;
@@ -3389,8 +3400,12 @@ void CppAdvanceSema::exitMemberInitializationStatement(CppAdvanceParser::MemberI
 
 void CppAdvanceSema::enterConversionFunction(CppAdvanceParser::ConversionFunctionContext* ctx)
 {
-	if (isTypeDefinitionBody() && currentTypeKind.top() == TypeKind::StaticClass)
-		CppAdvanceCompilerError("Static class cannot define type conversions", ctx->conversionFunctionId()->getStart());
+	if (isTypeDefinitionBody()) {
+		if (currentTypeKind.top() == TypeKind::StaticClass)
+			CppAdvanceCompilerError("Static class cannot define type conversions", ctx->conversionFunctionId()->getStart());
+		else if (currentTypeKind.top() == TypeKind::UnionStruct)
+			CppAdvanceCompilerError("Raw union does not support type conversions", ctx->conversionFunctionId()->getStart());
+	}
 	symbolContexts.push(symbolContexts.top());
 	bool isInline = false;
 	bool isConstexpr = false;
@@ -3546,6 +3561,8 @@ void CppAdvanceSema::enterIndexer(CppAdvanceParser::IndexerContext* ctx)
 {
 	if (currentTypeKind.top() == TypeKind::StaticClass)
 		CppAdvanceCompilerError("Static class cannot have an indexer", ctx->getStart());
+	else if (currentTypeKind.top() == TypeKind::UnionStruct)
+		CppAdvanceCompilerError("Raw union cannot have an indexer", ctx->getStart());
 	symbolContexts.push(symbolContexts.top());
 	bool isInline = false;
 	bool isStatic = false;
@@ -3949,8 +3966,13 @@ void CppAdvanceSema::enterProperty(CppAdvanceParser::PropertyContext* ctx)
 			else if (body->Assign()) isInline = true;
 		}
 
-		if (currentTypeKind.top() == TypeKind::StaticClass)
+		if (currentTypeKind.top() == TypeKind::StaticClass) {
 			isStatic = true;
+		}
+		else if (currentTypeKind.top() == TypeKind::UnionStruct && !isStatic && !isUnsafe)
+		{
+			CppAdvanceCompilerError("Raw union instance property cannot be safe, it requires an unsafe specifier", ctx->getStart());
+		}
 
 		CppAdvanceParser::AccessSpecifierContext* acc = ctx->accessSpecifier();
 		std::optional<AccessSpecifier> access = std::nullopt;
@@ -4300,6 +4322,8 @@ void CppAdvanceSema::exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDec
 			}
 			else
 			{
+				if (currentTypeKind.top() == TypeKind::UnionStruct && *access != AccessSpecifier::Private)
+					CppAdvanceCompilerError("Raw union field must be private", ctx->getStart());
 				if (unsafeDepth > 0) cppParser.unsafeVariables.insert(currentType + "." + id->getText());
 				structStack.top()->fields.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), 
 					{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr, *access, 
@@ -5761,24 +5785,172 @@ void CppAdvanceSema::enterClassEnumeratorDefinition(CppAdvanceParser::ClassEnume
 void CppAdvanceSema::exitClassEnumeratorDefinition(CppAdvanceParser::ClassEnumeratorDefinitionContext*)
 {}
 
-void CppAdvanceSema::enterUnionEnumerator(CppAdvanceParser::UnionEnumeratorContext*)
+void CppAdvanceSema::enterUnionEnumerator(CppAdvanceParser::UnionEnumeratorContext* ctx)
 {
-	
+	if (!functionBody && firstPass)
+	{
+		auto id = ctx->Identifier()->getText();
+		typeset.insert(id);
+		typeset.globalTypes.insert(currentType + "." + id);
+		if (auto clause = ctx->unionEnumeratorClause())
+		{
+			if (clause->theTypeId().empty()) {
+				auto rhs = clause->getText();
+				aliasTable[id] = rhs;
+				aliasTable.globalAliasTable[currentType + "." + id] = rhs;
+			}
+		}
+		structStack.top()->constants.emplace_back(ConstantDefinition{ id, nullptr, nullptr,
+			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, AccessSpecifier::Public,
+			getCurrentCompilationCondition(), getCurrentFullTypeName(), nullptr, nullptr, ctx->unionEnumeratorClause() });
+	}
 }
 
 void CppAdvanceSema::exitUnionEnumerator(CppAdvanceParser::UnionEnumeratorContext*)
+{}
+
+void CppAdvanceSema::enterUnionDefinition(CppAdvanceParser::UnionDefinitionContext* ctx)
 {
-	
+	symbolContexts.push(symbolContexts.top());
+	//currentAccessSpecifier.push(std::nullopt);
+	currentTypeKind.push(TypeKind::Union);
+
+	bool primaryType = true;
+	if (!currentType.empty()) {
+		currentType += ".";
+		primaryType = false;
+	}
+	std::string name = ctx->unionHead()->Identifier()->getText();
+	currentType += name;
+	typeset.insert(name);
+	if (ctx->unionHead()->Unsafe())
+	{
+		unsafeDepth++;
+	}
+
+	if (firstPass && !functionBody)
+	{
+		typeset.globalTypes.insert(currentType);
+		constructorCounts.push(0);
+		CppAdvanceParser::TemplateParamsContext* templateParams = ctx->unionHead()->templateParams();
+		CppAdvanceParser::BaseSpecifierListContext* bases = nullptr;
+
+		if (auto b = ctx->unionHead()->baseClause())
+		{
+			bases = b->baseSpecifierList();
+		}
+
+		bool isUnsafe = unsafeDepth > 0;
+
+		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		std::optional<AccessSpecifier> access;
+		if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(ctx->parent))
+		{
+			acc = decl->accessSpecifier();
+
+		}
+		else if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
+		{
+			acc = decl->accessSpecifier();
+
+		}
+
+		if (acc)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (acc->Public())
+			{
+				access = AccessSpecifier::Public;
+			}
+			else if (acc->Protected())
+			{
+				access = AccessSpecifier::Protected;
+			}
+			else if (acc->Private())
+			{
+				access = AccessSpecifier::Private;
+			}
+			else if (acc->Internal())
+			{
+				access = AccessSpecifier::Internal;
+			}
+		}
+
+		if (!access) {
+			if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
+			else access = AccessSpecifier::Internal;
+		}
+
+		currentAccessSpecifier.push(access);
+
+		if (isUnsafe) {
+			cppParser.unsafeTypes.insert(currentType);
+			if (primaryType) isUnsafeTypeDefinition = true;
+		}
+
+		if (primaryType) {
+			if (*access == AccessSpecifier::Protected)
+				isProtectedTypeDefinition = true;
+			else if (*access == AccessSpecifier::Private)
+				isPrivateTypeDefinition = true;
+		}
+
+		auto def = std::make_shared<StructDefinition>(TypeKind::Union,
+			name, templateParams, nullptr, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
+			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, bases, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
+			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
+			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, false, false, false);
+		if (!structStack.empty())
+			structStack.top()->nestedStructs.push_back(def);
+		structStack.push(def); 
+		if (templateParams)
+		{
+			name += "<";
+			bool first = true;
+			for (auto param : templateParams->templateParamDeclaration())
+			{
+				if (param->Identifier()) {
+					if (!first) name += ", ";
+					first = false;
+					name += param->Identifier()->getText();
+				}
+			}
+			name += ">";
+		}
+		currentTypeWithTemplate.push(name);
+	}
 }
 
-void CppAdvanceSema::enterUnionDefinition(CppAdvanceParser::UnionDefinitionContext*)
+void CppAdvanceSema::exitUnionDefinition(CppAdvanceParser::UnionDefinitionContext* ctx)
 {
-	
-}
+	auto pos = currentType.rfind('.');
+	if (firstPass && !functionBody) {
+		if (pos == currentType.npos) {
+			isUnsafeTypeDefinition = false;
+			isProtectedTypeDefinition = false;
+			isPrivateTypeDefinition = false;
+			auto& top = structStack.top();
+			if (top->access == AccessSpecifier::Protected) protectedSymbols.insert(top->id);
+			forwardDeclarations.push_back({ top->id,top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+			forwardDeclarations.push_back({ "__Class_" + top->id,top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+			globalStructs.push_back(top);
+		}
+		structStack.pop();
+		currentTypeWithTemplate.pop();
+		currentAccessSpecifier.pop();
+	}
 
-void CppAdvanceSema::exitUnionDefinition(CppAdvanceParser::UnionDefinitionContext*)
-{
-	
+	if (pos != currentType.npos)
+	{
+		currentType = currentType.substr(0, pos);
+	}
+	else
+	{
+		currentType.clear();
+	}
+	currentTypeKind.pop();
+	symbolContexts.pop();
 }
 
 void CppAdvanceSema::exitFriendDeclaration(CppAdvanceParser::FriendDeclarationContext* ctx)
