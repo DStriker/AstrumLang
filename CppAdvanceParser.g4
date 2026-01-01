@@ -174,7 +174,7 @@ unionMemberSpecification: Semi enumMemberDeclaration+;
 
 extensionDefinition: extensionHead LeftBrace extensionMemberSpecification? RightBrace;
 
-extensionHead: Unsafe? Extension (templateParams (className baseClause?)? | templateParams? className baseClause?);
+extensionHead: Unsafe? Extension (templateParams (theTypeId baseClause?)? | templateParams? theTypeId baseClause?);
 
 extensionMemberSpecification: extensionMemberDeclaration+;
 

@@ -1608,15 +1608,29 @@ struct Media final : public CppAdvance::Union {
 	#line 479 "FirstProgram.adv"
 	private: struct __UnionType_None{}; public: static constexpr __UnionType_None None{};
 	#line 480 "FirstProgram.adv"
-	public: using String = CppAdvance::Str;
+	public: using String = CppAdvance::Str; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
 	#line 481 "FirstProgram.adv"
 	public: using XYZ = std::tuple<CppAdvance::i32, CppAdvance::i32, CppAdvance::i32>;
 	#line 482 "FirstProgram.adv"
-	public: struct Audio { decltype(auto) __ref() const noexcept { return *this; } CppAdvance::Str name; CppAdvance::i32 len; CppAdvance::f32 volume; };
+	public: struct Audio { decltype(auto) __ref() const noexcept { return *this; }
+		CppAdvance::Str name; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
+		CppAdvance::i32 len; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
+		CppAdvance::f32 volume; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
+		
+	};
 	#line 483 "FirstProgram.adv"
-	public: struct Video { decltype(auto) __ref() const noexcept { return *this; } CppAdvance::Str name; CppAdvance::i32 len; CppAdvance::f32 fps; CppAdvance::Str lang; };
+	public: struct Video { decltype(auto) __ref() const noexcept { return *this; }
+		CppAdvance::Str name; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
+		CppAdvance::i32 len; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
+		CppAdvance::f32 fps; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
+		CppAdvance::Str lang; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
+		
+	};
 	#line 484 "FirstProgram.adv"
-	public: struct Text { decltype(auto) __ref() const noexcept { return *this; } CppAdvance::Str lang; };
+	public: struct Text { decltype(auto) __ref() const noexcept { return *this; }
+		CppAdvance::Str lang; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
+		
+	};
 	private: union {
 		#line 479 "FirstProgram.adv"
 		__UnionType_None _None;
@@ -1803,9 +1817,9 @@ template<class T1, class T2> struct Union2 final : public CppAdvance::Union {
 	public: using __class = __Class_Union2<T1, T2>;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 	#line 498 "FirstProgram.adv"
-	public: using Type1 = T1;
+	public: using Type1 = T1; ADV_CHECK_REF_STRUCT("T1", T1);
 	#line 499 "FirstProgram.adv"
-	public: using Type2 = T2;
+	public: using Type2 = T2; ADV_CHECK_REF_STRUCT("T2", T2);
 	private: union {
 		#line 498 "FirstProgram.adv"
 		Type1 _Type1;
@@ -1900,11 +1914,11 @@ template<class T1, class T2, class T3> struct Union3 final : public CppAdvance::
 	public: using __class = __Class_Union3<T1, T2, T3>;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 	#line 503 "FirstProgram.adv"
-	public: using Type1 = T1;
+	public: using Type1 = T1; ADV_CHECK_REF_STRUCT("T1", T1);
 	#line 504 "FirstProgram.adv"
-	public: using Type2 = T2;
+	public: using Type2 = T2; ADV_CHECK_REF_STRUCT("T2", T2);
 	#line 505 "FirstProgram.adv"
-	public: using Type3 = T3;
+	public: using Type3 = T3; ADV_CHECK_REF_STRUCT("T3", T3);
 	private: union {
 		#line 503 "FirstProgram.adv"
 		Type1 _Type1;
@@ -2019,13 +2033,13 @@ template<class T1, class T2, class T3, class T4> struct Union4 final : public Cp
 	public: using __class = __Class_Union4<T1, T2, T3, T4>;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 	#line 509 "FirstProgram.adv"
-	public: using Type1 = T1;
+	public: using Type1 = T1; ADV_CHECK_REF_STRUCT("T1", T1);
 	#line 510 "FirstProgram.adv"
-	public: using Type2 = T2;
+	public: using Type2 = T2; ADV_CHECK_REF_STRUCT("T2", T2);
 	#line 511 "FirstProgram.adv"
-	public: using Type3 = T3;
+	public: using Type3 = T3; ADV_CHECK_REF_STRUCT("T3", T3);
 	#line 512 "FirstProgram.adv"
-	public: using Type4 = T4;
+	public: using Type4 = T4; ADV_CHECK_REF_STRUCT("T4", T4);
 	private: union {
 		#line 509 "FirstProgram.adv"
 		Type1 _Type1;
@@ -2160,15 +2174,15 @@ template<class T1, class T2, class T3, class T4, class T5> struct Union5 final :
 	public: using __class = __Class_Union5<T1, T2, T3, T4, T5>;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 	#line 516 "FirstProgram.adv"
-	public: using Type1 = T1;
+	public: using Type1 = T1; ADV_CHECK_REF_STRUCT("T1", T1);
 	#line 517 "FirstProgram.adv"
-	public: using Type2 = T2;
+	public: using Type2 = T2; ADV_CHECK_REF_STRUCT("T2", T2);
 	#line 518 "FirstProgram.adv"
-	public: using Type3 = T3;
+	public: using Type3 = T3; ADV_CHECK_REF_STRUCT("T3", T3);
 	#line 519 "FirstProgram.adv"
-	public: using Type4 = T4;
+	public: using Type4 = T4; ADV_CHECK_REF_STRUCT("T4", T4);
 	#line 520 "FirstProgram.adv"
-	public: using Type5 = T5;
+	public: using Type5 = T5; ADV_CHECK_REF_STRUCT("T5", T5);
 	private: union {
 		#line 516 "FirstProgram.adv"
 		Type1 _Type1;
@@ -2323,17 +2337,17 @@ template<class T1, class T2, class T3, class T4, class T5, class T6> struct Unio
 	public: using __class = __Class_Union6<T1, T2, T3, T4, T5, T6>;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 	#line 524 "FirstProgram.adv"
-	public: using Type1 = T1;
+	public: using Type1 = T1; ADV_CHECK_REF_STRUCT("T1", T1);
 	#line 525 "FirstProgram.adv"
-	public: using Type2 = T2;
+	public: using Type2 = T2; ADV_CHECK_REF_STRUCT("T2", T2);
 	#line 526 "FirstProgram.adv"
-	public: using Type3 = T3;
+	public: using Type3 = T3; ADV_CHECK_REF_STRUCT("T3", T3);
 	#line 527 "FirstProgram.adv"
-	public: using Type4 = T4;
+	public: using Type4 = T4; ADV_CHECK_REF_STRUCT("T4", T4);
 	#line 528 "FirstProgram.adv"
-	public: using Type5 = T5;
+	public: using Type5 = T5; ADV_CHECK_REF_STRUCT("T5", T5);
 	#line 529 "FirstProgram.adv"
-	public: using Type6 = T6;
+	public: using Type6 = T6; ADV_CHECK_REF_STRUCT("T6", T6);
 	private: union {
 		#line 524 "FirstProgram.adv"
 		Type1 _Type1;
@@ -2507,6 +2521,21 @@ template<class T> using __extension_593_T = T;
 template<class T> inline constexpr auto __static_GetSuperCount(CppAdvance::i32 x, CppAdvance::i32 y)  -> const CppAdvance::i32;
 #line 594 "FirstProgram.adv"
 template<class T> inline constexpr auto __static_getCount3() -> const CppAdvance::i32;
+
+#line 598 "FirstProgram.adv"
+using __extension_598_i32 = CppAdvance::i32;
+#line 599 "FirstProgram.adv"
+inline constexpr auto getkm(__extension_598_i32 const& __this ) -> const CppAdvance::i32;
+
+#line 602 "FirstProgram.adv"
+using __extension_602_f64 = CppAdvance::f64;
+#line 603 "FirstProgram.adv"
+inline constexpr auto getkm(__extension_602_f64 const& __this ) -> const CppAdvance::f64;
+
+#line 606 "FirstProgram.adv"
+using __extension_606_str = CppAdvance::Str;
+#line 607 "FirstProgram.adv"
+inline constexpr auto getkm(__extension_606_str const& __this ) -> const CppAdvance::Str;
 
 
 #line 57 "FirstProgram.adv"
@@ -2963,7 +2992,7 @@ template<> inline constexpr auto sum<CppAdvance::i32, CppAdvance::i32(15)>(CppAd
 inline auto func4(CppAdvance::i32 x)  -> const CppAdvance::i32;
 #line 362 "FirstProgram.adv"
 inline auto _operator_subscript(CppAdvance::In<VectorClass> vec, CppAdvance::f32 x, CppAdvance::f32 y)  -> const CppAdvance::f32;
-#line 598 "FirstProgram.adv"
+#line 610 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32;
 //###############################################################################
 //# Global compile-time constants
@@ -3478,10 +3507,10 @@ inline constexpr auto __Class_ComplexVariant::getCount10()  -> CppAdvance::i32
 	ADV_EXPRESSION_BODY(CppAdvance::i32(12345)); 
 }
 
-#line 598 "FirstProgram.adv"
+#line 610 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32
 {
-	#line 598 "FirstProgram.adv"
+	#line 610 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(ADV_UPCS(x)(vec.__ref()) + ADV_UPCS(y)(vec.__ref()) + ADV_UPCS(z)(vec.__ref())); 
 }
 #line 9999 "FirstProgram.adv"
@@ -3621,6 +3650,30 @@ template<class T> inline constexpr auto __static_getCount3() -> const CppAdvance
 {
 	#line 594 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::i32(333)); 
+}
+#line 9999 "FirstProgram.adv"
+
+#line 599 "FirstProgram.adv"
+inline constexpr auto getkm(__extension_598_i32 const& __this ) -> const CppAdvance::i32
+{
+	#line 599 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(__this * CppAdvance::i32(1000)); 
+}
+#line 9999 "FirstProgram.adv"
+
+#line 603 "FirstProgram.adv"
+inline constexpr auto getkm(__extension_602_f64 const& __this ) -> const CppAdvance::f64
+{
+	#line 603 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(__this * CppAdvance::f32(1000.0f)); 
+}
+#line 9999 "FirstProgram.adv"
+
+#line 607 "FirstProgram.adv"
+inline constexpr auto getkm(__extension_606_str const& __this ) -> const CppAdvance::Str
+{
+	#line 607 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(CppAdvance::Str{u"1000km"}); 
 }
 #line 9999 "FirstProgram.adv"
 

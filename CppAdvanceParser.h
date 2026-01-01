@@ -1206,7 +1206,7 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *Extension();
     TemplateParamsContext *templateParams();
-    ClassNameContext *className();
+    TheTypeIdContext *theTypeId();
     antlr4::tree::TerminalNode *Unsafe();
     BaseClauseContext *baseClause();
 

@@ -5350,10 +5350,9 @@ void CppAdvanceSema::enterExtensionDefinition(CppAdvanceParser::ExtensionDefinit
 		primaryType = false;
 	}
 	std::string name;
-	if (auto className = ctx->extensionHead()->className())
+	if (auto className = ctx->extensionHead()->theTypeId())
 	{
-		if (auto id = className->Identifier()) name = id->getText();
-		else name = name = className->simpleTemplateId()->templateName()->getText();
+		name = className->getText();
 	}
 	else if (auto params = ctx->extensionHead()->templateParams())
 	{
@@ -5376,11 +5375,6 @@ void CppAdvanceSema::enterExtensionDefinition(CppAdvanceParser::ExtensionDefinit
 		CppAdvanceParser::TemplateParamsContext* tparams = ctx->extensionHead()->templateParams();
 		CppAdvanceParser::TemplateArgumentListContext* tspec = nullptr;
 		CppAdvanceParser::BaseSpecifierListContext* baseInterfaces = nullptr;
-
-		if (ctx->extensionHead()->className())
-		if (auto tid = ctx->extensionHead()->className()->simpleTemplateId()) {
-			tspec = tid->templateArgumentList();
-		}
 
 		if (auto b = ctx->extensionHead()->baseClause())
 		{
@@ -5435,24 +5429,30 @@ void CppAdvanceSema::enterExtensionDefinition(CppAdvanceParser::ExtensionDefinit
 			else if (*access == AccessSpecifier::Private)
 				isPrivateTypeDefinition = true;
 		}
+		auto mangledName = name;
+		StringReplace(mangledName, "<", "_tspec_");
+		StringReplace(mangledName, ">", "_tspec_");
+		StringReplace(mangledName, "|", "_vline_");
+		StringReplace(mangledName, "[", "_brack_");
+		StringReplace(mangledName, "]", "_brack_");
+		StringReplace(mangledName, ".", "_point_");
+		StringReplace(mangledName, ":", "_colon_");
+		StringReplace(mangledName, "(", "_paren_");
+		StringReplace(mangledName, ")", "_paren_");
+		StringReplace(mangledName, "?", "_quest_");
+		StringReplace(mangledName, ",", "_comma_");
+		StringReplace(mangledName, " ", "_");
 
 		auto def = std::make_shared<StructDefinition>(TypeKind::Extension,
-			name, tparams, tspec, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
+			mangledName, tparams, tspec, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, baseInterfaces, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
 			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
 			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, false, false, false);
+		def->extensionType = ctx->extensionHead()->theTypeId();
 		/*if (!structStack.empty())
 			structStack.top()->nestedStructs.push_back(def);*/
 		structStack.push(def);
-		if (ctx->extensionHead()->className()) {
-			if (auto tid = ctx->extensionHead()->className()->simpleTemplateId()) {
-				if (tid->templateArgumentList())
-				{
-					name += "<{{specialization}}>";
-				}
-			}
-		}
-		else if (auto tparams = ctx->extensionHead()->templateParams())
+		if (auto tparams = ctx->extensionHead()->templateParams())
 		{
 			name += "<";
 			bool first = true;

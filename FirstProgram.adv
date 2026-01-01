@@ -595,6 +595,18 @@ public extension <T> {
 	static GetSuperCount: (x: i32, y: i32) -> i32 ==> x*y + x+y;
 }
 
+public extension i32 {
+	km: i32 ==> this * 1000;
+}
+
+public extension f64 {
+	km: f64 ==> this * 1000.0f;
+}
+
+public extension str {
+	km: str ==> "1000km";
+}
+
 public getSum: (in vec: VectorClass) -> f32 => vec.x + vec.y + vec.z;
 
 private main: (iparam: i32, in jparam: f64 = 3.5) -> int
@@ -675,6 +687,9 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		mu = 0.15f;
 		mu = "def";
 		print(mu.GetType3());
+		print(123.km + 666);
+		print(1.4.km + 666);
+		print("123".km);
 		//print(var.GetStrongReferenceCount());
 		o: object = m;
 		on: object? = m;

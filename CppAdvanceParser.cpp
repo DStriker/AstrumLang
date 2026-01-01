@@ -618,10 +618,10 @@ void cppadvanceparserParserInitialize() {
   	912,97,1,0,0,0,913,914,3,100,50,0,914,916,5,134,0,0,915,917,3,102,51,
   	0,916,915,1,0,0,0,916,917,1,0,0,0,917,918,1,0,0,0,918,919,5,135,0,0,919,
   	99,1,0,0,0,920,922,5,117,0,0,921,920,1,0,0,0,921,922,1,0,0,0,922,923,
-  	1,0,0,0,923,938,5,44,0,0,924,929,3,168,84,0,925,927,3,368,184,0,926,928,
+  	1,0,0,0,923,938,5,44,0,0,924,929,3,168,84,0,925,927,3,342,171,0,926,928,
   	3,106,53,0,927,926,1,0,0,0,927,928,1,0,0,0,928,930,1,0,0,0,929,925,1,
   	0,0,0,929,930,1,0,0,0,930,939,1,0,0,0,931,933,3,168,84,0,932,931,1,0,
-  	0,0,932,933,1,0,0,0,933,934,1,0,0,0,934,936,3,368,184,0,935,937,3,106,
+  	0,0,932,933,1,0,0,0,933,934,1,0,0,0,934,936,3,342,171,0,935,937,3,106,
   	53,0,936,935,1,0,0,0,936,937,1,0,0,0,937,939,1,0,0,0,938,924,1,0,0,0,
   	938,932,1,0,0,0,939,101,1,0,0,0,940,942,3,104,52,0,941,940,1,0,0,0,942,
   	943,1,0,0,0,943,941,1,0,0,0,943,944,1,0,0,0,944,103,1,0,0,0,945,950,3,
@@ -6453,8 +6453,8 @@ CppAdvanceParser::TemplateParamsContext* CppAdvanceParser::ExtensionHeadContext:
   return getRuleContext<CppAdvanceParser::TemplateParamsContext>(0);
 }
 
-CppAdvanceParser::ClassNameContext* CppAdvanceParser::ExtensionHeadContext::className() {
-  return getRuleContext<CppAdvanceParser::ClassNameContext>(0);
+CppAdvanceParser::TheTypeIdContext* CppAdvanceParser::ExtensionHeadContext::theTypeId() {
+  return getRuleContext<CppAdvanceParser::TheTypeIdContext>(0);
 }
 
 tree::TerminalNode* CppAdvanceParser::ExtensionHeadContext::Unsafe() {
@@ -6516,9 +6516,11 @@ CppAdvanceParser::ExtensionHeadContext* CppAdvanceParser::extensionHead() {
       _errHandler->sync(this);
 
       _la = _input->LA(1);
-      if (_la == CppAdvanceParser::Identifier) {
+      if (((((_la - 24) & ~ 0x3fULL) == 0) &&
+        ((1ULL << (_la - 24)) & 144132505501450289) != 0) || ((((_la - 91) & ~ 0x3fULL) == 0) &&
+        ((1ULL << (_la - 91)) & 423037298016323) != 0)) {
         setState(925);
-        className();
+        theTypeId();
         setState(927);
         _errHandler->sync(this);
 
@@ -6541,7 +6543,7 @@ CppAdvanceParser::ExtensionHeadContext* CppAdvanceParser::extensionHead() {
         templateParams();
       }
       setState(934);
-      className();
+      theTypeId();
       setState(936);
       _errHandler->sync(this);
 

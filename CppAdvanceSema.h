@@ -368,6 +368,7 @@ struct StructDefinition {
 	bool isConstexpr = false;
 	bool isDefaultConstructible = false;
 	CppAdvanceParser::EnumBaseContext* enumBase = nullptr;
+	CppAdvanceParser::TheTypeIdContext* extensionType = nullptr;
 	//bool isStatic = false;
 
 	StructDefinition(TypeKind _kind, std::string _id, CppAdvanceParser::TemplateParamsContext* _targs, CppAdvanceParser::TemplateArgumentListContext* _tspec, AccessSpecifier _access, std::string _ccond, SourcePosition _pos,

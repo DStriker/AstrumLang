@@ -1221,15 +1221,22 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				if (!clause->Identifier().empty())
 				{
 					//named union members
-					out << "public: struct " << constant.id << " { decltype(auto) __ref() const noexcept { return *this; } ";
+					out << "public: struct " << constant.id 
+						<< " { decltype(auto) __ref() const noexcept { return *this; }\n" << std::string(++depth, '\t');
 					auto types = clause->theTypeId();
 					auto ids = clause->Identifier();
 					for (size_t i=0, size = types.size(); i < size; ++i)
 					{
 						printTypeId(types[i]);
 						out << " " << ids[i]->getText() << "; ";
+						out << "ADV_CHECK_REF_STRUCT(";
+						auto t = types[i]->getText();
+						StringReplace(t, "\"", "\\\"");
+						out << "\"" << t << "\", ";
+						printTypeId(types[i]);
+						out << ");\n" << std::string(depth, '\t');
 					}
-					out << "};\n" << std::string(depth, '\t');
+					out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
 				}
 				else
 				{
@@ -1239,6 +1246,12 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 					if (types.size() == 1)
 					{
 						printTypeId(types[0]);
+						out << "; ADV_CHECK_REF_STRUCT(";
+						auto t = types[0]->getText();
+						StringReplace(t, "\"", "\\\"");
+						out << "\"" << t << "\", ";
+						printTypeId(types[0]);
+						out << ")";
 					}
 					else
 					{
@@ -6642,6 +6655,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 
 void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 {
+	sema.symbolContexts.push(sema.symbolContexts.top());
 	if (!type->compilationCondition.empty())
 	{
 		out << "#if " << type->compilationCondition << std::endl;
@@ -6652,17 +6666,20 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 		printTemplateParams(type->templateParams);
 		out << " ";
 	}
-	out << "using __extension_" << type->pos.line << "_" << type->id << " = " << type->id;
-	if (type->templateSpecializationArgs)
+	out << "using __extension_" << type->pos.line << "_" << type->id << " = ";
+	if (type->extensionType)
 	{
-		out << "<";
-		printTemplateArgumentList(type->templateSpecializationArgs);
-		out << ">";
+		printTypeId(type->extensionType);
 	}
-	else if (type->templateParams)
+	else
+	{
+		out << type->id;
+	}
+
+	if (type->templateParams && type->id.find("_tspec_") == std::string::npos)
 	{
 		auto parent = static_cast<CppAdvanceParser::ExtensionHeadContext*>(type->templateParams->parent);
-		if (parent->className()) {
+		if (parent->theTypeId()) {
 			out << "<";
 			bool first = true;
 			for (auto param : type->templateParams->templateParamDeclaration())
@@ -7609,7 +7626,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 			if (type->templateParams)
 			{
 				auto parent = static_cast<CppAdvanceParser::ExtensionHeadContext*>(type->templateParams->parent);
-				if(parent->className())
+				if(parent->theTypeId())
 					currentTemplateParams = type->templateParams;
 			}
 			
