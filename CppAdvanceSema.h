@@ -985,4 +985,7 @@ public:
 
 	void exitUnionDefinition(CppAdvanceParser::UnionDefinitionContext*) override;
 
+
+	void exitUnionList(CppAdvanceParser::UnionListContext*) override;
+
 };

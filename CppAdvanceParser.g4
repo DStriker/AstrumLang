@@ -491,7 +491,11 @@ unqualifiedId:
 	| Tilde (className | decltypeSpecifier)
 	| templateId;
 
-theTypeId: typeSpecifierSeq Question? typePostfix?;
+theTypeId: 
+	  singleTypeId (VertLine singleTypeId)*  
+	;
+
+singleTypeId: typeSpecifierSeq Question? typePostfix?;
 
 typePostfix: arrayDeclarator+;
 

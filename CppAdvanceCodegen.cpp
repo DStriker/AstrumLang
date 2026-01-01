@@ -1213,6 +1213,56 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			}
 			out << " const __self " << constant.id << ";\n" << std::string(depth, '\t');
 		}
+		else if (type->kind == TypeKind::Union)
+		{
+			out << "#line " << constant.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			if (auto clause = constant.unionEnumerator)
+			{
+				if (!clause->Identifier().empty())
+				{
+					//named union members
+					out << "public: struct " << constant.id << " { decltype(auto) __ref() const noexcept { return *this; } ";
+					auto types = clause->theTypeId();
+					auto ids = clause->Identifier();
+					for (size_t i=0, size = types.size(); i < size; ++i)
+					{
+						printTypeId(types[i]);
+						out << " " << ids[i]->getText() << "; ";
+					}
+					out << "};\n" << std::string(depth, '\t');
+				}
+				else
+				{
+					//anonymous union members
+					out << "public: using " << constant.id << " = ";
+					auto types = clause->theTypeId();
+					if (types.size() == 1)
+					{
+						printTypeId(types[0]);
+					}
+					else
+					{
+						out << "std::tuple<";
+						bool first = true;
+						for (auto t : types)
+						{
+							if (!first) out << ", ";
+							first = false;
+							printTypeId(t);
+						}
+						out << ">";
+					}
+
+					out << ";\n" << std::string(depth, '\t');
+				}
+			}
+			else
+			{
+				//empty union members
+				out << "private: struct __UnionType_" << constant.id << "{}; public: static constexpr __UnionType_" 
+					<< constant.id << " " << constant.id << "{};\n" << std::string(depth, '\t');
+			}
+		}
 		else {
 			if (!constant.compilationCondition.empty())
 			{
@@ -1343,6 +1393,179 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		}
         out << "public: static std::span<const __self> GetValues() noexcept { return { __values, " << std::to_string(i) << " }; }\n" 
 			<< std::string(depth, '\t');
+	}
+	else if (type->kind == TypeKind::Union)
+	{
+		//union data
+		out << "private: union {\n" << std::string(++depth, '\t');
+		for (const auto& constant : type->constants)
+		{
+			out << "#line " << constant.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			if (!constant.unionEnumerator)
+			{
+				out << "__UnionType_";
+			}
+
+			out << constant.id << " _" << constant.id << ";\n" << std::string(depth, '\t');
+		}
+		out << "\n" << std::string(--depth,'\t') << "};\n" << std::string(depth, '\t');
+		//union discrimination tag
+		out << "enum ";
+		if (type->constants.size() < std::numeric_limits<unsigned char>::max()) {
+			out << ": unsigned char ";
+		}
+		else if (type->constants.size() < std::numeric_limits<unsigned short>::max())
+		{
+			out << ": unsigned short ";
+		}
+		out << "{\n" << std::string(++depth, '\t');
+		bool first = true;
+		for (const auto& constant : type->constants)
+		{
+			if (!first) out << ", ";
+			first = false;
+			out << "_TAG__" << constant.id;
+		}
+		out << "\n" << std::string(--depth, '\t') << "} __union_internal_tag;\n" << std::string(depth, '\t');
+		out << "public:\n" << std::string(depth, '\t');
+		//value initialization
+		for (const auto& constant : type->constants)
+		{
+			out << "#line " << constant.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << type->id << "(CppAdvance::In<";
+			if (!constant.unionEnumerator)
+			{
+				out << "__UnionType_";
+			}
+
+			out << constant.id << "> value) : __union_internal_tag{ _TAG__" << constant.id
+				<< " } { new (&_" << constant.id << ") ";
+			if (!constant.unionEnumerator)
+			{
+				out << "__UnionType_";
+			}
+			out << constant.id << "(value); }\n"
+				<< std::string(depth, '\t');
+		}
+		//copy initialization
+		out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "private: void __copy(const __self& other) {\n" << std::string(++depth, '\t');
+		out << "__union_internal_tag = other.__union_internal_tag;\n" << std::string(depth, '\t');
+        out << "switch (__union_internal_tag) {\n" << std::string(++depth, '\t');
+		for (const auto& constant : type->constants)
+		{
+			out << "#line " << constant.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << "case _TAG__" << constant.id << ": new (&_" << constant.id << ") ";
+			if (!constant.unionEnumerator)
+			{
+				out << "__UnionType_";
+			}
+			out << constant.id << "(other._" << constant.id << "); break;\n" << std::string(depth, '\t');
+		}
+		out << "\n" << std::string(--depth, '\t') << "}\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "public: " << type->id << "(const __self& other) { __copy(other); }\n" << std::string(depth, '\t');
+		//move initialization
+		out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "private: void __move(__self&& other) {\n" << std::string(++depth, '\t');
+		out << "__union_internal_tag = other.__union_internal_tag;\n" << std::string(depth, '\t');
+		out << "switch (__union_internal_tag) {\n" << std::string(++depth, '\t');
+		for (const auto& constant : type->constants)
+		{
+			out << "#line " << constant.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << "case _TAG__" << constant.id << ": new (&_" << constant.id << ") ";
+			if (!constant.unionEnumerator)
+			{
+				out << "__UnionType_";
+			}
+			out << constant.id << "(std::move(other._" << constant.id << ")); break;\n" << std::string(depth, '\t');
+		}
+		out << "\n" << std::string(--depth, '\t') << "}\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "public: " << type->id << "(__self&& other) { __move(std::move(other)); }\n" << std::string(depth, '\t');
+		//deinitialization
+		out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "private: void __destroy() {\n" << std::string(++depth, '\t');
+		out << "switch (__union_internal_tag) {\n" << std::string(++depth, '\t');
+		for (const auto& constant : type->constants)
+		{
+			out << "#line " << constant.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << "case _TAG__" << constant.id << ": _" << constant.id << ".~";
+			if (!constant.unionEnumerator)
+			{
+				out << "__UnionType_";
+			}
+			out << constant.id << "(); break;\n" << std::string(depth, '\t');
+		}
+		out << "\n" << std::string(--depth, '\t') << "}\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "public: ~" << type->id << "() { __destroy(); }\n" << std::string(depth, '\t');
+		//value assignment
+		for (const auto& constant : type->constants)
+		{
+			out << "#line " << constant.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << type->id << "& operator=(CppAdvance::In<";
+			if (!constant.unionEnumerator)
+			{
+				out << "__UnionType_";
+			}
+
+			out << constant.id << "> value) {\n" << std::string(++depth, '\t');
+			out << "__destroy();\n" << std::string(depth, '\t');
+            out << "__union_internal_tag = _TAG__" << constant.id << ";\n" << std::string(depth, '\t');
+            out << "new (&_" << constant.id << ") ";
+            if (!constant.unionEnumerator)
+            {
+                out << "__UnionType_";
+            }
+            out << constant.id << "(value); return *this;";
+			out << "\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+		}
+		//copy assignment
+		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }\n" << std::string(depth, '\t');
+		//move assignment
+		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }\n" << std::string(depth, '\t');
+		//data getters
+		for (const auto& constant : type->constants)
+		{
+			out << "#line " << constant.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			out << "public: auto Get" << constant.id << "() const { if (__union_internal_tag != _TAG__" << constant.id
+				<< ") throw std::logic_error(\"Type mismatch in the discriminated union\"); return _" << constant.id << "; }\n"
+				<< std::string(depth, '\t');
+		}
+		//type checking
+		out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "public: template<class __SomeT> bool Is() const noexcept {\n" << std::string(++depth, '\t');
+		first = true;
+		for (const auto& constant : type->constants) {
+			if (!first) out << "else ";
+			first = false;
+			out << "if constexpr (std::is_same_v<__SomeT, ";
+            if (!constant.unionEnumerator)
+            {
+                out << "__UnionType_";
+            }
+			out << constant.id << ">) return __union_internal_tag == _TAG__" << constant.id << ";\n" << std::string(depth, '\t');
+		}
+		out << "return false;\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+		//type casting
+		out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "public: template<class __SomeT> std::optional<__SomeT> As() const noexcept {\n" << std::string(++depth, '\t');
+		first = true;
+		for (const auto& constant : type->constants) {
+			if (!first) out << "else ";
+			first = false;
+			out << "if constexpr (std::is_same_v<__SomeT, ";
+			if (!constant.unionEnumerator)
+			{
+				out << "__UnionType_";
+			}
+			out << constant.id << ">) { if(__union_internal_tag == _TAG__" << constant.id << ") return _" << constant.id 
+				<< "; }\n" << std::string(depth, '\t');
+		}
+		out << "return {};\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
 	}
 	for (const auto& alias : type->typeAliases)
 	{
@@ -2532,7 +2755,6 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 		}
 	}
 	out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-	out << type->id << " " << "__value;\n" << std::string(depth, '\t');
 	out << "public: using __underlying = " << type->id;
 	if (type->templateSpecializationArgs)
 	{
@@ -2553,6 +2775,7 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 		out << ">";
 	}
 	out << "; using __self = __underlying;\n" << std::string(depth, '\t');
+	out << "__self " << "__value;\n" << std::string(depth, '\t');
 	for (const auto& nested : type->nestedStructs)
 	{
 		if (nested->access != AccessSpecifier::Public) continue;
@@ -4321,7 +4544,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			}
 
 			interfaceRequirements.emplace_back("__HasMethodImplementation_set" + methodIds[&method]);
-			out << "> concept __HasMethodImplementation_set" << methodIds[&method] << " = requires(typename __AnyType::__class t) { {t.__ref().setAt(";
+			out << "> concept __HasMethodImplementation_set" << methodIds[&method] << " = requires(typename __AnyType::__class t) { {t.setAt(";
 			if (method.indexerParams) {
 				bool first = true;
 				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
@@ -4376,7 +4599,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		}
 
 		interfaceRequirements.emplace_back("__HasMethodImplementation_get" + id);
-		out << "> concept __HasMethodImplementation_get" << id << " = requires(typename __AnyType::__class t) { {t.__ref().get" << prop.id 
+		out << "> concept __HasMethodImplementation_get" << id << " = requires(typename __AnyType::__class t) { {t.get" << prop.id 
 			<< "()} -> std::convertible_to<";
 		printTypeId(prop.type);
 		out << ">; } || requires(typename __AnyType::__class t) { {get" << prop.id << "(t)} -> std::convertible_to<";
@@ -4395,7 +4618,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 				}
 			}
 			interfaceRequirements.emplace_back("__HasMethodImplementation_set" + id);
-			out << "> concept __HasMethodImplementation_set" << id << " = requires(typename __AnyType::__class t) { t.__ref().set" << prop.id
+			out << "> concept __HasMethodImplementation_set" << id << " = requires(typename __AnyType::__class t) { t.set" << prop.id
 				<< "(std::declval<";
 			printTypeId(prop.type);
 			out << ">()); } || requires(typename __AnyType::__class t) { set"
@@ -7154,7 +7377,8 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 		}
 
 		selfConstants.clear();
-		if (type->kind == TypeKind::Struct || type->kind == TypeKind::Enum || type->kind == TypeKind::Struct || type->kind == TypeKind::UnionStruct)
+		if (type->kind == TypeKind::Struct || type->kind == TypeKind::Enum || type->kind == TypeKind::Struct
+			|| type->kind == TypeKind::Union || type->kind == TypeKind::UnionStruct)
 		{
 			printStructWrapper(type.get());
 		}
@@ -11726,9 +11950,10 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 				namedReturns.emplace_back(id, ret);
 				symbolTable[id] = ret->getText();
 			}
-			else if (ret->typeSpecifierSeq() && ret->typeSpecifierSeq()->simpleTypeSpecifier())
+			else if (ret->VertLine().empty() && ret->singleTypeId(0)->typeSpecifierSeq() 
+				&& ret->singleTypeId(0)->typeSpecifierSeq()->simpleTypeSpecifier())
 			{
-				auto tup = ret->typeSpecifierSeq()->simpleTypeSpecifier()->namedTupleField();
+				auto tup = ret->singleTypeId(0)->typeSpecifierSeq()->simpleTypeSpecifier()->namedTupleField();
 				for (auto element : tup)
 				{
 					auto id = element->Identifier()->getText();
@@ -11859,9 +12084,10 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 					namedReturns.emplace_back(id, ret);
 					symbolTable[id] = ret->getText();
 				}
-				else if (ret->typeSpecifierSeq() && ret->typeSpecifierSeq()->simpleTypeSpecifier())
+				else if (ret->VertLine().empty() && ret->singleTypeId(0)->typeSpecifierSeq() 
+					&& ret->singleTypeId(0)->typeSpecifierSeq()->simpleTypeSpecifier())
 				{
-					auto tup = ret->typeSpecifierSeq()->simpleTypeSpecifier()->namedTupleField();
+					auto tup = ret->singleTypeId(0)->typeSpecifierSeq()->simpleTypeSpecifier()->namedTupleField();
 					for (auto element : tup)
 					{
 						auto id = element->Identifier()->getText();
@@ -13096,9 +13322,10 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 				namedReturns.emplace_back(id,ret);
 				symbolTable[id] = ret->getText();
 			}
-			else if (ret->typeSpecifierSeq() && ret->typeSpecifierSeq()->simpleTypeSpecifier())
+			else if (ret->VertLine().empty() && ret->singleTypeId(0)->typeSpecifierSeq() 
+				&& ret->singleTypeId(0)->typeSpecifierSeq()->simpleTypeSpecifier())
 			{
-				auto tup = ret->typeSpecifierSeq()->simpleTypeSpecifier()->namedTupleField();
+				auto tup = ret->singleTypeId(0)->typeSpecifierSeq()->simpleTypeSpecifier()->namedTupleField();
 				for (auto element : tup)
 				{
 					auto id = element->Identifier()->getText();
@@ -13252,9 +13479,10 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 					namedReturns.emplace_back(id, ret);
 					symbolTable[id] = ret->getText();
 				}
-				else if (ret->typeSpecifierSeq() && ret->typeSpecifierSeq()->simpleTypeSpecifier())
+				else if (ret->VertLine().empty() && ret->singleTypeId(0)->typeSpecifierSeq() 
+					&& ret->singleTypeId(0)->typeSpecifierSeq()->simpleTypeSpecifier())
 				{
-					auto tup = ret->typeSpecifierSeq()->simpleTypeSpecifier()->namedTupleField();
+					auto tup = ret->singleTypeId(0)->typeSpecifierSeq()->simpleTypeSpecifier()->namedTupleField();
 					for (auto element : tup)
 					{
 						auto id = element->Identifier()->getText();
@@ -13445,9 +13673,10 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 					namedReturns.emplace_back(id, ret->theTypeId());
 					symbolTable[id] = ret->getText();
 				}
-				else if (ret->theTypeId() && ret->theTypeId()->typeSpecifierSeq() && ret->theTypeId()->typeSpecifierSeq()->simpleTypeSpecifier())
+				else if (ret->theTypeId() && ret->theTypeId()->VertLine().empty() && ret->theTypeId()->singleTypeId(0)->typeSpecifierSeq() 
+					&& ret->theTypeId()->singleTypeId(0)->typeSpecifierSeq()->simpleTypeSpecifier())
 				{
-					auto tup = ret->theTypeId()->typeSpecifierSeq()->simpleTypeSpecifier()->namedTupleField();
+					auto tup = ret->theTypeId()->singleTypeId(0)->typeSpecifierSeq()->simpleTypeSpecifier()->namedTupleField();
 					for (auto element : tup)
 					{
 						auto id = element->Identifier()->getText();
@@ -15484,12 +15713,28 @@ void CppAdvanceCodegen::printTypeSpecifierSeq(CppAdvanceParser::TypeSpecifierSeq
 
 void CppAdvanceCodegen::printTypeId(CppAdvanceParser::TheTypeIdContext* ctx) const
 {
-	//printTypeSpecifierSeq(ctx->typeSpecifierSeq());
+	if (!ctx->VertLine().empty())
+	{
+		out << "Union" << (ctx->VertLine().size() + 1) << "<";
+		bool first = true;
+		for (auto type : ctx->singleTypeId())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printSingleTypeId(type);
+		}
+		out << ">";
+	}
+	else {
+		printSingleTypeId(ctx->singleTypeId(0));
+	}
+}
+
+void CppAdvanceCodegen::printSingleTypeId(CppAdvanceParser::SingleTypeIdContext* ctx) const
+{
 	int brackets = 0;
 	if (auto post = ctx->typePostfix())
 	{
-		//if (isDeclaration) return;
-		//printTypePostfix(arr);
 		for (auto decl : post->arrayDeclarator())
 		{
 			if (decl->Question()) out << "CppAdvance::Nullable<";

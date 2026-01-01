@@ -566,12 +566,16 @@ void CppAdvanceSema::exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationCo
 		}
 		if (isWeak)
 		{
-			if (auto post = t->typePostfix())
+			if (!t->VertLine().empty())
+			{
+				CppAdvanceCompilerError("Weak reference cannot be used with unions", ctx->declSpecifierSeq()->getStart());
+			}
+			if (auto post = t->singleTypeId(0)->typePostfix())
 			{
 				if (!post->arrayDeclarator().back()->Question())
 					CppAdvanceCompilerError("Weak reference must be optional", ctx->declSpecifierSeq()->getStart());
 			}
-			else if (!t->Question())
+			else if (!t->singleTypeId(0)->Question())
 			{
 				CppAdvanceCompilerError("Weak reference must be optional", ctx->declSpecifierSeq()->getStart());
 			}
@@ -933,8 +937,11 @@ void CppAdvanceSema::enterConstantDeclaration(CppAdvanceParser::ConstantDeclarat
 	if (ctx->theTypeId())
 	{
 		symbolTable[ctx->Identifier()->getText()] = contextTypes[ctx->theTypeId()];
-		if (!ctx->theTypeId()->typeSpecifierSeq()->pointerOperator().empty())
-			CppAdvanceCompilerError("Compile-time constant cannot be pointer", ctx->theTypeId()->typeSpecifierSeq()->pointerOperator()[0]->getStart());
+		if (!ctx->theTypeId()->VertLine().empty())
+			CppAdvanceCompilerError("Compile-time constant cannot be union", ctx->theTypeId()->VertLine(0)->getSymbol());
+		if (!ctx->theTypeId()->singleTypeId(0)->typeSpecifierSeq()->pointerOperator().empty())
+			CppAdvanceCompilerError("Compile-time constant cannot be pointer", 
+				ctx->theTypeId()->singleTypeId(0)->typeSpecifierSeq()->pointerOperator()[0]->getStart());
 	}
 
 	if (!functionBody && firstPass)
@@ -1358,9 +1365,11 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 				outParams.insert(id);
 				initStates.top().potentiallyAssigned.insert(id);
 			}
-			else if (ret->theTypeId() && ret->theTypeId()->typeSpecifierSeq() && ret->theTypeId()->typeSpecifierSeq()->simpleTypeSpecifier())
+			else if (ret->theTypeId() && ret->theTypeId()->VertLine().empty() 
+				&& ret->theTypeId()->singleTypeId(0)->typeSpecifierSeq() 
+				&& ret->theTypeId()->singleTypeId(0)->typeSpecifierSeq()->simpleTypeSpecifier())
 			{
-				auto tup = ret->theTypeId()->typeSpecifierSeq()->simpleTypeSpecifier()->namedTupleField();
+				auto tup = ret->theTypeId()->singleTypeId(0)->typeSpecifierSeq()->simpleTypeSpecifier()->namedTupleField();
 				for (auto element : tup)
 				{
 					auto id = element->Identifier()->getText();
@@ -2673,10 +2682,12 @@ void CppAdvanceSema::exitReturnType(CppAdvanceParser::ReturnTypeContext* ctx)
 		}
 		else if (auto t = ctx->theTypeId())
 		{
-			if (auto st = t->typeSpecifierSeq()->simpleTypeSpecifier()) {
-				for (auto f : st->namedTupleField())
-				{
-					symbolTable[f->Identifier()->getText()] = contextTypes[f->theTypeId()];
+			if (t->VertLine().empty()) {
+				if (auto st = t->singleTypeId(0)->typeSpecifierSeq()->simpleTypeSpecifier()) {
+					for (auto f : st->namedTupleField())
+					{
+						symbolTable[f->Identifier()->getText()] = contextTypes[f->theTypeId()];
+					}
 				}
 			}
 		}
@@ -2685,7 +2696,11 @@ void CppAdvanceSema::exitReturnType(CppAdvanceParser::ReturnTypeContext* ctx)
 
 void CppAdvanceSema::exitTheTypeId(CppAdvanceParser::TheTypeIdContext* ctx)
 {
-	if (!typeStack.empty()) {
+	if (!ctx->VertLine().empty())
+	{
+		contextTypes[ctx] = "Union" + std::to_string(ctx->VertLine().size() + 1);
+	}
+	else if (!typeStack.empty()) {
 		contextTypes[ctx] = typeStack.top();
 		if (!currentSubtype.empty()) contextTypes[ctx] += "<" + currentSubtype + ">";
 	}
@@ -3652,9 +3667,11 @@ void CppAdvanceSema::enterIndexer(CppAdvanceParser::IndexerContext* ctx)
 				outParams.insert(id);
 				initStates.top().potentiallyAssigned.insert(id);
 			}
-			else if (ret->theTypeId() && ret->theTypeId()->typeSpecifierSeq() && ret->theTypeId()->typeSpecifierSeq()->simpleTypeSpecifier())
+			else if (ret->theTypeId() && ret->theTypeId()->VertLine().empty() 
+				&& ret->theTypeId()->singleTypeId(0)->typeSpecifierSeq() 
+				&& ret->theTypeId()->singleTypeId(0)->typeSpecifierSeq()->simpleTypeSpecifier())
 			{
-				auto tup = ret->theTypeId()->typeSpecifierSeq()->simpleTypeSpecifier()->namedTupleField();
+				auto tup = ret->theTypeId()->singleTypeId(0)->typeSpecifierSeq()->simpleTypeSpecifier()->namedTupleField();
 				for (auto element : tup)
 				{
 					auto id = element->Identifier()->getText();
@@ -4224,12 +4241,16 @@ void CppAdvanceSema::exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDec
 	{
 		if (auto type = ctx->theTypeId())
 		{
-			if (auto post = type->typePostfix())
+			if (!type->VertLine().empty())
+			{
+				CppAdvanceCompilerError("Weak reference cannot be used with unions", ctx->declSpecifierSeq()->getStart());
+			}
+			if (auto post = type->singleTypeId(0)->typePostfix())
 			{
 				if (!post->arrayDeclarator().back()->Question())
 					CppAdvanceCompilerError("Weak reference must be optional", ctx->declSpecifierSeq()->getStart());
 			}
-			else if (!type->Question())
+			else if (!type->singleTypeId(0)->Question())
 			{
 				CppAdvanceCompilerError("Weak reference must be optional", ctx->declSpecifierSeq()->getStart());
 			}
@@ -5812,7 +5833,7 @@ void CppAdvanceSema::exitUnionEnumerator(CppAdvanceParser::UnionEnumeratorContex
 void CppAdvanceSema::enterUnionDefinition(CppAdvanceParser::UnionDefinitionContext* ctx)
 {
 	symbolContexts.push(symbolContexts.top());
-	//currentAccessSpecifier.push(std::nullopt);
+	currentAccessSpecifier.push(std::nullopt);
 	currentTypeKind.push(TypeKind::Union);
 
 	bool primaryType = true;
@@ -5951,6 +5972,11 @@ void CppAdvanceSema::exitUnionDefinition(CppAdvanceParser::UnionDefinitionContex
 	}
 	currentTypeKind.pop();
 	symbolContexts.pop();
+}
+
+void CppAdvanceSema::exitUnionList(CppAdvanceParser::UnionListContext* ctx)
+{
+	currentAccessSpecifier.pop();
 }
 
 void CppAdvanceSema::exitFriendDeclaration(CppAdvanceParser::FriendDeclarationContext* ctx)

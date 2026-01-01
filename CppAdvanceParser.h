@@ -110,17 +110,17 @@ public:
     RuleNamespaceName = 161, RuleTemplateName = 162, RuleSimpleTemplateId = 163, 
     RuleOperatorTemplateId = 164, RuleTemplateId = 165, RuleTemplateArgumentList = 166, 
     RuleTemplateArgument = 167, RuleIdExpression = 168, RuleQualifiedId = 169, 
-    RuleUnqualifiedId = 170, RuleTheTypeId = 171, RuleTypePostfix = 172, 
-    RuleArrayDeclarator = 173, RulePointerOperator = 174, RulePointerOperatorSeq = 175, 
-    RuleTypeSpecifierSeq = 176, RuleTypeSpecifier = 177, RuleTrailingTypeSpecifier = 178, 
-    RuleTypeNameSpecifier = 179, RuleCvQualifierSeq = 180, RuleCvQualifier = 181, 
-    RuleTypename = 182, RuleClassName = 183, RuleDecltypeSpecifier = 184, 
-    RuleEnumName = 185, RuleAccessSpecifier = 186, RuleProtectedInternal = 187, 
-    RuleOperatorFunctionId = 188, RuleConversionFunctionId = 189, RuleUnaryExpression = 190, 
-    RuleNewExpression = 191, RuleStackallocExpression = 192, RuleMemorySpaceSetter = 193, 
-    RuleNewInitializer = 194, RulePostfixExpression = 195, RuleTupleExpression = 196, 
-    RulePrimaryExpression = 197, RuleUnaryPrefixOperator = 198, RuleRefCaptureOperator = 199, 
-    RuleUnaryPostfixOperator = 200, RuleNot = 201, RuleOperator = 202, RuleLiteral = 203
+    RuleUnqualifiedId = 170, RuleTheTypeId = 171, RuleSingleTypeId = 172, 
+    RuleTypePostfix = 173, RuleArrayDeclarator = 174, RulePointerOperator = 175, 
+    RulePointerOperatorSeq = 176, RuleTypeSpecifierSeq = 177, RuleTypeSpecifier = 178, 
+    RuleTrailingTypeSpecifier = 179, RuleTypeNameSpecifier = 180, RuleCvQualifierSeq = 181, 
+    RuleCvQualifier = 182, RuleTypename = 183, RuleClassName = 184, RuleDecltypeSpecifier = 185, 
+    RuleEnumName = 186, RuleAccessSpecifier = 187, RuleProtectedInternal = 188, 
+    RuleOperatorFunctionId = 189, RuleConversionFunctionId = 190, RuleUnaryExpression = 191, 
+    RuleNewExpression = 192, RuleStackallocExpression = 193, RuleMemorySpaceSetter = 194, 
+    RuleNewInitializer = 195, RulePostfixExpression = 196, RuleTupleExpression = 197, 
+    RulePrimaryExpression = 198, RuleUnaryPrefixOperator = 199, RuleRefCaptureOperator = 200, 
+    RuleUnaryPostfixOperator = 201, RuleNot = 202, RuleOperator = 203, RuleLiteral = 204
   };
 
   explicit CppAdvanceParser(antlr4::TokenStream *input);
@@ -312,6 +312,7 @@ public:
   class QualifiedIdContext;
   class UnqualifiedIdContext;
   class TheTypeIdContext;
+  class SingleTypeIdContext;
   class TypePostfixContext;
   class ArrayDeclaratorContext;
   class PointerOperatorContext;
@@ -3318,6 +3319,22 @@ public:
   public:
     TheTypeIdContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
+    std::vector<SingleTypeIdContext *> singleTypeId();
+    SingleTypeIdContext* singleTypeId(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> VertLine();
+    antlr4::tree::TerminalNode* VertLine(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  TheTypeIdContext* theTypeId();
+
+  class  SingleTypeIdContext : public antlr4::ParserRuleContext {
+  public:
+    SingleTypeIdContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
     TypeSpecifierSeqContext *typeSpecifierSeq();
     antlr4::tree::TerminalNode *Question();
     TypePostfixContext *typePostfix();
@@ -3327,7 +3344,7 @@ public:
    
   };
 
-  TheTypeIdContext* theTypeId();
+  SingleTypeIdContext* singleTypeId();
 
   class  TypePostfixContext : public antlr4::ParserRuleContext {
   public:

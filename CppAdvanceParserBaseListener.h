@@ -532,6 +532,9 @@ public:
   virtual void enterTheTypeId(CppAdvanceParser::TheTypeIdContext * /*ctx*/) override { }
   virtual void exitTheTypeId(CppAdvanceParser::TheTypeIdContext * /*ctx*/) override { }
 
+  virtual void enterSingleTypeId(CppAdvanceParser::SingleTypeIdContext * /*ctx*/) override { }
+  virtual void exitSingleTypeId(CppAdvanceParser::SingleTypeIdContext * /*ctx*/) override { }
+
   virtual void enterTypePostfix(CppAdvanceParser::TypePostfixContext * /*ctx*/) override { }
   virtual void exitTypePostfix(CppAdvanceParser::TypePostfixContext * /*ctx*/) override { }
 

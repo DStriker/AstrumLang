@@ -475,7 +475,7 @@ public enum class ComplexVariant {
 	public static Count10: i32 ==> 12345;
 }
 
-/*public union Media : IMagicNumber {
+public union Media : IMagicNumber {
 	None,
 	String(str),
 	XYZ(i32,i32,i32),
@@ -484,18 +484,52 @@ public enum class ComplexVariant {
 	Text(lang: str);
 
 	public printVariant: () = {
-		print("This is printVariant function in optional chaining call");
-		print(s);
+		print("This is printVariant function in Media union");
 	}
 
-    public GetMagicNumber: (in f: VectorClass) -> f32 => this.f * f.x;
+    public GetMagicNumber: (in f: VectorClass) -> f32 => 0.5f * f.x;
 
 	public Count123: i32 ==> 1234567890;
 
 	public static Count10: i32 ==> 12345;
-}*/
+}
 
-public union struct RawUnion {
+public union<T1, T2> Union2 {
+	Type1(T1),
+	Type2(T2)
+}
+
+public union<T1, T2, T3> Union3 {
+	Type1(T1),
+	Type2(T2),
+	Type3(T3)
+}
+
+public union<T1, T2, T3, T4> Union4 {
+	Type1(T1),
+	Type2(T2),
+	Type3(T3),
+	Type4(T4)
+}
+
+public union<T1, T2, T3, T4, T5> Union5 {
+	Type1(T1),
+	Type2(T2),
+	Type3(T3),
+	Type4(T4),
+	Type5(T5)
+}
+
+public union<T1, T2, T3, T4, T5, T6> Union6 {
+	Type1(T1),
+	Type2(T2),
+	Type3(T3),
+	Type4(T4),
+	Type5(T5),
+	Type6(T6)
+}
+
+/*public union struct RawUnion {
     i: i32;
     f: f32;
     s: str;
@@ -525,7 +559,7 @@ public union struct RawUnion {
 
 		unsafe Count123: i32 ==> 1234567890;
 	}
-}
+}*/
 
 private extension <T> {
 	AsString: str => "AsString";
@@ -630,18 +664,20 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		//nxt = null;
 		print(nxt2!.GetStrongReferenceCount());
 		//print(map<int,map<int,string>>.StaticMethod());
-		ru: RawUnion = 3.14f;
-		unsafe {
-			print(ru.F);
-			print(ru.GetMagicNumber(nxt2!));
-		}
-		ru = "abc";
-		unsafe {
-			print(ru.S);
-		}
+		m:Media = ::None;
+		m = "abcdef";
+		m = (1,2,3);
+		m = ::Video("123",5,6.17f,"def");
+		type NumOrStr = i32 | f32 | str;
+		mu: i32 | f32 | str = 5;
+		mu = "abc";
+		mu = 123;
+		mu = 0.15f;
+		mu = "def";
+		print(mu.GetType3());
 		//print(var.GetStrongReferenceCount());
-		o: object = ru;
-		on: object? = ru;
+		o: object = m;
+		on: object? = m;
 		//print(day.Value);
 	}
 	print(nxt!.GetStrongReferenceCount());
