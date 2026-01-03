@@ -223,7 +223,7 @@ constructorBody: (Assign | Equal)? LeftBrace delegatingConstructorStatement? mem
 
 memberInitializationList: memberInitializationStatement+;
 
-delegatingConstructorBody: (Assign | Equal) Greater (delegatingConstructorStatement | memberInitializationStatement);
+delegatingConstructorBody: (AssignArrow | EqualArrow) (delegatingConstructorStatement | memberInitializationStatement);
 
 delegatingConstructorStatement: (This | Super) LeftParen expressionList? RightParen Semi;
 
@@ -267,7 +267,7 @@ returnType: Arrow (Const? Ref? theTypeId | Identifier Colon theTypeId | Const? R
 
 functionBody: (Assign | Equal)? compoundStatement;
 
-shortFunctionBody: (Assign | Equal) Greater expressionStatement;
+shortFunctionBody: (AssignArrow | EqualArrow) expressionStatement;
 
 exceptionSpecification: Noexcept (LeftParen constantExpression RightParen)?;
 
@@ -349,33 +349,52 @@ scopeSafeCompoundStatement: LeftBrace stat+? RightBrace;
 
 expr: assignmentExpression;
 
-multiplicativeExpression: unaryExpression multiplicativeBranch*;
+powerExpression: 
+	  unaryExpression
+	| powerExpression (DoubleStar | DoubleCaret | Op10) powerExpression
+	;
 
-multiplicativeBranch: (Star | Div | Mod) unaryExpression;
+multiplicativeExpression: 
+	  powerExpression
+	| multiplicativeExpression (Star | Div | Mod | Op9) multiplicativeExpression
+	;
 
-additiveExpression: multiplicativeExpression additiveBranch*;
+additiveExpression: 
+	  multiplicativeExpression
+	| additiveExpression (Plus | Minus | Tilde | Op8) additiveExpression
+	;
 
-additiveBranch: (Plus | Minus) multiplicativeExpression;
-
-shiftExpression: additiveExpression shiftBranch*;
-
-shiftBranch: shiftOperator additiveExpression;
+shiftExpression: 
+	  additiveExpression
+	| shiftExpression shiftOperator shiftExpression
+	;
 
 threeWayComparisonExpression: shiftExpression (Spaceship shiftExpression)?;
 
-relationalExpression: threeWayComparisonExpression relationalBranch?;
+relationalExpression: 
+	  threeWayComparisonExpression 
+	| relationalExpression (Less | Greater | LessEqual | GreaterEqual | Op6) relationalExpression
+	;
 
-relationalBranch: (Less | Greater | LessEqual | GreaterEqual) threeWayComparisonExpression;
+equalityExpression: 
+	  relationalExpression
+	| equalityExpression (IdentityEqual | NotIdentityEqual | Equal | NotEqual | Op5) equalityExpression
+	;
 
-equalityExpression: relationalExpression equalityBranch*;
+andExpression: 
+	  equalityExpression
+	| andExpression (Amp | Op4) andExpression
+	;
 
-equalityBranch: (Equal | NotEqual) relationalExpression;
+exclusiveOrExpression: 
+	  andExpression
+	| exclusiveOrExpression (Caret | Op3) exclusiveOrExpression
+	;
 
-andExpression: equalityExpression (Amp equalityExpression)*;
-
-exclusiveOrExpression: andExpression (Caret andExpression)*;
-
-inclusiveOrExpression: exclusiveOrExpression (VertLine exclusiveOrExpression)*;
+inclusiveOrExpression: 
+	  exclusiveOrExpression
+	| inclusiveOrExpression (VertLine | Op2) inclusiveOrExpression
+	;
 
 logicalAndExpression: inclusiveOrExpression (And inclusiveOrExpression)*;
 
@@ -407,20 +426,25 @@ assignmentOperator:
 	  Assign
 	| PlusAssign
 	| MinusAssign
+	| TildeAssign
 	| StarAssign
+	| DoubleStarAssign
 	| DivAssign
 	| ModAssign
 	| RightShiftAssign
 	| LeftShiftAssign
+	| SignedRightShiftAssign
 	| AndAssign
 	| XorAssign
 	| OrAssign
 	| DoubleQuestionAssign
+	| Op1
 	;
 
 shiftOperator:
-	  Greater Greater
+	  Greater Greater Greater?
 	| Less Less
+	| Op7
 	;
 
 tryBlock: Try compoundStatement exceptionHandler+;
@@ -540,8 +564,11 @@ operatorFunctionId: Operator_ operator;
 conversionFunctionId: Operator_ (Ref | Const Ref)? theTypeId;
 
 unaryExpression:
-	  postfixExpression
-	| (unaryPrefixOperator | refCaptureOperator | Out | PlusPlus | MinusMinus | Sizeof) unaryExpression
+	(unaryPrefixOperator | refCaptureOperator | Out | PlusPlus | MinusMinus | unaryCustomOperator | Sizeof)? unaryExpressionTail
+	;
+
+unaryExpressionTail:
+	  fullPostfixExpression
 	| Sizeof (LeftParen theTypeId RightParen | Ellipsis LeftParen Identifier RightParen)
 	| Alignof LeftParen theTypeId RightParen
 	;
@@ -554,6 +581,10 @@ memorySpaceSetter: Less constantExpression Greater;
 
 newInitializer: LeftParen expressionList? RightParen | bracedInitList;
 
+fullPostfixExpression:
+	postfixExpression (PlusPlus | MinusMinus | unaryCustomOperator)?
+	;
+
 postfixExpression:
 	  primaryExpression
 	| newExpression
@@ -565,7 +596,7 @@ postfixExpression:
 	| Forward postfixExpression
 	| postfixExpression Dot IntegerLiteral
 	| postfixExpression Question? Dot Greater? idExpression
-	| postfixExpression (PlusPlus | MinusMinus | unaryPostfixOperator)
+	| postfixExpression unaryPostfixOperator
 	;
 
 tupleExpression:
@@ -588,6 +619,19 @@ unaryPrefixOperator:
 	| Minus
 	| Tilde
 	| not
+	| Dollar
+	| Caret
+	| DoubleCaret
+	;
+
+unaryCustomOperator:
+	  Op2
+	| Op3
+	| Op4
+	| Op7
+	| Op8
+	| Op9
+	| Op10
 	;
 
 refCaptureOperator: Amp | Ref;
@@ -603,12 +647,15 @@ not: Exclamation | Not;
 operator:
 	  New
 	| Delete
+	| In
 	| Plus
 	| Minus
 	| Star
+	| DoubleStar
 	| Div
 	| Mod
 	| Caret
+	| DoubleCaret
 	| Amp
 	| Exclamation
 	| VertLine
@@ -619,15 +666,18 @@ operator:
 	| Assign
 	| PlusAssign
 	| MinusAssign
+	| TildeAssign
 	| StarAssign
+	| DoubleStarAssign
 	| ModAssign
 	| XorAssign
 	| AndAssign
 	| OrAssign
 	| Less Less
-	| Greater Greater
+	| Greater Greater Greater?
 	| RightShiftAssign
 	| LeftShiftAssign
+	| SignedRightShiftAssign
 	| Equal
 	| NotEqual
 	| LessEqual
@@ -635,6 +685,16 @@ operator:
 	| PlusPlus
 	| MinusMinus
 	| LeftParen RightParen
+	| Op1
+	| Op2
+	| Op3
+	| Op4
+	| Op5
+	| Op6
+	| Op7
+	| Op8
+	| Op9
+	| Op10
 	;
 
 literal:

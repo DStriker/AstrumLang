@@ -86,6 +86,8 @@
     <IncludePath>C:\Users\user\Documents\vcpkg-master\installed\x64-windows\include;C:\Users\user\Documents\VSProjects\TestDll;$(IncludePath)</IncludePath>
     <CodeAnalysisRuleSet>AstrumChecks.ruleset</CodeAnalysisRuleSet>
     <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</ExternalIncludePath>
+    <CustomBuildBeforeTargets>
+    </CustomBuildBeforeTargets>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -93,6 +95,8 @@
     <IncludePath>C:\Users\user\Documents\vcpkg-master\installed\x64-windows\include;C:\Users\user\Documents\VSProjects\TestDll;$(IncludePath)</IncludePath>
     <IgnoreImportLibrary>true</IgnoreImportLibrary>
     <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);</ExternalIncludePath>
+    <CustomBuildBeforeTargets>
+    </CustomBuildBeforeTargets>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <VcpkgInstalledDir>..\..\vcpkg-master\installed</VcpkgInstalledDir>
@@ -156,6 +160,36 @@
       <AdditionalDependencies>antlr4-runtime.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\Users\user\Documents\vcpkg-master\installed\x64-windows\debug\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>
+      </Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>
+      </Outputs>
+      <Inputs>
+      </Inputs>
+    </CustomBuildStep>
+    <CustomBuild>
+      <Command>
+      </Command>
+    </CustomBuild>
+    <CustomBuild>
+      <Message>
+      </Message>
+    </CustomBuild>
+    <CustomBuild>
+      <Outputs>
+      </Outputs>
+    </CustomBuild>
+    <CustomBuild>
+      <AdditionalInputs>
+      </AdditionalInputs>
+    </CustomBuild>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -184,6 +218,36 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Message>
+      </Message>
+    </CustomBuildStep>
+    <CustomBuildStep>
+      <Outputs>
+      </Outputs>
+      <Inputs>
+      </Inputs>
+    </CustomBuildStep>
+    <CustomBuild>
+      <Command>
+      </Command>
+    </CustomBuild>
+    <CustomBuild>
+      <Message>
+      </Message>
+    </CustomBuild>
+    <CustomBuild>
+      <Outputs>
+      </Outputs>
+    </CustomBuild>
+    <CustomBuild>
+      <AdditionalInputs>
+      </AdditionalInputs>
+    </CustomBuild>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CppAdvanceCodegen.cpp" />
@@ -206,7 +270,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="CppAdvanceLexer.g4" />
-    <None Include="CppAdvanceParser.g4" />
+    <CustomBuild Include="CppAdvanceParser.g4">
+      <FileType>Document</FileType>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">java org.antlr.v4.Tool -Dlanguage=Cpp CppAdvanceLexer.g4 CppAdvanceParser.g4</Command>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">java org.antlr.v4.Tool -Dlanguage=Cpp CppAdvanceLexer.g4 CppAdvanceParser.g4</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Astrum parser generator</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">CppAdvanceLexer.h;CppAdvanceLexer.cpp;CppAdvanceParser.h;CppAdvanceParser.cpp;CppAdvanceParserBaseListener.h;CppAdvanceParserBaseListener.cpp;CppAdvanceParserListener.h;CppAdvanceParserListener.cpp</Outputs>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Astrum parser generator</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">CppAdvanceLexer.h;CppAdvanceLexer.cpp;CppAdvanceParser.h;CppAdvanceParser.cpp;CppAdvanceParserBaseListener.h;CppAdvanceParserBaseListener.cpp;CppAdvanceParserListener.h;CppAdvanceParserListener.cpp</Outputs>
+    </CustomBuild>
     <None Include="FirstProgram.adv" />
   </ItemGroup>
   <ItemGroup>

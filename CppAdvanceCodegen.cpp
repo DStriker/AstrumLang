@@ -1691,8 +1691,8 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			}
 			else if (auto body = prop.setter->shortFunctionBody())
 			{
-				if (body->Equal()) isConstexpr = true;
-				else if (body->Assign()) isInline = true;
+				if (body->EqualArrow()) isConstexpr = true;
+				else if (body->AssignArrow()) isInline = true;
 			}
 			else if (!prop.isAbstract)
 			{
@@ -1778,8 +1778,8 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			}
 			else if (auto body = prop.getter->shortFunctionBody())
 			{
-				if (body->Equal()) isConstexpr = true;
-				else if (body->Assign()) isInline = true;
+				if (body->EqualArrow()) isConstexpr = true;
+				else if (body->AssignArrow()) isInline = true;
 			}
 			else if (!prop.isAbstract)
 			{
@@ -2216,11 +2216,11 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				}
 				else if (auto body = func.indexerSetter->shortFunctionBody())
 				{
-					if (body->Equal()) {
+					if (body->EqualArrow()) {
 						isInline = true;
 						isConstexpr = true;
 					}
-					else if (body->Assign())
+					else if (body->AssignArrow())
 					{
 						isInline = true;
 					}
@@ -2294,11 +2294,11 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				}
 				else if (auto body = func.indexerGetter->shortFunctionBody())
 				{
-					if (body->Equal()) {
+					if (body->EqualArrow()) {
 						isInline = true;
 						isConstexpr = true;
 					}
-					else if (body->Assign())
+					else if (body->AssignArrow())
 					{
 						isInline = true;
 					}
@@ -10806,11 +10806,12 @@ void CppAdvanceCodegen::printStructDefinition(CppAdvanceParser::StructDefinition
 							if (spec->Mutable()) isMut = true;
 						}
 						if (isStatic) continue;
-						std::string id;
-						if (method->Identifier()) id = method->Identifier()->getText();
-						if (method->operatorFunctionId()) id = method->operatorFunctionId()->getText();
+						//std::string id;
 
-						out << "auto " << id;
+						out << "auto ";
+						if (method->Identifier()) printIdentifier(method->Identifier());
+						if (method->operatorFunctionId()) printOperatorFunctionId(method->operatorFunctionId());
+
 						printFunctionParameters(method->functionParams());
 						if (!isMut) out << " const ";
 						if (method->exceptionSpecification()) printExceptionSpecification(method->exceptionSpecification());
@@ -10825,7 +10826,10 @@ void CppAdvanceCodegen::printStructDefinition(CppAdvanceParser::StructDefinition
 						{
 							out << "void";
 						}
-						out << " { ADV_EXPRESSION_BODY(__value." << id << "(";
+						out << " { ADV_EXPRESSION_BODY(__value.";
+						if (method->Identifier()) printIdentifier(method->Identifier());
+						if (method->operatorFunctionId()) printOperatorFunctionId(method->operatorFunctionId());
+						out << "(";
 						bool first = true;
 						if (auto params = method->functionParams()->paramDeclClause())
 						{
@@ -11145,8 +11149,21 @@ void CppAdvanceCodegen::printOperatorTemplateId(CppAdvanceParser::OperatorTempla
 
 void CppAdvanceCodegen::printOperatorFunctionId(CppAdvanceParser::OperatorFunctionIdContext* ctx) const
 {
-	out << "operator ";
-	printOperator(ctx->operator_());
+	auto op = ctx->operator_();
+	if (op->In())
+	{
+		out << "_operator_in";
+	}
+	else if (op->DoubleCaret() || op->Tilde() || op->TildeAssign() || op->DoubleStar() || op->DoubleStarAssign() || op->Greater().size() > 2
+		|| op->SignedRightShiftAssign()
+		|| op->Op1() || op->Op2() || op->Op3() || op->Op4() || op->Op5() || op->Op6() || op->Op7() || op->Op8() || op->Op9() || op->Op10())
+	{
+		out << sema.getCustomOperatorName(op->getText());
+	}
+	else {
+		out << "operator ";
+		printOperator(ctx->operator_());
+	}
 }
 
 void CppAdvanceCodegen::printConversionFunctionId(CppAdvanceParser::ConversionFunctionIdContext* ctx) const
@@ -11328,8 +11345,8 @@ void CppAdvanceCodegen::printConstructor(CppAdvanceParser::ConstructorContext* c
 		}
 		else if (auto body = ctx->delegatingConstructorBody())
 		{
-			if (body->Equal()) isConstexpr = true;
-			else if (body->Assign()) isInline = true;
+			if (body->EqualArrow()) isConstexpr = true;
+			else if (body->AssignArrow()) isInline = true;
 		}
 
 		if (isConstexpr)
@@ -11620,8 +11637,8 @@ void CppAdvanceCodegen::printDestructor(CppAdvanceParser::DestructorContext* ctx
 		}
 		else if (auto body = ctx->shortFunctionBody())
 		{
-			if (body->Equal()) isConstexpr = true;
-			else if (body->Assign()) isInline = true;
+			if (body->EqualArrow()) isConstexpr = true;
+			else if (body->AssignArrow()) isInline = true;
 		}
 
 		if (isConstexpr)
@@ -11818,8 +11835,8 @@ void CppAdvanceCodegen::printConversionFunction(CppAdvanceParser::ConversionFunc
 		}
 		else if (auto body = ctx->shortFunctionBody())
 		{
-			if (body->Equal()) isConstexpr = true;
-			else if (body->Assign()) isInline = true;
+			if (body->EqualArrow()) isConstexpr = true;
+			else if (body->AssignArrow()) isInline = true;
 		}
 
 		if (isConstexpr)
@@ -12173,7 +12190,7 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			}
 			else if (auto body = func.indexerGetter->shortFunctionBody())
 			{
-				isInline = body->Assign() || body->Equal();
+				isInline = body->AssignArrow() || body->EqualArrow();
 			}
 		}
 
@@ -12365,7 +12382,7 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			}
 			else if (auto body = func.indexerSetter->shortFunctionBody())
 			{
-				isInline = body->Assign() || body->Equal();
+				isInline = body->AssignArrow() || body->EqualArrow();
 			}
 
 			if (func.access != AccessSpecifier::Private && isInline)
@@ -12593,8 +12610,8 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			}
 			else if (auto body = prop.setter->shortFunctionBody())
 			{
-				if (body->Equal()) isConstexpr = true;
-				else if (body->Assign()) isInline = true;
+				if (body->EqualArrow()) isConstexpr = true;
+				else if (body->AssignArrow()) isInline = true;
 			}
 			else
 			{
@@ -12691,8 +12708,8 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			}
 			else if (auto body = prop.getter->shortFunctionBody())
 			{
-				if (body->Equal()) isConstexpr = true;
-				else if (body->Assign()) isInline = true;
+				if (body->EqualArrow()) isConstexpr = true;
+				else if (body->AssignArrow()) isInline = true;
 			}
 			else
 			{
@@ -12899,8 +12916,8 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			}
 			else if (auto body = setter->shortFunctionBody())
 			{
-				if (body->Equal()) isConstexpr = true;
-				else if (body->Assign()) isInline = true;
+				if (body->EqualArrow()) isConstexpr = true;
+				else if (body->AssignArrow()) isInline = true;
 			}
 			else
 			{
@@ -12980,8 +12997,8 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			}
 			else if (auto body = getter->shortFunctionBody())
 			{
-				if (body->Equal()) isConstexpr = true;
-				else if (body->Assign()) isInline = true;
+				if (body->EqualArrow()) isConstexpr = true;
+				else if (body->AssignArrow()) isInline = true;
 			}
 			else
 			{
@@ -13077,8 +13094,8 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			}
 			else if (auto body = ctx->shortFunctionBody())
 			{
-				if (body->Equal()) isConstexpr = true;
-				else if (body->Assign()) isInline = true;
+				if (body->EqualArrow()) isConstexpr = true;
+				else if (body->AssignArrow()) isInline = true;
 			}
 
 			if (isConstexpr)
@@ -13636,8 +13653,8 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 			}
 			else if (auto body = ctx->shortFunctionBody())
 			{
-				if (body->Equal()) isConstexpr = true;
-				else if (body->Assign()) isInline = true;
+				if (body->EqualArrow()) isConstexpr = true;
+				else if (body->AssignArrow()) isInline = true;
 			}
 
 			if (isConsteval)
@@ -13662,7 +13679,7 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 			else if (auto op = ctx->operatorFunctionId())
 			{
 				auto id = op->getText();
-				out << id;
+				printOperatorFunctionId(op);
 				if (id.ends_with(" new") || id.ends_with(" delete")) isNewDeleteOperator = true;
 			}
 			
@@ -14604,6 +14621,42 @@ void CppAdvanceCodegen::printAssignmentExpression(CppAdvanceParser::AssignmentEx
 			out << left << ".construct(";
 			paren = true;
 		}
+		else if (ctx->assignmentOperator()->DoubleStarAssign())
+		{
+			std::string ufcs = "ADV_UFCS";
+			if (!functionBody) ufcs += "_NONLOCAL";
+			out << ufcs << "(_operator_mul_mul_eq)(";
+			printLogicalOrExpression(ctx->logicalOrExpression());
+			out << ", ";
+			paren = true;
+		}
+		else if (ctx->assignmentOperator()->SignedRightShiftAssign())
+		{
+			std::string ufcs = "ADV_UFCS";
+			if (!functionBody) ufcs += "_NONLOCAL";
+			out << ufcs << "(_operator_gt_gt_gt_eq)(";
+			printLogicalOrExpression(ctx->logicalOrExpression());
+			out << ", ";
+			paren = true;
+		}
+		else if (ctx->assignmentOperator()->TildeAssign())
+		{
+			std::string ufcs = "ADV_UFCS";
+			if (!functionBody) ufcs += "_NONLOCAL";
+			out << ufcs << "(_operator_not_eq)(";
+			printLogicalOrExpression(ctx->logicalOrExpression());
+			out << ", ";
+			paren = true;
+		}
+		else if (ctx->assignmentOperator()->Op1())
+		{
+			std::string ufcs = "ADV_UFCS";
+			if (!functionBody) ufcs += "_NONLOCAL";
+			out << ufcs << "(" << sema.getCustomOperatorName(ctx->assignmentOperator()->Op1()->getText()) << ")(";
+			printLogicalOrExpression(ctx->logicalOrExpression());
+			out << ", ";
+			paren = true;
+		}
 		else {
 			printLogicalOrExpression(ctx->logicalOrExpression());
 			printAssignmentOperator(ctx->assignmentOperator());
@@ -14857,64 +14910,161 @@ void CppAdvanceCodegen::printLogicalAndExpression(CppAdvanceParser::LogicalAndEx
 
 void CppAdvanceCodegen::printInclusiveOrExpression(CppAdvanceParser::InclusiveOrExpressionContext* ctx) const
 {
-	bool first = true;
-	for (auto expr : ctx->exclusiveOrExpression())
+	if (ctx->exclusiveOrExpression())
 	{
-		if (!first) out << " | ";
-		first = false;
-		printExclusiveOrExpression(expr);
+		printExclusiveOrExpression(ctx->exclusiveOrExpression());
+	}
+	else if (ctx->VertLine())
+	{
+		printInclusiveOrExpression(ctx->inclusiveOrExpression(0));
+        out << " | ";
+        printInclusiveOrExpression(ctx->inclusiveOrExpression(1));
+	}
+	else
+	{
+		std::string ufcs = "ADV_UFCS";
+		if (!functionBody) ufcs += "_NONLOCAL";
+		out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op2()->getText()) << ")(";
+		printInclusiveOrExpression(ctx->inclusiveOrExpression(0));
+		out << ", ";
+        printInclusiveOrExpression(ctx->inclusiveOrExpression(1));
+		out << ")";
 	}
 }
 
 void CppAdvanceCodegen::printExclusiveOrExpression(CppAdvanceParser::ExclusiveOrExpressionContext* ctx) const
 {
-	bool first = true;
-	for (auto expr : ctx->andExpression())
+	if (ctx->andExpression())
 	{
-		if (!first) out << " ^ ";
-		first = false;
-		printAndExpression(expr);
+		printAndExpression(ctx->andExpression());
+	}
+	else if (ctx->Caret())
+	{
+		printExclusiveOrExpression(ctx->exclusiveOrExpression(0));
+		out << " ^ ";
+		printExclusiveOrExpression(ctx->exclusiveOrExpression(1));
+	}
+	else
+	{
+		std::string ufcs = "ADV_UFCS";
+		if (!functionBody) ufcs += "_NONLOCAL";
+		out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op3()->getText()) << ")(";
+		printExclusiveOrExpression(ctx->exclusiveOrExpression(0));
+		out << ", ";
+		printExclusiveOrExpression(ctx->exclusiveOrExpression(1));
+		out << ")";
 	}
 }
 
 void CppAdvanceCodegen::printAndExpression(CppAdvanceParser::AndExpressionContext* ctx) const
 {
-	bool first = true;
-	for (auto expr : ctx->equalityExpression())
+	if (ctx->equalityExpression())
 	{
-		if (!first) out << " & ";
-		first = false;
-		printEqualityExpression(expr);
+		printEqualityExpression(ctx->equalityExpression());
+	}
+	else if (ctx->Amp())
+	{
+		printAndExpression(ctx->andExpression(0));
+		out << " & ";
+		printAndExpression(ctx->andExpression(1));
+	}
+	else
+	{
+		std::string ufcs = "ADV_UFCS";
+		if (!functionBody) ufcs += "_NONLOCAL";
+		out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op4()->getText()) << ")(";
+		printAndExpression(ctx->andExpression(0));
+		out << ", ";
+		printAndExpression(ctx->andExpression(1));
+		out << ")";
 	}
 }
 
 void CppAdvanceCodegen::printEqualityExpression(CppAdvanceParser::EqualityExpressionContext* ctx) const
 {
-	printRelationalExpression(ctx->relationalExpression());
-	for (auto branch : ctx->equalityBranch())
+	if (ctx->relationalExpression())
 	{
-		if (branch->Equal())
-			out << " == ";
-		else
-			out << " != ";
-		printRelationalExpression(branch->relationalExpression());
+		printRelationalExpression(ctx->relationalExpression());
+	}
+	else if (ctx->Equal())
+	{
+		printEqualityExpression(ctx->equalityExpression(0));
+		out << " == ";
+		printEqualityExpression(ctx->equalityExpression(1));
+	}
+	else if (ctx->NotEqual())
+	{
+		printEqualityExpression(ctx->equalityExpression(0));
+		out << " != ";
+		printEqualityExpression(ctx->equalityExpression(1));
+	}
+	else if (ctx->IdentityEqual())
+	{
+		out << "(";
+		printEqualityExpression(ctx->equalityExpression(0));
+		out << ").__identityEquals(";
+		printEqualityExpression(ctx->equalityExpression(1));
+		out << ")";
+	}
+	else if (ctx->NotIdentityEqual())
+	{
+		out << "!(";
+		printEqualityExpression(ctx->equalityExpression(0));
+		out << ").__identityEquals(";
+		printEqualityExpression(ctx->equalityExpression(1));
+		out << ")";
+	}
+	else
+	{
+		std::string ufcs = "ADV_UFCS";
+		if (!functionBody) ufcs += "_NONLOCAL";
+		out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op5()->getText()) << ")(";
+		printEqualityExpression(ctx->equalityExpression(0));
+		out << ", ";
+		printEqualityExpression(ctx->equalityExpression(1));
+		out << ")";
 	}
 }
 
 void CppAdvanceCodegen::printRelationalExpression(CppAdvanceParser::RelationalExpressionContext* ctx) const
 {
-	printThreeWayComparisonExpression(ctx->threeWayComparisonExpression());
-	if (auto branch = ctx->relationalBranch())
+	if (ctx->threeWayComparisonExpression())
 	{
-		if (branch->LessEqual())
-			out << " <= ";
-		else if (branch->GreaterEqual())
-			out << " >= ";
-		else if (branch->Less())
-			out << " < ";
-		else
-			out << " > ";
-		printThreeWayComparisonExpression(branch->threeWayComparisonExpression());
+		printThreeWayComparisonExpression(ctx->threeWayComparisonExpression());
+	}
+	else if (ctx->Greater())
+	{
+		printRelationalExpression(ctx->relationalExpression(0));
+		out << " > ";
+		printRelationalExpression(ctx->relationalExpression(1));
+	}
+	else if (ctx->Less())
+	{
+		printRelationalExpression(ctx->relationalExpression(0));
+		out << " < ";
+		printRelationalExpression(ctx->relationalExpression(1));
+	}
+	else if (ctx->GreaterEqual())
+	{
+		printRelationalExpression(ctx->relationalExpression(0));
+		out << " >= ";
+		printRelationalExpression(ctx->relationalExpression(1));
+	}
+	else if (ctx->LessEqual())
+	{
+		printRelationalExpression(ctx->relationalExpression(0));
+		out << " <= ";
+		printRelationalExpression(ctx->relationalExpression(1));
+	}
+	else
+	{
+		std::string ufcs = "ADV_UFCS";
+		if (!functionBody) ufcs += "_NONLOCAL";
+		out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op6()->getText()) << ")(";
+		printRelationalExpression(ctx->relationalExpression(0));
+		out << ", ";
+		printRelationalExpression(ctx->relationalExpression(1));
+		out << ")";
 	}
 }
 
@@ -14930,92 +15080,255 @@ void CppAdvanceCodegen::printThreeWayComparisonExpression(CppAdvanceParser::Thre
 
 void CppAdvanceCodegen::printShiftExpression(CppAdvanceParser::ShiftExpressionContext* ctx) const
 {
-	printAdditiveExpression(ctx->additiveExpression());
-	for (auto branch : ctx->shiftBranch())
+	if (ctx->additiveExpression())
 	{
-		if (!branch->shiftOperator()->Less().empty())
-			out << " << ";
-		else
+		printAdditiveExpression(ctx->additiveExpression());
+	}
+	else if (!ctx->shiftOperator()->Greater().empty())
+	{
+		if (ctx->shiftOperator()->Greater().size() == 2)
+		{
+			printShiftExpression(ctx->shiftExpression(0));
 			out << " >> ";
-		printAdditiveExpression(branch->additiveExpression());
+			printShiftExpression(ctx->shiftExpression(1));
+		}
+		else
+		{
+			std::string ufcs = "ADV_UFCS";
+			if (!functionBody) ufcs += "_NONLOCAL";
+			out << ufcs << "(_operator_gt_gt_gt)(";
+			printShiftExpression(ctx->shiftExpression(0));
+			out << ", ";
+			printShiftExpression(ctx->shiftExpression(1));
+			out << ")";
+		}
+	}
+	else if (!ctx->shiftOperator()->Less().empty())
+	{
+		printShiftExpression(ctx->shiftExpression(0));
+		out << " << ";
+		printShiftExpression(ctx->shiftExpression(1));
+	}
+	else
+	{
+		std::string ufcs = "ADV_UFCS";
+		if (!functionBody) ufcs += "_NONLOCAL";
+		out << ufcs << "(" << sema.getCustomOperatorName(ctx->shiftOperator()->Op7()->getText()) << ")(";
+		printShiftExpression(ctx->shiftExpression(0));
+		out << ", ";
+		printShiftExpression(ctx->shiftExpression(1));
+		out << ")";
 	}
 }
 
 void CppAdvanceCodegen::printAdditiveExpression(CppAdvanceParser::AdditiveExpressionContext* ctx) const
 {
-	printMultiplicativeExpression(ctx->multiplicativeExpression());
-	for (auto branch : ctx->additiveBranch())
+	if (ctx->multiplicativeExpression())
 	{
-		if (branch->Plus())
-			out << " + ";
-		else
-			out << " - ";
-		printMultiplicativeExpression(branch->multiplicativeExpression());
+		printMultiplicativeExpression(ctx->multiplicativeExpression());
+	}
+	else if (ctx->Plus())
+	{
+		printAdditiveExpression(ctx->additiveExpression(0));
+		out << " + ";
+		printAdditiveExpression(ctx->additiveExpression(1));
+	}
+	else if (ctx->Minus())
+	{
+		printAdditiveExpression(ctx->additiveExpression(0));
+		out << " - ";
+		printAdditiveExpression(ctx->additiveExpression(1));
+	}
+	else if (ctx->Tilde())
+	{
+		std::string ufcs = "ADV_UFCS";
+		if (!functionBody) ufcs += "_NONLOCAL";
+		out << ufcs << "(_operator_not)(";
+		printAdditiveExpression(ctx->additiveExpression(0));
+		out << ", ";
+		printAdditiveExpression(ctx->additiveExpression(1));
+		out << ")";
+	}
+	else
+	{
+		std::string ufcs = "ADV_UFCS";
+		if (!functionBody) ufcs += "_NONLOCAL";
+		out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op8()->getText()) << ")(";
+		printAdditiveExpression(ctx->additiveExpression(0));
+		out << ", ";
+		printAdditiveExpression(ctx->additiveExpression(1));
+		out << ")";
 	}
 }
 
 void CppAdvanceCodegen::printMultiplicativeExpression(CppAdvanceParser::MultiplicativeExpressionContext* ctx) const
 {
-	printUnaryExpression(ctx->unaryExpression());
-	for (auto branch : ctx->multiplicativeBranch())
+	if (ctx->powerExpression())
 	{
-		if (branch->Star())
-			out << " * ";
-		else if (branch->Div())
-			out << " / ";
-		else
-			out << " % ";
-		printUnaryExpression(branch->unaryExpression());
+		printPowerExpression(ctx->powerExpression());
+	}
+	else if (ctx->Star())
+	{
+		printMultiplicativeExpression(ctx->multiplicativeExpression(0));
+		out << " * ";
+		printMultiplicativeExpression(ctx->multiplicativeExpression(1));
+	}
+	else if (ctx->Div())
+	{
+		printMultiplicativeExpression(ctx->multiplicativeExpression(0));
+		out << " / ";
+		printMultiplicativeExpression(ctx->multiplicativeExpression(1));
+	}
+	else if (ctx->Mod())
+	{
+		printMultiplicativeExpression(ctx->multiplicativeExpression(0));
+		out << " % ";
+		printMultiplicativeExpression(ctx->multiplicativeExpression(1));
+	}
+	else
+	{
+		std::string ufcs = "ADV_UFCS";
+		if (!functionBody) ufcs += "_NONLOCAL";
+		out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op9()->getText()) << ")(";
+		printMultiplicativeExpression(ctx->multiplicativeExpression(0));
+		out << ", ";
+		printMultiplicativeExpression(ctx->multiplicativeExpression(1));
+		out << ")";
+	}
+}
+
+void CppAdvanceCodegen::printPowerExpression(CppAdvanceParser::PowerExpressionContext* ctx) const
+{
+	if (ctx->unaryExpression())
+	{
+		printUnaryExpression(ctx->unaryExpression());
+	}
+	else if (ctx->DoubleStar())
+	{
+		std::string ufcs = "ADV_UFCS";
+		if (!functionBody) ufcs += "_NONLOCAL";
+		out << ufcs << "(_operator_mul_mul)(";
+		printPowerExpression(ctx->powerExpression(0));
+		out << ", ";
+		printPowerExpression(ctx->powerExpression(1));
+		out << ")";
+	}
+	else if (ctx->DoubleCaret())
+	{
+		std::string ufcs = "ADV_UFCS";
+		if (!functionBody) ufcs += "_NONLOCAL";
+		out << ufcs << "(_operator_xor_xor)(";
+		printPowerExpression(ctx->powerExpression(0));
+		out << ", ";
+		printPowerExpression(ctx->powerExpression(1));
+		out << ")";
+	}
+	else
+	{
+		std::string ufcs = "ADV_UFCS";
+		if (!functionBody) ufcs += "_NONLOCAL";
+		out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op10()->getText()) << ")(";
+		printPowerExpression(ctx->powerExpression(0));
+		out << ", ";
+		printPowerExpression(ctx->powerExpression(1));
+		out << ")";
 	}
 }
 
 void CppAdvanceCodegen::printUnaryExpression(CppAdvanceParser::UnaryExpressionContext* ctx) const
 {
 	unaryExpressions.push(ctx);
-	if (auto expr = ctx->unaryExpression())
+	bool paren = false;
+	if (auto upo = ctx->unaryPrefixOperator())
 	{
-		if (auto upo = ctx->unaryPrefixOperator())
-		{
-			literalMinus = upo->Minus();
-			if (upo->Plus())
-				out << "+";
-			else if (upo->Tilde())
-				out << "~";
-			else if (upo->not_())
-				out << "!";
+		literalMinus = upo->Minus();
+		if (upo->Plus()) {
+			out << "+";
 		}
-		else if (ctx->PlusPlus())
-		{
-			out << "++";
+		else if (upo->Tilde()) {
+			std::string ufcs = "ADV_UFCS";
+			if (!functionBody) ufcs += "_NONLOCAL";
+			out << ufcs << "(_operator_not)(";
+			paren = true;
 		}
-		else if (ctx->MinusMinus())
-		{
-			out << "--";
+		else if (upo->not_()) {
+			out << "!";
 		}
-		else if (ctx->Sizeof())
+		else if (upo->Dollar())
 		{
-			out << "CppAdvance::usize(sizeof ";
+			std::string ufcs = "ADV_UFCS";
+			if (!functionBody) ufcs += "_NONLOCAL";
+			out << ufcs << "(_operator_dollar)(";
+			paren = true;
 		}
-		else if (ctx->refCaptureOperator())
+		else if (upo->Caret())
 		{
-			out << "CppAdvance::MutableRef<std::remove_cvref_t<decltype(";
-			printUnaryExpression(expr);
-			out << ")>>(";
+			std::string ufcs = "ADV_UFCS";
+			if (!functionBody) ufcs += "_NONLOCAL";
+			out << ufcs << "(_operator_xor)(";
+			paren = true;
 		}
-		else if (ctx->Out())
+		else if (upo->DoubleCaret())
 		{
-			isOutExpression = true;
-			out << "CppAdvance::Out(&";
-			/*printUnaryExpression(expr);
-			out << "(&";*/
+			std::string ufcs = "ADV_UFCS";
+			if (!functionBody) ufcs += "_NONLOCAL";
+			out << ufcs << "(_operator_xor_xor)(";
+			paren = true;
 		}
-		printUnaryExpression(expr);
-		if (ctx->Sizeof() || ctx->refCaptureOperator() || ctx->Out()) out << ")";
-		isOutExpression = false;
 	}
-	else if (auto postfix = ctx->postfixExpression())
+	else if (ctx->PlusPlus())
 	{
-		printPostfixExpression(postfix);
+		out << "++";
+	}
+	else if (ctx->MinusMinus())
+	{
+		out << "--";
+	}
+	else if (ctx->Sizeof())
+	{
+		out << "CppAdvance::usize(sizeof ";
+		paren = true;
+	}
+	else if (ctx->refCaptureOperator())
+	{
+		out << "CppAdvance::MutableRef<std::remove_cvref_t<decltype(";
+		printUnaryExpressionTail(ctx->unaryExpressionTail());
+		out << ")>>(";
+		paren = true;
+	}
+	else if (ctx->Out())
+	{
+		isOutExpression = true;
+		out << "CppAdvance::Out(&";
+		paren = true;
+	}
+	else if (ctx->unaryCustomOperator())
+	{
+		std::string ufcs = "ADV_UFCS";
+		if (!functionBody) ufcs += "_NONLOCAL";
+		out << ufcs << "(" << sema.getCustomOperatorName(ctx->unaryCustomOperator()->getText()) << ")(";
+		paren = true;
+	}
+	printUnaryExpressionTail(ctx->unaryExpressionTail());	
+	if (!lvalue && sema.optionalChains.contains(ctx))
+	{
+		for (int i = 0; i < sema.optionalChains[ctx]; ++i)
+		{
+			out << "); })";
+		}
+	}
+	if (paren) out << ")";
+	isOutExpression = false;
+	
+	unaryExpressions.pop();
+	literalMinus = false;
+}
+
+void CppAdvanceCodegen::printUnaryExpressionTail(CppAdvanceParser::UnaryExpressionTailContext* ctx) const
+{
+	if (auto postfix = ctx->fullPostfixExpression())
+	{
+		printFullPostfixExpression(postfix);
 	}
 	else if (ctx->Sizeof())
 	{
@@ -15032,16 +15345,6 @@ void CppAdvanceCodegen::printUnaryExpression(CppAdvanceParser::UnaryExpressionCo
 		printTypeId(ctx->theTypeId());
 		out << "))";
 	}
-	
-	if (!lvalue && sema.optionalChains.contains(ctx))
-	{
-		for (int i = 0; i < sema.optionalChains[ctx]; ++i)
-		{
-			out << "); })";
-		}
-	}
-	unaryExpressions.pop();
-	literalMinus = false;
 }
 
 void CppAdvanceCodegen::printNewExpression(CppAdvanceParser::NewExpressionContext* ctx) const
@@ -15069,6 +15372,32 @@ void CppAdvanceCodegen::printNewExpression(CppAdvanceParser::NewExpressionContex
 void CppAdvanceCodegen::printStackallocExpression(CppAdvanceParser::StackallocExpressionContext* ctx) const
 {
 	out << GetStackObjectVarName(ctx->theTypeId());
+}
+
+
+void CppAdvanceCodegen::printFullPostfixExpression(CppAdvanceParser::FullPostfixExpressionContext* ctx) const
+{
+	if (ctx->PlusPlus())
+	{
+		printPostfixExpression(ctx->postfixExpression());
+		out << "++";
+	}
+	else if (ctx->MinusMinus())
+	{
+		printPostfixExpression(ctx->postfixExpression());
+		out << "--";
+	}
+	else if (ctx->unaryCustomOperator())
+	{
+		std::string ufcs = "ADV_UFCS";
+		if (!functionBody) ufcs += "_NONLOCAL";
+		out << ufcs << "(" << sema.getCustomOperatorName(ctx->unaryCustomOperator()->getText()) << "_postfix)(";
+		printPostfixExpression(ctx->postfixExpression());
+		out << ")";
+	}
+	else {
+		printPostfixExpression(ctx->postfixExpression());
+	}
 }
 
 void CppAdvanceCodegen::printPostfixExpression(CppAdvanceParser::PostfixExpressionContext* ctx) const
@@ -15532,16 +15861,6 @@ void CppAdvanceCodegen::printPostfixExpression(CppAdvanceParser::PostfixExpressi
 			}
 		}
 		
-	}
-	else if (ctx->PlusPlus())
-	{
-		printPostfixExpression(ctx->postfixExpression());
-		out << "++";
-	}
-	else if (ctx->MinusMinus())
-	{
-		printPostfixExpression(ctx->postfixExpression());
-		out << "--";
 	}
 	else if (auto op = ctx->unaryPostfixOperator())
 	{

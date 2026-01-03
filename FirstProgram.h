@@ -2524,18 +2524,22 @@ template<class T> inline constexpr auto __static_getCount3() -> const CppAdvance
 
 #line 598 "FirstProgram.adv"
 using __extension_598_i32 = CppAdvance::i32;
+#line 600 "FirstProgram.adv"
+inline constexpr auto _operator_bsl_mul_div(__extension_598_i32 const& __this LIFETIMEBOUND)  -> const CppAdvance::i32;
+#line 601 "FirstProgram.adv"
+inline constexpr auto _operator_bsl_mul_div(__extension_598_i32 const& __this LIFETIMEBOUND, CppAdvance::i32 other)  -> const CppAdvance::i32;
 #line 599 "FirstProgram.adv"
 inline constexpr auto getkm(__extension_598_i32 const& __this ) -> const CppAdvance::i32;
 
-#line 602 "FirstProgram.adv"
-using __extension_602_f64 = CppAdvance::f64;
-#line 603 "FirstProgram.adv"
-inline constexpr auto getkm(__extension_602_f64 const& __this ) -> const CppAdvance::f64;
+#line 604 "FirstProgram.adv"
+using __extension_604_f64 = CppAdvance::f64;
+#line 605 "FirstProgram.adv"
+inline constexpr auto getkm(__extension_604_f64 const& __this ) -> const CppAdvance::f64;
 
-#line 606 "FirstProgram.adv"
-using __extension_606_str = CppAdvance::Str;
-#line 607 "FirstProgram.adv"
-inline constexpr auto getkm(__extension_606_str const& __this ) -> const CppAdvance::Str;
+#line 608 "FirstProgram.adv"
+using __extension_608_str = CppAdvance::Str;
+#line 609 "FirstProgram.adv"
+inline constexpr auto getkm(__extension_608_str const& __this ) -> const CppAdvance::Str;
 
 
 #line 57 "FirstProgram.adv"
@@ -2992,7 +2996,7 @@ template<> inline constexpr auto sum<CppAdvance::i32, CppAdvance::i32(15)>(CppAd
 inline auto func4(CppAdvance::i32 x)  -> const CppAdvance::i32;
 #line 362 "FirstProgram.adv"
 inline auto _operator_subscript(CppAdvance::In<VectorClass> vec, CppAdvance::f32 x, CppAdvance::f32 y)  -> const CppAdvance::f32;
-#line 610 "FirstProgram.adv"
+#line 612 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32;
 //###############################################################################
 //# Global compile-time constants
@@ -3507,10 +3511,10 @@ inline constexpr auto __Class_ComplexVariant::getCount10()  -> CppAdvance::i32
 	ADV_EXPRESSION_BODY(CppAdvance::i32(12345)); 
 }
 
-#line 610 "FirstProgram.adv"
+#line 612 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32
 {
-	#line 610 "FirstProgram.adv"
+	#line 612 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(ADV_UPCS(x)(vec.__ref()) + ADV_UPCS(y)(vec.__ref()) + ADV_UPCS(z)(vec.__ref())); 
 }
 #line 9999 "FirstProgram.adv"
@@ -3653,6 +3657,20 @@ template<class T> inline constexpr auto __static_getCount3() -> const CppAdvance
 }
 #line 9999 "FirstProgram.adv"
 
+#line 600 "FirstProgram.adv"
+inline constexpr auto _operator_bsl_mul_div(__extension_598_i32 const& __this LIFETIMEBOUND)  -> const CppAdvance::i32
+{
+	#line 600 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(__this / CppAdvance::i32(2)); 
+}
+
+#line 601 "FirstProgram.adv"
+inline constexpr auto _operator_bsl_mul_div(__extension_598_i32 const& __this LIFETIMEBOUND, CppAdvance::i32 other)  -> const CppAdvance::i32
+{
+	#line 601 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY((__this + other) / CppAdvance::i32(2)); 
+}
+
 #line 599 "FirstProgram.adv"
 inline constexpr auto getkm(__extension_598_i32 const& __this ) -> const CppAdvance::i32
 {
@@ -3661,18 +3679,18 @@ inline constexpr auto getkm(__extension_598_i32 const& __this ) -> const CppAdva
 }
 #line 9999 "FirstProgram.adv"
 
-#line 603 "FirstProgram.adv"
-inline constexpr auto getkm(__extension_602_f64 const& __this ) -> const CppAdvance::f64
+#line 605 "FirstProgram.adv"
+inline constexpr auto getkm(__extension_604_f64 const& __this ) -> const CppAdvance::f64
 {
-	#line 603 "FirstProgram.adv"
+	#line 605 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(__this * CppAdvance::f32(1000.0f)); 
 }
 #line 9999 "FirstProgram.adv"
 
-#line 607 "FirstProgram.adv"
-inline constexpr auto getkm(__extension_606_str const& __this ) -> const CppAdvance::Str
+#line 609 "FirstProgram.adv"
+inline constexpr auto getkm(__extension_608_str const& __this ) -> const CppAdvance::Str
 {
-	#line 607 "FirstProgram.adv"
+	#line 609 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::Str{u"1000km"}); 
 }
 #line 9999 "FirstProgram.adv"

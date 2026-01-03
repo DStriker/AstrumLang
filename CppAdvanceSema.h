@@ -403,6 +403,7 @@ class CppAdvanceSema : public CppAdvanceParserBaseListener
 	CppAdvanceParser::TemplateParamsContext* getLastTypeTemplateParams();
 	CppAdvanceParser::TemplateArgumentListContext* getLastTypeTemplateSpecializationArgs();
 	std::string getCurrentFullTypeName();
+	void tryToAddTypeInStackFromOperator(std::string_view op);
 	CppAdvanceParser* parser;
 	std::string filename;
 public:
@@ -523,6 +524,7 @@ public:
 
 	std::string getNamedTupleId(std::string_view tuple);
 	std::string getInterfaceMethodId(std::string_view name, CppAdvanceParser::ParamDeclClauseContext* params);
+	std::string getCustomOperatorName(std::string_view op);
 
 	inline bool isTypeDefinitionBody() {
 		return !currentType.empty();
@@ -988,5 +990,32 @@ public:
 
 
 	void exitUnionList(CppAdvanceParser::UnionListContext*) override;
+
+
+	void enterFullPostfixExpression(CppAdvanceParser::FullPostfixExpressionContext*) override;
+
+
+	void exitFullPostfixExpression(CppAdvanceParser::FullPostfixExpressionContext*) override;
+
+
+	void exitPowerExpression(CppAdvanceParser::PowerExpressionContext*) override;
+
+
+	void exitMultiplicativeExpression(CppAdvanceParser::MultiplicativeExpressionContext*) override;
+
+
+	void exitAdditiveExpression(CppAdvanceParser::AdditiveExpressionContext*) override;
+
+
+	void exitShiftExpression(CppAdvanceParser::ShiftExpressionContext*) override;
+
+
+	void exitAndExpression(CppAdvanceParser::AndExpressionContext*) override;
+
+
+	void exitExclusiveOrExpression(CppAdvanceParser::ExclusiveOrExpressionContext*) override;
+
+
+	void exitInclusiveOrExpression(CppAdvanceParser::InclusiveOrExpressionContext*) override;
 
 };

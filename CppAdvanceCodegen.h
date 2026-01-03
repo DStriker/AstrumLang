@@ -212,10 +212,13 @@ public:
 	void printShiftExpression(CppAdvanceParser::ShiftExpressionContext* ctx) const;
 	void printAdditiveExpression(CppAdvanceParser::AdditiveExpressionContext* ctx) const;
 	void printMultiplicativeExpression(CppAdvanceParser::MultiplicativeExpressionContext* ctx) const;
+	void printPowerExpression(CppAdvanceParser::PowerExpressionContext* ctx) const;
 	void printUnaryExpression(CppAdvanceParser::UnaryExpressionContext* ctx) const;
+	void printUnaryExpressionTail(CppAdvanceParser::UnaryExpressionTailContext* ctx) const;
 	void printNewExpression(CppAdvanceParser::NewExpressionContext* ctx) const;
 	void printStackallocExpression(CppAdvanceParser::StackallocExpressionContext* ctx) const;
 	void printClassInitializer(CppAdvanceParser::TheTypeIdContext* type, CppAdvanceParser::NewInitializerContext* init) const;
+	void printFullPostfixExpression(CppAdvanceParser::FullPostfixExpressionContext* ctx) const;
 	void printPostfixExpression(CppAdvanceParser::PostfixExpressionContext* ctx) const;
 	void printPrimaryExpression(CppAdvanceParser::PrimaryExpressionContext* ctx) const;
 	void printTupleExpression(CppAdvanceParser::TupleExpressionContext* ctx) const;

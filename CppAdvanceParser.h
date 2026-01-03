@@ -16,39 +16,42 @@ public:
     CharacterLiteral = 6, FloatingLiteral = 7, DecimalTypeLiteral = 8, StringLiteral = 9, 
     RegularString = 10, HexStringLiteral = 11, GraveString = 12, MultilineStringLiteral = 13, 
     BooleanLiteral = 14, Directive = 15, Abstract = 16, Alignas = 17, Alignof = 18, 
-    As = 19, Asm = 20, Assert = 21, Auto = 22, Await = 23, Bool = 24, Break = 25, 
-    Case = 26, Catch = 27, Char = 28, Byte = 29, Class = 30, Concept = 31, 
-    Const = 32, Consteval = 33, Continue = 34, Copy = 35, Debug = 36, Decimal = 37, 
-    Decltype = 38, Default = 39, Delete = 40, Do = 41, Else = 42, Enum = 43, 
-    Extension = 44, Extern = 45, False_ = 46, Final = 47, F32 = 48, F64 = 49, 
-    Fext = 50, Field = 51, For = 52, Forward = 53, Friend = 54, Get = 55, 
-    Goto = 56, If = 57, Import = 58, Implicit = 59, In = 60, Inout = 61, 
-    I8 = 62, I16 = 63, I32 = 64, I64 = 65, I128 = 66, Isize = 67, Inline = 68, 
-    Interface = 69, Internal = 70, Is = 71, Let = 72, Lock = 73, Module = 74, 
-    Move = 75, Mutable = 76, Namespace = 77, New = 78, Noexcept = 79, Null = 80, 
-    Object = 81, Operator_ = 82, Out = 83, Override = 84, Private = 85, 
-    Protected = 86, Public = 87, Ref = 88, Requires = 89, Return = 90, Rune = 91, 
-    Self = 92, Set = 93, Sizeof = 94, Stackalloc = 95, Static = 96, Str = 97, 
-    Struct = 98, Super = 99, Switch = 100, That = 101, This = 102, Thread_local = 103, 
-    Throw = 104, True_ = 105, Try = 106, Type = 107, Typeof = 108, Union = 109, 
-    Unowned = 110, Using = 111, U8 = 112, U16 = 113, U32 = 114, U64 = 115, 
-    U128 = 116, Unsafe = 117, Usize = 118, Version = 119, Virtual = 120, 
-    Void = 121, Volatile = 122, Weak = 123, While = 124, Yield = 125, Not = 126, 
-    And = 127, Or = 128, Identifier = 129, LeftParen = 130, RightParen = 131, 
-    LeftBracket = 132, RightBracket = 133, LeftBrace = 134, RightBrace = 135, 
-    Plus = 136, Minus = 137, Star = 138, DoubleStar = 139, Div = 140, Mod = 141, 
-    LifetimeAnnotation = 142, Caret = 143, Amp = 144, VertLine = 145, Tilde = 146, 
-    Colon = 147, Assign = 148, Less = 149, Greater = 150, PlusAssign = 151, 
-    MinusAssign = 152, StarAssign = 153, DivAssign = 154, ModAssign = 155, 
-    XorAssign = 156, AndAssign = 157, OrAssign = 158, LeftShiftAssign = 159, 
-    RightShiftAssign = 160, SignedLeftShiftAssign = 161, SignedRightShiftAssign = 162, 
-    Equal = 163, NotEqual = 164, Spaceship = 165, LessEqual = 166, GreaterEqual = 167, 
-    PlusPlus = 168, MinusMinus = 169, Comma = 170, Arrow = 171, Exclamation = 172, 
-    Question = 173, DoubleQuestion = 174, DoubleQuestionAssign = 175, Doublecolon = 176, 
-    Semi = 177, Dot = 178, DoubleDot = 179, DoubleDotLess = 180, Dollar = 181, 
-    Ellipsis = 182, Apostroph = 183, AtSign = 184, DOUBLE_CURLY_INSIDE = 185, 
-    FORMAT_STRING = 186, DecimalLiteral = 187, OctalLiteral = 188, HexadecimalLiteral = 189, 
-    BinaryLiteral = 190, Integersuffix = 191, DOUBLE_CURLY_CLOSE_INSIDE = 192
+    As = 19, Asm = 20, Assert = 21, Await = 22, Bool = 23, Break = 24, Case = 25, 
+    Catch = 26, Char = 27, Byte = 28, Class = 29, Const = 30, Consteval = 31, 
+    Continue = 32, Debug = 33, Decimal = 34, Decltype = 35, Default = 36, 
+    Delete = 37, Do = 38, Else = 39, Enum = 40, Extension = 41, Extern = 42, 
+    False_ = 43, Final = 44, F32 = 45, F64 = 46, Fext = 47, Field = 48, 
+    For = 49, Forward = 50, Friend = 51, Get = 52, If = 53, Import = 54, 
+    Implicit = 55, In = 56, Inout = 57, I8 = 58, I16 = 59, I32 = 60, I64 = 61, 
+    I128 = 62, Isize = 63, Inline = 64, Interface = 65, Internal = 66, Is = 67, 
+    Let = 68, Lock = 69, Move = 70, Mutable = 71, New = 72, Noexcept = 73, 
+    Null = 74, Object = 75, Operator_ = 76, Out = 77, Override = 78, Private = 79, 
+    Protected = 80, Public = 81, Ref = 82, Requires = 83, Return = 84, Rune = 85, 
+    Self = 86, Set = 87, Sizeof = 88, Stackalloc = 89, Static = 90, Str = 91, 
+    Struct = 92, Super = 93, Switch = 94, This = 95, Thread_local = 96, 
+    Throw = 97, True_ = 98, Try = 99, Type = 100, Typeof = 101, Union = 102, 
+    Unowned = 103, Using = 104, U8 = 105, U16 = 106, U32 = 107, U64 = 108, 
+    U128 = 109, Unsafe = 110, Usize = 111, Version = 112, Virtual = 113, 
+    Void = 114, Volatile = 115, Weak = 116, While = 117, Yield = 118, Not = 119, 
+    And = 120, Or = 121, Identifier = 122, LeftParen = 123, RightParen = 124, 
+    LeftBracket = 125, RightBracket = 126, LeftBrace = 127, RightBrace = 128, 
+    Plus = 129, Minus = 130, Star = 131, DoubleStar = 132, Div = 133, Mod = 134, 
+    LifetimeAnnotation = 135, Caret = 136, DoubleCaret = 137, Amp = 138, 
+    VertLine = 139, Tilde = 140, Colon = 141, Assign = 142, Less = 143, 
+    Greater = 144, PlusAssign = 145, MinusAssign = 146, TildeAssign = 147, 
+    StarAssign = 148, DoubleStarAssign = 149, DivAssign = 150, ModAssign = 151, 
+    XorAssign = 152, AndAssign = 153, OrAssign = 154, LeftShiftAssign = 155, 
+    RightShiftAssign = 156, SignedRightShiftAssign = 157, Equal = 158, NotEqual = 159, 
+    IdentityEqual = 160, NotIdentityEqual = 161, Spaceship = 162, LessEqual = 163, 
+    GreaterEqual = 164, PlusPlus = 165, MinusMinus = 166, Comma = 167, Arrow = 168, 
+    AssignArrow = 169, EqualArrow = 170, Exclamation = 171, Question = 172, 
+    DoubleQuestion = 173, DoubleQuestionAssign = 174, Doublecolon = 175, 
+    Semi = 176, Dot = 177, DoubleDot = 178, DoubleDotEqual = 179, Dollar = 180, 
+    Ellipsis = 181, Apostroph = 182, AtSign = 183, Op1 = 184, Op2 = 185, 
+    Op10 = 186, Op3 = 187, Op4 = 188, Op5 = 189, Op7 = 190, Op6 = 191, Op8 = 192, 
+    Op9 = 193, DOUBLE_CURLY_INSIDE = 194, FORMAT_STRING = 195, DecimalLiteral = 196, 
+    OctalLiteral = 197, HexadecimalLiteral = 198, BinaryLiteral = 199, Integersuffix = 200, 
+    DOUBLE_CURLY_CLOSE_INSIDE = 201
   };
 
   enum {
@@ -94,33 +97,33 @@ public:
     RuleRefDeclaration = 114, RuleMemberRefDeclaration = 115, RuleSimpleMultiDeclaration = 116, 
     RuleMultiDeclaration = 117, RuleConstantDeclaration = 118, RuleForwardVarDeclaration = 119, 
     RuleAliasDeclaration = 120, RuleVersionSelectionStatement = 121, RuleVersionSelectionStatementBlock = 122, 
-    RuleScopeSafeCompoundStatement = 123, RuleExpr = 124, RuleMultiplicativeExpression = 125, 
-    RuleMultiplicativeBranch = 126, RuleAdditiveExpression = 127, RuleAdditiveBranch = 128, 
-    RuleShiftExpression = 129, RuleShiftBranch = 130, RuleThreeWayComparisonExpression = 131, 
-    RuleRelationalExpression = 132, RuleRelationalBranch = 133, RuleEqualityExpression = 134, 
-    RuleEqualityBranch = 135, RuleAndExpression = 136, RuleExclusiveOrExpression = 137, 
-    RuleInclusiveOrExpression = 138, RuleLogicalAndExpression = 139, RuleLogicalOrExpression = 140, 
-    RuleNullCoalescingExpression = 141, RuleNullCoalescingBranch = 142, 
-    RuleConditionalExpression = 143, RuleConstantExpression = 144, RuleAssignmentExpression = 145, 
-    RuleInitializerClause = 146, RuleBracedInitList = 147, RuleInitializerList = 148, 
-    RuleInitializerPart = 149, RuleExpressionList = 150, RuleExpressionListPart = 151, 
-    RuleAssignmentOperator = 152, RuleShiftOperator = 153, RuleTryBlock = 154, 
-    RuleExceptionHandler = 155, RuleExceptionDeclaration = 156, RuleThrowExpression = 157, 
-    RuleSimpleTypeSpecifier = 158, RuleNamedTupleField = 159, RuleNestedNameSpecifier = 160, 
-    RuleNamespaceName = 161, RuleTemplateName = 162, RuleSimpleTemplateId = 163, 
-    RuleOperatorTemplateId = 164, RuleTemplateId = 165, RuleTemplateArgumentList = 166, 
-    RuleTemplateArgument = 167, RuleIdExpression = 168, RuleQualifiedId = 169, 
-    RuleUnqualifiedId = 170, RuleTheTypeId = 171, RuleSingleTypeId = 172, 
-    RuleTypePostfix = 173, RuleArrayDeclarator = 174, RulePointerOperator = 175, 
-    RulePointerOperatorSeq = 176, RuleTypeSpecifierSeq = 177, RuleTypeSpecifier = 178, 
-    RuleTrailingTypeSpecifier = 179, RuleTypeNameSpecifier = 180, RuleCvQualifierSeq = 181, 
-    RuleCvQualifier = 182, RuleTypename = 183, RuleClassName = 184, RuleDecltypeSpecifier = 185, 
-    RuleEnumName = 186, RuleAccessSpecifier = 187, RuleProtectedInternal = 188, 
-    RuleOperatorFunctionId = 189, RuleConversionFunctionId = 190, RuleUnaryExpression = 191, 
-    RuleNewExpression = 192, RuleStackallocExpression = 193, RuleMemorySpaceSetter = 194, 
-    RuleNewInitializer = 195, RulePostfixExpression = 196, RuleTupleExpression = 197, 
-    RulePrimaryExpression = 198, RuleUnaryPrefixOperator = 199, RuleRefCaptureOperator = 200, 
-    RuleUnaryPostfixOperator = 201, RuleNot = 202, RuleOperator = 203, RuleLiteral = 204
+    RuleScopeSafeCompoundStatement = 123, RuleExpr = 124, RulePowerExpression = 125, 
+    RuleMultiplicativeExpression = 126, RuleAdditiveExpression = 127, RuleShiftExpression = 128, 
+    RuleThreeWayComparisonExpression = 129, RuleRelationalExpression = 130, 
+    RuleEqualityExpression = 131, RuleAndExpression = 132, RuleExclusiveOrExpression = 133, 
+    RuleInclusiveOrExpression = 134, RuleLogicalAndExpression = 135, RuleLogicalOrExpression = 136, 
+    RuleNullCoalescingExpression = 137, RuleNullCoalescingBranch = 138, 
+    RuleConditionalExpression = 139, RuleConstantExpression = 140, RuleAssignmentExpression = 141, 
+    RuleInitializerClause = 142, RuleBracedInitList = 143, RuleInitializerList = 144, 
+    RuleInitializerPart = 145, RuleExpressionList = 146, RuleExpressionListPart = 147, 
+    RuleAssignmentOperator = 148, RuleShiftOperator = 149, RuleTryBlock = 150, 
+    RuleExceptionHandler = 151, RuleExceptionDeclaration = 152, RuleThrowExpression = 153, 
+    RuleSimpleTypeSpecifier = 154, RuleNamedTupleField = 155, RuleNestedNameSpecifier = 156, 
+    RuleNamespaceName = 157, RuleTemplateName = 158, RuleSimpleTemplateId = 159, 
+    RuleOperatorTemplateId = 160, RuleTemplateId = 161, RuleTemplateArgumentList = 162, 
+    RuleTemplateArgument = 163, RuleIdExpression = 164, RuleQualifiedId = 165, 
+    RuleUnqualifiedId = 166, RuleTheTypeId = 167, RuleSingleTypeId = 168, 
+    RuleTypePostfix = 169, RuleArrayDeclarator = 170, RulePointerOperator = 171, 
+    RulePointerOperatorSeq = 172, RuleTypeSpecifierSeq = 173, RuleTypeSpecifier = 174, 
+    RuleTrailingTypeSpecifier = 175, RuleTypeNameSpecifier = 176, RuleCvQualifierSeq = 177, 
+    RuleCvQualifier = 178, RuleTypename = 179, RuleClassName = 180, RuleDecltypeSpecifier = 181, 
+    RuleEnumName = 182, RuleAccessSpecifier = 183, RuleProtectedInternal = 184, 
+    RuleOperatorFunctionId = 185, RuleConversionFunctionId = 186, RuleUnaryExpression = 187, 
+    RuleUnaryExpressionTail = 188, RuleNewExpression = 189, RuleStackallocExpression = 190, 
+    RuleMemorySpaceSetter = 191, RuleNewInitializer = 192, RuleFullPostfixExpression = 193, 
+    RulePostfixExpression = 194, RuleTupleExpression = 195, RulePrimaryExpression = 196, 
+    RuleUnaryPrefixOperator = 197, RuleUnaryCustomOperator = 198, RuleRefCaptureOperator = 199, 
+    RuleUnaryPostfixOperator = 200, RuleNot = 201, RuleOperator = 202, RuleLiteral = 203
   };
 
   explicit CppAdvanceParser(antlr4::TokenStream *input);
@@ -265,17 +268,13 @@ public:
   class VersionSelectionStatementBlockContext;
   class ScopeSafeCompoundStatementContext;
   class ExprContext;
+  class PowerExpressionContext;
   class MultiplicativeExpressionContext;
-  class MultiplicativeBranchContext;
   class AdditiveExpressionContext;
-  class AdditiveBranchContext;
   class ShiftExpressionContext;
-  class ShiftBranchContext;
   class ThreeWayComparisonExpressionContext;
   class RelationalExpressionContext;
-  class RelationalBranchContext;
   class EqualityExpressionContext;
-  class EqualityBranchContext;
   class AndExpressionContext;
   class ExclusiveOrExpressionContext;
   class InclusiveOrExpressionContext;
@@ -332,14 +331,17 @@ public:
   class OperatorFunctionIdContext;
   class ConversionFunctionIdContext;
   class UnaryExpressionContext;
+  class UnaryExpressionTailContext;
   class NewExpressionContext;
   class StackallocExpressionContext;
   class MemorySpaceSetterContext;
   class NewInitializerContext;
+  class FullPostfixExpressionContext;
   class PostfixExpressionContext;
   class TupleExpressionContext;
   class PrimaryExpressionContext;
   class UnaryPrefixOperatorContext;
+  class UnaryCustomOperatorContext;
   class RefCaptureOperatorContext;
   class UnaryPostfixOperatorContext;
   class NotContext;
@@ -1616,9 +1618,8 @@ public:
   public:
     DelegatingConstructorBodyContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *Greater();
-    antlr4::tree::TerminalNode *Assign();
-    antlr4::tree::TerminalNode *Equal();
+    antlr4::tree::TerminalNode *AssignArrow();
+    antlr4::tree::TerminalNode *EqualArrow();
     DelegatingConstructorStatementContext *delegatingConstructorStatement();
     MemberInitializationStatementContext *memberInitializationStatement();
 
@@ -2011,10 +2012,9 @@ public:
   public:
     ShortFunctionBodyContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *Greater();
     ExpressionStatementContext *expressionStatement();
-    antlr4::tree::TerminalNode *Assign();
-    antlr4::tree::TerminalNode *Equal();
+    antlr4::tree::TerminalNode *AssignArrow();
+    antlr4::tree::TerminalNode *EqualArrow();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2562,13 +2562,35 @@ public:
 
   ExprContext* expr();
 
+  class  PowerExpressionContext : public antlr4::ParserRuleContext {
+  public:
+    PowerExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    UnaryExpressionContext *unaryExpression();
+    std::vector<PowerExpressionContext *> powerExpression();
+    PowerExpressionContext* powerExpression(size_t i);
+    antlr4::tree::TerminalNode *DoubleStar();
+    antlr4::tree::TerminalNode *DoubleCaret();
+    antlr4::tree::TerminalNode *Op10();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  PowerExpressionContext* powerExpression();
+  PowerExpressionContext* powerExpression(int precedence);
   class  MultiplicativeExpressionContext : public antlr4::ParserRuleContext {
   public:
     MultiplicativeExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    UnaryExpressionContext *unaryExpression();
-    std::vector<MultiplicativeBranchContext *> multiplicativeBranch();
-    MultiplicativeBranchContext* multiplicativeBranch(size_t i);
+    PowerExpressionContext *powerExpression();
+    std::vector<MultiplicativeExpressionContext *> multiplicativeExpression();
+    MultiplicativeExpressionContext* multiplicativeExpression(size_t i);
+    antlr4::tree::TerminalNode *Star();
+    antlr4::tree::TerminalNode *Div();
+    antlr4::tree::TerminalNode *Mod();
+    antlr4::tree::TerminalNode *Op9();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2576,30 +2598,18 @@ public:
   };
 
   MultiplicativeExpressionContext* multiplicativeExpression();
-
-  class  MultiplicativeBranchContext : public antlr4::ParserRuleContext {
-  public:
-    MultiplicativeBranchContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    UnaryExpressionContext *unaryExpression();
-    antlr4::tree::TerminalNode *Star();
-    antlr4::tree::TerminalNode *Div();
-    antlr4::tree::TerminalNode *Mod();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-   
-  };
-
-  MultiplicativeBranchContext* multiplicativeBranch();
-
+  MultiplicativeExpressionContext* multiplicativeExpression(int precedence);
   class  AdditiveExpressionContext : public antlr4::ParserRuleContext {
   public:
     AdditiveExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     MultiplicativeExpressionContext *multiplicativeExpression();
-    std::vector<AdditiveBranchContext *> additiveBranch();
-    AdditiveBranchContext* additiveBranch(size_t i);
+    std::vector<AdditiveExpressionContext *> additiveExpression();
+    AdditiveExpressionContext* additiveExpression(size_t i);
+    antlr4::tree::TerminalNode *Plus();
+    antlr4::tree::TerminalNode *Minus();
+    antlr4::tree::TerminalNode *Tilde();
+    antlr4::tree::TerminalNode *Op8();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2607,29 +2617,15 @@ public:
   };
 
   AdditiveExpressionContext* additiveExpression();
-
-  class  AdditiveBranchContext : public antlr4::ParserRuleContext {
-  public:
-    AdditiveBranchContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    MultiplicativeExpressionContext *multiplicativeExpression();
-    antlr4::tree::TerminalNode *Plus();
-    antlr4::tree::TerminalNode *Minus();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-   
-  };
-
-  AdditiveBranchContext* additiveBranch();
-
+  AdditiveExpressionContext* additiveExpression(int precedence);
   class  ShiftExpressionContext : public antlr4::ParserRuleContext {
   public:
     ShiftExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     AdditiveExpressionContext *additiveExpression();
-    std::vector<ShiftBranchContext *> shiftBranch();
-    ShiftBranchContext* shiftBranch(size_t i);
+    std::vector<ShiftExpressionContext *> shiftExpression();
+    ShiftExpressionContext* shiftExpression(size_t i);
+    ShiftOperatorContext *shiftOperator();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2637,21 +2633,7 @@ public:
   };
 
   ShiftExpressionContext* shiftExpression();
-
-  class  ShiftBranchContext : public antlr4::ParserRuleContext {
-  public:
-    ShiftBranchContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    ShiftOperatorContext *shiftOperator();
-    AdditiveExpressionContext *additiveExpression();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-   
-  };
-
-  ShiftBranchContext* shiftBranch();
-
+  ShiftExpressionContext* shiftExpression(int precedence);
   class  ThreeWayComparisonExpressionContext : public antlr4::ParserRuleContext {
   public:
     ThreeWayComparisonExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -2672,7 +2654,13 @@ public:
     RelationalExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     ThreeWayComparisonExpressionContext *threeWayComparisonExpression();
-    RelationalBranchContext *relationalBranch();
+    std::vector<RelationalExpressionContext *> relationalExpression();
+    RelationalExpressionContext* relationalExpression(size_t i);
+    antlr4::tree::TerminalNode *Less();
+    antlr4::tree::TerminalNode *Greater();
+    antlr4::tree::TerminalNode *LessEqual();
+    antlr4::tree::TerminalNode *GreaterEqual();
+    antlr4::tree::TerminalNode *Op6();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2680,31 +2668,19 @@ public:
   };
 
   RelationalExpressionContext* relationalExpression();
-
-  class  RelationalBranchContext : public antlr4::ParserRuleContext {
-  public:
-    RelationalBranchContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    ThreeWayComparisonExpressionContext *threeWayComparisonExpression();
-    antlr4::tree::TerminalNode *Less();
-    antlr4::tree::TerminalNode *Greater();
-    antlr4::tree::TerminalNode *LessEqual();
-    antlr4::tree::TerminalNode *GreaterEqual();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-   
-  };
-
-  RelationalBranchContext* relationalBranch();
-
+  RelationalExpressionContext* relationalExpression(int precedence);
   class  EqualityExpressionContext : public antlr4::ParserRuleContext {
   public:
     EqualityExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     RelationalExpressionContext *relationalExpression();
-    std::vector<EqualityBranchContext *> equalityBranch();
-    EqualityBranchContext* equalityBranch(size_t i);
+    std::vector<EqualityExpressionContext *> equalityExpression();
+    EqualityExpressionContext* equalityExpression(size_t i);
+    antlr4::tree::TerminalNode *IdentityEqual();
+    antlr4::tree::TerminalNode *NotIdentityEqual();
+    antlr4::tree::TerminalNode *Equal();
+    antlr4::tree::TerminalNode *NotEqual();
+    antlr4::tree::TerminalNode *Op5();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2712,30 +2688,16 @@ public:
   };
 
   EqualityExpressionContext* equalityExpression();
-
-  class  EqualityBranchContext : public antlr4::ParserRuleContext {
-  public:
-    EqualityBranchContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    RelationalExpressionContext *relationalExpression();
-    antlr4::tree::TerminalNode *Equal();
-    antlr4::tree::TerminalNode *NotEqual();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-   
-  };
-
-  EqualityBranchContext* equalityBranch();
-
+  EqualityExpressionContext* equalityExpression(int precedence);
   class  AndExpressionContext : public antlr4::ParserRuleContext {
   public:
     AndExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    std::vector<EqualityExpressionContext *> equalityExpression();
-    EqualityExpressionContext* equalityExpression(size_t i);
-    std::vector<antlr4::tree::TerminalNode *> Amp();
-    antlr4::tree::TerminalNode* Amp(size_t i);
+    EqualityExpressionContext *equalityExpression();
+    std::vector<AndExpressionContext *> andExpression();
+    AndExpressionContext* andExpression(size_t i);
+    antlr4::tree::TerminalNode *Amp();
+    antlr4::tree::TerminalNode *Op4();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2743,15 +2705,16 @@ public:
   };
 
   AndExpressionContext* andExpression();
-
+  AndExpressionContext* andExpression(int precedence);
   class  ExclusiveOrExpressionContext : public antlr4::ParserRuleContext {
   public:
     ExclusiveOrExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    std::vector<AndExpressionContext *> andExpression();
-    AndExpressionContext* andExpression(size_t i);
-    std::vector<antlr4::tree::TerminalNode *> Caret();
-    antlr4::tree::TerminalNode* Caret(size_t i);
+    AndExpressionContext *andExpression();
+    std::vector<ExclusiveOrExpressionContext *> exclusiveOrExpression();
+    ExclusiveOrExpressionContext* exclusiveOrExpression(size_t i);
+    antlr4::tree::TerminalNode *Caret();
+    antlr4::tree::TerminalNode *Op3();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2759,15 +2722,16 @@ public:
   };
 
   ExclusiveOrExpressionContext* exclusiveOrExpression();
-
+  ExclusiveOrExpressionContext* exclusiveOrExpression(int precedence);
   class  InclusiveOrExpressionContext : public antlr4::ParserRuleContext {
   public:
     InclusiveOrExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    std::vector<ExclusiveOrExpressionContext *> exclusiveOrExpression();
-    ExclusiveOrExpressionContext* exclusiveOrExpression(size_t i);
-    std::vector<antlr4::tree::TerminalNode *> VertLine();
-    antlr4::tree::TerminalNode* VertLine(size_t i);
+    ExclusiveOrExpressionContext *exclusiveOrExpression();
+    std::vector<InclusiveOrExpressionContext *> inclusiveOrExpression();
+    InclusiveOrExpressionContext* inclusiveOrExpression(size_t i);
+    antlr4::tree::TerminalNode *VertLine();
+    antlr4::tree::TerminalNode *Op2();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2775,7 +2739,7 @@ public:
   };
 
   InclusiveOrExpressionContext* inclusiveOrExpression();
-
+  InclusiveOrExpressionContext* inclusiveOrExpression(int precedence);
   class  LogicalAndExpressionContext : public antlr4::ParserRuleContext {
   public:
     LogicalAndExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -2989,15 +2953,19 @@ public:
     antlr4::tree::TerminalNode *Assign();
     antlr4::tree::TerminalNode *PlusAssign();
     antlr4::tree::TerminalNode *MinusAssign();
+    antlr4::tree::TerminalNode *TildeAssign();
     antlr4::tree::TerminalNode *StarAssign();
+    antlr4::tree::TerminalNode *DoubleStarAssign();
     antlr4::tree::TerminalNode *DivAssign();
     antlr4::tree::TerminalNode *ModAssign();
     antlr4::tree::TerminalNode *RightShiftAssign();
     antlr4::tree::TerminalNode *LeftShiftAssign();
+    antlr4::tree::TerminalNode *SignedRightShiftAssign();
     antlr4::tree::TerminalNode *AndAssign();
     antlr4::tree::TerminalNode *XorAssign();
     antlr4::tree::TerminalNode *OrAssign();
     antlr4::tree::TerminalNode *DoubleQuestionAssign();
+    antlr4::tree::TerminalNode *Op1();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -3014,6 +2982,7 @@ public:
     antlr4::tree::TerminalNode* Greater(size_t i);
     std::vector<antlr4::tree::TerminalNode *> Less();
     antlr4::tree::TerminalNode* Less(size_t i);
+    antlr4::tree::TerminalNode *Op7();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -3614,13 +3583,27 @@ public:
   public:
     UnaryExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    PostfixExpressionContext *postfixExpression();
-    UnaryExpressionContext *unaryExpression();
+    UnaryExpressionTailContext *unaryExpressionTail();
     UnaryPrefixOperatorContext *unaryPrefixOperator();
     RefCaptureOperatorContext *refCaptureOperator();
     antlr4::tree::TerminalNode *Out();
     antlr4::tree::TerminalNode *PlusPlus();
     antlr4::tree::TerminalNode *MinusMinus();
+    UnaryCustomOperatorContext *unaryCustomOperator();
+    antlr4::tree::TerminalNode *Sizeof();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  UnaryExpressionContext* unaryExpression();
+
+  class  UnaryExpressionTailContext : public antlr4::ParserRuleContext {
+  public:
+    UnaryExpressionTailContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    FullPostfixExpressionContext *fullPostfixExpression();
     antlr4::tree::TerminalNode *Sizeof();
     antlr4::tree::TerminalNode *LeftParen();
     TheTypeIdContext *theTypeId();
@@ -3634,7 +3617,7 @@ public:
    
   };
 
-  UnaryExpressionContext* unaryExpression();
+  UnaryExpressionTailContext* unaryExpressionTail();
 
   class  NewExpressionContext : public antlr4::ParserRuleContext {
   public:
@@ -3699,6 +3682,22 @@ public:
 
   NewInitializerContext* newInitializer();
 
+  class  FullPostfixExpressionContext : public antlr4::ParserRuleContext {
+  public:
+    FullPostfixExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    PostfixExpressionContext *postfixExpression();
+    antlr4::tree::TerminalNode *PlusPlus();
+    antlr4::tree::TerminalNode *MinusMinus();
+    UnaryCustomOperatorContext *unaryCustomOperator();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  FullPostfixExpressionContext* fullPostfixExpression();
+
   class  PostfixExpressionContext : public antlr4::ParserRuleContext {
   public:
     PostfixExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -3720,8 +3719,6 @@ public:
     antlr4::tree::TerminalNode *IntegerLiteral();
     IdExpressionContext *idExpression();
     antlr4::tree::TerminalNode *Greater();
-    antlr4::tree::TerminalNode *PlusPlus();
-    antlr4::tree::TerminalNode *MinusMinus();
     UnaryPostfixOperatorContext *unaryPostfixOperator();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -3782,6 +3779,9 @@ public:
     antlr4::tree::TerminalNode *Minus();
     antlr4::tree::TerminalNode *Tilde();
     NotContext *not_();
+    antlr4::tree::TerminalNode *Dollar();
+    antlr4::tree::TerminalNode *Caret();
+    antlr4::tree::TerminalNode *DoubleCaret();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -3789,6 +3789,25 @@ public:
   };
 
   UnaryPrefixOperatorContext* unaryPrefixOperator();
+
+  class  UnaryCustomOperatorContext : public antlr4::ParserRuleContext {
+  public:
+    UnaryCustomOperatorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Op2();
+    antlr4::tree::TerminalNode *Op3();
+    antlr4::tree::TerminalNode *Op4();
+    antlr4::tree::TerminalNode *Op7();
+    antlr4::tree::TerminalNode *Op8();
+    antlr4::tree::TerminalNode *Op9();
+    antlr4::tree::TerminalNode *Op10();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  UnaryCustomOperatorContext* unaryCustomOperator();
 
   class  RefCaptureOperatorContext : public antlr4::ParserRuleContext {
   public:
@@ -3842,12 +3861,15 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *New();
     antlr4::tree::TerminalNode *Delete();
+    antlr4::tree::TerminalNode *In();
     antlr4::tree::TerminalNode *Plus();
     antlr4::tree::TerminalNode *Minus();
     antlr4::tree::TerminalNode *Star();
+    antlr4::tree::TerminalNode *DoubleStar();
     antlr4::tree::TerminalNode *Div();
     antlr4::tree::TerminalNode *Mod();
     antlr4::tree::TerminalNode *Caret();
+    antlr4::tree::TerminalNode *DoubleCaret();
     antlr4::tree::TerminalNode *Amp();
     antlr4::tree::TerminalNode *Exclamation();
     antlr4::tree::TerminalNode *VertLine();
@@ -3860,13 +3882,16 @@ public:
     antlr4::tree::TerminalNode *Assign();
     antlr4::tree::TerminalNode *PlusAssign();
     antlr4::tree::TerminalNode *MinusAssign();
+    antlr4::tree::TerminalNode *TildeAssign();
     antlr4::tree::TerminalNode *StarAssign();
+    antlr4::tree::TerminalNode *DoubleStarAssign();
     antlr4::tree::TerminalNode *ModAssign();
     antlr4::tree::TerminalNode *XorAssign();
     antlr4::tree::TerminalNode *AndAssign();
     antlr4::tree::TerminalNode *OrAssign();
     antlr4::tree::TerminalNode *RightShiftAssign();
     antlr4::tree::TerminalNode *LeftShiftAssign();
+    antlr4::tree::TerminalNode *SignedRightShiftAssign();
     antlr4::tree::TerminalNode *Equal();
     antlr4::tree::TerminalNode *NotEqual();
     antlr4::tree::TerminalNode *LessEqual();
@@ -3875,6 +3900,16 @@ public:
     antlr4::tree::TerminalNode *MinusMinus();
     antlr4::tree::TerminalNode *LeftParen();
     antlr4::tree::TerminalNode *RightParen();
+    antlr4::tree::TerminalNode *Op1();
+    antlr4::tree::TerminalNode *Op2();
+    antlr4::tree::TerminalNode *Op3();
+    antlr4::tree::TerminalNode *Op4();
+    antlr4::tree::TerminalNode *Op5();
+    antlr4::tree::TerminalNode *Op6();
+    antlr4::tree::TerminalNode *Op7();
+    antlr4::tree::TerminalNode *Op8();
+    antlr4::tree::TerminalNode *Op9();
+    antlr4::tree::TerminalNode *Op10();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -3906,6 +3941,15 @@ public:
 
   bool sempred(antlr4::RuleContext *_localctx, size_t ruleIndex, size_t predicateIndex) override;
 
+  bool powerExpressionSempred(PowerExpressionContext *_localctx, size_t predicateIndex);
+  bool multiplicativeExpressionSempred(MultiplicativeExpressionContext *_localctx, size_t predicateIndex);
+  bool additiveExpressionSempred(AdditiveExpressionContext *_localctx, size_t predicateIndex);
+  bool shiftExpressionSempred(ShiftExpressionContext *_localctx, size_t predicateIndex);
+  bool relationalExpressionSempred(RelationalExpressionContext *_localctx, size_t predicateIndex);
+  bool equalityExpressionSempred(EqualityExpressionContext *_localctx, size_t predicateIndex);
+  bool andExpressionSempred(AndExpressionContext *_localctx, size_t predicateIndex);
+  bool exclusiveOrExpressionSempred(ExclusiveOrExpressionContext *_localctx, size_t predicateIndex);
+  bool inclusiveOrExpressionSempred(InclusiveOrExpressionContext *_localctx, size_t predicateIndex);
   bool nestedNameSpecifierSempred(NestedNameSpecifierContext *_localctx, size_t predicateIndex);
   bool postfixExpressionSempred(PostfixExpressionContext *_localctx, size_t predicateIndex);
 

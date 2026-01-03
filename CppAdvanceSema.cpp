@@ -104,6 +104,20 @@ std::string CppAdvanceSema::getCurrentFullTypeName()
 	return result;
 }
 
+void CppAdvanceSema::tryToAddTypeInStackFromOperator(std::string_view op)
+{
+	auto opName = getCustomOperatorName(op);
+	auto full = typeStack.top() + "." + opName;
+	if (functionTable.contains(full))
+	{
+		typeStack.push(functionTable[full]);
+	}
+	else if (functionTable.contains(opName))
+	{
+		typeStack.push(functionTable[opName]);
+	}
+}
+
 inline constexpr uint64_t FNV_PRIME = 1099511628211ULL;
 inline constexpr uint64_t FNV_OFFSET_BASIS = 14695981039346656037ULL;
 
@@ -141,6 +155,46 @@ std::string CppAdvanceSema::getInterfaceMethodId(std::string_view name, CppAdvan
 		hash *= FNV_PRIME;
 	}
 	return std::format("{:016x}", hash);
+}
+
+std::string CppAdvanceSema::getCustomOperatorName(std::string_view op)
+{
+	static std::unordered_map<std::string, std::string> cache;
+	auto it = cache.find(std::string(op));
+	if (it != cache.end())
+	{
+		return it->second;
+	}
+
+	constexpr int OPCHAR_LENGTH = 4;
+	std::string result = "_operator";
+	result.reserve(result.length() + OPCHAR_LENGTH * op.length());
+	for (char c : op)
+	{
+		result += '_';
+		switch (c)
+		{
+			case '+': result += "add"; break;
+            case '-': result += "sub"; break;
+            case '*': result += "mul"; break;
+            case '/': result += "div"; break;
+            case '%': result += "mod"; break;
+            case '&': result += "and"; break;
+            case '|': result += "or"; break;
+            case '^': result += "xor"; break;
+            case '~': result += "not"; break;
+            case '=': result += "eq"; break;
+            case '!': result += "ne"; break;
+            case '<': result += "lt"; break;
+            case '>': result += "gt"; break;
+			case '\\': result += "bsl"; break;
+		default:
+			break;
+		}
+	}
+
+	cache.insert({ std::string(op), result });
+	return result;
 }
 
 void CppAdvanceSema::enterProgram(CppAdvanceParser::ProgramContext* ctx)
@@ -406,19 +460,26 @@ void CppAdvanceSema::enterUnaryExpression(CppAdvanceParser::UnaryExpressionConte
 	else if (ctx->Out())
 	{
 		isOutExpression = true;
-		auto id = ctx->unaryExpression()->getText();
+		auto id = ctx->unaryExpressionTail()->getText();
 		initStates.top().definitelyAssigned.insert(id);
 	}
 }
 
 void CppAdvanceSema::exitUnaryExpression(CppAdvanceParser::UnaryExpressionContext* ctx)
 {
-	if (firstPass) unaryExpressions.pop();
+	if (firstPass) {
+		unaryExpressions.pop();
+		if (functionBody) return;
+	}
 	literalMinus = false;
 	isOutExpression = false;
-	if (ctx->Sizeof() || ctx->Alignof())
+	if (ctx->Sizeof() || ctx->unaryExpressionTail()->Sizeof() || ctx->unaryExpressionTail()->Alignof())
 	{
 		typeStack.push("usize");
+	}
+	else if (ctx->unaryCustomOperator())
+	{
+		tryToAddTypeInStackFromOperator(ctx->unaryCustomOperator()->getText());
 	}
 }
 
@@ -824,7 +885,7 @@ void CppAdvanceSema::enterPostfixExpression(CppAdvanceParser::PostfixExpressionC
 
 	if (auto upo = ctx->unaryPostfixOperator())
 	{
-		if (!upo->Star().empty() ||!upo->DoubleStar().empty())
+		if (!upo->Star().empty() || !upo->DoubleStar().empty())
 		{
 			if (unsafeDepth <= 0)
 				CppAdvanceCompilerError("Cannot to use dereferencing of the raw pointer in the safe context", upo->getStart());
@@ -1455,8 +1516,8 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 		}
 		else if (auto body = ctx->shortFunctionBody())
 		{
-			if (body->Assign()) isInline = true;
-			else if (body->Equal()) isConstexpr = true;
+			if (body->AssignArrow()) isInline = true;
+			else if (body->EqualArrow()) isConstexpr = true;
 			if (isTypeDefinitionBody() && currentTypeKind.top() == TypeKind::Interface)
 				isDefault = true;
 		}
@@ -1557,7 +1618,8 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 			if (isTypeDefinitionBody() && currentTypeKind.top() == TypeKind::StaticClass)
 				CppAdvanceCompilerError("Static class cannot overload operators", ctx->operatorFunctionId()->getStart());
 			id = ctx->operatorFunctionId()->getText(); 
-			if (ctx->operatorFunctionId()->operator_()->Exclamation()) id = "operator*";
+			auto op = ctx->operatorFunctionId()->operator_();
+			if (op->Exclamation()) id = "operator*";
 			StringReplace(id, "operator", "operator ");
 			isOperator = true;
 			if (ctx->operatorFunctionId()->operator_()->New())
@@ -1593,6 +1655,16 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 				else {
 					CppAdvanceCompilerError("Operator delete must receive parameter of the type Pointer", ctx->operatorFunctionId()->getStop());
 				}
+			}
+			else if (op->In())
+			{
+				id = "_operator_in";
+			}
+			else if (op->DoubleCaret() || op->Tilde() || op->TildeAssign() || op->DoubleStar() || op->DoubleStarAssign() || op->Greater().size() > 2
+				|| op->SignedRightShiftAssign()
+				|| op->Op1() || op->Op2() || op->Op3() || op->Op4() || op->Op5() || op->Op6() || op->Op7() || op->Op8() || op->Op9() || op->Op10())
+			{
+				id = getCustomOperatorName(op->getText());
 			}
 		}
 		if (isOperator && !id.ends_with("new") && !id.ends_with("delete"))
@@ -2000,7 +2072,7 @@ void CppAdvanceSema::exitPostfixExpression(CppAdvanceParser::PostfixExpressionCo
 				else {
 					if (!currentSubtype.empty())
 						typeStack.push(currentSubtype);
-					else 
+					else
 						typeStack.push(functionTable[typeStack.top() + ".operator*"]);
 				}
 			}
@@ -2397,7 +2469,7 @@ void CppAdvanceSema::exitInitializerClause(CppAdvanceParser::InitializerClauseCo
 
 void CppAdvanceSema::exitRelationalExpression(CppAdvanceParser::RelationalExpressionContext* ctx)
 {
-	if (ctx->relationalBranch())
+	if (!ctx->relationalExpression().empty())
 	{
 		typeStack.push("bool");
 	}
@@ -2405,7 +2477,7 @@ void CppAdvanceSema::exitRelationalExpression(CppAdvanceParser::RelationalExpres
 
 void CppAdvanceSema::exitEqualityExpression(CppAdvanceParser::EqualityExpressionContext* ctx)
 {
-	if (!ctx->equalityBranch().empty())
+	if (!ctx->equalityExpression().empty())
 	{
 		typeStack.push("bool");
 	}
@@ -3207,8 +3279,8 @@ void CppAdvanceSema::enterConstructor(CppAdvanceParser::ConstructorContext* ctx)
 		}
 		else if (auto body = ctx->delegatingConstructorBody())
 		{
-			if (body->Assign()) isInline = true;
-			else if (body->Equal()) isConstexpr = true;
+			if (body->AssignArrow()) isInline = true;
+			else if (body->EqualArrow()) isConstexpr = true;
 		}
 
 		if (isConstexpr) structStack.top()->isConstexpr = true;
@@ -3484,8 +3556,8 @@ void CppAdvanceSema::enterConversionFunction(CppAdvanceParser::ConversionFunctio
 		}
 		else if (auto body = ctx->shortFunctionBody())
 		{
-			if (body->Assign()) isInline = true;
-			else if (body->Equal()) isConstexpr = true;
+			if (body->AssignArrow()) isInline = true;
+			else if (body->EqualArrow()) isConstexpr = true;
 		}
 
 		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
@@ -3738,8 +3810,8 @@ void CppAdvanceSema::enterIndexer(CppAdvanceParser::IndexerContext* ctx)
 		}
 		else if (auto body = ctx->shortFunctionBody())
 		{
-			if (body->Assign()) isInline = true;
-			else if (body->Equal()) isConstexpr = true;
+			if (body->AssignArrow()) isInline = true;
+			else if (body->EqualArrow()) isConstexpr = true;
 		}
 
 		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
@@ -3979,8 +4051,8 @@ void CppAdvanceSema::enterProperty(CppAdvanceParser::PropertyContext* ctx)
 		}
 		else if (auto body = ctx->shortFunctionBody())
 		{
-			if (body->Equal()) isConstexpr = true;
-			else if (body->Assign()) isInline = true;
+			if (body->EqualArrow()) isConstexpr = true;
+			else if (body->AssignArrow()) isInline = true;
 		}
 
 		if (currentTypeKind.top() == TypeKind::StaticClass) {
@@ -4588,8 +4660,8 @@ void CppAdvanceSema::enterDestructor(CppAdvanceParser::DestructorContext* ctx)
 	else if (auto body = ctx->shortFunctionBody())
 	{
 		expression = body->expressionStatement()->expr();
-		if (body->Equal()) isConstexpr = true;
-		else if (body->Assign()) isInline = true;
+		if (body->EqualArrow()) isConstexpr = true;
+		else if (body->AssignArrow()) isInline = true;
 	}
 
 	structStack.top()->methods.emplace_back(
@@ -5977,6 +6049,87 @@ void CppAdvanceSema::exitUnionDefinition(CppAdvanceParser::UnionDefinitionContex
 void CppAdvanceSema::exitUnionList(CppAdvanceParser::UnionListContext* ctx)
 {
 	currentAccessSpecifier.pop();
+}
+
+void CppAdvanceSema::enterFullPostfixExpression(CppAdvanceParser::FullPostfixExpressionContext* ctx)
+{
+	
+}
+
+void CppAdvanceSema::exitFullPostfixExpression(CppAdvanceParser::FullPostfixExpressionContext* ctx)
+{
+	if (firstPass && functionBody) return;
+	if (!typeStack.empty() && !typeStack.top().empty())
+	{
+		if (ctx->unaryCustomOperator())
+		{
+			tryToAddTypeInStackFromOperator(ctx->unaryCustomOperator()->getText());
+		}
+		contextTypes[ctx] = typeStack.top();
+	}
+}
+
+void CppAdvanceSema::exitPowerExpression(CppAdvanceParser::PowerExpressionContext* ctx)
+{
+	if (firstPass && functionBody) return;
+	if (ctx->Op10())
+	{
+		tryToAddTypeInStackFromOperator(ctx->Op10()->getText());
+	}
+}
+
+void CppAdvanceSema::exitMultiplicativeExpression(CppAdvanceParser::MultiplicativeExpressionContext* ctx)
+{
+	if (firstPass && functionBody) return;
+	if (ctx->Op9())
+	{
+		tryToAddTypeInStackFromOperator(ctx->Op9()->getText());
+	}
+}
+
+void CppAdvanceSema::exitAdditiveExpression(CppAdvanceParser::AdditiveExpressionContext* ctx)
+{
+	if (firstPass && functionBody) return;
+	if (ctx->Op8())
+	{
+		tryToAddTypeInStackFromOperator(ctx->Op8()->getText());
+	}
+}
+
+void CppAdvanceSema::exitShiftExpression(CppAdvanceParser::ShiftExpressionContext* ctx)
+{
+	if (firstPass && functionBody) return;
+	if (ctx->shiftOperator() && ctx->shiftOperator()->Op7())
+	{
+		tryToAddTypeInStackFromOperator(ctx->shiftOperator()->Op7()->getText());
+	}
+}
+
+void CppAdvanceSema::exitAndExpression(CppAdvanceParser::AndExpressionContext* ctx)
+{
+	if (firstPass && functionBody) return;
+	if (ctx->Op4())
+	{
+		tryToAddTypeInStackFromOperator(ctx->Op4()->getText());
+	}
+}
+
+void CppAdvanceSema::exitExclusiveOrExpression(CppAdvanceParser::ExclusiveOrExpressionContext* ctx)
+{
+	if (firstPass && functionBody) return;
+	if (ctx->Op3())
+	{
+		tryToAddTypeInStackFromOperator(ctx->Op3()->getText());
+	}
+}
+
+void CppAdvanceSema::exitInclusiveOrExpression(CppAdvanceParser::InclusiveOrExpressionContext* ctx)
+{
+	if (firstPass && functionBody) return;
+	if (ctx->Op2())
+	{
+		tryToAddTypeInStackFromOperator(ctx->Op2()->getText());
+	}
 }
 
 void CppAdvanceSema::exitFriendDeclaration(CppAdvanceParser::FriendDeclarationContext* ctx)

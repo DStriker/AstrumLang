@@ -64,8 +64,6 @@ Asm: 'asm';
 
 Assert: 'assert';
 
-Auto: '_';
-
 Await: 'await';
 
 Bool: 'bool';
@@ -82,15 +80,11 @@ Byte: 'byte';
 
 Class: 'class';
 
-Concept: 'concept';
-
 Const: 'const';
 
 Consteval: 'consteval';
 
 Continue: 'continue';
-
-Copy: 'copy';
 
 Debug: 'debug';
 
@@ -132,8 +126,6 @@ Friend: 'friend';
 
 Get: 'get';
 
-Goto: 'goto';
-
 If: 'if';
 
 Import: 'import';
@@ -168,13 +160,9 @@ Let: 'let';
 
 Lock: 'lock';
 
-Module: 'module';
-
 Move: 'move';
 
 Mutable: 'mut';
-
-Namespace: 'namespace';
 
 New: 'new';
 
@@ -221,8 +209,6 @@ Struct: 'struct';
 Super: 'super';
 
 Switch: 'switch';
-
-That: 'that';
 
 This: 'this';
 
@@ -310,6 +296,8 @@ LifetimeAnnotation: '\\^' ALPHANUMERIC;
 
 Caret: '^';
 
+DoubleCaret: '^^';
+
 Amp: '&';
 
 VertLine: '|';
@@ -328,7 +316,11 @@ PlusAssign: '+=';
 
 MinusAssign: '-=';
 
+TildeAssign: '~=';
+
 StarAssign: '*=';
+
+DoubleStarAssign: '**=';
 
 DivAssign: '/=';
 
@@ -344,13 +336,15 @@ LeftShiftAssign: '<<=';
 
 RightShiftAssign: '>>=';
 
-SignedLeftShiftAssign: '<<<=';
-
 SignedRightShiftAssign: '>>>=';
 
 Equal: '==';
 
 NotEqual: '!=';
+
+IdentityEqual: '===';
+
+NotIdentityEqual: '!==';
 
 Spaceship: '<=>';
 
@@ -365,6 +359,10 @@ MinusMinus: '--';
 Comma: ',';
 
 Arrow: '->';
+
+AssignArrow: '=>';
+
+EqualArrow: '==>';
 
 Exclamation: '!';
 
@@ -382,7 +380,7 @@ Dot: '.';
 
 DoubleDot: '..';
 
-DoubleDotLess: '..<';
+DoubleDotEqual: '..=';
 
 Dollar: '$';
 
@@ -391,6 +389,26 @@ Ellipsis: '...';
 Apostroph: '`';
 
 AtSign: '@';
+
+Op1: (NonCmpOpChar OperatorChar* | '<<' NonGtLtOpChar OperatorChar* | '>>' NonGtLtOpChar OperatorChar*) '=';
+
+Op2: '|' OperatorChar+;
+
+Op10: ('**' | '^^') OperatorChar+;
+
+Op3: '^' OperatorChar+;
+
+Op4: '&' OperatorChar+;
+
+Op5: [=!] OperatorChar+;
+
+Op7: ('>>' | '<<') NonGtLtOpChar OperatorChar*;
+
+Op6: [<>] NonGtLtOpChar OperatorChar*;
+
+Op8: [+\-~] OperatorChar+;
+
+Op9: [*/%\\] OperatorChar+;
 
 mode INTERPOLATION_STRING;
 
@@ -504,3 +522,9 @@ fragment Gchar: ~ [`\r\n] | '``';
 fragment Schar: ~ ["\\\r\n] | Escapesequence | Universalcharactername;
 
 fragment Rawstring: 'R"' ( '\\' ["()] | ~[\r\n (])*? '(' ~[)]*? ')' ( '\\' ["()] | ~[\r\n "])*? '"';
+
+fragment OperatorChar: [=!+\-*/%<>\\&|^~];
+
+fragment NonCmpOpChar: [+\-*/%\\&|^~];
+
+fragment NonGtLtOpChar: [=!+\-*/%\\&|^~];

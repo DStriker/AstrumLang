@@ -391,23 +391,17 @@ public:
   virtual void enterExpr(CppAdvanceParser::ExprContext * /*ctx*/) override { }
   virtual void exitExpr(CppAdvanceParser::ExprContext * /*ctx*/) override { }
 
+  virtual void enterPowerExpression(CppAdvanceParser::PowerExpressionContext * /*ctx*/) override { }
+  virtual void exitPowerExpression(CppAdvanceParser::PowerExpressionContext * /*ctx*/) override { }
+
   virtual void enterMultiplicativeExpression(CppAdvanceParser::MultiplicativeExpressionContext * /*ctx*/) override { }
   virtual void exitMultiplicativeExpression(CppAdvanceParser::MultiplicativeExpressionContext * /*ctx*/) override { }
-
-  virtual void enterMultiplicativeBranch(CppAdvanceParser::MultiplicativeBranchContext * /*ctx*/) override { }
-  virtual void exitMultiplicativeBranch(CppAdvanceParser::MultiplicativeBranchContext * /*ctx*/) override { }
 
   virtual void enterAdditiveExpression(CppAdvanceParser::AdditiveExpressionContext * /*ctx*/) override { }
   virtual void exitAdditiveExpression(CppAdvanceParser::AdditiveExpressionContext * /*ctx*/) override { }
 
-  virtual void enterAdditiveBranch(CppAdvanceParser::AdditiveBranchContext * /*ctx*/) override { }
-  virtual void exitAdditiveBranch(CppAdvanceParser::AdditiveBranchContext * /*ctx*/) override { }
-
   virtual void enterShiftExpression(CppAdvanceParser::ShiftExpressionContext * /*ctx*/) override { }
   virtual void exitShiftExpression(CppAdvanceParser::ShiftExpressionContext * /*ctx*/) override { }
-
-  virtual void enterShiftBranch(CppAdvanceParser::ShiftBranchContext * /*ctx*/) override { }
-  virtual void exitShiftBranch(CppAdvanceParser::ShiftBranchContext * /*ctx*/) override { }
 
   virtual void enterThreeWayComparisonExpression(CppAdvanceParser::ThreeWayComparisonExpressionContext * /*ctx*/) override { }
   virtual void exitThreeWayComparisonExpression(CppAdvanceParser::ThreeWayComparisonExpressionContext * /*ctx*/) override { }
@@ -415,14 +409,8 @@ public:
   virtual void enterRelationalExpression(CppAdvanceParser::RelationalExpressionContext * /*ctx*/) override { }
   virtual void exitRelationalExpression(CppAdvanceParser::RelationalExpressionContext * /*ctx*/) override { }
 
-  virtual void enterRelationalBranch(CppAdvanceParser::RelationalBranchContext * /*ctx*/) override { }
-  virtual void exitRelationalBranch(CppAdvanceParser::RelationalBranchContext * /*ctx*/) override { }
-
   virtual void enterEqualityExpression(CppAdvanceParser::EqualityExpressionContext * /*ctx*/) override { }
   virtual void exitEqualityExpression(CppAdvanceParser::EqualityExpressionContext * /*ctx*/) override { }
-
-  virtual void enterEqualityBranch(CppAdvanceParser::EqualityBranchContext * /*ctx*/) override { }
-  virtual void exitEqualityBranch(CppAdvanceParser::EqualityBranchContext * /*ctx*/) override { }
 
   virtual void enterAndExpression(CppAdvanceParser::AndExpressionContext * /*ctx*/) override { }
   virtual void exitAndExpression(CppAdvanceParser::AndExpressionContext * /*ctx*/) override { }
@@ -592,6 +580,9 @@ public:
   virtual void enterUnaryExpression(CppAdvanceParser::UnaryExpressionContext * /*ctx*/) override { }
   virtual void exitUnaryExpression(CppAdvanceParser::UnaryExpressionContext * /*ctx*/) override { }
 
+  virtual void enterUnaryExpressionTail(CppAdvanceParser::UnaryExpressionTailContext * /*ctx*/) override { }
+  virtual void exitUnaryExpressionTail(CppAdvanceParser::UnaryExpressionTailContext * /*ctx*/) override { }
+
   virtual void enterNewExpression(CppAdvanceParser::NewExpressionContext * /*ctx*/) override { }
   virtual void exitNewExpression(CppAdvanceParser::NewExpressionContext * /*ctx*/) override { }
 
@@ -604,6 +595,9 @@ public:
   virtual void enterNewInitializer(CppAdvanceParser::NewInitializerContext * /*ctx*/) override { }
   virtual void exitNewInitializer(CppAdvanceParser::NewInitializerContext * /*ctx*/) override { }
 
+  virtual void enterFullPostfixExpression(CppAdvanceParser::FullPostfixExpressionContext * /*ctx*/) override { }
+  virtual void exitFullPostfixExpression(CppAdvanceParser::FullPostfixExpressionContext * /*ctx*/) override { }
+
   virtual void enterPostfixExpression(CppAdvanceParser::PostfixExpressionContext * /*ctx*/) override { }
   virtual void exitPostfixExpression(CppAdvanceParser::PostfixExpressionContext * /*ctx*/) override { }
 
@@ -615,6 +609,9 @@ public:
 
   virtual void enterUnaryPrefixOperator(CppAdvanceParser::UnaryPrefixOperatorContext * /*ctx*/) override { }
   virtual void exitUnaryPrefixOperator(CppAdvanceParser::UnaryPrefixOperatorContext * /*ctx*/) override { }
+
+  virtual void enterUnaryCustomOperator(CppAdvanceParser::UnaryCustomOperatorContext * /*ctx*/) override { }
+  virtual void exitUnaryCustomOperator(CppAdvanceParser::UnaryCustomOperatorContext * /*ctx*/) override { }
 
   virtual void enterRefCaptureOperator(CppAdvanceParser::RefCaptureOperatorContext * /*ctx*/) override { }
   virtual void exitRefCaptureOperator(CppAdvanceParser::RefCaptureOperatorContext * /*ctx*/) override { }

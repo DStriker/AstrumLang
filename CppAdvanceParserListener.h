@@ -389,23 +389,17 @@ public:
   virtual void enterExpr(CppAdvanceParser::ExprContext *ctx) = 0;
   virtual void exitExpr(CppAdvanceParser::ExprContext *ctx) = 0;
 
+  virtual void enterPowerExpression(CppAdvanceParser::PowerExpressionContext *ctx) = 0;
+  virtual void exitPowerExpression(CppAdvanceParser::PowerExpressionContext *ctx) = 0;
+
   virtual void enterMultiplicativeExpression(CppAdvanceParser::MultiplicativeExpressionContext *ctx) = 0;
   virtual void exitMultiplicativeExpression(CppAdvanceParser::MultiplicativeExpressionContext *ctx) = 0;
-
-  virtual void enterMultiplicativeBranch(CppAdvanceParser::MultiplicativeBranchContext *ctx) = 0;
-  virtual void exitMultiplicativeBranch(CppAdvanceParser::MultiplicativeBranchContext *ctx) = 0;
 
   virtual void enterAdditiveExpression(CppAdvanceParser::AdditiveExpressionContext *ctx) = 0;
   virtual void exitAdditiveExpression(CppAdvanceParser::AdditiveExpressionContext *ctx) = 0;
 
-  virtual void enterAdditiveBranch(CppAdvanceParser::AdditiveBranchContext *ctx) = 0;
-  virtual void exitAdditiveBranch(CppAdvanceParser::AdditiveBranchContext *ctx) = 0;
-
   virtual void enterShiftExpression(CppAdvanceParser::ShiftExpressionContext *ctx) = 0;
   virtual void exitShiftExpression(CppAdvanceParser::ShiftExpressionContext *ctx) = 0;
-
-  virtual void enterShiftBranch(CppAdvanceParser::ShiftBranchContext *ctx) = 0;
-  virtual void exitShiftBranch(CppAdvanceParser::ShiftBranchContext *ctx) = 0;
 
   virtual void enterThreeWayComparisonExpression(CppAdvanceParser::ThreeWayComparisonExpressionContext *ctx) = 0;
   virtual void exitThreeWayComparisonExpression(CppAdvanceParser::ThreeWayComparisonExpressionContext *ctx) = 0;
@@ -413,14 +407,8 @@ public:
   virtual void enterRelationalExpression(CppAdvanceParser::RelationalExpressionContext *ctx) = 0;
   virtual void exitRelationalExpression(CppAdvanceParser::RelationalExpressionContext *ctx) = 0;
 
-  virtual void enterRelationalBranch(CppAdvanceParser::RelationalBranchContext *ctx) = 0;
-  virtual void exitRelationalBranch(CppAdvanceParser::RelationalBranchContext *ctx) = 0;
-
   virtual void enterEqualityExpression(CppAdvanceParser::EqualityExpressionContext *ctx) = 0;
   virtual void exitEqualityExpression(CppAdvanceParser::EqualityExpressionContext *ctx) = 0;
-
-  virtual void enterEqualityBranch(CppAdvanceParser::EqualityBranchContext *ctx) = 0;
-  virtual void exitEqualityBranch(CppAdvanceParser::EqualityBranchContext *ctx) = 0;
 
   virtual void enterAndExpression(CppAdvanceParser::AndExpressionContext *ctx) = 0;
   virtual void exitAndExpression(CppAdvanceParser::AndExpressionContext *ctx) = 0;
@@ -590,6 +578,9 @@ public:
   virtual void enterUnaryExpression(CppAdvanceParser::UnaryExpressionContext *ctx) = 0;
   virtual void exitUnaryExpression(CppAdvanceParser::UnaryExpressionContext *ctx) = 0;
 
+  virtual void enterUnaryExpressionTail(CppAdvanceParser::UnaryExpressionTailContext *ctx) = 0;
+  virtual void exitUnaryExpressionTail(CppAdvanceParser::UnaryExpressionTailContext *ctx) = 0;
+
   virtual void enterNewExpression(CppAdvanceParser::NewExpressionContext *ctx) = 0;
   virtual void exitNewExpression(CppAdvanceParser::NewExpressionContext *ctx) = 0;
 
@@ -602,6 +593,9 @@ public:
   virtual void enterNewInitializer(CppAdvanceParser::NewInitializerContext *ctx) = 0;
   virtual void exitNewInitializer(CppAdvanceParser::NewInitializerContext *ctx) = 0;
 
+  virtual void enterFullPostfixExpression(CppAdvanceParser::FullPostfixExpressionContext *ctx) = 0;
+  virtual void exitFullPostfixExpression(CppAdvanceParser::FullPostfixExpressionContext *ctx) = 0;
+
   virtual void enterPostfixExpression(CppAdvanceParser::PostfixExpressionContext *ctx) = 0;
   virtual void exitPostfixExpression(CppAdvanceParser::PostfixExpressionContext *ctx) = 0;
 
@@ -613,6 +607,9 @@ public:
 
   virtual void enterUnaryPrefixOperator(CppAdvanceParser::UnaryPrefixOperatorContext *ctx) = 0;
   virtual void exitUnaryPrefixOperator(CppAdvanceParser::UnaryPrefixOperatorContext *ctx) = 0;
+
+  virtual void enterUnaryCustomOperator(CppAdvanceParser::UnaryCustomOperatorContext *ctx) = 0;
+  virtual void exitUnaryCustomOperator(CppAdvanceParser::UnaryCustomOperatorContext *ctx) = 0;
 
   virtual void enterRefCaptureOperator(CppAdvanceParser::RefCaptureOperatorContext *ctx) = 0;
   virtual void exitRefCaptureOperator(CppAdvanceParser::RefCaptureOperatorContext *ctx) = 0;
