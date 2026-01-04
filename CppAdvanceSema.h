@@ -154,6 +154,7 @@ struct VariableDefinition
 	SourcePosition pos;
 	CppAdvanceParser::InitializerClauseContext* initializer;
 	CppAdvanceParser::InitializerListContext* initializerList;
+	CppAdvanceParser::AttributeSpecifierSeqContext* attributes;
 	AccessSpecifier access;
 	std::string compilationCondition;
 	std::string parentType;
@@ -174,6 +175,7 @@ struct ConstantDefinition
 	CppAdvanceParser::TheTypeIdContext* type;
 	SourcePosition pos;
 	CppAdvanceParser::InitializerClauseContext* initializer;
+	CppAdvanceParser::AttributeSpecifierSeqContext* attributes;
 	AccessSpecifier access = AccessSpecifier::Public;
 	std::string compilationCondition;
 	std::string parentType;
@@ -212,6 +214,7 @@ struct FunctionDefinition
 	CppAdvanceParser::TheTypeIdContext* returnType;
 	CppAdvanceParser::ExprContext* expression;
 	CppAdvanceParser::ExceptionSpecificationContext* exceptionSpecification;
+	CppAdvanceParser::AttributeSpecifierSeqContext* attributes;
 	SourcePosition pos;
 	AccessSpecifier access;
 	std::string compilationCondition;
@@ -257,6 +260,7 @@ struct PropertyDefinition {
 	CppAdvanceParser::PropertyGetterContext* getter;
 	CppAdvanceParser::PropertySetterContext* setter;
 	CppAdvanceParser::ExprContext* expression;
+	CppAdvanceParser::AttributeSpecifierSeqContext* attributes;
 	AccessSpecifier access;
 	std::string compilationCondition;
 	std::string shortType;
@@ -369,6 +373,7 @@ struct StructDefinition {
 	bool isDefaultConstructible = false;
 	CppAdvanceParser::EnumBaseContext* enumBase = nullptr;
 	CppAdvanceParser::TheTypeIdContext* extensionType = nullptr;
+	CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 	//bool isStatic = false;
 
 	StructDefinition(TypeKind _kind, std::string _id, CppAdvanceParser::TemplateParamsContext* _targs, CppAdvanceParser::TemplateArgumentListContext* _tspec, AccessSpecifier _access, std::string _ccond, SourcePosition _pos,
@@ -1017,5 +1022,8 @@ public:
 
 
 	void exitInclusiveOrExpression(CppAdvanceParser::InclusiveOrExpressionContext*) override;
+
+
+	void enterAttributeSpecifier(CppAdvanceParser::AttributeSpecifierContext*) override;
 
 };

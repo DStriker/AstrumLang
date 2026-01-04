@@ -29,6 +29,7 @@ class CppAdvanceCodegen
 	mutable bool isExtension = false;
 	mutable bool functionProlog = false;
 	mutable bool checkForRefStruct = false;
+	mutable bool isAlignas = false;
 	mutable int depth = 0;
 	mutable int varargDepth = -1;
 	mutable std::unordered_map<std::string,std::string> symbolTable;
@@ -150,6 +151,9 @@ public:
 	void printEnumClassList(CppAdvanceParser::EnumClassListContext* ctx) const;
 	void printEnumClassEnumerator(CppAdvanceParser::ClassEnumeratorDefinitionContext* ctx) const;
 	void printEnumClassMemberSpecification(CppAdvanceParser::EnumClassMemberSpecificationContext* ctx) const;
+	void printAttributeSpecifierSeq(CppAdvanceParser::AttributeSpecifierSeqContext* ctx) const;
+	void printAttributeSpecifier(CppAdvanceParser::AttributeSpecifierContext* ctx) const;
+	void printAttributeArgumentClause(CppAdvanceParser::AttributeArgumentClauseContext* ctx) const;
 	void printOperator(CppAdvanceParser::OperatorContext* ctx) const;
 	void printOperatorTemplateId(CppAdvanceParser::OperatorTemplateIdContext* ctx) const;
 	void printOperatorFunctionId(CppAdvanceParser::OperatorFunctionIdContext* ctx) const;

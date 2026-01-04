@@ -20,19 +20,19 @@ stat:
 declarationSeq: declaration+;
 
 declaration:
-	  accessSpecifier? Unsafe? blockDeclaration
-	| accessSpecifier? structDefinition
-	| accessSpecifier? classDefinition
-	| accessSpecifier? interfaceDefinition
+	  attributeSpecifierSeq? accessSpecifier? Unsafe? blockDeclaration
+	| attributeSpecifierSeq? accessSpecifier? structDefinition
+	| attributeSpecifierSeq? accessSpecifier? classDefinition
+	| attributeSpecifierSeq? accessSpecifier? interfaceDefinition
 	| accessSpecifier? extensionDefinition
-	| accessSpecifier? enumDefinition
-	| accessSpecifier? enumClassDefinition
-	| accessSpecifier? unionDefinition
+	| attributeSpecifierSeq? accessSpecifier? enumDefinition
+	| attributeSpecifierSeq? accessSpecifier? enumClassDefinition
+	| attributeSpecifierSeq? accessSpecifier? unionDefinition
 	| symbolSpecifierSeq declarationCompoundStatement
 	| externVariableDeclaration 
 	| versionDefinition
 	| versionConditionalDeclaration
-	| accessSpecifier? functionDefinition
+	| attributeSpecifierSeq? accessSpecifier? functionDefinition
 	| accessSpecifier? functionTemplateDeclaration
 	| externFunctionDeclaration
 	;
@@ -93,18 +93,18 @@ memberVersionIfDeclaration: structMemberDeclaration | memberDeclarationCompoundS
 memberVersionElseDeclaration: structMemberDeclaration | memberDeclarationCompoundStatement;
 
 structMemberDeclaration: 
-	  (accessSpecifier | protectedInternal)? memberBlockDeclaration
-	| accessSpecifier? structDefinition
-	| accessSpecifier? classDefinition
-	| accessSpecifier? enumDefinition
-	| accessSpecifier? enumClassDefinition
-	| accessSpecifier? unionDefinition
+	  attributeSpecifierSeq? (accessSpecifier | protectedInternal)? memberBlockDeclaration
+	| attributeSpecifierSeq? accessSpecifier? structDefinition
+	| attributeSpecifierSeq? accessSpecifier? classDefinition
+	| attributeSpecifierSeq? accessSpecifier? enumDefinition
+	| attributeSpecifierSeq? accessSpecifier? enumClassDefinition
+	| attributeSpecifierSeq? accessSpecifier? unionDefinition
 	| symbolSpecifierSeq memberDeclarationCompoundStatement
 	| memberVersionConditionalDeclaration
-	| (accessSpecifier | protectedInternal)? functionDefinition
-	| (accessSpecifier | protectedInternal)? constructor
-	| (accessSpecifier | protectedInternal)? conversionFunction
-	| (accessSpecifier | protectedInternal)? indexer
+	| attributeSpecifierSeq? (accessSpecifier | protectedInternal)? functionDefinition
+	| attributeSpecifierSeq? (accessSpecifier | protectedInternal)? constructor
+	| attributeSpecifierSeq? (accessSpecifier | protectedInternal)? conversionFunction
+	| attributeSpecifierSeq? (accessSpecifier | protectedInternal)? indexer
 	| property
 	| accessSpecifier? functionTemplateDeclaration
 	| abstractMethodDeclaration
@@ -124,7 +124,7 @@ interfaceHead: Unsafe? Interface Identifier templateParams? baseClause?;
 interfaceMemberSpecification: interfaceMemberDeclaration+;
 
 interfaceMemberDeclaration: 
-	  functionDefinition 
+	  attributeSpecifierSeq? functionDefinition 
 	| interfaceMethodDeclaration
 	| interfaceIndexer
 	| interfaceProperty
@@ -140,12 +140,12 @@ enumBase: Colon simpleTypeSpecifier;
 
 enumList: enumeratorDefinition (Comma enumeratorDefinition)*;
 
-enumeratorDefinition: Identifier (Assign constantExpression)?;
+enumeratorDefinition: attributeSpecifierSeq? Identifier (Assign constantExpression)?;
 
 enumMemberSpecification: Semi enumMemberDeclaration+;
 
 enumMemberDeclaration: 
-	  accessSpecifier? functionDefinition
+	  attributeSpecifierSeq? accessSpecifier? functionDefinition
 	| property
 	| friendDeclaration
 	;
@@ -156,7 +156,7 @@ enumClassHead: Unsafe? Enum Class Identifier baseClause?;
 
 enumClassList: classEnumeratorDefinition (Comma classEnumeratorDefinition)*;
 
-classEnumeratorDefinition: Identifier (LeftParen expressionList RightParen)?;
+classEnumeratorDefinition: attributeSpecifierSeq? Identifier (LeftParen expressionList RightParen)?;
 
 enumClassMemberSpecification: Semi structMemberDeclaration+;
 
@@ -166,7 +166,7 @@ unionHead: Unsafe? Union templateParams? Identifier baseClause?;
 
 unionList: unionEnumerator (Comma unionEnumerator)*;
 
-unionEnumerator: Identifier (LeftParen unionEnumeratorClause RightParen)?;
+unionEnumerator: attributeSpecifierSeq? Identifier (LeftParen unionEnumeratorClause RightParen)?;
 
 unionEnumeratorClause: theTypeId (Comma theTypeId)* | Identifier Colon theTypeId (Comma Identifier Colon theTypeId)*;
 
@@ -179,9 +179,9 @@ extensionHead: Unsafe? Extension (templateParams (theTypeId baseClause?)? | temp
 extensionMemberSpecification: extensionMemberDeclaration+;
 
 extensionMemberDeclaration:
-	  functionDefinition
-	| constructor
-	| indexer
+	  attributeSpecifierSeq? functionDefinition
+	| attributeSpecifierSeq? constructor
+	| attributeSpecifierSeq? indexer
 	| property
 	;
 
@@ -191,13 +191,13 @@ baseSpecifierList: baseSpecifier (Comma baseSpecifier)*;
 
 baseSpecifier: nestedNameSpecifier? className;
 
-property: accessSpecifier? Unsafe? (Static | Virtual | Override | Final)? Identifier Colon Const? Ref? theTypeId (functionBody | shortFunctionBody | (Assign initializerClause)? propertyBody);
+property: attributeSpecifierSeq? accessSpecifier? Unsafe? (Static | Virtual | Override | Final)? Identifier Colon Const? Ref? theTypeId (functionBody | shortFunctionBody | (Assign initializerClause)? propertyBody);
 
 propertyBody: LeftBrace (propertyGetter | propertySetter | propertyGetter propertySetter) RightBrace;
 
-abstractProperty: accessSpecifier? Abstract Identifier Colon Const? Ref? theTypeId propertyBody;
+abstractProperty: attributeSpecifierSeq? accessSpecifier? Abstract Identifier Colon Const? Ref? theTypeId propertyBody;
 
-interfaceProperty: Identifier Colon Const? Ref? theTypeId propertyBody;
+interfaceProperty: attributeSpecifierSeq? Identifier Colon Const? Ref? theTypeId propertyBody;
 
 propertyGetter: (accessSpecifier | protectedInternal)? Get (functionBody | shortFunctionBody | Semi);
 
@@ -213,9 +213,9 @@ functionTemplateDeclaration: functionSpecifier* Identifier Colon templateParams 
 
 functionDefinition: functionSpecifier* (Identifier | simpleTemplateId | operatorFunctionId) Colon templateParams? functionParams returnType? LifetimeAnnotation? exceptionSpecification? (functionBody | shortFunctionBody);
 
-abstractMethodDeclaration: (accessSpecifier | protectedInternal)? Abstract Mutable? (Identifier | operatorFunctionId) Colon functionParams returnType? LifetimeAnnotation? exceptionSpecification? Semi;
+abstractMethodDeclaration: attributeSpecifierSeq? (accessSpecifier | protectedInternal)? Abstract Mutable? (Identifier | operatorFunctionId) Colon functionParams returnType? LifetimeAnnotation? exceptionSpecification? Semi;
 
-interfaceMethodDeclaration: (Identifier | operatorFunctionId) Colon functionParams returnType? LifetimeAnnotation? exceptionSpecification? Semi;
+interfaceMethodDeclaration: attributeSpecifierSeq? (Identifier | operatorFunctionId) Colon functionParams returnType? LifetimeAnnotation? exceptionSpecification? Semi;
 
 constructor: Inline? Unsafe? implicitSpecification? This templateParams? functionParams exceptionSpecification? (constructorBody | delegatingConstructorBody | ((Assign | Equal) Default Semi));
 
@@ -241,7 +241,7 @@ indexerGetter: (accessSpecifier | protectedInternal)? Get (functionBody | shortF
 
 indexerSetter: (accessSpecifier | protectedInternal)? Set (functionBody | shortFunctionBody);
 
-interfaceIndexer: This LeftBracket paramDeclClause RightBracket returnType exceptionSpecification? LeftBrace Get Semi (Set Semi)? RightBrace;
+interfaceIndexer: attributeSpecifierSeq? This LeftBracket paramDeclClause RightBracket returnType exceptionSpecification? LeftBrace Get Semi (Set Semi)? RightBrace;
 
 functionSpecifier: Inline | Unsafe | Consteval | Mutable | Static | Virtual | Override | Final;
 
@@ -259,7 +259,7 @@ paramDeclClause: paramDeclList Ellipsis?;
 
 paramDeclList: paramDeclaration (Comma paramDeclaration)*;
 
-paramDeclaration: paramSpecification? Identifier (Colon (theTypeId LifetimeAnnotation?)? (Assign initializerClause)?)?;
+paramDeclaration: attributeSpecifierSeq? paramSpecification? Identifier (Colon (theTypeId LifetimeAnnotation?)? (Assign initializerClause)?)?;
 
 paramSpecification: Move | Forward | In | Inout | Out | Ref | In Ref;
 
@@ -283,9 +283,15 @@ friendDeclaration:
 	| Friend functionDefinition
 	;
 
+attributeSpecifierSeq: attributeSpecifier+;
+
+attributeSpecifier: AtSign nestedNameSpecifier? Identifier attributeArgumentClause?;
+
+attributeArgumentClause: LeftParen expressionList RightParen;
+
 selectionStatement: 
-	  Static? If LeftParen condition RightParen stat (Else elseBranch)?
-	| Static? If (not? Consteval | condition) compoundStatement (Else elseBranch)?;
+	  attributeSpecifierSeq? Static? If LeftParen condition RightParen stat (Else elseBranch)?
+	| attributeSpecifierSeq? Static? If (not? Consteval | condition) compoundStatement (Else elseBranch)?;
 
 condition: simpleDeclaration? logicalOrExpression | declarator ;
 
@@ -589,7 +595,7 @@ postfixExpression:
 	  primaryExpression
 	| newExpression
 	| stackallocExpression
-	| postfixExpression Question? LeftBracket expressionList RightBracket
+	| postfixExpression Question? LeftBracket attributeSpecifierSeq? expressionList RightBracket
 	| postfixExpression LeftParen expressionList? RightParen
 	| (simpleTypeSpecifier) LeftParen expressionList? RightParen
 	| Move postfixExpression

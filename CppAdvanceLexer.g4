@@ -54,8 +54,6 @@ Directive: '#' ~ [\n]* -> channel (HIDDEN);
 
 Abstract: 'abstract';
 
-Alignas: 'alignas';
-
 Alignof: 'alignof';
 
 As: 'as';

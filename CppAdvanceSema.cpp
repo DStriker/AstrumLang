@@ -663,23 +663,28 @@ void CppAdvanceSema::exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationCo
 			isStatic = true;
 		}
 		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 		std::optional<AccessSpecifier> access = std::nullopt;
 		bool isProtectedInternal = false;
-		if (auto block = dynamic_cast<CppAdvanceParser::BlockDeclarationContext*>(ctx->parent))
-		{
-			if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(block->parent))
+
+		if (!isTypeDefinitionBody()) {
+			if (auto block = reinterpret_cast<CppAdvanceParser::BlockDeclarationContext*>(ctx->parent))
 			{
-				acc = decl->accessSpecifier();
+				if (auto decl = reinterpret_cast<CppAdvanceParser::DeclarationContext*>(block->parent))
+				{
+					acc = decl->accessSpecifier();
+					attributes = decl->attributeSpecifierSeq();
+				}
 			}
 		}
-		if (!acc)
+		else
 		{
-			if (auto block = dynamic_cast<CppAdvanceParser::MemberBlockDeclarationContext*>(ctx->parent))
+			if (auto block = reinterpret_cast<CppAdvanceParser::MemberBlockDeclarationContext*>(ctx->parent))
 			{
-				if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(block->parent)) {
-					isProtectedInternal = decl->protectedInternal();
-					acc = decl->accessSpecifier();
-				}
+				auto decl = reinterpret_cast<CppAdvanceParser::StructMemberDeclarationContext*>(block->parent);
+				isProtectedInternal = decl->protectedInternal();
+				acc = decl->accessSpecifier();
+				attributes = decl->attributeSpecifierSeq();
 			}
 		}
 		if (isProtectedInternal)
@@ -740,7 +745,8 @@ void CppAdvanceSema::exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationCo
 			if (unsafeDepth > 0) cppParser.unsafeVariables.insert(id->getText());
 			globalVariables.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), 
 				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), ctx->initializerList(), 
-				*access, getCurrentCompilationCondition(), "", false, isConst, isVolatile, isThreadLocal, unsafeDepth > 0, false, isUnowned, isWeak});
+				attributes, *access, getCurrentCompilationCondition(), "", false, isConst, isVolatile, isThreadLocal, unsafeDepth > 0, 
+				false, isUnowned, isWeak});
 		}
 		else
 		{
@@ -749,16 +755,16 @@ void CppAdvanceSema::exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationCo
 
 			if (unsafeDepth > 0) cppParser.unsafeVariables.insert(currentType+"." + id->getText());
 			structStack.top()->fields.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), 
-				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), ctx->initializerList(), *access, 
-				getCurrentCompilationCondition(), getCurrentFullTypeName(), isStatic, isConst, isVolatile, isThreadLocal, unsafeDepth > 0,
-				false, isUnowned, isWeak});
+				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), ctx->initializerList(),
+				attributes, *access, getCurrentCompilationCondition(), getCurrentFullTypeName(), isStatic, isConst, isVolatile, isThreadLocal, 
+				unsafeDepth > 0, false, isUnowned, isWeak});
 			if (isStatic || isThreadLocal)
 			{
 				if (isProtectedTypeDefinition) access = AccessSpecifier::Protected;
 				else access = AccessSpecifier::Private;
 				staticFields.emplace_back(VariableDefinition{ id->getText(), getLastTypeTemplateParams(), ctx->theTypeId(), 
 					{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), ctx->initializerList(), 
-					*access, getCurrentCompilationCondition(), getCurrentFullTypeName(), isStatic, isConst, isVolatile, isThreadLocal, 
+					attributes, *access, getCurrentCompilationCondition(), getCurrentFullTypeName(), isStatic, isConst, isVolatile, isThreadLocal,
 					isUnsafeTypeDefinition, getLastTypeTemplateSpecializationArgs() != nullptr, isUnowned, isWeak });
 			}
 		}
@@ -1008,22 +1014,28 @@ void CppAdvanceSema::enterConstantDeclaration(CppAdvanceParser::ConstantDeclarat
 	if (!functionBody && firstPass)
 	{
 		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 		std::optional<AccessSpecifier> access = std::nullopt;
-		if (auto block = dynamic_cast<CppAdvanceParser::BlockDeclarationContext*>(ctx->parent))
+		if (!isTypeDefinitionBody())
 		{
-			if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(block->parent))
+			if (auto block = reinterpret_cast<CppAdvanceParser::BlockDeclarationContext*>(ctx->parent))
 			{
-				acc = decl->accessSpecifier();
+				if (auto decl = reinterpret_cast<CppAdvanceParser::DeclarationContext*>(block->parent))
+				{
+					acc = decl->accessSpecifier();
+                    attributes = decl->attributeSpecifierSeq();
+				}
 			}
 		}
-		if (!acc)
+		else
 		{
-			if (auto block = dynamic_cast<CppAdvanceParser::MemberBlockDeclarationContext*>(ctx->parent))
+			if (auto block = reinterpret_cast<CppAdvanceParser::MemberBlockDeclarationContext*>(ctx->parent))
 			{
-				if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(block->parent)) {
+				if (auto decl = reinterpret_cast<CppAdvanceParser::StructMemberDeclarationContext*>(block->parent)) {
 					if (decl->protectedInternal())
 						CppAdvanceCompilerError("Cannot to declare protected internal constant", decl->protectedInternal()->getStart());
 					acc = decl->accessSpecifier();
+                    attributes = decl->attributeSpecifierSeq();
 				}
 			}
 		}
@@ -1059,11 +1071,15 @@ void CppAdvanceSema::enterConstantDeclaration(CppAdvanceParser::ConstantDeclarat
 		if (!isTypeDefinitionBody())
 		{
 			if (*access == AccessSpecifier::Protected) protectedSymbols.insert(ctx->Identifier()->getText());
-			globalConstants.emplace_back(ConstantDefinition{ ctx->Identifier()->getText(), ctx->templateParams(), ctx->theTypeId(), {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), *access, getCurrentCompilationCondition(), ""});
+			globalConstants.emplace_back(ConstantDefinition{ ctx->Identifier()->getText(), ctx->templateParams(), ctx->theTypeId(), 
+				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), 
+				attributes, *access, getCurrentCompilationCondition(), ""});
 		}
 		else
 		{
-			structStack.top()->constants.emplace_back(ConstantDefinition{ ctx->Identifier()->getText(), ctx->templateParams(), ctx->theTypeId(), {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), *access, getCurrentCompilationCondition(), getCurrentFullTypeName() });
+			structStack.top()->constants.emplace_back(ConstantDefinition{ ctx->Identifier()->getText(), ctx->templateParams(), ctx->theTypeId(),
+				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(),
+				attributes, *access, getCurrentCompilationCondition(), getCurrentFullTypeName() });
 		}
 	}
 }
@@ -1333,6 +1349,7 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 	CppAdvanceParser::TemplateParamsContext* templateParams = ctx->templateParams();
 	CppAdvanceParser::TemplateArgumentListContext* templateSpecializationArgs = nullptr;
 	CppAdvanceParser::ExceptionSpecificationContext* exceptions = ctx->exceptionSpecification();
+	CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 
 	for (auto spec : ctx->functionSpecifier()) {
 		if (spec->Inline()) isInline = true;
@@ -1538,27 +1555,43 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
 		std::optional<AccessSpecifier> access = std::nullopt;
 		bool isProtectedInternal = false;
-		if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(ctx->parent))
+		if (!isTypeDefinitionBody())
 		{
-			if (decl->accessSpecifier())
+			if (auto decl = reinterpret_cast<CppAdvanceParser::DeclarationContext*>(ctx->parent))
 			{
-				acc = decl->accessSpecifier();
+				if (decl->accessSpecifier())
+				{
+					acc = decl->accessSpecifier();
+				}
+				attributes = decl->attributeSpecifierSeq();
 			}
 		}
-		else if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
+		else if (currentTypeKind.top() == TypeKind::Enum || currentTypeKind.top() == TypeKind::Union)
+		{
+			if (auto decl = reinterpret_cast<CppAdvanceParser::EnumMemberDeclarationContext*>(ctx->parent))
+			{
+				if (decl->accessSpecifier())
+				{
+					acc = decl->accessSpecifier();
+				}
+				attributes = decl->attributeSpecifierSeq();
+			}
+		}
+		else if (currentTypeKind.top() == TypeKind::Extension)
+		{
+			if (auto decl = reinterpret_cast<CppAdvanceParser::ExtensionMemberDeclarationContext*>(ctx->parent))
+			{
+				attributes = decl->attributeSpecifierSeq();
+			}
+		}
+		else if (auto decl = reinterpret_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
 		{
 			isProtectedInternal = decl->protectedInternal();
 			if (decl->accessSpecifier())
 			{
 				acc = decl->accessSpecifier();
 			}
-		}
-		else if (auto decl = dynamic_cast<CppAdvanceParser::EnumMemberDeclarationContext*>(ctx->parent))
-		{
-			if (decl->accessSpecifier())
-			{
-				acc = decl->accessSpecifier();
-			}
+			attributes = decl->attributeSpecifierSeq();
 		}
 		
 		if (acc)
@@ -1673,7 +1706,7 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 		{
 			if (*access == AccessSpecifier::Protected && !isOperator) protectedSymbols.insert(id);
 			if (isFriendDefinition) isInline = true;
-			auto def = FunctionDefinition{ id, templateParams, templateSpecializationArgs, params, returnType, expression, exceptions,
+			auto def = FunctionDefinition{ id, templateParams, templateSpecializationArgs, params, returnType, expression, exceptions, attributes,
 				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(),
 				isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth };
 			if (isFriendDefinition)
@@ -1688,14 +1721,14 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 			auto lastSpec = getLastTypeTemplateSpecializationArgs();
 			auto fullType = getCurrentFullTypeName();
 			structStack.top()->methods.emplace_back(
-				MethodDefinition{ id, templateParams, templateSpecializationArgs, params, returnType, expression, exceptions, 
+				MethodDefinition{ id, templateParams, templateSpecializationArgs, params, returnType, expression, exceptions, attributes,
 				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(), 
 				isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth, 
 				currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, isDefault, 
 				isMutating, isStatic, isVirtual,
 				isOverride, false, isFinal});
 			methods.insert_or_assign(SourcePosition{ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine()},
-				MethodDefinition{ id, templateParams, templateSpecializationArgs, params, returnType, expression, exceptions,
+				MethodDefinition{ id, templateParams, templateSpecializationArgs, params, returnType, expression, exceptions,attributes,
 				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, 
 				isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
 				isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth,
@@ -2693,7 +2726,10 @@ void CppAdvanceSema::enterFunctionTemplateDeclaration(CppAdvanceParser::Function
 		if (!access) access = AccessSpecifier::Internal;
 		auto id = ctx->Identifier();
 		if (*access == AccessSpecifier::Protected) protectedSymbols.insert(id->getText());
-		globalFunctions.emplace_back(FunctionDefinition{ id->getText(), templateParams, templateSpecializationArgs, params, returnType, expression, exceptions, {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(), isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth });
+		globalFunctions.emplace_back(
+			FunctionDefinition{ id->getText(), templateParams, templateSpecializationArgs, params, returnType, expression, exceptions,
+			nullptr, {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(), 
+			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth });
 	}
 }
 
@@ -2937,6 +2973,7 @@ void CppAdvanceSema::enterStructDefinition(CppAdvanceParser::StructDefinitionCon
 		CppAdvanceParser::TemplateParamsContext* tparams = ctx->structHead()->templateParams();
 		CppAdvanceParser::TemplateArgumentListContext* tspec = nullptr;
 		CppAdvanceParser::BaseSpecifierListContext* interfaces = nullptr;
+		CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 
 		if (auto t = namectx->simpleTemplateId())
 		{
@@ -2955,12 +2992,13 @@ void CppAdvanceSema::enterStructDefinition(CppAdvanceParser::StructDefinitionCon
 		if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(ctx->parent))
 		{
 			acc = decl->accessSpecifier();
+			attributes = decl->attributeSpecifierSeq();
 			
 		}
 		else if(auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
 		{
 			acc = decl->accessSpecifier();
-
+			attributes = decl->attributeSpecifierSeq();
 		}
 
 		if (acc)
@@ -3007,6 +3045,7 @@ void CppAdvanceSema::enterStructDefinition(CppAdvanceParser::StructDefinitionCon
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, interfaces, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
 			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
 			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, false, false, false);
+		def->attributes = attributes;
 		if (!structStack.empty())
 			structStack.top()->nestedStructs.push_back(def);
 		structStack.push(def);
@@ -3160,13 +3199,15 @@ void CppAdvanceSema::exitMemberRefDeclaration(CppAdvanceParser::MemberRefDeclara
 	{
 		bool isConst = ctx->Const() || ctx->Let();
 		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 		std::optional<AccessSpecifier> access = std::nullopt;
-		if (auto block = dynamic_cast<CppAdvanceParser::MemberBlockDeclarationContext*>(ctx->parent))
+		if (auto block = reinterpret_cast<CppAdvanceParser::MemberBlockDeclarationContext*>(ctx->parent))
 		{
-			if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(block->parent)) {
+			if (auto decl = reinterpret_cast<CppAdvanceParser::StructMemberDeclarationContext*>(block->parent)) {
 				if(decl->protectedInternal())
 					CppAdvanceCompilerError("Cannot to declare protected internal reference variable", decl->protectedInternal()->getStart());
 				acc = decl->accessSpecifier();
+				attributes = decl->attributeSpecifierSeq();
 			}
 		}
 		if (acc)
@@ -3187,7 +3228,9 @@ void CppAdvanceSema::exitMemberRefDeclaration(CppAdvanceParser::MemberRefDeclara
 		if (!access) access = AccessSpecifier::Private;
 		auto id = ctx->Identifier();
 		if (unsafeDepth > 0) cppParser.unsafeVariables.insert(currentType + "." + id->getText());
-		structStack.top()->fields.emplace_back(VariableDefinition{ "& "+id->getText(), nullptr, ctx->theTypeId(), {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr, *access, getCurrentCompilationCondition(), "", false, isConst, false, false, unsafeDepth > 0, false});
+		structStack.top()->fields.emplace_back(
+			VariableDefinition{ "& "+id->getText(), nullptr, ctx->theTypeId(), {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
+			nullptr, nullptr, attributes, *access, getCurrentCompilationCondition(), "", false, isConst, false, false, unsafeDepth > 0, false});
 	}
 }
 
@@ -3221,6 +3264,7 @@ void CppAdvanceSema::enterConstructor(CppAdvanceParser::ConstructorContext* ctx)
 	CppAdvanceParser::TemplateParamsContext* templateParams = ctx->templateParams();
 	CppAdvanceParser::ExceptionSpecificationContext* exceptions = ctx->exceptionSpecification();
 	CppAdvanceParser::ImplicitSpecificationContext* implicit = ctx->implicitSpecification();
+	CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 
 	if (ctx->Unsafe()) {
 		isUnsafe = true;
@@ -3288,12 +3332,22 @@ void CppAdvanceSema::enterConstructor(CppAdvanceParser::ConstructorContext* ctx)
 		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
 		std::optional<AccessSpecifier> access = std::nullopt;
 		bool isProtectedInternal = false;
-		if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
-		{
-			isProtectedInternal = decl->protectedInternal();
-			if (decl->accessSpecifier())
+		if (currentTypeKind.top() != TypeKind::Extension) {
+			if (auto decl = reinterpret_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
 			{
-				acc = decl->accessSpecifier();
+				isProtectedInternal = decl->protectedInternal();
+				attributes = decl->attributeSpecifierSeq();
+				if (decl->accessSpecifier())
+				{
+					acc = decl->accessSpecifier();
+				}
+			}
+		}
+		else
+		{
+			if (auto decl = reinterpret_cast<CppAdvanceParser::ExtensionMemberDeclarationContext*>(ctx->parent))
+			{
+				attributes = decl->attributeSpecifierSeq();
 			}
 		}
 
@@ -3362,13 +3416,13 @@ void CppAdvanceSema::enterConstructor(CppAdvanceParser::ConstructorContext* ctx)
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
 		auto fullType = getCurrentFullTypeName();
 		structStack.top()->methods.emplace_back(
-			MethodDefinition{ id, templateParams, nullptr, params, nullptr, nullptr, exceptions,
+			MethodDefinition{ id, templateParams, nullptr, params, nullptr, nullptr, exceptions,attributes,
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(),
 			isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, varargDepth,
 			currentType, fullType, lastTparams, lastSpec, implicit, isProtectedTypeDefinition, isUnsafeTypeDefinition, isDefault, true, false, false,
 			false, false, false, true });
 		methods.insert_or_assign(SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() },
-			MethodDefinition{ id, templateParams, nullptr, params, nullptr, nullptr, exceptions,
+			MethodDefinition{ id, templateParams, nullptr, params, nullptr, nullptr, exceptions,attributes,
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
 			isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
 			isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, varargDepth,
@@ -3506,6 +3560,7 @@ void CppAdvanceSema::enterConversionFunction(CppAdvanceParser::ConversionFunctio
 	CppAdvanceParser::TemplateParamsContext* templateParams = ctx->templateParams();
 	CppAdvanceParser::ExceptionSpecificationContext* exceptions = ctx->exceptionSpecification();
 	CppAdvanceParser::ImplicitSpecificationContext* implicit = ctx->implicitSpecification();
+	CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 
 	for (auto spec : ctx->functionSpecifier()) {
 		if (spec->Inline()) isInline = true;
@@ -3563,13 +3618,15 @@ void CppAdvanceSema::enterConversionFunction(CppAdvanceParser::ConversionFunctio
 		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
 		std::optional<AccessSpecifier> access = std::nullopt;
 		bool isProtectedInternal = false;
-		if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
+		
+		if (auto decl = reinterpret_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
 		{
 			isProtectedInternal = decl->protectedInternal();
 			if (decl->accessSpecifier())
 			{
 				acc = decl->accessSpecifier();
 			}
+			attributes = decl->attributeSpecifierSeq();
 		}
 
 		if (acc)
@@ -3613,13 +3670,13 @@ void CppAdvanceSema::enterConversionFunction(CppAdvanceParser::ConversionFunctio
 		bool isRefReturn = ctx->conversionFunctionId()->Ref();
 		bool isConstReturn = ctx->conversionFunctionId()->Const();
 		structStack.top()->methods.emplace_back(
-			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions,
+			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions, attributes,
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(),
 			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, false, -1,
 			currentType, fullType, lastTparams, lastSpec, implicit, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, false, false, isVirtual,
 			isOverride, false, isFinal, false, false, true });
 		methods.insert_or_assign(SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() },
-			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions,
+			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions, attributes,
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
 			isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
 			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, false, -1,
@@ -3669,6 +3726,7 @@ void CppAdvanceSema::enterIndexer(CppAdvanceParser::IndexerContext* ctx)
 	CppAdvanceParser::ParamDeclClauseContext* params = ctx->paramDeclClause();
 	CppAdvanceParser::TemplateParamsContext* templateParams = ctx->templateParams();
 	CppAdvanceParser::ExceptionSpecificationContext* exceptions = ctx->exceptionSpecification();
+	CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 	CppAdvanceParser::IndexerGetterContext* getter = nullptr;
 	CppAdvanceParser::IndexerSetterContext* setter = nullptr;
 	prevFunctionBody = functionBody;
@@ -3817,13 +3875,21 @@ void CppAdvanceSema::enterIndexer(CppAdvanceParser::IndexerContext* ctx)
 		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
 		std::optional<AccessSpecifier> access = std::nullopt;
 		bool isProtectedInternal = false;
-		if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
+		if (currentTypeKind.top() == TypeKind::Extension)
+		{
+			if (auto decl = reinterpret_cast<CppAdvanceParser::ExtensionMemberDeclarationContext*>(ctx->parent))
+			{
+				attributes = decl->attributeSpecifierSeq();
+			}
+		}
+		else if (auto decl = reinterpret_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
 		{
 			isProtectedInternal = decl->protectedInternal();
 			if (decl->accessSpecifier())
 			{
 				acc = decl->accessSpecifier();
 			}
+			attributes = decl->attributeSpecifierSeq();
 		}
 
 		if (acc)
@@ -3870,13 +3936,13 @@ void CppAdvanceSema::enterIndexer(CppAdvanceParser::IndexerContext* ctx)
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
 		auto fullType = getCurrentFullTypeName();
 		structStack.top()->methods.emplace_back(
-			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions,
+			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions, attributes,
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(),
 			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth,
 			currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, isMutating, isStatic, isVirtual,
 			isOverride, false, isFinal, false,false,false,params, getter, setter });
 		methods.insert_or_assign(SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() },
-			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions,
+			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions, attributes,
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
 			isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
 			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth,
@@ -4102,7 +4168,8 @@ void CppAdvanceSema::enterProperty(CppAdvanceParser::PropertyContext* ctx)
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
 		auto fullType = getCurrentFullTypeName();
 		auto pos = SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() };
-		auto property = PropertyDefinition{ id, propertyType, pos, initializer, getter, setter, expression, *access, getCurrentCompilationCondition(),
+		auto property = PropertyDefinition{ id, propertyType, pos, initializer, getter, setter, expression, 
+			ctx->attributeSpecifierSeq(), *access, getCurrentCompilationCondition(),
 			currentType, fullType, lastTparams, lastSpec, isStatic, isConstReturn, isRefReturn, isUnsafe, isPrivateTypeDefinition,
 			isProtectedTypeDefinition, isUnsafeTypeDefinition, isVirtual, isOverride, false,
 			isFinal && currentTypeKind.top() == TypeKind::Class, isInline, isConstexpr };
@@ -4332,22 +4399,28 @@ void CppAdvanceSema::exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDec
 	if (!functionBody && firstPass)
 	{
 		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 		std::optional<AccessSpecifier> access = std::nullopt;
 		bool isProtectedInternal = false;
-		if (auto block = dynamic_cast<CppAdvanceParser::BlockDeclarationContext*>(ctx->parent))
+		if (!isTypeDefinitionBody())
 		{
-			if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(block->parent))
+			if (auto block = reinterpret_cast<CppAdvanceParser::BlockDeclarationContext*>(ctx->parent))
 			{
-				acc = decl->accessSpecifier();
+				if (auto decl = reinterpret_cast<CppAdvanceParser::DeclarationContext*>(block->parent))
+				{
+					acc = decl->accessSpecifier();
+					attributes = decl->attributeSpecifierSeq();
+				}
 			}
 		}
-		if (!acc)
+		else
 		{
-			if (auto block = dynamic_cast<CppAdvanceParser::MemberBlockDeclarationContext*>(ctx->parent))
+			if (auto block = reinterpret_cast<CppAdvanceParser::MemberBlockDeclarationContext*>(ctx->parent))
 			{
-				if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(block->parent)) {
+				if (auto decl = reinterpret_cast<CppAdvanceParser::StructMemberDeclarationContext*>(block->parent)) {
 					isProtectedInternal = decl->protectedInternal();
 					acc = decl->accessSpecifier();
+                    attributes = decl->attributeSpecifierSeq();
 				}
 			}
 		}
@@ -4410,7 +4483,7 @@ void CppAdvanceSema::exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDec
 				if (*access == AccessSpecifier::Protected) protectedSymbols.insert(id->getText());
 				if (unsafeDepth > 0) cppParser.unsafeVariables.insert(id->getText());
 				globalVariables.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), 
-					{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr, *access, 
+					{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr, attributes, *access, 
 					getCurrentCompilationCondition(), "", false, isConst, isVolatile, isThreadLocal, unsafeDepth > 0, false, isUnowned, isWeak });
 			}
 			else
@@ -4419,14 +4492,14 @@ void CppAdvanceSema::exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDec
 					CppAdvanceCompilerError("Raw union field must be private", ctx->getStart());
 				if (unsafeDepth > 0) cppParser.unsafeVariables.insert(currentType + "." + id->getText());
 				structStack.top()->fields.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), 
-					{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr, *access, 
+					{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr, attributes, *access,
 					getCurrentCompilationCondition(), "", isStatic, isConst, isVolatile, isThreadLocal, unsafeDepth > 0, false, isUnowned, isWeak });
 				if (isStatic || isThreadLocal)
 				{
 					if (isProtectedTypeDefinition) access = AccessSpecifier::Protected;
 					else access = AccessSpecifier::Private;
 					staticFields.emplace_back(VariableDefinition{ id->getText(), getLastTypeTemplateParams(), ctx->theTypeId(), 
-						{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr, *access, 
+						{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr, attributes, *access,
 						getCurrentCompilationCondition(), getCurrentFullTypeName(), isStatic, isConst, isVolatile, isThreadLocal, 
 						isUnsafeTypeDefinition, getLastTypeTemplateSpecializationArgs() != nullptr, isUnowned, isWeak });
 				}
@@ -4477,6 +4550,7 @@ void CppAdvanceSema::enterClassDefinition(CppAdvanceParser::ClassDefinitionConte
 		CppAdvanceParser::TemplateParamsContext* tparams = ctx->classHead()->templateParams();
 		CppAdvanceParser::TemplateArgumentListContext* tspec = nullptr;
 		CppAdvanceParser::BaseSpecifierListContext* bases = nullptr;
+		CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 
 		if (auto t = namectx->simpleTemplateId())
 		{
@@ -4497,12 +4571,12 @@ void CppAdvanceSema::enterClassDefinition(CppAdvanceParser::ClassDefinitionConte
 		if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(ctx->parent))
 		{
 			acc = decl->accessSpecifier();
-
+			attributes = decl->attributeSpecifierSeq();
 		}
 		else if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
 		{
 			acc = decl->accessSpecifier();
-
+			attributes = decl->attributeSpecifierSeq();
 		}
 
 		if (acc)
@@ -4550,6 +4624,7 @@ void CppAdvanceSema::enterClassDefinition(CppAdvanceParser::ClassDefinitionConte
 			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
 			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, ctx->classHead()->Abstract(), ctx->classHead()->Final(),
 			false);
+		def->attributes = attributes;
 		if (!structStack.empty())
 			structStack.top()->nestedStructs.push_back(def);
 		structStack.push(def);
@@ -4665,13 +4740,13 @@ void CppAdvanceSema::enterDestructor(CppAdvanceParser::DestructorContext* ctx)
 	}
 
 	structStack.top()->methods.emplace_back(
-		MethodDefinition{ id, nullptr, nullptr, nullptr, nullptr, expression, ctx->exceptionSpecification(),
+		MethodDefinition{ id, nullptr, nullptr, nullptr, nullptr, expression, ctx->exceptionSpecification(), nullptr,
 		pos, AccessSpecifier::Public, getCurrentCompilationCondition(),
 		isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, -1,
 		currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, true, false, false,
 		false, false, false, false, true });
 	methods.insert_or_assign(pos,
-		MethodDefinition{ id, nullptr, nullptr, nullptr, nullptr, expression, ctx->exceptionSpecification(),
+		MethodDefinition{ id, nullptr, nullptr, nullptr, nullptr, expression, ctx->exceptionSpecification(), nullptr,
 		pos, isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
 		isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, -1,
 		currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, true, false, false,
@@ -4759,7 +4834,8 @@ void CppAdvanceSema::enterAbstractProperty(CppAdvanceParser::AbstractPropertyCon
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
 		auto fullType = getCurrentFullTypeName();
 		auto pos = SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() };
-		auto property = PropertyDefinition{ id, propertyType, pos, nullptr, getter, setter, nullptr, *access, getCurrentCompilationCondition(),
+		auto property = PropertyDefinition{ id, propertyType, pos, nullptr, getter, setter, nullptr,
+			ctx->attributeSpecifierSeq(), *access, getCurrentCompilationCondition(),
 			currentType, fullType, lastTparams, lastSpec, false, isConstReturn, isRefReturn, isUnsafe, isPrivateTypeDefinition,
 			isProtectedTypeDefinition, isUnsafeTypeDefinition, false, false, true, false, false, false };
 		structStack.top()->properties.emplace_back(property);
@@ -4907,7 +4983,7 @@ void CppAdvanceSema::enterAbstractMethodDeclaration(CppAdvanceParser::AbstractMe
 		auto lastTparams = getLastTypeTemplateParams();
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
 		auto fullType = getCurrentFullTypeName();
-		auto def = MethodDefinition{ id, nullptr, nullptr, params, returnType, nullptr, exceptions,
+		auto def = MethodDefinition{ id, nullptr, nullptr, params, returnType, nullptr, exceptions, ctx->attributeSpecifierSeq(),
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(),
 			false, false, false, false, isRefReturn, isConstReturn, false, varargDepth,
 			currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false,
@@ -4992,6 +5068,7 @@ void CppAdvanceSema::enterInterfaceDefinition(CppAdvanceParser::InterfaceDefinit
 		typeset.globalTypes.insert(currentType);
 		CppAdvanceParser::TemplateParamsContext* tparams = ctx->interfaceHead()->templateParams();
 		CppAdvanceParser::BaseSpecifierListContext* baseInterfaces = nullptr;
+		CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 
 		if (auto b = ctx->interfaceHead()->baseClause())
 		{
@@ -5005,7 +5082,7 @@ void CppAdvanceSema::enterInterfaceDefinition(CppAdvanceParser::InterfaceDefinit
 		if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(ctx->parent))
 		{
 			acc = decl->accessSpecifier();
-
+			attributes = decl->attributeSpecifierSeq();
 		}
 
 		if (acc)
@@ -5052,6 +5129,7 @@ void CppAdvanceSema::enterInterfaceDefinition(CppAdvanceParser::InterfaceDefinit
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, baseInterfaces, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
 			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
 			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, false, false, false);
+		def->attributes = attributes;
 		/*if (!structStack.empty())
 			structStack.top()->nestedStructs.push_back(def);*/
 		structStack.push(def);
@@ -5159,7 +5237,8 @@ void CppAdvanceSema::enterInterfaceProperty(CppAdvanceParser::InterfacePropertyC
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
 		auto fullType = getCurrentFullTypeName();
 		auto pos = SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() };
-		auto property = PropertyDefinition{ id, propertyType, pos, nullptr, getter, setter, nullptr, AccessSpecifier::Public, getCurrentCompilationCondition(),
+		auto property = PropertyDefinition{ id, propertyType, pos, nullptr, getter, setter, nullptr,
+			ctx->attributeSpecifierSeq(), AccessSpecifier::Public, getCurrentCompilationCondition(),
 			currentType, fullType, lastTparams, lastSpec, false, isConstReturn, isRefReturn, isUnsafe, isPrivateTypeDefinition,
 			isProtectedTypeDefinition, isUnsafeTypeDefinition };
 		structStack.top()->properties.emplace_back(property);
@@ -5266,7 +5345,7 @@ void CppAdvanceSema::enterInterfaceMethodDeclaration(CppAdvanceParser::Interface
 		auto lastTparams = getLastTypeTemplateParams();
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
 		auto fullType = getCurrentFullTypeName();
-		auto def = MethodDefinition{ id, nullptr, nullptr, params, returnType, nullptr, exceptions,
+		auto def = MethodDefinition{ id, nullptr, nullptr, params, returnType, nullptr, exceptions, ctx->attributeSpecifierSeq(),
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, AccessSpecifier::Public, getCurrentCompilationCondition(),
 			false, false, false, false, isRefReturn, isConstReturn, false, varargDepth,
 			currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false,
@@ -5359,7 +5438,7 @@ void CppAdvanceSema::enterInterfaceIndexer(CppAdvanceParser::InterfaceIndexerCon
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
 		auto fullType = getCurrentFullTypeName();
 		structStack.top()->methods.emplace_back(
-			MethodDefinition{ id, nullptr, nullptr, nullptr, returnType, nullptr, exceptions,
+			MethodDefinition{ id, nullptr, nullptr, nullptr, returnType, nullptr, exceptions, ctx->attributeSpecifierSeq(),
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, AccessSpecifier::Public, getCurrentCompilationCondition(),
 			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth,
 			currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, isMutating, isStatic, isVirtual,
@@ -5610,16 +5689,17 @@ void CppAdvanceSema::enterEnumDefinition(CppAdvanceParser::EnumDefinitionContext
 		bool isFlags = false;
 
 		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 		std::optional<AccessSpecifier> access;
 		if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(ctx->parent))
 		{
 			acc = decl->accessSpecifier();
-
+			attributes = decl->attributeSpecifierSeq();
 		}
 		else if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
 		{
 			acc = decl->accessSpecifier();
-
+			attributes = decl->attributeSpecifierSeq();
 		}
 
 		if (acc)
@@ -5666,6 +5746,7 @@ void CppAdvanceSema::enterEnumDefinition(CppAdvanceParser::EnumDefinitionContext
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, nullptr, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
 			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
 			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, isFlags, false, false, ctx->enumHead()->enumBase());
+		def->attributes = attributes;
 		if (!structStack.empty())
 			structStack.top()->nestedStructs.push_back(def);
 		structStack.push(def);
@@ -5712,7 +5793,7 @@ void CppAdvanceSema::enterEnumeratorDefinition(CppAdvanceParser::EnumeratorDefin
 		symbolTable[id] = structStack.top()->id;
 		symbolTable.globalSymbolTable[currentType + "." + id] = structStack.top()->id;
 		structStack.top()->constants.emplace_back(ConstantDefinition{ ctx->Identifier()->getText(), nullptr, nullptr,
-			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, AccessSpecifier::Public,
+			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, ctx->attributeSpecifierSeq(), AccessSpecifier::Public,
 			getCurrentCompilationCondition(), getCurrentFullTypeName(), ctx->constantExpression() });
 	}
 }
@@ -5753,16 +5834,17 @@ void CppAdvanceSema::enterEnumClassDefinition(CppAdvanceParser::EnumClassDefinit
 		bool isUnsafe = unsafeDepth > 0;
 
 		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 		std::optional<AccessSpecifier> access;
 		if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(ctx->parent))
 		{
 			acc = decl->accessSpecifier();
-
+			attributes = decl->attributeSpecifierSeq();
 		}
 		else if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
 		{
 			acc = decl->accessSpecifier();
-
+			attributes = decl->attributeSpecifierSeq();
 		}
 
 		if (acc)
@@ -5809,6 +5891,7 @@ void CppAdvanceSema::enterEnumClassDefinition(CppAdvanceParser::EnumClassDefinit
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, bases, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
 			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
 			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, false, false, false);
+		def->attributes = attributes;
 		if (!structStack.empty())
 			structStack.top()->nestedStructs.push_back(def);
 		structStack.push(def);
@@ -5870,7 +5953,7 @@ void CppAdvanceSema::enterClassEnumeratorDefinition(CppAdvanceParser::ClassEnume
 		symbolTable[id] = structStack.top()->id;
 		symbolTable.globalSymbolTable[currentType+"."+id] = structStack.top()->id;
 		structStack.top()->constants.emplace_back(ConstantDefinition{ id, nullptr, nullptr,
-			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, AccessSpecifier::Public,
+			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, ctx->attributeSpecifierSeq(), AccessSpecifier::Public,
 			getCurrentCompilationCondition(), getCurrentFullTypeName(), nullptr, ctx->expressionList() });
 	}
 }
@@ -5894,7 +5977,7 @@ void CppAdvanceSema::enterUnionEnumerator(CppAdvanceParser::UnionEnumeratorConte
 			}
 		}
 		structStack.top()->constants.emplace_back(ConstantDefinition{ id, nullptr, nullptr,
-			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, AccessSpecifier::Public,
+			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, ctx->attributeSpecifierSeq(), AccessSpecifier::Public,
 			getCurrentCompilationCondition(), getCurrentFullTypeName(), nullptr, nullptr, ctx->unionEnumeratorClause() });
 	}
 }
@@ -5927,6 +6010,7 @@ void CppAdvanceSema::enterUnionDefinition(CppAdvanceParser::UnionDefinitionConte
 		constructorCounts.push(0);
 		CppAdvanceParser::TemplateParamsContext* templateParams = ctx->unionHead()->templateParams();
 		CppAdvanceParser::BaseSpecifierListContext* bases = nullptr;
+		CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 
 		if (auto b = ctx->unionHead()->baseClause())
 		{
@@ -5940,12 +6024,12 @@ void CppAdvanceSema::enterUnionDefinition(CppAdvanceParser::UnionDefinitionConte
 		if (auto decl = dynamic_cast<CppAdvanceParser::DeclarationContext*>(ctx->parent))
 		{
 			acc = decl->accessSpecifier();
-
+			attributes = decl->attributeSpecifierSeq();
 		}
 		else if (auto decl = dynamic_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
 		{
 			acc = decl->accessSpecifier();
-
+			attributes = decl->attributeSpecifierSeq();
 		}
 
 		if (acc)
@@ -5994,6 +6078,7 @@ void CppAdvanceSema::enterUnionDefinition(CppAdvanceParser::UnionDefinitionConte
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, bases, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
 			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
 			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, false, false, false);
+		def->attributes = attributes;
 		if (!structStack.empty())
 			structStack.top()->nestedStructs.push_back(def);
 		structStack.push(def); 
@@ -6129,6 +6214,15 @@ void CppAdvanceSema::exitInclusiveOrExpression(CppAdvanceParser::InclusiveOrExpr
 	if (ctx->Op2())
 	{
 		tryToAddTypeInStackFromOperator(ctx->Op2()->getText());
+	}
+}
+
+void CppAdvanceSema::enterAttributeSpecifier(CppAdvanceParser::AttributeSpecifierContext* ctx)
+{
+	auto id = ctx->Identifier()->getText();
+	if (id == "Align" && !ctx->attributeArgumentClause())
+	{
+		CppAdvanceCompilerError("Align attribute should have integer value", ctx->Identifier()->getSymbol());
 	}
 }
 

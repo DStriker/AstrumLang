@@ -81,6 +81,7 @@ public struct Vector3
 		}
 		set {
 			print("Write");
+			@Likely
 			if (value > 10) field = value / 10;
 			else field = value;
 		}
@@ -598,7 +599,8 @@ public extension <T> {
 public extension i32 {
 	km: i32 ==> this * 1000;
 	operator \*/: () -> i32 ==> this / 2;
-	operator \*/: (other: i32) -> i32 ==> (this + other) / 2;
+
+	operator \*/: (other: i32) -> i32 ==> this * other * 2;
 }
 
 public extension f64 {
@@ -610,6 +612,12 @@ public extension str {
 }
 
 public getSum: (in vec: VectorClass) -> f32 => vec.x + vec.y + vec.z;
+
+@Align(alignof(i64)) 
+struct TestStruct {
+	x: i64;
+	y: i64;
+}
 
 private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 {
@@ -692,7 +700,7 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		print(123.km + 666);
 		print(1.4f.km + 666);
 		print("123".km);
-		print(3 \*/ (\*/10));
+		print(3 \*/ 10 \*/ 5);
 		//print(var.GetStrongReferenceCount());
 		o: object = m;
 		on: object? = m;

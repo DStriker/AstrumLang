@@ -3,6 +3,10 @@
 #include <ranges>
 
 #define GET_ELEMENT_AT out << "_parent.getAt(";\
+if (isUnchecked)\
+{\
+	out << "CppAdvance::UncheckedTag{}, ";\
+}\
 for (auto param : params)\
 {\
 	bool first = true;\
@@ -16,6 +20,10 @@ for (auto param : params)\
 out << ")";
 
 #define GET_ELEMENT_AT_EXTERNAL out << "getAt(_parent, ";\
+if (isUnchecked)\
+{\
+	out << "CppAdvance::UncheckedTag{}, ";\
+}\
 for (auto param : params)\
 {\
 	bool first = true;\
@@ -99,6 +107,44 @@ void CppAdvanceCodegen::printGlobalVariables() const
 		else if (var.access == AccessSpecifier::Protected)
 		{
 			out << "namespace __" << filename << "_Protected { ";
+		}
+		if (var.attributes)
+		{
+			for (auto attr : var.attributes->attributeSpecifier())
+			{
+				auto attrName = attr->Identifier()->getText();
+				if (attrName == "Deprecated")
+				{
+					out << "[[deprecated";
+					if (attr->attributeArgumentClause())
+						out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+					out << "]] ";
+				}
+				else if (attrName == "Unused") {
+					out << "[[maybe_unused]] ";
+				}
+				else if (attrName == "Align") {
+					isAlignas = true;
+					out << "alignas(";
+					bool aof = attr->attributeArgumentClause()->expressionList()->getText().starts_with("alignof");
+					if (!aof)
+					{
+						out << "size_t(";
+					}
+					printAttributeArgumentClause(attr->attributeArgumentClause());
+					if (!aof)
+					{
+						out << ")";
+					}
+					out << ") ";
+					isAlignas = false;
+				}
+				else
+				{
+					printAttributeSpecifier(attr);
+					out << " ";
+				}
+			}
 		}
 		if (var.isConst && var.access != AccessSpecifier::Private)
 		{
@@ -342,6 +388,28 @@ void CppAdvanceCodegen::printGlobalConstants() const
 			isFunctionDeclaration = false;
 			out << " ";
 		}
+		if (var.attributes)
+		{
+			for (auto attr : var.attributes->attributeSpecifier())
+			{
+				auto attrName = attr->Identifier()->getText();
+				if (attrName == "Deprecated")
+				{
+					out << "[[deprecated";
+					if (attr->attributeArgumentClause())
+						out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+					out << "]] ";
+				}
+				else if (attrName == "Unused") {
+					out << "[[maybe_unused]] ";
+				}
+				else
+				{
+					printAttributeSpecifier(attr);
+					out << " ";
+				}
+			}
+		}
 		out << "inline constexpr ";
 		bool isArray = false;
 		if (var.type)
@@ -446,6 +514,41 @@ void CppAdvanceCodegen::printGlobalFunctions() const
 		if (func.varargs >= 0)
 		{
 			out << "[[clang::annotate(\"varargs:" << (int)func.varargs << "\")]] ";
+		}
+
+		if (func.attributes)
+		{
+			for (auto attr : func.attributes->attributeSpecifier())
+			{
+				auto attrName = attr->Identifier()->getText();
+				if (attrName == "Deprecated")
+				{
+					out << "[[deprecated";
+					if (attr->attributeArgumentClause())
+						out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+					out << "]] ";
+				}
+				else if (attrName == "Unused") {
+					out << "[[maybe_unused]] ";
+				}
+				else if (attrName == "NoDiscard") {
+					out << "[[nodiscard]] ";
+				}
+				else if (attrName == "NoReturn") {
+					out << "[[noreturn]] ";
+				}
+				else if (attrName == "ForceInline") {
+					out << "FORCE_INLINE ";
+				}
+				else if (attrName == "NoInline") {
+					out << "NOINLINE ";
+				}
+				else
+				{
+					printAttributeSpecifier(attr);
+					out << " ";
+				}
+			}
 		}
 
 		isFunctionDeclaration = true;
@@ -621,6 +724,44 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 	}
 	if (isUnsafe) out << "[[clang::annotate(\"unsafe\")]] ";
 	if (type->kind == TypeKind::RefStruct) out << "[[clang::annotate(\"ref_struct\")]] ";
+	if (type->attributes)
+	{
+		for (auto attr : type->attributes->attributeSpecifier())
+		{
+			auto attrName = attr->Identifier()->getText();
+			if (attrName == "Deprecated")
+			{
+				out << "[[deprecated";
+				if (attr->attributeArgumentClause())
+					out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+				out << "]] ";
+			}
+			else if (attrName == "Unused") {
+				out << "[[maybe_unused]] ";
+			}
+			else if (attrName == "Align") {
+				isAlignas = true;
+				out << "alignas(";
+				bool aof = attr->attributeArgumentClause()->expressionList()->getText().starts_with("alignof");
+				if (!aof)
+				{
+					out << "size_t(";
+				}
+				printAttributeArgumentClause(attr->attributeArgumentClause());
+				if (!aof)
+				{
+					out << ")";
+				}
+				out << ") ";
+				isAlignas = false;
+			}
+			else
+			{
+				printAttributeSpecifier(attr);
+				out << " ";
+			}
+		}
+	}
 	if (type->kind == TypeKind::Class || type->kind == TypeKind::EnumClass) {
 		if (type->isAbstract) out << "ADV_NOVTABLE ";
 		out << "__Class_";
@@ -1004,6 +1145,40 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			out << "#if " << decl.compilationCondition << std::endl << std::string(depth, '\t');
 		}
 		out << "#line " << decl.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t') << "private: ";
+		if (decl.attributes)
+		{
+			for (auto attr : decl.attributes->attributeSpecifier())
+			{
+				auto attrName = attr->Identifier()->getText();
+				if (attrName == "Deprecated")
+				{
+					out << "[[deprecated";
+					if (attr->attributeArgumentClause())
+						out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+					out << "]] ";
+				}
+				else if (attrName == "Unused") {
+					out << "[[maybe_unused]] ";
+				}
+				else if (attrName == "NoDiscard") {
+					out << "[[nodiscard]] ";
+				}
+				else if (attrName == "NoReturn") {
+					out << "[[noreturn]] ";
+				}
+				else if (attrName == "ForceInline") {
+					out << "FORCE_INLINE ";
+				}
+				else if (attrName == "NoInline") {
+					out << "NOINLINE ";
+				}
+				else
+				{
+					printAttributeSpecifier(attr);
+					out << " ";
+				}
+			}
+		}
 		out << "friend ";
 		if (decl.isConstReturn || !decl.isRefReturn) out << "const ";
 		if (auto t = decl.returnType)
@@ -1068,6 +1243,47 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		if (field.isUnsafe) {
 			isUnsafe = true;
 			out << "[[clang::annotate(\"unsafe\")]] ";
+		}
+		if (field.attributes)
+		{
+			for (auto attr : field.attributes->attributeSpecifier())
+			{
+				auto attrName = attr->Identifier()->getText();
+				if (attrName == "Deprecated")
+				{
+					out << "[[deprecated";
+					if (attr->attributeArgumentClause())
+						out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+					out << "]] ";
+				}
+				else if (attrName == "NoUniqueAddress" || attrName == "EmptyField") {
+					if (!field.isStatic) out << "ADV_VIRTUAL_FIELD ";
+				}
+				else if (attrName == "Unused") {
+					out << "[[maybe_unused]] ";
+				}
+				else if (attrName == "Align") {
+					isAlignas = true;
+					out << "alignas(";
+					bool aof = attr->attributeArgumentClause()->expressionList()->getText().starts_with("alignof");
+					if (!aof)
+					{
+						out << "size_t(";
+					}
+					printAttributeArgumentClause(attr->attributeArgumentClause());
+					if (!aof)
+					{
+						out << ")";
+					}
+					out << ") ";
+					isAlignas = false;
+				}
+				else
+				{
+					printAttributeSpecifier(attr);
+					out << " ";
+				}
+			}
 		}
 		if (field.isStatic || field.isThreadLocal)
 		{
@@ -1206,7 +1422,30 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		if (type->kind == TypeKind::EnumClass && !constant.type)
 		{
 			out << "#line " << constant.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-			out << "public: static ";
+			out << "public: ";
+			if (constant.attributes)
+			{
+				for (auto attr : constant.attributes->attributeSpecifier())
+				{
+					auto attrName = attr->Identifier()->getText();
+					if (attrName == "Deprecated")
+					{
+						out << "[[deprecated";
+						if (attr->attributeArgumentClause())
+							out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+						out << "]] ";
+					}
+					else if (attrName == "Unused") {
+						out << "[[maybe_unused]] ";
+					}
+					else
+					{
+						printAttributeSpecifier(attr);
+						out << " ";
+					}
+				}
+			}
+			out << "static ";
 			if (!DLLName.empty())
 			{
 				out << DLLName << "_API";
@@ -1221,7 +1460,30 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				if (!clause->Identifier().empty())
 				{
 					//named union members
-					out << "public: struct " << constant.id 
+					out << "public: struct ";
+					if (type->attributes)
+					{
+						for (auto attr : type->attributes->attributeSpecifier())
+						{
+							auto attrName = attr->Identifier()->getText();
+							if (attrName == "Deprecated")
+							{
+								out << "[[deprecated";
+								if (attr->attributeArgumentClause())
+									out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+								out << "]] ";
+							}
+							else if (attrName == "Unused") {
+								out << "[[maybe_unused]] ";
+							}
+							else
+							{
+								printAttributeSpecifier(attr);
+								out << " ";
+							}
+						}
+					}
+					out << constant.id
 						<< " { decltype(auto) __ref() const noexcept { return *this; }\n" << std::string(++depth, '\t');
 					auto types = clause->theTypeId();
 					auto ids = clause->Identifier();
@@ -1293,6 +1555,28 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			case AccessSpecifier::Private:
 				out << "private: ";
 				break;
+			}
+			if (constant.attributes)
+			{
+				for (auto attr : constant.attributes->attributeSpecifier())
+				{
+					auto attrName = attr->Identifier()->getText();
+					if (attrName == "Deprecated")
+					{
+						out << "[[deprecated";
+						if (attr->attributeArgumentClause())
+							out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+						out << "]] ";
+					}
+					else if (attrName == "Unused") {
+						out << "[[maybe_unused]] ";
+					}
+					else
+					{
+						printAttributeSpecifier(attr);
+						out << " ";
+					}
+				}
 			}
 			bool isSelfType = sema.contextTypes.contains(constant.type) && sema.contextTypes[constant.type].ends_with(type->id)
 				|| sema.contextTypes.contains(constant.initializer) && sema.contextTypes[constant.initializer].ends_with(type->id)
@@ -1632,6 +1916,47 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			if (sema.propertiesNeedField.contains(prop.setter)) {
 				out << "#line " << prop.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 				out << "private: ";
+				if (prop.attributes)
+				{
+					for (auto attr : prop.attributes->attributeSpecifier())
+					{
+						auto attrName = attr->Identifier()->getText();
+						if (attrName == "Deprecated")
+						{
+							out << "[[deprecated";
+							if (attr->attributeArgumentClause())
+								out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+							out << "]] ";
+						}
+						else if (attrName == "NoUniqueAddress" || attrName == "EmptyField") {
+							if (!prop.isStatic) out << "ADV_VIRTUAL_FIELD ";
+						}
+						else if (attrName == "Unused") {
+							out << "[[maybe_unused]] ";
+						}
+						else if (attrName == "Align") {
+							isAlignas = true;
+							out << "alignas(";
+							bool aof = attr->attributeArgumentClause()->expressionList()->getText().starts_with("alignof");
+							if (!aof)
+							{
+								out << "size_t(";
+							}
+							printAttributeArgumentClause(attr->attributeArgumentClause());
+							if (!aof)
+							{
+								out << ")";
+							}
+							out << ") ";
+							isAlignas = false;
+						}
+						else
+						{
+							printAttributeSpecifier(attr);
+							out << " ";
+						}
+					}
+				}
 				if (prop.isStatic) out << "static ";
 				else if (prop.isConst) out << "const ";
 				else if (type->kind == TypeKind::Class) out << "mutable ";
@@ -1641,7 +1966,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				if (prop.isStatic)
 				{
 					sema.staticFields.push_back(
-						VariableDefinition{ "p_" + prop.id, prop.parentTemplateParams, prop.type, prop.pos, prop.initializer, nullptr,
+						VariableDefinition{ "p_" + prop.id, prop.parentTemplateParams, prop.type, prop.pos, prop.initializer, nullptr, nullptr,
 						prop.isProtectedType ? AccessSpecifier::Protected : AccessSpecifier::Private, prop.compilationCondition, prop.parentType,
 						true, prop.isConst, false, false, prop.isUnsafeType, type->templateSpecializationArgs != nullptr });
 				}
@@ -1766,6 +2091,40 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			if (isUnsafe)
 			{
 				out << "[[clang::annotate(\"unsafe\")]] ";
+			}
+			if (prop.attributes)
+			{
+				for (auto attr : prop.attributes->attributeSpecifier())
+				{
+					auto attrName = attr->Identifier()->getText();
+					if (attrName == "Deprecated")
+					{
+						out << "[[deprecated";
+						if (attr->attributeArgumentClause())
+							out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+						out << "]] ";
+					}
+					else if (attrName == "Unused") {
+						out << "[[maybe_unused]] ";
+					}
+					else if (attrName == "NoDiscard") {
+						out << "[[nodiscard]] ";
+					}
+					else if (attrName == "NoReturn") {
+						out << "[[noreturn]] ";
+					}
+					else if (attrName == "ForceInline") {
+						out << "FORCE_INLINE ";
+					}
+					else if (attrName == "NoInline") {
+						out << "NOINLINE ";
+					}
+					else
+					{
+						printAttributeSpecifier(attr);
+						out << " ";
+					}
+				}
 			}
 
 			isFunctionDeclaration = true;
@@ -2046,6 +2405,13 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		{
 			out << "#if " << func.compilationCondition << std::endl << std::string(depth, '\t');
 		}
+		bool isUnchecked = false;
+		if (func.attributes)
+		{
+			for (auto attr : func.attributes->attributeSpecifier()) {
+				if (attr->getText() == "Unchecked") isUnchecked = true;
+			}
+		}
 		if (func.indexerSetter)
 		{
 			out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
@@ -2146,6 +2512,10 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				isPrivate = true;
 			if (isPrivate) out << "private: ";
 			out << "template<class _ElemRight> FORCE_INLINE auto& operator=(_ElemRight&& other) { _parent.setAt(";
+			if (isUnchecked)
+			{
+				out << "CppAdvance::UncheckedTag{}, ";
+			}
 			for (auto param : func.indexerParams->paramDeclList()->paramDeclaration())
 			{
 				if (auto t = param->theTypeId())
@@ -2181,6 +2551,10 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			out << "FORCE_INLINE decltype(auto) __ref() { return "; GET_ELEMENT_AT; out << "; }\n" << std::string(depth, '\t');
 			out << "FORCE_INLINE decltype(auto) __ref() const { return ";
 			out << "const_cast<std::remove_cvref_t<decltype(_parent)> const&>(_parent).getAt(";
+			if (isUnchecked)
+			{
+				out << "CppAdvance::UncheckedTag{}, ";
+			}
 			for (auto param : params)
 			{
 				bool first = true;
@@ -2252,6 +2626,40 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				{
 					out << "[[clang::annotate(\"unsafe\")]] ";
 				}
+				if (func.attributes)
+				{
+					for (auto attr : func.attributes->attributeSpecifier())
+					{
+						auto attrName = attr->Identifier()->getText();
+						if (attrName == "Deprecated")
+						{
+							out << "[[deprecated";
+							if (attr->attributeArgumentClause())
+								out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+							out << "]] ";
+						}
+						else if (attrName == "Unused") {
+							out << "[[maybe_unused]] ";
+						}
+						else if (attrName == "NoDiscard") {
+							out << "[[nodiscard]] ";
+						}
+						else if (attrName == "NoReturn") {
+							out << "[[noreturn]] ";
+						}
+						else if (attrName == "ForceInline") {
+							out << "FORCE_INLINE ";
+						}
+						else if (attrName == "NoInline") {
+							out << "NOINLINE ";
+						}
+						else
+						{
+							printAttributeSpecifier(attr);
+							out << " ";
+						}
+					}
+				}
 				if (isConstexpr)
 				{
 					out << "inline constexpr ";
@@ -2265,7 +2673,11 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 					if (func.access == AccessSpecifier::Public || func.access == AccessSpecifier::Protected || func.access == AccessSpecifier::Private) out << DLLName << "_API ";
 					else out << DLLName << "_HIDDEN ";
 				}
-				out << "void setAt(";
+				out << "void setAt("; 
+				if (isUnchecked)
+				{
+					out << "CppAdvance::UncheckedTag, ";
+				}
 				printParamDeclClause(func.indexerParams);
 				out << ", const ";
 				printTypeId(func.returnType);
@@ -2335,6 +2747,40 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			{
 				out << "[[clang::annotate(\"unsafe\")]] ";
 			}
+			if (func.attributes)
+			{
+				for (auto attr : func.attributes->attributeSpecifier())
+				{
+					auto attrName = attr->Identifier()->getText();
+					if (attrName == "Deprecated")
+					{
+						out << "[[deprecated";
+						if (attr->attributeArgumentClause())
+							out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+						out << "]] ";
+					}
+					else if (attrName == "Unused") {
+						out << "[[maybe_unused]] ";
+					}
+					else if (attrName == "NoDiscard") {
+						out << "[[nodiscard]] ";
+					}
+					else if (attrName == "NoReturn") {
+						out << "[[noreturn]] ";
+					}
+					else if (attrName == "ForceInline") {
+						out << "FORCE_INLINE ";
+					}
+					else if (attrName == "NoInline") {
+						out << "NOINLINE ";
+					}
+					else
+					{
+						printAttributeSpecifier(attr);
+						out << " ";
+					}
+				}
+			}
 			if (isConstexpr)
 			{
 				out << "inline constexpr ";
@@ -2352,6 +2798,10 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			printTypeId(func.returnType);
 			if (func.isRefReturn) out << "&";
 			out << " getAt(";
+			if (isUnchecked)
+			{
+				out << "CppAdvance::UncheckedTag, ";
+			}
 			printParamDeclClause(func.indexerParams);
 			out << ")";
 			if (func.isOverride) out << " override";
@@ -2360,6 +2810,40 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			if (isUnsafe)
 			{
 				out << "[[clang::annotate(\"unsafe\")]] ";
+			}
+			if (func.attributes)
+			{
+				for (auto attr : func.attributes->attributeSpecifier())
+				{
+					auto attrName = attr->Identifier()->getText();
+					if (attrName == "Deprecated")
+					{
+						out << "[[deprecated";
+						if (attr->attributeArgumentClause())
+							out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+						out << "]] ";
+					}
+					else if (attrName == "Unused") {
+						out << "[[maybe_unused]] ";
+					}
+					else if (attrName == "NoDiscard") {
+						out << "[[nodiscard]] ";
+					}
+					else if (attrName == "NoReturn") {
+						out << "[[noreturn]] ";
+					}
+					else if (attrName == "ForceInline") {
+						out << "FORCE_INLINE ";
+					}
+					else if (attrName == "NoInline") {
+						out << "NOINLINE ";
+					}
+					else
+					{
+						printAttributeSpecifier(attr);
+						out << " ";
+					}
+				}
 			}
 			if (isConstexpr)
 			{
@@ -2378,6 +2862,10 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			printTypeId(func.returnType);
 			if (func.isRefReturn) out << "&";
 			out << " getAt(";
+			if (isUnchecked)
+			{
+				out << "CppAdvance::UncheckedTag, ";
+			}
 			printParamDeclClause(func.indexerParams);
 			out << ") const";
 			if (func.isOverride) out << " override";
@@ -2408,6 +2896,40 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		if (func.varargs >= 0)
 		{
 			out << "[[clang::annotate(\"varargs:" << (int)func.varargs << "\")]] ";
+		}
+		if (func.attributes)
+		{
+			for (auto attr : func.attributes->attributeSpecifier())
+			{
+				auto attrName = attr->Identifier()->getText();
+				if (attrName == "Deprecated")
+				{
+					out << "[[deprecated";
+					if (attr->attributeArgumentClause())
+						out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+					out << "]] ";
+				}
+				else if (attrName == "Unused") {
+					out << "[[maybe_unused]] ";
+				}
+				else if (attrName == "NoDiscard") {
+					out << "[[nodiscard]] ";
+				}
+				else if (attrName == "NoReturn") {
+					out << "[[noreturn]] ";
+				}
+				else if (attrName == "ForceInline") {
+					out << "FORCE_INLINE ";
+				}
+				else if (attrName == "NoInline") {
+					out << "NOINLINE ";
+				}
+				else
+				{
+					printAttributeSpecifier(attr);
+					out << " ";
+				}
+			}
 		}
 
 		isFunctionDeclaration = true;
@@ -2474,7 +2996,11 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		if (func.params) printFunctionParameters(func.params);
 		else if (isIndexer)
 		{
-			out << "(";
+			out << "("; 
+			if (isUnchecked)
+			{
+				out << "CppAdvance::UncheckedTag, ";
+			}
 			printParamDeclClause(func.indexerParams);
 			out << ")";
 		}
@@ -2557,6 +3083,40 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				out << "private: ";
 				break;
 			}
+			if (func.attributes)
+			{
+				for (auto attr : func.attributes->attributeSpecifier())
+				{
+					auto attrName = attr->Identifier()->getText();
+					if (attrName == "Deprecated")
+					{
+						out << "[[deprecated";
+						if (attr->attributeArgumentClause())
+							out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+						out << "]] ";
+					}
+					else if (attrName == "Unused") {
+						out << "[[maybe_unused]] ";
+					}
+					else if (attrName == "NoDiscard") {
+						out << "[[nodiscard]] ";
+					}
+					else if (attrName == "NoReturn") {
+						out << "[[noreturn]] ";
+					}
+					else if (attrName == "ForceInline") {
+						out << "FORCE_INLINE ";
+					}
+					else if (attrName == "NoInline") {
+						out << "NOINLINE ";
+					}
+					else
+					{
+						printAttributeSpecifier(attr);
+						out << " ";
+					}
+				}
+			}
 
 			isFunctionDeclaration = true;
 			if (func.isConsteval)
@@ -2608,6 +3168,41 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			case AccessSpecifier::Private:
 				out << "private: ";
 				break;
+			}
+
+			if (func.attributes)
+			{
+				for (auto attr : func.attributes->attributeSpecifier())
+				{
+					auto attrName = attr->Identifier()->getText();
+					if (attrName == "Deprecated")
+					{
+						out << "[[deprecated";
+						if (attr->attributeArgumentClause())
+							out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+						out << "]] ";
+					}
+					else if (attrName == "Unused") {
+						out << "[[maybe_unused]] ";
+					}
+					else if (attrName == "NoDiscard") {
+						out << "[[nodiscard]] ";
+					}
+					else if (attrName == "NoReturn") {
+						out << "[[noreturn]] ";
+					}
+					else if (attrName == "ForceInline") {
+						out << "FORCE_INLINE ";
+					}
+					else if (attrName == "NoInline") {
+						out << "NOINLINE ";
+					}
+					else
+					{
+						printAttributeSpecifier(attr);
+						out << " ";
+					}
+				}
 			}
 
 			isFunctionDeclaration = true;
@@ -3459,7 +4054,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 		{
 			out << "#endif " << std::endl << std::string(depth, '\t');
 		}
-		sema.properties.insert_or_assign(field.pos, PropertyDefinition{ field.id, field.type, field.pos, nullptr, nullptr, nullptr, nullptr, field.access, field.compilationCondition,
+		sema.properties.insert_or_assign(field.pos, PropertyDefinition{ field.id, field.type, field.pos, nullptr, nullptr, nullptr, nullptr, nullptr, field.access, field.compilationCondition,
 			"", field.parentType + "::__self", type->templateParams, type->templateSpecializationArgs, true, field.isConst, false, isUnsafe, type->access == AccessSpecifier::Private,
 			type->access == AccessSpecifier::Protected, type->isUnsafe, false, false, false,
 			false, false, false });
@@ -3656,8 +4251,10 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 		{
 			out << "#endif " << std::endl << std::string(depth, '\t');
 		}
-		sema.properties.insert_or_assign(SourcePosition{prop.pos.line, prop.pos.column+1}, PropertyDefinition{ prop.id, prop.type, prop.pos, nullptr, nullptr, nullptr, nullptr, prop.access, prop.compilationCondition,
-			"", prop.parentType + "::__self", type->templateParams, type->templateSpecializationArgs, true, prop.isConst, false, isUnsafe, type->access == AccessSpecifier::Private,
+		sema.properties.insert_or_assign(SourcePosition{prop.pos.line, prop.pos.column+1}, PropertyDefinition{ prop.id, prop.type, prop.pos, nullptr,
+			nullptr, nullptr, nullptr, nullptr, prop.access, prop.compilationCondition,
+			"", prop.parentType + "::__self", type->templateParams, type->templateSpecializationArgs, true,
+			prop.isConst, false, isUnsafe, type->access == AccessSpecifier::Private,
 			type->access == AccessSpecifier::Protected, type->isUnsafe, false, false, false,
 			false, false, false });
 	}
@@ -4454,12 +5051,18 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	//concepts for method implementations
 	std::map<const MethodDefinition*, std::string> methodIds;
 	std::map<const PropertyDefinition*, std::string> propertyIds;
-	std::vector<std::string> interfaceRequirements;
+	std::vector<std::string> interfaceRequirements; 
 	for (const auto& method : type->methods) {
 		if (method.isStatic) continue;
+		bool isUnchecked = false;
+		if (method.attributes) for (auto attr : method.attributes->attributeSpecifier())
+		{
+			auto attrName = attr->Identifier()->getText();
+			if (attrName == "Unchecked") isUnchecked = true;
+		}
 		if (method.indexerParams)
 		{
-			methodIds[&method] = sema.getInterfaceMethodId(type->id + "_" + method.id, method.indexerParams);
+			methodIds[&method] = sema.getInterfaceMethodId(type->id + "_" + method.id + std::to_string(isUnchecked), method.indexerParams);
 		}
 		else
 		{
@@ -4482,6 +5085,11 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		if (method.indexerParams)
 		{
 			bool first = true;
+			if (isUnchecked)
+			{
+				out << "CppAdvance::UncheckedTag{}";
+				first = false;
+			}
 			for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
 			{
 				if (!first) out << ", ";
@@ -4518,6 +5126,21 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		out << "; } ";
 		if (!method.isDefault) {
 			out << " || requires(typename __AnyType::__class t) { {" << method.id << "(t";
+			if (method.indexerParams)
+			{
+				if (isUnchecked)
+				{
+					out << ", CppAdvance::UncheckedTag{}";
+				}
+				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
+				{
+					out << ", ";
+					out << "std::declval<";
+					printTypeId(param->theTypeId());
+					out << ">()";
+				}
+			}
+			else
 			if (method.params && method.params->paramDeclClause()) {
 				for (auto param : method.params->paramDeclClause()->paramDeclList()->paramDeclaration())
 				{
@@ -4559,7 +5182,12 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			interfaceRequirements.emplace_back("__HasMethodImplementation_set" + methodIds[&method]);
 			out << "> concept __HasMethodImplementation_set" << methodIds[&method] << " = requires(typename __AnyType::__class t) { {t.setAt(";
 			if (method.indexerParams) {
-				bool first = true;
+				bool first = true; 
+				if (isUnchecked)
+				{
+					out << "CppAdvance::UncheckedTag{}";
+					first = false;
+				}
 				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
 				{
 					if (!first) out << ", ";
@@ -4572,6 +5200,10 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			out << ",std::declval<";
 			printTypeId(method.returnType);
 			out << ">())} -> std::same_as<void>; } || requires(typename __AnyType::__class t) { {setAt(t";
+			if (isUnchecked)
+			{
+				out << ", CppAdvance::UncheckedTag{}";
+			}
 			if (method.params && method.params->paramDeclClause()) {
 				for (auto param : method.params->paramDeclClause()->paramDeclList()->paramDeclaration())
 				{
@@ -4679,7 +5311,13 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	out << "\n" << std::string(depth, '\t') << "{\n" << std::string(++depth, '\t');
 	for (const auto& method : type->methods)
 	{
-		if (method.isStatic) continue;
+		if (method.isStatic) continue; 
+		bool isUnchecked = false;
+		if (method.attributes) for (auto attr : method.attributes->attributeSpecifier())
+		{
+			auto attrName = attr->Identifier()->getText();
+			if (attrName == "Unchecked") isUnchecked = true;
+		}
 		auto id = methodIds[&method];
 		out << "using fn_" << id << " = ";
 		if (method.returnType) {
@@ -4694,6 +5332,10 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		out << "(CppAdvance::Object*";
 		if (method.indexerParams)
 		{
+			if (isUnchecked)
+			{
+				out << ", CppAdvance::UncheckedTag";
+			}
 			out << ", ";
 			printParamDeclClause(method.indexerParams);
 		}
@@ -4717,12 +5359,20 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		out << " impl_" << id << "(CppAdvance::Object* obj";
 		if (method.indexerParams)
 		{
+			if (isUnchecked)
+			{
+				out << ", CppAdvance::UncheckedTag __tag";
+			}
 			out << ", ";
 			printParamDeclClause(method.indexerParams);
 			out << ") { return ADV_UFCS(getAt)(*static_cast<typename __AnyType::__class*>(obj)";
 			if (method.indexerParams) {
 				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
 				{
+					if (isUnchecked)
+					{
+						out << ", __tag";
+					}
 					out << ", ";
 					printIdentifier(param->Identifier());
 				}
@@ -4770,7 +5420,11 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		}
 		out << "\n" << std::string(depth, '\t');
 		if (method.indexerSetter) {
-			out << "using fn_set" << id << " = void(CppAdvance::Object*, ";
+			out << "using fn_set" << id << " = void(CppAdvance::Object*, "; 
+			if (isUnchecked)
+			{
+				out << "CppAdvance::UncheckedTag, ";
+			}
 			printParamDeclClause(method.indexerParams);
 			out << ", const ";
 			printTypeId(method.returnType);
@@ -4778,12 +5432,20 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			out << "fn_set" << id << "* fnptr_set" << id << ";\n" << std::string(depth, '\t');
 			out << "#line " << method.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 			out << "template<class __AnyType> static void impl_set" << id << "(CppAdvance::Object* obj, ";
+			if (isUnchecked)
+			{
+				out << "CppAdvance::UncheckedTag __tag, ";
+			}
 			printParamDeclClause(method.indexerParams);
 			out << ", const ";
 			printTypeId(method.returnType);
 			out << "& value) { ADV_UFCS(setAt)(*static_cast<typename __AnyType::__class*>(obj)";
 			for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
 			{
+				if (isUnchecked)
+				{
+					out << ", __tag";
+				}
 				out << ", ";
 				printIdentifier(param->Identifier());
 			}
@@ -5700,7 +6362,42 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		if (method.isStatic)
 		{
 			out << "#line " << method.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-			out << "public: static ";
+			out << "public: ";
+			if (method.attributes)
+			{
+				for (auto attr : method.attributes->attributeSpecifier())
+				{
+					auto attrName = attr->Identifier()->getText();
+					if (attrName == "Deprecated")
+					{
+						out << "[[deprecated";
+						if (attr->attributeArgumentClause())
+							out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+						out << "]] ";
+					}
+					else if (attrName == "Unused") {
+						out << "[[maybe_unused]] ";
+					}
+					else if (attrName == "NoDiscard") {
+						out << "[[nodiscard]] ";
+					}
+					else if (attrName == "NoReturn") {
+						out << "[[noreturn]] ";
+					}
+					else if (attrName == "ForceInline") {
+						out << "FORCE_INLINE ";
+					}
+					else if (attrName == "NoInline") {
+						out << "NOINLINE ";
+					}
+					else
+					{
+						printAttributeSpecifier(attr);
+						out << " ";
+					}
+				}
+			}
+			out << "static ";
 
 			if (method.returnType)
 			{
@@ -5735,6 +6432,40 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		if (!method.isDefault) continue;
 		out << "#line " << method.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 		out << "public: ";
+		if (method.attributes)
+		{
+			for (auto attr : method.attributes->attributeSpecifier())
+			{
+				auto attrName = attr->Identifier()->getText();
+				if (attrName == "Deprecated")
+				{
+					out << "[[deprecated";
+					if (attr->attributeArgumentClause())
+						out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+					out << "]] ";
+				}
+				else if (attrName == "Unused") {
+					out << "[[maybe_unused]] ";
+				}
+				else if (attrName == "NoDiscard") {
+					out << "[[nodiscard]] ";
+				}
+				else if (attrName == "NoReturn") {
+					out << "[[noreturn]] ";
+				}
+				else if (attrName == "ForceInline") {
+					out << "FORCE_INLINE ";
+				}
+				else if (attrName == "NoInline") {
+					out << "NOINLINE ";
+				}
+				else
+				{
+					printAttributeSpecifier(attr);
+					out << " ";
+				}
+			}
+		}
 
 		if (method.returnType)
 		{
@@ -6323,7 +7054,45 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	//interface methods
 	for (const auto& method : type->methods)
 	{
-		if (method.isStatic) continue;
+		if (method.isStatic) continue; 
+		bool isUnchecked = false;
+		if (method.attributes)
+		{
+			for (auto attr : method.attributes->attributeSpecifier())
+			{
+				auto attrName = attr->Identifier()->getText();
+				if (attrName == "Deprecated")
+				{
+					out << "[[deprecated";
+					if (attr->attributeArgumentClause())
+						out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+					out << "]] ";
+				}
+				else if (attrName == "Unused") {
+					out << "[[maybe_unused]] ";
+				}
+				else if (attrName == "NoDiscard") {
+					out << "[[nodiscard]] ";
+				}
+				else if (attrName == "NoReturn") {
+					out << "[[noreturn]] ";
+				}
+				else if (attrName == "ForceInline") {
+					out << "FORCE_INLINE ";
+				}
+				else if (attrName == "NoInline") {
+					out << "NOINLINE ";
+				}
+				else if (attr->getText() == "Unchecked") {
+					isUnchecked = true;
+				}
+				else
+				{
+					printAttributeSpecifier(attr);
+					out << " ";
+				}
+			}
+		}
 		out << "template<class __AnyInterface";
 		if (type->templateParams && !isCovariant && !method.indexerParams) {
 			for (auto param : type->templateParams->templateParamDeclaration())
@@ -6464,10 +7233,48 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			if (method.indexerSetter)
 			{
 				//indexer setter
+				if (method.attributes)
+				{
+					for (auto attr : method.attributes->attributeSpecifier())
+					{
+						auto attrName = attr->Identifier()->getText();
+						if (attrName == "Deprecated")
+						{
+							out << "[[deprecated";
+							if (attr->attributeArgumentClause())
+								out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+							out << "]] ";
+						}
+						else if (attrName == "Unused") {
+							out << "[[maybe_unused]] ";
+						}
+						else if (attrName == "NoDiscard") {
+							out << "[[nodiscard]] ";
+						}
+						else if (attrName == "NoReturn") {
+							out << "[[noreturn]] ";
+						}
+						else if (attrName == "ForceInline") {
+							out << "FORCE_INLINE ";
+						}
+						else if (attrName == "NoInline") {
+							out << "NOINLINE ";
+						}
+						else
+						{
+							printAttributeSpecifier(attr);
+							out << " ";
+						}
+					}
+				}
 				out << "template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> ";
 				out << "FORCE_INLINE void setAt(";
 				out << "const __AnyInterface&";
 				out << " iface, ";
+				if (isUnchecked)
+				{
+					out << "CppAdvance::UncheckedTag, ";
+				}
 				printParamDeclClause(method.indexerParams);
 				out << ", const ";
 				printTypeId(method.returnType);
@@ -6476,6 +7283,10 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 
 				out << " { CppAdvance::GetVTableFromInterface(&iface)->fnptr_set" << methodIds[&method];
 				out << "(CppAdvance::GetObjectReferenceFromInterface(&iface)";
+				if (isUnchecked)
+				{
+					out << ", CppAdvance::UncheckedTag{}";
+				}
 				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
 				{
 					out << ", ";
@@ -6512,6 +7323,10 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 				}
 				out << " {}\n" << std::string(depth, '\t');
 				out << "template<class _ElemRight> FORCE_INLINE auto& operator=(_ElemRight&& other) { setAt(_parent, ";
+				if (isUnchecked)
+				{
+					out << ", CppAdvance::UncheckedTag{}";
+				}
 				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
 				{
 					if (auto t = param->theTypeId())
@@ -6539,6 +7354,10 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 				}
 				out << "FORCE_INLINE decltype(auto) __ref() { return "; GET_ELEMENT_AT_EXTERNAL; out << "; }\n" << std::string(depth, '\t');
 				out << "FORCE_INLINE decltype(auto) __ref() const { return getAt(_parent, ";
+				if (isUnchecked)
+				{
+					out << ", CppAdvance::UncheckedTag{}";
+				}
 				for (auto param : params)
 				{
 					bool first = true;
@@ -6555,10 +7374,48 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			}
 
 			//indexer API
+			if (method.attributes)
+			{
+				for (auto attr : method.attributes->attributeSpecifier())
+				{
+					auto attrName = attr->Identifier()->getText();
+					if (attrName == "Deprecated")
+					{
+						out << "[[deprecated";
+						if (attr->attributeArgumentClause())
+							out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+						out << "]] ";
+					}
+					else if (attrName == "Unused") {
+						out << "[[maybe_unused]] ";
+					}
+					else if (attrName == "NoDiscard") {
+						out << "[[nodiscard]] ";
+					}
+					else if (attrName == "NoReturn") {
+						out << "[[noreturn]] ";
+					}
+					else if (attrName == "ForceInline") {
+						out << "FORCE_INLINE ";
+					}
+					else if (attrName == "NoInline") {
+						out << "NOINLINE ";
+					}
+					else
+					{
+						printAttributeSpecifier(attr);
+						out << " ";
+					}
+				}
+			}
 			out << "template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> ";
 			out << "FORCE_INLINE decltype(auto) _operator_subscript(";
 			out << "const __AnyInterface&";
 			out << " iface, ";
+			if (isUnchecked)
+			{
+				out << "CppAdvance::UncheckedTag __tag, ";
+			}
 			printParamDeclClause(method.indexerParams);
 			out << ") ";
 			if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
@@ -6575,6 +7432,10 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 					out << "std::decay_t<" << type->id << ">";
 				}
 				out << ">{iface";
+				if (isUnchecked)
+				{
+					out << ", __tag";
+				}
 				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
 				{
 					out << ", ";
@@ -6585,6 +7446,10 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			else
 			{
 				out << "{ return getAt(iface";
+				if (isUnchecked)
+				{
+					out << ", __tag";
+				}
 				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
 				{
 					out << ", ";
@@ -6599,6 +7464,40 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	for (const auto& prop : type->properties)
 	{
 		//getter
+		if (prop.attributes)
+		{
+			for (auto attr : prop.attributes->attributeSpecifier())
+			{
+				auto attrName = attr->Identifier()->getText();
+				if (attrName == "Deprecated")
+				{
+					out << "[[deprecated";
+					if (attr->attributeArgumentClause())
+						out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+					out << "]] ";
+				}
+				else if (attrName == "Unused") {
+					out << "[[maybe_unused]] ";
+				}
+				else if (attrName == "NoDiscard") {
+					out << "[[nodiscard]] ";
+				}
+				else if (attrName == "NoReturn") {
+					out << "[[noreturn]] ";
+				}
+				else if (attrName == "ForceInline") {
+					out << "FORCE_INLINE ";
+				}
+				else if (attrName == "NoInline") {
+					out << "NOINLINE ";
+				}
+				else
+				{
+					printAttributeSpecifier(attr);
+					out << " ";
+				}
+			}
+		}
 		out << "template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> ";
 		out << "FORCE_INLINE ";
 
@@ -6721,7 +7620,45 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 		if (func.indexerParams)
 		{
 			bool isInline = func.isInline;
-			bool isConstexpr = func.isConstexpr;
+			bool isConstexpr = func.isConstexpr; 
+			bool isUnchecked = false;
+			if (func.attributes)
+			{
+				for (auto attr : func.attributes->attributeSpecifier())
+				{
+					auto attrName = attr->Identifier()->getText();
+					if (attrName == "Deprecated")
+					{
+						out << "[[deprecated";
+						if (attr->attributeArgumentClause())
+							out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+						out << "]] ";
+					}
+					else if (attrName == "Unused") {
+						out << "[[maybe_unused]] ";
+					}
+					else if (attrName == "NoDiscard") {
+						out << "[[nodiscard]] ";
+					}
+					else if (attrName == "NoReturn") {
+						out << "[[noreturn]] ";
+					}
+					else if (attrName == "ForceInline") {
+						out << "FORCE_INLINE ";
+					}
+					else if (attrName == "NoInline") {
+						out << "NOINLINE ";
+					}
+					else if (attr->getText() == "Unchecked") {
+						isUnchecked = true;
+					}
+					else
+					{
+						printAttributeSpecifier(attr);
+						out << " ";
+					}
+				}
+			}
 
 			if (type->templateParams)
 			{
@@ -6767,11 +7704,49 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 			out << "& __this ";
 			if (!func.isMutating) out << "LIFETIMEBOUND";
 			out << ", ";
+			if (isUnchecked)
+			{
+				out << "CppAdvance::UncheckedTag, ";
+			}
 			printParamDeclClause(func.indexerParams);
 			out << ")";
 			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
 			out << ";\n" << std::string(depth, '\t');
 			out << "#line " << func.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			if (func.attributes)
+			{
+				for (auto attr : func.attributes->attributeSpecifier())
+				{
+					auto attrName = attr->Identifier()->getText();
+					if (attrName == "Deprecated")
+					{
+						out << "[[deprecated";
+						if (attr->attributeArgumentClause())
+							out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+						out << "]] ";
+					}
+					else if (attrName == "Unused") {
+						out << "[[maybe_unused]] ";
+					}
+					else if (attrName == "NoDiscard") {
+						out << "[[nodiscard]] ";
+					}
+					else if (attrName == "NoReturn") {
+						out << "[[noreturn]] ";
+					}
+					else if (attrName == "ForceInline") {
+						out << "FORCE_INLINE ";
+					}
+					else if (attrName == "NoInline") {
+						out << "NOINLINE ";
+					}
+					else
+					{
+						printAttributeSpecifier(attr);
+						out << " ";
+					}
+				}
+			}
 			if (type->templateParams)
 			{
 				printTemplateParams(type->templateParams);
@@ -6804,10 +7779,18 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 			out << "& __this ";
 			if (!func.isMutating) out << "LIFETIMEBOUND";
 			out << ", ";
+			if (isUnchecked)
+			{
+				out << "CppAdvance::UncheckedTag, ";
+			}
 			printParamDeclClause(func.indexerParams);
 			out << ")";
 			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
 			out << " { return getAt(__this";
+			if (isUnchecked)
+			{
+				out << ", CppAdvance::UncheckedTag{}";
+			}
 			for (auto param : func.indexerParams->paramDeclList()->paramDeclaration())
 			{
 				out << ", ";
@@ -6830,6 +7813,41 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 		if (func.varargs >= 0)
 		{
 			out << "[[clang::annotate(\"varargs:" << (int)func.varargs << "\")]] ";
+		}
+
+		if (func.attributes)
+		{
+			for (auto attr : func.attributes->attributeSpecifier())
+			{
+				auto attrName = attr->Identifier()->getText();
+				if (attrName == "Deprecated")
+				{
+					out << "[[deprecated";
+					if (attr->attributeArgumentClause())
+						out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+					out << "]] ";
+				}
+				else if (attrName == "Unused") {
+					out << "[[maybe_unused]] ";
+				}
+				else if (attrName == "NoDiscard") {
+					out << "[[nodiscard]] ";
+				}
+				else if (attrName == "NoReturn") {
+					out << "[[noreturn]] ";
+				}
+				else if (attrName == "ForceInline") {
+					out << "FORCE_INLINE ";
+				}
+				else if (attrName == "NoInline") {
+					out << "NOINLINE ";
+				}
+				else
+				{
+					printAttributeSpecifier(attr);
+					out << " ";
+				}
+			}
 		}
 
 		isFunctionDeclaration = true;
@@ -6992,6 +8010,40 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 		out << ";" << std::endl << std::string(depth, '\t');
 		if (func.id == "operator++" || func.id == "operator--")
 		{
+			if (func.attributes)
+			{
+				for (auto attr : func.attributes->attributeSpecifier())
+				{
+					auto attrName = attr->Identifier()->getText();
+					if (attrName == "Deprecated")
+					{
+						out << "[[deprecated";
+						if (attr->attributeArgumentClause())
+							out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+						out << "]] ";
+					}
+					else if (attrName == "Unused") {
+						out << "[[maybe_unused]] ";
+					}
+					else if (attrName == "NoDiscard") {
+						out << "[[nodiscard]] ";
+					}
+					else if (attrName == "NoReturn") {
+						out << "[[noreturn]] ";
+					}
+					else if (attrName == "ForceInline") {
+						out << "FORCE_INLINE ";
+					}
+					else if (attrName == "NoInline") {
+						out << "NOINLINE ";
+					}
+					else
+					{
+						printAttributeSpecifier(attr);
+						out << " ";
+					}
+				}
+			}
 			if (type->templateParams)
 			{
 				printTemplateParams(type->templateParams);
@@ -7050,6 +8102,40 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 	{
 		out << "#line " << prop.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 		
+		if (prop.attributes)
+		{
+			for (auto attr : prop.attributes->attributeSpecifier())
+			{
+				auto attrName = attr->Identifier()->getText();
+				if (attrName == "Deprecated")
+				{
+					out << "[[deprecated";
+					if (attr->attributeArgumentClause())
+						out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+					out << "]] ";
+				}
+				else if (attrName == "Unused") {
+					out << "[[maybe_unused]] ";
+				}
+				else if (attrName == "NoDiscard") {
+					out << "[[nodiscard]] ";
+				}
+				else if (attrName == "NoReturn") {
+					out << "[[noreturn]] ";
+				}
+				else if (attrName == "ForceInline") {
+					out << "FORCE_INLINE ";
+				}
+				else if (attrName == "NoInline") {
+					out << "NOINLINE ";
+				}
+				else
+				{
+					printAttributeSpecifier(attr);
+					out << " ";
+				}
+			}
+		}
 		if (type->templateParams)
 		{
 			printTemplateParams(type->templateParams);
@@ -7656,7 +8742,13 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 				if (func.indexerParams)
 				{
 					bool isInline = func.isInline;
-					bool isConstexpr = func.isConstexpr;
+					bool isConstexpr = func.isConstexpr; 
+					bool isUnchecked = false;
+					if (func.attributes) for (auto attr : func.attributes->attributeSpecifier())
+					{
+						auto attrName = attr->Identifier()->getText();
+						if (attrName == "Unchecked") isUnchecked = true;
+					}
 
 					if (type->templateParams)
 					{
@@ -10062,6 +11154,18 @@ void CppAdvanceCodegen::printSelectionStatement(CppAdvanceParser::SelectionState
 			printCondition(ctx->condition());
 		}
 		out << ") ";
+		if (ctx->attributeSpecifierSeq())
+		{
+			auto attr = ctx->attributeSpecifierSeq()->attributeSpecifier(0)->Identifier()->getText();
+			if (attr == "Likely")
+			{
+				out << "[[likely]] ";
+			}
+			else if (attr == "Unlikely")
+			{
+				out << "[[unlikely]] ";
+			}
+		}
 		if (!currentLabel.empty()) out << "{";
 		auto prevLabel = currentLabel;
 		currentLabel.clear();
@@ -11131,6 +12235,37 @@ void CppAdvanceCodegen::printEnumClassMemberSpecification(CppAdvanceParser::Enum
 	}
 }
 
+void CppAdvanceCodegen::printAttributeSpecifierSeq(CppAdvanceParser::AttributeSpecifierSeqContext* ctx) const
+{
+	for (auto attr : ctx->attributeSpecifier())
+	{
+		printAttributeSpecifier(attr);
+		out << " ";
+	}
+}
+
+void CppAdvanceCodegen::printAttributeSpecifier(CppAdvanceParser::AttributeSpecifierContext* ctx) const
+{
+	out << "[[clang::annotate(\"UserAttr: ";
+	if (ctx->nestedNameSpecifier())
+	{
+		printNestedNameSpecifier(ctx->nestedNameSpecifier());
+	}
+	printIdentifier(ctx->Identifier());
+	if (ctx->attributeArgumentClause())
+	{
+		printAttributeArgumentClause(ctx->attributeArgumentClause());
+	}
+	out << "\")]]";
+}
+
+void CppAdvanceCodegen::printAttributeArgumentClause(CppAdvanceParser::AttributeArgumentClauseContext* ctx) const
+{
+	out << "(";
+	printExpressionList(ctx->expressionList());
+	out << ")";
+}
+
 void CppAdvanceCodegen::printOperator(CppAdvanceParser::OperatorContext* ctx) const
 {
 	out << ctx->getText();
@@ -11896,6 +13031,12 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			out.switchTo(true);
 			emptyLine = true;
 		}
+		bool isUnchecked = false;
+		if (func.attributes) for (auto attr : func.attributes->attributeSpecifier())
+		{
+			auto attrName = attr->Identifier()->getText();
+			if (attrName == "Unchecked") isUnchecked = true;
+		}
 		if (!func.compilationCondition.empty())
 		{
 			out << "#if " << func.compilationCondition << std::endl;
@@ -11957,6 +13098,10 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 		out << "::" << func.id;
 		isUnsafe = func.isUnsafe;
 		out << "(";
+		if (isUnchecked)
+		{
+			out << "CppAdvance::UncheckedTag, ";
+		}
 		printParamDeclClause(func.indexerParams);
 		out << ") ";
 		isVariadicTemplate = false;
@@ -12095,6 +13240,10 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			out << "::" << func.id;
 			isUnsafe = func.isUnsafe;
 			out << "(";
+			if (isUnchecked)
+			{
+				out << "CppAdvance::UncheckedTag, ";
+			}
 			printParamDeclClause(func.indexerParams);
 			out << ") ";
 			isVariadicTemplate = false;
@@ -12250,6 +13399,10 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 		out << "::getAt";
 		isUnsafe = func.isUnsafe;
 		out << "(";
+		if (isUnchecked)
+		{
+			out << "CppAdvance::UncheckedTag, ";
+		}
 		printParamDeclClause(func.indexerParams);
 		out << ") ";
 		isVariadicTemplate = false;
@@ -12336,6 +13489,10 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			out << "::getAt";
 			isUnsafe = func.isUnsafe;
 			out << "(";
+			if (isUnchecked)
+			{
+				out << "CppAdvance::UncheckedTag, ";
+			}
 			printParamDeclClause(func.indexerParams);
 			out << ") const ";
 			isVariadicTemplate = false;
@@ -12437,6 +13594,10 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			out << "::setAt";
 			isUnsafe = func.isUnsafe;
 			out << "(";
+			if (isUnchecked)
+			{
+				out << "CppAdvance::UncheckedTag, ";
+			}
 			printParamDeclClause(func.indexerParams);
 			out << ", const ";
 			printTypeId(func.returnType);
@@ -15341,9 +16502,17 @@ void CppAdvanceCodegen::printUnaryExpressionTail(CppAdvanceParser::UnaryExpressi
 	}
 	else if (ctx->Alignof())
 	{
-		out << "CppAdvance::usize(alignof(";
+		if (!isAlignas)
+		{
+			out << "CppAdvance::usize(";
+		}
+		out << "alignof(";
 		printTypeId(ctx->theTypeId());
-		out << "))";
+		if (!isAlignas)
+		{
+			out << ")";
+		}
+		out << ")";
 	}
 }
 
@@ -15710,6 +16879,14 @@ void CppAdvanceCodegen::printPostfixExpression(CppAdvanceParser::PostfixExpressi
 			out << ".__ref(), ";
 		}
 
+		if (ctx->attributeSpecifierSeq())
+		{
+			auto attr = ctx->attributeSpecifierSeq()->attributeSpecifier(0)->Identifier()->getText();
+			if (attr == "Unchecked")
+			{
+				out << "CppAdvance::UncheckedTag{}, ";
+			}
+		}
 		printExpressionList(ctx->expressionList());
 		out << ")";
 	}

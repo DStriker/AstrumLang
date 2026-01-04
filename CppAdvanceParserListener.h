@@ -314,6 +314,15 @@ public:
   virtual void enterFriendDeclaration(CppAdvanceParser::FriendDeclarationContext *ctx) = 0;
   virtual void exitFriendDeclaration(CppAdvanceParser::FriendDeclarationContext *ctx) = 0;
 
+  virtual void enterAttributeSpecifierSeq(CppAdvanceParser::AttributeSpecifierSeqContext *ctx) = 0;
+  virtual void exitAttributeSpecifierSeq(CppAdvanceParser::AttributeSpecifierSeqContext *ctx) = 0;
+
+  virtual void enterAttributeSpecifier(CppAdvanceParser::AttributeSpecifierContext *ctx) = 0;
+  virtual void exitAttributeSpecifier(CppAdvanceParser::AttributeSpecifierContext *ctx) = 0;
+
+  virtual void enterAttributeArgumentClause(CppAdvanceParser::AttributeArgumentClauseContext *ctx) = 0;
+  virtual void exitAttributeArgumentClause(CppAdvanceParser::AttributeArgumentClauseContext *ctx) = 0;
+
   virtual void enterSelectionStatement(CppAdvanceParser::SelectionStatementContext *ctx) = 0;
   virtual void exitSelectionStatement(CppAdvanceParser::SelectionStatementContext *ctx) = 0;
 
