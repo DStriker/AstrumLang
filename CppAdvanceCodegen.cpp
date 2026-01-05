@@ -4498,7 +4498,22 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 		if (func.isStatic) out << "static ";
 
 		bool isRegularMethod = !func.isConstructor && !func.isDestructor && !func.isConverter;
-		if (isRegularMethod) out << "decltype(auto) ";
+		if (func.isCommutative)
+		{
+			if (func.returnType)
+			{
+				out << "const ";
+				printTypeId(func.returnType);
+				out << " ";
+			}
+			else
+			{
+				out << "decltype(auto) ";
+			}
+		}
+		else if (isRegularMethod) {
+			out << "decltype(auto) ";
+		}
 		else if (func.implicitSpecification)
 		{
 			printImplicitSpecification(func.implicitSpecification);
@@ -9377,6 +9392,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 					isFunctionDeclaration = false;
 					if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
 					out << " -> decltype(auto)";
+
 					if (!func.params->paramDeclClause())
 					{
 						out << " { auto copy = __this; ADV_UFCS(" << func.id << ")(__this); return copy; }";
@@ -10392,7 +10408,22 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 		if (func.isConstexpr && !func.isConstructor) out << "constexpr ";
 
 		bool isRegularMethod = !func.isConverter && !func.isConstructor;
-		if (isRegularMethod) out << "decltype(auto) ";
+		if (func.isCommutative)
+		{
+			if (func.returnType)
+			{
+				out << "const ";
+				printTypeId(func.returnType);
+				out << " ";
+			}
+			else
+			{
+				out << "decltype(auto) ";
+			}
+		}
+		else if (isRegularMethod) {
+			out << "decltype(auto) ";
+		}
 		if (parent)
 		{
 			out << parent->id;
@@ -10638,107 +10669,6 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 			if (func.isStatic) out << "__class::";
 			else out << "__ref().";
 			out << func.id << "(1); }" << std::endl << std::string(depth, '\t');
-		}
-		else if (func.isCommutative) {
-			switch (func.access)
-			{
-			case AccessSpecifier::Public:
-			case AccessSpecifier::Internal:
-				out << "public: ";
-				break;
-			case AccessSpecifier::Protected:
-			case AccessSpecifier::ProtectedInternal:
-				out << "protected: ";
-				break;
-			case AccessSpecifier::Private:
-				out << "private: ";
-				break;
-			}
-			if (func.attributes)
-			{
-				for (auto attr : func.attributes->attributeSpecifier())
-				{
-					auto attrName = attr->Identifier()->getText();
-					if (attrName == "Deprecated")
-					{
-						out << "[[deprecated";
-						if (attr->attributeArgumentClause())
-							out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
-						out << "]] ";
-					}
-					else if (attrName == "Unused") {
-						out << "[[maybe_unused]] ";
-					}
-					else if (attrName == "NoDiscard") {
-						out << "[[nodiscard]] ";
-					}
-					else if (attrName == "NoReturn") {
-						out << "[[noreturn]] ";
-					}
-					else if (attrName == "ForceInline") {
-						out << "FORCE_INLINE ";
-					}
-					else if (attrName == "NoInline") {
-						out << "NOINLINE ";
-					}
-					else
-					{
-						printAttributeSpecifier(attr);
-						out << " ";
-					}
-				}
-			}
-
-			isFunctionDeclaration = true;
-			if (func.templateParams) {
-				printTemplateParams(func.templateParams);
-				out << " ";
-			}
-			if (func.params->paramDeclClause())
-			{
-				out << "friend ";
-			}
-			if (func.isConsteval)
-			{
-				out << "inline consteval ";
-			}
-			else if (func.isConstexpr)
-			{
-				out << "inline constexpr ";
-			}
-			else
-			{
-				out << "inline ";
-			}
-
-			out << "auto " << func.id;
-			if (!func.params->paramDeclClause())
-			{
-				if (func.id.starts_with("_operator_"))
-					out << "_postfix() ";
-			}
-			else
-			{
-				out << "(";
-				printParamDeclClause(func.params->paramDeclClause());
-				out << ", const __self& __this) ";
-			}
-
-			isVariadicTemplate = false;
-			isFunctionDeclaration = false;
-			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
-			out << " -> decltype(auto)";
-			if (!func.params->paramDeclClause())
-			{
-				out << " { auto copy = __ref(); ADV_UFCS(" << func.id << ")(__ref()); return copy; }";
-			}
-			else
-			{
-				out << " { return ADV_UFCS(" << func.id << ")(__this, ";
-				out << func.params->paramDeclClause()->paramDeclList()->paramDeclaration(0)->Identifier()->getText();
-				out << "); }";
-			}
-			out << std::endl << std::string(depth, '\t');
 		}
 		if (func.isStatic) continue;
 		if (parent) {
@@ -15278,17 +15208,14 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 			else if (func.isCommutative)
 			{
 				out << std::endl << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-				if (!func.params->paramDeclClause())
+				if (func.parentTemplateParams)
 				{
-					if (func.parentTemplateParams)
-					{
-						printTemplateParams(func.parentTemplateParams);
-						out << " ";
-					}
-					else if (func.parentTemplateSpecializationArgs)
-					{
-						out << "template<> ";
-					}
+					printTemplateParams(func.parentTemplateParams);
+					out << " ";
+				}
+				else if (func.parentTemplateSpecializationArgs)
+				{
+					out << "template<> ";
 				}
 				
 				if (func.isConsteval)
@@ -15324,7 +15251,11 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 				{
 					out << "(";
 					printParamDeclClause(func.params->paramDeclClause());
-					out << ", const __self& __this) ";
+					auto parent = func.parentType;
+					StringReplace(parent, ".", "::");
+					currentShortType = func.shortType;
+					currentTypeWithTemplate = parent;
+					out << ", const typename " << parent << "::__self& __this) ";
 				}
 				isVariadicTemplate = false;
 				if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
@@ -15336,7 +15267,7 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 				else
 				{
 					out << " { return ADV_UFCS(" << func.id << ")(__this, ";
-					out << func.params->paramDeclClause()->paramDeclList()->paramDeclaration(0)->Identifier();
+					out << func.params->paramDeclClause()->paramDeclList()->paramDeclaration(0)->Identifier()->getText();
 					out << "); }";
 				}
 				currentShortType.clear();
@@ -16747,17 +16678,17 @@ void CppAdvanceCodegen::printEqualityExpression(CppAdvanceParser::EqualityExpres
 	}
 	else if (ctx->IdentityEqual())
 	{
-		out << "(";
+		out << "CppAdvance::IdentityEquals(";
 		printEqualityExpression(ctx->equalityExpression(0));
-		out << ").__identityEquals(";
+		out << ", ";
 		printEqualityExpression(ctx->equalityExpression(1));
 		out << ")";
 	}
 	else if (ctx->NotIdentityEqual())
 	{
-		out << "!(";
+		out << "!CppAdvance::IdentityEquals(";
 		printEqualityExpression(ctx->equalityExpression(0));
-		out << ").__identityEquals(";
+		out << ", ";
 		printEqualityExpression(ctx->equalityExpression(1));
 		out << ")";
 	}

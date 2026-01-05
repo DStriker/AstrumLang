@@ -541,6 +541,8 @@ class ConcreteVectorClass : public CppAdvance::ClassRefParent<VectorClass> {
 	public: inline  ConcreteVectorClass(CppAdvance::i32 i) noexcept;
 	#line 357 "FirstProgram.adv"
 	public: inline decltype(auto) operator+(const ConcreteVectorClass& other) const ;
+	#line 360 "FirstProgram.adv"
+	public: inline decltype(auto) operator==(CppAdvance::In<__self> other) const ;
 	
 };
 #line 326 "FirstProgram.adv"
@@ -556,6 +558,8 @@ class ConcreteVectorClass__Unowned : public CppAdvance::ClassRefParentUnowned<Ve
 	ADV_CLASS_UNOWNED_COMMON_CTORS(ConcreteVectorClass__Unowned)
 	#line 357 "FirstProgram.adv"
 	public: inline decltype(auto) operator+(const ConcreteVectorClass& other) const ;
+	#line 360 "FirstProgram.adv"
+	public: inline decltype(auto) operator==(CppAdvance::In<__self> other) const ;
 	
 };
 #line 326 "FirstProgram.adv"
@@ -574,7 +578,7 @@ class ConcreteVectorClass__Weak : public CppAdvance::ClassRefParentWeak<VectorCl
 };
 
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<Next> = false;
-#line 365 "FirstProgram.adv"
+#line 368 "FirstProgram.adv"
 class Next : public CppAdvance::ObjectRef {
 	public: using __self = Next;
 	private: using ___super = CppAdvance::ObjectRef;
@@ -592,11 +596,11 @@ class Next : public CppAdvance::ObjectRef {
 	ADV_CLASS_STRONG_COMMON_CTORS(Next)
 	#define ADV_PROPERTY_SELF __class
 	#define ADV_PROPERTY_SELF __self
-	#line 382 "FirstProgram.adv"
+	#line 385 "FirstProgram.adv"
 	public: inline decltype(auto) operator*() const ;
 	
 };
-#line 365 "FirstProgram.adv"
+#line 368 "FirstProgram.adv"
 class Next__Unowned : public CppAdvance::ObjectRef__Unowned {
 	public: using __self = Next;
 	public: using __strong_ref = Next;
@@ -607,11 +611,11 @@ class Next__Unowned : public CppAdvance::ObjectRef__Unowned {
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *reinterpret_cast<__class*>(_obj); }
 	ADV_CLASS_FROM_PTR(Next__Unowned)
 	ADV_CLASS_UNOWNED_COMMON_CTORS(Next__Unowned)
-	#line 382 "FirstProgram.adv"
+	#line 385 "FirstProgram.adv"
 	public: inline decltype(auto) operator*() const ;
 	
 };
-#line 365 "FirstProgram.adv"
+#line 368 "FirstProgram.adv"
 class Next__Weak : public CppAdvance::ObjectRef__Weak {
 	public: using __self = Next;
 	public: using __strong_ref = Next;
@@ -627,32 +631,32 @@ class Next__Weak : public CppAdvance::ObjectRef__Weak {
 };
 
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<IMagicNumber> = false;
-#line 391 "FirstProgram.adv"
+#line 394 "FirstProgram.adv"
 template<class __AnyType> concept __HasMethodImplementation_a2e2f819fa3cd789 = requires(typename __AnyType::__class t) { {t.GetMagicNumber(std::declval<VectorClass>())} -> std::convertible_to<CppAdvance::f32>; }  || requires(typename __AnyType::__class t) { {GetMagicNumber(t, std::declval<VectorClass>())} -> std::convertible_to<CppAdvance::f32>; };
-#line 392 "FirstProgram.adv"
+#line 395 "FirstProgram.adv"
 template<class __AnyType> concept __HasMethodImplementation_getaddd298886dbcfb6 = requires(typename __AnyType::__class t) { {t.getCount123()} -> std::convertible_to<CppAdvance::i32>; } || requires(typename __AnyType::__class t) { {getCount123(t)} -> std::convertible_to<CppAdvance::i32>; };
 namespace __vtables {
-	#line 390 "FirstProgram.adv"
+	#line 393 "FirstProgram.adv"
 	struct __vtable_IMagicNumber
 	{
 		using fn_a2e2f819fa3cd789 = const CppAdvance::f32(CppAdvance::Object*, CppAdvance::In<VectorClass> f);
 		fn_a2e2f819fa3cd789* fnptr_a2e2f819fa3cd789;
-		#line 391 "FirstProgram.adv"
+		#line 394 "FirstProgram.adv"
 		template<class __AnyType> static const CppAdvance::f32 impl_a2e2f819fa3cd789(CppAdvance::Object* obj, CppAdvance::In<VectorClass> f) { ADV_EXPRESSION_BODY(ADV_UFCS(GetMagicNumber)(*static_cast<typename __AnyType::__class*>(obj), f)); }
 		using fn_getCount123 = CppAdvance::i32(CppAdvance::Object*);
 		fn_getCount123* fnptr_getCount123;
-		#line 392 "FirstProgram.adv"
+		#line 395 "FirstProgram.adv"
 		template<class __AnyType> static CppAdvance::i32 impl_getCount123(CppAdvance::Object* obj) { return ADV_UFCS(getCount123)(*static_cast<typename __AnyType::__class*>(obj)); }
 		
 	};
 }
-#line 390 "FirstProgram.adv"
+#line 393 "FirstProgram.adv"
 template<class __AnyType> inline constexpr __vtables::__vtable_IMagicNumber __vtable_IMagicNumber_for = {&__vtables::__vtable_IMagicNumber::template impl_a2e2f819fa3cd789<__AnyType>
 	, &__vtables::__vtable_IMagicNumber::template impl_getCount123<__AnyType>
 	};
-#line 390 "FirstProgram.adv"
+#line 393 "FirstProgram.adv"
 template<class __AnyType> concept __ImplementsInterface_IMagicNumber = __HasMethodImplementation_a2e2f819fa3cd789<__AnyType> && __HasMethodImplementation_getaddd298886dbcfb6<__AnyType>;
-#line 390 "FirstProgram.adv"
+#line 393 "FirstProgram.adv"
 class IMagicNumber final : public CppAdvance::InterfaceRef {
 	public: using __self = IMagicNumber;
 	public: using __vtable = __vtables::__vtable_IMagicNumber;
@@ -871,25 +875,25 @@ template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdv
 template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> FORCE_INLINE const CppAdvance::i32 getCount123(const __AnyInterface& iface) { return CppAdvance::GetVTableFromInterface(&iface)->fnptr_getCount123(CppAdvance::GetObjectReferenceFromInterface(&iface)); }
 
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<IResettable> = false;
-#line 396 "FirstProgram.adv"
+#line 399 "FirstProgram.adv"
 template<class __AnyType> concept __HasMethodImplementation_565bebff34b81aa1 = requires(typename __AnyType::__class t) { {t.Reset()} -> std::same_as<void>; }  || requires(typename __AnyType::__class t) { {Reset(t)} -> std::same_as<void>; };
 namespace __vtables {
-	#line 395 "FirstProgram.adv"
+	#line 398 "FirstProgram.adv"
 	struct __vtable_IResettable
 	{
 		using fn_565bebff34b81aa1 = void(CppAdvance::Object*);
 		fn_565bebff34b81aa1* fnptr_565bebff34b81aa1;
-		#line 396 "FirstProgram.adv"
+		#line 399 "FirstProgram.adv"
 		template<class __AnyType> static void impl_565bebff34b81aa1(CppAdvance::Object* obj) { ADV_EXPRESSION_BODY(ADV_UFCS(Reset)(*static_cast<typename __AnyType::__class*>(obj))); }
 		
 	};
 }
-#line 395 "FirstProgram.adv"
+#line 398 "FirstProgram.adv"
 template<class __AnyType> inline constexpr __vtables::__vtable_IResettable __vtable_IResettable_for = {&__vtables::__vtable_IResettable::template impl_565bebff34b81aa1<__AnyType>
 	};
-#line 395 "FirstProgram.adv"
+#line 398 "FirstProgram.adv"
 template<class __AnyType> concept __ImplementsInterface_IResettable = __HasMethodImplementation_565bebff34b81aa1<__AnyType>;
-#line 395 "FirstProgram.adv"
+#line 398 "FirstProgram.adv"
 class IResettable final : public CppAdvance::InterfaceRef {
 	public: using __self = IResettable;
 	public: using __vtable = __vtables::__vtable_IResettable;
@@ -1107,25 +1111,25 @@ class IResettable__Weak final : public CppAdvance::ObjectRef__Weak {
 template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> FORCE_INLINE void Reset(const __AnyInterface& iface)  { ADV_EXPRESSION_BODY(CppAdvance::GetVTableFromInterface(&iface)->fnptr_565bebff34b81aa1(CppAdvance::GetObjectReferenceFromInterface(&iface))); }
 
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<IInterface> = false;
-#line 403 "FirstProgram.adv"
-template<class __AnyType> concept __HasMethodImplementation_6cedb65857a10a4e = requires(typename __AnyType::__class t) { {t.DefaultMethod(std::declval<VectorClass>())} -> std::convertible_to<CppAdvance::f32>; } ;
-#line 404 "FirstProgram.adv"
-template<class __AnyType> concept __HasMethodImplementation_fbc51d6746c8ca94 = requires(typename __AnyType::__class t) { {t.operator+(std::declval<ConcreteVectorClass>())} -> std::convertible_to<ConcreteVectorClass>; }  || requires(typename __AnyType::__class t) { {operator+(t, std::declval<ConcreteVectorClass>())} -> std::convertible_to<ConcreteVectorClass>; };
-#line 407 "FirstProgram.adv"
-template<class __AnyType> concept __HasMethodImplementation_8addcb5f9470873d = requires(typename __AnyType::__class t) { {t.getAt(std::declval<CppAdvance::i32>())} -> std::convertible_to<CppAdvance::f32&>; }  || requires(typename __AnyType::__class t) { {_operator_subscript(t, std::declval<CppAdvance::i32>())} -> std::convertible_to<CppAdvance::f32&>; };
 #line 406 "FirstProgram.adv"
+template<class __AnyType> concept __HasMethodImplementation_6cedb65857a10a4e = requires(typename __AnyType::__class t) { {t.DefaultMethod(std::declval<VectorClass>())} -> std::convertible_to<CppAdvance::f32>; } ;
+#line 407 "FirstProgram.adv"
+template<class __AnyType> concept __HasMethodImplementation_fbc51d6746c8ca94 = requires(typename __AnyType::__class t) { {t.operator+(std::declval<ConcreteVectorClass>())} -> std::convertible_to<ConcreteVectorClass>; }  || requires(typename __AnyType::__class t) { {operator+(t, std::declval<ConcreteVectorClass>())} -> std::convertible_to<ConcreteVectorClass>; };
+#line 410 "FirstProgram.adv"
+template<class __AnyType> concept __HasMethodImplementation_8addcb5f9470873d = requires(typename __AnyType::__class t) { {t.getAt(std::declval<CppAdvance::i32>())} -> std::convertible_to<CppAdvance::f32&>; }  || requires(typename __AnyType::__class t) { {_operator_subscript(t, std::declval<CppAdvance::i32>())} -> std::convertible_to<CppAdvance::f32&>; };
+#line 409 "FirstProgram.adv"
 template<class __AnyType> concept __HasMethodImplementation_getfd864fe31949d59b = requires(typename __AnyType::__class t) { {t.getName()} -> std::convertible_to<CppAdvance::Str>; } || requires(typename __AnyType::__class t) { {getName(t)} -> std::convertible_to<CppAdvance::Str>; };
-#line 399 "FirstProgram.adv"
+#line 402 "FirstProgram.adv"
 ADV_CHECK_INTERFACE(IMagicNumber, IMagicNumber);
-#line 399 "FirstProgram.adv"
+#line 402 "FirstProgram.adv"
 ADV_CHECK_INTERFACE(IResettable, IResettable);
 namespace __vtables {
-	#line 399 "FirstProgram.adv"
+	#line 402 "FirstProgram.adv"
 	struct __vtable_IInterface : public IMagicNumber::__vtable, public IResettable::__vtable
 	{
 		using fn_6cedb65857a10a4e = const CppAdvance::f32(CppAdvance::Object*, CppAdvance::In<VectorClass> f);
 		fn_6cedb65857a10a4e* fnptr_6cedb65857a10a4e;
-		#line 403 "FirstProgram.adv"
+		#line 406 "FirstProgram.adv"
 		template<class __AnyType> static const CppAdvance::f32 impl_6cedb65857a10a4e(CppAdvance::Object* obj, CppAdvance::In<VectorClass> f) { 
 			if constexpr(__HasMethodImplementation_6cedb65857a10a4e<__AnyType>) {
 				ADV_EXPRESSION_BODY(ADV_UFCS(DefaultMethod)(*static_cast<typename __AnyType::__class*>(obj), f)); 
@@ -1133,20 +1137,20 @@ namespace __vtables {
 		}
 		using fn_fbc51d6746c8ca94 = const ConcreteVectorClass(CppAdvance::Object*, const ConcreteVectorClass& f);
 		fn_fbc51d6746c8ca94* fnptr_fbc51d6746c8ca94;
-		#line 404 "FirstProgram.adv"
+		#line 407 "FirstProgram.adv"
 		template<class __AnyType> static const ConcreteVectorClass impl_fbc51d6746c8ca94(CppAdvance::Object* obj, const ConcreteVectorClass& f) { ADV_EXPRESSION_BODY(ADV_UFCS(operator+)(*static_cast<typename __AnyType::__class*>(obj), f)); }
 		using fn_8addcb5f9470873d = CppAdvance::f32&(CppAdvance::Object*, CppAdvance::i32 i);
 		fn_8addcb5f9470873d* fnptr_8addcb5f9470873d;
-		#line 407 "FirstProgram.adv"
+		#line 410 "FirstProgram.adv"
 		template<class __AnyType> static CppAdvance::f32& impl_8addcb5f9470873d(CppAdvance::Object* obj, CppAdvance::i32 i) { return ADV_UFCS(getAt)(*static_cast<typename __AnyType::__class*>(obj), i); }
 		using fn_getName = CppAdvance::Str(CppAdvance::Object*);
 		fn_getName* fnptr_getName;
-		#line 406 "FirstProgram.adv"
+		#line 409 "FirstProgram.adv"
 		template<class __AnyType> static CppAdvance::Str impl_getName(CppAdvance::Object* obj) { return ADV_UFCS(getName)(*static_cast<typename __AnyType::__class*>(obj)); }
 		
 	};
 }
-#line 399 "FirstProgram.adv"
+#line 402 "FirstProgram.adv"
 template<class __AnyType> inline constexpr __vtables::__vtable_IInterface __vtable_IInterface_for = {__vtable_IMagicNumber_for<__AnyType>
 	, __vtable_IResettable_for<__AnyType>
 	, __HasMethodImplementation_6cedb65857a10a4e<__AnyType> ? &__vtables::__vtable_IInterface::template impl_6cedb65857a10a4e<__AnyType> : nullptr
@@ -1154,9 +1158,9 @@ template<class __AnyType> inline constexpr __vtables::__vtable_IInterface __vtab
 	, &__vtables::__vtable_IInterface::template impl_8addcb5f9470873d<__AnyType>
 	, &__vtables::__vtable_IInterface::template impl_getName<__AnyType>
 	};
-#line 399 "FirstProgram.adv"
+#line 402 "FirstProgram.adv"
 template<class __AnyType> concept __ImplementsInterface_IInterface = __ImplementsInterface_IMagicNumber<__AnyType> && __ImplementsInterface_IResettable<__AnyType> && __HasMethodImplementation_fbc51d6746c8ca94<__AnyType> && __HasMethodImplementation_8addcb5f9470873d<__AnyType> && __HasMethodImplementation_getfd864fe31949d59b<__AnyType>;
-#line 399 "FirstProgram.adv"
+#line 402 "FirstProgram.adv"
 class IInterface final : public CppAdvance::InterfaceRef {
 	public: using __self = IInterface;
 	public: using __vtable = __vtables::__vtable_IInterface;
@@ -1257,13 +1261,13 @@ class IInterface final : public CppAdvance::InterfaceRef {
 	public: template<class __AnyType, class __FixedType = std::decay_t<__AnyType>::__self> requires std::is_base_of_v<CppAdvance::Object, std::decay_t<__AnyType>> IInterface& operator=(__AnyType&& value) { static_assert(__ImplementsInterface_IInterface<__FixedType>, "Cannot initialize interface IInterface from this type"); 
  	if (_obj) CppAdvance::Release(_obj); _obj = (CppAdvance::Object*)&value; CppAdvance::Retain(_obj); 
 	_vtable = &__vtable_IInterface_for<__FixedType>; return *this; }
-	#line 400 "FirstProgram.adv"
-	static constexpr auto VERSION = CppAdvance::i32(12345);
-	#line 401 "FirstProgram.adv"
-	using SomeInt = CppAdvance::i32;
 	#line 403 "FirstProgram.adv"
+	static constexpr auto VERSION = CppAdvance::i32(12345);
+	#line 404 "FirstProgram.adv"
+	using SomeInt = CppAdvance::i32;
+	#line 406 "FirstProgram.adv"
 	public: const CppAdvance::f32 __default_DefaultMethod(CppAdvance::In<VectorClass> f) const ;
-	#line 409 "FirstProgram.adv"
+	#line 412 "FirstProgram.adv"
 	public: static const CppAdvance::i32 SomeStaticMethod(CppAdvance::i32 i) ;
 	
 };
@@ -1390,64 +1394,64 @@ template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdv
 template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> FORCE_INLINE const CppAdvance::Str getName(const __AnyInterface& iface) { return CppAdvance::GetVTableFromInterface(&iface)->fnptr_getName(CppAdvance::GetObjectReferenceFromInterface(&iface)); }
 
 class __Class_DayOfWeek;
-#line 412 "FirstProgram.adv"
+#line 415 "FirstProgram.adv"
 struct DayOfWeek final : public CppAdvance::Enum {
 	public: using __self = DayOfWeek;
 	public: using __class = __Class_DayOfWeek;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 412 "FirstProgram.adv"
-	private: CppAdvance::i32 __value;
-	#line 412 "FirstProgram.adv"
-	public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, CppAdvance::i32)
-	#line 413 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const DayOfWeek Monday;
-	#line 414 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const DayOfWeek Tuesday;
 	#line 415 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const DayOfWeek Wednesday;
+	private: CppAdvance::i32 __value;
+	#line 415 "FirstProgram.adv"
+	public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, CppAdvance::i32)
 	#line 416 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const DayOfWeek Thursday;
+	public: static TESTDLL_HIDDEN const DayOfWeek Monday;
 	#line 417 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const DayOfWeek Friday;
+	public: static TESTDLL_HIDDEN const DayOfWeek Tuesday;
 	#line 418 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const DayOfWeek Saturday;
+	public: static TESTDLL_HIDDEN const DayOfWeek Wednesday;
 	#line 419 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const DayOfWeek Thursday;
+	#line 420 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const DayOfWeek Friday;
+	#line 421 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const DayOfWeek Saturday;
+	#line 422 "FirstProgram.adv"
 	public: static TESTDLL_HIDDEN const DayOfWeek Sunday;
-	#line 412 "FirstProgram.adv"
+	#line 415 "FirstProgram.adv"
 	private: static constexpr CppAdvance::Str __names[] = {u"Monday", u"Tuesday", u"Wednesday", u"Thursday", u"Friday", u"Saturday", u"Sunday"};
-	#line 412 "FirstProgram.adv"
+	#line 415 "FirstProgram.adv"
 	public: static constexpr std::span<const CppAdvance::Str> GetNames() noexcept { return __names; }
-	#line 412 "FirstProgram.adv"
+	#line 415 "FirstProgram.adv"
 	private: static const DayOfWeek __values[];
-	#line 412 "FirstProgram.adv"
+	#line 415 "FirstProgram.adv"
 	public: static constexpr std::span<const DayOfWeek> GetValues() noexcept;
-	#line 412 "FirstProgram.adv"
+	#line 415 "FirstProgram.adv"
 	public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
-	#line 412 "FirstProgram.adv"
+	#line 415 "FirstProgram.adv"
 	public: constexpr operator CppAdvance::i32() const noexcept { return __value; }
-	#line 412 "FirstProgram.adv"
+	#line 415 "FirstProgram.adv"
 	private: constexpr DayOfWeek(CppAdvance::i32 value) : __value(value) {}
 	
 };
-#line 413 "FirstProgram.adv"
+#line 416 "FirstProgram.adv"
 inline constexpr DayOfWeek DayOfWeek::Monday = CppAdvance::i32(CppAdvance::i32(1));
 
-#line 414 "FirstProgram.adv"
+#line 417 "FirstProgram.adv"
 inline constexpr DayOfWeek DayOfWeek::Tuesday = CppAdvance::i32(CppAdvance::i64(Monday.__value) + 1);
 
-#line 415 "FirstProgram.adv"
+#line 418 "FirstProgram.adv"
 inline constexpr DayOfWeek DayOfWeek::Wednesday = CppAdvance::i32(CppAdvance::i64(Tuesday.__value) + 1);
 
-#line 416 "FirstProgram.adv"
+#line 419 "FirstProgram.adv"
 inline constexpr DayOfWeek DayOfWeek::Thursday = CppAdvance::i32(CppAdvance::i64(Wednesday.__value) + 1);
 
-#line 417 "FirstProgram.adv"
+#line 420 "FirstProgram.adv"
 inline constexpr DayOfWeek DayOfWeek::Friday = CppAdvance::i32(CppAdvance::i64(Thursday.__value) + 1);
 
-#line 418 "FirstProgram.adv"
+#line 421 "FirstProgram.adv"
 inline constexpr DayOfWeek DayOfWeek::Saturday = CppAdvance::i32(CppAdvance::i64(Friday.__value) + 1);
 
-#line 419 "FirstProgram.adv"
+#line 422 "FirstProgram.adv"
 inline constexpr DayOfWeek DayOfWeek::Sunday = CppAdvance::i32(CppAdvance::i64(Saturday.__value) + 1);
 inline constexpr DayOfWeek DayOfWeek::__values[] = {Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday};
 inline constexpr std::span<const DayOfWeek> DayOfWeek::GetValues() noexcept { return __values; }
@@ -1462,95 +1466,95 @@ constexpr auto Sunday = DayOfWeek::Sunday;\
 
 
 class __Class_Options;
-#line 423 "FirstProgram.adv"
+#line 426 "FirstProgram.adv"
 struct [[clang::annotate("UserAttr: Flags")]] Options final : public CppAdvance::Enum {
 	public: using __self = Options;
 	public: using __class = __Class_Options;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 423 "FirstProgram.adv"
-	private: CppAdvance::u8 __value;
-	#line 423 "FirstProgram.adv"
-	public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, CppAdvance::u8)
-	#line 424 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const Options None;
-	#line 425 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const Options First;
 	#line 426 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const Options Second;
+	private: CppAdvance::u8 __value;
+	#line 426 "FirstProgram.adv"
+	public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, CppAdvance::u8)
 	#line 427 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const Options Third;
+	public: static TESTDLL_HIDDEN const Options None;
 	#line 428 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const Options Fourth;
+	public: static TESTDLL_HIDDEN const Options First;
 	#line 429 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const Options Fiveth;
+	public: static TESTDLL_HIDDEN const Options Second;
 	#line 430 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const Options Sixth;
+	public: static TESTDLL_HIDDEN const Options Third;
 	#line 431 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const Options Seventh;
+	public: static TESTDLL_HIDDEN const Options Fourth;
+	#line 432 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Options Fiveth;
 	#line 433 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const Options All;
+	public: static TESTDLL_HIDDEN const Options Sixth;
 	#line 434 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const Options Weekend;
-	#line 423 "FirstProgram.adv"
-	private: static constexpr CppAdvance::Str __names[] = {u"None", u"First", u"Second", u"Third", u"Fourth", u"Fiveth", u"Sixth", u"Seventh", u"All", u"Weekend"};
-	#line 423 "FirstProgram.adv"
-	public: static constexpr std::span<const CppAdvance::Str> GetNames() noexcept { return __names; }
-	#line 423 "FirstProgram.adv"
-	private: static const Options __values[];
-	#line 423 "FirstProgram.adv"
-	public: static constexpr std::span<const Options> GetValues() noexcept;
-	#line 423 "FirstProgram.adv"
-	public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
-	#line 423 "FirstProgram.adv"
-	public: constexpr Options operator &(Options other) const noexcept { return (__value & other.__value); }
-	#line 423 "FirstProgram.adv"
-	public: constexpr bool HasFlag(Options other) const noexcept { return static_cast<bool>(__value & other.__value); }
-	#line 423 "FirstProgram.adv"
-	public: constexpr const Options operator |(Options other) const noexcept { return (__value | other.__value); }
-	#line 423 "FirstProgram.adv"
-	public: constexpr Options& operator |=(Options other) noexcept { __value |= other.__value; return *this; }
-	#line 423 "FirstProgram.adv"
-	public: constexpr Options& AddFlag(Options other) noexcept { __value |= other.__value; return *this; }
-	#line 423 "FirstProgram.adv"
-	public: constexpr Options RemoveFlag(Options other) noexcept { __value &=~ other.__value; return __value; }
+	public: static TESTDLL_HIDDEN const Options Seventh;
 	#line 436 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Options All;
+	#line 437 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Options Weekend;
+	#line 426 "FirstProgram.adv"
+	private: static constexpr CppAdvance::Str __names[] = {u"None", u"First", u"Second", u"Third", u"Fourth", u"Fiveth", u"Sixth", u"Seventh", u"All", u"Weekend"};
+	#line 426 "FirstProgram.adv"
+	public: static constexpr std::span<const CppAdvance::Str> GetNames() noexcept { return __names; }
+	#line 426 "FirstProgram.adv"
+	private: static const Options __values[];
+	#line 426 "FirstProgram.adv"
+	public: static constexpr std::span<const Options> GetValues() noexcept;
+	#line 426 "FirstProgram.adv"
+	public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
+	#line 426 "FirstProgram.adv"
+	public: constexpr Options operator &(Options other) const noexcept { return (__value & other.__value); }
+	#line 426 "FirstProgram.adv"
+	public: constexpr bool HasFlag(Options other) const noexcept { return static_cast<bool>(__value & other.__value); }
+	#line 426 "FirstProgram.adv"
+	public: constexpr const Options operator |(Options other) const noexcept { return (__value | other.__value); }
+	#line 426 "FirstProgram.adv"
+	public: constexpr Options& operator |=(Options other) noexcept { __value |= other.__value; return *this; }
+	#line 426 "FirstProgram.adv"
+	public: constexpr Options& AddFlag(Options other) noexcept { __value |= other.__value; return *this; }
+	#line 426 "FirstProgram.adv"
+	public: constexpr Options RemoveFlag(Options other) noexcept { __value &=~ other.__value; return __value; }
+	#line 439 "FirstProgram.adv"
 	public: inline auto getIsWeekend() const  -> bool;
 	#line 9999 "FirstProgram.adv"
 	ADV_PROPERTY_GETTER(public, IsWeekend, getIsWeekend, bool);
-	#line 423 "FirstProgram.adv"
+	#line 426 "FirstProgram.adv"
 	public: constexpr operator CppAdvance::u8() const noexcept { return __value; }
-	#line 423 "FirstProgram.adv"
+	#line 426 "FirstProgram.adv"
 	private: constexpr Options(CppAdvance::u8 value) : __value(value) {}
 	
 };
-#line 424 "FirstProgram.adv"
+#line 427 "FirstProgram.adv"
 inline constexpr Options Options::None = CppAdvance::u8(CppAdvance::i32(0));
 
-#line 425 "FirstProgram.adv"
+#line 428 "FirstProgram.adv"
 inline constexpr Options Options::First = CppAdvance::u8(CppAdvance::i64(None.__value) << 1 ? CppAdvance::i64(None.__value) << 1 : 1);
 
-#line 426 "FirstProgram.adv"
+#line 429 "FirstProgram.adv"
 inline constexpr Options Options::Second = CppAdvance::u8(CppAdvance::i64(First.__value) << 1 ? CppAdvance::i64(First.__value) << 1 : 1);
 
-#line 427 "FirstProgram.adv"
+#line 430 "FirstProgram.adv"
 inline constexpr Options Options::Third = CppAdvance::u8(CppAdvance::i64(Second.__value) << 1 ? CppAdvance::i64(Second.__value) << 1 : 1);
 
-#line 428 "FirstProgram.adv"
+#line 431 "FirstProgram.adv"
 inline constexpr Options Options::Fourth = CppAdvance::u8(CppAdvance::i64(Third.__value) << 1 ? CppAdvance::i64(Third.__value) << 1 : 1);
 
-#line 429 "FirstProgram.adv"
+#line 432 "FirstProgram.adv"
 inline constexpr Options Options::Fiveth = CppAdvance::u8(CppAdvance::i64(Fourth.__value) << 1 ? CppAdvance::i64(Fourth.__value) << 1 : 1);
 
-#line 430 "FirstProgram.adv"
+#line 433 "FirstProgram.adv"
 inline constexpr Options Options::Sixth = CppAdvance::u8(CppAdvance::i64(Fiveth.__value) << 1 ? CppAdvance::i64(Fiveth.__value) << 1 : 1);
 
-#line 431 "FirstProgram.adv"
+#line 434 "FirstProgram.adv"
 inline constexpr Options Options::Seventh = CppAdvance::u8(CppAdvance::i64(Sixth.__value) << 1 ? CppAdvance::i64(Sixth.__value) << 1 : 1);
 
-#line 433 "FirstProgram.adv"
+#line 436 "FirstProgram.adv"
 inline constexpr Options Options::All = CppAdvance::u8(First | Second | Third | Fourth | Fiveth | Sixth | Seventh);
 
-#line 434 "FirstProgram.adv"
+#line 437 "FirstProgram.adv"
 inline constexpr Options Options::Weekend = CppAdvance::u8(Sixth | Seventh);
 inline constexpr Options Options::__values[] = {None, First, Second, Third, Fourth, Fiveth, Sixth, Seventh, All, Weekend};
 inline constexpr std::span<const Options> Options::GetValues() noexcept { return __values; }
@@ -1568,70 +1572,70 @@ constexpr auto Weekend = Options::Weekend;\
 
 
 class __Class_Text;
-#line 438 "FirstProgram.adv"
+#line 441 "FirstProgram.adv"
 struct Text final : public CppAdvance::Enum {
 	public: using __self = Text;
 	public: using __class = __Class_Text;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 438 "FirstProgram.adv"
-	private: CppAdvance::Str __value;
-	#line 438 "FirstProgram.adv"
-	public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, CppAdvance::Str)
-	#line 439 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const Text Monday;
-	#line 440 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const Text Tuesday;
 	#line 441 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const Text Wednesday;
+	private: CppAdvance::Str __value;
+	#line 441 "FirstProgram.adv"
+	public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, CppAdvance::Str)
 	#line 442 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const Text Thursday;
+	public: static TESTDLL_HIDDEN const Text Monday;
 	#line 443 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const Text Friday;
+	public: static TESTDLL_HIDDEN const Text Tuesday;
 	#line 444 "FirstProgram.adv"
-	public: static TESTDLL_HIDDEN const Text Saturday;
+	public: static TESTDLL_HIDDEN const Text Wednesday;
 	#line 445 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Text Thursday;
+	#line 446 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Text Friday;
+	#line 447 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Text Saturday;
+	#line 448 "FirstProgram.adv"
 	public: static TESTDLL_HIDDEN const Text Sunday;
-	#line 438 "FirstProgram.adv"
+	#line 441 "FirstProgram.adv"
 	private: static constexpr CppAdvance::Str __names[] = {u"Monday", u"Tuesday", u"Wednesday", u"Thursday", u"Friday", u"Saturday", u"Sunday"};
-	#line 438 "FirstProgram.adv"
+	#line 441 "FirstProgram.adv"
 	public: static constexpr std::span<const CppAdvance::Str> GetNames() noexcept { return __names; }
-	#line 438 "FirstProgram.adv"
+	#line 441 "FirstProgram.adv"
 	private: static const Text __values[];
-	#line 438 "FirstProgram.adv"
+	#line 441 "FirstProgram.adv"
 	public: static constexpr std::span<const Text> GetValues() noexcept;
-	#line 438 "FirstProgram.adv"
+	#line 441 "FirstProgram.adv"
 	public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
-	#line 450 "FirstProgram.adv"
+	#line 453 "FirstProgram.adv"
 	private: inline auto getShortString() const  -> CppAdvance::Str;
 	#line 9999 "FirstProgram.adv"
 	ADV_PROPERTY_GETTER(private, ShortString, getShortString, CppAdvance::Str);
-	#line 447 "FirstProgram.adv"
+	#line 450 "FirstProgram.adv"
 	public: inline auto ToShortString() const  -> const CppAdvance::Str;
-	#line 438 "FirstProgram.adv"
+	#line 441 "FirstProgram.adv"
 	public: constexpr operator CppAdvance::Str() const noexcept { return __value; }
-	#line 438 "FirstProgram.adv"
+	#line 441 "FirstProgram.adv"
 	private: constexpr Text(CppAdvance::Str value) : __value(value) {}
 	
 };
-#line 439 "FirstProgram.adv"
+#line 442 "FirstProgram.adv"
 inline constexpr Text Text::Monday = CppAdvance::Str(CppAdvance::Str{u"This is Monday"});
 
-#line 440 "FirstProgram.adv"
+#line 443 "FirstProgram.adv"
 inline constexpr Text Text::Tuesday = CppAdvance::Str(CppAdvance::Str{u"This is Tuesday"});
 
-#line 441 "FirstProgram.adv"
+#line 444 "FirstProgram.adv"
 inline constexpr Text Text::Wednesday = CppAdvance::Str(CppAdvance::Str{u"This is Wednesday"});
 
-#line 442 "FirstProgram.adv"
+#line 445 "FirstProgram.adv"
 inline constexpr Text Text::Thursday = CppAdvance::Str(CppAdvance::Str{u"This is Thursday"});
 
-#line 443 "FirstProgram.adv"
+#line 446 "FirstProgram.adv"
 inline constexpr Text Text::Friday = CppAdvance::Str(CppAdvance::Str{u"This is Friday"});
 
-#line 444 "FirstProgram.adv"
+#line 447 "FirstProgram.adv"
 inline constexpr Text Text::Saturday = CppAdvance::Str(CppAdvance::Str{u"This is Saturday"});
 
-#line 445 "FirstProgram.adv"
+#line 448 "FirstProgram.adv"
 inline constexpr Text Text::Sunday = CppAdvance::Str(CppAdvance::Str{u"This is Sunday"});
 inline constexpr Text Text::__values[] = {Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday};
 inline constexpr std::span<const Text> Text::GetValues() noexcept { return __values; }
@@ -1646,7 +1650,7 @@ constexpr auto Sunday = Text::Sunday;\
 
 
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<ComplexVariant> = false;
-#line 453 "FirstProgram.adv"
+#line 456 "FirstProgram.adv"
 class ComplexVariant final : public CppAdvance::EnumClassRef {
 	public: using __self = ComplexVariant;
 	private: using ___super = CppAdvance::EnumClassRef;
@@ -1664,7 +1668,7 @@ class ComplexVariant final : public CppAdvance::EnumClassRef {
 	#define ADV_PROPERTY_SELF __class
 	public: ADV_PROPERTY_GETTER_STATIC(public, TESTDLL_API, Count10, getCount10, CppAdvance::i32);
 	#define ADV_PROPERTY_SELF __self
-	#line 465 "FirstProgram.adv"
+	#line 468 "FirstProgram.adv"
 	public: inline decltype(auto) operator*() const ;
 	public: FORCE_INLINE static decltype(auto) getValue1() noexcept;
 	ADV_PROPERTY_GETTER_STATIC(public, TESTDLL_API, Value1, getValue1, __self);
@@ -1674,11 +1678,11 @@ class ComplexVariant final : public CppAdvance::EnumClassRef {
 	ADV_PROPERTY_GETTER_STATIC(public, TESTDLL_API, Value3, getValue3, __self);
 	public: FORCE_INLINE static decltype(auto) getValue4() noexcept;
 	ADV_PROPERTY_GETTER_STATIC(public, TESTDLL_API, Value4, getValue4, __self);
-	#line 453 "FirstProgram.adv"
+	#line 456 "FirstProgram.adv"
 	public: FORCE_INLINE static decltype(auto) GetValues() noexcept;
 	
 };
-#line 453 "FirstProgram.adv"
+#line 456 "FirstProgram.adv"
 class ComplexVariant__Unowned : public CppAdvance::ObjectRef__Unowned {
 	public: using __self = ComplexVariant;
 	public: using __strong_ref = ComplexVariant;
@@ -1689,11 +1693,11 @@ class ComplexVariant__Unowned : public CppAdvance::ObjectRef__Unowned {
 	public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *reinterpret_cast<__class*>(_obj); }
 	ADV_CLASS_FROM_PTR(ComplexVariant__Unowned)
 	ADV_CLASS_UNOWNED_COMMON_CTORS(ComplexVariant__Unowned)
-	#line 465 "FirstProgram.adv"
+	#line 468 "FirstProgram.adv"
 	public: inline decltype(auto) operator*() const ;
 	
 };
-#line 453 "FirstProgram.adv"
+#line 456 "FirstProgram.adv"
 class ComplexVariant__Weak : public CppAdvance::ObjectRef__Weak {
 	public: using __self = ComplexVariant;
 	public: using __strong_ref = ComplexVariant;
@@ -1709,25 +1713,25 @@ class ComplexVariant__Weak : public CppAdvance::ObjectRef__Weak {
 };
 
 class __Class_Media;
-#line 479 "FirstProgram.adv"
+#line 482 "FirstProgram.adv"
 struct Media final : public CppAdvance::Union {
 	public: using __self = Media;
 	public: using __class = __Class_Media;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 480 "FirstProgram.adv"
-	private: struct __UnionType_None{}; public: static constexpr __UnionType_None None{};
-	#line 481 "FirstProgram.adv"
-	public: using String = CppAdvance::Str; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
-	#line 482 "FirstProgram.adv"
-	public: using XYZ = std::tuple<CppAdvance::i32, CppAdvance::i32, CppAdvance::i32>;
 	#line 483 "FirstProgram.adv"
+	private: struct __UnionType_None{}; public: static constexpr __UnionType_None None{};
+	#line 484 "FirstProgram.adv"
+	public: using String = CppAdvance::Str; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
+	#line 485 "FirstProgram.adv"
+	public: using XYZ = std::tuple<CppAdvance::i32, CppAdvance::i32, CppAdvance::i32>;
+	#line 486 "FirstProgram.adv"
 	public: struct Audio { decltype(auto) __ref() const noexcept { return *this; }
 		CppAdvance::Str name; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
 		CppAdvance::i32 len; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
 		CppAdvance::f32 volume; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
 		
 	};
-	#line 484 "FirstProgram.adv"
+	#line 487 "FirstProgram.adv"
 	public: struct Video { decltype(auto) __ref() const noexcept { return *this; }
 		CppAdvance::Str name; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
 		CppAdvance::i32 len; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
@@ -1735,23 +1739,23 @@ struct Media final : public CppAdvance::Union {
 		CppAdvance::Str lang; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
 		
 	};
-	#line 485 "FirstProgram.adv"
+	#line 488 "FirstProgram.adv"
 	public: struct Text { decltype(auto) __ref() const noexcept { return *this; }
 		CppAdvance::Str lang; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
 		
 	};
 	private: union {
-		#line 480 "FirstProgram.adv"
-		__UnionType_None _None;
-		#line 481 "FirstProgram.adv"
-		String _String;
-		#line 482 "FirstProgram.adv"
-		XYZ _XYZ;
 		#line 483 "FirstProgram.adv"
-		Audio _Audio;
+		__UnionType_None _None;
 		#line 484 "FirstProgram.adv"
-		Video _Video;
+		String _String;
 		#line 485 "FirstProgram.adv"
+		XYZ _XYZ;
+		#line 486 "FirstProgram.adv"
+		Audio _Audio;
+		#line 487 "FirstProgram.adv"
+		Video _Video;
+		#line 488 "FirstProgram.adv"
 		Text _Text;
 		
 	};
@@ -1759,131 +1763,131 @@ struct Media final : public CppAdvance::Union {
 		_TAG__None, _TAG__String, _TAG__XYZ, _TAG__Audio, _TAG__Video, _TAG__Text
 	} __union_internal_tag;
 	public:
-	#line 480 "FirstProgram.adv"
-	Media(CppAdvance::In<__UnionType_None> value) : __union_internal_tag{ _TAG__None } { new (&_None) __UnionType_None(value); }
-	#line 481 "FirstProgram.adv"
-	Media(CppAdvance::In<String> value) : __union_internal_tag{ _TAG__String } { new (&_String) String(value); }
-	#line 482 "FirstProgram.adv"
-	Media(CppAdvance::In<XYZ> value) : __union_internal_tag{ _TAG__XYZ } { new (&_XYZ) XYZ(value); }
 	#line 483 "FirstProgram.adv"
-	Media(CppAdvance::In<Audio> value) : __union_internal_tag{ _TAG__Audio } { new (&_Audio) Audio(value); }
+	Media(CppAdvance::In<__UnionType_None> value) : __union_internal_tag{ _TAG__None } { new (&_None) __UnionType_None(value); }
 	#line 484 "FirstProgram.adv"
-	Media(CppAdvance::In<Video> value) : __union_internal_tag{ _TAG__Video } { new (&_Video) Video(value); }
+	Media(CppAdvance::In<String> value) : __union_internal_tag{ _TAG__String } { new (&_String) String(value); }
 	#line 485 "FirstProgram.adv"
+	Media(CppAdvance::In<XYZ> value) : __union_internal_tag{ _TAG__XYZ } { new (&_XYZ) XYZ(value); }
+	#line 486 "FirstProgram.adv"
+	Media(CppAdvance::In<Audio> value) : __union_internal_tag{ _TAG__Audio } { new (&_Audio) Audio(value); }
+	#line 487 "FirstProgram.adv"
+	Media(CppAdvance::In<Video> value) : __union_internal_tag{ _TAG__Video } { new (&_Video) Video(value); }
+	#line 488 "FirstProgram.adv"
 	Media(CppAdvance::In<Text> value) : __union_internal_tag{ _TAG__Text } { new (&_Text) Text(value); }
 	#line 9999 "FirstProgram.adv"
 	private: void __copy(const __self& other) {
 		__union_internal_tag = other.__union_internal_tag;
 		switch (__union_internal_tag) {
-			#line 480 "FirstProgram.adv"
-			case _TAG__None: new (&_None) __UnionType_None(other._None); break;
-			#line 481 "FirstProgram.adv"
-			case _TAG__String: new (&_String) String(other._String); break;
-			#line 482 "FirstProgram.adv"
-			case _TAG__XYZ: new (&_XYZ) XYZ(other._XYZ); break;
 			#line 483 "FirstProgram.adv"
-			case _TAG__Audio: new (&_Audio) Audio(other._Audio); break;
+			case _TAG__None: new (&_None) __UnionType_None(other._None); break;
 			#line 484 "FirstProgram.adv"
-			case _TAG__Video: new (&_Video) Video(other._Video); break;
+			case _TAG__String: new (&_String) String(other._String); break;
 			#line 485 "FirstProgram.adv"
+			case _TAG__XYZ: new (&_XYZ) XYZ(other._XYZ); break;
+			#line 486 "FirstProgram.adv"
+			case _TAG__Audio: new (&_Audio) Audio(other._Audio); break;
+			#line 487 "FirstProgram.adv"
+			case _TAG__Video: new (&_Video) Video(other._Video); break;
+			#line 488 "FirstProgram.adv"
 			case _TAG__Text: new (&_Text) Text(other._Text); break;
 			
 		}
 	}
-	#line 479 "FirstProgram.adv"
+	#line 482 "FirstProgram.adv"
 	public: Media(const __self& other) { __copy(other); }
 	#line 9999 "FirstProgram.adv"
 	private: void __move(__self&& other) {
 		__union_internal_tag = other.__union_internal_tag;
 		switch (__union_internal_tag) {
-			#line 480 "FirstProgram.adv"
-			case _TAG__None: new (&_None) __UnionType_None(std::move(other._None)); break;
-			#line 481 "FirstProgram.adv"
-			case _TAG__String: new (&_String) String(std::move(other._String)); break;
-			#line 482 "FirstProgram.adv"
-			case _TAG__XYZ: new (&_XYZ) XYZ(std::move(other._XYZ)); break;
 			#line 483 "FirstProgram.adv"
-			case _TAG__Audio: new (&_Audio) Audio(std::move(other._Audio)); break;
+			case _TAG__None: new (&_None) __UnionType_None(std::move(other._None)); break;
 			#line 484 "FirstProgram.adv"
-			case _TAG__Video: new (&_Video) Video(std::move(other._Video)); break;
+			case _TAG__String: new (&_String) String(std::move(other._String)); break;
 			#line 485 "FirstProgram.adv"
+			case _TAG__XYZ: new (&_XYZ) XYZ(std::move(other._XYZ)); break;
+			#line 486 "FirstProgram.adv"
+			case _TAG__Audio: new (&_Audio) Audio(std::move(other._Audio)); break;
+			#line 487 "FirstProgram.adv"
+			case _TAG__Video: new (&_Video) Video(std::move(other._Video)); break;
+			#line 488 "FirstProgram.adv"
 			case _TAG__Text: new (&_Text) Text(std::move(other._Text)); break;
 			
 		}
 	}
-	#line 479 "FirstProgram.adv"
+	#line 482 "FirstProgram.adv"
 	public: Media(__self&& other) { __move(std::move(other)); }
 	#line 9999 "FirstProgram.adv"
 	private: void __destroy() {
 		switch (__union_internal_tag) {
-			#line 480 "FirstProgram.adv"
-			case _TAG__None: _None.~__UnionType_None(); break;
-			#line 481 "FirstProgram.adv"
-			case _TAG__String: _String.~String(); break;
-			#line 482 "FirstProgram.adv"
-			case _TAG__XYZ: _XYZ.~XYZ(); break;
 			#line 483 "FirstProgram.adv"
-			case _TAG__Audio: _Audio.~Audio(); break;
+			case _TAG__None: _None.~__UnionType_None(); break;
 			#line 484 "FirstProgram.adv"
-			case _TAG__Video: _Video.~Video(); break;
+			case _TAG__String: _String.~String(); break;
 			#line 485 "FirstProgram.adv"
+			case _TAG__XYZ: _XYZ.~XYZ(); break;
+			#line 486 "FirstProgram.adv"
+			case _TAG__Audio: _Audio.~Audio(); break;
+			#line 487 "FirstProgram.adv"
+			case _TAG__Video: _Video.~Video(); break;
+			#line 488 "FirstProgram.adv"
 			case _TAG__Text: _Text.~Text(); break;
 			
 		}
 	}
-	#line 479 "FirstProgram.adv"
+	#line 482 "FirstProgram.adv"
 	public: ~Media() { __destroy(); }
-	#line 480 "FirstProgram.adv"
+	#line 483 "FirstProgram.adv"
 	Media& operator=(CppAdvance::In<__UnionType_None> value) {
 		__destroy();
 		__union_internal_tag = _TAG__None;
 		new (&_None) __UnionType_None(value); return *this;
 	}
-	#line 481 "FirstProgram.adv"
+	#line 484 "FirstProgram.adv"
 	Media& operator=(CppAdvance::In<String> value) {
 		__destroy();
 		__union_internal_tag = _TAG__String;
 		new (&_String) String(value); return *this;
 	}
-	#line 482 "FirstProgram.adv"
+	#line 485 "FirstProgram.adv"
 	Media& operator=(CppAdvance::In<XYZ> value) {
 		__destroy();
 		__union_internal_tag = _TAG__XYZ;
 		new (&_XYZ) XYZ(value); return *this;
 	}
-	#line 483 "FirstProgram.adv"
+	#line 486 "FirstProgram.adv"
 	Media& operator=(CppAdvance::In<Audio> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Audio;
 		new (&_Audio) Audio(value); return *this;
 	}
-	#line 484 "FirstProgram.adv"
+	#line 487 "FirstProgram.adv"
 	Media& operator=(CppAdvance::In<Video> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Video;
 		new (&_Video) Video(value); return *this;
 	}
-	#line 485 "FirstProgram.adv"
+	#line 488 "FirstProgram.adv"
 	Media& operator=(CppAdvance::In<Text> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Text;
 		new (&_Text) Text(value); return *this;
 	}
-	#line 479 "FirstProgram.adv"
-	public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }
-	#line 479 "FirstProgram.adv"
-	public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }
-	#line 480 "FirstProgram.adv"
-	public: auto GetNone() const { if (__union_internal_tag != _TAG__None) throw std::logic_error("Type mismatch in the discriminated union"); return _None; }
-	#line 481 "FirstProgram.adv"
-	public: auto GetString() const { if (__union_internal_tag != _TAG__String) throw std::logic_error("Type mismatch in the discriminated union"); return _String; }
 	#line 482 "FirstProgram.adv"
-	public: auto GetXYZ() const { if (__union_internal_tag != _TAG__XYZ) throw std::logic_error("Type mismatch in the discriminated union"); return _XYZ; }
+	public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }
+	#line 482 "FirstProgram.adv"
+	public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }
 	#line 483 "FirstProgram.adv"
-	public: auto GetAudio() const { if (__union_internal_tag != _TAG__Audio) throw std::logic_error("Type mismatch in the discriminated union"); return _Audio; }
+	public: auto GetNone() const { if (__union_internal_tag != _TAG__None) throw std::logic_error("Type mismatch in the discriminated union"); return _None; }
 	#line 484 "FirstProgram.adv"
-	public: auto GetVideo() const { if (__union_internal_tag != _TAG__Video) throw std::logic_error("Type mismatch in the discriminated union"); return _Video; }
+	public: auto GetString() const { if (__union_internal_tag != _TAG__String) throw std::logic_error("Type mismatch in the discriminated union"); return _String; }
 	#line 485 "FirstProgram.adv"
+	public: auto GetXYZ() const { if (__union_internal_tag != _TAG__XYZ) throw std::logic_error("Type mismatch in the discriminated union"); return _XYZ; }
+	#line 486 "FirstProgram.adv"
+	public: auto GetAudio() const { if (__union_internal_tag != _TAG__Audio) throw std::logic_error("Type mismatch in the discriminated union"); return _Audio; }
+	#line 487 "FirstProgram.adv"
+	public: auto GetVideo() const { if (__union_internal_tag != _TAG__Video) throw std::logic_error("Type mismatch in the discriminated union"); return _Video; }
+	#line 488 "FirstProgram.adv"
 	public: auto GetText() const { if (__union_internal_tag != _TAG__Text) throw std::logic_error("Type mismatch in the discriminated union"); return _Text; }
 	#line 9999 "FirstProgram.adv"
 	public: template<class __SomeT> bool Is() const noexcept {
@@ -1905,34 +1909,34 @@ struct Media final : public CppAdvance::Union {
 		else if constexpr (std::is_same_v<__SomeT, Text>) { if(__union_internal_tag == _TAG__Text) return _Text; }
 		return {};
 	}
-	#line 493 "FirstProgram.adv"
+	#line 496 "FirstProgram.adv"
 	public: inline constexpr auto getCount123() const  -> CppAdvance::i32;
 	#line 9999 "FirstProgram.adv"
 	ADV_PROPERTY_GETTER(public, Count123, getCount123, CppAdvance::i32);
-	#line 495 "FirstProgram.adv"
+	#line 498 "FirstProgram.adv"
 	public: inline constexpr static auto getCount10()  -> CppAdvance::i32;
 	#line 9999 "FirstProgram.adv"
 	ADV_PROPERTY_GETTER_STATIC(public, TESTDLL_API, Count10, getCount10, CppAdvance::i32);
-	#line 487 "FirstProgram.adv"
+	#line 490 "FirstProgram.adv"
 	public: inline auto printVariant() const  -> void;
-	#line 491 "FirstProgram.adv"
+	#line 494 "FirstProgram.adv"
 	public: inline auto GetMagicNumber(CppAdvance::In<VectorClass> f) const  -> const CppAdvance::f32;
 	
 };
 template<class T1, class T2> class __Class_Union2;
-#line 498 "FirstProgram.adv"
+#line 501 "FirstProgram.adv"
 template<class T1, class T2> struct Union2 final : public CppAdvance::Union {
 	public: using __self = Union2<T1, T2>;
 	public: using __class = __Class_Union2<T1, T2>;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 499 "FirstProgram.adv"
+	#line 502 "FirstProgram.adv"
 	public: using Type1 = T1; ADV_CHECK_REF_STRUCT("T1", T1);
-	#line 500 "FirstProgram.adv"
+	#line 503 "FirstProgram.adv"
 	public: using Type2 = T2; ADV_CHECK_REF_STRUCT("T2", T2);
 	private: union {
-		#line 499 "FirstProgram.adv"
+		#line 502 "FirstProgram.adv"
 		Type1 _Type1;
-		#line 500 "FirstProgram.adv"
+		#line 503 "FirstProgram.adv"
 		Type2 _Type2;
 		
 	};
@@ -1940,67 +1944,67 @@ template<class T1, class T2> struct Union2 final : public CppAdvance::Union {
 		_TAG__Type1, _TAG__Type2
 	} __union_internal_tag;
 	public:
-	#line 499 "FirstProgram.adv"
+	#line 502 "FirstProgram.adv"
 	Union2(CppAdvance::In<Type1> value) : __union_internal_tag{ _TAG__Type1 } { new (&_Type1) Type1(value); }
-	#line 500 "FirstProgram.adv"
+	#line 503 "FirstProgram.adv"
 	Union2(CppAdvance::In<Type2> value) : __union_internal_tag{ _TAG__Type2 } { new (&_Type2) Type2(value); }
 	#line 9999 "FirstProgram.adv"
 	private: void __copy(const __self& other) {
 		__union_internal_tag = other.__union_internal_tag;
 		switch (__union_internal_tag) {
-			#line 499 "FirstProgram.adv"
+			#line 502 "FirstProgram.adv"
 			case _TAG__Type1: new (&_Type1) Type1(other._Type1); break;
-			#line 500 "FirstProgram.adv"
+			#line 503 "FirstProgram.adv"
 			case _TAG__Type2: new (&_Type2) Type2(other._Type2); break;
 			
 		}
 	}
-	#line 498 "FirstProgram.adv"
+	#line 501 "FirstProgram.adv"
 	public: Union2(const __self& other) { __copy(other); }
 	#line 9999 "FirstProgram.adv"
 	private: void __move(__self&& other) {
 		__union_internal_tag = other.__union_internal_tag;
 		switch (__union_internal_tag) {
-			#line 499 "FirstProgram.adv"
+			#line 502 "FirstProgram.adv"
 			case _TAG__Type1: new (&_Type1) Type1(std::move(other._Type1)); break;
-			#line 500 "FirstProgram.adv"
+			#line 503 "FirstProgram.adv"
 			case _TAG__Type2: new (&_Type2) Type2(std::move(other._Type2)); break;
 			
 		}
 	}
-	#line 498 "FirstProgram.adv"
+	#line 501 "FirstProgram.adv"
 	public: Union2(__self&& other) { __move(std::move(other)); }
 	#line 9999 "FirstProgram.adv"
 	private: void __destroy() {
 		switch (__union_internal_tag) {
-			#line 499 "FirstProgram.adv"
+			#line 502 "FirstProgram.adv"
 			case _TAG__Type1: _Type1.~Type1(); break;
-			#line 500 "FirstProgram.adv"
+			#line 503 "FirstProgram.adv"
 			case _TAG__Type2: _Type2.~Type2(); break;
 			
 		}
 	}
-	#line 498 "FirstProgram.adv"
+	#line 501 "FirstProgram.adv"
 	public: ~Union2() { __destroy(); }
-	#line 499 "FirstProgram.adv"
+	#line 502 "FirstProgram.adv"
 	Union2& operator=(CppAdvance::In<Type1> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type1;
 		new (&_Type1) Type1(value); return *this;
 	}
-	#line 500 "FirstProgram.adv"
+	#line 503 "FirstProgram.adv"
 	Union2& operator=(CppAdvance::In<Type2> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type2;
 		new (&_Type2) Type2(value); return *this;
 	}
-	#line 498 "FirstProgram.adv"
+	#line 501 "FirstProgram.adv"
 	public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }
-	#line 498 "FirstProgram.adv"
+	#line 501 "FirstProgram.adv"
 	public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }
-	#line 499 "FirstProgram.adv"
+	#line 502 "FirstProgram.adv"
 	public: auto GetType1() const { if (__union_internal_tag != _TAG__Type1) throw std::logic_error("Type mismatch in the discriminated union"); return _Type1; }
-	#line 500 "FirstProgram.adv"
+	#line 503 "FirstProgram.adv"
 	public: auto GetType2() const { if (__union_internal_tag != _TAG__Type2) throw std::logic_error("Type mismatch in the discriminated union"); return _Type2; }
 	#line 9999 "FirstProgram.adv"
 	public: template<class __SomeT> bool Is() const noexcept {
@@ -2017,23 +2021,23 @@ template<class T1, class T2> struct Union2 final : public CppAdvance::Union {
 	
 };
 template<class T1, class T2, class T3> class __Class_Union3;
-#line 503 "FirstProgram.adv"
+#line 506 "FirstProgram.adv"
 template<class T1, class T2, class T3> struct Union3 final : public CppAdvance::Union {
 	public: using __self = Union3<T1, T2, T3>;
 	public: using __class = __Class_Union3<T1, T2, T3>;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 504 "FirstProgram.adv"
+	#line 507 "FirstProgram.adv"
 	public: using Type1 = T1; ADV_CHECK_REF_STRUCT("T1", T1);
-	#line 505 "FirstProgram.adv"
+	#line 508 "FirstProgram.adv"
 	public: using Type2 = T2; ADV_CHECK_REF_STRUCT("T2", T2);
-	#line 506 "FirstProgram.adv"
+	#line 509 "FirstProgram.adv"
 	public: using Type3 = T3; ADV_CHECK_REF_STRUCT("T3", T3);
 	private: union {
-		#line 504 "FirstProgram.adv"
+		#line 507 "FirstProgram.adv"
 		Type1 _Type1;
-		#line 505 "FirstProgram.adv"
+		#line 508 "FirstProgram.adv"
 		Type2 _Type2;
-		#line 506 "FirstProgram.adv"
+		#line 509 "FirstProgram.adv"
 		Type3 _Type3;
 		
 	};
@@ -2041,83 +2045,83 @@ template<class T1, class T2, class T3> struct Union3 final : public CppAdvance::
 		_TAG__Type1, _TAG__Type2, _TAG__Type3
 	} __union_internal_tag;
 	public:
-	#line 504 "FirstProgram.adv"
+	#line 507 "FirstProgram.adv"
 	Union3(CppAdvance::In<Type1> value) : __union_internal_tag{ _TAG__Type1 } { new (&_Type1) Type1(value); }
-	#line 505 "FirstProgram.adv"
+	#line 508 "FirstProgram.adv"
 	Union3(CppAdvance::In<Type2> value) : __union_internal_tag{ _TAG__Type2 } { new (&_Type2) Type2(value); }
-	#line 506 "FirstProgram.adv"
+	#line 509 "FirstProgram.adv"
 	Union3(CppAdvance::In<Type3> value) : __union_internal_tag{ _TAG__Type3 } { new (&_Type3) Type3(value); }
 	#line 9999 "FirstProgram.adv"
 	private: void __copy(const __self& other) {
 		__union_internal_tag = other.__union_internal_tag;
 		switch (__union_internal_tag) {
-			#line 504 "FirstProgram.adv"
+			#line 507 "FirstProgram.adv"
 			case _TAG__Type1: new (&_Type1) Type1(other._Type1); break;
-			#line 505 "FirstProgram.adv"
+			#line 508 "FirstProgram.adv"
 			case _TAG__Type2: new (&_Type2) Type2(other._Type2); break;
-			#line 506 "FirstProgram.adv"
+			#line 509 "FirstProgram.adv"
 			case _TAG__Type3: new (&_Type3) Type3(other._Type3); break;
 			
 		}
 	}
-	#line 503 "FirstProgram.adv"
+	#line 506 "FirstProgram.adv"
 	public: Union3(const __self& other) { __copy(other); }
 	#line 9999 "FirstProgram.adv"
 	private: void __move(__self&& other) {
 		__union_internal_tag = other.__union_internal_tag;
 		switch (__union_internal_tag) {
-			#line 504 "FirstProgram.adv"
+			#line 507 "FirstProgram.adv"
 			case _TAG__Type1: new (&_Type1) Type1(std::move(other._Type1)); break;
-			#line 505 "FirstProgram.adv"
+			#line 508 "FirstProgram.adv"
 			case _TAG__Type2: new (&_Type2) Type2(std::move(other._Type2)); break;
-			#line 506 "FirstProgram.adv"
+			#line 509 "FirstProgram.adv"
 			case _TAG__Type3: new (&_Type3) Type3(std::move(other._Type3)); break;
 			
 		}
 	}
-	#line 503 "FirstProgram.adv"
+	#line 506 "FirstProgram.adv"
 	public: Union3(__self&& other) { __move(std::move(other)); }
 	#line 9999 "FirstProgram.adv"
 	private: void __destroy() {
 		switch (__union_internal_tag) {
-			#line 504 "FirstProgram.adv"
+			#line 507 "FirstProgram.adv"
 			case _TAG__Type1: _Type1.~Type1(); break;
-			#line 505 "FirstProgram.adv"
+			#line 508 "FirstProgram.adv"
 			case _TAG__Type2: _Type2.~Type2(); break;
-			#line 506 "FirstProgram.adv"
+			#line 509 "FirstProgram.adv"
 			case _TAG__Type3: _Type3.~Type3(); break;
 			
 		}
 	}
-	#line 503 "FirstProgram.adv"
+	#line 506 "FirstProgram.adv"
 	public: ~Union3() { __destroy(); }
-	#line 504 "FirstProgram.adv"
+	#line 507 "FirstProgram.adv"
 	Union3& operator=(CppAdvance::In<Type1> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type1;
 		new (&_Type1) Type1(value); return *this;
 	}
-	#line 505 "FirstProgram.adv"
+	#line 508 "FirstProgram.adv"
 	Union3& operator=(CppAdvance::In<Type2> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type2;
 		new (&_Type2) Type2(value); return *this;
 	}
-	#line 506 "FirstProgram.adv"
+	#line 509 "FirstProgram.adv"
 	Union3& operator=(CppAdvance::In<Type3> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type3;
 		new (&_Type3) Type3(value); return *this;
 	}
-	#line 503 "FirstProgram.adv"
-	public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }
-	#line 503 "FirstProgram.adv"
-	public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }
-	#line 504 "FirstProgram.adv"
-	public: auto GetType1() const { if (__union_internal_tag != _TAG__Type1) throw std::logic_error("Type mismatch in the discriminated union"); return _Type1; }
-	#line 505 "FirstProgram.adv"
-	public: auto GetType2() const { if (__union_internal_tag != _TAG__Type2) throw std::logic_error("Type mismatch in the discriminated union"); return _Type2; }
 	#line 506 "FirstProgram.adv"
+	public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }
+	#line 506 "FirstProgram.adv"
+	public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }
+	#line 507 "FirstProgram.adv"
+	public: auto GetType1() const { if (__union_internal_tag != _TAG__Type1) throw std::logic_error("Type mismatch in the discriminated union"); return _Type1; }
+	#line 508 "FirstProgram.adv"
+	public: auto GetType2() const { if (__union_internal_tag != _TAG__Type2) throw std::logic_error("Type mismatch in the discriminated union"); return _Type2; }
+	#line 509 "FirstProgram.adv"
 	public: auto GetType3() const { if (__union_internal_tag != _TAG__Type3) throw std::logic_error("Type mismatch in the discriminated union"); return _Type3; }
 	#line 9999 "FirstProgram.adv"
 	public: template<class __SomeT> bool Is() const noexcept {
@@ -2136,27 +2140,27 @@ template<class T1, class T2, class T3> struct Union3 final : public CppAdvance::
 	
 };
 template<class T1, class T2, class T3, class T4> class __Class_Union4;
-#line 509 "FirstProgram.adv"
+#line 512 "FirstProgram.adv"
 template<class T1, class T2, class T3, class T4> struct Union4 final : public CppAdvance::Union {
 	public: using __self = Union4<T1, T2, T3, T4>;
 	public: using __class = __Class_Union4<T1, T2, T3, T4>;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 510 "FirstProgram.adv"
-	public: using Type1 = T1; ADV_CHECK_REF_STRUCT("T1", T1);
-	#line 511 "FirstProgram.adv"
-	public: using Type2 = T2; ADV_CHECK_REF_STRUCT("T2", T2);
-	#line 512 "FirstProgram.adv"
-	public: using Type3 = T3; ADV_CHECK_REF_STRUCT("T3", T3);
 	#line 513 "FirstProgram.adv"
+	public: using Type1 = T1; ADV_CHECK_REF_STRUCT("T1", T1);
+	#line 514 "FirstProgram.adv"
+	public: using Type2 = T2; ADV_CHECK_REF_STRUCT("T2", T2);
+	#line 515 "FirstProgram.adv"
+	public: using Type3 = T3; ADV_CHECK_REF_STRUCT("T3", T3);
+	#line 516 "FirstProgram.adv"
 	public: using Type4 = T4; ADV_CHECK_REF_STRUCT("T4", T4);
 	private: union {
-		#line 510 "FirstProgram.adv"
-		Type1 _Type1;
-		#line 511 "FirstProgram.adv"
-		Type2 _Type2;
-		#line 512 "FirstProgram.adv"
-		Type3 _Type3;
 		#line 513 "FirstProgram.adv"
+		Type1 _Type1;
+		#line 514 "FirstProgram.adv"
+		Type2 _Type2;
+		#line 515 "FirstProgram.adv"
+		Type3 _Type3;
+		#line 516 "FirstProgram.adv"
 		Type4 _Type4;
 		
 	};
@@ -2164,99 +2168,99 @@ template<class T1, class T2, class T3, class T4> struct Union4 final : public Cp
 		_TAG__Type1, _TAG__Type2, _TAG__Type3, _TAG__Type4
 	} __union_internal_tag;
 	public:
-	#line 510 "FirstProgram.adv"
-	Union4(CppAdvance::In<Type1> value) : __union_internal_tag{ _TAG__Type1 } { new (&_Type1) Type1(value); }
-	#line 511 "FirstProgram.adv"
-	Union4(CppAdvance::In<Type2> value) : __union_internal_tag{ _TAG__Type2 } { new (&_Type2) Type2(value); }
-	#line 512 "FirstProgram.adv"
-	Union4(CppAdvance::In<Type3> value) : __union_internal_tag{ _TAG__Type3 } { new (&_Type3) Type3(value); }
 	#line 513 "FirstProgram.adv"
+	Union4(CppAdvance::In<Type1> value) : __union_internal_tag{ _TAG__Type1 } { new (&_Type1) Type1(value); }
+	#line 514 "FirstProgram.adv"
+	Union4(CppAdvance::In<Type2> value) : __union_internal_tag{ _TAG__Type2 } { new (&_Type2) Type2(value); }
+	#line 515 "FirstProgram.adv"
+	Union4(CppAdvance::In<Type3> value) : __union_internal_tag{ _TAG__Type3 } { new (&_Type3) Type3(value); }
+	#line 516 "FirstProgram.adv"
 	Union4(CppAdvance::In<Type4> value) : __union_internal_tag{ _TAG__Type4 } { new (&_Type4) Type4(value); }
 	#line 9999 "FirstProgram.adv"
 	private: void __copy(const __self& other) {
 		__union_internal_tag = other.__union_internal_tag;
 		switch (__union_internal_tag) {
-			#line 510 "FirstProgram.adv"
-			case _TAG__Type1: new (&_Type1) Type1(other._Type1); break;
-			#line 511 "FirstProgram.adv"
-			case _TAG__Type2: new (&_Type2) Type2(other._Type2); break;
-			#line 512 "FirstProgram.adv"
-			case _TAG__Type3: new (&_Type3) Type3(other._Type3); break;
 			#line 513 "FirstProgram.adv"
+			case _TAG__Type1: new (&_Type1) Type1(other._Type1); break;
+			#line 514 "FirstProgram.adv"
+			case _TAG__Type2: new (&_Type2) Type2(other._Type2); break;
+			#line 515 "FirstProgram.adv"
+			case _TAG__Type3: new (&_Type3) Type3(other._Type3); break;
+			#line 516 "FirstProgram.adv"
 			case _TAG__Type4: new (&_Type4) Type4(other._Type4); break;
 			
 		}
 	}
-	#line 509 "FirstProgram.adv"
+	#line 512 "FirstProgram.adv"
 	public: Union4(const __self& other) { __copy(other); }
 	#line 9999 "FirstProgram.adv"
 	private: void __move(__self&& other) {
 		__union_internal_tag = other.__union_internal_tag;
 		switch (__union_internal_tag) {
-			#line 510 "FirstProgram.adv"
-			case _TAG__Type1: new (&_Type1) Type1(std::move(other._Type1)); break;
-			#line 511 "FirstProgram.adv"
-			case _TAG__Type2: new (&_Type2) Type2(std::move(other._Type2)); break;
-			#line 512 "FirstProgram.adv"
-			case _TAG__Type3: new (&_Type3) Type3(std::move(other._Type3)); break;
 			#line 513 "FirstProgram.adv"
+			case _TAG__Type1: new (&_Type1) Type1(std::move(other._Type1)); break;
+			#line 514 "FirstProgram.adv"
+			case _TAG__Type2: new (&_Type2) Type2(std::move(other._Type2)); break;
+			#line 515 "FirstProgram.adv"
+			case _TAG__Type3: new (&_Type3) Type3(std::move(other._Type3)); break;
+			#line 516 "FirstProgram.adv"
 			case _TAG__Type4: new (&_Type4) Type4(std::move(other._Type4)); break;
 			
 		}
 	}
-	#line 509 "FirstProgram.adv"
+	#line 512 "FirstProgram.adv"
 	public: Union4(__self&& other) { __move(std::move(other)); }
 	#line 9999 "FirstProgram.adv"
 	private: void __destroy() {
 		switch (__union_internal_tag) {
-			#line 510 "FirstProgram.adv"
-			case _TAG__Type1: _Type1.~Type1(); break;
-			#line 511 "FirstProgram.adv"
-			case _TAG__Type2: _Type2.~Type2(); break;
-			#line 512 "FirstProgram.adv"
-			case _TAG__Type3: _Type3.~Type3(); break;
 			#line 513 "FirstProgram.adv"
+			case _TAG__Type1: _Type1.~Type1(); break;
+			#line 514 "FirstProgram.adv"
+			case _TAG__Type2: _Type2.~Type2(); break;
+			#line 515 "FirstProgram.adv"
+			case _TAG__Type3: _Type3.~Type3(); break;
+			#line 516 "FirstProgram.adv"
 			case _TAG__Type4: _Type4.~Type4(); break;
 			
 		}
 	}
-	#line 509 "FirstProgram.adv"
+	#line 512 "FirstProgram.adv"
 	public: ~Union4() { __destroy(); }
-	#line 510 "FirstProgram.adv"
+	#line 513 "FirstProgram.adv"
 	Union4& operator=(CppAdvance::In<Type1> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type1;
 		new (&_Type1) Type1(value); return *this;
 	}
-	#line 511 "FirstProgram.adv"
+	#line 514 "FirstProgram.adv"
 	Union4& operator=(CppAdvance::In<Type2> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type2;
 		new (&_Type2) Type2(value); return *this;
 	}
-	#line 512 "FirstProgram.adv"
+	#line 515 "FirstProgram.adv"
 	Union4& operator=(CppAdvance::In<Type3> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type3;
 		new (&_Type3) Type3(value); return *this;
 	}
-	#line 513 "FirstProgram.adv"
+	#line 516 "FirstProgram.adv"
 	Union4& operator=(CppAdvance::In<Type4> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type4;
 		new (&_Type4) Type4(value); return *this;
 	}
-	#line 509 "FirstProgram.adv"
-	public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }
-	#line 509 "FirstProgram.adv"
-	public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }
-	#line 510 "FirstProgram.adv"
-	public: auto GetType1() const { if (__union_internal_tag != _TAG__Type1) throw std::logic_error("Type mismatch in the discriminated union"); return _Type1; }
-	#line 511 "FirstProgram.adv"
-	public: auto GetType2() const { if (__union_internal_tag != _TAG__Type2) throw std::logic_error("Type mismatch in the discriminated union"); return _Type2; }
 	#line 512 "FirstProgram.adv"
-	public: auto GetType3() const { if (__union_internal_tag != _TAG__Type3) throw std::logic_error("Type mismatch in the discriminated union"); return _Type3; }
+	public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }
+	#line 512 "FirstProgram.adv"
+	public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }
 	#line 513 "FirstProgram.adv"
+	public: auto GetType1() const { if (__union_internal_tag != _TAG__Type1) throw std::logic_error("Type mismatch in the discriminated union"); return _Type1; }
+	#line 514 "FirstProgram.adv"
+	public: auto GetType2() const { if (__union_internal_tag != _TAG__Type2) throw std::logic_error("Type mismatch in the discriminated union"); return _Type2; }
+	#line 515 "FirstProgram.adv"
+	public: auto GetType3() const { if (__union_internal_tag != _TAG__Type3) throw std::logic_error("Type mismatch in the discriminated union"); return _Type3; }
+	#line 516 "FirstProgram.adv"
 	public: auto GetType4() const { if (__union_internal_tag != _TAG__Type4) throw std::logic_error("Type mismatch in the discriminated union"); return _Type4; }
 	#line 9999 "FirstProgram.adv"
 	public: template<class __SomeT> bool Is() const noexcept {
@@ -2277,31 +2281,31 @@ template<class T1, class T2, class T3, class T4> struct Union4 final : public Cp
 	
 };
 template<class T1, class T2, class T3, class T4, class T5> class __Class_Union5;
-#line 516 "FirstProgram.adv"
+#line 519 "FirstProgram.adv"
 template<class T1, class T2, class T3, class T4, class T5> struct Union5 final : public CppAdvance::Union {
 	public: using __self = Union5<T1, T2, T3, T4, T5>;
 	public: using __class = __Class_Union5<T1, T2, T3, T4, T5>;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 517 "FirstProgram.adv"
-	public: using Type1 = T1; ADV_CHECK_REF_STRUCT("T1", T1);
-	#line 518 "FirstProgram.adv"
-	public: using Type2 = T2; ADV_CHECK_REF_STRUCT("T2", T2);
-	#line 519 "FirstProgram.adv"
-	public: using Type3 = T3; ADV_CHECK_REF_STRUCT("T3", T3);
 	#line 520 "FirstProgram.adv"
-	public: using Type4 = T4; ADV_CHECK_REF_STRUCT("T4", T4);
+	public: using Type1 = T1; ADV_CHECK_REF_STRUCT("T1", T1);
 	#line 521 "FirstProgram.adv"
+	public: using Type2 = T2; ADV_CHECK_REF_STRUCT("T2", T2);
+	#line 522 "FirstProgram.adv"
+	public: using Type3 = T3; ADV_CHECK_REF_STRUCT("T3", T3);
+	#line 523 "FirstProgram.adv"
+	public: using Type4 = T4; ADV_CHECK_REF_STRUCT("T4", T4);
+	#line 524 "FirstProgram.adv"
 	public: using Type5 = T5; ADV_CHECK_REF_STRUCT("T5", T5);
 	private: union {
-		#line 517 "FirstProgram.adv"
-		Type1 _Type1;
-		#line 518 "FirstProgram.adv"
-		Type2 _Type2;
-		#line 519 "FirstProgram.adv"
-		Type3 _Type3;
 		#line 520 "FirstProgram.adv"
-		Type4 _Type4;
+		Type1 _Type1;
 		#line 521 "FirstProgram.adv"
+		Type2 _Type2;
+		#line 522 "FirstProgram.adv"
+		Type3 _Type3;
+		#line 523 "FirstProgram.adv"
+		Type4 _Type4;
+		#line 524 "FirstProgram.adv"
 		Type5 _Type5;
 		
 	};
@@ -2309,115 +2313,115 @@ template<class T1, class T2, class T3, class T4, class T5> struct Union5 final :
 		_TAG__Type1, _TAG__Type2, _TAG__Type3, _TAG__Type4, _TAG__Type5
 	} __union_internal_tag;
 	public:
-	#line 517 "FirstProgram.adv"
-	Union5(CppAdvance::In<Type1> value) : __union_internal_tag{ _TAG__Type1 } { new (&_Type1) Type1(value); }
-	#line 518 "FirstProgram.adv"
-	Union5(CppAdvance::In<Type2> value) : __union_internal_tag{ _TAG__Type2 } { new (&_Type2) Type2(value); }
-	#line 519 "FirstProgram.adv"
-	Union5(CppAdvance::In<Type3> value) : __union_internal_tag{ _TAG__Type3 } { new (&_Type3) Type3(value); }
 	#line 520 "FirstProgram.adv"
-	Union5(CppAdvance::In<Type4> value) : __union_internal_tag{ _TAG__Type4 } { new (&_Type4) Type4(value); }
+	Union5(CppAdvance::In<Type1> value) : __union_internal_tag{ _TAG__Type1 } { new (&_Type1) Type1(value); }
 	#line 521 "FirstProgram.adv"
+	Union5(CppAdvance::In<Type2> value) : __union_internal_tag{ _TAG__Type2 } { new (&_Type2) Type2(value); }
+	#line 522 "FirstProgram.adv"
+	Union5(CppAdvance::In<Type3> value) : __union_internal_tag{ _TAG__Type3 } { new (&_Type3) Type3(value); }
+	#line 523 "FirstProgram.adv"
+	Union5(CppAdvance::In<Type4> value) : __union_internal_tag{ _TAG__Type4 } { new (&_Type4) Type4(value); }
+	#line 524 "FirstProgram.adv"
 	Union5(CppAdvance::In<Type5> value) : __union_internal_tag{ _TAG__Type5 } { new (&_Type5) Type5(value); }
 	#line 9999 "FirstProgram.adv"
 	private: void __copy(const __self& other) {
 		__union_internal_tag = other.__union_internal_tag;
 		switch (__union_internal_tag) {
-			#line 517 "FirstProgram.adv"
-			case _TAG__Type1: new (&_Type1) Type1(other._Type1); break;
-			#line 518 "FirstProgram.adv"
-			case _TAG__Type2: new (&_Type2) Type2(other._Type2); break;
-			#line 519 "FirstProgram.adv"
-			case _TAG__Type3: new (&_Type3) Type3(other._Type3); break;
 			#line 520 "FirstProgram.adv"
-			case _TAG__Type4: new (&_Type4) Type4(other._Type4); break;
+			case _TAG__Type1: new (&_Type1) Type1(other._Type1); break;
 			#line 521 "FirstProgram.adv"
+			case _TAG__Type2: new (&_Type2) Type2(other._Type2); break;
+			#line 522 "FirstProgram.adv"
+			case _TAG__Type3: new (&_Type3) Type3(other._Type3); break;
+			#line 523 "FirstProgram.adv"
+			case _TAG__Type4: new (&_Type4) Type4(other._Type4); break;
+			#line 524 "FirstProgram.adv"
 			case _TAG__Type5: new (&_Type5) Type5(other._Type5); break;
 			
 		}
 	}
-	#line 516 "FirstProgram.adv"
+	#line 519 "FirstProgram.adv"
 	public: Union5(const __self& other) { __copy(other); }
 	#line 9999 "FirstProgram.adv"
 	private: void __move(__self&& other) {
 		__union_internal_tag = other.__union_internal_tag;
 		switch (__union_internal_tag) {
-			#line 517 "FirstProgram.adv"
-			case _TAG__Type1: new (&_Type1) Type1(std::move(other._Type1)); break;
-			#line 518 "FirstProgram.adv"
-			case _TAG__Type2: new (&_Type2) Type2(std::move(other._Type2)); break;
-			#line 519 "FirstProgram.adv"
-			case _TAG__Type3: new (&_Type3) Type3(std::move(other._Type3)); break;
 			#line 520 "FirstProgram.adv"
-			case _TAG__Type4: new (&_Type4) Type4(std::move(other._Type4)); break;
+			case _TAG__Type1: new (&_Type1) Type1(std::move(other._Type1)); break;
 			#line 521 "FirstProgram.adv"
+			case _TAG__Type2: new (&_Type2) Type2(std::move(other._Type2)); break;
+			#line 522 "FirstProgram.adv"
+			case _TAG__Type3: new (&_Type3) Type3(std::move(other._Type3)); break;
+			#line 523 "FirstProgram.adv"
+			case _TAG__Type4: new (&_Type4) Type4(std::move(other._Type4)); break;
+			#line 524 "FirstProgram.adv"
 			case _TAG__Type5: new (&_Type5) Type5(std::move(other._Type5)); break;
 			
 		}
 	}
-	#line 516 "FirstProgram.adv"
+	#line 519 "FirstProgram.adv"
 	public: Union5(__self&& other) { __move(std::move(other)); }
 	#line 9999 "FirstProgram.adv"
 	private: void __destroy() {
 		switch (__union_internal_tag) {
-			#line 517 "FirstProgram.adv"
-			case _TAG__Type1: _Type1.~Type1(); break;
-			#line 518 "FirstProgram.adv"
-			case _TAG__Type2: _Type2.~Type2(); break;
-			#line 519 "FirstProgram.adv"
-			case _TAG__Type3: _Type3.~Type3(); break;
 			#line 520 "FirstProgram.adv"
-			case _TAG__Type4: _Type4.~Type4(); break;
+			case _TAG__Type1: _Type1.~Type1(); break;
 			#line 521 "FirstProgram.adv"
+			case _TAG__Type2: _Type2.~Type2(); break;
+			#line 522 "FirstProgram.adv"
+			case _TAG__Type3: _Type3.~Type3(); break;
+			#line 523 "FirstProgram.adv"
+			case _TAG__Type4: _Type4.~Type4(); break;
+			#line 524 "FirstProgram.adv"
 			case _TAG__Type5: _Type5.~Type5(); break;
 			
 		}
 	}
-	#line 516 "FirstProgram.adv"
+	#line 519 "FirstProgram.adv"
 	public: ~Union5() { __destroy(); }
-	#line 517 "FirstProgram.adv"
+	#line 520 "FirstProgram.adv"
 	Union5& operator=(CppAdvance::In<Type1> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type1;
 		new (&_Type1) Type1(value); return *this;
 	}
-	#line 518 "FirstProgram.adv"
+	#line 521 "FirstProgram.adv"
 	Union5& operator=(CppAdvance::In<Type2> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type2;
 		new (&_Type2) Type2(value); return *this;
 	}
-	#line 519 "FirstProgram.adv"
+	#line 522 "FirstProgram.adv"
 	Union5& operator=(CppAdvance::In<Type3> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type3;
 		new (&_Type3) Type3(value); return *this;
 	}
-	#line 520 "FirstProgram.adv"
+	#line 523 "FirstProgram.adv"
 	Union5& operator=(CppAdvance::In<Type4> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type4;
 		new (&_Type4) Type4(value); return *this;
 	}
-	#line 521 "FirstProgram.adv"
+	#line 524 "FirstProgram.adv"
 	Union5& operator=(CppAdvance::In<Type5> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type5;
 		new (&_Type5) Type5(value); return *this;
 	}
-	#line 516 "FirstProgram.adv"
-	public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }
-	#line 516 "FirstProgram.adv"
-	public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }
-	#line 517 "FirstProgram.adv"
-	public: auto GetType1() const { if (__union_internal_tag != _TAG__Type1) throw std::logic_error("Type mismatch in the discriminated union"); return _Type1; }
-	#line 518 "FirstProgram.adv"
-	public: auto GetType2() const { if (__union_internal_tag != _TAG__Type2) throw std::logic_error("Type mismatch in the discriminated union"); return _Type2; }
 	#line 519 "FirstProgram.adv"
-	public: auto GetType3() const { if (__union_internal_tag != _TAG__Type3) throw std::logic_error("Type mismatch in the discriminated union"); return _Type3; }
+	public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }
+	#line 519 "FirstProgram.adv"
+	public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }
 	#line 520 "FirstProgram.adv"
-	public: auto GetType4() const { if (__union_internal_tag != _TAG__Type4) throw std::logic_error("Type mismatch in the discriminated union"); return _Type4; }
+	public: auto GetType1() const { if (__union_internal_tag != _TAG__Type1) throw std::logic_error("Type mismatch in the discriminated union"); return _Type1; }
 	#line 521 "FirstProgram.adv"
+	public: auto GetType2() const { if (__union_internal_tag != _TAG__Type2) throw std::logic_error("Type mismatch in the discriminated union"); return _Type2; }
+	#line 522 "FirstProgram.adv"
+	public: auto GetType3() const { if (__union_internal_tag != _TAG__Type3) throw std::logic_error("Type mismatch in the discriminated union"); return _Type3; }
+	#line 523 "FirstProgram.adv"
+	public: auto GetType4() const { if (__union_internal_tag != _TAG__Type4) throw std::logic_error("Type mismatch in the discriminated union"); return _Type4; }
+	#line 524 "FirstProgram.adv"
 	public: auto GetType5() const { if (__union_internal_tag != _TAG__Type5) throw std::logic_error("Type mismatch in the discriminated union"); return _Type5; }
 	#line 9999 "FirstProgram.adv"
 	public: template<class __SomeT> bool Is() const noexcept {
@@ -2440,35 +2444,35 @@ template<class T1, class T2, class T3, class T4, class T5> struct Union5 final :
 	
 };
 template<class T1, class T2, class T3, class T4, class T5, class T6> class __Class_Union6;
-#line 524 "FirstProgram.adv"
+#line 527 "FirstProgram.adv"
 template<class T1, class T2, class T3, class T4, class T5, class T6> struct Union6 final : public CppAdvance::Union {
 	public: using __self = Union6<T1, T2, T3, T4, T5, T6>;
 	public: using __class = __Class_Union6<T1, T2, T3, T4, T5, T6>;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 525 "FirstProgram.adv"
-	public: using Type1 = T1; ADV_CHECK_REF_STRUCT("T1", T1);
-	#line 526 "FirstProgram.adv"
-	public: using Type2 = T2; ADV_CHECK_REF_STRUCT("T2", T2);
-	#line 527 "FirstProgram.adv"
-	public: using Type3 = T3; ADV_CHECK_REF_STRUCT("T3", T3);
 	#line 528 "FirstProgram.adv"
-	public: using Type4 = T4; ADV_CHECK_REF_STRUCT("T4", T4);
+	public: using Type1 = T1; ADV_CHECK_REF_STRUCT("T1", T1);
 	#line 529 "FirstProgram.adv"
-	public: using Type5 = T5; ADV_CHECK_REF_STRUCT("T5", T5);
+	public: using Type2 = T2; ADV_CHECK_REF_STRUCT("T2", T2);
 	#line 530 "FirstProgram.adv"
+	public: using Type3 = T3; ADV_CHECK_REF_STRUCT("T3", T3);
+	#line 531 "FirstProgram.adv"
+	public: using Type4 = T4; ADV_CHECK_REF_STRUCT("T4", T4);
+	#line 532 "FirstProgram.adv"
+	public: using Type5 = T5; ADV_CHECK_REF_STRUCT("T5", T5);
+	#line 533 "FirstProgram.adv"
 	public: using Type6 = T6; ADV_CHECK_REF_STRUCT("T6", T6);
 	private: union {
-		#line 525 "FirstProgram.adv"
-		Type1 _Type1;
-		#line 526 "FirstProgram.adv"
-		Type2 _Type2;
-		#line 527 "FirstProgram.adv"
-		Type3 _Type3;
 		#line 528 "FirstProgram.adv"
-		Type4 _Type4;
+		Type1 _Type1;
 		#line 529 "FirstProgram.adv"
-		Type5 _Type5;
+		Type2 _Type2;
 		#line 530 "FirstProgram.adv"
+		Type3 _Type3;
+		#line 531 "FirstProgram.adv"
+		Type4 _Type4;
+		#line 532 "FirstProgram.adv"
+		Type5 _Type5;
+		#line 533 "FirstProgram.adv"
 		Type6 _Type6;
 		
 	};
@@ -2476,131 +2480,131 @@ template<class T1, class T2, class T3, class T4, class T5, class T6> struct Unio
 		_TAG__Type1, _TAG__Type2, _TAG__Type3, _TAG__Type4, _TAG__Type5, _TAG__Type6
 	} __union_internal_tag;
 	public:
-	#line 525 "FirstProgram.adv"
-	Union6(CppAdvance::In<Type1> value) : __union_internal_tag{ _TAG__Type1 } { new (&_Type1) Type1(value); }
-	#line 526 "FirstProgram.adv"
-	Union6(CppAdvance::In<Type2> value) : __union_internal_tag{ _TAG__Type2 } { new (&_Type2) Type2(value); }
-	#line 527 "FirstProgram.adv"
-	Union6(CppAdvance::In<Type3> value) : __union_internal_tag{ _TAG__Type3 } { new (&_Type3) Type3(value); }
 	#line 528 "FirstProgram.adv"
-	Union6(CppAdvance::In<Type4> value) : __union_internal_tag{ _TAG__Type4 } { new (&_Type4) Type4(value); }
+	Union6(CppAdvance::In<Type1> value) : __union_internal_tag{ _TAG__Type1 } { new (&_Type1) Type1(value); }
 	#line 529 "FirstProgram.adv"
-	Union6(CppAdvance::In<Type5> value) : __union_internal_tag{ _TAG__Type5 } { new (&_Type5) Type5(value); }
+	Union6(CppAdvance::In<Type2> value) : __union_internal_tag{ _TAG__Type2 } { new (&_Type2) Type2(value); }
 	#line 530 "FirstProgram.adv"
+	Union6(CppAdvance::In<Type3> value) : __union_internal_tag{ _TAG__Type3 } { new (&_Type3) Type3(value); }
+	#line 531 "FirstProgram.adv"
+	Union6(CppAdvance::In<Type4> value) : __union_internal_tag{ _TAG__Type4 } { new (&_Type4) Type4(value); }
+	#line 532 "FirstProgram.adv"
+	Union6(CppAdvance::In<Type5> value) : __union_internal_tag{ _TAG__Type5 } { new (&_Type5) Type5(value); }
+	#line 533 "FirstProgram.adv"
 	Union6(CppAdvance::In<Type6> value) : __union_internal_tag{ _TAG__Type6 } { new (&_Type6) Type6(value); }
 	#line 9999 "FirstProgram.adv"
 	private: void __copy(const __self& other) {
 		__union_internal_tag = other.__union_internal_tag;
 		switch (__union_internal_tag) {
-			#line 525 "FirstProgram.adv"
-			case _TAG__Type1: new (&_Type1) Type1(other._Type1); break;
-			#line 526 "FirstProgram.adv"
-			case _TAG__Type2: new (&_Type2) Type2(other._Type2); break;
-			#line 527 "FirstProgram.adv"
-			case _TAG__Type3: new (&_Type3) Type3(other._Type3); break;
 			#line 528 "FirstProgram.adv"
-			case _TAG__Type4: new (&_Type4) Type4(other._Type4); break;
+			case _TAG__Type1: new (&_Type1) Type1(other._Type1); break;
 			#line 529 "FirstProgram.adv"
-			case _TAG__Type5: new (&_Type5) Type5(other._Type5); break;
+			case _TAG__Type2: new (&_Type2) Type2(other._Type2); break;
 			#line 530 "FirstProgram.adv"
+			case _TAG__Type3: new (&_Type3) Type3(other._Type3); break;
+			#line 531 "FirstProgram.adv"
+			case _TAG__Type4: new (&_Type4) Type4(other._Type4); break;
+			#line 532 "FirstProgram.adv"
+			case _TAG__Type5: new (&_Type5) Type5(other._Type5); break;
+			#line 533 "FirstProgram.adv"
 			case _TAG__Type6: new (&_Type6) Type6(other._Type6); break;
 			
 		}
 	}
-	#line 524 "FirstProgram.adv"
+	#line 527 "FirstProgram.adv"
 	public: Union6(const __self& other) { __copy(other); }
 	#line 9999 "FirstProgram.adv"
 	private: void __move(__self&& other) {
 		__union_internal_tag = other.__union_internal_tag;
 		switch (__union_internal_tag) {
-			#line 525 "FirstProgram.adv"
-			case _TAG__Type1: new (&_Type1) Type1(std::move(other._Type1)); break;
-			#line 526 "FirstProgram.adv"
-			case _TAG__Type2: new (&_Type2) Type2(std::move(other._Type2)); break;
-			#line 527 "FirstProgram.adv"
-			case _TAG__Type3: new (&_Type3) Type3(std::move(other._Type3)); break;
 			#line 528 "FirstProgram.adv"
-			case _TAG__Type4: new (&_Type4) Type4(std::move(other._Type4)); break;
+			case _TAG__Type1: new (&_Type1) Type1(std::move(other._Type1)); break;
 			#line 529 "FirstProgram.adv"
-			case _TAG__Type5: new (&_Type5) Type5(std::move(other._Type5)); break;
+			case _TAG__Type2: new (&_Type2) Type2(std::move(other._Type2)); break;
 			#line 530 "FirstProgram.adv"
+			case _TAG__Type3: new (&_Type3) Type3(std::move(other._Type3)); break;
+			#line 531 "FirstProgram.adv"
+			case _TAG__Type4: new (&_Type4) Type4(std::move(other._Type4)); break;
+			#line 532 "FirstProgram.adv"
+			case _TAG__Type5: new (&_Type5) Type5(std::move(other._Type5)); break;
+			#line 533 "FirstProgram.adv"
 			case _TAG__Type6: new (&_Type6) Type6(std::move(other._Type6)); break;
 			
 		}
 	}
-	#line 524 "FirstProgram.adv"
+	#line 527 "FirstProgram.adv"
 	public: Union6(__self&& other) { __move(std::move(other)); }
 	#line 9999 "FirstProgram.adv"
 	private: void __destroy() {
 		switch (__union_internal_tag) {
-			#line 525 "FirstProgram.adv"
-			case _TAG__Type1: _Type1.~Type1(); break;
-			#line 526 "FirstProgram.adv"
-			case _TAG__Type2: _Type2.~Type2(); break;
-			#line 527 "FirstProgram.adv"
-			case _TAG__Type3: _Type3.~Type3(); break;
 			#line 528 "FirstProgram.adv"
-			case _TAG__Type4: _Type4.~Type4(); break;
+			case _TAG__Type1: _Type1.~Type1(); break;
 			#line 529 "FirstProgram.adv"
-			case _TAG__Type5: _Type5.~Type5(); break;
+			case _TAG__Type2: _Type2.~Type2(); break;
 			#line 530 "FirstProgram.adv"
+			case _TAG__Type3: _Type3.~Type3(); break;
+			#line 531 "FirstProgram.adv"
+			case _TAG__Type4: _Type4.~Type4(); break;
+			#line 532 "FirstProgram.adv"
+			case _TAG__Type5: _Type5.~Type5(); break;
+			#line 533 "FirstProgram.adv"
 			case _TAG__Type6: _Type6.~Type6(); break;
 			
 		}
 	}
-	#line 524 "FirstProgram.adv"
+	#line 527 "FirstProgram.adv"
 	public: ~Union6() { __destroy(); }
-	#line 525 "FirstProgram.adv"
+	#line 528 "FirstProgram.adv"
 	Union6& operator=(CppAdvance::In<Type1> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type1;
 		new (&_Type1) Type1(value); return *this;
 	}
-	#line 526 "FirstProgram.adv"
+	#line 529 "FirstProgram.adv"
 	Union6& operator=(CppAdvance::In<Type2> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type2;
 		new (&_Type2) Type2(value); return *this;
 	}
-	#line 527 "FirstProgram.adv"
+	#line 530 "FirstProgram.adv"
 	Union6& operator=(CppAdvance::In<Type3> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type3;
 		new (&_Type3) Type3(value); return *this;
 	}
-	#line 528 "FirstProgram.adv"
+	#line 531 "FirstProgram.adv"
 	Union6& operator=(CppAdvance::In<Type4> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type4;
 		new (&_Type4) Type4(value); return *this;
 	}
-	#line 529 "FirstProgram.adv"
+	#line 532 "FirstProgram.adv"
 	Union6& operator=(CppAdvance::In<Type5> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type5;
 		new (&_Type5) Type5(value); return *this;
 	}
-	#line 530 "FirstProgram.adv"
+	#line 533 "FirstProgram.adv"
 	Union6& operator=(CppAdvance::In<Type6> value) {
 		__destroy();
 		__union_internal_tag = _TAG__Type6;
 		new (&_Type6) Type6(value); return *this;
 	}
-	#line 524 "FirstProgram.adv"
-	public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }
-	#line 524 "FirstProgram.adv"
-	public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }
-	#line 525 "FirstProgram.adv"
-	public: auto GetType1() const { if (__union_internal_tag != _TAG__Type1) throw std::logic_error("Type mismatch in the discriminated union"); return _Type1; }
-	#line 526 "FirstProgram.adv"
-	public: auto GetType2() const { if (__union_internal_tag != _TAG__Type2) throw std::logic_error("Type mismatch in the discriminated union"); return _Type2; }
 	#line 527 "FirstProgram.adv"
-	public: auto GetType3() const { if (__union_internal_tag != _TAG__Type3) throw std::logic_error("Type mismatch in the discriminated union"); return _Type3; }
+	public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }
+	#line 527 "FirstProgram.adv"
+	public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }
 	#line 528 "FirstProgram.adv"
-	public: auto GetType4() const { if (__union_internal_tag != _TAG__Type4) throw std::logic_error("Type mismatch in the discriminated union"); return _Type4; }
+	public: auto GetType1() const { if (__union_internal_tag != _TAG__Type1) throw std::logic_error("Type mismatch in the discriminated union"); return _Type1; }
 	#line 529 "FirstProgram.adv"
-	public: auto GetType5() const { if (__union_internal_tag != _TAG__Type5) throw std::logic_error("Type mismatch in the discriminated union"); return _Type5; }
+	public: auto GetType2() const { if (__union_internal_tag != _TAG__Type2) throw std::logic_error("Type mismatch in the discriminated union"); return _Type2; }
 	#line 530 "FirstProgram.adv"
+	public: auto GetType3() const { if (__union_internal_tag != _TAG__Type3) throw std::logic_error("Type mismatch in the discriminated union"); return _Type3; }
+	#line 531 "FirstProgram.adv"
+	public: auto GetType4() const { if (__union_internal_tag != _TAG__Type4) throw std::logic_error("Type mismatch in the discriminated union"); return _Type4; }
+	#line 532 "FirstProgram.adv"
+	public: auto GetType5() const { if (__union_internal_tag != _TAG__Type5) throw std::logic_error("Type mismatch in the discriminated union"); return _Type5; }
+	#line 533 "FirstProgram.adv"
 	public: auto GetType6() const { if (__union_internal_tag != _TAG__Type6) throw std::logic_error("Type mismatch in the discriminated union"); return _Type6; }
 	#line 9999 "FirstProgram.adv"
 	public: template<class __SomeT> bool Is() const noexcept {
@@ -2624,41 +2628,43 @@ template<class T1, class T2, class T3, class T4, class T5, class T6> struct Unio
 	}
 	
 };
-#line 594 "FirstProgram.adv"
-template<class T> using __extension_594_T = T;
-#line 596 "FirstProgram.adv"
+#line 597 "FirstProgram.adv"
+template<class T> using __extension_597_T = T;
+#line 599 "FirstProgram.adv"
 template<class T> inline constexpr auto __static_GetSuperCount(CppAdvance::i32 x, CppAdvance::i32 y)  -> const CppAdvance::i32;
-#line 595 "FirstProgram.adv"
+#line 598 "FirstProgram.adv"
 template<class T> inline constexpr auto __static_getCount3() -> const CppAdvance::i32;
 
-#line 599 "FirstProgram.adv"
-using __extension_599_i32 = CppAdvance::i32;
-#line 603 "FirstProgram.adv"
-inline constexpr auto _operator_bsl_mul_div(__extension_599_i32 const& __this LIFETIMEBOUND)  -> const CppAdvance::i32;
+#line 602 "FirstProgram.adv"
+using __extension_602_i32 = CppAdvance::i32;
 #line 606 "FirstProgram.adv"
-inline constexpr auto _operator_bsl_mul_div(__extension_599_i32 const& __this LIFETIMEBOUND, CppAdvance::f32 other)  -> const CppAdvance::f32;
-#line 600 "FirstProgram.adv"
-inline constexpr auto getkm(__extension_599_i32 const& __this ) -> const CppAdvance::i32;
-
+[[clang::annotate("UserAttr: AllowPostfix")]] inline constexpr auto _operator_bsl_mul_div(__extension_602_i32 const& __this LIFETIMEBOUND)  -> const CppAdvance::i32;
+[[clang::annotate("UserAttr: AllowPostfix")]] inline constexpr auto _operator_bsl_mul_div_postfix(__extension_602_i32 & __this)  -> decltype(auto);
 #line 609 "FirstProgram.adv"
-using __extension_609_f64 = CppAdvance::f64;
-#line 610 "FirstProgram.adv"
-inline constexpr auto getkm(__extension_609_f64 const& __this ) -> const CppAdvance::f64;
+[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_bsl_mul_div(__extension_602_i32 const& __this LIFETIMEBOUND, CppAdvance::f32 other)  -> const CppAdvance::f32;
+[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_bsl_mul_div(CppAdvance::f32 other, const __extension_602_i32 & __this)  -> decltype(auto);
+#line 603 "FirstProgram.adv"
+inline constexpr auto getkm(__extension_602_i32 const& __this ) -> const CppAdvance::i32;
 
+#line 612 "FirstProgram.adv"
+using __extension_612_f64 = CppAdvance::f64;
 #line 613 "FirstProgram.adv"
-using __extension_613_str = CppAdvance::Str;
-#line 614 "FirstProgram.adv"
-inline constexpr auto getkm(__extension_613_str const& __this ) -> const CppAdvance::Str;
+inline constexpr auto getkm(__extension_612_f64 const& __this ) -> const CppAdvance::f64;
+
+#line 616 "FirstProgram.adv"
+using __extension_616_str = CppAdvance::Str;
+#line 617 "FirstProgram.adv"
+inline constexpr auto getkm(__extension_616_str const& __this ) -> const CppAdvance::Str;
 
 class __Class_TestStruct;
-#line 620 "FirstProgram.adv"
+#line 623 "FirstProgram.adv"
 struct alignas((alignof(CppAdvance::i64))) TestStruct final : public CppAdvance::Struct {
 	public: using __self = TestStruct;
 	public: using __class = __Class_TestStruct;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 621 "FirstProgram.adv"
+	#line 624 "FirstProgram.adv"
 	private: CppAdvance::i64 x; ADV_CHECK_REF_STRUCT("i64", CppAdvance::i64);
-	#line 622 "FirstProgram.adv"
+	#line 625 "FirstProgram.adv"
 	private: CppAdvance::i64 y; ADV_CHECK_REF_STRUCT("i64", CppAdvance::i64);
 	public: TestStruct(CppAdvance::i64 _x, CppAdvance::i64 _y) : x{_x}, y{_y} {}
 	
@@ -2847,6 +2853,8 @@ class __Class_ConcreteVectorClass : public CppAdvance::ClassParent<VectorClass> 
 	public: inline auto operator+(const ConcreteVectorClass& other) const  -> const ConcreteVectorClass;
 	#line 358 "FirstProgram.adv"
 	public: inline auto GetMagicNumber(CppAdvance::In<VectorClass> i) const  -> const CppAdvance::f32;
+	#line 360 "FirstProgram.adv"
+	public: inline auto operator==(CppAdvance::In<__self> other) const  -> const bool;
 	
 #define ADV_PROPERTY_SELF __self
 };
@@ -2855,7 +2863,7 @@ ADV_CHECK_FOR_CONCRETE(ConcreteVectorClass);
 #line 326 "FirstProgram.adv"
 ADV_CHECK_INTERFACE_IMPLEMENTATION(ConcreteVectorClass, VectorClass, VectorClass, ConcreteVectorClass);
 
-#line 365 "FirstProgram.adv"
+#line 368 "FirstProgram.adv"
 class __Class_Next : public CppAdvance::Object {
 	public: using __self = Next;
 	private: using ___super = CppAdvance::Object;
@@ -2864,31 +2872,31 @@ class __Class_Next : public CppAdvance::Object {
 	friend class __self::__weak_ref;
 	#define ADV_PROPERTY_SELF __selfClass
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 366 "FirstProgram.adv"
-	public: mutable CppAdvance::i32 i; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
-	#line 367 "FirstProgram.adv"
-	public: mutable CppAdvance::Nullable<Next>::__weak_ref v;
 	#line 369 "FirstProgram.adv"
+	public: mutable CppAdvance::i32 i; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
+	#line 370 "FirstProgram.adv"
+	public: mutable CppAdvance::Nullable<Next>::__weak_ref v;
+	#line 372 "FirstProgram.adv"
 	public: inline __Class_Next()  = default;
-	#line 371 "FirstProgram.adv"
+	#line 374 "FirstProgram.adv"
 	public: inline ~__Class_Next() ;
-	#line 373 "FirstProgram.adv"
+	#line 376 "FirstProgram.adv"
 	public: inline explicit __Class_Next(CppAdvance::i32 i) ;
-	#line 378 "FirstProgram.adv"
+	#line 381 "FirstProgram.adv"
 	public: inline explicit __Class_Next(CppAdvance::In<__self> other) ;
 	inline __Class_Next(__selfClass& copy) : __Class_Next(__self(copy)) {}
-	#line 382 "FirstProgram.adv"
+	#line 385 "FirstProgram.adv"
 	public: inline auto operator*() const  -> const CppAdvance::i32;
-	#line 384 "FirstProgram.adv"
+	#line 387 "FirstProgram.adv"
 	public: inline auto printNext() const  -> void;
 	
 #define ADV_PROPERTY_SELF __self
 };
-#line 365 "FirstProgram.adv"
+#line 368 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(Next);
 
 
-#line 412 "FirstProgram.adv"
+#line 415 "FirstProgram.adv"
 class __Class_DayOfWeek final : public CppAdvance::ValueType
 {
 	#line 9999 "FirstProgram.adv"
@@ -2898,11 +2906,11 @@ class __Class_DayOfWeek final : public CppAdvance::ValueType
 	operator __underlying() const noexcept { return __value; }
 	
 };
-#line 412 "FirstProgram.adv"
+#line 415 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(DayOfWeek);
 
 
-#line 423 "FirstProgram.adv"
+#line 426 "FirstProgram.adv"
 class __Class_Options final : public CppAdvance::ValueType
 {
 	#line 9999 "FirstProgram.adv"
@@ -2913,11 +2921,11 @@ class __Class_Options final : public CppAdvance::ValueType
 	auto getIsWeekend() const -> bool { return __value.getIsWeekend(); }
 	
 };
-#line 423 "FirstProgram.adv"
+#line 426 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(Options);
 
 
-#line 438 "FirstProgram.adv"
+#line 441 "FirstProgram.adv"
 class __Class_Text final : public CppAdvance::ValueType
 {
 	#line 9999 "FirstProgram.adv"
@@ -2928,10 +2936,10 @@ class __Class_Text final : public CppAdvance::ValueType
 	auto ToShortString() const  -> CppAdvance::Str const { ADV_EXPRESSION_BODY(__value.ToShortString()); }
 	
 };
-#line 438 "FirstProgram.adv"
+#line 441 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(Text);
 
-#line 453 "FirstProgram.adv"
+#line 456 "FirstProgram.adv"
 class __Class_ComplexVariant final : public CppAdvance::EnumClass {
 	public: using __self = ComplexVariant;
 	private: using ___super = CppAdvance::EnumClass;
@@ -2940,50 +2948,50 @@ class __Class_ComplexVariant final : public CppAdvance::EnumClass {
 	friend class __self::__weak_ref;
 	#define ADV_PROPERTY_SELF __selfClass
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 460 "FirstProgram.adv"
+	#line 463 "FirstProgram.adv"
 	public: const CppAdvance::i32 i; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
-	#line 461 "FirstProgram.adv"
+	#line 464 "FirstProgram.adv"
 	public: const CppAdvance::f32 f; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-	#line 462 "FirstProgram.adv"
+	#line 465 "FirstProgram.adv"
 	public: const CppAdvance::Str s; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
 	private: __Class_ComplexVariant(CppAdvance::i32 _i, CppAdvance::f32 _f, CppAdvance::Str _s) : i{_i}, f{_f}, s{_s} {}
-	#line 454 "FirstProgram.adv"
-	public: static TESTDLL_API const __self Value1;
-	#line 455 "FirstProgram.adv"
-	public: static TESTDLL_API const __self Value2;
-	#line 456 "FirstProgram.adv"
-	public: static TESTDLL_API const __self Value3;
 	#line 457 "FirstProgram.adv"
+	public: static TESTDLL_API const __self Value1;
+	#line 458 "FirstProgram.adv"
+	public: static TESTDLL_API const __self Value2;
+	#line 459 "FirstProgram.adv"
+	public: static TESTDLL_API const __self Value3;
+	#line 460 "FirstProgram.adv"
 	public: static TESTDLL_API const __self Value4;
-	#line 453 "FirstProgram.adv"
+	#line 456 "FirstProgram.adv"
 	private: static TESTDLL_API const __self __values[];
-	#line 453 "FirstProgram.adv"
+	#line 456 "FirstProgram.adv"
 	public: static std::span<const __self> GetValues() noexcept { return { __values, 4 }; }
-	#line 474 "FirstProgram.adv"
+	#line 477 "FirstProgram.adv"
 	public: inline constexpr auto getCount123() const  -> CppAdvance::i32;
 	#line 9999 "FirstProgram.adv"
 	ADV_PROPERTY_GETTER(public, Count123, getCount123, CppAdvance::i32);
-	#line 476 "FirstProgram.adv"
+	#line 479 "FirstProgram.adv"
 	public: inline constexpr static auto getCount10()  -> CppAdvance::i32;
 	#line 9999 "FirstProgram.adv"
 	ADV_PROPERTY_GETTER_STATIC(public, TESTDLL_API, Count10, getCount10, CppAdvance::i32);
-	#line 465 "FirstProgram.adv"
+	#line 468 "FirstProgram.adv"
 	public: inline auto operator*() const  -> const CppAdvance::i32;
-	#line 467 "FirstProgram.adv"
+	#line 470 "FirstProgram.adv"
 	public: inline auto printVariant() const  -> void;
-	#line 472 "FirstProgram.adv"
+	#line 475 "FirstProgram.adv"
 	public: inline auto GetMagicNumber(CppAdvance::In<VectorClass> f) const  -> const CppAdvance::f32;
 	
 #define ADV_PROPERTY_SELF __self
 };
-#line 453 "FirstProgram.adv"
+#line 456 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(ComplexVariant);
 
 
-#line 479 "FirstProgram.adv"
+#line 482 "FirstProgram.adv"
 class __Class_Media final : public CppAdvance::ValueType
 {
-	#line 479 "FirstProgram.adv"
+	#line 482 "FirstProgram.adv"
 	ADV_CHECK_INTERFACE(IMagicNumber, IMagicNumber);
 	#line 9999 "FirstProgram.adv"
 	public: using __underlying = Media; using __self = __underlying;
@@ -2995,13 +3003,13 @@ class __Class_Media final : public CppAdvance::ValueType
 	auto GetMagicNumber(CppAdvance::In<VectorClass> f) const  -> CppAdvance::f32 const { ADV_EXPRESSION_BODY(__value.GetMagicNumber(f)); }
 	
 };
-#line 479 "FirstProgram.adv"
+#line 482 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(Media);
-#line 479 "FirstProgram.adv"
+#line 482 "FirstProgram.adv"
 ADV_CHECK_INTERFACE_IMPLEMENTATION(Media, IMagicNumber, IMagicNumber, Media);
 
 
-#line 498 "FirstProgram.adv"
+#line 501 "FirstProgram.adv"
 template<class T1, class T2> class __Class_Union2 final : public CppAdvance::ValueType
 {
 	#line 9999 "FirstProgram.adv"
@@ -3013,7 +3021,7 @@ template<class T1, class T2> class __Class_Union2 final : public CppAdvance::Val
 };
 
 
-#line 503 "FirstProgram.adv"
+#line 506 "FirstProgram.adv"
 template<class T1, class T2, class T3> class __Class_Union3 final : public CppAdvance::ValueType
 {
 	#line 9999 "FirstProgram.adv"
@@ -3025,7 +3033,7 @@ template<class T1, class T2, class T3> class __Class_Union3 final : public CppAd
 };
 
 
-#line 509 "FirstProgram.adv"
+#line 512 "FirstProgram.adv"
 template<class T1, class T2, class T3, class T4> class __Class_Union4 final : public CppAdvance::ValueType
 {
 	#line 9999 "FirstProgram.adv"
@@ -3037,7 +3045,7 @@ template<class T1, class T2, class T3, class T4> class __Class_Union4 final : pu
 };
 
 
-#line 516 "FirstProgram.adv"
+#line 519 "FirstProgram.adv"
 template<class T1, class T2, class T3, class T4, class T5> class __Class_Union5 final : public CppAdvance::ValueType
 {
 	#line 9999 "FirstProgram.adv"
@@ -3049,7 +3057,7 @@ template<class T1, class T2, class T3, class T4, class T5> class __Class_Union5 
 };
 
 
-#line 524 "FirstProgram.adv"
+#line 527 "FirstProgram.adv"
 template<class T1, class T2, class T3, class T4, class T5, class T6> class __Class_Union6 final : public CppAdvance::ValueType
 {
 	#line 9999 "FirstProgram.adv"
@@ -3061,7 +3069,7 @@ template<class T1, class T2, class T3, class T4, class T5, class T6> class __Cla
 };
 
 
-#line 620 "FirstProgram.adv"
+#line 623 "FirstProgram.adv"
 class __Class_TestStruct final : public CppAdvance::ValueType
 {
 	#line 9999 "FirstProgram.adv"
@@ -3071,7 +3079,7 @@ class __Class_TestStruct final : public CppAdvance::ValueType
 	operator __underlying() const noexcept { return __value; }
 	
 };
-#line 620 "FirstProgram.adv"
+#line 623 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(TestStruct);
 
 namespace __ntuples {
@@ -3145,9 +3153,9 @@ template<class T, int32_t U> auto sum(T a, T b)  -> decltype(auto);
 template<> inline constexpr auto sum<CppAdvance::i32, CppAdvance::i32(15)>(CppAdvance::i32 a, CppAdvance::i32 b)  -> decltype(auto);
 #line 69 "FirstProgram.adv"
 inline auto func4(CppAdvance::i32 x)  -> const CppAdvance::i32;
-#line 363 "FirstProgram.adv"
+#line 366 "FirstProgram.adv"
 inline auto _operator_subscript(CppAdvance::In<VectorClass> vec, CppAdvance::f32 x, CppAdvance::f32 y)  -> const CppAdvance::f32;
-#line 617 "FirstProgram.adv"
+#line 620 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32;
 //###############################################################################
 //# Global compile-time constants
@@ -3586,93 +3594,99 @@ inline auto __Class_ConcreteVectorClass::GetMagicNumber(CppAdvance::In<VectorCla
 	#line 358 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(ADV_UPCS(x)((*this).__ref()) * ADV_UPCS(x)(i.__ref())); 
 }
-#line 363 "FirstProgram.adv"
+#line 360 "FirstProgram.adv"
+inline auto __Class_ConcreteVectorClass::operator==(CppAdvance::In<__self> other) const  -> const bool
+{
+	#line 360 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(x == ADV_UPCS(x)(other.__ref()) && y == ADV_UPCS(y)(other.__ref()) && z == ADV_UPCS(z)(other.__ref())); 
+}
+#line 366 "FirstProgram.adv"
 inline auto _operator_subscript(CppAdvance::In<VectorClass> vec, CppAdvance::f32 x, CppAdvance::f32 y)  -> const CppAdvance::f32
 {
-	#line 363 "FirstProgram.adv"
+	#line 366 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(ADV_UPCS(x)(vec.__ref()) * x + ADV_UPCS(y)(vec.__ref()) * y); 
 }
-#line 371 "FirstProgram.adv"
+#line 374 "FirstProgram.adv"
 inline __Class_Next::~__Class_Next() 
 {
-	#line 371 "FirstProgram.adv"
+	#line 374 "FirstProgram.adv"
 	print(CppAdvance::Str{u"Next deiniting"}); 
 }
-#line 373 "FirstProgram.adv"
+#line 376 "FirstProgram.adv"
 inline __Class_Next::__Class_Next(CppAdvance::i32 i)  : 
-#line 374 "FirstProgram.adv"
+#line 377 "FirstProgram.adv"
 i{i}
 {
 }
-#line 378 "FirstProgram.adv"
+#line 381 "FirstProgram.adv"
 inline __Class_Next::__Class_Next(CppAdvance::In<__self> other)  : 
-#line 379 "FirstProgram.adv"
+#line 382 "FirstProgram.adv"
 i{CppAdvance::i32(0)}
 {
 }
-#line 382 "FirstProgram.adv"
+#line 385 "FirstProgram.adv"
 inline auto __Class_Next::operator*() const  -> const CppAdvance::i32
 {
-	#line 382 "FirstProgram.adv"
+	#line 385 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(i); 
 }
-#line 384 "FirstProgram.adv"
+#line 387 "FirstProgram.adv"
 inline auto __Class_Next::printNext() const  -> void
 {
-	#line 385 "FirstProgram.adv"
+	#line 388 "FirstProgram.adv"
 	print(CppAdvance::Str{u"This is printNext function in optional chaining call"});
 }
-#line 436 "FirstProgram.adv"
+#line 439 "FirstProgram.adv"
 inline auto Options::getIsWeekend() const  -> bool 
 {
-	#line 436 "FirstProgram.adv"
+	#line 439 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(ADV_UFCS(HasFlag)(Weekend.__ref(), (*this))); 
 }
 
-#line 447 "FirstProgram.adv"
+#line 450 "FirstProgram.adv"
 inline auto Text::ToShortString() const  -> const CppAdvance::Str
 {
-	#line 448 "FirstProgram.adv"
+	#line 451 "FirstProgram.adv"
 	return Value;
 }
-#line 465 "FirstProgram.adv"
+#line 468 "FirstProgram.adv"
 inline auto __Class_ComplexVariant::operator*() const  -> const CppAdvance::i32
 {
-	#line 465 "FirstProgram.adv"
+	#line 468 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(i); 
 }
-#line 467 "FirstProgram.adv"
+#line 470 "FirstProgram.adv"
 inline auto __Class_ComplexVariant::printVariant() const  -> void
 {
-	#line 468 "FirstProgram.adv"
+	#line 471 "FirstProgram.adv"
 	print(CppAdvance::Str{u"This is printVariant function in optional chaining call"});
-	#line 469 "FirstProgram.adv"
+	#line 472 "FirstProgram.adv"
 	print(s);
 }
-#line 472 "FirstProgram.adv"
+#line 475 "FirstProgram.adv"
 inline auto __Class_ComplexVariant::GetMagicNumber(CppAdvance::In<VectorClass> f) const  -> const CppAdvance::f32
 {
-	#line 472 "FirstProgram.adv"
+	#line 475 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(ADV_UPCS(f)((*this).__ref()) * ADV_UPCS(x)(f.__ref())); 
 }
-#line 474 "FirstProgram.adv"
+#line 477 "FirstProgram.adv"
 inline constexpr auto __Class_ComplexVariant::getCount123() const  -> CppAdvance::i32 
 {
-	#line 474 "FirstProgram.adv"
+	#line 477 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::i32(1234567890)); 
 }
 
-#line 476 "FirstProgram.adv"
+#line 479 "FirstProgram.adv"
 inline constexpr auto __Class_ComplexVariant::getCount10()  -> CppAdvance::i32 
 {
-	#line 476 "FirstProgram.adv"
+	#line 479 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::i32(12345)); 
 }
 
-#line 617 "FirstProgram.adv"
+#line 620 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32
 {
-	#line 617 "FirstProgram.adv"
+	#line 620 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(ADV_UPCS(x)(vec.__ref()) + ADV_UPCS(y)(vec.__ref()) + ADV_UPCS(z)(vec.__ref())); 
 }
 #line 9999 "FirstProgram.adv"
@@ -3739,6 +3753,9 @@ inline ConcreteVectorClass::ConcreteVectorClass(CppAdvance::i32 i)noexcept : ___
 #line 357 "FirstProgram.adv"
 inline decltype(auto) ConcreteVectorClass::operator+(const ConcreteVectorClass& other) const { ADV_EXPRESSION_BODY(__ref().operator+(other)); }
 inline decltype(auto) ConcreteVectorClass__Unowned::operator+(const ConcreteVectorClass& other) const { ADV_EXPRESSION_BODY(__ref().operator+(other)); }
+#line 360 "FirstProgram.adv"
+inline decltype(auto) ConcreteVectorClass::operator==(CppAdvance::In<__self> other) const { ADV_EXPRESSION_BODY(__ref().operator==(other)); }
+inline decltype(auto) ConcreteVectorClass__Unowned::operator==(CppAdvance::In<__self> other) const { ADV_EXPRESSION_BODY(__ref().operator==(other)); }
 
 #line 9999 "FirstProgram.adv"
 inline Next::ADV_CLASS_DEFAULT_CTOR(Next)
@@ -3748,7 +3765,7 @@ inline Next__Unowned::ADV_CLASS_UNOWNED_CTOR_REF(Next__Unowned)
 inline Next__Unowned& Next__Unowned::ADV_CLASS_UNOWNED_ASSIGN_REF(Next__Unowned)
 inline Next__Weak::ADV_CLASS_WEAK_CTOR_REF(Next__Weak)
 inline Next__Weak& Next__Weak::ADV_CLASS_WEAK_ASSIGN_REF(Next__Weak)
-#line 382 "FirstProgram.adv"
+#line 385 "FirstProgram.adv"
 inline decltype(auto) Next::operator*() const { ADV_EXPRESSION_BODY(__ref().operator*()); }
 inline decltype(auto) Next__Unowned::operator*() const { ADV_EXPRESSION_BODY(__ref().operator*()); }
 
@@ -3758,12 +3775,12 @@ inline decltype(auto) Next__Unowned::operator*() const { ADV_EXPRESSION_BODY(__r
 
 inline const CppAdvance::f32 IInterface::__default_DefaultMethod(CppAdvance::In<VectorClass> f) const 
 {
-	#line 403 "FirstProgram.adv"
+	#line 406 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(ADV_UFCS(GetMagicNumber)((*this).__ref(), f)); 
 }
 inline const CppAdvance::i32 IInterface::SomeStaticMethod(CppAdvance::i32 i) 
 {
-	#line 409 "FirstProgram.adv"
+	#line 412 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(i * CppAdvance::i32(123)); 
 }
 #line 9999 "FirstProgram.adv"
@@ -3786,7 +3803,7 @@ FORCE_INLINE decltype(auto) ComplexVariant::getValue2() noexcept { return __clas
 FORCE_INLINE decltype(auto) ComplexVariant::getValue3() noexcept { return __class::Value3; }
 FORCE_INLINE decltype(auto) ComplexVariant::getValue4() noexcept { return __class::Value4; }
 FORCE_INLINE decltype(auto) ComplexVariant::GetValues() noexcept { return __class::GetValues(); }
-#line 465 "FirstProgram.adv"
+#line 468 "FirstProgram.adv"
 inline decltype(auto) ComplexVariant::operator*() const { ADV_EXPRESSION_BODY(__ref().operator*()); }
 inline decltype(auto) ComplexVariant__Unowned::operator*() const { ADV_EXPRESSION_BODY(__ref().operator*()); }
 
@@ -3802,55 +3819,57 @@ inline decltype(auto) ComplexVariant__Unowned::operator*() const { ADV_EXPRESSIO
 
 #line 9999 "FirstProgram.adv"
 
-#line 596 "FirstProgram.adv"
+#line 599 "FirstProgram.adv"
 template<class T> inline constexpr auto __static_GetSuperCount(CppAdvance::i32 x, CppAdvance::i32 y)  -> const CppAdvance::i32
 {
-	#line 596 "FirstProgram.adv"
+	#line 599 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(x * y + x + y); 
 }
 
-#line 595 "FirstProgram.adv"
+#line 598 "FirstProgram.adv"
 template<class T> inline constexpr auto __static_getCount3() -> const CppAdvance::i32
 {
-	#line 595 "FirstProgram.adv"
+	#line 598 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::i32(333)); 
 }
 #line 9999 "FirstProgram.adv"
 
-#line 603 "FirstProgram.adv"
-inline constexpr auto _operator_bsl_mul_div(__extension_599_i32 const& __this LIFETIMEBOUND)  -> const CppAdvance::i32
-{
-	#line 603 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(__this / CppAdvance::i32(2)); 
-}
-
 #line 606 "FirstProgram.adv"
-inline constexpr auto _operator_bsl_mul_div(__extension_599_i32 const& __this LIFETIMEBOUND, CppAdvance::f32 other)  -> const CppAdvance::f32
+inline constexpr auto _operator_bsl_mul_div(__extension_602_i32 const& __this LIFETIMEBOUND)  -> const CppAdvance::i32
 {
 	#line 606 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(__this / CppAdvance::i32(2)); 
+}
+inline constexpr auto _operator_bsl_mul_div_postfix(__extension_602_i32 & __this)  -> decltype(auto) { auto copy = __this; ADV_UFCS(_operator_bsl_mul_div)(__this); return copy; }
+
+#line 609 "FirstProgram.adv"
+inline constexpr auto _operator_bsl_mul_div(__extension_602_i32 const& __this LIFETIMEBOUND, CppAdvance::f32 other)  -> const CppAdvance::f32
+{
+	#line 609 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::f32{__this} * other * CppAdvance::i32(2)); 
 }
+inline constexpr auto _operator_bsl_mul_div(CppAdvance::f32 other, const __extension_602_i32 & __this)  -> decltype(auto) { return ADV_UFCS(_operator_bsl_mul_div)(__this, other); }
 
-#line 600 "FirstProgram.adv"
-inline constexpr auto getkm(__extension_599_i32 const& __this ) -> const CppAdvance::i32
+#line 603 "FirstProgram.adv"
+inline constexpr auto getkm(__extension_602_i32 const& __this ) -> const CppAdvance::i32
 {
-	#line 600 "FirstProgram.adv"
+	#line 603 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(__this * CppAdvance::i32(1000)); 
 }
 #line 9999 "FirstProgram.adv"
 
-#line 610 "FirstProgram.adv"
-inline constexpr auto getkm(__extension_609_f64 const& __this ) -> const CppAdvance::f64
+#line 613 "FirstProgram.adv"
+inline constexpr auto getkm(__extension_612_f64 const& __this ) -> const CppAdvance::f64
 {
-	#line 610 "FirstProgram.adv"
+	#line 613 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(__this * CppAdvance::f32(1000.0f)); 
 }
 #line 9999 "FirstProgram.adv"
 
-#line 614 "FirstProgram.adv"
-inline constexpr auto getkm(__extension_613_str const& __this ) -> const CppAdvance::Str
+#line 617 "FirstProgram.adv"
+inline constexpr auto getkm(__extension_616_str const& __this ) -> const CppAdvance::Str
 {
-	#line 614 "FirstProgram.adv"
+	#line 617 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::Str{u"1000km"}); 
 }
 #line 9999 "FirstProgram.adv"

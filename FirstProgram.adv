@@ -356,6 +356,9 @@ public class ConcreteVectorClass : VectorClass {
 
 	operator+: (in ref other: ConcreteVectorClass) -> ConcreteVectorClass => new ConcreteVectorClass(this.x + other.x, this.y + other.y, this.z + other.z);
 	GetMagicNumber: (in i: VectorClass) -> f32 => this.x * i.x;
+
+	operator==: (in other: self) -> bool => x == other.x && y == other.y && z == other.z;
+
 }
 //public GetMagicNumber: (in vec: VectorClass, i: VectorClass) -> f32 => vec.y * i.y;
 //public GetMagicNumber: (in vec: ConcreteVectorClass, in i: VectorClass) -> f32 => vec.x * i.x;
@@ -689,28 +692,15 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		//nxt = null;
 		print(nxt2!.GetStrongReferenceCount());
 		//print(map<int,map<int,string>>.StaticMethod());
-		m:Media = ::None;
-		m = "abcdef";
-		m = (1,2,3);
-		m = ::Video("123",5,6.17f,"def");
-		type NumOrStr = i32 | f32 | str;
-		mu: i32 | f32 | str = 5;
-		mu = "abc";
-		mu = 123;
-		mu = 0.15f;
-		mu = "def";
-		print(mu.GetType3());
-		print(123.km + 666);
-		print(1.4f.km + 666);
-		print("123".km);
-		print(\*/5);
-		iii := 5;
-		print(iii \*/);
-		print(5 \*/ 1.13f);
-		print(1.13f \*/ 5);
+		cv1 :ConcreteVectorClass? = new ConcreteVectorClass(1,2,3);
+		cv2 :IInterface= cv1!;
+		//print(i32(cv1! == cv2));
+		//print(i32(cv1! != cv2));
+		print(i32(cv1 === cv2));
+		print(i32(cv1 !== cv2));
 		//print(var.GetStrongReferenceCount());
-		o: object = m;
-		on: object? = m;
+		//o: object = m;
+		//on: object? = m;
 		//print(day.Value);
 	}
 	print(nxt!.GetStrongReferenceCount());
