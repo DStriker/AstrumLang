@@ -17415,6 +17415,11 @@ void CppAdvanceCodegen::printPostfixExpression(CppAdvanceParser::PostfixExpressi
 			printPostfixExpression(ctx->postfixExpression());
 			out << ")";
 		}
+		else if (ctx->Type())
+		{
+			printSimpleTypeSpecifier(ctx->simpleTypeSpecifier());
+			out << "::__static_getType()";
+		}
 		else {
 			auto txt = ctx->getText();
 			auto dotpos = txt.rfind('.');
@@ -17648,7 +17653,13 @@ void CppAdvanceCodegen::printPrimaryExpression(CppAdvanceParser::PrimaryExpressi
 			out << "-";
 		printTypeId(t);
 		out << "::";
-		printIdentifier(ctx->Identifier());
+		if (ctx->Identifier()) {
+			printIdentifier(ctx->Identifier());
+		}
+		else
+		{
+			out << "__static_getType()";
+		}
 	}
 	else if (auto expr = ctx->expr())
 	{

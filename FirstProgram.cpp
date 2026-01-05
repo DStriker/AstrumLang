@@ -19,15 +19,15 @@ template<class T> inline auto getAsString(__extension_568_T<T> const& __this ) -
 
 #line 628 "FirstProgram.adv"
 auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam = CppAdvance::f64(3.5))  -> const int;
-#line 711 "FirstProgram.adv"
+#line 714 "FirstProgram.adv"
 inline constexpr CppAdvance::usize PRIVATE_CONSTANT = CppAdvance::usize(34U);
 #line 2 "FirstProgram.adv"
 volatile CppAdvance::Unsafe::__VolatileRawPtr<const CppAdvance::char16> globalVar{};
 #line 3 "FirstProgram.adv"
 extern const CppAdvance::Unsafe::__RawPtr<CppAdvance::i32> globalVar1 = nullptr;
-#line 712 "FirstProgram.adv"
+#line 715 "FirstProgram.adv"
 static CppAdvance::i32 globalVar2 = CppAdvance::i32(8);
-#line 713 "FirstProgram.adv"
+#line 716 "FirstProgram.adv"
 static const CppAdvance::i32 globalVar3 = CppAdvance::i32(456);
 #line 92 "FirstProgram.adv"
 thread_local CppAdvance::i32 Vector3::Count2 = CppAdvance::i32(123);
@@ -249,10 +249,16 @@ auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam)  -> co
 		print(CppAdvance::i32{CppAdvance::IdentityEquals(cv1, cv2)});
 		#line 700 "FirstProgram.adv"
 		print(CppAdvance::i32{!CppAdvance::IdentityEquals(cv1, cv2)});
+		#line 701 "FirstProgram.adv"
+		auto t1 = CppAdvance::i32::__static_getType(); 
+		#line 702 "FirstProgram.adv"
+		auto t2 = String::__static_getType(); 
+		#line 703 "FirstProgram.adv"
+		auto t3 = CppAdvance::Array<String>::__static_getType(); 
 	}
-	#line 706 "FirstProgram.adv"
+	#line 709 "FirstProgram.adv"
 	print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
-	#line 707 "FirstProgram.adv"
+	#line 710 "FirstProgram.adv"
 	print(ADV_UPCS(x)(ADV_UPCS(x)(ADV_USFCS((Test1::Test2::TestClass), makeTestClass)(CppAdvance::i32(3), CppAdvance::f32(3.14f)).__ref()).__ref()));
 }
 

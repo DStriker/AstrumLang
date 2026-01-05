@@ -1830,8 +1830,13 @@ void CppAdvanceSema::exitFunctionDefinition(CppAdvanceParser::FunctionDefinition
 
 void CppAdvanceSema::exitPrimaryExpression(CppAdvanceParser::PrimaryExpressionContext* ctx)
 {
-	if (ctx->This()) typeStack.push(currentType);
-	
+	if (ctx->This()) {
+		typeStack.push(currentType);
+	}
+	else if (ctx->Type())
+	{
+		typeStack.push("System.Type");
+	}
 }
 
 void CppAdvanceSema::exitNestedNameSpecifier(CppAdvanceParser::NestedNameSpecifierContext* ctx)
@@ -2176,6 +2181,10 @@ void CppAdvanceSema::exitPostfixExpression(CppAdvanceParser::PostfixExpressionCo
 					typeStack.push(type);
 				}
 			}
+		}
+		else if (ctx->Type())
+		{
+			typeStack.push("System.Type");
 		}
 		else
 		{

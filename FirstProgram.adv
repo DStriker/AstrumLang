@@ -698,6 +698,9 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		//print(i32(cv1! != cv2));
 		print(i32(cv1 === cv2));
 		print(i32(cv1 !== cv2));
+		t1 := i32.type;
+		t2 := String.type;
+		t3 := (String[]).type;
 		//print(var.GetStrongReferenceCount());
 		//o: object = m;
 		//on: object? = m;

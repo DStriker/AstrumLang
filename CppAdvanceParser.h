@@ -3777,11 +3777,12 @@ public:
     antlr4::tree::TerminalNode *Move();
     PostfixExpressionContext *postfixExpression();
     antlr4::tree::TerminalNode *Forward();
+    antlr4::tree::TerminalNode *Dot();
+    antlr4::tree::TerminalNode *Type();
     antlr4::tree::TerminalNode *LeftBracket();
     antlr4::tree::TerminalNode *RightBracket();
     antlr4::tree::TerminalNode *Question();
     AttributeSpecifierSeqContext *attributeSpecifierSeq();
-    antlr4::tree::TerminalNode *Dot();
     antlr4::tree::TerminalNode *IntegerLiteral();
     IdExpressionContext *idExpression();
     antlr4::tree::TerminalNode *Greater();
@@ -3825,6 +3826,7 @@ public:
     antlr4::tree::TerminalNode *RightParen();
     TheTypeIdContext *theTypeId();
     antlr4::tree::TerminalNode *Dot();
+    antlr4::tree::TerminalNode *Type();
     antlr4::tree::TerminalNode *Identifier();
     TupleExpressionContext *tupleExpression();
     IdExpressionContext *idExpression();

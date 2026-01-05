@@ -601,6 +601,7 @@ postfixExpression:
 	| Move postfixExpression
 	| Forward postfixExpression
 	| postfixExpression Dot IntegerLiteral
+	| simpleTypeSpecifier Dot Type
 	| postfixExpression Question? Dot Greater? idExpression
 	| postfixExpression unaryPostfixOperator
 	;
@@ -615,7 +616,7 @@ primaryExpression:
 	| Super
 	| Field
 	| LeftParen expr RightParen
-	| LeftParen theTypeId RightParen Dot Identifier
+	| LeftParen theTypeId RightParen Dot (Type | Identifier)
 	| tupleExpression
 	| Doublecolon? idExpression
 	;
