@@ -5741,6 +5741,15 @@ void CppAdvanceSema::enterEnumDefinition(CppAdvanceParser::EnumDefinitionContext
 				isPrivateTypeDefinition = true;
 		}
 
+		if (attributes)
+		{
+			for (auto attr : attributes->attributeSpecifier())
+			{
+				if (attr->Identifier()->getText() == "Flags")
+					isFlags = true;
+			}
+		}
+
 		auto def = std::make_shared<StructDefinition>(TypeKind::Enum,
 			name, nullptr, nullptr, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, nullptr, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},

@@ -419,7 +419,7 @@ public enum DayOfWeek {
 	Sunday
 }
 
-/*@Flags
+@Flags
 public enum Options : u8 {
 	None = 0,
 	First,//1
@@ -428,13 +428,13 @@ public enum Options : u8 {
 	Fourth,//8
 	Fiveth,//16
 	Sixth,//32
-	Seventh//64
+	Seventh,//64
 
     All = First | Second | Third | Fourth | Fiveth | Sixth | Seventh,
 	Weekend = Sixth | Seventh;
 
 	IsWeekend: bool => Weekend.HasFlag(this);
-}*/
+}
 public enum Text : str {
 	Monday = "This is Monday",
 	Tuesday = "This is Tuesday",
@@ -700,7 +700,13 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		print(123.km + 666);
 		print(1.4f.km + 666);
 		print("123".km);
-		print(3 \*/ 10 \*/ 5);
+		opt:= Options.Weekend;
+		print(i32(opt.HasFlag(Options.Sixth)));
+		print(i32(opt.HasFlag(Options.Fiveth)));
+		opt |= Options.Fiveth;
+		print(i32(opt.HasFlag(Options.Fiveth)));
+		opt.RemoveFlag(Options.Fiveth);
+		print(i32(opt.HasFlag(Options.Fiveth)));
 		//print(var.GetStrongReferenceCount());
 		o: object = m;
 		on: object? = m;

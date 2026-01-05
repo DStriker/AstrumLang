@@ -49,6 +49,8 @@ class IInterface__Unowned;
 class IInterface__Weak;
 class DayOfWeek;
 class __Class_DayOfWeek;
+class Options;
+class __Class_Options;
 class Text;
 class __Class_Text;
 class ComplexVariant;
@@ -1459,6 +1461,112 @@ constexpr auto Saturday = DayOfWeek::Saturday;\
 constexpr auto Sunday = DayOfWeek::Sunday;\
 
 
+class __Class_Options;
+#line 423 "FirstProgram.adv"
+struct [[clang::annotate("UserAttr: Flags")]] Options final : public CppAdvance::Enum {
+	public: using __self = Options;
+	public: using __class = __Class_Options;
+	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+	#line 423 "FirstProgram.adv"
+	private: CppAdvance::u8 __value;
+	#line 423 "FirstProgram.adv"
+	public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, CppAdvance::u8)
+	#line 424 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Options None;
+	#line 425 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Options First;
+	#line 426 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Options Second;
+	#line 427 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Options Third;
+	#line 428 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Options Fourth;
+	#line 429 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Options Fiveth;
+	#line 430 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Options Sixth;
+	#line 431 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Options Seventh;
+	#line 433 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Options All;
+	#line 434 "FirstProgram.adv"
+	public: static TESTDLL_HIDDEN const Options Weekend;
+	#line 423 "FirstProgram.adv"
+	private: static constexpr CppAdvance::Str __names[] = {u"None", u"First", u"Second", u"Third", u"Fourth", u"Fiveth", u"Sixth", u"Seventh", u"All", u"Weekend"};
+	#line 423 "FirstProgram.adv"
+	public: static constexpr std::span<const CppAdvance::Str> GetNames() noexcept { return __names; }
+	#line 423 "FirstProgram.adv"
+	private: static const Options __values[];
+	#line 423 "FirstProgram.adv"
+	public: static constexpr std::span<const Options> GetValues() noexcept;
+	#line 423 "FirstProgram.adv"
+	public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
+	#line 423 "FirstProgram.adv"
+	public: constexpr Options operator &(Options other) const noexcept { return (__value & other.__value); }
+	#line 423 "FirstProgram.adv"
+	public: constexpr bool HasFlag(Options other) const noexcept { return static_cast<bool>(__value & other.__value); }
+	#line 423 "FirstProgram.adv"
+	public: constexpr const Options operator |(Options other) const noexcept { return (__value | other.__value); }
+	#line 423 "FirstProgram.adv"
+	public: constexpr Options& operator |=(Options other) noexcept { __value |= other.__value; return *this; }
+	#line 423 "FirstProgram.adv"
+	public: constexpr Options& AddFlag(Options other) noexcept { __value |= other.__value; return *this; }
+	#line 423 "FirstProgram.adv"
+	public: constexpr Options RemoveFlag(Options other) noexcept { __value &=~ other.__value; return __value; }
+	#line 436 "FirstProgram.adv"
+	public: inline auto getIsWeekend() const  -> bool;
+	#line 9999 "FirstProgram.adv"
+	ADV_PROPERTY_GETTER(public, IsWeekend, getIsWeekend, bool);
+	#line 423 "FirstProgram.adv"
+	public: constexpr operator CppAdvance::u8() const noexcept { return __value; }
+	#line 423 "FirstProgram.adv"
+	private: constexpr Options(CppAdvance::u8 value) : __value(value) {}
+	
+};
+#line 424 "FirstProgram.adv"
+inline constexpr Options Options::None = CppAdvance::u8(CppAdvance::i32(0));
+
+#line 425 "FirstProgram.adv"
+inline constexpr Options Options::First = CppAdvance::u8(CppAdvance::i64(None.__value) << 1 ? CppAdvance::i64(None.__value) << 1 : 1);
+
+#line 426 "FirstProgram.adv"
+inline constexpr Options Options::Second = CppAdvance::u8(CppAdvance::i64(First.__value) << 1 ? CppAdvance::i64(First.__value) << 1 : 1);
+
+#line 427 "FirstProgram.adv"
+inline constexpr Options Options::Third = CppAdvance::u8(CppAdvance::i64(Second.__value) << 1 ? CppAdvance::i64(Second.__value) << 1 : 1);
+
+#line 428 "FirstProgram.adv"
+inline constexpr Options Options::Fourth = CppAdvance::u8(CppAdvance::i64(Third.__value) << 1 ? CppAdvance::i64(Third.__value) << 1 : 1);
+
+#line 429 "FirstProgram.adv"
+inline constexpr Options Options::Fiveth = CppAdvance::u8(CppAdvance::i64(Fourth.__value) << 1 ? CppAdvance::i64(Fourth.__value) << 1 : 1);
+
+#line 430 "FirstProgram.adv"
+inline constexpr Options Options::Sixth = CppAdvance::u8(CppAdvance::i64(Fiveth.__value) << 1 ? CppAdvance::i64(Fiveth.__value) << 1 : 1);
+
+#line 431 "FirstProgram.adv"
+inline constexpr Options Options::Seventh = CppAdvance::u8(CppAdvance::i64(Sixth.__value) << 1 ? CppAdvance::i64(Sixth.__value) << 1 : 1);
+
+#line 433 "FirstProgram.adv"
+inline constexpr Options Options::All = CppAdvance::u8(First | Second | Third | Fourth | Fiveth | Sixth | Seventh);
+
+#line 434 "FirstProgram.adv"
+inline constexpr Options Options::Weekend = CppAdvance::u8(Sixth | Seventh);
+inline constexpr Options Options::__values[] = {None, First, Second, Third, Fourth, Fiveth, Sixth, Seventh, All, Weekend};
+inline constexpr std::span<const Options> Options::GetValues() noexcept { return __values; }
+#define ADV_USING_ENUM_Options \
+constexpr auto None = Options::None;\
+constexpr auto First = Options::First;\
+constexpr auto Second = Options::Second;\
+constexpr auto Third = Options::Third;\
+constexpr auto Fourth = Options::Fourth;\
+constexpr auto Fiveth = Options::Fiveth;\
+constexpr auto Sixth = Options::Sixth;\
+constexpr auto Seventh = Options::Seventh;\
+constexpr auto All = Options::All;\
+constexpr auto Weekend = Options::Weekend;\
+
+
 class __Class_Text;
 #line 438 "FirstProgram.adv"
 struct Text final : public CppAdvance::Enum {
@@ -2543,15 +2651,15 @@ using __extension_610_str = CppAdvance::Str;
 inline constexpr auto getkm(__extension_610_str const& __this ) -> const CppAdvance::Str;
 
 class __Class_TestStruct;
-#line 616 "FirstProgram.adv"
-struct TestStruct final : public CppAdvance::Struct {
+#line 617 "FirstProgram.adv"
+struct alignas((alignof(CppAdvance::i64))) TestStruct final : public CppAdvance::Struct {
 	public: using __self = TestStruct;
 	public: using __class = __Class_TestStruct;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 617 "FirstProgram.adv"
-	private: CppAdvance::i64 x; ADV_CHECK_REF_STRUCT("i64", CppAdvance::i64);
 	#line 618 "FirstProgram.adv"
-	private: alignas((alignof(CppAdvance::i64))) CppAdvance::i64 y; ADV_CHECK_REF_STRUCT("i64", CppAdvance::i64);
+	private: CppAdvance::i64 x; ADV_CHECK_REF_STRUCT("i64", CppAdvance::i64);
+	#line 619 "FirstProgram.adv"
+	private: CppAdvance::i64 y; ADV_CHECK_REF_STRUCT("i64", CppAdvance::i64);
 	public: TestStruct(CppAdvance::i64 _x, CppAdvance::i64 _y) : x{_x}, y{_y} {}
 	
 };
@@ -2794,6 +2902,21 @@ class __Class_DayOfWeek final : public CppAdvance::ValueType
 ADV_CHECK_FOR_CONCRETE(DayOfWeek);
 
 
+#line 423 "FirstProgram.adv"
+class __Class_Options final : public CppAdvance::ValueType
+{
+	#line 9999 "FirstProgram.adv"
+	public: using __underlying = Options; using __self = __underlying;
+	__self __value;
+	__Class_Options(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>) : __value{value} {}
+	operator __underlying() const noexcept { return __value; }
+	auto getIsWeekend() const -> bool { return __value.getIsWeekend(); }
+	
+};
+#line 423 "FirstProgram.adv"
+ADV_CHECK_FOR_CONCRETE(Options);
+
+
 #line 438 "FirstProgram.adv"
 class __Class_Text final : public CppAdvance::ValueType
 {
@@ -2938,7 +3061,7 @@ template<class T1, class T2, class T3, class T4, class T5, class T6> class __Cla
 };
 
 
-#line 616 "FirstProgram.adv"
+#line 617 "FirstProgram.adv"
 class __Class_TestStruct final : public CppAdvance::ValueType
 {
 	#line 9999 "FirstProgram.adv"
@@ -2948,7 +3071,7 @@ class __Class_TestStruct final : public CppAdvance::ValueType
 	operator __underlying() const noexcept { return __value; }
 	
 };
-#line 616 "FirstProgram.adv"
+#line 617 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(TestStruct);
 
 namespace __ntuples {
@@ -3499,6 +3622,13 @@ inline auto __Class_Next::printNext() const  -> void
 	#line 385 "FirstProgram.adv"
 	print(CppAdvance::Str{u"This is printNext function in optional chaining call"});
 }
+#line 436 "FirstProgram.adv"
+inline auto Options::getIsWeekend() const  -> bool 
+{
+	#line 436 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(ADV_UFCS(HasFlag)(Weekend.__ref(), (*this))); 
+}
+
 #line 447 "FirstProgram.adv"
 inline auto Text::ToShortString() const  -> const CppAdvance::Str
 {
@@ -3636,6 +3766,8 @@ inline const CppAdvance::i32 IInterface::SomeStaticMethod(CppAdvance::i32 i)
 	#line 409 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(i * CppAdvance::i32(123)); 
 }
+#line 9999 "FirstProgram.adv"
+
 #line 9999 "FirstProgram.adv"
 
 #line 9999 "FirstProgram.adv"
