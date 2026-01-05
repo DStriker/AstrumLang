@@ -1342,6 +1342,7 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 	bool isRefReturn = false;
 	bool isConstReturn = false;
 	bool isForwardReturn = false;
+	bool isCommutative = false;
 	int8_t varargDepth = -1;
 	CppAdvanceParser::TheTypeIdContext* returnType = nullptr;
 	CppAdvanceParser::ExprContext* expression = nullptr;
@@ -1702,13 +1703,26 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 		}
 		if (isOperator && !id.ends_with("new") && !id.ends_with("delete"))
 			StringReplace(id, " ", "");
+
+		if (ctx->operatorFunctionId() && attributes)
+		{
+			for (auto attr : attributes->attributeSpecifier())
+			{
+				if (attr->Identifier()->getText() == "AllowPostfix" || attr->Identifier()->getText() == "Commutative")
+					isCommutative = true;
+			}
+		}
+
+		if (isCommutative && !isTypeDefinitionBody() && params && !params->paramDeclClause())
+			CppAdvanceCompilerError("Operator function should have parameters", ctx->functionParams()->getStart());
+
 		if (!isTypeDefinitionBody() || isFriendDefinition)
 		{
 			if (*access == AccessSpecifier::Protected && !isOperator) protectedSymbols.insert(id);
 			if (isFriendDefinition) isInline = true;
 			auto def = FunctionDefinition{ id, templateParams, templateSpecializationArgs, params, returnType, expression, exceptions, attributes,
 				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(),
-				isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth };
+				isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, isCommutative, varargDepth };
 			if (isFriendDefinition)
 			{
 				structStack.top()->friendFuncDefinitions.emplace_back(def);
@@ -1723,7 +1737,7 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 			structStack.top()->methods.emplace_back(
 				MethodDefinition{ id, templateParams, templateSpecializationArgs, params, returnType, expression, exceptions, attributes,
 				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(), 
-				isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth, 
+				isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, isCommutative, varargDepth, 
 				currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, isDefault, 
 				isMutating, isStatic, isVirtual,
 				isOverride, false, isFinal});
@@ -1731,7 +1745,7 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 				MethodDefinition{ id, templateParams, templateSpecializationArgs, params, returnType, expression, exceptions,attributes,
 				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, 
 				isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
-				isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth,
+				isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, isCommutative, varargDepth,
 				currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, isDefault, 
 				isMutating, isStatic, isVirtual,
 				isOverride && currentTypeKind.top() == TypeKind::Class, false, isFinal && currentTypeKind.top() == TypeKind::Class });
@@ -2729,7 +2743,7 @@ void CppAdvanceSema::enterFunctionTemplateDeclaration(CppAdvanceParser::Function
 		globalFunctions.emplace_back(
 			FunctionDefinition{ id->getText(), templateParams, templateSpecializationArgs, params, returnType, expression, exceptions,
 			nullptr, {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(), 
-			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth });
+			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, false, varargDepth });
 	}
 }
 
@@ -3418,14 +3432,14 @@ void CppAdvanceSema::enterConstructor(CppAdvanceParser::ConstructorContext* ctx)
 		structStack.top()->methods.emplace_back(
 			MethodDefinition{ id, templateParams, nullptr, params, nullptr, nullptr, exceptions,attributes,
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(),
-			isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, varargDepth,
+			isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, false, varargDepth,
 			currentType, fullType, lastTparams, lastSpec, implicit, isProtectedTypeDefinition, isUnsafeTypeDefinition, isDefault, true, false, false,
 			false, false, false, true });
 		methods.insert_or_assign(SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() },
 			MethodDefinition{ id, templateParams, nullptr, params, nullptr, nullptr, exceptions,attributes,
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
 			isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
-			isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, varargDepth,
+			isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, false, varargDepth,
 			currentType, fullType, lastTparams, lastSpec, implicit, isProtectedTypeDefinition, isUnsafeTypeDefinition, isDefault, true, false, false,
 			false, false, false, true });
 	}
@@ -3672,14 +3686,14 @@ void CppAdvanceSema::enterConversionFunction(CppAdvanceParser::ConversionFunctio
 		structStack.top()->methods.emplace_back(
 			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions, attributes,
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(),
-			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, false, -1,
+			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, false, false, -1,
 			currentType, fullType, lastTparams, lastSpec, implicit, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, false, false, isVirtual,
 			isOverride, false, isFinal, false, false, true });
 		methods.insert_or_assign(SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() },
 			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions, attributes,
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
 			isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
-			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, false, -1,
+			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, false, false, -1,
 			currentType, fullType, lastTparams, lastSpec, implicit, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, false, false, isVirtual,
 			isOverride && currentTypeKind.top() == TypeKind::Class, false, isFinal && currentTypeKind.top() == TypeKind::Class, false, false, true });
 	}
@@ -3938,14 +3952,14 @@ void CppAdvanceSema::enterIndexer(CppAdvanceParser::IndexerContext* ctx)
 		structStack.top()->methods.emplace_back(
 			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions, attributes,
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(),
-			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth,
+			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, false, varargDepth,
 			currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, isMutating, isStatic, isVirtual,
 			isOverride, false, isFinal, false,false,false,params, getter, setter });
 		methods.insert_or_assign(SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() },
 			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions, attributes,
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
 			isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
-			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth,
+			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, false, varargDepth,
 			currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, isMutating, isStatic, isVirtual,
 			isOverride && currentTypeKind.top() == TypeKind::Class, false, isFinal && currentTypeKind.top() == TypeKind::Class, false,false,false,params, getter, setter });
 	}
@@ -4742,13 +4756,13 @@ void CppAdvanceSema::enterDestructor(CppAdvanceParser::DestructorContext* ctx)
 	structStack.top()->methods.emplace_back(
 		MethodDefinition{ id, nullptr, nullptr, nullptr, nullptr, expression, ctx->exceptionSpecification(), nullptr,
 		pos, AccessSpecifier::Public, getCurrentCompilationCondition(),
-		isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, -1,
+		isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, false, -1,
 		currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, true, false, false,
 		false, false, false, false, true });
 	methods.insert_or_assign(pos,
 		MethodDefinition{ id, nullptr, nullptr, nullptr, nullptr, expression, ctx->exceptionSpecification(), nullptr,
 		pos, isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
-		isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, -1,
+		isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, false, -1,
 		currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, true, false, false,
 		false, false, false, false, true });
 }
@@ -4985,7 +4999,7 @@ void CppAdvanceSema::enterAbstractMethodDeclaration(CppAdvanceParser::AbstractMe
 		auto fullType = getCurrentFullTypeName();
 		auto def = MethodDefinition{ id, nullptr, nullptr, params, returnType, nullptr, exceptions, ctx->attributeSpecifierSeq(),
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(),
-			false, false, false, false, isRefReturn, isConstReturn, false, varargDepth,
+			false, false, false, false, isRefReturn, isConstReturn, false, false, varargDepth,
 			currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false,
 			isMutating, false, false, false, true, false };
 		structStack.top()->methods.emplace_back(def);
@@ -5347,7 +5361,7 @@ void CppAdvanceSema::enterInterfaceMethodDeclaration(CppAdvanceParser::Interface
 		auto fullType = getCurrentFullTypeName();
 		auto def = MethodDefinition{ id, nullptr, nullptr, params, returnType, nullptr, exceptions, ctx->attributeSpecifierSeq(),
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, AccessSpecifier::Public, getCurrentCompilationCondition(),
-			false, false, false, false, isRefReturn, isConstReturn, false, varargDepth,
+			false, false, false, false, isRefReturn, isConstReturn, false, false, varargDepth,
 			currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false,
 			false, false, false, false, true, false };
 		structStack.top()->methods.emplace_back(def);
@@ -5440,7 +5454,7 @@ void CppAdvanceSema::enterInterfaceIndexer(CppAdvanceParser::InterfaceIndexerCon
 		structStack.top()->methods.emplace_back(
 			MethodDefinition{ id, nullptr, nullptr, nullptr, returnType, nullptr, exceptions, ctx->attributeSpecifierSeq(),
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, AccessSpecifier::Public, getCurrentCompilationCondition(),
-			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, varargDepth,
+			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, false, varargDepth,
 			currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, isMutating, isStatic, isVirtual,
 			isOverride, false, isFinal, false,false,false,params, getter, setter });
 		/*methods.insert_or_assign(SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() },

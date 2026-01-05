@@ -609,6 +609,94 @@ void CppAdvanceCodegen::printGlobalFunctions() const
 		}
 		if (func.isRefReturn) out << "&";
 		out << ";";
+
+		if (func.isCommutative)
+		{
+			out << "\n" << std::string(depth, '\t');
+			if (func.attributes)
+			{
+				for (auto attr : func.attributes->attributeSpecifier())
+				{
+					auto attrName = attr->Identifier()->getText();
+					if (attrName == "Deprecated")
+					{
+						out << "[[deprecated";
+						if (attr->attributeArgumentClause())
+							out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+						out << "]] ";
+					}
+					else if (attrName == "Unused") {
+						out << "[[maybe_unused]] ";
+					}
+					else if (attrName == "NoDiscard") {
+						out << "[[nodiscard]] ";
+					}
+					else if (attrName == "NoReturn") {
+						out << "[[noreturn]] ";
+					}
+					else if (attrName == "ForceInline") {
+						out << "FORCE_INLINE ";
+					}
+					else if (attrName == "NoInline") {
+						out << "NOINLINE ";
+					}
+					else
+					{
+						printAttributeSpecifier(attr);
+						out << " ";
+					}
+				}
+			}
+
+			isFunctionDeclaration = true;
+			if (func.templateParams) {
+				printTemplateParams(func.templateParams);
+				out << " ";
+			}
+			else if (func.templateSpecializationArgs)
+			{
+				out << "template<> ";
+			}
+
+			if (func.isConsteval)
+			{
+				out << "inline consteval ";
+			}
+			else if (func.isConstexpr)
+			{
+				out << "inline constexpr ";
+			}
+			else if (func.isInline)
+			{
+				out << "inline ";
+			}
+			else if (!DLLName.empty() && func.access != AccessSpecifier::Private && !func.templateParams)
+			{
+				if (func.access == AccessSpecifier::Public) out << DLLName << "_API ";
+				else out << DLLName << "_HIDDEN ";
+			}
+
+			out << "auto " << func.id;
+			auto params = func.params->paramDeclClause()->paramDeclList()->paramDeclaration() | std::views::reverse;
+			if (params.size() == 1 && func.id.starts_with("_operator_"))
+				out << "_postfix";
+			out << "(";
+			bool first = true;
+			for (auto param : params)
+			{
+				if (!first) out << ", ";
+				first = false;
+				printParamDeclaration(param);
+			}
+			out << ")";
+			isVariadicTemplate = false;
+			isFunctionDeclaration = false;
+			out << " ";
+			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
+			out << " -> decltype(auto)";
+			out << ";";
+		}
+
 		if (func.access == AccessSpecifier::Protected || isUnsafe) out << " }";
 		out << std::endl;
 		if (!func.compilationCondition.empty())
@@ -3137,6 +3225,97 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			isFunctionDeclaration = false;
 			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
 			out << " -> " << type->id << ";" << std::endl << std::string(depth, '\t');
+		}
+		else if (func.isCommutative)
+		{
+			switch (func.access)
+			{
+			case AccessSpecifier::Public:
+			case AccessSpecifier::Internal:
+				out << "public: ";
+				break;
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected: ";
+				break;
+			case AccessSpecifier::Private:
+				out << "private: ";
+				break;
+			}
+			if (func.attributes)
+			{
+				for (auto attr : func.attributes->attributeSpecifier())
+				{
+					auto attrName = attr->Identifier()->getText();
+					if (attrName == "Deprecated")
+					{
+						out << "[[deprecated";
+						if (attr->attributeArgumentClause())
+							out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+						out << "]] ";
+					}
+					else if (attrName == "Unused") {
+						out << "[[maybe_unused]] ";
+					}
+					else if (attrName == "NoDiscard") {
+						out << "[[nodiscard]] ";
+					}
+					else if (attrName == "NoReturn") {
+						out << "[[noreturn]] ";
+					}
+					else if (attrName == "ForceInline") {
+						out << "FORCE_INLINE ";
+					}
+					else if (attrName == "NoInline") {
+						out << "NOINLINE ";
+					}
+					else
+					{
+						printAttributeSpecifier(attr);
+						out << " ";
+					}
+				}
+			}
+
+			isFunctionDeclaration = true;
+			if (func.templateParams) {
+				printTemplateParams(func.templateParams);
+				out << " ";
+			}
+			if (func.params->paramDeclClause())
+			{
+				out << "friend ";
+			}
+			if (func.isConsteval)
+			{
+				out << "inline consteval ";
+			}
+			else if (func.isConstexpr)
+			{
+				out << "inline constexpr ";
+			}
+			else
+			{
+				out << "inline ";
+			}
+
+			out << "auto " << func.id;
+			if (!func.params->paramDeclClause())
+			{
+				if (func.id.starts_with("_operator_")) 
+					out << "_postfix() ";
+			}
+			else
+			{
+				out << "(";
+				printParamDeclClause(func.params->paramDeclClause());
+				out << ", const __self& __this) ";
+			}
+
+			isVariadicTemplate = false;
+			isFunctionDeclaration = false;
+			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
+			out << " -> decltype(auto);" << std::endl << std::string(depth, '\t');
 		}
 		else if (func.isConstructor && func.params->paramDeclClause())
 		{
@@ -8096,6 +8275,105 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 			}
 			out << ";" << std::endl << std::string(depth, '\t');
 		}
+		else if (func.isCommutative)
+		{
+			if (func.attributes)
+			{
+				for (auto attr : func.attributes->attributeSpecifier())
+				{
+					auto attrName = attr->Identifier()->getText();
+					if (attrName == "Deprecated")
+					{
+						out << "[[deprecated";
+						if (attr->attributeArgumentClause())
+							out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+						out << "]] ";
+					}
+					else if (attrName == "Unused") {
+						out << "[[maybe_unused]] ";
+					}
+					else if (attrName == "NoDiscard") {
+						out << "[[nodiscard]] ";
+					}
+					else if (attrName == "NoReturn") {
+						out << "[[noreturn]] ";
+					}
+					else if (attrName == "ForceInline") {
+						out << "FORCE_INLINE ";
+					}
+					else if (attrName == "NoInline") {
+						out << "NOINLINE ";
+					}
+					else
+					{
+						printAttributeSpecifier(attr);
+						out << " ";
+					}
+				}
+			}
+
+			isFunctionDeclaration = true;
+			if (func.templateParams) {
+				printTemplateParams(func.templateParams);
+				out << " ";
+			}
+			if (func.isConsteval)
+			{
+				out << "inline consteval ";
+			}
+			else if (func.isConstexpr)
+			{
+				out << "inline constexpr ";
+			}
+			else
+			{
+				out << "inline ";
+			}
+
+			out << "auto " << func.id;
+			if (!func.params->paramDeclClause())
+			{
+				if (func.id.starts_with("_operator_"))
+					out << "_postfix(__extension_" << type->pos.line << "_" << type->id;
+				if (type->templateParams)
+				{
+					out << "<";
+					bool first = true;
+					for (auto param : type->templateParams->templateParamDeclaration())
+					{
+						if (!first) out << ", ";
+						first = false;
+						printIdentifier(param->Identifier());
+					}
+					out << ">";
+				}
+				out << " & __this) ";
+			}
+			else
+			{
+				out << "(";
+				printParamDeclClause(func.params->paramDeclClause());
+				out << ", const __extension_" << type->pos.line << "_" << type->id;
+				if (type->templateParams)
+				{
+					out << "<";
+					bool first = true;
+					for (auto param : type->templateParams->templateParamDeclaration())
+					{
+						if (!first) out << ", ";
+						first = false;
+						printIdentifier(param->Identifier());
+					}
+					out << ">";
+				}
+				out << " & __this) ";
+			}
+
+			isVariadicTemplate = false;
+			isFunctionDeclaration = false;
+			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
+			out << " -> decltype(auto);" << std::endl << std::string(depth, '\t');
+		}
 	}
 
 	for (const auto& prop : type->properties)
@@ -9034,6 +9312,83 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 						out << ">";
 					}
 					out << " { auto copy = __this.__ref(); __this.__ref()." << func.id << "(); return copy; }" << std::endl << std::string(depth, '\t');
+				}
+				else if (func.isCommutative)
+				{
+					if (type->templateParams)
+					{
+						printTemplateParams(type->templateParams);
+						out << " ";
+					}
+					isFunctionDeclaration = true;
+					if (func.isConsteval)
+					{
+						out << "inline consteval ";
+					}
+					else if (func.isConstexpr)
+					{
+						out << "inline constexpr ";
+					}
+					else
+					{
+						out << "inline ";
+					}
+
+					out << "auto " << func.id;
+					if (!func.params->paramDeclClause())
+					{
+						if (func.id.starts_with("_operator_"))
+							out << "_postfix";
+						out << "(__extension_" << type->pos.line << "_" << type->id;
+						if (type->templateParams)
+						{
+							out << "<";
+							bool first = true;
+							for (auto param : type->templateParams->templateParamDeclaration())
+							{
+								if (!first) out << ", ";
+								first = false;
+								printIdentifier(param->Identifier());
+							}
+							out << ">";
+						}
+						out << " & __this) ";
+					}
+					else {
+						out << "(";
+						printParamDeclClause(func.params->paramDeclClause());
+						out << ", const __extension_" << type->pos.line << "_" << type->id;
+						if (type->templateParams)
+						{
+							out << "<";
+							bool first = true;
+							for (auto param : type->templateParams->templateParamDeclaration())
+							{
+								if (!first) out << ", ";
+								first = false;
+								printIdentifier(param->Identifier());
+							}
+							out << ">";
+						}
+						out << " & __this) ";
+					}
+					
+					isVariadicTemplate = false;
+					isFunctionDeclaration = false;
+					if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
+					out << " -> decltype(auto)";
+					if (!func.params->paramDeclClause())
+					{
+						out << " { auto copy = __this; ADV_UFCS(" << func.id << ")(__this); return copy; }";
+					}
+					else
+					{
+						out << " { return ADV_UFCS(" << func.id << ")(__this, ";
+						out << func.params->paramDeclClause()->paramDeclList()->paramDeclaration(0)->Identifier()->getText();
+						out << "); }";
+					}
+					
+					out << std::endl << std::string(depth, '\t');
 				}
 
 				if (type->access == AccessSpecifier::Protected || type->isUnsafe) out << "\n" << std::string(--depth, '\t') << "}";
@@ -10283,6 +10638,107 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 			if (func.isStatic) out << "__class::";
 			else out << "__ref().";
 			out << func.id << "(1); }" << std::endl << std::string(depth, '\t');
+		}
+		else if (func.isCommutative) {
+			switch (func.access)
+			{
+			case AccessSpecifier::Public:
+			case AccessSpecifier::Internal:
+				out << "public: ";
+				break;
+			case AccessSpecifier::Protected:
+			case AccessSpecifier::ProtectedInternal:
+				out << "protected: ";
+				break;
+			case AccessSpecifier::Private:
+				out << "private: ";
+				break;
+			}
+			if (func.attributes)
+			{
+				for (auto attr : func.attributes->attributeSpecifier())
+				{
+					auto attrName = attr->Identifier()->getText();
+					if (attrName == "Deprecated")
+					{
+						out << "[[deprecated";
+						if (attr->attributeArgumentClause())
+							out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+						out << "]] ";
+					}
+					else if (attrName == "Unused") {
+						out << "[[maybe_unused]] ";
+					}
+					else if (attrName == "NoDiscard") {
+						out << "[[nodiscard]] ";
+					}
+					else if (attrName == "NoReturn") {
+						out << "[[noreturn]] ";
+					}
+					else if (attrName == "ForceInline") {
+						out << "FORCE_INLINE ";
+					}
+					else if (attrName == "NoInline") {
+						out << "NOINLINE ";
+					}
+					else
+					{
+						printAttributeSpecifier(attr);
+						out << " ";
+					}
+				}
+			}
+
+			isFunctionDeclaration = true;
+			if (func.templateParams) {
+				printTemplateParams(func.templateParams);
+				out << " ";
+			}
+			if (func.params->paramDeclClause())
+			{
+				out << "friend ";
+			}
+			if (func.isConsteval)
+			{
+				out << "inline consteval ";
+			}
+			else if (func.isConstexpr)
+			{
+				out << "inline constexpr ";
+			}
+			else
+			{
+				out << "inline ";
+			}
+
+			out << "auto " << func.id;
+			if (!func.params->paramDeclClause())
+			{
+				if (func.id.starts_with("_operator_"))
+					out << "_postfix() ";
+			}
+			else
+			{
+				out << "(";
+				printParamDeclClause(func.params->paramDeclClause());
+				out << ", const __self& __this) ";
+			}
+
+			isVariadicTemplate = false;
+			isFunctionDeclaration = false;
+			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
+			out << " -> decltype(auto)";
+			if (!func.params->paramDeclClause())
+			{
+				out << " { auto copy = __ref(); ADV_UFCS(" << func.id << ")(__ref()); return copy; }";
+			}
+			else
+			{
+				out << " { return ADV_UFCS(" << func.id << ")(__this, ";
+				out << func.params->paramDeclClause()->paramDeclList()->paramDeclaration(0)->Identifier()->getText();
+				out << "); }";
+			}
+			out << std::endl << std::string(depth, '\t');
 		}
 		if (func.isStatic) continue;
 		if (parent) {
@@ -14556,6 +15012,69 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 		{
 			printShortFunctionBody(ctx->shortFunctionBody());
 		}
+
+		if (func.isCommutative)
+		{
+			out << std::endl << std::string(depth, '\t');
+			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+			if (func.templateParams)
+			{
+				printTemplateParams(func.templateParams);
+				out << " ";
+			}
+			else if (func.templateSpecializationArgs)
+			{
+				out << "template<> ";
+			}
+			if (func.isConsteval)
+			{
+				out << "inline consteval ";
+			}
+			else if (func.isConstexpr)
+			{
+				out << "inline constexpr ";
+			}
+			else if (func.isInline)
+			{
+				out << "inline ";
+			}
+
+			out << "auto " << func.id;
+			if (func.id.ends_with(" new") || func.id.ends_with(" delete")) isNewDeleteOperator = true;
+			auto params = func.params->paramDeclClause()->paramDeclList()->paramDeclaration() | std::views::reverse;
+			if (params.size() == 1 && func.id.starts_with("_operator_"))
+				out << "_postfix";
+			out << "(";
+			bool first = true;
+			for (auto param : params)
+			{
+				if (!first) out << ", ";
+				first = false;
+				printParamDeclaration(param);
+			}
+			out << ")";
+			isVariadicTemplate = false;
+			out << " ";
+			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
+			out << " -> decltype(auto) ";
+			if (!func.params->paramDeclClause())
+			{
+				out << " { auto copy = ";
+				out << params[0]->Identifier()->getText();
+				out << "; ADV_UFCS(" << func.id << ")(";
+				out << params[0]->Identifier()->getText();
+				out << "); return copy; }";
+			}
+			else
+			{
+				out << " { return ADV_UFCS(" << func.id << ")(";
+				out << params[1]->Identifier()->getText();
+				out << ", ";
+				out << params[0]->Identifier()->getText();
+				out << "); }";
+			}
+		}
+
 		if (func.access == AccessSpecifier::Protected || _isUnsafe) out << "\n" << std::string(--depth,'\t') << "}";
 		out << std::endl;
 		if (!func.compilationCondition.empty())
@@ -14753,6 +15272,73 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 				isVariadicTemplate = false;
 				if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
 				out << " -> __self { auto copy = CppAdvance::New<__self>(__self(*this)); ++(*this); return copy; }";
+				currentShortType.clear();
+				currentTypeWithTemplate.clear();
+			}
+			else if (func.isCommutative)
+			{
+				out << std::endl << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+				if (!func.params->paramDeclClause())
+				{
+					if (func.parentTemplateParams)
+					{
+						printTemplateParams(func.parentTemplateParams);
+						out << " ";
+					}
+					else if (func.parentTemplateSpecializationArgs)
+					{
+						out << "template<> ";
+					}
+				}
+				
+				if (func.isConsteval)
+				{
+					out << "inline consteval ";
+				}
+				else if (func.isConstexpr)
+				{
+					out << "inline constexpr ";
+				}
+				else
+				{
+					out << "inline ";
+				}
+
+				out << "auto ";
+				if (!func.params->paramDeclClause()) {
+					auto parent = func.parentType;
+					StringReplace(parent, ".", "::");
+					out << parent;
+					currentShortType = func.shortType;
+					currentTypeWithTemplate = parent;
+					out << "::";
+				}
+				
+				out << func.id;
+				if (!func.params->paramDeclClause())
+				{
+					if (func.id.starts_with("_operator_"))
+						out << "_postfix() ";
+				}
+				else
+				{
+					out << "(";
+					printParamDeclClause(func.params->paramDeclClause());
+					out << ", const __self& __this) ";
+				}
+				isVariadicTemplate = false;
+				if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
+				out << " -> decltype(auto) ";
+				if (!func.params->paramDeclClause())
+				{
+					out << " { auto copy = __ref(); ADV_UFCS(" << func.id << ")(__ref()); return copy; }";
+				}
+				else
+				{
+					out << " { return ADV_UFCS(" << func.id << ")(__this, ";
+					out << func.params->paramDeclClause()->paramDeclList()->paramDeclaration(0)->Identifier();
+					out << "); }";
+				}
 				currentShortType.clear();
 				currentTypeWithTemplate.clear();
 			}

@@ -225,6 +225,7 @@ struct FunctionDefinition
 	bool isRefReturn = false;
 	bool isConstReturn = false;
 	bool isForwardReturn = false;
+	bool isCommutative = false;
 	int8_t varargs = -1;
 };
 

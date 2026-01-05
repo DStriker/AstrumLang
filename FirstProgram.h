@@ -2633,32 +2633,32 @@ template<class T> inline constexpr auto __static_getCount3() -> const CppAdvance
 
 #line 599 "FirstProgram.adv"
 using __extension_599_i32 = CppAdvance::i32;
-#line 601 "FirstProgram.adv"
-inline constexpr auto _operator_bsl_mul_div(__extension_599_i32 const& __this LIFETIMEBOUND)  -> const CppAdvance::i32;
 #line 603 "FirstProgram.adv"
-inline constexpr auto _operator_bsl_mul_div(__extension_599_i32 const& __this LIFETIMEBOUND, CppAdvance::i32 other)  -> const CppAdvance::i32;
+inline constexpr auto _operator_bsl_mul_div(__extension_599_i32 const& __this LIFETIMEBOUND)  -> const CppAdvance::i32;
+#line 606 "FirstProgram.adv"
+inline constexpr auto _operator_bsl_mul_div(__extension_599_i32 const& __this LIFETIMEBOUND, CppAdvance::f32 other)  -> const CppAdvance::f32;
 #line 600 "FirstProgram.adv"
 inline constexpr auto getkm(__extension_599_i32 const& __this ) -> const CppAdvance::i32;
 
-#line 606 "FirstProgram.adv"
-using __extension_606_f64 = CppAdvance::f64;
-#line 607 "FirstProgram.adv"
-inline constexpr auto getkm(__extension_606_f64 const& __this ) -> const CppAdvance::f64;
-
+#line 609 "FirstProgram.adv"
+using __extension_609_f64 = CppAdvance::f64;
 #line 610 "FirstProgram.adv"
-using __extension_610_str = CppAdvance::Str;
-#line 611 "FirstProgram.adv"
-inline constexpr auto getkm(__extension_610_str const& __this ) -> const CppAdvance::Str;
+inline constexpr auto getkm(__extension_609_f64 const& __this ) -> const CppAdvance::f64;
+
+#line 613 "FirstProgram.adv"
+using __extension_613_str = CppAdvance::Str;
+#line 614 "FirstProgram.adv"
+inline constexpr auto getkm(__extension_613_str const& __this ) -> const CppAdvance::Str;
 
 class __Class_TestStruct;
-#line 617 "FirstProgram.adv"
+#line 620 "FirstProgram.adv"
 struct alignas((alignof(CppAdvance::i64))) TestStruct final : public CppAdvance::Struct {
 	public: using __self = TestStruct;
 	public: using __class = __Class_TestStruct;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 618 "FirstProgram.adv"
+	#line 621 "FirstProgram.adv"
 	private: CppAdvance::i64 x; ADV_CHECK_REF_STRUCT("i64", CppAdvance::i64);
-	#line 619 "FirstProgram.adv"
+	#line 622 "FirstProgram.adv"
 	private: CppAdvance::i64 y; ADV_CHECK_REF_STRUCT("i64", CppAdvance::i64);
 	public: TestStruct(CppAdvance::i64 _x, CppAdvance::i64 _y) : x{_x}, y{_y} {}
 	
@@ -3061,7 +3061,7 @@ template<class T1, class T2, class T3, class T4, class T5, class T6> class __Cla
 };
 
 
-#line 617 "FirstProgram.adv"
+#line 620 "FirstProgram.adv"
 class __Class_TestStruct final : public CppAdvance::ValueType
 {
 	#line 9999 "FirstProgram.adv"
@@ -3071,7 +3071,7 @@ class __Class_TestStruct final : public CppAdvance::ValueType
 	operator __underlying() const noexcept { return __value; }
 	
 };
-#line 617 "FirstProgram.adv"
+#line 620 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(TestStruct);
 
 namespace __ntuples {
@@ -3147,7 +3147,7 @@ template<> inline constexpr auto sum<CppAdvance::i32, CppAdvance::i32(15)>(CppAd
 inline auto func4(CppAdvance::i32 x)  -> const CppAdvance::i32;
 #line 363 "FirstProgram.adv"
 inline auto _operator_subscript(CppAdvance::In<VectorClass> vec, CppAdvance::f32 x, CppAdvance::f32 y)  -> const CppAdvance::f32;
-#line 614 "FirstProgram.adv"
+#line 617 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32;
 //###############################################################################
 //# Global compile-time constants
@@ -3669,10 +3669,10 @@ inline constexpr auto __Class_ComplexVariant::getCount10()  -> CppAdvance::i32
 	ADV_EXPRESSION_BODY(CppAdvance::i32(12345)); 
 }
 
-#line 614 "FirstProgram.adv"
+#line 617 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32
 {
-	#line 614 "FirstProgram.adv"
+	#line 617 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(ADV_UPCS(x)(vec.__ref()) + ADV_UPCS(y)(vec.__ref()) + ADV_UPCS(z)(vec.__ref())); 
 }
 #line 9999 "FirstProgram.adv"
@@ -3817,18 +3817,18 @@ template<class T> inline constexpr auto __static_getCount3() -> const CppAdvance
 }
 #line 9999 "FirstProgram.adv"
 
-#line 601 "FirstProgram.adv"
+#line 603 "FirstProgram.adv"
 inline constexpr auto _operator_bsl_mul_div(__extension_599_i32 const& __this LIFETIMEBOUND)  -> const CppAdvance::i32
 {
-	#line 601 "FirstProgram.adv"
+	#line 603 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(__this / CppAdvance::i32(2)); 
 }
 
-#line 603 "FirstProgram.adv"
-inline constexpr auto _operator_bsl_mul_div(__extension_599_i32 const& __this LIFETIMEBOUND, CppAdvance::i32 other)  -> const CppAdvance::i32
+#line 606 "FirstProgram.adv"
+inline constexpr auto _operator_bsl_mul_div(__extension_599_i32 const& __this LIFETIMEBOUND, CppAdvance::f32 other)  -> const CppAdvance::f32
 {
-	#line 603 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(__this * other * CppAdvance::i32(2)); 
+	#line 606 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(CppAdvance::f32{__this} * other * CppAdvance::i32(2)); 
 }
 
 #line 600 "FirstProgram.adv"
@@ -3839,18 +3839,18 @@ inline constexpr auto getkm(__extension_599_i32 const& __this ) -> const CppAdva
 }
 #line 9999 "FirstProgram.adv"
 
-#line 607 "FirstProgram.adv"
-inline constexpr auto getkm(__extension_606_f64 const& __this ) -> const CppAdvance::f64
+#line 610 "FirstProgram.adv"
+inline constexpr auto getkm(__extension_609_f64 const& __this ) -> const CppAdvance::f64
 {
-	#line 607 "FirstProgram.adv"
+	#line 610 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(__this * CppAdvance::f32(1000.0f)); 
 }
 #line 9999 "FirstProgram.adv"
 
-#line 611 "FirstProgram.adv"
-inline constexpr auto getkm(__extension_610_str const& __this ) -> const CppAdvance::Str
+#line 614 "FirstProgram.adv"
+inline constexpr auto getkm(__extension_613_str const& __this ) -> const CppAdvance::Str
 {
-	#line 611 "FirstProgram.adv"
+	#line 614 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::Str{u"1000km"}); 
 }
 #line 9999 "FirstProgram.adv"

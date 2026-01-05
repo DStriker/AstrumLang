@@ -598,9 +598,12 @@ public extension <T> {
 
 public extension i32 {
 	km: i32 ==> this * 1000;
+
+	@AllowPostfix
 	operator \*/: () -> i32 ==> this / 2;
 
-	operator \*/: (other: i32) -> i32 ==> this * other * 2;
+	@Commutative
+	operator \*/: (other: f32) -> f32 ==> f32(this) * other * 2;
 }
 
 public extension f64 {
@@ -700,13 +703,11 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		print(123.km + 666);
 		print(1.4f.km + 666);
 		print("123".km);
-		opt:= Options.Weekend;
-		print(i32(opt.HasFlag(Options.Sixth)));
-		print(i32(opt.HasFlag(Options.Fiveth)));
-		opt |= Options.Fiveth;
-		print(i32(opt.HasFlag(Options.Fiveth)));
-		opt.RemoveFlag(Options.Fiveth);
-		print(i32(opt.HasFlag(Options.Fiveth)));
+		print(\*/5);
+		iii := 5;
+		print(iii \*/);
+		print(5 \*/ 1.13f);
+		print(1.13f \*/ 5);
 		//print(var.GetStrongReferenceCount());
 		o: object = m;
 		on: object? = m;
