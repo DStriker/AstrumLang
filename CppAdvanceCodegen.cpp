@@ -1937,7 +1937,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		out << "return false;\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
 		//type casting
 		out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-		out << "public: template<class __SomeT> std::optional<__SomeT> As() const noexcept {\n" << std::string(++depth, '\t');
+		out << "public: template<class __SomeT> CppAdvance::Nullable<__SomeT> As() const noexcept {\n" << std::string(++depth, '\t');
 		first = true;
 		for (const auto& constant : type->constants) {
 			if (!first) out << "else ";
@@ -1950,7 +1950,8 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			out << constant.id << ">) { if(__union_internal_tag == _TAG__" << constant.id << ") return _" << constant.id 
 				<< "; }\n" << std::string(depth, '\t');
 		}
-		out << "return {};\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+		out << "else static_assert(false, \"Cannot to cast union type " << type->id << " to __SomeT\");\n" << std::string(depth, '\t');
+		out << "return nullptr;\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
 	}
 	for (const auto& alias : type->typeAliases)
 	{
@@ -3317,7 +3318,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			if (func.exceptionSpecification) printExceptionSpecification(func.exceptionSpecification);
 			out << " -> decltype(auto);" << std::endl << std::string(depth, '\t');
 		}
-		else if (func.isConstructor && func.params->paramDeclClause())
+		else if (type->kind == TypeKind::Class && func.isConstructor && func.params->paramDeclClause())
 		{
 			auto params = func.params->paramDeclClause()->paramDeclList()->paramDeclaration();
 			if (params.size() == 1)
@@ -16708,7 +16709,27 @@ void CppAdvanceCodegen::printRelationalExpression(CppAdvanceParser::RelationalEx
 {
 	if (ctx->threeWayComparisonExpression())
 	{
-		printThreeWayComparisonExpression(ctx->threeWayComparisonExpression());
+		if (ctx->As())
+		{
+			out << "CppAdvance::Cast<";
+			if (ctx->Question())
+			{
+				out << "false";
+			}
+			else
+			{
+				out << "true";
+			}
+			out << ", ";
+			printTypeId(ctx->theTypeId());
+			out << ">(";
+			printThreeWayComparisonExpression(ctx->threeWayComparisonExpression());
+			out << ")";
+		}
+		else
+		{
+			printThreeWayComparisonExpression(ctx->threeWayComparisonExpression());
+		}
 	}
 	else if (ctx->Greater())
 	{

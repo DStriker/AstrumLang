@@ -378,7 +378,7 @@ shiftExpression:
 threeWayComparisonExpression: shiftExpression (Spaceship shiftExpression)?;
 
 relationalExpression: 
-	  threeWayComparisonExpression 
+	  threeWayComparisonExpression ((Is | As Question?) theTypeId)?
 	| relationalExpression (Less | Greater | LessEqual | GreaterEqual | Op6) relationalExpression
 	;
 
@@ -588,7 +588,7 @@ memorySpaceSetter: Less constantExpression Greater;
 newInitializer: LeftParen expressionList? RightParen | bracedInitList;
 
 fullPostfixExpression:
-	postfixExpression (PlusPlus | MinusMinus | unaryCustomOperator)?
+	  postfixExpression (PlusPlus | MinusMinus | unaryCustomOperator)?
 	;
 
 postfixExpression:

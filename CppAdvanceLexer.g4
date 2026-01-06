@@ -220,8 +220,6 @@ Try: 'try';
 
 Type: 'type';
 
-Typeof: 'typeof';
-
 Union: 'union';
 
 Unowned: 'unowned';

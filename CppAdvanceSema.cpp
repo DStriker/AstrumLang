@@ -2525,9 +2525,13 @@ void CppAdvanceSema::exitInitializerClause(CppAdvanceParser::InitializerClauseCo
 
 void CppAdvanceSema::exitRelationalExpression(CppAdvanceParser::RelationalExpressionContext* ctx)
 {
-	if (!ctx->relationalExpression().empty())
+	if (!ctx->relationalExpression().empty() || ctx->Is())
 	{
 		typeStack.push("bool");
+	}
+	else if (ctx->As())
+	{
+		typeStack.push(contextTypes[ctx->theTypeId()]);
 	}
 }
 

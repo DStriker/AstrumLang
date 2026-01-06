@@ -104,6 +104,7 @@ public struct Vector3
 	}
 
 	this() == default;
+	implicit this(in ref that: self) == default;
 
 	implicit this<U>(f: U) == {
 		this(f,f,f);
@@ -252,7 +253,7 @@ public abstract class VectorClass : BaseClass
 		print("VectorClass deiniting");
 	}*/
 
-	public implicit operator f32 noexcept => y;
+	public operator f32 noexcept => y;
 
 	/*public increment: () -> ref self = {
 		++x;
@@ -692,19 +693,18 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		//nxt = null;
 		print(nxt2!.GetStrongReferenceCount());
 		//print(map<int,map<int,string>>.StaticMethod());
-		cv1 :ConcreteVectorClass? = new ConcreteVectorClass(1,2,3);
+		cv1 :ConcreteVectorClass? = new ConcreteVectorClass(1,2.13f,3);
 		cv2 :IInterface= cv1!;
 		//print(i32(cv1! == cv2));
 		//print(i32(cv1! != cv2));
-		print(i32(cv1 === cv2));
-		print(i32(cv1 !== cv2));
-		t1 := i32.type;
-		t2 := String.type;
-		t3 := (String[]).type;
+		print((cv1 === cv2) as i32);
+		print((cv1 !== cv2) as i32);
+		cv11 := nxt as? Next;
+		print(cv1! as f32);
+		
 		//print(var.GetStrongReferenceCount());
-		//o: object = m;
-		//on: object? = m;
-		//print(day.Value);
+		o: object = vec;
+		on: object? = vec;
 	}
 	print(nxt!.GetStrongReferenceCount());
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);
