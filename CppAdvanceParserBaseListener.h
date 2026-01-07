@@ -469,6 +469,15 @@ public:
   virtual void enterExpressionListPart(CppAdvanceParser::ExpressionListPartContext * /*ctx*/) override { }
   virtual void exitExpressionListPart(CppAdvanceParser::ExpressionListPartContext * /*ctx*/) override { }
 
+  virtual void enterPatternList(CppAdvanceParser::PatternListContext * /*ctx*/) override { }
+  virtual void exitPatternList(CppAdvanceParser::PatternListContext * /*ctx*/) override { }
+
+  virtual void enterPattern(CppAdvanceParser::PatternContext * /*ctx*/) override { }
+  virtual void exitPattern(CppAdvanceParser::PatternContext * /*ctx*/) override { }
+
+  virtual void enterPropertyPattern(CppAdvanceParser::PropertyPatternContext * /*ctx*/) override { }
+  virtual void exitPropertyPattern(CppAdvanceParser::PropertyPatternContext * /*ctx*/) override { }
+
   virtual void enterAssignmentOperator(CppAdvanceParser::AssignmentOperatorContext * /*ctx*/) override { }
   virtual void exitAssignmentOperator(CppAdvanceParser::AssignmentOperatorContext * /*ctx*/) override { }
 

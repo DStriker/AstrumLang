@@ -2528,6 +2528,15 @@ void CppAdvanceSema::exitRelationalExpression(CppAdvanceParser::RelationalExpres
 	if (!ctx->relationalExpression().empty() || ctx->Is())
 	{
 		typeStack.push("bool");
+		if (ctx->Is())
+		{
+			if (isCondition && firstPass)
+			{
+				auto patterns = ctx->patternList();
+				if (patterns->pattern(0)->theTypeId() && patterns->Or().empty())
+					ifPrerequisites[currentIfStatement].push_back(ctx);
+			}
+		}
 	}
 	else if (ctx->As())
 	{
@@ -2583,6 +2592,7 @@ void CppAdvanceSema::exitJumpStatement(CppAdvanceParser::JumpStatementContext* c
 
 void CppAdvanceSema::enterSelectionStatement(CppAdvanceParser::SelectionStatementContext* ctx)
 {
+	currentIfStatement = ctx;
 	if (firstPass) return;
 	IfContext ictx;
 	ictx.before = initStates.top();

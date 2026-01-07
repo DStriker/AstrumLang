@@ -492,6 +492,8 @@ public:
 		std::vector<CppAdvanceParser::StackallocExpressionContext*>> stackallocPrerequisites;
 	std::unordered_map<CppAdvanceParser::StatContext*, 
 		std::vector<CppAdvanceParser::PostfixExpressionContext*>> conditionalPrerequisites;
+	std::unordered_map<CppAdvanceParser::SelectionStatementContext*, std::vector<CppAdvanceParser::RelationalExpressionContext*>>
+		ifPrerequisites;
 	std::unordered_map<std::string,NamedTuple> namedTuples;
 	std::unordered_map<CppAdvanceParser::ConstructorBodyContext*, std::unordered_set<std::string>> currentFields;
 	std::unordered_set<CppAdvanceParser::PropertySetterContext*> propertiesNeedField;
@@ -506,6 +508,7 @@ public:
 	std::stack<CppAdvanceParser::UnaryExpressionContext*> unaryExpressions;
 	CppAdvanceParser::AssignmentExpressionContext* currentAssignment{};
 	CppAdvanceParser::StatContext* currentStatement{};
+	CppAdvanceParser::SelectionStatementContext* currentIfStatement{};
 	bool firstPass = true;
 	bool literalMinus = false;
 	bool functionBody = false;

@@ -11468,6 +11468,24 @@ void CppAdvanceCodegen::printCompoundStatement(CppAdvanceParser::CompoundStateme
 		}
 		functionProlog = false;
 	}
+	else if (ifProlog)
+	{
+		if (sema.ifPrerequisites.contains(currentIf))
+		{
+			out << "\n" << std::string(depth, '\t');
+			int i = 0;
+			for (auto prereq : sema.ifPrerequisites[currentIf])
+			{
+				auto txt = prereq->threeWayComparisonExpression()->getText();
+				if (std::all_of(txt.begin(), txt.end(), [](char c) { return std::isalnum(c) || c == '_'; }))
+				{
+					out << "const auto& " << txt << " = *__tmp" << i << ";\n" << std::string(depth, '\t');
+				}
+				++i;
+			}
+		}
+		ifProlog = false;
+	}
 	else if (isUnsafe)
 	{
 		out << "\tCppAdvance::UnsafeContextGuard __unsafe_context_guard" << ctx->getStart()->getLine() << "{};";
@@ -11530,8 +11548,30 @@ void CppAdvanceCodegen::printExpressionStatement(CppAdvanceParser::ExpressionSta
 
 void CppAdvanceCodegen::printSelectionStatement(CppAdvanceParser::SelectionStatementContext* ctx) const
 {
+	currentIf = ctx;
 	if (ctx->If())
 	{
+		std::vector<CppAdvanceParser::RelationalExpressionContext*> prerequisites;
+		if (sema.ifPrerequisites.contains(ctx))
+		{
+			prerequisites = sema.ifPrerequisites[ctx];
+		}
+
+		int prereqIndex = 0;
+		if (!prerequisites.empty())
+		{
+			out << "{\n" << std::string(++depth,'\t');
+			for (auto prereq : prerequisites)
+			{
+				out << "#line " << prereq->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+				out << "auto __tmp" << prereqIndex++ << " = CppAdvance::Cast<false, ";
+				printTypeId(prereq->patternList()->pattern(0)->theTypeId());
+				out << ">(";
+				printThreeWayComparisonExpression(prereq->threeWayComparisonExpression());
+				out << ");\n" << std::string(depth, '\t');
+			}
+			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		}
 		out << "if " << (ctx->Static() || ctx->Consteval() ? "constexpr " : "") << "(";
 		if (ctx->Consteval()) {
 			if (ctx->not_()) out << "!";
@@ -11558,11 +11598,25 @@ void CppAdvanceCodegen::printSelectionStatement(CppAdvanceParser::SelectionState
 		currentLabel.clear();
 		if (auto block = ctx->compoundStatement())
 		{
+			ifProlog = true;
 			printCompoundStatement(block);
 		}
 		else
 		{
 			out << "{" << std::endl << std::string(++depth, '\t');
+			if (!prerequisites.empty())
+			{
+				prereqIndex = 0;
+				for (auto prereq : sema.ifPrerequisites[currentIf])
+				{
+					auto txt = prereq->threeWayComparisonExpression()->getText();
+					if (std::all_of(txt.begin(), txt.end(), [](char c) { return std::isalnum(c) || c == '_'; }))
+					{
+						out << "const auto& " << txt << " = *__tmp" << prereqIndex << ";\n" << std::string(depth, '\t');
+					}
+					++prereqIndex;
+				}
+			}
 			printStatement(ctx->stat());
 			out << std::endl << std::string(--depth, '\t') << "}";
 		}
@@ -11574,6 +11628,10 @@ void CppAdvanceCodegen::printSelectionStatement(CppAdvanceParser::SelectionState
 		}
 		if (!prevLabel.empty()) out << " BREAK_" << prevLabel << ":; }";
 		currentLabel = prevLabel;
+		if (!prerequisites.empty())
+		{
+			out << "\n" << std::string(--depth, '\t') << "}";
+		}
 	}
 }
 
@@ -11910,6 +11968,7 @@ void CppAdvanceCodegen::printExceptionDeclaration(CppAdvanceParser::ExceptionDec
 
 void CppAdvanceCodegen::printCondition(CppAdvanceParser::ConditionContext* ctx) const
 {
+	isCondition = true;
 	if (auto decl = ctx->simpleDeclaration())
 	{
 		printSimpleDeclaration(decl);
@@ -11922,6 +11981,7 @@ void CppAdvanceCodegen::printCondition(CppAdvanceParser::ConditionContext* ctx) 
 	{
 		printDeclarator(decl);
 	}
+	isCondition = false;
 }
 
 void CppAdvanceCodegen::printLoopCondition(CppAdvanceParser::WhileConditionContext* ctx) const
@@ -16725,6 +16785,28 @@ void CppAdvanceCodegen::printRelationalExpression(CppAdvanceParser::RelationalEx
 			out << ">(";
 			printThreeWayComparisonExpression(ctx->threeWayComparisonExpression());
 			out << ")";
+		}
+		else if (ctx->Is())
+		{
+			bool ifRegularIs = true;
+			if (isCondition && currentIf && sema.ifPrerequisites.contains(currentIf))
+			{
+				auto patterns = sema.ifPrerequisites[currentIf];
+				auto it = std::find(patterns.begin(), patterns.end(), ctx);
+				if (it != patterns.end())
+				{
+					ifRegularIs = false;
+					out << "__tmp" << (it - patterns.begin()) << ".isValid()";
+				}
+			}
+
+			if (ifRegularIs) {
+				out << "CppAdvance::Is<";
+				printTypeId(ctx->patternList()->pattern(0)->theTypeId());
+				out << ">(";
+				printThreeWayComparisonExpression(ctx->threeWayComparisonExpression());
+				out << ")";
+			}
 		}
 		else
 		{

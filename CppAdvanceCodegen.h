@@ -30,6 +30,8 @@ class CppAdvanceCodegen
 	mutable bool functionProlog = false;
 	mutable bool checkForRefStruct = false;
 	mutable bool isAlignas = false;
+	mutable bool ifProlog = false;
+	mutable bool isCondition = false;
 	mutable int depth = 0;
 	mutable int varargDepth = -1;
 	mutable std::unordered_map<std::string,std::string> symbolTable;
@@ -44,6 +46,7 @@ class CppAdvanceCodegen
 	mutable CppAdvanceParser::TemplateArgumentListContext* currentTemplateSpecArgs = nullptr;
 	mutable CppAdvanceParser::SimpleDeclarationContext* currentDeclaration = nullptr;
 	mutable CppAdvanceParser::AssignmentExpressionContext* currentAssignment = nullptr;
+	mutable CppAdvanceParser::SelectionStatementContext* currentIf = nullptr;
 	mutable std::string currentType;
 	mutable std::string currentLabel;
 	mutable std::string currentDeclarationName;

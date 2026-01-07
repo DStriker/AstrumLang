@@ -694,13 +694,26 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		print(nxt2!.GetStrongReferenceCount());
 		//print(map<int,map<int,string>>.StaticMethod());
 		cv1 :ConcreteVectorClass? = new ConcreteVectorClass(1,2.13f,3);
-		cv2 :IInterface= cv1!;
+		cv2 :VectorClass= cv1!;
 		//print(i32(cv1! == cv2));
 		//print(i32(cv1! != cv2));
 		print((cv1 === cv2) as i32);
 		print((cv1 !== cv2) as i32);
-		cv11 := nxt as? Next;
+		mu: Next | f32 | str = new Next(5);
+		print((mu as Next).i);
+		if let cv11 := nxt as? Next 
+		{
+			print("aaaaaaaaaa");
+		}
+		//nxt2 = null;
+		if nxt2 is ConcreteVectorClass {
+			print("Nxt2.ZZ = ");
+			//print(nxt.i);
+			//nxt2.ZZ = 10;
+			print(nxt2.Name);
+		}
 		print(cv1! as f32);
+		print((cv1 is IInterface) as i32);
 		
 		//print(var.GetStrongReferenceCount());
 		o: object = vec;

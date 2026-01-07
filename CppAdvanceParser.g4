@@ -378,7 +378,7 @@ shiftExpression:
 threeWayComparisonExpression: shiftExpression (Spaceship shiftExpression)?;
 
 relationalExpression: 
-	  threeWayComparisonExpression ((Is | As Question?) theTypeId)?
+	  threeWayComparisonExpression (As Question? theTypeId | Is patternList)?
 	| relationalExpression (Less | Greater | LessEqual | GreaterEqual | Op6) relationalExpression
 	;
 
@@ -427,6 +427,19 @@ initializerPart: initializerClause Ellipsis?;
 expressionList: expressionListPart (Comma expressionListPart)*;
 
 expressionListPart: (Identifier Assign)? (conditionalExpression | bracedInitList) Ellipsis? | Out Identifier Colon theTypeId;
+
+patternList: pattern ((And | Or) pattern)*;
+
+pattern: 
+	  not? theTypeId (LeftBrace propertyPattern (Comma propertyPattern)* RightBrace)?
+	| not? LeftParen (Identifier | pattern) RightParen
+	| not? shiftExpression (LeftParen Let Identifier (Comma Identifier)* RightParen)?
+	| not? LeftBrace pattern (Comma pattern)* RightBrace
+	| Let Identifier (Comma Identifier)*
+	| (Greater | GreaterEqual | Less | LessEqual) shiftExpression
+	;
+
+propertyPattern: Identifier Colon pattern;
 
 assignmentOperator:
 	  Assign

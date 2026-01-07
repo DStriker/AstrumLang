@@ -106,24 +106,25 @@ public:
     RuleConditionalExpression = 142, RuleConstantExpression = 143, RuleAssignmentExpression = 144, 
     RuleInitializerClause = 145, RuleBracedInitList = 146, RuleInitializerList = 147, 
     RuleInitializerPart = 148, RuleExpressionList = 149, RuleExpressionListPart = 150, 
-    RuleAssignmentOperator = 151, RuleShiftOperator = 152, RuleTryBlock = 153, 
-    RuleExceptionHandler = 154, RuleExceptionDeclaration = 155, RuleThrowExpression = 156, 
-    RuleSimpleTypeSpecifier = 157, RuleNamedTupleField = 158, RuleNestedNameSpecifier = 159, 
-    RuleNamespaceName = 160, RuleTemplateName = 161, RuleSimpleTemplateId = 162, 
-    RuleOperatorTemplateId = 163, RuleTemplateId = 164, RuleTemplateArgumentList = 165, 
-    RuleTemplateArgument = 166, RuleIdExpression = 167, RuleQualifiedId = 168, 
-    RuleUnqualifiedId = 169, RuleTheTypeId = 170, RuleSingleTypeId = 171, 
-    RuleTypePostfix = 172, RuleArrayDeclarator = 173, RulePointerOperator = 174, 
-    RulePointerOperatorSeq = 175, RuleTypeSpecifierSeq = 176, RuleTypeSpecifier = 177, 
-    RuleTrailingTypeSpecifier = 178, RuleTypeNameSpecifier = 179, RuleCvQualifierSeq = 180, 
-    RuleCvQualifier = 181, RuleTypename = 182, RuleClassName = 183, RuleDecltypeSpecifier = 184, 
-    RuleEnumName = 185, RuleAccessSpecifier = 186, RuleProtectedInternal = 187, 
-    RuleOperatorFunctionId = 188, RuleConversionFunctionId = 189, RuleUnaryExpression = 190, 
-    RuleUnaryExpressionTail = 191, RuleNewExpression = 192, RuleStackallocExpression = 193, 
-    RuleMemorySpaceSetter = 194, RuleNewInitializer = 195, RuleFullPostfixExpression = 196, 
-    RulePostfixExpression = 197, RuleTupleExpression = 198, RulePrimaryExpression = 199, 
-    RuleUnaryPrefixOperator = 200, RuleUnaryCustomOperator = 201, RuleRefCaptureOperator = 202, 
-    RuleUnaryPostfixOperator = 203, RuleNot = 204, RuleOperator = 205, RuleLiteral = 206
+    RulePatternList = 151, RulePattern = 152, RulePropertyPattern = 153, 
+    RuleAssignmentOperator = 154, RuleShiftOperator = 155, RuleTryBlock = 156, 
+    RuleExceptionHandler = 157, RuleExceptionDeclaration = 158, RuleThrowExpression = 159, 
+    RuleSimpleTypeSpecifier = 160, RuleNamedTupleField = 161, RuleNestedNameSpecifier = 162, 
+    RuleNamespaceName = 163, RuleTemplateName = 164, RuleSimpleTemplateId = 165, 
+    RuleOperatorTemplateId = 166, RuleTemplateId = 167, RuleTemplateArgumentList = 168, 
+    RuleTemplateArgument = 169, RuleIdExpression = 170, RuleQualifiedId = 171, 
+    RuleUnqualifiedId = 172, RuleTheTypeId = 173, RuleSingleTypeId = 174, 
+    RuleTypePostfix = 175, RuleArrayDeclarator = 176, RulePointerOperator = 177, 
+    RulePointerOperatorSeq = 178, RuleTypeSpecifierSeq = 179, RuleTypeSpecifier = 180, 
+    RuleTrailingTypeSpecifier = 181, RuleTypeNameSpecifier = 182, RuleCvQualifierSeq = 183, 
+    RuleCvQualifier = 184, RuleTypename = 185, RuleClassName = 186, RuleDecltypeSpecifier = 187, 
+    RuleEnumName = 188, RuleAccessSpecifier = 189, RuleProtectedInternal = 190, 
+    RuleOperatorFunctionId = 191, RuleConversionFunctionId = 192, RuleUnaryExpression = 193, 
+    RuleUnaryExpressionTail = 194, RuleNewExpression = 195, RuleStackallocExpression = 196, 
+    RuleMemorySpaceSetter = 197, RuleNewInitializer = 198, RuleFullPostfixExpression = 199, 
+    RulePostfixExpression = 200, RuleTupleExpression = 201, RulePrimaryExpression = 202, 
+    RuleUnaryPrefixOperator = 203, RuleUnaryCustomOperator = 204, RuleRefCaptureOperator = 205, 
+    RuleUnaryPostfixOperator = 206, RuleNot = 207, RuleOperator = 208, RuleLiteral = 209
   };
 
   explicit CppAdvanceParser(antlr4::TokenStream *input);
@@ -294,6 +295,9 @@ public:
   class InitializerPartContext;
   class ExpressionListContext;
   class ExpressionListPartContext;
+  class PatternListContext;
+  class PatternContext;
+  class PropertyPatternContext;
   class AssignmentOperatorContext;
   class ShiftOperatorContext;
   class TryBlockContext;
@@ -2718,9 +2722,10 @@ public:
     RelationalExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     ThreeWayComparisonExpressionContext *threeWayComparisonExpression();
+    antlr4::tree::TerminalNode *As();
     TheTypeIdContext *theTypeId();
     antlr4::tree::TerminalNode *Is();
-    antlr4::tree::TerminalNode *As();
+    PatternListContext *patternList();
     antlr4::tree::TerminalNode *Question();
     std::vector<RelationalExpressionContext *> relationalExpression();
     RelationalExpressionContext* relationalExpression(size_t i);
@@ -3013,6 +3018,71 @@ public:
   };
 
   ExpressionListPartContext* expressionListPart();
+
+  class  PatternListContext : public antlr4::ParserRuleContext {
+  public:
+    PatternListContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<PatternContext *> pattern();
+    PatternContext* pattern(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> And();
+    antlr4::tree::TerminalNode* And(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> Or();
+    antlr4::tree::TerminalNode* Or(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  PatternListContext* patternList();
+
+  class  PatternContext : public antlr4::ParserRuleContext {
+  public:
+    PatternContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    TheTypeIdContext *theTypeId();
+    NotContext *not_();
+    antlr4::tree::TerminalNode *LeftBrace();
+    std::vector<PropertyPatternContext *> propertyPattern();
+    PropertyPatternContext* propertyPattern(size_t i);
+    antlr4::tree::TerminalNode *RightBrace();
+    std::vector<antlr4::tree::TerminalNode *> Comma();
+    antlr4::tree::TerminalNode* Comma(size_t i);
+    antlr4::tree::TerminalNode *LeftParen();
+    antlr4::tree::TerminalNode *RightParen();
+    std::vector<antlr4::tree::TerminalNode *> Identifier();
+    antlr4::tree::TerminalNode* Identifier(size_t i);
+    std::vector<PatternContext *> pattern();
+    PatternContext* pattern(size_t i);
+    ShiftExpressionContext *shiftExpression();
+    antlr4::tree::TerminalNode *Let();
+    antlr4::tree::TerminalNode *Greater();
+    antlr4::tree::TerminalNode *GreaterEqual();
+    antlr4::tree::TerminalNode *Less();
+    antlr4::tree::TerminalNode *LessEqual();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  PatternContext* pattern();
+
+  class  PropertyPatternContext : public antlr4::ParserRuleContext {
+  public:
+    PropertyPatternContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Identifier();
+    antlr4::tree::TerminalNode *Colon();
+    PatternContext *pattern();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  PropertyPatternContext* propertyPattern();
 
   class  AssignmentOperatorContext : public antlr4::ParserRuleContext {
   public:

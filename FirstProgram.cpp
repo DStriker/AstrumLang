@@ -19,15 +19,15 @@ template<class T> inline auto getAsString(__extension_569_T<T> const& __this ) -
 
 #line 629 "FirstProgram.adv"
 auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam = CppAdvance::f64(3.5))  -> const int;
-#line 715 "FirstProgram.adv"
+#line 729 "FirstProgram.adv"
 inline constexpr CppAdvance::usize PRIVATE_CONSTANT = CppAdvance::usize(34U);
 #line 2 "FirstProgram.adv"
 volatile CppAdvance::Unsafe::__VolatileRawPtr<const CppAdvance::char16> globalVar{};
 #line 3 "FirstProgram.adv"
 extern const CppAdvance::Unsafe::__RawPtr<CppAdvance::i32> globalVar1 = nullptr;
-#line 716 "FirstProgram.adv"
+#line 730 "FirstProgram.adv"
 static CppAdvance::i32 globalVar2 = CppAdvance::i32(8);
-#line 717 "FirstProgram.adv"
+#line 731 "FirstProgram.adv"
 static const CppAdvance::i32 globalVar3 = CppAdvance::i32(456);
 #line 92 "FirstProgram.adv"
 thread_local CppAdvance::i32 Vector3::Count2 = CppAdvance::i32(123);
@@ -244,25 +244,56 @@ auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam)  -> co
 		#line 696 "FirstProgram.adv"
 		CppAdvance::Nullable<ConcreteVectorClass> cv1 = CppAdvance::New<ConcreteVectorClass>(CppAdvance::i32(1), CppAdvance::f32(2.13f), CppAdvance::i32(3)); 
 		#line 697 "FirstProgram.adv"
-		IInterface cv2 = (*(cv1)); 
+		VectorClass cv2 = (*(cv1)); 
 		#line 700 "FirstProgram.adv"
 		print(CppAdvance::Cast<true, CppAdvance::i32>((CppAdvance::IdentityEquals(cv1, cv2))));
 		#line 701 "FirstProgram.adv"
 		print(CppAdvance::Cast<true, CppAdvance::i32>((!CppAdvance::IdentityEquals(cv1, cv2))));
 		#line 702 "FirstProgram.adv"
-		auto cv11 = CppAdvance::Cast<true, Next>(nxt); 
+		Union3<Next, CppAdvance::f32, CppAdvance::Str> mu = CppAdvance::New<Next>(CppAdvance::i32(5)); 
 		#line 703 "FirstProgram.adv"
-		print(CppAdvance::Cast<true, CppAdvance::f32>((*(cv1))));
+		print(ADV_UPCS(i)((CppAdvance::Cast<true, Next>(mu)).__ref()));
 		#line 704 "FirstProgram.adv"
-		print(ADV_UPCS(i)(cv11.__ref()));
-		#line 707 "FirstProgram.adv"
+		if (const auto cv11 = CppAdvance::Cast<false, Next>(nxt)) {
+			#line 706 "FirstProgram.adv"
+			print(CppAdvance::Str{u"aaaaaaaaaa"});
+		}
+		#line 709 "FirstProgram.adv"
+		{
+			#line 709 "FirstProgram.adv"
+			auto __tmp0 = CppAdvance::Cast<false, ConcreteVectorClass>(nxt2);
+			#line 709 "FirstProgram.adv"
+			if (__tmp0.isValid()) {
+				const auto& nxt2 = *__tmp0;
+				
+				#line 710 "FirstProgram.adv"
+				{
+					#line 710 "FirstProgram.adv"
+					auto __tmp0 = CppAdvance::Cast<false, IInterface>(nxt2);
+					#line 710 "FirstProgram.adv"
+					if (__tmp0.isValid()) {
+						const auto& nxt2 = *__tmp0;
+						
+						#line 711 "FirstProgram.adv"
+						print(CppAdvance::Str{u"Nxt2.ZZ = "});
+						#line 714 "FirstProgram.adv"
+						print(ADV_UPCS(Name)(nxt2.__ref()));
+					}
+				}
+			}
+		}
+		#line 717 "FirstProgram.adv"
+		print(CppAdvance::Cast<true, CppAdvance::f32>((*(cv1))));
+		#line 718 "FirstProgram.adv"
+		print(CppAdvance::Cast<true, CppAdvance::i32>((CppAdvance::Is<IInterface>(cv1))));
+		#line 721 "FirstProgram.adv"
 		CppAdvance::ObjectRef o = vec; 
-		#line 708 "FirstProgram.adv"
+		#line 722 "FirstProgram.adv"
 		CppAdvance::Nullable<CppAdvance::ObjectRef> on = vec; 
 	}
-	#line 710 "FirstProgram.adv"
+	#line 724 "FirstProgram.adv"
 	print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
-	#line 711 "FirstProgram.adv"
+	#line 725 "FirstProgram.adv"
 	print(ADV_UPCS(x)(ADV_UPCS(x)(ADV_USFCS((Test1::Test2::TestClass), makeTestClass)(CppAdvance::i32(3), CppAdvance::f32(3.14f)).__ref()).__ref()));
 }
 
