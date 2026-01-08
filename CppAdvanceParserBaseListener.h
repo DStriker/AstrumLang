@@ -472,6 +472,9 @@ public:
   virtual void enterPatternList(CppAdvanceParser::PatternListContext * /*ctx*/) override { }
   virtual void exitPatternList(CppAdvanceParser::PatternListContext * /*ctx*/) override { }
 
+  virtual void enterPatternCombinationOperator(CppAdvanceParser::PatternCombinationOperatorContext * /*ctx*/) override { }
+  virtual void exitPatternCombinationOperator(CppAdvanceParser::PatternCombinationOperatorContext * /*ctx*/) override { }
+
   virtual void enterPattern(CppAdvanceParser::PatternContext * /*ctx*/) override { }
   virtual void exitPattern(CppAdvanceParser::PatternContext * /*ctx*/) override { }
 

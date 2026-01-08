@@ -3,6 +3,33 @@
 
 class CppAdvanceCodegen
 {
+	mutable std::unordered_map<std::string,std::string> symbolTable;
+	mutable std::unordered_map<std::string, CppAdvanceParser::TheTypeIdContext*> refParameters;
+	mutable std::unordered_set<CppAdvanceParser::PostfixExpressionContext*> ignoredExpressions;
+	mutable std::unordered_set<CppAdvanceParser::IdExpressionContext*> functionCallExpressions;
+	mutable std::unordered_map<std::string, std::vector<std::string>> enumValues;
+	mutable std::vector<std::pair<std::string, CppAdvanceParser::TheTypeIdContext*>> namedReturns;
+	mutable std::vector<ConstantDefinition> selfConstants;
+	mutable std::stack<CppAdvanceParser::UnaryExpressionContext*> unaryExpressions;
+	mutable CppAdvanceParser::TemplateParamsContext* currentTemplateParams = nullptr;
+	mutable CppAdvanceParser::TemplateArgumentListContext* currentTemplateSpecArgs = nullptr;
+	mutable CppAdvanceParser::SimpleDeclarationContext* currentDeclaration = nullptr;
+	mutable CppAdvanceParser::AssignmentExpressionContext* currentAssignment = nullptr;
+	mutable CppAdvanceParser::EqualityExpressionContext* currentEquality = nullptr;
+	mutable CppAdvanceParser::RelationalExpressionContext* currentIs = nullptr;
+	mutable CppAdvanceParser::SelectionStatementContext* currentIf = nullptr;
+	mutable std::string currentType;
+	mutable std::string currentLabel;
+	mutable std::string currentDeclarationName;
+	mutable std::string currentShortType;
+	mutable std::string currentTypeWithTemplate;
+	mutable std::string currentPropertyField;
+	mutable std::string lastEnumValue;
+	mutable std::optional <AccessSpecifier> currentAccessSpecifier;
+	std::string filename;
+	mutable int depth = 0;
+	mutable int varargDepth = -1;
+	mutable int currentTupleSize = 0;
 	mutable bool literalMinus = false;
 	mutable bool lvalue = false;
 	mutable bool functionBody = false;
@@ -32,30 +59,6 @@ class CppAdvanceCodegen
 	mutable bool isAlignas = false;
 	mutable bool ifProlog = false;
 	mutable bool isCondition = false;
-	mutable int depth = 0;
-	mutable int varargDepth = -1;
-	mutable std::unordered_map<std::string,std::string> symbolTable;
-	mutable std::unordered_map<std::string, CppAdvanceParser::TheTypeIdContext*> refParameters;
-	mutable std::unordered_set<CppAdvanceParser::PostfixExpressionContext*> ignoredExpressions;
-	mutable std::unordered_set<CppAdvanceParser::IdExpressionContext*> functionCallExpressions;
-	mutable std::unordered_map<std::string, std::vector<std::string>> enumValues;
-	mutable std::vector<std::pair<std::string, CppAdvanceParser::TheTypeIdContext*>> namedReturns;
-	mutable std::vector<ConstantDefinition> selfConstants;
-	mutable std::stack<CppAdvanceParser::UnaryExpressionContext*> unaryExpressions;
-	mutable CppAdvanceParser::TemplateParamsContext* currentTemplateParams = nullptr;
-	mutable CppAdvanceParser::TemplateArgumentListContext* currentTemplateSpecArgs = nullptr;
-	mutable CppAdvanceParser::SimpleDeclarationContext* currentDeclaration = nullptr;
-	mutable CppAdvanceParser::AssignmentExpressionContext* currentAssignment = nullptr;
-	mutable CppAdvanceParser::SelectionStatementContext* currentIf = nullptr;
-	mutable std::string currentType;
-	mutable std::string currentLabel;
-	mutable std::string currentDeclarationName;
-	mutable std::string currentShortType;
-	mutable std::string currentTypeWithTemplate;
-	mutable std::string currentPropertyField;
-	mutable std::string lastEnumValue;
-	mutable std::optional <AccessSpecifier> currentAccessSpecifier;
-	std::string filename;
 
 	class StreamSwitcher {
 	private:
@@ -216,6 +219,8 @@ public:
 	void printEqualityExpression(CppAdvanceParser::EqualityExpressionContext* ctx) const;
 	void printRelationalExpression(CppAdvanceParser::RelationalExpressionContext* ctx) const;
 	void printThreeWayComparisonExpression(CppAdvanceParser::ThreeWayComparisonExpressionContext* ctx) const;
+	void printPatternList(CppAdvanceParser::PatternListContext* ctx, CppAdvanceParser::ThreeWayComparisonExpressionContext* leftExpr,
+		std::string_view tmpName, std::string_view propertyName = "", bool isDeconstruction = false, bool isIndex = false, bool skipFirst = false) const;
 	void printShiftExpression(CppAdvanceParser::ShiftExpressionContext* ctx) const;
 	void printAdditiveExpression(CppAdvanceParser::AdditiveExpressionContext* ctx) const;
 	void printMultiplicativeExpression(CppAdvanceParser::MultiplicativeExpressionContext* ctx) const;

@@ -1586,6 +1586,13 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 						printTypeId(types[i]);
 						out << ");\n" << std::string(depth, '\t');
 					}
+					out << "bool operator==(const " << constant.id << "& that) const noexcept { return ";
+					for (size_t i = 0, size = types.size(); i < size; ++i)
+					{
+						if (i > 0) out << " && ";
+						out << ids[i]->getText() << " == that." << ids[i]->getText();
+					}
+					out << "; }";
 					out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
 				}
 				else
@@ -1622,7 +1629,9 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			else
 			{
 				//empty union members
-				out << "private: struct __UnionType_" << constant.id << "{}; public: static constexpr __UnionType_" 
+				out << "private: struct __UnionType_" << constant.id << "{ constexpr bool operator==(const __UnionType_" 
+					<< constant.id << " &) const noexcept { return true; } ";
+				out << "}; public: static constexpr __UnionType_" 
 					<< constant.id << " " << constant.id << "{};\n" << std::string(depth, '\t');
 			}
 		}
@@ -1738,6 +1747,8 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		out << "public: static constexpr std::span<const " << type->id << "> GetValues() noexcept;\n" << std::string(depth, '\t');
 		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 		out << "public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } \n" << std::string(depth, '\t');
+		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "public: constexpr bool operator ==(const __self& that) const noexcept { return __value == that.__value; } \n" << std::string(depth, '\t');
 		if (type->isAbstract) //flags
 		{
 			out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
@@ -1952,6 +1963,34 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		}
 		out << "else static_assert(false, \"Cannot to cast union type " << type->id << " to __SomeT\");\n" << std::string(depth, '\t');
 		out << "return nullptr;\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+		//equality checking
+		/*out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "public: bool operator==(const __self& other) const noexcept {\n" << std::string(++depth, '\t');
+		out << "if (__union_internal_tag != other.__union_internal_tag) return false;\n" << std::string(depth, '\t');
+		first = true;
+		for (const auto& constant : type->constants) {
+			if (!first) out << "else ";
+			first = false;
+			out << "if (__union_internal_tag == _TAG__"
+				<< constant.id << ") return _" << constant.id << " == other._" << constant.id << "; \n"
+				<< std::string(depth, '\t');
+		}
+		out << "return false;\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');*/
+		out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "public: template<class __SomeT> bool operator==(const __SomeT& other) const noexcept {\n" << std::string(++depth, '\t');
+		first = true;
+		for (const auto& constant : type->constants) {
+			if (!first) out << "else ";
+			first = false;
+			out << "if constexpr (std::is_same_v<__SomeT, ";
+			if (!constant.unionEnumerator)
+			{
+				out << "__UnionType_";
+			}
+			out << constant.id << ">) return __union_internal_tag == _TAG__" << constant.id << " && _" << constant.id << " == other;\n"
+				<< std::string(depth, '\t');
+		}
+		out << "return false;\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
 	}
 	for (const auto& alias : type->typeAliases)
 	{
@@ -3458,9 +3497,236 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 	{
 		out << "\n#define ADV_PROPERTY_SELF __self";
 	}
-	out << "\n" << std::string(--depth, '\t') << "};";
+	if (type->kind == TypeKind::Struct)
+	{
+		out << "template <size_t I";
+		if (type->templateParams)
+		{
+			for (auto param : type->templateParams->templateParamDeclaration())
+			{
+				out << ", ";
+				printTemplateParamDeclaration(param);
+			}
+		}
+		out << "> friend auto& get(" << type->id;
+		if (type->templateParams)
+		{
+			out << "<";
+			bool first = true;
+			for (auto param : type->templateParams->templateParamDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				printIdentifier(param->Identifier());
+			}
+			out << ">";
+		}
+		else if (type->templateSpecializationArgs)
+		{
+			out << "<";
+			bool first = true;
+			for (auto param : type->templateSpecializationArgs->templateArgument())
+			{
+				if (!first) out << ", ";
+				first = false;
+				printTemplateArgument(param);
+			}
+			out << ">";
+		}
+		out << "&);\n" << std::string(depth, '\t');
+		out << "template <size_t I";
+		if (type->templateParams)
+		{
+			for (auto param : type->templateParams->templateParamDeclaration())
+			{
+				out << ", ";
+				printTemplateParamDeclaration(param);
+			}
+		}
+		out << "> friend const auto& get(const " << type->id;
+		if (type->templateParams)
+		{
+			out << "<";
+			bool first = true;
+			for (auto param : type->templateParams->templateParamDeclaration())
+			{
+				if (!first) out << ", ";
+				first = false;
+				printIdentifier(param->Identifier());
+			}
+			out << ">";
+		}
+		else if (type->templateSpecializationArgs)
+		{
+			out << "<";
+			bool first = true;
+			for (auto param : type->templateSpecializationArgs->templateArgument())
+			{
+				if (!first) out << ", ";
+				first = false;
+				printTemplateArgument(param);
+			}
+			out << ">";
+		}
+		out << "&);\n" << std::string(depth, '\t');
+	}
+	out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
 
-	if (type->kind == TypeKind::Class || type->kind == TypeKind::EnumClass)
+	currentTupleSize = 0;
+	if (type->kind == TypeKind::Struct)
+	{
+		int i = 0;
+		for (const auto& field : type->fields) {
+			if (field.isStatic || field.isThreadLocal || field.access != AccessSpecifier::Public) continue;
+			if (!field.isConst) {
+				if (type->templateParams)
+				{
+					printTemplateParams(type->templateParams);
+				}
+				else
+				{
+					out << "template<>";
+				}
+				out << " inline auto& get<" << i << ">(" << type->id;
+				if (type->templateParams)
+				{
+					out << "<";
+					bool first = true;
+					for (auto param : type->templateParams->templateParamDeclaration())
+					{
+						if (!first) out << ", ";
+						first = false;
+						printIdentifier(param->Identifier());
+					}
+					out << ">";
+				}
+				else if (type->templateSpecializationArgs)
+				{
+					out << "<";
+					bool first = true;
+					for (auto param : type->templateSpecializationArgs->templateArgument())
+					{
+						if (!first) out << ", ";
+						first = false;
+						printTemplateArgument(param);
+					}
+					out << ">";
+				}
+				out << "& t) { return t." << field.id << "; }\n" << std::string(depth, '\t');
+			}
+			if (type->templateParams)
+			{
+				printTemplateParams(type->templateParams);
+			}
+			else
+			{
+				out << "template<>";
+			}
+			out << " inline const auto& get<" << i++ << ">(const " << type->id;
+			if (type->templateParams)
+			{
+				out << "<";
+				bool first = true;
+				for (auto param : type->templateParams->templateParamDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					printIdentifier(param->Identifier());
+				}
+				out << ">";
+			}
+			else if (type->templateSpecializationArgs)
+			{
+				out << "<";
+				bool first = true;
+				for (auto param : type->templateSpecializationArgs->templateArgument())
+				{
+					if (!first) out << ", ";
+					first = false;
+					printTemplateArgument(param);
+				}
+				out << ">";
+			}
+			out << "& t) { return t." << field.id << "; }\n" << std::string(depth, '\t');
+		}
+
+		for (const auto& prop : type->properties) {
+			if (!prop.setter || !sema.propertiesNeedField.contains(prop.setter) || prop.isStatic 
+				|| prop.access != AccessSpecifier::Public) continue;
+			if (!prop.isConst) {
+				if (type->templateParams)
+				{
+					printTemplateParams(type->templateParams);
+				}
+				else
+				{
+					out << "template<>";
+				}
+				out << " inline auto& get<" << i << ">(" << type->id;
+				if (type->templateParams)
+				{
+					out << "<";
+					bool first = true;
+					for (auto param : type->templateParams->templateParamDeclaration())
+					{
+						if (!first) out << ", ";
+						first = false;
+						printIdentifier(param->Identifier());
+					}
+					out << ">";
+				}
+				else if (type->templateSpecializationArgs)
+				{
+					out << "<";
+					bool first = true;
+					for (auto param : type->templateSpecializationArgs->templateArgument())
+					{
+						if (!first) out << ", ";
+						first = false;
+						printTemplateArgument(param);
+					}
+					out << ">";
+				}
+				out << "& t) { return t." << prop.id << "; }\n" << std::string(depth, '\t');
+			}
+			if (type->templateParams)
+			{
+				printTemplateParams(type->templateParams);
+			}
+			else
+			{
+				out << "template<>";
+			}
+			out << " inline const auto& get<" << i++ << ">(const " << type->id;
+			if (type->templateParams)
+			{
+				out << "<";
+				bool first = true;
+				for (auto param : type->templateParams->templateParamDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					printIdentifier(param->Identifier());
+				}
+				out << ">";
+			}
+			else if (type->templateSpecializationArgs)
+			{
+				out << "<";
+				bool first = true;
+				for (auto param : type->templateSpecializationArgs->templateArgument())
+				{
+					if (!first) out << ", ";
+					first = false;
+					printTemplateArgument(param);
+				}
+				out << ">";
+			}
+			out << "& t) { return t." << prop.id << "; }\n" << std::string(depth, '\t');
+		}
+		currentTupleSize = i;
+	}
+	else if (type->kind == TypeKind::Class || type->kind == TypeKind::EnumClass)
 	{
 		out << "\n" << std::string(depth, '\t');
 		if (!type->templateSpecializationArgs && !type->templateParams)
@@ -8747,7 +9013,127 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 		}
 
 		if (type->access == AccessSpecifier::Protected || type->isUnsafe) out << "\n" << std::string(--depth, '\t') << "}";
-		out << std::endl;
+		out << std::endl << std::string(depth,'\t');
+		if (currentTupleSize > 0)
+		{
+			out << "namespace std {\n" << std::string(++depth, '\t');
+			if (type->templateParams)
+			{
+				printTemplateParams(type->templateParams);
+			}
+			else
+			{
+				out << "template<>";
+			}
+			out << " struct tuple_size<" << type->id;
+			if (type->templateParams)
+			{
+				out << "<";
+				bool first = true;
+				for (auto param : type->templateParams->templateParamDeclaration())
+				{
+					if (!first) out << ", ";
+					first = false;
+					printIdentifier(param->Identifier());
+				}
+				out << ">";
+			}
+			else if (type->templateSpecializationArgs)
+			{
+				out << "<";
+				bool first = true;
+				for (auto param : type->templateSpecializationArgs->templateArgument())
+				{
+					if (!first) out << ", ";
+					first = false;
+					printTemplateArgument(param);
+				}
+				out << ">";
+			}
+			out << "> : integral_constant<size_t, " << currentTupleSize << "> {}; \n" << std::string(depth, '\t');
+			int i = 0;
+			for (const auto& field : type->fields) {
+				if (field.isStatic || field.isThreadLocal || field.access != AccessSpecifier::Public) continue;
+				if (type->templateParams)
+				{
+					printTemplateParams(type->templateParams);
+				}
+				else
+				{
+					out << "template<>";
+				}
+				out << " struct tuple_element<" << i++ << ", " << type->id;
+				if (type->templateParams)
+				{
+					out << "<";
+					bool first = true;
+					for (auto param : type->templateParams->templateParamDeclaration())
+					{
+						if (!first) out << ", ";
+						first = false;
+						printIdentifier(param->Identifier());
+					}
+					out << ">";
+				}
+				else if (type->templateSpecializationArgs)
+				{
+					out << "<";
+					bool first = true;
+					for (auto param : type->templateSpecializationArgs->templateArgument())
+					{
+						if (!first) out << ", ";
+						first = false;
+						printTemplateArgument(param);
+					}
+					out << ">";
+				}
+				out << "> { using type = ";
+				printTypeId(field.type);
+				out << "; };\n" << std::string(depth, '\t');
+			}
+
+			for (const auto& prop : type->properties) {
+				if (!prop.setter || !sema.propertiesNeedField.contains(prop.setter) || prop.isStatic
+					|| prop.access != AccessSpecifier::Public) continue;
+				if (type->templateParams)
+				{
+					printTemplateParams(type->templateParams);
+				}
+				else
+				{
+					out << "template<>";
+				}
+				out << " struct tuple_element<" << i++ << ", " << type->id;
+				if (type->templateParams)
+				{
+					out << "<";
+					bool first = true;
+					for (auto param : type->templateParams->templateParamDeclaration())
+					{
+						if (!first) out << ", ";
+						first = false;
+						printIdentifier(param->Identifier());
+					}
+					out << ">";
+				}
+				else if (type->templateSpecializationArgs)
+				{
+					out << "<";
+					bool first = true;
+					for (auto param : type->templateSpecializationArgs->templateArgument())
+					{
+						if (!first) out << ", ";
+						first = false;
+						printTemplateArgument(param);
+					}
+					out << ">";
+				}
+				out << "> { using type = ";
+				printTypeId(prop.type);
+				out << "; };\n" << std::string(depth, '\t');
+			}
+			out << "\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+		}
 		sema.symbolContexts.pop();
 	}
 	for (const auto& type : sema.globalStructs)
@@ -8829,22 +9215,28 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 		out << " {}";
 		out << "\n" << std::string(depth, '\t') << "FORCE_INLINE decltype(auto) __ref() noexcept { return *this; }";
 		out << "\n" << std::string(depth, '\t') << "FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }";
-		out << "\n" << std::string(--depth, '\t') << "};" << "\n" << std::string(--depth,'\t') << "}";
-		if (tuple.access == AccessSpecifier::Protected) out << " } ";
-		out << std::endl;
 		auto fullName = id;
 		StringReplace(fullName, ".", "::");
-		out << "namespace std {\n" << std::string(++depth, '\t');
-		out << "template <> struct tuple_size<" << fullName << "> : integral_constant<size_t, " << tuple.fields.size() << "> {};\n" << std::string(depth, '\t');
-		out << "template <size_t I> auto& get("<< fullName << "&);\n" << std::string(depth, '\t');
-		out << "template <size_t I> const auto& get(const " << fullName << "&);\n" << std::string(depth, '\t');
+		out << "\n" << std::string(depth, '\t');
+		out << "template <size_t I> friend auto& get(" << fullName << "&);\n" << std::string(depth, '\t');
+		out << "template <size_t I> friend const auto& get(const " << fullName << "&);\n" << std::string(depth, '\t');
+		out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
 		int i = 0;
 		for (const auto& [field, type] : tuple.fields) {
-			out << "template <> struct tuple_element<" << i << ", " << fullName << "> { using type = ";
-			printTypeId(type);
-			out << "; };\n" << std::string(depth, '\t');
 			out << "template <> inline auto& get<" << i << ">(" << fullName << "& t) { return t." << field << "; }\n" << std::string(depth, '\t');
 			out << "template <> inline const auto& get<" << i++ << ">(const " << fullName << "& t) { return t." << field << "; }\n" << std::string(depth, '\t');
+		}
+		out << "\n" << std::string(--depth, '\t') << "}";
+		if (tuple.access == AccessSpecifier::Protected) out << " } ";
+		out << std::endl;
+		out << "namespace std {\n" << std::string(++depth, '\t');
+		out << "template <> struct tuple_size<" << fullName << "> : integral_constant<size_t, " << tuple.fields.size() << "> {};\n" << std::string(depth, '\t');
+
+		i = 0;
+		for (const auto& [field, type] : tuple.fields) {
+			out << "template <> struct tuple_element<" << i++ << ", " << fullName << "> { using type = ";
+			printTypeId(type);
+			out << "; };\n" << std::string(depth, '\t');
 		}
 
 		out << "\n" << std::string(--depth, '\t') << "}";
@@ -11476,10 +11868,36 @@ void CppAdvanceCodegen::printCompoundStatement(CppAdvanceParser::CompoundStateme
 			int i = 0;
 			for (auto prereq : sema.ifPrerequisites[currentIf])
 			{
-				auto txt = prereq->threeWayComparisonExpression()->getText();
-				if (std::all_of(txt.begin(), txt.end(), [](char c) { return std::isalnum(c) || c == '_'; }))
+				auto pattern = prereq->patternList()->pattern(0);
+				bool isNull = pattern->shiftExpression() && pattern->shiftExpression()->getText() == "null";
+				if (!isNull && pattern->not_() || isNull && !pattern->not_()) continue;
+				out << "#line " << prereq->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+				if (pattern->Let())
 				{
-					out << "const auto& " << txt << " = *__tmp" << i << ";\n" << std::string(depth, '\t');
+					out << "const auto& [";
+					bool first = true;
+					for (auto id : pattern->Identifier())
+					{
+						if (!first) out << ", ";
+						first = false;
+						printIdentifier(id);
+					}
+					out << "] = ";
+					out << "*__tmp" << i << "; \n" << std::string(depth, '\t');
+				}
+				else {
+					auto txt = prereq->threeWayComparisonExpression()->getText();
+					if (std::all_of(txt.begin(), txt.end(), [](char c) { return std::isalnum(c) || c == '_'; }))
+					{
+						if (isNull)
+						{
+							out << "auto __tmp" << i << " = *" << txt << "; ";
+						}
+						out << "const auto& " << txt << " = ";
+						if (!isNull) out << "*";
+						out << "__tmp" << i;
+						out << ";\n" << std::string(depth, '\t');
+					}
 				}
 				++i;
 			}
@@ -11563,9 +11981,28 @@ void CppAdvanceCodegen::printSelectionStatement(CppAdvanceParser::SelectionState
 			out << "{\n" << std::string(++depth,'\t');
 			for (auto prereq : prerequisites)
 			{
+				auto pattern = prereq->patternList()->pattern(0);
+				if (pattern->shiftExpression() && pattern->shiftExpression()->getText() == "null") continue;
 				out << "#line " << prereq->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 				out << "auto __tmp" << prereqIndex++ << " = CppAdvance::Cast<false, ";
-				printTypeId(prereq->patternList()->pattern(0)->theTypeId());
+				if (pattern->theTypeId())
+				{
+					printTypeId(pattern->theTypeId());
+				}
+				else if (pattern->shiftExpression())
+				{
+					if (!pattern->Let()) out << "decltype(";
+					currentIs = prereq;
+					printShiftExpression(pattern->shiftExpression());
+					currentIs = nullptr;
+					if (!pattern->Let()) out << ")";
+				}
+				else /*if (pattern->Let())*/
+				{
+					out << "decltype(";
+					printThreeWayComparisonExpression(prereq->threeWayComparisonExpression());
+					out << ")::__self";
+				}
 				out << ">(";
 				printThreeWayComparisonExpression(prereq->threeWayComparisonExpression());
 				out << ");\n" << std::string(depth, '\t');
@@ -11609,10 +12046,36 @@ void CppAdvanceCodegen::printSelectionStatement(CppAdvanceParser::SelectionState
 				prereqIndex = 0;
 				for (auto prereq : sema.ifPrerequisites[currentIf])
 				{
-					auto txt = prereq->threeWayComparisonExpression()->getText();
-					if (std::all_of(txt.begin(), txt.end(), [](char c) { return std::isalnum(c) || c == '_'; }))
+					auto pattern = prereq->patternList()->pattern(0);
+                    bool isNull = pattern->shiftExpression() && pattern->shiftExpression()->getText() == "null";
+					if (!isNull && pattern->not_() || isNull && !pattern->not_()) continue;
+					out << "#line " << prereq->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+					if (pattern->Let())
 					{
-						out << "const auto& " << txt << " = *__tmp" << prereqIndex << ";\n" << std::string(depth, '\t');
+						out << "const auto& [";
+						bool first = true;
+						for (auto id : pattern->Identifier())
+						{
+							if (!first) out << ", ";
+							first = false;
+							printIdentifier(id);
+						}
+						out << "] = ";
+						out << "*__tmp" << prereqIndex << "; \n" << std::string(depth, '\t');
+					}
+					else {
+						auto txt = prereq->threeWayComparisonExpression()->getText();
+						if (std::all_of(txt.begin(), txt.end(), [](char c) { return std::isalnum(c) || c == '_'; }))
+						{
+							if (isNull)
+							{
+								out << "auto __tmp" << prereqIndex << " = *" << txt << "; ";
+							}
+							out << "const auto& " << txt << " = ";
+							if (!isNull) out << "*";
+							out << "__tmp" << prereqIndex;
+							out << ";\n" << std::string(depth, '\t');
+						}
 					}
 					++prereqIndex;
 				}
@@ -16729,12 +17192,14 @@ void CppAdvanceCodegen::printEqualityExpression(CppAdvanceParser::EqualityExpres
 	{
 		printEqualityExpression(ctx->equalityExpression(0));
 		out << " == ";
+		currentEquality = ctx;
 		printEqualityExpression(ctx->equalityExpression(1));
 	}
 	else if (ctx->NotEqual())
 	{
 		printEqualityExpression(ctx->equalityExpression(0));
 		out << " != ";
+		currentEquality = ctx;
 		printEqualityExpression(ctx->equalityExpression(1));
 	}
 	else if (ctx->IdentityEqual())
@@ -16742,6 +17207,7 @@ void CppAdvanceCodegen::printEqualityExpression(CppAdvanceParser::EqualityExpres
 		out << "CppAdvance::IdentityEquals(";
 		printEqualityExpression(ctx->equalityExpression(0));
 		out << ", ";
+		currentEquality = ctx;
 		printEqualityExpression(ctx->equalityExpression(1));
 		out << ")";
 	}
@@ -16750,6 +17216,7 @@ void CppAdvanceCodegen::printEqualityExpression(CppAdvanceParser::EqualityExpres
 		out << "!CppAdvance::IdentityEquals(";
 		printEqualityExpression(ctx->equalityExpression(0));
 		out << ", ";
+		currentEquality = ctx;
 		printEqualityExpression(ctx->equalityExpression(1));
 		out << ")";
 	}
@@ -16760,9 +17227,11 @@ void CppAdvanceCodegen::printEqualityExpression(CppAdvanceParser::EqualityExpres
 		out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op5()->getText()) << ")(";
 		printEqualityExpression(ctx->equalityExpression(0));
 		out << ", ";
+		currentEquality = ctx;
 		printEqualityExpression(ctx->equalityExpression(1));
 		out << ")";
 	}
+	currentEquality = nullptr;
 }
 
 void CppAdvanceCodegen::printRelationalExpression(CppAdvanceParser::RelationalExpressionContext* ctx) const
@@ -16788,25 +17257,43 @@ void CppAdvanceCodegen::printRelationalExpression(CppAdvanceParser::RelationalEx
 		}
 		else if (ctx->Is())
 		{
-			bool ifRegularIs = true;
+			bool skipFirst = false;
+			currentIs = ctx;
+			std::string tmpName;
+			out << "(";
 			if (isCondition && currentIf && sema.ifPrerequisites.contains(currentIf))
 			{
 				auto patterns = sema.ifPrerequisites[currentIf];
 				auto it = std::find(patterns.begin(), patterns.end(), ctx);
 				if (it != patterns.end())
 				{
-					ifRegularIs = false;
-					out << "__tmp" << (it - patterns.begin()) << ".isValid()";
+					auto pattern = (*it)->patternList()->pattern(0);
+					if (!(pattern->shiftExpression() && pattern->shiftExpression()->getText() == "null"))
+					{
+						if (pattern->not_()) out << "!";
+						tmpName = "__tmp" + std::to_string (it - patterns.begin());
+						out << tmpName << ".isValid()";
+						if (!pattern->theTypeId() || !pattern->propertyPattern().empty())
+						{
+							if (pattern->not_())
+							{
+								out << " || ";
+							}
+							else {
+								out << " && ";
+							}
+						}
+						else
+						{
+							skipFirst = true;
+						}
+					}
 				}
 			}
-
-			if (ifRegularIs) {
-				out << "CppAdvance::Is<";
-				printTypeId(ctx->patternList()->pattern(0)->theTypeId());
-				out << ">(";
-				printThreeWayComparisonExpression(ctx->threeWayComparisonExpression());
-				out << ")";
-			}
+			printPatternList(ctx->patternList(), ctx->threeWayComparisonExpression(), tmpName, "", false, false, skipFirst);
+			
+			out << ")";
+			currentIs = nullptr;
 		}
 		else
 		{
@@ -16856,6 +17343,204 @@ void CppAdvanceCodegen::printThreeWayComparisonExpression(CppAdvanceParser::Thre
 	{
 		out << " <=> ";
 		printShiftExpression(ctx->shiftExpression(1));
+	}
+}
+
+void CppAdvanceCodegen::printPatternList(CppAdvanceParser::PatternListContext* ctx, CppAdvanceParser::ThreeWayComparisonExpressionContext* leftExpr,
+	std::string_view tmpName, std::string_view propertyName, bool isDeconstruction, bool isIndex, bool skipFirst) const
+{
+	static int contextIndex = 0;
+	int i = 0;
+	for (auto pattern : ctx->pattern()) {
+		if (i == 0 && skipFirst) {
+			++i;  continue;
+		}
+		if (pattern->theTypeId() && pattern->theTypeId()->getText() == "_")
+		{
+			out << "true";
+			++i;  continue;
+		}
+		if (i > 0) {
+			auto op = ctx->patternCombinationOperator(i - 1);
+			if (op->And())
+			{
+				out << " && ";
+			}
+			else if (op->Or())
+			{
+				out << " || ";
+			}
+		}
+		if (pattern->not_())
+		{
+			out << "!";
+		}
+		if (pattern->LeftBrace() || pattern->LeftBracket())
+		{
+			out << "(";
+			bool first = true;
+			contextIndex = 0;
+			for (auto subpatterns : pattern->patternList())
+			{
+				if (!first) {
+					out << "\n" << std::string(depth + 1, '\t') << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"";
+					out << "\n" << std::string(depth + 1, '\t') << " && ";
+				}
+				first = false;
+				out << "(";
+				if (pattern->LeftBrace())
+				{
+					printPatternList(subpatterns, leftExpr, tmpName, "", true);
+				}
+				else
+				{
+					printPatternList(subpatterns, leftExpr, tmpName, "", false, true);
+				}
+				contextIndex++;
+				
+				out << ")";
+			}
+			contextIndex = 0;
+			first = true;
+			for (auto subpatterns : pattern->propertyPattern())
+			{
+				if (!first) {
+					out << "\n" << std::string(depth + 1, '\t') << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"";
+					out << "\n" << std::string(depth + 1, '\t') << " && ";
+				}
+				first = false;
+				out << "(";
+				printPatternList(subpatterns->patternList(), leftExpr, tmpName, subpatterns->Identifier()->getText());
+				out << ")";
+			}
+			out << ")";
+		}
+		else {
+			out << "CppAdvance::Is";
+			if (auto type = pattern->theTypeId())
+			{
+				out << "<typename ";
+				printTypeId(type);
+				out << ">(";
+				if (isDeconstruction)
+				{
+					out << "get<" << contextIndex << ">";
+				}
+				else if (!propertyName.empty())
+				{
+					out << "ADV_UPCS(" << propertyName << ")";
+				}
+				if (isDeconstruction || isIndex || !propertyName.empty())
+				{
+					out << "(";
+				}
+				printThreeWayComparisonExpression(leftExpr);
+				if (isDeconstruction || isIndex)
+				{
+					out << ")";
+				}
+				if (isIndex)
+				{
+					out << "[" << contextIndex << "]";
+				}
+				else if (!propertyName.empty()) {
+					out << ").__ref()";
+				}
+				out << ")";
+			}
+			else if (auto expr = pattern->shiftExpression())
+			{
+				if (pattern->Let())
+				{
+					out << "<typename ";
+					printShiftExpression(expr);
+					out << ">(";
+					if (isDeconstruction)
+					{
+						out << "get<" << contextIndex << ">";
+					}
+					else if (!propertyName.empty())
+					{
+						out << "ADV_UPCS(" << propertyName << ")";
+					}
+					if (isDeconstruction || isIndex || !propertyName.empty())
+					{
+						out << "(";
+					}
+					printThreeWayComparisonExpression(leftExpr);
+					if (isDeconstruction || isIndex)
+					{
+						out << ")";
+					}
+					if (isIndex)
+					{
+						out << "[" << contextIndex << "]";
+					}
+					else if (!propertyName.empty()) {
+						out << ").__ref()";
+					}
+					out << ")";
+				}
+				else {
+					if (pattern->Greater())
+					{
+						out << "Greater";
+					}
+					else if (pattern->GreaterEqual())
+					{
+						out << "GreaterOrEqual";
+					}
+					else if (pattern->Less())
+					{
+						out << "Less";
+					}
+					else if (pattern->LessEqual())
+					{
+						out << "LessOrEqual";
+					}
+					out << "(";
+					
+					if (isDeconstruction)
+					{
+						out << "get<" << contextIndex << ">";
+					}
+					else if (!propertyName.empty())
+					{
+						out << "ADV_UPCS(" << propertyName << ")";
+					}
+					if (isDeconstruction || isIndex || !propertyName.empty())
+					{
+						out << "(";
+					}
+					if (!tmpName.empty())
+					{
+						out << "*" << tmpName;
+					}
+					else {
+						printThreeWayComparisonExpression(leftExpr);
+					}
+					if (isDeconstruction || isIndex)
+					{
+						out << ")";
+					}
+					if (isIndex)
+					{
+						out << "[" << contextIndex << "]";
+					}
+					else if (!propertyName.empty()) {
+						out << ")";
+						if (tmpName.empty())
+						{
+							out << ".__ref()";
+						}
+					}
+					out << ", ";
+					printShiftExpression(expr);
+					out << ")";
+				}
+			}
+		}
+		++i;
 	}
 }
 
@@ -17736,6 +18421,18 @@ void CppAdvanceCodegen::printPrimaryExpression(CppAdvanceParser::PrimaryExpressi
 			{
 				out << "decltype(";
 				printLogicalOrExpression(currentAssignment->logicalOrExpression());
+				out << ")";
+			}
+			else if (currentIs)
+			{
+				out << "decltype(";
+				printThreeWayComparisonExpression(currentIs->threeWayComparisonExpression());
+				out << ")";
+			}
+			else if (currentEquality && !currentEquality->equalityExpression().empty())
+			{
+				out << "decltype(";
+				printEqualityExpression(currentEquality->equalityExpression(0));
 				out << ")";
 			}
 			out << "::";

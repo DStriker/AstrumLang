@@ -470,6 +470,9 @@ public:
   virtual void enterPatternList(CppAdvanceParser::PatternListContext *ctx) = 0;
   virtual void exitPatternList(CppAdvanceParser::PatternListContext *ctx) = 0;
 
+  virtual void enterPatternCombinationOperator(CppAdvanceParser::PatternCombinationOperatorContext *ctx) = 0;
+  virtual void exitPatternCombinationOperator(CppAdvanceParser::PatternCombinationOperatorContext *ctx) = 0;
+
   virtual void enterPattern(CppAdvanceParser::PatternContext *ctx) = 0;
   virtual void exitPattern(CppAdvanceParser::PatternContext *ctx) = 0;
 

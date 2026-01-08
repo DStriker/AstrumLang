@@ -102,6 +102,7 @@ struct [[clang::annotate("ref_struct")]] Span final : public CppAdvance::RefStru
 	public: inline ~Span() noexcept;
 	
 };
+
 class __Class_Vector3;
 #line 57 "FirstProgram.adv"
 struct Vector3 final : public CppAdvance::Struct {
@@ -180,6 +181,7 @@ struct Vector3 final : public CppAdvance::Struct {
 		
 #define ADV_PROPERTY_SELF __self
 	};
+	
 	#line 97 "FirstProgram.adv"
 	ADV_CHECK_FOR_CONCRETE(NestedStruct);
 	
@@ -317,8 +319,24 @@ struct Vector3 final : public CppAdvance::Struct {
 	public: inline constexpr auto Reset()  -> void;
 	#line 160 "FirstProgram.adv"
 	public: template<class U> inline constexpr auto TemplateMethod(U x, U y, U z)  -> const Coords;
+	template <size_t I> friend auto& get(Vector3&);
+	template <size_t I> friend const auto& get(const Vector3&);
 	
 };
+template<> inline auto& get<0>(Vector3& t) { return t.x; }
+template<> inline const auto& get<0>(const Vector3& t) { return t.x; }
+template<> inline auto& get<1>(Vector3& t) { return t.y; }
+template<> inline const auto& get<1>(const Vector3& t) { return t.y; }
+template<> inline auto& get<2>(Vector3& t) { return t.z; }
+template<> inline const auto& get<2>(const Vector3& t) { return t.z; }
+
+namespace std {
+	template<> struct tuple_size<Vector3> : integral_constant<size_t, 3> {}; 
+	template<> struct tuple_element<0, Vector3> { using type = CppAdvance::f32; };
+	template<> struct tuple_element<1, Vector3> { using type = CppAdvance::f32; };
+	template<> struct tuple_element<2, Vector3> { using type = CppAdvance::f32; };
+	
+}
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<BaseClass> = false;
 #line 178 "FirstProgram.adv"
 class BaseClass : public CppAdvance::ObjectRef {
@@ -368,6 +386,10 @@ class BaseClass__Weak : public CppAdvance::ObjectRef__Weak {
 	#define ADV_PROPERTY_SELF __self
 };
 
+namespace std {
+	template<> struct tuple_size<BaseClass> : integral_constant<size_t, 3> {}; 
+	
+}
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<VectorClass> = false;
 #line 182 "FirstProgram.adv"
 class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
@@ -459,6 +481,7 @@ class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
 		
 #define ADV_PROPERTY_SELF __self
 	};
+	
 	#line 219 "FirstProgram.adv"
 	ADV_CHECK_FOR_CONCRETE(NestedClass);
 	
@@ -1430,11 +1453,14 @@ struct DayOfWeek final : public CppAdvance::Enum {
 	#line 416 "FirstProgram.adv"
 	public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
 	#line 416 "FirstProgram.adv"
+	public: constexpr bool operator ==(const __self& that) const noexcept { return __value == that.__value; } 
+	#line 416 "FirstProgram.adv"
 	public: constexpr operator CppAdvance::i32() const noexcept { return __value; }
 	#line 416 "FirstProgram.adv"
 	private: constexpr DayOfWeek(CppAdvance::i32 value) : __value(value) {}
 	
 };
+
 #line 417 "FirstProgram.adv"
 inline constexpr DayOfWeek DayOfWeek::Monday = CppAdvance::i32(CppAdvance::i32(1));
 
@@ -1508,6 +1534,8 @@ struct [[clang::annotate("UserAttr: Flags")]] Options final : public CppAdvance:
 	#line 427 "FirstProgram.adv"
 	public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
 	#line 427 "FirstProgram.adv"
+	public: constexpr bool operator ==(const __self& that) const noexcept { return __value == that.__value; } 
+	#line 427 "FirstProgram.adv"
 	public: constexpr Options operator &(Options other) const noexcept { return (__value & other.__value); }
 	#line 427 "FirstProgram.adv"
 	public: constexpr bool HasFlag(Options other) const noexcept { return static_cast<bool>(__value & other.__value); }
@@ -1529,6 +1557,7 @@ struct [[clang::annotate("UserAttr: Flags")]] Options final : public CppAdvance:
 	private: constexpr Options(CppAdvance::u8 value) : __value(value) {}
 	
 };
+
 #line 428 "FirstProgram.adv"
 inline constexpr Options Options::None = CppAdvance::u8(CppAdvance::i32(0));
 
@@ -1607,6 +1636,8 @@ struct Text final : public CppAdvance::Enum {
 	public: static constexpr std::span<const Text> GetValues() noexcept;
 	#line 442 "FirstProgram.adv"
 	public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
+	#line 442 "FirstProgram.adv"
+	public: constexpr bool operator ==(const __self& that) const noexcept { return __value == that.__value; } 
 	#line 454 "FirstProgram.adv"
 	private: inline auto getShortString() const  -> CppAdvance::Str;
 	#line 9999 "FirstProgram.adv"
@@ -1619,6 +1650,7 @@ struct Text final : public CppAdvance::Enum {
 	private: constexpr Text(CppAdvance::Str value) : __value(value) {}
 	
 };
+
 #line 443 "FirstProgram.adv"
 inline constexpr Text Text::Monday = CppAdvance::Str(CppAdvance::Str{u"This is Monday"});
 
@@ -1721,7 +1753,7 @@ struct Media final : public CppAdvance::Union {
 	public: using __class = __Class_Media;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 	#line 484 "FirstProgram.adv"
-	private: struct __UnionType_None{}; public: static constexpr __UnionType_None None{};
+	private: struct __UnionType_None{ constexpr bool operator==(const __UnionType_None &) const noexcept { return true; } }; public: static constexpr __UnionType_None None{};
 	#line 485 "FirstProgram.adv"
 	public: using String = CppAdvance::Str; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
 	#line 486 "FirstProgram.adv"
@@ -1731,7 +1763,7 @@ struct Media final : public CppAdvance::Union {
 		CppAdvance::Str name; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
 		CppAdvance::i32 len; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
 		CppAdvance::f32 volume; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-		
+		bool operator==(const Audio& that) const noexcept { return name == that.name && len == that.len && volume == that.volume; }
 	};
 	#line 488 "FirstProgram.adv"
 	public: struct Video { decltype(auto) __ref() const noexcept { return *this; }
@@ -1739,12 +1771,12 @@ struct Media final : public CppAdvance::Union {
 		CppAdvance::i32 len; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
 		CppAdvance::f32 fps; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
 		CppAdvance::Str lang; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
-		
+		bool operator==(const Video& that) const noexcept { return name == that.name && len == that.len && fps == that.fps && lang == that.lang; }
 	};
 	#line 489 "FirstProgram.adv"
 	public: struct Text { decltype(auto) __ref() const noexcept { return *this; }
 		CppAdvance::Str lang; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
-		
+		bool operator==(const Text& that) const noexcept { return lang == that.lang; }
 	};
 	private: union {
 		#line 484 "FirstProgram.adv"
@@ -1912,6 +1944,16 @@ struct Media final : public CppAdvance::Union {
 		else static_assert(false, "Cannot to cast union type Media to __SomeT");
 		return nullptr;
 	}
+	#line 9999 "FirstProgram.adv"
+	public: template<class __SomeT> bool operator==(const __SomeT& other) const noexcept {
+		if constexpr (std::is_same_v<__SomeT, __UnionType_None>) return __union_internal_tag == _TAG__None && _None == other;
+		else if constexpr (std::is_same_v<__SomeT, String>) return __union_internal_tag == _TAG__String && _String == other;
+		else if constexpr (std::is_same_v<__SomeT, XYZ>) return __union_internal_tag == _TAG__XYZ && _XYZ == other;
+		else if constexpr (std::is_same_v<__SomeT, Audio>) return __union_internal_tag == _TAG__Audio && _Audio == other;
+		else if constexpr (std::is_same_v<__SomeT, Video>) return __union_internal_tag == _TAG__Video && _Video == other;
+		else if constexpr (std::is_same_v<__SomeT, Text>) return __union_internal_tag == _TAG__Text && _Text == other;
+		return false;
+	}
 	#line 497 "FirstProgram.adv"
 	public: inline constexpr auto getCount123() const  -> CppAdvance::i32;
 	#line 9999 "FirstProgram.adv"
@@ -1926,6 +1968,7 @@ struct Media final : public CppAdvance::Union {
 	public: inline auto GetMagicNumber(CppAdvance::In<VectorClass> f) const  -> const CppAdvance::f32;
 	
 };
+
 template<class T1, class T2> class __Class_Union2;
 #line 502 "FirstProgram.adv"
 template<class T1, class T2> struct Union2 final : public CppAdvance::Union {
@@ -2022,8 +2065,15 @@ template<class T1, class T2> struct Union2 final : public CppAdvance::Union {
 		else static_assert(false, "Cannot to cast union type Union2 to __SomeT");
 		return nullptr;
 	}
+	#line 9999 "FirstProgram.adv"
+	public: template<class __SomeT> bool operator==(const __SomeT& other) const noexcept {
+		if constexpr (std::is_same_v<__SomeT, Type1>) return __union_internal_tag == _TAG__Type1 && _Type1 == other;
+		else if constexpr (std::is_same_v<__SomeT, Type2>) return __union_internal_tag == _TAG__Type2 && _Type2 == other;
+		return false;
+	}
 	
 };
+
 template<class T1, class T2, class T3> class __Class_Union3;
 #line 507 "FirstProgram.adv"
 template<class T1, class T2, class T3> struct Union3 final : public CppAdvance::Union {
@@ -2142,8 +2192,16 @@ template<class T1, class T2, class T3> struct Union3 final : public CppAdvance::
 		else static_assert(false, "Cannot to cast union type Union3 to __SomeT");
 		return nullptr;
 	}
+	#line 9999 "FirstProgram.adv"
+	public: template<class __SomeT> bool operator==(const __SomeT& other) const noexcept {
+		if constexpr (std::is_same_v<__SomeT, Type1>) return __union_internal_tag == _TAG__Type1 && _Type1 == other;
+		else if constexpr (std::is_same_v<__SomeT, Type2>) return __union_internal_tag == _TAG__Type2 && _Type2 == other;
+		else if constexpr (std::is_same_v<__SomeT, Type3>) return __union_internal_tag == _TAG__Type3 && _Type3 == other;
+		return false;
+	}
 	
 };
+
 template<class T1, class T2, class T3, class T4> class __Class_Union4;
 #line 513 "FirstProgram.adv"
 template<class T1, class T2, class T3, class T4> struct Union4 final : public CppAdvance::Union {
@@ -2284,8 +2342,17 @@ template<class T1, class T2, class T3, class T4> struct Union4 final : public Cp
 		else static_assert(false, "Cannot to cast union type Union4 to __SomeT");
 		return nullptr;
 	}
+	#line 9999 "FirstProgram.adv"
+	public: template<class __SomeT> bool operator==(const __SomeT& other) const noexcept {
+		if constexpr (std::is_same_v<__SomeT, Type1>) return __union_internal_tag == _TAG__Type1 && _Type1 == other;
+		else if constexpr (std::is_same_v<__SomeT, Type2>) return __union_internal_tag == _TAG__Type2 && _Type2 == other;
+		else if constexpr (std::is_same_v<__SomeT, Type3>) return __union_internal_tag == _TAG__Type3 && _Type3 == other;
+		else if constexpr (std::is_same_v<__SomeT, Type4>) return __union_internal_tag == _TAG__Type4 && _Type4 == other;
+		return false;
+	}
 	
 };
+
 template<class T1, class T2, class T3, class T4, class T5> class __Class_Union5;
 #line 520 "FirstProgram.adv"
 template<class T1, class T2, class T3, class T4, class T5> struct Union5 final : public CppAdvance::Union {
@@ -2448,8 +2515,18 @@ template<class T1, class T2, class T3, class T4, class T5> struct Union5 final :
 		else static_assert(false, "Cannot to cast union type Union5 to __SomeT");
 		return nullptr;
 	}
+	#line 9999 "FirstProgram.adv"
+	public: template<class __SomeT> bool operator==(const __SomeT& other) const noexcept {
+		if constexpr (std::is_same_v<__SomeT, Type1>) return __union_internal_tag == _TAG__Type1 && _Type1 == other;
+		else if constexpr (std::is_same_v<__SomeT, Type2>) return __union_internal_tag == _TAG__Type2 && _Type2 == other;
+		else if constexpr (std::is_same_v<__SomeT, Type3>) return __union_internal_tag == _TAG__Type3 && _Type3 == other;
+		else if constexpr (std::is_same_v<__SomeT, Type4>) return __union_internal_tag == _TAG__Type4 && _Type4 == other;
+		else if constexpr (std::is_same_v<__SomeT, Type5>) return __union_internal_tag == _TAG__Type5 && _Type5 == other;
+		return false;
+	}
 	
 };
+
 template<class T1, class T2, class T3, class T4, class T5, class T6> class __Class_Union6;
 #line 528 "FirstProgram.adv"
 template<class T1, class T2, class T3, class T4, class T5, class T6> struct Union6 final : public CppAdvance::Union {
@@ -2634,8 +2711,19 @@ template<class T1, class T2, class T3, class T4, class T5, class T6> struct Unio
 		else static_assert(false, "Cannot to cast union type Union6 to __SomeT");
 		return nullptr;
 	}
+	#line 9999 "FirstProgram.adv"
+	public: template<class __SomeT> bool operator==(const __SomeT& other) const noexcept {
+		if constexpr (std::is_same_v<__SomeT, Type1>) return __union_internal_tag == _TAG__Type1 && _Type1 == other;
+		else if constexpr (std::is_same_v<__SomeT, Type2>) return __union_internal_tag == _TAG__Type2 && _Type2 == other;
+		else if constexpr (std::is_same_v<__SomeT, Type3>) return __union_internal_tag == _TAG__Type3 && _Type3 == other;
+		else if constexpr (std::is_same_v<__SomeT, Type4>) return __union_internal_tag == _TAG__Type4 && _Type4 == other;
+		else if constexpr (std::is_same_v<__SomeT, Type5>) return __union_internal_tag == _TAG__Type5 && _Type5 == other;
+		else if constexpr (std::is_same_v<__SomeT, Type6>) return __union_internal_tag == _TAG__Type6 && _Type6 == other;
+		return false;
+	}
 	
 };
+
 #line 598 "FirstProgram.adv"
 template<class T> using __extension_598_T = T;
 #line 600 "FirstProgram.adv"
@@ -2675,8 +2763,11 @@ struct alignas((alignof(CppAdvance::i64))) TestStruct final : public CppAdvance:
 	#line 626 "FirstProgram.adv"
 	private: CppAdvance::i64 y; ADV_CHECK_REF_STRUCT("i64", CppAdvance::i64);
 	public: TestStruct(CppAdvance::i64 _x, CppAdvance::i64 _y) : x{_x}, y{_y} {}
+	template <size_t I> friend auto& get(TestStruct&);
+	template <size_t I> friend const auto& get(const TestStruct&);
 	
 };
+
 
 #line 57 "FirstProgram.adv"
 class __Class_Vector3 final : public CppAdvance::ValueType
@@ -2720,6 +2811,7 @@ class __Class_BaseClass : public CppAdvance::Object {
 	
 #define ADV_PROPERTY_SELF __self
 };
+
 #line 178 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(BaseClass);
 
@@ -2807,6 +2899,7 @@ class ADV_NOVTABLE __Class_VectorClass ADV_ABSTRACT : public CppAdvance::ClassPa
 	
 #define ADV_PROPERTY_SELF __self
 };
+
 #line 182 "FirstProgram.adv"
 ADV_CHECK_FOR_ABSTRACT(VectorClass);
 #line 182 "FirstProgram.adv"
@@ -2866,6 +2959,7 @@ class __Class_ConcreteVectorClass : public CppAdvance::ClassParent<VectorClass> 
 	
 #define ADV_PROPERTY_SELF __self
 };
+
 #line 327 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(ConcreteVectorClass);
 #line 327 "FirstProgram.adv"
@@ -2900,6 +2994,7 @@ class __Class_Next : public CppAdvance::Object {
 	
 #define ADV_PROPERTY_SELF __self
 };
+
 #line 369 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(Next);
 
@@ -2992,6 +3087,7 @@ class __Class_ComplexVariant final : public CppAdvance::EnumClass {
 	
 #define ADV_PROPERTY_SELF __self
 };
+
 #line 457 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(ComplexVariant);
 
@@ -3101,21 +3197,23 @@ namespace __ntuples {
 		NamedTuple_4e7be1ed49b09d71(CppAdvance::In<CppAdvance::i32> _i, CppAdvance::In<CppAdvance::f64> _f, CppAdvance::In<CppAdvance::Str> _s) : i{_i}, f{_f}, s{_s} {}
 		FORCE_INLINE decltype(auto) __ref() noexcept { return *this; }
 		FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		template <size_t I> friend auto& get(__ntuples::NamedTuple_4e7be1ed49b09d71&);
+		template <size_t I> friend const auto& get(const __ntuples::NamedTuple_4e7be1ed49b09d71&);
+		
 	};
+	template <> inline auto& get<0>(__ntuples::NamedTuple_4e7be1ed49b09d71& t) { return t.i; }
+	template <> inline const auto& get<0>(const __ntuples::NamedTuple_4e7be1ed49b09d71& t) { return t.i; }
+	template <> inline auto& get<1>(__ntuples::NamedTuple_4e7be1ed49b09d71& t) { return t.f; }
+	template <> inline const auto& get<1>(const __ntuples::NamedTuple_4e7be1ed49b09d71& t) { return t.f; }
+	template <> inline auto& get<2>(__ntuples::NamedTuple_4e7be1ed49b09d71& t) { return t.s; }
+	template <> inline const auto& get<2>(const __ntuples::NamedTuple_4e7be1ed49b09d71& t) { return t.s; }
+	
 }
 namespace std {
 	template <> struct tuple_size<__ntuples::NamedTuple_4e7be1ed49b09d71> : integral_constant<size_t, 3> {};
-	template <size_t I> auto& get(__ntuples::NamedTuple_4e7be1ed49b09d71&);
-	template <size_t I> const auto& get(const __ntuples::NamedTuple_4e7be1ed49b09d71&);
 	template <> struct tuple_element<0, __ntuples::NamedTuple_4e7be1ed49b09d71> { using type = CppAdvance::i32; };
-	template <> inline auto& get<0>(__ntuples::NamedTuple_4e7be1ed49b09d71& t) { return t.i; }
-	template <> inline const auto& get<0>(const __ntuples::NamedTuple_4e7be1ed49b09d71& t) { return t.i; }
 	template <> struct tuple_element<1, __ntuples::NamedTuple_4e7be1ed49b09d71> { using type = CppAdvance::f64; };
-	template <> inline auto& get<1>(__ntuples::NamedTuple_4e7be1ed49b09d71& t) { return t.f; }
-	template <> inline const auto& get<1>(const __ntuples::NamedTuple_4e7be1ed49b09d71& t) { return t.f; }
 	template <> struct tuple_element<2, __ntuples::NamedTuple_4e7be1ed49b09d71> { using type = CppAdvance::Str; };
-	template <> inline auto& get<2>(__ntuples::NamedTuple_4e7be1ed49b09d71& t) { return t.s; }
-	template <> inline const auto& get<2>(const __ntuples::NamedTuple_4e7be1ed49b09d71& t) { return t.s; }
 	
 }
 namespace __ntuples {
@@ -3129,21 +3227,23 @@ namespace __ntuples {
 		NamedTuple_6893f862d6c49683(CppAdvance::In<CppAdvance::i32> _x, CppAdvance::In<CppAdvance::i32> _y, CppAdvance::In<CppAdvance::i32> _z) : x{_x}, y{_y}, z{_z} {}
 		FORCE_INLINE decltype(auto) __ref() noexcept { return *this; }
 		FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		template <size_t I> friend auto& get(__ntuples::NamedTuple_6893f862d6c49683&);
+		template <size_t I> friend const auto& get(const __ntuples::NamedTuple_6893f862d6c49683&);
+		
 	};
+	template <> inline auto& get<0>(__ntuples::NamedTuple_6893f862d6c49683& t) { return t.x; }
+	template <> inline const auto& get<0>(const __ntuples::NamedTuple_6893f862d6c49683& t) { return t.x; }
+	template <> inline auto& get<1>(__ntuples::NamedTuple_6893f862d6c49683& t) { return t.y; }
+	template <> inline const auto& get<1>(const __ntuples::NamedTuple_6893f862d6c49683& t) { return t.y; }
+	template <> inline auto& get<2>(__ntuples::NamedTuple_6893f862d6c49683& t) { return t.z; }
+	template <> inline const auto& get<2>(const __ntuples::NamedTuple_6893f862d6c49683& t) { return t.z; }
+	
 }
 namespace std {
 	template <> struct tuple_size<__ntuples::NamedTuple_6893f862d6c49683> : integral_constant<size_t, 3> {};
-	template <size_t I> auto& get(__ntuples::NamedTuple_6893f862d6c49683&);
-	template <size_t I> const auto& get(const __ntuples::NamedTuple_6893f862d6c49683&);
 	template <> struct tuple_element<0, __ntuples::NamedTuple_6893f862d6c49683> { using type = CppAdvance::i32; };
-	template <> inline auto& get<0>(__ntuples::NamedTuple_6893f862d6c49683& t) { return t.x; }
-	template <> inline const auto& get<0>(const __ntuples::NamedTuple_6893f862d6c49683& t) { return t.x; }
 	template <> struct tuple_element<1, __ntuples::NamedTuple_6893f862d6c49683> { using type = CppAdvance::i32; };
-	template <> inline auto& get<1>(__ntuples::NamedTuple_6893f862d6c49683& t) { return t.y; }
-	template <> inline const auto& get<1>(const __ntuples::NamedTuple_6893f862d6c49683& t) { return t.y; }
 	template <> struct tuple_element<2, __ntuples::NamedTuple_6893f862d6c49683> { using type = CppAdvance::i32; };
-	template <> inline auto& get<2>(__ntuples::NamedTuple_6893f862d6c49683& t) { return t.z; }
-	template <> inline const auto& get<2>(const __ntuples::NamedTuple_6893f862d6c49683& t) { return t.z; }
 	
 }
 //###############################################################################

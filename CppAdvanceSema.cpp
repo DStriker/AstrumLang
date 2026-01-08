@@ -2533,7 +2533,10 @@ void CppAdvanceSema::exitRelationalExpression(CppAdvanceParser::RelationalExpres
 			if (isCondition && firstPass)
 			{
 				auto patterns = ctx->patternList();
-				if (patterns->pattern(0)->theTypeId() && patterns->Or().empty())
+				auto pattern = patterns->pattern()[0];
+				auto ops = patterns->patternCombinationOperator();
+				if (!(pattern->theTypeId() && (pattern->not_() && !pattern->LeftBrace() || pattern->getText() == "_"))
+					&& std::all_of(ops.begin(), ops.end(), [](auto op) { return !op->Or(); }))
 					ifPrerequisites[currentIfStatement].push_back(ctx);
 			}
 		}

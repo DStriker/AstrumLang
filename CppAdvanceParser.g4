@@ -428,18 +428,20 @@ expressionList: expressionListPart (Comma expressionListPart)*;
 
 expressionListPart: (Identifier Assign)? (conditionalExpression | bracedInitList) Ellipsis? | Out Identifier Colon theTypeId;
 
-patternList: pattern ((And | Or) pattern)*;
+patternList: pattern (patternCombinationOperator pattern)*;
+
+patternCombinationOperator: And | Or;
 
 pattern: 
 	  not? theTypeId (LeftBrace propertyPattern (Comma propertyPattern)* RightBrace)?
-	| not? LeftParen (Identifier | pattern) RightParen
 	| not? shiftExpression (LeftParen Let Identifier (Comma Identifier)* RightParen)?
-	| not? LeftBrace pattern (Comma pattern)* RightBrace
+	| not? LeftBrace patternList (Comma patternList)* RightBrace
+	| not? LeftBracket patternList (Comma patternList)* RightBracket
 	| Let Identifier (Comma Identifier)*
 	| (Greater | GreaterEqual | Less | LessEqual) shiftExpression
 	;
 
-propertyPattern: Identifier Colon pattern;
+propertyPattern: Identifier Colon patternList;
 
 assignmentOperator:
 	  Assign
