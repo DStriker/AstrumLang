@@ -19,15 +19,15 @@ template<class T> inline auto getAsString(__extension_569_T<T> const& __this ) -
 
 #line 629 "FirstProgram.adv"
 auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam = CppAdvance::f64(3.5))  -> const int;
-#line 736 "FirstProgram.adv"
+#line 768 "FirstProgram.adv"
 inline constexpr CppAdvance::usize PRIVATE_CONSTANT = CppAdvance::usize(34U);
 #line 2 "FirstProgram.adv"
 volatile CppAdvance::Unsafe::__VolatileRawPtr<const CppAdvance::char16> globalVar{};
 #line 3 "FirstProgram.adv"
 extern const CppAdvance::Unsafe::__RawPtr<CppAdvance::i32> globalVar1 = nullptr;
-#line 737 "FirstProgram.adv"
+#line 769 "FirstProgram.adv"
 static CppAdvance::i32 globalVar2 = CppAdvance::i32(8);
-#line 738 "FirstProgram.adv"
+#line 770 "FirstProgram.adv"
 static const CppAdvance::i32 globalVar3 = CppAdvance::i32(456);
 #line 92 "FirstProgram.adv"
 thread_local CppAdvance::i32 Vector3::Count2 = CppAdvance::i32(123);
@@ -272,43 +272,126 @@ auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam)  -> co
 		print(oz);
 		#line 715 "FirstProgram.adv"
 		const auto& [x, y, z] = vec;
-		#line 716 "FirstProgram.adv"
+		#line 726 "FirstProgram.adv"
+		CppAdvance::ObjectRef o = vec; 
+		#line 727 "FirstProgram.adv"
 		{
-			#line 716 "FirstProgram.adv"
-			auto __tmp0 = CppAdvance::Cast<false, Vector3>(vec);
-			#line 716 "FirstProgram.adv"
-			auto __tmp1 = CppAdvance::Cast<false, VectorClass>(vec);
-			#line 716 "FirstProgram.adv"
-			if ((!__tmp0.isValid() || !((CppAdvance::IsGreater(ADV_UPCS(x)(*__tmp0), CppAdvance::i32(5)))
-				#line 716 "FirstProgram.adv"
-				 && (CppAdvance::Is(ADV_UPCS(y)(*__tmp0), CppAdvance::i32(10)) || CppAdvance::Is(ADV_UPCS(y)(*__tmp0), CppAdvance::i32(15))))) && (__tmp1.isValid() && CppAdvance::IsGreater(*__tmp1, CppAdvance::i32(5)))) {
-				#line 716 "FirstProgram.adv"
-				const auto& vec = *__tmp0;
-				
-				#line 717 "FirstProgram.adv"
-				print(CppAdvance::Str{u"Nxt2.ZZ = "});
-				#line 720 "FirstProgram.adv"
-				print(CppAdvance::Str{u"Audio!"});
-			} else {
-				#line 721 "FirstProgram.adv"
+			#line 728 "FirstProgram.adv"
+			auto __tmp__valid_727 = CppAdvance::Cast<false, decltype(o)::__self>(o);
+			#line 728 "FirstProgram.adv"
+			auto __tmp0 = CppAdvance::Cast<false, CppAdvance::Str>(o);
+			#line 728 "FirstProgram.adv"
+			if(__tmp0.isValid())  {
+				#line 728 "FirstProgram.adv"
+				const auto& o = *__tmp0;
+				#line 728 "FirstProgram.adv"
 				{
-					#line 722 "FirstProgram.adv"
-					print(CppAdvance::Str{u"uz is incorrect"});
+					#line 729 "FirstProgram.adv"
+					print(o);
+				}
+			}
+			else {
+				#line 731 "FirstProgram.adv"
+				if(CppAdvance::Is(o, nullptr))  {
+					#line 731 "FirstProgram.adv"
+					print(CppAdvance::Str{u"Not null"});
+				}
+				else {
+					#line 732 "FirstProgram.adv"
+					if(!__tmp__valid_727.isValid() || !CppAdvance::Is(*__tmp__valid_727, CppAdvance::Str{u"abcd"}))  {
+						#line 732 "FirstProgram.adv"
+						print(CppAdvance::Str{u"abcd"});
+					}
+					else {
+						#line 733 "FirstProgram.adv"
+						if(__tmp__valid_727.isValid() && CppAdvance::IsGreater(*__tmp__valid_727, CppAdvance::i32(5)) && CppAdvance::IsLess(*__tmp__valid_727, CppAdvance::i32(15)))  {
+							#line 733 "FirstProgram.adv"
+							const auto& o = *__tmp__valid_727;
+							#line 733 "FirstProgram.adv"
+							print(CppAdvance::Str{u"5..15"});
+						}
+						else {
+							#line 734 "FirstProgram.adv"
+							if(__tmp__valid_727.isValid() && CppAdvance::Is(*__tmp__valid_727, (someVar)))  {
+								#line 734 "FirstProgram.adv"
+								const auto& o = *__tmp__valid_727;
+								#line 734 "FirstProgram.adv"
+								print(CppAdvance::Str{u"someVar"});
+							}
+							else {
+								#line 735 "FirstProgram.adv"
+								if(__tmp__valid_727.isValid())  {
+									#line 735 "FirstProgram.adv"
+									const auto& [x, y, z] = *__tmp__valid_727; 
+									#line 735 "FirstProgram.adv"
+									{
+										#line 736 "FirstProgram.adv"
+										print(x);
+										#line 737 "FirstProgram.adv"
+										print(y);
+										#line 738 "FirstProgram.adv"
+										print(z);
+									}
+								}
+								else {
+									#line 740 "FirstProgram.adv"
+									auto __tmp6 = CppAdvance::Cast<false, decltype(o)::Video>(o);
+									#line 740 "FirstProgram.adv"
+									if(__tmp6.isValid() && CppAdvance::Is<typename decltype(o)::Video>(o))  {
+										#line 740 "FirstProgram.adv"
+										const auto& [x, y, z] = *__tmp6; 
+										#line 740 "FirstProgram.adv"
+										print(x);
+									}
+									else {
+										#line 741 "FirstProgram.adv"
+										if(__tmp__valid_727.isValid() && ((CppAdvance::Is(get<0>(*__tmp__valid_727), CppAdvance::i32(1)))
+											#line 741 "FirstProgram.adv"
+											 && (CppAdvance::Is(get<1>(*__tmp__valid_727), CppAdvance::i32(2)))
+											#line 741 "FirstProgram.adv"
+											 && (true)))  {
+											#line 741 "FirstProgram.adv"
+											const auto& o = *__tmp__valid_727;
+											#line 741 "FirstProgram.adv"
+											print(CppAdvance::Str{u"1,2,_"});
+										}
+										else {
+											#line 742 "FirstProgram.adv"
+											if(__tmp__valid_727.isValid() && ((CppAdvance::Is((*__tmp__valid_727)[0], CppAdvance::i32(1)))
+												#line 742 "FirstProgram.adv"
+												 && (true)
+												#line 742 "FirstProgram.adv"
+												 && (CppAdvance::Is((*__tmp__valid_727)[2], CppAdvance::i32(3)))))  {
+												#line 742 "FirstProgram.adv"
+												const auto& o = *__tmp__valid_727;
+												#line 742 "FirstProgram.adv"
+												print(CppAdvance::Str{u"1,_,3"});
+											}
+											else {
+												#line 743 "FirstProgram.adv"
+												print(CppAdvance::Str{u"Unknown option"});
+												
+											}
+										}
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		}
-		#line 724 "FirstProgram.adv"
+
+		#line 757 "FirstProgram.adv"
 		print(CppAdvance::Cast<true, CppAdvance::f32>((*(cv1))));
-		#line 725 "FirstProgram.adv"
+		#line 758 "FirstProgram.adv"
 		print(CppAdvance::Cast<true, CppAdvance::i32>(((CppAdvance::Is((*(cv1)), (cv2))))));
-		#line 728 "FirstProgram.adv"
-		CppAdvance::ObjectRef o = vec; 
-		#line 729 "FirstProgram.adv"
+		#line 761 "FirstProgram.adv"
 		CppAdvance::Nullable<CppAdvance::ObjectRef> on = vec; 
 	}
-	#line 731 "FirstProgram.adv"
+	#line 763 "FirstProgram.adv"
 	print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
-	#line 732 "FirstProgram.adv"
+	#line 764 "FirstProgram.adv"
 	print(ADV_UPCS(x)(ADV_UPCS(x)(ADV_USFCS((Test1::Test2::TestClass), makeTestClass)(CppAdvance::i32(3), CppAdvance::f32(3.14f)).__ref()).__ref()));
 }
 

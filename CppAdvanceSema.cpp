@@ -263,7 +263,7 @@ void CppAdvanceSema::enterExpr(CppAdvanceParser::ExprContext* ctx)
 
 void CppAdvanceSema::exitExpr(CppAdvanceParser::ExprContext* ctx)
 {
-	
+	if (!typeStack.empty()) contextTypes[ctx] = typeStack.top();
 }
 
 void CppAdvanceSema::checkIntegerLiteral(TerminalNode* literal, bool minus)
@@ -2597,34 +2597,73 @@ void CppAdvanceSema::enterSelectionStatement(CppAdvanceParser::SelectionStatemen
 {
 	currentIfStatement = ctx;
 	if (firstPass) return;
-	IfContext ictx;
-	ictx.before = initStates.top();
-	ictx.hasElse = ctx->Else();
-	initStates.push(ictx.before);
-	ifContexts.push(ictx);
+	if (ctx->If()) {
+		IfContext ictx;
+		ictx.before = initStates.top();
+		ictx.hasElse = ctx->Else();
+		initStates.push(ictx.before);
+		ifContexts.push(ictx);
+	}
+	else if (ctx->Switch())
+	{
+		currentSwitchData.push({0, ctx->switchStatementBranch().size()});
+	}
 }
 
-void CppAdvanceSema::exitSelectionStatement(CppAdvanceParser::SelectionStatementContext*)
+void CppAdvanceSema::exitSelectionStatement(CppAdvanceParser::SelectionStatementContext* ctx)
 {
 	if (firstPass) return;
-	auto& ictx = ifContexts.top();
-	InitState elseState;
-	if (ictx.hasElse)
-	{
-		elseState = ictx.otherwise;
-	}
-	else
-	{
-		elseState = ictx.before;
-		ictx.then = initStates.top();
-	}
+	if (ctx->If()) {
+		auto& ictx = ifContexts.top();
+		InitState elseState;
+		if (ictx.hasElse)
+		{
+			elseState = ictx.otherwise;
+		}
+		else
+		{
+			elseState = ictx.before;
+			ictx.then = initStates.top();
+		}
 
-	initStates.pop();
-	auto& currentState = initStates.top();
-	currentState.definitelyAssigned = ictx.then.intersect(elseState.definitelyAssigned);
-    currentState.potentiallyAssigned = ictx.then.unite(elseState.potentiallyAssigned);
+		initStates.pop();
+		auto& currentState = initStates.top();
+		currentState.definitelyAssigned = ictx.then.intersect(elseState.definitelyAssigned);
+		currentState.potentiallyAssigned = ictx.then.unite(elseState.potentiallyAssigned);
 
-	ifContexts.pop();
+		ifContexts.pop();
+	}
+	else if (ctx->Switch())
+	{
+		auto branches = ctx->switchStatementBranch();
+		auto last = branches.size() - 1;
+		if (branches[last]->patternList()->getText() != "_")
+		{
+			auto& ictx = ifContexts.top();
+			InitState elseState = ictx.before;
+			ictx.then = initStates.top();
+
+			initStates.pop();
+			auto& currentState = initStates.top();
+			currentState.definitelyAssigned = ictx.then.intersect(elseState.definitelyAssigned);
+			currentState.potentiallyAssigned = ictx.then.unite(elseState.potentiallyAssigned);
+
+			ifContexts.pop();
+		}
+		for (int i = last - 1; i >= 0; i--)
+		{
+			auto& ictx = ifContexts.top();
+			InitState elseState = initStates.top();
+
+			initStates.pop();
+			auto& currentState = initStates.top();
+			currentState.definitelyAssigned = ictx.then.intersect(elseState.definitelyAssigned);
+			currentState.potentiallyAssigned = ictx.then.unite(elseState.potentiallyAssigned);
+
+			ifContexts.pop();
+		}
+		currentSwitchData.pop();
+	}
 }
 
 void CppAdvanceSema::enterElseBranch(CppAdvanceParser::ElseBranchContext*)
@@ -6273,6 +6312,60 @@ void CppAdvanceSema::enterAttributeSpecifier(CppAdvanceParser::AttributeSpecifie
 	{
 		CppAdvanceCompilerError("Align attribute should have integer value", ctx->Identifier()->getSymbol());
 	}
+}
+
+void CppAdvanceSema::enterSwitchStatementBranch(CppAdvanceParser::SwitchStatementBranchContext* ctx)
+{
+	if (firstPass) return;
+	auto switchData = currentSwitchData.top();
+	if (switchData.first > 0)
+	{
+		ifContexts.top().then = initStates.top();
+		initStates.pop();
+		initStates.push(ifContexts.top().before);
+	}
+	if (ctx->patternList()->getText() != "_") {
+		IfContext ictx;
+		ictx.before = initStates.top();
+		ictx.hasElse = switchData.second - switchData.first > 1;
+		initStates.push(ictx.before);
+		ifContexts.push(ictx);
+	}
+	else if(switchData.second - switchData.first > 1)
+	{
+		CppAdvanceCompilerError("Default branch must be last in the switch", ctx->patternList()->getStart());
+	}
+}
+
+void CppAdvanceSema::exitSwitchStatementBranch(CppAdvanceParser::SwitchStatementBranchContext* ctx)
+{
+	if (firstPass) return;
+	++currentSwitchData.top().first;
+}
+
+void CppAdvanceSema::enterSwitchExpression(CppAdvanceParser::SwitchExpressionContext* ctx)
+{
+	if (firstPass || !ctx->Switch()) return;
+	currentSwitchData.push({ 0, ctx->switchExpressionBranch().size() });
+}
+
+void CppAdvanceSema::exitSwitchExpression(CppAdvanceParser::SwitchExpressionContext* ctx)
+{
+	if (!ctx->Switch()) return;
+	typeStack.push(contextTypes[ctx->switchExpressionBranch(0)->expr()]);
+	if (firstPass) return;
+	currentSwitchData.pop();
+}
+
+void CppAdvanceSema::enterSwitchExpressionBranch(CppAdvanceParser::SwitchExpressionBranchContext* ctx)
+{
+	if (firstPass) return;
+	auto switchData = currentSwitchData.top();
+	if (switchData.second - switchData.first > 1)
+	{
+		CppAdvanceCompilerError("Default branch must be last in the switch", ctx->patternList()->getStart());
+	}
+	++currentSwitchData.top().first;
 }
 
 void CppAdvanceSema::exitFriendDeclaration(CppAdvanceParser::FriendDeclarationContext* ctx)

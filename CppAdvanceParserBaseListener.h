@@ -334,6 +334,9 @@ public:
   virtual void enterElseBranch(CppAdvanceParser::ElseBranchContext * /*ctx*/) override { }
   virtual void exitElseBranch(CppAdvanceParser::ElseBranchContext * /*ctx*/) override { }
 
+  virtual void enterSwitchStatementBranch(CppAdvanceParser::SwitchStatementBranchContext * /*ctx*/) override { }
+  virtual void exitSwitchStatementBranch(CppAdvanceParser::SwitchStatementBranchContext * /*ctx*/) override { }
+
   virtual void enterDeclarator(CppAdvanceParser::DeclaratorContext * /*ctx*/) override { }
   virtual void exitDeclarator(CppAdvanceParser::DeclaratorContext * /*ctx*/) override { }
 
@@ -399,6 +402,12 @@ public:
 
   virtual void enterExpr(CppAdvanceParser::ExprContext * /*ctx*/) override { }
   virtual void exitExpr(CppAdvanceParser::ExprContext * /*ctx*/) override { }
+
+  virtual void enterSwitchExpression(CppAdvanceParser::SwitchExpressionContext * /*ctx*/) override { }
+  virtual void exitSwitchExpression(CppAdvanceParser::SwitchExpressionContext * /*ctx*/) override { }
+
+  virtual void enterSwitchExpressionBranch(CppAdvanceParser::SwitchExpressionBranchContext * /*ctx*/) override { }
+  virtual void exitSwitchExpressionBranch(CppAdvanceParser::SwitchExpressionBranchContext * /*ctx*/) override { }
 
   virtual void enterPowerExpression(CppAdvanceParser::PowerExpressionContext * /*ctx*/) override { }
   virtual void exitPowerExpression(CppAdvanceParser::PowerExpressionContext * /*ctx*/) override { }

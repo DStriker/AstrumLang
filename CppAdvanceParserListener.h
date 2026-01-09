@@ -332,6 +332,9 @@ public:
   virtual void enterElseBranch(CppAdvanceParser::ElseBranchContext *ctx) = 0;
   virtual void exitElseBranch(CppAdvanceParser::ElseBranchContext *ctx) = 0;
 
+  virtual void enterSwitchStatementBranch(CppAdvanceParser::SwitchStatementBranchContext *ctx) = 0;
+  virtual void exitSwitchStatementBranch(CppAdvanceParser::SwitchStatementBranchContext *ctx) = 0;
+
   virtual void enterDeclarator(CppAdvanceParser::DeclaratorContext *ctx) = 0;
   virtual void exitDeclarator(CppAdvanceParser::DeclaratorContext *ctx) = 0;
 
@@ -397,6 +400,12 @@ public:
 
   virtual void enterExpr(CppAdvanceParser::ExprContext *ctx) = 0;
   virtual void exitExpr(CppAdvanceParser::ExprContext *ctx) = 0;
+
+  virtual void enterSwitchExpression(CppAdvanceParser::SwitchExpressionContext *ctx) = 0;
+  virtual void exitSwitchExpression(CppAdvanceParser::SwitchExpressionContext *ctx) = 0;
+
+  virtual void enterSwitchExpressionBranch(CppAdvanceParser::SwitchExpressionBranchContext *ctx) = 0;
+  virtual void exitSwitchExpressionBranch(CppAdvanceParser::SwitchExpressionBranchContext *ctx) = 0;
 
   virtual void enterPowerExpression(CppAdvanceParser::PowerExpressionContext *ctx) = 0;
   virtual void exitPowerExpression(CppAdvanceParser::PowerExpressionContext *ctx) = 0;

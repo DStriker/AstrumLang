@@ -713,19 +713,51 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 		print(oz);
 		//if (nxt is ConcreteVectorClass or i32) and (nxt2 is VectorClass) {
 		x,y,z := vec;
-		if vec is not Vector3{ x: >5, y: 10 or 15 } and vec is VectorClass and >5 {
+		/*if vec is not null {
 			print("Nxt2.ZZ = ");
 			//print(nxt.i);
 			//nxt2.ZZ = 10;
 			print("Audio!");
+		} else if vec is VectorClass {
+            print("uz is incorrect");
 		} else {
             print("uz is incorrect");
+		}*/
+		o: object = vec;
+		switch o {
+			str => {
+				print(o);
+			}
+			null => print("Not null");//x
+			not "abcd" => print("abcd");
+			>5 and <15 => print("5..15");
+			(someVar) => print("someVar");
+			let x,y,z => {//x
+				print(x); 
+				print(y); 
+				print(z);
+			}
+			::Video(let x,y,z) => print(x);//currentis
+			{1,2,_} => print("1,2,_");
+			[1,_,3] => print("1,_,3");
+            _ => print("Unknown option");
 		}
+		/*result := switch vec {
+			String => "string",
+			not null => "Not null",
+			"abcd" => "abcd",
+			>5 and <15 => "5..15",
+			(someVar) => "someVar",
+			let x,y,z => "xyz",
+			::Video(let x,y,z) => "video",
+			{1,2,_} => "1,2,_",
+			[1,_,3] => "1,_,3",
+            _ => throw IntegerOverflowException()
+		};*/
 		print(cv1! as f32);
 		print((cv1! is (cv2)) as i32);
 		
 		//print(var.GetStrongReferenceCount());
-		o: object = vec;
 		on: object? = vec;
 	}
 	print(nxt!.GetStrongReferenceCount());

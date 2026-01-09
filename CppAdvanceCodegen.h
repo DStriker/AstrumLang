@@ -11,6 +11,7 @@ class CppAdvanceCodegen
 	mutable std::vector<std::pair<std::string, CppAdvanceParser::TheTypeIdContext*>> namedReturns;
 	mutable std::vector<ConstantDefinition> selfConstants;
 	mutable std::stack<CppAdvanceParser::UnaryExpressionContext*> unaryExpressions;
+	mutable std::stack<CppAdvanceParser::SelectionStatementContext*> switchStatements;
 	mutable CppAdvanceParser::TemplateParamsContext* currentTemplateParams = nullptr;
 	mutable CppAdvanceParser::TemplateArgumentListContext* currentTemplateSpecArgs = nullptr;
 	mutable CppAdvanceParser::SimpleDeclarationContext* currentDeclaration = nullptr;
@@ -126,6 +127,8 @@ public:
 	void printScopeSafeCompoundStatement(CppAdvanceParser::ScopeSafeCompoundStatementContext* ctx) const;
 	void printExpressionStatement(CppAdvanceParser::ExpressionStatementContext* ctx) const;
 	void printSelectionStatement(CppAdvanceParser::SelectionStatementContext* ctx) const;
+	void printSwitchStatementBranch(CppAdvanceParser::SwitchStatementBranchContext* ctx, 
+		CppAdvanceParser::ThreeWayComparisonExpressionContext* switchExpr, int branchIndex) const;
 	void printIterationStatement(CppAdvanceParser::IterationStatementContext* ctx) const;
 	void printForInitStatement(CppAdvanceParser::ForInitStatementContext* ctx) const;
 	void printVersionSelectionStatement(CppAdvanceParser::VersionSelectionStatementContext* ctx) const;
@@ -225,6 +228,7 @@ public:
 	void printAdditiveExpression(CppAdvanceParser::AdditiveExpressionContext* ctx) const;
 	void printMultiplicativeExpression(CppAdvanceParser::MultiplicativeExpressionContext* ctx) const;
 	void printPowerExpression(CppAdvanceParser::PowerExpressionContext* ctx) const;
+	void printSwitchExpression(CppAdvanceParser::SwitchExpressionContext* ctx) const;
 	void printUnaryExpression(CppAdvanceParser::UnaryExpressionContext* ctx) const;
 	void printUnaryExpressionTail(CppAdvanceParser::UnaryExpressionTailContext* ctx) const;
 	void printNewExpression(CppAdvanceParser::NewExpressionContext* ctx) const;

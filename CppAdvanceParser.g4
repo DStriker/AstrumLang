@@ -291,11 +291,15 @@ attributeArgumentClause: LeftParen expressionList RightParen;
 
 selectionStatement: 
 	  attributeSpecifierSeq? Static? If LeftParen condition RightParen stat (Else elseBranch)?
-	| attributeSpecifierSeq? Static? If (not? Consteval | condition) compoundStatement (Else elseBranch)?;
+	| attributeSpecifierSeq? Static? If (not? Consteval | condition) compoundStatement (Else elseBranch)?
+	| Switch threeWayComparisonExpression LeftBrace switchStatementBranch+ RightBrace
+	;
 
 condition: simpleDeclaration? logicalOrExpression | declarator ;
 
 elseBranch: stat;
+
+switchStatementBranch: attributeSpecifierSeq? patternList AssignArrow stat;
 
 declarator: (Const | Let)? identifierSeq Colon theTypeId? Assign initializerClause;
 
@@ -355,8 +359,15 @@ scopeSafeCompoundStatement: LeftBrace stat+? RightBrace;
 
 expr: assignmentExpression;
 
-powerExpression: 
+switchExpression:
 	  unaryExpression
+	| Switch threeWayComparisonExpression LeftBrace switchExpressionBranch (Comma switchExpressionBranch)+ RightBrace
+	;
+
+switchExpressionBranch: patternList AssignArrow expr;
+
+powerExpression: 
+	  switchExpression
 	| powerExpression (DoubleStar | DoubleCaret | Op10) powerExpression
 	;
 

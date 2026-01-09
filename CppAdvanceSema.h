@@ -506,9 +506,13 @@ public:
 	std::stack<TypeKind> currentTypeKind;
 	std::stack<int> constructorCounts;
 	std::stack<CppAdvanceParser::UnaryExpressionContext*> unaryExpressions;
+	std::stack<std::pair<int, int>> currentSwitchData;
 	CppAdvanceParser::AssignmentExpressionContext* currentAssignment{};
 	CppAdvanceParser::StatContext* currentStatement{};
 	CppAdvanceParser::SelectionStatementContext* currentIfStatement{};
+	int depth = 0;
+	int unsafeDepth = 0;
+	int loopDepth = 0;
 	bool firstPass = true;
 	bool literalMinus = false;
 	bool functionBody = false;
@@ -525,9 +529,6 @@ public:
 	bool isUnsafeTypeDefinition = false;
 	bool isRefProperty = false;
 	bool isFriendDefinition = false;
-	int depth = 0;
-	int unsafeDepth = 0;
-	int loopDepth = 0;
 
 	CppAdvanceSema(CppAdvanceParser* parser, std::string_view file) : parser{ parser }, filename{ file }, symbolTable{ cppParser.symbolTable, symbolContexts }, aliasTable{ cppParser.aliasTable, symbolContexts }, typeset{cppParser.types,symbolContexts}, functionTable{ cppParser.functionTable } {}
 
@@ -1029,5 +1030,20 @@ public:
 
 
 	void enterAttributeSpecifier(CppAdvanceParser::AttributeSpecifierContext*) override;
+
+
+	void enterSwitchStatementBranch(CppAdvanceParser::SwitchStatementBranchContext*) override;
+
+
+	void exitSwitchStatementBranch(CppAdvanceParser::SwitchStatementBranchContext*) override;
+
+
+	void enterSwitchExpression(CppAdvanceParser::SwitchExpressionContext*) override;
+
+
+	void exitSwitchExpression(CppAdvanceParser::SwitchExpressionContext*) override;
+
+
+	void enterSwitchExpressionBranch(CppAdvanceParser::SwitchExpressionBranchContext*) override;
 
 };

@@ -12096,6 +12096,138 @@ void CppAdvanceCodegen::printSelectionStatement(CppAdvanceParser::SelectionState
 			out << "\n" << std::string(--depth, '\t') << "}";
 		}
 	}
+	else if (ctx->Switch())
+	{
+		switchStatements.push(ctx);
+		int i = 0;
+		for (auto branch : ctx->switchStatementBranch())
+		{
+			printSwitchStatementBranch(branch, ctx->threeWayComparisonExpression(), i++);
+		}
+		out << "\n";
+		for (auto branch : ctx->switchStatementBranch())
+		{
+			out << std::string(--depth,'\t') << "}\n";
+		}
+		switchStatements.pop();
+	}
+}
+
+void CppAdvanceCodegen::printSwitchStatementBranch(CppAdvanceParser::SwitchStatementBranchContext* ctx, 
+	CppAdvanceParser::ThreeWayComparisonExpressionContext* switchExpr, int branchIndex) const
+{
+	if (branchIndex > 0) out << "else ";
+	out << "{\n" << std::string(++depth, '\t');
+	auto tmpName = "__tmp__valid_" + std::to_string(switchExpr->getStart()->getLine());
+	auto pattern = ctx->patternList()->pattern(0);
+	if (branchIndex == 0)
+	{
+		out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "auto " << tmpName << " = CppAdvance::Cast<false, ";
+		out << "decltype(";
+		printThreeWayComparisonExpression(switchExpr);
+		out << ")::__self";
+		out << ">(";
+		printThreeWayComparisonExpression(switchExpr);
+		out << ");\n" << std::string(depth, '\t');
+	}
+
+	auto isDefault = ctx->patternList()->getText() == "_";
+	if (pattern->theTypeId() && !isDefault || pattern->shiftExpression() && pattern->Let()) {
+		out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		tmpName = "__tmp" + std::to_string(branchIndex);
+		out << "auto " << tmpName << " = CppAdvance::Cast<false, ";
+		if (pattern->theTypeId())
+		{
+			printTypeId(pattern->theTypeId());
+		}
+		else if (pattern->shiftExpression())
+		{
+			printShiftExpression(pattern->shiftExpression());
+		}
+		out << ">(";
+		printThreeWayComparisonExpression(switchExpr);
+		out << ");\n" << std::string(depth, '\t');
+	}
+
+	if (!isDefault)
+	{
+		out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "if(";
+		bool skipFirst = false;
+		bool isNull = pattern->shiftExpression() && pattern->shiftExpression()->getText() == "null";
+		if (!isNull)
+		{
+			if (pattern->not_()) out << "!";
+			out << tmpName << ".isValid()";
+			if (!(pattern->Let() && !pattern->shiftExpression()) && (!pattern->theTypeId() || !pattern->propertyPattern().empty()))
+			{
+				if (pattern->not_())
+				{
+					out << " || ";
+				}
+				else {
+					out << " && ";
+				}
+			}
+			else
+			{
+				skipFirst = true;
+			}
+		}
+		printPatternList(ctx->patternList(), switchExpr, !isNull ? tmpName : "", "", false, false, skipFirst);
+		out << ") ";
+		if (ctx->attributeSpecifierSeq())
+		{
+			auto attr = ctx->attributeSpecifierSeq()->attributeSpecifier(0)->Identifier()->getText();
+			if (attr == "Likely")
+			{
+				out << "[[likely]] ";
+			}
+			else if (attr == "Unlikely")
+			{
+				out << "[[unlikely]] ";
+			}
+		}
+		out << " {\n" << std::string(++depth, '\t');
+		if (!isNull && !pattern->not_() || isNull && pattern->not_()) {
+			if (pattern->Let())
+			{
+				out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+				out << "const auto& [";
+				bool first = true;
+				for (auto id : pattern->Identifier())
+				{
+					if (!first) out << ", ";
+					first = false;
+					printIdentifier(id);
+				}
+				out << "] = ";
+				out << "*" << tmpName << "; \n" << std::string(depth, '\t');
+			}
+			else {
+				auto txt = switchExpr->getText();
+				if (std::all_of(txt.begin(), txt.end(), [](char c) { return std::isalnum(c) || c == '_'; }))
+				{
+					out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+					if (isNull)
+					{
+						out << "auto " << tmpName << " = *" << txt << "; ";
+					}
+					out << "const auto& " << txt << " = ";
+					if (!isNull) out << "*";
+					out << tmpName;
+					out << ";\n" << std::string(depth, '\t');
+				}
+			}
+		}
+        printStatement(ctx->stat());
+		out << "\n" << std::string(--depth,'\t') << "}";
+	}
+	else {
+		printStatement(ctx->stat());
+	}
+	out << "\n" << std::string(depth, '\t');
 }
 
 void CppAdvanceCodegen::printIterationStatement(CppAdvanceParser::IterationStatementContext* ctx) const
@@ -17273,7 +17405,7 @@ void CppAdvanceCodegen::printRelationalExpression(CppAdvanceParser::RelationalEx
 						if (pattern->not_()) out << "!";
 						tmpName = "__tmp" + std::to_string (it - patterns.begin());
 						out << tmpName << ".isValid()";
-						if (!pattern->theTypeId() || !pattern->propertyPattern().empty())
+						if (!(pattern->Let() && !pattern->shiftExpression()) && (!pattern->theTypeId() || !pattern->propertyPattern().empty()))
 						{
 							if (pattern->not_())
 							{
@@ -17665,9 +17797,9 @@ void CppAdvanceCodegen::printMultiplicativeExpression(CppAdvanceParser::Multipli
 
 void CppAdvanceCodegen::printPowerExpression(CppAdvanceParser::PowerExpressionContext* ctx) const
 {
-	if (ctx->unaryExpression())
+	if (ctx->switchExpression())
 	{
-		printUnaryExpression(ctx->unaryExpression());
+		printSwitchExpression(ctx->switchExpression());
 	}
 	else if (ctx->DoubleStar())
 	{
@@ -17698,6 +17830,14 @@ void CppAdvanceCodegen::printPowerExpression(CppAdvanceParser::PowerExpressionCo
 		out << ", ";
 		printPowerExpression(ctx->powerExpression(1));
 		out << ")";
+	}
+}
+
+void CppAdvanceCodegen::printSwitchExpression(CppAdvanceParser::SwitchExpressionContext* ctx) const
+{
+	if (ctx->unaryExpression())
+	{
+		printUnaryExpression(ctx->unaryExpression());
 	}
 }
 
@@ -18433,6 +18573,12 @@ void CppAdvanceCodegen::printPrimaryExpression(CppAdvanceParser::PrimaryExpressi
 			{
 				out << "decltype(";
 				printEqualityExpression(currentEquality->equalityExpression(0));
+				out << ")";
+			}
+			else if (!switchStatements.empty())
+			{
+				out << "decltype(";
+				printThreeWayComparisonExpression(switchStatements.top()->threeWayComparisonExpression());
 				out << ")";
 			}
 			out << "::";
