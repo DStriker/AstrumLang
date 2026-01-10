@@ -6374,6 +6374,12 @@ void CppAdvanceSema::enterSwitchExpressionBranch(CppAdvanceParser::SwitchExpress
 	++currentSwitchData.top().first;
 }
 
+void CppAdvanceSema::exitRangeExpression(CppAdvanceParser::RangeExpressionContext* ctx)
+{
+	if (ctx->DoubleDot() || ctx->DoubleDotEqual()) 
+		typeStack.push("System.Range");
+}
+
 void CppAdvanceSema::exitFriendDeclaration(CppAdvanceParser::FriendDeclarationContext* ctx)
 {
 	isFriendDefinition = false;

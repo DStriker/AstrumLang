@@ -19,15 +19,15 @@ template<class T> inline auto getAsString(__extension_569_T<T> const& __this ) -
 
 #line 629 "FirstProgram.adv"
 auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam = CppAdvance::f64(3.5))  -> const int;
-#line 781 "FirstProgram.adv"
+#line 741 "FirstProgram.adv"
 inline constexpr CppAdvance::usize PRIVATE_CONSTANT = CppAdvance::usize(34U);
 #line 2 "FirstProgram.adv"
 volatile CppAdvance::Unsafe::__VolatileRawPtr<const CppAdvance::char16> globalVar{};
 #line 3 "FirstProgram.adv"
 extern const CppAdvance::Unsafe::__RawPtr<CppAdvance::i32> globalVar1 = nullptr;
-#line 782 "FirstProgram.adv"
+#line 742 "FirstProgram.adv"
 static CppAdvance::i32 globalVar2 = CppAdvance::i32(8);
-#line 783 "FirstProgram.adv"
+#line 743 "FirstProgram.adv"
 static const CppAdvance::i32 globalVar3 = CppAdvance::i32(456);
 #line 92 "FirstProgram.adv"
 thread_local CppAdvance::i32 Vector3::Count2 = CppAdvance::i32(123);
@@ -274,68 +274,22 @@ auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam)  -> co
 		const auto& [x, y, z] = vec;
 		#line 726 "FirstProgram.adv"
 		CppAdvance::ObjectRef o = vec; 
-		#line 760 "FirstProgram.adv"
-		auto result = [&]() -> CppAdvance::i32 {
-			#line 761 "FirstProgram.adv"
-			auto __tmp__valid_760 = CppAdvance::Cast<false, decltype(nxt2)::__self>(nxt2);
-			#line 761 "FirstProgram.adv"
-			auto __tmp0 = CppAdvance::Cast<false, ConcreteVectorClass>(nxt2);
-			#line 761 "FirstProgram.adv"
-			if(__tmp0.isValid()) {
-				#line 761 "FirstProgram.adv"
-				const auto& nxt2 = *__tmp0;
-				return ADV_UPCS(ZZ)(nxt2.__ref());
-			}
-			else {
-				#line 762 "FirstProgram.adv"
-				if(!CppAdvance::Is(nxt2, nullptr)) {
-					#line 762 "FirstProgram.adv"
-					auto __tmp__valid_760 = *nxt2; const auto& nxt2 = __tmp__valid_760;
-					return ADV_UPCS(Count)(nxt2.__ref());
-				}
-				else {
-					CppAdvance::Throw(CppAdvance::IntegerOverflowException{});
-					
-				}
-			}
-		}
-		(); 
-		#line 765 "FirstProgram.adv"
-		print([&]() -> CppAdvance::i32 {
-			#line 766 "FirstProgram.adv"
-			auto __tmp__valid_765 = CppAdvance::Cast<false, decltype(nxt2)::__self>(nxt2);
-			#line 766 "FirstProgram.adv"
-			auto __tmp0 = CppAdvance::Cast<false, ConcreteVectorClass>(nxt2);
-			#line 766 "FirstProgram.adv"
-			if(__tmp0.isValid()) {
-				#line 766 "FirstProgram.adv"
-				const auto& nxt2 = *__tmp0;
-				return ADV_UPCS(ZZ)(nxt2.__ref());
-			}
-			else {
-				#line 767 "FirstProgram.adv"
-				if(!CppAdvance::Is(nxt2, nullptr)) {
-					#line 767 "FirstProgram.adv"
-					auto __tmp__valid_765 = *nxt2; const auto& nxt2 = __tmp__valid_765;
-					return ADV_UPCS(Count)(nxt2.__ref());
-				}
-				else {
-					CppAdvance::Throw(CppAdvance::IntegerOverflowException{});
-					
-				}
-			}
-		}
-		());
-		#line 770 "FirstProgram.adv"
+		#line 727 "FirstProgram.adv"
+		ADV_UFCS(_operator_subscript)(vec.__ref(), CppAdvance::i32(1)) = CppAdvance::i32(5);
+		#line 728 "FirstProgram.adv"
+		ADV_UFCS(_operator_subscript)(vec.__ref(), Range(CppAdvance::i32(1), ADV_UFCS(_operator_xor)(CppAdvance::i32(3)), false)) = CppAdvance::i32(8);
+		#line 729 "FirstProgram.adv"
+		ADV_UFCS(_operator_subscript)(vec.__ref(), Range(CppAdvance::i32(1), ADV_UFCS(_operator_xor)(CppAdvance::i32(3)), true)) = CppAdvance::i32(9);
+		#line 730 "FirstProgram.adv"
 		print(CppAdvance::Cast<true, CppAdvance::f32>((*(cv1))));
-		#line 771 "FirstProgram.adv"
+		#line 731 "FirstProgram.adv"
 		print(CppAdvance::Cast<true, CppAdvance::i32>(((CppAdvance::Is((*(cv1)), (cv2))))));
-		#line 774 "FirstProgram.adv"
+		#line 734 "FirstProgram.adv"
 		CppAdvance::Nullable<CppAdvance::ObjectRef> on = vec; 
 	}
-	#line 776 "FirstProgram.adv"
+	#line 736 "FirstProgram.adv"
 	print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
-	#line 777 "FirstProgram.adv"
+	#line 737 "FirstProgram.adv"
 	print(ADV_UPCS(x)(ADV_UPCS(x)(ADV_USFCS((Test1::Test2::TestClass), makeTestClass)(CppAdvance::i32(3), CppAdvance::f32(3.14f)).__ref()).__ref()));
 }
 

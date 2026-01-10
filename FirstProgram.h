@@ -1445,6 +1445,8 @@ struct DayOfWeek final : public CppAdvance::Enum {
 	#line 416 "FirstProgram.adv"
 	private: static constexpr CppAdvance::Str __names[] = {u"Monday", u"Tuesday", u"Wednesday", u"Thursday", u"Friday", u"Saturday", u"Sunday"};
 	#line 416 "FirstProgram.adv"
+	public: static constexpr int __variants = 7;
+	#line 416 "FirstProgram.adv"
 	public: static constexpr std::span<const CppAdvance::Str> GetNames() noexcept { return __names; }
 	#line 416 "FirstProgram.adv"
 	private: static const DayOfWeek __values[];
@@ -1525,6 +1527,8 @@ struct [[clang::annotate("UserAttr: Flags")]] Options final : public CppAdvance:
 	public: static TESTDLL_HIDDEN const Options Weekend;
 	#line 427 "FirstProgram.adv"
 	private: static constexpr CppAdvance::Str __names[] = {u"None", u"First", u"Second", u"Third", u"Fourth", u"Fiveth", u"Sixth", u"Seventh", u"All", u"Weekend"};
+	#line 427 "FirstProgram.adv"
+	public: static constexpr int __variants = 10;
 	#line 427 "FirstProgram.adv"
 	public: static constexpr std::span<const CppAdvance::Str> GetNames() noexcept { return __names; }
 	#line 427 "FirstProgram.adv"
@@ -1628,6 +1632,8 @@ struct Text final : public CppAdvance::Enum {
 	public: static TESTDLL_HIDDEN const Text Sunday;
 	#line 442 "FirstProgram.adv"
 	private: static constexpr CppAdvance::Str __names[] = {u"Monday", u"Tuesday", u"Wednesday", u"Thursday", u"Friday", u"Saturday", u"Sunday"};
+	#line 442 "FirstProgram.adv"
+	public: static constexpr int __variants = 7;
 	#line 442 "FirstProgram.adv"
 	public: static constexpr std::span<const CppAdvance::Str> GetNames() noexcept { return __names; }
 	#line 442 "FirstProgram.adv"
@@ -1797,6 +1803,8 @@ struct Media final : public CppAdvance::Union {
 		_TAG__None, _TAG__String, _TAG__XYZ, _TAG__Audio, _TAG__Video, _TAG__Text
 	} __union_internal_tag;
 	public:
+	#line 483 "FirstProgram.adv"
+	static constexpr int __variants = 6;
 	#line 484 "FirstProgram.adv"
 	Media(CppAdvance::In<__UnionType_None> value) : __union_internal_tag{ _TAG__None } { new (&_None) __UnionType_None(value); }
 	#line 485 "FirstProgram.adv"
@@ -1990,6 +1998,8 @@ template<class T1, class T2> struct Union2 final : public CppAdvance::Union {
 		_TAG__Type1, _TAG__Type2
 	} __union_internal_tag;
 	public:
+	#line 502 "FirstProgram.adv"
+	static constexpr int __variants = 2;
 	#line 503 "FirstProgram.adv"
 	Union2(CppAdvance::In<Type1> value) : __union_internal_tag{ _TAG__Type1 } { new (&_Type1) Type1(value); }
 	#line 504 "FirstProgram.adv"
@@ -2099,6 +2109,8 @@ template<class T1, class T2, class T3> struct Union3 final : public CppAdvance::
 		_TAG__Type1, _TAG__Type2, _TAG__Type3
 	} __union_internal_tag;
 	public:
+	#line 507 "FirstProgram.adv"
+	static constexpr int __variants = 3;
 	#line 508 "FirstProgram.adv"
 	Union3(CppAdvance::In<Type1> value) : __union_internal_tag{ _TAG__Type1 } { new (&_Type1) Type1(value); }
 	#line 509 "FirstProgram.adv"
@@ -2231,6 +2243,8 @@ template<class T1, class T2, class T3, class T4> struct Union4 final : public Cp
 		_TAG__Type1, _TAG__Type2, _TAG__Type3, _TAG__Type4
 	} __union_internal_tag;
 	public:
+	#line 513 "FirstProgram.adv"
+	static constexpr int __variants = 4;
 	#line 514 "FirstProgram.adv"
 	Union4(CppAdvance::In<Type1> value) : __union_internal_tag{ _TAG__Type1 } { new (&_Type1) Type1(value); }
 	#line 515 "FirstProgram.adv"
@@ -2386,6 +2400,8 @@ template<class T1, class T2, class T3, class T4, class T5> struct Union5 final :
 		_TAG__Type1, _TAG__Type2, _TAG__Type3, _TAG__Type4, _TAG__Type5
 	} __union_internal_tag;
 	public:
+	#line 520 "FirstProgram.adv"
+	static constexpr int __variants = 5;
 	#line 521 "FirstProgram.adv"
 	Union5(CppAdvance::In<Type1> value) : __union_internal_tag{ _TAG__Type1 } { new (&_Type1) Type1(value); }
 	#line 522 "FirstProgram.adv"
@@ -2564,6 +2580,8 @@ template<class T1, class T2, class T3, class T4, class T5, class T6> struct Unio
 		_TAG__Type1, _TAG__Type2, _TAG__Type3, _TAG__Type4, _TAG__Type5, _TAG__Type6
 	} __union_internal_tag;
 	public:
+	#line 528 "FirstProgram.adv"
+	static constexpr int __variants = 6;
 	#line 529 "FirstProgram.adv"
 	Union6(CppAdvance::In<Type1> value) : __union_internal_tag{ _TAG__Type1 } { new (&_Type1) Type1(value); }
 	#line 530 "FirstProgram.adv"
@@ -3070,6 +3088,8 @@ class __Class_ComplexVariant final : public CppAdvance::EnumClass {
 	private: static TESTDLL_API const __self __values[];
 	#line 457 "FirstProgram.adv"
 	public: static std::span<const __self> GetValues() noexcept { return { __values, 4 }; }
+	#line 457 "FirstProgram.adv"
+	public: static constexpr int __variants = 4;
 	#line 478 "FirstProgram.adv"
 	public: inline constexpr auto getCount123() const  -> CppAdvance::i32;
 	#line 9999 "FirstProgram.adv"

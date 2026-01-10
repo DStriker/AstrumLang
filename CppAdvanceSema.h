@@ -1046,4 +1046,7 @@ public:
 
 	void enterSwitchExpressionBranch(CppAdvanceParser::SwitchExpressionBranchContext*) override;
 
+
+	void exitRangeExpression(CppAdvanceParser::RangeExpressionContext*) override;
+
 };

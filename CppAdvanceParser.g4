@@ -359,9 +359,11 @@ scopeSafeCompoundStatement: LeftBrace stat+? RightBrace;
 
 expr: assignmentExpression;
 
+rangeExpression: unaryExpression ((DoubleDot | DoubleDotEqual) unaryExpression)?;
+
 switchExpression:
-	  unaryExpression
-	| Switch threeWayComparisonExpression (Arrow theTypeId)? LeftBrace switchExpressionBranch (Comma switchExpressionBranch)+ RightBrace
+	  rangeExpression
+	| Switch threeWayComparisonExpression (Arrow theTypeId)? LeftBrace switchExpressionBranch (Comma switchExpressionBranch)+ Comma? RightBrace
 	;
 
 switchExpressionBranch: patternList AssignArrow expr;

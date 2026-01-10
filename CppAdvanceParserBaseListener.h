@@ -403,6 +403,9 @@ public:
   virtual void enterExpr(CppAdvanceParser::ExprContext * /*ctx*/) override { }
   virtual void exitExpr(CppAdvanceParser::ExprContext * /*ctx*/) override { }
 
+  virtual void enterRangeExpression(CppAdvanceParser::RangeExpressionContext * /*ctx*/) override { }
+  virtual void exitRangeExpression(CppAdvanceParser::RangeExpressionContext * /*ctx*/) override { }
+
   virtual void enterSwitchExpression(CppAdvanceParser::SwitchExpressionContext * /*ctx*/) override { }
   virtual void exitSwitchExpression(CppAdvanceParser::SwitchExpressionContext * /*ctx*/) override { }
 

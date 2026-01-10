@@ -401,6 +401,9 @@ public:
   virtual void enterExpr(CppAdvanceParser::ExprContext *ctx) = 0;
   virtual void exitExpr(CppAdvanceParser::ExprContext *ctx) = 0;
 
+  virtual void enterRangeExpression(CppAdvanceParser::RangeExpressionContext *ctx) = 0;
+  virtual void exitRangeExpression(CppAdvanceParser::RangeExpressionContext *ctx) = 0;
+
   virtual void enterSwitchExpression(CppAdvanceParser::SwitchExpressionContext *ctx) = 0;
   virtual void exitSwitchExpression(CppAdvanceParser::SwitchExpressionContext *ctx) = 0;
 

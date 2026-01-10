@@ -1740,6 +1740,8 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		}
 		out << "};\n" << std::string(depth, '\t');
 		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "public: static constexpr int __variants = " << type->constants.size() << ";\n" << std::string(depth, '\t');
+		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 		out << "public: static constexpr std::span<const CppAdvance::Str> GetNames() noexcept { return __names; }\n" << std::string(depth, '\t');
 		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 		out << "private: static const " << type->id << " __values[];\n" << std::string(depth, '\t');
@@ -1789,6 +1791,8 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		}
         out << "public: static std::span<const __self> GetValues() noexcept { return { __values, " << std::to_string(i) << " }; }\n" 
 			<< std::string(depth, '\t');
+		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "public: static constexpr int __variants = " << i << ";\n" << std::string(depth, '\t');
 	}
 	else if (type->kind == TypeKind::Union)
 	{
@@ -1824,6 +1828,8 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		}
 		out << "\n" << std::string(--depth, '\t') << "} __union_internal_tag;\n" << std::string(depth, '\t');
 		out << "public:\n" << std::string(depth, '\t');
+		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "static constexpr int __variants = " << type->constants.size() << ";\n" << std::string(depth, '\t');
 		//value initialization
 		for (const auto& constant : type->constants)
 		{
@@ -12113,16 +12119,28 @@ void CppAdvanceCodegen::printSelectionStatement(CppAdvanceParser::SelectionState
 	else if (ctx->Switch())
 	{
 		switchStatements.push(ctx);
+		switchProcessedVariants.push({ 0,0 });
 		int i = 0;
 		for (auto branch : ctx->switchStatementBranch())
 		{
 			printSwitchStatementBranch(branch, ctx->threeWayComparisonExpression(), i++);
+		}
+		if (ctx->switchStatementBranch().back()->patternList()->getText() != "_")
+		{
+			out << " else { using __switchType = decltype(";
+			printThreeWayComparisonExpression(ctx->threeWayComparisonExpression());
+			out << "); static_assert((!std::derived_from<__switchType, CppAdvance::Enum> &&"
+				<< " !std::derived_from<__switchType, CppAdvance::EnumClassRef> && !std::derived_from<__switchType, CppAdvance::Union>) "
+				<< "|| CppAdvance::GetVariantsCount<__switchType>() <= " 
+				<< switchProcessedVariants.top().first + switchProcessedVariants.top().second << ", "
+				<< "\"Switch does not handle all possible variants, add a default branch\"); }";
 		}
 		out << "\n";
 		for (auto branch : ctx->switchStatementBranch())
 		{
 			out << std::string(--depth,'\t') << "}\n";
 		}
+		switchProcessedVariants.pop();
 		switchStatements.pop();
 	}
 }
@@ -17506,6 +17524,10 @@ void CppAdvanceCodegen::printPatternList(CppAdvanceParser::PatternListContext* c
 	int i = 0;
 	for (auto pattern : ctx->pattern()) {
 		if (i == 0 && skipFirst) {
+			if (!switchProcessedVariants.empty())
+			{
+				switchProcessedVariants.top().second++;
+			}
 			++i;  continue;
 		}
 		if (pattern->theTypeId() && pattern->theTypeId()->getText() == "_")
@@ -17591,6 +17613,10 @@ void CppAdvanceCodegen::printPatternList(CppAdvanceParser::PatternListContext* c
 				if (isDeconstruction || isIndex)
 				{
 					out << ")";
+				}
+				else if (!switchProcessedVariants.empty())
+				{
+					switchProcessedVariants.top().second++;
 				}
 				if (isIndex)
 				{
@@ -17856,13 +17882,14 @@ void CppAdvanceCodegen::printPowerExpression(CppAdvanceParser::PowerExpressionCo
 
 void CppAdvanceCodegen::printSwitchExpression(CppAdvanceParser::SwitchExpressionContext* ctx) const
 {
-	if (ctx->unaryExpression())
+	if (ctx->rangeExpression())
 	{
-		printUnaryExpression(ctx->unaryExpression());
+		printRangeExpression(ctx->rangeExpression());
 	}
 	else
 	{
 		switchExpressions.push(ctx);
+		switchProcessedVariants.push({ 0,0 });
 		int i = 0;
 		out << "[";
 		if (functionBody) out << "&";
@@ -17873,17 +17900,29 @@ void CppAdvanceCodegen::printSwitchExpression(CppAdvanceParser::SwitchExpression
 			printTypeId(ctx->theTypeId());
 			out << " ";
 		}
+		out << "\nADV_WARNING_DISABLE(4715, -Wreturn-type)\n" << std::string(depth, '\t');
 
 		for (auto branch : ctx->switchExpressionBranch())
 		{
 			printSwitchExpressionBranch(branch, ctx->threeWayComparisonExpression(), i++);
+		}
+		if (ctx->switchExpressionBranch().back()->patternList()->getText() != "_")
+		{
+			out << " else { using __switchType = decltype(";
+			printThreeWayComparisonExpression(ctx->threeWayComparisonExpression());
+			out << "); static_assert((!std::derived_from<__switchType, CppAdvance::Enum> &&"
+				<< " !std::derived_from<__switchType, CppAdvance::EnumClassRef> && !std::derived_from<__switchType, CppAdvance::Union>) "
+				<< "|| CppAdvance::GetVariantsCount<__switchType>() <= "
+				<< switchProcessedVariants.top().first + switchProcessedVariants.top().second << ", "
+				<< "\"Switch does not handle all possible variants, add a default branch\"); }";
 		}
 		out << "\n";
 		for (auto branch : ctx->switchExpressionBranch())
 		{
 			out << std::string(--depth, '\t') << "}\n";
 		}
-		out << std::string(depth, '\t') << "()";
+		out << "ADV_WARNING_POP\n" << std::string(depth, '\t') << "()";
+		switchProcessedVariants.pop();
 		switchExpressions.pop();
 	}
 }
@@ -18006,6 +18045,24 @@ void CppAdvanceCodegen::printSwitchExpressionBranch(CppAdvanceParser::SwitchExpr
 		out << ";";
 	}
 	out << "\n" << std::string(depth, '\t');
+}
+
+void CppAdvanceCodegen::printRangeExpression(CppAdvanceParser::RangeExpressionContext* ctx) const
+{
+	if (ctx->DoubleDot() || ctx->DoubleDotEqual())
+	{
+		out << "Range(";
+		printUnaryExpression(ctx->unaryExpression(0));
+		out << ", ";
+		printUnaryExpression(ctx->unaryExpression(1));
+		out << ", ";
+        out << (ctx->DoubleDot() ? "false" : "true");
+		out << ")";
+	}
+	else
+	{
+		printUnaryExpression(ctx->unaryExpression(0));
+	}
 }
 
 void CppAdvanceCodegen::printUnaryExpression(CppAdvanceParser::UnaryExpressionContext* ctx) const
@@ -18734,12 +18791,14 @@ void CppAdvanceCodegen::printPrimaryExpression(CppAdvanceParser::PrimaryExpressi
 			}
 			else if (!switchStatements.empty())
 			{
+				switchProcessedVariants.top().first++;
 				out << "decltype(";
 				printThreeWayComparisonExpression(switchStatements.top()->threeWayComparisonExpression());
 				out << ")";
 			}
 			else if (!switchExpressions.empty())
 			{
+				switchProcessedVariants.top().first++;
 				out << "decltype(";
 				printThreeWayComparisonExpression(switchExpressions.top()->threeWayComparisonExpression());
 				out << ")";
