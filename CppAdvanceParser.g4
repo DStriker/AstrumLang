@@ -359,7 +359,14 @@ scopeSafeCompoundStatement: LeftBrace stat+? RightBrace;
 
 expr: assignmentExpression;
 
-rangeExpression: unaryExpression ((DoubleDot | DoubleDotEqual) unaryExpression)?;
+rangeExpression: 
+	  unaryExpression
+	| rangeExpressionStart? (DoubleDot | DoubleDotEqual) rangeExpressionEnd?
+	;
+
+rangeExpressionStart: unaryExpression;
+
+rangeExpressionEnd: unaryExpression;
 
 switchExpression:
 	  rangeExpression

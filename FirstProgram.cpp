@@ -19,15 +19,15 @@ template<class T> inline auto getAsString(__extension_569_T<T> const& __this ) -
 
 #line 629 "FirstProgram.adv"
 auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam = CppAdvance::f64(3.5))  -> const int;
-#line 741 "FirstProgram.adv"
+#line 743 "FirstProgram.adv"
 inline constexpr CppAdvance::usize PRIVATE_CONSTANT = CppAdvance::usize(34U);
 #line 2 "FirstProgram.adv"
 volatile CppAdvance::Unsafe::__VolatileRawPtr<const CppAdvance::char16> globalVar{};
 #line 3 "FirstProgram.adv"
 extern const CppAdvance::Unsafe::__RawPtr<CppAdvance::i32> globalVar1 = nullptr;
-#line 742 "FirstProgram.adv"
+#line 744 "FirstProgram.adv"
 static CppAdvance::i32 globalVar2 = CppAdvance::i32(8);
-#line 743 "FirstProgram.adv"
+#line 745 "FirstProgram.adv"
 static const CppAdvance::i32 globalVar3 = CppAdvance::i32(456);
 #line 92 "FirstProgram.adv"
 thread_local CppAdvance::i32 Vector3::Count2 = CppAdvance::i32(123);
@@ -277,19 +277,23 @@ auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam)  -> co
 		#line 727 "FirstProgram.adv"
 		ADV_UFCS(_operator_subscript)(vec.__ref(), CppAdvance::i32(1)) = CppAdvance::i32(5);
 		#line 728 "FirstProgram.adv"
-		ADV_UFCS(_operator_subscript)(vec.__ref(), Range(CppAdvance::i32(1), ADV_UFCS(_operator_xor)(CppAdvance::i32(3)), false)) = CppAdvance::i32(8);
+		ADV_UFCS(_operator_subscript)(vec.__ref(), Range(CppAdvance::i32(1), CppAdvance::i32(3), false)) = CppAdvance::i32(10);
 		#line 729 "FirstProgram.adv"
-		ADV_UFCS(_operator_subscript)(vec.__ref(), Range(CppAdvance::i32(1), ADV_UFCS(_operator_xor)(CppAdvance::i32(3)), true)) = CppAdvance::i32(9);
+		ADV_UFCS(_operator_subscript)(vec.__ref(), Range(CppAdvance::i32(1), Index(0, true), false)) = CppAdvance::i32(8);
 		#line 730 "FirstProgram.adv"
-		print(CppAdvance::Cast<true, CppAdvance::f32>((*(cv1))));
+		ADV_UFCS(_operator_subscript)(vec.__ref(), Range(0, ADV_UFCS(_operator_xor)(CppAdvance::i32(3)), true)) = CppAdvance::i32(9);
 		#line 731 "FirstProgram.adv"
+		ADV_UFCS(_operator_subscript)(vec.__ref(), Range(0, Index(0, true), false)) = CppAdvance::i32(5);
+		#line 732 "FirstProgram.adv"
+		print(CppAdvance::Cast<true, CppAdvance::f32>((*(cv1))));
+		#line 733 "FirstProgram.adv"
 		print(CppAdvance::Cast<true, CppAdvance::i32>(((CppAdvance::Is((*(cv1)), (cv2))))));
-		#line 734 "FirstProgram.adv"
+		#line 736 "FirstProgram.adv"
 		CppAdvance::Nullable<CppAdvance::ObjectRef> on = vec; 
 	}
-	#line 736 "FirstProgram.adv"
+	#line 738 "FirstProgram.adv"
 	print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
-	#line 737 "FirstProgram.adv"
+	#line 739 "FirstProgram.adv"
 	print(ADV_UPCS(x)(ADV_UPCS(x)(ADV_USFCS((Test1::Test2::TestClass), makeTestClass)(CppAdvance::i32(3), CppAdvance::f32(3.14f)).__ref()).__ref()));
 }
 

@@ -404,6 +404,12 @@ public:
   virtual void enterRangeExpression(CppAdvanceParser::RangeExpressionContext *ctx) = 0;
   virtual void exitRangeExpression(CppAdvanceParser::RangeExpressionContext *ctx) = 0;
 
+  virtual void enterRangeExpressionStart(CppAdvanceParser::RangeExpressionStartContext *ctx) = 0;
+  virtual void exitRangeExpressionStart(CppAdvanceParser::RangeExpressionStartContext *ctx) = 0;
+
+  virtual void enterRangeExpressionEnd(CppAdvanceParser::RangeExpressionEndContext *ctx) = 0;
+  virtual void exitRangeExpressionEnd(CppAdvanceParser::RangeExpressionEndContext *ctx) = 0;
+
   virtual void enterSwitchExpression(CppAdvanceParser::SwitchExpressionContext *ctx) = 0;
   virtual void exitSwitchExpression(CppAdvanceParser::SwitchExpressionContext *ctx) = 0;
 

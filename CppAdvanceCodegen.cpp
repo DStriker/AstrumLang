@@ -18052,16 +18052,30 @@ void CppAdvanceCodegen::printRangeExpression(CppAdvanceParser::RangeExpressionCo
 	if (ctx->DoubleDot() || ctx->DoubleDotEqual())
 	{
 		out << "Range(";
-		printUnaryExpression(ctx->unaryExpression(0));
+		if (ctx->rangeExpressionStart())
+		{
+			printUnaryExpression(ctx->rangeExpressionStart()->unaryExpression());
+		}
+		else
+		{
+			out << "0";
+		}
 		out << ", ";
-		printUnaryExpression(ctx->unaryExpression(1));
+		if (ctx->rangeExpressionEnd())
+		{
+			printUnaryExpression(ctx->rangeExpressionEnd()->unaryExpression());
+		}
+		else
+		{
+			out << "Index(0, true)";
+		}
 		out << ", ";
         out << (ctx->DoubleDot() ? "false" : "true");
 		out << ")";
 	}
 	else
 	{
-		printUnaryExpression(ctx->unaryExpression(0));
+		printUnaryExpression(ctx->unaryExpression());
 	}
 }
 

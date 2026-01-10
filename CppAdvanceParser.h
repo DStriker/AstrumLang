@@ -98,35 +98,36 @@ public:
     RuleSimpleMultiDeclaration = 120, RuleMultiDeclaration = 121, RuleConstantDeclaration = 122, 
     RuleForwardVarDeclaration = 123, RuleAliasDeclaration = 124, RuleVersionSelectionStatement = 125, 
     RuleVersionSelectionStatementBlock = 126, RuleScopeSafeCompoundStatement = 127, 
-    RuleExpr = 128, RuleRangeExpression = 129, RuleSwitchExpression = 130, 
-    RuleSwitchExpressionBranch = 131, RulePowerExpression = 132, RuleMultiplicativeExpression = 133, 
-    RuleAdditiveExpression = 134, RuleShiftExpression = 135, RuleThreeWayComparisonExpression = 136, 
-    RuleRelationalExpression = 137, RuleEqualityExpression = 138, RuleAndExpression = 139, 
-    RuleExclusiveOrExpression = 140, RuleInclusiveOrExpression = 141, RuleLogicalAndExpression = 142, 
-    RuleLogicalOrExpression = 143, RuleNullCoalescingExpression = 144, RuleNullCoalescingBranch = 145, 
-    RuleConditionalExpression = 146, RuleConstantExpression = 147, RuleAssignmentExpression = 148, 
-    RuleInitializerClause = 149, RuleBracedInitList = 150, RuleInitializerList = 151, 
-    RuleInitializerPart = 152, RuleExpressionList = 153, RuleExpressionListPart = 154, 
-    RulePatternList = 155, RulePatternCombinationOperator = 156, RulePattern = 157, 
-    RulePropertyPattern = 158, RuleAssignmentOperator = 159, RuleShiftOperator = 160, 
-    RuleTryBlock = 161, RuleExceptionHandler = 162, RuleExceptionDeclaration = 163, 
-    RuleThrowExpression = 164, RuleSimpleTypeSpecifier = 165, RuleNamedTupleField = 166, 
-    RuleNestedNameSpecifier = 167, RuleNamespaceName = 168, RuleTemplateName = 169, 
-    RuleSimpleTemplateId = 170, RuleOperatorTemplateId = 171, RuleTemplateId = 172, 
-    RuleTemplateArgumentList = 173, RuleTemplateArgument = 174, RuleIdExpression = 175, 
-    RuleQualifiedId = 176, RuleUnqualifiedId = 177, RuleTheTypeId = 178, 
-    RuleSingleTypeId = 179, RuleTypePostfix = 180, RuleArrayDeclarator = 181, 
-    RulePointerOperator = 182, RulePointerOperatorSeq = 183, RuleTypeSpecifierSeq = 184, 
-    RuleTypeSpecifier = 185, RuleTrailingTypeSpecifier = 186, RuleTypeNameSpecifier = 187, 
-    RuleCvQualifierSeq = 188, RuleCvQualifier = 189, RuleTypename = 190, 
-    RuleClassName = 191, RuleDecltypeSpecifier = 192, RuleEnumName = 193, 
-    RuleAccessSpecifier = 194, RuleProtectedInternal = 195, RuleOperatorFunctionId = 196, 
-    RuleConversionFunctionId = 197, RuleUnaryExpression = 198, RuleUnaryExpressionTail = 199, 
-    RuleNewExpression = 200, RuleStackallocExpression = 201, RuleMemorySpaceSetter = 202, 
-    RuleNewInitializer = 203, RuleFullPostfixExpression = 204, RulePostfixExpression = 205, 
-    RuleTupleExpression = 206, RulePrimaryExpression = 207, RuleUnaryPrefixOperator = 208, 
-    RuleUnaryCustomOperator = 209, RuleRefCaptureOperator = 210, RuleUnaryPostfixOperator = 211, 
-    RuleNot = 212, RuleOperator = 213, RuleLiteral = 214
+    RuleExpr = 128, RuleRangeExpression = 129, RuleRangeExpressionStart = 130, 
+    RuleRangeExpressionEnd = 131, RuleSwitchExpression = 132, RuleSwitchExpressionBranch = 133, 
+    RulePowerExpression = 134, RuleMultiplicativeExpression = 135, RuleAdditiveExpression = 136, 
+    RuleShiftExpression = 137, RuleThreeWayComparisonExpression = 138, RuleRelationalExpression = 139, 
+    RuleEqualityExpression = 140, RuleAndExpression = 141, RuleExclusiveOrExpression = 142, 
+    RuleInclusiveOrExpression = 143, RuleLogicalAndExpression = 144, RuleLogicalOrExpression = 145, 
+    RuleNullCoalescingExpression = 146, RuleNullCoalescingBranch = 147, 
+    RuleConditionalExpression = 148, RuleConstantExpression = 149, RuleAssignmentExpression = 150, 
+    RuleInitializerClause = 151, RuleBracedInitList = 152, RuleInitializerList = 153, 
+    RuleInitializerPart = 154, RuleExpressionList = 155, RuleExpressionListPart = 156, 
+    RulePatternList = 157, RulePatternCombinationOperator = 158, RulePattern = 159, 
+    RulePropertyPattern = 160, RuleAssignmentOperator = 161, RuleShiftOperator = 162, 
+    RuleTryBlock = 163, RuleExceptionHandler = 164, RuleExceptionDeclaration = 165, 
+    RuleThrowExpression = 166, RuleSimpleTypeSpecifier = 167, RuleNamedTupleField = 168, 
+    RuleNestedNameSpecifier = 169, RuleNamespaceName = 170, RuleTemplateName = 171, 
+    RuleSimpleTemplateId = 172, RuleOperatorTemplateId = 173, RuleTemplateId = 174, 
+    RuleTemplateArgumentList = 175, RuleTemplateArgument = 176, RuleIdExpression = 177, 
+    RuleQualifiedId = 178, RuleUnqualifiedId = 179, RuleTheTypeId = 180, 
+    RuleSingleTypeId = 181, RuleTypePostfix = 182, RuleArrayDeclarator = 183, 
+    RulePointerOperator = 184, RulePointerOperatorSeq = 185, RuleTypeSpecifierSeq = 186, 
+    RuleTypeSpecifier = 187, RuleTrailingTypeSpecifier = 188, RuleTypeNameSpecifier = 189, 
+    RuleCvQualifierSeq = 190, RuleCvQualifier = 191, RuleTypename = 192, 
+    RuleClassName = 193, RuleDecltypeSpecifier = 194, RuleEnumName = 195, 
+    RuleAccessSpecifier = 196, RuleProtectedInternal = 197, RuleOperatorFunctionId = 198, 
+    RuleConversionFunctionId = 199, RuleUnaryExpression = 200, RuleUnaryExpressionTail = 201, 
+    RuleNewExpression = 202, RuleStackallocExpression = 203, RuleMemorySpaceSetter = 204, 
+    RuleNewInitializer = 205, RuleFullPostfixExpression = 206, RulePostfixExpression = 207, 
+    RuleTupleExpression = 208, RulePrimaryExpression = 209, RuleUnaryPrefixOperator = 210, 
+    RuleUnaryCustomOperator = 211, RuleRefCaptureOperator = 212, RuleUnaryPostfixOperator = 213, 
+    RuleNot = 214, RuleOperator = 215, RuleLiteral = 216
   };
 
   explicit CppAdvanceParser(antlr4::TokenStream *input);
@@ -276,6 +277,8 @@ public:
   class ScopeSafeCompoundStatementContext;
   class ExprContext;
   class RangeExpressionContext;
+  class RangeExpressionStartContext;
+  class RangeExpressionEndContext;
   class SwitchExpressionContext;
   class SwitchExpressionBranchContext;
   class PowerExpressionContext;
@@ -2663,10 +2666,11 @@ public:
   public:
     RangeExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    std::vector<UnaryExpressionContext *> unaryExpression();
-    UnaryExpressionContext* unaryExpression(size_t i);
+    UnaryExpressionContext *unaryExpression();
     antlr4::tree::TerminalNode *DoubleDot();
     antlr4::tree::TerminalNode *DoubleDotEqual();
+    RangeExpressionStartContext *rangeExpressionStart();
+    RangeExpressionEndContext *rangeExpressionEnd();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -2674,6 +2678,32 @@ public:
   };
 
   RangeExpressionContext* rangeExpression();
+
+  class  RangeExpressionStartContext : public antlr4::ParserRuleContext {
+  public:
+    RangeExpressionStartContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    UnaryExpressionContext *unaryExpression();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  RangeExpressionStartContext* rangeExpressionStart();
+
+  class  RangeExpressionEndContext : public antlr4::ParserRuleContext {
+  public:
+    RangeExpressionEndContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    UnaryExpressionContext *unaryExpression();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  RangeExpressionEndContext* rangeExpressionEnd();
 
   class  SwitchExpressionContext : public antlr4::ParserRuleContext {
   public:
