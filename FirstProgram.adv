@@ -724,9 +724,12 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
             print("uz is incorrect");
 		}*/
 		o: object = vec;
-		switch o {
+		/*switch o {
 			str => {
 				print(o);
+			}
+			i32 i => {
+				print(i);
 			}
 			null => print("Not null");//x
 			not "abcd" => print("abcd");
@@ -741,9 +744,9 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 			{1,2,_} => print("1,2,_");
 			[1,_,3] => print("1,_,3");
             _ => print("Unknown option");
-		}
+		}*/
 		/*result := switch vec {
-			String => "string",
+			str => "string",
 			not null => "Not null",
 			"abcd" => "abcd",
 			>5 and <15 => "5..15",
@@ -754,6 +757,16 @@ private main: (iparam: i32, in jparam: f64 = 3.5) -> int
 			[1,_,3] => "1,_,3",
             _ => throw IntegerOverflowException()
 		};*/
+		result := switch nxt2 -> i32 {
+			ConcreteVectorClass => nxt2.ZZ,
+			not null => nxt2.Count,
+			_ => throw CppAdvance.IntegerOverflowException()
+		};
+		print(switch nxt2 -> i32 {
+			ConcreteVectorClass => nxt2.ZZ,
+			not null => nxt2.Count,
+			_ => throw CppAdvance.IntegerOverflowException()
+		});
 		print(cv1! as f32);
 		print((cv1! is (cv2)) as i32);
 		

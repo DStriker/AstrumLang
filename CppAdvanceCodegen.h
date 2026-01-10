@@ -12,6 +12,7 @@ class CppAdvanceCodegen
 	mutable std::vector<ConstantDefinition> selfConstants;
 	mutable std::stack<CppAdvanceParser::UnaryExpressionContext*> unaryExpressions;
 	mutable std::stack<CppAdvanceParser::SelectionStatementContext*> switchStatements;
+	mutable std::stack<CppAdvanceParser::SwitchExpressionContext*> switchExpressions;
 	mutable CppAdvanceParser::TemplateParamsContext* currentTemplateParams = nullptr;
 	mutable CppAdvanceParser::TemplateArgumentListContext* currentTemplateSpecArgs = nullptr;
 	mutable CppAdvanceParser::SimpleDeclarationContext* currentDeclaration = nullptr;
@@ -229,6 +230,8 @@ public:
 	void printMultiplicativeExpression(CppAdvanceParser::MultiplicativeExpressionContext* ctx) const;
 	void printPowerExpression(CppAdvanceParser::PowerExpressionContext* ctx) const;
 	void printSwitchExpression(CppAdvanceParser::SwitchExpressionContext* ctx) const;
+	void printSwitchExpressionBranch(CppAdvanceParser::SwitchExpressionBranchContext* ctx,
+		CppAdvanceParser::ThreeWayComparisonExpressionContext* switchExpr, int branchIndex) const;
 	void printUnaryExpression(CppAdvanceParser::UnaryExpressionContext* ctx) const;
 	void printUnaryExpressionTail(CppAdvanceParser::UnaryExpressionTailContext* ctx) const;
 	void printNewExpression(CppAdvanceParser::NewExpressionContext* ctx) const;

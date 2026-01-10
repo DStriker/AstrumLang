@@ -2669,6 +2669,8 @@ public:
     std::vector<SwitchExpressionBranchContext *> switchExpressionBranch();
     SwitchExpressionBranchContext* switchExpressionBranch(size_t i);
     antlr4::tree::TerminalNode *RightBrace();
+    antlr4::tree::TerminalNode *Arrow();
+    TheTypeIdContext *theTypeId();
     std::vector<antlr4::tree::TerminalNode *> Comma();
     antlr4::tree::TerminalNode* Comma(size_t i);
 
@@ -3119,6 +3121,8 @@ public:
     virtual size_t getRuleIndex() const override;
     TheTypeIdContext *theTypeId();
     NotContext *not_();
+    std::vector<antlr4::tree::TerminalNode *> Identifier();
+    antlr4::tree::TerminalNode* Identifier(size_t i);
     antlr4::tree::TerminalNode *LeftBrace();
     std::vector<PropertyPatternContext *> propertyPattern();
     PropertyPatternContext* propertyPattern(size_t i);
@@ -3128,8 +3132,6 @@ public:
     ShiftExpressionContext *shiftExpression();
     antlr4::tree::TerminalNode *LeftParen();
     antlr4::tree::TerminalNode *Let();
-    std::vector<antlr4::tree::TerminalNode *> Identifier();
-    antlr4::tree::TerminalNode* Identifier(size_t i);
     antlr4::tree::TerminalNode *RightParen();
     std::vector<PatternListContext *> patternList();
     PatternListContext* patternList(size_t i);

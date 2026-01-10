@@ -6352,7 +6352,13 @@ void CppAdvanceSema::enterSwitchExpression(CppAdvanceParser::SwitchExpressionCon
 void CppAdvanceSema::exitSwitchExpression(CppAdvanceParser::SwitchExpressionContext* ctx)
 {
 	if (!ctx->Switch()) return;
-	typeStack.push(contextTypes[ctx->switchExpressionBranch(0)->expr()]);
+	if (ctx->theTypeId())
+	{
+		typeStack.push(contextTypes[ctx->theTypeId()]);
+	}
+	else {
+		typeStack.push(contextTypes[ctx->switchExpressionBranch(0)->expr()]);
+	}
 	if (firstPass) return;
 	currentSwitchData.pop();
 }
@@ -6361,7 +6367,7 @@ void CppAdvanceSema::enterSwitchExpressionBranch(CppAdvanceParser::SwitchExpress
 {
 	if (firstPass) return;
 	auto switchData = currentSwitchData.top();
-	if (switchData.second - switchData.first > 1)
+	if (switchData.second - switchData.first > 1 && ctx->patternList()->getText() == "_")
 	{
 		CppAdvanceCompilerError("Default branch must be last in the switch", ctx->patternList()->getStart());
 	}

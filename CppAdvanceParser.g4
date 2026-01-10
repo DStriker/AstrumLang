@@ -361,7 +361,7 @@ expr: assignmentExpression;
 
 switchExpression:
 	  unaryExpression
-	| Switch threeWayComparisonExpression LeftBrace switchExpressionBranch (Comma switchExpressionBranch)+ RightBrace
+	| Switch threeWayComparisonExpression (Arrow theTypeId)? LeftBrace switchExpressionBranch (Comma switchExpressionBranch)+ RightBrace
 	;
 
 switchExpressionBranch: patternList AssignArrow expr;
@@ -444,7 +444,7 @@ patternList: pattern (patternCombinationOperator pattern)*;
 patternCombinationOperator: And | Or;
 
 pattern: 
-	  not? theTypeId (LeftBrace propertyPattern (Comma propertyPattern)* RightBrace)?
+	  not? theTypeId Identifier? (LeftBrace propertyPattern (Comma propertyPattern)* RightBrace)?
 	| not? shiftExpression (LeftParen Let Identifier (Comma Identifier)* RightParen)?
 	| not? LeftBrace patternList (Comma patternList)* RightBrace
 	| not? LeftBracket patternList (Comma patternList)* RightBracket
