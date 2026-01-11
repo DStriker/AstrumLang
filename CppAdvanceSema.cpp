@@ -7,6 +7,7 @@ using namespace std::literals::string_literals;
 const char* CurrentCppAdvanceCompilingFile{};
 std::string DLLName{};
 std::string CurrentCppAdvanceCompilingFileSource;
+bool UnitTestMode = false;
 
 void CppAdvanceCompilerError(std::string_view output, const Token* token)
 {
@@ -155,6 +156,28 @@ std::string CppAdvanceSema::getInterfaceMethodId(std::string_view name, CppAdvan
 		hash *= FNV_PRIME;
 	}
 	return std::format("{:016x}", hash);
+}
+
+std::string CppAdvanceSema::getUnitTestId(CppAdvanceParser::UnitTestDeclarationContext* test)
+{
+	std::string result;
+	if (test->StringLiteral())
+	{
+		result += test->StringLiteral()->getText();
+	}
+	else
+	{
+		result += filename;
+		result += "_";
+		result += std::to_string(test->getStart()->getLine());
+	}
+
+	uint64_t hash = FNV_OFFSET_BASIS;
+	for (char c : result) {
+		hash ^= c;
+		hash *= FNV_PRIME;
+	}
+	return std::format("__Test_{:016x}", hash);
 }
 
 std::string CppAdvanceSema::getCustomOperatorName(std::string_view op)
@@ -2595,6 +2618,10 @@ void CppAdvanceSema::exitForwardVarDeclaration(CppAdvanceParser::ForwardVarDecla
 void CppAdvanceSema::exitJumpStatement(CppAdvanceParser::JumpStatementContext* ctx)
 {
 	if (firstPass) return;
+	if (isUnitTestBody)
+	{
+		CppAdvanceCompilerError("Unit test cannot return value", ctx->Return()->getSymbol());
+	}
 	if (ctx->Return() && std::any_of(outParams.begin(), outParams.end(), [&](const auto& param) { return !initStates.top().definitelyAssigned.contains(param); }))
 	{
 		CppAdvanceCompilerError("Each branch of a function must initialize all out parameters", ctx->Return()->getSymbol());
@@ -6417,6 +6444,18 @@ void CppAdvanceSema::exitSwitchExpressionBranch(CppAdvanceParser::SwitchExpressi
 	symbolContexts.pop();
 }
 
+void CppAdvanceSema::enterUnitTestDeclaration(CppAdvanceParser::UnitTestDeclarationContext* ctx)
+{
+	isUnitTestBody = true;
+	functionBody = true;
+}
+
+void CppAdvanceSema::exitUnitTestDeclaration(CppAdvanceParser::UnitTestDeclarationContext* ctx)
+{
+	isUnitTestBody = false;
+	functionBody = false;
+}
+
 void CppAdvanceSema::exitRangeExpression(CppAdvanceParser::RangeExpressionContext* ctx)
 {
 	if (ctx->DoubleDot() || ctx->DoubleDotEqual()) 
@@ -6471,4 +6510,30 @@ void CppAdvanceSema::exitIterationStatement(CppAdvanceParser::IterationStatement
 {
 	if (firstPass) return;
 	--loopDepth;
+}
+
+void TestIgnoringParseTreeWalker::enterRule(antlr4::tree::ParseTreeListener* listener, ParseTree* r) const
+{
+	if (dynamic_cast<CppAdvanceParser::UnitTestDeclarationContext*>(r) != nullptr)
+	{
+		isUnitTestBody = true;
+		return;
+	}
+	if (!isUnitTestBody)
+	{
+		ParseTreeWalker::enterRule(listener, r);
+	}
+}
+
+void TestIgnoringParseTreeWalker::exitRule(antlr4::tree::ParseTreeListener* listener, ParseTree* r) const
+{
+	if (dynamic_cast<CppAdvanceParser::UnitTestDeclarationContext*>(r) != nullptr)
+	{
+		isUnitTestBody = false;
+		return;
+	}
+	if (!isUnitTestBody)
+	{
+		ParseTreeWalker::exitRule(listener, r);
+	}
 }

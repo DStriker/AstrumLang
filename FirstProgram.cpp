@@ -271,7 +271,7 @@ auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam)  -> co
 		#line 715 "FirstProgram.adv"
 		print(oz);
 		#line 716 "FirstProgram.adv"
-		ADV_ASSERT(ox == CppAdvance::i32(1), u"ox==1");
+		ADV_ASSERT((ox == CppAdvance::i32(1)), u"ox==1");
 		#line 718 "FirstProgram.adv"
 		static_assert(CppAdvance::usize(sizeof(CppAdvance::i32)) == CppAdvance::i32(4), "i32 must be 4 bytes");
 		#line 720 "FirstProgram.adv"
@@ -290,6 +290,7 @@ auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam)  -> co
 	#line 739 "FirstProgram.adv"
 	print(ADV_UPCS(x)(ADV_UPCS(x)(ADV_USFCS((Test1::Test2::TestClass), makeTestClass)(CppAdvance::i32(3), CppAdvance::f32(3.14f)).__ref()).__ref()));
 }
+
 
 
 #line 572 "FirstProgram.adv"

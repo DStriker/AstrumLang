@@ -62,6 +62,7 @@ class CppAdvanceCodegen
 	mutable bool isAlignas = false;
 	mutable bool ifProlog = false;
 	mutable bool isCondition = false;
+	mutable bool isUnitTestBody = false;
 
 	class StreamSwitcher {
 	private:
@@ -203,6 +204,7 @@ public:
 	void printForwardVarDeclaration(CppAdvanceParser::ForwardVarDeclarationContext* ctx) const;
 	void printAliasDeclaration(CppAdvanceParser::AliasDeclarationContext* ctx) const;
 	void printAssertDeclaration(CppAdvanceParser::AssertDeclarationContext* ctx) const;
+	void printUnitTestDeclaration(CppAdvanceParser::UnitTestDeclarationContext* ctx) const;
 	void printExpression(CppAdvanceParser::ExprContext* ctx) const;
 	void printAssignmentExpression(CppAdvanceParser::AssignmentExpressionContext* ctx) const;
 	void printAssignmentOperator(CppAdvanceParser::AssignmentOperatorContext* ctx) const;

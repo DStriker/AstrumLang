@@ -46,6 +46,9 @@ public:
   virtual void enterAssertDeclaration(CppAdvanceParser::AssertDeclarationContext * /*ctx*/) override { }
   virtual void exitAssertDeclaration(CppAdvanceParser::AssertDeclarationContext * /*ctx*/) override { }
 
+  virtual void enterUnitTestDeclaration(CppAdvanceParser::UnitTestDeclarationContext * /*ctx*/) override { }
+  virtual void exitUnitTestDeclaration(CppAdvanceParser::UnitTestDeclarationContext * /*ctx*/) override { }
+
   virtual void enterLabeledStatement(CppAdvanceParser::LabeledStatementContext * /*ctx*/) override { }
   virtual void exitLabeledStatement(CppAdvanceParser::LabeledStatementContext * /*ctx*/) override { }
 

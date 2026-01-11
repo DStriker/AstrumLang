@@ -35,6 +35,7 @@ declaration:
 	| attributeSpecifierSeq? accessSpecifier? functionDefinition
 	| accessSpecifier? functionTemplateDeclaration
 	| externFunctionDeclaration
+	| unitTestDeclaration
 	;
 
 symbolSpecifierSeq: accessSpecifier | Unsafe | accessSpecifier Unsafe;
@@ -69,6 +70,8 @@ assertDeclaration:
 	| Assert conditionalExpression Semi
 	| Static? Assert LeftParen constantExpression Comma StringLiteral RightParen Semi
 	;
+
+unitTestDeclaration: Test StringLiteral? compoundStatement;
 
 labeledStatement: Identifier Colon (iterationStatement | selectionStatement | compoundStatement);
 

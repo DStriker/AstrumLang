@@ -11482,6 +11482,10 @@ void CppAdvanceCodegen::printDeclaration(CppAdvanceParser::DeclarationContext* c
 			}
 		}
 	}
+	else if (auto decl = ctx->unitTestDeclaration())
+	{
+		printUnitTestDeclaration(decl);
+	}
 }
 
 void CppAdvanceCodegen::printBlockDeclaration(CppAdvanceParser::BlockDeclarationContext* ctx) const
@@ -11971,6 +11975,10 @@ void CppAdvanceCodegen::printCompoundStatement(CppAdvanceParser::CompoundStateme
 			out << ";";
 		}
 		if (isPropertySetter) out << "\n" << std::string(depth, '\t') << "return *this;";
+	}
+	if (isUnitTestBody)
+	{
+		out << "\n" << std::string(depth, '\t') << "return true;";
 	}
 	out << "\n" << std::string(--depth, '\t') << "}";
 	if (!prevLabel.empty()) out << " BREAK_" << prevLabel << ":; }";
@@ -16992,9 +17000,9 @@ void CppAdvanceCodegen::printAssertDeclaration(CppAdvanceParser::AssertDeclarati
 	}
 	else
 	{
-		out << "ADV_ASSERT(";
+		out << "ADV_ASSERT((";
 		printConditionalExpression(ctx->conditionalExpression(0));
-		out << ", ";
+		out << "), ";
 		if (ctx->conditionalExpression().size() > 1)
 		{
             printConditionalExpression(ctx->conditionalExpression(1));
@@ -17005,6 +17013,22 @@ void CppAdvanceCodegen::printAssertDeclaration(CppAdvanceParser::AssertDeclarati
 		}
 		out << ");";
 	}
+}
+
+void CppAdvanceCodegen::printUnitTestDeclaration(CppAdvanceParser::UnitTestDeclarationContext* ctx) const
+{
+	if (!UnitTestMode) return;
+	isUnitTestBody = true;
+	functionBody = true;
+	out.switchTo(false);
+	out << "#ifdef ADV_UNITTEST\n" << std::string(depth, '\t');
+	out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth,'\t');
+	out << "static bool " << sema.getUnitTestId(ctx) << " = []()";
+	printCompoundStatement(ctx->compoundStatement());
+	out << "();\n" << std::string(depth, '\t');
+	out << "#endif" << std::string(depth, '\t');
+	functionBody = false;
+	isUnitTestBody = false;
 }
 
 void CppAdvanceCodegen::printExpression(CppAdvanceParser::ExprContext* ctx) const

@@ -44,6 +44,9 @@ public:
   virtual void enterAssertDeclaration(CppAdvanceParser::AssertDeclarationContext *ctx) = 0;
   virtual void exitAssertDeclaration(CppAdvanceParser::AssertDeclarationContext *ctx) = 0;
 
+  virtual void enterUnitTestDeclaration(CppAdvanceParser::UnitTestDeclarationContext *ctx) = 0;
+  virtual void exitUnitTestDeclaration(CppAdvanceParser::UnitTestDeclarationContext *ctx) = 0;
+
   virtual void enterLabeledStatement(CppAdvanceParser::LabeledStatementContext *ctx) = 0;
   virtual void exitLabeledStatement(CppAdvanceParser::LabeledStatementContext *ctx) = 0;
 

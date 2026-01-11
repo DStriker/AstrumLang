@@ -135,8 +135,11 @@ int main(int argc, const char* argv[])
 	{
 		auto filename = "FirstProgram";
 		CppAdvanceSema sema{ &parser, filename };
+		auto walker = TestIgnoringParseTreeWalker{};
 		tree::ParseTreeWalker::DEFAULT.walk(&sema, tree);
 		tree::ParseTreeWalker::DEFAULT.walk(&sema, tree);
+		/*walker.walk(&sema, tree);
+		walker.walk(&sema, tree);*/
 		CppAdvanceCodegen codegen(sema, filename);
 		codegen.print();
 		std::cout << "Build successful\n";

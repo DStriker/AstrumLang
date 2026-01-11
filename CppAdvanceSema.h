@@ -12,6 +12,7 @@ using antlr4::tree::TerminalNode;
 extern const char* CurrentCppAdvanceCompilingFile;
 extern std::string CurrentCppAdvanceCompilingFileSource;
 extern std::string DLLName;
+extern bool UnitTestMode;
 
 struct SourcePosition
 {
@@ -538,11 +539,13 @@ public:
 	bool isUnsafeTypeDefinition = false;
 	bool isRefProperty = false;
 	bool isFriendDefinition = false;
+	bool isUnitTestBody = false;
 
 	CppAdvanceSema(CppAdvanceParser* parser, std::string_view file) : parser{ parser }, filename{ file }, symbolTable{ cppParser.symbolTable, symbolContexts }, aliasTable{ cppParser.aliasTable, symbolContexts }, typeset{cppParser.types,symbolContexts}, functionTable{ cppParser.functionTable } {}
 
 	std::string getNamedTupleId(std::string_view tuple);
 	std::string getInterfaceMethodId(std::string_view name, CppAdvanceParser::ParamDeclClauseContext* params);
+	std::string getUnitTestId(CppAdvanceParser::UnitTestDeclarationContext* test);
 	std::string getCustomOperatorName(std::string_view op);
 
 	inline bool isTypeDefinitionBody() {
@@ -1063,5 +1066,22 @@ public:
 
 
 	void exitSwitchExpressionBranch(CppAdvanceParser::SwitchExpressionBranchContext*) override;
+
+
+	void enterUnitTestDeclaration(CppAdvanceParser::UnitTestDeclarationContext*) override;
+
+
+	void exitUnitTestDeclaration(CppAdvanceParser::UnitTestDeclarationContext*) override;
+
+
+};
+
+class TestIgnoringParseTreeWalker : public antlr4::tree::ParseTreeWalker {
+	mutable bool isUnitTestBody = false;
+
+protected:
+	void enterRule(antlr4::tree::ParseTreeListener* listener, ParseTree* r) const override;
+
+	void exitRule(antlr4::tree::ParseTreeListener* listener, ParseTree* r) const override;
 
 };

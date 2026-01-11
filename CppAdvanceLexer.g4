@@ -208,6 +208,8 @@ Super: 'super';
 
 Switch: 'switch';
 
+Test: 'test';
+
 This: 'this';
 
 Thread_local: 'tls';
