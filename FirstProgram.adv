@@ -628,7 +628,7 @@ struct TestStruct {
 	static assert(sizeof(i32) == 4, "i32 must be 4 bytes");
 }
 
-private main: (iparam: i32, in jparam: f64 = 3.5) -> int
+main: ()
 {
 	/*extern externalFunc: (a: i32, b: str) -> str;
 	ii := k := l := 15;

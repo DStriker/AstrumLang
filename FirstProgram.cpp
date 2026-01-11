@@ -18,7 +18,7 @@ template<class T> inline auto __construct_(CppAdvance::ConstructorProxy<__extens
 template<class T> inline auto getAsString(__extension_569_T<T> const& __this ) -> const CppAdvance::Str;
 
 #line 631 "FirstProgram.adv"
-auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam = CppAdvance::f64(3.5))  -> const int;
+extern "C" auto __Astrum_Main()  -> CppAdvance::i32;
 #line 743 "FirstProgram.adv"
 inline constexpr CppAdvance::usize PRIVATE_CONSTANT = CppAdvance::usize(34U);
 #line 2 "FirstProgram.adv"
@@ -202,7 +202,7 @@ inline auto Text::getShortString() const  -> CppAdvance::Str
 
 
 #line 631 "FirstProgram.adv"
-auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam)  -> const int
+extern "C" auto __Astrum_Main()  -> CppAdvance::i32
 {
 	#line 676 "FirstProgram.adv"
 	CppAdvance::Nullable<IInterface> nxtm = CppAdvance::New<ConcreteVectorClass>(CppAdvance::i32(11), CppAdvance::i32(12), CppAdvance::i32(13)); 
@@ -289,6 +289,7 @@ auto main(CppAdvance::i32 iparam, CppAdvance::In<CppAdvance::f64> jparam)  -> co
 	print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
 	#line 739 "FirstProgram.adv"
 	print(ADV_UPCS(x)(ADV_UPCS(x)(ADV_USFCS((Test1::Test2::TestClass), makeTestClass)(CppAdvance::i32(3), CppAdvance::f32(3.14f)).__ref()).__ref()));
+	return 0;
 }
 
 

@@ -1366,6 +1366,7 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 	bool isConstReturn = false;
 	bool isForwardReturn = false;
 	bool isCommutative = false;
+	bool isMain = false;
 	int8_t varargDepth = -1;
 	CppAdvanceParser::TheTypeIdContext* returnType = nullptr;
 	CppAdvanceParser::ExprContext* expression = nullptr;
@@ -1501,6 +1502,8 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 		}
 
 		int lifetimes = 0;
+		int paramCount = 0;
+		std::string firstParamType;
 		if (auto decl = params->paramDeclClause())
 		{
 			bool isDefault = false;
@@ -1515,6 +1518,12 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 					CppAdvanceCompilerError("Operator function cannot to have a variadic arguments length", decl->Ellipsis()->getSymbol());
 				}
 			}
+			paramCount = declList->paramDeclaration().size();
+			if (auto t = declList->paramDeclaration(0)->theTypeId())
+			{
+				firstParamType = t->getText();
+			}
+
 			for (auto param : declList->paramDeclaration())
 			{
 				if (param->LifetimeAnnotation()) ++lifetimes;
@@ -1646,7 +1655,7 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 			if (currentAccessSpecifier.top())
 				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
 			if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
-				CppAdvanceCompilerError("Cannot to declare protected internal member outside the class body", acc->getStart());
+				CppAdvanceCompilerError("Cannot to declare protected internal member outside the class body", ctx->getStart());
 			access = AccessSpecifier::ProtectedInternal;
 		}
 
@@ -1659,6 +1668,31 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 				access = structStack.top()->access;
 			}
 		}
+		else if (ctx->Identifier() && ctx->Identifier()->getText() == "main")
+		{
+			isMain = true;
+			if (access)
+			{
+				CppAdvanceCompilerError("Main function cannot have an explicit access specifier", ctx->getStart());
+			}
+			else
+			{
+				access = AccessSpecifier::Private;
+			}
+
+			if (paramCount > 1 || !firstParamType.empty() && firstParamType != "str[]")
+			{
+				CppAdvanceCompilerError("Main function can have only one parameter of the type str[]", 
+					ctx->functionParams()->paramDeclClause()->paramDeclList()->paramDeclaration().back()->getStop());
+			}
+
+			if (returnType && returnType->getText() != "i32")
+			{
+				CppAdvanceCompilerError("Main function can return only i32 value", returnType->getStart());
+			}
+		}
+
+
 		if (!isFriendDefinition) {
 			if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
 			if (!access) access = AccessSpecifier::Internal;
@@ -1669,8 +1703,16 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 		}
 		std::string id;
 		bool isOperator = false;
-		if (ctx->Identifier()) id = ctx->Identifier()->getText();
-		else if (ctx->simpleTemplateId()) id = ctx->simpleTemplateId()->templateName()->Identifier()->getText();
+		if (isMain)
+		{
+			id = "__Astrum_Main";
+		}
+		else if (ctx->Identifier()) {
+			id = ctx->Identifier()->getText();
+		}
+		else if (ctx->simpleTemplateId()) {
+			id = ctx->simpleTemplateId()->templateName()->Identifier()->getText();
+		}
 		else if (ctx->operatorFunctionId()) {
 			if (isTypeDefinitionBody() && currentTypeKind.top() == TypeKind::StaticClass)
 				CppAdvanceCompilerError("Static class cannot overload operators", ctx->operatorFunctionId()->getStart());

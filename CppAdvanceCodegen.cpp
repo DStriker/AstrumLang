@@ -493,6 +493,7 @@ void CppAdvanceCodegen::printGlobalFunctions() const
 	}
 	for (const auto& func : sema.globalFunctions)
 	{
+		isMainFunction = func.id == "__Astrum_Main";
 		out.switchTo(true);
 		if (func.access == AccessSpecifier::Private) {
 			out.switchTo(false);
@@ -552,6 +553,10 @@ void CppAdvanceCodegen::printGlobalFunctions() const
 		}
 
 		isFunctionDeclaration = true;
+		if (isMainFunction)
+		{
+			out << "extern \"C\" ";
+		}
 		if (func.templateParams) {
 			printTemplateParams(func.templateParams);
 			out << " ";
@@ -602,6 +607,10 @@ void CppAdvanceCodegen::printGlobalFunctions() const
 		else if (func.expression && func.id != "operator delete")
 		{
 			out << "decltype(auto)";
+		}
+		else if (isMainFunction)
+		{
+			out << "CppAdvance::i32";
 		}
 		else
 		{
@@ -703,6 +712,7 @@ void CppAdvanceCodegen::printGlobalFunctions() const
 		{
 			out << "#endif " << std::endl;
 		}
+		isMainFunction = false;
 	}
 	isUnsafe = false;
 }
@@ -11954,25 +11964,31 @@ void CppAdvanceCodegen::printCompoundStatement(CppAdvanceParser::CompoundStateme
 
 	if (funcTopLevel)
 	{
-		if (!ctx->stat().empty() && !ctx->stat().back()->jumpStatement() && !namedReturns.empty()) {
-			out << "\n" << std::string(depth, '\t') << "return ";
-			if (namedReturns.size() == 1)
-			{
-				out << namedReturns[0].first;
-			}
-			else
-			{
-				out << "{";
-				bool first = true;
-				for (const auto& var : namedReturns)
+		if (!ctx->stat().empty() && !ctx->stat().back()->jumpStatement()) {
+			if (!namedReturns.empty()) {
+				out << "\n" << std::string(depth, '\t') << "return ";
+				if (namedReturns.size() == 1)
 				{
-					if (!first) out << ", ";
-					first = false;
-					out << var.first;
+					out << namedReturns[0].first;
 				}
-				out << "}";
+				else
+				{
+					out << "{";
+					bool first = true;
+					for (const auto& var : namedReturns)
+					{
+						if (!first) out << ", ";
+						first = false;
+						out << var.first;
+					}
+					out << "}";
+				}
+				out << ";";
 			}
-			out << ";";
+			else if (isMainFunction)
+			{
+				out << "\n" << std::string(depth, '\t') << "return 0;";
+			}
 		}
 		if (isPropertySetter) out << "\n" << std::string(depth, '\t') << "return *this;";
 	}
@@ -15562,6 +15578,7 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 	if (pfunc != sema.globalFunctions.end())
 	{
 		const FunctionDefinition& func = *pfunc;
+		isMainFunction = func.id == "__Astrum_Main";
 		if (func.isInline && func.access != AccessSpecifier::Private) {
 			out.switchTo(true);
 			emptyLine = true;
@@ -15581,6 +15598,10 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 		}
 
 		out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		if (isMainFunction)
+		{
+			out << "extern \"C\" ";
+		}
 		if (func.templateParams) 
 		{
 			printTemplateParams(func.templateParams);
@@ -15649,6 +15670,10 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 		else if (ctx->shortFunctionBody() && func.id != "operator delete")
 		{
 			out << "decltype(auto)";
+		}
+		else if (isMainFunction)
+		{
+			out << "CppAdvance::i32";
 		}
 		else
 		{
@@ -15735,6 +15760,7 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 			out << "#endif " << std::endl;
 		}
 		out.switchTo(false);
+		isMainFunction = false;
 	}
 	else
 	{
@@ -16169,6 +16195,10 @@ void CppAdvanceCodegen::printFunctionParameters(CppAdvanceParser::FunctionParams
 	{
 		printParamDeclClause(clause);
 	}
+	else if (isMainFunction)
+	{
+		//out << "CppAdvance::Array<CppAdvance::Str>";
+	}
 	out << ")";
 }
 
@@ -16320,6 +16350,7 @@ void CppAdvanceCodegen::printShortFunctionBody(CppAdvanceParser::ShortFunctionBo
 		if (!isDestructor) out << ")";
 		out << "; ";
 		if (isPropertySetter) out << "return *this;";
+		if (isMainFunction) out << "return 0;";
 		out << "\n" << std::string(--depth, '\t') << "}";
 	}
 	functionBody = prev;

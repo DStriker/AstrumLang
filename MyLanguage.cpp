@@ -1,6 +1,7 @@
 ﻿// MyLanguage.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
 #pragma warning( error: 4172 26815 26816)
+#define ADV_CPP_APPLICATION
 
 #include "CppAdvanceLexer.h";
 #include "CppAdvanceParser.h";

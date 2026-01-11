@@ -63,6 +63,7 @@ class CppAdvanceCodegen
 	mutable bool ifProlog = false;
 	mutable bool isCondition = false;
 	mutable bool isUnitTestBody = false;
+	mutable bool isMainFunction = false;
 
 	class StreamSwitcher {
 	private:
