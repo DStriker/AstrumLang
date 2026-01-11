@@ -3475,6 +3475,22 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		}
 		isNewDeleteOperator = false;
 	}
+	for (const auto& assert_ : type->staticAsserts)
+	{
+		if (!assert_.compilationCondition.empty())
+		{
+			out << "#if " << assert_.compilationCondition << std::endl << std::string(depth, '\t');
+		}
+		out << "#line " << assert_.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "static_assert(";
+		printConstantExpression(assert_.expression);
+		out << ", " << assert_.message << ");\n" << std::string(depth, '\t');
+		if (!assert_.compilationCondition.empty())
+		{
+			out << "#endif " << std::endl << std::string(depth, '\t');
+		}
+	}
+
 	if (type->kind == TypeKind::Enum) {
 		out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 		out << "public: constexpr operator ";
@@ -11502,6 +11518,10 @@ void CppAdvanceCodegen::printBlockDeclaration(CppAdvanceParser::BlockDeclaration
 	{
 		printAliasDeclaration(decl);
 	}
+	else if (auto decl = ctx->assertDeclaration())
+	{
+		printAssertDeclaration(decl);
+	}
 	isVolatile = false;
 	isUnowned = false;
 	isWeak = false;
@@ -16376,6 +16396,10 @@ void CppAdvanceCodegen::printMemberBlockDeclaration(CppAdvanceParser::MemberBloc
 	{
 		printAliasDeclaration(decl);
 	}
+	else if (auto decl = ctx->assertDeclaration())
+	{
+		printAssertDeclaration(decl);
+	}
 	isVolatile = false;
 	isUnowned = false;
 	isWeak = false;
@@ -16955,6 +16979,31 @@ void CppAdvanceCodegen::printAliasDeclaration(CppAdvanceParser::AliasDeclaration
 		out << "using "; printIdentifier(ctx->Identifier()); out << " = ";
 		printTypeId(ctx->theTypeId());
 		out << ";";
+	}
+}
+
+void CppAdvanceCodegen::printAssertDeclaration(CppAdvanceParser::AssertDeclarationContext* ctx) const
+{
+	if (ctx->Static())
+	{
+		out << "static_assert(";
+		printConstantExpression(ctx->constantExpression());
+		out << ", " << ctx->StringLiteral()->getText() << ");";
+	}
+	else
+	{
+		out << "ADV_ASSERT(";
+		printConditionalExpression(ctx->conditionalExpression(0));
+		out << ", ";
+		if (ctx->conditionalExpression().size() > 1)
+		{
+            printConditionalExpression(ctx->conditionalExpression(1));
+		}
+		else
+		{
+			out << 'u' << '"' << ctx->conditionalExpression(0)->getText() << '"';
+		}
+		out << ");";
 	}
 }
 

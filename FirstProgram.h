@@ -2781,6 +2781,8 @@ struct alignas((alignof(CppAdvance::i64))) TestStruct final : public CppAdvance:
 	#line 626 "FirstProgram.adv"
 	private: CppAdvance::i64 y; ADV_CHECK_REF_STRUCT("i64", CppAdvance::i64);
 	public: TestStruct(CppAdvance::i64 _x, CppAdvance::i64 _y) : x{_x}, y{_y} {}
+	#line 628 "FirstProgram.adv"
+	static_assert(CppAdvance::usize(sizeof(CppAdvance::i32)) == CppAdvance::i32(4), "i32 must be 4 bytes");
 	template <size_t I> friend auto& get(TestStruct&);
 	template <size_t I> friend const auto& get(const TestStruct&);
 	

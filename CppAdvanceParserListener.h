@@ -41,6 +41,9 @@ public:
   virtual void enterMemberBlockDeclaration(CppAdvanceParser::MemberBlockDeclarationContext *ctx) = 0;
   virtual void exitMemberBlockDeclaration(CppAdvanceParser::MemberBlockDeclarationContext *ctx) = 0;
 
+  virtual void enterAssertDeclaration(CppAdvanceParser::AssertDeclarationContext *ctx) = 0;
+  virtual void exitAssertDeclaration(CppAdvanceParser::AssertDeclarationContext *ctx) = 0;
+
   virtual void enterLabeledStatement(CppAdvanceParser::LabeledStatementContext *ctx) = 0;
   virtual void exitLabeledStatement(CppAdvanceParser::LabeledStatementContext *ctx) = 0;
 

@@ -195,6 +195,14 @@ struct TypeAliasDefinition
 	bool isUnsafe = false;
 };
 
+struct StaticAssert
+{
+	CppAdvanceParser::ConstantExpressionContext* expression;
+	std::string message;
+	SourcePosition pos;
+	std::string compilationCondition;
+};
+
 struct Version 
 {
 	std::string id;
@@ -365,6 +373,7 @@ struct StructDefinition {
 	std::vector<ForwardDeclaration> friendTypes;
 	std::vector<FunctionDeclaration> friendFuncDeclarations;
 	std::vector<FunctionDefinition> friendFuncDefinitions;
+	std::vector<StaticAssert> staticAsserts;
 
 	bool isUnsafe = false;
 	bool isAbstract = false;
@@ -1048,5 +1057,11 @@ public:
 
 
 	void exitRangeExpression(CppAdvanceParser::RangeExpressionContext*) override;
+
+
+	void enterAssertDeclaration(CppAdvanceParser::AssertDeclarationContext*) override;
+
+
+	void exitSwitchExpressionBranch(CppAdvanceParser::SwitchExpressionBranchContext*) override;
 
 };

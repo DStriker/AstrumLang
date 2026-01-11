@@ -43,6 +43,9 @@ public:
   virtual void enterMemberBlockDeclaration(CppAdvanceParser::MemberBlockDeclarationContext * /*ctx*/) override { }
   virtual void exitMemberBlockDeclaration(CppAdvanceParser::MemberBlockDeclarationContext * /*ctx*/) override { }
 
+  virtual void enterAssertDeclaration(CppAdvanceParser::AssertDeclarationContext * /*ctx*/) override { }
+  virtual void exitAssertDeclaration(CppAdvanceParser::AssertDeclarationContext * /*ctx*/) override { }
+
   virtual void enterLabeledStatement(CppAdvanceParser::LabeledStatementContext * /*ctx*/) override { }
   virtual void exitLabeledStatement(CppAdvanceParser::LabeledStatementContext * /*ctx*/) override { }
 

@@ -202,6 +202,7 @@ public:
 	void printConstantDeclaration(CppAdvanceParser::ConstantDeclarationContext* ctx) const;
 	void printForwardVarDeclaration(CppAdvanceParser::ForwardVarDeclarationContext* ctx) const;
 	void printAliasDeclaration(CppAdvanceParser::AliasDeclarationContext* ctx) const;
+	void printAssertDeclaration(CppAdvanceParser::AssertDeclarationContext* ctx) const;
 	void printExpression(CppAdvanceParser::ExprContext* ctx) const;
 	void printAssignmentExpression(CppAdvanceParser::AssignmentExpressionContext* ctx) const;
 	void printAssignmentOperator(CppAdvanceParser::AssignmentOperatorContext* ctx) const;

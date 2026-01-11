@@ -52,6 +52,7 @@ blockDeclaration:
 	| constantDeclaration
 	| forwardVarDeclaration
 	| aliasDeclaration
+	| assertDeclaration
 	;
 
 memberBlockDeclaration:
@@ -60,6 +61,13 @@ memberBlockDeclaration:
 	| memberRefDeclaration
 	| constantDeclaration
 	| aliasDeclaration
+	| assertDeclaration
+	;
+
+assertDeclaration: 
+	  Assert LeftParen conditionalExpression Comma conditionalExpression RightParen Semi
+	| Assert conditionalExpression Semi
+	| Static? Assert LeftParen constantExpression Comma StringLiteral RightParen Semi
 	;
 
 labeledStatement: Identifier Colon (iterationStatement | selectionStatement | compoundStatement);

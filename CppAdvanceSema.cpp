@@ -2536,8 +2536,16 @@ void CppAdvanceSema::exitRelationalExpression(CppAdvanceParser::RelationalExpres
 				auto pattern = patterns->pattern()[0];
 				auto ops = patterns->patternCombinationOperator();
 				if (!(pattern->theTypeId() && (pattern->not_() && !pattern->LeftBrace() || pattern->getText() == "_"))
-					&& std::all_of(ops.begin(), ops.end(), [](auto op) { return !op->Or(); }))
+					&& std::all_of(ops.begin(), ops.end(), [](auto op) { return !op->Or(); })) {
 					ifPrerequisites[currentIfStatement].push_back(ctx);
+					auto type = pattern->theTypeId()->getText();
+					if (auto pos = type.find('<'); pos != std::string::npos)
+					{
+						type = type.substr(0, pos);
+					}
+					symbolTable[!pattern->Identifier().empty() ? pattern->Identifier(0)->getText() : ctx->threeWayComparisonExpression()->getText()]
+						= type;
+				}
 			}
 		}
 	}
@@ -2603,6 +2611,7 @@ void CppAdvanceSema::enterSelectionStatement(CppAdvanceParser::SelectionStatemen
 		ictx.hasElse = ctx->Else();
 		initStates.push(ictx.before);
 		ifContexts.push(ictx);
+		symbolContexts.push(symbolContexts.top());
 	}
 	else if (ctx->Switch())
 	{
@@ -2632,6 +2641,7 @@ void CppAdvanceSema::exitSelectionStatement(CppAdvanceParser::SelectionStatement
 		currentState.potentiallyAssigned = ictx.then.unite(elseState.potentiallyAssigned);
 
 		ifContexts.pop();
+		symbolContexts.pop();
 	}
 	else if (ctx->Switch())
 	{
@@ -6317,6 +6327,18 @@ void CppAdvanceSema::enterAttributeSpecifier(CppAdvanceParser::AttributeSpecifie
 void CppAdvanceSema::enterSwitchStatementBranch(CppAdvanceParser::SwitchStatementBranchContext* ctx)
 {
 	if (firstPass) return;
+	symbolContexts.push(symbolContexts.top());
+	auto pattern = ctx->patternList()->pattern(0);
+	if (pattern->theTypeId() && pattern->getText() != "_")
+	{
+		auto parent = static_cast<CppAdvanceParser::SelectionStatementContext*>(ctx->parent);
+		auto type = pattern->theTypeId()->getText();
+		if (auto pos = type.find('<'); pos != std::string::npos)
+		{
+			type = type.substr(0, pos);
+		}
+		symbolTable[!pattern->Identifier().empty() ? pattern->Identifier(0)->getText() : parent->threeWayComparisonExpression()->getText()] = type;
+	}
 	auto switchData = currentSwitchData.top();
 	if (switchData.first > 0)
 	{
@@ -6340,6 +6362,7 @@ void CppAdvanceSema::enterSwitchStatementBranch(CppAdvanceParser::SwitchStatemen
 void CppAdvanceSema::exitSwitchStatementBranch(CppAdvanceParser::SwitchStatementBranchContext* ctx)
 {
 	if (firstPass) return;
+	symbolContexts.pop();
 	++currentSwitchData.top().first;
 }
 
@@ -6365,6 +6388,21 @@ void CppAdvanceSema::exitSwitchExpression(CppAdvanceParser::SwitchExpressionCont
 
 void CppAdvanceSema::enterSwitchExpressionBranch(CppAdvanceParser::SwitchExpressionBranchContext* ctx)
 {
+	symbolContexts.push(symbolContexts.top());
+	if (firstPass == functionBody)
+	{
+		auto pattern = ctx->patternList()->pattern(0);
+		if (pattern->theTypeId() && pattern->getText() != "_")
+		{
+			auto parent = static_cast<CppAdvanceParser::SwitchExpressionContext*>(ctx->parent);
+			auto type = pattern->theTypeId()->getText();
+			if (auto pos = type.find('<'); pos != std::string::npos)
+			{
+				type = type.substr(0, pos);
+			}
+			symbolTable[!pattern->Identifier().empty() ? pattern->Identifier(0)->getText() : parent->threeWayComparisonExpression()->getText()] = type;
+		}
+	}
 	if (firstPass) return;
 	auto switchData = currentSwitchData.top();
 	if (switchData.second - switchData.first > 1 && ctx->patternList()->getText() == "_")
@@ -6374,10 +6412,30 @@ void CppAdvanceSema::enterSwitchExpressionBranch(CppAdvanceParser::SwitchExpress
 	++currentSwitchData.top().first;
 }
 
+void CppAdvanceSema::exitSwitchExpressionBranch(CppAdvanceParser::SwitchExpressionBranchContext*)
+{
+	symbolContexts.pop();
+}
+
 void CppAdvanceSema::exitRangeExpression(CppAdvanceParser::RangeExpressionContext* ctx)
 {
 	if (ctx->DoubleDot() || ctx->DoubleDotEqual()) 
 		typeStack.push("System.Range");
+}
+
+void CppAdvanceSema::enterAssertDeclaration(CppAdvanceParser::AssertDeclarationContext* ctx)
+{
+	if (ctx->Static()) {
+		if (firstPass && isTypeDefinitionBody())
+		{
+			structStack.top()->staticAsserts.push_back({ctx->constantExpression(), ctx->StringLiteral()->getText(),
+				{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() }, getCurrentCompilationCondition()});
+		}
+	} else
+	{
+		if (!functionBody)
+			CppAdvanceCompilerError("Runtime assert declaration can only appear in the function body", ctx->Assert()->getSymbol());
+	}
 }
 
 void CppAdvanceSema::exitFriendDeclaration(CppAdvanceParser::FriendDeclarationContext* ctx)
