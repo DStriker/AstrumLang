@@ -252,6 +252,7 @@
   <ItemGroup>
     <ClCompile Include="CppAdvanceCodegen.cpp" />
     <ClCompile Include="CppAdvanceLexer.cpp" />
+    <ClCompile Include="CppAdvanceLexerBase.cpp" />
     <ClCompile Include="CppAdvanceParser.cpp" />
     <ClCompile Include="CppAdvanceParserBaseListener.cpp" />
     <ClCompile Include="CppAdvanceParserErrorListener.cpp" />
@@ -283,6 +284,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CppAdvanceLexer.h" />
+    <ClInclude Include="CppAdvanceLexerBase.h" />
     <ClInclude Include="CppAdvanceParser.h" />
     <ClInclude Include="CppAdvanceParserBaseListener.h" />
     <ClInclude Include="CppAdvanceParserErrorListener.h" />

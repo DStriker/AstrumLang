@@ -15597,6 +15597,10 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 			out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n" << std::string(++depth, '\t');
 		}
 
+		if (isMainFunction)
+		{
+			out << "ADV_ENTRY_POINT\n" << std::string(depth, '\t');
+		}
 		out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 		if (isMainFunction)
 		{
@@ -19355,6 +19359,10 @@ void CppAdvanceCodegen::printLiteral(CppAdvanceParser::LiteralContext* ctx) cons
 		auto txt = literal->getText();
 		printMultilineStringLiteral(std::move(txt));
 	}
+	else if (ctx->interpolatedStringLiteral())
+	{
+		printInterpolatedStringLiteral(ctx->interpolatedStringLiteral());
+	}
 }
 
 void CppAdvanceCodegen::printIntegerLiteral(std::string txt, bool minus) const {
@@ -19680,4 +19688,103 @@ void CppAdvanceCodegen::printMultilineStringLiteral(std::string txt) const
 		out << line.substr(margin);
 	}
 	out << ")_multi_\"}";
+}
+
+void CppAdvanceCodegen::printInterpolatedStringLiteral(CppAdvanceParser::InterpolatedStringLiteralContext* ctx) const
+{
+	out << "CppAdvance::StringInterpolation(u";
+	std::vector<CppAdvanceParser::NullCoalescingExpressionContext*> expressions;
+	auto processExpression = [&](auto expr) { 
+		out << "{";
+		if (expr->Colon())
+		{
+			out << ":";
+			for (auto options : expr->FORMAT_STRING())
+			{
+				out << options->getText();
+			}
+		}
+		out << "}";
+		expressions.push_back(expr->nullCoalescingExpression());
+	};
+
+	if (auto literal = ctx->interpolatedRegularStringLiteral())
+	{
+		out << '"';
+		for (auto part : literal->interpolatedRegularStringPart())
+		{
+			if (auto expr = part->interpolatedExpression())
+			{
+				processExpression(expr);
+			}
+			else if (part->DOUBLE_CURLY_INSIDE())
+			{
+				out << "{{";
+			}
+			else if (part->REGULAR_CHAR_INSIDE())
+			{
+				out << part->REGULAR_CHAR_INSIDE()->getText();
+			}
+			else if (part->REGULAR_STRING_INSIDE())
+			{
+				out << part->REGULAR_STRING_INSIDE()->getText();
+			}
+		}
+		out << '"';
+	}
+	else if (auto literal = ctx->interpolatedVerbatiumStringLiteral())
+	{
+		out << "R\"_grave_(";
+		for (auto part : literal->interpolatedVerbatiumStringPart())
+		{
+			if (auto expr = part->interpolatedExpression())
+			{
+				processExpression(expr);
+			}
+			else if (part->DOUBLE_CURLY_INSIDE())
+			{
+				out << "{{";
+			}
+			else if (part->VERBATIUM_DOUBLE_GRAVE_INSIDE())
+			{
+				out << '`';
+			}
+			else if (part->GRAVE_STRING_INSIDE())
+			{
+				out << part->GRAVE_STRING_INSIDE()->getText();
+			}
+		}
+		out << ")_grave_\"";
+	}
+	else if (auto literal = ctx->interpolatedMultilineStringLiteral())
+	{
+		out << "R\"_multi_(";
+		for (auto part : literal->interpolatedMultilineStringPart())
+		{
+			if (auto expr = part->interpolatedExpression())
+			{
+				processExpression(expr);
+			}
+			else if (part->DOUBLE_CURLY_INSIDE())
+			{
+				out << "{{";
+			}
+			else if (part->MULTILINE_QUOTES_INSIDE())
+			{
+				out << part->MULTILINE_QUOTES_INSIDE()->getText();
+			}
+			else if (part->MULTILINE_STRING_INSIDE())
+			{
+				out << part->MULTILINE_STRING_INSIDE()->getText();
+			}
+		}
+		out << ")_multi_\"";
+	}
+
+	for (auto expr : expressions)
+	{
+		out << ", ";
+		printNullCoalescingExpression(expr);
+	}
+	out << ")";
 }

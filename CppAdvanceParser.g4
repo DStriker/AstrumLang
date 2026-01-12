@@ -758,5 +758,37 @@ literal:
 	| CharacterLiteral
 	| StringLiteral
 	| MultilineStringLiteral 
+	| interpolatedStringLiteral
 	| Null
 	;
+
+interpolatedStringLiteral: interpolatedRegularStringLiteral | interpolatedVerbatiumStringLiteral | interpolatedMultilineStringLiteral;
+
+interpolatedRegularStringLiteral: InterpolatedRegularStringStart interpolatedRegularStringPart* DOUBLE_QUOTE_INSIDE;
+
+interpolatedRegularStringPart: 
+	  interpolatedExpression
+	| DOUBLE_CURLY_INSIDE
+	| REGULAR_CHAR_INSIDE
+	| REGULAR_STRING_INSIDE
+	;
+
+interpolatedVerbatiumStringLiteral: InterpolatedGraveStringStart interpolatedVerbatiumStringPart* GRAVE_INSIDE;
+
+interpolatedVerbatiumStringPart:
+	  interpolatedExpression
+	| DOUBLE_CURLY_INSIDE
+	| VERBATIUM_DOUBLE_GRAVE_INSIDE
+	| GRAVE_STRING_INSIDE
+	;
+
+interpolatedMultilineStringLiteral: InterpolatedMultilineStringStart interpolatedMultilineStringPart* TRIPLE_QUOTE_INSIDE;
+
+interpolatedMultilineStringPart:
+	  interpolatedExpression
+	| DOUBLE_CURLY_INSIDE
+	| MULTILINE_QUOTES_INSIDE
+	| MULTILINE_STRING_INSIDE
+	;
+
+interpolatedExpression: nullCoalescingExpression (Colon FORMAT_STRING+)?;

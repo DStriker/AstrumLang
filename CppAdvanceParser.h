@@ -13,44 +13,49 @@ class  CppAdvanceParser : public antlr4::Parser {
 public:
   enum {
     Whitespace = 1, Newline = 2, BlockComment = 3, LineComment = 4, IntegerLiteral = 5, 
-    CharacterLiteral = 6, FloatingLiteral = 7, DecimalTypeLiteral = 8, StringLiteral = 9, 
-    RegularString = 10, HexStringLiteral = 11, GraveString = 12, MultilineStringLiteral = 13, 
-    BooleanLiteral = 14, Directive = 15, Abstract = 16, Alignof = 17, As = 18, 
-    Asm = 19, Assert = 20, Await = 21, Bool = 22, Break = 23, Case = 24, 
-    Catch = 25, Char = 26, Byte = 27, Class = 28, Const = 29, Consteval = 30, 
-    Continue = 31, Debug = 32, Decimal = 33, Decltype = 34, Default = 35, 
-    Delete = 36, Do = 37, Else = 38, Enum = 39, Extension = 40, Extern = 41, 
-    False_ = 42, Final = 43, F32 = 44, F64 = 45, Fext = 46, Field = 47, 
-    For = 48, Forward = 49, Friend = 50, Get = 51, If = 52, Import = 53, 
-    Implicit = 54, In = 55, Inout = 56, I8 = 57, I16 = 58, I32 = 59, I64 = 60, 
-    I128 = 61, Isize = 62, Inline = 63, Interface = 64, Internal = 65, Is = 66, 
-    Let = 67, Lock = 68, Move = 69, Mutable = 70, New = 71, Noexcept = 72, 
-    Null = 73, Object = 74, Operator_ = 75, Out = 76, Override = 77, Private = 78, 
-    Protected = 79, Public = 80, Ref = 81, Requires = 82, Return = 83, Rune = 84, 
-    Self = 85, Set = 86, Sizeof = 87, Stackalloc = 88, Static = 89, Str = 90, 
-    Struct = 91, Super = 92, Switch = 93, Test = 94, This = 95, Thread_local = 96, 
-    Throw = 97, True_ = 98, Try = 99, Type = 100, Union = 101, Unowned = 102, 
-    Using = 103, U8 = 104, U16 = 105, U32 = 106, U64 = 107, U128 = 108, 
-    Unsafe = 109, Usize = 110, Version = 111, Virtual = 112, Void = 113, 
-    Volatile = 114, Weak = 115, While = 116, Yield = 117, Not = 118, And = 119, 
-    Or = 120, Identifier = 121, LeftParen = 122, RightParen = 123, LeftBracket = 124, 
-    RightBracket = 125, LeftBrace = 126, RightBrace = 127, Plus = 128, Minus = 129, 
-    Star = 130, DoubleStar = 131, Div = 132, Mod = 133, LifetimeAnnotation = 134, 
-    Caret = 135, DoubleCaret = 136, Amp = 137, VertLine = 138, Tilde = 139, 
-    Colon = 140, Assign = 141, Less = 142, Greater = 143, PlusAssign = 144, 
-    MinusAssign = 145, TildeAssign = 146, StarAssign = 147, DoubleStarAssign = 148, 
-    DivAssign = 149, ModAssign = 150, XorAssign = 151, AndAssign = 152, 
-    OrAssign = 153, LeftShiftAssign = 154, RightShiftAssign = 155, SignedRightShiftAssign = 156, 
-    Equal = 157, NotEqual = 158, IdentityEqual = 159, NotIdentityEqual = 160, 
-    Spaceship = 161, LessEqual = 162, GreaterEqual = 163, PlusPlus = 164, 
-    MinusMinus = 165, Comma = 166, Arrow = 167, AssignArrow = 168, EqualArrow = 169, 
-    Exclamation = 170, Question = 171, DoubleQuestion = 172, DoubleQuestionAssign = 173, 
-    Doublecolon = 174, Semi = 175, Dot = 176, DoubleDot = 177, DoubleDotEqual = 178, 
-    Dollar = 179, Ellipsis = 180, Apostroph = 181, AtSign = 182, Op1 = 183, 
-    Op2 = 184, Op10 = 185, Op3 = 186, Op4 = 187, Op5 = 188, Op7 = 189, Op6 = 190, 
-    Op8 = 191, Op9 = 192, DOUBLE_CURLY_INSIDE = 193, FORMAT_STRING = 194, 
-    DecimalLiteral = 195, OctalLiteral = 196, HexadecimalLiteral = 197, 
-    BinaryLiteral = 198, Integersuffix = 199, DOUBLE_CURLY_CLOSE_INSIDE = 200
+    CharacterLiteral = 6, FloatingLiteral = 7, DecimalTypeLiteral = 8, DecimalLiteral = 9, 
+    OctalLiteral = 10, HexadecimalLiteral = 11, BinaryLiteral = 12, StringLiteral = 13, 
+    RegularString = 14, HexStringLiteral = 15, GraveString = 16, InterpolatedRegularStringStart = 17, 
+    InterpolatedGraveStringStart = 18, InterpolatedMultilineStringStart = 19, 
+    MultilineStringLiteral = 20, BooleanLiteral = 21, Directive = 22, Abstract = 23, 
+    Alignof = 24, As = 25, Asm = 26, Assert = 27, Await = 28, Bool = 29, 
+    Break = 30, Case = 31, Catch = 32, Char = 33, Byte = 34, Class = 35, 
+    Const = 36, Consteval = 37, Continue = 38, Debug = 39, Decimal = 40, 
+    Decltype = 41, Default = 42, Delete = 43, Do = 44, Else = 45, Enum = 46, 
+    Extension = 47, Extern = 48, False_ = 49, Final = 50, F32 = 51, F64 = 52, 
+    Fext = 53, Field = 54, For = 55, Forward = 56, Friend = 57, Get = 58, 
+    If = 59, Import = 60, Implicit = 61, In = 62, Inout = 63, I8 = 64, I16 = 65, 
+    I32 = 66, I64 = 67, I128 = 68, Isize = 69, Inline = 70, Interface = 71, 
+    Internal = 72, Is = 73, Let = 74, Lock = 75, Move = 76, Mutable = 77, 
+    New = 78, Noexcept = 79, Null = 80, Object = 81, Operator_ = 82, Out = 83, 
+    Override = 84, Private = 85, Protected = 86, Public = 87, Ref = 88, 
+    Requires = 89, Return = 90, Rune = 91, Self = 92, Set = 93, Sizeof = 94, 
+    Stackalloc = 95, Static = 96, Str = 97, Struct = 98, Super = 99, Switch = 100, 
+    Test = 101, This = 102, Thread_local = 103, Throw = 104, True_ = 105, 
+    Try = 106, Type = 107, Union = 108, Unowned = 109, Using = 110, U8 = 111, 
+    U16 = 112, U32 = 113, U64 = 114, U128 = 115, Unsafe = 116, Usize = 117, 
+    Version = 118, Virtual = 119, Void = 120, Volatile = 121, Weak = 122, 
+    While = 123, Yield = 124, Not = 125, And = 126, Or = 127, Identifier = 128, 
+    LeftParen = 129, RightParen = 130, LeftBracket = 131, RightBracket = 132, 
+    LeftBrace = 133, RightBrace = 134, Plus = 135, Minus = 136, Star = 137, 
+    DoubleStar = 138, Div = 139, Mod = 140, LifetimeAnnotation = 141, Caret = 142, 
+    DoubleCaret = 143, Amp = 144, VertLine = 145, Tilde = 146, Colon = 147, 
+    Assign = 148, Less = 149, Greater = 150, PlusAssign = 151, MinusAssign = 152, 
+    TildeAssign = 153, StarAssign = 154, DoubleStarAssign = 155, DivAssign = 156, 
+    ModAssign = 157, XorAssign = 158, AndAssign = 159, OrAssign = 160, LeftShiftAssign = 161, 
+    RightShiftAssign = 162, SignedRightShiftAssign = 163, Equal = 164, NotEqual = 165, 
+    IdentityEqual = 166, NotIdentityEqual = 167, Spaceship = 168, LessEqual = 169, 
+    GreaterEqual = 170, PlusPlus = 171, MinusMinus = 172, Comma = 173, Arrow = 174, 
+    AssignArrow = 175, EqualArrow = 176, Exclamation = 177, Question = 178, 
+    DoubleQuestion = 179, DoubleQuestionAssign = 180, Doublecolon = 181, 
+    Semi = 182, Dot = 183, DoubleDot = 184, DoubleDotEqual = 185, Dollar = 186, 
+    Ellipsis = 187, Apostroph = 188, AtSign = 189, Op1 = 190, Op2 = 191, 
+    Op10 = 192, Op3 = 193, Op4 = 194, Op5 = 195, Op7 = 196, Op6 = 197, Op8 = 198, 
+    Op9 = 199, DOUBLE_CURLY_INSIDE = 200, OPEN_BRACE_INSIDE = 201, REGULAR_CHAR_INSIDE = 202, 
+    VERBATIUM_DOUBLE_GRAVE_INSIDE = 203, MULTILINE_QUOTES_INSIDE = 204, 
+    DOUBLE_QUOTE_INSIDE = 205, GRAVE_INSIDE = 206, TRIPLE_QUOTE_INSIDE = 207, 
+    REGULAR_STRING_INSIDE = 208, GRAVE_STRING_INSIDE = 209, MULTILINE_STRING_INSIDE = 210, 
+    CLOSE_BRACE_INSIDE = 211, FORMAT_STRING = 212, DOUBLE_CURLY_CLOSE_INSIDE = 213
   };
 
   enum {
@@ -128,7 +133,11 @@ public:
     RuleNewInitializer = 207, RuleFullPostfixExpression = 208, RulePostfixExpression = 209, 
     RuleTupleExpression = 210, RulePrimaryExpression = 211, RuleUnaryPrefixOperator = 212, 
     RuleUnaryCustomOperator = 213, RuleRefCaptureOperator = 214, RuleUnaryPostfixOperator = 215, 
-    RuleNot = 216, RuleOperator = 217, RuleLiteral = 218
+    RuleNot = 216, RuleOperator = 217, RuleLiteral = 218, RuleInterpolatedStringLiteral = 219, 
+    RuleInterpolatedRegularStringLiteral = 220, RuleInterpolatedRegularStringPart = 221, 
+    RuleInterpolatedVerbatiumStringLiteral = 222, RuleInterpolatedVerbatiumStringPart = 223, 
+    RuleInterpolatedMultilineStringLiteral = 224, RuleInterpolatedMultilineStringPart = 225, 
+    RuleInterpolatedExpression = 226
   };
 
   explicit CppAdvanceParser(antlr4::TokenStream *input);
@@ -366,7 +375,15 @@ public:
   class UnaryPostfixOperatorContext;
   class NotContext;
   class OperatorContext;
-  class LiteralContext; 
+  class LiteralContext;
+  class InterpolatedStringLiteralContext;
+  class InterpolatedRegularStringLiteralContext;
+  class InterpolatedRegularStringPartContext;
+  class InterpolatedVerbatiumStringLiteralContext;
+  class InterpolatedVerbatiumStringPartContext;
+  class InterpolatedMultilineStringLiteralContext;
+  class InterpolatedMultilineStringPartContext;
+  class InterpolatedExpressionContext; 
 
   class  ProgramContext : public antlr4::ParserRuleContext {
   public:
@@ -4240,6 +4257,7 @@ public:
     antlr4::tree::TerminalNode *CharacterLiteral();
     antlr4::tree::TerminalNode *StringLiteral();
     antlr4::tree::TerminalNode *MultilineStringLiteral();
+    InterpolatedStringLiteralContext *interpolatedStringLiteral();
     antlr4::tree::TerminalNode *Null();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -4248,6 +4266,133 @@ public:
   };
 
   LiteralContext* literal();
+
+  class  InterpolatedStringLiteralContext : public antlr4::ParserRuleContext {
+  public:
+    InterpolatedStringLiteralContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    InterpolatedRegularStringLiteralContext *interpolatedRegularStringLiteral();
+    InterpolatedVerbatiumStringLiteralContext *interpolatedVerbatiumStringLiteral();
+    InterpolatedMultilineStringLiteralContext *interpolatedMultilineStringLiteral();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  InterpolatedStringLiteralContext* interpolatedStringLiteral();
+
+  class  InterpolatedRegularStringLiteralContext : public antlr4::ParserRuleContext {
+  public:
+    InterpolatedRegularStringLiteralContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *InterpolatedRegularStringStart();
+    antlr4::tree::TerminalNode *DOUBLE_QUOTE_INSIDE();
+    std::vector<InterpolatedRegularStringPartContext *> interpolatedRegularStringPart();
+    InterpolatedRegularStringPartContext* interpolatedRegularStringPart(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  InterpolatedRegularStringLiteralContext* interpolatedRegularStringLiteral();
+
+  class  InterpolatedRegularStringPartContext : public antlr4::ParserRuleContext {
+  public:
+    InterpolatedRegularStringPartContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    InterpolatedExpressionContext *interpolatedExpression();
+    antlr4::tree::TerminalNode *DOUBLE_CURLY_INSIDE();
+    antlr4::tree::TerminalNode *REGULAR_CHAR_INSIDE();
+    antlr4::tree::TerminalNode *REGULAR_STRING_INSIDE();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  InterpolatedRegularStringPartContext* interpolatedRegularStringPart();
+
+  class  InterpolatedVerbatiumStringLiteralContext : public antlr4::ParserRuleContext {
+  public:
+    InterpolatedVerbatiumStringLiteralContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *InterpolatedGraveStringStart();
+    antlr4::tree::TerminalNode *GRAVE_INSIDE();
+    std::vector<InterpolatedVerbatiumStringPartContext *> interpolatedVerbatiumStringPart();
+    InterpolatedVerbatiumStringPartContext* interpolatedVerbatiumStringPart(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  InterpolatedVerbatiumStringLiteralContext* interpolatedVerbatiumStringLiteral();
+
+  class  InterpolatedVerbatiumStringPartContext : public antlr4::ParserRuleContext {
+  public:
+    InterpolatedVerbatiumStringPartContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    InterpolatedExpressionContext *interpolatedExpression();
+    antlr4::tree::TerminalNode *DOUBLE_CURLY_INSIDE();
+    antlr4::tree::TerminalNode *VERBATIUM_DOUBLE_GRAVE_INSIDE();
+    antlr4::tree::TerminalNode *GRAVE_STRING_INSIDE();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  InterpolatedVerbatiumStringPartContext* interpolatedVerbatiumStringPart();
+
+  class  InterpolatedMultilineStringLiteralContext : public antlr4::ParserRuleContext {
+  public:
+    InterpolatedMultilineStringLiteralContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *InterpolatedMultilineStringStart();
+    antlr4::tree::TerminalNode *TRIPLE_QUOTE_INSIDE();
+    std::vector<InterpolatedMultilineStringPartContext *> interpolatedMultilineStringPart();
+    InterpolatedMultilineStringPartContext* interpolatedMultilineStringPart(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  InterpolatedMultilineStringLiteralContext* interpolatedMultilineStringLiteral();
+
+  class  InterpolatedMultilineStringPartContext : public antlr4::ParserRuleContext {
+  public:
+    InterpolatedMultilineStringPartContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    InterpolatedExpressionContext *interpolatedExpression();
+    antlr4::tree::TerminalNode *DOUBLE_CURLY_INSIDE();
+    antlr4::tree::TerminalNode *MULTILINE_QUOTES_INSIDE();
+    antlr4::tree::TerminalNode *MULTILINE_STRING_INSIDE();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  InterpolatedMultilineStringPartContext* interpolatedMultilineStringPart();
+
+  class  InterpolatedExpressionContext : public antlr4::ParserRuleContext {
+  public:
+    InterpolatedExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    NullCoalescingExpressionContext *nullCoalescingExpression();
+    antlr4::tree::TerminalNode *Colon();
+    std::vector<antlr4::tree::TerminalNode *> FORMAT_STRING();
+    antlr4::tree::TerminalNode* FORMAT_STRING(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  InterpolatedExpressionContext* interpolatedExpression();
 
 
   bool sempred(antlr4::RuleContext *_localctx, size_t ruleIndex, size_t predicateIndex) override;

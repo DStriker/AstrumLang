@@ -508,37 +508,7 @@ void CppAdvanceSema::exitUnaryExpression(CppAdvanceParser::UnaryExpressionContex
 
 void CppAdvanceSema::enterLiteral(CppAdvanceParser::LiteralContext* ctx)
 {
-	if (firstPass == functionBody) return;
-	if (auto literal = ctx->IntegerLiteral()) {
-		checkIntegerLiteral(literal, literalMinus);
-		typeStack.push("i32");
-		//std::cout << typeStack.top() << std::endl;
-	}
-	else if (ctx->FloatingLiteral())
-	{
-		typeStack.push("f64");
-		//std::cout << typeStack.top() << std::endl;
-	}
-	else if (ctx->BooleanLiteral())
-	{
-		typeStack.push("bool");
-		//std::cout << typeStack.top() << std::endl;
-	}
-	else if (auto literal = ctx->CharacterLiteral()) {
-		checkAsciiLiteral(literal);
-		typeStack.push("char");
-		//std::cout << typeStack.top() << std::endl;
-	}
-	else if (ctx->StringLiteral() || ctx->MultilineStringLiteral())
-	{
-		typeStack.push("Str");
-		//std::cout << typeStack.top() << std::endl;
-	}
-	else if (ctx->Null())
-	{
-		typeStack.push("null");
-		//std::cout << typeStack.top() << std::endl;
-	}
+	
 }
 
 void CppAdvanceSema::enterFunctionBody(CppAdvanceParser::FunctionBodyContext*)
@@ -6496,6 +6466,44 @@ void CppAdvanceSema::exitUnitTestDeclaration(CppAdvanceParser::UnitTestDeclarati
 {
 	isUnitTestBody = false;
 	functionBody = false;
+}
+
+void CppAdvanceSema::exitInterpolatedStringLiteral(CppAdvanceParser::InterpolatedStringLiteralContext* ctx)
+{
+	
+}
+
+void CppAdvanceSema::exitLiteral(CppAdvanceParser::LiteralContext* ctx)
+{
+	if (firstPass == functionBody) return;
+	if (auto literal = ctx->IntegerLiteral()) {
+		checkIntegerLiteral(literal, literalMinus);
+		typeStack.push("i32");
+	}
+	else if (ctx->FloatingLiteral())
+	{
+		typeStack.push("f64");
+	}
+	else if (ctx->BooleanLiteral())
+	{
+		typeStack.push("bool");
+	}
+	else if (auto literal = ctx->CharacterLiteral()) {
+		checkAsciiLiteral(literal);
+		typeStack.push("char");
+	}
+	else if (ctx->StringLiteral() || ctx->MultilineStringLiteral())
+	{
+		typeStack.push("Str");
+	}
+	else if (ctx->interpolatedStringLiteral())
+	{
+		typeStack.push("StringInterpolation");
+	}
+	else if (ctx->Null())
+	{
+		typeStack.push("null");
+	}
 }
 
 void CppAdvanceSema::exitRangeExpression(CppAdvanceParser::RangeExpressionContext* ctx)

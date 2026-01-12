@@ -673,6 +673,30 @@ public:
   virtual void enterLiteral(CppAdvanceParser::LiteralContext * /*ctx*/) override { }
   virtual void exitLiteral(CppAdvanceParser::LiteralContext * /*ctx*/) override { }
 
+  virtual void enterInterpolatedStringLiteral(CppAdvanceParser::InterpolatedStringLiteralContext * /*ctx*/) override { }
+  virtual void exitInterpolatedStringLiteral(CppAdvanceParser::InterpolatedStringLiteralContext * /*ctx*/) override { }
+
+  virtual void enterInterpolatedRegularStringLiteral(CppAdvanceParser::InterpolatedRegularStringLiteralContext * /*ctx*/) override { }
+  virtual void exitInterpolatedRegularStringLiteral(CppAdvanceParser::InterpolatedRegularStringLiteralContext * /*ctx*/) override { }
+
+  virtual void enterInterpolatedRegularStringPart(CppAdvanceParser::InterpolatedRegularStringPartContext * /*ctx*/) override { }
+  virtual void exitInterpolatedRegularStringPart(CppAdvanceParser::InterpolatedRegularStringPartContext * /*ctx*/) override { }
+
+  virtual void enterInterpolatedVerbatiumStringLiteral(CppAdvanceParser::InterpolatedVerbatiumStringLiteralContext * /*ctx*/) override { }
+  virtual void exitInterpolatedVerbatiumStringLiteral(CppAdvanceParser::InterpolatedVerbatiumStringLiteralContext * /*ctx*/) override { }
+
+  virtual void enterInterpolatedVerbatiumStringPart(CppAdvanceParser::InterpolatedVerbatiumStringPartContext * /*ctx*/) override { }
+  virtual void exitInterpolatedVerbatiumStringPart(CppAdvanceParser::InterpolatedVerbatiumStringPartContext * /*ctx*/) override { }
+
+  virtual void enterInterpolatedMultilineStringLiteral(CppAdvanceParser::InterpolatedMultilineStringLiteralContext * /*ctx*/) override { }
+  virtual void exitInterpolatedMultilineStringLiteral(CppAdvanceParser::InterpolatedMultilineStringLiteralContext * /*ctx*/) override { }
+
+  virtual void enterInterpolatedMultilineStringPart(CppAdvanceParser::InterpolatedMultilineStringPartContext * /*ctx*/) override { }
+  virtual void exitInterpolatedMultilineStringPart(CppAdvanceParser::InterpolatedMultilineStringPartContext * /*ctx*/) override { }
+
+  virtual void enterInterpolatedExpression(CppAdvanceParser::InterpolatedExpressionContext * /*ctx*/) override { }
+  virtual void exitInterpolatedExpression(CppAdvanceParser::InterpolatedExpressionContext * /*ctx*/) override { }
+
 
   virtual void enterEveryRule(antlr4::ParserRuleContext * /*ctx*/) override { }
   virtual void exitEveryRule(antlr4::ParserRuleContext * /*ctx*/) override { }

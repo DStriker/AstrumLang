@@ -264,4 +264,5 @@ public:
 	void printCharacterLiteral(std::string txt) const;
 	void printStringLiteral(std::string txt) const;
 	void printMultilineStringLiteral(std::string txt) const;
+	void printInterpolatedStringLiteral(CppAdvanceParser::InterpolatedStringLiteralContext* ctx) const;
 };

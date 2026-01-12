@@ -1,5 +1,13 @@
 lexer grammar CppAdvanceLexer;
 
+@header {
+#include "CppAdvanceLexerBase.h"
+}
+
+options {
+    superClass = CppAdvanceLexerBase;
+}
+
 Whitespace: [ \t]+ -> skip;
 
 Newline: ('\r' '\n'? | '\n') -> skip;
@@ -28,6 +36,14 @@ FloatingLiteral:
 
 DecimalTypeLiteral: Digitsequence? '.' Digitsequence 'm';
 
+DecimalLiteral: '0' | (NONZERODIGIT ('_'? DIGIT)*);
+
+OctalLiteral: '0o' ('_'? OCTALDIGIT)*;
+
+HexadecimalLiteral: '0x' ( '_'? HEXADECIMALDIGIT)*;
+
+BinaryLiteral: '0b' ('_'? BINARYDIGIT)*;
+
 StringLiteral: Encodingprefix? (Rawstring | RegularString | GraveString);
 
 RegularString: '"' Schar* '"';
@@ -36,15 +52,15 @@ HexStringLiteral: 'x"' (HEXADECIMALDIGIT | [ \t])* '"';
 
 GraveString: '`' Gchar* '`';
 
-//InterpolatedRegularStringStart:
-//    Encodingprefix? '$"' { this.OnInterpolatedRegularStringStart(); } -> pushMode(INTERPOLATION_STRING)
-//;
-//InterpolatedGraveStringStart:
-//    Encodingprefix? '$`' { this.OnInterpolatedVerbatiumStringStart(); } -> pushMode(INTERPOLATION_STRING)
-//;
-//InterpolatedMultilineStringStart:
-//    Encodingprefix? '$\'\'\'' { this.OnInterpolatedMultilineStringStart(); } -> pushMode(INTERPOLATION_STRING)
-//;
+InterpolatedRegularStringStart:
+    '$"' { this->OnInterpolatedRegularStringStart(); } -> pushMode(INTERPOLATION_STRING)
+;
+InterpolatedGraveStringStart:
+    '$`' { this->OnInterpolatedVerbatiumStringStart(); } -> pushMode(INTERPOLATION_STRING)
+;
+InterpolatedMultilineStringStart:
+    '$\'\'\'' { this->OnInterpolatedMultilineStringStart(); } -> pushMode(INTERPOLATION_STRING)
+;
 
 MultilineStringLiteral: '\'\'\'' MultilineStringItem*? '\'\'\'';
 
@@ -274,9 +290,9 @@ LeftBracket: '[';
 
 RightBracket: ']';
 
-LeftBrace: '{';
+LeftBrace: '{' { this->OnOpenBrace(); };
 
-RightBrace: '}';
+RightBrace: '}' { this->OnCloseBrace(); };
 
 Plus: '+';
 
@@ -302,7 +318,7 @@ VertLine: '|';
 
 Tilde: '~';
 
-Colon: ':';
+Colon: ':' { this->OnColon(); };
 
 Assign: '=';
 
@@ -411,19 +427,21 @@ Op9: [*/%\\] OperatorChar+;
 mode INTERPOLATION_STRING;
 
 DOUBLE_CURLY_INSIDE           : '{{';
-//OPEN_BRACE_INSIDE             : '{' { this.OpenBraceInside(); } -> skip, pushMode(DEFAULT_MODE);
-//REGULAR_CHAR_INSIDE           :     { this.IsRegularCharInside() }? Simpleescapesequence;
-//VERBATIUM_DOUBLE_GRAVE_INSIDE :     { this.IsVerbatiumDoubleGraveInside() }? '``';
-//DOUBLE_QUOTE_INSIDE           : '"' { this.OnDoubleQuoteInside(); } -> popMode;
-//GRAVE_INSIDE           		  : '`' { this.OnGraveInside(); } -> popMode;
-//REGULAR_STRING_INSIDE         :     { this.IsRegularCharInside() }? ~('{' | '\\' | '"')+;
-//GRAVE_STRING_INSIDE           :     { this.IsVerbatiumGraveInside() }? ~('{' | '`')+;
-//MULTILINE_STRING_INSIDE       :     { this.IsMultilineStringInside() }? ~('{' | '\'')+;
+OPEN_BRACE_INSIDE             : '{' { this->OpenBraceInside(); } -> skip, pushMode(DEFAULT_MODE);
+REGULAR_CHAR_INSIDE           :     { this->IsRegularCharInside() }? Simpleescapesequence;
+VERBATIUM_DOUBLE_GRAVE_INSIDE :     { this->IsVerbatiumCharInside() }? '``';
+MULTILINE_QUOTES_INSIDE       :     { this->IsMultilineStringInside() }? ('\'' | '\'\'') ~'\'';
+DOUBLE_QUOTE_INSIDE           : '"' { this->OnDoubleQuoteInside(); } -> popMode;
+GRAVE_INSIDE           		  : '`' { this->OnGraveInside(); } -> popMode;
+TRIPLE_QUOTE_INSIDE           : '\'\'\'' { this->OnTripleQuoteInside(); } -> popMode;
+REGULAR_STRING_INSIDE         :     { this->IsRegularCharInside() }? ~('{' | '\\' | '"')+;
+GRAVE_STRING_INSIDE           :     { this->IsVerbatiumCharInside() }? ~('{' | '`')+;
+MULTILINE_STRING_INSIDE       :     { this->IsMultilineStringInside() }? ~('{' | '\'')+;
 
 mode INTERPOLATION_FORMAT;
 
 DOUBLE_CURLY_CLOSE_INSIDE : '}}' -> type(FORMAT_STRING);
-//CLOSE_BRACE_INSIDE        : '}'  { this.OnCloseBraceInside(); } -> skip, popMode;
+CLOSE_BRACE_INSIDE        : '}'  { this->OnCloseBraceInside(); } -> skip, popMode;
 FORMAT_STRING             : ~'}'+;
 
 fragment MultilineStringItem: MultilineStringChar | StringEscape;
@@ -451,16 +469,6 @@ fragment HEXADECIMALDIGIT: [0-9a-fA-F];
 fragment BINARYDIGIT: [01];
 
 fragment ALPHANUMERIC: [0-9a-zA-Z];
-
-DecimalLiteral: '0' | (NONZERODIGIT ('_'? DIGIT)*);
-
-OctalLiteral: '0o' ('_'? OCTALDIGIT)*;
-
-HexadecimalLiteral: '0x' ( '_'? HEXADECIMALDIGIT)*;
-
-BinaryLiteral: '0b' ('_'? BINARYDIGIT)*;
-
-Integersuffix: '_'? (Unsignedsuffix | 'i8' | 'i16' | 'i32' | 'i64' | 'u8' | 'u16' | 'u32' | 'u64' | 'iz' | 'uz' | 'i128' | 'u128' | 'big');
 
 fragment Unsignedsuffix: 'u';
 
@@ -508,6 +516,8 @@ fragment SIGN: [+-];
 fragment Digitsequence: DIGIT ('_'? DIGIT)*;
 
 fragment HexDigitsequence: HEXADECIMALDIGIT ('_'? HEXADECIMALDIGIT)*;
+
+fragment Integersuffix: '_'? (Unsignedsuffix | 'i8' | 'i16' | 'i32' | 'i64' | 'u8' | 'u16' | 'u32' | 'u64' | 'iz' | 'uz' | 'i128' | 'u128' | 'big');
 
 fragment Floatingsuffix: '_'? ('f' | 'f32' | 'f64' | 'fext');
 

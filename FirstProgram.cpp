@@ -19,15 +19,15 @@ template<class T> inline auto getAsString(__extension_569_T<T> const& __this ) -
 
 #line 631 "FirstProgram.adv"
 extern "C" auto __Astrum_Main()  -> CppAdvance::i32;
-#line 743 "FirstProgram.adv"
+#line 760 "FirstProgram.adv"
 inline constexpr CppAdvance::usize PRIVATE_CONSTANT = CppAdvance::usize(34U);
 #line 2 "FirstProgram.adv"
 volatile CppAdvance::Unsafe::__VolatileRawPtr<const CppAdvance::char16> globalVar{};
 #line 3 "FirstProgram.adv"
 extern const CppAdvance::Unsafe::__RawPtr<CppAdvance::i32> globalVar1 = nullptr;
-#line 744 "FirstProgram.adv"
+#line 761 "FirstProgram.adv"
 static CppAdvance::i32 globalVar2 = CppAdvance::i32(8);
-#line 745 "FirstProgram.adv"
+#line 762 "FirstProgram.adv"
 static const CppAdvance::i32 globalVar3 = CppAdvance::i32(456);
 #line 92 "FirstProgram.adv"
 thread_local CppAdvance::i32 Vector3::Count2 = CppAdvance::i32(123);
@@ -201,6 +201,7 @@ inline auto Text::getShortString() const  -> CppAdvance::Str
 
 
 
+ADV_ENTRY_POINT
 #line 631 "FirstProgram.adv"
 extern "C" auto __Astrum_Main()  -> CppAdvance::i32
 {
@@ -282,12 +283,40 @@ extern "C" auto __Astrum_Main()  -> CppAdvance::i32
 		print(CppAdvance::Cast<true, CppAdvance::f32>((*(cv1))));
 		#line 733 "FirstProgram.adv"
 		print(CppAdvance::Cast<true, CppAdvance::i32>(((CppAdvance::Is((*(cv1)), (cv2))))));
+		#line 734 "FirstProgram.adv"
+		auto s1 = CppAdvance::StringInterpolation(u"abc {} names", ox); 
+		#line 735 "FirstProgram.adv"
+		auto s2 = CppAdvance::StringInterpolation(u"{}", oy); 
 		#line 736 "FirstProgram.adv"
+		auto s3 = CppAdvance::StringInterpolation(u"Count: {}", ox > CppAdvance::i32(0).valueOr([&]() FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { return CppAdvance::Str{u"def"}; })); 
+		#line 737 "FirstProgram.adv"
+		auto s4 = CppAdvance::StringInterpolation(u"Number: {:016x}", ox); 
+		#line 738 "FirstProgram.adv"
+		auto s5 = CppAdvance::StringInterpolation(uR"_grave_(abcd
+		efgh: {}
+		ghi)_grave_", ox); 
+		#line 742 "FirstProgram.adv"
+		auto s6 = CppAdvance::StringInterpolation(uR"_multi_(
+		abcd: {}
+		)_multi_", oy); 
+		#line 745 "FirstProgram.adv"
+		print(s1);
+		#line 746 "FirstProgram.adv"
+		print(s2);
+		#line 747 "FirstProgram.adv"
+		print(s3);
+		#line 748 "FirstProgram.adv"
+		print(s4);
+		#line 749 "FirstProgram.adv"
+		print(s5);
+		#line 750 "FirstProgram.adv"
+		print(s6);
+		#line 753 "FirstProgram.adv"
 		CppAdvance::Nullable<CppAdvance::ObjectRef> on = vec; 
 	}
-	#line 738 "FirstProgram.adv"
+	#line 755 "FirstProgram.adv"
 	print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
-	#line 739 "FirstProgram.adv"
+	#line 756 "FirstProgram.adv"
 	print(ADV_UPCS(x)(ADV_UPCS(x)(ADV_USFCS((Test1::Test2::TestClass), makeTestClass)(CppAdvance::i32(3), CppAdvance::f32(3.14f)).__ref()).__ref()));
 	return 0;
 }

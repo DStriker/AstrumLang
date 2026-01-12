@@ -1074,6 +1074,12 @@ public:
 	void exitUnitTestDeclaration(CppAdvanceParser::UnitTestDeclarationContext*) override;
 
 
+
+	void exitInterpolatedStringLiteral(CppAdvanceParser::InterpolatedStringLiteralContext*) override;
+
+
+	void exitLiteral(CppAdvanceParser::LiteralContext*) override;
+
 };
 
 class TestIgnoringParseTreeWalker : public antlr4::tree::ParseTreeWalker {

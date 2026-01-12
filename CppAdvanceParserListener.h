@@ -671,6 +671,30 @@ public:
   virtual void enterLiteral(CppAdvanceParser::LiteralContext *ctx) = 0;
   virtual void exitLiteral(CppAdvanceParser::LiteralContext *ctx) = 0;
 
+  virtual void enterInterpolatedStringLiteral(CppAdvanceParser::InterpolatedStringLiteralContext *ctx) = 0;
+  virtual void exitInterpolatedStringLiteral(CppAdvanceParser::InterpolatedStringLiteralContext *ctx) = 0;
+
+  virtual void enterInterpolatedRegularStringLiteral(CppAdvanceParser::InterpolatedRegularStringLiteralContext *ctx) = 0;
+  virtual void exitInterpolatedRegularStringLiteral(CppAdvanceParser::InterpolatedRegularStringLiteralContext *ctx) = 0;
+
+  virtual void enterInterpolatedRegularStringPart(CppAdvanceParser::InterpolatedRegularStringPartContext *ctx) = 0;
+  virtual void exitInterpolatedRegularStringPart(CppAdvanceParser::InterpolatedRegularStringPartContext *ctx) = 0;
+
+  virtual void enterInterpolatedVerbatiumStringLiteral(CppAdvanceParser::InterpolatedVerbatiumStringLiteralContext *ctx) = 0;
+  virtual void exitInterpolatedVerbatiumStringLiteral(CppAdvanceParser::InterpolatedVerbatiumStringLiteralContext *ctx) = 0;
+
+  virtual void enterInterpolatedVerbatiumStringPart(CppAdvanceParser::InterpolatedVerbatiumStringPartContext *ctx) = 0;
+  virtual void exitInterpolatedVerbatiumStringPart(CppAdvanceParser::InterpolatedVerbatiumStringPartContext *ctx) = 0;
+
+  virtual void enterInterpolatedMultilineStringLiteral(CppAdvanceParser::InterpolatedMultilineStringLiteralContext *ctx) = 0;
+  virtual void exitInterpolatedMultilineStringLiteral(CppAdvanceParser::InterpolatedMultilineStringLiteralContext *ctx) = 0;
+
+  virtual void enterInterpolatedMultilineStringPart(CppAdvanceParser::InterpolatedMultilineStringPartContext *ctx) = 0;
+  virtual void exitInterpolatedMultilineStringPart(CppAdvanceParser::InterpolatedMultilineStringPartContext *ctx) = 0;
+
+  virtual void enterInterpolatedExpression(CppAdvanceParser::InterpolatedExpressionContext *ctx) = 0;
+  virtual void exitInterpolatedExpression(CppAdvanceParser::InterpolatedExpressionContext *ctx) = 0;
+
 
 };
 
