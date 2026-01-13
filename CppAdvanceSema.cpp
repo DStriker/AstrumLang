@@ -291,7 +291,7 @@ void CppAdvanceSema::exitExpr(CppAdvanceParser::ExprContext* ctx)
 
 void CppAdvanceSema::checkIntegerLiteral(TerminalNode* literal, bool minus)
 {
-	if (firstPass == functionBody) return;
+	if (firstPass == functionBody > 0) return;
 	std::string txt = literal->getText();
 	if (txt.empty()) return;
 	auto base = 10;
@@ -462,7 +462,7 @@ void CppAdvanceSema::checkIntegerLiteral(TerminalNode* literal, bool minus)
 
 void CppAdvanceSema::checkAsciiLiteral(TerminalNode* literal)
 {
-	if (firstPass == functionBody) return;
+	if (firstPass == functionBody > 0) return;
 	std::string txt = literal->getText();
 	if (txt.starts_with('b')) {
 		if (txt.length() > 5 || (txt.length() == 5 && txt[2] != '\\'))
@@ -475,7 +475,7 @@ void CppAdvanceSema::checkAsciiLiteral(TerminalNode* literal)
 void CppAdvanceSema::enterUnaryExpression(CppAdvanceParser::UnaryExpressionContext* ctx)
 {
 	if (firstPass) unaryExpressions.push(ctx);
-	if (firstPass == functionBody) return;
+	if (firstPass == functionBody > 0) return;
 	if (auto upo = ctx->unaryPrefixOperator())
 	{
 		literalMinus = upo->Minus();
@@ -513,14 +513,14 @@ void CppAdvanceSema::enterLiteral(CppAdvanceParser::LiteralContext* ctx)
 
 void CppAdvanceSema::enterFunctionBody(CppAdvanceParser::FunctionBodyContext*)
 {
-	functionBody = true;
+	++functionBody;
 	++depth;
 }
 
 void CppAdvanceSema::exitFunctionBody(CppAdvanceParser::FunctionBodyContext*)
 {
-	if (--depth == 0)
-		functionBody = false;
+	--depth;
+	--functionBody;
 }
 
 void CppAdvanceSema::exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationContext* ctx)
@@ -1790,20 +1790,20 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 
 void CppAdvanceSema::enterShortFunctionBody(CppAdvanceParser::ShortFunctionBodyContext*)
 {
-	functionBody = true;
+	functionBody++;
 	++depth;
 }
 
 void CppAdvanceSema::exitShortFunctionBody(CppAdvanceParser::ShortFunctionBodyContext*)
 {
-	if (--depth == 0)
-		functionBody = false;
+	--depth;
+	--functionBody;
 }
 
 void CppAdvanceSema::exitFunctionDefinition(CppAdvanceParser::FunctionDefinitionContext* ctx)
 {
 	//if (firstPass == functionBody) return;
-	if (firstPass != functionBody) {
+	if (firstPass != functionBody > 0) {
 		std::string funcname;
 		if (!currentType.empty() && !isFriendDefinition) funcname += currentType + ".";
 		if (ctx->Identifier())
@@ -2863,7 +2863,7 @@ void CppAdvanceSema::enterFunctionTemplateDeclaration(CppAdvanceParser::Function
 
 void CppAdvanceSema::exitFunctionTemplateDeclaration(CppAdvanceParser::FunctionTemplateDeclarationContext* ctx)
 {
-	if (firstPass != functionBody) {
+	if (firstPass != functionBody > 0) {
 		auto idc = ctx->Identifier();
 		auto funcname = idc->getText();
 		if (ctx->returnType())
@@ -3595,7 +3595,7 @@ void CppAdvanceSema::exitConstructor(CppAdvanceParser::ConstructorContext* ctx)
 void CppAdvanceSema::enterConstructorBody(CppAdvanceParser::ConstructorBodyContext* ctx)
 {
 	++depth;
-	functionBody = true;
+	++functionBody;
 
 	if (firstPass)
 	{
@@ -3626,20 +3626,20 @@ void CppAdvanceSema::enterConstructorBody(CppAdvanceParser::ConstructorBodyConte
 
 void CppAdvanceSema::exitConstructorBody(CppAdvanceParser::ConstructorBodyContext*)
 {
-	if (--depth == 0)
-		functionBody = false;
+	--depth == 0;
+	--functionBody;
 }
 
 void CppAdvanceSema::enterDelegatingConstructorBody(CppAdvanceParser::DelegatingConstructorBodyContext*)
 {
 	++depth;
-	functionBody = true;
+	++functionBody;
 }
 
 void CppAdvanceSema::exitDelegatingConstructorBody(CppAdvanceParser::DelegatingConstructorBodyContext*)
 {
-	if (--depth == 0)
-		functionBody = false;
+	--depth;
+	functionBody--;
 }
 
 void CppAdvanceSema::enterDelegatingConstructorStatement(CppAdvanceParser::DelegatingConstructorStatementContext* ctx)
@@ -3857,7 +3857,7 @@ void CppAdvanceSema::enterIndexer(CppAdvanceParser::IndexerContext* ctx)
 	CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 	CppAdvanceParser::IndexerGetterContext* getter = nullptr;
 	CppAdvanceParser::IndexerSetterContext* setter = nullptr;
-	prevFunctionBody = functionBody;
+	//functionBody++;
 
 	for (auto spec : ctx->functionSpecifier()) {
 		if (spec->Inline()) isInline = true;
@@ -4081,8 +4081,8 @@ void CppAdvanceSema::enterIndexer(CppAdvanceParser::IndexerContext* ctx)
 
 void CppAdvanceSema::exitIndexer(CppAdvanceParser::IndexerContext* ctx)
 {
-	functionBody = prevFunctionBody;
-	if (firstPass && ! functionBody) {
+	//functionBody--;
+	if (firstPass && !functionBody) {
 		std::string funcname;
 		if (!currentType.empty()) funcname += currentType + ".";
 		funcname += "_operator_subscript";
@@ -4128,7 +4128,7 @@ void CppAdvanceSema::enterIndexerGetter(CppAdvanceParser::IndexerGetterContext* 
 			CppAdvanceCompilerError("Cannot to declare protected internal member outside the class", spec->Protected()->getSymbol());
 		}
 	}
-	functionBody = true;
+	++functionBody;
 	++depth;
 	if (!firstPass)
 	{
@@ -4150,7 +4150,7 @@ void CppAdvanceSema::enterIndexerSetter(CppAdvanceParser::IndexerSetterContext* 
 			CppAdvanceCompilerError("Cannot to declare protected internal member outside the class", spec->Protected()->getSymbol());
 		}
 	}
-	functionBody = true;
+	++functionBody;
 	++depth;
 	if (!firstPass)
 	{
@@ -4160,7 +4160,7 @@ void CppAdvanceSema::enterIndexerSetter(CppAdvanceParser::IndexerSetterContext* 
 
 void CppAdvanceSema::exitIndexerGetter(CppAdvanceParser::IndexerGetterContext*)
 {
-	functionBody = false;
+	--functionBody;
 	--depth;
 	if (!firstPass)
 	{
@@ -4171,7 +4171,7 @@ void CppAdvanceSema::exitIndexerGetter(CppAdvanceParser::IndexerGetterContext*)
 
 void CppAdvanceSema::exitIndexerSetter(CppAdvanceParser::IndexerSetterContext*)
 {
-	functionBody = false;
+	--functionBody;
 	--depth;
 	if (!firstPass)
 	{
@@ -4184,7 +4184,7 @@ void CppAdvanceSema::enterProperty(CppAdvanceParser::PropertyContext* ctx)
 {
 	symbolContexts.push(symbolContexts.top());
 	propertyBody = true;
-	prevFunctionBody = functionBody;
+	functionBody++;
 	bool isStatic = ctx->Static();
 	bool isUnsafe = ctx->Unsafe();
 	bool isVirtual = ctx->Virtual();
@@ -4226,7 +4226,7 @@ void CppAdvanceSema::enterProperty(CppAdvanceParser::PropertyContext* ctx)
 		expression = ctx->shortFunctionBody()->expressionStatement()->expr();
 	}
 
-	if (firstPass && !functionBody) {
+	if (firstPass && functionBody <= 1) {
 		bool isInline = false;
 		bool isConstexpr = false;
 
@@ -4310,8 +4310,8 @@ void CppAdvanceSema::exitProperty(CppAdvanceParser::PropertyContext* ctx)
 {
 	propertyBody = false;
 	isRefProperty = false;
-	functionBody = prevFunctionBody;
-	if (firstPass != functionBody) {
+	functionBody--;
+	if (firstPass != functionBody > 0) {
 		std::string funcname;
 		std::string prefix;
 		if (!currentType.empty()) prefix = currentType + ".";
@@ -4364,7 +4364,7 @@ void CppAdvanceSema::enterPropertyGetter(CppAdvanceParser::PropertyGetterContext
 		}
 	}
 	
-	functionBody = true;
+	++functionBody;
 	++depth;
 	if (!firstPass)
 	{
@@ -4374,7 +4374,7 @@ void CppAdvanceSema::enterPropertyGetter(CppAdvanceParser::PropertyGetterContext
 
 void CppAdvanceSema::exitPropertyGetter(CppAdvanceParser::PropertyGetterContext* ctx)
 {
-	//functionBody = false;
+	--functionBody;
 	--depth;
 	if (!firstPass)
 	{
@@ -4399,7 +4399,7 @@ void CppAdvanceSema::enterPropertySetter(CppAdvanceParser::PropertySetterContext
 		}
 	}
 
-	functionBody = true;
+	++functionBody;
 	fieldAssignment = ctx->Semi();
 	++depth;
 	if (!firstPass)
@@ -4410,7 +4410,7 @@ void CppAdvanceSema::enterPropertySetter(CppAdvanceParser::PropertySetterContext
 
 void CppAdvanceSema::exitPropertySetter(CppAdvanceParser::PropertySetterContext* ctx)
 {
-	//functionBody = false;
+	--functionBody;
 	if (fieldAssignment) {
 		if (isRefProperty && currentTypeKind.top() != TypeKind::RefStruct)
             CppAdvanceCompilerError("Cannot to use reference data property outside the ref struct body", ctx->getStart());
@@ -4890,7 +4890,7 @@ void CppAdvanceSema::enterAbstractProperty(CppAdvanceParser::AbstractPropertyCon
 {
 	symbolContexts.push(symbolContexts.top());
 	propertyBody = true;
-	prevFunctionBody = functionBody;
+	//functionBody++;
 	bool isUnsafe = false;
 	bool isRefReturn = ctx->Ref();
 	bool isConstReturn = ctx->Const();
@@ -4975,8 +4975,8 @@ void CppAdvanceSema::exitAbstractProperty(CppAdvanceParser::AbstractPropertyCont
 {
 	propertyBody = false;
 	isRefProperty = false;
-	functionBody = prevFunctionBody;
-	if (firstPass != functionBody) {
+	//functionBody--;
+	if (firstPass != functionBody > 0) {
 		std::string funcname;
 		std::string prefix;
 		if (!currentType.empty()) prefix = currentType + ".";
@@ -5123,7 +5123,7 @@ void CppAdvanceSema::enterAbstractMethodDeclaration(CppAdvanceParser::AbstractMe
 
 void CppAdvanceSema::exitAbstractMethodDeclaration(CppAdvanceParser::AbstractMethodDeclarationContext* ctx)
 {
-	if (firstPass != functionBody) {
+	if (firstPass != functionBody > 0) {
 		std::string funcname;
 		if (!currentType.empty()) funcname += currentType + ".";
 		if (ctx->Identifier())
@@ -5326,7 +5326,7 @@ void CppAdvanceSema::enterInterfaceProperty(CppAdvanceParser::InterfacePropertyC
 {
 	symbolContexts.push(symbolContexts.top());
 	propertyBody = true;
-	prevFunctionBody = functionBody;
+	//functionBody++;
 	bool isUnsafe = false;
 	bool isRefReturn = ctx->Ref();
 	bool isConstReturn = ctx->Const();
@@ -5378,8 +5378,8 @@ void CppAdvanceSema::exitInterfaceProperty(CppAdvanceParser::InterfacePropertyCo
 {
 	propertyBody = false;
 	isRefProperty = false;
-	functionBody = prevFunctionBody;
-	if (firstPass != functionBody) {
+	//functionBody--;
+	if (firstPass != functionBody > 0) {
 		std::string funcname;
 		std::string prefix;
 		if (!currentType.empty()) prefix = currentType + ".";
@@ -5485,7 +5485,7 @@ void CppAdvanceSema::enterInterfaceMethodDeclaration(CppAdvanceParser::Interface
 
 void CppAdvanceSema::exitInterfaceMethodDeclaration(CppAdvanceParser::InterfaceMethodDeclarationContext* ctx)
 {
-	if (firstPass != functionBody) {
+	if (firstPass != functionBody > 0) {
 		std::string funcname;
 		if (!currentType.empty()) funcname += currentType + ".";
 		if (ctx->Identifier())
@@ -5545,7 +5545,7 @@ void CppAdvanceSema::enterInterfaceIndexer(CppAdvanceParser::InterfaceIndexerCon
 	CppAdvanceParser::ExceptionSpecificationContext* exceptions = ctx->exceptionSpecification();
 	CppAdvanceParser::IndexerGetterContext* getter = nullptr;
 	CppAdvanceParser::IndexerSetterContext* setter = ctx->Set() ? (CppAdvanceParser::IndexerSetterContext*)1 : nullptr;
-	prevFunctionBody = functionBody;
+	//functionBody++;
 
 	if (!isUnsafe && unsafeDepth > 0) isUnsafe = true;
 	if (isUnsafe && unsafeDepth <= 0) unsafeDepth++;
@@ -5583,7 +5583,7 @@ void CppAdvanceSema::enterInterfaceIndexer(CppAdvanceParser::InterfaceIndexerCon
 
 void CppAdvanceSema::exitInterfaceIndexer(CppAdvanceParser::InterfaceIndexerContext* ctx)
 {
-	functionBody = prevFunctionBody;
+	//functionBody--;
 	if (firstPass && !functionBody) {
 		std::string funcname;
 		if (!currentType.empty()) funcname += currentType + ".";
@@ -6428,7 +6428,7 @@ void CppAdvanceSema::exitSwitchExpression(CppAdvanceParser::SwitchExpressionCont
 void CppAdvanceSema::enterSwitchExpressionBranch(CppAdvanceParser::SwitchExpressionBranchContext* ctx)
 {
 	symbolContexts.push(symbolContexts.top());
-	if (firstPass == functionBody)
+	if (firstPass == functionBody > 0)
 	{
 		auto pattern = ctx->patternList()->pattern(0);
 		if (pattern->theTypeId() && pattern->getText() != "_")
@@ -6459,13 +6459,13 @@ void CppAdvanceSema::exitSwitchExpressionBranch(CppAdvanceParser::SwitchExpressi
 void CppAdvanceSema::enterUnitTestDeclaration(CppAdvanceParser::UnitTestDeclarationContext* ctx)
 {
 	isUnitTestBody = true;
-	functionBody = true;
+	functionBody++;
 }
 
 void CppAdvanceSema::exitUnitTestDeclaration(CppAdvanceParser::UnitTestDeclarationContext* ctx)
 {
 	isUnitTestBody = false;
-	functionBody = false;
+	functionBody--;
 }
 
 void CppAdvanceSema::exitInterpolatedStringLiteral(CppAdvanceParser::InterpolatedStringLiteralContext* ctx)
@@ -6475,7 +6475,7 @@ void CppAdvanceSema::exitInterpolatedStringLiteral(CppAdvanceParser::Interpolate
 
 void CppAdvanceSema::exitLiteral(CppAdvanceParser::LiteralContext* ctx)
 {
-	if (firstPass == functionBody) return;
+	if (firstPass == functionBody > 0) return;
 	if (auto literal = ctx->IntegerLiteral()) {
 		checkIntegerLiteral(literal, literalMinus);
 		typeStack.push("i32");
@@ -6504,6 +6504,16 @@ void CppAdvanceSema::exitLiteral(CppAdvanceParser::LiteralContext* ctx)
 	{
 		typeStack.push("null");
 	}
+}
+
+void CppAdvanceSema::enterLambdaBody(CppAdvanceParser::LambdaBodyContext* ctx)
+{
+	functionBody++;
+}
+
+void CppAdvanceSema::exitLambdaBody(CppAdvanceParser::LambdaBodyContext* ctx)
+{
+	functionBody--;
 }
 
 void CppAdvanceSema::exitRangeExpression(CppAdvanceParser::RangeExpressionContext* ctx)

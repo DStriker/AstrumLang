@@ -50,7 +50,7 @@ RegularString: '"' Schar* '"';
 
 HexStringLiteral: 'x"' (HEXADECIMALDIGIT | [ \t])* '"';
 
-GraveString: '`' Gchar* '`';
+GraveString: '`' MultilineStringItem*? '`';
 
 InterpolatedRegularStringStart:
     '$"' { this->OnInterpolatedRegularStringStart(); } -> pushMode(INTERPOLATION_STRING)

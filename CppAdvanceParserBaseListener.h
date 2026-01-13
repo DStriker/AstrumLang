@@ -649,6 +649,24 @@ public:
   virtual void enterTupleExpression(CppAdvanceParser::TupleExpressionContext * /*ctx*/) override { }
   virtual void exitTupleExpression(CppAdvanceParser::TupleExpressionContext * /*ctx*/) override { }
 
+  virtual void enterLambdaExpression(CppAdvanceParser::LambdaExpressionContext * /*ctx*/) override { }
+  virtual void exitLambdaExpression(CppAdvanceParser::LambdaExpressionContext * /*ctx*/) override { }
+
+  virtual void enterLambdaCaptureList(CppAdvanceParser::LambdaCaptureListContext * /*ctx*/) override { }
+  virtual void exitLambdaCaptureList(CppAdvanceParser::LambdaCaptureListContext * /*ctx*/) override { }
+
+  virtual void enterLambdaCaptureClause(CppAdvanceParser::LambdaCaptureClauseContext * /*ctx*/) override { }
+  virtual void exitLambdaCaptureClause(CppAdvanceParser::LambdaCaptureClauseContext * /*ctx*/) override { }
+
+  virtual void enterCapture(CppAdvanceParser::CaptureContext * /*ctx*/) override { }
+  virtual void exitCapture(CppAdvanceParser::CaptureContext * /*ctx*/) override { }
+
+  virtual void enterLambdaDeclarator(CppAdvanceParser::LambdaDeclaratorContext * /*ctx*/) override { }
+  virtual void exitLambdaDeclarator(CppAdvanceParser::LambdaDeclaratorContext * /*ctx*/) override { }
+
+  virtual void enterLambdaBody(CppAdvanceParser::LambdaBodyContext * /*ctx*/) override { }
+  virtual void exitLambdaBody(CppAdvanceParser::LambdaBodyContext * /*ctx*/) override { }
+
   virtual void enterPrimaryExpression(CppAdvanceParser::PrimaryExpressionContext * /*ctx*/) override { }
   virtual void exitPrimaryExpression(CppAdvanceParser::PrimaryExpressionContext * /*ctx*/) override { }
 

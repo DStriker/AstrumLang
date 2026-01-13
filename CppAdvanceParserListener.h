@@ -647,6 +647,24 @@ public:
   virtual void enterTupleExpression(CppAdvanceParser::TupleExpressionContext *ctx) = 0;
   virtual void exitTupleExpression(CppAdvanceParser::TupleExpressionContext *ctx) = 0;
 
+  virtual void enterLambdaExpression(CppAdvanceParser::LambdaExpressionContext *ctx) = 0;
+  virtual void exitLambdaExpression(CppAdvanceParser::LambdaExpressionContext *ctx) = 0;
+
+  virtual void enterLambdaCaptureList(CppAdvanceParser::LambdaCaptureListContext *ctx) = 0;
+  virtual void exitLambdaCaptureList(CppAdvanceParser::LambdaCaptureListContext *ctx) = 0;
+
+  virtual void enterLambdaCaptureClause(CppAdvanceParser::LambdaCaptureClauseContext *ctx) = 0;
+  virtual void exitLambdaCaptureClause(CppAdvanceParser::LambdaCaptureClauseContext *ctx) = 0;
+
+  virtual void enterCapture(CppAdvanceParser::CaptureContext *ctx) = 0;
+  virtual void exitCapture(CppAdvanceParser::CaptureContext *ctx) = 0;
+
+  virtual void enterLambdaDeclarator(CppAdvanceParser::LambdaDeclaratorContext *ctx) = 0;
+  virtual void exitLambdaDeclarator(CppAdvanceParser::LambdaDeclaratorContext *ctx) = 0;
+
+  virtual void enterLambdaBody(CppAdvanceParser::LambdaBodyContext *ctx) = 0;
+  virtual void exitLambdaBody(CppAdvanceParser::LambdaBodyContext *ctx) = 0;
+
   virtual void enterPrimaryExpression(CppAdvanceParser::PrimaryExpressionContext *ctx) = 0;
   virtual void exitPrimaryExpression(CppAdvanceParser::PrimaryExpressionContext *ctx) = 0;
 

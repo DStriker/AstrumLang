@@ -18979,7 +18979,7 @@ void CppAdvanceCodegen::printPrimaryExpression(CppAdvanceParser::PrimaryExpressi
 	}
 	else if (ctx->This())
 	{
-		if (isExtension)
+		if (isExtension || isLambda)
 		{
 			out << "__this";
 		}
@@ -19002,6 +19002,10 @@ void CppAdvanceCodegen::printPrimaryExpression(CppAdvanceParser::PrimaryExpressi
 			out << "field";
 		}
 	}
+	else if (ctx->lambdaExpression())
+	{
+		printLambdaExpression(ctx->lambdaExpression());
+	}
 }
 
 void CppAdvanceCodegen::printTupleExpression(CppAdvanceParser::TupleExpressionContext* ctx) const
@@ -19018,6 +19022,112 @@ void CppAdvanceCodegen::printTupleExpression(CppAdvanceParser::TupleExpressionCo
 		}
 		out << ")";
 	}
+}
+
+void CppAdvanceCodegen::printLambdaExpression(CppAdvanceParser::LambdaExpressionContext* ctx) const
+{
+	bool isMutable = false;
+	out << '[';
+	if (auto list = ctx->lambdaCaptureList())
+	{
+		auto clause = list->lambdaCaptureClause();
+		if (clause->Assign())
+		{
+			out << '=';
+		}
+		bool first = !clause->Assign();
+		for (auto capture : clause->capture())
+		{
+			if (!first) out << ", ";
+			first = false;
+			if (capture->This())
+			{
+				if (capture->Weak())
+				{
+					out << "__this = __self::__weak_ref(*this)";
+				}
+				else
+				{
+					out << "__this = __self(*this)";
+				}
+			}
+			else
+			{
+				printIdentifier(capture->Identifier());
+				out << " = ";
+				printInitializerClause(capture->initializerClause());
+			}
+		}
+		isMutable = list->Mutable();
+	}
+	out << "] ";
+	if (ctx->templateParams())
+	{
+		printTemplateParams(ctx->templateParams());
+		out << " ";
+	}
+
+	auto declarator = ctx->lambdaDeclarator();
+	if (declarator->functionParams())
+	{
+		isFunctionDeclaration = true;
+		printFunctionParameters(declarator->functionParams());
+		isFunctionDeclaration = false;
+		out << " ";
+	}
+	else if (declarator->Identifier())
+	{
+		out << "(const auto ";
+		printIdentifier(declarator->Identifier());
+		out << ") ";
+	}
+
+	if (isMutable)
+	{
+		out << "mutable ";
+	}
+
+	if (auto ret = declarator->returnType())
+	{
+		out << "-> ";
+		if (ret->Forward())
+		{
+			out << "decltype(auto)";
+		}
+		else {
+			if (ret->Const() || !ret->Ref())
+			{
+				out << "const ";
+			}
+			if (ret->theTypeId())
+			{
+				printTypeId(ret->theTypeId());
+			}
+			if (ret->Ref())
+			{
+				out << "&";
+			}
+		}
+		out << " ";
+	}
+
+	auto prev = functionBody;
+	auto prevLambda = isLambda;
+	functionBody = true;
+	isLambda = true;
+	if (auto body = ctx->lambdaBody()->functionBody())
+	{
+		functionProlog = true;
+		printFunctionBody(body);
+	}
+	else
+	{
+		out << "{ ADV_EXPRESSION_BODY(";
+		printExpression(ctx->lambdaBody()->expr());
+		out << "); }";
+	}
+	functionBody = prev;
+	isLambda = prevLambda;
 }
 
 void CppAdvanceCodegen::printTypeSpecifierSeq(CppAdvanceParser::TypeSpecifierSeqContext* ctx) const
@@ -19692,6 +19802,10 @@ void CppAdvanceCodegen::printMultilineStringLiteral(std::string txt) const
 
 void CppAdvanceCodegen::printInterpolatedStringLiteral(CppAdvanceParser::InterpolatedStringLiteralContext* ctx) const
 {
+	if (currentDeclaration && !currentDeclaration->theTypeId())
+	{
+		out << "String(";
+	}
 	out << "CppAdvance::StringInterpolation(u";
 	std::vector<CppAdvanceParser::NullCoalescingExpressionContext*> expressions;
 	auto processExpression = [&](auto expr) { 
@@ -19787,4 +19901,8 @@ void CppAdvanceCodegen::printInterpolatedStringLiteral(CppAdvanceParser::Interpo
 		printNullCoalescingExpression(expr);
 	}
 	out << ")";
+	if (currentDeclaration && !currentDeclaration->theTypeId())
+	{
+		out << ")";
+	}
 }

@@ -64,6 +64,7 @@ class CppAdvanceCodegen
 	mutable bool isCondition = false;
 	mutable bool isUnitTestBody = false;
 	mutable bool isMainFunction = false;
+	mutable bool isLambda = false;
 
 	class StreamSwitcher {
 	private:
@@ -247,6 +248,7 @@ public:
 	void printPostfixExpression(CppAdvanceParser::PostfixExpressionContext* ctx) const;
 	void printPrimaryExpression(CppAdvanceParser::PrimaryExpressionContext* ctx) const;
 	void printTupleExpression(CppAdvanceParser::TupleExpressionContext* ctx) const;
+	void printLambdaExpression(CppAdvanceParser::LambdaExpressionContext* ctx) const;
 	void printTypeSpecifierSeq(CppAdvanceParser::TypeSpecifierSeqContext* ctx) const;
 	void printTypeId(CppAdvanceParser::TheTypeIdContext* ctx) const;
 	void printSingleTypeId(CppAdvanceParser::SingleTypeIdContext* ctx) const;

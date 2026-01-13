@@ -131,13 +131,15 @@ public:
     RuleConversionFunctionId = 201, RuleUnaryExpression = 202, RuleUnaryExpressionTail = 203, 
     RuleNewExpression = 204, RuleStackallocExpression = 205, RuleMemorySpaceSetter = 206, 
     RuleNewInitializer = 207, RuleFullPostfixExpression = 208, RulePostfixExpression = 209, 
-    RuleTupleExpression = 210, RulePrimaryExpression = 211, RuleUnaryPrefixOperator = 212, 
-    RuleUnaryCustomOperator = 213, RuleRefCaptureOperator = 214, RuleUnaryPostfixOperator = 215, 
-    RuleNot = 216, RuleOperator = 217, RuleLiteral = 218, RuleInterpolatedStringLiteral = 219, 
-    RuleInterpolatedRegularStringLiteral = 220, RuleInterpolatedRegularStringPart = 221, 
-    RuleInterpolatedVerbatiumStringLiteral = 222, RuleInterpolatedVerbatiumStringPart = 223, 
-    RuleInterpolatedMultilineStringLiteral = 224, RuleInterpolatedMultilineStringPart = 225, 
-    RuleInterpolatedExpression = 226
+    RuleTupleExpression = 210, RuleLambdaExpression = 211, RuleLambdaCaptureList = 212, 
+    RuleLambdaCaptureClause = 213, RuleCapture = 214, RuleLambdaDeclarator = 215, 
+    RuleLambdaBody = 216, RulePrimaryExpression = 217, RuleUnaryPrefixOperator = 218, 
+    RuleUnaryCustomOperator = 219, RuleRefCaptureOperator = 220, RuleUnaryPostfixOperator = 221, 
+    RuleNot = 222, RuleOperator = 223, RuleLiteral = 224, RuleInterpolatedStringLiteral = 225, 
+    RuleInterpolatedRegularStringLiteral = 226, RuleInterpolatedRegularStringPart = 227, 
+    RuleInterpolatedVerbatiumStringLiteral = 228, RuleInterpolatedVerbatiumStringPart = 229, 
+    RuleInterpolatedMultilineStringLiteral = 230, RuleInterpolatedMultilineStringPart = 231, 
+    RuleInterpolatedExpression = 232
   };
 
   explicit CppAdvanceParser(antlr4::TokenStream *input);
@@ -368,6 +370,12 @@ public:
   class FullPostfixExpressionContext;
   class PostfixExpressionContext;
   class TupleExpressionContext;
+  class LambdaExpressionContext;
+  class LambdaCaptureListContext;
+  class LambdaCaptureClauseContext;
+  class CaptureContext;
+  class LambdaDeclaratorContext;
+  class LambdaBodyContext;
   class PrimaryExpressionContext;
   class UnaryPrefixOperatorContext;
   class UnaryCustomOperatorContext;
@@ -4073,6 +4081,102 @@ public:
 
   TupleExpressionContext* tupleExpression();
 
+  class  LambdaExpressionContext : public antlr4::ParserRuleContext {
+  public:
+    LambdaExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    LambdaDeclaratorContext *lambdaDeclarator();
+    LambdaBodyContext *lambdaBody();
+    LambdaCaptureListContext *lambdaCaptureList();
+    TemplateParamsContext *templateParams();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  LambdaExpressionContext* lambdaExpression();
+
+  class  LambdaCaptureListContext : public antlr4::ParserRuleContext {
+  public:
+    LambdaCaptureListContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *LeftBracket();
+    LambdaCaptureClauseContext *lambdaCaptureClause();
+    antlr4::tree::TerminalNode *RightBracket();
+    antlr4::tree::TerminalNode *Mutable();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  LambdaCaptureListContext* lambdaCaptureList();
+
+  class  LambdaCaptureClauseContext : public antlr4::ParserRuleContext {
+  public:
+    LambdaCaptureClauseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    std::vector<CaptureContext *> capture();
+    CaptureContext* capture(size_t i);
+    antlr4::tree::TerminalNode *Assign();
+    std::vector<antlr4::tree::TerminalNode *> Comma();
+    antlr4::tree::TerminalNode* Comma(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  LambdaCaptureClauseContext* lambdaCaptureClause();
+
+  class  CaptureContext : public antlr4::ParserRuleContext {
+  public:
+    CaptureContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *This();
+    antlr4::tree::TerminalNode *Weak();
+    antlr4::tree::TerminalNode *Identifier();
+    antlr4::tree::TerminalNode *Assign();
+    InitializerClauseContext *initializerClause();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  CaptureContext* capture();
+
+  class  LambdaDeclaratorContext : public antlr4::ParserRuleContext {
+  public:
+    LambdaDeclaratorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    FunctionParamsContext *functionParams();
+    antlr4::tree::TerminalNode *Identifier();
+    ReturnTypeContext *returnType();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  LambdaDeclaratorContext* lambdaDeclarator();
+
+  class  LambdaBodyContext : public antlr4::ParserRuleContext {
+  public:
+    LambdaBodyContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    FunctionBodyContext *functionBody();
+    antlr4::tree::TerminalNode *AssignArrow();
+    ExprContext *expr();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  LambdaBodyContext* lambdaBody();
+
   class  PrimaryExpressionContext : public antlr4::ParserRuleContext {
   public:
     PrimaryExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -4091,6 +4195,7 @@ public:
     TupleExpressionContext *tupleExpression();
     IdExpressionContext *idExpression();
     antlr4::tree::TerminalNode *Doublecolon();
+    LambdaExpressionContext *lambdaExpression();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

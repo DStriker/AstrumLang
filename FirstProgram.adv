@@ -386,7 +386,9 @@ public class Next {
 	public operator!: () -> i32 => i;
 
 	public printNext: () = {
+		func2 := [weak this] (x: i32, y: i32) -> i32 { j:= x*y*this!.i; return j*2; };
 		print("This is printNext function in optional chaining call");
+		print(func2(3,4));
 	}
 
 }
@@ -731,23 +733,11 @@ main: ()
 		vec[1] = 5;
 		print(cv1! as f32);
 		print((cv1! is (cv2)) as i32);
-		s1:= $"abc {ox} names";
-		s2:= $"{oy}";
-		s3:= $"Count: {ox > 0 ?? "def"}";
-		s4:= $"Number: {ox:016x}";
-		s5:= $`abcd
-		efgh: {ox}
-		ghi`;
-
-		s6:= $'''
-		abcd: {oy}
-		''';
-		print(s1);
-		print(s2);
-		print(s3);
-		print(s4);
-		print(s5);
-		print(s6);
+		func := x => x*x;
+		list.find(x => x > 5);
+		print(func(12));
+		nx:= new Next(5);
+		nx.printNext();
 
 		//print(var.GetStrongReferenceCount());
 		on: object? = vec;

@@ -523,10 +523,9 @@ public:
 	int depth = 0;
 	int unsafeDepth = 0;
 	int loopDepth = 0;
+	int functionBody = 0;
 	bool firstPass = true;
 	bool literalMinus = false;
-	bool functionBody = false;
-	bool prevFunctionBody = false;
 	bool propertyBody = false;
 	bool isAssignment = false;
 	bool fieldAssignment = false;
@@ -1079,6 +1078,12 @@ public:
 
 
 	void exitLiteral(CppAdvanceParser::LiteralContext*) override;
+
+
+	void enterLambdaBody(CppAdvanceParser::LambdaBodyContext*) override;
+
+
+	void exitLambdaBody(CppAdvanceParser::LambdaBodyContext*) override;
 
 };
 

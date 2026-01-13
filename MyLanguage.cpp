@@ -108,6 +108,7 @@ int main(int argc, const char* argv[])
 	CurrentCppAdvanceCompilingFile = "FirstProgram.adv";
 	std::ifstream stream;
 	stream.open(CurrentCppAdvanceCompilingFile);
+	auto start = std::chrono::high_resolution_clock::now();
 	ANTLRInputStream input(stream);
 	CppAdvanceLexer lexer(&input);
 	lexer.removeErrorListeners();
@@ -117,6 +118,10 @@ int main(int argc, const char* argv[])
 	if (lexer.getNumberOfSyntaxErrors())
 		std::exit(-1);
 
+	auto finish = std::chrono::high_resolution_clock::now();
+	auto time = std::chrono::duration_cast<std::chrono::microseconds>(finish - start);
+	std::cout << "Lexer time: " << (time.count() / 1'000'000.0) << " secs\n";
+	start = std::chrono::high_resolution_clock::now();
 	CppAdvanceParser parser(&tokens);
 	parser.removeErrorListeners();
 	parser.addErrorListener(errorListener.get());
@@ -131,19 +136,30 @@ int main(int argc, const char* argv[])
 	tree::ParseTree* tree = parser.program();
 	if (parser.getNumberOfSyntaxErrors())
 		std::exit(-1);
+	finish = std::chrono::high_resolution_clock::now();
+	time = std::chrono::duration_cast<std::chrono::microseconds>(finish - start);
+	std::cout << "Parser time: " << (time.count() / 1'000'000.0) << " secs\n";
 	//std::cout << tree->toStringTree(&parser) << "\n";
 
 	{
 		auto filename = "FirstProgram";
+		start = std::chrono::high_resolution_clock::now();
 		CppAdvanceSema sema{ &parser, filename };
 		auto walker = TestIgnoringParseTreeWalker{};
 		tree::ParseTreeWalker::DEFAULT.walk(&sema, tree);
 		tree::ParseTreeWalker::DEFAULT.walk(&sema, tree);
 		/*walker.walk(&sema, tree);
 		walker.walk(&sema, tree);*/
+		finish = std::chrono::high_resolution_clock::now();
+		time = std::chrono::duration_cast<std::chrono::microseconds>(finish - start);
+		std::cout << "Sema time: " << (time.count() / 1'000'000.0) << " secs\n";
+		start = std::chrono::high_resolution_clock::now();
 		CppAdvanceCodegen codegen(sema, filename);
 		codegen.print();
-		std::cout << "Build successful\n";
+		finish = std::chrono::high_resolution_clock::now();
+		time = std::chrono::duration_cast<std::chrono::microseconds>(finish - start);
+		std::cout << "Codegen time: " << (time.count() / 1'000'000.0) << " secs\n";
+		std::cout << "Codegen completed\n";
 	}
 
 	fs::path exePath("C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\FirstProgram.exe");

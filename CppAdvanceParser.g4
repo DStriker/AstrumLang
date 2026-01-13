@@ -656,6 +656,18 @@ tupleExpression:
 	LeftParen conditionalExpression (Comma conditionalExpression)+ RightParen
 	;
 
+lambdaExpression: lambdaCaptureList? templateParams? lambdaDeclarator lambdaBody;
+
+lambdaCaptureList: LeftBracket lambdaCaptureClause RightBracket Mutable?;
+
+lambdaCaptureClause: capture+ | Assign (Comma capture)*;
+
+capture: Weak? This | Identifier Assign initializerClause;
+
+lambdaDeclarator: (functionParams | Identifier) returnType?;
+
+lambdaBody: functionBody | AssignArrow expr;
+
 primaryExpression:
 	  literal
 	| This
@@ -665,6 +677,7 @@ primaryExpression:
 	| LeftParen theTypeId RightParen Dot (Type | Identifier)
 	| tupleExpression
 	| Doublecolon? idExpression
+	| lambdaExpression
 	;
 
 unaryPrefixOperator:
