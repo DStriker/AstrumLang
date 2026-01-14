@@ -734,10 +734,16 @@ main: ()
 		print(cv1! as f32);
 		print((cv1! is (cv2)) as i32);
 		func := x => x*x;
-		list.find(x => x > 5);
 		print(func(12));
 		nx:= new Next(5);
 		nx.printNext();
+		//factorial: (x: i32) -> i32 => x == 0 ? 1 : x * factorial(x-1);
+		factorial: (x: i32) -> i32 = 
+		{
+			if (x == 0) return 1;
+			return x * factorial(x-1);
+		}
+		print(factorial(6));
 
 		//print(var.GetStrongReferenceCount());
 		on: object? = vec;

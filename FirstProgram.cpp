@@ -19,15 +19,15 @@ template<class T> inline auto getAsString(__extension_571_T<T> const& __this ) -
 
 #line 633 "FirstProgram.adv"
 extern "C" auto __Astrum_Main()  -> CppAdvance::i32;
-#line 749 "FirstProgram.adv"
+#line 756 "FirstProgram.adv"
 inline constexpr CppAdvance::usize PRIVATE_CONSTANT = CppAdvance::usize(34U);
 #line 2 "FirstProgram.adv"
 volatile CppAdvance::Unsafe::__VolatileRawPtr<const CppAdvance::char16> globalVar{};
 #line 3 "FirstProgram.adv"
 extern const CppAdvance::Unsafe::__RawPtr<CppAdvance::i32> globalVar1 = nullptr;
-#line 750 "FirstProgram.adv"
+#line 757 "FirstProgram.adv"
 static CppAdvance::i32 globalVar2 = CppAdvance::i32(8);
-#line 751 "FirstProgram.adv"
+#line 758 "FirstProgram.adv"
 static const CppAdvance::i32 globalVar3 = CppAdvance::i32(456);
 #line 92 "FirstProgram.adv"
 thread_local CppAdvance::i32 Vector3::Count2 = CppAdvance::i32(123);
@@ -291,12 +291,25 @@ extern "C" auto __Astrum_Main()  -> CppAdvance::i32
 		auto nx = CppAdvance::New<Next>(CppAdvance::i32(5)); 
 		#line 739 "FirstProgram.adv"
 		ADV_UFCS(printNext)(nx.__ref());
-		#line 742 "FirstProgram.adv"
+		#line 741 "FirstProgram.adv"
+		CppAdvance::LocalFunction<const CppAdvance::i32(CppAdvance::i32)> factorial; factorial = [&] (CppAdvance::i32 x) -> const CppAdvance::i32 
+		{
+			#line 743 "FirstProgram.adv"
+			if (x == CppAdvance::i32(0)) {
+				#line 743 "FirstProgram.adv"
+				return CppAdvance::i32(1);
+			}
+			#line 744 "FirstProgram.adv"
+			return x * factorial(x - CppAdvance::i32(1));
+		};
+		#line 746 "FirstProgram.adv"
+		print(factorial(CppAdvance::i32(6)));
+		#line 749 "FirstProgram.adv"
 		CppAdvance::Nullable<CppAdvance::ObjectRef> on = vec; 
 	}
-	#line 744 "FirstProgram.adv"
+	#line 751 "FirstProgram.adv"
 	print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
-	#line 745 "FirstProgram.adv"
+	#line 752 "FirstProgram.adv"
 	print(ADV_UPCS(x)(ADV_UPCS(x)(ADV_USFCS((Test1::Test2::TestClass), makeTestClass)(CppAdvance::i32(3), CppAdvance::f32(3.14f)).__ref()).__ref()));
 	return 0;
 }

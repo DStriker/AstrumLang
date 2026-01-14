@@ -11834,6 +11834,10 @@ void CppAdvanceCodegen::printStatement(CppAdvanceParser::StatContext* ctx) const
 	{
 		printTryBlock(try_);
 	}
+	else if (auto func = ctx->functionDefinition())
+	{
+		printLocalFunction(func);
+	}
 	else if(auto select = ctx->versionSelectionStatement())
 	{
 		printVersionSelectionStatement(select);
@@ -16190,6 +16194,91 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 	refParameters.clear();
 	namedReturns.clear();
 	sema.symbolContexts.pop();
+}
+
+void CppAdvanceCodegen::printLocalFunction(CppAdvanceParser::FunctionDefinitionContext* ctx) const
+{
+	bool isStatic = false;
+	for (auto spec : ctx->functionSpecifier())
+	{
+		if (spec->Static()) isStatic = true;
+	}
+	if (isStatic)
+	{
+		out << "static ";
+	}
+	out << "CppAdvance::LocalFunction<";
+	if (auto ret = ctx->returnType())
+	{
+		if (ret->Const() || !ret->Ref())
+		{
+			out << "const ";
+		}
+		if (ret->theTypeId())
+		{
+			printTypeId(ret->theTypeId());
+		}
+		if (ret->Ref())
+		{
+			out << "&";
+		}
+	}
+	else
+	{
+		out << "void";
+	}
+	out << "(";
+	if (auto params = ctx->functionParams()->paramDeclClause())
+	{
+		bool first = true;
+		for (auto param : params->paramDeclList()->paramDeclaration())
+		{
+			if (!first) out << ", ";
+			first = false;
+			if (param->theTypeId())
+			{
+				printTypeId(param->theTypeId());
+			}
+		}
+	}
+	out << ")> ";
+	printIdentifier(ctx->Identifier());
+	out << "; ";
+	printIdentifier(ctx->Identifier());
+	out << " = [&] ";
+	if (ctx->templateParams())
+	{
+		printTemplateParams(ctx->templateParams());
+		out << " ";
+	}
+	printFunctionParameters(ctx->functionParams());
+	if (auto ret = ctx->returnType())
+	{
+		out << " -> ";
+		if (ret->Const() || !ret->Ref())
+		{
+			out << "const ";
+		}
+		if (ret->theTypeId())
+		{
+			printTypeId(ret->theTypeId());
+		}
+		if (ret->Ref())
+		{
+			out << "&";
+		}
+		out << " ";
+	}
+	if (ctx->functionBody())
+	{
+		functionProlog = true;
+		printFunctionBody(ctx->functionBody());
+	}
+	else if (ctx->shortFunctionBody())
+	{
+		printShortFunctionBody(ctx->shortFunctionBody());
+	}
+	out << ";";
 }
 
 void CppAdvanceCodegen::printFunctionParameters(CppAdvanceParser::FunctionParamsContext* ctx) const

@@ -419,6 +419,7 @@ public:
     IterationStatementContext *iterationStatement();
     JumpStatementContext *jumpStatement();
     TryBlockContext *tryBlock();
+    FunctionDefinitionContext *functionDefinition();
     CompoundStatementContext *compoundStatement();
     antlr4::tree::TerminalNode *Unsafe();
 

@@ -186,6 +186,7 @@ public:
 	void printProperty(CppAdvanceParser::PropertyContext* ctx) const;
 	void printFunctionTemplateDeclaration(CppAdvanceParser::FunctionTemplateDeclarationContext* ctx) const;
 	void printFunctionDefinition(CppAdvanceParser::FunctionDefinitionContext* ctx) const;
+	void printLocalFunction(CppAdvanceParser::FunctionDefinitionContext* ctx) const;
 	void printFunctionParameters(CppAdvanceParser::FunctionParamsContext* ctx) const;
 	void printParamDeclClause(CppAdvanceParser::ParamDeclClauseContext* ctx) const;
 	void printParamDeclaration(CppAdvanceParser::ParamDeclarationContext* ctx) const;

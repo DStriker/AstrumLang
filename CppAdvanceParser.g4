@@ -14,6 +14,7 @@ stat:
 	| iterationStatement
 	| jumpStatement
 	| tryBlock
+	| functionDefinition
 	| Unsafe? compoundStatement
     ;
 

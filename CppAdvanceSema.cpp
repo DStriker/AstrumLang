@@ -1353,6 +1353,8 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 			isUnsafe = true;
 			if (unsafeDepth > 0)
 				CppAdvanceCompilerError("Unsafe context recursion", spec->Unsafe()->getSymbol());
+			else if (functionBody > 0)
+				CppAdvanceCompilerError("Local function cannot be directly marked as unsafe, use unsafe block", spec->Unsafe()->getSymbol());
 		}
 		else if (spec->Static()) {
             isStatic = true;
@@ -1380,6 +1382,8 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 				CppAdvanceCompilerError("Global function cannot be virtual", spec->Virtual()->getSymbol());
 			else if(currentTypeKind.top() != TypeKind::Class)
 				CppAdvanceCompilerError("Cannot to declare virtual method outside the class body", spec->Virtual()->getSymbol());
+			else if(functionBody > 0)
+				CppAdvanceCompilerError("Local function cannot be virtual", spec->Virtual()->getSymbol());
 		}
 		else if (spec->Override())
 		{
@@ -1389,9 +1393,11 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 			if (currentTypeKind.top() == TypeKind::StaticClass)
 				CppAdvanceCompilerError("Static class method cannot be overrided", spec->Override()->getSymbol());
 			if (currentTypeKind.top() == TypeKind::Interface)
-				CppAdvanceCompilerError("Interface method cannot be overrided", spec->Static()->getSymbol());
+				CppAdvanceCompilerError("Interface method cannot be overrided", spec->Override()->getSymbol());
 			if (currentTypeKind.top() == TypeKind::Extension)
-				CppAdvanceCompilerError("Extension method cannot be overrided", spec->Static()->getSymbol());
+				CppAdvanceCompilerError("Extension method cannot be overrided", spec->Override()->getSymbol());
+			if (functionBody > 0)
+				CppAdvanceCompilerError("Local function cannot be overrided", spec->Override()->getSymbol());
 		}
 		else if (spec->Final())
 		{
@@ -1400,6 +1406,8 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 				CppAdvanceCompilerError("Global function cannot be final", spec->Final()->getSymbol());
 			else if (currentTypeKind.top() != TypeKind::Class)
 				CppAdvanceCompilerError("Cannot to declare final method outside the class body", spec->Final()->getSymbol());
+			else if (functionBody > 0)
+				CppAdvanceCompilerError("Local function cannot be final", spec->Virtual()->getSymbol());
 		}
 	}
 
@@ -1425,6 +1433,11 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 					outParams.insert(id);
 					initStates.top().potentiallyAssigned.insert(id);
 				}
+
+				if (functionBody > 0 && !param->theTypeId())
+				{
+					CppAdvanceCompilerError("Local function must have defined types for all params", param->getStop());
+				}
 			}
 		}
 
@@ -1449,6 +1462,22 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 					outParams.insert(id);
 					initStates.top().potentiallyAssigned.insert(id);
 				}
+			}
+		}
+
+		if (functionBody > 0)
+		{
+			if (ctx->simpleTemplateId())
+			{
+				CppAdvanceCompilerError("Local function cannot be specialization", ctx->simpleTemplateId()->getStart());
+			}
+			if (ctx->operatorFunctionId())
+			{
+				CppAdvanceCompilerError("Local function cannot be operator overloading", ctx->operatorFunctionId()->getStart());
+			}
+			if (ctx->shortFunctionBody() && !ctx->returnType())
+			{
+				CppAdvanceCompilerError("Local function must have defined return type", ctx->functionParams()->getStop());
 			}
 		}
 	}
