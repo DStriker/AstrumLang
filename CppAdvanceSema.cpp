@@ -2996,7 +2996,7 @@ void CppAdvanceSema::exitSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpecifi
 			namedTuples[tuple] = NamedTuple{ std::move(id),std::move(fields),access };
 		}
 	}
-	else if (ctx->Arrow())
+	else if (ctx->functionTypeId())
 	{
 		typeStack.push("CppAdvance.FunctionRef");
 	}

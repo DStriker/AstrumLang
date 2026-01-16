@@ -533,10 +533,12 @@ simpleTypeSpecifier:
 	| Self
 	| Object
 	| decltypeSpecifier
-	| LeftParen (typeIdWithSpecification (Comma typeIdWithSpecification)*)? Ellipsis? RightParen Arrow (Const? Ref? theTypeId | Void)
+	| functionTypeId
 	| LeftParen theTypeId (Comma theTypeId)+ RightParen
 	| LeftParen namedTupleField (Comma namedTupleField)+ RightParen
 	;
+
+functionTypeId: LeftParen (typeIdWithSpecification (Comma typeIdWithSpecification)*)? Ellipsis? RightParen Arrow (Const? Ref? theTypeId | Void);
 
 typeIdWithSpecification: paramSpecification? theTypeId;
 
@@ -593,6 +595,7 @@ pointerOperatorSeq: pointerOperator+;
 typeSpecifierSeq: 
 	  (pointerOperator+ cvQualifier?)? simpleTypeSpecifier 
 	| pointerOperator+ cvQualifier? Void
+	| pointerOperator LeftParen functionTypeId RightParen
 	;
 
 typeSpecifier: trailingTypeSpecifier ;

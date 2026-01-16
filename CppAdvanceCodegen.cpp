@@ -16885,6 +16885,36 @@ void CppAdvanceCodegen::printSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpe
 		printExpression(decl->expr());
 		out << ")";
 	}
+	else if (auto f = ctx->functionTypeId())
+	{
+		out << "CppAdvance::FunctionRef<";
+		if (f->Void())
+		{
+			out << "void";
+		}
+		else
+		{
+			if (f->theTypeId()) {
+				printTypeId(f->theTypeId());
+				out << " ";
+			}
+			if (f->Const()) out << "const";
+			if (f->Ref()) out << "&";
+		}
+		out << "(";
+		bool first = true;
+		for (auto param : f->typeIdWithSpecification())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printTypeIdWithSpecification(param);
+		}
+		if (f->Ellipsis())
+		{
+			out << "...";
+		}
+		out << ")>";
+	}
 	else if (ctx->LeftParen())
 	{
 		if (!ctx->namedTupleField().empty())
@@ -16892,36 +16922,6 @@ void CppAdvanceCodegen::printSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpe
 			auto id = sema.getNamedTupleId(ctx->getText());
 			StringReplace(id, ".", "::");
 			out << id;
-		}
-		else if (ctx->Arrow())
-		{
-			out << "CppAdvance::FunctionRef<";
-			if (ctx->Void())
-			{
-				out << "void";
-			}
-			else
-			{
-				if (!ctx->theTypeId().empty()) {
-					printTypeId(ctx->theTypeId(0));
-					out << " ";
-				}
-				if (ctx->Const()) out << "const";
-				if (ctx->Ref()) out << "&";
-			}
-			out << "(";
-			bool first = true;
-			for (auto param : ctx->typeIdWithSpecification())
-			{
-				if (!first) out << ", ";
-				first = false;
-				printTypeIdWithSpecification(param);
-			}
-			if (ctx->Ellipsis())
-			{
-				out << "...";
-			}
-			out << ")>";
 		}
 		else
 		{
@@ -16931,7 +16931,7 @@ void CppAdvanceCodegen::printSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpe
 			{
 				if (!first) out << ", ";
 				first = false;
-				printTypeId(type);
+                printTypeId(type);
 			}
 			out << ">";
 		}
@@ -19330,21 +19330,52 @@ void CppAdvanceCodegen::printTypeSpecifierSeq(CppAdvanceParser::TypeSpecifierSeq
 		else ++pointerDepth;
 	}
 	if (pointerDepth) isPtr = true;
-	for (auto i = 0; i < pointerDepth; i++) out << (isUnsafe ? "CppAdvance::Unsafe::" : "") << (isVolatile ? "__VolatileRawPtr<" : "__RawPtr<");
-	if (auto cv = ctx->cvQualifier())
+	if (auto f = ctx->functionTypeId())
 	{
-		if (cv->Const()) out << "const ";
-		else if (cv->Volatile()) out << "volatile ";
+		if (f->Void())
+		{
+			out << "void";
+		}
+		else
+		{
+			if (f->theTypeId()) {
+				printTypeId(f->theTypeId());
+				out << " ";
+			}
+			if (f->Const()) out << "const";
+			if (f->Ref()) out << "&";
+		}
+		out << "(*)(";
+		bool first = true;
+		for (auto param : f->typeIdWithSpecification())
+		{
+			if (!first) out << ", ";
+			first = false;
+			printTypeIdWithSpecification(param);
+		}
+		if (f->Ellipsis())
+		{
+			out << "...";
+		}
+		out << ")";
 	}
-	if (ctx->Void())
-	{
-		out << "void";
+	else {
+		for (auto i = 0; i < pointerDepth; i++) out << (isUnsafe ? "CppAdvance::Unsafe::" : "") << (isVolatile ? "__VolatileRawPtr<" : "__RawPtr<");
+		if (auto cv = ctx->cvQualifier())
+		{
+			if (cv->Const()) out << "const ";
+			else if (cv->Volatile()) out << "volatile ";
+		}
+		if (ctx->Void())
+		{
+			out << "void";
+		}
+		else if (ctx->simpleTypeSpecifier()) {
+			printSimpleTypeSpecifier(ctx->simpleTypeSpecifier());
+		}
+
+		for (auto i = 0; i < pointerDepth; i++) out << ">";
 	}
-	else if (ctx->simpleTypeSpecifier()) {
-		printSimpleTypeSpecifier(ctx->simpleTypeSpecifier());
-	}
-	
-	for (auto i = 0; i < pointerDepth; i++) out << ">";
 	isPtr = false;
 }
 

@@ -19,15 +19,15 @@ template<class T> inline auto getAsString(__extension_574_T<T> const& __this ) -
 
 #line 640 "FirstProgram.adv"
 extern "C" auto __Astrum_Main()  -> CppAdvance::i32;
-#line 783 "FirstProgram.adv"
+#line 779 "FirstProgram.adv"
 inline constexpr CppAdvance::usize PRIVATE_CONSTANT = CppAdvance::usize(34U);
 #line 2 "FirstProgram.adv"
 volatile CppAdvance::Unsafe::__VolatileRawPtr<const CppAdvance::char16> globalVar{};
 #line 3 "FirstProgram.adv"
 extern const CppAdvance::Unsafe::__RawPtr<CppAdvance::i32> globalVar1 = nullptr;
-#line 784 "FirstProgram.adv"
+#line 780 "FirstProgram.adv"
 static CppAdvance::i32 globalVar2 = CppAdvance::i32(8);
-#line 785 "FirstProgram.adv"
+#line 781 "FirstProgram.adv"
 static const CppAdvance::i32 globalVar3 = CppAdvance::i32(456);
 #line 92 "FirstProgram.adv"
 thread_local CppAdvance::i32 Vector3::Count2 = CppAdvance::i32(123);
@@ -299,63 +299,48 @@ extern "C" auto __Astrum_Main()  -> CppAdvance::i32
 		};
 		#line 749 "FirstProgram.adv"
 		using SimpleAction = CppAdvance::FunctionRef<void()>;
-		#line 750 "FirstProgram.adv"
-		CppAdvance::FunctionRef<CppAdvance::i32 (CppAdvance::i32)> action1 = testInt; 
 		#line 751 "FirstProgram.adv"
-		auto iii = CppAdvance::i32(20); 
+		CppAdvance::FunctionRef<CppAdvance::i32 (CppAdvance::i32)> action1 = testInt; 
 		#line 752 "FirstProgram.adv"
-		print(action1(iii));
+		auto iii = CppAdvance::i32(20); 
 		#line 753 "FirstProgram.adv"
-		print(CppAdvance::Str{u"nx strong count: "});
-		#line 754 "FirstProgram.adv"
-		print(ADV_UFCS(GetStrongReferenceCount)(nx.__ref()));
-		#line 755 "FirstProgram.adv"
-		print(ADV_UFCS(GetUnownedReferenceCount)(nx.__ref()));
-		#line 756 "FirstProgram.adv"
-		print(ADV_UFCS(GetWeakReferenceCount)(nx.__ref()));
-		#line 757 "FirstProgram.adv"
-		action1 = ADV_METHOD_BINDING_STRONG(TestInt, (nx));
-		#line 758 "FirstProgram.adv"
 		print(action1(iii));
-		#line 759 "FirstProgram.adv"
-		CppAdvance::Nullable<CppAdvance::FunctionRef<void()>> action2{}; 
-		#line 760 "FirstProgram.adv"
-		print(CppAdvance::Str{u"nx strong count: "});
-		#line 761 "FirstProgram.adv"
-		print(ADV_UFCS(GetStrongReferenceCount)(nx.__ref()));
-		#line 762 "FirstProgram.adv"
-		print(ADV_UFCS(GetUnownedReferenceCount)(nx.__ref()));
-		#line 763 "FirstProgram.adv"
-		print(ADV_UFCS(GetWeakReferenceCount)(nx.__ref()));
-		#line 764 "FirstProgram.adv"
+		#line 754 "FirstProgram.adv"
+		action1 = ADV_METHOD_BINDING_UNOWNED(TestInt, (nx));
+		#line 755 "FirstProgram.adv"
+		print(action1(iii));
+		#line 756 "FirstProgram.adv"
+		CppAdvance::Nullable<Action<>> action2{}; 
+		#line 757 "FirstProgram.adv"
 		action1 = [] (const auto x) { ADV_EXPRESSION_BODY(x * x); };
-		#line 765 "FirstProgram.adv"
-		print(CppAdvance::Str{u"nx strong count: "});
-		#line 766 "FirstProgram.adv"
-		print(ADV_UFCS(GetStrongReferenceCount)(nx.__ref()));
-		#line 767 "FirstProgram.adv"
-		print(ADV_UFCS(GetUnownedReferenceCount)(nx.__ref()));
-		#line 768 "FirstProgram.adv"
-		print(ADV_UFCS(GetWeakReferenceCount)(nx.__ref()));
-		#line 769 "FirstProgram.adv"
+		#line 758 "FirstProgram.adv"
 		print(action1(CppAdvance::i32(20)));
-		#line 770 "FirstProgram.adv"
+		#line 759 "FirstProgram.adv"
 		CppAdvance::Nullable<SimpleAction> action3 = ADV_METHOD_BINDING_STRONG(printNext, (nx)); 
-		#line 771 "FirstProgram.adv"
+		#line 760 "FirstProgram.adv"
 		action2 = action3;
-		#line 772 "FirstProgram.adv"
+		#line 761 "FirstProgram.adv"
 		action2.andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(ADV_UFCS(Invoke)(value.__ref())); });
-		#line 773 "FirstProgram.adv"
+		#line 762 "FirstProgram.adv"
 		action2.andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(ADV_UFCS(Invoke)(value.__ref())); });
-		#line 776 "FirstProgram.adv"
+		#line 763 "FirstProgram.adv"
+		{	using namespace CppAdvance::Unsafe;	using namespace __Unsafe;	using namespace __FirstProgram_Protected__Unsafe;	CppAdvance::UnsafeContextGuard __unsafe_context_guard763{};
+			#line 764 "FirstProgram.adv"
+			using ActionPtr = void(*)();
+			#line 765 "FirstProgram.adv"
+			ActionPtr actionPtr{}; 
+		}
+		#line 769 "FirstProgram.adv"
 		CppAdvance::Nullable<CppAdvance::ObjectRef> on = vec; 
 	}
-	#line 778 "FirstProgram.adv"
+	#line 771 "FirstProgram.adv"
 	print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
-	#line 779 "FirstProgram.adv"
+	#line 772 "FirstProgram.adv"
 	print(ADV_UPCS(x)(ADV_UPCS(x)(ADV_USFCS((Test1::Test2::TestClass), makeTestClass)(CppAdvance::i32(3), CppAdvance::f32(3.14f)).__ref()).__ref()));
 	return 0;
 }
+
+
 
 
 

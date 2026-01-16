@@ -526,6 +526,9 @@ public:
   virtual void enterSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpecifierContext * /*ctx*/) override { }
   virtual void exitSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpecifierContext * /*ctx*/) override { }
 
+  virtual void enterFunctionTypeId(CppAdvanceParser::FunctionTypeIdContext * /*ctx*/) override { }
+  virtual void exitFunctionTypeId(CppAdvanceParser::FunctionTypeIdContext * /*ctx*/) override { }
+
   virtual void enterTypeIdWithSpecification(CppAdvanceParser::TypeIdWithSpecificationContext * /*ctx*/) override { }
   virtual void exitTypeIdWithSpecification(CppAdvanceParser::TypeIdWithSpecificationContext * /*ctx*/) override { }
 

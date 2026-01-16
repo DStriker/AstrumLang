@@ -524,6 +524,9 @@ public:
   virtual void enterSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpecifierContext *ctx) = 0;
   virtual void exitSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpecifierContext *ctx) = 0;
 
+  virtual void enterFunctionTypeId(CppAdvanceParser::FunctionTypeIdContext *ctx) = 0;
+  virtual void exitFunctionTypeId(CppAdvanceParser::FunctionTypeIdContext *ctx) = 0;
+
   virtual void enterTypeIdWithSpecification(CppAdvanceParser::TypeIdWithSpecificationContext *ctx) = 0;
   virtual void exitTypeIdWithSpecification(CppAdvanceParser::TypeIdWithSpecificationContext *ctx) = 0;
 

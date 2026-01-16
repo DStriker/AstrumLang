@@ -747,18 +747,23 @@ main: ()
 		factorial: (x: i32) -> i32 
 			=> x == 0 ? 1 : x * factorial(x-1);
 		type SimpleAction = () -> void;
+		
 		action1: (i32) -> i32 = testInt;
 		iii:=20;
 		print(action1(iii));
 		action1 = &{unowned nx.TestInt};
 		print(action1(iii));
-		action2: (() -> void)?;
+		action2: Action<>?;
 		action1 = x => x*x;
 		print(action1(20));
 		action3:SimpleAction? = &{nx.printNext};
 		action2 = action3;
 		action2?.Invoke();
 		action2?.Invoke();
+		unsafe {
+			type ActionPtr = *(() -> void);
+			actionPtr: ActionPtr;
+		}
 
 		//print(var.GetStrongReferenceCount());
 		on: object? = vec;
@@ -766,6 +771,9 @@ main: ()
 	print(nxt!.GetStrongReferenceCount());
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);
 }
+
+type Action<Args...> = (Args...) -> void;
+type Predicate<T> = (T) -> bool;
 
 private {
 	PRIVATE_CONSTANT : usize == 34;

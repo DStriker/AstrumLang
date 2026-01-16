@@ -117,30 +117,30 @@ public:
     RulePatternList = 159, RulePatternCombinationOperator = 160, RulePattern = 161, 
     RulePropertyPattern = 162, RuleAssignmentOperator = 163, RuleShiftOperator = 164, 
     RuleTryBlock = 165, RuleExceptionHandler = 166, RuleExceptionDeclaration = 167, 
-    RuleThrowExpression = 168, RuleSimpleTypeSpecifier = 169, RuleTypeIdWithSpecification = 170, 
-    RuleNamedTupleField = 171, RuleNestedNameSpecifier = 172, RuleNamespaceName = 173, 
-    RuleTemplateName = 174, RuleSimpleTemplateId = 175, RuleOperatorTemplateId = 176, 
-    RuleTemplateId = 177, RuleTemplateArgumentList = 178, RuleTemplateArgument = 179, 
-    RuleIdExpression = 180, RuleQualifiedId = 181, RuleUnqualifiedId = 182, 
-    RuleTheTypeId = 183, RuleSingleTypeId = 184, RuleTypePostfix = 185, 
-    RuleArrayDeclarator = 186, RulePointerOperator = 187, RulePointerOperatorSeq = 188, 
-    RuleTypeSpecifierSeq = 189, RuleTypeSpecifier = 190, RuleTrailingTypeSpecifier = 191, 
-    RuleTypeNameSpecifier = 192, RuleCvQualifierSeq = 193, RuleCvQualifier = 194, 
-    RuleTypename = 195, RuleClassName = 196, RuleDecltypeSpecifier = 197, 
-    RuleEnumName = 198, RuleAccessSpecifier = 199, RuleProtectedInternal = 200, 
-    RuleOperatorFunctionId = 201, RuleConversionFunctionId = 202, RuleUnaryExpression = 203, 
-    RuleUnaryExpressionTail = 204, RuleNewExpression = 205, RuleStackallocExpression = 206, 
-    RuleMemorySpaceSetter = 207, RuleNewInitializer = 208, RuleFullPostfixExpression = 209, 
-    RulePostfixExpression = 210, RuleTupleExpression = 211, RuleMethodBindingExpression = 212, 
-    RuleMethodOwnerExpression = 213, RuleMethodName = 214, RuleLambdaExpression = 215, 
-    RuleLambdaCaptureList = 216, RuleLambdaCaptureClause = 217, RuleCapture = 218, 
-    RuleLambdaDeclarator = 219, RuleLambdaBody = 220, RulePrimaryExpression = 221, 
-    RuleUnaryPrefixOperator = 222, RuleUnaryCustomOperator = 223, RuleRefCaptureOperator = 224, 
-    RuleUnaryPostfixOperator = 225, RuleNot = 226, RuleOperator = 227, RuleLiteral = 228, 
-    RuleInterpolatedStringLiteral = 229, RuleInterpolatedRegularStringLiteral = 230, 
-    RuleInterpolatedRegularStringPart = 231, RuleInterpolatedVerbatiumStringLiteral = 232, 
-    RuleInterpolatedVerbatiumStringPart = 233, RuleInterpolatedMultilineStringLiteral = 234, 
-    RuleInterpolatedMultilineStringPart = 235, RuleInterpolatedExpression = 236
+    RuleThrowExpression = 168, RuleSimpleTypeSpecifier = 169, RuleFunctionTypeId = 170, 
+    RuleTypeIdWithSpecification = 171, RuleNamedTupleField = 172, RuleNestedNameSpecifier = 173, 
+    RuleNamespaceName = 174, RuleTemplateName = 175, RuleSimpleTemplateId = 176, 
+    RuleOperatorTemplateId = 177, RuleTemplateId = 178, RuleTemplateArgumentList = 179, 
+    RuleTemplateArgument = 180, RuleIdExpression = 181, RuleQualifiedId = 182, 
+    RuleUnqualifiedId = 183, RuleTheTypeId = 184, RuleSingleTypeId = 185, 
+    RuleTypePostfix = 186, RuleArrayDeclarator = 187, RulePointerOperator = 188, 
+    RulePointerOperatorSeq = 189, RuleTypeSpecifierSeq = 190, RuleTypeSpecifier = 191, 
+    RuleTrailingTypeSpecifier = 192, RuleTypeNameSpecifier = 193, RuleCvQualifierSeq = 194, 
+    RuleCvQualifier = 195, RuleTypename = 196, RuleClassName = 197, RuleDecltypeSpecifier = 198, 
+    RuleEnumName = 199, RuleAccessSpecifier = 200, RuleProtectedInternal = 201, 
+    RuleOperatorFunctionId = 202, RuleConversionFunctionId = 203, RuleUnaryExpression = 204, 
+    RuleUnaryExpressionTail = 205, RuleNewExpression = 206, RuleStackallocExpression = 207, 
+    RuleMemorySpaceSetter = 208, RuleNewInitializer = 209, RuleFullPostfixExpression = 210, 
+    RulePostfixExpression = 211, RuleTupleExpression = 212, RuleMethodBindingExpression = 213, 
+    RuleMethodOwnerExpression = 214, RuleMethodName = 215, RuleLambdaExpression = 216, 
+    RuleLambdaCaptureList = 217, RuleLambdaCaptureClause = 218, RuleCapture = 219, 
+    RuleLambdaDeclarator = 220, RuleLambdaBody = 221, RulePrimaryExpression = 222, 
+    RuleUnaryPrefixOperator = 223, RuleUnaryCustomOperator = 224, RuleRefCaptureOperator = 225, 
+    RuleUnaryPostfixOperator = 226, RuleNot = 227, RuleOperator = 228, RuleLiteral = 229, 
+    RuleInterpolatedStringLiteral = 230, RuleInterpolatedRegularStringLiteral = 231, 
+    RuleInterpolatedRegularStringPart = 232, RuleInterpolatedVerbatiumStringLiteral = 233, 
+    RuleInterpolatedVerbatiumStringPart = 234, RuleInterpolatedMultilineStringLiteral = 235, 
+    RuleInterpolatedMultilineStringPart = 236, RuleInterpolatedExpression = 237
   };
 
   explicit CppAdvanceParser(antlr4::TokenStream *input);
@@ -330,6 +330,7 @@ public:
   class ExceptionDeclarationContext;
   class ThrowExpressionContext;
   class SimpleTypeSpecifierContext;
+  class FunctionTypeIdContext;
   class TypeIdWithSpecificationContext;
   class NamedTupleFieldContext;
   class NestedNameSpecifierContext;
@@ -3423,17 +3424,11 @@ public:
     antlr4::tree::TerminalNode *Self();
     antlr4::tree::TerminalNode *Object();
     DecltypeSpecifierContext *decltypeSpecifier();
+    FunctionTypeIdContext *functionTypeId();
     antlr4::tree::TerminalNode *LeftParen();
-    antlr4::tree::TerminalNode *RightParen();
-    antlr4::tree::TerminalNode *Arrow();
     std::vector<TheTypeIdContext *> theTypeId();
     TheTypeIdContext* theTypeId(size_t i);
-    antlr4::tree::TerminalNode *Void();
-    std::vector<TypeIdWithSpecificationContext *> typeIdWithSpecification();
-    TypeIdWithSpecificationContext* typeIdWithSpecification(size_t i);
-    antlr4::tree::TerminalNode *Ellipsis();
-    antlr4::tree::TerminalNode *Const();
-    antlr4::tree::TerminalNode *Ref();
+    antlr4::tree::TerminalNode *RightParen();
     std::vector<antlr4::tree::TerminalNode *> Comma();
     antlr4::tree::TerminalNode* Comma(size_t i);
     std::vector<NamedTupleFieldContext *> namedTupleField();
@@ -3445,6 +3440,30 @@ public:
   };
 
   SimpleTypeSpecifierContext* simpleTypeSpecifier();
+
+  class  FunctionTypeIdContext : public antlr4::ParserRuleContext {
+  public:
+    FunctionTypeIdContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *LeftParen();
+    antlr4::tree::TerminalNode *RightParen();
+    antlr4::tree::TerminalNode *Arrow();
+    TheTypeIdContext *theTypeId();
+    antlr4::tree::TerminalNode *Void();
+    std::vector<TypeIdWithSpecificationContext *> typeIdWithSpecification();
+    TypeIdWithSpecificationContext* typeIdWithSpecification(size_t i);
+    antlr4::tree::TerminalNode *Ellipsis();
+    antlr4::tree::TerminalNode *Const();
+    antlr4::tree::TerminalNode *Ref();
+    std::vector<antlr4::tree::TerminalNode *> Comma();
+    antlr4::tree::TerminalNode* Comma(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  FunctionTypeIdContext* functionTypeId();
 
   class  TypeIdWithSpecificationContext : public antlr4::ParserRuleContext {
   public:
@@ -3745,6 +3764,9 @@ public:
     PointerOperatorContext* pointerOperator(size_t i);
     CvQualifierContext *cvQualifier();
     antlr4::tree::TerminalNode *Void();
+    antlr4::tree::TerminalNode *LeftParen();
+    FunctionTypeIdContext *functionTypeId();
+    antlr4::tree::TerminalNode *RightParen();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

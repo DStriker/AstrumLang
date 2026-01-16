@@ -86,6 +86,10 @@ namespace __FirstProgram_Protected { using Test112 = typename Test1::Test2::Clas
 template<class A, class C> using SimpleTuple = std::tuple<A, bool, C>;
 #line 43 "FirstProgram.adv"
 using ImportantOptions = __ntuples::NamedTuple_4e7be1ed49b09d71;
+#line 775 "FirstProgram.adv"
+template<class... Args> using Action = CppAdvance::FunctionRef<void(Args...)>;
+#line 776 "FirstProgram.adv"
+template<class T> using Predicate = CppAdvance::FunctionRef<bool (T)>;
 //###############################################################################
 //# Type definitions
 //###############################################################################
