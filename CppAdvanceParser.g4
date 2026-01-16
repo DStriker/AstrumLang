@@ -533,9 +533,12 @@ simpleTypeSpecifier:
 	| Self
 	| Object
 	| decltypeSpecifier
+	| LeftParen (typeIdWithSpecification (Comma typeIdWithSpecification)*)? Ellipsis? RightParen Arrow (Const? Ref? theTypeId | Void)
 	| LeftParen theTypeId (Comma theTypeId)+ RightParen
 	| LeftParen namedTupleField (Comma namedTupleField)+ RightParen
 	;
+
+typeIdWithSpecification: paramSpecification? theTypeId;
 
 namedTupleField: Identifier Colon theTypeId;
 
@@ -572,7 +575,10 @@ theTypeId:
 	  singleTypeId (VertLine singleTypeId)*  
 	;
 
-singleTypeId: typeSpecifierSeq Question? typePostfix?;
+singleTypeId: 
+	  typeSpecifierSeq Question? typePostfix?
+	| LeftParen theTypeId RightParen (Question typePostfix? | typePostfix)
+	;
 
 typePostfix: arrayDeclarator+;
 
@@ -584,7 +590,10 @@ pointerOperator
     
 pointerOperatorSeq: pointerOperator+;
 
-typeSpecifierSeq: (pointerOperator+ cvQualifier?)? simpleTypeSpecifier | pointerOperator+ cvQualifier? Void;
+typeSpecifierSeq: 
+	  (pointerOperator+ cvQualifier?)? simpleTypeSpecifier 
+	| pointerOperator+ cvQualifier? Void
+	;
 
 typeSpecifier: trailingTypeSpecifier ;
 
@@ -657,13 +666,19 @@ tupleExpression:
 	LeftParen conditionalExpression (Comma conditionalExpression)+ RightParen
 	;
 
+methodBindingExpression: Amp LeftBrace (Weak | Unowned)? (methodOwnerExpression Dot)? methodName RightBrace;
+
+methodOwnerExpression: unaryExpression;
+
+methodName: Identifier;
+
 lambdaExpression: lambdaCaptureList? templateParams? lambdaDeclarator lambdaBody;
 
 lambdaCaptureList: LeftBracket lambdaCaptureClause RightBracket Mutable?;
 
 lambdaCaptureClause: capture+ | Assign (Comma capture)*;
 
-capture: Weak? This | Identifier Assign initializerClause;
+capture: (Weak | Unowned)? This | (Weak | Unowned)? Identifier | Identifier Assign initializerClause;
 
 lambdaDeclarator: (functionParams | Identifier) returnType?;
 
@@ -679,6 +694,7 @@ primaryExpression:
 	| tupleExpression
 	| Doublecolon? idExpression
 	| lambdaExpression
+	| methodBindingExpression
 	;
 
 unaryPrefixOperator:

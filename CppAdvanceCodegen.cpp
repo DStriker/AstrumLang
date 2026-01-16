@@ -12724,9 +12724,11 @@ void CppAdvanceCodegen::printDeclarator(CppAdvanceParser::DeclaratorContext* ctx
 	}
 }
 
-void CppAdvanceCodegen::printTemplateParams(CppAdvanceParser::TemplateParamsContext* ctx) const
+void CppAdvanceCodegen::printTemplateParams(CppAdvanceParser::TemplateParamsContext* ctx, bool printTemplateKeyword) const
 {
-	out << "template<";
+	if (printTemplateKeyword)
+		out << "template";
+	out << "<";
 	bool first = true; 
 	isTemplateParamDeclaration = true;
 	for (auto decl : ctx->templateParamDeclaration())
@@ -16891,6 +16893,36 @@ void CppAdvanceCodegen::printSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpe
 			StringReplace(id, ".", "::");
 			out << id;
 		}
+		else if (ctx->Arrow())
+		{
+			out << "CppAdvance::FunctionRef<";
+			if (ctx->Void())
+			{
+				out << "void";
+			}
+			else
+			{
+				if (!ctx->theTypeId().empty()) {
+					printTypeId(ctx->theTypeId(0));
+					out << " ";
+				}
+				if (ctx->Const()) out << "const";
+				if (ctx->Ref()) out << "&";
+			}
+			out << "(";
+			bool first = true;
+			for (auto param : ctx->typeIdWithSpecification())
+			{
+				if (!first) out << ", ";
+				first = false;
+				printTypeIdWithSpecification(param);
+			}
+			if (ctx->Ellipsis())
+			{
+				out << "...";
+			}
+			out << ")>";
+		}
 		else
 		{
 			out << "std::tuple<";
@@ -19095,6 +19127,10 @@ void CppAdvanceCodegen::printPrimaryExpression(CppAdvanceParser::PrimaryExpressi
 	{
 		printLambdaExpression(ctx->lambdaExpression());
 	}
+	else if (ctx->methodBindingExpression())
+	{
+		printMethodBindingExpression(ctx->methodBindingExpression());
+	}
 }
 
 void CppAdvanceCodegen::printTupleExpression(CppAdvanceParser::TupleExpressionContext* ctx) const
@@ -19135,16 +19171,42 @@ void CppAdvanceCodegen::printLambdaExpression(CppAdvanceParser::LambdaExpression
 				{
 					out << "__this = __self::__weak_ref(*this)";
 				}
+				else if (capture->Unowned())
+				{
+					out << "__this = __self::__unowned_ref(*this)";
+				}
 				else
 				{
 					out << "__this = __self(*this)";
 				}
 			}
-			else
+			else if (capture->initializerClause())
 			{
 				printIdentifier(capture->Identifier());
 				out << " = ";
 				printInitializerClause(capture->initializerClause());
+			}
+			else if (capture->Weak())
+			{
+				printIdentifier(capture->Identifier());
+				out << " = decltype("; 
+				printIdentifier(capture->Identifier());
+				out << ")::__weak_ref(";
+				printIdentifier(capture->Identifier());
+				out << ")";
+			}
+			else if (capture->Unowned())
+			{
+				printIdentifier(capture->Identifier());
+				out << " = decltype(";
+				printIdentifier(capture->Identifier());
+				out << ")::__unowned_ref(";
+				printIdentifier(capture->Identifier());
+				out << ")";
+			}
+			else
+			{
+				printIdentifier(capture->Identifier());
 			}
 		}
 		isMutable = list->Mutable();
@@ -19152,7 +19214,7 @@ void CppAdvanceCodegen::printLambdaExpression(CppAdvanceParser::LambdaExpression
 	out << "] ";
 	if (ctx->templateParams())
 	{
-		printTemplateParams(ctx->templateParams());
+		printTemplateParams(ctx->templateParams(), false);
 		out << " ";
 	}
 
@@ -19219,6 +19281,41 @@ void CppAdvanceCodegen::printLambdaExpression(CppAdvanceParser::LambdaExpression
 	isLambda = prevLambda;
 }
 
+void CppAdvanceCodegen::printMethodBindingExpression(CppAdvanceParser::MethodBindingExpressionContext* ctx) const
+{
+	out << "ADV_METHOD_BINDING";
+	if (ctx->Weak())
+	{
+		out << "_WEAK";
+	}
+	else if (ctx->Unowned())
+	{
+		out << "_UNOWNED";
+	}
+	else
+	{
+		out << "_STRONG";
+	}
+	out << "(";
+	printIdentifier(ctx->methodName()->Identifier());
+	out << ", ";
+	if (ctx->methodOwnerExpression())
+	{
+		out << "(";
+		printUnaryExpression(ctx->methodOwnerExpression()->unaryExpression());
+		out << ")";
+	}
+	else if (isExtension || isLambda)
+	{
+		out << "__this";
+	}
+	else
+	{
+		out << "(*this)";
+	}
+	out << ")";
+}
+
 void CppAdvanceCodegen::printTypeSpecifierSeq(CppAdvanceParser::TypeSpecifierSeqContext* ctx) const
 {
 	/*auto txt = ctx->getText();
@@ -19243,7 +19340,7 @@ void CppAdvanceCodegen::printTypeSpecifierSeq(CppAdvanceParser::TypeSpecifierSeq
 	{
 		out << "void";
 	}
-	else {
+	else if (ctx->simpleTypeSpecifier()) {
 		printSimpleTypeSpecifier(ctx->simpleTypeSpecifier());
 	}
 	
@@ -19270,6 +19367,49 @@ void CppAdvanceCodegen::printTypeId(CppAdvanceParser::TheTypeIdContext* ctx) con
 	}
 }
 
+void CppAdvanceCodegen::printTypeIdWithSpecification(CppAdvanceParser::TypeIdWithSpecificationContext* ctx) const
+{
+	bool isConst = false;
+	bool isRef = false;
+	bool isInRef = false;
+	bool isRvalueRef = false;
+
+	enum {
+		Value = 0,
+		In,
+		InRef,
+		Inout,
+		Ref,
+		Out,
+		Move,
+		Forward
+	} type{};
+
+	if (auto spec = ctx->paramSpecification()) {
+		if (spec->Move()) type = Move;
+		else if (spec->Forward()) type = Forward;
+		else if (spec->In()) { if (spec->Ref()) type = InRef; else type = In; }
+		else if (spec->Inout()) type = Inout;
+		else if (spec->Ref()) type = Ref;
+		else if (spec->Out()) type = Out;
+		else type = Value;
+	}
+
+	if (type == InRef) out << "const ";
+	else if (type == In) out << "CppAdvance::In<";
+	else if (type == Ref || type == Inout) out << "CppAdvance::MutableRef<std::remove_cvref_t<";
+	else if (type == Out) {
+		out << "CppAdvance::Out<std::remove_cvref_t<";
+	}
+	if (isVarargs && !isVariadicTemplate) out << "std::initializer_list<";
+	printTypeId(ctx->theTypeId());
+	if (isVarargs && !isVariadicTemplate) out << ">";
+	if (type == In) out << ">";
+	else if (type == Ref || type == Inout || type == Out) out << ">>";
+	else if (type == InRef) out << "&";
+	else if (type == Move || type == Forward) out << "&&";
+}
+
 void CppAdvanceCodegen::printSingleTypeId(CppAdvanceParser::SingleTypeIdContext* ctx) const
 {
 	int brackets = 0;
@@ -19284,7 +19424,15 @@ void CppAdvanceCodegen::printSingleTypeId(CppAdvanceParser::SingleTypeIdContext*
 	}
 
 	if (ctx->Question()) out << "CppAdvance::Nullable<";
-	printTypeSpecifierSeq(ctx->typeSpecifierSeq());
+	if (ctx->typeSpecifierSeq())
+	{
+		printTypeSpecifierSeq(ctx->typeSpecifierSeq());
+	}
+	else if (ctx->theTypeId())
+	{
+		printTypeId(ctx->theTypeId());
+	}
+	
 	if (ctx->Question()) out << ">";
 
 	out << std::string(brackets, '>');

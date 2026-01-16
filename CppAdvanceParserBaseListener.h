@@ -526,6 +526,9 @@ public:
   virtual void enterSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpecifierContext * /*ctx*/) override { }
   virtual void exitSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpecifierContext * /*ctx*/) override { }
 
+  virtual void enterTypeIdWithSpecification(CppAdvanceParser::TypeIdWithSpecificationContext * /*ctx*/) override { }
+  virtual void exitTypeIdWithSpecification(CppAdvanceParser::TypeIdWithSpecificationContext * /*ctx*/) override { }
+
   virtual void enterNamedTupleField(CppAdvanceParser::NamedTupleFieldContext * /*ctx*/) override { }
   virtual void exitNamedTupleField(CppAdvanceParser::NamedTupleFieldContext * /*ctx*/) override { }
 
@@ -648,6 +651,15 @@ public:
 
   virtual void enterTupleExpression(CppAdvanceParser::TupleExpressionContext * /*ctx*/) override { }
   virtual void exitTupleExpression(CppAdvanceParser::TupleExpressionContext * /*ctx*/) override { }
+
+  virtual void enterMethodBindingExpression(CppAdvanceParser::MethodBindingExpressionContext * /*ctx*/) override { }
+  virtual void exitMethodBindingExpression(CppAdvanceParser::MethodBindingExpressionContext * /*ctx*/) override { }
+
+  virtual void enterMethodOwnerExpression(CppAdvanceParser::MethodOwnerExpressionContext * /*ctx*/) override { }
+  virtual void exitMethodOwnerExpression(CppAdvanceParser::MethodOwnerExpressionContext * /*ctx*/) override { }
+
+  virtual void enterMethodName(CppAdvanceParser::MethodNameContext * /*ctx*/) override { }
+  virtual void exitMethodName(CppAdvanceParser::MethodNameContext * /*ctx*/) override { }
 
   virtual void enterLambdaExpression(CppAdvanceParser::LambdaExpressionContext * /*ctx*/) override { }
   virtual void exitLambdaExpression(CppAdvanceParser::LambdaExpressionContext * /*ctx*/) override { }

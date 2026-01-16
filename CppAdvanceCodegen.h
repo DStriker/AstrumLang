@@ -146,7 +146,7 @@ public:
 	void printCondition(CppAdvanceParser::ConditionContext* ctx) const;
 	void printLoopCondition(CppAdvanceParser::WhileConditionContext* ctx) const;
 	void printDeclarator(CppAdvanceParser::DeclaratorContext* ctx) const;
-	void printTemplateParams(CppAdvanceParser::TemplateParamsContext* ctx) const;
+	void printTemplateParams(CppAdvanceParser::TemplateParamsContext* ctx, bool printTemplateKeyword = true) const;
 	void printTemplateParamDeclaration(CppAdvanceParser::TemplateParamDeclarationContext* ctx) const;
 	void printTemplateIdentifier(CppAdvanceParser::TemplateIdContext* ctx) const;
 	void printSimpleTemplateId(CppAdvanceParser::SimpleTemplateIdContext* ctx) const;
@@ -250,8 +250,10 @@ public:
 	void printPrimaryExpression(CppAdvanceParser::PrimaryExpressionContext* ctx) const;
 	void printTupleExpression(CppAdvanceParser::TupleExpressionContext* ctx) const;
 	void printLambdaExpression(CppAdvanceParser::LambdaExpressionContext* ctx) const;
+	void printMethodBindingExpression(CppAdvanceParser::MethodBindingExpressionContext* ctx) const;
 	void printTypeSpecifierSeq(CppAdvanceParser::TypeSpecifierSeqContext* ctx) const;
 	void printTypeId(CppAdvanceParser::TheTypeIdContext* ctx) const;
+	void printTypeIdWithSpecification(CppAdvanceParser::TypeIdWithSpecificationContext* ctx) const;
 	void printSingleTypeId(CppAdvanceParser::SingleTypeIdContext* ctx) const;
 	void printTypePostfix(CppAdvanceParser::TypePostfixContext* ctx) const;
 	void printArrayDeclarator(CppAdvanceParser::ArrayDeclaratorContext* ctx) const;
