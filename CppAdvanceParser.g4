@@ -448,7 +448,7 @@ constantExpression: conditionalExpression;
 
 assignmentExpression: logicalOrExpression assignmentOperator initializerClause | conditionalExpression | throwExpression;
 
-initializerClause: assignmentExpression | bracedInitList;
+initializerClause: assignmentExpression Ellipsis? | bracedInitList;
 
 bracedInitList: LeftBrace (initializerList Comma?)? RightBrace;
 
@@ -534,7 +534,8 @@ simpleTypeSpecifier:
 	| Object
 	| decltypeSpecifier
 	| functionTypeId
-	| LeftParen theTypeId (Comma theTypeId)+ RightParen
+	| LeftParen theTypeId (Comma theTypeId)+ Ellipsis? RightParen
+	| LeftParen theTypeId Ellipsis RightParen
 	| LeftParen namedTupleField (Comma namedTupleField)+ RightParen
 	;
 

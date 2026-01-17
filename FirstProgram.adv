@@ -760,16 +760,28 @@ main: ()
 		action2 = action3;
 		action2?.Invoke();
 		action2?.Invoke();
-		unsafe {
-			type ActionPtr = *(() -> void);
-			actionPtr: ActionPtr;
-		}
+		g: GenericStruct(5, 5.13, "abc", false, 6, 2.12f);
 
 		//print(var.GetStrongReferenceCount());
 		on: object? = vec;
 	}
 	print(nxt!.GetStrongReferenceCount());
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);
+}
+
+public struct <T1, TArgs...> GenericStruct
+{
+	public t1: T1;
+	public t2: (TArgs...);
+	public s: usize;
+
+	public this(in ref t1: T1, forward args: TArgs...)
+	{
+		this.t1 = t1;
+		this.t2 = forward args...;
+		this.s = sizeof...(TArgs);
+		print(s);
+	}
 }
 
 type Action<Args...> = (Args...) -> void;

@@ -70,6 +70,7 @@ template<class T1, class T2, class T3, class T4, class T5> class __Class_Union5;
 template<class T1, class T2, class T3, class T4, class T5, class T6> class Union6;
 template<class T1, class T2, class T3, class T4, class T5, class T6> class __Class_Union6;
 class TestStruct;
+template<class T1, class... TArgs> class GenericStruct;
 namespace __ntuples { class NamedTuple_4e7be1ed49b09d71; } 
 namespace __ntuples { class NamedTuple_6893f862d6c49683; } 
 namespace __ntuples { class NamedTuple_6893f862d6c49683; } 
@@ -86,9 +87,9 @@ namespace __FirstProgram_Protected { using Test112 = typename Test1::Test2::Clas
 template<class A, class C> using SimpleTuple = std::tuple<A, bool, C>;
 #line 43 "FirstProgram.adv"
 using ImportantOptions = __ntuples::NamedTuple_4e7be1ed49b09d71;
-#line 775 "FirstProgram.adv"
+#line 787 "FirstProgram.adv"
 template<class... Args> using Action = CppAdvance::FunctionRef<void(Args...)>;
-#line 776 "FirstProgram.adv"
+#line 788 "FirstProgram.adv"
 template<class T> using Predicate = CppAdvance::FunctionRef<bool (T)>;
 //###############################################################################
 //# Type definitions
@@ -2797,6 +2798,24 @@ struct alignas((alignof(CppAdvance::i64))) TestStruct final : public CppAdvance:
 	
 };
 
+template<class T1, class... TArgs> class __Class_GenericStruct;
+#line 772 "FirstProgram.adv"
+template<class T1, class... TArgs> struct GenericStruct final : public CppAdvance::Struct {
+	public: using __self = GenericStruct<T1, TArgs...>;
+	public: using __class = __Class_GenericStruct<T1, TArgs...>;
+	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+	#line 774 "FirstProgram.adv"
+	public: T1 t1; ADV_CHECK_REF_STRUCT("T1", T1);
+	#line 775 "FirstProgram.adv"
+	public: std::tuple<TArgs...> t2; ADV_CHECK_REF_STRUCT("(TArgs...)", std::tuple<TArgs...>);
+	#line 776 "FirstProgram.adv"
+	public: CppAdvance::usize s; ADV_CHECK_REF_STRUCT("usize", CppAdvance::usize);
+	public: GenericStruct(T1 _t1, std::tuple<TArgs...> _t2, CppAdvance::usize _s) : t1{_t1}, t2{_t2}, s{_s} {}
+	#line 778 "FirstProgram.adv"
+	public: [[clang::annotate("varargs:1")]] TESTDLL_API GenericStruct(const T1& t1, TArgs&&... args) ;
+	
+};
+
 
 #line 57 "FirstProgram.adv"
 class __Class_Vector3 final : public CppAdvance::ValueType
@@ -3216,6 +3235,18 @@ class __Class_TestStruct final : public CppAdvance::ValueType
 };
 #line 629 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(TestStruct);
+
+
+#line 772 "FirstProgram.adv"
+template<class T1, class... TArgs> class __Class_GenericStruct final : public CppAdvance::ValueType
+{
+	#line 9999 "FirstProgram.adv"
+	public: using __underlying = GenericStruct<T1, TArgs...>; using __self = __underlying;
+	__self __value;
+	__Class_GenericStruct(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>) : __value{value} {}
+	operator __underlying() const noexcept { return __value; }
+	
+};
 
 namespace __ntuples {
 	#line 9999 "FirstProgram.adv"
@@ -3854,6 +3885,18 @@ inline auto printSuck()  -> decltype(auto)
 	#line 638 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(print(CppAdvance::Str{u"Suck my dick"})); 
 }
+#line 778 "FirstProgram.adv"
+template<class T1, class... TArgs> GenericStruct<T1, TArgs...>::GenericStruct(const T1& t1, TArgs&&... args)  : 
+#line 780 "FirstProgram.adv"
+t1{t1}, 
+#line 781 "FirstProgram.adv"
+t2{std::forward<decltype(args)>(args)...}, 
+#line 782 "FirstProgram.adv"
+s{CppAdvance::usize(sizeof...(TArgs))}
+{
+	#line 783 "FirstProgram.adv"
+	print(s);
+}
 #line 9999 "FirstProgram.adv"
 
 #line 9999 "FirstProgram.adv"
@@ -4046,6 +4089,8 @@ inline constexpr auto getkm(__extension_622_str const& __this ) -> const CppAdva
 	#line 623 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::Str{u"1000km"}); 
 }
+#line 9999 "FirstProgram.adv"
+
 #line 9999 "FirstProgram.adv"
 
 #line 9999 "FirstProgram.adv"

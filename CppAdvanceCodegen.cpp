@@ -269,7 +269,8 @@ void CppAdvanceCodegen::printGlobalVariables() const
 			out << "__Unsafe::";
 		}
 		auto parent = field.parentType;
-		StringReplace(parent,".", "::");
+		StringReplace(parent, ".", "::");
+		StringReplace(parent, "::::::", "...");
 		out << parent << "::" << field.id;
 		//if (isArray) printArrayDeclarator(field.type->arrayDeclarator());
 		currentDeclarationName = field.id;
@@ -318,6 +319,7 @@ void CppAdvanceCodegen::printGlobalVariables() const
 
 		auto parent = prop.parentType;
 		StringReplace(parent, ".", "::");
+		StringReplace(parent, "::::::", "...");
 		out << parent << "::__Property_" << prop.id << "<> ";
 		if (prop.isProtectedType) {
 			out << "__" << filename << "_Protected" << (isUnsafe ? "__Unsafe" : "") << "::";
@@ -802,10 +804,15 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		}
 	}
 	out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+	bool isVariadicTemplateStruct = false;
 	if (type->templateParams)
 	{
 		printTemplateParams(type->templateParams);
 		out << " ";
+		for (auto param : type->templateParams->templateParamDeclaration())
+		{
+			if (param->Ellipsis()) isVariadicTemplateStruct = true;
+		}
 	}
 	else if (type->templateSpecializationArgs)
 	{
@@ -937,6 +944,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -958,6 +966,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(param->Identifier());
+				if (param->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -993,6 +1002,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(param->Identifier());
+				if (param->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -1095,6 +1105,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(param->Identifier());
+					if (param->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -2383,6 +2394,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 		auto parent = prop.parentType;
 		StringReplace(parent, ".", "::");
+		StringReplace(parent, "::::::", "...");
 		if (prop.setter)
 		{
 			if (prop.getter) {
@@ -2565,6 +2577,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			out << "> struct __IndexerAccessor_" << func.pos.line << " {\n" << std::string(++depth, '\t') << "private:\n" << std::string(depth, '\t');
 			auto parent = func.parentType;
 			StringReplace(parent, ".", "::");
+			StringReplace(parent, "::::::", "...");
 			auto pos = parent.find("<{{specialization}}>");
 			if (pos != parent.npos)
 			{
@@ -3529,7 +3542,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 	{
 		out << "\n#define ADV_PROPERTY_SELF __self";
 	}
-	if (type->kind == TypeKind::Struct)
+	if (type->kind == TypeKind::Struct && !isVariadicTemplateStruct)
 	{
 		out << "template <size_t I";
 		if (type->templateParams)
@@ -3550,6 +3563,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(param->Identifier());
+				if (param->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -3585,6 +3599,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(param->Identifier());
+				if (param->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -3605,7 +3620,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 	out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
 
 	currentTupleSize = 0;
-	if (type->kind == TypeKind::Struct)
+	if (type->kind == TypeKind::Struct && !isVariadicTemplateStruct)
 	{
 		int i = 0;
 		for (const auto& field : type->fields) {
@@ -3629,6 +3644,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 						if (!first) out << ", ";
 						first = false;
 						printIdentifier(param->Identifier());
+						if (param->Ellipsis()) out << "...";
 					}
 					out << ">";
 				}
@@ -3664,6 +3680,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(param->Identifier());
+					if (param->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -3704,6 +3721,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 						if (!first) out << ", ";
 						first = false;
 						printIdentifier(param->Identifier());
+						if (param->Ellipsis()) out << "...";
 					}
 					out << ">";
 				}
@@ -3739,6 +3757,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(param->Identifier());
+					if (param->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -3857,6 +3876,7 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -3880,6 +3900,7 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(param->Identifier());
+				if (param->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -4097,6 +4118,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(tparam->Identifier());
+				if (tparam->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -4154,6 +4176,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -4190,6 +4213,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -4210,6 +4234,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -4230,6 +4255,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -4250,6 +4276,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -4270,6 +4297,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -4290,6 +4318,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -4310,6 +4339,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -5002,6 +5032,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(tparam->Identifier());
+				if (tparam->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -5111,6 +5142,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -5131,6 +5163,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -5151,6 +5184,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -5171,6 +5205,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -5203,6 +5238,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -5405,6 +5441,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -5425,6 +5462,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -5445,6 +5483,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -5465,6 +5504,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -5497,6 +5537,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -5537,6 +5578,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(tparam->Identifier());
+			if (tparam->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -5889,6 +5931,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 					{
 						out << ", ";
 						printIdentifier(param->Identifier());
+						if (param->Ellipsis()) out << "...";
 					}
 				}
 				out << ">) {\n" << std::string(++depth, '\t');
@@ -5997,6 +6040,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -6039,6 +6083,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 				{
 					out << ", ";
 					printIdentifier(param->Identifier());
+					if (param->Ellipsis()) out << "...";
 				}
 			}
 			out << "> ? ";
@@ -6053,6 +6098,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 				if (!first2) out << ", ";
 				first2 = false;
 				printIdentifier(param->Identifier());
+				if (param->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -6073,6 +6119,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 					if (!first2) out << ", ";
 					first2 = false;
 					printIdentifier(param->Identifier());
+					if (param->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -6093,6 +6140,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 				if (!first2) out << ", ";
 				first2 = false;
 				printIdentifier(param->Identifier());
+				if (param->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -6109,6 +6157,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 					if (!first2) out << ", ";
 					first2 = false;
 					printIdentifier(param->Identifier());
+					if (param->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -6167,6 +6216,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			{
 				out << ", ";
 				printIdentifier(param->Identifier());
+				if (param->Ellipsis()) out << "...";
 			}
 		}
 		out << ">";
@@ -6192,6 +6242,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -6206,6 +6257,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -6222,6 +6274,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -6236,6 +6289,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -6251,6 +6305,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -6265,6 +6320,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -6522,6 +6578,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">,\"Cannot initialize interface " << type->id << " from this type\");\n" << std::string(depth, '\t');
@@ -6538,6 +6595,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -6550,6 +6608,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -6562,6 +6621,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -6572,6 +6632,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">; }\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
@@ -6584,6 +6645,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">,\"Cannot initialize interface " << type->id << " from this type\");\n" << std::string(depth, '\t');
@@ -6600,6 +6662,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -6612,6 +6675,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -6624,6 +6688,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -6634,6 +6699,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">; }\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
@@ -6645,6 +6711,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << "> } { static_assert(__ImplementsInterface_"
@@ -6655,6 +6722,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">, \"Cannot initialize interface " << type->id << " from this type\"); CppAdvance::Retain(_obj); }\n" << std::string(depth, '\t');
@@ -6667,6 +6735,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">,\"Cannot initialize interface " << type->id << " from this type\");\n" << std::string(depth, '\t');
@@ -6684,6 +6753,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -6696,6 +6766,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -6708,6 +6779,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -6718,6 +6790,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">; } return *this;\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
@@ -6729,6 +6802,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">,\"Cannot initialize interface " << type->id << " from this type\");\n" << std::string(depth, '\t');
@@ -6746,6 +6820,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -6758,6 +6833,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -6770,6 +6846,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -6780,6 +6857,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">; } return *this;\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
@@ -6792,6 +6870,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">, \"Cannot initialize interface " << type->id << " from this type\"); \n " << std::string(depth, '\t') << "if (_obj) CppAdvance::Release(_obj); _obj = (CppAdvance::Object*)&value; CppAdvance::Retain(_obj); \n"
@@ -6803,6 +6882,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">; return *this; }\n" << std::string(depth, '\t');
@@ -7006,6 +7086,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -7020,6 +7101,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -7036,6 +7118,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -7050,6 +7133,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -7065,6 +7149,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -7188,6 +7273,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << "> " << type->id << "__Unowned(const __AnyType& value) : ___super(nullptr), _vtable{ nullptr } \n" << std::string(depth++, '\t') << "{\n" << std::string(depth, '\t');
@@ -7204,6 +7290,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -7216,6 +7303,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -7227,6 +7315,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << "> && std::is_rvalue_reference_v<__AnyType&&> " << type->id << "__Unowned(__AnyType&& value) : ___super(nullptr), _vtable{ nullptr } \n" << std::string(depth++, '\t') << "{\n" << std::string(depth, '\t');
@@ -7243,6 +7332,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -7255,6 +7345,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -7266,6 +7357,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << "> " << type->id << "__Unowned& operator=(const __AnyType& value) {\n" << std::string(++depth, '\t');
@@ -7283,6 +7375,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -7295,6 +7388,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -7306,6 +7400,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << "> && std::is_rvalue_reference_v<__AnyType&&> " << type->id << "__Unowned& operator=(__AnyType&& value) {\n" << std::string(++depth, '\t');
@@ -7323,6 +7418,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -7335,6 +7431,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -7359,6 +7456,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -7373,6 +7471,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -7389,6 +7488,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -7403,6 +7503,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -7417,6 +7518,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -7493,6 +7595,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << "> " << type->id << "__Weak(const __AnyType& value) : ___super(nullptr), _vtable{ nullptr } \n" << std::string(depth++, '\t') << "{\n" << std::string(depth, '\t');
@@ -7509,6 +7612,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -7521,6 +7625,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << "> " << type->id << "__Weak& operator=(const __AnyType& value) {\n" << std::string(++depth, '\t');
@@ -7538,6 +7643,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		{
 			out << ", ";
 			printIdentifier(param->Identifier());
+			if (param->Ellipsis()) out << "...";
 		}
 	}
 	out << ">;\n" << std::string(--depth, '\t')
@@ -8189,6 +8295,7 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(param->Identifier());
+					if (param->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -8264,6 +8371,7 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(param->Identifier());
+					if (param->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -8364,6 +8472,7 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(param->Identifier());
+					if (param->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -8417,6 +8526,7 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(param->Identifier());
+					if (param->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -8437,6 +8547,7 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(param->Identifier());
+					if (param->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -8472,6 +8583,7 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 						if (!first) out << ", ";
 						first = false;
 						printIdentifier(param->Identifier());
+						if (param->Ellipsis()) out << "...";
 					}
 					out << ">";
 				}
@@ -8566,6 +8678,7 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(param->Identifier());
+					if (param->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -8584,6 +8697,7 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(param->Identifier());
+					if (param->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -8658,6 +8772,7 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 						if (!first) out << ", ";
 						first = false;
 						printIdentifier(param->Identifier());
+						if (param->Ellipsis()) out << "...";
 					}
 					out << ">";
 				}
@@ -8677,6 +8792,7 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 						if (!first) out << ", ";
 						first = false;
 						printIdentifier(param->Identifier());
+						if (param->Ellipsis()) out << "...";
 					}
 					out << ">";
 				}
@@ -8744,6 +8860,7 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(param->Identifier());
+					if (param->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -8785,6 +8902,7 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(param->Identifier());
+					if (param->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -8838,6 +8956,7 @@ void CppAdvanceCodegen::printEnumClassData(StructDefinition* type) const
 		if (parentType.empty()) {
 			parentType = constant.parentType;
 			StringReplace(parentType, ".", "::");
+			StringReplace(parentType, "::::::", "...");
 		}
 		out << "#line " << constant.pos.line << " \"" << filename << ".adv\"\n";
 		out << "const " << parentType << "::__self " << parentType << "::" << constant.id << " = ";
@@ -8939,6 +9058,7 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 			}
 			auto parentType = constant.parentType;
 			StringReplace(parentType, ".", "::");
+			StringReplace(parentType, "::::::", "...");
 			out << "inline constexpr " << parentType << " " << parentType << "::" << constant.id << " = ";
 			currentDeclarationName = constant.id;
 			if (constant.initializer) {
@@ -9067,6 +9187,7 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(param->Identifier());
+					if (param->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -9104,6 +9225,7 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 						if (!first) out << ", ";
 						first = false;
 						printIdentifier(param->Identifier());
+						if (param->Ellipsis()) out << "...";
 					}
 					out << ">";
 				}
@@ -9145,6 +9267,7 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 						if (!first) out << ", ";
 						first = false;
 						printIdentifier(param->Identifier());
+						if (param->Ellipsis()) out << "...";
 					}
 					out << ">";
 				}
@@ -9389,6 +9512,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 						if (!first) out << ", ";
 						first = false;
 						printIdentifier(param->Identifier());
+						if (param->Ellipsis()) out << "...";
 					}
 					out << ">";
 				}
@@ -9499,6 +9623,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 							if (!first) out << ", ";
 							first = false;
 							printIdentifier(param->Identifier());
+							if (param->Ellipsis()) out << "...";
 						}
 						out << ">";
 					}
@@ -9554,6 +9679,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 							if (!first) out << ", ";
 							first = false;
 							printIdentifier(param->Identifier());
+							if (param->Ellipsis()) out << "...";
 						}
 						out << ">";
 					}
@@ -9601,6 +9727,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 							if (!first) out << ", ";
 							first = false;
 							printIdentifier(param->Identifier());
+							if (param->Ellipsis()) out << "...";
 						}
 						out << ">";
 					}
@@ -9621,6 +9748,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 							if (!first) out << ", ";
 							first = false;
 							printIdentifier(param->Identifier());
+							if (param->Ellipsis()) out << "...";
 						}
 						out << ">";
 					}
@@ -9656,6 +9784,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 								if (!first) out << ", ";
 								first = false;
 								printIdentifier(param->Identifier());
+								if (param->Ellipsis()) out << "...";
 							}
 							out << ">";
 						}
@@ -9730,6 +9859,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 							if (!first) out << ", ";
 							first = false;
 							printIdentifier(param->Identifier());
+							if (param->Ellipsis()) out << "...";
 						}
 						out << ">";
 					}
@@ -9748,6 +9878,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 							if (!first) out << ", ";
 							first = false;
 							printIdentifier(param->Identifier());
+							if (param->Ellipsis()) out << "...";
 						}
 						out << ">";
 					}
@@ -9789,6 +9920,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 								if (!first) out << ", ";
 								first = false;
 								printIdentifier(param->Identifier());
+								if (param->Ellipsis()) out << "...";
 							}
 							out << ">";
 						}
@@ -9807,6 +9939,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 								if (!first) out << ", ";
 								first = false;
 								printIdentifier(param->Identifier());
+								if (param->Ellipsis()) out << "...";
 							}
 							out << ">";
 						}
@@ -9860,6 +9993,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 							if (!first) out << ", ";
 							first = false;
 							printIdentifier(param->Identifier());
+							if (param->Ellipsis()) out << "...";
 						}
 						out << ">";
 					}
@@ -9894,6 +10028,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 							if (!first) out << ", ";
 							first = false;
 							printIdentifier(param->Identifier());
+							if (param->Ellipsis()) out << "...";
 						}
 						out << ">";
 					}
@@ -10006,6 +10141,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -10027,6 +10163,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(tparam->Identifier());
+				if (tparam->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -10073,6 +10210,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(tparam->Identifier());
+				if (tparam->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -10094,6 +10232,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(tparam->Identifier());
+			if (tparam->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -10139,6 +10278,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(tparam->Identifier());
+				if (tparam->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -10160,6 +10300,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(tparam->Identifier());
+			if (tparam->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -10183,6 +10324,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(tparam->Identifier());
+				if (tparam->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -10204,6 +10346,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(tparam->Identifier());
+			if (tparam->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -10248,6 +10391,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(tparam->Identifier());
+				if (tparam->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -10269,6 +10413,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(tparam->Identifier());
+			if (tparam->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -10314,6 +10459,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(tparam->Identifier());
+				if (tparam->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -10335,6 +10481,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(tparam->Identifier());
+			if (tparam->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -10358,6 +10505,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(tparam->Identifier());
+				if (tparam->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -10379,6 +10527,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(tparam->Identifier());
+			if (tparam->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -10423,6 +10572,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(tparam->Identifier());
+				if (tparam->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -10444,6 +10594,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(tparam->Identifier());
+			if (tparam->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -10489,6 +10640,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(tparam->Identifier());
+				if (tparam->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -10510,6 +10662,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(tparam->Identifier());
+			if (tparam->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -10533,6 +10686,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(tparam->Identifier());
+				if (tparam->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -10554,6 +10708,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 			if (!first) out << ", ";
 			first = false;
 			printIdentifier(tparam->Identifier());
+			if (tparam->Ellipsis()) out << "...";
 		}
 		out << ">";
 	}
@@ -10607,6 +10762,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -10628,6 +10784,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(tparam->Identifier());
+				if (tparam->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -10673,6 +10830,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 						if (!first) out << ", ";
 						first = false;
 						printIdentifier(tparam->Identifier());
+						if (tparam->Ellipsis()) out << "...";
 					}
 					out << ">";
 				}
@@ -10694,6 +10852,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -10742,6 +10901,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 						if (!first) out << ", ";
 						first = false;
 						printIdentifier(tparam->Identifier());
+						if (tparam->Ellipsis()) out << "...";
 					}
 					out << ">";
 				}
@@ -10780,6 +10940,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -10867,6 +11028,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -10888,6 +11050,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(tparam->Identifier());
+				if (tparam->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -10985,6 +11148,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -11061,6 +11225,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 						if (!first) out << ", ";
 						first = false;
 						printIdentifier(tparam->Identifier());
+						if (tparam->Ellipsis()) out << "...";
 					}
 					out << ">";
 				}
@@ -11082,6 +11247,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -11148,6 +11314,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -11169,6 +11336,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(tparam->Identifier());
+				if (tparam->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -11247,6 +11415,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(tparam->Identifier());
+				if (tparam->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -11320,6 +11489,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 						if (!first) out << ", ";
 						first = false;
 						printIdentifier(tparam->Identifier());
+						if (tparam->Ellipsis()) out << "...";
 					}
 					out << ">";
 				}
@@ -11341,6 +11511,7 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -12911,6 +13082,7 @@ void CppAdvanceCodegen::printStructDefinition(CppAdvanceParser::StructDefinition
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -12926,6 +13098,7 @@ void CppAdvanceCodegen::printStructDefinition(CppAdvanceParser::StructDefinition
 					if (!first) out << ", ";
 					first = false;
 					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis()) out << "...";
 				}
 				out << ">";
 			}
@@ -12952,6 +13125,7 @@ void CppAdvanceCodegen::printStructDefinition(CppAdvanceParser::StructDefinition
 							if (!first) out << ", ";
 							first = false;
 							printIdentifier(tparam->Identifier());
+							if (tparam->Ellipsis()) out << "...";
 						}
 						out << ">";
 					}
@@ -13533,6 +13707,7 @@ void CppAdvanceCodegen::printConstructor(CppAdvanceParser::ConstructorContext* c
 
 		auto parent = func.parentType;
 		StringReplace(parent, ".", "::");
+		StringReplace(parent, "::::::", "...");
 		auto pos = parent.find("<{{specialization}}>");
 		if (pos != parent.npos)
 		{
@@ -13770,6 +13945,7 @@ void CppAdvanceCodegen::printDelegatingConstructorStatement(CppAdvanceParser::De
 				if (!first) out << ", ";
 				first = false;
 				printIdentifier(param->Identifier());
+				if (param->Ellipsis()) out << "...";
 			}
 			out << ">";
 		}
@@ -13847,6 +14023,7 @@ void CppAdvanceCodegen::printDestructor(CppAdvanceParser::DestructorContext* ctx
 
 		auto parent = func.parentType;
 		StringReplace(parent, ".", "::");
+		StringReplace(parent, "::::::", "...");
 		auto pos = parent.find("<{{specialization}}>");
 		if (pos != parent.npos)
 		{
@@ -14010,6 +14187,7 @@ void CppAdvanceCodegen::printConversionFunction(CppAdvanceParser::ConversionFunc
 
 		auto parent = func.parentType;
 		StringReplace(parent, ".", "::");
+		StringReplace(parent, "::::::", "...");
 		auto pos = parent.find("<{{specialization}}>");
 		if (pos != parent.npos)
 		{
@@ -14211,6 +14389,7 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 		out << "auto ";
 		auto parent = func.parentType;
 		StringReplace(parent, ".", "::");
+		StringReplace(parent, "::::::", "...");
 		auto pos = parent.find("<{{specialization}}>");
 		if (pos != parent.npos)
 		{
@@ -14353,6 +14532,7 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			out << "auto ";
 			auto parent = func.parentType;
 			StringReplace(parent, ".", "::");
+			StringReplace(parent, "::::::", "...");
 			auto pos = parent.find("<{{specialization}}>");
 			if (pos != parent.npos)
 			{
@@ -14512,6 +14692,7 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 		out << "auto ";
 		parent = func.parentType;
 		StringReplace(parent, ".", "::");
+		StringReplace(parent, "::::::", "...");
 		pos = parent.find("<{{specialization}}>");
 		if (pos != parent.npos)
 		{
@@ -14602,6 +14783,7 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			out << "auto ";
 			auto parent = func.parentType;
 			StringReplace(parent, ".", "::");
+			StringReplace(parent, "::::::", "...");
 			auto pos = parent.find("<{{specialization}}>");
 			if (pos != parent.npos)
 			{
@@ -14707,6 +14889,7 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 			out << "auto ";
 			parent = func.parentType;
 			StringReplace(parent, ".", "::");
+			StringReplace(parent, "::::::", "...");
 			pos = parent.find("<{{specialization}}>");
 			if (pos != parent.npos)
 			{
@@ -14939,6 +15122,7 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			out << "auto ";
 			auto parent = prop.parentType;
 			StringReplace(parent, ".", "::");
+			StringReplace(parent, "::::::", "...");
 			auto pos = parent.find("<{{specialization}}>");
 			if (pos != parent.npos)
 			{
@@ -15037,6 +15221,7 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			out << "auto ";
 			auto parent = prop.parentType;
 			StringReplace(parent, ".", "::");
+			StringReplace(parent, "::::::", "...");
 			auto pos = parent.find("<{{specialization}}>");
 			if (pos != parent.npos)
 			{
@@ -15107,6 +15292,7 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			out << "auto ";
 			auto parent = prop.parentType;
 			StringReplace(parent, ".", "::");
+			StringReplace(parent, "::::::", "...");
 			auto pos = parent.find("<{{specialization}}>");
 			if (pos != parent.npos)
 			{
@@ -15831,6 +16017,7 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 			out << "auto ";
 			auto parent = func.parentType;
 			StringReplace(parent, ".", "::");
+			StringReplace(parent, "::::::", "...");
 			auto pos = parent.find("<{{specialization}}>");
 			if (pos != parent.npos)
 			{
@@ -15954,6 +16141,7 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 				out << "auto ";
 				auto parent = func.parentType;
 				StringReplace(parent, ".", "::");
+				StringReplace(parent, "::::::", "...");
 				out << parent;
 				currentShortType = func.shortType;
 				currentTypeWithTemplate = parent;
@@ -15994,6 +16182,7 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 				if (!func.params->paramDeclClause()) {
 					auto parent = func.parentType;
 					StringReplace(parent, ".", "::");
+					StringReplace(parent, "::::::", "...");
 					out << parent;
 					currentShortType = func.shortType;
 					currentTypeWithTemplate = parent;
@@ -16012,6 +16201,7 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 					printParamDeclClause(func.params->paramDeclClause());
 					auto parent = func.parentType;
 					StringReplace(parent, ".", "::");
+					StringReplace(parent, "::::::", "...");
 					currentShortType = func.shortType;
 					currentTypeWithTemplate = parent;
 					out << ", const typename " << parent << "::__self& __this) ";
@@ -16370,7 +16560,7 @@ void CppAdvanceCodegen::printParamDeclaration(CppAdvanceParser::ParamDeclaration
 		else if (type == Value) out << "auto";
 	}
 
-	if (isVariadicTemplate) out << "...";
+	if (isVariadicTemplate && isVarargs) out << "...";
 	out << " ";
 	printIdentifier(ctx->Identifier());
 
@@ -16933,6 +17123,10 @@ void CppAdvanceCodegen::printSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpe
 				first = false;
                 printTypeId(type);
 			}
+			if (ctx->Ellipsis())
+			{
+				out << "...";
+			}
 			out << ">";
 		}
 	}
@@ -17333,6 +17527,10 @@ void CppAdvanceCodegen::printInitializerClause(CppAdvanceParser::InitializerClau
 	else if (auto init = ctx->bracedInitList())
 	{
 		printBracedInitList(init);
+	}
+	if (ctx->Ellipsis())
+	{
+		out << "...";
 	}
 }
 

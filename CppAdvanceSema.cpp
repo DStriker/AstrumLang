@@ -3227,6 +3227,10 @@ void CppAdvanceSema::enterStructDefinition(CppAdvanceParser::StructDefinitionCon
 					first = false;
 					name += param->Identifier()->getText();
 				}
+				if (param->Ellipsis())
+				{
+					name += "...";
+				}
 			}
 			name += ">";
 		}
@@ -4806,6 +4810,10 @@ void CppAdvanceSema::enterClassDefinition(CppAdvanceParser::ClassDefinitionConte
 					first = false;
 					name += param->Identifier()->getText();
 				}
+				if (param->Ellipsis())
+				{
+					name += "...";
+				}
 			}
 			name += ">";
 		}
@@ -5305,6 +5313,10 @@ void CppAdvanceSema::enterInterfaceDefinition(CppAdvanceParser::InterfaceDefinit
 					first = false;
 					name += param->Identifier()->getText();
 				}
+				if (param->Ellipsis())
+				{
+					name += "...";
+				}
 			}
 			name += ">";
 		}
@@ -5774,6 +5786,10 @@ void CppAdvanceSema::enterExtensionDefinition(CppAdvanceParser::ExtensionDefinit
 					if (!first) name += ", ";
 					first = false;
 					name += param->Identifier()->getText();
+				}
+				if (param->Ellipsis())
+				{
+					name += "...";
 				}
 			}
 			name += ">";
@@ -6262,6 +6278,10 @@ void CppAdvanceSema::enterUnionDefinition(CppAdvanceParser::UnionDefinitionConte
 					if (!first) name += ", ";
 					first = false;
 					name += param->Identifier()->getText();
+				}
+				if (param->Ellipsis())
+				{
+					name += "...";
 				}
 			}
 			name += ">";

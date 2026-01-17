@@ -3116,6 +3116,7 @@ public:
     InitializerClauseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     AssignmentExpressionContext *assignmentExpression();
+    antlr4::tree::TerminalNode *Ellipsis();
     BracedInitListContext *bracedInitList();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -3431,6 +3432,7 @@ public:
     antlr4::tree::TerminalNode *RightParen();
     std::vector<antlr4::tree::TerminalNode *> Comma();
     antlr4::tree::TerminalNode* Comma(size_t i);
+    antlr4::tree::TerminalNode *Ellipsis();
     std::vector<NamedTupleFieldContext *> namedTupleField();
     NamedTupleFieldContext* namedTupleField(size_t i);
 
