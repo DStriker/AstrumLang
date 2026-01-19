@@ -411,11 +411,13 @@ threeWayComparisonExpression: shiftExpression (Spaceship shiftExpression)?;
 
 relationalExpression: 
 	  threeWayComparisonExpression (As Question? theTypeId | Is patternList)?
+	| Type theTypeId Is typeTrait
 	| relationalExpression (Less | Greater | LessEqual | GreaterEqual | Op6) relationalExpression
 	;
 
 equalityExpression: 
 	  relationalExpression
+	| Type theTypeId (Equal | NotEqual) theTypeId
 	| equalityExpression (IdentityEqual | NotIdentityEqual | Equal | NotEqual | Op5) equalityExpression
 	;
 
@@ -472,6 +474,33 @@ pattern:
 	| Let Identifier (Comma Identifier)*
 	| (Greater | GreaterEqual | Less | LessEqual) shiftExpression
 	;
+
+typeTrait: 
+	not? (
+	  Void
+	| Null
+	| (Ref | Union)? Struct
+	| Enum Class?
+	| Class
+	| Unowned
+	| Weak
+	| Interface
+	| Union
+	| LeftParen RightParen Arrow
+	| Star
+	| Amp Amp?
+	| Question
+	| Ref
+	| Const
+	| Volatile
+	| Abstract
+	| Final
+	| (Default | Noexcept | Implicit)? New LeftParen (Move? theTypeId)? RightParen
+	| (Default | Noexcept)? Tilde LeftParen RightParen
+	| Operator_ theTypeId
+	| Less Identifier Greater
+	| theTypeId (Or theTypeId)*
+	);
 
 propertyPattern: Identifier Colon patternList;
 
@@ -533,6 +562,7 @@ simpleTypeSpecifier:
 	| Self
 	| Object
 	| decltypeSpecifier
+	| decaySpecifier
 	| functionTypeId
 	| LeftParen theTypeId (Comma theTypeId)+ Ellipsis? RightParen
 	| LeftParen theTypeId Ellipsis RightParen
@@ -576,6 +606,7 @@ unqualifiedId:
 
 theTypeId: 
 	  singleTypeId (VertLine singleTypeId)*  
+	| constantExpression Question theTypeId Colon theTypeId
 	;
 
 singleTypeId: 
@@ -618,6 +649,8 @@ typename:
 className: Identifier | simpleTemplateId;
 
 decltypeSpecifier: Decltype LeftParen expr RightParen;
+
+decaySpecifier: Decay LeftParen theTypeId RightParen;
 
 enumName: Identifier;
 
@@ -699,6 +732,7 @@ primaryExpression:
 	| Doublecolon? idExpression
 	| lambdaExpression
 	| methodBindingExpression
+	| declvalExpression
 	;
 
 unaryPrefixOperator:
@@ -826,3 +860,5 @@ interpolatedMultilineStringPart:
 	;
 
 interpolatedExpression: nullCoalescingExpression (Colon FORMAT_STRING+)?;
+
+declvalExpression: Declval LeftParen theTypeId RightParen;

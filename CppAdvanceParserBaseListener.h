@@ -502,6 +502,9 @@ public:
   virtual void enterPattern(CppAdvanceParser::PatternContext * /*ctx*/) override { }
   virtual void exitPattern(CppAdvanceParser::PatternContext * /*ctx*/) override { }
 
+  virtual void enterTypeTrait(CppAdvanceParser::TypeTraitContext * /*ctx*/) override { }
+  virtual void exitTypeTrait(CppAdvanceParser::TypeTraitContext * /*ctx*/) override { }
+
   virtual void enterPropertyPattern(CppAdvanceParser::PropertyPatternContext * /*ctx*/) override { }
   virtual void exitPropertyPattern(CppAdvanceParser::PropertyPatternContext * /*ctx*/) override { }
 
@@ -612,6 +615,9 @@ public:
 
   virtual void enterDecltypeSpecifier(CppAdvanceParser::DecltypeSpecifierContext * /*ctx*/) override { }
   virtual void exitDecltypeSpecifier(CppAdvanceParser::DecltypeSpecifierContext * /*ctx*/) override { }
+
+  virtual void enterDecaySpecifier(CppAdvanceParser::DecaySpecifierContext * /*ctx*/) override { }
+  virtual void exitDecaySpecifier(CppAdvanceParser::DecaySpecifierContext * /*ctx*/) override { }
 
   virtual void enterEnumName(CppAdvanceParser::EnumNameContext * /*ctx*/) override { }
   virtual void exitEnumName(CppAdvanceParser::EnumNameContext * /*ctx*/) override { }
@@ -729,6 +735,9 @@ public:
 
   virtual void enterInterpolatedExpression(CppAdvanceParser::InterpolatedExpressionContext * /*ctx*/) override { }
   virtual void exitInterpolatedExpression(CppAdvanceParser::InterpolatedExpressionContext * /*ctx*/) override { }
+
+  virtual void enterDeclvalExpression(CppAdvanceParser::DeclvalExpressionContext * /*ctx*/) override { }
+  virtual void exitDeclvalExpression(CppAdvanceParser::DeclvalExpressionContext * /*ctx*/) override { }
 
 
   virtual void enterEveryRule(antlr4::ParserRuleContext * /*ctx*/) override { }

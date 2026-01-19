@@ -84,8 +84,6 @@ Bool: 'bool';
 
 Break: 'break';
 
-Case: 'case';
-
 Catch: 'catch';
 
 Char: 'char';
@@ -102,9 +100,13 @@ Continue: 'continue';
 
 Debug: 'debug';
 
+Decay: 'decay';
+
 Decimal: 'decimal';
 
 Decltype: 'decltype';
+
+Declval: 'declval';
 
 Default: 'default';
 
@@ -199,8 +201,6 @@ Protected: 'protected';
 Public: 'public';
 
 Ref: 'ref';
-
-Requires: 'requires';
 
 Return: 'return';
 

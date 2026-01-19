@@ -270,4 +270,5 @@ public:
 	void printStringLiteral(std::string txt) const;
 	void printMultilineStringLiteral(std::string txt) const;
 	void printInterpolatedStringLiteral(CppAdvanceParser::InterpolatedStringLiteralContext* ctx) const;
+	void printDeclvalExpression(CppAdvanceParser::DeclvalExpressionContext* ctx) const;
 };

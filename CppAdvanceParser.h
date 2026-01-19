@@ -19,17 +19,17 @@ public:
     InterpolatedGraveStringStart = 18, InterpolatedMultilineStringStart = 19, 
     MultilineStringLiteral = 20, BooleanLiteral = 21, Directive = 22, Abstract = 23, 
     Alignof = 24, As = 25, Asm = 26, Assert = 27, Await = 28, Bool = 29, 
-    Break = 30, Case = 31, Catch = 32, Char = 33, Byte = 34, Class = 35, 
-    Const = 36, Consteval = 37, Continue = 38, Debug = 39, Decimal = 40, 
-    Decltype = 41, Default = 42, Delete = 43, Do = 44, Else = 45, Enum = 46, 
-    Extension = 47, Extern = 48, False_ = 49, Final = 50, F32 = 51, F64 = 52, 
-    Fext = 53, Field = 54, For = 55, Forward = 56, Friend = 57, Get = 58, 
-    If = 59, Import = 60, Implicit = 61, In = 62, Inout = 63, I8 = 64, I16 = 65, 
-    I32 = 66, I64 = 67, I128 = 68, Isize = 69, Inline = 70, Interface = 71, 
-    Internal = 72, Is = 73, Let = 74, Lock = 75, Move = 76, Mutable = 77, 
-    New = 78, Noexcept = 79, Null = 80, Object = 81, Operator_ = 82, Out = 83, 
-    Override = 84, Private = 85, Protected = 86, Public = 87, Ref = 88, 
-    Requires = 89, Return = 90, Rune = 91, Self = 92, Set = 93, Sizeof = 94, 
+    Break = 30, Catch = 31, Char = 32, Byte = 33, Class = 34, Const = 35, 
+    Consteval = 36, Continue = 37, Debug = 38, Decay = 39, Decimal = 40, 
+    Decltype = 41, Declval = 42, Default = 43, Delete = 44, Do = 45, Else = 46, 
+    Enum = 47, Extension = 48, Extern = 49, False_ = 50, Final = 51, F32 = 52, 
+    F64 = 53, Fext = 54, Field = 55, For = 56, Forward = 57, Friend = 58, 
+    Get = 59, If = 60, Import = 61, Implicit = 62, In = 63, Inout = 64, 
+    I8 = 65, I16 = 66, I32 = 67, I64 = 68, I128 = 69, Isize = 70, Inline = 71, 
+    Interface = 72, Internal = 73, Is = 74, Let = 75, Lock = 76, Move = 77, 
+    Mutable = 78, New = 79, Noexcept = 80, Null = 81, Object = 82, Operator_ = 83, 
+    Out = 84, Override = 85, Private = 86, Protected = 87, Public = 88, 
+    Ref = 89, Return = 90, Rune = 91, Self = 92, Set = 93, Sizeof = 94, 
     Stackalloc = 95, Static = 96, Str = 97, Struct = 98, Super = 99, Switch = 100, 
     Test = 101, This = 102, Thread_local = 103, Throw = 104, True_ = 105, 
     Try = 106, Type = 107, Union = 108, Unowned = 109, Using = 110, U8 = 111, 
@@ -115,32 +115,34 @@ public:
     RuleInitializerClause = 153, RuleBracedInitList = 154, RuleInitializerList = 155, 
     RuleInitializerPart = 156, RuleExpressionList = 157, RuleExpressionListPart = 158, 
     RulePatternList = 159, RulePatternCombinationOperator = 160, RulePattern = 161, 
-    RulePropertyPattern = 162, RuleAssignmentOperator = 163, RuleShiftOperator = 164, 
-    RuleTryBlock = 165, RuleExceptionHandler = 166, RuleExceptionDeclaration = 167, 
-    RuleThrowExpression = 168, RuleSimpleTypeSpecifier = 169, RuleFunctionTypeId = 170, 
-    RuleTypeIdWithSpecification = 171, RuleNamedTupleField = 172, RuleNestedNameSpecifier = 173, 
-    RuleNamespaceName = 174, RuleTemplateName = 175, RuleSimpleTemplateId = 176, 
-    RuleOperatorTemplateId = 177, RuleTemplateId = 178, RuleTemplateArgumentList = 179, 
-    RuleTemplateArgument = 180, RuleIdExpression = 181, RuleQualifiedId = 182, 
-    RuleUnqualifiedId = 183, RuleTheTypeId = 184, RuleSingleTypeId = 185, 
-    RuleTypePostfix = 186, RuleArrayDeclarator = 187, RulePointerOperator = 188, 
-    RulePointerOperatorSeq = 189, RuleTypeSpecifierSeq = 190, RuleTypeSpecifier = 191, 
-    RuleTrailingTypeSpecifier = 192, RuleTypeNameSpecifier = 193, RuleCvQualifierSeq = 194, 
-    RuleCvQualifier = 195, RuleTypename = 196, RuleClassName = 197, RuleDecltypeSpecifier = 198, 
-    RuleEnumName = 199, RuleAccessSpecifier = 200, RuleProtectedInternal = 201, 
-    RuleOperatorFunctionId = 202, RuleConversionFunctionId = 203, RuleUnaryExpression = 204, 
-    RuleUnaryExpressionTail = 205, RuleNewExpression = 206, RuleStackallocExpression = 207, 
-    RuleMemorySpaceSetter = 208, RuleNewInitializer = 209, RuleFullPostfixExpression = 210, 
-    RulePostfixExpression = 211, RuleTupleExpression = 212, RuleMethodBindingExpression = 213, 
-    RuleMethodOwnerExpression = 214, RuleMethodName = 215, RuleLambdaExpression = 216, 
-    RuleLambdaCaptureList = 217, RuleLambdaCaptureClause = 218, RuleCapture = 219, 
-    RuleLambdaDeclarator = 220, RuleLambdaBody = 221, RulePrimaryExpression = 222, 
-    RuleUnaryPrefixOperator = 223, RuleUnaryCustomOperator = 224, RuleRefCaptureOperator = 225, 
-    RuleUnaryPostfixOperator = 226, RuleNot = 227, RuleOperator = 228, RuleLiteral = 229, 
-    RuleInterpolatedStringLiteral = 230, RuleInterpolatedRegularStringLiteral = 231, 
-    RuleInterpolatedRegularStringPart = 232, RuleInterpolatedVerbatiumStringLiteral = 233, 
-    RuleInterpolatedVerbatiumStringPart = 234, RuleInterpolatedMultilineStringLiteral = 235, 
-    RuleInterpolatedMultilineStringPart = 236, RuleInterpolatedExpression = 237
+    RuleTypeTrait = 162, RulePropertyPattern = 163, RuleAssignmentOperator = 164, 
+    RuleShiftOperator = 165, RuleTryBlock = 166, RuleExceptionHandler = 167, 
+    RuleExceptionDeclaration = 168, RuleThrowExpression = 169, RuleSimpleTypeSpecifier = 170, 
+    RuleFunctionTypeId = 171, RuleTypeIdWithSpecification = 172, RuleNamedTupleField = 173, 
+    RuleNestedNameSpecifier = 174, RuleNamespaceName = 175, RuleTemplateName = 176, 
+    RuleSimpleTemplateId = 177, RuleOperatorTemplateId = 178, RuleTemplateId = 179, 
+    RuleTemplateArgumentList = 180, RuleTemplateArgument = 181, RuleIdExpression = 182, 
+    RuleQualifiedId = 183, RuleUnqualifiedId = 184, RuleTheTypeId = 185, 
+    RuleSingleTypeId = 186, RuleTypePostfix = 187, RuleArrayDeclarator = 188, 
+    RulePointerOperator = 189, RulePointerOperatorSeq = 190, RuleTypeSpecifierSeq = 191, 
+    RuleTypeSpecifier = 192, RuleTrailingTypeSpecifier = 193, RuleTypeNameSpecifier = 194, 
+    RuleCvQualifierSeq = 195, RuleCvQualifier = 196, RuleTypename = 197, 
+    RuleClassName = 198, RuleDecltypeSpecifier = 199, RuleDecaySpecifier = 200, 
+    RuleEnumName = 201, RuleAccessSpecifier = 202, RuleProtectedInternal = 203, 
+    RuleOperatorFunctionId = 204, RuleConversionFunctionId = 205, RuleUnaryExpression = 206, 
+    RuleUnaryExpressionTail = 207, RuleNewExpression = 208, RuleStackallocExpression = 209, 
+    RuleMemorySpaceSetter = 210, RuleNewInitializer = 211, RuleFullPostfixExpression = 212, 
+    RulePostfixExpression = 213, RuleTupleExpression = 214, RuleMethodBindingExpression = 215, 
+    RuleMethodOwnerExpression = 216, RuleMethodName = 217, RuleLambdaExpression = 218, 
+    RuleLambdaCaptureList = 219, RuleLambdaCaptureClause = 220, RuleCapture = 221, 
+    RuleLambdaDeclarator = 222, RuleLambdaBody = 223, RulePrimaryExpression = 224, 
+    RuleUnaryPrefixOperator = 225, RuleUnaryCustomOperator = 226, RuleRefCaptureOperator = 227, 
+    RuleUnaryPostfixOperator = 228, RuleNot = 229, RuleOperator = 230, RuleLiteral = 231, 
+    RuleInterpolatedStringLiteral = 232, RuleInterpolatedRegularStringLiteral = 233, 
+    RuleInterpolatedRegularStringPart = 234, RuleInterpolatedVerbatiumStringLiteral = 235, 
+    RuleInterpolatedVerbatiumStringPart = 236, RuleInterpolatedMultilineStringLiteral = 237, 
+    RuleInterpolatedMultilineStringPart = 238, RuleInterpolatedExpression = 239, 
+    RuleDeclvalExpression = 240
   };
 
   explicit CppAdvanceParser(antlr4::TokenStream *input);
@@ -322,6 +324,7 @@ public:
   class PatternListContext;
   class PatternCombinationOperatorContext;
   class PatternContext;
+  class TypeTraitContext;
   class PropertyPatternContext;
   class AssignmentOperatorContext;
   class ShiftOperatorContext;
@@ -359,6 +362,7 @@ public:
   class TypenameContext;
   class ClassNameContext;
   class DecltypeSpecifierContext;
+  class DecaySpecifierContext;
   class EnumNameContext;
   class AccessSpecifierContext;
   class ProtectedInternalContext;
@@ -397,7 +401,8 @@ public:
   class InterpolatedVerbatiumStringPartContext;
   class InterpolatedMultilineStringLiteralContext;
   class InterpolatedMultilineStringPartContext;
-  class InterpolatedExpressionContext; 
+  class InterpolatedExpressionContext;
+  class DeclvalExpressionContext; 
 
   class  ProgramContext : public antlr4::ParserRuleContext {
   public:
@@ -2915,6 +2920,8 @@ public:
     antlr4::tree::TerminalNode *Is();
     PatternListContext *patternList();
     antlr4::tree::TerminalNode *Question();
+    antlr4::tree::TerminalNode *Type();
+    TypeTraitContext *typeTrait();
     std::vector<RelationalExpressionContext *> relationalExpression();
     RelationalExpressionContext* relationalExpression(size_t i);
     antlr4::tree::TerminalNode *Less();
@@ -2935,12 +2942,15 @@ public:
     EqualityExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     RelationalExpressionContext *relationalExpression();
+    antlr4::tree::TerminalNode *Type();
+    std::vector<TheTypeIdContext *> theTypeId();
+    TheTypeIdContext* theTypeId(size_t i);
+    antlr4::tree::TerminalNode *Equal();
+    antlr4::tree::TerminalNode *NotEqual();
     std::vector<EqualityExpressionContext *> equalityExpression();
     EqualityExpressionContext* equalityExpression(size_t i);
     antlr4::tree::TerminalNode *IdentityEqual();
     antlr4::tree::TerminalNode *NotIdentityEqual();
-    antlr4::tree::TerminalNode *Equal();
-    antlr4::tree::TerminalNode *NotEqual();
     antlr4::tree::TerminalNode *Op5();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -3272,6 +3282,54 @@ public:
 
   PatternContext* pattern();
 
+  class  TypeTraitContext : public antlr4::ParserRuleContext {
+  public:
+    TypeTraitContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Void();
+    antlr4::tree::TerminalNode *Null();
+    antlr4::tree::TerminalNode *Struct();
+    antlr4::tree::TerminalNode *Enum();
+    antlr4::tree::TerminalNode *Class();
+    antlr4::tree::TerminalNode *Unowned();
+    antlr4::tree::TerminalNode *Weak();
+    antlr4::tree::TerminalNode *Interface();
+    antlr4::tree::TerminalNode *Union();
+    antlr4::tree::TerminalNode *LeftParen();
+    antlr4::tree::TerminalNode *RightParen();
+    antlr4::tree::TerminalNode *Arrow();
+    antlr4::tree::TerminalNode *Star();
+    std::vector<antlr4::tree::TerminalNode *> Amp();
+    antlr4::tree::TerminalNode* Amp(size_t i);
+    antlr4::tree::TerminalNode *Question();
+    antlr4::tree::TerminalNode *Ref();
+    antlr4::tree::TerminalNode *Const();
+    antlr4::tree::TerminalNode *Volatile();
+    antlr4::tree::TerminalNode *Abstract();
+    antlr4::tree::TerminalNode *Final();
+    antlr4::tree::TerminalNode *New();
+    antlr4::tree::TerminalNode *Tilde();
+    antlr4::tree::TerminalNode *Operator_();
+    std::vector<TheTypeIdContext *> theTypeId();
+    TheTypeIdContext* theTypeId(size_t i);
+    antlr4::tree::TerminalNode *Less();
+    antlr4::tree::TerminalNode *Identifier();
+    antlr4::tree::TerminalNode *Greater();
+    NotContext *not_();
+    std::vector<antlr4::tree::TerminalNode *> Or();
+    antlr4::tree::TerminalNode* Or(size_t i);
+    antlr4::tree::TerminalNode *Default();
+    antlr4::tree::TerminalNode *Noexcept();
+    antlr4::tree::TerminalNode *Implicit();
+    antlr4::tree::TerminalNode *Move();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  TypeTraitContext* typeTrait();
+
   class  PropertyPatternContext : public antlr4::ParserRuleContext {
   public:
     PropertyPatternContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -3425,6 +3483,7 @@ public:
     antlr4::tree::TerminalNode *Self();
     antlr4::tree::TerminalNode *Object();
     DecltypeSpecifierContext *decltypeSpecifier();
+    DecaySpecifierContext *decaySpecifier();
     FunctionTypeIdContext *functionTypeId();
     antlr4::tree::TerminalNode *LeftParen();
     std::vector<TheTypeIdContext *> theTypeId();
@@ -3673,6 +3732,11 @@ public:
     SingleTypeIdContext* singleTypeId(size_t i);
     std::vector<antlr4::tree::TerminalNode *> VertLine();
     antlr4::tree::TerminalNode* VertLine(size_t i);
+    ConstantExpressionContext *constantExpression();
+    antlr4::tree::TerminalNode *Question();
+    std::vector<TheTypeIdContext *> theTypeId();
+    TheTypeIdContext* theTypeId(size_t i);
+    antlr4::tree::TerminalNode *Colon();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -3892,6 +3956,22 @@ public:
   };
 
   DecltypeSpecifierContext* decltypeSpecifier();
+
+  class  DecaySpecifierContext : public antlr4::ParserRuleContext {
+  public:
+    DecaySpecifierContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Decay();
+    antlr4::tree::TerminalNode *LeftParen();
+    TheTypeIdContext *theTypeId();
+    antlr4::tree::TerminalNode *RightParen();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  DecaySpecifierContext* decaySpecifier();
 
   class  EnumNameContext : public antlr4::ParserRuleContext {
   public:
@@ -4298,6 +4378,7 @@ public:
     antlr4::tree::TerminalNode *Doublecolon();
     LambdaExpressionContext *lambdaExpression();
     MethodBindingExpressionContext *methodBindingExpression();
+    DeclvalExpressionContext *declvalExpression();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -4600,6 +4681,22 @@ public:
   };
 
   InterpolatedExpressionContext* interpolatedExpression();
+
+  class  DeclvalExpressionContext : public antlr4::ParserRuleContext {
+  public:
+    DeclvalExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Declval();
+    antlr4::tree::TerminalNode *LeftParen();
+    TheTypeIdContext *theTypeId();
+    antlr4::tree::TerminalNode *RightParen();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  DeclvalExpressionContext* declvalExpression();
 
 
   bool sempred(antlr4::RuleContext *_localctx, size_t ruleIndex, size_t predicateIndex) override;

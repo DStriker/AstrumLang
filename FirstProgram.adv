@@ -769,11 +769,22 @@ main: ()
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);
 }
 
-public struct <T1, TArgs...> GenericStruct
+IS_VOID: <T> bool == type T is not class or type T is ()-> 
+	or type T is operator i32 or type T is not VectorClass or type T is IInterface;
+
+type Decayed<T> = decay(T);
+type Conditional<T> = 
+	type T is class ? 
+		i32 : 
+		type T is struct ? 
+			i32 | str :
+			f32 | str;
+
+public struct <T1, TArgs...> GenericStruct 
 {
 	public t1: T1;
 	public t2: (TArgs...);
-	public s: usize;
+	private s: usize;
 
 	public this(in ref t1: T1, forward args: TArgs...)
 	{
@@ -783,6 +794,8 @@ public struct <T1, TArgs...> GenericStruct
 		print(s);
 	}
 }
+
+printf: <TArgs...> (in fmt: str, forward args: TArgs...) => std.printf(fmt, forward args...);
 
 type Action<Args...> = (Args...) -> void;
 type Predicate<T> = (T) -> bool;

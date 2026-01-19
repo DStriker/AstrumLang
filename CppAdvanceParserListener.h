@@ -500,6 +500,9 @@ public:
   virtual void enterPattern(CppAdvanceParser::PatternContext *ctx) = 0;
   virtual void exitPattern(CppAdvanceParser::PatternContext *ctx) = 0;
 
+  virtual void enterTypeTrait(CppAdvanceParser::TypeTraitContext *ctx) = 0;
+  virtual void exitTypeTrait(CppAdvanceParser::TypeTraitContext *ctx) = 0;
+
   virtual void enterPropertyPattern(CppAdvanceParser::PropertyPatternContext *ctx) = 0;
   virtual void exitPropertyPattern(CppAdvanceParser::PropertyPatternContext *ctx) = 0;
 
@@ -610,6 +613,9 @@ public:
 
   virtual void enterDecltypeSpecifier(CppAdvanceParser::DecltypeSpecifierContext *ctx) = 0;
   virtual void exitDecltypeSpecifier(CppAdvanceParser::DecltypeSpecifierContext *ctx) = 0;
+
+  virtual void enterDecaySpecifier(CppAdvanceParser::DecaySpecifierContext *ctx) = 0;
+  virtual void exitDecaySpecifier(CppAdvanceParser::DecaySpecifierContext *ctx) = 0;
 
   virtual void enterEnumName(CppAdvanceParser::EnumNameContext *ctx) = 0;
   virtual void exitEnumName(CppAdvanceParser::EnumNameContext *ctx) = 0;
@@ -727,6 +733,9 @@ public:
 
   virtual void enterInterpolatedExpression(CppAdvanceParser::InterpolatedExpressionContext *ctx) = 0;
   virtual void exitInterpolatedExpression(CppAdvanceParser::InterpolatedExpressionContext *ctx) = 0;
+
+  virtual void enterDeclvalExpression(CppAdvanceParser::DeclvalExpressionContext *ctx) = 0;
+  virtual void exitDeclvalExpression(CppAdvanceParser::DeclvalExpressionContext *ctx) = 0;
 
 
 };

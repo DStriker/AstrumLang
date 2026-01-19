@@ -17075,6 +17075,11 @@ void CppAdvanceCodegen::printSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpe
 		printExpression(decl->expr());
 		out << ")";
 	}
+	else if (auto decl = ctx->decaySpecifier()) {
+		out << "std::remove_cvref_t<";
+		printTypeId(decl->theTypeId());
+		out << ">";
+	}
 	else if (auto f = ctx->functionTypeId())
 	{
 		out << "CppAdvance::FunctionRef<";
@@ -17786,6 +17791,19 @@ void CppAdvanceCodegen::printEqualityExpression(CppAdvanceParser::EqualityExpres
 	{
 		printRelationalExpression(ctx->relationalExpression());
 	}
+	else if (!ctx->theTypeId().empty())
+	{
+		if (ctx->NotEqual())
+		{
+			out << "!";
+		}
+
+		out << "std::is_same_v<";
+		printTypeId(ctx->theTypeId(0));
+		out << ", ";
+		printTypeId(ctx->theTypeId(1));
+		out << ">";
+	}
 	else if (ctx->Equal())
 	{
 		printEqualityExpression(ctx->equalityExpression(0));
@@ -17921,6 +17939,222 @@ void CppAdvanceCodegen::printRelationalExpression(CppAdvanceParser::RelationalEx
 		printRelationalExpression(ctx->relationalExpression(0));
 		out << " <= ";
 		printRelationalExpression(ctx->relationalExpression(1));
+	}
+	else if (auto trait = ctx->typeTrait())
+	{
+		if (trait->not_())
+			out << "!";
+		if (trait->Void())
+		{
+			out << "std::is_void_v<";
+		}
+		else if (trait->Null())
+		{
+			out << "std::is_null_pointer_v<";
+		}
+		else if (trait->Struct())
+		{
+			if (trait->Ref())
+			{
+				out << "std::is_base_of_v<CppAdvance::RefStruct, ";
+			}
+			else if (trait->Union())
+			{
+				out << "std::is_union_v<";
+			}
+			else {
+				out << "std::is_base_of_v<CppAdvance::Struct, ";
+			}
+		}
+		else if (trait->Enum())
+		{
+			if (trait->Class())
+			{
+				out << "std::is_base_of_v<CppAdvance::EnumClassRef, ";
+			}
+			else {
+				out << "std::is_base_of_v<CppAdvance::Enum, ";
+			}
+		}
+		else if (trait->Union())
+		{
+			out << "std::is_base_of_v<CppAdvance::Union, ";
+		}
+		else if (trait->Class())
+		{
+			out << "std::is_base_of_v<CppAdvance::ObjectRef, ";
+		}
+		else if (trait->Interface())
+		{
+			out << "std::is_base_of_v<CppAdvance::InterfaceRef, ";
+		}
+		else if (trait->Unowned())
+		{
+			out << "std::is_base_of_v<CppAdvance::ObjectRef__Unowned, ";
+		}
+		else if (trait->Weak())
+		{
+			out << "std::is_base_of_v<CppAdvance::ObjectRef__Weak, ";
+		}
+		else if (trait->Arrow())
+		{
+			out << "std::is_base_of_v<CppAdvance::FuncBase, ";
+		}
+		else if (trait->Star())
+		{
+			out << "CppAdvance::is_instance_of_v<";
+		}
+		else if (trait->Question())
+		{
+			out << "CppAdvance::IsNullable<";
+		}
+		else if (!trait->Amp().empty())
+		{
+			if (trait->Amp().size() > 1)
+			{
+				out << "std::is_rvalue_reference_v<";
+			}
+			else {
+				out << "std::is_lvalue_reference_v<";
+			}
+		}
+		else if (trait->Ref())
+		{
+			out << "std::is_reference_v<";
+		}
+		else if (trait->Const())
+		{
+			out << "std::is_const_v<";
+		}
+		else if (trait->Volatile())
+		{
+			out << "std::is_volatile_v<";
+		}
+		else if (trait->Abstract())
+		{
+			out << "std::is_abstract_v<";
+		}
+		else if (trait->Final())
+		{
+			out << "std::is_final_v<";
+		}
+		else if (trait->Less())
+		{
+			out << "CppAdvance::is_instance_of_v<";
+		}
+		else if (trait->New())
+		{
+			if (trait->theTypeId().empty())
+			{
+				if (trait->Default())
+				{
+					out << "std::is_trivially_default_constructible_v<";
+				}
+				else if (trait->Noexcept())
+				{
+					out << "std::is_nothrow_default_constructible_v<";
+				}
+				else
+				{
+					out << "std::is_default_constructible_v<";
+				}
+			}
+			else if (trait->Move())
+			{
+				if (trait->Default())
+				{
+					out << "std::is_trivially_move_constructible_v<";
+				}
+				else if (trait->Noexcept())
+				{
+					out << "std::is_nothrow_move_constructible_v<";
+				}
+				else
+				{
+					out << "std::is_move_constructible_v<";
+				}
+			}
+			else if (trait->Default())
+			{
+				out << "std::is_trivially_constructible_v<";
+			}
+			else if (trait->Noexcept())
+			{
+				out << "std::is_nothrow_constructible_v<";
+			}
+			else 
+			{
+				out << "std::is_constructible_v<";
+			}
+		}
+		else if (trait->Tilde())
+		{
+			if (trait->Default())
+			{
+				out << "std::is_trivially_destructible_v<";
+			}
+			else if (trait->Noexcept())
+			{
+				out << "std::is_nothrow_destructible_v<";
+			}
+			else
+			{
+				out << "std::is_destructible_v<";
+			}
+		}
+		else if (trait->Operator_())
+		{
+			out << "std::convertible_to<";
+		}
+		else if (!trait->Or().empty())
+		{
+			out << "CppAdvance::IsAnyOf<";
+		}
+		else
+		{
+			out << "CppAdvance::TypeIs<";
+		}
+
+		printTypeId(ctx->theTypeId());
+
+		if (trait->Star()) {
+			out << ", CppAdvance::RawPtr";
+		}
+		else if (trait->Less())
+		{
+			out << ", ";
+			printTypeId(trait->theTypeId(0));
+		}
+		else if (!trait->Or().empty())
+		{
+			for (auto type : trait->theTypeId())
+			{
+				out << ", ";
+				printTypeId(type);
+			}
+		}
+		else if (trait->New())
+		{
+			if (!trait->theTypeId().empty() && !trait->Move())
+			{
+				for (auto type : trait->theTypeId())
+				{
+					out << ", ";
+					printTypeId(type);
+				}
+			}
+		}
+		else if (trait->Operator_())
+		{
+			out << ", ";
+			printTypeId(trait->theTypeId(0));
+		}
+		else if (!trait->theTypeId().empty())
+		{
+			out << ", ";
+			printTypeId(trait->theTypeId(0));
+		}
+		out << ">";
 	}
 	else
 	{
@@ -19329,6 +19563,10 @@ void CppAdvanceCodegen::printPrimaryExpression(CppAdvanceParser::PrimaryExpressi
 	{
 		printMethodBindingExpression(ctx->methodBindingExpression());
 	}
+	else if (ctx->declvalExpression())
+	{
+		printDeclvalExpression(ctx->declvalExpression());
+	}
 }
 
 void CppAdvanceCodegen::printTupleExpression(CppAdvanceParser::TupleExpressionContext* ctx) const
@@ -19589,6 +19827,16 @@ void CppAdvanceCodegen::printTypeId(CppAdvanceParser::TheTypeIdContext* ctx) con
 			first = false;
 			printSingleTypeId(type);
 		}
+		out << ">";
+	}
+	else if (ctx->constantExpression())
+	{
+		out << "std::conditional_t<";
+		printConstantExpression(ctx->constantExpression());
+		out << ", ";
+		printTypeId(ctx->theTypeId(0));
+		out << ", ";
+		printTypeId(ctx->theTypeId(1));
 		out << ">";
 	}
 	else {
@@ -20371,4 +20619,11 @@ void CppAdvanceCodegen::printInterpolatedStringLiteral(CppAdvanceParser::Interpo
 	{
 		out << ")";
 	}
+}
+
+void CppAdvanceCodegen::printDeclvalExpression(CppAdvanceParser::DeclvalExpressionContext* ctx) const
+{
+	out << "std::declval<";
+	printTypeId(ctx->theTypeId());
+	out << ">()";
 }

@@ -87,9 +87,18 @@ namespace __FirstProgram_Protected { using Test112 = typename Test1::Test2::Clas
 template<class A, class C> using SimpleTuple = std::tuple<A, bool, C>;
 #line 43 "FirstProgram.adv"
 using ImportantOptions = __ntuples::NamedTuple_4e7be1ed49b09d71;
-#line 787 "FirstProgram.adv"
+#line 775 "FirstProgram.adv"
+template<class T> using Decayed = std::remove_cvref_t<T>;
+#line 776 "FirstProgram.adv"
+template<class T> using Conditional = 
+	std::conditional_t<std::is_base_of_v<CppAdvance::ObjectRef, T>, 
+		CppAdvance::i32, 
+		std::conditional_t<std::is_base_of_v<CppAdvance::Struct, T>,
+			Union2<CppAdvance::i32, CppAdvance::Str>,
+			Union2<CppAdvance::f32, CppAdvance::Str>>>;
+#line 800 "FirstProgram.adv"
 template<class... Args> using Action = CppAdvance::FunctionRef<void(Args...)>;
-#line 788 "FirstProgram.adv"
+#line 801 "FirstProgram.adv"
 template<class T> using Predicate = CppAdvance::FunctionRef<bool (T)>;
 //###############################################################################
 //# Type definitions
@@ -2799,19 +2808,19 @@ struct alignas((alignof(CppAdvance::i64))) TestStruct final : public CppAdvance:
 };
 
 template<class T1, class... TArgs> class __Class_GenericStruct;
-#line 772 "FirstProgram.adv"
+#line 783 "FirstProgram.adv"
 template<class T1, class... TArgs> struct GenericStruct final : public CppAdvance::Struct {
 	public: using __self = GenericStruct<T1, TArgs...>;
 	public: using __class = __Class_GenericStruct<T1, TArgs...>;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 774 "FirstProgram.adv"
+	#line 785 "FirstProgram.adv"
 	public: T1 t1; ADV_CHECK_REF_STRUCT("T1", T1);
-	#line 775 "FirstProgram.adv"
+	#line 786 "FirstProgram.adv"
 	public: std::tuple<TArgs...> t2; ADV_CHECK_REF_STRUCT("(TArgs...)", std::tuple<TArgs...>);
-	#line 776 "FirstProgram.adv"
-	public: CppAdvance::usize s; ADV_CHECK_REF_STRUCT("usize", CppAdvance::usize);
+	#line 787 "FirstProgram.adv"
+	private: CppAdvance::usize s; ADV_CHECK_REF_STRUCT("usize", CppAdvance::usize);
 	public: GenericStruct(T1 _t1, std::tuple<TArgs...> _t2, CppAdvance::usize _s) : t1{_t1}, t2{_t2}, s{_s} {}
-	#line 778 "FirstProgram.adv"
+	#line 789 "FirstProgram.adv"
 	public: [[clang::annotate("varargs:1")]] TESTDLL_API GenericStruct(const T1& t1, TArgs&&... args) ;
 	
 };
@@ -3237,7 +3246,7 @@ class __Class_TestStruct final : public CppAdvance::ValueType
 ADV_CHECK_FOR_CONCRETE(TestStruct);
 
 
-#line 772 "FirstProgram.adv"
+#line 783 "FirstProgram.adv"
 template<class T1, class... TArgs> class __Class_GenericStruct final : public CppAdvance::ValueType
 {
 	#line 9999 "FirstProgram.adv"
@@ -3331,6 +3340,8 @@ inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32;
 inline constexpr auto testInt(CppAdvance::i32 i)  -> const CppAdvance::i32;
 #line 638 "FirstProgram.adv"
 inline auto printSuck()  -> decltype(auto);
+#line 798 "FirstProgram.adv"
+template<class... TArgs> inline auto printf(CppAdvance::In<CppAdvance::Str> fmt, TArgs&&... args)  -> decltype(auto);
 //###############################################################################
 //# Global compile-time constants
 //###############################################################################
@@ -3346,6 +3357,8 @@ inline constexpr auto INT_CONSTANT = NORMAL_CONSTANT<CppAdvance::i32>;
 #line 16 "FirstProgram.adv"
 inline constexpr auto LONG_CONSTANT = NORMAL_CONSTANT<CppAdvance::i64>;
 #endif 
+#line 772 "FirstProgram.adv"
+template<class T> inline constexpr bool IS_VOID = !std::is_base_of_v<CppAdvance::ObjectRef, T> || std::is_base_of_v<CppAdvance::FuncBase, T> || std::convertible_to<T, CppAdvance::i32> || !CppAdvance::TypeIs<T, VectorClass> || CppAdvance::TypeIs<T, IInterface>;
 //###############################################################################
 //# Global variable declarations
 //###############################################################################
@@ -3885,17 +3898,23 @@ inline auto printSuck()  -> decltype(auto)
 	#line 638 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(print(CppAdvance::Str{u"Suck my dick"})); 
 }
-#line 778 "FirstProgram.adv"
+#line 789 "FirstProgram.adv"
 template<class T1, class... TArgs> GenericStruct<T1, TArgs...>::GenericStruct(const T1& t1, TArgs&&... args)  : 
-#line 780 "FirstProgram.adv"
+#line 791 "FirstProgram.adv"
 t1{t1}, 
-#line 781 "FirstProgram.adv"
+#line 792 "FirstProgram.adv"
 t2{std::forward<decltype(args)>(args)...}, 
-#line 782 "FirstProgram.adv"
+#line 793 "FirstProgram.adv"
 s{CppAdvance::usize(sizeof...(TArgs))}
 {
-	#line 783 "FirstProgram.adv"
+	#line 794 "FirstProgram.adv"
 	print(s);
+}
+#line 798 "FirstProgram.adv"
+template<class... TArgs> inline auto printf(CppAdvance::In<CppAdvance::Str> fmt, TArgs&&... args)  -> decltype(auto)
+{
+	#line 798 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(std::printf(fmt, std::forward<decltype(args)>(args)...)); 
 }
 #line 9999 "FirstProgram.adv"
 
