@@ -730,6 +730,7 @@ primaryExpression:
 	| Super
 	| Field
 	| LeftParen expr RightParen
+	| foldExpression 
 	| LeftParen theTypeId RightParen Dot (Type | Identifier)
 	| tupleExpression
 	| Doublecolon? idExpression
@@ -737,6 +738,17 @@ primaryExpression:
 	| methodBindingExpression
 	| declvalExpression
 	;
+
+foldExpression:
+	LeftParen(
+	  (foldLeftExpression (operator | And | Or) Ellipsis ((operator | And | Or) foldRightExpression)?)
+	| (Ellipsis (operator | And | Or) foldRightExpression)
+	)RightParen
+	;
+
+foldLeftExpression: unaryExpression;
+
+foldRightExpression: unaryExpression;
 
 unaryPrefixOperator:
 	  Plus

@@ -692,6 +692,15 @@ public:
   virtual void enterPrimaryExpression(CppAdvanceParser::PrimaryExpressionContext *ctx) = 0;
   virtual void exitPrimaryExpression(CppAdvanceParser::PrimaryExpressionContext *ctx) = 0;
 
+  virtual void enterFoldExpression(CppAdvanceParser::FoldExpressionContext *ctx) = 0;
+  virtual void exitFoldExpression(CppAdvanceParser::FoldExpressionContext *ctx) = 0;
+
+  virtual void enterFoldLeftExpression(CppAdvanceParser::FoldLeftExpressionContext *ctx) = 0;
+  virtual void exitFoldLeftExpression(CppAdvanceParser::FoldLeftExpressionContext *ctx) = 0;
+
+  virtual void enterFoldRightExpression(CppAdvanceParser::FoldRightExpressionContext *ctx) = 0;
+  virtual void exitFoldRightExpression(CppAdvanceParser::FoldRightExpressionContext *ctx) = 0;
+
   virtual void enterUnaryPrefixOperator(CppAdvanceParser::UnaryPrefixOperatorContext *ctx) = 0;
   virtual void exitUnaryPrefixOperator(CppAdvanceParser::UnaryPrefixOperatorContext *ctx) = 0;
 

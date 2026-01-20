@@ -19871,6 +19871,10 @@ void CppAdvanceCodegen::printPrimaryExpression(CppAdvanceParser::PrimaryExpressi
 			out << "field";
 		}
 	}
+	else if (ctx->foldExpression())
+	{
+		printFoldExpression(ctx->foldExpression());
+	}
 	else if (ctx->lambdaExpression())
 	{
 		printLambdaExpression(ctx->lambdaExpression());
@@ -19899,6 +19903,45 @@ void CppAdvanceCodegen::printTupleExpression(CppAdvanceParser::TupleExpressionCo
 		}
 		out << ")";
 	}
+}
+
+void CppAdvanceCodegen::printFoldExpression(CppAdvanceParser::FoldExpressionContext* ctx) const
+{
+	out << "(";
+	if (ctx->foldLeftExpression())
+	{
+		printUnaryExpression(ctx->foldLeftExpression()->unaryExpression());
+		if (!ctx->operator_().empty())
+		{
+			out << " " << ctx->operator_(0)->getText();
+		}
+		else if (!ctx->And().empty())
+		{
+			out << " &&";
+		}
+		else if (!ctx->Or().empty())
+		{
+			out << " ||";
+		}
+	}
+	out << " ... ";
+	if (ctx->foldRightExpression())
+	{
+		if (!ctx->operator_().empty())
+		{
+			out << ctx->operator_(0)->getText() << " ";
+		}
+		else if (!ctx->And().empty())
+		{
+			out << "&& ";
+		}
+		else if (!ctx->Or().empty())
+		{
+			out << "|| ";
+		}
+		printUnaryExpression(ctx->foldRightExpression()->unaryExpression());
+	}
+	out << ")";
 }
 
 void CppAdvanceCodegen::printLambdaExpression(CppAdvanceParser::LambdaExpressionContext* ctx) const

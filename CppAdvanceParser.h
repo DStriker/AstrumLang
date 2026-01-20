@@ -136,13 +136,14 @@ public:
     RuleMethodOwnerExpression = 217, RuleMethodName = 218, RuleLambdaExpression = 219, 
     RuleLambdaCaptureList = 220, RuleLambdaCaptureClause = 221, RuleCapture = 222, 
     RuleLambdaDeclarator = 223, RuleLambdaBody = 224, RulePrimaryExpression = 225, 
-    RuleUnaryPrefixOperator = 226, RuleUnaryCustomOperator = 227, RuleRefCaptureOperator = 228, 
-    RuleUnaryPostfixOperator = 229, RuleNot = 230, RuleOperator = 231, RuleLiteral = 232, 
-    RuleInterpolatedStringLiteral = 233, RuleInterpolatedRegularStringLiteral = 234, 
-    RuleInterpolatedRegularStringPart = 235, RuleInterpolatedVerbatiumStringLiteral = 236, 
-    RuleInterpolatedVerbatiumStringPart = 237, RuleInterpolatedMultilineStringLiteral = 238, 
-    RuleInterpolatedMultilineStringPart = 239, RuleInterpolatedExpression = 240, 
-    RuleDeclvalExpression = 241
+    RuleFoldExpression = 226, RuleFoldLeftExpression = 227, RuleFoldRightExpression = 228, 
+    RuleUnaryPrefixOperator = 229, RuleUnaryCustomOperator = 230, RuleRefCaptureOperator = 231, 
+    RuleUnaryPostfixOperator = 232, RuleNot = 233, RuleOperator = 234, RuleLiteral = 235, 
+    RuleInterpolatedStringLiteral = 236, RuleInterpolatedRegularStringLiteral = 237, 
+    RuleInterpolatedRegularStringPart = 238, RuleInterpolatedVerbatiumStringLiteral = 239, 
+    RuleInterpolatedVerbatiumStringPart = 240, RuleInterpolatedMultilineStringLiteral = 241, 
+    RuleInterpolatedMultilineStringPart = 242, RuleInterpolatedExpression = 243, 
+    RuleDeclvalExpression = 244
   };
 
   explicit CppAdvanceParser(antlr4::TokenStream *input);
@@ -388,6 +389,9 @@ public:
   class LambdaDeclaratorContext;
   class LambdaBodyContext;
   class PrimaryExpressionContext;
+  class FoldExpressionContext;
+  class FoldLeftExpressionContext;
+  class FoldRightExpressionContext;
   class UnaryPrefixOperatorContext;
   class UnaryCustomOperatorContext;
   class RefCaptureOperatorContext;
@@ -4393,6 +4397,7 @@ public:
     antlr4::tree::TerminalNode *LeftParen();
     ExprContext *expr();
     antlr4::tree::TerminalNode *RightParen();
+    FoldExpressionContext *foldExpression();
     TheTypeIdContext *theTypeId();
     antlr4::tree::TerminalNode *Dot();
     antlr4::tree::TerminalNode *Type();
@@ -4410,6 +4415,55 @@ public:
   };
 
   PrimaryExpressionContext* primaryExpression();
+
+  class  FoldExpressionContext : public antlr4::ParserRuleContext {
+  public:
+    FoldExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *LeftParen();
+    antlr4::tree::TerminalNode *RightParen();
+    FoldLeftExpressionContext *foldLeftExpression();
+    antlr4::tree::TerminalNode *Ellipsis();
+    FoldRightExpressionContext *foldRightExpression();
+    std::vector<OperatorContext *> operator_();
+    OperatorContext* operator_(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> And();
+    antlr4::tree::TerminalNode* And(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> Or();
+    antlr4::tree::TerminalNode* Or(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  FoldExpressionContext* foldExpression();
+
+  class  FoldLeftExpressionContext : public antlr4::ParserRuleContext {
+  public:
+    FoldLeftExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    UnaryExpressionContext *unaryExpression();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  FoldLeftExpressionContext* foldLeftExpression();
+
+  class  FoldRightExpressionContext : public antlr4::ParserRuleContext {
+  public:
+    FoldRightExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    UnaryExpressionContext *unaryExpression();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  FoldRightExpressionContext* foldRightExpression();
 
   class  UnaryPrefixOperatorContext : public antlr4::ParserRuleContext {
   public:

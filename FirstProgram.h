@@ -91,9 +91,9 @@ using ImportantOptions = __ntuples::NamedTuple_4e7be1ed49b09d71;
 template<class T> using Decayed = std::remove_cvref_t<T>;
 #line 777 "FirstProgram.adv"
 template<class T> using Conditional = std::conditional_t<std::is_base_of_v<CppAdvance::ObjectRef, T>, CppAdvance::i32, std::conditional_t<std::is_base_of_v<CppAdvance::Struct, T>, Union2<CppAdvance::i32, CppAdvance::Str>, Union2<CppAdvance::f32, CppAdvance::Str>>>;
-#line 822 "FirstProgram.adv"
+#line 803 "FirstProgram.adv"
 template<class... Args> using Action = CppAdvance::FunctionRef<void(Args...)>;
-#line 823 "FirstProgram.adv"
+#line 804 "FirstProgram.adv"
 template<class T> using Predicate = CppAdvance::FunctionRef<bool (T)>;
 //###############################################################################
 //# Type definitions
@@ -2764,15 +2764,15 @@ template<class T> inline constexpr auto __static_GetSuperCount(CppAdvance::i32 x
 template<class T> inline constexpr auto __static_getCount3() -> const CppAdvance::i32;
 
 #line 608 "FirstProgram.adv"
-template<class T> requires(CppAdvance::TypeIs<T, CppAdvance::i32>()) using __extension_608_vector = vector<T>;
+template<class T> requires(CppAdvance::TypeIs<T, CppAdvance::i32>()) using __extension_608_T = T;
 #line 612 "FirstProgram.adv"
-template<class T> [[clang::annotate("UserAttr: AllowPostfix")]] inline constexpr auto _operator_bsl_mul_div(__extension_608_vector<T> const& __this LIFETIMEBOUND)  -> const CppAdvance::i32;
-template<class T> [[clang::annotate("UserAttr: AllowPostfix")]] inline constexpr auto _operator_bsl_mul_div_postfix(__extension_608_vector<T> & __this)  -> decltype(auto);
+template<class T> [[clang::annotate("UserAttr: AllowPostfix")]] inline constexpr auto _operator_bsl_mul_div(__extension_608_T<T> const& __this LIFETIMEBOUND)  -> const CppAdvance::i32;
+template<class T> [[clang::annotate("UserAttr: AllowPostfix")]] inline constexpr auto _operator_bsl_mul_div_postfix(__extension_608_T<T> & __this)  -> decltype(auto);
 #line 615 "FirstProgram.adv"
-template<class T> [[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_bsl_mul_div(__extension_608_vector<T> const& __this LIFETIMEBOUND, CppAdvance::f32 other)  -> const CppAdvance::f32;
-template<class T> [[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_bsl_mul_div(CppAdvance::f32 other, const __extension_608_vector<T> & __this)  -> decltype(auto);
+template<class T> [[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_bsl_mul_div(__extension_608_T<T> const& __this LIFETIMEBOUND, CppAdvance::f32 other)  -> const CppAdvance::f32;
+template<class T> [[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_bsl_mul_div(CppAdvance::f32 other, const __extension_608_T<T> & __this)  -> decltype(auto);
 #line 609 "FirstProgram.adv"
-template<class T> inline constexpr auto getkm(__extension_608_vector<T> const& __this ) -> const CppAdvance::i32;
+template<class T> inline constexpr auto getkm(__extension_608_T<T> const& __this ) -> const CppAdvance::i32;
 
 #line 618 "FirstProgram.adv"
 using __extension_618_f64 = CppAdvance::f64;
@@ -2815,24 +2815,8 @@ template<class T1, class... TArgs> requires(CppAdvance::TypeIs<T1, CppAdvance::i
 	#line 789 "FirstProgram.adv"
 	private: CppAdvance::usize s; ADV_CHECK_REF_STRUCT("usize", CppAdvance::usize);
 	public: GenericStruct(T1 _t1, std::tuple<TArgs...> _t2, CppAdvance::usize _s) : t1{_t1}, t2{_t2}, s{_s} {}
-	#line 802 "FirstProgram.adv"
-	private: static CppAdvance::i32 p_Count; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
-	#line 807 "FirstProgram.adv"
-	public: static auto setCount(const CppAdvance::i32& value) -> void;
-	#line 803 "FirstProgram.adv"
-	public: static auto getCount()  -> CppAdvance::i32;
-	#line 9999 "FirstProgram.adv"
-	ADV_PROPERTY_GETTER_SETTER_STATIC(public, TESTDLL_API, Count, public, getCount, public, setCount, CppAdvance::i32);
-	#line 815 "FirstProgram.adv"
-	public: inline constexpr auto getName() const  -> CppAdvance::Str;
-	#line 9999 "FirstProgram.adv"
-	ADV_PROPERTY_GETTER(public, Name, getName, CppAdvance::Str);
 	#line 791 "FirstProgram.adv"
 	public: [[clang::annotate("varargs:1")]] TESTDLL_API GenericStruct(const T1& t1, TArgs&&... args) ;
-	#line 799 "FirstProgram.adv"
-	public: inline constexpr auto format() const noexcept -> const CppAdvance::Str;
-	#line 800 "FirstProgram.adv"
-	public: inline constexpr auto HashCode() const  -> const CppAdvance::usize;
 	
 };
 
@@ -3265,9 +3249,6 @@ template<class T1, class... TArgs> requires(CppAdvance::TypeIs<T1, CppAdvance::i
 	__self __value;
 	__Class_GenericStruct(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>) : __value{value} {}
 	operator __underlying() const noexcept { return __value; }
-	auto getName() const -> CppAdvance::Str { return __value.getName(); }
-	auto format() const noexcept -> CppAdvance::Str const { ADV_EXPRESSION_BODY(__value.format()); }
-	auto HashCode() const  -> CppAdvance::usize const { ADV_EXPRESSION_BODY(__value.HashCode()); }
 	
 };
 
@@ -3354,8 +3335,8 @@ inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32;
 inline constexpr auto testInt(CppAdvance::i32 i)  -> const CppAdvance::i32;
 #line 638 "FirstProgram.adv"
 inline auto printSuck()  -> decltype(auto);
-#line 818 "FirstProgram.adv"
-template<class T1, class... TArgs> inline auto printf(T1 fmt, TArgs&&... args)  -> decltype(auto);
+#line 800 "FirstProgram.adv"
+template<class... TArgs> inline auto vsum(TArgs&&... args)  -> decltype(auto);
 //###############################################################################
 //# Global compile-time constants
 //###############################################################################
@@ -3924,53 +3905,11 @@ s{CppAdvance::usize(sizeof...(TArgs))}
 	#line 796 "FirstProgram.adv"
 	print(s);
 }
-#line 799 "FirstProgram.adv"
-template<class T1, class... TArgs> requires(CppAdvance::TypeIs<T1, CppAdvance::i32>()) inline constexpr auto GenericStruct<T1, TArgs...>::format() const noexcept -> const CppAdvance::Str
-{
-	#line 799 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(CppAdvance::Str{u"test"}); 
-}
 #line 800 "FirstProgram.adv"
-template<class T1, class... TArgs> requires(CppAdvance::TypeIs<T1, CppAdvance::i32>()) inline constexpr auto GenericStruct<T1, TArgs...>::HashCode() const  -> const CppAdvance::usize
+template<class... TArgs> inline auto vsum(TArgs&&... args)  -> decltype(auto)
 {
-	#line 800 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(CppAdvance::u32(654321U)); 
-}
-#line 807 "FirstProgram.adv"
-template<class T1, class... TArgs> requires(CppAdvance::TypeIs<T1, CppAdvance::i32>()) auto GenericStruct<T1, TArgs...>::setCount(const CppAdvance::i32& value) -> void 
-{
-	#line 808 "FirstProgram.adv"
-	print(CppAdvance::Str{u"Write"});
-	#line 809 "FirstProgram.adv"
-	if (value > CppAdvance::i32(10)) [[likely]] {
-		#line 810 "FirstProgram.adv"
-		p_Count = value / CppAdvance::i32(10);
-	} else {
-		#line 811 "FirstProgram.adv"
-		p_Count = value;
-	}
-}
-#line 803 "FirstProgram.adv"
-template<class T1, class... TArgs> requires(CppAdvance::TypeIs<T1, CppAdvance::i32>()) auto GenericStruct<T1, TArgs...>::getCount()  -> CppAdvance::i32 
-{
-	#line 804 "FirstProgram.adv"
-	print(CppAdvance::Str{u"Read"});
-	#line 805 "FirstProgram.adv"
-	return p_Count * CppAdvance::i32(10);
-}
-
-#line 815 "FirstProgram.adv"
-template<class T1, class... TArgs> requires(CppAdvance::TypeIs<T1, CppAdvance::i32>()) inline constexpr auto GenericStruct<T1, TArgs...>::getName() const  -> CppAdvance::Str 
-{
-	#line 815 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(CppAdvance::Str{u"Vector3"}); 
-}
-
-#line 818 "FirstProgram.adv"
-template<class T1, class... TArgs> requires(CppAdvance::TypeIs<T1, CppAdvance::Str>()) inline auto printf(T1 fmt, TArgs&&... args)  -> decltype(auto)
-{
-	#line 820 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(print(fmt)); 
+	#line 801 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY((args + ... + CppAdvance::i32(1))); 
 }
 #line 9999 "FirstProgram.adv"
 
@@ -4127,26 +4066,26 @@ template<class T> inline constexpr auto __static_getCount3() -> const CppAdvance
 #line 9999 "FirstProgram.adv"
 
 #line 612 "FirstProgram.adv"
-template<class T> inline constexpr auto _operator_bsl_mul_div(__extension_608_vector<T> const& __this LIFETIMEBOUND)  -> const CppAdvance::i32
+template<class T> inline constexpr auto _operator_bsl_mul_div(__extension_608_T<T> const& __this LIFETIMEBOUND)  -> const CppAdvance::i32
 {
 	#line 612 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(CppAdvance::i32(2)); 
+	ADV_EXPRESSION_BODY(__this / CppAdvance::i32(2)); 
 }
-template<class T> inline constexpr auto _operator_bsl_mul_div_postfix(__extension_608_vector<T> & __this)  -> decltype(auto) { auto copy = __this; ADV_UFCS(_operator_bsl_mul_div)(__this); return copy; }
+template<class T> inline constexpr auto _operator_bsl_mul_div_postfix(__extension_608_T<T> & __this)  -> decltype(auto) { auto copy = __this; ADV_UFCS(_operator_bsl_mul_div)(__this); return copy; }
 
 #line 615 "FirstProgram.adv"
-template<class T> inline constexpr auto _operator_bsl_mul_div(__extension_608_vector<T> const& __this LIFETIMEBOUND, CppAdvance::f32 other)  -> const CppAdvance::f32
+template<class T> inline constexpr auto _operator_bsl_mul_div(__extension_608_T<T> const& __this LIFETIMEBOUND, CppAdvance::f32 other)  -> const CppAdvance::f32
 {
 	#line 615 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(other * CppAdvance::i32(2)); 
+	ADV_EXPRESSION_BODY(CppAdvance::f32{__this} * other * CppAdvance::i32(2)); 
 }
-template<class T> inline constexpr auto _operator_bsl_mul_div(CppAdvance::f32 other, const __extension_608_vector<T> & __this)  -> decltype(auto) { return ADV_UFCS(_operator_bsl_mul_div)(__this, other); }
+template<class T> inline constexpr auto _operator_bsl_mul_div(CppAdvance::f32 other, const __extension_608_T<T> & __this)  -> decltype(auto) { return ADV_UFCS(_operator_bsl_mul_div)(__this, other); }
 
 #line 609 "FirstProgram.adv"
-template<class T> inline constexpr auto getkm(__extension_608_vector<T> const& __this ) -> const CppAdvance::i32
+template<class T> inline constexpr auto getkm(__extension_608_T<T> const& __this ) -> const CppAdvance::i32
 {
 	#line 609 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(CppAdvance::i32(1000)); 
+	ADV_EXPRESSION_BODY(__this * CppAdvance::i32(1000)); 
 }
 #line 9999 "FirstProgram.adv"
 

@@ -250,6 +250,7 @@ public:
 	void printPostfixExpression(CppAdvanceParser::PostfixExpressionContext* ctx) const;
 	void printPrimaryExpression(CppAdvanceParser::PrimaryExpressionContext* ctx) const;
 	void printTupleExpression(CppAdvanceParser::TupleExpressionContext* ctx) const;
+	void printFoldExpression(CppAdvanceParser::FoldExpressionContext* ctx) const;
 	void printLambdaExpression(CppAdvanceParser::LambdaExpressionContext* ctx) const;
 	void printMethodBindingExpression(CppAdvanceParser::MethodBindingExpressionContext* ctx) const;
 	void printTypeSpecifierSeq(CppAdvanceParser::TypeSpecifierSeqContext* ctx) const;
