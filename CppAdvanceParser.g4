@@ -92,7 +92,7 @@ compoundStatement: LeftBrace (stat+)? RightBrace;
 
 structDefinition: structHead LeftBrace structMemberSpecification? RightBrace;
 
-structHead: Unsafe? (Ref | Union)? Struct templateParams? className baseClause?;
+structHead: Unsafe? (Ref | Union)? Struct templateParams? className baseClause? constraintClause?;
 
 structMemberSpecification: structMemberDeclaration+;
 
@@ -127,11 +127,11 @@ structMemberDeclaration:
 
 classDefinition: classHead LeftBrace structMemberSpecification? RightBrace;
 
-classHead: Unsafe? (Abstract | Final | Static)? Class templateParams? className baseClause?;
+classHead: Unsafe? (Abstract | Final | Static)? Class templateParams? className baseClause? constraintClause?;
 
 interfaceDefinition: interfaceHead LeftBrace interfaceMemberSpecification? RightBrace;
 
-interfaceHead: Unsafe? Interface Identifier templateParams? baseClause?;
+interfaceHead: Unsafe? Interface Identifier templateParams? baseClause?  constraintClause?;
 
 interfaceMemberSpecification: interfaceMemberDeclaration+;
 
@@ -174,7 +174,7 @@ enumClassMemberSpecification: Semi structMemberDeclaration+;
 
 unionDefinition: unionHead LeftBrace unionList unionMemberSpecification? RightBrace;
 
-unionHead: Unsafe? Union templateParams? Identifier baseClause?;
+unionHead: Unsafe? Union templateParams? Identifier baseClause? constraintClause?;
 
 unionList: unionEnumerator (Comma unionEnumerator)*;
 
@@ -186,7 +186,8 @@ unionMemberSpecification: Semi enumMemberDeclaration+;
 
 extensionDefinition: extensionHead LeftBrace extensionMemberSpecification? RightBrace;
 
-extensionHead: Unsafe? Extension (templateParams (theTypeId baseClause?)? | templateParams? theTypeId baseClause?);
+extensionHead: Unsafe? Extension (templateParams (theTypeId baseClause?)? constraintClause?
+	| templateParams? theTypeId baseClause? constraintClause?);
 
 extensionMemberSpecification: extensionMemberDeclaration+;
 
@@ -223,13 +224,13 @@ externFunctionDeclaration: Extern Unsafe? Identifier Colon functionParams return
 
 functionTemplateDeclaration: functionSpecifier* Identifier Colon templateParams functionParams returnType? LifetimeAnnotation? exceptionSpecification? Semi;
 
-functionDefinition: functionSpecifier* (Identifier | simpleTemplateId | operatorFunctionId) Colon templateParams? functionParams returnType? LifetimeAnnotation? exceptionSpecification? (functionBody | shortFunctionBody);
+functionDefinition: functionSpecifier* (Identifier | simpleTemplateId | operatorFunctionId) Colon templateParams? functionParams returnType? LifetimeAnnotation? exceptionSpecification? constraintClause? (functionBody | shortFunctionBody);
 
 abstractMethodDeclaration: attributeSpecifierSeq? (accessSpecifier | protectedInternal)? Abstract Mutable? (Identifier | operatorFunctionId) Colon functionParams returnType? LifetimeAnnotation? exceptionSpecification? Semi;
 
 interfaceMethodDeclaration: attributeSpecifierSeq? (Identifier | operatorFunctionId) Colon functionParams returnType? LifetimeAnnotation? exceptionSpecification? Semi;
 
-constructor: Inline? Unsafe? implicitSpecification? This templateParams? functionParams exceptionSpecification? (constructorBody | delegatingConstructorBody | ((Assign | Equal) Default Semi));
+constructor: Inline? Unsafe? implicitSpecification? This templateParams? functionParams exceptionSpecification? constraintClause? (constructorBody | delegatingConstructorBody | ((Assign | Equal) Default Semi));
 
 constructorBody: (Assign | Equal)? LeftBrace delegatingConstructorStatement? memberInitializationList? stat* RightBrace;
 
@@ -243,7 +244,7 @@ memberInitializationStatement: (This Dot)? Identifier Assign initializerClause S
 
 destructor: Inline? Tilde This exceptionSpecification? (functionBody | shortFunctionBody);
 
-conversionFunction: functionSpecifier* implicitSpecification? templateParams? conversionFunctionId exceptionSpecification? (functionBody | shortFunctionBody);
+conversionFunction: functionSpecifier* implicitSpecification? templateParams? conversionFunctionId exceptionSpecification? constraintClause? (functionBody | shortFunctionBody);
 
 indexer: functionSpecifier* templateParams? This LeftBracket paramDeclClause RightBracket returnType exceptionSpecification? (functionBody | shortFunctionBody | indexerProperty);
 
@@ -461,6 +462,8 @@ initializerPart: initializerClause Ellipsis?;
 expressionList: expressionListPart (Comma expressionListPart)*;
 
 expressionListPart: (Identifier Assign)? (conditionalExpression | bracedInitList) Ellipsis? | Out Identifier Colon theTypeId;
+
+constraintClause: Where constantExpression;
 
 patternList: pattern (patternCombinationOperator pattern)*;
 
@@ -709,7 +712,7 @@ methodOwnerExpression: unaryExpression;
 
 methodName: Identifier;
 
-lambdaExpression: lambdaCaptureList? templateParams? lambdaDeclarator lambdaBody;
+lambdaExpression: lambdaCaptureList? templateParams? lambdaDeclarator constraintClause? lambdaBody;
 
 lambdaCaptureList: LeftBracket lambdaCaptureClause RightBracket Mutable?;
 

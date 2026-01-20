@@ -192,6 +192,7 @@ public:
 	void printParamDeclaration(CppAdvanceParser::ParamDeclarationContext* ctx) const;
 	void printExceptionSpecification(CppAdvanceParser::ExceptionSpecificationContext* ctx) const;
 	void printImplicitSpecification(CppAdvanceParser::ImplicitSpecificationContext* ctx) const;
+	void printConstraintClause(CppAdvanceParser::ConstraintClauseContext* ctx) const;
 	void printFunctionBody(CppAdvanceParser::FunctionBodyContext* ctx) const;
 	void printShortFunctionBody(CppAdvanceParser::ShortFunctionBodyContext* ctx) const;
 	void printFriendDeclaration(CppAdvanceParser::FriendDeclarationContext* ctx) const;

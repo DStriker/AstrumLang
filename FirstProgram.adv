@@ -605,7 +605,7 @@ public extension <T> {
 	static GetSuperCount: (x: i32, y: i32) -> i32 ==> x*y + x+y;
 }
 
-public extension i32 {
+public extension <T> where type is i32 {
 	km: i32 ==> this * 1000;
 
 	@AllowPostfix
@@ -761,6 +761,7 @@ main: ()
 		action2?.Invoke();
 		action2?.Invoke();
 		g: GenericStruct(5, 5.13, "abc", false, 6, 2.12f);
+		printf("printfffffffff");
 
 		//print(var.GetStrongReferenceCount());
 		on: object? = vec;
@@ -774,13 +775,14 @@ IS_VOID: <T> bool == type T is not class or type T is ()->
 
 type Decayed<T> = decay(T);
 type Conditional<T> = 
-	type T is class ? 
-		i32 : 
-		type T is struct ? 
-			i32 | str :
-			f32 | str;
+	type T is class 
+		? i32 
+		: type T is struct 
+			? i32 | str 
+			: f32 | str;
 
 public struct <T1, TArgs...> GenericStruct 
+where type T1 is i32
 {
 	public t1: T1;
 	public t2: (TArgs...);
@@ -793,9 +795,29 @@ public struct <T1, TArgs...> GenericStruct
 		this.s = sizeof...(TArgs);
 		print(s);
 	}
+
+	public format: () -> str noexcept ==> "test";
+	public HashCode: () -> usize ==> 654321u;
+
+	public static Count: i32 = 1 {
+		get {
+			print("Read");
+			return field * 10;
+		}
+		set {
+			print("Write");
+			@Likely
+			if (value > 10) field = value / 10;
+			else field = value;
+		}
+	}
+
+	public Name: str ==> "Vector3";
 }
 
-printf: <TArgs...> (in fmt: str, forward args: TArgs...) => std.printf(fmt, forward args...);
+printf: <T1, TArgs...> (fmt: T1, forward args: TArgs...) 
+where type T1 is str 
+	=> print(fmt);
 
 type Action<Args...> = (Args...) -> void;
 type Predicate<T> = (T) -> bool;

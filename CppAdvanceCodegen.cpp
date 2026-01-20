@@ -245,6 +245,11 @@ void CppAdvanceCodegen::printGlobalVariables() const
 		{
 			printTemplateParams(field.templateParams);
 			out << " ";
+			if (field.constraints)
+			{
+				printConstraintClause(field.constraints);
+				out << " ";
+			}
 		}
 		else if (field.isTypeSpecialization)
 		{
@@ -303,6 +308,11 @@ void CppAdvanceCodegen::printGlobalVariables() const
 		{
 			printTemplateParams(prop.parentTemplateParams);
 			out << " ";
+			if (prop.parentConstraints)
+			{
+				printConstraintClause(prop.parentConstraints);
+				out << " ";
+			}
 		}
 		else if (prop.parentTemplateSpecializationArgs)
 		{
@@ -757,6 +767,11 @@ void CppAdvanceCodegen::printForwardDeclarations() const
 			printTemplateParams(type.templateParams);
 			isFunctionDeclaration = false;
 			out << " ";
+			if (type.constraints)
+			{
+				printConstraintClause(type.constraints);
+				out << " ";
+			}
 		}
 		
 		if (type.isRawUnion)
@@ -796,6 +811,11 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			{
 				printTemplateParams(type->templateParams);
 				out << " ";
+				if (type->constraints)
+				{
+					printConstraintClause(type->constraints);
+					out << " ";
+				}
 			}
 			out << "class ";
 			if (type->kind == TypeKind::Struct || type->kind == TypeKind::Enum || type->kind == TypeKind::Union
@@ -812,6 +832,11 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		for (auto param : type->templateParams->templateParamDeclaration())
 		{
 			if (param->Ellipsis()) isVariadicTemplateStruct = true;
+		}
+		if (type->constraints)
+		{
+			printConstraintClause(type->constraints);
+			out << " ";
 		}
 	}
 	else if (type->templateSpecializationArgs)
@@ -2121,7 +2146,8 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				if (prop.isStatic)
 				{
 					sema.staticFields.push_back(
-						VariableDefinition{ "p_" + prop.id, prop.parentTemplateParams, prop.type, prop.pos, prop.initializer, nullptr, nullptr,
+						VariableDefinition{ "p_" + prop.id, prop.parentTemplateParams, prop.parentConstraints, prop.type, prop.pos, prop.initializer,
+						nullptr, nullptr,
 						prop.isProtectedType ? AccessSpecifier::Protected : AccessSpecifier::Private, prop.compilationCondition, prop.parentType,
 						true, prop.isConst, false, false, prop.isUnsafeType, type->templateSpecializationArgs != nullptr });
 				}
@@ -3830,6 +3856,11 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 	{
 		printTemplateParams(type->templateParams);
 		out << " ";
+		if (type->constraints)
+		{
+			printConstraintClause(type->constraints);
+			out << " ";
+		}
 	}
 	else if (type->templateSpecializationArgs)
 	{
@@ -4128,7 +4159,12 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 	if (type->templateParams)
 	{
 		printTemplateParams(type->templateParams);
-		out << " ";
+		out << " "; 
+		if (type->constraints)
+		{
+			printConstraintClause(type->constraints);
+			out << " ";
+		}
 	}
 	else if (type->templateSpecializationArgs)
 	{
@@ -4563,7 +4599,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			out << "#endif " << std::endl << std::string(depth, '\t');
 		}
 		sema.properties.insert_or_assign(field.pos, PropertyDefinition{ field.id, field.type, field.pos, nullptr, nullptr, nullptr, nullptr, nullptr, field.access, field.compilationCondition,
-			"", field.parentType + "::__self", type->templateParams, type->templateSpecializationArgs, true, field.isConst, false, isUnsafe, type->access == AccessSpecifier::Private,
+			"", field.parentType + "::__self", type->templateParams, type->templateSpecializationArgs, type->constraints, true, field.isConst, false, isUnsafe, type->access == AccessSpecifier::Private,
 			type->access == AccessSpecifier::Protected, type->isUnsafe, false, false, false,
 			false, false, false });
 	}
@@ -4761,7 +4797,7 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 		}
 		sema.properties.insert_or_assign(SourcePosition{prop.pos.line, prop.pos.column+1}, PropertyDefinition{ prop.id, prop.type, prop.pos, nullptr,
 			nullptr, nullptr, nullptr, nullptr, prop.access, prop.compilationCondition,
-			"", prop.parentType + "::__self", type->templateParams, type->templateSpecializationArgs, true,
+			"", prop.parentType + "::__self", type->templateParams, type->templateSpecializationArgs, type->constraints, true,
 			prop.isConst, false, isUnsafe, type->access == AccessSpecifier::Private,
 			type->access == AccessSpecifier::Protected, type->isUnsafe, false, false, false,
 			false, false, false });
@@ -5099,6 +5135,11 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 	{
 		printTemplateParams(type->templateParams);
 		out << " ";
+		if (type->constraints)
+		{
+			printConstraintClause(type->constraints);
+			out << " ";
+		}
 	}
 	else if (type->templateSpecializationArgs)
 	{
@@ -5398,6 +5439,11 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 	{
 		printTemplateParams(type->templateParams);
 		out << " ";
+		if (type->constraints)
+		{
+			printConstraintClause(type->constraints);
+			out << " ";
+		}
 	}
 	else if (type->templateSpecializationArgs)
 	{
@@ -6179,6 +6225,11 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	}
 	out << "> concept __ImplementsInterface_" << type->id << " = ";
 	first = true;
+	if (type->constraints)
+	{
+		first = false;
+		printConstantExpression(type->constraints->constantExpression());
+	}
 	if (type->interfaces)
 	{
 		for (auto base : type->interfaces->baseSpecifier())
@@ -6228,6 +6279,11 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	{
 		printTemplateParams(type->templateParams);
 		out << " ";
+		if (type->constraints)
+		{
+			printConstraintClause(type->constraints);
+			out << " ";
+		}
 	}
 	out << "class ";
 	if (isUnsafe) out << "[[clang::annotate(\"unsafe\")]] ";
@@ -7072,6 +7128,11 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	{
 		printTemplateParams(type->templateParams);
 		out << " ";
+		if (type->constraints)
+		{
+			printConstraintClause(type->constraints);
+			out << " ";
+		}
 	}
 	out << "class ";
 	if (isUnsafe) out << "[[clang::annotate(\"unsafe\")]] ";
@@ -7442,6 +7503,11 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	{
 		printTemplateParams(type->templateParams);
 		out << " ";
+		if (type->constraints)
+		{
+			printConstraintClause(type->constraints);
+			out << " ";
+		}
 	}
 	out << "class ";
 	if (isUnsafe) out << "[[clang::annotate(\"unsafe\")]] ";
@@ -8163,6 +8229,11 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 	{
 		printTemplateParams(type->templateParams);
 		out << " ";
+		if (type->constraints)
+		{
+			printConstraintClause(type->constraints);
+			out << " ";
+		}
 	}
 	out << "using __extension_" << type->pos.line << "_" << type->id << " = ";
 	if (type->extensionType)
@@ -8705,6 +8776,15 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 		}
 		else if (func.isCommutative)
 		{
+			if (type->templateParams)
+			{
+				printTemplateParams(type->templateParams);
+				out << " ";
+			}
+			if (func.templateParams) {
+				printTemplateParams(func.templateParams);
+				out << " ";
+			}
 			if (func.attributes)
 			{
 				for (auto attr : func.attributes->attributeSpecifier())
@@ -8741,10 +8821,6 @@ void CppAdvanceCodegen::printExtension(StructDefinition* type) const
 			}
 
 			isFunctionDeclaration = true;
-			if (func.templateParams) {
-				printTemplateParams(func.templateParams);
-				out << " ";
-			}
 			if (func.isConsteval)
 			{
 				out << "inline consteval ";
@@ -10107,6 +10183,12 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 			{
 				printTemplateParams(parent->templateParams);
 				out << " ";
+
+				if (parent->constraints)
+				{
+					printConstraintClause(parent->constraints);
+					out << " ";
+				}
 			}
 			else if (parent->templateSpecializationArgs)
 			{
@@ -10117,6 +10199,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 		{
 			printTemplateParams(type->templateParams);
 			out << " ";
+			if (type->constraints)
+			{
+				printConstraintClause(type->constraints);
+				out << " ";
+			}
 		}
 		else if (type->templateSpecializationArgs)
 		{
@@ -10176,6 +10263,12 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 		{
 			printTemplateParams(parent->templateParams);
 			out << " ";
+
+			if (parent->constraints)
+			{
+				printConstraintClause(parent->constraints);
+				out << " ";
+			}
 		}
 		else if (parent->templateSpecializationArgs)
 		{
@@ -10186,6 +10279,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 	{
 		printTemplateParams(type->templateParams);
 		out << " ";
+		if (type->constraints)
+		{
+			printConstraintClause(type->constraints);
+			out << " ";
+		}
 	}
 	else if (type->templateSpecializationArgs)
 	{
@@ -10244,6 +10342,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 		{
 			printTemplateParams(parent->templateParams);
 			out << " ";
+			if (parent->constraints)
+			{
+				printConstraintClause(parent->constraints);
+				out << " ";
+			}
 		}
 		else if (parent->templateSpecializationArgs)
 		{
@@ -10254,6 +10357,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 	{
 		printTemplateParams(type->templateParams);
 		out << " ";
+		if (type->constraints)
+		{
+			printConstraintClause(type->constraints);
+			out << " ";
+		}
 	}
 	else if (type->templateSpecializationArgs)
 	{
@@ -10357,6 +10465,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 		{
 			printTemplateParams(parent->templateParams);
 			out << " ";
+			if (parent->constraints)
+			{
+				printConstraintClause(parent->constraints);
+				out << " ";
+			}
 		}
 		else if (parent->templateSpecializationArgs)
 		{
@@ -10367,6 +10480,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 	{
 		printTemplateParams(type->templateParams);
 		out << " ";
+		if (type->constraints)
+		{
+			printConstraintClause(type->constraints);
+			out << " ";
+		}
 	}
 	else if (type->templateSpecializationArgs)
 	{
@@ -10425,6 +10543,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 		{
 			printTemplateParams(parent->templateParams);
 			out << " ";
+			if (parent->constraints)
+			{
+				printConstraintClause(parent->constraints);
+				out << " ";
+			}
 		}
 		else if (parent->templateSpecializationArgs)
 		{
@@ -10435,6 +10558,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 	{
 		printTemplateParams(type->templateParams);
 		out << " ";
+		if (type->constraints)
+		{
+			printConstraintClause(type->constraints);
+			out << " ";
+		}
 	}
 	else if (type->templateSpecializationArgs)
 	{
@@ -10538,6 +10666,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 		{
 			printTemplateParams(parent->templateParams);
 			out << " ";
+			if (parent->constraints)
+			{
+				printConstraintClause(parent->constraints);
+				out << " ";
+			}
 		}
 		else if (parent->templateSpecializationArgs)
 		{
@@ -10548,6 +10681,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 	{
 		printTemplateParams(type->templateParams);
 		out << " ";
+		if (type->constraints)
+		{
+			printConstraintClause(type->constraints);
+			out << " ";
+		}
 	}
 	else if (type->templateSpecializationArgs)
 	{
@@ -10606,6 +10744,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 		{
 			printTemplateParams(parent->templateParams);
 			out << " ";
+			if (parent->constraints)
+			{
+				printConstraintClause(parent->constraints);
+				out << " ";
+			}
 		}
 		else if (parent->templateSpecializationArgs)
 		{
@@ -10616,6 +10759,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 	{
 		printTemplateParams(type->templateParams);
 		out << " ";
+		if (type->constraints)
+		{
+			printConstraintClause(type->constraints);
+			out << " ";
+		}
 	}
 	else if (type->templateSpecializationArgs)
 	{
@@ -10728,6 +10876,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 			{
 				printTemplateParams(parent->templateParams);
 				out << " ";
+				if (parent->constraints)
+				{
+					printConstraintClause(parent->constraints);
+					out << " ";
+				}
 			}
 			else if (parent->templateSpecializationArgs)
 			{
@@ -10738,6 +10891,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 		{
 			printTemplateParams(type->templateParams);
 			out << " ";
+			if (type->constraints)
+			{
+				printConstraintClause(type->constraints);
+				out << " ";
+			}
 		}
 		else if (type->templateSpecializationArgs)
 		{
@@ -10876,6 +11034,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 				{
 					printTemplateParams(parent->templateParams);
 					out << " ";
+					if (parent->constraints)
+					{
+						printConstraintClause(parent->constraints);
+						out << " ";
+					}
 				}
 				else if (parent->templateSpecializationArgs)
 				{
@@ -10915,6 +11078,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 			{
 				printTemplateParams(parent->templateParams);
 				out << " ";
+				if (parent->constraints)
+				{
+					printConstraintClause(parent->constraints);
+					out << " ";
+				}
 			}
 			else if (parent->templateSpecializationArgs)
 			{
@@ -10966,6 +11134,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 			{
 				printTemplateParams(parent->templateParams);
 				out << " ";
+				if (parent->constraints)
+				{
+					printConstraintClause(parent->constraints);
+					out << " ";
+				}
 			}
 			else if (parent->templateSpecializationArgs)
 			{
@@ -10976,6 +11149,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 		{
 			printTemplateParams(type->templateParams);
 			out << " ";
+			if (type->constraints)
+			{
+				printConstraintClause(type->constraints);
+				out << " ";
+			}
 		}
 		else if (type->templateSpecializationArgs)
 		{
@@ -11186,6 +11364,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 				{
 					printTemplateParams(parent->templateParams);
 					out << " ";
+					if (parent->constraints)
+					{
+						printConstraintClause(parent->constraints);
+						out << " ";
+					}
 				}
 				else if (parent->templateSpecializationArgs)
 				{
@@ -11196,6 +11379,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 			{
 				printTemplateParams(type->templateParams);
 				out << " ";
+				if (type->constraints)
+				{
+					printConstraintClause(type->constraints);
+					out << " ";
+				}
 			}
 			else if (type->templateSpecializationArgs)
 			{
@@ -11267,6 +11455,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 			{
 				printTemplateParams(parent->templateParams);
 				out << " ";
+				if (parent->constraints)
+				{
+					printConstraintClause(parent->constraints);
+					out << " ";
+				}
 			}
 			else if (parent->templateSpecializationArgs)
 			{
@@ -11277,6 +11470,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 		{
 			printTemplateParams(type->templateParams);
 			out << " ";
+			if (type->constraints)
+			{
+				printConstraintClause(type->constraints);
+				out << " ";
+			}
 		}
 		else if (type->templateSpecializationArgs)
 		{
@@ -11450,6 +11648,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 				{
 					printTemplateParams(parent->templateParams);
 					out << " ";
+					if (parent->constraints)
+					{
+						printConstraintClause(parent->constraints);
+						out << " ";
+					}
 				}
 				else if (parent->templateSpecializationArgs)
 				{
@@ -11460,6 +11663,11 @@ void CppAdvanceCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* ty
 			{
 				printTemplateParams(type->templateParams);
 				out << " ";
+				if (type->constraints)
+				{
+					printConstraintClause(type->constraints);
+					out << " ";
+				}
 			}
 			else if (type->templateSpecializationArgs)
 			{
@@ -13005,6 +13213,11 @@ void CppAdvanceCodegen::printStructDefinition(CppAdvanceParser::StructDefinition
 			{
 				printTemplateParams(tparams);
 				out << " ";
+				if (ctx->structHead()->constraintClause())
+				{
+					printConstraintClause(ctx->structHead()->constraintClause());
+					out << " ";
+				}
 			}
 			out << "class __Class_" << ctx->structHead()->className()->getText() << ";\n" << std::string(depth, '\t');
 		}
@@ -13268,6 +13481,11 @@ void CppAdvanceCodegen::printStructHead(CppAdvanceParser::StructHeadContext* ctx
 	{
 		printTemplateParams(tparams);
 		out << " ";
+		if (ctx->constraintClause())
+		{
+			printConstraintClause(ctx->constraintClause());
+			out << " ";
+		}
 	}
 	else if (auto name = ctx->className())
 	{
@@ -13309,6 +13527,11 @@ void CppAdvanceCodegen::printClassHead(CppAdvanceParser::ClassHeadContext* ctx) 
 	{
 		printTemplateParams(tparams);
 		out << " ";
+		if (ctx->constraintClause())
+		{
+			printConstraintClause(ctx->constraintClause());
+			out << " ";
+		}
 	}
 	else if (auto name = ctx->className())
 	{
@@ -13682,6 +13905,11 @@ void CppAdvanceCodegen::printConstructor(CppAdvanceParser::ConstructorContext* c
 		{
 			printTemplateParams(func.parentTemplateParams);
 			out << " ";
+			if (func.parentConstraints)
+			{
+				printConstraintClause(func.parentConstraints);
+				out << " ";
+			}
 		}
 		else if (func.parentTemplateSpecializationArgs)
 		{
@@ -13691,6 +13919,11 @@ void CppAdvanceCodegen::printConstructor(CppAdvanceParser::ConstructorContext* c
 		{
 			printTemplateParams(func.templateParams);
 			out << " ";
+			if (func.constraints)
+			{
+				printConstraintClause(func.constraints);
+				out << " ";
+			}
 		}
 		if (func.isConsteval)
 		{
@@ -14007,6 +14240,11 @@ void CppAdvanceCodegen::printDestructor(CppAdvanceParser::DestructorContext* ctx
 		{
 			printTemplateParams(func.parentTemplateParams);
 			out << " ";
+			if (func.parentConstraints)
+			{
+				printConstraintClause(func.parentConstraints);
+				out << " ";
+			}
 		}
 		else if (func.parentTemplateSpecializationArgs)
 		{
@@ -14162,6 +14400,11 @@ void CppAdvanceCodegen::printConversionFunction(CppAdvanceParser::ConversionFunc
 		{
 			printTemplateParams(func.parentTemplateParams);
 			out << " ";
+			if (func.parentConstraints)
+			{
+				printConstraintClause(func.parentConstraints);
+				out << " ";
+			}
 		}
 		else if (func.parentTemplateSpecializationArgs)
 		{
@@ -14171,6 +14414,11 @@ void CppAdvanceCodegen::printConversionFunction(CppAdvanceParser::ConversionFunc
 		{
 			printTemplateParams(func.templateParams);
 			out << " ";
+			if (func.constraints)
+			{
+				printConstraintClause(func.constraints);
+				out << " ";
+			}
 		}
 		if (func.isConsteval)
 		{
@@ -14363,6 +14611,11 @@ void CppAdvanceCodegen::printIndexer(CppAdvanceParser::IndexerContext* ctx) cons
 		{
 			printTemplateParams(func.parentTemplateParams);
 			out << " ";
+			if (func.parentConstraints)
+			{
+				printConstraintClause(func.parentConstraints);
+				out << " ";
+			}
 		}
 		else if (func.parentTemplateSpecializationArgs)
 		{
@@ -15104,6 +15357,11 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			{
 				printTemplateParams(prop.parentTemplateParams);
 				out << " ";
+				if (prop.parentConstraints)
+				{
+					printConstraintClause(prop.parentConstraints);
+					out << " ";
+				}
 			}
 			else if (prop.parentTemplateSpecializationArgs)
 			{
@@ -15203,6 +15461,11 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			{
 				printTemplateParams(prop.parentTemplateParams);
 				out << " ";
+				if (prop.parentConstraints)
+				{
+					printConstraintClause(prop.parentConstraints);
+					out << " ";
+				}
 			}
 			else if (prop.parentTemplateSpecializationArgs)
 			{
@@ -15274,6 +15537,11 @@ void CppAdvanceCodegen::printProperty(CppAdvanceParser::PropertyContext* ctx) co
 			{
 				printTemplateParams(prop.parentTemplateParams);
 				out << " ";
+				if (prop.parentConstraints)
+				{
+					printConstraintClause(prop.parentConstraints);
+					out << " ";
+				}
 			}
 			else if (prop.parentTemplateSpecializationArgs)
 			{
@@ -15802,6 +16070,11 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 		{
 			printTemplateParams(func.templateParams);
 			out << " ";
+			if (func.constraints)
+			{
+				printConstraintClause(func.constraints);
+				out << " ";
+			}
 		}
 		else if (func.templateSpecializationArgs)
 		{
@@ -15987,6 +16260,11 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 			{
 				printTemplateParams(func.parentTemplateParams);
 				out << " ";
+				if (func.parentConstraints)
+				{
+					printConstraintClause(func.parentConstraints);
+					out << " ";
+				}
 			}
 			else if (func.parentTemplateSpecializationArgs)
 			{
@@ -15996,6 +16274,11 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 			{
 				printTemplateParams(func.templateParams);
 				out << " ";
+				if (func.constraints)
+				{
+					printConstraintClause(func.constraints);
+					out << " ";
+				}
 			}
 			else if (func.templateSpecializationArgs)
 			{
@@ -16120,6 +16403,11 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 				{
 					printTemplateParams(func.parentTemplateParams);
 					out << " ";
+					if (func.parentConstraints)
+					{
+						printConstraintClause(func.parentConstraints);
+						out << " ";
+					}
 				}
 				else if (func.parentTemplateSpecializationArgs)
 				{
@@ -16159,6 +16447,11 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 				{
 					printTemplateParams(func.parentTemplateParams);
 					out << " ";
+					if (func.parentConstraints)
+					{
+						printConstraintClause(func.parentConstraints);
+						out << " ";
+					}
 				}
 				else if (func.parentTemplateSpecializationArgs)
 				{
@@ -16253,6 +16546,11 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 			{
 				printTemplateParams(tparams);
 				out << " ";
+				if (ctx->constraintClause())
+				{
+					printConstraintClause(ctx->constraintClause());
+					out << " ";
+				}
 			}
 
 			bool isInline = false;
@@ -16442,6 +16740,11 @@ void CppAdvanceCodegen::printLocalFunction(CppAdvanceParser::FunctionDefinitionC
 	{
 		printTemplateParams(ctx->templateParams());
 		out << " ";
+		if (ctx->constraintClause())
+		{
+			printConstraintClause(ctx->constraintClause());
+			out << " ";
+		}
 	}
 	printFunctionParameters(ctx->functionParams());
 	if (auto ret = ctx->returnType())
@@ -16598,6 +16901,13 @@ void CppAdvanceCodegen::printImplicitSpecification(CppAdvanceParser::ImplicitSpe
 		printConstantExpression(expr); 
 		out << ")";
 	}
+}
+
+void CppAdvanceCodegen::printConstraintClause(CppAdvanceParser::ConstraintClauseContext* ctx) const
+{
+	out << "requires(";
+	printConstantExpression(ctx->constantExpression());
+	out << ")";
 }
 
 void CppAdvanceCodegen::printFunctionBody(CppAdvanceParser::FunctionBodyContext* ctx) const
@@ -17942,6 +18252,7 @@ void CppAdvanceCodegen::printRelationalExpression(CppAdvanceParser::RelationalEx
 	}
 	else if (auto trait = ctx->typeTrait())
 	{
+		bool typeIs = false;
 		if (trait->not_())
 			out << "!";
 		if (trait->Void())
@@ -18113,6 +18424,7 @@ void CppAdvanceCodegen::printRelationalExpression(CppAdvanceParser::RelationalEx
 		else
 		{
 			out << "CppAdvance::TypeIs<";
+			typeIs = true;
 		}
 
 		printTypeId(ctx->theTypeId());
@@ -18155,6 +18467,10 @@ void CppAdvanceCodegen::printRelationalExpression(CppAdvanceParser::RelationalEx
 			printTypeId(trait->theTypeId(0));
 		}
 		out << ">";
+		if (typeIs)
+		{
+			out << "()";
+		}
 	}
 	else
 	{
@@ -19695,6 +20011,11 @@ void CppAdvanceCodegen::printLambdaExpression(CppAdvanceParser::LambdaExpression
 				out << "&";
 			}
 		}
+		out << " ";
+	}
+	if (ctx->constraintClause())
+	{
+		printConstraintClause(ctx->constraintClause());
 		out << " ";
 	}
 

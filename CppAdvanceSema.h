@@ -151,6 +151,7 @@ struct VariableDefinition
 {
 	std::string id;
 	CppAdvanceParser::TemplateParamsContext* templateParams;
+	CppAdvanceParser::ConstraintClauseContext* constraints;
 	CppAdvanceParser::TheTypeIdContext* type;
 	SourcePosition pos;
 	CppAdvanceParser::InitializerClauseContext* initializer;
@@ -219,6 +220,7 @@ struct FunctionDefinition
 	std::string id;
 	CppAdvanceParser::TemplateParamsContext* templateParams;
 	CppAdvanceParser::TemplateArgumentListContext* templateSpecializationArgs;
+	CppAdvanceParser::ConstraintClauseContext* constraints;
 	CppAdvanceParser::FunctionParamsContext* params;
 	CppAdvanceParser::TheTypeIdContext* returnType;
 	CppAdvanceParser::ExprContext* expression;
@@ -244,6 +246,7 @@ struct MethodDefinition : public FunctionDefinition
 	std::string parentType;
 	CppAdvanceParser::TemplateParamsContext* parentTemplateParams;
 	CppAdvanceParser::TemplateArgumentListContext* parentTemplateSpecializationArgs;
+	CppAdvanceParser::ConstraintClauseContext* parentConstraints;
 	CppAdvanceParser::ImplicitSpecificationContext* implicitSpecification;
 	bool isProtectedType = false;
 	bool isUnsafeType = false;
@@ -277,6 +280,7 @@ struct PropertyDefinition {
 	std::string parentType;
 	CppAdvanceParser::TemplateParamsContext* parentTemplateParams;
 	CppAdvanceParser::TemplateArgumentListContext* parentTemplateSpecializationArgs;
+	CppAdvanceParser::ConstraintClauseContext* parentConstraints;
 	bool isStatic = false;
 	bool isConst = false;
 	bool isRef = false;
@@ -327,6 +331,7 @@ struct NamedTuple {
 struct ForwardDeclaration {
 	std::string id;
 	CppAdvanceParser::TemplateParamsContext* templateParams;
+	CppAdvanceParser::ConstraintClauseContext* constraints;
 	AccessSpecifier access = AccessSpecifier::Internal;
 	SourcePosition pos;
 	std::string compilationCondition;
@@ -361,6 +366,7 @@ struct StructDefinition {
 	std::string id;
 	CppAdvanceParser::TemplateParamsContext* templateParams;
 	CppAdvanceParser::TemplateArgumentListContext* templateSpecializationArgs;
+	CppAdvanceParser::ConstraintClauseContext* constraints;
 	AccessSpecifier access = AccessSpecifier::Internal;
 	std::string compilationCondition;
 	SourcePosition pos;
@@ -387,13 +393,15 @@ struct StructDefinition {
 	CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 	//bool isStatic = false;
 
-	StructDefinition(TypeKind _kind, std::string _id, CppAdvanceParser::TemplateParamsContext* _targs, CppAdvanceParser::TemplateArgumentListContext* _tspec, AccessSpecifier _access, std::string _ccond, SourcePosition _pos,
+	StructDefinition(TypeKind _kind, std::string _id, CppAdvanceParser::TemplateParamsContext* _targs, CppAdvanceParser::TemplateArgumentListContext* _tspec,
+		CppAdvanceParser::ConstraintClauseContext* _constraints, AccessSpecifier _access, std::string _ccond, SourcePosition _pos,
 		const std::vector<VariableDefinition>& _fields, const std::vector<ConstantDefinition>& _constants, CppAdvanceParser::BaseSpecifierListContext* _bases,
 		const std::vector<TypeAliasDefinition>& _typeAliases, const std::vector<PropertyDefinition>& _properties, const std::vector<MethodDefinition>& _methods,
 		const std::vector<std::shared_ptr<StructDefinition>>& _nestedStructs, const std::vector<ForwardDeclaration>& _friendTypes,
 		const std::vector<FunctionDeclaration>& _friendDecls, const std::vector<FunctionDefinition>& _friendDefs, bool _isUnsafe, bool _isAbstract, bool _isFinal, bool _hasAggregateInit,
 		CppAdvanceParser::EnumBaseContext* _enumBase = nullptr)
-		: kind{_kind},id { std::move(_id) }, templateParams{ _targs }, templateSpecializationArgs{ _tspec }, access{ _access }, compilationCondition{ std::move(_ccond) }, pos{ _pos },
+		: kind{_kind},id { std::move(_id) }, templateParams{ _targs }, templateSpecializationArgs{ _tspec },
+		constraints{ _constraints }, access{ _access }, compilationCondition{ std::move(_ccond) }, pos{ _pos },
 		interfaces{_bases}, fields{ _fields }, constants{ _constants }, typeAliases{ typeAliases }, properties{_properties},
 		methods{ _methods }, nestedStructs{ _nestedStructs }, friendTypes{ _friendTypes }, friendFuncDeclarations{_friendDecls},
 		friendFuncDefinitions{ _friendDefs }, isUnsafe{ _isUnsafe }, isAbstract{ _isAbstract }, isFinal{ _isFinal }, hasAggregateInit{_hasAggregateInit },
@@ -418,6 +426,7 @@ class CppAdvanceSema : public CppAdvanceParserBaseListener
 	std::string getCurrentCompilationCondition();
 	CppAdvanceParser::TemplateParamsContext* getLastTypeTemplateParams();
 	CppAdvanceParser::TemplateArgumentListContext* getLastTypeTemplateSpecializationArgs();
+	CppAdvanceParser::ConstraintClauseContext* getLastTypeConstraints();
 	std::string getCurrentFullTypeName();
 	void tryToAddTypeInStackFromOperator(std::string_view op);
 	CppAdvanceParser* parser;

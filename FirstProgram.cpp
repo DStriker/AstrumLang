@@ -19,15 +19,15 @@ template<class T> inline auto getAsString(__extension_574_T<T> const& __this ) -
 
 #line 640 "FirstProgram.adv"
 extern "C" auto __Astrum_Main()  -> CppAdvance::i32;
-#line 804 "FirstProgram.adv"
+#line 826 "FirstProgram.adv"
 inline constexpr CppAdvance::usize PRIVATE_CONSTANT = CppAdvance::usize(34U);
 #line 2 "FirstProgram.adv"
 volatile CppAdvance::Unsafe::__VolatileRawPtr<const CppAdvance::char16> globalVar{};
 #line 3 "FirstProgram.adv"
 extern const CppAdvance::Unsafe::__RawPtr<CppAdvance::i32> globalVar1 = nullptr;
-#line 805 "FirstProgram.adv"
+#line 827 "FirstProgram.adv"
 static CppAdvance::i32 globalVar2 = CppAdvance::i32(8);
-#line 806 "FirstProgram.adv"
+#line 828 "FirstProgram.adv"
 static const CppAdvance::i32 globalVar3 = CppAdvance::i32(456);
 #line 92 "FirstProgram.adv"
 thread_local CppAdvance::i32 Vector3::Count2 = CppAdvance::i32(123);
@@ -39,6 +39,8 @@ CppAdvance::i32 __Class_VectorClass::Count2 = CppAdvance::i32(123);
 const Vector3 __Class_VectorClass::ZERO = Vector3{CppAdvance::i32(0), CppAdvance::i32(0), CppAdvance::i32(0)};
 #line 77 "FirstProgram.adv"
 CppAdvance::i32 Vector3::p_Count = CppAdvance::i32(1);
+#line 802 "FirstProgram.adv"
+template<class T1, class... TArgs> requires(CppAdvance::TypeIs<T1, CppAdvance::i32>()) CppAdvance::i32 GenericStruct<T1, TArgs...>::p_Count = CppAdvance::i32(1);
 #line 77 "FirstProgram.adv"
 Vector3::__Property_Count<> Vector3::Count;
 #line 214 "FirstProgram.adv"
@@ -51,6 +53,8 @@ __Class_ComplexVariant::__Property_Count10<> __Class_ComplexVariant::Count10;
 __Class_ComplexVariant::__self::__Property_Count10<> __Class_ComplexVariant::__self::Count10;
 #line 504 "FirstProgram.adv"
 Media::__Property_Count10<> Media::Count10;
+#line 802 "FirstProgram.adv"
+template<class T1, class... TArgs> requires(CppAdvance::TypeIs<T1, CppAdvance::i32>()) GenericStruct<T1, TArgs...>::__Property_Count<> GenericStruct<T1, TArgs...>::Count;
 
 
 
@@ -326,12 +330,14 @@ extern "C" auto __Astrum_Main()  -> CppAdvance::i32
 		action2.andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(ADV_UFCS(Invoke)(value.__ref())); });
 		#line 763 "FirstProgram.adv"
 		GenericStruct g{ CppAdvance::i32(5), CppAdvance::f64(5.13), CppAdvance::Str{u"abc"}, false, CppAdvance::i32(6), CppAdvance::f32(2.12f) }; 
-		#line 766 "FirstProgram.adv"
+		#line 764 "FirstProgram.adv"
+		printf(CppAdvance::Str{u"printfffffffff"});
+		#line 767 "FirstProgram.adv"
 		CppAdvance::Nullable<CppAdvance::ObjectRef> on = vec; 
 	}
-	#line 768 "FirstProgram.adv"
-	print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
 	#line 769 "FirstProgram.adv"
+	print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
+	#line 770 "FirstProgram.adv"
 	print(ADV_UPCS(x)(ADV_UPCS(x)(ADV_USFCS((Test1::Test2::TestClass), makeTestClass)(CppAdvance::i32(3), CppAdvance::f32(3.14f)).__ref()).__ref()));
 	return 0;
 }

@@ -268,6 +268,8 @@ Volatile: 'volatile';
 
 Weak: 'weak';
 
+Where: 'where';
+
 While: 'while';
 
 Yield: 'yield';

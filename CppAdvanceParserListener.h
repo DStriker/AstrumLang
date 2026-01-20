@@ -491,6 +491,9 @@ public:
   virtual void enterExpressionListPart(CppAdvanceParser::ExpressionListPartContext *ctx) = 0;
   virtual void exitExpressionListPart(CppAdvanceParser::ExpressionListPartContext *ctx) = 0;
 
+  virtual void enterConstraintClause(CppAdvanceParser::ConstraintClauseContext *ctx) = 0;
+  virtual void exitConstraintClause(CppAdvanceParser::ConstraintClauseContext *ctx) = 0;
+
   virtual void enterPatternList(CppAdvanceParser::PatternListContext *ctx) = 0;
   virtual void exitPatternList(CppAdvanceParser::PatternListContext *ctx) = 0;
 

@@ -493,6 +493,9 @@ public:
   virtual void enterExpressionListPart(CppAdvanceParser::ExpressionListPartContext * /*ctx*/) override { }
   virtual void exitExpressionListPart(CppAdvanceParser::ExpressionListPartContext * /*ctx*/) override { }
 
+  virtual void enterConstraintClause(CppAdvanceParser::ConstraintClauseContext * /*ctx*/) override { }
+  virtual void exitConstraintClause(CppAdvanceParser::ConstraintClauseContext * /*ctx*/) override { }
+
   virtual void enterPatternList(CppAdvanceParser::PatternListContext * /*ctx*/) override { }
   virtual void exitPatternList(CppAdvanceParser::PatternListContext * /*ctx*/) override { }
 

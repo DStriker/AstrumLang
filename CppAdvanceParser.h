@@ -35,27 +35,27 @@ public:
     Try = 106, Type = 107, Union = 108, Unowned = 109, Using = 110, U8 = 111, 
     U16 = 112, U32 = 113, U64 = 114, U128 = 115, Unsafe = 116, Usize = 117, 
     Version = 118, Virtual = 119, Void = 120, Volatile = 121, Weak = 122, 
-    While = 123, Yield = 124, Not = 125, And = 126, Or = 127, Identifier = 128, 
-    LeftParen = 129, RightParen = 130, LeftBracket = 131, RightBracket = 132, 
-    LeftBrace = 133, RightBrace = 134, Plus = 135, Minus = 136, Star = 137, 
-    DoubleStar = 138, Div = 139, Mod = 140, LifetimeAnnotation = 141, Caret = 142, 
-    DoubleCaret = 143, Amp = 144, VertLine = 145, Tilde = 146, Colon = 147, 
-    Assign = 148, Less = 149, Greater = 150, PlusAssign = 151, MinusAssign = 152, 
-    TildeAssign = 153, StarAssign = 154, DoubleStarAssign = 155, DivAssign = 156, 
-    ModAssign = 157, XorAssign = 158, AndAssign = 159, OrAssign = 160, LeftShiftAssign = 161, 
-    RightShiftAssign = 162, SignedRightShiftAssign = 163, Equal = 164, NotEqual = 165, 
-    IdentityEqual = 166, NotIdentityEqual = 167, Spaceship = 168, LessEqual = 169, 
-    GreaterEqual = 170, PlusPlus = 171, MinusMinus = 172, Comma = 173, Arrow = 174, 
-    AssignArrow = 175, EqualArrow = 176, Exclamation = 177, Question = 178, 
-    DoubleQuestion = 179, DoubleQuestionAssign = 180, Doublecolon = 181, 
-    Semi = 182, Dot = 183, DoubleDot = 184, DoubleDotEqual = 185, Dollar = 186, 
-    Ellipsis = 187, Apostroph = 188, AtSign = 189, Op1 = 190, Op2 = 191, 
-    Op10 = 192, Op3 = 193, Op4 = 194, Op5 = 195, Op7 = 196, Op6 = 197, Op8 = 198, 
-    Op9 = 199, DOUBLE_CURLY_INSIDE = 200, OPEN_BRACE_INSIDE = 201, REGULAR_CHAR_INSIDE = 202, 
-    VERBATIUM_DOUBLE_GRAVE_INSIDE = 203, MULTILINE_QUOTES_INSIDE = 204, 
-    DOUBLE_QUOTE_INSIDE = 205, GRAVE_INSIDE = 206, TRIPLE_QUOTE_INSIDE = 207, 
-    REGULAR_STRING_INSIDE = 208, GRAVE_STRING_INSIDE = 209, MULTILINE_STRING_INSIDE = 210, 
-    CLOSE_BRACE_INSIDE = 211, FORMAT_STRING = 212, DOUBLE_CURLY_CLOSE_INSIDE = 213
+    Where = 123, While = 124, Yield = 125, Not = 126, And = 127, Or = 128, 
+    Identifier = 129, LeftParen = 130, RightParen = 131, LeftBracket = 132, 
+    RightBracket = 133, LeftBrace = 134, RightBrace = 135, Plus = 136, Minus = 137, 
+    Star = 138, DoubleStar = 139, Div = 140, Mod = 141, LifetimeAnnotation = 142, 
+    Caret = 143, DoubleCaret = 144, Amp = 145, VertLine = 146, Tilde = 147, 
+    Colon = 148, Assign = 149, Less = 150, Greater = 151, PlusAssign = 152, 
+    MinusAssign = 153, TildeAssign = 154, StarAssign = 155, DoubleStarAssign = 156, 
+    DivAssign = 157, ModAssign = 158, XorAssign = 159, AndAssign = 160, 
+    OrAssign = 161, LeftShiftAssign = 162, RightShiftAssign = 163, SignedRightShiftAssign = 164, 
+    Equal = 165, NotEqual = 166, IdentityEqual = 167, NotIdentityEqual = 168, 
+    Spaceship = 169, LessEqual = 170, GreaterEqual = 171, PlusPlus = 172, 
+    MinusMinus = 173, Comma = 174, Arrow = 175, AssignArrow = 176, EqualArrow = 177, 
+    Exclamation = 178, Question = 179, DoubleQuestion = 180, DoubleQuestionAssign = 181, 
+    Doublecolon = 182, Semi = 183, Dot = 184, DoubleDot = 185, DoubleDotEqual = 186, 
+    Dollar = 187, Ellipsis = 188, Apostroph = 189, AtSign = 190, Op1 = 191, 
+    Op2 = 192, Op10 = 193, Op3 = 194, Op4 = 195, Op5 = 196, Op7 = 197, Op6 = 198, 
+    Op8 = 199, Op9 = 200, DOUBLE_CURLY_INSIDE = 201, OPEN_BRACE_INSIDE = 202, 
+    REGULAR_CHAR_INSIDE = 203, VERBATIUM_DOUBLE_GRAVE_INSIDE = 204, MULTILINE_QUOTES_INSIDE = 205, 
+    DOUBLE_QUOTE_INSIDE = 206, GRAVE_INSIDE = 207, TRIPLE_QUOTE_INSIDE = 208, 
+    REGULAR_STRING_INSIDE = 209, GRAVE_STRING_INSIDE = 210, MULTILINE_STRING_INSIDE = 211, 
+    CLOSE_BRACE_INSIDE = 212, FORMAT_STRING = 213, DOUBLE_CURLY_CLOSE_INSIDE = 214
   };
 
   enum {
@@ -114,35 +114,35 @@ public:
     RuleConditionalExpression = 150, RuleConstantExpression = 151, RuleAssignmentExpression = 152, 
     RuleInitializerClause = 153, RuleBracedInitList = 154, RuleInitializerList = 155, 
     RuleInitializerPart = 156, RuleExpressionList = 157, RuleExpressionListPart = 158, 
-    RulePatternList = 159, RulePatternCombinationOperator = 160, RulePattern = 161, 
-    RuleTypeTrait = 162, RulePropertyPattern = 163, RuleAssignmentOperator = 164, 
-    RuleShiftOperator = 165, RuleTryBlock = 166, RuleExceptionHandler = 167, 
-    RuleExceptionDeclaration = 168, RuleThrowExpression = 169, RuleSimpleTypeSpecifier = 170, 
-    RuleFunctionTypeId = 171, RuleTypeIdWithSpecification = 172, RuleNamedTupleField = 173, 
-    RuleNestedNameSpecifier = 174, RuleNamespaceName = 175, RuleTemplateName = 176, 
-    RuleSimpleTemplateId = 177, RuleOperatorTemplateId = 178, RuleTemplateId = 179, 
-    RuleTemplateArgumentList = 180, RuleTemplateArgument = 181, RuleIdExpression = 182, 
-    RuleQualifiedId = 183, RuleUnqualifiedId = 184, RuleTheTypeId = 185, 
-    RuleSingleTypeId = 186, RuleTypePostfix = 187, RuleArrayDeclarator = 188, 
-    RulePointerOperator = 189, RulePointerOperatorSeq = 190, RuleTypeSpecifierSeq = 191, 
-    RuleTypeSpecifier = 192, RuleTrailingTypeSpecifier = 193, RuleTypeNameSpecifier = 194, 
-    RuleCvQualifierSeq = 195, RuleCvQualifier = 196, RuleTypename = 197, 
-    RuleClassName = 198, RuleDecltypeSpecifier = 199, RuleDecaySpecifier = 200, 
-    RuleEnumName = 201, RuleAccessSpecifier = 202, RuleProtectedInternal = 203, 
-    RuleOperatorFunctionId = 204, RuleConversionFunctionId = 205, RuleUnaryExpression = 206, 
-    RuleUnaryExpressionTail = 207, RuleNewExpression = 208, RuleStackallocExpression = 209, 
-    RuleMemorySpaceSetter = 210, RuleNewInitializer = 211, RuleFullPostfixExpression = 212, 
-    RulePostfixExpression = 213, RuleTupleExpression = 214, RuleMethodBindingExpression = 215, 
-    RuleMethodOwnerExpression = 216, RuleMethodName = 217, RuleLambdaExpression = 218, 
-    RuleLambdaCaptureList = 219, RuleLambdaCaptureClause = 220, RuleCapture = 221, 
-    RuleLambdaDeclarator = 222, RuleLambdaBody = 223, RulePrimaryExpression = 224, 
-    RuleUnaryPrefixOperator = 225, RuleUnaryCustomOperator = 226, RuleRefCaptureOperator = 227, 
-    RuleUnaryPostfixOperator = 228, RuleNot = 229, RuleOperator = 230, RuleLiteral = 231, 
-    RuleInterpolatedStringLiteral = 232, RuleInterpolatedRegularStringLiteral = 233, 
-    RuleInterpolatedRegularStringPart = 234, RuleInterpolatedVerbatiumStringLiteral = 235, 
-    RuleInterpolatedVerbatiumStringPart = 236, RuleInterpolatedMultilineStringLiteral = 237, 
-    RuleInterpolatedMultilineStringPart = 238, RuleInterpolatedExpression = 239, 
-    RuleDeclvalExpression = 240
+    RuleConstraintClause = 159, RulePatternList = 160, RulePatternCombinationOperator = 161, 
+    RulePattern = 162, RuleTypeTrait = 163, RulePropertyPattern = 164, RuleAssignmentOperator = 165, 
+    RuleShiftOperator = 166, RuleTryBlock = 167, RuleExceptionHandler = 168, 
+    RuleExceptionDeclaration = 169, RuleThrowExpression = 170, RuleSimpleTypeSpecifier = 171, 
+    RuleFunctionTypeId = 172, RuleTypeIdWithSpecification = 173, RuleNamedTupleField = 174, 
+    RuleNestedNameSpecifier = 175, RuleNamespaceName = 176, RuleTemplateName = 177, 
+    RuleSimpleTemplateId = 178, RuleOperatorTemplateId = 179, RuleTemplateId = 180, 
+    RuleTemplateArgumentList = 181, RuleTemplateArgument = 182, RuleIdExpression = 183, 
+    RuleQualifiedId = 184, RuleUnqualifiedId = 185, RuleTheTypeId = 186, 
+    RuleSingleTypeId = 187, RuleTypePostfix = 188, RuleArrayDeclarator = 189, 
+    RulePointerOperator = 190, RulePointerOperatorSeq = 191, RuleTypeSpecifierSeq = 192, 
+    RuleTypeSpecifier = 193, RuleTrailingTypeSpecifier = 194, RuleTypeNameSpecifier = 195, 
+    RuleCvQualifierSeq = 196, RuleCvQualifier = 197, RuleTypename = 198, 
+    RuleClassName = 199, RuleDecltypeSpecifier = 200, RuleDecaySpecifier = 201, 
+    RuleEnumName = 202, RuleAccessSpecifier = 203, RuleProtectedInternal = 204, 
+    RuleOperatorFunctionId = 205, RuleConversionFunctionId = 206, RuleUnaryExpression = 207, 
+    RuleUnaryExpressionTail = 208, RuleNewExpression = 209, RuleStackallocExpression = 210, 
+    RuleMemorySpaceSetter = 211, RuleNewInitializer = 212, RuleFullPostfixExpression = 213, 
+    RulePostfixExpression = 214, RuleTupleExpression = 215, RuleMethodBindingExpression = 216, 
+    RuleMethodOwnerExpression = 217, RuleMethodName = 218, RuleLambdaExpression = 219, 
+    RuleLambdaCaptureList = 220, RuleLambdaCaptureClause = 221, RuleCapture = 222, 
+    RuleLambdaDeclarator = 223, RuleLambdaBody = 224, RulePrimaryExpression = 225, 
+    RuleUnaryPrefixOperator = 226, RuleUnaryCustomOperator = 227, RuleRefCaptureOperator = 228, 
+    RuleUnaryPostfixOperator = 229, RuleNot = 230, RuleOperator = 231, RuleLiteral = 232, 
+    RuleInterpolatedStringLiteral = 233, RuleInterpolatedRegularStringLiteral = 234, 
+    RuleInterpolatedRegularStringPart = 235, RuleInterpolatedVerbatiumStringLiteral = 236, 
+    RuleInterpolatedVerbatiumStringPart = 237, RuleInterpolatedMultilineStringLiteral = 238, 
+    RuleInterpolatedMultilineStringPart = 239, RuleInterpolatedExpression = 240, 
+    RuleDeclvalExpression = 241
   };
 
   explicit CppAdvanceParser(antlr4::TokenStream *input);
@@ -321,6 +321,7 @@ public:
   class InitializerPartContext;
   class ExpressionListContext;
   class ExpressionListPartContext;
+  class ConstraintClauseContext;
   class PatternListContext;
   class PatternCombinationOperatorContext;
   class PatternContext;
@@ -769,6 +770,7 @@ public:
     antlr4::tree::TerminalNode *Unsafe();
     TemplateParamsContext *templateParams();
     BaseClauseContext *baseClause();
+    ConstraintClauseContext *constraintClause();
     antlr4::tree::TerminalNode *Ref();
     antlr4::tree::TerminalNode *Union();
 
@@ -919,6 +921,7 @@ public:
     antlr4::tree::TerminalNode *Unsafe();
     TemplateParamsContext *templateParams();
     BaseClauseContext *baseClause();
+    ConstraintClauseContext *constraintClause();
     antlr4::tree::TerminalNode *Abstract();
     antlr4::tree::TerminalNode *Final();
     antlr4::tree::TerminalNode *Static();
@@ -955,6 +958,7 @@ public:
     antlr4::tree::TerminalNode *Unsafe();
     TemplateParamsContext *templateParams();
     BaseClauseContext *baseClause();
+    ConstraintClauseContext *constraintClause();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -1214,6 +1218,7 @@ public:
     antlr4::tree::TerminalNode *Unsafe();
     TemplateParamsContext *templateParams();
     BaseClauseContext *baseClause();
+    ConstraintClauseContext *constraintClause();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -1314,6 +1319,7 @@ public:
     TemplateParamsContext *templateParams();
     TheTypeIdContext *theTypeId();
     antlr4::tree::TerminalNode *Unsafe();
+    ConstraintClauseContext *constraintClause();
     BaseClauseContext *baseClause();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -1611,6 +1617,7 @@ public:
     ReturnTypeContext *returnType();
     antlr4::tree::TerminalNode *LifetimeAnnotation();
     ExceptionSpecificationContext *exceptionSpecification();
+    ConstraintClauseContext *constraintClause();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -1678,6 +1685,7 @@ public:
     ImplicitSpecificationContext *implicitSpecification();
     TemplateParamsContext *templateParams();
     ExceptionSpecificationContext *exceptionSpecification();
+    ConstraintClauseContext *constraintClause();
     antlr4::tree::TerminalNode *Default();
     antlr4::tree::TerminalNode *Semi();
     antlr4::tree::TerminalNode *Assign();
@@ -1806,6 +1814,7 @@ public:
     ImplicitSpecificationContext *implicitSpecification();
     TemplateParamsContext *templateParams();
     ExceptionSpecificationContext *exceptionSpecification();
+    ConstraintClauseContext *constraintClause();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -3218,6 +3227,20 @@ public:
 
   ExpressionListPartContext* expressionListPart();
 
+  class  ConstraintClauseContext : public antlr4::ParserRuleContext {
+  public:
+    ConstraintClauseContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Where();
+    ConstantExpressionContext *constantExpression();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  ConstraintClauseContext* constraintClause();
+
   class  PatternListContext : public antlr4::ParserRuleContext {
   public:
     PatternListContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -4269,6 +4292,7 @@ public:
     LambdaBodyContext *lambdaBody();
     LambdaCaptureListContext *lambdaCaptureList();
     TemplateParamsContext *templateParams();
+    ConstraintClauseContext *constraintClause();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

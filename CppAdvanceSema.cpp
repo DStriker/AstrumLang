@@ -91,6 +91,18 @@ CppAdvanceParser::TemplateArgumentListContext* CppAdvanceSema::getLastTypeTempla
 	return nullptr;
 }
 
+CppAdvanceParser::ConstraintClauseContext* CppAdvanceSema::getLastTypeConstraints()
+{
+	const auto& structs = getStackUnderlyingContainer(structStack);
+	for (auto it = structs.rbegin(); it != structs.rend(); ++it)
+	{
+		auto params = it->get()->constraints;
+		if (params)
+			return params;
+	}
+	return nullptr;
+}
+
 std::string CppAdvanceSema::getCurrentFullTypeName()
 {
 	const auto& structs = getStackUnderlyingContainer(currentTypeWithTemplate);
@@ -736,7 +748,7 @@ void CppAdvanceSema::exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationCo
 		{
 			if (*access == AccessSpecifier::Protected) protectedSymbols.insert(id->getText());
 			if (unsafeDepth > 0) cppParser.unsafeVariables.insert(id->getText());
-			globalVariables.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), 
+			globalVariables.emplace_back(VariableDefinition{ id->getText(), nullptr, nullptr, ctx->theTypeId(), 
 				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), ctx->initializerList(), 
 				attributes, *access, getCurrentCompilationCondition(), "", false, isConst, isVolatile, isThreadLocal, unsafeDepth > 0, 
 				false, isUnowned, isWeak});
@@ -747,7 +759,7 @@ void CppAdvanceSema::exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationCo
 				CppAdvanceCompilerError("Raw union field must be private", ctx->getStart());
 
 			if (unsafeDepth > 0) cppParser.unsafeVariables.insert(currentType+"." + id->getText());
-			structStack.top()->fields.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), 
+			structStack.top()->fields.emplace_back(VariableDefinition{ id->getText(), nullptr, nullptr, ctx->theTypeId(), 
 				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), ctx->initializerList(),
 				attributes, *access, getCurrentCompilationCondition(), getCurrentFullTypeName(), isStatic, isConst, isVolatile, isThreadLocal, 
 				unsafeDepth > 0, false, isUnowned, isWeak});
@@ -755,7 +767,7 @@ void CppAdvanceSema::exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationCo
 			{
 				if (isProtectedTypeDefinition) access = AccessSpecifier::Protected;
 				else access = AccessSpecifier::Private;
-				staticFields.emplace_back(VariableDefinition{ id->getText(), getLastTypeTemplateParams(), ctx->theTypeId(), 
+				staticFields.emplace_back(VariableDefinition{ id->getText(), getLastTypeTemplateParams(), getLastTypeConstraints(), ctx->theTypeId(), 
 					{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, ctx->initializerClause(), ctx->initializerList(), 
 					attributes, *access, getCurrentCompilationCondition(), getCurrentFullTypeName(), isStatic, isConst, isVolatile, isThreadLocal,
 					isUnsafeTypeDefinition, getLastTypeTemplateSpecializationArgs() != nullptr, isUnowned, isWeak });
@@ -1343,6 +1355,7 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 	CppAdvanceParser::FunctionParamsContext* params = ctx->functionParams();
 	CppAdvanceParser::TemplateParamsContext* templateParams = ctx->templateParams();
 	CppAdvanceParser::TemplateArgumentListContext* templateSpecializationArgs = nullptr;
+	CppAdvanceParser::ConstraintClauseContext* constraints = ctx->constraintClause();
 	CppAdvanceParser::ExceptionSpecificationContext* exceptions = ctx->exceptionSpecification();
 	CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 
@@ -1463,6 +1476,10 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 					initStates.top().potentiallyAssigned.insert(id);
 				}
 			}
+		}
+		if (constraints && !templateParams)
+		{
+			CppAdvanceCompilerError("Only generic function can have constraints", constraints->Where()->getSymbol());
 		}
 
 		if (functionBody > 0)
@@ -1784,7 +1801,7 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 		{
 			if (*access == AccessSpecifier::Protected && !isOperator) protectedSymbols.insert(id);
 			if (isFriendDefinition) isInline = true;
-			auto def = FunctionDefinition{ id, templateParams, templateSpecializationArgs, params, returnType, expression, exceptions, attributes,
+			auto def = FunctionDefinition{ id, templateParams, templateSpecializationArgs, constraints, params, returnType, expression, exceptions, attributes,
 				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(),
 				isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, isCommutative, varargDepth };
 			if (isFriendDefinition)
@@ -1797,20 +1814,21 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 		{
 			auto lastTparams = getLastTypeTemplateParams();
 			auto lastSpec = getLastTypeTemplateSpecializationArgs();
+			auto lastConstraints = getLastTypeConstraints();
 			auto fullType = getCurrentFullTypeName();
 			structStack.top()->methods.emplace_back(
-				MethodDefinition{ id, templateParams, templateSpecializationArgs, params, returnType, expression, exceptions, attributes,
+				MethodDefinition{ id, templateParams, templateSpecializationArgs, constraints, params, returnType, expression, exceptions, attributes,
 				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(), 
 				isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, isCommutative, varargDepth, 
-				currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, isDefault, 
+				currentType, fullType, lastTparams, lastSpec, lastConstraints, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, isDefault,
 				isMutating, isStatic, isVirtual,
 				isOverride, false, isFinal});
 			methods.insert_or_assign(SourcePosition{ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine()},
-				MethodDefinition{ id, templateParams, templateSpecializationArgs, params, returnType, expression, exceptions,attributes,
+				MethodDefinition{ id, templateParams, templateSpecializationArgs, constraints, params, returnType, expression, exceptions,attributes,
 				{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, 
 				isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
 				isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, isCommutative, varargDepth,
-				currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, isDefault, 
+				currentType, fullType, lastTparams, lastSpec, lastConstraints, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, isDefault,
 				isMutating, isStatic, isVirtual,
 				isOverride && currentTypeKind.top() == TypeKind::Class, false, isFinal && currentTypeKind.top() == TypeKind::Class });
 		}
@@ -2884,7 +2902,7 @@ void CppAdvanceSema::enterFunctionTemplateDeclaration(CppAdvanceParser::Function
 		auto id = ctx->Identifier();
 		if (*access == AccessSpecifier::Protected) protectedSymbols.insert(id->getText());
 		globalFunctions.emplace_back(
-			FunctionDefinition{ id->getText(), templateParams, templateSpecializationArgs, params, returnType, expression, exceptions,
+			FunctionDefinition{ id->getText(), templateParams, templateSpecializationArgs, nullptr, params, returnType, expression, exceptions,
 			nullptr, {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(), 
 			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, false, varargDepth });
 	}
@@ -2981,7 +2999,7 @@ void CppAdvanceSema::exitSimpleTypeSpecifier(CppAdvanceParser::SimpleTypeSpecifi
 		{
 			typeset.insert(tuple);
 			auto access = (currentAccessSpecifier.top() ? *currentAccessSpecifier.top() : AccessSpecifier::Public);
-			forwardDeclarations.push_back({ tuple,{},access,{0,0},"" });
+			forwardDeclarations.push_back({ tuple,{},{},access,{0,0},"" });
 			auto id = tuple;
 			if (id.find('.') != id.npos) id = id.substr(id.rfind('.') + 1);
 			std::vector<std::pair<std::string, CppAdvanceParser::TheTypeIdContext*>> fields;
@@ -3133,6 +3151,7 @@ void CppAdvanceSema::enterStructDefinition(CppAdvanceParser::StructDefinitionCon
 		typeset.globalTypes.insert(currentType);
 		CppAdvanceParser::TemplateParamsContext* tparams = ctx->structHead()->templateParams();
 		CppAdvanceParser::TemplateArgumentListContext* tspec = nullptr;
+		CppAdvanceParser::ConstraintClauseContext* constraints = ctx->structHead()->constraintClause();
 		CppAdvanceParser::BaseSpecifierListContext* interfaces = nullptr;
 		CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 
@@ -3144,6 +3163,11 @@ void CppAdvanceSema::enterStructDefinition(CppAdvanceParser::StructDefinitionCon
 		if (auto b = ctx->structHead()->baseClause())
 		{
 			interfaces = b->baseSpecifierList();
+		}
+
+		if (constraints && !tparams)
+		{
+			CppAdvanceCompilerError("Only generic type can have constraints", constraints->Where()->getSymbol());
 		}
 
 		bool isUnsafe = unsafeDepth > 0;
@@ -3202,7 +3226,7 @@ void CppAdvanceSema::enterStructDefinition(CppAdvanceParser::StructDefinitionCon
 		}
 
 		auto def = std::make_shared<StructDefinition>( currentTypeKind.top(),
-			name, tparams, tspec, *access,getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
+			name, tparams, tspec, constraints, *access,getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, interfaces, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
 			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
 			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, false, false, false);
@@ -3249,7 +3273,7 @@ void CppAdvanceSema::exitStructDefinition(CppAdvanceParser::StructDefinitionCont
 			auto& top = structStack.top();
 			if (top->access == AccessSpecifier::Protected) protectedSymbols.insert(top->id);
 			if (!top->templateSpecializationArgs)
-				forwardDeclarations.push_back({ top->id,top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe, 
+				forwardDeclarations.push_back({ top->id,top->templateParams,top->constraints,top->access,{0,0},top->compilationCondition,top->isUnsafe, 
 					currentTypeKind.top() == TypeKind::UnionStruct });
 			globalStructs.push_back(top);
 		}
@@ -3394,7 +3418,7 @@ void CppAdvanceSema::exitMemberRefDeclaration(CppAdvanceParser::MemberRefDeclara
 		auto id = ctx->Identifier();
 		if (unsafeDepth > 0) cppParser.unsafeVariables.insert(currentType + "." + id->getText());
 		structStack.top()->fields.emplace_back(
-			VariableDefinition{ "& "+id->getText(), nullptr, ctx->theTypeId(), {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
+			VariableDefinition{ "& "+id->getText(), nullptr, nullptr, ctx->theTypeId(), {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
 			nullptr, nullptr, attributes, *access, getCurrentCompilationCondition(), "", false, isConst, false, false, unsafeDepth > 0, false});
 	}
 }
@@ -3427,6 +3451,7 @@ void CppAdvanceSema::enterConstructor(CppAdvanceParser::ConstructorContext* ctx)
 	int8_t varargDepth = -1;
 	CppAdvanceParser::FunctionParamsContext* params = ctx->functionParams();
 	CppAdvanceParser::TemplateParamsContext* templateParams = ctx->templateParams();
+	CppAdvanceParser::ConstraintClauseContext* constraints = ctx->constraintClause();
 	CppAdvanceParser::ExceptionSpecificationContext* exceptions = ctx->exceptionSpecification();
 	CppAdvanceParser::ImplicitSpecificationContext* implicit = ctx->implicitSpecification();
 	CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
@@ -3445,6 +3470,10 @@ void CppAdvanceSema::enterConstructor(CppAdvanceParser::ConstructorContext* ctx)
 			if (structStack.top()->isAbstract && implicit)
 				CppAdvanceCompilerError("Abstract class cannot have an implicit constructor", implicit->getStart());
 			constructorCounts.top()++;
+		}
+		if (constraints && !templateParams)
+		{
+			CppAdvanceCompilerError("Only generic constructor can have constraints", constraints->Where()->getSymbol());
 		}
 
 		if (isDefault) isInline = true;
@@ -3579,19 +3608,20 @@ void CppAdvanceSema::enterConstructor(CppAdvanceParser::ConstructorContext* ctx)
 		
 		auto lastTparams = getLastTypeTemplateParams();
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
+		auto lastConstraints = getLastTypeConstraints();
 		auto fullType = getCurrentFullTypeName();
 		structStack.top()->methods.emplace_back(
-			MethodDefinition{ id, templateParams, nullptr, params, nullptr, nullptr, exceptions,attributes,
+			MethodDefinition{ id, templateParams, nullptr, constraints, params, nullptr, nullptr, exceptions,attributes,
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(),
 			isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, false, varargDepth,
-			currentType, fullType, lastTparams, lastSpec, implicit, isProtectedTypeDefinition, isUnsafeTypeDefinition, isDefault, true, false, false,
+			currentType, fullType, lastTparams, lastSpec, lastConstraints, implicit, isProtectedTypeDefinition, isUnsafeTypeDefinition, isDefault, true, false, false,
 			false, false, false, true });
 		methods.insert_or_assign(SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() },
-			MethodDefinition{ id, templateParams, nullptr, params, nullptr, nullptr, exceptions,attributes,
+			MethodDefinition{ id, templateParams, nullptr, constraints, params, nullptr, nullptr, exceptions,attributes,
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
 			isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
 			isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, false, varargDepth,
-			currentType, fullType, lastTparams, lastSpec, implicit, isProtectedTypeDefinition, isUnsafeTypeDefinition, isDefault, true, false, false,
+			currentType, fullType, lastTparams, lastSpec, lastConstraints, implicit, isProtectedTypeDefinition, isUnsafeTypeDefinition, isDefault, true, false, false,
 			false, false, false, true });
 	}
 }
@@ -3723,6 +3753,7 @@ void CppAdvanceSema::enterConversionFunction(CppAdvanceParser::ConversionFunctio
 	CppAdvanceParser::TheTypeIdContext* returnType = ctx->conversionFunctionId()->theTypeId();
 	CppAdvanceParser::ExprContext* expression = nullptr;
 	CppAdvanceParser::TemplateParamsContext* templateParams = ctx->templateParams();
+	CppAdvanceParser::ConstraintClauseContext* constraints = ctx->constraintClause();
 	CppAdvanceParser::ExceptionSpecificationContext* exceptions = ctx->exceptionSpecification();
 	CppAdvanceParser::ImplicitSpecificationContext* implicit = ctx->implicitSpecification();
 	CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
@@ -3783,7 +3814,10 @@ void CppAdvanceSema::enterConversionFunction(CppAdvanceParser::ConversionFunctio
 		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
 		std::optional<AccessSpecifier> access = std::nullopt;
 		bool isProtectedInternal = false;
-		
+		if (constraints && !templateParams)
+		{
+			CppAdvanceCompilerError("Only generic function can have constraints", constraints->Where()->getSymbol());
+		}
 		if (auto decl = reinterpret_cast<CppAdvanceParser::StructMemberDeclarationContext*>(ctx->parent))
 		{
 			isProtectedInternal = decl->protectedInternal();
@@ -3831,21 +3865,22 @@ void CppAdvanceSema::enterConversionFunction(CppAdvanceParser::ConversionFunctio
 		std::string id;
 		auto lastTparams = getLastTypeTemplateParams();
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
+		auto lastConstraints = getLastTypeConstraints();
 		auto fullType = getCurrentFullTypeName();
 		bool isRefReturn = ctx->conversionFunctionId()->Ref();
 		bool isConstReturn = ctx->conversionFunctionId()->Const();
 		structStack.top()->methods.emplace_back(
-			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions, attributes,
+			MethodDefinition{ id, templateParams, nullptr, constraints, nullptr, returnType, expression, exceptions, attributes,
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(),
 			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, false, false, -1,
-			currentType, fullType, lastTparams, lastSpec, implicit, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, false, false, isVirtual,
+			currentType, fullType, lastTparams, lastSpec, lastConstraints, implicit, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, false, false, isVirtual,
 			isOverride, false, isFinal, false, false, true });
 		methods.insert_or_assign(SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() },
-			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions, attributes,
+			MethodDefinition{ id, templateParams, nullptr, constraints, nullptr, returnType, expression, exceptions, attributes,
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
 			isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
 			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, false, false, -1,
-			currentType, fullType, lastTparams, lastSpec, implicit, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, false, false, isVirtual,
+			currentType, fullType, lastTparams, lastSpec, lastConstraints, implicit, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, false, false, isVirtual,
 			isOverride && currentTypeKind.top() == TypeKind::Class, false, isFinal && currentTypeKind.top() == TypeKind::Class, false, false, true });
 	}
 }
@@ -4099,19 +4134,20 @@ void CppAdvanceSema::enterIndexer(CppAdvanceParser::IndexerContext* ctx)
 		
 		auto lastTparams = getLastTypeTemplateParams();
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
+		auto lastConstraints = getLastTypeConstraints();
 		auto fullType = getCurrentFullTypeName();
 		structStack.top()->methods.emplace_back(
-			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions, attributes,
+			MethodDefinition{ id, templateParams, nullptr, nullptr, nullptr, returnType, expression, exceptions, attributes,
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(),
 			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, false, varargDepth,
-			currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, isMutating, isStatic, isVirtual,
+			currentType, fullType, lastTparams, lastSpec, lastConstraints, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, isMutating, isStatic, isVirtual,
 			isOverride, false, isFinal, false,false,false,params, getter, setter });
 		methods.insert_or_assign(SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() },
-			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions, attributes,
+			MethodDefinition{ id, templateParams, nullptr, nullptr, nullptr, returnType, expression, exceptions, attributes,
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
 			isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
 			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, false, varargDepth,
-			currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, isMutating, isStatic, isVirtual,
+			currentType, fullType, lastTparams, lastSpec, lastConstraints, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, isMutating, isStatic, isVirtual,
 			isOverride && currentTypeKind.top() == TypeKind::Class, false, isFinal && currentTypeKind.top() == TypeKind::Class, false,false,false,params, getter, setter });
 	}
 }
@@ -4331,11 +4367,12 @@ void CppAdvanceSema::enterProperty(CppAdvanceParser::PropertyContext* ctx)
 		std::string id = ctx->Identifier()->getText();
 		auto lastTparams = getLastTypeTemplateParams();
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
+		auto lastConstraints = getLastTypeConstraints();
 		auto fullType = getCurrentFullTypeName();
 		auto pos = SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() };
 		auto property = PropertyDefinition{ id, propertyType, pos, initializer, getter, setter, expression, 
 			ctx->attributeSpecifierSeq(), *access, getCurrentCompilationCondition(),
-			currentType, fullType, lastTparams, lastSpec, isStatic, isConstReturn, isRefReturn, isUnsafe, isPrivateTypeDefinition,
+			currentType, fullType, lastTparams, lastSpec, lastConstraints, isStatic, isConstReturn, isRefReturn, isUnsafe, isPrivateTypeDefinition,
 			isProtectedTypeDefinition, isUnsafeTypeDefinition, isVirtual, isOverride, false,
 			isFinal && currentTypeKind.top() == TypeKind::Class, isInline, isConstexpr };
 		structStack.top()->properties.emplace_back(property);
@@ -4647,7 +4684,7 @@ void CppAdvanceSema::exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDec
 			{
 				if (*access == AccessSpecifier::Protected) protectedSymbols.insert(id->getText());
 				if (unsafeDepth > 0) cppParser.unsafeVariables.insert(id->getText());
-				globalVariables.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), 
+				globalVariables.emplace_back(VariableDefinition{ id->getText(), nullptr, nullptr, ctx->theTypeId(), 
 					{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr, attributes, *access, 
 					getCurrentCompilationCondition(), "", false, isConst, isVolatile, isThreadLocal, unsafeDepth > 0, false, isUnowned, isWeak });
 			}
@@ -4656,14 +4693,14 @@ void CppAdvanceSema::exitSimpleMultiDeclaration(CppAdvanceParser::SimpleMultiDec
 				if (currentTypeKind.top() == TypeKind::UnionStruct && *access != AccessSpecifier::Private)
 					CppAdvanceCompilerError("Raw union field must be private", ctx->getStart());
 				if (unsafeDepth > 0) cppParser.unsafeVariables.insert(currentType + "." + id->getText());
-				structStack.top()->fields.emplace_back(VariableDefinition{ id->getText(), nullptr, ctx->theTypeId(), 
+				structStack.top()->fields.emplace_back(VariableDefinition{ id->getText(), nullptr, nullptr, ctx->theTypeId(), 
 					{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr, attributes, *access,
 					getCurrentCompilationCondition(), "", isStatic, isConst, isVolatile, isThreadLocal, unsafeDepth > 0, false, isUnowned, isWeak });
 				if (isStatic || isThreadLocal)
 				{
 					if (isProtectedTypeDefinition) access = AccessSpecifier::Protected;
 					else access = AccessSpecifier::Private;
-					staticFields.emplace_back(VariableDefinition{ id->getText(), getLastTypeTemplateParams(), ctx->theTypeId(), 
+					staticFields.emplace_back(VariableDefinition{ id->getText(), getLastTypeTemplateParams(), getLastTypeConstraints(), ctx->theTypeId(),
 						{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr, attributes, *access,
 						getCurrentCompilationCondition(), getCurrentFullTypeName(), isStatic, isConst, isVolatile, isThreadLocal, 
 						isUnsafeTypeDefinition, getLastTypeTemplateSpecializationArgs() != nullptr, isUnowned, isWeak });
@@ -4714,6 +4751,7 @@ void CppAdvanceSema::enterClassDefinition(CppAdvanceParser::ClassDefinitionConte
 		constructorCounts.push(0);
 		CppAdvanceParser::TemplateParamsContext* tparams = ctx->classHead()->templateParams();
 		CppAdvanceParser::TemplateArgumentListContext* tspec = nullptr;
+		CppAdvanceParser::ConstraintClauseContext* constraints = ctx->classHead()->constraintClause();
 		CppAdvanceParser::BaseSpecifierListContext* bases = nullptr;
 		CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 
@@ -4727,6 +4765,10 @@ void CppAdvanceSema::enterClassDefinition(CppAdvanceParser::ClassDefinitionConte
 			bases = b->baseSpecifierList();
 			if (isStatic && bases->baseSpecifier().size() > 1)
 				CppAdvanceCompilerError("Static class can be inherited only from other static classes", b->getStart());
+		}
+		if (constraints && !tparams)
+		{
+			CppAdvanceCompilerError("Only generic type can have constraints", constraints->Where()->getSymbol());
 		}
 
 		bool isUnsafe = unsafeDepth > 0;
@@ -4784,7 +4826,7 @@ void CppAdvanceSema::enterClassDefinition(CppAdvanceParser::ClassDefinitionConte
 		}
 
 		auto def = std::make_shared<StructDefinition>(currentTypeKind.top(),
-			name, tparams, tspec, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
+			name, tparams, tspec, constraints, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, bases, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
 			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
 			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, ctx->classHead()->Abstract(), ctx->classHead()->Final(),
@@ -4835,11 +4877,11 @@ void CppAdvanceSema::exitClassDefinition(CppAdvanceParser::ClassDefinitionContex
 			if (constructorCounts.top() == 0) top->isDefaultConstructible = true;
 			constructorCounts.pop();
 			if (!top->templateSpecializationArgs) {
-				forwardDeclarations.push_back({ top->id,top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+				forwardDeclarations.push_back({ top->id,top->templateParams,top->constraints,top->access,{0,0},top->compilationCondition,top->isUnsafe });
 				if (currentTypeKind.top() != TypeKind::StaticClass) {
-					forwardDeclarations.push_back({ top->id + "__Unowned",top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
-					forwardDeclarations.push_back({ top->id + "__Weak",top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
-					forwardDeclarations.push_back({ "__Class_" + top->id,top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+					forwardDeclarations.push_back({ top->id + "__Unowned",top->templateParams,top->constraints,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+					forwardDeclarations.push_back({ top->id + "__Weak",top->templateParams,top->constraints,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+					forwardDeclarations.push_back({ "__Class_" + top->id,top->templateParams,top->constraints,top->access,{0,0},top->compilationCondition,top->isUnsafe });
 				}
 			}
 			globalStructs.push_back(top);
@@ -4889,6 +4931,7 @@ void CppAdvanceSema::enterDestructor(CppAdvanceParser::DestructorContext* ctx)
 	if (currentTypeKind.top() == TypeKind::Class) id.insert(1, "__Class_");
 	auto lastTparams = getLastTypeTemplateParams();
 	auto lastSpec = getLastTypeTemplateSpecializationArgs();
+	auto lastConstraints = getLastTypeConstraints();
 	auto fullType = getCurrentFullTypeName();
 	auto pos = SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() };
 	CppAdvanceParser::ExprContext* expression = nullptr;
@@ -4909,16 +4952,16 @@ void CppAdvanceSema::enterDestructor(CppAdvanceParser::DestructorContext* ctx)
 	}
 
 	structStack.top()->methods.emplace_back(
-		MethodDefinition{ id, nullptr, nullptr, nullptr, nullptr, expression, ctx->exceptionSpecification(), nullptr,
+		MethodDefinition{ id, nullptr, nullptr, nullptr, nullptr, nullptr, expression, ctx->exceptionSpecification(), nullptr,
 		pos, AccessSpecifier::Public, getCurrentCompilationCondition(),
 		isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, false, -1,
-		currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, true, false, false,
+		currentType, fullType, lastTparams, lastSpec, lastConstraints, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, true, false, false,
 		false, false, false, false, true });
 	methods.insert_or_assign(pos,
-		MethodDefinition{ id, nullptr, nullptr, nullptr, nullptr, expression, ctx->exceptionSpecification(), nullptr,
+		MethodDefinition{ id, nullptr, nullptr, nullptr, nullptr, nullptr, expression, ctx->exceptionSpecification(), nullptr,
 		pos, isPrivateTypeDefinition ? AccessSpecifier::Private : AccessSpecifier::Internal, getCurrentCompilationCondition(),
 		isInline || isConstexpr, isConstexpr, false, isUnsafe, false, false, false, false, -1,
-		currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, true, false, false,
+		currentType, fullType, lastTparams, lastSpec, lastConstraints, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, true, false, false,
 		false, false, false, false, true });
 }
 
@@ -5001,11 +5044,12 @@ void CppAdvanceSema::enterAbstractProperty(CppAdvanceParser::AbstractPropertyCon
 		std::string id = ctx->Identifier()->getText();
 		auto lastTparams = getLastTypeTemplateParams();
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
+		auto lastConstraints = getLastTypeConstraints();
 		auto fullType = getCurrentFullTypeName();
 		auto pos = SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() };
 		auto property = PropertyDefinition{ id, propertyType, pos, nullptr, getter, setter, nullptr,
 			ctx->attributeSpecifierSeq(), *access, getCurrentCompilationCondition(),
-			currentType, fullType, lastTparams, lastSpec, false, isConstReturn, isRefReturn, isUnsafe, isPrivateTypeDefinition,
+			currentType, fullType, lastTparams, lastSpec, lastConstraints, false, isConstReturn, isRefReturn, isUnsafe, isPrivateTypeDefinition,
 			isProtectedTypeDefinition, isUnsafeTypeDefinition, false, false, true, false, false, false };
 		structStack.top()->properties.emplace_back(property);
 		properties.insert_or_assign(pos, property);
@@ -5151,11 +5195,12 @@ void CppAdvanceSema::enterAbstractMethodDeclaration(CppAdvanceParser::AbstractMe
 		StringReplace(id, " ", "");
 		auto lastTparams = getLastTypeTemplateParams();
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
+		auto lastConstraints = getLastTypeConstraints();
 		auto fullType = getCurrentFullTypeName();
-		auto def = MethodDefinition{ id, nullptr, nullptr, params, returnType, nullptr, exceptions, ctx->attributeSpecifierSeq(),
+		auto def = MethodDefinition{ id, nullptr, nullptr, nullptr, params, returnType, nullptr, exceptions, ctx->attributeSpecifierSeq(),
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, *access, getCurrentCompilationCondition(),
 			false, false, false, false, isRefReturn, isConstReturn, false, false, varargDepth,
-			currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false,
+			currentType, fullType, lastTparams, lastSpec, lastConstraints, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false,
 			isMutating, false, false, false, true, false };
 		structStack.top()->methods.emplace_back(def);
 		methods.insert_or_assign(SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() }, def);
@@ -5236,6 +5281,7 @@ void CppAdvanceSema::enterInterfaceDefinition(CppAdvanceParser::InterfaceDefinit
 	{
 		typeset.globalTypes.insert(currentType);
 		CppAdvanceParser::TemplateParamsContext* tparams = ctx->interfaceHead()->templateParams();
+		CppAdvanceParser::ConstraintClauseContext* constraints = ctx->interfaceHead()->constraintClause();
 		CppAdvanceParser::BaseSpecifierListContext* baseInterfaces = nullptr;
 		CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 
@@ -5244,6 +5290,10 @@ void CppAdvanceSema::enterInterfaceDefinition(CppAdvanceParser::InterfaceDefinit
 			baseInterfaces = b->baseSpecifierList();
 		}
 
+		if (constraints && !tparams)
+		{
+			CppAdvanceCompilerError("Only generic type can have constraints", constraints->Where()->getSymbol());
+		}
 		bool isUnsafe = unsafeDepth > 0;
 
 		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
@@ -5294,7 +5344,7 @@ void CppAdvanceSema::enterInterfaceDefinition(CppAdvanceParser::InterfaceDefinit
 		}
 
 		auto def = std::make_shared<StructDefinition>(TypeKind::Interface,
-			name, tparams, nullptr, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
+			name, tparams, nullptr, constraints, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, baseInterfaces, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
 			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
 			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, false, false, false);
@@ -5334,9 +5384,9 @@ void CppAdvanceSema::exitInterfaceDefinition(CppAdvanceParser::InterfaceDefiniti
 			isPrivateTypeDefinition = false;
 			auto& top = structStack.top();
 			if (top->access == AccessSpecifier::Protected) protectedSymbols.insert(top->id);
-			forwardDeclarations.push_back({ top->id,top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
-			forwardDeclarations.push_back({ top->id + "__Unowned",top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe});
-			forwardDeclarations.push_back({ top->id + "__Weak",top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe});
+			forwardDeclarations.push_back({ top->id,top->templateParams,top->constraints,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+			forwardDeclarations.push_back({ top->id + "__Unowned",top->templateParams,top->constraints,top->access,{0,0},top->compilationCondition,top->isUnsafe});
+			forwardDeclarations.push_back({ top->id + "__Weak",top->templateParams,top->constraints,top->access,{0,0},top->compilationCondition,top->isUnsafe});
 			globalStructs.push_back(top);
 		}
 		int idx = 0;
@@ -5408,11 +5458,12 @@ void CppAdvanceSema::enterInterfaceProperty(CppAdvanceParser::InterfacePropertyC
 		std::string id = ctx->Identifier()->getText();
 		auto lastTparams = getLastTypeTemplateParams();
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
+		auto lastConstraints = getLastTypeConstraints();
 		auto fullType = getCurrentFullTypeName();
 		auto pos = SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() };
 		auto property = PropertyDefinition{ id, propertyType, pos, nullptr, getter, setter, nullptr,
 			ctx->attributeSpecifierSeq(), AccessSpecifier::Public, getCurrentCompilationCondition(),
-			currentType, fullType, lastTparams, lastSpec, false, isConstReturn, isRefReturn, isUnsafe, isPrivateTypeDefinition,
+			currentType, fullType, lastTparams, lastSpec, lastConstraints, false, isConstReturn, isRefReturn, isUnsafe, isPrivateTypeDefinition,
 			isProtectedTypeDefinition, isUnsafeTypeDefinition };
 		structStack.top()->properties.emplace_back(property);
 		//properties.insert_or_assign(pos, property);
@@ -5517,11 +5568,12 @@ void CppAdvanceSema::enterInterfaceMethodDeclaration(CppAdvanceParser::Interface
 			StringReplace(id, " ", "");
 		auto lastTparams = getLastTypeTemplateParams();
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
+		auto lastConstraints = getLastTypeConstraints();
 		auto fullType = getCurrentFullTypeName();
-		auto def = MethodDefinition{ id, nullptr, nullptr, params, returnType, nullptr, exceptions, ctx->attributeSpecifierSeq(),
+		auto def = MethodDefinition{ id, nullptr, nullptr, nullptr, params, returnType, nullptr, exceptions, ctx->attributeSpecifierSeq(),
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, AccessSpecifier::Public, getCurrentCompilationCondition(),
 			false, false, false, false, isRefReturn, isConstReturn, false, false, varargDepth,
-			currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false,
+			currentType, fullType, lastTparams, lastSpec, lastConstraints, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false,
 			false, false, false, false, true, false };
 		structStack.top()->methods.emplace_back(def);
 		//methods.insert_or_assign(SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() }, def);
@@ -5609,12 +5661,13 @@ void CppAdvanceSema::enterInterfaceIndexer(CppAdvanceParser::InterfaceIndexerCon
 
 		auto lastTparams = getLastTypeTemplateParams();
 		auto lastSpec = getLastTypeTemplateSpecializationArgs();
+		auto lastConstraints = getLastTypeConstraints();
 		auto fullType = getCurrentFullTypeName();
 		structStack.top()->methods.emplace_back(
-			MethodDefinition{ id, nullptr, nullptr, nullptr, returnType, nullptr, exceptions, ctx->attributeSpecifierSeq(),
+			MethodDefinition{ id, nullptr, nullptr, nullptr, nullptr, returnType, nullptr, exceptions, ctx->attributeSpecifierSeq(),
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, AccessSpecifier::Public, getCurrentCompilationCondition(),
 			isInline || isConstexpr, isConstexpr, isConsteval, isUnsafe, isRefReturn, isConstReturn, isForwardReturn, false, varargDepth,
-			currentType, fullType, lastTparams, lastSpec, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, isMutating, isStatic, isVirtual,
+			currentType, fullType, lastTparams, lastSpec, lastConstraints, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false, isMutating, isStatic, isVirtual,
 			isOverride, false, isFinal, false,false,false,params, getter, setter });
 		/*methods.insert_or_assign(SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() },
 			MethodDefinition{ id, templateParams, nullptr, nullptr, returnType, expression, exceptions,
@@ -5698,11 +5751,16 @@ void CppAdvanceSema::enterExtensionDefinition(CppAdvanceParser::ExtensionDefinit
 		typeset.globalTypes.insert(currentType);
 		CppAdvanceParser::TemplateParamsContext* tparams = ctx->extensionHead()->templateParams();
 		CppAdvanceParser::TemplateArgumentListContext* tspec = nullptr;
+		CppAdvanceParser::ConstraintClauseContext* constraints = ctx->extensionHead()->constraintClause();
 		CppAdvanceParser::BaseSpecifierListContext* baseInterfaces = nullptr;
 
 		if (auto b = ctx->extensionHead()->baseClause())
 		{
 			baseInterfaces = b->baseSpecifierList();
+		}
+		if (constraints && !tparams)
+		{
+			CppAdvanceCompilerError("Only generic type can have constraints", constraints->Where()->getSymbol());
 		}
 
 		bool isUnsafe = unsafeDepth > 0;
@@ -5768,7 +5826,7 @@ void CppAdvanceSema::enterExtensionDefinition(CppAdvanceParser::ExtensionDefinit
 		StringReplace(mangledName, " ", "_");
 
 		auto def = std::make_shared<StructDefinition>(TypeKind::Extension,
-			mangledName, tparams, tspec, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
+			mangledName, tparams, tspec, constraints, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, baseInterfaces, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
 			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
 			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, false, false, false);
@@ -5928,7 +5986,7 @@ void CppAdvanceSema::enterEnumDefinition(CppAdvanceParser::EnumDefinitionContext
 		}
 
 		auto def = std::make_shared<StructDefinition>(TypeKind::Enum,
-			name, nullptr, nullptr, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
+			name, nullptr, nullptr, nullptr, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, nullptr, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
 			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
 			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, isFlags, false, false, ctx->enumHead()->enumBase());
@@ -5950,8 +6008,8 @@ void CppAdvanceSema::exitEnumDefinition(CppAdvanceParser::EnumDefinitionContext*
 			isPrivateTypeDefinition = false;
 			auto& top = structStack.top();
 			if (top->access == AccessSpecifier::Protected) protectedSymbols.insert(top->id);
-			forwardDeclarations.push_back({ top->id,nullptr,top->access,{0,0},top->compilationCondition,top->isUnsafe });
-			forwardDeclarations.push_back({ "__Class_"+top->id,nullptr,top->access,{0,0},top->compilationCondition,top->isUnsafe});
+			forwardDeclarations.push_back({ top->id,nullptr,nullptr,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+			forwardDeclarations.push_back({ "__Class_"+top->id,nullptr,nullptr,top->access,{0,0},top->compilationCondition,top->isUnsafe});
 			globalStructs.push_back(top);
 		}
 		structStack.pop();
@@ -6073,7 +6131,7 @@ void CppAdvanceSema::enterEnumClassDefinition(CppAdvanceParser::EnumClassDefinit
 		}
 
 		auto def = std::make_shared<StructDefinition>(TypeKind::EnumClass,
-			name, nullptr, nullptr, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
+			name, nullptr, nullptr, nullptr, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, bases, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
 			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
 			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, false, false, false);
@@ -6097,10 +6155,10 @@ void CppAdvanceSema::exitEnumClassDefinition(CppAdvanceParser::EnumClassDefiniti
 			if (top->access == AccessSpecifier::Protected) protectedSymbols.insert(top->id);
 			if (constructorCounts.top() == 0) top->isDefaultConstructible = true;
 			constructorCounts.pop();
-			forwardDeclarations.push_back({ top->id,top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
-			forwardDeclarations.push_back({ top->id + "__Unowned",top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
-			forwardDeclarations.push_back({ top->id + "__Weak",top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
-			forwardDeclarations.push_back({ "__Class_" + top->id,top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+			forwardDeclarations.push_back({ top->id,top->templateParams,top->constraints,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+			forwardDeclarations.push_back({ top->id + "__Unowned",top->templateParams,top->constraints,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+			forwardDeclarations.push_back({ top->id + "__Weak",top->templateParams,top->constraints,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+			forwardDeclarations.push_back({ "__Class_" + top->id,top->templateParams,top->constraints,top->access,{0,0},top->compilationCondition,top->isUnsafe });
 			globalStructs.push_back(top);
 		}
 		int idx = 0;
@@ -6195,12 +6253,17 @@ void CppAdvanceSema::enterUnionDefinition(CppAdvanceParser::UnionDefinitionConte
 		typeset.globalTypes.insert(currentType);
 		constructorCounts.push(0);
 		CppAdvanceParser::TemplateParamsContext* templateParams = ctx->unionHead()->templateParams();
+		CppAdvanceParser::ConstraintClauseContext* constraints = ctx->unionHead()->constraintClause();
 		CppAdvanceParser::BaseSpecifierListContext* bases = nullptr;
 		CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
 
 		if (auto b = ctx->unionHead()->baseClause())
 		{
 			bases = b->baseSpecifierList();
+		}
+		if (constraints && !templateParams)
+		{
+			CppAdvanceCompilerError("Only generic type can have constraints", constraints->Where()->getSymbol());
 		}
 
 		bool isUnsafe = unsafeDepth > 0;
@@ -6260,7 +6323,7 @@ void CppAdvanceSema::enterUnionDefinition(CppAdvanceParser::UnionDefinitionConte
 		}
 
 		auto def = std::make_shared<StructDefinition>(TypeKind::Union,
-			name, templateParams, nullptr, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
+			name, templateParams, nullptr, constraints, *access, getCurrentCompilationCondition(), SourcePosition{ ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
 			std::vector<VariableDefinition>{}, std::vector<ConstantDefinition>{}, bases, std::vector<TypeAliasDefinition>{}, std::vector<PropertyDefinition>{},
 			std::vector<MethodDefinition>{}, std::vector<std::shared_ptr<StructDefinition>>{}, std::vector<ForwardDeclaration>{},
 			std::vector<FunctionDeclaration>{}, std::vector<FunctionDefinition>{}, isUnsafe, false, false, false);
@@ -6300,8 +6363,8 @@ void CppAdvanceSema::exitUnionDefinition(CppAdvanceParser::UnionDefinitionContex
 			isPrivateTypeDefinition = false;
 			auto& top = structStack.top();
 			if (top->access == AccessSpecifier::Protected) protectedSymbols.insert(top->id);
-			forwardDeclarations.push_back({ top->id,top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
-			forwardDeclarations.push_back({ "__Class_" + top->id,top->templateParams,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+			forwardDeclarations.push_back({ top->id,top->templateParams,top->constraints,top->access,{0,0},top->compilationCondition,top->isUnsafe });
+			forwardDeclarations.push_back({ "__Class_" + top->id,top->templateParams,top->constraints,top->access,{0,0},top->compilationCondition,top->isUnsafe });
 			globalStructs.push_back(top);
 		}
 		structStack.pop();
@@ -6607,7 +6670,7 @@ void CppAdvanceSema::exitFriendDeclaration(CppAdvanceParser::FriendDeclarationCo
 	}
 	else
 	{
-		structStack.top()->friendTypes.emplace_back(ForwardDeclaration{ ctx->Identifier()->getText(), ctx->templateParams(), 
+		structStack.top()->friendTypes.emplace_back(ForwardDeclaration{ ctx->Identifier()->getText(), ctx->templateParams(),nullptr, 
 			AccessSpecifier::Internal,{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
 			getCurrentCompilationCondition(), false });
 	}
