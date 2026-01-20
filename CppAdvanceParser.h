@@ -137,13 +137,13 @@ public:
     RuleLambdaCaptureList = 220, RuleLambdaCaptureClause = 221, RuleCapture = 222, 
     RuleLambdaDeclarator = 223, RuleLambdaBody = 224, RulePrimaryExpression = 225, 
     RuleFoldExpression = 226, RuleFoldLeftExpression = 227, RuleFoldRightExpression = 228, 
-    RuleUnaryPrefixOperator = 229, RuleUnaryCustomOperator = 230, RuleRefCaptureOperator = 231, 
-    RuleUnaryPostfixOperator = 232, RuleNot = 233, RuleOperator = 234, RuleLiteral = 235, 
-    RuleInterpolatedStringLiteral = 236, RuleInterpolatedRegularStringLiteral = 237, 
-    RuleInterpolatedRegularStringPart = 238, RuleInterpolatedVerbatiumStringLiteral = 239, 
-    RuleInterpolatedVerbatiumStringPart = 240, RuleInterpolatedMultilineStringLiteral = 241, 
-    RuleInterpolatedMultilineStringPart = 242, RuleInterpolatedExpression = 243, 
-    RuleDeclvalExpression = 244
+    RuleTemplateDeductionGuide = 229, RuleUnaryPrefixOperator = 230, RuleUnaryCustomOperator = 231, 
+    RuleRefCaptureOperator = 232, RuleUnaryPostfixOperator = 233, RuleNot = 234, 
+    RuleOperator = 235, RuleLiteral = 236, RuleInterpolatedStringLiteral = 237, 
+    RuleInterpolatedRegularStringLiteral = 238, RuleInterpolatedRegularStringPart = 239, 
+    RuleInterpolatedVerbatiumStringLiteral = 240, RuleInterpolatedVerbatiumStringPart = 241, 
+    RuleInterpolatedMultilineStringLiteral = 242, RuleInterpolatedMultilineStringPart = 243, 
+    RuleInterpolatedExpression = 244, RuleDeclvalExpression = 245
   };
 
   explicit CppAdvanceParser(antlr4::TokenStream *input);
@@ -392,6 +392,7 @@ public:
   class FoldExpressionContext;
   class FoldLeftExpressionContext;
   class FoldRightExpressionContext;
+  class TemplateDeductionGuideContext;
   class UnaryPrefixOperatorContext;
   class UnaryCustomOperatorContext;
   class RefCaptureOperatorContext;
@@ -483,6 +484,7 @@ public:
     FunctionDefinitionContext *functionDefinition();
     FunctionTemplateDeclarationContext *functionTemplateDeclaration();
     ExternFunctionDeclarationContext *externFunctionDeclaration();
+    TemplateDeductionGuideContext *templateDeductionGuide();
     UnitTestDeclarationContext *unitTestDeclaration();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -4464,6 +4466,31 @@ public:
   };
 
   FoldRightExpressionContext* foldRightExpression();
+
+  class  TemplateDeductionGuideContext : public antlr4::ParserRuleContext {
+  public:
+    TemplateDeductionGuideContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    TemplateNameContext *templateName();
+    antlr4::tree::TerminalNode *LeftParen();
+    std::vector<TheTypeIdContext *> theTypeId();
+    TheTypeIdContext* theTypeId(size_t i);
+    antlr4::tree::TerminalNode *RightParen();
+    antlr4::tree::TerminalNode *Arrow();
+    SimpleTemplateIdContext *simpleTemplateId();
+    antlr4::tree::TerminalNode *Semi();
+    TemplateParamsContext *templateParams();
+    ImplicitSpecificationContext *implicitSpecification();
+    std::vector<antlr4::tree::TerminalNode *> Comma();
+    antlr4::tree::TerminalNode* Comma(size_t i);
+    ConstraintClauseContext *constraintClause();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  TemplateDeductionGuideContext* templateDeductionGuide();
 
   class  UnaryPrefixOperatorContext : public antlr4::ParserRuleContext {
   public:

@@ -125,6 +125,7 @@ public:
 	void printDeclSpecifier(CppAdvanceParser::DeclSpecifierContext* ctx) const;
 	void printExternVariableDeclaration(CppAdvanceParser::ExternVariableDeclarationContext* ctx) const;
 	void printExternFunctionDeclaration(CppAdvanceParser::ExternFunctionDeclarationContext* ctx) const;
+	void printTemplateDeductionGuide(CppAdvanceParser::TemplateDeductionGuideContext* ctx) const;
 	void printStatement(CppAdvanceParser::StatContext* ctx) const;
 	void printDeclarationStatement(CppAdvanceParser::DeclarationStatementContext* ctx) const;
 	void printDeclarationCompoundStatement(CppAdvanceParser::DeclarationCompoundStatementContext* ctx) const;

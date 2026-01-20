@@ -770,32 +770,7 @@ main: ()
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);
 }
 
-IS_VOID: <T> bool == type T is not class or type T is ()-> 
-	or type T is operator i32 or type T is not VectorClass or type T is IInterface;
-
-type Decayed<T> = decay(T);
-type Conditional<T> = 
-	type T is class 
-		? i32 
-		: type T is struct 
-			? i32 | str 
-			: f32 | str;
-
-public struct <T1, TArgs...> GenericStruct 
-where type T1 is i32
-{
-	public t1: T1;
-	public t2: (TArgs...);
-	private s: usize;
-
-	public this(in ref t1: T1, forward args: TArgs...)
-	{
-		this.t1 = t1;
-		this.t2 = forward args...;
-		this.s = sizeof...(TArgs);
-		print(s);
-	}
-}
+<T> vector(i32) -> vector<i32>;
 
 vsum: <TArgs...> (forward args: TArgs...) 
 	=> (args + ... + 1);

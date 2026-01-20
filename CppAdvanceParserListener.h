@@ -701,6 +701,9 @@ public:
   virtual void enterFoldRightExpression(CppAdvanceParser::FoldRightExpressionContext *ctx) = 0;
   virtual void exitFoldRightExpression(CppAdvanceParser::FoldRightExpressionContext *ctx) = 0;
 
+  virtual void enterTemplateDeductionGuide(CppAdvanceParser::TemplateDeductionGuideContext *ctx) = 0;
+  virtual void exitTemplateDeductionGuide(CppAdvanceParser::TemplateDeductionGuideContext *ctx) = 0;
+
   virtual void enterUnaryPrefixOperator(CppAdvanceParser::UnaryPrefixOperatorContext *ctx) = 0;
   virtual void exitUnaryPrefixOperator(CppAdvanceParser::UnaryPrefixOperatorContext *ctx) = 0;
 

@@ -11871,6 +11871,10 @@ void CppAdvanceCodegen::printDeclaration(CppAdvanceParser::DeclarationContext* c
 			}
 		}
 	}
+	else if (auto decl = ctx->templateDeductionGuide())
+	{
+		printTemplateDeductionGuide(decl);
+	}
 	else if (auto decl = ctx->unitTestDeclaration())
 	{
 		printUnitTestDeclaration(decl);
@@ -11996,6 +12000,45 @@ void CppAdvanceCodegen::printExternFunctionDeclaration(CppAdvanceParser::ExternF
 		out << "void";
 	}
 	if (ret->Ref()) out << "&";
+	out << ";";
+}
+
+void CppAdvanceCodegen::printTemplateDeductionGuide(CppAdvanceParser::TemplateDeductionGuideContext* ctx) const
+{
+	out.switchTo(true);
+	out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+	if (ctx->templateParams())
+	{
+		printTemplateParams(ctx->templateParams());
+		out << " ";
+		if (ctx->constraintClause())
+		{
+			printConstraintClause(ctx->constraintClause());
+			out << " ";
+		}
+	}
+
+	if (ctx->implicitSpecification())
+	{
+		printImplicitSpecification(ctx->implicitSpecification());
+		out << " ";
+	}
+	else if (ctx->theTypeId().size() == 1)
+	{
+		out << "explicit ";
+	}
+
+	printIdentifier(ctx->templateName()->Identifier());
+    out << "(";
+	bool first = true;
+	for (auto tid : ctx->theTypeId())
+	{
+		if (!first) out << ", ";
+		first = false;
+		printTypeId(tid);
+	}
+	out << ") -> ";
+	printSimpleTemplateId(ctx->simpleTemplateId());
 	out << ";";
 }
 

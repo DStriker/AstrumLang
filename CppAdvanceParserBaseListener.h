@@ -703,6 +703,9 @@ public:
   virtual void enterFoldRightExpression(CppAdvanceParser::FoldRightExpressionContext * /*ctx*/) override { }
   virtual void exitFoldRightExpression(CppAdvanceParser::FoldRightExpressionContext * /*ctx*/) override { }
 
+  virtual void enterTemplateDeductionGuide(CppAdvanceParser::TemplateDeductionGuideContext * /*ctx*/) override { }
+  virtual void exitTemplateDeductionGuide(CppAdvanceParser::TemplateDeductionGuideContext * /*ctx*/) override { }
+
   virtual void enterUnaryPrefixOperator(CppAdvanceParser::UnaryPrefixOperatorContext * /*ctx*/) override { }
   virtual void exitUnaryPrefixOperator(CppAdvanceParser::UnaryPrefixOperatorContext * /*ctx*/) override { }
 

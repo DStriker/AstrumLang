@@ -36,6 +36,7 @@ declaration:
 	| attributeSpecifierSeq? accessSpecifier? functionDefinition
 	| accessSpecifier? functionTemplateDeclaration
 	| externFunctionDeclaration
+	| templateDeductionGuide
 	| unitTestDeclaration
 	;
 
@@ -749,6 +750,8 @@ foldExpression:
 foldLeftExpression: unaryExpression;
 
 foldRightExpression: unaryExpression;
+
+templateDeductionGuide: (templateParams constraintClause?)? implicitSpecification? templateName LeftParen theTypeId (Comma theTypeId)* RightParen Arrow simpleTemplateId Semi;
 
 unaryPrefixOperator:
 	  Plus

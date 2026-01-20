@@ -70,7 +70,6 @@ template<class T1, class T2, class T3, class T4, class T5> class __Class_Union5;
 template<class T1, class T2, class T3, class T4, class T5, class T6> class Union6;
 template<class T1, class T2, class T3, class T4, class T5, class T6> class __Class_Union6;
 class TestStruct;
-template<class T1, class... TArgs> requires(CppAdvance::TypeIs<T1, CppAdvance::i32>()) class GenericStruct;
 namespace __ntuples { class NamedTuple_4e7be1ed49b09d71; } 
 namespace __ntuples { class NamedTuple_6893f862d6c49683; } 
 namespace __ntuples { class NamedTuple_6893f862d6c49683; } 
@@ -87,13 +86,9 @@ namespace __FirstProgram_Protected { using Test112 = typename Test1::Test2::Clas
 template<class A, class C> using SimpleTuple = std::tuple<A, bool, C>;
 #line 43 "FirstProgram.adv"
 using ImportantOptions = __ntuples::NamedTuple_4e7be1ed49b09d71;
-#line 776 "FirstProgram.adv"
-template<class T> using Decayed = std::remove_cvref_t<T>;
-#line 777 "FirstProgram.adv"
-template<class T> using Conditional = std::conditional_t<std::is_base_of_v<CppAdvance::ObjectRef, T>, CppAdvance::i32, std::conditional_t<std::is_base_of_v<CppAdvance::Struct, T>, Union2<CppAdvance::i32, CppAdvance::Str>, Union2<CppAdvance::f32, CppAdvance::Str>>>;
-#line 803 "FirstProgram.adv"
+#line 778 "FirstProgram.adv"
 template<class... Args> using Action = CppAdvance::FunctionRef<void(Args...)>;
-#line 804 "FirstProgram.adv"
+#line 779 "FirstProgram.adv"
 template<class T> using Predicate = CppAdvance::FunctionRef<bool (T)>;
 //###############################################################################
 //# Type definitions
@@ -2802,24 +2797,6 @@ struct alignas((alignof(CppAdvance::i64))) TestStruct final : public CppAdvance:
 	
 };
 
-template<class T1, class... TArgs> requires(CppAdvance::TypeIs<T1, CppAdvance::i32>()) class __Class_GenericStruct;
-#line 784 "FirstProgram.adv"
-template<class T1, class... TArgs> requires(CppAdvance::TypeIs<T1, CppAdvance::i32>()) struct GenericStruct final : public CppAdvance::Struct {
-	public: using __self = GenericStruct<T1, TArgs...>;
-	public: using __class = __Class_GenericStruct<T1, TArgs...>;
-	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-	#line 787 "FirstProgram.adv"
-	public: T1 t1; ADV_CHECK_REF_STRUCT("T1", T1);
-	#line 788 "FirstProgram.adv"
-	public: std::tuple<TArgs...> t2; ADV_CHECK_REF_STRUCT("(TArgs...)", std::tuple<TArgs...>);
-	#line 789 "FirstProgram.adv"
-	private: CppAdvance::usize s; ADV_CHECK_REF_STRUCT("usize", CppAdvance::usize);
-	public: GenericStruct(T1 _t1, std::tuple<TArgs...> _t2, CppAdvance::usize _s) : t1{_t1}, t2{_t2}, s{_s} {}
-	#line 791 "FirstProgram.adv"
-	public: [[clang::annotate("varargs:1")]] TESTDLL_API GenericStruct(const T1& t1, TArgs&&... args) ;
-	
-};
-
 
 #line 57 "FirstProgram.adv"
 class __Class_Vector3 final : public CppAdvance::ValueType
@@ -3240,18 +3217,6 @@ class __Class_TestStruct final : public CppAdvance::ValueType
 #line 629 "FirstProgram.adv"
 ADV_CHECK_FOR_CONCRETE(TestStruct);
 
-
-#line 784 "FirstProgram.adv"
-template<class T1, class... TArgs> requires(CppAdvance::TypeIs<T1, CppAdvance::i32>()) class __Class_GenericStruct final : public CppAdvance::ValueType
-{
-	#line 9999 "FirstProgram.adv"
-	public: using __underlying = GenericStruct<T1, TArgs...>; using __self = __underlying;
-	__self __value;
-	__Class_GenericStruct(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>) : __value{value} {}
-	operator __underlying() const noexcept { return __value; }
-	
-};
-
 namespace __ntuples {
 	#line 9999 "FirstProgram.adv"
 	struct NamedTuple_4e7be1ed49b09d71 final : public CppAdvance::Struct { 
@@ -3335,7 +3300,7 @@ inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32;
 inline constexpr auto testInt(CppAdvance::i32 i)  -> const CppAdvance::i32;
 #line 638 "FirstProgram.adv"
 inline auto printSuck()  -> decltype(auto);
-#line 800 "FirstProgram.adv"
+#line 775 "FirstProgram.adv"
 template<class... TArgs> inline auto vsum(TArgs&&... args)  -> decltype(auto);
 //###############################################################################
 //# Global compile-time constants
@@ -3352,8 +3317,6 @@ inline constexpr auto INT_CONSTANT = NORMAL_CONSTANT<CppAdvance::i32>;
 #line 16 "FirstProgram.adv"
 inline constexpr auto LONG_CONSTANT = NORMAL_CONSTANT<CppAdvance::i64>;
 #endif 
-#line 773 "FirstProgram.adv"
-template<class T> inline constexpr bool IS_VOID = !std::is_base_of_v<CppAdvance::ObjectRef, T> || std::is_base_of_v<CppAdvance::FuncBase, T> || std::convertible_to<T, CppAdvance::i32> || !CppAdvance::TypeIs<T, VectorClass>() || CppAdvance::TypeIs<T, IInterface>();
 //###############################################################################
 //# Global variable declarations
 //###############################################################################
@@ -3893,22 +3856,11 @@ inline auto printSuck()  -> decltype(auto)
 	#line 638 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(print(CppAdvance::Str{u"Suck my dick"})); 
 }
-#line 791 "FirstProgram.adv"
-template<class T1, class... TArgs> requires(CppAdvance::TypeIs<T1, CppAdvance::i32>()) GenericStruct<T1, TArgs...>::GenericStruct(const T1& t1, TArgs&&... args)  : 
-#line 793 "FirstProgram.adv"
-t1{t1}, 
-#line 794 "FirstProgram.adv"
-t2{std::forward<decltype(args)>(args)...}, 
-#line 795 "FirstProgram.adv"
-s{CppAdvance::usize(sizeof...(TArgs))}
-{
-	#line 796 "FirstProgram.adv"
-	print(s);
-}
-#line 800 "FirstProgram.adv"
+template<class T> explicit vector(CppAdvance::i32) -> vector<CppAdvance::i32>;
+#line 775 "FirstProgram.adv"
 template<class... TArgs> inline auto vsum(TArgs&&... args)  -> decltype(auto)
 {
-	#line 801 "FirstProgram.adv"
+	#line 776 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY((args + ... + CppAdvance::i32(1))); 
 }
 #line 9999 "FirstProgram.adv"
@@ -4103,8 +4055,6 @@ inline constexpr auto getkm(__extension_622_str const& __this ) -> const CppAdva
 	#line 623 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::Str{u"1000km"}); 
 }
-#line 9999 "FirstProgram.adv"
-
 #line 9999 "FirstProgram.adv"
 
 #line 9999 "FirstProgram.adv"
