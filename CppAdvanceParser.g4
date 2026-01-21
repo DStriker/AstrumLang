@@ -16,6 +16,7 @@ stat:
 	| tryBlock
 	| functionDefinition
 	| Unsafe? compoundStatement
+	| inlineCppStatement
     ;
 
 declarationSeq: declaration+;
@@ -316,6 +317,8 @@ elseBranch: stat;
 switchStatementBranch: attributeSpecifierSeq? patternList AssignArrow stat;
 
 declarator: (Const | Let)? identifierSeq Colon theTypeId? Assign initializerClause;
+
+inlineCppStatement: Unsafe? Cpp StringLiteral Semi;
 
 iterationStatement:
 	  While LeftParen whileCondition RightParen stat

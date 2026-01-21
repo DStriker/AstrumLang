@@ -6584,6 +6584,15 @@ void CppAdvanceSema::exitUnitTestDeclaration(CppAdvanceParser::UnitTestDeclarati
 	functionBody--;
 }
 
+void CppAdvanceSema::enterInlineCppStatement(CppAdvanceParser::InlineCppStatementContext* ctx)
+{
+	if (!firstPass)
+	{
+		if (!ctx->Unsafe() && unsafeDepth <= 0)
+            CppAdvanceCompilerError("Inline C++ block can be declared only in unsafe context", ctx->Cpp()->getSymbol());
+	}
+}
+
 void CppAdvanceSema::exitInterpolatedStringLiteral(CppAdvanceParser::InterpolatedStringLiteralContext* ctx)
 {
 	

@@ -346,6 +346,9 @@ public:
   virtual void enterDeclarator(CppAdvanceParser::DeclaratorContext * /*ctx*/) override { }
   virtual void exitDeclarator(CppAdvanceParser::DeclaratorContext * /*ctx*/) override { }
 
+  virtual void enterInlineCppStatement(CppAdvanceParser::InlineCppStatementContext * /*ctx*/) override { }
+  virtual void exitInlineCppStatement(CppAdvanceParser::InlineCppStatementContext * /*ctx*/) override { }
+
   virtual void enterIterationStatement(CppAdvanceParser::IterationStatementContext * /*ctx*/) override { }
   virtual void exitIterationStatement(CppAdvanceParser::IterationStatementContext * /*ctx*/) override { }
 

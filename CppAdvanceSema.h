@@ -1081,7 +1081,7 @@ public:
 
 	void exitUnitTestDeclaration(CppAdvanceParser::UnitTestDeclarationContext*) override;
 
-
+	void enterInlineCppStatement(CppAdvanceParser::InlineCppStatementContext*) override;
 
 	void exitInterpolatedStringLiteral(CppAdvanceParser::InterpolatedStringLiteralContext*) override;
 

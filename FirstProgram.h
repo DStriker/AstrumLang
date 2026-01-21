@@ -86,9 +86,9 @@ namespace __FirstProgram_Protected { using Test112 = typename Test1::Test2::Clas
 template<class A, class C> using SimpleTuple = std::tuple<A, bool, C>;
 #line 43 "FirstProgram.adv"
 using ImportantOptions = __ntuples::NamedTuple_4e7be1ed49b09d71;
-#line 778 "FirstProgram.adv"
+#line 776 "FirstProgram.adv"
 template<class... Args> using Action = CppAdvance::FunctionRef<void(Args...)>;
-#line 779 "FirstProgram.adv"
+#line 777 "FirstProgram.adv"
 template<class T> using Predicate = CppAdvance::FunctionRef<bool (T)>;
 //###############################################################################
 //# Type definitions
@@ -3300,7 +3300,7 @@ inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32;
 inline constexpr auto testInt(CppAdvance::i32 i)  -> const CppAdvance::i32;
 #line 638 "FirstProgram.adv"
 inline auto printSuck()  -> decltype(auto);
-#line 775 "FirstProgram.adv"
+#line 773 "FirstProgram.adv"
 template<class... TArgs> inline auto vsum(TArgs&&... args)  -> decltype(auto);
 //###############################################################################
 //# Global compile-time constants
@@ -3856,11 +3856,10 @@ inline auto printSuck()  -> decltype(auto)
 	#line 638 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(print(CppAdvance::Str{u"Suck my dick"})); 
 }
-template<class T> explicit vector(CppAdvance::i32) -> vector<CppAdvance::i32>;
-#line 775 "FirstProgram.adv"
+#line 773 "FirstProgram.adv"
 template<class... TArgs> inline auto vsum(TArgs&&... args)  -> decltype(auto)
 {
-	#line 776 "FirstProgram.adv"
+	#line 774 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY((args + ... + CppAdvance::i32(1))); 
 }
 #line 9999 "FirstProgram.adv"

@@ -12264,6 +12264,10 @@ void CppAdvanceCodegen::printStatement(CppAdvanceParser::StatContext* ctx) const
 	{
 		printVersionSelectionStatement(select);
 	}
+	else if (auto cpp = ctx->inlineCppStatement())
+	{
+		printInlineCppStatement(cpp);
+	}
 }
 
 void CppAdvanceCodegen::printDeclarationStatement(CppAdvanceParser::DeclarationStatementContext* ctx) const
@@ -13068,6 +13072,16 @@ void CppAdvanceCodegen::printExceptionDeclaration(CppAdvanceParser::ExceptionDec
 		out << "& ";
 		printIdentifier(ctx->Identifier());
 	}
+}
+
+void CppAdvanceCodegen::printInlineCppStatement(CppAdvanceParser::InlineCppStatementContext* ctx) const
+{
+	auto src = ctx->StringLiteral()->getText();
+	int i = 0;
+	while (src[i] == '"' || src[i] == '\'') {
+		i++;
+	}
+	out << src.substr(i, src.length() - 2*i);
 }
 
 void CppAdvanceCodegen::printCondition(CppAdvanceParser::ConditionContext* ctx) const

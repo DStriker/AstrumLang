@@ -144,6 +144,7 @@ public:
 	void printTryBlock(CppAdvanceParser::TryBlockContext* ctx) const;
 	void printExceptionHandler(CppAdvanceParser::ExceptionHandlerContext* ctx) const;
 	void printExceptionDeclaration(CppAdvanceParser::ExceptionDeclarationContext* ctx, int i = 0) const;
+	void printInlineCppStatement(CppAdvanceParser::InlineCppStatementContext* ctx) const;
 	void printCondition(CppAdvanceParser::ConditionContext* ctx) const;
 	void printLoopCondition(CppAdvanceParser::WhileConditionContext* ctx) const;
 	void printDeclarator(CppAdvanceParser::DeclaratorContext* ctx) const;

@@ -19,15 +19,15 @@ template<class T> inline auto getAsString(__extension_574_T<T> const& __this ) -
 
 #line 640 "FirstProgram.adv"
 extern "C" auto __Astrum_Main()  -> CppAdvance::i32;
-#line 782 "FirstProgram.adv"
+#line 780 "FirstProgram.adv"
 inline constexpr CppAdvance::usize PRIVATE_CONSTANT = CppAdvance::usize(34U);
 #line 2 "FirstProgram.adv"
 volatile CppAdvance::Unsafe::__VolatileRawPtr<const CppAdvance::char16> globalVar{};
 #line 3 "FirstProgram.adv"
 extern const CppAdvance::Unsafe::__RawPtr<CppAdvance::i32> globalVar1 = nullptr;
-#line 783 "FirstProgram.adv"
+#line 781 "FirstProgram.adv"
 static CppAdvance::i32 globalVar2 = CppAdvance::i32(8);
-#line 784 "FirstProgram.adv"
+#line 782 "FirstProgram.adv"
 static const CppAdvance::i32 globalVar3 = CppAdvance::i32(456);
 #line 92 "FirstProgram.adv"
 thread_local CppAdvance::i32 Vector3::Count2 = CppAdvance::i32(123);
@@ -324,15 +324,13 @@ extern "C" auto __Astrum_Main()  -> CppAdvance::i32
 		#line 762 "FirstProgram.adv"
 		action2.andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(ADV_UFCS(Invoke)(value.__ref())); });
 		#line 763 "FirstProgram.adv"
-		GenericStruct g{ CppAdvance::i32(5), CppAdvance::f64(5.13), CppAdvance::Str{u"abc"}, false, CppAdvance::i32(6), CppAdvance::f32(2.12f) }; 
-		#line 764 "FirstProgram.adv"
-		print(vsum(CppAdvance::i32(1), CppAdvance::i32(2), CppAdvance::i32(3), CppAdvance::i32(4), CppAdvance::i32(5), CppAdvance::i32(6)));
-		#line 767 "FirstProgram.adv"
+		print(vsum(1,2,3,4,5,6));
+		#line 766 "FirstProgram.adv"
 		CppAdvance::Nullable<CppAdvance::ObjectRef> on = vec; 
 	}
-	#line 769 "FirstProgram.adv"
+	#line 768 "FirstProgram.adv"
 	print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
-	#line 770 "FirstProgram.adv"
+	#line 769 "FirstProgram.adv"
 	print(ADV_UPCS(x)(ADV_UPCS(x)(ADV_USFCS((Test1::Test2::TestClass), makeTestClass)(CppAdvance::i32(3), CppAdvance::f32(3.14f)).__ref()).__ref()));
 	return 0;
 }

@@ -74,8 +74,6 @@ Alignof: 'alignof';
 
 As: 'as';
 
-Asm: 'asm';
-
 Assert: 'assert';
 
 Await: 'await';
@@ -97,6 +95,8 @@ Const: 'const';
 Consteval: 'consteval';
 
 Continue: 'continue';
+
+Cpp: 'cpp';
 
 Debug: 'debug';
 

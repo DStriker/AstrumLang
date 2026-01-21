@@ -344,6 +344,9 @@ public:
   virtual void enterDeclarator(CppAdvanceParser::DeclaratorContext *ctx) = 0;
   virtual void exitDeclarator(CppAdvanceParser::DeclaratorContext *ctx) = 0;
 
+  virtual void enterInlineCppStatement(CppAdvanceParser::InlineCppStatementContext *ctx) = 0;
+  virtual void exitInlineCppStatement(CppAdvanceParser::InlineCppStatementContext *ctx) = 0;
+
   virtual void enterIterationStatement(CppAdvanceParser::IterationStatementContext *ctx) = 0;
   virtual void exitIterationStatement(CppAdvanceParser::IterationStatementContext *ctx) = 0;
 
