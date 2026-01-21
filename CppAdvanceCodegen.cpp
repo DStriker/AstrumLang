@@ -1265,7 +1265,19 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		}
 		
 		out << " " << decl.id;
-		printFunctionParameters(decl.params);
+		if (decl.isExtern)
+		{
+			out << "(const __self&";
+			if (auto clause = decl.params->paramDeclClause())
+			{
+				out << ", ";
+				printParamDeclClause(clause);
+			}
+			out << ")";
+		}
+		else {
+			printFunctionParameters(decl.params);
+		}
 		out << ";\n" << std::string(depth, '\t');
 		if (!decl.compilationCondition.empty())
 		{
@@ -5120,7 +5132,19 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 		}
 
 		out << " " << func.id;
-		printFunctionParameters(func.params);
+		if (func.isExtern)
+		{
+			out << "(const __self&";
+			if (auto clause = func.params->paramDeclClause())
+			{
+				out << ", ";
+				printParamDeclClause(clause);
+			}
+			out << ")";
+		}
+		else {
+			printFunctionParameters(func.params);
+		}
 		out << ";\n" << std::string(depth, '\t');
 		if (!func.compilationCondition.empty())
 		{

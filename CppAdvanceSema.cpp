@@ -6641,6 +6641,21 @@ void CppAdvanceSema::exitLambdaBody(CppAdvanceParser::LambdaBodyContext* ctx)
 	functionBody--;
 }
 
+void CppAdvanceSema::enterExternMethodDeclaration(CppAdvanceParser::ExternMethodDeclarationContext*)
+{
+	isFriendDefinition = true;
+}
+
+void CppAdvanceSema::exitExternMethodDeclaration(CppAdvanceParser::ExternMethodDeclarationContext* ctx)
+{
+	isFriendDefinition = false;
+	if (!firstPass || functionBody) return;
+
+	structStack.top()->friendFuncDeclarations.emplace_back(FunctionDeclaration{ ctx->Identifier()->getText(), ctx->functionParams(),
+		ctx->returnType(), ctx->exceptionSpecification(), { ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine() },
+		getCurrentCompilationCondition(), true });
+}
+
 void CppAdvanceSema::exitRangeExpression(CppAdvanceParser::RangeExpressionContext* ctx)
 {
 	if (ctx->DoubleDot() || ctx->DoubleDotEqual()) 

@@ -320,6 +320,9 @@ public:
   virtual void enterFriendDeclaration(CppAdvanceParser::FriendDeclarationContext *ctx) = 0;
   virtual void exitFriendDeclaration(CppAdvanceParser::FriendDeclarationContext *ctx) = 0;
 
+  virtual void enterExternMethodDeclaration(CppAdvanceParser::ExternMethodDeclarationContext *ctx) = 0;
+  virtual void exitExternMethodDeclaration(CppAdvanceParser::ExternMethodDeclarationContext *ctx) = 0;
+
   virtual void enterAttributeSpecifierSeq(CppAdvanceParser::AttributeSpecifierSeqContext *ctx) = 0;
   virtual void exitAttributeSpecifierSeq(CppAdvanceParser::AttributeSpecifierSeqContext *ctx) = 0;
 

@@ -62,7 +62,7 @@ public ref struct Span
 public struct Vector3
 {
 	public {
-		x, y, z: f32;
+		x, y, z: i32;
 		//t: Test111 { get; private set; }
 
 		//if debug _version: i32;
@@ -145,7 +145,7 @@ public struct Vector3
 	public this[idx: i32, idx2: i32, idx3: i32] -> f32 ==> y + z;
 
 	public getX: () -> f32 ==> x;
-	public getNext: () -> Next => new Next(6);
+	extern getNext: () -> Next;
 
 	public {
 		inline static Method: (x: i32, y: i32, z: i32) -> i32 == {
@@ -661,6 +661,7 @@ main: ()
 	{
 		nxt2:VectorClass? = stackalloc ConcreteVectorClass(10,"123455555555");
 		vec: Vector3 = new Vector3(12,"12344444444444");
+		xxn:= vec.getNext();
 		print(nxt2!.GetStrongReferenceCount());
 		print(nxt!.GetStrongReferenceCount());
 		print(nxt2!.GetStrongReferenceCount());
@@ -758,6 +759,11 @@ private {
 	let globalVar3 :i32 = 456;
 	//xyz :IntArray = {{{1,2,3},{4,5,6},{7,8,9}},{{11,12,13},{14,15,16},{17,18,19}},{{21,22,23},{24,25,26},{27,28,29}}};
 	//type IntArray = i64[3][3][3];
+}
+
+public extension Vector3
+{
+	getNext: () -> Next => new Next(this.x);
 }
 
 test "main module test"

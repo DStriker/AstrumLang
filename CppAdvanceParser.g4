@@ -124,6 +124,7 @@ structMemberDeclaration:
 	| abstractMethodDeclaration
 	| abstractProperty
 	| friendDeclaration
+	| externMethodDeclaration
 	| destructor
 	;
 
@@ -297,6 +298,8 @@ friendDeclaration:
 	| Friend Identifier Colon functionParams returnType LifetimeAnnotation? exceptionSpecification? Semi
 	| Friend functionDefinition
 	;
+
+externMethodDeclaration: accessSpecifier? Extern Identifier Colon functionParams returnType LifetimeAnnotation? exceptionSpecification? Semi;
 
 attributeSpecifierSeq: attributeSpecifier+;
 

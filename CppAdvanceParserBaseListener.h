@@ -322,6 +322,9 @@ public:
   virtual void enterFriendDeclaration(CppAdvanceParser::FriendDeclarationContext * /*ctx*/) override { }
   virtual void exitFriendDeclaration(CppAdvanceParser::FriendDeclarationContext * /*ctx*/) override { }
 
+  virtual void enterExternMethodDeclaration(CppAdvanceParser::ExternMethodDeclarationContext * /*ctx*/) override { }
+  virtual void exitExternMethodDeclaration(CppAdvanceParser::ExternMethodDeclarationContext * /*ctx*/) override { }
+
   virtual void enterAttributeSpecifierSeq(CppAdvanceParser::AttributeSpecifierSeqContext * /*ctx*/) override { }
   virtual void exitAttributeSpecifierSeq(CppAdvanceParser::AttributeSpecifierSeqContext * /*ctx*/) override { }
 

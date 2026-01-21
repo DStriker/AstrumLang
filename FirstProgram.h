@@ -86,9 +86,9 @@ namespace __FirstProgram_Protected { using Test112 = typename Test1::Test2::Clas
 template<class A, class C> using SimpleTuple = std::tuple<A, bool, C>;
 #line 49 "FirstProgram.adv"
 using ImportantOptions = __ntuples::NamedTuple_4e7be1ed49b09d71;
-#line 752 "FirstProgram.adv"
-template<class... Args> using Action = CppAdvance::FunctionRef<void(Args...)>;
 #line 753 "FirstProgram.adv"
+template<class... Args> using Action = CppAdvance::FunctionRef<void(Args...)>;
+#line 754 "FirstProgram.adv"
 template<class T> using Predicate = CppAdvance::FunctionRef<bool (T)>;
 //###############################################################################
 //# Type definitions
@@ -195,19 +195,21 @@ struct Vector3 final : public CppAdvance::Struct {
 	private: template<class T> friend class TestStruct2; template<class T> friend class __Class_TestStruct2;
 	#line 73 "FirstProgram.adv"
 	private: friend const CppAdvance::i32 func3(CppAdvance::i32 x);
+	#line 148 "FirstProgram.adv"
+	private: friend const Next getNext(const __self&);
 	#line 74 "FirstProgram.adv"
 	private: friend const CppAdvance::i32 func4(CppAdvance::i32 x);
 	#line 65 "FirstProgram.adv"
-	public: CppAdvance::f32 x; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
+	public: CppAdvance::i32 x; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
 	#line 65 "FirstProgram.adv"
-	public: CppAdvance::f32 y; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
+	public: CppAdvance::i32 y; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
 	#line 65 "FirstProgram.adv"
-	public: CppAdvance::f32 z; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
+	public: CppAdvance::i32 z; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
 	#line 97 "FirstProgram.adv"
 	private: static thread_local CppAdvance::i32 Count2; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
 	#line 99 "FirstProgram.adv"
 	public: TESTDLL_API static const Vector3 ZERO;
-	public: constexpr Vector3(CppAdvance::f32 _x, CppAdvance::f32 _y, CppAdvance::f32 _z) : x{_x}, y{_y}, z{_z} {}
+	public: constexpr Vector3(CppAdvance::i32 _x, CppAdvance::i32 _y, CppAdvance::i32 _z) : x{_x}, y{_y}, z{_z} {}
 	#line 98 "FirstProgram.adv"
 	public: static constexpr auto BYTES = CppAdvance::i32(24);
 	#line 100 "FirstProgram.adv"
@@ -315,8 +317,6 @@ struct Vector3 final : public CppAdvance::Struct {
 	public: inline constexpr auto _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const  -> const CppAdvance::f32;
 	#line 147 "FirstProgram.adv"
 	public: inline constexpr auto getX() const  -> const CppAdvance::f32;
-	#line 148 "FirstProgram.adv"
-	public: inline auto getNext() const  -> const Next;
 	#line 151 "FirstProgram.adv"
 	public: inline constexpr static auto Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z)  -> const CppAdvance::i32;
 	#line 157 "FirstProgram.adv"
@@ -336,9 +336,9 @@ template<> inline const auto& get<2>(const Vector3& t) { return t.z; }
 
 namespace std {
 	template<> struct tuple_size<Vector3> : integral_constant<size_t, 3> {}; 
-	template<> struct tuple_element<0, Vector3> { using type = CppAdvance::f32; };
-	template<> struct tuple_element<1, Vector3> { using type = CppAdvance::f32; };
-	template<> struct tuple_element<2, Vector3> { using type = CppAdvance::f32; };
+	template<> struct tuple_element<0, Vector3> { using type = CppAdvance::i32; };
+	template<> struct tuple_element<1, Vector3> { using type = CppAdvance::i32; };
+	template<> struct tuple_element<2, Vector3> { using type = CppAdvance::i32; };
 	
 }
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<BaseClass> = false;
@@ -2797,6 +2797,11 @@ struct alignas((alignof(CppAdvance::i64))) TestStruct final : public CppAdvance:
 	
 };
 
+#line 764 "FirstProgram.adv"
+using __extension_764_Vector3 = Vector3;
+#line 766 "FirstProgram.adv"
+inline auto getNext(__extension_764_Vector3 const& __this LIFETIMEBOUND)  -> const Next;
+
 
 #line 62 "FirstProgram.adv"
 class __Class_Vector3 final : public CppAdvance::ValueType
@@ -2819,7 +2824,6 @@ class __Class_Vector3 final : public CppAdvance::ValueType
 	decltype(auto) getAt(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  { return __value._operator_subscript(idx, idx2, idx3); }
 	decltype(auto) getAt(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const  { return __value._operator_subscript(idx, idx2, idx3); }
 	auto getX() const  -> CppAdvance::f32 const { ADV_EXPRESSION_BODY(__value.getX()); }
-	auto getNext() const  -> Next const { ADV_EXPRESSION_BODY(__value.getNext()); }
 	auto Reset() -> void { ADV_EXPRESSION_BODY(__value.Reset()); }
 	
 };
@@ -3300,7 +3304,7 @@ inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32;
 inline constexpr auto testInt(CppAdvance::i32 i)  -> const CppAdvance::i32;
 #line 611 "FirstProgram.adv"
 inline auto printSuck()  -> decltype(auto);
-#line 749 "FirstProgram.adv"
+#line 750 "FirstProgram.adv"
 template<class... TArgs> inline auto vsum(TArgs&&... args)  -> decltype(auto);
 //###############################################################################
 //# Global compile-time constants
@@ -3479,12 +3483,6 @@ inline constexpr auto Vector3::getX() const  -> const CppAdvance::f32
 {
 	#line 147 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(x); 
-}
-#line 148 "FirstProgram.adv"
-inline auto Vector3::getNext() const  -> const Next
-{
-	#line 148 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(CppAdvance::New<Next>(CppAdvance::i32(6))); 
 }
 #line 151 "FirstProgram.adv"
 inline constexpr auto Vector3::Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z)  -> const CppAdvance::i32
@@ -3856,10 +3854,10 @@ inline auto printSuck()  -> decltype(auto)
 	#line 611 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(print(CppAdvance::Str{u"Suck my dick"})); 
 }
-#line 749 "FirstProgram.adv"
+#line 750 "FirstProgram.adv"
 template<class... TArgs> inline auto vsum(TArgs&&... args)  -> decltype(auto)
 {
-	#line 750 "FirstProgram.adv"
+	#line 751 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY((args + ... + CppAdvance::i32(1))); 
 }
 #line 9999 "FirstProgram.adv"
@@ -4055,6 +4053,15 @@ inline constexpr auto getkm(__extension_595_str const& __this ) -> const CppAdva
 	ADV_EXPRESSION_BODY(CppAdvance::Str{u"1000km"}); 
 }
 #line 9999 "FirstProgram.adv"
+
+#line 9999 "FirstProgram.adv"
+
+#line 766 "FirstProgram.adv"
+inline auto getNext(__extension_764_Vector3 const& __this LIFETIMEBOUND)  -> const Next
+{
+	#line 766 "FirstProgram.adv"
+	ADV_EXPRESSION_BODY(CppAdvance::New<Next>(ADV_UPCS(x)(__this.__ref()))); 
+}
 
 #line 9999 "FirstProgram.adv"
 

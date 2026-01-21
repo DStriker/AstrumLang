@@ -346,6 +346,7 @@ struct FunctionDeclaration {
 	CppAdvanceParser::ExceptionSpecificationContext* exceptions;
 	SourcePosition pos;
 	std::string compilationCondition;
+	bool isExtern = false;
 };
 
 enum class TypeKind {
@@ -1093,6 +1094,12 @@ public:
 
 
 	void exitLambdaBody(CppAdvanceParser::LambdaBodyContext*) override;
+
+
+	void enterExternMethodDeclaration(CppAdvanceParser::ExternMethodDeclarationContext*) override;
+
+
+	void exitExternMethodDeclaration(CppAdvanceParser::ExternMethodDeclarationContext*) override;
 
 };
 
