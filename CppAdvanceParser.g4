@@ -31,12 +31,12 @@ declaration:
 	| attributeSpecifierSeq? accessSpecifier? enumClassDefinition
 	| attributeSpecifierSeq? accessSpecifier? unionDefinition
 	| symbolSpecifierSeq declarationCompoundStatement
-	| externVariableDeclaration 
+	| attributeSpecifierSeq? externVariableDeclaration 
 	| versionDefinition
 	| versionConditionalDeclaration
 	| attributeSpecifierSeq? accessSpecifier? functionDefinition
 	| accessSpecifier? functionTemplateDeclaration
-	| externFunctionDeclaration
+	| attributeSpecifierSeq? externFunctionDeclaration
 	| templateDeductionGuide
 	| unitTestDeclaration
 	;

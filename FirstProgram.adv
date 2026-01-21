@@ -2,8 +2,14 @@
 	volatile globalVar : *const char;
 	let globalVar1 :*i32 = null;
 	type cstring = *const byte;
-	extern externalUnsafePtr: i32;
 }
+
+@CLink
+extern ExternalCounter: i32;
+
+@CLink
+@StdCall
+extern externalFunc: (a: i32, b: str) -> str;
 
 protected type Test111 = Test1.Test2.TestClass;
 protected type Test112 = Test1.Test2.Class2;
@@ -45,7 +51,6 @@ type ImportantOptions = (i: i32,f: f64,s: str);
 //sum: (in a, in b) ==> a + b;
 sum: <T, U: i32> (a: T, b: T) -> forward;
 sum<i32, 15>: (a: i32, b: i32) ==> a + b + 15;
-extern externalFunc: (a: i32, b: str) -> str;
 
 public ref struct Span
 {
@@ -539,38 +544,6 @@ public union<T1, T2, T3, T4, T5, T6> Union6 {
 	Type6(T6)
 }
 
-/*public union struct RawUnion {
-    i: i32;
-    f: f32;
-    s: str;
-
-	public {
-		unsafe I: i32 => i;
-		unsafe F: f32 => f;
-		unsafe S: str => s;
-
-		implicit this(i: i32) = {
-			this.i = i;
-		}
-
-		implicit this(f: f32) = {
-			this.f = f;
-		}
-
-		implicit this(s: str) = {
-			this.s = s;
-		}
-
-		~this => print("RawUnion deiniting");
-
-        unsafe operator!: () -> i32 => i;
-
-		unsafe GetMagicNumber: (in f: VectorClass) -> f32 => this.f * f.x;
-
-		unsafe Count123: i32 ==> 1234567890;
-	}
-}*/
-
 private extension <T> {
 	AsString: str => "AsString";
 
@@ -760,7 +733,10 @@ main: ()
 		action2 = action3;
 		action2?.Invoke();
 		action2?.Invoke();
-		unsafe cpp "print(vsum(1,2,3,4,5,6));";
+		unsafe cpp 
+		`
+			print(vsum(1,2,3,4,5,6));
+		`;
 
 		//print(var.GetStrongReferenceCount());
 		on: object? = vec;

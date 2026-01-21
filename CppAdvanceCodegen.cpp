@@ -11972,6 +11972,21 @@ void CppAdvanceCodegen::printExternVariableDeclaration(CppAdvanceParser::ExternV
 {
 	if (!functionBody) out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 	out << "extern ";
+	CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
+	if (auto parent = dynamic_cast<CppAdvanceParser::DeclarationContext*>(ctx->parent))
+	{
+		attributes = parent->attributeSpecifierSeq();
+	}
+	if (attributes)
+	{
+		for (auto attr : attributes->attributeSpecifier())
+		{
+			if (attr->Identifier()->getText() == "CLink")
+			{
+				out << "\"C\" ";
+			}
+		}
+	}
 	isDeclaration = true;
 	printTypeId(ctx->theTypeId());
 	isDeclaration = false;
@@ -11984,7 +11999,33 @@ void CppAdvanceCodegen::printExternVariableDeclaration(CppAdvanceParser::ExternV
 void CppAdvanceCodegen::printExternFunctionDeclaration(CppAdvanceParser::ExternFunctionDeclarationContext* ctx) const
 {
 	if (!functionBody) out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-	out << "extern auto ";
+	out << "extern ";
+	CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
+	if (auto parent = dynamic_cast<CppAdvanceParser::DeclarationContext*>(ctx->parent))
+	{
+		attributes = parent->attributeSpecifierSeq();
+	}
+	bool isStdCall = false;
+	if (attributes)
+	{
+		for (auto attr : attributes->attributeSpecifier())
+		{
+			auto txt = attr->Identifier()->getText();
+			if (txt == "CLink")
+			{
+				out << "\"C\" ";
+			}
+			else if (txt == "StdCall")
+			{
+				isStdCall = true;
+			}
+		}
+	}
+	out << "auto ";
+	if (isStdCall)
+	{
+		out << "__stdcall ";
+	}
 	printIdentifier(ctx->Identifier());
 	printFunctionParameters(ctx->functionParams());
 	if (ctx->exceptionSpecification()) printExceptionSpecification(ctx->exceptionSpecification());
@@ -13078,7 +13119,7 @@ void CppAdvanceCodegen::printInlineCppStatement(CppAdvanceParser::InlineCppState
 {
 	auto src = ctx->StringLiteral()->getText();
 	int i = 0;
-	while (src[i] == '"' || src[i] == '\'') {
+	while (src[i] == '"' || src[i] == '\'' || src[i] == '`') {
 		i++;
 	}
 	out << src.substr(i, src.length() - 2*i);
