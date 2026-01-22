@@ -6685,6 +6685,84 @@ void CppAdvanceSema::enterAssociatedTypeDeclaration(CppAdvanceParser::Associated
 	}
 }
 
+void CppAdvanceSema::exitBitFieldDeclaration(CppAdvanceParser::BitFieldDeclarationContext* ctx)
+{
+	if (firstPass && functionBody) return;
+	if (ctx->theTypeId()->getText().find('*') != std::string::npos && unsafeDepth <= 0)
+	{
+		CppAdvanceCompilerError("Cannot to use raw pointers in the safe context", ctx->theTypeId()->getStart());
+	}
+
+	symbolTable[ctx->Identifier()->getText()] = contextTypes[ctx->theTypeId()];
+	if (!functionBody)
+	{
+		symbolTable.globalSymbolTable[currentType + "." + ctx->Identifier()->getText()] = contextTypes[ctx->theTypeId()];
+	}
+
+	if (!functionBody && firstPass)
+	{
+		if (currentTypeKind.top() != TypeKind::Struct && currentTypeKind.top() != TypeKind::RefStruct 
+			&& currentTypeKind.top() != TypeKind::Class && currentTypeKind.top() != TypeKind::EnumClass)
+		{
+			CppAdvanceCompilerError("Cannot to use bit field in this context", ctx->IntegerLiteral()->getSymbol());
+		}
+		CppAdvanceParser::AccessSpecifierContext* acc = nullptr;
+		CppAdvanceParser::AttributeSpecifierSeqContext* attributes = nullptr;
+		std::optional<AccessSpecifier> access = std::nullopt;
+		bool isProtectedInternal = false;
+
+		if (auto block = reinterpret_cast<CppAdvanceParser::MemberBlockDeclarationContext*>(ctx->parent))
+		{
+			auto decl = reinterpret_cast<CppAdvanceParser::StructMemberDeclarationContext*>(block->parent);
+			isProtectedInternal = decl->protectedInternal();
+			acc = decl->accessSpecifier();
+			attributes = decl->attributeSpecifierSeq();
+		}
+		if (isProtectedInternal)
+		{
+			CppAdvanceCompilerError("Cannot to declare protected internal field with specified bit width", ctx->IntegerLiteral()->getSymbol());
+		}
+		else if (acc)
+		{
+			if (currentAccessSpecifier.top())
+				CppAdvanceCompilerError("Cannot to redefine access specifier", acc->getStart());
+			if (acc->Public())
+			{
+				access = AccessSpecifier::Public;
+			}
+			else if (acc->Protected())
+			{
+				access = AccessSpecifier::Protected;
+				if (currentTypeKind.top() != TypeKind::Class)
+					CppAdvanceCompilerError("Cannot to declare protected field in the struct/union/enum", ctx->getStart());
+			}
+			else if (acc->Private())
+			{
+				access = AccessSpecifier::Private;
+			}
+			else if (acc->Internal())
+			{
+				access = AccessSpecifier::Internal;
+			}
+		}
+
+		if (currentAccessSpecifier.top()) access = currentAccessSpecifier.top();
+		if (!access) {
+			if (!isTypeDefinitionBody())
+				access = AccessSpecifier::Internal;
+			else
+				access = AccessSpecifier::Private;
+		}
+		auto id = ctx->Identifier();
+
+		if (unsafeDepth > 0) cppParser.unsafeVariables.insert(currentType + "." + id->getText());
+		structStack.top()->fields.emplace_back(VariableDefinition{ id->getText(), nullptr, nullptr, ctx->theTypeId(),
+			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr,
+			attributes, *access, getCurrentCompilationCondition(), getCurrentFullTypeName(), false, false, false, false,
+			unsafeDepth > 0, false, false, false, static_cast<uint8_t>(std::stoi(ctx->IntegerLiteral()->getText())) });
+	}
+}
+
 void CppAdvanceSema::exitRangeExpression(CppAdvanceParser::RangeExpressionContext* ctx)
 {
 	if (ctx->DoubleDot() || ctx->DoubleDotEqual()) 

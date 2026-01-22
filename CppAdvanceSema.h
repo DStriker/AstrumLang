@@ -168,6 +168,7 @@ struct VariableDefinition
 	bool isTypeSpecialization = false;
 	bool isUnowned = false;
 	bool isWeak = false;
+	uint8_t bitWidth = 0;
 };
 
 struct ConstantDefinition 
@@ -1103,6 +1104,9 @@ public:
 
 
 	void enterAssociatedTypeDeclaration(CppAdvanceParser::AssociatedTypeDeclarationContext*) override;
+
+
+	void exitBitFieldDeclaration(CppAdvanceParser::BitFieldDeclarationContext*) override;
 
 };
 

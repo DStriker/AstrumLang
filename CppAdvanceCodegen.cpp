@@ -289,6 +289,10 @@ void CppAdvanceCodegen::printGlobalVariables() const
 			out << " = ";
 			printInitializerList(field.initializerList);
 		}
+		if (field.bitWidth > 0)
+		{
+			out << " : " << (int)field.bitWidth;
+		}
 		out << ";";
 		out << std::endl;
 		if (!field.compilationCondition.empty())
@@ -1479,7 +1483,10 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				out << " }";
 			}
 		}
-
+		if (field.bitWidth > 0)
+		{
+			out << " : " << (int)field.bitWidth;
+		}
 		out << ";";
 		if (type->kind != TypeKind::RefStruct || field.isStatic || field.isThreadLocal) {
 			if (!sema.contextTypes.contains(field.type) || !sema.contextTypes[field.type].ends_with(type->id)) {

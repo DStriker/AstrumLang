@@ -382,6 +382,9 @@ public:
   virtual void enterSimpleDeclaration(CppAdvanceParser::SimpleDeclarationContext * /*ctx*/) override { }
   virtual void exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationContext * /*ctx*/) override { }
 
+  virtual void enterBitFieldDeclaration(CppAdvanceParser::BitFieldDeclarationContext * /*ctx*/) override { }
+  virtual void exitBitFieldDeclaration(CppAdvanceParser::BitFieldDeclarationContext * /*ctx*/) override { }
+
   virtual void enterDeconstructionDeclaration(CppAdvanceParser::DeconstructionDeclarationContext * /*ctx*/) override { }
   virtual void exitDeconstructionDeclaration(CppAdvanceParser::DeconstructionDeclarationContext * /*ctx*/) override { }
 

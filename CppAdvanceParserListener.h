@@ -380,6 +380,9 @@ public:
   virtual void enterSimpleDeclaration(CppAdvanceParser::SimpleDeclarationContext *ctx) = 0;
   virtual void exitSimpleDeclaration(CppAdvanceParser::SimpleDeclarationContext *ctx) = 0;
 
+  virtual void enterBitFieldDeclaration(CppAdvanceParser::BitFieldDeclarationContext *ctx) = 0;
+  virtual void exitBitFieldDeclaration(CppAdvanceParser::BitFieldDeclarationContext *ctx) = 0;
+
   virtual void enterDeconstructionDeclaration(CppAdvanceParser::DeconstructionDeclarationContext *ctx) = 0;
   virtual void exitDeconstructionDeclaration(CppAdvanceParser::DeconstructionDeclarationContext *ctx) = 0;
 

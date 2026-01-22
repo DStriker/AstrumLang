@@ -62,6 +62,7 @@ blockDeclaration:
 memberBlockDeclaration:
 	  simpleDeclaration
 	| simpleMultiDeclaration
+	| bitFieldDeclaration
 	| memberRefDeclaration
 	| constantDeclaration
 	| aliasDeclaration
@@ -359,6 +360,8 @@ simpleDeclaration: declSpecifierSeq? Identifier Colon
 	| theTypeId LeftParen initializerList? RightParen
 	| (Star Const?)? Assign initializerClause)
 	Semi;
+
+bitFieldDeclaration: Identifier Colon theTypeId Colon IntegerLiteral Semi;
 
 deconstructionDeclaration: (Const | Let)? identifierSeq Colon Assign initializerClause Semi;
 

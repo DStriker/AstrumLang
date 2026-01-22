@@ -86,9 +86,9 @@ namespace __FirstProgram_Protected { using Test112 = typename Test1::Test2::Clas
 template<class A, class C> using SimpleTuple = std::tuple<A, bool, C>;
 #line 49 "FirstProgram.adv"
 using ImportantOptions = __ntuples::NamedTuple_4e7be1ed49b09d71;
-#line 748 "FirstProgram.adv"
+#line 747 "FirstProgram.adv"
 template<class... Args> using Action = CppAdvance::FunctionRef<void(Args...)>;
-#line 749 "FirstProgram.adv"
+#line 748 "FirstProgram.adv"
 template<class T> using Predicate = CppAdvance::FunctionRef<bool (T)>;
 //###############################################################################
 //# Type definitions
@@ -2783,10 +2783,10 @@ struct alignas((alignof(CppAdvance::i64))) TestStruct final : public CppAdvance:
 	public: using __class = __Class_TestStruct;
 	public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 	#line 612 "FirstProgram.adv"
-	private: CppAdvance::i64 x; ADV_CHECK_REF_STRUCT("i64", CppAdvance::i64);
+	private: typename System::CInt x : 4; ADV_CHECK_REF_STRUCT("System.CInt", typename System::CInt);
 	#line 613 "FirstProgram.adv"
-	private: CppAdvance::i64 y; ADV_CHECK_REF_STRUCT("i64", CppAdvance::i64);
-	public: TestStruct(CppAdvance::i64 _x, CppAdvance::i64 _y) : x{_x}, y{_y} {}
+	private: typename System::CInt y : 4; ADV_CHECK_REF_STRUCT("System.CInt", typename System::CInt);
+	public: TestStruct(typename System::CInt _x, typename System::CInt _y) : x{_x}, y{_y} {}
 	#line 615 "FirstProgram.adv"
 	static_assert(CppAdvance::usize(sizeof(CppAdvance::i32)) == CppAdvance::i32(4), "i32 must be 4 bytes");
 	template <size_t I> friend auto& get(TestStruct&);
@@ -2794,10 +2794,10 @@ struct alignas((alignof(CppAdvance::i64))) TestStruct final : public CppAdvance:
 	
 };
 
-#line 759 "FirstProgram.adv"
-using __extension_759_Vector3 = Vector3;
-#line 761 "FirstProgram.adv"
-inline auto getNext(__extension_759_Vector3 const& __this LIFETIMEBOUND)  -> const Next;
+#line 758 "FirstProgram.adv"
+using __extension_758_Vector3 = Vector3;
+#line 760 "FirstProgram.adv"
+inline auto getNext(__extension_758_Vector3 const& __this LIFETIMEBOUND)  -> const Next;
 
 
 #line 62 "FirstProgram.adv"
@@ -3311,9 +3311,7 @@ inline auto func4(CppAdvance::i32 x)  -> const CppAdvance::i32;
 inline auto _operator_subscript(CppAdvance::In<VectorClass> vec, CppAdvance::f32 x, CppAdvance::f32 y)  -> const CppAdvance::f32;
 #line 608 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32;
-#line 618 "FirstProgram.adv"
-template<__ImplementsInterface_IInterface T> inline auto GetStr(T o)  -> const CppAdvance::Str;
-#line 745 "FirstProgram.adv"
+#line 744 "FirstProgram.adv"
 template<class... TArgs> inline auto vsum(TArgs&&... args)  -> decltype(auto);
 //###############################################################################
 //# Global compile-time constants
@@ -3870,16 +3868,10 @@ inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32
 	#line 608 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(ADV_UPCS(x)(vec.__ref()) + ADV_UPCS(y)(vec.__ref()) + ADV_UPCS(z)(vec.__ref())); 
 }
-#line 618 "FirstProgram.adv"
-template<__ImplementsInterface_IInterface T> inline auto GetStr(T o)  -> const CppAdvance::Str
-{
-	#line 618 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(o ? ADV_UPCS(Name)(o.__ref()) : CppAdvance::Str{u"unknown"}); 
-}
-#line 745 "FirstProgram.adv"
+#line 744 "FirstProgram.adv"
 template<class... TArgs> inline auto vsum(TArgs&&... args)  -> decltype(auto)
 {
-	#line 746 "FirstProgram.adv"
+	#line 745 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY((args + ... + CppAdvance::i32(1))); 
 }
 #line 9999 "FirstProgram.adv"
@@ -4075,10 +4067,10 @@ inline constexpr auto getkm(__extension_604_str const& __this ) -> const CppAdva
 
 #line 9999 "FirstProgram.adv"
 
-#line 761 "FirstProgram.adv"
-inline auto getNext(__extension_759_Vector3 const& __this LIFETIMEBOUND)  -> const Next
+#line 760 "FirstProgram.adv"
+inline auto getNext(__extension_758_Vector3 const& __this LIFETIMEBOUND)  -> const Next
 {
-	#line 761 "FirstProgram.adv"
+	#line 760 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::New<Next>(ADV_UPCS(x)(__this.__ref()))); 
 }
 

@@ -609,13 +609,12 @@ public getSum: (in vec: VectorClass) -> f32 => vec.x + vec.y + vec.z;
 
 @Align(alignof(i64)) 
 struct TestStruct {
-	x: i64;
-	y: i64;
+	x: System.CInt : 4;
+	y: System.CInt : 4;
 	
 	static assert(sizeof(i32) == 4, "i32 must be 4 bytes");
 }
 
-GetStr: <T: is IInterface> (o: T) -> str => o ? o.Name : "unknown";
 
 main: ()
 {
