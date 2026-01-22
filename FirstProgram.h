@@ -1146,8 +1146,6 @@ class IResettable__Weak final : public CppAdvance::ObjectRef__Weak {
 template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> FORCE_INLINE void Reset(const __AnyInterface& iface)  { ADV_EXPRESSION_BODY(CppAdvance::GetVTableFromInterface(&iface)->fnptr_565bebff34b81aa1(CppAdvance::GetObjectReferenceFromInterface(&iface))); }
 
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<IInterface> = false;
-#line 420 "FirstProgram.adv"
-template<class __AnyType> concept __HasMethodImplementation_6cedb65857a10a4e = requires(typename __AnyType::__class t) { {t.DefaultMethod(std::declval<VectorClass>())} -> std::convertible_to<CppAdvance::f32>; } ;
 #line 421 "FirstProgram.adv"
 template<class __AnyType> concept __HasMethodImplementation_fbc51d6746c8ca94 = requires(typename __AnyType::__class t) { {t.operator+(std::declval<ConcreteVectorClass>())} -> std::convertible_to<ConcreteVectorClass>; }  || requires(typename __AnyType::__class t) { {operator+(t, std::declval<ConcreteVectorClass>())} -> std::convertible_to<ConcreteVectorClass>; };
 #line 424 "FirstProgram.adv"
@@ -1164,14 +1162,6 @@ namespace __vtables {
 	#line 415 "FirstProgram.adv"
 	struct __vtable_IInterface : public IMagicNumber::__vtable, public IResettable::__vtable
 	{
-		using fn_6cedb65857a10a4e = const CppAdvance::f32(CppAdvance::Object*, CppAdvance::In<VectorClass> f);
-		fn_6cedb65857a10a4e* fnptr_6cedb65857a10a4e;
-		#line 420 "FirstProgram.adv"
-		template<class __AnyType> static const CppAdvance::f32 impl_6cedb65857a10a4e(CppAdvance::Object* obj, CppAdvance::In<VectorClass> f) { 
-			if constexpr(__HasMethodImplementation_6cedb65857a10a4e<__AnyType>) {
-				ADV_EXPRESSION_BODY(ADV_UFCS(DefaultMethod)(*static_cast<typename __AnyType::__class*>(obj), f)); 
-			} else { throw 0; }
-		}
 		using fn_fbc51d6746c8ca94 = const ConcreteVectorClass(CppAdvance::Object*, const ConcreteVectorClass& f);
 		fn_fbc51d6746c8ca94* fnptr_fbc51d6746c8ca94;
 		#line 421 "FirstProgram.adv"
@@ -1190,7 +1180,6 @@ namespace __vtables {
 #line 415 "FirstProgram.adv"
 template<class __AnyType> inline constexpr __vtables::__vtable_IInterface __vtable_IInterface_for = {__vtable_IMagicNumber_for<__AnyType>
 	, __vtable_IResettable_for<__AnyType>
-	, __HasMethodImplementation_6cedb65857a10a4e<__AnyType> ? &__vtables::__vtable_IInterface::template impl_6cedb65857a10a4e<__AnyType> : nullptr
 	, &__vtables::__vtable_IInterface::template impl_fbc51d6746c8ca94<__AnyType>
 	, &__vtables::__vtable_IInterface::template impl_8addcb5f9470873d<__AnyType>
 	, &__vtables::__vtable_IInterface::template impl_getName<__AnyType>
@@ -1303,7 +1292,7 @@ class IInterface final : public CppAdvance::InterfaceRef {
 	#line 418 "FirstProgram.adv"
 	using SomeInt = CppAdvance::i32;
 	#line 420 "FirstProgram.adv"
-	public: const CppAdvance::f32 __default_DefaultMethod(CppAdvance::In<VectorClass> f) const ;
+	public: const CppAdvance::f32 DefaultMethod(CppAdvance::In<VectorClass> f) const ;
 	#line 426 "FirstProgram.adv"
 	public: static const CppAdvance::i32 SomeStaticMethod(CppAdvance::i32 i) ;
 	
@@ -1420,11 +1409,6 @@ class IInterface__Weak final : public CppAdvance::ObjectRef__Weak {
 	}
 	
 };
-template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> FORCE_INLINE const CppAdvance::f32 DefaultMethod(const __AnyInterface& iface, CppAdvance::In<VectorClass> f)  {
-	auto func = CppAdvance::GetVTableFromInterface(&iface)->fnptr_6cedb65857a10a4e;
-	if (func) { ADV_EXPRESSION_BODY(func(CppAdvance::GetObjectReferenceFromInterface(&iface), f)); }
-	else { ADV_EXPRESSION_BODY(reinterpret_cast<const IInterface*>(&iface)->__default_DefaultMethod(f)); }
-}
 template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> FORCE_INLINE const ConcreteVectorClass operator+(const __AnyInterface& iface, const ConcreteVectorClass& f)  { ADV_EXPRESSION_BODY(CppAdvance::GetVTableFromInterface(&iface)->fnptr_fbc51d6746c8ca94(CppAdvance::GetObjectReferenceFromInterface(&iface), f)); }
 template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> FORCE_INLINE CppAdvance::f32& getAt(const __AnyInterface& iface, CppAdvance::i32 i)  { ADV_EXPRESSION_BODY(CppAdvance::GetVTableFromInterface(&iface)->fnptr_8addcb5f9470873d(CppAdvance::GetObjectReferenceFromInterface(&iface), i)); }
 template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> FORCE_INLINE decltype(auto) _operator_subscript(const __AnyInterface& iface, CppAdvance::i32 i) { return getAt(iface, i); }
@@ -3962,7 +3946,7 @@ inline constexpr auto TestInt(__extension_402_Next const& __this LIFETIMEBOUND, 
 
 #line 9999 "FirstProgram.adv"
 
-inline const CppAdvance::f32 IInterface::__default_DefaultMethod(CppAdvance::In<VectorClass> f) const 
+inline const CppAdvance::f32 IInterface::DefaultMethod(CppAdvance::In<VectorClass> f) const 
 {
 	#line 420 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(ADV_UFCS(GetMagicNumber)((*this).__ref(), f)); 

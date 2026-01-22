@@ -5658,7 +5658,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	std::map<const PropertyDefinition*, std::string> propertyIds;
 	std::vector<std::string> interfaceRequirements; 
 	for (const auto& method : type->methods) {
-		if (method.isStatic) continue;
+		if (method.isFinal) continue;
 		bool isUnchecked = false;
 		if (method.attributes) for (auto attr : method.attributes->attributeSpecifier())
 		{
@@ -5936,7 +5936,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	out << "\n" << std::string(depth, '\t') << "{\n" << std::string(++depth, '\t');
 	for (const auto& method : type->methods)
 	{
-		if (method.isStatic) continue; 
+		if (method.isFinal) continue; 
 		bool isUnchecked = false;
 		if (method.attributes) for (auto attr : method.attributes->attributeSpecifier())
 		{
@@ -6162,7 +6162,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		}
 	}
 	for (const auto& method : type->methods) {
-		if (method.isStatic) continue;
+		if (method.isFinal) continue;
         if (!first) out << ", ";
 		first = false;
 		if (method.isDefault) {
@@ -6986,7 +6986,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		}
 	}
 	out << ">; return *this; }\n" << std::string(depth, '\t');
-	//method default implementations and static methods
+	//method default implementations and final methods
 	for (const auto& constant : type->constants)
 	{
 		out << "#line " << constant.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
@@ -7033,7 +7033,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	}
 	for (const auto& method : type->methods)
 	{
-		if (method.isStatic)
+		if (method.isFinal)
 		{
 			out << "#line " << method.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 			out << "public: ";
@@ -7071,7 +7071,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 					}
 				}
 			}
-			out << "static ";
+			if (method.isStatic) out << "static ";
 
 			if (method.returnType)
 			{
@@ -7099,6 +7099,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 				}
 			}
 			out << ") ";
+			if (!method.isStatic) out << "const ";
 			if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
 			out << ";\n" << std::string(depth, '\t');
 			continue;
@@ -7764,7 +7765,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	//interface methods
 	for (const auto& method : type->methods)
 	{
-		if (method.isStatic) continue; 
+		if (method.isFinal) continue; 
 		bool isUnchecked = false;
 		if (method.attributes)
 		{
@@ -9578,7 +9579,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 			bool first = true;
 			for (const auto& method : type->methods)
 			{
-				if (!method.isDefault && !method.isStatic) continue;
+				if (!method.isDefault && !method.isFinal) continue;
 				if (first)
 				{
 					if (type->access != AccessSpecifier::Private) {
@@ -9638,7 +9639,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 					out << ">";
 				}
 				auto id = method.id;
-				if (!method.isStatic) id = "__default_" + id;
+				if (!method.isFinal) id = "__default_" + id;
 				out << "::" << id << "(";
 				first = true;
 				if (method.params)

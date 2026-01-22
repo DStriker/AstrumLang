@@ -1417,8 +1417,8 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 			isFinal = true;
 			if (!isTypeDefinitionBody() || isFriendDefinition)
 				CppAdvanceCompilerError("Global function cannot be final", spec->Final()->getSymbol());
-			else if (currentTypeKind.top() != TypeKind::Class)
-				CppAdvanceCompilerError("Cannot to declare final method outside the class body", spec->Final()->getSymbol());
+			else if (currentTypeKind.top() != TypeKind::Class && currentTypeKind.top() != TypeKind::Interface)
+				CppAdvanceCompilerError("Cannot to declare final method outside the class/interface body", spec->Final()->getSymbol());
 			else if (functionBody > 0)
 				CppAdvanceCompilerError("Local function cannot be final", spec->Virtual()->getSymbol());
 		}
@@ -1513,8 +1513,10 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 		if (isStatic) {
 			if (isMutating)
 				CppAdvanceCompilerError("Static method cannot be mutating", ctx->getStart());
-			if (isVirtual || isOverride || isFinal)
-				CppAdvanceCompilerError("Static method cannot be virtual, override or final", ctx->getStart());
+			if (isVirtual || isOverride)
+				CppAdvanceCompilerError("Static method cannot be virtual or override", ctx->getStart());
+			if (isFinal && currentTypeKind.top() != TypeKind::Interface)
+				CppAdvanceCompilerError("Static method cannot be final outside the interface body", ctx->getStart());
 		}
 
 		int lifetimes = 0;
