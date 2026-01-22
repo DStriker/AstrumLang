@@ -827,6 +827,20 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 			out << type->id << ";\n" << std::string(depth, '\t');
 		}
 	}
+	bool isPacked = false;
+	if (type->attributes && (type->kind == TypeKind::Struct || type->kind == TypeKind::RefStruct))
+	{
+		for (auto attr : type->attributes->attributeSpecifier())
+		{
+			auto attrName = attr->Identifier()->getText();
+			
+			if (attrName == "Packed")
+			{
+				out << "#pragma pack(push, 1)\n" << std::string(depth, '\t');
+				isPacked = true;
+			}
+		}
+	}
 	out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 	bool isVariadicTemplateStruct = false;
 	if (type->templateParams)
@@ -889,7 +903,7 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 				out << ") ";
 				isAlignas = false;
 			}
-			else
+			else if (attrName != "Packed")
 			{
 				printAttributeSpecifier(attr);
 				out << " ";
@@ -3663,6 +3677,10 @@ void CppAdvanceCodegen::printType(StructDefinition* type) const
 		out << "&);\n" << std::string(depth, '\t');
 	}
 	out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
+	if (isPacked)
+	{
+		out << "#pragma pack(pop)\n" << std::string(depth, '\t');
+	}
 
 	currentTupleSize = 0;
 	if (type->kind == TypeKind::Struct && !isVariadicTemplateStruct)

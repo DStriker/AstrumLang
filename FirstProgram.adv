@@ -11,6 +11,8 @@ extern ExternalCounter: i32;
 @StdCall
 extern externalFunc: (a: i32, b: str) -> str;
 
+//import lib "msvcrt.lib";
+
 protected type Test111 = Test1.Test2.TestClass;
 protected type Test112 = Test1.Test2.Class2;
 public version WINDOWS = default 167;
@@ -607,7 +609,8 @@ public extension str {
 
 public getSum: (in vec: VectorClass) -> f32 => vec.x + vec.y + vec.z;
 
-@Align(alignof(i64)) 
+@Align(alignof(i64))
+@Packed
 struct TestStruct {
 	x: System.CInt : 4;
 	y: System.CInt : 4;
