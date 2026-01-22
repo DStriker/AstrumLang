@@ -88,62 +88,63 @@ public:
     RuleDelegatingConstructorStatement = 75, RuleMemberInitializationStatement = 76, 
     RuleDestructor = 77, RuleConversionFunction = 78, RuleIndexer = 79, 
     RuleIndexerProperty = 80, RuleIndexerGetter = 81, RuleIndexerSetter = 82, 
-    RuleInterfaceIndexer = 83, RuleFunctionSpecifier = 84, RuleImplicitSpecification = 85, 
-    RuleTemplateParams = 86, RuleTemplateParamDeclaration = 87, RuleTemplateTypename = 88, 
-    RuleFunctionParams = 89, RuleParamDeclClause = 90, RuleParamDeclList = 91, 
-    RuleParamDeclaration = 92, RuleParamSpecification = 93, RuleReturnType = 94, 
-    RuleFunctionBody = 95, RuleShortFunctionBody = 96, RuleExceptionSpecification = 97, 
-    RuleDeclSpecifier = 98, RuleDeclSpecifierSeq = 99, RuleIdentifierSeq = 100, 
-    RuleFriendDeclaration = 101, RuleExternMethodDeclaration = 102, RuleAttributeSpecifierSeq = 103, 
-    RuleAttributeSpecifier = 104, RuleAttributeArgumentClause = 105, RuleSelectionStatement = 106, 
-    RuleCondition = 107, RuleElseBranch = 108, RuleSwitchStatementBranch = 109, 
-    RuleDeclarator = 110, RuleInlineCppStatement = 111, RuleIterationStatement = 112, 
-    RuleWhileCondition = 113, RuleDoWhileCondition = 114, RuleForInitStatement = 115, 
-    RuleForRangeDeclaration = 116, RuleForRangeInitializer = 117, RuleExpressionSeq = 118, 
-    RuleJumpStatement = 119, RuleSimpleDeclaration = 120, RuleDeconstructionDeclaration = 121, 
-    RuleRefDeclaration = 122, RuleMemberRefDeclaration = 123, RuleSimpleMultiDeclaration = 124, 
-    RuleMultiDeclaration = 125, RuleConstantDeclaration = 126, RuleForwardVarDeclaration = 127, 
-    RuleAliasDeclaration = 128, RuleVersionSelectionStatement = 129, RuleVersionSelectionStatementBlock = 130, 
-    RuleScopeSafeCompoundStatement = 131, RuleExpr = 132, RuleRangeExpression = 133, 
-    RuleRangeExpressionStart = 134, RuleRangeExpressionEnd = 135, RuleSwitchExpression = 136, 
-    RuleSwitchExpressionBranch = 137, RulePowerExpression = 138, RuleMultiplicativeExpression = 139, 
-    RuleAdditiveExpression = 140, RuleShiftExpression = 141, RuleThreeWayComparisonExpression = 142, 
-    RuleRelationalExpression = 143, RuleEqualityExpression = 144, RuleAndExpression = 145, 
-    RuleExclusiveOrExpression = 146, RuleInclusiveOrExpression = 147, RuleLogicalAndExpression = 148, 
-    RuleLogicalOrExpression = 149, RuleNullCoalescingExpression = 150, RuleNullCoalescingBranch = 151, 
-    RuleConditionalExpression = 152, RuleConstantExpression = 153, RuleAssignmentExpression = 154, 
-    RuleInitializerClause = 155, RuleBracedInitList = 156, RuleInitializerList = 157, 
-    RuleInitializerPart = 158, RuleExpressionList = 159, RuleExpressionListPart = 160, 
-    RuleConstraintClause = 161, RulePatternList = 162, RulePatternCombinationOperator = 163, 
-    RulePattern = 164, RuleTypeTrait = 165, RulePropertyPattern = 166, RuleAssignmentOperator = 167, 
-    RuleShiftOperator = 168, RuleTryBlock = 169, RuleExceptionHandler = 170, 
-    RuleExceptionDeclaration = 171, RuleThrowExpression = 172, RuleSimpleTypeSpecifier = 173, 
-    RuleFunctionTypeId = 174, RuleTypeIdWithSpecification = 175, RuleNamedTupleField = 176, 
-    RuleNestedNameSpecifier = 177, RuleNamespaceName = 178, RuleTemplateName = 179, 
-    RuleSimpleTemplateId = 180, RuleOperatorTemplateId = 181, RuleTemplateId = 182, 
-    RuleTemplateArgumentList = 183, RuleTemplateArgument = 184, RuleIdExpression = 185, 
-    RuleQualifiedId = 186, RuleUnqualifiedId = 187, RuleTheTypeId = 188, 
-    RuleSingleTypeId = 189, RuleTypePostfix = 190, RuleArrayDeclarator = 191, 
-    RulePointerOperator = 192, RulePointerOperatorSeq = 193, RuleTypeSpecifierSeq = 194, 
-    RuleTypeSpecifier = 195, RuleTrailingTypeSpecifier = 196, RuleTypeNameSpecifier = 197, 
-    RuleCvQualifierSeq = 198, RuleCvQualifier = 199, RuleTypename = 200, 
-    RuleClassName = 201, RuleDecltypeSpecifier = 202, RuleDecaySpecifier = 203, 
-    RuleEnumName = 204, RuleAccessSpecifier = 205, RuleProtectedInternal = 206, 
-    RuleOperatorFunctionId = 207, RuleConversionFunctionId = 208, RuleUnaryExpression = 209, 
-    RuleUnaryExpressionTail = 210, RuleNewExpression = 211, RuleStackallocExpression = 212, 
-    RuleMemorySpaceSetter = 213, RuleNewInitializer = 214, RuleFullPostfixExpression = 215, 
-    RulePostfixExpression = 216, RuleTupleExpression = 217, RuleMethodBindingExpression = 218, 
-    RuleMethodOwnerExpression = 219, RuleMethodName = 220, RuleLambdaExpression = 221, 
-    RuleLambdaCaptureList = 222, RuleLambdaCaptureClause = 223, RuleCapture = 224, 
-    RuleLambdaDeclarator = 225, RuleLambdaBody = 226, RulePrimaryExpression = 227, 
-    RuleFoldExpression = 228, RuleFoldLeftExpression = 229, RuleFoldRightExpression = 230, 
-    RuleTemplateDeductionGuide = 231, RuleUnaryPrefixOperator = 232, RuleUnaryCustomOperator = 233, 
-    RuleRefCaptureOperator = 234, RuleUnaryPostfixOperator = 235, RuleNot = 236, 
-    RuleOperator = 237, RuleLiteral = 238, RuleInterpolatedStringLiteral = 239, 
-    RuleInterpolatedRegularStringLiteral = 240, RuleInterpolatedRegularStringPart = 241, 
-    RuleInterpolatedVerbatiumStringLiteral = 242, RuleInterpolatedVerbatiumStringPart = 243, 
-    RuleInterpolatedMultilineStringLiteral = 244, RuleInterpolatedMultilineStringPart = 245, 
-    RuleInterpolatedExpression = 246, RuleDeclvalExpression = 247
+    RuleInterfaceIndexer = 83, RuleAssociatedTypeDeclaration = 84, RuleFunctionSpecifier = 85, 
+    RuleImplicitSpecification = 86, RuleTemplateParams = 87, RuleTemplateParamDeclaration = 88, 
+    RuleTemplateTypename = 89, RuleFunctionParams = 90, RuleParamDeclClause = 91, 
+    RuleParamDeclList = 92, RuleParamDeclaration = 93, RuleParamSpecification = 94, 
+    RuleReturnType = 95, RuleFunctionBody = 96, RuleShortFunctionBody = 97, 
+    RuleExceptionSpecification = 98, RuleDeclSpecifier = 99, RuleDeclSpecifierSeq = 100, 
+    RuleIdentifierSeq = 101, RuleFriendDeclaration = 102, RuleExternMethodDeclaration = 103, 
+    RuleAttributeSpecifierSeq = 104, RuleAttributeSpecifier = 105, RuleAttributeArgumentClause = 106, 
+    RuleSelectionStatement = 107, RuleCondition = 108, RuleElseBranch = 109, 
+    RuleSwitchStatementBranch = 110, RuleDeclarator = 111, RuleInlineCppStatement = 112, 
+    RuleIterationStatement = 113, RuleWhileCondition = 114, RuleDoWhileCondition = 115, 
+    RuleForInitStatement = 116, RuleForRangeDeclaration = 117, RuleForRangeInitializer = 118, 
+    RuleExpressionSeq = 119, RuleJumpStatement = 120, RuleSimpleDeclaration = 121, 
+    RuleDeconstructionDeclaration = 122, RuleRefDeclaration = 123, RuleMemberRefDeclaration = 124, 
+    RuleSimpleMultiDeclaration = 125, RuleMultiDeclaration = 126, RuleConstantDeclaration = 127, 
+    RuleForwardVarDeclaration = 128, RuleAliasDeclaration = 129, RuleVersionSelectionStatement = 130, 
+    RuleVersionSelectionStatementBlock = 131, RuleScopeSafeCompoundStatement = 132, 
+    RuleExpr = 133, RuleRangeExpression = 134, RuleRangeExpressionStart = 135, 
+    RuleRangeExpressionEnd = 136, RuleSwitchExpression = 137, RuleSwitchExpressionBranch = 138, 
+    RulePowerExpression = 139, RuleMultiplicativeExpression = 140, RuleAdditiveExpression = 141, 
+    RuleShiftExpression = 142, RuleThreeWayComparisonExpression = 143, RuleRelationalExpression = 144, 
+    RuleEqualityExpression = 145, RuleAndExpression = 146, RuleExclusiveOrExpression = 147, 
+    RuleInclusiveOrExpression = 148, RuleLogicalAndExpression = 149, RuleLogicalOrExpression = 150, 
+    RuleNullCoalescingExpression = 151, RuleNullCoalescingBranch = 152, 
+    RuleConditionalExpression = 153, RuleConstantExpression = 154, RuleAssignmentExpression = 155, 
+    RuleInitializerClause = 156, RuleBracedInitList = 157, RuleInitializerList = 158, 
+    RuleInitializerPart = 159, RuleExpressionList = 160, RuleExpressionListPart = 161, 
+    RuleConstraintClause = 162, RulePatternList = 163, RulePatternCombinationOperator = 164, 
+    RulePattern = 165, RuleTypeTrait = 166, RulePropertyPattern = 167, RuleAssignmentOperator = 168, 
+    RuleShiftOperator = 169, RuleTryBlock = 170, RuleExceptionHandler = 171, 
+    RuleExceptionDeclaration = 172, RuleThrowExpression = 173, RuleSimpleTypeSpecifier = 174, 
+    RuleFunctionTypeId = 175, RuleTypeIdWithSpecification = 176, RuleNamedTupleField = 177, 
+    RuleNestedNameSpecifier = 178, RuleNamespaceName = 179, RuleTemplateName = 180, 
+    RuleSimpleTemplateId = 181, RuleOperatorTemplateId = 182, RuleTemplateId = 183, 
+    RuleTemplateArgumentList = 184, RuleTemplateArgument = 185, RuleIdExpression = 186, 
+    RuleQualifiedId = 187, RuleUnqualifiedId = 188, RuleTheTypeId = 189, 
+    RuleSingleTypeId = 190, RuleTypePostfix = 191, RuleArrayDeclarator = 192, 
+    RulePointerOperator = 193, RulePointerOperatorSeq = 194, RuleTypeSpecifierSeq = 195, 
+    RuleTypeSpecifier = 196, RuleTrailingTypeSpecifier = 197, RuleTypeNameSpecifier = 198, 
+    RuleCvQualifierSeq = 199, RuleCvQualifier = 200, RuleTypename = 201, 
+    RuleClassName = 202, RuleDecltypeSpecifier = 203, RuleDecaySpecifier = 204, 
+    RuleEnumName = 205, RuleAccessSpecifier = 206, RuleProtectedInternal = 207, 
+    RuleOperatorFunctionId = 208, RuleConversionFunctionId = 209, RuleUnaryExpression = 210, 
+    RuleUnaryExpressionTail = 211, RuleNewExpression = 212, RuleStackallocExpression = 213, 
+    RuleMemorySpaceSetter = 214, RuleNewInitializer = 215, RuleFullPostfixExpression = 216, 
+    RulePostfixExpression = 217, RuleTupleExpression = 218, RuleMethodBindingExpression = 219, 
+    RuleMethodOwnerExpression = 220, RuleMethodName = 221, RuleLambdaExpression = 222, 
+    RuleLambdaCaptureList = 223, RuleLambdaCaptureClause = 224, RuleCapture = 225, 
+    RuleLambdaDeclarator = 226, RuleLambdaBody = 227, RulePrimaryExpression = 228, 
+    RuleFoldExpression = 229, RuleFoldLeftExpression = 230, RuleFoldRightExpression = 231, 
+    RuleTemplateDeductionGuide = 232, RuleUnaryPrefixOperator = 233, RuleUnaryCustomOperator = 234, 
+    RuleRefCaptureOperator = 235, RuleUnaryPostfixOperator = 236, RuleNot = 237, 
+    RuleOperator = 238, RuleLiteral = 239, RuleInterpolatedStringLiteral = 240, 
+    RuleInterpolatedRegularStringLiteral = 241, RuleInterpolatedRegularStringPart = 242, 
+    RuleInterpolatedVerbatiumStringLiteral = 243, RuleInterpolatedVerbatiumStringPart = 244, 
+    RuleInterpolatedMultilineStringLiteral = 245, RuleInterpolatedMultilineStringPart = 246, 
+    RuleInterpolatedExpression = 247, RuleDeclvalExpression = 248
   };
 
   explicit CppAdvanceParser(antlr4::TokenStream *input);
@@ -247,6 +248,7 @@ public:
   class IndexerGetterContext;
   class IndexerSetterContext;
   class InterfaceIndexerContext;
+  class AssociatedTypeDeclarationContext;
   class FunctionSpecifierContext;
   class ImplicitSpecificationContext;
   class TemplateParamsContext;
@@ -1002,6 +1004,7 @@ public:
     InterfacePropertyContext *interfaceProperty();
     ConstantDeclarationContext *constantDeclaration();
     AliasDeclarationContext *aliasDeclaration();
+    AssociatedTypeDeclarationContext *associatedTypeDeclaration();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -1931,6 +1934,21 @@ public:
   };
 
   InterfaceIndexerContext* interfaceIndexer();
+
+  class  AssociatedTypeDeclarationContext : public antlr4::ParserRuleContext {
+  public:
+    AssociatedTypeDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Type();
+    antlr4::tree::TerminalNode *Identifier();
+    antlr4::tree::TerminalNode *Semi();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+   
+  };
+
+  AssociatedTypeDeclarationContext* associatedTypeDeclaration();
 
   class  FunctionSpecifierContext : public antlr4::ParserRuleContext {
   public:

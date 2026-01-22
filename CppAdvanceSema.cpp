@@ -6656,6 +6656,19 @@ void CppAdvanceSema::exitExternMethodDeclaration(CppAdvanceParser::ExternMethodD
 		getCurrentCompilationCondition(), true });
 }
 
+void CppAdvanceSema::enterAssociatedTypeDeclaration(CppAdvanceParser::AssociatedTypeDeclarationContext* ctx)
+{
+	auto name = ctx->Identifier()->getText();
+	typeset.insert(name);
+
+	if (!functionBody && firstPass)
+	{
+		structStack.top()->typeAliases.emplace_back(TypeAliasDefinition{ name, nullptr, nullptr, 
+			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, AccessSpecifier::Public, getCurrentCompilationCondition(),
+			unsafeDepth > 0 });
+	}
+}
+
 void CppAdvanceSema::exitRangeExpression(CppAdvanceParser::RangeExpressionContext* ctx)
 {
 	if (ctx->DoubleDot() || ctx->DoubleDotEqual()) 

@@ -145,6 +145,7 @@ interfaceMemberDeclaration:
 	| interfaceProperty
 	| constantDeclaration
 	| aliasDeclaration
+	| associatedTypeDeclaration
 	;
 
 enumDefinition: enumHead LeftBrace enumList enumMemberSpecification? RightBrace;
@@ -258,6 +259,8 @@ indexerGetter: (accessSpecifier | protectedInternal)? Get (functionBody | shortF
 indexerSetter: (accessSpecifier | protectedInternal)? Set (functionBody | shortFunctionBody);
 
 interfaceIndexer: attributeSpecifierSeq? This LeftBracket paramDeclClause RightBracket returnType exceptionSpecification? LeftBrace Get Semi (Set Semi)? RightBrace;
+
+associatedTypeDeclaration: Type Identifier Semi;
 
 functionSpecifier: Inline | Unsafe | Consteval | Mutable | Static | Virtual | Override | Final;
 

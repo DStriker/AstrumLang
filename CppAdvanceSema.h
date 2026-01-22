@@ -1101,6 +1101,9 @@ public:
 
 	void exitExternMethodDeclaration(CppAdvanceParser::ExternMethodDeclarationContext*) override;
 
+
+	void enterAssociatedTypeDeclaration(CppAdvanceParser::AssociatedTypeDeclarationContext*) override;
+
 };
 
 class TestIgnoringParseTreeWalker : public antlr4::tree::ParseTreeWalker {

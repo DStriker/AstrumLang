@@ -5877,6 +5877,26 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			out << ">()); };\n" << std::string(depth, '\t');
 		}
 	}
+	for (const auto& associatedType : type->typeAliases)
+	{
+		if (associatedType.type != nullptr) continue;
+
+        out << "#line " << associatedType.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+		out << "template<class __AnyType";
+		if (type->templateParams)
+		{
+			for (auto param : type->templateParams->templateParamDeclaration())
+			{
+				out << ", ";
+				printTemplateParamDeclaration(param);
+			}
+		}
+
+		auto id = sema.getInterfaceMethodId(type->id + "_" + associatedType.id, nullptr);
+		interfaceRequirements.emplace_back("__HasAssociatedType_" + id);
+		out << "> concept __HasAssociatedType_" << id << " = requires { typename __AnyType::" << associatedType.id << "; };\n"
+			<< std::string(depth, '\t');
+	}
 	//check base interfaces
 	if (type->interfaces) {
 		for (auto iface : type->interfaces->baseSpecifier())
@@ -6998,6 +7018,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	}
 	for (const auto& alias : type->typeAliases)
 	{
+		if (!alias.type) continue;
 		out << "#line " << alias.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 		if (alias.templateParams)
 		{

@@ -329,7 +329,9 @@ public abstract class VectorClass : BaseClass
 }
 
 
-public class ConcreteVectorClass : VectorClass {
+public class ConcreteVectorClass : VectorClass, IInterface {
+	public type ElementType = i32;
+
 	this() == default;
 
 	public this(x: f32, y: f32, z: f32) noexcept == {
@@ -412,6 +414,7 @@ public interface IResettable {
 
 public interface IInterface: IMagicNumber, IResettable {
 	VERSION :== 12345;
+	type ElementType;
 	type SomeInt = i32;
 
 	DefaultMethod: (in f: VectorClass) -> f32 => this.GetMagicNumber(f);

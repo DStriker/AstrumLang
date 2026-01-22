@@ -266,6 +266,9 @@ public:
   virtual void enterInterfaceIndexer(CppAdvanceParser::InterfaceIndexerContext *ctx) = 0;
   virtual void exitInterfaceIndexer(CppAdvanceParser::InterfaceIndexerContext *ctx) = 0;
 
+  virtual void enterAssociatedTypeDeclaration(CppAdvanceParser::AssociatedTypeDeclarationContext *ctx) = 0;
+  virtual void exitAssociatedTypeDeclaration(CppAdvanceParser::AssociatedTypeDeclarationContext *ctx) = 0;
+
   virtual void enterFunctionSpecifier(CppAdvanceParser::FunctionSpecifierContext *ctx) = 0;
   virtual void exitFunctionSpecifier(CppAdvanceParser::FunctionSpecifierContext *ctx) = 0;
 
