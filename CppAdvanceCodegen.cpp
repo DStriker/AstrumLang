@@ -13361,6 +13361,18 @@ void CppAdvanceCodegen::printTemplateParamDeclaration(CppAdvanceParser::Template
 		{
 			printTypeId(name);
 		}
+		else if (t->Is())
+		{
+			out << "__ImplementsInterface_";
+			if (t->simpleTemplateId())
+			{
+				printSimpleTemplateId(t->simpleTemplateId());
+			}
+			else
+			{
+				printIdentifier(t->Identifier());
+			}
+		}
 		else
 		{
 			out << "class";
@@ -20408,7 +20420,20 @@ void CppAdvanceCodegen::printTypeSpecifierSeq(CppAdvanceParser::TypeSpecifierSeq
 
 void CppAdvanceCodegen::printTypeId(CppAdvanceParser::TheTypeIdContext* ctx) const
 {
-	if (!ctx->VertLine().empty())
+	if (ctx->Static())
+	{
+		out << "__ImplementsInterface_";
+		if (ctx->simpleTemplateId())
+		{
+			printSimpleTemplateId(ctx->simpleTemplateId());
+		}
+		else
+		{
+			printIdentifier(ctx->Identifier());
+		}
+		out << " auto";
+	}
+	else if (!ctx->VertLine().empty())
 	{
 		out << "Union" << (ctx->VertLine().size() + 1) << "<";
 		bool first = true;

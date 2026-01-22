@@ -615,9 +615,7 @@ struct TestStruct {
 	static assert(sizeof(i32) == 4, "i32 must be 4 bytes");
 }
 
-testInt: (i: i32) -> i32 ==> i * 2;
-
-printSuck: () => print("Suck my dick");
+GetStr: <T: is IInterface> (o: T) -> str => o ? o.Name : "unknown";
 
 main: ()
 {
@@ -731,18 +729,6 @@ main: ()
 			=> x == 0 ? 1 : x * factorial(x-1);
 		type SimpleAction = () -> void;
 		
-		action1: (i32) -> i32 = testInt;
-		iii:=20;
-		print(action1(iii));
-		action1 = &{unowned nx.TestInt};
-		print(action1(iii));
-		action2: Action<>?;
-		action1 = x => x*x;
-		print(action1(20));
-		action3:SimpleAction? = &{nx.printNext};
-		action2 = action3;
-		action2?.Invoke();
-		action2?.Invoke();
 		unsafe cpp 
 		`
 			print(vsum(1,2,3,4,5,6));

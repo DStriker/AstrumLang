@@ -2035,6 +2035,9 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *Type();
     TheTypeIdContext *theTypeId();
+    antlr4::tree::TerminalNode *Is();
+    antlr4::tree::TerminalNode *Identifier();
+    SimpleTemplateIdContext *simpleTemplateId();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -3823,6 +3826,9 @@ public:
     SingleTypeIdContext* singleTypeId(size_t i);
     std::vector<antlr4::tree::TerminalNode *> VertLine();
     antlr4::tree::TerminalNode* VertLine(size_t i);
+    antlr4::tree::TerminalNode *Static();
+    antlr4::tree::TerminalNode *Identifier();
+    SimpleTemplateIdContext *simpleTemplateId();
     ConstantExpressionContext *constantExpression();
     antlr4::tree::TerminalNode *Question();
     std::vector<TheTypeIdContext *> theTypeId();

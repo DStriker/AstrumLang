@@ -86,9 +86,9 @@ namespace __FirstProgram_Protected { using Test112 = typename Test1::Test2::Clas
 template<class A, class C> using SimpleTuple = std::tuple<A, bool, C>;
 #line 49 "FirstProgram.adv"
 using ImportantOptions = __ntuples::NamedTuple_4e7be1ed49b09d71;
-#line 762 "FirstProgram.adv"
+#line 748 "FirstProgram.adv"
 template<class... Args> using Action = CppAdvance::FunctionRef<void(Args...)>;
-#line 763 "FirstProgram.adv"
+#line 749 "FirstProgram.adv"
 template<class T> using Predicate = CppAdvance::FunctionRef<bool (T)>;
 //###############################################################################
 //# Type definitions
@@ -2794,10 +2794,10 @@ struct alignas((alignof(CppAdvance::i64))) TestStruct final : public CppAdvance:
 	
 };
 
-#line 773 "FirstProgram.adv"
-using __extension_773_Vector3 = Vector3;
-#line 775 "FirstProgram.adv"
-inline auto getNext(__extension_773_Vector3 const& __this LIFETIMEBOUND)  -> const Next;
+#line 759 "FirstProgram.adv"
+using __extension_759_Vector3 = Vector3;
+#line 761 "FirstProgram.adv"
+inline auto getNext(__extension_759_Vector3 const& __this LIFETIMEBOUND)  -> const Next;
 
 
 #line 62 "FirstProgram.adv"
@@ -3312,10 +3312,8 @@ inline auto _operator_subscript(CppAdvance::In<VectorClass> vec, CppAdvance::f32
 #line 608 "FirstProgram.adv"
 inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32;
 #line 618 "FirstProgram.adv"
-inline constexpr auto testInt(CppAdvance::i32 i)  -> const CppAdvance::i32;
-#line 620 "FirstProgram.adv"
-inline auto printSuck()  -> decltype(auto);
-#line 759 "FirstProgram.adv"
+template<__ImplementsInterface_IInterface T> inline auto GetStr(T o)  -> const CppAdvance::Str;
+#line 745 "FirstProgram.adv"
 template<class... TArgs> inline auto vsum(TArgs&&... args)  -> decltype(auto);
 //###############################################################################
 //# Global compile-time constants
@@ -3873,21 +3871,15 @@ inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32
 	ADV_EXPRESSION_BODY(ADV_UPCS(x)(vec.__ref()) + ADV_UPCS(y)(vec.__ref()) + ADV_UPCS(z)(vec.__ref())); 
 }
 #line 618 "FirstProgram.adv"
-inline constexpr auto testInt(CppAdvance::i32 i)  -> const CppAdvance::i32
+template<__ImplementsInterface_IInterface T> inline auto GetStr(T o)  -> const CppAdvance::Str
 {
 	#line 618 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(i * CppAdvance::i32(2)); 
+	ADV_EXPRESSION_BODY(o ? ADV_UPCS(Name)(o.__ref()) : CppAdvance::Str{u"unknown"}); 
 }
-#line 620 "FirstProgram.adv"
-inline auto printSuck()  -> decltype(auto)
-{
-	#line 620 "FirstProgram.adv"
-	ADV_EXPRESSION_BODY(print(CppAdvance::Str{u"Suck my dick"})); 
-}
-#line 759 "FirstProgram.adv"
+#line 745 "FirstProgram.adv"
 template<class... TArgs> inline auto vsum(TArgs&&... args)  -> decltype(auto)
 {
-	#line 760 "FirstProgram.adv"
+	#line 746 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY((args + ... + CppAdvance::i32(1))); 
 }
 #line 9999 "FirstProgram.adv"
@@ -4083,10 +4075,10 @@ inline constexpr auto getkm(__extension_604_str const& __this ) -> const CppAdva
 
 #line 9999 "FirstProgram.adv"
 
-#line 775 "FirstProgram.adv"
-inline auto getNext(__extension_773_Vector3 const& __this LIFETIMEBOUND)  -> const Next
+#line 761 "FirstProgram.adv"
+inline auto getNext(__extension_759_Vector3 const& __this LIFETIMEBOUND)  -> const Next
 {
-	#line 775 "FirstProgram.adv"
+	#line 761 "FirstProgram.adv"
 	ADV_EXPRESSION_BODY(CppAdvance::New<Next>(ADV_UPCS(x)(__this.__ref()))); 
 }
 

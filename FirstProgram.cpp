@@ -17,17 +17,17 @@ template<class T> inline auto __construct_(CppAdvance::ConstructorProxy<__extens
 #line 557 "FirstProgram.adv"
 template<class T> inline auto getAsString(__extension_556_T<T> const& __this ) -> const CppAdvance::Str;
 
-#line 622 "FirstProgram.adv"
+#line 620 "FirstProgram.adv"
 extern "C" auto __Astrum_Main()  -> CppAdvance::i32;
-#line 766 "FirstProgram.adv"
+#line 752 "FirstProgram.adv"
 inline constexpr CppAdvance::usize PRIVATE_CONSTANT = CppAdvance::usize(34U);
 #line 2 "FirstProgram.adv"
 volatile CppAdvance::Unsafe::__VolatileRawPtr<const CppAdvance::char16> globalVar{};
 #line 3 "FirstProgram.adv"
 extern const CppAdvance::Unsafe::__RawPtr<CppAdvance::i32> globalVar1 = nullptr;
-#line 767 "FirstProgram.adv"
+#line 753 "FirstProgram.adv"
 static CppAdvance::i32 globalVar2 = CppAdvance::i32(8);
-#line 768 "FirstProgram.adv"
+#line 754 "FirstProgram.adv"
 static const CppAdvance::i32 globalVar3 = CppAdvance::i32(456);
 #line 98 "FirstProgram.adv"
 thread_local CppAdvance::i32 Vector3::Count2 = CppAdvance::i32(123);
@@ -210,137 +210,113 @@ inline auto Text::getShortString() const  -> CppAdvance::Str
 
 
 ADV_ENTRY_POINT
-#line 622 "FirstProgram.adv"
+#line 620 "FirstProgram.adv"
 extern "C" auto __Astrum_Main()  -> CppAdvance::i32
 {
-	#line 667 "FirstProgram.adv"
+	#line 665 "FirstProgram.adv"
 	CppAdvance::Nullable<IInterface> nxtm = CppAdvance::New<ConcreteVectorClass>(CppAdvance::i32(11), CppAdvance::i32(12), CppAdvance::i32(13)); 
-	#line 668 "FirstProgram.adv"
+	#line 666 "FirstProgram.adv"
 	CppAdvance::Nullable<IInterface> nxt = nxtm; 
-	#line 670 "FirstProgram.adv"
+	#line 668 "FirstProgram.adv"
 	{
-		#line 671 "FirstProgram.adv"
-		#line 671 "FirstProgram.adv"
-		CppAdvance::Stackalloc<ConcreteVectorClass> __obj_671_33(CppAdvance::i32(10), CppAdvance::Str{u"123455555555"}); CppAdvance::InitStackObject((CppAdvance::Object*)__obj_671_33.obj);
-		#line 671 "FirstProgram.adv"
-		CppAdvance::Nullable<VectorClass> nxt2 = __obj_671_33; 
-		#line 672 "FirstProgram.adv"
+		#line 669 "FirstProgram.adv"
+		#line 669 "FirstProgram.adv"
+		CppAdvance::Stackalloc<ConcreteVectorClass> __obj_669_33(CppAdvance::i32(10), CppAdvance::Str{u"123455555555"}); CppAdvance::InitStackObject((CppAdvance::Object*)__obj_669_33.obj);
+		#line 669 "FirstProgram.adv"
+		CppAdvance::Nullable<VectorClass> nxt2 = __obj_669_33; 
+		#line 670 "FirstProgram.adv"
 		Vector3 vec = CppAdvance::New<Vector3>(CppAdvance::i32(12), CppAdvance::Str{u"12344444444444"}); 
-		#line 673 "FirstProgram.adv"
+		#line 671 "FirstProgram.adv"
 		auto xxn = ADV_UFCS(getNext)(vec.__ref()); 
+		#line 672 "FirstProgram.adv"
+		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt2)).__ref()));
+		#line 673 "FirstProgram.adv"
+		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
 		#line 674 "FirstProgram.adv"
 		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt2)).__ref()));
 		#line 675 "FirstProgram.adv"
-		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
-		#line 676 "FirstProgram.adv"
-		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt2)).__ref()));
-		#line 677 "FirstProgram.adv"
 		print(ADV_UFCS(_operator_subscript)((*(nxt)).__ref(), CppAdvance::i32(2)));
-		#line 678 "FirstProgram.adv"
+		#line 676 "FirstProgram.adv"
 		typename IInterface::SomeInt xx = ADV_USPCS(VERSION, IInterface)(); 
-		#line 679 "FirstProgram.adv"
+		#line 677 "FirstProgram.adv"
 		print(xx);
+		#line 679 "FirstProgram.adv"
+		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt2)).__ref()));
 		#line 681 "FirstProgram.adv"
-		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt2)).__ref()));
-		#line 683 "FirstProgram.adv"
 		nxt.andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(ADV_UFCS(Reset)(value.__ref())); });
-		#line 684 "FirstProgram.adv"
+		#line 682 "FirstProgram.adv"
 		print(ADV_UFCS(PrintInterface)((*(nxt2)).__ref(), CppAdvance::i32(123)));
-		#line 685 "FirstProgram.adv"
+		#line 683 "FirstProgram.adv"
 		print(ADV_UPCS(Name)((*(nxt)).__ref()));
-		#line 686 "FirstProgram.adv"
+		#line 684 "FirstProgram.adv"
 		print(CppAdvance::usize(sizeof (__Class_ConcreteVectorClass)));
-		#line 688 "FirstProgram.adv"
+		#line 686 "FirstProgram.adv"
 		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt2)).__ref()));
-		#line 690 "FirstProgram.adv"
+		#line 688 "FirstProgram.adv"
 		CppAdvance::Nullable<ConcreteVectorClass> cv1 = CppAdvance::New<ConcreteVectorClass>(CppAdvance::i32(1), CppAdvance::f32(2.13f), CppAdvance::i32(3)); 
-		#line 691 "FirstProgram.adv"
+		#line 689 "FirstProgram.adv"
 		ConcreteVectorClass cv2 = (*(cv1)); 
-		#line 694 "FirstProgram.adv"
+		#line 692 "FirstProgram.adv"
 		print(CppAdvance::Cast<true, CppAdvance::i32>((CppAdvance::IdentityEquals(cv1, cv2))));
-		#line 695 "FirstProgram.adv"
+		#line 693 "FirstProgram.adv"
 		print(CppAdvance::Cast<true, CppAdvance::i32>((!CppAdvance::IdentityEquals(cv1, cv2))));
-		#line 696 "FirstProgram.adv"
+		#line 694 "FirstProgram.adv"
 		Union3<Next, CppAdvance::f32, CppAdvance::Str> mu = CppAdvance::New<Next>(CppAdvance::i32(5)); 
-		#line 697 "FirstProgram.adv"
+		#line 695 "FirstProgram.adv"
 		print(ADV_UPCS(i)((CppAdvance::Cast<true, Next>(mu)).__ref()));
-		#line 698 "FirstProgram.adv"
+		#line 696 "FirstProgram.adv"
 		if (const auto cv11 = CppAdvance::Cast<false, Next>(nxt)) {
-			#line 700 "FirstProgram.adv"
+			#line 698 "FirstProgram.adv"
 			print(CppAdvance::Str{u"aaaaaaaaaa"});
 		}
-		#line 702 "FirstProgram.adv"
+		#line 700 "FirstProgram.adv"
 		Media media = Media::Audio(CppAdvance::Str{u"abcd"}, CppAdvance::i32(1), CppAdvance::i32(13)); 
-		#line 703 "FirstProgram.adv"
+		#line 701 "FirstProgram.adv"
 		ImportantOptions opt = { CppAdvance::i32(1), CppAdvance::i32(4), CppAdvance::Str{u"abc"} }; 
-		#line 704 "FirstProgram.adv"
+		#line 702 "FirstProgram.adv"
 		const auto& [ox, oy, oz] = opt;
-		#line 705 "FirstProgram.adv"
+		#line 703 "FirstProgram.adv"
 		print(ox);
-		#line 706 "FirstProgram.adv"
+		#line 704 "FirstProgram.adv"
 		print(oy);
-		#line 707 "FirstProgram.adv"
+		#line 705 "FirstProgram.adv"
 		print(oz);
-		#line 708 "FirstProgram.adv"
+		#line 706 "FirstProgram.adv"
 		ADV_ASSERT((ox == CppAdvance::i32(1)), u"ox==1");
-		#line 710 "FirstProgram.adv"
+		#line 708 "FirstProgram.adv"
 		static_assert(CppAdvance::usize(sizeof(CppAdvance::i32)) == CppAdvance::i32(4), "i32 must be 4 bytes");
-		#line 712 "FirstProgram.adv"
+		#line 710 "FirstProgram.adv"
 		const auto& [x, y, z] = vec;
-		#line 723 "FirstProgram.adv"
+		#line 721 "FirstProgram.adv"
 		ADV_UFCS(_operator_subscript)(vec.__ref(), CppAdvance::i32(1)) = CppAdvance::i32(5);
-		#line 724 "FirstProgram.adv"
+		#line 722 "FirstProgram.adv"
 		print(CppAdvance::Cast<true, CppAdvance::f32>((*(cv1))));
-		#line 725 "FirstProgram.adv"
+		#line 723 "FirstProgram.adv"
 		print(CppAdvance::Cast<true, CppAdvance::i32>(((CppAdvance::Is((*(cv1)), (cv2))))));
-		#line 726 "FirstProgram.adv"
+		#line 724 "FirstProgram.adv"
 		auto func = [] (const auto x) { ADV_EXPRESSION_BODY(x * x); }; 
-		#line 727 "FirstProgram.adv"
+		#line 725 "FirstProgram.adv"
 		print(func(CppAdvance::i32(12)));
-		#line 728 "FirstProgram.adv"
+		#line 726 "FirstProgram.adv"
 		auto nx = CppAdvance::New<Next>(CppAdvance::i32(5)); 
-		#line 730 "FirstProgram.adv"
+		#line 728 "FirstProgram.adv"
 		CppAdvance::LocalFunction<const CppAdvance::i32(CppAdvance::i32)> factorial; factorial = [&] (CppAdvance::i32 x) -> const CppAdvance::i32 
 		{
-			#line 731 "FirstProgram.adv"
+			#line 729 "FirstProgram.adv"
 			ADV_EXPRESSION_BODY(x == CppAdvance::i32(0) ? CppAdvance::i32(1) : x * factorial(x - CppAdvance::i32(1))); return 0;
 		};
-		#line 732 "FirstProgram.adv"
+		#line 730 "FirstProgram.adv"
 		using SimpleAction = CppAdvance::FunctionRef<void()>;
-		#line 734 "FirstProgram.adv"
-		CppAdvance::FunctionRef<CppAdvance::i32 (CppAdvance::i32)> action1 = testInt; 
-		#line 735 "FirstProgram.adv"
-		auto iii = CppAdvance::i32(20); 
-		#line 736 "FirstProgram.adv"
-		print(action1(iii));
-		#line 737 "FirstProgram.adv"
-		action1 = ADV_METHOD_BINDING_UNOWNED(TestInt, (nx));
-		#line 738 "FirstProgram.adv"
-		print(action1(iii));
-		#line 739 "FirstProgram.adv"
-		CppAdvance::Nullable<Action<>> action2{}; 
-		#line 740 "FirstProgram.adv"
-		action1 = [] (const auto x) { ADV_EXPRESSION_BODY(x * x); };
-		#line 741 "FirstProgram.adv"
-		print(action1(CppAdvance::i32(20)));
-		#line 742 "FirstProgram.adv"
-		CppAdvance::Nullable<SimpleAction> action3 = ADV_METHOD_BINDING_STRONG(printNext, (nx)); 
-		#line 743 "FirstProgram.adv"
-		action2 = action3;
-		#line 744 "FirstProgram.adv"
-		action2.andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(ADV_UFCS(Invoke)(value.__ref())); });
-		#line 745 "FirstProgram.adv"
-		action2.andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(ADV_UFCS(Invoke)(value.__ref())); });
-		#line 746 "FirstProgram.adv"
+		#line 732 "FirstProgram.adv"
 		
 			print(vsum(1,2,3,4,5,6));
 		
-		#line 752 "FirstProgram.adv"
+		#line 738 "FirstProgram.adv"
 		CppAdvance::Nullable<CppAdvance::ObjectRef> on = vec; 
 	}
-	#line 754 "FirstProgram.adv"
+	#line 740 "FirstProgram.adv"
 	print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
-	#line 755 "FirstProgram.adv"
+	#line 741 "FirstProgram.adv"
 	print(ADV_UPCS(x)(ADV_UPCS(x)(ADV_USFCS((Test1::Test2::TestClass), makeTestClass)(CppAdvance::i32(3), CppAdvance::f32(3.14f)).__ref()).__ref()));
 	return 0;
 }

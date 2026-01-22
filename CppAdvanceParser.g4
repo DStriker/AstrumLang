@@ -273,7 +273,7 @@ templateParams: Less templateParamDeclaration (Comma templateParamDeclaration)* 
 
 templateParamDeclaration: (In | Out)? Identifier templateParams? (Ellipsis | Colon (templateTypename Ellipsis? | templateTypename? Assign (theTypeId | conditionalExpression)))?;
 
-templateTypename: Type | theTypeId;
+templateTypename: Type | theTypeId | Is (Identifier | simpleTemplateId);
 
 functionParams: LeftParen paramDeclClause? RightParen;
 
@@ -622,6 +622,7 @@ unqualifiedId:
 
 theTypeId: 
 	  singleTypeId (VertLine singleTypeId)*  
+	| Static (Identifier | simpleTemplateId)
 	| constantExpression Question theTypeId Colon theTypeId
 	;
 
