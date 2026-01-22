@@ -76,6 +76,8 @@ As: 'as';
 
 Assert: 'assert';
 
+Assume: 'assume';
+
 Await: 'await';
 
 Bool: 'bool';

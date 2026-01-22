@@ -57,6 +57,7 @@ blockDeclaration:
 	| forwardVarDeclaration
 	| aliasDeclaration
 	| assertDeclaration
+	| assumeDeclaration
 	;
 
 memberBlockDeclaration:
@@ -67,6 +68,7 @@ memberBlockDeclaration:
 	| constantDeclaration
 	| aliasDeclaration
 	| assertDeclaration
+	| assumeDeclaration
 	;
 
 assertDeclaration: 
@@ -74,6 +76,8 @@ assertDeclaration:
 	| Assert conditionalExpression Semi
 	| Static? Assert LeftParen constantExpression Comma StringLiteral RightParen Semi
 	;
+
+assumeDeclaration: Assume conditionalExpression Semi;
 
 unitTestDeclaration: Test StringLiteral? compoundStatement;
 

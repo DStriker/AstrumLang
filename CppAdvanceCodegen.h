@@ -210,6 +210,7 @@ public:
 	void printForwardVarDeclaration(CppAdvanceParser::ForwardVarDeclarationContext* ctx) const;
 	void printAliasDeclaration(CppAdvanceParser::AliasDeclarationContext* ctx) const;
 	void printAssertDeclaration(CppAdvanceParser::AssertDeclarationContext* ctx) const;
+	void printAssumeDeclaration(CppAdvanceParser::AssumeDeclarationContext* ctx) const;
 	void printUnitTestDeclaration(CppAdvanceParser::UnitTestDeclarationContext* ctx) const;
 	void printExpression(CppAdvanceParser::ExprContext* ctx) const;
 	void printAssignmentExpression(CppAdvanceParser::AssignmentExpressionContext* ctx) const;

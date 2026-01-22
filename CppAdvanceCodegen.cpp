@@ -12055,6 +12055,10 @@ void CppAdvanceCodegen::printBlockDeclaration(CppAdvanceParser::BlockDeclaration
 	{
 		printAssertDeclaration(decl);
 	}
+	else if (auto decl = ctx->assumeDeclaration())
+	{
+		printAssumeDeclaration(decl);
+	}
 	isVolatile = false;
 	isUnowned = false;
 	isWeak = false;
@@ -17280,6 +17284,10 @@ void CppAdvanceCodegen::printMemberBlockDeclaration(CppAdvanceParser::MemberBloc
 	{
 		printAssertDeclaration(decl);
 	}
+	else if (auto decl = ctx->assumeDeclaration())
+	{
+		printAssumeDeclaration(decl);
+	}
 	isVolatile = false;
 	isUnowned = false;
 	isWeak = false;
@@ -17924,6 +17932,13 @@ void CppAdvanceCodegen::printAssertDeclaration(CppAdvanceParser::AssertDeclarati
 		}
 		out << ");";
 	}
+}
+
+void CppAdvanceCodegen::printAssumeDeclaration(CppAdvanceParser::AssumeDeclarationContext* ctx) const
+{
+	out << "ASSUME(";
+	printConditionalExpression(ctx->conditionalExpression());
+	out << ");";
 }
 
 void CppAdvanceCodegen::printUnitTestDeclaration(CppAdvanceParser::UnitTestDeclarationContext* ctx) const
