@@ -1494,6 +1494,8 @@ public:
     AttributeSpecifierSeqContext *attributeSpecifierSeq();
     antlr4::tree::TerminalNode *Const();
     antlr4::tree::TerminalNode *Ref();
+    antlr4::tree::TerminalNode *Static();
+    antlr4::tree::TerminalNode *Semi();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -1674,6 +1676,7 @@ public:
     antlr4::tree::TerminalNode *Identifier();
     OperatorFunctionIdContext *operatorFunctionId();
     AttributeSpecifierSeqContext *attributeSpecifierSeq();
+    antlr4::tree::TerminalNode *Static();
     ReturnTypeContext *returnType();
     antlr4::tree::TerminalNode *LifetimeAnnotation();
     ExceptionSpecificationContext *exceptionSpecification();

@@ -214,7 +214,10 @@ propertyBody: LeftBrace (propertyGetter | propertySetter | propertyGetter proper
 
 abstractProperty: attributeSpecifierSeq? accessSpecifier? Abstract Identifier Colon Const? Ref? theTypeId propertyBody;
 
-interfaceProperty: attributeSpecifierSeq? Identifier Colon Const? Ref? theTypeId propertyBody;
+interfaceProperty: 
+	attributeSpecifierSeq? Identifier Colon Const? Ref? theTypeId propertyBody
+	| Static Identifier Colon Const? Ref? theTypeId Semi
+	;
 
 propertyGetter: (accessSpecifier | protectedInternal)? Get (functionBody | shortFunctionBody | Semi);
 
@@ -232,7 +235,7 @@ functionDefinition: functionSpecifier* (Identifier | simpleTemplateId | operator
 
 abstractMethodDeclaration: attributeSpecifierSeq? (accessSpecifier | protectedInternal)? Abstract Mutable? (Identifier | operatorFunctionId) Colon functionParams returnType? LifetimeAnnotation? exceptionSpecification? Semi;
 
-interfaceMethodDeclaration: attributeSpecifierSeq? (Identifier | operatorFunctionId) Colon functionParams returnType? LifetimeAnnotation? exceptionSpecification? Semi;
+interfaceMethodDeclaration: attributeSpecifierSeq? Static? (Identifier | operatorFunctionId) Colon functionParams returnType? LifetimeAnnotation? exceptionSpecification? Semi;
 
 constructor: Inline? Unsafe? implicitSpecification? This templateParams? functionParams exceptionSpecification? constraintClause? (constructorBody | delegatingConstructorBody | ((Assign | Equal) Default Semi));
 

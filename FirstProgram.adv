@@ -78,6 +78,7 @@ public struct Vector3
 	//public Equals: (in ref other: IEquatable) -> bool noexcept ==> true;
 	public format: () -> str noexcept ==> "test";
 	public HashCode: () -> usize ==> 654321u;
+	public static AStaticMethod: (i: i32) -> i32 ==> i*2;
 
 	public static Count: i32 = 1 {
 		get {
@@ -367,6 +368,9 @@ public class ConcreteVectorClass : VectorClass, IInterface {
 
 	operator==: (in other: self) -> bool => x == other.x && y == other.y && z == other.z;
 
+	public static AbstractStaticMethod: (i: i32) -> i32 ==> i*2;
+	public static Name2: str ==> "abc";
+
 }
 //public GetMagicNumber: (in vec: VectorClass, i: VectorClass) -> f32 => vec.y * i.y;
 //public GetMagicNumber: (in vec: ConcreteVectorClass, in i: VectorClass) -> f32 => vec.x * i.x;
@@ -421,8 +425,10 @@ public interface IInterface: IMagicNumber, IResettable {
 	operator+: (in ref f: ConcreteVectorClass) -> ConcreteVectorClass;
 	
 	Name: str { get; }
+	static Name2: str;
 	this[i: i32] -> ref f32 { get; }
 
+	static AbstractStaticMethod: (i: i32) -> i32;
 	static final SomeStaticMethod: (i: i32) -> i32 ==> i * 123;
 }
 

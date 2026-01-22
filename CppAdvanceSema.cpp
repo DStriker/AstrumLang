@@ -1515,8 +1515,16 @@ void CppAdvanceSema::enterFunctionDefinition(CppAdvanceParser::FunctionDefinitio
 				CppAdvanceCompilerError("Static method cannot be mutating", ctx->getStart());
 			if (isVirtual || isOverride)
 				CppAdvanceCompilerError("Static method cannot be virtual or override", ctx->getStart());
-			if (isFinal && currentTypeKind.top() != TypeKind::Interface)
+
+			if (currentTypeKind.top() == TypeKind::Interface)
+			{
+				if (!isFinal)
+					CppAdvanceCompilerError("Not-final static method in the interface cannot have body", ctx->getStart());
+			}
+			else if (isFinal) 
+			{
 				CppAdvanceCompilerError("Static method cannot be final outside the interface body", ctx->getStart());
+			}
 		}
 
 		int lifetimes = 0;
@@ -5429,8 +5437,8 @@ void CppAdvanceSema::enterInterfaceProperty(CppAdvanceParser::InterfacePropertyC
 	bool isConstReturn = ctx->Const();
 	isRefProperty = isRefReturn;
 	CppAdvanceParser::TheTypeIdContext* propertyType = ctx->theTypeId();
-	CppAdvanceParser::PropertyGetterContext* getter = ctx->propertyBody()->propertyGetter();
-	CppAdvanceParser::PropertySetterContext* setter = ctx->propertyBody()->propertySetter();
+	CppAdvanceParser::PropertyGetterContext* getter = nullptr;
+	CppAdvanceParser::PropertySetterContext* setter = nullptr;
 
 	if (unsafeDepth > 0)
 	{
@@ -5438,6 +5446,12 @@ void CppAdvanceSema::enterInterfaceProperty(CppAdvanceParser::InterfacePropertyC
 	}
 
 	if (firstPass && !functionBody) {
+		if (ctx->propertyBody())
+		{
+			getter = ctx->propertyBody()->propertyGetter();
+			setter = ctx->propertyBody()->propertySetter();
+		}
+
 		if (getter)
 		{
 			if (getter->accessSpecifier() || getter->protectedInternal())
@@ -5465,7 +5479,7 @@ void CppAdvanceSema::enterInterfaceProperty(CppAdvanceParser::InterfacePropertyC
 		auto pos = SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() };
 		auto property = PropertyDefinition{ id, propertyType, pos, nullptr, getter, setter, nullptr,
 			ctx->attributeSpecifierSeq(), AccessSpecifier::Public, getCurrentCompilationCondition(),
-			currentType, fullType, lastTparams, lastSpec, lastConstraints, false, isConstReturn, isRefReturn, isUnsafe, isPrivateTypeDefinition,
+			currentType, fullType, lastTparams, lastSpec, lastConstraints, ctx->Static() != nullptr, isConstReturn, isRefReturn, isUnsafe, isPrivateTypeDefinition,
 			isProtectedTypeDefinition, isUnsafeTypeDefinition };
 		structStack.top()->properties.emplace_back(property);
 		//properties.insert_or_assign(pos, property);
@@ -5576,7 +5590,7 @@ void CppAdvanceSema::enterInterfaceMethodDeclaration(CppAdvanceParser::Interface
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, AccessSpecifier::Public, getCurrentCompilationCondition(),
 			false, false, false, false, isRefReturn, isConstReturn, false, false, varargDepth,
 			currentType, fullType, lastTparams, lastSpec, lastConstraints, nullptr, isProtectedTypeDefinition, isUnsafeTypeDefinition, false,
-			false, false, false, false, true, false };
+			false, ctx->Static() != nullptr, false, false, true, false };
 		structStack.top()->methods.emplace_back(def);
 		//methods.insert_or_assign(SourcePosition{ ctx->getStart()->getLine(),ctx->getStart()->getCharPositionInLine() }, def);
 	}

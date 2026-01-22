@@ -3984,7 +3984,7 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 	}
 	for (const auto& method : type->methods)
 	{
-		if (method.templateParams || method.templateSpecializationArgs || method.isStatic || method.isConstructor || method.isDestructor
+		if (method.templateParams || method.templateSpecializationArgs || method.isConstructor || method.isDestructor
 			|| method.access != AccessSpecifier::Public || method.params && !method.returnType && method.expression) continue;
 		if (!method.compilationCondition.empty())
 		{
@@ -4068,9 +4068,10 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 		}
 		else if (method.params)
 		{
+			if (method.isStatic) out << "static ";
 			out << "auto " << method.id;
 			printFunctionParameters(method.params);
-			if (!method.isMutating) out << " const ";
+			if (!method.isMutating && !method.isStatic) out << " const ";
 			if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
 			out << " -> ";
 			if (method.returnType)
@@ -4091,7 +4092,16 @@ void CppAdvanceCodegen::printStructWrapper(StructDefinition* type) const
 				out << "void";
 			}
 			if (method.isOverride) out << " override";
-			out << " { ADV_EXPRESSION_BODY(__value." << method.id << "(";
+			out << " { ADV_EXPRESSION_BODY(";
+			if (method.isStatic)
+			{
+				out << "__self::";
+			}
+			else {
+				out << "__value.";
+			}
+			
+			out << method.id << "(";
 			bool first = true;
 			if (auto params = method.params->paramDeclClause())
 			{
@@ -5686,7 +5696,15 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		auto id = method.id;
 		if (method.indexerParams) id = "getAt";
 		if (!method.isDefault) interfaceRequirements.emplace_back("__HasMethodImplementation_" + methodIds[&method]);
-		out << "> concept __HasMethodImplementation_" << methodIds[&method] << " = requires(typename __AnyType::__class t) { {t." << id << "(";
+		out << "> concept __HasMethodImplementation_" << methodIds[&method] << " = requires";
+		if (method.isStatic)
+		{
+			out << " { {__AnyType::__class::" << id << "(";
+		}
+		else
+		{
+			out << "(typename __AnyType::__class t) { {t." << id << "(";
+		}
 		if (method.indexerParams)
 		{
 			bool first = true;
@@ -5730,7 +5748,15 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		
 		out << "; } ";
 		if (!method.isDefault) {
-			out << " || requires(typename __AnyType::__class t) { {" << method.id << "(t";
+			out << " || requires";
+			if (method.isStatic)
+			{
+				out << " { { __static_" << method.id << "<__AnyType>(";
+			}
+			else
+			{
+				out << "(typename __AnyType::__class t) { {" << method.id << "(t";
+			}
 			if (method.indexerParams)
 			{
 				if (isUnchecked)
@@ -5747,9 +5773,11 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			}
 			else
 			if (method.params && method.params->paramDeclClause()) {
+				bool first = method.isStatic;
 				for (auto param : method.params->paramDeclClause()->paramDeclList()->paramDeclaration())
 				{
-					out << ", ";
+					if (!first) out << ", ";
+					first = false;
 					out << "std::declval<";
 					printTypeId(param->theTypeId());
 					out << ">()";
@@ -5849,12 +5877,20 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		}
 
 		interfaceRequirements.emplace_back("__HasMethodImplementation_get" + id);
-		out << "> concept __HasMethodImplementation_get" << id << " = requires(typename __AnyType::__class t) { {t.get" << prop.id 
-			<< "()} -> std::convertible_to<";
-		printTypeId(prop.type);
-		out << ">; } || requires(typename __AnyType::__class t) { {get" << prop.id << "(t)} -> std::convertible_to<";
-		printTypeId(prop.type);
-		out << ">; };\n" << std::string(depth, '\t');
+		out << "> concept __HasMethodImplementation_get" << id;
+		if (prop.isStatic)
+		{
+			out << " = requires { __AnyType::" << prop.id << "; } || requires { __static_get" << prop.id <<"<__AnyType>(); };\n"
+				<< std::string(depth, '\t');
+		}
+		else {
+			out << " = requires(typename __AnyType::__class t) { {t.get" << prop.id
+				<< "()} -> std::convertible_to<";
+			printTypeId(prop.type);
+			out << ">; } || requires(typename __AnyType::__class t) { {get" << prop.id << "(t)} -> std::convertible_to<";
+			printTypeId(prop.type);
+			out << ">; };\n" << std::string(depth, '\t');
+		}
 		if (prop.setter)
 		{
 			out << "#line " << prop.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
@@ -5936,7 +5972,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	out << "\n" << std::string(depth, '\t') << "{\n" << std::string(++depth, '\t');
 	for (const auto& method : type->methods)
 	{
-		if (method.isFinal) continue; 
+		if (method.isFinal || method.isStatic) continue; 
 		bool isUnchecked = false;
 		if (method.attributes) for (auto attr : method.attributes->attributeSpecifier())
 		{
@@ -6080,6 +6116,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	}
 	for (const auto& prop : type->properties)
 	{
+		if (prop.isStatic) continue;
 		out << "using fn_get" << prop.id << " = ";
 		if (prop.isConst) out << "const ";
 		printTypeId(prop.type);
@@ -6162,7 +6199,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		}
 	}
 	for (const auto& method : type->methods) {
-		if (method.isFinal) continue;
+		if (method.isFinal || method.isStatic) continue;
         if (!first) out << ", ";
 		first = false;
 		if (method.isDefault) {
@@ -6218,6 +6255,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		out << "\n" << std::string(depth + 1,'\t');
 	}
 	for (const auto& prop : type->properties) {
+		if (prop.isStatic) continue;
 		if (!first) out << ", ";
 		first = false;
 		out << "&__vtables::__vtable_" << type->id;
@@ -7765,7 +7803,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	//interface methods
 	for (const auto& method : type->methods)
 	{
-		if (method.isFinal) continue; 
+		if (method.isStatic) continue; 
 		bool isUnchecked = false;
 		if (method.attributes)
 		{
@@ -7832,7 +7870,8 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 				printIdentifier(param->Identifier());
 			}
 		}
-		out << "> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> ";
+		out << "> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename "
+			<< type->id << "::__vtable> ";
 		out << "FORCE_INLINE ";
 		
 		if (isCovariant) {
@@ -7871,41 +7910,9 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		out << ") ";
 		if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
 
-		if (method.isDefault)
+		if (method.isFinal)
 		{
-			out << " {\n" << std::string(++depth,'\t');
-			out << "auto func = CppAdvance::GetVTableFromInterface(&iface)->fnptr_" << methodIds[&method] << ";\n" << std::string(depth, '\t');
-			out << "if (func) { ADV_EXPRESSION_BODY(func";
-		}
-		else {
-			out << " { ADV_EXPRESSION_BODY(CppAdvance::GetVTableFromInterface(&iface)->fnptr_" << methodIds[&method];
-		}
-		out << "(CppAdvance::GetObjectReferenceFromInterface(&iface)";
-		if (method.params)
-		{
-			if (auto params = method.params->paramDeclClause())
-			{
-				for (auto param : params->paramDeclList()->paramDeclaration())
-				{
-					out << ", ";
-					printIdentifier(param->Identifier());
-				}
-			}
-		}
-		if (auto params = method.indexerParams)
-		{
-			for (auto param : params->paramDeclList()->paramDeclaration())
-			{
-				out << ", ";
-				printIdentifier(param->Identifier());
-			}
-		}
-		out << ")); ";
-		//default method body
-		if (method.isDefault)
-		{
-			out << "}\n" << std::string(depth, '\t');
-			out << "else { ADV_EXPRESSION_BODY(reinterpret_cast<const " << type->id;
+			out << " { ADV_EXPRESSION_BODY(reinterpret_cast<const " << type->id;
 			if (type->templateParams)
 			{
 				first = true;
@@ -7925,7 +7932,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 				}
 				out << ">";
 			};
-			out << "*>(&iface)->__default_" << method.id << "(";
+			out << "*>(&iface)->" << method.id << "(";
 			if (auto params = method.params->paramDeclClause())
 			{
 				first = true;
@@ -7936,14 +7943,225 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 					printIdentifier(param->Identifier());
 				}
 			}
-			out << ")); }\n" << std::string(--depth, '\t');
+			out << ")); ";
 		}
-		else if (method.indexerParams)
+		else 
 		{
-			out << "}\n" << std::string(depth, '\t');
-			if (method.indexerSetter)
+			if (method.isDefault)
 			{
-				//indexer setter
+				out << " {\n" << std::string(++depth,'\t');
+				out << "auto func = CppAdvance::GetVTableFromInterface(&iface)->fnptr_" << methodIds[&method] << ";\n" << std::string(depth, '\t');
+				out << "if (func) { ADV_EXPRESSION_BODY(func";
+			}
+			else {
+				out << " { ADV_EXPRESSION_BODY(CppAdvance::GetVTableFromInterface(&iface)->fnptr_" << methodIds[&method];
+			}
+			out << "(CppAdvance::GetObjectReferenceFromInterface(&iface)";
+			if (method.params)
+			{
+				if (auto params = method.params->paramDeclClause())
+				{
+					for (auto param : params->paramDeclList()->paramDeclaration())
+					{
+						out << ", ";
+						printIdentifier(param->Identifier());
+					}
+				}
+			}
+			if (auto params = method.indexerParams)
+			{
+				for (auto param : params->paramDeclList()->paramDeclaration())
+				{
+					out << ", ";
+					printIdentifier(param->Identifier());
+				}
+			}
+			out << ")); ";
+			//default method body
+			if (method.isDefault)
+			{
+				out << "}\n" << std::string(depth, '\t');
+				out << "else { ADV_EXPRESSION_BODY(reinterpret_cast<const " << type->id;
+				if (type->templateParams)
+				{
+					first = true;
+					out << "<";
+					if (isCovariant)
+					{
+						out << "typename __AnyInterface::ElementType";
+					}
+					else {
+						for (auto param : type->templateParams->templateParamDeclaration())
+						{
+							if (!first) out << ", ";
+							first = false;
+							printIdentifier(param->Identifier());
+							if (param->Ellipsis()) out << "...";
+						}
+					}
+					out << ">";
+				};
+				out << "*>(&iface)->__default_" << method.id << "(";
+				if (auto params = method.params->paramDeclClause())
+				{
+					first = true;
+					for (auto param : params->paramDeclList()->paramDeclaration())
+					{
+						if (!first) out << ", ";
+						first = false;
+						printIdentifier(param->Identifier());
+					}
+				}
+				out << ")); }\n" << std::string(--depth, '\t');
+			}
+			else if (method.indexerParams)
+			{
+				out << "}\n" << std::string(depth, '\t');
+				if (method.indexerSetter)
+				{
+					//indexer setter
+					if (method.attributes)
+					{
+						for (auto attr : method.attributes->attributeSpecifier())
+						{
+							auto attrName = attr->Identifier()->getText();
+							if (attrName == "Deprecated")
+							{
+								out << "[[deprecated";
+								if (attr->attributeArgumentClause())
+									out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
+								out << "]] ";
+							}
+							else if (attrName == "Unused") {
+								out << "[[maybe_unused]] ";
+							}
+							else if (attrName == "NoDiscard") {
+								out << "[[nodiscard]] ";
+							}
+							else if (attrName == "NoReturn") {
+								out << "[[noreturn]] ";
+							}
+							else if (attrName == "ForceInline") {
+								out << "FORCE_INLINE ";
+							}
+							else if (attrName == "NoInline") {
+								out << "NOINLINE ";
+							}
+							else
+							{
+								printAttributeSpecifier(attr);
+								out << " ";
+							}
+						}
+					}
+					out << "template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename "
+						<< type->id << "::__vtable> ";
+					out << "FORCE_INLINE void setAt(";
+					out << "const __AnyInterface&";
+					out << " iface, ";
+					if (isUnchecked)
+					{
+						out << "CppAdvance::UncheckedTag, ";
+					}
+					printParamDeclClause(method.indexerParams);
+					out << ", const ";
+					printTypeId(method.returnType);
+					out << "& value) ";
+					if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
+
+					out << " { CppAdvance::GetVTableFromInterface(&iface)->fnptr_set" << methodIds[&method];
+					out << "(CppAdvance::GetObjectReferenceFromInterface(&iface)";
+					if (isUnchecked)
+					{
+						out << ", CppAdvance::UncheckedTag{}";
+					}
+					for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
+					{
+						out << ", ";
+						printIdentifier(param->Identifier());
+					}
+					out << ", value); }\n" << std::string(depth, '\t');
+
+					//accessor
+					out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
+					out << "template<class __AnyInterface, class __IdxT = ";
+					printTypeId(method.returnType);
+					if (method.isRefReturn) out << "&";
+					out << "> struct __IndexerAccessor_" << method.pos.line << " {\n" << std::string(++depth, '\t') << "private:\n" << std::string(depth, '\t');
+					out << "__AnyInterface _parent;\n" << std::string(depth, '\t');
+					for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
+					{
+						if (auto t = param->theTypeId())
+						{
+							printTypeId(t);
+							out << " _"; printIdentifier(param->Identifier());
+							out << ";\n" << std::string(depth, '\t');
+						}
+					}
+					out << "public:\n" << std::string(depth, '\t');
+					out << "FORCE_INLINE __IndexerAccessor_" << method.pos.line << "(const __AnyInterface& parent, ";
+					printParamDeclClause(method.indexerParams);
+					out << ") : _parent(parent)";
+					for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
+					{
+						if (auto t = param->theTypeId())
+						{
+							out << ", _"; printIdentifier(param->Identifier()); out << "("; printIdentifier(param->Identifier()); out << ")";
+						}
+					}
+					out << " {}\n" << std::string(depth, '\t');
+					out << "template<class _ElemRight> FORCE_INLINE auto& operator=(_ElemRight&& other) { setAt(_parent, ";
+					if (isUnchecked)
+					{
+						out << ", CppAdvance::UncheckedTag{}";
+					}
+					for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
+					{
+						if (auto t = param->theTypeId())
+						{
+							out << "_"; printIdentifier(param->Identifier()); out << ", ";
+						}
+					}
+					out << "std::forward<_ElemRight>(other)); return *this; }\n" << std::string(depth, '\t');
+					INDEXER_WRITE_METHODS;
+					auto params = method.indexerParams->paramDeclList()->paramDeclaration();
+					if (!method.isConstReturn)
+					{
+						out << "FORCE_INLINE operator __IdxT() { return ";
+						GET_ELEMENT_AT_EXTERNAL;
+						out << "; }\n" << std::string(depth, '\t');
+						out << "FORCE_INLINE operator const __IdxT() const { return ";
+						GET_ELEMENT_AT_EXTERNAL;
+						out << "; }\n" << std::string(depth, '\t');
+					}
+					else
+					{
+						out << "FORCE_INLINE operator __IdxT() const { return ";
+						GET_ELEMENT_AT_EXTERNAL;
+						out << "; }\n" << std::string(depth, '\t');
+					}
+					out << "FORCE_INLINE decltype(auto) __ref() { return "; GET_ELEMENT_AT_EXTERNAL; out << "; }\n" << std::string(depth, '\t');
+					out << "FORCE_INLINE decltype(auto) __ref() const { return getAt(_parent, ";
+					if (isUnchecked)
+					{
+						out << ", CppAdvance::UncheckedTag{}";
+					}
+					for (auto param : params)
+					{
+						bool first = true;
+						if (auto t = param->theTypeId())
+						{
+							if (!first) out << ", ";
+							first = false;
+							out << "_"; printIdentifier(param->Identifier());
+						}
+					}
+					out << "); }\n" << std::string(depth, '\t');
+					INDEXER_READ_METHODS(method.pos.line);
+					out << "\n" << std::string(--depth, '\t') << "};\n\n" << std::string(depth, '\t');
+				}
+
+				//indexer API
 				if (method.attributes)
 				{
 					for (auto attr : method.attributes->attributeSpecifier())
@@ -7978,195 +8196,56 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 						}
 					}
 				}
-				out << "template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> ";
-				out << "FORCE_INLINE void setAt(";
+				out << "template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename "
+					<< type->id << "::__vtable> ";
+				out << "FORCE_INLINE decltype(auto) _operator_subscript(";
 				out << "const __AnyInterface&";
 				out << " iface, ";
 				if (isUnchecked)
 				{
-					out << "CppAdvance::UncheckedTag, ";
+					out << "CppAdvance::UncheckedTag __tag, ";
 				}
 				printParamDeclClause(method.indexerParams);
-				out << ", const ";
-				printTypeId(method.returnType);
-				out << "& value) ";
+				out << ") ";
 				if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
 
-				out << " { CppAdvance::GetVTableFromInterface(&iface)->fnptr_set" << methodIds[&method];
-				out << "(CppAdvance::GetObjectReferenceFromInterface(&iface)";
-				if (isUnchecked)
+				if (method.indexerSetter)
 				{
-					out << ", CppAdvance::UncheckedTag{}";
-				}
-				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
-				{
-					out << ", ";
-					printIdentifier(param->Identifier());
-				}
-				out << ", value); }\n" << std::string(depth, '\t');
-
-				//accessor
-				out << "#line 9999 \"" << filename << ".adv\"\n" << std::string(depth, '\t');
-				out << "template<class __AnyInterface, class __IdxT = ";
-				printTypeId(method.returnType);
-				if (method.isRefReturn) out << "&";
-				out << "> struct __IndexerAccessor_" << method.pos.line << " {\n" << std::string(++depth, '\t') << "private:\n" << std::string(depth, '\t');
-				out << "__AnyInterface _parent;\n" << std::string(depth, '\t');
-				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
-				{
-					if (auto t = param->theTypeId())
+					out << "{ return __IndexerAccessor_" << method.pos.line << "<";
+					if (type->templateParams)
 					{
-						printTypeId(t);
-						out << " _"; printIdentifier(param->Identifier());
-						out << ";\n" << std::string(depth, '\t');
-					}
-				}
-				out << "public:\n" << std::string(depth, '\t');
-				out << "FORCE_INLINE __IndexerAccessor_" << method.pos.line << "(const __AnyInterface& parent, ";
-				printParamDeclClause(method.indexerParams);
-				out << ") : _parent(parent)";
-				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
-				{
-					if (auto t = param->theTypeId())
-					{
-						out << ", _"; printIdentifier(param->Identifier()); out << "("; printIdentifier(param->Identifier()); out << ")";
-					}
-				}
-				out << " {}\n" << std::string(depth, '\t');
-				out << "template<class _ElemRight> FORCE_INLINE auto& operator=(_ElemRight&& other) { setAt(_parent, ";
-				if (isUnchecked)
-				{
-					out << ", CppAdvance::UncheckedTag{}";
-				}
-				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
-				{
-					if (auto t = param->theTypeId())
-					{
-						out << "_"; printIdentifier(param->Identifier()); out << ", ";
-					}
-				}
-				out << "std::forward<_ElemRight>(other)); return *this; }\n" << std::string(depth, '\t');
-				INDEXER_WRITE_METHODS;
-				auto params = method.indexerParams->paramDeclList()->paramDeclaration();
-				if (!method.isConstReturn)
-				{
-					out << "FORCE_INLINE operator __IdxT() { return ";
-					GET_ELEMENT_AT_EXTERNAL;
-					out << "; }\n" << std::string(depth, '\t');
-					out << "FORCE_INLINE operator const __IdxT() const { return ";
-					GET_ELEMENT_AT_EXTERNAL;
-					out << "; }\n" << std::string(depth, '\t');
-				}
-				else
-				{
-					out << "FORCE_INLINE operator __IdxT() const { return ";
-					GET_ELEMENT_AT_EXTERNAL;
-					out << "; }\n" << std::string(depth, '\t');
-				}
-				out << "FORCE_INLINE decltype(auto) __ref() { return "; GET_ELEMENT_AT_EXTERNAL; out << "; }\n" << std::string(depth, '\t');
-				out << "FORCE_INLINE decltype(auto) __ref() const { return getAt(_parent, ";
-				if (isUnchecked)
-				{
-					out << ", CppAdvance::UncheckedTag{}";
-				}
-				for (auto param : params)
-				{
-					bool first = true;
-					if (auto t = param->theTypeId())
-					{
-						if (!first) out << ", ";
-						first = false;
-						out << "_"; printIdentifier(param->Identifier());
-					}
-				}
-				out << "); }\n" << std::string(depth, '\t');
-				INDEXER_READ_METHODS(method.pos.line);
-				out << "\n" << std::string(--depth, '\t') << "};\n\n" << std::string(depth, '\t');
-			}
-
-			//indexer API
-			if (method.attributes)
-			{
-				for (auto attr : method.attributes->attributeSpecifier())
-				{
-					auto attrName = attr->Identifier()->getText();
-					if (attrName == "Deprecated")
-					{
-						out << "[[deprecated";
-						if (attr->attributeArgumentClause())
-							out << "(" << attr->attributeArgumentClause()->expressionList()->getText() << ")";
-						out << "]] ";
-					}
-					else if (attrName == "Unused") {
-						out << "[[maybe_unused]] ";
-					}
-					else if (attrName == "NoDiscard") {
-						out << "[[nodiscard]] ";
-					}
-					else if (attrName == "NoReturn") {
-						out << "[[noreturn]] ";
-					}
-					else if (attrName == "ForceInline") {
-						out << "FORCE_INLINE ";
-					}
-					else if (attrName == "NoInline") {
-						out << "NOINLINE ";
+						out << "std::decay_t<__AnyInterface>";
 					}
 					else
 					{
-						printAttributeSpecifier(attr);
-						out << " ";
+						out << "std::decay_t<" << type->id << ">";
 					}
-				}
-			}
-			out << "template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> ";
-			out << "FORCE_INLINE decltype(auto) _operator_subscript(";
-			out << "const __AnyInterface&";
-			out << " iface, ";
-			if (isUnchecked)
-			{
-				out << "CppAdvance::UncheckedTag __tag, ";
-			}
-			printParamDeclClause(method.indexerParams);
-			out << ") ";
-			if (method.exceptionSpecification) printExceptionSpecification(method.exceptionSpecification);
-
-			if (method.indexerSetter)
-			{
-				out << "{ return __IndexerAccessor_" << method.pos.line << "<";
-				if (type->templateParams)
-				{
-					out << "std::decay_t<__AnyInterface>";
+					out << ">{iface";
+					if (isUnchecked)
+					{
+						out << ", __tag";
+					}
+					for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
+					{
+						out << ", ";
+						printIdentifier(param->Identifier());
+					}
+					out << "}; ";
 				}
 				else
 				{
-					out << "std::decay_t<" << type->id << ">";
+					out << "{ return getAt(iface";
+					if (isUnchecked)
+					{
+						out << ", __tag";
+					}
+					for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
+					{
+						out << ", ";
+						printIdentifier(param->Identifier());
+					}
+					out << "); ";
 				}
-				out << ">{iface";
-				if (isUnchecked)
-				{
-					out << ", __tag";
-				}
-				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
-				{
-					out << ", ";
-					printIdentifier(param->Identifier());
-				}
-				out << "}; ";
-			}
-			else
-			{
-				out << "{ return getAt(iface";
-				if (isUnchecked)
-				{
-					out << ", __tag";
-				}
-				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration())
-				{
-					out << ", ";
-					printIdentifier(param->Identifier());
-				}
-				out << "); ";
 			}
 		}
 		out << "}\n" << std::string(depth, '\t');
@@ -8174,6 +8253,7 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	//interface properties
 	for (const auto& prop : type->properties)
 	{
+		if (prop.isStatic) continue;
 		//getter
 		if (prop.attributes)
 		{
@@ -8209,7 +8289,8 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 				}
 			}
 		}
-		out << "template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> ";
+		out << "template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename "
+			<< type->id << "::__vtable> ";
 		out << "FORCE_INLINE ";
 
 		if (isCovariant) {
@@ -8227,7 +8308,8 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		if (prop.setter)
 		{
 			//setter
-			out << "template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> ";
+			out << "template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename "
+				<< type->id << "::__vtable> ";
 			out << "FORCE_INLINE void set" << prop.id << "(";
 			out << "const __AnyInterface&";
 			out << " iface, const ";
@@ -8241,7 +8323,8 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 			out << ")\n" << std::string(depth, '\t');
 
 			//dispatcher function
-			out << "template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> ";
+			out << "template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename "
+				<< type->id << "::__vtable> ";
 			out << "FORCE_INLINE decltype(auto) _get_property_" << prop.id << "(";
 			out << "const __AnyInterface&";
 			out << " iface) { return __properties::__Property_" << type->id << "_" << prop.id << "<";
@@ -9579,7 +9662,7 @@ void CppAdvanceCodegen::printSpecialFunctionDefinitions() const
 			bool first = true;
 			for (const auto& method : type->methods)
 			{
-				if (!method.isDefault && !method.isFinal) continue;
+				if (!method.isDefault && !method.isFinal || method.isStatic) continue;
 				if (first)
 				{
 					if (type->access != AccessSpecifier::Private) {
