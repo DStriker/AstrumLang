@@ -434,8 +434,9 @@ class CppAdvanceSema : public CppAdvanceParserBaseListener
 	CppAdvanceParser* parser;
 	std::string filename;
 public:
-	CppAdvanceParser::ProgramContext* ast;
+	CppAdvanceParser::ModuleContext* ast;
 	CppSymbolParser cppParser;
+	std::string packageName;
 	std::string currentType;
 	std::string currentSubtype;
 	std::stack<std::string> currentTypeWithTemplate;
@@ -562,10 +563,10 @@ public:
 		return !currentType.empty();
 	}
 
-	void enterProgram(CppAdvanceParser::ProgramContext* ctx) override;
+	void enterModule(CppAdvanceParser::ModuleContext* ctx) override;
 
 
-	void exitProgram(CppAdvanceParser::ProgramContext* ctx) override;
+	void exitModule(CppAdvanceParser::ModuleContext* ctx) override;
 
 
 	void enterStat(CppAdvanceParser::StatContext* ctx) override;
@@ -1107,6 +1108,9 @@ public:
 
 
 	void exitBitFieldDeclaration(CppAdvanceParser::BitFieldDeclarationContext*) override;
+
+
+	void enterPackageDeclaration(CppAdvanceParser::PackageDeclarationContext*) override;
 
 };
 

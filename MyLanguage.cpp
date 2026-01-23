@@ -133,7 +133,7 @@ int main(int argc, const char* argv[])
 		CurrentCppAdvanceCompilingFileSource += "\n";
 	}
 
-	tree::ParseTree* tree = parser.program();
+	tree::ParseTree* tree = parser.module();
 	if (parser.getNumberOfSyntaxErrors())
 		std::exit(-1);
 	finish = std::chrono::high_resolution_clock::now();

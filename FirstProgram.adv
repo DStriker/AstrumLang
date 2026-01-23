@@ -1,4 +1,9 @@
-﻿unsafe {
+﻿package MyApp.Main;
+
+import System.Application.Collections as Coll;
+public import "Game.h";
+
+unsafe {
 	volatile globalVar : *const char;
 	let globalVar1 :*i32 = null;
 	type cstring = *const byte;
@@ -731,10 +736,7 @@ main: ()
 			=> x == 0 ? 1 : x * factorial(x-1);
 		type SimpleAction = () -> void;
 		
-		unsafe cpp 
-		`
-			print(vsum(1,2,3,4,5,6));
-		`;
+		print(vsum(1,2,3,4,5,6));
 
 		//print(var.GetStrongReferenceCount());
 		on: object? = vec;

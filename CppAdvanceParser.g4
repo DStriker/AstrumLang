@@ -1,9 +1,22 @@
 parser grammar CppAdvanceParser;
 options { tokenVocab=CppAdvanceLexer; }
 
-program
-    : declarationSeq EOF
+module
+    : packageDeclaration? importDeclaration* declarationSeq EOF
     ;
+
+packageDeclaration: Package packageName Semi;
+
+packageName: nestedPackageName? Identifier;
+
+nestedPackageName: Identifier Dot | nestedPackageName Identifier Dot;
+
+moduleName: nestedPackageName? Identifier;
+
+importDeclaration:
+	  Public? Import moduleName (As Identifier)? Semi
+	| Public? Import StringLiteral Semi
+	;
 
 stat: 
 	  declarationStatement

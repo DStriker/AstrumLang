@@ -518,7 +518,7 @@ void CppAdvanceCodegen::printGlobalFunctions() const
 		{
 			out << "#if " << func.compilationCondition << std::endl;
 		}
-		out << "#line " << func.pos.line << " \"" << filename << ".adv\"\n";
+		out << "#line " << func.pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 		isUnsafe = func.isUnsafe;
 		if (func.access == AccessSpecifier::Protected) {
 			out << "namespace __" << filename << "_Protected" << (isUnsafe ? "__Unsafe" : "") << " { ";
@@ -4177,6 +4177,11 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 {
 	if (!isNested && !type->templateSpecializationArgs)
 	{
+		if (!sema.packageName.empty())
+		{
+			out << "\n}\n";
+			depth = 0;
+		}
 		if (type->templateParams)
 		{
 			printTemplateParams(type->templateParams);
@@ -4186,7 +4191,12 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 		{
 			out << "template<> ";
 		}
-		out << "inline constexpr bool CppAdvance::__details::cheapCopy<" << type->id;
+		out << "inline constexpr bool CppAdvance::__details::cheapCopy<";
+		if (!sema.packageName.empty())
+		{
+			out << sema.packageName << "::";
+		}
+		out << type->id;
 		if (type->templateParams)
 		{
 			out << "<";
@@ -4201,6 +4211,11 @@ void CppAdvanceCodegen::printClassRef(StructDefinition* type) const
 			out << ">";
 		}
 		out << "> = false;\n" << std::string(depth, '\t');
+		if (!sema.packageName.empty())
+		{
+			out << "\nnamespace " << sema.packageName << " {\n\t";
+			++depth;
+		}
 	}
 	out << "#line " << type->pos.line << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 	if (type->templateParams)
@@ -5663,6 +5678,11 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 	{
 		out << "#if " << type->compilationCondition << std::endl;
 	}
+	if (!sema.packageName.empty())
+	{
+		out << "\n}\n";
+		depth = 0;
+	}
 	if (type->templateParams)
 	{
 		printTemplateParams(type->templateParams);
@@ -5673,7 +5693,12 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		out << "template<> ";
 	}
 
-	out << "inline constexpr bool CppAdvance::__details::cheapCopy<" << type->id;
+	out << "inline constexpr bool CppAdvance::__details::cheapCopy<";
+	if (!sema.packageName.empty())
+	{
+		out << sema.packageName << "::";
+	}
+	out << type->id;
 	if (type->templateParams)
 	{
 		out << "<";
@@ -5688,6 +5713,11 @@ void CppAdvanceCodegen::printInterface(StructDefinition* type) const
 		out << ">";
 	}
 	out << "> = false;\n" << std::string(depth, '\t');
+	if (!sema.packageName.empty())
+	{
+		out << "\nnamespace " << sema.packageName << " {\n\t";
+		++depth;
+	}
 	//concepts for method implementations
 	std::map<const MethodDefinition*, std::string> methodIds;
 	std::map<const PropertyDefinition*, std::string> propertyIds;
@@ -9398,6 +9428,11 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 		out << std::endl << std::string(depth,'\t');
 		if (currentTupleSize > 0)
 		{
+			if (!sema.packageName.empty())
+			{
+				out << "\n}\n";
+				depth = 0;
+			}
 			out << "namespace std {\n" << std::string(++depth, '\t');
 			if (type->templateParams)
 			{
@@ -9407,7 +9442,12 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 			{
 				out << "template<>";
 			}
-			out << " struct tuple_size<" << type->id;
+			out << " struct tuple_size<";
+			if (!sema.packageName.empty())
+			{
+				out << sema.packageName << "::";
+			}
+			out << type->id;
 			if (type->templateParams)
 			{
 				out << "<";
@@ -9445,7 +9485,12 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 				{
 					out << "template<>";
 				}
-				out << " struct tuple_element<" << i++ << ", " << type->id;
+				out << " struct tuple_element<" << i++ << ", ";
+				if (!sema.packageName.empty())
+				{
+					out << sema.packageName << "::";
+				}
+				out << type->id;
 				if (type->templateParams)
 				{
 					out << "<";
@@ -9471,9 +9516,39 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 					}
 					out << ">";
 				}
-				out << "> { using type = ";
-				printTypeId(field.type);
-				out << "; };\n" << std::string(depth, '\t');
+				out << "> { using type = decltype(std::declval<";
+				if (!sema.packageName.empty())
+				{
+					out << sema.packageName << "::";
+				}
+				out << type->id;
+				if (type->templateParams)
+				{
+					out << "<";
+					bool first = true;
+					for (auto param : type->templateParams->templateParamDeclaration())
+					{
+						if (!first) out << ", ";
+						first = false;
+						printIdentifier(param->Identifier());
+						if (param->Ellipsis()) out << "...";
+					}
+					out << ">";
+				}
+				else if (type->templateSpecializationArgs)
+				{
+					out << "<";
+					bool first = true;
+					for (auto param : type->templateSpecializationArgs->templateArgument())
+					{
+						if (!first) out << ", ";
+						first = false;
+						printTemplateArgument(param);
+					}
+					out << ">";
+				}
+				out << ">().__ref()." << field.id;
+				out << "); };\n" << std::string(depth, '\t');
 			}
 
 			for (const auto& prop : type->properties) {
@@ -9487,7 +9562,12 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 				{
 					out << "template<>";
 				}
-				out << " struct tuple_element<" << i++ << ", " << type->id;
+				out << " struct tuple_element<" << i++ << ", ";
+				if (!sema.packageName.empty())
+				{
+					out << sema.packageName << "::";
+				}
+				out << type->id;
 				if (type->templateParams)
 				{
 					out << "<";
@@ -9513,11 +9593,46 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 					}
 					out << ">";
 				}
-				out << "> { using type = ";
-				printTypeId(prop.type);
-				out << "; };\n" << std::string(depth, '\t');
+				out << "> { using type = decltype(std::declval<";
+				if (!sema.packageName.empty())
+				{
+					out << sema.packageName << "::";
+				}
+				out << type->id;
+				if (type->templateParams)
+				{
+					out << "<";
+					bool first = true;
+					for (auto param : type->templateParams->templateParamDeclaration())
+					{
+						if (!first) out << ", ";
+						first = false;
+						printIdentifier(param->Identifier());
+						if (param->Ellipsis()) out << "...";
+					}
+					out << ">";
+				}
+				else if (type->templateSpecializationArgs)
+				{
+					out << "<";
+					bool first = true;
+					for (auto param : type->templateSpecializationArgs->templateArgument())
+					{
+						if (!first) out << ", ";
+						first = false;
+						printTemplateArgument(param);
+					}
+					out << ">";
+				}
+				out << ">().__ref().p_" << prop.id;
+				out << "); };\n" << std::string(depth, '\t');
 			}
 			out << "\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+			if (!sema.packageName.empty())
+			{
+				out << "\nnamespace " << sema.packageName << " {";
+				++depth;
+			}
 		}
 		sema.symbolContexts.pop();
 	}
@@ -9614,21 +9729,34 @@ void CppAdvanceCodegen::printTypeDefinitions() const
 		out << "\n" << std::string(--depth, '\t') << "}";
 		if (tuple.access == AccessSpecifier::Protected) out << " } ";
 		out << std::endl;
+		if (!sema.packageName.empty())
+		{
+			out << "\n}\n";
+			depth = 0;
+		}
 		out << "namespace std {\n" << std::string(++depth, '\t');
+		if (!sema.packageName.empty())
+		{
+			fullName = sema.packageName + "::" + fullName;
+		}
 		out << "template <> struct tuple_size<" << fullName << "> : integral_constant<size_t, " << tuple.fields.size() << "> {};\n" << std::string(depth, '\t');
 
 		i = 0;
 		for (const auto& [field, type] : tuple.fields) {
-			out << "template <> struct tuple_element<" << i++ << ", " << fullName << "> { using type = ";
-			printTypeId(type);
-			out << "; };\n" << std::string(depth, '\t');
+			out << "template <> struct tuple_element<" << i++ << ", " << fullName << "> { using type = decltype(std::declval<" 
+				<< fullName << ">()." << field << "); };\n" << std::string(depth, '\t');
 		}
 
 		out << "\n" << std::string(--depth, '\t') << "}";
 		out << std::endl;
+		if (!sema.packageName.empty())
+		{
+			out << "\nnamespace " << sema.packageName << " {";
+			++depth;
+		}
 	}
 	isUnsafe = false;
-	depth = 0;
+	//depth = 0;
 }
 
 void CppAdvanceCodegen::printVersions() const
@@ -11908,11 +12036,20 @@ void CppAdvanceCodegen::print() const
 	{
 		out << "#include \"" << DLLName << "_export.h\"\n";
 	}
+	if (!sema.packageName.empty())
+	{
+		out << "\nnamespace " << sema.packageName << " {";
+		++depth;
+	}
 	out << std::endl << "namespace __Unsafe {} namespace __" << filename << "_Protected__Unsafe {}" << std::endl;
 
 	//.cpp header
 	out.switchTo(false);
-	out << "#include \"" << filename << ".h\"\n\n";
+	out << "#include \"" << filename << ".h\"\n";
+	if (!sema.packageName.empty())
+	{
+		out << "\nnamespace " << sema.packageName << " {\n";
+	}
 
 	sema.symbolContexts.push({});
 	sema.symbolContexts.push({});
@@ -11945,10 +12082,19 @@ void CppAdvanceCodegen::print() const
 
 	out << std::endl;
 	out.switchTo(false);
-	depth = 0;
+	//depth = 0;
 	printDeclarationSeq(sema.ast->declarationSeq());
 	printSpecialFunctionDefinitions();
 	sema.symbolContexts.pop();
+
+	if (!sema.packageName.empty())
+	{
+		out.switchTo(true);
+		out << "\n}";
+		out.switchTo(false);
+		out << "\n}";
+		--depth;
+	}
 }
 
 void CppAdvanceCodegen::printDeclarationSeq(CppAdvanceParser::DeclarationSeqContext* ctx) const
@@ -16327,7 +16473,12 @@ void CppAdvanceCodegen::printFunctionDefinition(CppAdvanceParser::FunctionDefini
 
 		if (isMainFunction)
 		{
-			out << "ADV_ENTRY_POINT\n" << std::string(depth, '\t');
+			out << "ADV_ENTRY_POINT(";
+			if (!sema.packageName.empty())
+			{
+				out << sema.packageName;
+			}
+			out << ")\n" << std::string(depth, '\t');
 		}
 		out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".adv\"\n" << std::string(depth, '\t');
 		if (isMainFunction)

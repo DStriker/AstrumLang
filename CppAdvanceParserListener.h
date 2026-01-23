@@ -14,8 +14,23 @@
 class  CppAdvanceParserListener : public antlr4::tree::ParseTreeListener {
 public:
 
-  virtual void enterProgram(CppAdvanceParser::ProgramContext *ctx) = 0;
-  virtual void exitProgram(CppAdvanceParser::ProgramContext *ctx) = 0;
+  virtual void enterModule(CppAdvanceParser::ModuleContext *ctx) = 0;
+  virtual void exitModule(CppAdvanceParser::ModuleContext *ctx) = 0;
+
+  virtual void enterPackageDeclaration(CppAdvanceParser::PackageDeclarationContext *ctx) = 0;
+  virtual void exitPackageDeclaration(CppAdvanceParser::PackageDeclarationContext *ctx) = 0;
+
+  virtual void enterPackageName(CppAdvanceParser::PackageNameContext *ctx) = 0;
+  virtual void exitPackageName(CppAdvanceParser::PackageNameContext *ctx) = 0;
+
+  virtual void enterNestedPackageName(CppAdvanceParser::NestedPackageNameContext *ctx) = 0;
+  virtual void exitNestedPackageName(CppAdvanceParser::NestedPackageNameContext *ctx) = 0;
+
+  virtual void enterModuleName(CppAdvanceParser::ModuleNameContext *ctx) = 0;
+  virtual void exitModuleName(CppAdvanceParser::ModuleNameContext *ctx) = 0;
+
+  virtual void enterImportDeclaration(CppAdvanceParser::ImportDeclarationContext *ctx) = 0;
+  virtual void exitImportDeclaration(CppAdvanceParser::ImportDeclarationContext *ctx) = 0;
 
   virtual void enterStat(CppAdvanceParser::StatContext *ctx) = 0;
   virtual void exitStat(CppAdvanceParser::StatContext *ctx) = 0;

@@ -16,8 +16,23 @@
 class  CppAdvanceParserBaseListener : public CppAdvanceParserListener {
 public:
 
-  virtual void enterProgram(CppAdvanceParser::ProgramContext * /*ctx*/) override { }
-  virtual void exitProgram(CppAdvanceParser::ProgramContext * /*ctx*/) override { }
+  virtual void enterModule(CppAdvanceParser::ModuleContext * /*ctx*/) override { }
+  virtual void exitModule(CppAdvanceParser::ModuleContext * /*ctx*/) override { }
+
+  virtual void enterPackageDeclaration(CppAdvanceParser::PackageDeclarationContext * /*ctx*/) override { }
+  virtual void exitPackageDeclaration(CppAdvanceParser::PackageDeclarationContext * /*ctx*/) override { }
+
+  virtual void enterPackageName(CppAdvanceParser::PackageNameContext * /*ctx*/) override { }
+  virtual void exitPackageName(CppAdvanceParser::PackageNameContext * /*ctx*/) override { }
+
+  virtual void enterNestedPackageName(CppAdvanceParser::NestedPackageNameContext * /*ctx*/) override { }
+  virtual void exitNestedPackageName(CppAdvanceParser::NestedPackageNameContext * /*ctx*/) override { }
+
+  virtual void enterModuleName(CppAdvanceParser::ModuleNameContext * /*ctx*/) override { }
+  virtual void exitModuleName(CppAdvanceParser::ModuleNameContext * /*ctx*/) override { }
+
+  virtual void enterImportDeclaration(CppAdvanceParser::ImportDeclarationContext * /*ctx*/) override { }
+  virtual void exitImportDeclaration(CppAdvanceParser::ImportDeclarationContext * /*ctx*/) override { }
 
   virtual void enterStat(CppAdvanceParser::StatContext * /*ctx*/) override { }
   virtual void exitStat(CppAdvanceParser::StatContext * /*ctx*/) override { }

@@ -232,7 +232,7 @@ std::string CppAdvanceSema::getCustomOperatorName(std::string_view op)
 	return result;
 }
 
-void CppAdvanceSema::enterProgram(CppAdvanceParser::ProgramContext* ctx)
+void CppAdvanceSema::enterModule(CppAdvanceParser::ModuleContext* ctx)
 {
 	ast = ctx;
 	if (firstPass) {
@@ -263,7 +263,7 @@ void CppAdvanceSema::enterProgram(CppAdvanceParser::ProgramContext* ctx)
 	abort();*/
 }
 
-void CppAdvanceSema::exitProgram(CppAdvanceParser::ProgramContext* ctx)
+void CppAdvanceSema::exitModule(CppAdvanceParser::ModuleContext* ctx)
 {
 	firstPass = false;
 	while (!symbolContexts.empty()) symbolContexts.pop();
@@ -6760,6 +6760,16 @@ void CppAdvanceSema::exitBitFieldDeclaration(CppAdvanceParser::BitFieldDeclarati
 			{ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()}, nullptr, nullptr,
 			attributes, *access, getCurrentCompilationCondition(), getCurrentFullTypeName(), false, false, false, false,
 			unsafeDepth > 0, false, false, false, static_cast<uint8_t>(std::stoi(ctx->IntegerLiteral()->getText())) });
+	}
+}
+
+void CppAdvanceSema::enterPackageDeclaration(CppAdvanceParser::PackageDeclarationContext* ctx)
+{
+	if (firstPass)
+	{
+		auto name = ctx->packageName()->getText();
+		StringReplace(name, ".", "::");
+		packageName = std::move(name);
 	}
 }
 
