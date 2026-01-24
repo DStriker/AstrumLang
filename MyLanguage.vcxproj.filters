@@ -48,6 +48,9 @@
     <ClCompile Include="CppAdvanceLexerBase.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="System\Application\Collections.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="FirstProgram.adv" />
@@ -59,6 +62,7 @@
     <None Include="FirstProgram.h">
       <Filter>Файлы заголовков</Filter>
     </None>
+    <None Include="System\Application\Collections.adv" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CppAdvanceSema.h">
@@ -89,6 +93,9 @@
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="CppAdvanceLexerBase.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Application\Collections.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
   </ItemGroup>

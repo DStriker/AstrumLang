@@ -105,61 +105,70 @@ int main(int argc, const char* argv[])
 		//std::cout << &(obj.__ref()._refCounts) << "\n";
 		//std::cout << size_t(obj.__ref().GetStrongReferenceCount()) << "\n";
 	preprocessDLL();
-	CurrentCppAdvanceCompilingFile = "FirstProgram.adv";
-	std::ifstream stream;
-	stream.open(CurrentCppAdvanceCompilingFile);
-	auto start = std::chrono::high_resolution_clock::now();
-	ANTLRInputStream input(stream);
-	CppAdvanceLexer lexer(&input);
-	lexer.removeErrorListeners();
-	auto errorListener = std::make_unique<CppAdvanceParserErrorListener>();
-	lexer.addErrorListener(errorListener.get());
-	CommonTokenStream tokens(&lexer);
-	if (lexer.getNumberOfSyntaxErrors())
-		std::exit(-1);
+	for (auto file : { "System\\Application\\Collections.adv", "FirstProgram.adv" }) {
+		CurrentCppAdvanceCompilingFile = file;
+		std::ifstream stream;
+		stream.open(CurrentCppAdvanceCompilingFile);
+		auto start = std::chrono::high_resolution_clock::now();
+		ANTLRInputStream input(stream);
+		CppAdvanceLexer lexer(&input);
+		lexer.removeErrorListeners();
+		auto errorListener = std::make_unique<CppAdvanceParserErrorListener>();
+		lexer.addErrorListener(errorListener.get());
+		CommonTokenStream tokens(&lexer);
+		if (lexer.getNumberOfSyntaxErrors())
+			std::exit(-1);
 
-	auto finish = std::chrono::high_resolution_clock::now();
-	auto time = std::chrono::duration_cast<std::chrono::microseconds>(finish - start);
-	std::cout << "Lexer time: " << (time.count() / 1'000'000.0) << " secs\n";
-	start = std::chrono::high_resolution_clock::now();
-	CppAdvanceParser parser(&tokens);
-	parser.removeErrorListeners();
-	parser.addErrorListener(errorListener.get());
-	stream.clear();
-	stream.seekg(0, std::ios::beg);
-	std::string line;
-	while (std::getline(stream, line)) {
-		CurrentCppAdvanceCompilingFileSource += line;
-		CurrentCppAdvanceCompilingFileSource += "\n";
-	}
-
-	tree::ParseTree* tree = parser.module();
-	if (parser.getNumberOfSyntaxErrors())
-		std::exit(-1);
-	finish = std::chrono::high_resolution_clock::now();
-	time = std::chrono::duration_cast<std::chrono::microseconds>(finish - start);
-	std::cout << "Parser time: " << (time.count() / 1'000'000.0) << " secs\n";
-	//std::cout << tree->toStringTree(&parser) << "\n";
-
-	{
-		auto filename = "FirstProgram";
+		auto finish = std::chrono::high_resolution_clock::now();
+		auto time = std::chrono::duration_cast<std::chrono::microseconds>(finish - start);
+		std::cout << "Lexer time: " << (time.count() / 1'000'000.0) << " secs\n";
 		start = std::chrono::high_resolution_clock::now();
-		CppAdvanceSema sema{ &parser, filename };
-		auto walker = TestIgnoringParseTreeWalker{};
-		tree::ParseTreeWalker::DEFAULT.walk(&sema, tree);
-		tree::ParseTreeWalker::DEFAULT.walk(&sema, tree);
-		/*walker.walk(&sema, tree);
-		walker.walk(&sema, tree);*/
+		CppAdvanceParser parser(&tokens);
+		parser.removeErrorListeners();
+		parser.addErrorListener(errorListener.get());
+		stream.clear();
+		stream.seekg(0, std::ios::beg);
+		std::string line;
+		while (std::getline(stream, line)) {
+			CurrentCppAdvanceCompilingFileSource += line;
+			CurrentCppAdvanceCompilingFileSource += "\n";
+		}
+
+		tree::ParseTree* tree = parser.module();
+		if (parser.getNumberOfSyntaxErrors())
+			std::exit(-1);
 		finish = std::chrono::high_resolution_clock::now();
 		time = std::chrono::duration_cast<std::chrono::microseconds>(finish - start);
-		std::cout << "Sema time: " << (time.count() / 1'000'000.0) << " secs\n";
-		start = std::chrono::high_resolution_clock::now();
-		CppAdvanceCodegen codegen(sema, filename);
-		codegen.print();
-		finish = std::chrono::high_resolution_clock::now();
-		time = std::chrono::duration_cast<std::chrono::microseconds>(finish - start);
-		std::cout << "Codegen time: " << (time.count() / 1'000'000.0) << " secs\n";
-		std::cout << "Codegen completed\n";
+		std::cout << "Parser time: " << (time.count() / 1'000'000.0) << " secs\n";
+		//std::cout << tree->toStringTree(&parser) << "\n";
+
+		{
+			auto filename = std::string(file);
+			filename = filename.substr(0, filename.length() - 4);
+			auto shortName = filename;
+			auto pos = filename.rfind('\\');
+			if (pos != filename.npos)
+			{
+				shortName = filename.substr(pos + 1);
+			}
+			start = std::chrono::high_resolution_clock::now();
+			CppAdvanceSema sema{ &parser, shortName };
+			auto walker = TestIgnoringParseTreeWalker{};
+			tree::ParseTreeWalker::DEFAULT.walk(&sema, tree);
+			tree::ParseTreeWalker::DEFAULT.walk(&sema, tree);
+			/*walker.walk(&sema, tree);
+			walker.walk(&sema, tree);*/
+			finish = std::chrono::high_resolution_clock::now();
+			time = std::chrono::duration_cast<std::chrono::microseconds>(finish - start);
+			std::cout << "Sema time: " << (time.count() / 1'000'000.0) << " secs\n";
+			start = std::chrono::high_resolution_clock::now();
+			CppAdvanceCodegen codegen(sema, shortName, filename);
+			codegen.print();
+			finish = std::chrono::high_resolution_clock::now();
+			time = std::chrono::duration_cast<std::chrono::microseconds>(finish - start);
+			std::cout << "Codegen time: " << (time.count() / 1'000'000.0) << " secs\n";
+			std::cout << "Codegen completed\n";
+		}
 	}
 
 	fs::path exePath("C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\FirstProgram.exe");

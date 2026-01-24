@@ -12036,6 +12036,20 @@ void CppAdvanceCodegen::print() const
 	{
 		out << "#include \"" << DLLName << "_export.h\"\n";
 	}
+
+	for (auto decl : sema.ast->importDeclaration())
+	{
+		if (decl->moduleName() && decl->moduleName()->nestedPackageName())
+		{
+			auto name = decl->moduleName()->nestedPackageName()->getText();
+			name = name.substr(0, name.length() - 1);
+			StringReplace(name, ".", "::");
+			importedPackages.insert(name);
+		}
+		printImportDeclaration(decl);
+	}
+
+	out.switchTo(true);
 	if (!sema.packageName.empty())
 	{
 		out << "\nnamespace " << sema.packageName << " {";
@@ -12094,6 +12108,58 @@ void CppAdvanceCodegen::print() const
 		out.switchTo(false);
 		out << "\n}";
 		--depth;
+	}
+}
+
+void CppAdvanceCodegen::printImportDeclaration(CppAdvanceParser::ImportDeclarationContext* ctx) const
+{
+	if (ctx->Public())
+	{
+		out.switchTo(true);
+	}
+	else
+	{
+		out.switchTo(false);
+	}
+
+	out << "#include ";
+	bool isPackage = false;
+	if (ctx->StringLiteral())
+	{
+		out << ctx->StringLiteral()->getText();
+	}
+	else
+	{
+		out << '"';
+		std::string name = ctx->moduleName()->getText();
+		StringReplace(name, ".", "/");
+		out << name;
+		/*if (findDirectoryInIncludes(name))
+		{
+			isPackage = true;
+			out << "/package";
+		}*/
+		out << ".h\"";
+	}
+	out << "\n";
+	if (ctx->moduleName())
+	{
+		auto name = ctx->moduleName()->getText();
+		StringReplace(name, ".", "::");
+		if (!isPackage)
+		{
+			name = name.substr(0, name.rfind("::"));
+		}
+		if (ctx->As())
+		{
+			out << "namespace ";
+			printIdentifier(ctx->Identifier());
+			out << " = " << name << ";\n";
+		}
+		else
+		{
+			out << "using namespace " << name << ";\n";
+		}
 	}
 }
 
@@ -13570,20 +13636,26 @@ void CppAdvanceCodegen::printTemplateParamDeclaration(CppAdvanceParser::Template
 	out << " ";
 	printIdentifier(ctx->Identifier());
 
-	if (isFunctionDeclaration && ctx->Assign())
+	if (isFunctionDeclaration)
 	{
-		bool prev = isTemplateParamDeclaration;
-		isTemplateParamDeclaration = false;
-		out << " = ";
-		if (auto type = ctx->theTypeId())
-		{
-			printTypeId(type);
+		if (ctx->Assign()) {
+			bool prev = isTemplateParamDeclaration;
+			isTemplateParamDeclaration = false;
+			out << " = ";
+			if (auto type = ctx->theTypeId())
+			{
+				printTypeId(type);
+			}
+			else
+			{
+				printConditionalExpression(ctx->conditionalExpression());
+			}
+			isTemplateParamDeclaration = prev;
 		}
-		else
-		{
-			printConditionalExpression(ctx->conditionalExpression());
-		}
-		isTemplateParamDeclaration = prev;
+	}
+	else if(!sema.symbolContexts.empty())
+	{
+		sema.typeset.insert(ctx->Identifier()->getText());
 	}
 }
 

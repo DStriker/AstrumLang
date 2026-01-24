@@ -258,6 +258,10 @@
     <ClCompile Include="CppAdvanceParserErrorListener.cpp" />
     <ClCompile Include="CppAdvanceParserListener.cpp" />
     <ClCompile Include="CppAdvanceSema.cpp" />
+    <ClCompile Include="System\Application\Collections.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <None Include=".gitignore" />
     <ClCompile Include="FirstProgram.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
@@ -289,9 +293,14 @@
     <ClInclude Include="CppAdvanceParserBaseListener.h" />
     <ClInclude Include="CppAdvanceParserErrorListener.h" />
     <ClInclude Include="CppAdvanceParserListener.h" />
+    <ClInclude Include="System\Application\Collections.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <None Include="FirstProgram.h" />
     <ClInclude Include="CppSymbolParser.h" />
     <ClInclude Include="StringUtils.h" />
+    <None Include="System\Application\Collections.adv" />
     <None Include="TESTDLL_export.h" />
   </ItemGroup>
   <ItemGroup>

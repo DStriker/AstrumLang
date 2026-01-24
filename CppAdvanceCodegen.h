@@ -8,6 +8,7 @@ class CppAdvanceCodegen
 	mutable std::unordered_set<CppAdvanceParser::PostfixExpressionContext*> ignoredExpressions;
 	mutable std::unordered_set<CppAdvanceParser::IdExpressionContext*> functionCallExpressions;
 	mutable std::unordered_map<std::string, std::vector<std::string>> enumValues;
+	mutable std::unordered_set<std::string> importedPackages;
 	mutable std::vector<std::pair<std::string, CppAdvanceParser::TheTypeIdContext*>> namedReturns;
 	mutable std::vector<ConstantDefinition> selfConstants;
 	mutable std::stack<CppAdvanceParser::UnaryExpressionContext*> unaryExpressions;
@@ -115,9 +116,10 @@ public:
 	mutable std::ofstream hout;
 	mutable StreamSwitcher out{ cppout, hout };
 
-	CppAdvanceCodegen(/*const*/ CppAdvanceSema& sem, std::string filename) : filename{ filename }, sema{ sem }, cppout{ filename + ".cpp" }, hout{ filename + ".h" } {}
+	CppAdvanceCodegen(/*const*/ CppAdvanceSema& sem, std::string filename, std::string fullPath) : filename{ filename }, sema{ sem }, cppout{ fullPath + ".cpp" }, hout{ fullPath + ".h" } {}
 
 	void print() const;
+	void printImportDeclaration(CppAdvanceParser::ImportDeclarationContext* ctx) const;
 	void printDeclarationSeq(CppAdvanceParser::DeclarationSeqContext* ctx) const;
 	void printDeclaration(CppAdvanceParser::DeclarationContext* ctx) const;
 	void printBlockDeclaration(CppAdvanceParser::BlockDeclarationContext* ctx) const;
