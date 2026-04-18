@@ -28,10 +28,12 @@ x86/
 [Aa][Rr][Mm]64/
 bld/
 [Bb]in/
+[Bb]uild/
 [Oo]bj/
 [Oo]ut/
 [Ll]og/
 [Ll]ogs/
+[Ll]ib/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -362,9 +364,29 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
+# Visual Studio metadata
+*.sln
+*.vcxproj
+*.filters
+*.vcxproj.filters
+*.vcxproj.user
+
+# CMake metadata
+CMakeFiles/
+CMakeCache.txt
+*.cmake
+
+# vcpkg metadata
+vcpkg_installed/
+vcpkg-manifest-install.log
+
+# ANTLR metadata
+*.interp
+*.tokens
+
 # Astrum filters
-*.dll
-*.lib
 *.exe
 *.idb
 *.ixx
+*.exp
+/CMakePresets.json

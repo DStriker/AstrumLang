@@ -1,0 +1,18 @@
+{
+    "version": 6,
+    "configurePresets": [
+        {
+            "name": "vcpkg-default",
+            "displayName": "vcpkg Release",
+            "description": "",
+            "generator": "Visual Studio 16 2019",
+            "binaryDir": "${sourceDir}/build/${presetName}",
+            "cacheVariables": {
+                "CMAKE_TOOLCHAIN_FILE": {
+                    "type": "FILEPATH",
+                    "value": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+                }
+            }
+        }
+    ]
+}

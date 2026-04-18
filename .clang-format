@@ -1,0 +1,35 @@
+BasedOnStyle: Google
+
+AlignAfterOpenBracket: true
+#AlignArrayOfStructures: Right
+AlignConsecutiveAssignments: Consecutive
+AlignEscapedNewlines: Right
+AlignOperands: Align
+AllowShortBlocksOnASingleLine: Always
+#AllowShortCaseExpressionOnASingleLine: true
+AllowShortIfStatementsOnASingleLine: Never
+ColumnLimit: 100
+EmptyLineBeforeAccessModifier: Always
+IndentWidth: 4
+#InsertNewlineAtEOF: true
+#LambdaBodyIndentation: Signature
+MaxEmptyLinesToKeep: 1
+NamespaceIndentation: All
+#QualifierAlignment: Left
+SortIncludes: true
+SortUsingDeclarations: true
+SpaceAfterCStyleCast: true
+#SpaceAfterOperatorKeyword: true
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCpp11BracedList: true
+SpaceBeforeParens: ControlStatements
+SpaceBeforeRangeBasedForLoopColon: true
+Standard: c++20
+TabWidth: 4
+UseTab: ForIndentation
+
+Language: Cpp
+# Force pointers to the type for C++.
+DerivePointerAlignment: false
+PointerAlignment: Left
+#ReferenceAlignment: Left
