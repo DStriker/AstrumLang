@@ -174,11 +174,15 @@ namespace AstrumLang {
 		// fills symbol table with system symbols
 		CppSymbolParser::initializeSystemSymbolTable();
 
+		const auto& sourceFiles = CompilerSettings::get().sourceFiles;
+		if (!sourceFiles.empty())
+			std::cout << "The following modules will be compiled:\n";
+		for (const auto& file : sourceFiles) { std::cout << file << std::endl; }
+
 		std::cout << "Stage 0: Building AST and dependency graphs\n";
 		std::unordered_map<std::string, AstrumParser*> parsers;
 		std::unordered_map<std::string, AstrumParser::ModuleContext*> ast;
 		DependencyGraph dependencies;
-		const auto& sourceFiles = CompilerSettings::get().sourceFiles;
 		for (const auto& src : sourceFiles) {
 			currentFilename = src;
 

@@ -15,8 +15,22 @@ namespace AstrumLang {
 	void CompilerSettings::setupFromCmd(std::span<const char*> args) {
 		namespace fs = std::filesystem;
 
+		if (args.empty())
+		{
+			get().versionMode = true;
+			return;
+		}
 		for (auto arg : args) {
 			auto str = std::string(arg);
+			if (str == "-v")
+			{
+				get().versionMode = true;
+				return;
+			}
+			if (str == "-h") {
+                get().helpMode = true;
+				return;
+			}
 			if (str.starts_with("-DLL:")) {
 				get().dllName = str.substr(5);
 			} else if (str.starts_with("-o:")) {
@@ -127,9 +141,6 @@ namespace AstrumLang {
 				}
 			}
 		}
-
-		std::cout << "The following modules will be compiled:\n";
-		for (const auto& file : get().sourceFiles) { std::cout << file << std::endl; }
 	}
 
 	static std::optional<std::string> findFileInPath(const std::filesystem::path& filePath) {

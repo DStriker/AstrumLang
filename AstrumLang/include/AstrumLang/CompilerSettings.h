@@ -14,7 +14,7 @@ namespace AstrumLang {
 		Default,
 		IA32,
 		SSE,
-        SSE2,
+		SSE2,
 		SSE4_2,
 		AVX,
 		AVX2,
@@ -49,12 +49,14 @@ namespace AstrumLang {
 		std::string dllName;
 		std::string exePath;
 		InstructionSet instructionSet = InstructionSet::Default;
-		CompilerBackend backend = CompilerBackend::Clang;
-		int optimizationLevel   = -1;
-		bool unitTestMode       = false;
-		bool buildMode          = false;
-		bool runMode            = false;
-		bool debugBuild         = false;
+		CompilerBackend backend       = CompilerBackend::Clang;
+		int optimizationLevel         = -1;
+		bool unitTestMode             = false;
+		bool buildMode                = false;
+		bool runMode                  = false;
+		bool debugBuild               = false;
+		bool versionMode              = false;
+		bool helpMode                 = false;
 
 		static CompilerSettings& get();
 		static void setupFromCmd(std::span<const char*> args);
