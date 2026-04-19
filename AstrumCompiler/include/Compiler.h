@@ -12,6 +12,11 @@ namespace AstrumLang {
 		static std::string currentFilename;
 		static std::unordered_map<std::string, std::vector<std::string>> sourceCode;
 		static void preprocessDLL();
+		static bool generateCpp(const std::vector<std::string>& sourceFiles);
+
+		static void preparePackages(const std::vector<std::string>& sourceFiles);
+
+		static bool build(const std::vector<std::string>& sources, const std::string& exePath);
 
 	   public:
 		static std::string getCurrentFilename() { return currentFilename; }
@@ -19,5 +24,6 @@ namespace AstrumLang {
 		static std::span<const std::string> getSourceCode(const std::string& filename);
 
 		static bool compile();
+
 	};
 }  // namespace AstrumLang

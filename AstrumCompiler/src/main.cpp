@@ -1,11 +1,9 @@
-﻿// MyLanguage.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение
-// программы.
-//
-#pragma warning(error : 4172 26815 26816)
+﻿#pragma warning(error : 4172 26815 26816)
 #define ADV_CPP_APPLICATION
 
 inline constexpr auto VERSION = "0.0.1";
-inline constexpr auto USAGE   = "Usage: astrumc [ gen | build [debug|release] | run ] [ -parameter... ] <file...>\n";
+inline constexpr auto USAGE =
+    "Usage: astrumc [ gen | build [debug|release] | run ] [ -parameter... ] <file...>\n";
 inline constexpr auto HELP = R"(
 Modes:
    gen				Only generate CPP files
@@ -111,23 +109,6 @@ int main(int argc, const char* argv[]) {
 	}
 
 	Compiler::compile();
-
-	/*std::filesystem::path exePath(
-	    R"(C:\Users\user\Documents\VSProjects\MyLanguage\FirstProgram.exe)");
-	int compileResult = std::system("cmd /c compile.bat");
-	if (compileResult != 0) {
-	    std::cerr << "Compilation failed with code: " + std::to_string(compileResult);
-	    return 0;
-	}
-
-	std::cout << "Compilation successful. Executable: " << exePath << std::endl;
-	std::string runCommand = "\"" + exePath.string() + "\"";
-	std::cout << "Running executable..." << std::endl;
-
-	int runResult = std::system(runCommand.c_str());
-	if (runResult != 0) {
-	    std::cerr << "Executable exited with code: " << runResult << std::endl;
-	}*/
 
 	return 0;
 }

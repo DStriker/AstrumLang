@@ -211,7 +211,7 @@ namespace AstrumLang {
 				    parentNamespace.empty() ? name : parentNamespace + "." + name;
 				StringReplace(typeStr, "::", ".");
 				parser->symbolTable[currentGlobalAlias + name] = typeStr;
-				parser->symbolTable[fullName] = typeStr;
+				parser->symbolTable[fullName]                  = typeStr;
 
 				/*if (ContainsRawPointer(typeStr)) {
 				    parser->unsafeVariables.insert(fullName);

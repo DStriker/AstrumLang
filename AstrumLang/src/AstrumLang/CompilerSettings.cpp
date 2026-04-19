@@ -15,20 +15,18 @@ namespace AstrumLang {
 	void CompilerSettings::setupFromCmd(std::span<const char*> args) {
 		namespace fs = std::filesystem;
 
-		if (args.empty())
-		{
+		if (args.empty()) {
 			get().versionMode = true;
 			return;
 		}
 		for (auto arg : args) {
 			auto str = std::string(arg);
-			if (str == "-v")
-			{
+			if (str == "-v") {
 				get().versionMode = true;
 				return;
 			}
 			if (str == "-h") {
-                get().helpMode = true;
+				get().helpMode = true;
 				return;
 			}
 			if (str.starts_with("-DLL:")) {
@@ -56,7 +54,7 @@ namespace AstrumLang {
 				get().buildMode = true;
 			} else if (str == "run") {
 				get().buildMode = true;
-				get().runMode = true;
+				get().runMode   = true;
 			} else if (str == "-backend:clang") {
 				get().backend = CompilerBackend::Clang;
 			} else if (str == "-backend:msvc") {

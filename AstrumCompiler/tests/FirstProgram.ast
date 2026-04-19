@@ -1,6 +1,6 @@
 ﻿package MyApp.Main;
 
-import System.Application.Collections;
+import System.Application;
 
 type IFace = System.Application.IInterface;
 

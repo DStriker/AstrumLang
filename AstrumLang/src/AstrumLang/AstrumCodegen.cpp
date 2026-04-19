@@ -11705,7 +11705,8 @@ namespace AstrumLang {
 			out << name;
 			if (auto found = CompilerSettings::findFileInIncludePaths(name, sema.filenamePath))
 			{
-				if (found->ends_with("/package.h"))
+				std::filesystem::path packagePath = *found;
+				if (packagePath.filename().string() == "package.h")
 				{
 					isPackage = true;
 					out << "/package";

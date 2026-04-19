@@ -168,6 +168,280 @@ namespace AstrumLang {
 	std::string Compiler::currentFilename;
 	std::unordered_map<std::string, std::vector<std::string>> Compiler::sourceCode;
 
+	bool Compiler::build(const std::vector<std::string>& sources, const std::string& exePath) {
+		std::string cmd;
+		auto backend           = CompilerSettings::get().backend;
+		auto dllName           = CompilerSettings::get().dllName;
+		auto optimizationLevel = CompilerSettings::get().optimizationLevel;
+		auto instructionSet    = CompilerSettings::get().instructionSet;
+		std::string quotes     = "\"";
+#ifdef _WIN32
+		auto vsPath = ExecCmd(L"vswhere -latest -property installationPath");
+		StringTrim(vsPath);
+		std::ofstream bat("astrum_build.bat");
+		bat << "@echo off\ncall \"";
+		bat << vsPath;
+		bat << R"(\VC\Auxiliary\Build\vcvars64.bat")";
+		bat << "\n";
+#endif
+		if (backend == CompilerBackend::Clang || backend == CompilerBackend::Gnu) {
+			if (backend == CompilerBackend::Clang) {
+				cmd += "clang++ ";
+			} else {
+				cmd += "g++ ";
+			}
+			for (const auto& path : CompilerSettings::get().includePaths) {
+				cmd += " -I ";
+				cmd += quotes;
+				cmd += path;
+				cmd += quotes;
+			}
+			for (const auto& src : sources) {
+				cmd += " ";
+				cmd += quotes;
+				std::filesystem::path srcPath = src;
+				srcPath.replace_extension("cpp");
+				cmd += srcPath.string();
+				cmd += quotes;
+			}
+			for (const auto& path : CompilerSettings::get().libraryPaths) {
+				cmd += " -L";
+				cmd += quotes;
+				cmd += path;
+				cmd += quotes;
+			}
+			for (std::filesystem::path lib : CompilerSettings::get().libraries) {
+				cmd += " -l";
+				lib.replace_extension();
+				cmd += lib.string().substr(3);
+			}
+			cmd += " -o ";
+			cmd += quotes;
+			cmd += exePath;
+			cmd += quotes;
+			if (CompilerSettings::get().debugBuild) {
+				if (optimizationLevel == -1) {
+					cmd += " -O0";
+				} else {
+					cmd += " -O";
+					cmd += std::to_string(optimizationLevel);
+				}
+				cmd += " -DDEBUG -D_DEBUG";
+			} else {
+				if (optimizationLevel == -1) {
+					cmd += " -O3";
+				} else {
+					cmd += " -O";
+					cmd += std::to_string(optimizationLevel);
+				}
+				cmd += " -DNDEBUG";
+			}
+
+			switch (instructionSet) {
+				case InstructionSet::Default:
+					break;
+				case InstructionSet::IA32:
+					cmd += " -mx87";
+					break;
+				case InstructionSet::SSE:
+					cmd += " -msse";
+					break;
+				case InstructionSet::SSE2:
+					cmd += " -msse2";
+					break;
+				case InstructionSet::SSE4_2:
+					cmd += " -msse4.2";
+					break;
+				case InstructionSet::AVX:
+					cmd += " -mavx";
+					break;
+				case InstructionSet::AVX2:
+					cmd += " -mavx2";
+					break;
+				case InstructionSet::AVX512:
+					cmd += " -mavx512f";
+					break;
+				case InstructionSet::AVX10_1:
+					cmd += " -mavx10.1";
+					break;
+				case InstructionSet::AVX10_2:
+					cmd += " -mavx10.2";
+					break;
+				case InstructionSet::ARM8_0:
+					cmd += " -mavx";
+					break;
+				default:
+					break;
+			}
+
+			cmd +=
+			    " -W -g -fstack-protector-strong -std=c++20 -D_CONSOLE -D_UNICODE -DUNICODE "
+			    "-L. -lastrumstd";
+		} else if (backend == CompilerBackend::VisualCpp) {
+			cmd += "cl /nologo /EHsc /W1";
+			for (const auto& path : CompilerSettings::get().includePaths) {
+				cmd += " /I";
+				cmd += quotes;
+				cmd += path;
+				cmd += quotes;
+			}
+			for (const auto& src : sources) {
+				cmd += " ";
+				cmd += quotes;
+				std::filesystem::path srcPath = src;
+				srcPath.replace_extension("cpp");
+				cmd += srcPath.string();
+				cmd += quotes;
+			}
+			if (!dllName.empty()) {
+				std::transform(dllName.begin(), dllName.end(), dllName.begin(), ::toupper);
+				cmd += " /D ";
+				cmd += quotes;
+				cmd += dllName;
+				cmd += "_EXPORTS";
+				cmd += quotes;
+			}
+			cmd += " /Fe:";
+			cmd += quotes;
+			cmd += exePath;
+			cmd += quotes;
+			if (CompilerSettings::get().debugBuild) {
+				if (optimizationLevel < 1) {
+					cmd += " /Od";
+				} else if (optimizationLevel == 3) {
+					cmd += " /O2";
+				} else {
+					cmd += " /O";
+					cmd += std::to_string(optimizationLevel);
+				}
+				cmd += R"( /RTC1 /sdl /D ""DEBUG"" /D ""_DEBUG"" /MDd)";
+			} else {
+				if (optimizationLevel == -1 || optimizationLevel == 3) {
+					cmd += " /O2";
+				} else if (optimizationLevel == 0) {
+					cmd += " /Od";
+				} else {
+					cmd += " /O";
+					cmd += std::to_string(optimizationLevel);
+				}
+				cmd += R"( /MD /Ob2 /D ""NDEBUG"")";
+			}
+
+			switch (instructionSet) {
+				case AstrumLang::InstructionSet::Default:
+					break;
+				case AstrumLang::InstructionSet::IA32:
+					cmd += " /arch:IA32";
+					break;
+				case AstrumLang::InstructionSet::SSE:
+					cmd += " /arch:SSE";
+					break;
+				case AstrumLang::InstructionSet::SSE2:
+					cmd += " /arch:SSE2";
+					break;
+				case AstrumLang::InstructionSet::SSE4_2:
+					cmd += " /arch:SSE4.2";
+					break;
+				case AstrumLang::InstructionSet::AVX:
+					cmd += " /arch:AVX";
+					break;
+				case AstrumLang::InstructionSet::AVX2:
+					cmd += " /arch:AVX2";
+					break;
+				case AstrumLang::InstructionSet::AVX512:
+					cmd += " /arch:AVX512";
+					break;
+				case AstrumLang::InstructionSet::AVX10_1:
+					cmd += " /arch:AVX10.1";
+					break;
+				case AstrumLang::InstructionSet::AVX10_2:
+					cmd += " /arch:AVX10.2";
+					break;
+				case AstrumLang::InstructionSet::ARM8_0:
+					cmd += " /arch:armv8.0";
+					break;
+				case AstrumLang::InstructionSet::ARM8_1:
+					cmd += " /arch:armv8.1";
+					break;
+				case AstrumLang::InstructionSet::ARM8_2:
+					cmd += " /arch:armv8.2";
+					break;
+				case AstrumLang::InstructionSet::ARM8_3:
+					cmd += " /arch:armv8.3";
+					break;
+				case AstrumLang::InstructionSet::ARM8_4:
+					cmd += " /arch:armv8.4";
+					break;
+				case AstrumLang::InstructionSet::ARM8_5:
+					cmd += " /arch:armv8.5";
+					break;
+				case AstrumLang::InstructionSet::ARM8_6:
+					cmd += " /arch:armv8.6";
+					break;
+				case AstrumLang::InstructionSet::ARM8_7:
+					cmd += " /arch:armv8.7";
+					break;
+				case AstrumLang::InstructionSet::ARM8_8:
+					cmd += " /arch:armv8.8";
+					break;
+				case AstrumLang::InstructionSet::ARM8_9:
+					cmd += " /arch:armv8.9";
+					break;
+				case AstrumLang::InstructionSet::ARM9_0:
+					cmd += " /arch:armv9.0";
+					break;
+				case AstrumLang::InstructionSet::ARM9_1:
+					cmd += " /arch:armv9.1";
+					break;
+				case AstrumLang::InstructionSet::ARM9_2:
+					cmd += " /arch:armv9.2";
+					break;
+				case AstrumLang::InstructionSet::ARM9_3:
+					cmd += " /arch:armv9.3";
+					break;
+				case AstrumLang::InstructionSet::ARM9_4:
+					cmd += " /arch:armv9.4";
+					break;
+				default:
+					break;
+			}
+
+			cmd +=
+			    R"( /GS /Zc:wchar_t /Gm- /Zi /Zc:inline /fp:precise /D ""_CONSOLE"" /D ""_UNICODE"" /D ""UNICODE"" /errorReport:prompt /WX- /Zc:forScope /Gd /std:c++latest /wd4005 /wd4584 /wd4190 /we4297 /we4715 /we26447 /we26815 /we26816 /external:W0 ""libastrumstd.lib"")";
+
+			auto libPaths = CompilerSettings::get().libraryPaths;
+			if (!libPaths.empty()) {
+				cmd += " /link";
+			}
+			for (const auto& path : libPaths) {
+				cmd += " /LIBPATH:";
+				cmd += quotes;
+				cmd += path;
+				cmd += quotes;
+			}
+			for (const std::filesystem::path& lib : CompilerSettings::get().libraries) {
+				cmd += " ";
+				cmd += quotes;
+				cmd += lib.string();
+				cmd += quotes;
+			}
+		}
+
+#ifdef _WIN32
+		bat << cmd;
+		bat.close();
+		cmd = "astrum_build.bat";
+#endif
+
+		int compileResult = std::system(cmd.c_str());
+		if (compileResult != 0) {
+			std::cerr << "Compilation failed with code: " + std::to_string(compileResult);
+			return false;
+		}
+		std::cout << "Build completed\n";
+		return true;
+	}
+
 	bool Compiler::compile() {
 		// creates file with dllexport macro if dll build mode enabled
 		preprocessDLL();
@@ -179,6 +453,43 @@ namespace AstrumLang {
 			std::cout << "The following modules will be compiled:\n";
 		for (const auto& file : sourceFiles) { std::cout << file << std::endl; }
 
+		// preparing package headers
+		preparePackages(sourceFiles);
+
+		// codegen
+		if (!generateCpp(sourceFiles))
+			return false;
+
+		std::string exePath = CompilerSettings::get().exePath;
+		if (exePath.empty()) {
+#ifdef _WIN32
+			exePath = "Application.exe";
+#else
+			exePath = "a.out";
+#endif
+		}
+
+		// cpp build
+		if (!sourceFiles.empty() && CompilerSettings::get().buildMode) {
+			if (!build(sourceFiles, exePath))
+				return false;
+		}
+
+		// run application
+		if (CompilerSettings::get().runMode) {
+			std::string runCommand = "\"" + exePath + "\"";
+			std::cout << "Running executable..." << std::endl;
+
+			int runResult = std::system(runCommand.c_str());
+			if (runResult != 0) {
+				std::cerr << "Executable exited with code: " << runResult << std::endl;
+			}
+		}
+
+		return true;
+	}
+
+	bool Compiler::generateCpp(const std::vector<std::string>& sourceFiles) {
 		std::cout << "Stage 0: Building AST and dependency graphs\n";
 		std::unordered_map<std::string, AstrumParser*> parsers;
 		std::unordered_map<std::string, AstrumParser::ModuleContext*> ast;
@@ -299,302 +610,41 @@ namespace AstrumLang {
 		}
 
 		std::cout << "Codegen completed\n";
-
-		std::string exePath = CompilerSettings::get().exePath;
-		if (exePath.empty()) {
-#ifdef _WIN32
-			exePath = "Application.exe";
-#else
-			exePath = "a.out";
-#endif
-		}
-
-		// cpp build
-		if (!orderedSources.empty() && CompilerSettings::get().buildMode) {
-			std::string cmd;
-			auto backend           = CompilerSettings::get().backend;
-			auto dllName           = CompilerSettings::get().dllName;
-			auto optimizationLevel = CompilerSettings::get().optimizationLevel;
-			auto instructionSet    = CompilerSettings::get().instructionSet;
-			std::string quotes     = "\"";
-#ifdef _WIN32
-			auto vsPath = ExecCmd(L"vswhere -latest -property installationPath");
-			StringTrim(vsPath);
-			std::ofstream bat("astrum_build.bat");
-			bat << "@echo off\ncall \"";
-			bat << vsPath;
-			bat << R"(\VC\Auxiliary\Build\vcvars64.bat")";
-			bat << "\n";
-#endif
-			if (backend == CompilerBackend::Clang || backend == CompilerBackend::Gnu) {
-				if (backend == CompilerBackend::Clang) {
-					cmd += "clang++ ";
-				} else {
-					cmd += "g++ ";
-				}
-				for (const auto& path : CompilerSettings::get().includePaths) {
-					cmd += " -I ";
-					cmd += quotes;
-					cmd += path;
-					cmd += quotes;
-				}
-				for (const auto& src : orderedSources) {
-					cmd += " ";
-					cmd += quotes;
-					std::filesystem::path srcPath = src;
-					srcPath.replace_extension("cpp");
-					cmd += srcPath.string();
-					cmd += quotes;
-				}
-				for (const auto& path : CompilerSettings::get().libraryPaths) {
-					cmd += " -L";
-					cmd += quotes;
-					cmd += path;
-					cmd += quotes;
-				}
-				for (std::filesystem::path lib : CompilerSettings::get().libraries) {
-					cmd += " -l";
-					lib.replace_extension();
-					cmd += lib.string().substr(3);
-				}
-				cmd += " -o ";
-				cmd += quotes;
-				cmd += exePath;
-				cmd += quotes;
-				if (CompilerSettings::get().debugBuild) {
-					if (optimizationLevel == -1) {
-						cmd += " -O0";
-					} else {
-						cmd += " -O";
-						cmd += std::to_string(optimizationLevel);
-					}
-					cmd += " -DDEBUG -D_DEBUG";
-				} else {
-					if (optimizationLevel == -1) {
-						cmd += " -O3";
-					} else {
-						cmd += " -O";
-						cmd += std::to_string(optimizationLevel);
-					}
-					cmd += " -DNDEBUG";
-				}
-
-				switch (instructionSet) {
-					case InstructionSet::Default:
-						break;
-					case InstructionSet::IA32:
-						cmd += " -mx87";
-						break;
-					case InstructionSet::SSE:
-						cmd += " -msse";
-						break;
-					case InstructionSet::SSE2:
-						cmd += " -msse2";
-						break;
-					case InstructionSet::SSE4_2:
-						cmd += " -msse4.2";
-						break;
-					case InstructionSet::AVX:
-						cmd += " -mavx";
-						break;
-					case InstructionSet::AVX2:
-						cmd += " -mavx2";
-						break;
-					case InstructionSet::AVX512:
-						cmd += " -mavx512f";
-						break;
-					case InstructionSet::AVX10_1:
-						cmd += " -mavx10.1";
-						break;
-					case InstructionSet::AVX10_2:
-						cmd += " -mavx10.2";
-						break;
-					case InstructionSet::ARM8_0:
-						cmd += " -mavx";
-						break;
-					default:
-						break;
-				}
-
-				cmd +=
-				    " -W -g -fstack-protector-strong -std=c++20 -D_CONSOLE -D_UNICODE -DUNICODE "
-				    "-L. -lastrumstd";
-			} else if (backend == CompilerBackend::VisualCpp) {
-				cmd += "cl /nologo /EHsc /W1";
-				for (const auto& path : CompilerSettings::get().includePaths) {
-					cmd += " /I";
-					cmd += quotes;
-					cmd += path;
-					cmd += quotes;
-				}
-				for (const auto& src : orderedSources) {
-					cmd += " ";
-					cmd += quotes;
-					std::filesystem::path srcPath = src;
-					srcPath.replace_extension("cpp");
-					cmd += srcPath.string();
-					cmd += quotes;
-				}
-				if (!dllName.empty()) {
-					std::transform(dllName.begin(), dllName.end(), dllName.begin(), ::toupper);
-					cmd += " /D ";
-					cmd += quotes;
-					cmd += dllName;
-					cmd += "_EXPORTS";
-					cmd += quotes;
-				}
-				cmd += " /Fe:";
-				cmd += quotes;
-				cmd += exePath;
-				cmd += quotes;
-				if (CompilerSettings::get().debugBuild) {
-					if (optimizationLevel < 1) {
-						cmd += " /Od";
-					} else if (optimizationLevel == 3) {
-						cmd += " /O2";
-					} else {
-						cmd += " /O";
-						cmd += std::to_string(optimizationLevel);
-					}
-					cmd += R"( /RTC1 /sdl /D ""DEBUG"" /D ""_DEBUG"" /MDd)";
-				} else {
-					if (optimizationLevel == -1 || optimizationLevel == 3) {
-						cmd += " /O2";
-					} else if (optimizationLevel == 0) {
-						cmd += " /Od";
-					} else {
-						cmd += " /O";
-						cmd += std::to_string(optimizationLevel);
-					}
-					cmd += R"( /MD /Ob2 /D ""NDEBUG"")";
-				}
-
-				switch (instructionSet) {
-					case AstrumLang::InstructionSet::Default:
-						break;
-					case AstrumLang::InstructionSet::IA32:
-						cmd += " /arch:IA32";
-						break;
-					case AstrumLang::InstructionSet::SSE:
-						cmd += " /arch:SSE";
-						break;
-					case AstrumLang::InstructionSet::SSE2:
-						cmd += " /arch:SSE2";
-						break;
-					case AstrumLang::InstructionSet::SSE4_2:
-						cmd += " /arch:SSE4.2";
-						break;
-					case AstrumLang::InstructionSet::AVX:
-						cmd += " /arch:AVX";
-						break;
-					case AstrumLang::InstructionSet::AVX2:
-						cmd += " /arch:AVX2";
-						break;
-					case AstrumLang::InstructionSet::AVX512:
-						cmd += " /arch:AVX512";
-						break;
-					case AstrumLang::InstructionSet::AVX10_1:
-						cmd += " /arch:AVX10.1";
-						break;
-					case AstrumLang::InstructionSet::AVX10_2:
-						cmd += " /arch:AVX10.2";
-						break;
-					case AstrumLang::InstructionSet::ARM8_0:
-						cmd += " /arch:armv8.0";
-						break;
-					case AstrumLang::InstructionSet::ARM8_1:
-						cmd += " /arch:armv8.1";
-						break;
-					case AstrumLang::InstructionSet::ARM8_2:
-						cmd += " /arch:armv8.2";
-						break;
-					case AstrumLang::InstructionSet::ARM8_3:
-						cmd += " /arch:armv8.3";
-						break;
-					case AstrumLang::InstructionSet::ARM8_4:
-						cmd += " /arch:armv8.4";
-						break;
-					case AstrumLang::InstructionSet::ARM8_5:
-						cmd += " /arch:armv8.5";
-						break;
-					case AstrumLang::InstructionSet::ARM8_6:
-						cmd += " /arch:armv8.6";
-						break;
-					case AstrumLang::InstructionSet::ARM8_7:
-						cmd += " /arch:armv8.7";
-						break;
-					case AstrumLang::InstructionSet::ARM8_8:
-						cmd += " /arch:armv8.8";
-						break;
-					case AstrumLang::InstructionSet::ARM8_9:
-						cmd += " /arch:armv8.9";
-						break;
-					case AstrumLang::InstructionSet::ARM9_0:
-						cmd += " /arch:armv9.0";
-						break;
-					case AstrumLang::InstructionSet::ARM9_1:
-						cmd += " /arch:armv9.1";
-						break;
-					case AstrumLang::InstructionSet::ARM9_2:
-						cmd += " /arch:armv9.2";
-						break;
-					case AstrumLang::InstructionSet::ARM9_3:
-						cmd += " /arch:armv9.3";
-						break;
-					case AstrumLang::InstructionSet::ARM9_4:
-						cmd += " /arch:armv9.4";
-						break;
-					default:
-						break;
-				}
-
-				cmd +=
-				    R"( /GS /Zc:wchar_t /Gm- /Zi /Zc:inline /fp:precise /D ""_CONSOLE"" /D ""_UNICODE"" /D ""UNICODE"" /errorReport:prompt /WX- /Zc:forScope /Gd /std:c++latest /wd4005 /wd4584 /wd4190 /we4297 /we4715 /we26447 /we26815 /we26816 /external:W0 ""libastrumstd.lib"")";
-
-				auto libPaths = CompilerSettings::get().libraryPaths;
-				if (!libPaths.empty()) {
-					cmd += " /link";
-				}
-				for (const auto& path : libPaths) {
-					cmd += " /LIBPATH:";
-					cmd += quotes;
-					cmd += path;
-					cmd += quotes;
-				}
-				for (const std::filesystem::path& lib : CompilerSettings::get().libraries) {
-					cmd += " ";
-					cmd += quotes;
-					cmd += lib.string();
-					cmd += quotes;
-				}
-			}
-
-#ifdef _WIN32
-			bat << cmd;
-			bat.close();
-			cmd = "astrum_build.bat";
-#endif
-
-			int compileResult = std::system(cmd.c_str());
-			if (compileResult != 0) {
-				std::cerr << "Compilation failed with code: " + std::to_string(compileResult);
-				return false;
-			}
-			std::cout << "Build completed\n";
-		}
-
-		// run application
-		if (CompilerSettings::get().runMode) {
-			std::string runCommand = "\"" + exePath + "\"";
-			std::cout << "Running executable..." << std::endl;
-
-			int runResult = std::system(runCommand.c_str());
-			if (runResult != 0) {
-				std::cerr << "Executable exited with code: " << runResult << std::endl;
-			}
-		}
-
 		return true;
+	}
+
+	void Compiler::preparePackages(const std::vector<std::string>& sourceFiles) {
+		std::cout << "Preparing packages\n";
+		std::set<std::filesystem::path> packages;
+		for (std::filesystem::path src : sourceFiles) { packages.insert(src.parent_path()); }
+		for (const auto& package : packages) {
+			auto packageHeader = package / "package.h";
+			std::string oldModules;
+			if (std::filesystem::exists(packageHeader)) {
+				std::ifstream file(packageHeader);
+				std::ostringstream fileContents;
+				if (file.is_open()) {
+					fileContents << file.rdbuf();
+				}
+				oldModules = fileContents.str();
+			}
+
+			std::ostringstream newModules;
+			for (const auto& entry : std::filesystem::directory_iterator(package)) {
+				auto entryPath = entry.path();
+				if (entryPath.extension().string() == ".ast") {
+					entryPath.replace_extension("h");
+					newModules << "#include \"" << entryPath.filename().string() << "\"\n";
+				}
+			}
+
+			if (oldModules != newModules.str()) {
+				std::ofstream file(packageHeader);
+				if (file.is_open()) {
+					file << newModules.str();
+				}
+			}
+		}
 	}
 
 	void Compiler::preprocessDLL() {
