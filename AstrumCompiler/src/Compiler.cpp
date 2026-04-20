@@ -449,15 +449,16 @@ namespace AstrumLang {
 		CppSymbolParser::initializeSystemSymbolTable();
 
 		const auto& sourceFiles = CompilerSettings::get().sourceFiles;
-		if (!sourceFiles.empty())
+		const auto& modifiedFiles = CompilerSettings::get().modifiedFiles;
+		if (!modifiedFiles.empty())
 			std::cout << "The following modules will be compiled:\n";
-		for (const auto& file : sourceFiles) { std::cout << file << std::endl; }
+		for (const auto& file : modifiedFiles) { std::cout << file << std::endl; }
 
 		// preparing package headers
-		preparePackages(sourceFiles);
+		preparePackages(modifiedFiles);
 
 		// codegen
-		if (!generateCpp(sourceFiles))
+		if (!generateCpp(modifiedFiles))
 			return false;
 
 		std::string exePath = CompilerSettings::get().exePath;
@@ -470,7 +471,7 @@ namespace AstrumLang {
 		}
 
 		// cpp build
-		if (!sourceFiles.empty() && CompilerSettings::get().buildMode) {
+		if (!modifiedFiles.empty() && CompilerSettings::get().buildMode) {
 			if (!build(sourceFiles, exePath))
 				return false;
 		}

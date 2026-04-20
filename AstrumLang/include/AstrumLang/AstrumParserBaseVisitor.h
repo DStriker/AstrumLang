@@ -368,6 +368,14 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitCollectionExpression(AstrumParser::CollectionExpressionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitKeyValuePairExpression(AstrumParser::KeyValuePairExpressionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitExpressionList(AstrumParser::ExpressionListContext *ctx) override {
     return visitChildren(ctx);
   }

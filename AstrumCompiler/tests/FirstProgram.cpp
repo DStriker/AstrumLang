@@ -114,12 +114,16 @@ ADV_ENTRY_POINT(MyApp::Main)
 			print(vsum(CppAdvance::i32(1), CppAdvance::i32(2), CppAdvance::i32(3), CppAdvance::i32(4), CppAdvance::i32(5), CppAdvance::i32(6)));
 			#line 110 "FirstProgram.ast"
 			print(ADV_USFCS((IInterface), SomeStaticMethod)(CppAdvance::i32(5)));
-			#line 113 "FirstProgram.ast"
+			#line 111 "FirstProgram.ast"
+			auto ints = std::initializer_list{CppAdvance::i32(0), CppAdvance::i32(2), CppAdvance::i32(4), CppAdvance::i32(6)}; 
+			#line 112 "FirstProgram.ast"
+			auto mapping = std::initializer_list{std::make_pair(CppAdvance::Str{u"key1"}, CppAdvance::i32(1)), std::make_pair(CppAdvance::Str{u"key2"}, CppAdvance::i32(2)), std::make_pair(CppAdvance::Str{u"key3"}, CppAdvance::i32(3))}; 
+			#line 115 "FirstProgram.ast"
 			CppAdvance::Nullable<CppAdvance::ObjectRef> on = vec; 
 		}
-		#line 115 "FirstProgram.ast"
+		#line 117 "FirstProgram.ast"
 		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
-		#line 116 "FirstProgram.ast"
+		#line 118 "FirstProgram.ast"
 		print(ADV_UPCS(x)(ADV_UPCS(x)(ADV_USFCS((Test1::Test2::TestClass), makeTestClass)(CppAdvance::i32(3), CppAdvance::f32(3.14f)).__ref()).__ref()));
 		return 0;
 	}

@@ -1109,6 +1109,11 @@ namespace AstrumLang {
 
 		std::any visitInterpolatedExpression(
 		    AstrumParser::InterpolatedExpressionContext* ctx) override;
+
+		std::any visitCollectionExpression(AstrumParser::CollectionExpressionContext* ctx) override;
+
+		std::any visitKeyValuePairExpression(
+		    AstrumParser::KeyValuePairExpressionContext* ctx) override;
 	};
 
 }  // namespace AstrumLang

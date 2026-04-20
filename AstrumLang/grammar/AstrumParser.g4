@@ -309,6 +309,7 @@ forRangeDeclaration
 forRangeInitializer
     : logicalOrExpression
     | bracedInitList
+    | collectionExpression
     ;
 
 expressionSeq
@@ -316,7 +317,7 @@ expressionSeq
     ;
 
 jumpStatement
-    : (Break Identifier? | Continue Identifier? | Return (expression | bracedInitList)?) Semi
+    : (Break Identifier? | Continue Identifier? | Return (expression | bracedInitList | collectionExpression)?) Semi
     ;
 
 versionSelectionStatement
@@ -465,6 +466,7 @@ assignmentExpression
 initializerClause
     : assignmentExpression Ellipsis?
     | bracedInitList
+    | collectionExpression
     ;
 
 bracedInitList
@@ -479,12 +481,21 @@ initializerPart
     : initializerClause Ellipsis?
     ;
 
+collectionExpression
+    : LeftBracket expression (Comma expression)* RightBracket
+    | LeftBracket keyValuePairExpression (Comma keyValuePairExpression)* RightBracket
+    ;
+
+keyValuePairExpression
+    : expression Colon expression
+    ;
+
 expressionList
     : expressionListPart (Comma expressionListPart)*
     ;
 
 expressionListPart
-    : (Identifier Assign)? (conditionalExpression | bracedInitList) Ellipsis?
+    : (Identifier Assign)? (conditionalExpression | bracedInitList | collectionExpression) Ellipsis?
     | Out Identifier Colon theTypeId
     ;
 

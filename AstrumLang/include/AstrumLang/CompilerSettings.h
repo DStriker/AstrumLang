@@ -43,6 +43,7 @@ namespace AstrumLang {
 
 	   public:
 		std::vector<std::string> sourceFiles;
+		std::vector<std::string> modifiedFiles;
 		std::vector<std::string> includePaths;
 		std::vector<std::string> libraryPaths;
 		std::vector<std::string> libraries;

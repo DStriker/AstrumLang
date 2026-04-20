@@ -2,8 +2,8 @@
 
 #include <ranges>
 
-#include "StringUtils.h"
 #include "CompilerSettings.h"
+#include "StringUtils.h"
 
 #define GET_ELEMENT_AT                                                                             \
 	out << "_parent.getAt(";                                                                       \
@@ -346,7 +346,7 @@ namespace AstrumLang {
 				}
 			}
 		}
-		
+
 		if (firstPass)
 			return;
 
@@ -483,9 +483,9 @@ namespace AstrumLang {
 			       "\n";
 		}
 		for (const auto& var : sema.globalConstants) {
-			//out.switchTo(true);
+			// out.switchTo(true);
 			if ((var.access == AccessSpecifier::Private) == firstPass) {
-				//out.switchTo(false);
+				// out.switchTo(false);
 				continue;
 			}
 			if (!var.compilationCondition.empty()) {
@@ -558,9 +558,9 @@ namespace AstrumLang {
 		}
 		for (const auto& alias : sema.globalTypeAliases) {
 			isUnsafe = alias.isUnsafe;
-			//out.switchTo(true);
+			// out.switchTo(true);
 			if ((alias.access == AccessSpecifier::Private) == firstPass) {
-				//out.switchTo(false);
+				// out.switchTo(false);
 				continue;
 			}
 			if (!alias.compilationCondition.empty()) {
@@ -602,9 +602,9 @@ namespace AstrumLang {
 		}
 		for (const auto& func : sema.globalFunctions) {
 			isMainFunction = func.id == "__Astrum_Main";
-			//out.switchTo(true);
+			// out.switchTo(true);
 			if ((func.access == AccessSpecifier::Private) == firstPass) {
-				//out.switchTo(false);
+				// out.switchTo(false);
 				continue;
 			}
 			if (!func.compilationCondition.empty()) {
@@ -668,8 +668,8 @@ namespace AstrumLang {
 				out << "inline constexpr ";
 			} else if (func.isInline) {
 				out << "inline ";
-			} else if (!CompilerSettings::get().dllName.empty() && func.access != AccessSpecifier::Private &&
-			           !func.templateParams) {
+			} else if (!CompilerSettings::get().dllName.empty() &&
+			           func.access != AccessSpecifier::Private && !func.templateParams) {
 				if (func.access == AccessSpecifier::Public)
 					out << CompilerSettings::get().dllName << "_API ";
 				else
@@ -749,8 +749,8 @@ namespace AstrumLang {
 					out << "inline constexpr ";
 				} else if (func.isInline) {
 					out << "inline ";
-				} else if (!CompilerSettings::get().dllName.empty() && func.access != AccessSpecifier::Private &&
-				           !func.templateParams) {
+				} else if (!CompilerSettings::get().dllName.empty() &&
+				           func.access != AccessSpecifier::Private && !func.templateParams) {
 					if (func.access == AccessSpecifier::Public)
 						out << CompilerSettings::get().dllName << "_API ";
 					else
@@ -1350,7 +1350,8 @@ namespace AstrumLang {
 			}
 			out << "#line " << field.pos.line << " \"" << filename << ".ast\"\n"
 			    << std::string(depth, '\t');
-			bool hasVisibility = !isPrivateStruct && field.isStatic && !CompilerSettings::get().dllName.empty();
+			bool hasVisibility =
+			    !isPrivateStruct && field.isStatic && !CompilerSettings::get().dllName.empty();
 			switch (field.access) {
 				case AccessSpecifier::Public:
 					out << "public: ";
@@ -2254,7 +2255,8 @@ namespace AstrumLang {
 					out << "inline constexpr ";
 				} else if (isInline) {
 					out << "inline ";
-				} else if (!CompilerSettings::get().dllName.empty() && !type->templateParams && !prop.isAbstract) {
+				} else if (!CompilerSettings::get().dllName.empty() && !type->templateParams &&
+				           !prop.isAbstract) {
 					if (setAccess == AccessSpecifier::Public ||
 					    setAccess == AccessSpecifier::Protected ||
 					    setAccess == AccessSpecifier::Private)
@@ -2369,7 +2371,8 @@ namespace AstrumLang {
 					out << "inline constexpr ";
 				} else if (isInline) {
 					out << "inline ";
-				} else if (!CompilerSettings::get().dllName.empty() && !type->templateParams && !prop.isAbstract) {
+				} else if (!CompilerSettings::get().dllName.empty() && !type->templateParams &&
+				           !prop.isAbstract) {
 					if (getAccess == AccessSpecifier::Public ||
 					    getAccess == AccessSpecifier::Protected ||
 					    getAccess == AccessSpecifier::Private)
@@ -2427,7 +2430,8 @@ namespace AstrumLang {
 					out << "inline constexpr ";
 				} else if (prop.isInline) {
 					out << "inline ";
-				} else if (!CompilerSettings::get().dllName.empty() && !type->templateParams && !prop.isAbstract) {
+				} else if (!CompilerSettings::get().dllName.empty() && !type->templateParams &&
+				           !prop.isAbstract) {
 					if (prop.access == AccessSpecifier::Public ||
 					    prop.access == AccessSpecifier::Protected ||
 					    prop.access == AccessSpecifier::Private)
@@ -2965,7 +2969,8 @@ namespace AstrumLang {
 					out << "inline constexpr ";
 				} else if (isInline) {
 					out << "inline ";
-				} else if (!CompilerSettings::get().dllName.empty() && !func.templateParams && !type->templateParams) {
+				} else if (!CompilerSettings::get().dllName.empty() && !func.templateParams &&
+				           !type->templateParams) {
 					if (func.access == AccessSpecifier::Public ||
 					    func.access == AccessSpecifier::Protected ||
 					    func.access == AccessSpecifier::Private)
@@ -3110,7 +3115,8 @@ namespace AstrumLang {
 				out << "inline constexpr ";
 			} else if (func.isInline || func.indexerSetter) {
 				out << "inline ";
-			} else if (!CompilerSettings::get().dllName.empty() && !func.templateParams && !func.isAbstract) {
+			} else if (!CompilerSettings::get().dllName.empty() && !func.templateParams &&
+			           !func.isAbstract) {
 				if (func.access == AccessSpecifier::Public ||
 				    func.access == AccessSpecifier::Protected ||
 				    func.access == AccessSpecifier::Private)
@@ -8440,7 +8446,8 @@ namespace AstrumLang {
 					out << "inline constexpr ";
 				} else if (isInline) {
 					out << "inline ";
-				} else if (!CompilerSettings::get().dllName.empty() && !func.templateParams && !type->templateParams) {
+				} else if (!CompilerSettings::get().dllName.empty() && !func.templateParams &&
+				           !type->templateParams) {
 					if (func.access == AccessSpecifier::Public ||
 					    func.access == AccessSpecifier::Protected ||
 					    func.access == AccessSpecifier::Private)
@@ -8636,7 +8643,8 @@ namespace AstrumLang {
 				out << "inline constexpr ";
 			} else if (func.isInline) {
 				out << "inline ";
-			} else if (!CompilerSettings::get().dllName.empty() && !func.templateParams && !type->templateParams) {
+			} else if (!CompilerSettings::get().dllName.empty() && !func.templateParams &&
+			           !type->templateParams) {
 				if (func.access == AccessSpecifier::Public ||
 				    func.access == AccessSpecifier::Protected ||
 				    func.access == AccessSpecifier::Private)
@@ -9099,7 +9107,7 @@ namespace AstrumLang {
 			       "\n";
 		}
 		for (const auto& type : sema.globalStructs) {
-			//out.switchTo(true);
+			// out.switchTo(true);
 			isPrivateStruct = type->access == AccessSpecifier::Private;
 			if (isPrivateStruct == firstPass) {
 				continue;
@@ -9461,9 +9469,9 @@ namespace AstrumLang {
 		}
 		isUnsafe = false;
 		for (const auto& [id, tuple] : sema.namedTuples) {
-			//out.switchTo(true);
+			// out.switchTo(true);
 			if ((tuple.access == AccessSpecifier::Private) == firstPass) {
-				//out.switchTo(false);
+				// out.switchTo(false);
 				continue;
 			}
 			if (tuple.access == AccessSpecifier::Protected) {
@@ -11703,11 +11711,9 @@ namespace AstrumLang {
 			std::string name = ctx->moduleName()->getText();
 			StringReplace(name, ".", "/");
 			out << name;
-			if (auto found = CompilerSettings::findFileInIncludePaths(name, sema.filenamePath))
-			{
+			if (auto found = CompilerSettings::findFileInIncludePaths(name, sema.filenamePath)) {
 				std::filesystem::path packagePath = *found;
-				if (packagePath.filename().string() == "package.h")
-				{
+				if (packagePath.filename().string() == "package.h") {
 					isPackage = true;
 					out << "/package";
 				}
@@ -12146,8 +12152,7 @@ namespace AstrumLang {
 		}
 	}
 
-	void AstrumCodegen::printDeclarationStatement(
-	    AstrumParser::DeclarationStatementContext* ctx) {
+	void AstrumCodegen::printDeclarationStatement(AstrumParser::DeclarationStatementContext* ctx) {
 		if (auto block = ctx->blockDeclaration()) {
 			printBlockDeclaration(block);
 		} else if (auto ext = ctx->externVariableDeclaration()) {
@@ -12304,16 +12309,14 @@ namespace AstrumLang {
 		}
 	}
 
-	void AstrumCodegen::printExpressionStatement(
-	    AstrumParser::ExpressionStatementContext* ctx) {
+	void AstrumCodegen::printExpressionStatement(AstrumParser::ExpressionStatementContext* ctx) {
 		if (auto expr = ctx->expression()) {
 			printExpression(expr);
 		}
 		out << ";";
 	}
 
-	void AstrumCodegen::printSelectionStatement(
-	    AstrumParser::SelectionStatementContext* ctx) {
+	void AstrumCodegen::printSelectionStatement(AstrumParser::SelectionStatementContext* ctx) {
 		currentIf = ctx;
 		if (ctx->If()) {
 			std::vector<AstrumParser::RelationalExpressionContext*> prerequisites;
@@ -12584,8 +12587,7 @@ namespace AstrumLang {
 		out << "\n" << std::string(depth, '\t');
 	}
 
-	void AstrumCodegen::printIterationStatement(
-	    AstrumParser::IterationStatementContext* ctx) {
+	void AstrumCodegen::printIterationStatement(AstrumParser::IterationStatementContext* ctx) {
 		auto prevLabel = currentLabel;
 		currentLabel.clear();
 		if (ctx->Do()) {
@@ -12655,8 +12657,10 @@ namespace AstrumLang {
 				auto coll = ctx->forRangeInitializer();
 				if (auto expr = coll->logicalOrExpression()) {
 					printLogicalOrExpression(expr);
-				} else {
+				} else if (auto expr = coll->bracedInitList()) {
 					printBracedInitList(coll->bracedInitList());
+				} else {
+					printCollectionExpression(coll->collectionExpression());
 				}
 				out << ") ";
 			} else if (auto init = ctx->forInitStatement()) {
@@ -12760,6 +12764,8 @@ namespace AstrumLang {
 				printExpression(expr);
 			} else if (auto init = ctx->bracedInitList()) {
 				printBracedInitList(init);
+			} else if (auto coll = ctx->collectionExpression()) {
+				printCollectionExpression(coll);
 			} else if (!namedReturns.empty()) {
 				if (namedReturns.size() == 1) {
 					out << namedReturns.begin()->first;
@@ -12832,8 +12838,7 @@ namespace AstrumLang {
 		}
 	}
 
-	void AstrumCodegen::printInlineCppStatement(
-	    AstrumParser::InlineCppStatementContext* ctx) {
+	void AstrumCodegen::printInlineCppStatement(AstrumParser::InlineCppStatementContext* ctx) {
 		auto src = ctx->StringLiteral()->getText();
 		int i    = 0;
 		while (src[i] == '"' || src[i] == '\'' || src[i] == '`') { i++; }
@@ -13480,8 +13485,7 @@ namespace AstrumLang {
 		}
 	}
 
-	void AstrumCodegen::printEnumClassDefinition(
-	    AstrumParser::EnumClassDefinitionContext* ctx) {
+	void AstrumCodegen::printEnumClassDefinition(AstrumParser::EnumClassDefinitionContext* ctx) {
 		if (isStructDeclaration || functionBody)
 			return;
 
@@ -13510,8 +13514,7 @@ namespace AstrumLang {
 		}
 	}
 
-	void AstrumCodegen::printAttributeSpecifier(
-	    AstrumParser::AttributeSpecifierContext* ctx) {
+	void AstrumCodegen::printAttributeSpecifier(AstrumParser::AttributeSpecifierContext* ctx) {
 		out << "[[clang::annotate(\"UserAttr: ";
 		if (ctx->nestedNameSpecifier()) {
 			printNestedNameSpecifier(ctx->nestedNameSpecifier());
@@ -13530,12 +13533,9 @@ namespace AstrumLang {
 		out << ")";
 	}
 
-	void AstrumCodegen::printOperator(AstrumParser::OperatorContext* ctx) {
-		out << ctx->getText();
-	}
+	void AstrumCodegen::printOperator(AstrumParser::OperatorContext* ctx) { out << ctx->getText(); }
 
-	void AstrumCodegen::printOperatorTemplateId(
-	    AstrumParser::OperatorTemplateIdContext* ctx) {
+	void AstrumCodegen::printOperatorTemplateId(AstrumParser::OperatorTemplateIdContext* ctx) {
 		printOperatorFunctionId(ctx->operatorFunctionId());
 		out << "<";
 		if (auto args = ctx->templateArgumentList()) {
@@ -13544,8 +13544,7 @@ namespace AstrumLang {
 		out << ">";
 	}
 
-	void AstrumCodegen::printOperatorFunctionId(
-	    AstrumParser::OperatorFunctionIdContext* ctx) {
+	void AstrumCodegen::printOperatorFunctionId(AstrumParser::OperatorFunctionIdContext* ctx) {
 		auto op = ctx->operator_();
 		if (op->In()) {
 			out << "_operator_in";
@@ -13561,14 +13560,12 @@ namespace AstrumLang {
 		}
 	}
 
-	void AstrumCodegen::printConversionFunctionId(
-	    AstrumParser::ConversionFunctionIdContext* ctx) {
+	void AstrumCodegen::printConversionFunctionId(AstrumParser::ConversionFunctionIdContext* ctx) {
 		out << "operator ";
 		printTypeId(ctx->theTypeId());
 	}
 
-	void AstrumCodegen::printTemplateArgumentList(
-	    AstrumParser::TemplateArgumentListContext* ctx) {
+	void AstrumCodegen::printTemplateArgumentList(AstrumParser::TemplateArgumentListContext* ctx) {
 		bool first = true;
 		for (auto arg : ctx->templateArgument()) {
 			if (!first)
@@ -14064,8 +14061,7 @@ namespace AstrumLang {
 		}
 	}
 
-	void AstrumCodegen::printConversionFunction(
-	    AstrumParser::ConversionFunctionContext* ctx) {
+	void AstrumCodegen::printConversionFunction(AstrumParser::ConversionFunctionContext* ctx) {
 		sema.symbolContexts.push(sema.symbolContexts.top());
 		bool prevUnsafe    = isUnsafe;
 		SourcePosition pos = {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()};
@@ -15555,8 +15551,7 @@ namespace AstrumLang {
 		out << ";";
 	}
 
-	void AstrumCodegen::printFunctionDefinition(
-	    AstrumParser::FunctionDefinitionContext* ctx) {
+	void AstrumCodegen::printFunctionDefinition(AstrumParser::FunctionDefinitionContext* ctx) {
 		sema.symbolContexts.push(sema.symbolContexts.top());
 		auto pfunc =
 		    std::find_if(sema.globalFunctions.begin(), sema.globalFunctions.end(), [&](auto f) {
@@ -16623,8 +16618,7 @@ namespace AstrumLang {
 		out << ";";
 	}
 
-	void AstrumCodegen::printSimpleTypeSpecifier(
-	    AstrumParser::SimpleTypeSpecifierContext* ctx) {
+	void AstrumCodegen::printSimpleTypeSpecifier(AstrumParser::SimpleTypeSpecifierContext* ctx) {
 		if (isNewDeleteOperator) {
 			if (ctx->Usize())
 				out << "size_t";
@@ -16827,8 +16821,7 @@ namespace AstrumLang {
 		currentDeclarationName.clear();
 	}
 
-	void AstrumCodegen::printMemberRefDeclaration(
-	    AstrumParser::MemberRefDeclarationContext* ctx) {
+	void AstrumCodegen::printMemberRefDeclaration(AstrumParser::MemberRefDeclarationContext* ctx) {
 		auto id      = ctx->Identifier()->getText();
 		bool isConst = ctx->Const() || ctx->Let();
 		if (isConst)
@@ -16880,8 +16873,7 @@ namespace AstrumLang {
 		currentDeclarationName.clear();
 	}
 
-	void AstrumCodegen::printConstantDeclaration(
-	    AstrumParser::ConstantDeclarationContext* ctx) {
+	void AstrumCodegen::printConstantDeclaration(AstrumParser::ConstantDeclarationContext* ctx) {
 		if (functionBody) {
 			out << "constexpr ";
 			bool isArray = false;
@@ -16961,8 +16953,7 @@ namespace AstrumLang {
 		out << ");";
 	}
 
-	void AstrumCodegen::printUnitTestDeclaration(
-	    AstrumParser::UnitTestDeclarationContext* ctx) {
+	void AstrumCodegen::printUnitTestDeclaration(AstrumParser::UnitTestDeclarationContext* ctx) {
 		if (!CompilerSettings::get().unitTestMode)
 			return;
 		isUnitTestBody = true;
@@ -16990,8 +16981,7 @@ namespace AstrumLang {
 		printAssignmentExpression(ctx->assignmentExpression());
 	}
 
-	void AstrumCodegen::printAssignmentExpression(
-	    AstrumParser::AssignmentExpressionContext* ctx) {
+	void AstrumCodegen::printAssignmentExpression(AstrumParser::AssignmentExpressionContext* ctx) {
 		if (ctx->assignmentOperator()) {
 			currentAssignment = ctx;
 		}
@@ -17058,8 +17048,7 @@ namespace AstrumLang {
 		currentAssignment = nullptr;
 	}
 
-	void AstrumCodegen::printAssignmentOperator(
-	    AstrumParser::AssignmentOperatorContext* ctx) {
+	void AstrumCodegen::printAssignmentOperator(AstrumParser::AssignmentOperatorContext* ctx) {
 		if (ctx->Assign()) {
 			out << " = ";
 		} else if (ctx->PlusAssign()) {
@@ -17092,6 +17081,8 @@ namespace AstrumLang {
 			printAssignmentExpression(expr);
 		} else if (auto init = ctx->bracedInitList()) {
 			printBracedInitList(init);
+		} else if (auto coll = ctx->collectionExpression()) {
+			printCollectionExpression(coll);
 		}
 		if (ctx->Ellipsis()) {
 			out << "...";
@@ -17127,6 +17118,34 @@ namespace AstrumLang {
 			out << "...";
 	}
 
+	void AstrumCodegen::printCollectionExpression(AstrumParser::CollectionExpressionContext* ctx) {
+		bool first = true;
+		int i      = 0;
+		out << "std::initializer_list{";
+		for (auto part : ctx->expression()) {
+			if (!first)
+				out << ", ";
+			first = false;
+			printExpression(part);
+		}
+		for (auto part : ctx->keyValuePairExpression()) {
+			if (!first)
+				out << ", ";
+			first = false;
+			printKeyValuePairExpression(part);
+		}
+		out << "}";
+	}
+
+	void AstrumCodegen::printKeyValuePairExpression(
+	    AstrumParser::KeyValuePairExpressionContext* ctx) {
+		out << "std::make_pair(";
+		printExpression(ctx->expression(0));
+		out << ", ";
+		printExpression(ctx->expression(1));
+		out << ")";
+	}
+
 	void AstrumCodegen::printThrowExpression(AstrumParser::ThrowExpressionContext* ctx) {
 		if (auto expr = ctx->assignmentExpression()) {
 			out << "CppAdvance::Throw(";
@@ -17152,12 +17171,13 @@ namespace AstrumLang {
 			out << "}";
 	}
 
-	void AstrumCodegen::printExpressionListPart(
-	    AstrumParser::ExpressionListPartContext* ctx) {
+	void AstrumCodegen::printExpressionListPart(AstrumParser::ExpressionListPartContext* ctx) {
 		if (auto expr = ctx->conditionalExpression()) {
 			printConditionalExpression(expr);
 		} else if (auto init = ctx->bracedInitList()) {
 			printBracedInitList(init);
+		} else if (auto coll = ctx->collectionExpression()) {
+			printCollectionExpression(coll);
 		} else if (ctx->Out()) {
 			auto id = ctx->Identifier()->getText();
 			out << "CppAdvance::Out(&";
@@ -17180,8 +17200,7 @@ namespace AstrumLang {
 		}
 	}
 
-	void AstrumCodegen::printConstantExpression(
-	    AstrumParser::ConstantExpressionContext* ctx) {
+	void AstrumCodegen::printConstantExpression(AstrumParser::ConstantExpressionContext* ctx) {
 		printConditionalExpression(ctx->conditionalExpression());
 	}
 
@@ -17227,8 +17246,7 @@ namespace AstrumLang {
 		for (int i = 0; i < expressions.size(); ++i) { out << "; })"; }
 	}
 
-	void AstrumCodegen::printLogicalOrExpression(
-	    AstrumParser::LogicalOrExpressionContext* ctx) {
+	void AstrumCodegen::printLogicalOrExpression(AstrumParser::LogicalOrExpressionContext* ctx) {
 		bool first = true;
 		for (auto andExpr : ctx->logicalAndExpression()) {
 			if (!first)
@@ -17238,8 +17256,7 @@ namespace AstrumLang {
 		}
 	}
 
-	void AstrumCodegen::printLogicalAndExpression(
-	    AstrumParser::LogicalAndExpressionContext* ctx) {
+	void AstrumCodegen::printLogicalAndExpression(AstrumParser::LogicalAndExpressionContext* ctx) {
 		bool first = true;
 		for (auto expr : ctx->inclusiveOrExpression()) {
 			if (!first)
@@ -17308,8 +17325,7 @@ namespace AstrumLang {
 		}
 	}
 
-	void AstrumCodegen::printEqualityExpression(
-	    AstrumParser::EqualityExpressionContext* ctx) {
+	void AstrumCodegen::printEqualityExpression(AstrumParser::EqualityExpressionContext* ctx) {
 		if (ctx->relationalExpression()) {
 			printRelationalExpression(ctx->relationalExpression());
 		} else if (!ctx->theTypeId().empty()) {
@@ -17360,8 +17376,7 @@ namespace AstrumLang {
 		currentEquality = nullptr;
 	}
 
-	void AstrumCodegen::printRelationalExpression(
-	    AstrumParser::RelationalExpressionContext* ctx) {
+	void AstrumCodegen::printRelationalExpression(AstrumParser::RelationalExpressionContext* ctx) {
 		if (ctx->threeWayComparisonExpression()) {
 			if (ctx->As()) {
 				out << "CppAdvance::Cast<";
@@ -17774,8 +17789,7 @@ namespace AstrumLang {
 		}
 	}
 
-	void AstrumCodegen::printAdditiveExpression(
-	    AstrumParser::AdditiveExpressionContext* ctx) {
+	void AstrumCodegen::printAdditiveExpression(AstrumParser::AdditiveExpressionContext* ctx) {
 		if (ctx->multiplicativeExpression()) {
 			printMultiplicativeExpression(ctx->multiplicativeExpression());
 		} else if (ctx->Plus()) {
@@ -18115,8 +18129,7 @@ namespace AstrumLang {
 		literalMinus = false;
 	}
 
-	void AstrumCodegen::printUnaryExpressionTail(
-	    AstrumParser::UnaryExpressionTailContext* ctx) {
+	void AstrumCodegen::printUnaryExpressionTail(AstrumParser::UnaryExpressionTailContext* ctx) {
 		if (auto postfix = ctx->fullPostfixExpression()) {
 			printFullPostfixExpression(postfix);
 		} else if (ctx->Sizeof()) {
@@ -18159,8 +18172,7 @@ namespace AstrumLang {
 		out << ")";
 	}
 
-	void AstrumCodegen::printStackallocExpression(
-	    AstrumParser::StackallocExpressionContext* ctx) {
+	void AstrumCodegen::printStackallocExpression(AstrumParser::StackallocExpressionContext* ctx) {
 		out << GetStackObjectVarName(ctx->theTypeId());
 	}
 
@@ -19147,8 +19159,7 @@ namespace AstrumLang {
 		}
 	}
 
-	void AstrumCodegen::printNestedNameSpecifier(
-	    AstrumParser::NestedNameSpecifierContext* ctx) {
+	void AstrumCodegen::printNestedNameSpecifier(AstrumParser::NestedNameSpecifierContext* ctx) {
 		if (auto nested = ctx->nestedNameSpecifier()) {
 			printNestedNameSpecifier(nested);
 			if (auto tid = ctx->simpleTemplateId()) {

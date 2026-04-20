@@ -88,7 +88,9 @@ namespace AstrumLang {
 		for (auto listener : errorListeners) { listener->semanticError(this, msg, token); }
 	}
 
-	bool AstrumSema::checkForCurrentPass() { return (firstPass != (functionBody > 0)) || propertyBody; }
+	bool AstrumSema::checkForCurrentPass() {
+		return (firstPass != (functionBody > 0)) || propertyBody;
+	}
 
 	std::optional<AccessSpecifier> AstrumSema::resolveAccessSpecifier(
 	    AstrumParser::AccessSpecifierContext* acc, bool isProtectedInternal) {
@@ -5013,8 +5015,8 @@ namespace AstrumLang {
 
 		visitChildren(ctx);
 
-		propertyBody  = false;
-		isRefProperty = false;
+		propertyBody       = false;
+		isRefProperty      = false;
 		isAbstractProperty = false;
 		if (firstPass != functionBody > 0) {
 			std::string funcname;
@@ -7931,6 +7933,19 @@ namespace AstrumLang {
 	std::any AstrumSema::visitInterpolatedExpression(
 	    AstrumParser::InterpolatedExpressionContext* ctx) {
 		return visitChildren(ctx);
+	}
+
+	std::any AstrumSema::visitCollectionExpression(AstrumParser::CollectionExpressionContext* ctx) {
+		visitChildren(ctx);
+		typeStack.push("std.initializer_list");
+		return 0;
+	}
+
+	std::any AstrumSema::visitKeyValuePairExpression(
+	    AstrumParser::KeyValuePairExpressionContext* ctx) {
+		visitChildren(ctx);
+		typeStack.push("std.pair");
+		return 0;
 	}
 
 }  // namespace AstrumLang

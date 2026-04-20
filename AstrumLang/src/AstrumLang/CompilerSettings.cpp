@@ -129,10 +129,11 @@ namespace AstrumLang {
 					headerPath.replace_extension("h");
 					cppPath.replace_extension("cpp");
 					auto lastAstrumTime = fs::last_write_time(srcPath);
+					get().sourceFiles.emplace_back(src);
 					if (!fs::exists(headerPath) || !fs::exists(cppPath) ||
 					    fs::last_write_time(headerPath) < lastAstrumTime ||
 					    fs::last_write_time(cppPath) < lastAstrumTime) {
-						get().sourceFiles.emplace_back(src);
+						get().modifiedFiles.emplace_back(src);
 					}
 				} else {
 					std::runtime_error("Unknown parameter: " + str);

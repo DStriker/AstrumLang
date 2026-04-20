@@ -243,6 +243,8 @@ namespace AstrumLang {
 		void printBracedInitList(AstrumParser::BracedInitListContext* ctx);
 		void printInitializerList(AstrumParser::InitializerListContext* ctx);
 		void printInitializerPart(AstrumParser::InitializerPartContext* ctx);
+		void printCollectionExpression(AstrumParser::CollectionExpressionContext* ctx);
+		void printKeyValuePairExpression(AstrumParser::KeyValuePairExpressionContext* ctx);
 		void printThrowExpression(AstrumParser::ThrowExpressionContext* ctx);
 		void printExpressionList(AstrumParser::ExpressionListContext* ctx);
 		void printExpressionListPart(AstrumParser::ExpressionListPartContext* ctx);
