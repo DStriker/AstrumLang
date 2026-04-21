@@ -18350,6 +18350,9 @@ namespace AstrumLang {
 		} else if (ctx->Sizeof()) {
 			out << "CppAdvance::usize(sizeof ";
 			paren = true;
+		} else if (ctx->Nameof()) {
+			out << "CppAdvance::Str(ASTRUM_NAMEOF(";
+			paren = true;
 		} else if (ctx->refCaptureOperator()) {
 			out << "CppAdvance::MutableRef<std::remove_cvref_t<decltype(";
 			printUnaryExpressionTail(ctx->unaryExpressionTail());
@@ -18371,6 +18374,8 @@ namespace AstrumLang {
 		if (!lvalue && sema.optionalChains.contains(ctx)) {
 			for (int i = 0; i < sema.optionalChains[ctx]; ++i) { out << "); })"; }
 		}
+		if (ctx->Nameof())
+			out << ")";
 		if (paren)
 			out << ")";
 		isOutExpression = false;
@@ -18402,6 +18407,21 @@ namespace AstrumLang {
 				out << ")";
 			}
 			out << ")";
+		} else if (ctx->Nameof()) {
+			out << "CppAdvance::Str(ASTRUM_NAMEOF(";
+			if (ctx->theTypeId())
+				printTypeId(ctx->theTypeId());
+			if (ctx->expression())
+				printExpression(ctx->expression());
+			out << "))";
+		} else if (ctx->Offsetof()) {
+			out << "CppAdvance::usize(offsetof(";
+			if (ctx->theTypeId())
+				printTypeId(ctx->theTypeId());
+			out << ", ";
+			if (ctx->Identifier())
+				printIdentifier(ctx->Identifier());
+			out << "))";
 		}
 	}
 

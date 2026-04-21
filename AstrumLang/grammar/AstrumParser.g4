@@ -528,6 +528,7 @@ unaryExpression
         | MinusMinus
         | unaryCustomOperator
         | Sizeof
+        | Nameof
     )? unaryExpressionTail
     ;
 
@@ -535,6 +536,8 @@ unaryExpressionTail
     : fullPostfixExpression
     | Sizeof (LeftParen theTypeId RightParen | Ellipsis LeftParen Identifier RightParen)
     | Alignof LeftParen theTypeId RightParen
+    | Nameof LeftParen (theTypeId | expression) RightParen
+    | Offsetof LeftParen theTypeId Comma Identifier RightParen
     ;
 
 newExpression

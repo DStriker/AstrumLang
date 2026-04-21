@@ -195,6 +195,8 @@ Move: 'move';
 
 Mutable: 'mut';
 
+Nameof: 'nameof';
+
 New: 'new';
 
 Noexcept: 'noexcept';
@@ -202,6 +204,8 @@ Noexcept: 'noexcept';
 Null: 'null';
 
 Object: 'object';
+
+Offsetof: 'offsetof';
 
 Operator_: 'operator';
 

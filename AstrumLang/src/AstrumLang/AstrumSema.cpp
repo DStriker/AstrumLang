@@ -2565,8 +2565,10 @@ namespace AstrumLang {
 			literalMinus    = false;
 			isOutExpression = false;
 			if (ctx->Sizeof() || ctx->unaryExpressionTail()->Sizeof() ||
-			    ctx->unaryExpressionTail()->Alignof()) {
+			    ctx->unaryExpressionTail()->Alignof() || ctx->unaryExpressionTail()->Offsetof()) {
 				typeStack.push("usize");
+			} else if (ctx->Nameof() || ctx->unaryExpressionTail()->Nameof()) {
+				typeStack.push("Str");
 			} else if (ctx->unaryCustomOperator()) {
 				tryToAddTypeInStackFromOperator(ctx->unaryCustomOperator()->getText());
 			}
