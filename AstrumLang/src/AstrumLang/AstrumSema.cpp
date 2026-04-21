@@ -7948,4 +7948,177 @@ namespace AstrumLang {
 		return 0;
 	}
 
+	std::any AstrumSema::visitStaticConstructor(AstrumParser::StaticConstructorContext* ctx) {
+		symbolContexts.push(symbolContexts.top());
+		bool isInline    = false;
+		bool isConstexpr = false;
+
+		if (firstPass && !functionBody) {
+			if (structStack.top()->staticConstructor.has_value())
+				notifyErrorListeners("Type can have only one static constructor.",
+				                     ctx->Static()->getSymbol());
+
+			if (auto body = ctx->functionBody()) {
+				if (body->Assign())
+					isInline = true;
+				else if (body->Equal())
+					isConstexpr = true;
+			} else if (auto body = ctx->shortFunctionBody()) {
+				if (body->AssignArrow())
+					isInline = true;
+				else if (body->EqualArrow())
+					isConstexpr = true;
+			}
+
+			if (isConstexpr)
+				structStack.top()->isConstexpr = true;
+
+			std::string id = structStack.top()->id;
+			if (currentTypeKind.top() == TypeKind::Class ||
+			    currentTypeKind.top() == TypeKind::EnumClass)
+				id = "__Class_" + id;
+
+			auto lastTparams     = getLastTypeTemplateParams();
+			auto lastSpec        = getLastTypeTemplateSpecializationArgs();
+			auto lastConstraints = getLastTypeConstraints();
+			auto fullType        = getCurrentFullTypeName();
+			auto def             = MethodDefinition {
+                id,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
+                AccessSpecifier::Private,
+                getCurrentCompilationCondition(),
+                isInline || isConstexpr,
+                isConstexpr,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                -1,
+                currentType,
+                fullType,
+                lastTparams,
+                lastSpec,
+                lastConstraints,
+                nullptr,
+                isProtectedTypeDefinition,
+                isUnsafeTypeDefinition,
+                false,
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                true};
+			structStack.top()->staticConstructor = def;
+			methods.insert_or_assign(SourcePosition {ctx->getStart()->getLine(),
+			                                         ctx->getStart()->getCharPositionInLine()},
+			                         def);
+		}
+
+		visitChildren(ctx);
+
+		outParams.clear();
+		symbolContexts.pop();
+
+		return 0;
+	}
+
+	std::any AstrumSema::visitStaticDestructor(AstrumParser::StaticDestructorContext* ctx) {
+		symbolContexts.push(symbolContexts.top());
+		bool isInline    = false;
+		bool isConstexpr = false;
+
+		if (firstPass && !functionBody) {
+			if (structStack.top()->staticDestructor.has_value())
+				notifyErrorListeners("Type can have only one static destructor.",
+				                     ctx->Static()->getSymbol());
+
+			if (auto body = ctx->functionBody()) {
+				if (body->Assign())
+					isInline = true;
+				else if (body->Equal())
+					isConstexpr = true;
+			} else if (auto body = ctx->shortFunctionBody()) {
+				if (body->AssignArrow())
+					isInline = true;
+				else if (body->EqualArrow())
+					isConstexpr = true;
+			}
+
+			if (isConstexpr)
+				structStack.top()->isConstexpr = true;
+
+			std::string id = "~" + structStack.top()->id;
+			if (currentTypeKind.top() == TypeKind::Class ||
+			    currentTypeKind.top() == TypeKind::EnumClass)
+				id = "__Class_" + id;
+
+			auto lastTparams     = getLastTypeTemplateParams();
+			auto lastSpec        = getLastTypeTemplateSpecializationArgs();
+			auto lastConstraints = getLastTypeConstraints();
+			auto fullType        = getCurrentFullTypeName();
+			auto def             = MethodDefinition {
+                id,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                nullptr,
+                {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
+                AccessSpecifier::Private,
+                getCurrentCompilationCondition(),
+                isInline || isConstexpr,
+                isConstexpr,
+                false,
+                false,
+                false,
+                false,
+                false,
+                false,
+                -1,
+                currentType,
+                fullType,
+                lastTparams,
+                lastSpec,
+                lastConstraints,
+                nullptr,
+                isProtectedTypeDefinition,
+                isUnsafeTypeDefinition,
+                false,
+                true,
+                true,
+                false,
+                false,
+                false,
+                false,
+                false,
+                true};
+			structStack.top()->staticDestructor = def;
+			methods.insert_or_assign(SourcePosition {ctx->getStart()->getLine(),
+			                                         ctx->getStart()->getCharPositionInLine()},
+			                         def);
+		}
+
+		visitChildren(ctx);
+
+		outParams.clear();
+		symbolContexts.pop();
+
+		return 0;
+	}
+
 }  // namespace AstrumLang

@@ -220,6 +220,8 @@ namespace AstrumLang {
 		std::vector<FunctionDeclaration> friendFuncDeclarations;
 		std::vector<FunctionDefinition> friendFuncDefinitions;
 		std::vector<StaticAssert> staticAsserts;
+		std::optional<MethodDefinition> staticConstructor;
+		std::optional<MethodDefinition> staticDestructor;
 
 		bool isUnsafe                                          = false;
 		bool isAbstract                                        = false;
@@ -1114,6 +1116,10 @@ namespace AstrumLang {
 
 		std::any visitKeyValuePairExpression(
 		    AstrumParser::KeyValuePairExpressionContext* ctx) override;
+
+		std::any visitStaticConstructor(AstrumParser::StaticConstructorContext* ctx) override;
+
+		std::any visitStaticDestructor(AstrumParser::StaticDestructorContext* ctx) override;
 	};
 
 }  // namespace AstrumLang

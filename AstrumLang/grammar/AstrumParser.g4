@@ -889,6 +889,8 @@ structMemberDeclaration
     | friendDeclaration
     | externMethodDeclaration
     | destructor
+    | staticConstructor
+    | staticDestructor
     ;
 
 // classes
@@ -923,6 +925,8 @@ interfaceMemberDeclaration
     | constantDeclaration
     | aliasDeclaration
     | associatedTypeDeclaration
+    | staticConstructor
+    | staticDestructor
     ;
 
 associatedTypeDeclaration
@@ -1217,10 +1221,18 @@ implicitSpecification
     : Implicit (LeftParen constantExpression RightParen)?
     ;
 
+staticConstructor
+    : Static (functionBody | shortFunctionBody)
+    ;
+
 // destructor
 
 destructor
     : Inline? Tilde This exceptionSpecification? (functionBody | shortFunctionBody)
+    ;
+
+staticDestructor
+    : Tilde Static (functionBody | shortFunctionBody)
     ;
 
 // conversion operators

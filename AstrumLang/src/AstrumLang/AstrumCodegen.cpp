@@ -460,6 +460,47 @@ namespace AstrumLang {
 			out << "\n" << std::string(depth, '\t');
 
 			printEnumClassData(type.get());
+			out << "\n" << std::string(depth, '\t');
+			if (type->staticConstructor.has_value() || type->staticDestructor.has_value())
+			{
+				auto func = type->staticConstructor.has_value() ? *type->staticConstructor
+				                                                : *type->staticDestructor;
+				if (func.parentTemplateParams) {
+					printTemplateParams(func.parentTemplateParams);
+					out << " ";
+					if (func.parentConstraints) {
+						printConstraintClause(func.parentConstraints);
+						out << " ";
+					}
+				} else if (func.parentTemplateSpecializationArgs) {
+					out << "template<> ";
+				}
+
+				auto parent = func.parentType;
+				StringReplace(parent, ".", "::");
+				StringReplace(parent, "::::::", "...");
+				auto pos = parent.find("<{{specialization}}>");
+				if (pos != parent.npos) {
+					out << parent.substr(0, pos);
+					out << "<";
+					printTemplateArgumentList(func.parentTemplateSpecializationArgs);
+					out << ">";
+					out << parent.substr(pos + 20);
+				} else {
+					out << parent;
+				}
+                out << "::__sctor ";
+				if (pos != parent.npos) {
+					out << parent.substr(0, pos);
+					out << "<";
+					printTemplateArgumentList(func.parentTemplateSpecializationArgs);
+					out << ">";
+					out << parent.substr(pos + 20);
+				} else {
+					out << parent;
+				}
+				out << "::__sctor::instance;\n" << std::string(depth, '\t');
+			}
 
 			if (type->access == AccessSpecifier::Protected || isUnsafe)
 				out << " }";
@@ -1477,6 +1518,37 @@ namespace AstrumLang {
 			if (!field.compilationCondition.empty()) {
 				out << "#endif " << std::endl << std::string(depth, '\t');
 			}
+		}
+		if (type->staticConstructor.has_value() || type->staticDestructor.has_value())
+		{
+			out << "private: class __sctor {\n" << std::string(++depth, '\t');
+			out << "static __sctor instance;\n" << std::string(depth, '\t');
+			if (auto ctor = type->staticConstructor)
+			{
+				if (!ctor->compilationCondition.empty()) {
+					out << "#if " << ctor->compilationCondition << std::endl
+					    << std::string(depth, '\t');
+				}
+				out << "#line " << ctor->pos.line << " \"" << filename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				out << "__sctor();\n" << std::string(depth, '\t');
+				if (!ctor->compilationCondition.empty()) {
+					out << "#endif " << std::endl << std::string(depth, '\t');
+				}
+			}
+			if (auto dtor = type->staticDestructor) {
+				if (!dtor->compilationCondition.empty()) {
+					out << "#if " << dtor->compilationCondition << std::endl
+					    << std::string(depth, '\t');
+				}
+				out << "#line " << dtor->pos.line << " \"" << filename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				out << "~__sctor();\n" << std::string(depth, '\t');
+				if (!dtor->compilationCondition.empty()) {
+					out << "#endif " << std::endl << std::string(depth, '\t');
+				}
+			}
+			out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
 		}
 
 		if (type->kind == TypeKind::Enum) {
@@ -13386,6 +13458,10 @@ namespace AstrumLang {
 			printConstructor(func);
 		} else if (auto func = ctx->destructor()) {
 			printDestructor(func);
+		} else if (auto func = ctx->staticConstructor()) {
+			printStaticConstructor(func);
+		} else if (auto func = ctx->staticDestructor()) {
+			printStaticDestructor(func);
 		} else if (auto func = ctx->conversionFunction()) {
 			printConversionFunction(func);
 		} else if (auto func = ctx->indexer()) {
@@ -14059,6 +14135,180 @@ namespace AstrumLang {
 			else
 				out << "}";
 		}
+	}
+
+	void AstrumCodegen::printStaticConstructor(AstrumParser::StaticConstructorContext* ctx) {
+		sema.symbolContexts.push(sema.symbolContexts.top());
+		SourcePosition pos = {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()};
+		if (sema.methods.contains(pos)) {
+			const MethodDefinition& func = sema.methods[pos];
+
+			if (func.isInline || func.parentTemplateParams ||
+			     func.parentTemplateSpecializationArgs) {
+				out.switchTo(true);
+				emptyLine = true;
+			}
+			if (!func.compilationCondition.empty()) {
+				out << "#if " << func.compilationCondition << std::endl;
+			}
+			if (func.isProtectedType) {
+				out << "namespace __" << filename << "_Protected"
+				    << (func.isUnsafeType ? "__Unsafe" : "") << " {\n"
+				    << std::string(++depth, '\t');
+			} else if (func.isUnsafeType) {
+				out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
+				    << std::string(++depth, '\t');
+			}
+
+			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+			    << std::string(depth, '\t');
+			if (func.parentTemplateParams) {
+				printTemplateParams(func.parentTemplateParams);
+				out << " ";
+				if (func.parentConstraints) {
+					printConstraintClause(func.parentConstraints);
+					out << " ";
+				}
+			} else if (func.parentTemplateSpecializationArgs) {
+				out << "template<> ";
+			}
+			if (func.templateParams) {
+				printTemplateParams(func.templateParams);
+				out << " ";
+				if (func.constraints) {
+					printConstraintClause(func.constraints);
+					out << " ";
+				}
+			}
+			if (func.isConstexpr) {
+				out << "inline constexpr ";
+			} else if (func.isInline) {
+				out << "inline ";
+			}
+
+			auto parent = func.parentType;
+			StringReplace(parent, ".", "::");
+			StringReplace(parent, "::::::", "...");
+			auto pos = parent.find("<{{specialization}}>");
+			if (pos != parent.npos) {
+				out << parent.substr(0, pos);
+				out << "<";
+				printTemplateArgumentList(func.parentTemplateSpecializationArgs);
+				out << ">";
+				out << parent.substr(pos + 20);
+			} else {
+				out << parent;
+			}
+			currentShortType        = func.shortType;
+			currentTypeWithTemplate = parent;
+			out << "::__sctor::__sctor() ";
+			currentShortType.clear();
+			currentTypeWithTemplate.clear();
+			currentType = func.id;
+			if (auto body = ctx->functionBody()) {
+				functionProlog = true;
+				printFunctionBody(body);
+			} else {
+				printShortFunctionBody(ctx->shortFunctionBody());
+			}
+			if (func.isProtectedType || func.isUnsafeType)
+				out << "\n" << std::string(--depth, '\t') << "}";
+			out << std::endl;
+			if (!func.compilationCondition.empty()) {
+				out << "#endif " << std::endl;
+			}
+			out.switchTo(false);
+		}
+		
+		refParameters.clear();
+		sema.symbolContexts.pop();
+	}
+
+	void AstrumCodegen::printStaticDestructor(AstrumParser::StaticDestructorContext* ctx) {
+		sema.symbolContexts.push(sema.symbolContexts.top());
+		SourcePosition pos = {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()};
+		if (sema.methods.contains(pos)) {
+			const MethodDefinition& func = sema.methods[pos];
+
+			if (func.isInline || func.parentTemplateParams ||
+			    func.parentTemplateSpecializationArgs) {
+				out.switchTo(true);
+				emptyLine = true;
+			}
+			if (!func.compilationCondition.empty()) {
+				out << "#if " << func.compilationCondition << std::endl;
+			}
+			if (func.isProtectedType) {
+				out << "namespace __" << filename << "_Protected"
+				    << (func.isUnsafeType ? "__Unsafe" : "") << " {\n"
+				    << std::string(++depth, '\t');
+			} else if (func.isUnsafeType) {
+				out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
+				    << std::string(++depth, '\t');
+			}
+
+			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+			    << std::string(depth, '\t');
+			if (func.parentTemplateParams) {
+				printTemplateParams(func.parentTemplateParams);
+				out << " ";
+				if (func.parentConstraints) {
+					printConstraintClause(func.parentConstraints);
+					out << " ";
+				}
+			} else if (func.parentTemplateSpecializationArgs) {
+				out << "template<> ";
+			}
+			if (func.templateParams) {
+				printTemplateParams(func.templateParams);
+				out << " ";
+				if (func.constraints) {
+					printConstraintClause(func.constraints);
+					out << " ";
+				}
+			}
+			if (func.isConstexpr) {
+				out << "inline constexpr ";
+			} else if (func.isInline) {
+				out << "inline ";
+			}
+
+			auto parent = func.parentType;
+			StringReplace(parent, ".", "::");
+			StringReplace(parent, "::::::", "...");
+			auto pos = parent.find("<{{specialization}}>");
+			if (pos != parent.npos) {
+				out << parent.substr(0, pos);
+				out << "<";
+				printTemplateArgumentList(func.parentTemplateSpecializationArgs);
+				out << ">";
+				out << parent.substr(pos + 20);
+			} else {
+				out << parent;
+			}
+			currentShortType        = func.shortType;
+			currentTypeWithTemplate = parent;
+			out << "::__sctor::~__sctor() ";
+			currentShortType.clear();
+			currentTypeWithTemplate.clear();
+			currentType = func.id;
+			if (auto body = ctx->functionBody()) {
+				functionProlog = true;
+				printFunctionBody(body);
+			} else {
+				printShortFunctionBody(ctx->shortFunctionBody());
+			}
+			if (func.isProtectedType || func.isUnsafeType)
+				out << "\n" << std::string(--depth, '\t') << "}";
+			out << std::endl;
+			if (!func.compilationCondition.empty()) {
+				out << "#endif " << std::endl;
+			}
+			out.switchTo(false);
+		}
+
+		refParameters.clear();
+		sema.symbolContexts.pop();
 	}
 
 	void AstrumCodegen::printConversionFunction(AstrumParser::ConversionFunctionContext* ctx) {

@@ -908,7 +908,15 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitStaticConstructor(AstrumParser::StaticConstructorContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitDestructor(AstrumParser::DestructorContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitStaticDestructor(AstrumParser::StaticDestructorContext *ctx) override {
     return visitChildren(ctx);
   }
 

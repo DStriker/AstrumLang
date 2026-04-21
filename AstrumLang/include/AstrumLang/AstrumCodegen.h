@@ -106,8 +106,7 @@ namespace AstrumLang {
 		void printVersions();
 		void printRefStructCheck(AstrumParser::TheTypeIdContext* type);
 		void printSpecialFunctionDefinitions();
-		void printTypeSpecialFunctionDefinitions(StructDefinition* type,
-		                                         StructDefinition* parent);
+		void printTypeSpecialFunctionDefinitions(StructDefinition* type, StructDefinition* parent);
 
 	   public:
 		/*const*/ AstrumSema& sema;
@@ -129,18 +128,15 @@ namespace AstrumLang {
 		void printBlockDeclaration(AstrumParser::BlockDeclarationContext* ctx);
 		void printDeclSpecifierSeq(AstrumParser::DeclSpecifierSeqContext* ctx);
 		void printDeclSpecifier(AstrumParser::DeclSpecifierContext* ctx);
-		void printExternVariableDeclaration(
-		    AstrumParser::ExternVariableDeclarationContext* ctx);
-		void printExternFunctionDeclaration(
-		    AstrumParser::ExternFunctionDeclarationContext* ctx);
+		void printExternVariableDeclaration(AstrumParser::ExternVariableDeclarationContext* ctx);
+		void printExternFunctionDeclaration(AstrumParser::ExternFunctionDeclarationContext* ctx);
 		void printTemplateDeductionGuide(AstrumParser::TemplateDeductionGuideContext* ctx);
 		void printStatement(AstrumParser::StatementContext* ctx);
 		void printDeclarationStatement(AstrumParser::DeclarationStatementContext* ctx);
 		void printDeclarationCompoundStatement(
 		    AstrumParser::DeclarationCompoundStatementContext* ctx);
 		void printCompoundStatement(AstrumParser::CompoundStatementContext* ctx);
-		void printScopeSafeCompoundStatement(
-		    AstrumParser::ScopeSafeCompoundStatementContext* ctx);
+		void printScopeSafeCompoundStatement(AstrumParser::ScopeSafeCompoundStatementContext* ctx);
 		void printExpressionStatement(AstrumParser::ExpressionStatementContext* ctx);
 		void printSelectionStatement(AstrumParser::SelectionStatementContext* ctx);
 		void printSwitchStatementBranch(
@@ -148,24 +144,21 @@ namespace AstrumLang {
 		    AstrumParser::ThreeWayComparisonExpressionContext* switchExpr, int branchIndex);
 		void printIterationStatement(AstrumParser::IterationStatementContext* ctx);
 		void printForInitStatement(AstrumParser::ForInitStatementContext* ctx);
-		void printVersionSelectionStatement(
-		    AstrumParser::VersionSelectionStatementContext* ctx);
+		void printVersionSelectionStatement(AstrumParser::VersionSelectionStatementContext* ctx);
 		void printVersionSelectionStatementBlock(
 		    AstrumParser::VersionSelectionStatementBlockContext* ctx);
 		void printLabeledStatement(AstrumParser::LabeledStatementContext* ctx);
 		void printJumpStatement(AstrumParser::JumpStatementContext* ctx);
 		void printTryBlock(AstrumParser::TryBlockContext* ctx);
 		void printExceptionHandler(AstrumParser::ExceptionHandlerContext* ctx);
-		void printExceptionDeclaration(AstrumParser::ExceptionDeclarationContext* ctx,
-		                               int i = 0);
+		void printExceptionDeclaration(AstrumParser::ExceptionDeclarationContext* ctx, int i = 0);
 		void printInlineCppStatement(AstrumParser::InlineCppStatementContext* ctx);
 		void printCondition(AstrumParser::ConditionContext* ctx);
 		void printLoopCondition(AstrumParser::WhileConditionContext* ctx);
 		void printDeclarator(AstrumParser::DeclaratorContext* ctx);
 		void printTemplateParams(AstrumParser::TemplateParamsContext* ctx,
 		                         bool printTemplateKeyword = true);
-		void printTemplateParamDeclaration(
-		    AstrumParser::TemplateParamDeclarationContext* ctx);
+		void printTemplateParamDeclaration(AstrumParser::TemplateParamDeclarationContext* ctx);
 		void printTemplateIdentifier(AstrumParser::TemplateIdContext* ctx);
 		void printSimpleTemplateId(AstrumParser::SimpleTemplateIdContext* ctx);
 		void printClassName(AstrumParser::ClassNameContext* ctx);
@@ -173,8 +166,7 @@ namespace AstrumLang {
 		void printStructHead(AstrumParser::StructHeadContext* ctx);
 		void printClassDefinition(AstrumParser::ClassDefinitionContext* ctx);
 		void printClassHead(AstrumParser::ClassHeadContext* ctx);
-		void printStructMemberSpecification(
-		    AstrumParser::StructMemberSpecificationContext* ctx);
+		void printStructMemberSpecification(AstrumParser::StructMemberSpecificationContext* ctx);
 		void printStructMemberDeclaration(AstrumParser::StructMemberDeclarationContext* ctx);
 		void printMemberDeclarationCompoundStatement(
 		    AstrumParser::MemberDeclarationCompoundStatementContext* ctx);
@@ -198,13 +190,14 @@ namespace AstrumLang {
 		void printBaseSpecifier(AstrumParser::BaseSpecifierContext* ctx);
 		void printConstructor(AstrumParser::ConstructorContext* ctx);
 		void printConstructorBody(AstrumParser::ConstructorBodyContext* ctx);
-		void printDelegatingConstructorBody(
-		    AstrumParser::DelegatingConstructorBodyContext* ctx);
+		void printDelegatingConstructorBody(AstrumParser::DelegatingConstructorBodyContext* ctx);
 		void printDelegatingConstructorStatement(
 		    AstrumParser::DelegatingConstructorStatementContext* ctx);
 		void printDestructor(AstrumParser::DestructorContext* ctx);
 		void printMemberInitializationStatement(
 		    AstrumParser::MemberInitializationStatementContext* ctx, bool insideBody = false);
+		void printStaticConstructor(AstrumParser::StaticConstructorContext* ctx);
+		void printStaticDestructor(AstrumParser::StaticDestructorContext* ctx);
 		void printConversionFunction(AstrumParser::ConversionFunctionContext* ctx);
 		void printIndexer(AstrumParser::IndexerContext* ctx);
 		void printProperty(AstrumParser::PropertyContext* ctx);
@@ -224,8 +217,7 @@ namespace AstrumLang {
 		void printMemberBlockDeclaration(AstrumParser::MemberBlockDeclarationContext* ctx);
 		void printSimpleDeclaration(AstrumParser::SimpleDeclarationContext* ctx);
 		void printSimpleMultiDeclaration(AstrumParser::SimpleMultiDeclarationContext* ctx);
-		void printDeconstructionDeclaration(
-		    AstrumParser::DeconstructionDeclarationContext* ctx);
+		void printDeconstructionDeclaration(AstrumParser::DeconstructionDeclarationContext* ctx);
 		void printSimpleTypeSpecifier(AstrumParser::SimpleTypeSpecifierContext* ctx);
 		void printRefDeclaration(AstrumParser::RefDeclarationContext* ctx);
 		void printMemberRefDeclaration(AstrumParser::MemberRefDeclarationContext* ctx);
@@ -251,8 +243,7 @@ namespace AstrumLang {
 		void printExpressionSeq(AstrumParser::ExpressionSeqContext* ctx);
 		void printConstantExpression(AstrumParser::ConstantExpressionContext* ctx);
 		void printConditionalExpression(AstrumParser::ConditionalExpressionContext* ctx);
-		void printNullCoalescingExpression(
-		    AstrumParser::NullCoalescingExpressionContext* ctx);
+		void printNullCoalescingExpression(AstrumParser::NullCoalescingExpressionContext* ctx);
 		void printLogicalOrExpression(AstrumParser::LogicalOrExpressionContext* ctx);
 		void printLogicalAndExpression(AstrumParser::LogicalAndExpressionContext* ctx);
 		void printInclusiveOrExpression(AstrumParser::InclusiveOrExpressionContext* ctx);
@@ -269,8 +260,7 @@ namespace AstrumLang {
 		                      bool skipFirst = false);
 		void printShiftExpression(AstrumParser::ShiftExpressionContext* ctx);
 		void printAdditiveExpression(AstrumParser::AdditiveExpressionContext* ctx);
-		void printMultiplicativeExpression(
-		    AstrumParser::MultiplicativeExpressionContext* ctx);
+		void printMultiplicativeExpression(AstrumParser::MultiplicativeExpressionContext* ctx);
 		void printPowerExpression(AstrumParser::PowerExpressionContext* ctx);
 		void printSwitchExpression(AstrumParser::SwitchExpressionContext* ctx);
 		void printSwitchExpressionBranch(
@@ -308,8 +298,7 @@ namespace AstrumLang {
 		void printCharacterLiteral(std::string txt);
 		void printStringLiteral(std::string txt);
 		void printMultilineStringLiteral(std::string txt);
-		void printInterpolatedStringLiteral(
-		    AstrumParser::InterpolatedStringLiteralContext* ctx);
+		void printInterpolatedStringLiteral(AstrumParser::InterpolatedStringLiteralContext* ctx);
 		void printDeclvalExpression(AstrumParser::DeclvalExpressionContext* ctx);
 	};
 }  // namespace AstrumLang

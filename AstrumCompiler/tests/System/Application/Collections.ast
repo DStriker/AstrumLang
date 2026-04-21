@@ -69,6 +69,12 @@ public struct Vector3
 
 		//if debug _version: i32;
 	}
+
+	static {
+		print("Static constructor call!");
+	}
+
+	~static => print("Static destructor call!");
 	
 	friend TestStruct;
 	friend TestStruct2<T>;

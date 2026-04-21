@@ -85,9 +85,9 @@ namespace __Collections_Protected { using Test112 = typename Test1::Test2::Class
 template<class A, class C> using SimpleTuple = std::tuple<A, bool, C>;
 #line 51 "Collections.ast"
 using ImportantOptions = __ntuples::NamedTuple_4e7be1ed49b09d71;
-#line 627 "Collections.ast"
+#line 633 "Collections.ast"
 template<class... Args> using Action = CppAdvance::FunctionRef<void(Args...)>;
-#line 628 "Collections.ast"
+#line 634 "Collections.ast"
 template<class T> using Predicate = CppAdvance::FunctionRef<bool (T)>;
 //###############################################################################
 //# Type definitions
@@ -114,7 +114,7 @@ class Span;
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 		public: 
 		class NestedStruct; class NestedStruct__Unowned; class NestedStruct__Weak; class __Class_NestedStruct;
-		#line 105 "Collections.ast"
+		#line 111 "Collections.ast"
 		class NestedStruct : public CppAdvance::ObjectRef {
 			public: using __self = NestedStruct;
 			private: using ___super = CppAdvance::ObjectRef;
@@ -131,11 +131,11 @@ class Span;
 			ADV_CLASS_STRONG_COMMON_CTORS(NestedStruct)
 			#define ADV_PROPERTY_SELF __class
 			#define ADV_PROPERTY_SELF __self
-			#line 110 "Collections.ast"
+			#line 116 "Collections.ast"
 			public: inline constexpr static decltype(auto) count(CppAdvance::i32 i) ;
 			
 		};
-		#line 105 "Collections.ast"
+		#line 111 "Collections.ast"
 		class NestedStruct__Unowned : public CppAdvance::ObjectRef__Unowned {
 			public: using __self = NestedStruct;
 			public: using __strong_ref = NestedStruct;
@@ -148,7 +148,7 @@ class Span;
 			ADV_CLASS_UNOWNED_COMMON_CTORS(NestedStruct__Unowned)
 			
 		};
-		#line 105 "Collections.ast"
+		#line 111 "Collections.ast"
 		class NestedStruct__Weak : public CppAdvance::ObjectRef__Weak {
 			public: using __self = NestedStruct;
 			public: using __strong_ref = NestedStruct;
@@ -164,7 +164,7 @@ class Span;
 		};
 		
 		public: 
-		#line 105 "Collections.ast"
+		#line 111 "Collections.ast"
 		class __Class_NestedStruct : public CppAdvance::Object {
 			public: using __self = NestedStruct;
 			private: using ___super = CppAdvance::Object;
@@ -173,30 +173,30 @@ class Span;
 			friend class __self::__weak_ref;
 			#define ADV_PROPERTY_SELF __selfClass
 			public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-			#line 107 "Collections.ast"
+			#line 113 "Collections.ast"
 			public: mutable CppAdvance::f32 x; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-			#line 108 "Collections.ast"
+			#line 114 "Collections.ast"
 			public: mutable CppAdvance::f32 y; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-			#line 109 "Collections.ast"
+			#line 115 "Collections.ast"
 			public: mutable CppAdvance::f32 z; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-			#line 110 "Collections.ast"
+			#line 116 "Collections.ast"
 			public: inline constexpr static auto count(CppAdvance::i32 i)  -> const CppAdvance::i32;
 			
 #define ADV_PROPERTY_SELF __self
 		};
 		
-		#line 105 "Collections.ast"
+		#line 111 "Collections.ast"
 		ADV_CHECK_FOR_CONCRETE(NestedStruct);
 		
-		#line 73 "Collections.ast"
+		#line 79 "Collections.ast"
 		private: friend class TestStruct; friend class __Class_TestStruct;
-		#line 74 "Collections.ast"
+		#line 80 "Collections.ast"
 		private: template<class T> friend class TestStruct2; template<class T> friend class __Class_TestStruct2;
-		#line 75 "Collections.ast"
+		#line 81 "Collections.ast"
 		private: friend const CppAdvance::i32 func3(CppAdvance::i32 x);
-		#line 151 "Collections.ast"
+		#line 157 "Collections.ast"
 		private: friend const Next getNext(const __self&);
-		#line 76 "Collections.ast"
+		#line 82 "Collections.ast"
 		private: friend const CppAdvance::i32 func4(CppAdvance::i32 x);
 		#line 67 "Collections.ast"
 		public: CppAdvance::i32 x; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
@@ -204,57 +204,65 @@ class Span;
 		public: CppAdvance::i32 y; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
 		#line 67 "Collections.ast"
 		public: CppAdvance::i32 z; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
-		#line 100 "Collections.ast"
+		#line 106 "Collections.ast"
 		private: static thread_local CppAdvance::i32 Count2; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
-		#line 102 "Collections.ast"
+		#line 108 "Collections.ast"
 		public: static const Vector3 ZERO;
+		private: class __sctor {
+			static __sctor instance;
+			#line 73 "Collections.ast"
+			__sctor();
+			#line 77 "Collections.ast"
+			~__sctor();
+			
+		};
 		public: constexpr Vector3(CppAdvance::i32 _x, CppAdvance::i32 _y, CppAdvance::i32 _z) : x{_x}, y{_y}, z{_z} {}
-		#line 101 "Collections.ast"
+		#line 107 "Collections.ast"
 		public: static constexpr auto BYTES = CppAdvance::i32(24);
-		#line 103 "Collections.ast"
+		#line 109 "Collections.ast"
 		private: using Coords = __ntuples::NamedTuple_6893f862d6c49683;
-		#line 85 "Collections.ast"
+		#line 91 "Collections.ast"
 		private: static CppAdvance::i32 p_Count; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
-		#line 90 "Collections.ast"
+		#line 96 "Collections.ast"
 		public: static auto setCount(const CppAdvance::i32& value) -> void;
-		#line 86 "Collections.ast"
+		#line 92 "Collections.ast"
 		public: static auto getCount()  -> CppAdvance::i32;
 		#line 9999 "Collections.ast"
 		ADV_PROPERTY_GETTER_SETTER_STATIC(public, , Count, public, getCount, public, setCount, CppAdvance::i32);
-		#line 98 "Collections.ast"
+		#line 104 "Collections.ast"
 		public: inline constexpr auto getName() const  -> CppAdvance::Str;
 		#line 9999 "Collections.ast"
 		ADV_PROPERTY_GETTER(public, Name, getName, CppAdvance::Str);
-		#line 81 "Collections.ast"
+		#line 87 "Collections.ast"
 		public: inline constexpr auto format() const noexcept -> const CppAdvance::Str;
-		#line 82 "Collections.ast"
+		#line 88 "Collections.ast"
 		public: inline constexpr auto HashCode() const  -> const CppAdvance::usize;
-		#line 83 "Collections.ast"
+		#line 89 "Collections.ast"
 		public: inline constexpr static auto AStaticMethod(CppAdvance::i32 i)  -> const CppAdvance::i32;
-		#line 114 "Collections.ast"
+		#line 120 "Collections.ast"
 		public: inline constexpr Vector3()  = default;
-		#line 115 "Collections.ast"
+		#line 121 "Collections.ast"
 		public: inline constexpr  Vector3(const __self& that)  = default;
-		#line 117 "Collections.ast"
+		#line 123 "Collections.ast"
 		public: template<class U> inline constexpr  Vector3(U f) ;
-		#line 122 "Collections.ast"
-		public: inline ~Vector3() noexcept;
-		#line 124 "Collections.ast"
-		public: inline constexpr  operator CppAdvance::f32() const noexcept;
-		#line 126 "Collections.ast"
-		public: inline auto operator+(const __self& other) const  -> const __self;
 		#line 128 "Collections.ast"
+		public: inline ~Vector3() noexcept;
+		#line 130 "Collections.ast"
+		public: inline constexpr  operator CppAdvance::f32() const noexcept;
+		#line 132 "Collections.ast"
+		public: inline auto operator+(const __self& other) const  -> const __self;
+		#line 134 "Collections.ast"
 		public: inline auto operator++()  LIFETIMEBOUND -> __self&;
 		public: inline auto operator++(int)  -> Vector3;
 		#line 9999 "Collections.ast"
-		private: template<class __IdxT = CppAdvance::f32> struct __IndexerAccessor_138 {
+		private: template<class __IdxT = CppAdvance::f32> struct __IndexerAccessor_144 {
 			private:
 			Vector3& _parent;
 			CppAdvance::i32 _idx;
 			 friend class Vector3;
 			public:
-			FORCE_INLINE __IndexerAccessor_138(Vector3& parent, CppAdvance::i32 idx) : _parent(parent), _idx(idx) {}
-			FORCE_INLINE __IndexerAccessor_138(Vector3 const& parent, CppAdvance::i32 idx) : _parent(const_cast<std::remove_cvref_t<decltype(parent)>&>(parent)), _idx(idx) {}
+			FORCE_INLINE __IndexerAccessor_144(Vector3& parent, CppAdvance::i32 idx) : _parent(parent), _idx(idx) {}
+			FORCE_INLINE __IndexerAccessor_144(Vector3 const& parent, CppAdvance::i32 idx) : _parent(const_cast<std::remove_cvref_t<decltype(parent)>&>(parent)), _idx(idx) {}
 			template<class _ElemRight> FORCE_INLINE auto& operator=(_ElemRight&& other) { _parent.setAt(_idx, std::forward<_ElemRight>(other)); return *this; }
 			template<class _ElemRight> FORCE_INLINE decltype(auto) operator+=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t+=u;} { return *this = __ref() += std::forward<_ElemRight>(other); }
 			template<class _ElemRight> FORCE_INLINE decltype(auto) operator-=(_ElemRight&& other) requires requires(__IdxT t, _ElemRight u) {t = t-=u;} { return *this = __ref() -= std::forward<_ElemRight>(other); }
@@ -291,7 +299,7 @@ class Span;
 			template<class... _ElemRight> FORCE_INLINE decltype(auto) _operator_subscript(_ElemRight&&... other) const { return __ref().__ref()._operator_subscript(std::forward<_ElemRight>(other)...); }
 			template<class... Args> FORCE_INLINE decltype(auto) operator()(Args&&... other) { return __ref()(std::forward<Args>(other)...); }
 			template<class... Args> FORCE_INLINE decltype(auto) operator()(Args&&... other) const { return __ref()(std::forward<Args>(other)...); }
-			template<class Ch> friend FORCE_INLINE decltype(auto) operator<<(std::basic_ostream<Ch>& stream, const __IndexerAccessor_138<__IdxT>& elem) { return stream << elem.__ref(); }
+			template<class Ch> friend FORCE_INLINE decltype(auto) operator<<(std::basic_ostream<Ch>& stream, const __IndexerAccessor_144<__IdxT>& elem) { return stream << elem.__ref(); }
 			FORCE_INLINE decltype(auto) operator*() requires requires(__IdxT t) {*t;} { return *__ref(); }
 			FORCE_INLINE decltype(auto) operator&() requires requires(__IdxT t) {&t;} { return &__ref(); }
 			template<class _ElemRight> FORCE_INLINE bool operator==(const _ElemRight& other) const requires requires(__IdxT t, _ElemRight u) {t==u;} { return __ref() == other; }
@@ -304,25 +312,25 @@ class Span;
 			
 		};
 
-		friend struct __IndexerAccessor_138<CppAdvance::f32>;
+		friend struct __IndexerAccessor_144<CppAdvance::f32>;
 		public: inline void setAt(CppAdvance::i32 idx, const CppAdvance::f32& value);
 		public: inline const CppAdvance::f32 getAt(CppAdvance::i32 idx);
 		inline const CppAdvance::f32 getAt(CppAdvance::i32 idx) const;
-		#line 138 "Collections.ast"
-		public: inline auto _operator_subscript(CppAdvance::i32 idx)  -> __IndexerAccessor_138<CppAdvance::f32>;
-		public: inline auto _operator_subscript(CppAdvance::i32 idx) const  -> const __IndexerAccessor_138<CppAdvance::f32>;
+		#line 144 "Collections.ast"
+		public: inline auto _operator_subscript(CppAdvance::i32 idx)  -> __IndexerAccessor_144<CppAdvance::f32>;
+		public: inline auto _operator_subscript(CppAdvance::i32 idx) const  -> const __IndexerAccessor_144<CppAdvance::f32>;
 		public: inline constexpr const CppAdvance::f32 getAt(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3);
 		inline constexpr const CppAdvance::f32 getAt(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const;
-		#line 148 "Collections.ast"
+		#line 154 "Collections.ast"
 		public: inline constexpr auto _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  -> const CppAdvance::f32;
 		public: inline constexpr auto _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const  -> const CppAdvance::f32;
-		#line 150 "Collections.ast"
+		#line 156 "Collections.ast"
 		public: inline constexpr auto getX() const  -> const CppAdvance::f32;
-		#line 154 "Collections.ast"
-		public: inline constexpr static auto Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z)  -> const CppAdvance::i32;
 		#line 160 "Collections.ast"
+		public: inline constexpr static auto Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z)  -> const CppAdvance::i32;
+		#line 166 "Collections.ast"
 		public: inline constexpr auto Reset()  -> void;
-		#line 168 "Collections.ast"
+		#line 174 "Collections.ast"
 		public: template<class U> inline constexpr auto TemplateMethod(U x, U y, U z)  -> const Coords;
 		template <size_t I> friend auto& get(Vector3&);
 		template <size_t I> friend const auto& get(const Vector3&);
@@ -350,7 +358,7 @@ namespace System::Application {
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<System::Application::BaseClass> = false;
 
 namespace System::Application {
-	#line 186 "Collections.ast"
+	#line 192 "Collections.ast"
 	class BaseClass : public CppAdvance::ObjectRef {
 		public: using __self = BaseClass;
 		private: using ___super = CppAdvance::ObjectRef;
@@ -370,7 +378,7 @@ namespace System::Application {
 		#define ADV_PROPERTY_SELF __self
 		
 	};
-	#line 186 "Collections.ast"
+	#line 192 "Collections.ast"
 	class BaseClass__Unowned : public CppAdvance::ObjectRef__Unowned {
 		public: using __self = BaseClass;
 		public: using __strong_ref = BaseClass;
@@ -383,7 +391,7 @@ namespace System::Application {
 		ADV_CLASS_UNOWNED_COMMON_CTORS(BaseClass__Unowned)
 		
 	};
-	#line 186 "Collections.ast"
+	#line 192 "Collections.ast"
 	class BaseClass__Weak : public CppAdvance::ObjectRef__Weak {
 		public: using __self = BaseClass;
 		public: using __strong_ref = BaseClass;
@@ -410,7 +418,7 @@ namespace System::Application {
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<System::Application::VectorClass> = false;
 
 namespace System::Application {
-	#line 190 "Collections.ast"
+	#line 196 "Collections.ast"
 	class VectorClass : public CppAdvance::ClassRefParent<BaseClass> {
 		public: using __self = VectorClass;
 		private: using ___super = CppAdvance::ClassRefParent<BaseClass>;
@@ -428,7 +436,7 @@ namespace System::Application {
 		ADV_CLASS_STRONG_COMMON_CTORS(VectorClass)
 		public: 
 		class NestedClass; class NestedClass__Unowned; class NestedClass__Weak; class __Class_NestedClass;
-		#line 227 "Collections.ast"
+		#line 233 "Collections.ast"
 		class NestedClass : public CppAdvance::ObjectRef {
 			public: using __self = NestedClass;
 			private: using ___super = CppAdvance::ObjectRef;
@@ -445,11 +453,11 @@ namespace System::Application {
 			ADV_CLASS_STRONG_COMMON_CTORS(NestedClass)
 			#define ADV_PROPERTY_SELF __class
 			#define ADV_PROPERTY_SELF __self
-			#line 238 "Collections.ast"
+			#line 244 "Collections.ast"
 			public: inline constexpr static decltype(auto) count(CppAdvance::i32 i) ;
 			
 		};
-		#line 227 "Collections.ast"
+		#line 233 "Collections.ast"
 		class NestedClass__Unowned : public CppAdvance::ObjectRef__Unowned {
 			public: using __self = NestedClass;
 			public: using __strong_ref = NestedClass;
@@ -462,7 +470,7 @@ namespace System::Application {
 			ADV_CLASS_UNOWNED_COMMON_CTORS(NestedClass__Unowned)
 			
 		};
-		#line 227 "Collections.ast"
+		#line 233 "Collections.ast"
 		class NestedClass__Weak : public CppAdvance::ObjectRef__Weak {
 			public: using __self = NestedClass;
 			public: using __strong_ref = NestedClass;
@@ -478,7 +486,7 @@ namespace System::Application {
 		};
 		
 		public: 
-		#line 227 "Collections.ast"
+		#line 233 "Collections.ast"
 		class __Class_NestedClass : public CppAdvance::Object {
 			public: using __self = NestedClass;
 			private: using ___super = CppAdvance::Object;
@@ -487,21 +495,21 @@ namespace System::Application {
 			friend class __self::__weak_ref;
 			#define ADV_PROPERTY_SELF __selfClass
 			public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-			#line 229 "Collections.ast"
+			#line 235 "Collections.ast"
 			public: mutable CppAdvance::f32 x; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-			#line 230 "Collections.ast"
+			#line 236 "Collections.ast"
 			public: mutable CppAdvance::f32 y; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-			#line 231 "Collections.ast"
+			#line 237 "Collections.ast"
 			public: mutable CppAdvance::f32 z; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-			#line 233 "Collections.ast"
+			#line 239 "Collections.ast"
 			public: inline constexpr __Class_NestedClass(CppAdvance::f32 x, CppAdvance::f32 y, CppAdvance::f32 z) noexcept;
-			#line 238 "Collections.ast"
+			#line 244 "Collections.ast"
 			public: inline constexpr static auto count(CppAdvance::i32 i)  -> const CppAdvance::i32;
 			
 #define ADV_PROPERTY_SELF __self
 		};
 		
-		#line 227 "Collections.ast"
+		#line 233 "Collections.ast"
 		ADV_CHECK_FOR_CONCRETE(NestedClass);
 		
 		public: static decltype(auto) getCount2();
@@ -511,13 +519,13 @@ namespace System::Application {
 		ADV_PROPERTY_GETTER_STATIC(public, , ZERO, getZERO, Vector3);
 		#define ADV_PROPERTY_SELF __class
 		#define ADV_PROPERTY_SELF __self
-		#line 264 "Collections.ast"
+		#line 270 "Collections.ast"
 		public: inline explicit operator CppAdvance::f32() const noexcept;
-		#line 296 "Collections.ast"
+		#line 302 "Collections.ast"
 		public: inline decltype(auto) _operator_subscript(CppAdvance::i32 idx) const  LIFETIMEBOUND;
-		#line 297 "Collections.ast"
-		public: inline decltype(auto) _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const ;
 		#line 303 "Collections.ast"
+		public: inline decltype(auto) _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const ;
+		#line 309 "Collections.ast"
 		public: inline constexpr static decltype(auto) Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z) ;
 		public: static constexpr decltype(auto) BYTES = CppAdvance::i32(24);
 		public: using Coords = __ntuples::NamedTuple_6893f862d6c49683;
@@ -528,7 +536,7 @@ namespace System::Application {
 		friend const CppAdvance::i32 func3(CppAdvance::i32 x);
 		
 	};
-	#line 190 "Collections.ast"
+	#line 196 "Collections.ast"
 	class VectorClass__Unowned : public CppAdvance::ClassRefParentUnowned<BaseClass> {
 		public: using __self = VectorClass;
 		public: using __strong_ref = VectorClass;
@@ -539,15 +547,15 @@ namespace System::Application {
 		public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *reinterpret_cast<__class*>(_obj); }
 		ADV_CLASS_FROM_PTR(VectorClass__Unowned)
 		ADV_CLASS_UNOWNED_COMMON_CTORS(VectorClass__Unowned)
-		#line 264 "Collections.ast"
+		#line 270 "Collections.ast"
 		public: inline explicit operator CppAdvance::f32() const noexcept;
-		#line 296 "Collections.ast"
+		#line 302 "Collections.ast"
 		public: inline decltype(auto) _operator_subscript(CppAdvance::i32 idx) const  LIFETIMEBOUND;
-		#line 297 "Collections.ast"
+		#line 303 "Collections.ast"
 		public: inline decltype(auto) _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const ;
 		
 	};
-	#line 190 "Collections.ast"
+	#line 196 "Collections.ast"
 	class VectorClass__Weak : public CppAdvance::ClassRefParentWeak<BaseClass> {
 		public: using __self = VectorClass;
 		public: using __strong_ref = VectorClass;
@@ -567,7 +575,7 @@ namespace System::Application {
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<System::Application::ConcreteVectorClass> = false;
 
 namespace System::Application {
-	#line 335 "Collections.ast"
+	#line 341 "Collections.ast"
 	class ConcreteVectorClass : public CppAdvance::ClassRefParent<VectorClass> {
 		public: using __self = ConcreteVectorClass;
 		private: using ___super = CppAdvance::ClassRefParent<VectorClass>;
@@ -586,18 +594,18 @@ namespace System::Application {
 		#define ADV_PROPERTY_SELF __class
 		public: ADV_PROPERTY_GETTER_STATIC(public, , Name2, getName2, CppAdvance::Str);
 		#define ADV_PROPERTY_SELF __self
-		#line 344 "Collections.ast"
+		#line 350 "Collections.ast"
 		public: inline  ConcreteVectorClass(CppAdvance::i32 i) noexcept;
-		#line 368 "Collections.ast"
+		#line 374 "Collections.ast"
 		public: inline decltype(auto) operator+(const ConcreteVectorClass& other) const ;
-		#line 371 "Collections.ast"
+		#line 377 "Collections.ast"
 		public: inline decltype(auto) operator==(CppAdvance::In<__self> other) const ;
-		#line 373 "Collections.ast"
+		#line 379 "Collections.ast"
 		public: inline constexpr static decltype(auto) AbstractStaticMethod(CppAdvance::i32 i) ;
 		public: using ElementType = CppAdvance::i32;
 		
 	};
-	#line 335 "Collections.ast"
+	#line 341 "Collections.ast"
 	class ConcreteVectorClass__Unowned : public CppAdvance::ClassRefParentUnowned<VectorClass> {
 		public: using __self = ConcreteVectorClass;
 		public: using __strong_ref = ConcreteVectorClass;
@@ -608,13 +616,13 @@ namespace System::Application {
 		public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *reinterpret_cast<__class*>(_obj); }
 		ADV_CLASS_FROM_PTR(ConcreteVectorClass__Unowned)
 		ADV_CLASS_UNOWNED_COMMON_CTORS(ConcreteVectorClass__Unowned)
-		#line 368 "Collections.ast"
+		#line 374 "Collections.ast"
 		public: inline decltype(auto) operator+(const ConcreteVectorClass& other) const ;
-		#line 371 "Collections.ast"
+		#line 377 "Collections.ast"
 		public: inline decltype(auto) operator==(CppAdvance::In<__self> other) const ;
 		
 	};
-	#line 335 "Collections.ast"
+	#line 341 "Collections.ast"
 	class ConcreteVectorClass__Weak : public CppAdvance::ClassRefParentWeak<VectorClass> {
 		public: using __self = ConcreteVectorClass;
 		public: using __strong_ref = ConcreteVectorClass;
@@ -634,7 +642,7 @@ namespace System::Application {
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<System::Application::Next> = false;
 
 namespace System::Application {
-	#line 382 "Collections.ast"
+	#line 388 "Collections.ast"
 	class Next : public CppAdvance::ObjectRef {
 		public: using __self = Next;
 		private: using ___super = CppAdvance::ObjectRef;
@@ -652,11 +660,11 @@ namespace System::Application {
 		ADV_CLASS_STRONG_COMMON_CTORS(Next)
 		#define ADV_PROPERTY_SELF __class
 		#define ADV_PROPERTY_SELF __self
-		#line 399 "Collections.ast"
+		#line 405 "Collections.ast"
 		public: inline decltype(auto) operator*() const ;
 		
 	};
-	#line 382 "Collections.ast"
+	#line 388 "Collections.ast"
 	class Next__Unowned : public CppAdvance::ObjectRef__Unowned {
 		public: using __self = Next;
 		public: using __strong_ref = Next;
@@ -667,11 +675,11 @@ namespace System::Application {
 		public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *reinterpret_cast<__class*>(_obj); }
 		ADV_CLASS_FROM_PTR(Next__Unowned)
 		ADV_CLASS_UNOWNED_COMMON_CTORS(Next__Unowned)
-		#line 399 "Collections.ast"
+		#line 405 "Collections.ast"
 		public: inline decltype(auto) operator*() const ;
 		
 	};
-	#line 382 "Collections.ast"
+	#line 388 "Collections.ast"
 	class Next__Weak : public CppAdvance::ObjectRef__Weak {
 		public: using __self = Next;
 		public: using __strong_ref = Next;
@@ -686,42 +694,42 @@ namespace System::Application {
 		#define ADV_PROPERTY_SELF __self
 	};
 	
-	#line 408 "Collections.ast"
-	using __extension_408_Next = Next;
-	#line 409 "Collections.ast"
-	inline constexpr auto TestInt(__extension_408_Next const& __this LIFETIMEBOUND, CppAdvance::i32 j)  -> const CppAdvance::i32;
+	#line 414 "Collections.ast"
+	using __extension_414_Next = Next;
+	#line 415 "Collections.ast"
+	inline constexpr auto TestInt(__extension_414_Next const& __this LIFETIMEBOUND, CppAdvance::i32 j)  -> const CppAdvance::i32;
 	
 	
 }
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<System::Application::IMagicNumber> = false;
 
 namespace System::Application {
-	#line 413 "Collections.ast"
+	#line 419 "Collections.ast"
 	template<class __AnyType> concept __HasMethodImplementation_a2e2f819fa3cd789 = requires(typename __AnyType::__class t) { {t.GetMagicNumber(std::declval<VectorClass>())} -> std::convertible_to<CppAdvance::f32>; }  || requires(typename __AnyType::__class t) { {GetMagicNumber(t, std::declval<VectorClass>())} -> std::convertible_to<CppAdvance::f32>; };
-	#line 414 "Collections.ast"
+	#line 420 "Collections.ast"
 	template<class __AnyType> concept __HasMethodImplementation_getaddd298886dbcfb6 = requires(typename __AnyType::__class t) { {t.getCount123()} -> std::convertible_to<CppAdvance::i32>; } || requires(typename __AnyType::__class t) { {getCount123(t)} -> std::convertible_to<CppAdvance::i32>; };
 	namespace __vtables {
-		#line 412 "Collections.ast"
+		#line 418 "Collections.ast"
 		struct __vtable_IMagicNumber
 		{
 			using fn_a2e2f819fa3cd789 = const CppAdvance::f32(CppAdvance::Object*, CppAdvance::In<VectorClass> f);
 			fn_a2e2f819fa3cd789* fnptr_a2e2f819fa3cd789;
-			#line 413 "Collections.ast"
+			#line 419 "Collections.ast"
 			template<class __AnyType> static const CppAdvance::f32 impl_a2e2f819fa3cd789(CppAdvance::Object* obj, CppAdvance::In<VectorClass> f) { ADV_EXPRESSION_BODY(ADV_UFCS(GetMagicNumber)(*static_cast<typename __AnyType::__class*>(obj), f)); }
 			using fn_getCount123 = CppAdvance::i32(CppAdvance::Object*);
 			fn_getCount123* fnptr_getCount123;
-			#line 414 "Collections.ast"
+			#line 420 "Collections.ast"
 			template<class __AnyType> static CppAdvance::i32 impl_getCount123(CppAdvance::Object* obj) { return ADV_UFCS(getCount123)(*static_cast<typename __AnyType::__class*>(obj)); }
 			
 		};
 	}
-	#line 412 "Collections.ast"
+	#line 418 "Collections.ast"
 	template<class __AnyType> inline constexpr __vtables::__vtable_IMagicNumber __vtable_IMagicNumber_for = {&__vtables::__vtable_IMagicNumber::template impl_a2e2f819fa3cd789<__AnyType>
 		, &__vtables::__vtable_IMagicNumber::template impl_getCount123<__AnyType>
 		};
-	#line 412 "Collections.ast"
+	#line 418 "Collections.ast"
 	template<class __AnyType> concept __ImplementsInterface_IMagicNumber = __HasMethodImplementation_a2e2f819fa3cd789<__AnyType> && __HasMethodImplementation_getaddd298886dbcfb6<__AnyType>;
-	#line 412 "Collections.ast"
+	#line 418 "Collections.ast"
 	class IMagicNumber final : public CppAdvance::InterfaceRef {
 		public: using __self = IMagicNumber;
 		public: using __vtable = __vtables::__vtable_IMagicNumber;
@@ -944,25 +952,25 @@ namespace System::Application {
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<System::Application::IResettable> = false;
 
 namespace System::Application {
-	#line 418 "Collections.ast"
+	#line 424 "Collections.ast"
 	template<class __AnyType> concept __HasMethodImplementation_565bebff34b81aa1 = requires(typename __AnyType::__class t) { {t.Reset()} -> std::same_as<void>; }  || requires(typename __AnyType::__class t) { {Reset(t)} -> std::same_as<void>; };
 	namespace __vtables {
-		#line 417 "Collections.ast"
+		#line 423 "Collections.ast"
 		struct __vtable_IResettable
 		{
 			using fn_565bebff34b81aa1 = void(CppAdvance::Object*);
 			fn_565bebff34b81aa1* fnptr_565bebff34b81aa1;
-			#line 418 "Collections.ast"
+			#line 424 "Collections.ast"
 			template<class __AnyType> static void impl_565bebff34b81aa1(CppAdvance::Object* obj) { ADV_EXPRESSION_BODY(ADV_UFCS(Reset)(*static_cast<typename __AnyType::__class*>(obj))); }
 			
 		};
 	}
-	#line 417 "Collections.ast"
+	#line 423 "Collections.ast"
 	template<class __AnyType> inline constexpr __vtables::__vtable_IResettable __vtable_IResettable_for = {&__vtables::__vtable_IResettable::template impl_565bebff34b81aa1<__AnyType>
 		};
-	#line 417 "Collections.ast"
+	#line 423 "Collections.ast"
 	template<class __AnyType> concept __ImplementsInterface_IResettable = __HasMethodImplementation_565bebff34b81aa1<__AnyType>;
-	#line 417 "Collections.ast"
+	#line 423 "Collections.ast"
 	class IResettable final : public CppAdvance::InterfaceRef {
 		public: using __self = IResettable;
 		public: using __vtable = __vtables::__vtable_IResettable;
@@ -1184,51 +1192,51 @@ namespace System::Application {
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<System::Application::IInterface> = false;
 
 namespace System::Application {
-	#line 427 "Collections.ast"
-	template<class __AnyType> concept __HasMethodImplementation_fbc51d6746c8ca94 = requires(typename __AnyType::__class t) { {t.operator+(std::declval<ConcreteVectorClass>())} -> std::convertible_to<ConcreteVectorClass>; }  || requires(typename __AnyType::__class t) { {operator+(t, std::declval<ConcreteVectorClass>())} -> std::convertible_to<ConcreteVectorClass>; };
-	#line 431 "Collections.ast"
-	template<class __AnyType> concept __HasMethodImplementation_8addcb5f9470873d = requires(typename __AnyType::__class t) { {t.getAt(std::declval<CppAdvance::i32>())} -> std::convertible_to<CppAdvance::f32&>; }  || requires(typename __AnyType::__class t) { {_operator_subscript(t, std::declval<CppAdvance::i32>())} -> std::convertible_to<CppAdvance::f32&>; };
 	#line 433 "Collections.ast"
+	template<class __AnyType> concept __HasMethodImplementation_fbc51d6746c8ca94 = requires(typename __AnyType::__class t) { {t.operator+(std::declval<ConcreteVectorClass>())} -> std::convertible_to<ConcreteVectorClass>; }  || requires(typename __AnyType::__class t) { {operator+(t, std::declval<ConcreteVectorClass>())} -> std::convertible_to<ConcreteVectorClass>; };
+	#line 437 "Collections.ast"
+	template<class __AnyType> concept __HasMethodImplementation_8addcb5f9470873d = requires(typename __AnyType::__class t) { {t.getAt(std::declval<CppAdvance::i32>())} -> std::convertible_to<CppAdvance::f32&>; }  || requires(typename __AnyType::__class t) { {_operator_subscript(t, std::declval<CppAdvance::i32>())} -> std::convertible_to<CppAdvance::f32&>; };
+	#line 439 "Collections.ast"
 	template<class __AnyType> concept __HasMethodImplementation_5aa06689d687e755 = requires { {__AnyType::__class::AbstractStaticMethod(std::declval<CppAdvance::i32>())} -> std::convertible_to<CppAdvance::i32>; }  || requires { { __static_AbstractStaticMethod<__AnyType>(std::declval<CppAdvance::i32>())} -> std::convertible_to<CppAdvance::i32>; };
-	#line 429 "Collections.ast"
+	#line 435 "Collections.ast"
 	template<class __AnyType> concept __HasMethodImplementation_getfd864fe31949d59b = requires(typename __AnyType::__class t) { {t.getName()} -> std::convertible_to<CppAdvance::Str>; } || requires(typename __AnyType::__class t) { {getName(t)} -> std::convertible_to<CppAdvance::Str>; };
-	#line 430 "Collections.ast"
+	#line 436 "Collections.ast"
 	template<class __AnyType> concept __HasMethodImplementation_get150f67e3f8760e2b = requires { __AnyType::Name2; } || requires { __static_getName2<__AnyType>(); };
-	#line 423 "Collections.ast"
+	#line 429 "Collections.ast"
 	template<class __AnyType> concept __HasAssociatedType_639db4f5c0c18988 = requires { typename __AnyType::ElementType; };
-	#line 421 "Collections.ast"
+	#line 427 "Collections.ast"
 	ADV_CHECK_INTERFACE(IMagicNumber, IMagicNumber);
-	#line 421 "Collections.ast"
+	#line 427 "Collections.ast"
 	ADV_CHECK_INTERFACE(IResettable, IResettable);
 	namespace __vtables {
-		#line 421 "Collections.ast"
+		#line 427 "Collections.ast"
 		struct __vtable_IInterface : public IMagicNumber::__vtable, public IResettable::__vtable
 		{
 			using fn_fbc51d6746c8ca94 = const ConcreteVectorClass(CppAdvance::Object*, const ConcreteVectorClass& f);
 			fn_fbc51d6746c8ca94* fnptr_fbc51d6746c8ca94;
-			#line 427 "Collections.ast"
+			#line 433 "Collections.ast"
 			template<class __AnyType> static const ConcreteVectorClass impl_fbc51d6746c8ca94(CppAdvance::Object* obj, const ConcreteVectorClass& f) { ADV_EXPRESSION_BODY(ADV_UFCS(operator+)(*static_cast<typename __AnyType::__class*>(obj), f)); }
 			using fn_8addcb5f9470873d = CppAdvance::f32&(CppAdvance::Object*, CppAdvance::i32 i);
 			fn_8addcb5f9470873d* fnptr_8addcb5f9470873d;
-			#line 431 "Collections.ast"
+			#line 437 "Collections.ast"
 			template<class __AnyType> static CppAdvance::f32& impl_8addcb5f9470873d(CppAdvance::Object* obj, CppAdvance::i32 i) { return ADV_UFCS(getAt)(*static_cast<typename __AnyType::__class*>(obj), i); }
 			using fn_getName = CppAdvance::Str(CppAdvance::Object*);
 			fn_getName* fnptr_getName;
-			#line 429 "Collections.ast"
+			#line 435 "Collections.ast"
 			template<class __AnyType> static CppAdvance::Str impl_getName(CppAdvance::Object* obj) { return ADV_UFCS(getName)(*static_cast<typename __AnyType::__class*>(obj)); }
 			
 		};
 	}
-	#line 421 "Collections.ast"
+	#line 427 "Collections.ast"
 	template<class __AnyType> inline constexpr __vtables::__vtable_IInterface __vtable_IInterface_for = {__vtable_IMagicNumber_for<__AnyType>
 		, __vtable_IResettable_for<__AnyType>
 		, &__vtables::__vtable_IInterface::template impl_fbc51d6746c8ca94<__AnyType>
 		, &__vtables::__vtable_IInterface::template impl_8addcb5f9470873d<__AnyType>
 		, &__vtables::__vtable_IInterface::template impl_getName<__AnyType>
 		};
-	#line 421 "Collections.ast"
+	#line 427 "Collections.ast"
 	template<class __AnyType> concept __ImplementsInterface_IInterface = __ImplementsInterface_IMagicNumber<__AnyType> && __ImplementsInterface_IResettable<__AnyType> && __HasMethodImplementation_fbc51d6746c8ca94<__AnyType> && __HasMethodImplementation_8addcb5f9470873d<__AnyType> && __HasMethodImplementation_5aa06689d687e755<__AnyType> && __HasMethodImplementation_getfd864fe31949d59b<__AnyType> && __HasMethodImplementation_get150f67e3f8760e2b<__AnyType> && __HasAssociatedType_639db4f5c0c18988<__AnyType>;
-	#line 421 "Collections.ast"
+	#line 427 "Collections.ast"
 	class IInterface final : public CppAdvance::InterfaceRef {
 		public: using __self = IInterface;
 		public: using __vtable = __vtables::__vtable_IInterface;
@@ -1329,13 +1337,13 @@ namespace System::Application {
 		public: template<class __AnyType, class __FixedType = std::decay_t<__AnyType>::__self> requires std::is_base_of_v<CppAdvance::Object, std::decay_t<__AnyType>> IInterface& operator=(__AnyType&& value) { static_assert(__ImplementsInterface_IInterface<__FixedType>, "Cannot initialize interface IInterface from this type"); 
  		if (_obj) CppAdvance::Release(_obj); _obj = (CppAdvance::Object*)&value; CppAdvance::Retain(_obj); 
 		_vtable = &__vtable_IInterface_for<__FixedType>; return *this; }
-		#line 422 "Collections.ast"
+		#line 428 "Collections.ast"
 		static constexpr auto VERSION = CppAdvance::i32(12345);
-		#line 424 "Collections.ast"
+		#line 430 "Collections.ast"
 		using SomeInt = CppAdvance::i32;
-		#line 426 "Collections.ast"
+		#line 432 "Collections.ast"
 		public: const CppAdvance::f32 DefaultMethod(CppAdvance::In<VectorClass> f) const ;
-		#line 434 "Collections.ast"
+		#line 440 "Collections.ast"
 		public: static const CppAdvance::i32 SomeStaticMethod(CppAdvance::i32 i) ;
 		
 	};
@@ -1458,69 +1466,69 @@ namespace System::Application {
 	template<class __AnyInterface> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IInterface::__vtable> FORCE_INLINE const CppAdvance::Str getName(const __AnyInterface& iface) { return CppAdvance::GetVTableFromInterface(&iface)->fnptr_getName(CppAdvance::GetObjectReferenceFromInterface(&iface)); }
 	
 	class __Class_DayOfWeek;
-	#line 437 "Collections.ast"
+	#line 443 "Collections.ast"
 	struct DayOfWeek final : public CppAdvance::Enum {
 		public: using __self = DayOfWeek;
 		public: using __class = __Class_DayOfWeek;
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-		#line 437 "Collections.ast"
-		private: CppAdvance::i32 __value;
-		#line 437 "Collections.ast"
-		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, CppAdvance::i32)
-		#line 438 "Collections.ast"
-		public: static const DayOfWeek Monday;
-		#line 439 "Collections.ast"
-		public: static const DayOfWeek Tuesday;
-		#line 440 "Collections.ast"
-		public: static const DayOfWeek Wednesday;
-		#line 441 "Collections.ast"
-		public: static const DayOfWeek Thursday;
-		#line 442 "Collections.ast"
-		public: static const DayOfWeek Friday;
 		#line 443 "Collections.ast"
-		public: static const DayOfWeek Saturday;
+		private: CppAdvance::i32 __value;
+		#line 443 "Collections.ast"
+		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, CppAdvance::i32)
 		#line 444 "Collections.ast"
+		public: static const DayOfWeek Monday;
+		#line 445 "Collections.ast"
+		public: static const DayOfWeek Tuesday;
+		#line 446 "Collections.ast"
+		public: static const DayOfWeek Wednesday;
+		#line 447 "Collections.ast"
+		public: static const DayOfWeek Thursday;
+		#line 448 "Collections.ast"
+		public: static const DayOfWeek Friday;
+		#line 449 "Collections.ast"
+		public: static const DayOfWeek Saturday;
+		#line 450 "Collections.ast"
 		public: static const DayOfWeek Sunday;
-		#line 437 "Collections.ast"
+		#line 443 "Collections.ast"
 		private: static constexpr CppAdvance::Str __names[] = {u"Monday", u"Tuesday", u"Wednesday", u"Thursday", u"Friday", u"Saturday", u"Sunday"};
-		#line 437 "Collections.ast"
+		#line 443 "Collections.ast"
 		public: static constexpr int __variants = 7;
-		#line 437 "Collections.ast"
+		#line 443 "Collections.ast"
 		public: static constexpr std::span<const CppAdvance::Str> GetNames() noexcept { return __names; }
-		#line 437 "Collections.ast"
+		#line 443 "Collections.ast"
 		private: static const DayOfWeek __values[];
-		#line 437 "Collections.ast"
+		#line 443 "Collections.ast"
 		public: static constexpr std::span<const DayOfWeek> GetValues() noexcept;
-		#line 437 "Collections.ast"
+		#line 443 "Collections.ast"
 		public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
-		#line 437 "Collections.ast"
+		#line 443 "Collections.ast"
 		public: constexpr bool operator ==(const __self& that) const noexcept { return __value == that.__value; } 
-		#line 437 "Collections.ast"
+		#line 443 "Collections.ast"
 		public: constexpr operator CppAdvance::i32() const noexcept { return __value; }
-		#line 437 "Collections.ast"
+		#line 443 "Collections.ast"
 		private: constexpr DayOfWeek(CppAdvance::i32 value) : __value(value) {}
 		
 	};
 	
-	#line 438 "Collections.ast"
+	#line 444 "Collections.ast"
 	inline constexpr DayOfWeek DayOfWeek::Monday = CppAdvance::i32(CppAdvance::i32(1));
 	
-	#line 439 "Collections.ast"
+	#line 445 "Collections.ast"
 	inline constexpr DayOfWeek DayOfWeek::Tuesday = CppAdvance::i32(CppAdvance::i64(Monday.__value) + 1);
 	
-	#line 440 "Collections.ast"
+	#line 446 "Collections.ast"
 	inline constexpr DayOfWeek DayOfWeek::Wednesday = CppAdvance::i32(CppAdvance::i64(Tuesday.__value) + 1);
 	
-	#line 441 "Collections.ast"
+	#line 447 "Collections.ast"
 	inline constexpr DayOfWeek DayOfWeek::Thursday = CppAdvance::i32(CppAdvance::i64(Wednesday.__value) + 1);
 	
-	#line 442 "Collections.ast"
+	#line 448 "Collections.ast"
 	inline constexpr DayOfWeek DayOfWeek::Friday = CppAdvance::i32(CppAdvance::i64(Thursday.__value) + 1);
 	
-	#line 443 "Collections.ast"
+	#line 449 "Collections.ast"
 	inline constexpr DayOfWeek DayOfWeek::Saturday = CppAdvance::i32(CppAdvance::i64(Friday.__value) + 1);
 	
-	#line 444 "Collections.ast"
+	#line 450 "Collections.ast"
 	inline constexpr DayOfWeek DayOfWeek::Sunday = CppAdvance::i32(CppAdvance::i64(Saturday.__value) + 1);
 	inline constexpr DayOfWeek DayOfWeek::__values[] = {Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday};
 	inline constexpr std::span<const DayOfWeek> DayOfWeek::GetValues() noexcept { return __values; }
@@ -1535,100 +1543,100 @@ namespace System::Application {
 	
 	
 	class __Class_Options;
-	#line 448 "Collections.ast"
+	#line 454 "Collections.ast"
 	struct [[clang::annotate("UserAttr: Flags")]] Options final : public CppAdvance::Enum {
 		public: using __self = Options;
 		public: using __class = __Class_Options;
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-		#line 448 "Collections.ast"
-		private: CppAdvance::u8 __value;
-		#line 448 "Collections.ast"
-		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, CppAdvance::u8)
-		#line 449 "Collections.ast"
-		public: static const Options None;
-		#line 450 "Collections.ast"
-		public: static const Options First;
-		#line 451 "Collections.ast"
-		public: static const Options Second;
-		#line 452 "Collections.ast"
-		public: static const Options Third;
-		#line 453 "Collections.ast"
-		public: static const Options Fourth;
 		#line 454 "Collections.ast"
-		public: static const Options Fiveth;
+		private: CppAdvance::u8 __value;
+		#line 454 "Collections.ast"
+		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, CppAdvance::u8)
 		#line 455 "Collections.ast"
-		public: static const Options Sixth;
+		public: static const Options None;
 		#line 456 "Collections.ast"
-		public: static const Options Seventh;
+		public: static const Options First;
+		#line 457 "Collections.ast"
+		public: static const Options Second;
 		#line 458 "Collections.ast"
-		public: static const Options All;
+		public: static const Options Third;
 		#line 459 "Collections.ast"
-		public: static const Options Weekend;
-		#line 448 "Collections.ast"
-		private: static constexpr CppAdvance::Str __names[] = {u"None", u"First", u"Second", u"Third", u"Fourth", u"Fiveth", u"Sixth", u"Seventh", u"All", u"Weekend"};
-		#line 448 "Collections.ast"
-		public: static constexpr int __variants = 10;
-		#line 448 "Collections.ast"
-		public: static constexpr std::span<const CppAdvance::Str> GetNames() noexcept { return __names; }
-		#line 448 "Collections.ast"
-		private: static const Options __values[];
-		#line 448 "Collections.ast"
-		public: static constexpr std::span<const Options> GetValues() noexcept;
-		#line 448 "Collections.ast"
-		public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
-		#line 448 "Collections.ast"
-		public: constexpr bool operator ==(const __self& that) const noexcept { return __value == that.__value; } 
-		#line 448 "Collections.ast"
-		public: constexpr Options operator &(Options other) const noexcept { return (__value & other.__value); }
-		#line 448 "Collections.ast"
-		public: constexpr bool HasFlag(Options other) const noexcept { return static_cast<bool>(__value & other.__value); }
-		#line 448 "Collections.ast"
-		public: constexpr const Options operator |(Options other) const noexcept { return (__value | other.__value); }
-		#line 448 "Collections.ast"
-		public: constexpr Options& operator |=(Options other) noexcept { __value |= other.__value; return *this; }
-		#line 448 "Collections.ast"
-		public: constexpr Options& AddFlag(Options other) noexcept { __value |= other.__value; return *this; }
-		#line 448 "Collections.ast"
-		public: constexpr Options RemoveFlag(Options other) noexcept { __value &=~ other.__value; return __value; }
+		public: static const Options Fourth;
+		#line 460 "Collections.ast"
+		public: static const Options Fiveth;
 		#line 461 "Collections.ast"
+		public: static const Options Sixth;
+		#line 462 "Collections.ast"
+		public: static const Options Seventh;
+		#line 464 "Collections.ast"
+		public: static const Options All;
+		#line 465 "Collections.ast"
+		public: static const Options Weekend;
+		#line 454 "Collections.ast"
+		private: static constexpr CppAdvance::Str __names[] = {u"None", u"First", u"Second", u"Third", u"Fourth", u"Fiveth", u"Sixth", u"Seventh", u"All", u"Weekend"};
+		#line 454 "Collections.ast"
+		public: static constexpr int __variants = 10;
+		#line 454 "Collections.ast"
+		public: static constexpr std::span<const CppAdvance::Str> GetNames() noexcept { return __names; }
+		#line 454 "Collections.ast"
+		private: static const Options __values[];
+		#line 454 "Collections.ast"
+		public: static constexpr std::span<const Options> GetValues() noexcept;
+		#line 454 "Collections.ast"
+		public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
+		#line 454 "Collections.ast"
+		public: constexpr bool operator ==(const __self& that) const noexcept { return __value == that.__value; } 
+		#line 454 "Collections.ast"
+		public: constexpr Options operator &(Options other) const noexcept { return (__value & other.__value); }
+		#line 454 "Collections.ast"
+		public: constexpr bool HasFlag(Options other) const noexcept { return static_cast<bool>(__value & other.__value); }
+		#line 454 "Collections.ast"
+		public: constexpr const Options operator |(Options other) const noexcept { return (__value | other.__value); }
+		#line 454 "Collections.ast"
+		public: constexpr Options& operator |=(Options other) noexcept { __value |= other.__value; return *this; }
+		#line 454 "Collections.ast"
+		public: constexpr Options& AddFlag(Options other) noexcept { __value |= other.__value; return *this; }
+		#line 454 "Collections.ast"
+		public: constexpr Options RemoveFlag(Options other) noexcept { __value &=~ other.__value; return __value; }
+		#line 467 "Collections.ast"
 		public: inline auto getIsWeekend() const  -> bool;
 		#line 9999 "Collections.ast"
 		ADV_PROPERTY_GETTER(public, IsWeekend, getIsWeekend, bool);
-		#line 448 "Collections.ast"
+		#line 454 "Collections.ast"
 		public: constexpr operator CppAdvance::u8() const noexcept { return __value; }
-		#line 448 "Collections.ast"
+		#line 454 "Collections.ast"
 		private: constexpr Options(CppAdvance::u8 value) : __value(value) {}
 		
 	};
 	
-	#line 449 "Collections.ast"
+	#line 455 "Collections.ast"
 	inline constexpr Options Options::None = CppAdvance::u8(CppAdvance::i32(0));
 	
-	#line 450 "Collections.ast"
+	#line 456 "Collections.ast"
 	inline constexpr Options Options::First = CppAdvance::u8(CppAdvance::i64(None.__value) << 1 ? CppAdvance::i64(None.__value) << 1 : 1);
 	
-	#line 451 "Collections.ast"
+	#line 457 "Collections.ast"
 	inline constexpr Options Options::Second = CppAdvance::u8(CppAdvance::i64(First.__value) << 1 ? CppAdvance::i64(First.__value) << 1 : 1);
 	
-	#line 452 "Collections.ast"
+	#line 458 "Collections.ast"
 	inline constexpr Options Options::Third = CppAdvance::u8(CppAdvance::i64(Second.__value) << 1 ? CppAdvance::i64(Second.__value) << 1 : 1);
 	
-	#line 453 "Collections.ast"
+	#line 459 "Collections.ast"
 	inline constexpr Options Options::Fourth = CppAdvance::u8(CppAdvance::i64(Third.__value) << 1 ? CppAdvance::i64(Third.__value) << 1 : 1);
 	
-	#line 454 "Collections.ast"
+	#line 460 "Collections.ast"
 	inline constexpr Options Options::Fiveth = CppAdvance::u8(CppAdvance::i64(Fourth.__value) << 1 ? CppAdvance::i64(Fourth.__value) << 1 : 1);
 	
-	#line 455 "Collections.ast"
+	#line 461 "Collections.ast"
 	inline constexpr Options Options::Sixth = CppAdvance::u8(CppAdvance::i64(Fiveth.__value) << 1 ? CppAdvance::i64(Fiveth.__value) << 1 : 1);
 	
-	#line 456 "Collections.ast"
+	#line 462 "Collections.ast"
 	inline constexpr Options Options::Seventh = CppAdvance::u8(CppAdvance::i64(Sixth.__value) << 1 ? CppAdvance::i64(Sixth.__value) << 1 : 1);
 	
-	#line 458 "Collections.ast"
+	#line 464 "Collections.ast"
 	inline constexpr Options Options::All = CppAdvance::u8(First | Second | Third | Fourth | Fiveth | Sixth | Seventh);
 	
-	#line 459 "Collections.ast"
+	#line 465 "Collections.ast"
 	inline constexpr Options Options::Weekend = CppAdvance::u8(Sixth | Seventh);
 	inline constexpr Options Options::__values[] = {None, First, Second, Third, Fourth, Fiveth, Sixth, Seventh, All, Weekend};
 	inline constexpr std::span<const Options> Options::GetValues() noexcept { return __values; }
@@ -1646,75 +1654,75 @@ namespace System::Application {
 	
 	
 	class __Class_Text;
-	#line 463 "Collections.ast"
+	#line 469 "Collections.ast"
 	struct Text final : public CppAdvance::Enum {
 		public: using __self = Text;
 		public: using __class = __Class_Text;
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-		#line 463 "Collections.ast"
-		private: CppAdvance::Str __value;
-		#line 463 "Collections.ast"
-		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, CppAdvance::Str)
-		#line 464 "Collections.ast"
-		public: static const Text Monday;
-		#line 465 "Collections.ast"
-		public: static const Text Tuesday;
-		#line 466 "Collections.ast"
-		public: static const Text Wednesday;
-		#line 467 "Collections.ast"
-		public: static const Text Thursday;
-		#line 468 "Collections.ast"
-		public: static const Text Friday;
 		#line 469 "Collections.ast"
-		public: static const Text Saturday;
+		private: CppAdvance::Str __value;
+		#line 469 "Collections.ast"
+		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, CppAdvance::Str)
 		#line 470 "Collections.ast"
-		public: static const Text Sunday;
-		#line 463 "Collections.ast"
-		private: static constexpr CppAdvance::Str __names[] = {u"Monday", u"Tuesday", u"Wednesday", u"Thursday", u"Friday", u"Saturday", u"Sunday"};
-		#line 463 "Collections.ast"
-		public: static constexpr int __variants = 7;
-		#line 463 "Collections.ast"
-		public: static constexpr std::span<const CppAdvance::Str> GetNames() noexcept { return __names; }
-		#line 463 "Collections.ast"
-		private: static const Text __values[];
-		#line 463 "Collections.ast"
-		public: static constexpr std::span<const Text> GetValues() noexcept;
-		#line 463 "Collections.ast"
-		public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
-		#line 463 "Collections.ast"
-		public: constexpr bool operator ==(const __self& that) const noexcept { return __value == that.__value; } 
+		public: static const Text Monday;
+		#line 471 "Collections.ast"
+		public: static const Text Tuesday;
+		#line 472 "Collections.ast"
+		public: static const Text Wednesday;
+		#line 473 "Collections.ast"
+		public: static const Text Thursday;
+		#line 474 "Collections.ast"
+		public: static const Text Friday;
 		#line 475 "Collections.ast"
+		public: static const Text Saturday;
+		#line 476 "Collections.ast"
+		public: static const Text Sunday;
+		#line 469 "Collections.ast"
+		private: static constexpr CppAdvance::Str __names[] = {u"Monday", u"Tuesday", u"Wednesday", u"Thursday", u"Friday", u"Saturday", u"Sunday"};
+		#line 469 "Collections.ast"
+		public: static constexpr int __variants = 7;
+		#line 469 "Collections.ast"
+		public: static constexpr std::span<const CppAdvance::Str> GetNames() noexcept { return __names; }
+		#line 469 "Collections.ast"
+		private: static const Text __values[];
+		#line 469 "Collections.ast"
+		public: static constexpr std::span<const Text> GetValues() noexcept;
+		#line 469 "Collections.ast"
+		public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
+		#line 469 "Collections.ast"
+		public: constexpr bool operator ==(const __self& that) const noexcept { return __value == that.__value; } 
+		#line 481 "Collections.ast"
 		private: inline auto getShortString() const  -> CppAdvance::Str;
 		#line 9999 "Collections.ast"
 		ADV_PROPERTY_GETTER(private, ShortString, getShortString, CppAdvance::Str);
-		#line 472 "Collections.ast"
+		#line 478 "Collections.ast"
 		public: inline auto ToShortString() const  -> const CppAdvance::Str;
-		#line 463 "Collections.ast"
+		#line 469 "Collections.ast"
 		public: constexpr operator CppAdvance::Str() const noexcept { return __value; }
-		#line 463 "Collections.ast"
+		#line 469 "Collections.ast"
 		private: constexpr Text(CppAdvance::Str value) : __value(value) {}
 		
 	};
 	
-	#line 464 "Collections.ast"
+	#line 470 "Collections.ast"
 	inline constexpr Text Text::Monday = CppAdvance::Str(CppAdvance::Str{u"This is Monday"});
 	
-	#line 465 "Collections.ast"
+	#line 471 "Collections.ast"
 	inline constexpr Text Text::Tuesday = CppAdvance::Str(CppAdvance::Str{u"This is Tuesday"});
 	
-	#line 466 "Collections.ast"
+	#line 472 "Collections.ast"
 	inline constexpr Text Text::Wednesday = CppAdvance::Str(CppAdvance::Str{u"This is Wednesday"});
 	
-	#line 467 "Collections.ast"
+	#line 473 "Collections.ast"
 	inline constexpr Text Text::Thursday = CppAdvance::Str(CppAdvance::Str{u"This is Thursday"});
 	
-	#line 468 "Collections.ast"
+	#line 474 "Collections.ast"
 	inline constexpr Text Text::Friday = CppAdvance::Str(CppAdvance::Str{u"This is Friday"});
 	
-	#line 469 "Collections.ast"
+	#line 475 "Collections.ast"
 	inline constexpr Text Text::Saturday = CppAdvance::Str(CppAdvance::Str{u"This is Saturday"});
 	
-	#line 470 "Collections.ast"
+	#line 476 "Collections.ast"
 	inline constexpr Text Text::Sunday = CppAdvance::Str(CppAdvance::Str{u"This is Sunday"});
 	inline constexpr Text Text::__values[] = {Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday};
 	inline constexpr std::span<const Text> Text::GetValues() noexcept { return __values; }
@@ -1733,7 +1741,7 @@ namespace System::Application {
 template<> inline constexpr bool CppAdvance::__details::cheapCopy<System::Application::ComplexVariant> = false;
 
 namespace System::Application {
-	#line 478 "Collections.ast"
+	#line 484 "Collections.ast"
 	class ComplexVariant final : public CppAdvance::EnumClassRef {
 		public: using __self = ComplexVariant;
 		private: using ___super = CppAdvance::EnumClassRef;
@@ -1751,7 +1759,7 @@ namespace System::Application {
 		#define ADV_PROPERTY_SELF __class
 		public: ADV_PROPERTY_GETTER_STATIC(public, , Count10, getCount10, CppAdvance::i32);
 		#define ADV_PROPERTY_SELF __self
-		#line 490 "Collections.ast"
+		#line 496 "Collections.ast"
 		public: inline decltype(auto) operator*() const ;
 		public: FORCE_INLINE static decltype(auto) getValue1() noexcept;
 		ADV_PROPERTY_GETTER_STATIC(public, , Value1, getValue1, __self);
@@ -1761,11 +1769,11 @@ namespace System::Application {
 		ADV_PROPERTY_GETTER_STATIC(public, , Value3, getValue3, __self);
 		public: FORCE_INLINE static decltype(auto) getValue4() noexcept;
 		ADV_PROPERTY_GETTER_STATIC(public, , Value4, getValue4, __self);
-		#line 478 "Collections.ast"
+		#line 484 "Collections.ast"
 		public: FORCE_INLINE static decltype(auto) GetValues() noexcept;
 		
 	};
-	#line 478 "Collections.ast"
+	#line 484 "Collections.ast"
 	class ComplexVariant__Unowned : public CppAdvance::ObjectRef__Unowned {
 		public: using __self = ComplexVariant;
 		public: using __strong_ref = ComplexVariant;
@@ -1776,11 +1784,11 @@ namespace System::Application {
 		public: FORCE_INLINE decltype(auto) __ref() const noexcept { CppAdvance::UnownedCheck(_obj); return *reinterpret_cast<__class*>(_obj); }
 		ADV_CLASS_FROM_PTR(ComplexVariant__Unowned)
 		ADV_CLASS_UNOWNED_COMMON_CTORS(ComplexVariant__Unowned)
-		#line 490 "Collections.ast"
+		#line 496 "Collections.ast"
 		public: inline decltype(auto) operator*() const ;
 		
 	};
-	#line 478 "Collections.ast"
+	#line 484 "Collections.ast"
 	class ComplexVariant__Weak : public CppAdvance::ObjectRef__Weak {
 		public: using __self = ComplexVariant;
 		public: using __strong_ref = ComplexVariant;
@@ -1796,25 +1804,25 @@ namespace System::Application {
 	};
 	
 	class __Class_Media;
-	#line 504 "Collections.ast"
+	#line 510 "Collections.ast"
 	struct Media final : public CppAdvance::Union {
 		public: using __self = Media;
 		public: using __class = __Class_Media;
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-		#line 505 "Collections.ast"
+		#line 511 "Collections.ast"
 		private: struct __UnionType_None{ constexpr bool operator==(const __UnionType_None &) const noexcept { return true; } }; public: static constexpr __UnionType_None None{};
-		#line 506 "Collections.ast"
+		#line 512 "Collections.ast"
 		public: using String = CppAdvance::Str; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
-		#line 507 "Collections.ast"
+		#line 513 "Collections.ast"
 		public: using XYZ = std::tuple<CppAdvance::i32, CppAdvance::i32, CppAdvance::i32>;
-		#line 508 "Collections.ast"
+		#line 514 "Collections.ast"
 		public: struct Audio { decltype(auto) __ref() const noexcept { return *this; }
 			CppAdvance::Str name; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
 			CppAdvance::i32 len; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
 			CppAdvance::f32 volume; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
 			bool operator==(const Audio& that) const noexcept { return name == that.name && len == that.len && volume == that.volume; }
 		};
-		#line 509 "Collections.ast"
+		#line 515 "Collections.ast"
 		public: struct Video { decltype(auto) __ref() const noexcept { return *this; }
 			CppAdvance::Str name; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
 			CppAdvance::i32 len; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
@@ -1822,23 +1830,23 @@ namespace System::Application {
 			CppAdvance::Str lang; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
 			bool operator==(const Video& that) const noexcept { return name == that.name && len == that.len && fps == that.fps && lang == that.lang; }
 		};
-		#line 510 "Collections.ast"
+		#line 516 "Collections.ast"
 		public: struct Text { decltype(auto) __ref() const noexcept { return *this; }
 			CppAdvance::Str lang; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
 			bool operator==(const Text& that) const noexcept { return lang == that.lang; }
 		};
 		private: union {
-			#line 505 "Collections.ast"
+			#line 511 "Collections.ast"
 			__UnionType_None _None;
-			#line 506 "Collections.ast"
+			#line 512 "Collections.ast"
 			String _String;
-			#line 507 "Collections.ast"
+			#line 513 "Collections.ast"
 			XYZ _XYZ;
-			#line 508 "Collections.ast"
+			#line 514 "Collections.ast"
 			Audio _Audio;
-			#line 509 "Collections.ast"
+			#line 515 "Collections.ast"
 			Video _Video;
-			#line 510 "Collections.ast"
+			#line 516 "Collections.ast"
 			Text _Text;
 			
 		};
@@ -1846,133 +1854,133 @@ namespace System::Application {
 			_TAG__None, _TAG__String, _TAG__XYZ, _TAG__Audio, _TAG__Video, _TAG__Text
 		} __union_internal_tag;
 		public:
-		#line 504 "Collections.ast"
-		static constexpr int __variants = 6;
-		#line 505 "Collections.ast"
-		Media(CppAdvance::In<__UnionType_None> value) : __union_internal_tag{ _TAG__None } { new (&_None) __UnionType_None(value); }
-		#line 506 "Collections.ast"
-		Media(CppAdvance::In<String> value) : __union_internal_tag{ _TAG__String } { new (&_String) String(value); }
-		#line 507 "Collections.ast"
-		Media(CppAdvance::In<XYZ> value) : __union_internal_tag{ _TAG__XYZ } { new (&_XYZ) XYZ(value); }
-		#line 508 "Collections.ast"
-		Media(CppAdvance::In<Audio> value) : __union_internal_tag{ _TAG__Audio } { new (&_Audio) Audio(value); }
-		#line 509 "Collections.ast"
-		Media(CppAdvance::In<Video> value) : __union_internal_tag{ _TAG__Video } { new (&_Video) Video(value); }
 		#line 510 "Collections.ast"
+		static constexpr int __variants = 6;
+		#line 511 "Collections.ast"
+		Media(CppAdvance::In<__UnionType_None> value) : __union_internal_tag{ _TAG__None } { new (&_None) __UnionType_None(value); }
+		#line 512 "Collections.ast"
+		Media(CppAdvance::In<String> value) : __union_internal_tag{ _TAG__String } { new (&_String) String(value); }
+		#line 513 "Collections.ast"
+		Media(CppAdvance::In<XYZ> value) : __union_internal_tag{ _TAG__XYZ } { new (&_XYZ) XYZ(value); }
+		#line 514 "Collections.ast"
+		Media(CppAdvance::In<Audio> value) : __union_internal_tag{ _TAG__Audio } { new (&_Audio) Audio(value); }
+		#line 515 "Collections.ast"
+		Media(CppAdvance::In<Video> value) : __union_internal_tag{ _TAG__Video } { new (&_Video) Video(value); }
+		#line 516 "Collections.ast"
 		Media(CppAdvance::In<Text> value) : __union_internal_tag{ _TAG__Text } { new (&_Text) Text(value); }
 		#line 9999 "Collections.ast"
 		private: void __copy(const __self& other) {
 			__union_internal_tag = other.__union_internal_tag;
 			switch (__union_internal_tag) {
-				#line 505 "Collections.ast"
+				#line 511 "Collections.ast"
 				case _TAG__None: new (&_None) __UnionType_None(other._None); break;
-				#line 506 "Collections.ast"
+				#line 512 "Collections.ast"
 				case _TAG__String: new (&_String) String(other._String); break;
-				#line 507 "Collections.ast"
+				#line 513 "Collections.ast"
 				case _TAG__XYZ: new (&_XYZ) XYZ(other._XYZ); break;
-				#line 508 "Collections.ast"
+				#line 514 "Collections.ast"
 				case _TAG__Audio: new (&_Audio) Audio(other._Audio); break;
-				#line 509 "Collections.ast"
+				#line 515 "Collections.ast"
 				case _TAG__Video: new (&_Video) Video(other._Video); break;
-				#line 510 "Collections.ast"
+				#line 516 "Collections.ast"
 				case _TAG__Text: new (&_Text) Text(other._Text); break;
 				
 			}
 		}
-		#line 504 "Collections.ast"
+		#line 510 "Collections.ast"
 		public: Media(const __self& other) { __copy(other); }
 		#line 9999 "Collections.ast"
 		private: void __move(__self&& other) {
 			__union_internal_tag = other.__union_internal_tag;
 			switch (__union_internal_tag) {
-				#line 505 "Collections.ast"
+				#line 511 "Collections.ast"
 				case _TAG__None: new (&_None) __UnionType_None(std::move(other._None)); break;
-				#line 506 "Collections.ast"
+				#line 512 "Collections.ast"
 				case _TAG__String: new (&_String) String(std::move(other._String)); break;
-				#line 507 "Collections.ast"
+				#line 513 "Collections.ast"
 				case _TAG__XYZ: new (&_XYZ) XYZ(std::move(other._XYZ)); break;
-				#line 508 "Collections.ast"
+				#line 514 "Collections.ast"
 				case _TAG__Audio: new (&_Audio) Audio(std::move(other._Audio)); break;
-				#line 509 "Collections.ast"
+				#line 515 "Collections.ast"
 				case _TAG__Video: new (&_Video) Video(std::move(other._Video)); break;
-				#line 510 "Collections.ast"
+				#line 516 "Collections.ast"
 				case _TAG__Text: new (&_Text) Text(std::move(other._Text)); break;
 				
 			}
 		}
-		#line 504 "Collections.ast"
+		#line 510 "Collections.ast"
 		public: Media(__self&& other) { __move(std::move(other)); }
 		#line 9999 "Collections.ast"
 		private: void __destroy() {
 			switch (__union_internal_tag) {
-				#line 505 "Collections.ast"
+				#line 511 "Collections.ast"
 				case _TAG__None: _None.~__UnionType_None(); break;
-				#line 506 "Collections.ast"
+				#line 512 "Collections.ast"
 				case _TAG__String: _String.~String(); break;
-				#line 507 "Collections.ast"
+				#line 513 "Collections.ast"
 				case _TAG__XYZ: _XYZ.~XYZ(); break;
-				#line 508 "Collections.ast"
+				#line 514 "Collections.ast"
 				case _TAG__Audio: _Audio.~Audio(); break;
-				#line 509 "Collections.ast"
+				#line 515 "Collections.ast"
 				case _TAG__Video: _Video.~Video(); break;
-				#line 510 "Collections.ast"
+				#line 516 "Collections.ast"
 				case _TAG__Text: _Text.~Text(); break;
 				
 			}
 		}
-		#line 504 "Collections.ast"
+		#line 510 "Collections.ast"
 		public: ~Media() { __destroy(); }
-		#line 505 "Collections.ast"
+		#line 511 "Collections.ast"
 		Media& operator=(CppAdvance::In<__UnionType_None> value) {
 			__destroy();
 			__union_internal_tag = _TAG__None;
 			new (&_None) __UnionType_None(value); return *this;
 		}
-		#line 506 "Collections.ast"
+		#line 512 "Collections.ast"
 		Media& operator=(CppAdvance::In<String> value) {
 			__destroy();
 			__union_internal_tag = _TAG__String;
 			new (&_String) String(value); return *this;
 		}
-		#line 507 "Collections.ast"
+		#line 513 "Collections.ast"
 		Media& operator=(CppAdvance::In<XYZ> value) {
 			__destroy();
 			__union_internal_tag = _TAG__XYZ;
 			new (&_XYZ) XYZ(value); return *this;
 		}
-		#line 508 "Collections.ast"
+		#line 514 "Collections.ast"
 		Media& operator=(CppAdvance::In<Audio> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Audio;
 			new (&_Audio) Audio(value); return *this;
 		}
-		#line 509 "Collections.ast"
+		#line 515 "Collections.ast"
 		Media& operator=(CppAdvance::In<Video> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Video;
 			new (&_Video) Video(value); return *this;
 		}
-		#line 510 "Collections.ast"
+		#line 516 "Collections.ast"
 		Media& operator=(CppAdvance::In<Text> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Text;
 			new (&_Text) Text(value); return *this;
 		}
-		#line 504 "Collections.ast"
-		public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }
-		#line 504 "Collections.ast"
-		public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }
-		#line 505 "Collections.ast"
-		public: auto GetNone() { if (__union_internal_tag != _TAG__None) throw std::logic_error("Type mismatch in the discriminated union"); return _None; }
-		#line 506 "Collections.ast"
-		public: auto GetString() { if (__union_internal_tag != _TAG__String) throw std::logic_error("Type mismatch in the discriminated union"); return _String; }
-		#line 507 "Collections.ast"
-		public: auto GetXYZ() { if (__union_internal_tag != _TAG__XYZ) throw std::logic_error("Type mismatch in the discriminated union"); return _XYZ; }
-		#line 508 "Collections.ast"
-		public: auto GetAudio() { if (__union_internal_tag != _TAG__Audio) throw std::logic_error("Type mismatch in the discriminated union"); return _Audio; }
-		#line 509 "Collections.ast"
-		public: auto GetVideo() { if (__union_internal_tag != _TAG__Video) throw std::logic_error("Type mismatch in the discriminated union"); return _Video; }
 		#line 510 "Collections.ast"
+		public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }
+		#line 510 "Collections.ast"
+		public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }
+		#line 511 "Collections.ast"
+		public: auto GetNone() { if (__union_internal_tag != _TAG__None) throw std::logic_error("Type mismatch in the discriminated union"); return _None; }
+		#line 512 "Collections.ast"
+		public: auto GetString() { if (__union_internal_tag != _TAG__String) throw std::logic_error("Type mismatch in the discriminated union"); return _String; }
+		#line 513 "Collections.ast"
+		public: auto GetXYZ() { if (__union_internal_tag != _TAG__XYZ) throw std::logic_error("Type mismatch in the discriminated union"); return _XYZ; }
+		#line 514 "Collections.ast"
+		public: auto GetAudio() { if (__union_internal_tag != _TAG__Audio) throw std::logic_error("Type mismatch in the discriminated union"); return _Audio; }
+		#line 515 "Collections.ast"
+		public: auto GetVideo() { if (__union_internal_tag != _TAG__Video) throw std::logic_error("Type mismatch in the discriminated union"); return _Video; }
+		#line 516 "Collections.ast"
 		public: auto GetText() { if (__union_internal_tag != _TAG__Text) throw std::logic_error("Type mismatch in the discriminated union"); return _Text; }
 		#line 9999 "Collections.ast"
 		public: template<class __SomeT> bool Is() const noexcept {
@@ -2005,35 +2013,35 @@ namespace System::Application {
 			else if constexpr (std::is_same_v<__SomeT, Text>) return __union_internal_tag == _TAG__Text && _Text == other;
 			return false;
 		}
-		#line 518 "Collections.ast"
+		#line 524 "Collections.ast"
 		public: inline constexpr auto getCount123() const  -> CppAdvance::i32;
 		#line 9999 "Collections.ast"
 		ADV_PROPERTY_GETTER(public, Count123, getCount123, CppAdvance::i32);
-		#line 520 "Collections.ast"
+		#line 526 "Collections.ast"
 		public: inline constexpr static auto getCount10()  -> CppAdvance::i32;
 		#line 9999 "Collections.ast"
 		ADV_PROPERTY_GETTER_STATIC(public, , Count10, getCount10, CppAdvance::i32);
-		#line 512 "Collections.ast"
+		#line 518 "Collections.ast"
 		public: inline auto printVariant() const  -> void;
-		#line 516 "Collections.ast"
+		#line 522 "Collections.ast"
 		public: inline auto GetMagicNumber(CppAdvance::In<VectorClass> f) const  -> const CppAdvance::f32;
 		
 	};
 	
 	template<class T1, class T2> class __Class_Union2;
-	#line 523 "Collections.ast"
+	#line 529 "Collections.ast"
 	template<class T1, class T2> struct Union2 final : public CppAdvance::Union {
 		public: using __self = Union2<T1, T2>;
 		public: using __class = __Class_Union2<T1, T2>;
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-		#line 524 "Collections.ast"
+		#line 530 "Collections.ast"
 		public: using Type1 = T1; ADV_CHECK_REF_STRUCT("T1", T1);
-		#line 525 "Collections.ast"
+		#line 531 "Collections.ast"
 		public: using Type2 = T2; ADV_CHECK_REF_STRUCT("T2", T2);
 		private: union {
-			#line 524 "Collections.ast"
+			#line 530 "Collections.ast"
 			Type1 _Type1;
-			#line 525 "Collections.ast"
+			#line 531 "Collections.ast"
 			Type2 _Type2;
 			
 		};
@@ -2041,69 +2049,69 @@ namespace System::Application {
 			_TAG__Type1, _TAG__Type2
 		} __union_internal_tag;
 		public:
-		#line 523 "Collections.ast"
+		#line 529 "Collections.ast"
 		static constexpr int __variants = 2;
-		#line 524 "Collections.ast"
+		#line 530 "Collections.ast"
 		Union2(CppAdvance::In<Type1> value) : __union_internal_tag{ _TAG__Type1 } { new (&_Type1) Type1(value); }
-		#line 525 "Collections.ast"
+		#line 531 "Collections.ast"
 		Union2(CppAdvance::In<Type2> value) : __union_internal_tag{ _TAG__Type2 } { new (&_Type2) Type2(value); }
 		#line 9999 "Collections.ast"
 		private: void __copy(const __self& other) {
 			__union_internal_tag = other.__union_internal_tag;
 			switch (__union_internal_tag) {
-				#line 524 "Collections.ast"
+				#line 530 "Collections.ast"
 				case _TAG__Type1: new (&_Type1) Type1(other._Type1); break;
-				#line 525 "Collections.ast"
+				#line 531 "Collections.ast"
 				case _TAG__Type2: new (&_Type2) Type2(other._Type2); break;
 				
 			}
 		}
-		#line 523 "Collections.ast"
+		#line 529 "Collections.ast"
 		public: Union2(const __self& other) { __copy(other); }
 		#line 9999 "Collections.ast"
 		private: void __move(__self&& other) {
 			__union_internal_tag = other.__union_internal_tag;
 			switch (__union_internal_tag) {
-				#line 524 "Collections.ast"
+				#line 530 "Collections.ast"
 				case _TAG__Type1: new (&_Type1) Type1(std::move(other._Type1)); break;
-				#line 525 "Collections.ast"
+				#line 531 "Collections.ast"
 				case _TAG__Type2: new (&_Type2) Type2(std::move(other._Type2)); break;
 				
 			}
 		}
-		#line 523 "Collections.ast"
+		#line 529 "Collections.ast"
 		public: Union2(__self&& other) { __move(std::move(other)); }
 		#line 9999 "Collections.ast"
 		private: void __destroy() {
 			switch (__union_internal_tag) {
-				#line 524 "Collections.ast"
+				#line 530 "Collections.ast"
 				case _TAG__Type1: _Type1.~Type1(); break;
-				#line 525 "Collections.ast"
+				#line 531 "Collections.ast"
 				case _TAG__Type2: _Type2.~Type2(); break;
 				
 			}
 		}
-		#line 523 "Collections.ast"
+		#line 529 "Collections.ast"
 		public: ~Union2() { __destroy(); }
-		#line 524 "Collections.ast"
+		#line 530 "Collections.ast"
 		Union2& operator=(CppAdvance::In<Type1> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type1;
 			new (&_Type1) Type1(value); return *this;
 		}
-		#line 525 "Collections.ast"
+		#line 531 "Collections.ast"
 		Union2& operator=(CppAdvance::In<Type2> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type2;
 			new (&_Type2) Type2(value); return *this;
 		}
-		#line 523 "Collections.ast"
+		#line 529 "Collections.ast"
 		public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }
-		#line 523 "Collections.ast"
+		#line 529 "Collections.ast"
 		public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }
-		#line 524 "Collections.ast"
+		#line 530 "Collections.ast"
 		public: auto GetType1() { if (__union_internal_tag != _TAG__Type1) throw std::logic_error("Type mismatch in the discriminated union"); return _Type1; }
-		#line 525 "Collections.ast"
+		#line 531 "Collections.ast"
 		public: auto GetType2() { if (__union_internal_tag != _TAG__Type2) throw std::logic_error("Type mismatch in the discriminated union"); return _Type2; }
 		#line 9999 "Collections.ast"
 		public: template<class __SomeT> bool Is() const noexcept {
@@ -2128,23 +2136,23 @@ namespace System::Application {
 	};
 	
 	template<class T1, class T2, class T3> class __Class_Union3;
-	#line 528 "Collections.ast"
+	#line 534 "Collections.ast"
 	template<class T1, class T2, class T3> struct Union3 final : public CppAdvance::Union {
 		public: using __self = Union3<T1, T2, T3>;
 		public: using __class = __Class_Union3<T1, T2, T3>;
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-		#line 529 "Collections.ast"
+		#line 535 "Collections.ast"
 		public: using Type1 = T1; ADV_CHECK_REF_STRUCT("T1", T1);
-		#line 530 "Collections.ast"
+		#line 536 "Collections.ast"
 		public: using Type2 = T2; ADV_CHECK_REF_STRUCT("T2", T2);
-		#line 531 "Collections.ast"
+		#line 537 "Collections.ast"
 		public: using Type3 = T3; ADV_CHECK_REF_STRUCT("T3", T3);
 		private: union {
-			#line 529 "Collections.ast"
+			#line 535 "Collections.ast"
 			Type1 _Type1;
-			#line 530 "Collections.ast"
+			#line 536 "Collections.ast"
 			Type2 _Type2;
-			#line 531 "Collections.ast"
+			#line 537 "Collections.ast"
 			Type3 _Type3;
 			
 		};
@@ -2152,85 +2160,85 @@ namespace System::Application {
 			_TAG__Type1, _TAG__Type2, _TAG__Type3
 		} __union_internal_tag;
 		public:
-		#line 528 "Collections.ast"
+		#line 534 "Collections.ast"
 		static constexpr int __variants = 3;
-		#line 529 "Collections.ast"
+		#line 535 "Collections.ast"
 		Union3(CppAdvance::In<Type1> value) : __union_internal_tag{ _TAG__Type1 } { new (&_Type1) Type1(value); }
-		#line 530 "Collections.ast"
+		#line 536 "Collections.ast"
 		Union3(CppAdvance::In<Type2> value) : __union_internal_tag{ _TAG__Type2 } { new (&_Type2) Type2(value); }
-		#line 531 "Collections.ast"
+		#line 537 "Collections.ast"
 		Union3(CppAdvance::In<Type3> value) : __union_internal_tag{ _TAG__Type3 } { new (&_Type3) Type3(value); }
 		#line 9999 "Collections.ast"
 		private: void __copy(const __self& other) {
 			__union_internal_tag = other.__union_internal_tag;
 			switch (__union_internal_tag) {
-				#line 529 "Collections.ast"
+				#line 535 "Collections.ast"
 				case _TAG__Type1: new (&_Type1) Type1(other._Type1); break;
-				#line 530 "Collections.ast"
+				#line 536 "Collections.ast"
 				case _TAG__Type2: new (&_Type2) Type2(other._Type2); break;
-				#line 531 "Collections.ast"
+				#line 537 "Collections.ast"
 				case _TAG__Type3: new (&_Type3) Type3(other._Type3); break;
 				
 			}
 		}
-		#line 528 "Collections.ast"
+		#line 534 "Collections.ast"
 		public: Union3(const __self& other) { __copy(other); }
 		#line 9999 "Collections.ast"
 		private: void __move(__self&& other) {
 			__union_internal_tag = other.__union_internal_tag;
 			switch (__union_internal_tag) {
-				#line 529 "Collections.ast"
+				#line 535 "Collections.ast"
 				case _TAG__Type1: new (&_Type1) Type1(std::move(other._Type1)); break;
-				#line 530 "Collections.ast"
+				#line 536 "Collections.ast"
 				case _TAG__Type2: new (&_Type2) Type2(std::move(other._Type2)); break;
-				#line 531 "Collections.ast"
+				#line 537 "Collections.ast"
 				case _TAG__Type3: new (&_Type3) Type3(std::move(other._Type3)); break;
 				
 			}
 		}
-		#line 528 "Collections.ast"
+		#line 534 "Collections.ast"
 		public: Union3(__self&& other) { __move(std::move(other)); }
 		#line 9999 "Collections.ast"
 		private: void __destroy() {
 			switch (__union_internal_tag) {
-				#line 529 "Collections.ast"
+				#line 535 "Collections.ast"
 				case _TAG__Type1: _Type1.~Type1(); break;
-				#line 530 "Collections.ast"
+				#line 536 "Collections.ast"
 				case _TAG__Type2: _Type2.~Type2(); break;
-				#line 531 "Collections.ast"
+				#line 537 "Collections.ast"
 				case _TAG__Type3: _Type3.~Type3(); break;
 				
 			}
 		}
-		#line 528 "Collections.ast"
+		#line 534 "Collections.ast"
 		public: ~Union3() { __destroy(); }
-		#line 529 "Collections.ast"
+		#line 535 "Collections.ast"
 		Union3& operator=(CppAdvance::In<Type1> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type1;
 			new (&_Type1) Type1(value); return *this;
 		}
-		#line 530 "Collections.ast"
+		#line 536 "Collections.ast"
 		Union3& operator=(CppAdvance::In<Type2> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type2;
 			new (&_Type2) Type2(value); return *this;
 		}
-		#line 531 "Collections.ast"
+		#line 537 "Collections.ast"
 		Union3& operator=(CppAdvance::In<Type3> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type3;
 			new (&_Type3) Type3(value); return *this;
 		}
-		#line 528 "Collections.ast"
+		#line 534 "Collections.ast"
 		public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }
-		#line 528 "Collections.ast"
+		#line 534 "Collections.ast"
 		public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }
-		#line 529 "Collections.ast"
+		#line 535 "Collections.ast"
 		public: auto GetType1() { if (__union_internal_tag != _TAG__Type1) throw std::logic_error("Type mismatch in the discriminated union"); return _Type1; }
-		#line 530 "Collections.ast"
+		#line 536 "Collections.ast"
 		public: auto GetType2() { if (__union_internal_tag != _TAG__Type2) throw std::logic_error("Type mismatch in the discriminated union"); return _Type2; }
-		#line 531 "Collections.ast"
+		#line 537 "Collections.ast"
 		public: auto GetType3() { if (__union_internal_tag != _TAG__Type3) throw std::logic_error("Type mismatch in the discriminated union"); return _Type3; }
 		#line 9999 "Collections.ast"
 		public: template<class __SomeT> bool Is() const noexcept {
@@ -2258,27 +2266,27 @@ namespace System::Application {
 	};
 	
 	template<class T1, class T2, class T3, class T4> class __Class_Union4;
-	#line 534 "Collections.ast"
+	#line 540 "Collections.ast"
 	template<class T1, class T2, class T3, class T4> struct Union4 final : public CppAdvance::Union {
 		public: using __self = Union4<T1, T2, T3, T4>;
 		public: using __class = __Class_Union4<T1, T2, T3, T4>;
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-		#line 535 "Collections.ast"
+		#line 541 "Collections.ast"
 		public: using Type1 = T1; ADV_CHECK_REF_STRUCT("T1", T1);
-		#line 536 "Collections.ast"
+		#line 542 "Collections.ast"
 		public: using Type2 = T2; ADV_CHECK_REF_STRUCT("T2", T2);
-		#line 537 "Collections.ast"
+		#line 543 "Collections.ast"
 		public: using Type3 = T3; ADV_CHECK_REF_STRUCT("T3", T3);
-		#line 538 "Collections.ast"
+		#line 544 "Collections.ast"
 		public: using Type4 = T4; ADV_CHECK_REF_STRUCT("T4", T4);
 		private: union {
-			#line 535 "Collections.ast"
+			#line 541 "Collections.ast"
 			Type1 _Type1;
-			#line 536 "Collections.ast"
+			#line 542 "Collections.ast"
 			Type2 _Type2;
-			#line 537 "Collections.ast"
+			#line 543 "Collections.ast"
 			Type3 _Type3;
-			#line 538 "Collections.ast"
+			#line 544 "Collections.ast"
 			Type4 _Type4;
 			
 		};
@@ -2286,101 +2294,101 @@ namespace System::Application {
 			_TAG__Type1, _TAG__Type2, _TAG__Type3, _TAG__Type4
 		} __union_internal_tag;
 		public:
-		#line 534 "Collections.ast"
+		#line 540 "Collections.ast"
 		static constexpr int __variants = 4;
-		#line 535 "Collections.ast"
+		#line 541 "Collections.ast"
 		Union4(CppAdvance::In<Type1> value) : __union_internal_tag{ _TAG__Type1 } { new (&_Type1) Type1(value); }
-		#line 536 "Collections.ast"
+		#line 542 "Collections.ast"
 		Union4(CppAdvance::In<Type2> value) : __union_internal_tag{ _TAG__Type2 } { new (&_Type2) Type2(value); }
-		#line 537 "Collections.ast"
+		#line 543 "Collections.ast"
 		Union4(CppAdvance::In<Type3> value) : __union_internal_tag{ _TAG__Type3 } { new (&_Type3) Type3(value); }
-		#line 538 "Collections.ast"
+		#line 544 "Collections.ast"
 		Union4(CppAdvance::In<Type4> value) : __union_internal_tag{ _TAG__Type4 } { new (&_Type4) Type4(value); }
 		#line 9999 "Collections.ast"
 		private: void __copy(const __self& other) {
 			__union_internal_tag = other.__union_internal_tag;
 			switch (__union_internal_tag) {
-				#line 535 "Collections.ast"
+				#line 541 "Collections.ast"
 				case _TAG__Type1: new (&_Type1) Type1(other._Type1); break;
-				#line 536 "Collections.ast"
+				#line 542 "Collections.ast"
 				case _TAG__Type2: new (&_Type2) Type2(other._Type2); break;
-				#line 537 "Collections.ast"
+				#line 543 "Collections.ast"
 				case _TAG__Type3: new (&_Type3) Type3(other._Type3); break;
-				#line 538 "Collections.ast"
+				#line 544 "Collections.ast"
 				case _TAG__Type4: new (&_Type4) Type4(other._Type4); break;
 				
 			}
 		}
-		#line 534 "Collections.ast"
+		#line 540 "Collections.ast"
 		public: Union4(const __self& other) { __copy(other); }
 		#line 9999 "Collections.ast"
 		private: void __move(__self&& other) {
 			__union_internal_tag = other.__union_internal_tag;
 			switch (__union_internal_tag) {
-				#line 535 "Collections.ast"
+				#line 541 "Collections.ast"
 				case _TAG__Type1: new (&_Type1) Type1(std::move(other._Type1)); break;
-				#line 536 "Collections.ast"
+				#line 542 "Collections.ast"
 				case _TAG__Type2: new (&_Type2) Type2(std::move(other._Type2)); break;
-				#line 537 "Collections.ast"
+				#line 543 "Collections.ast"
 				case _TAG__Type3: new (&_Type3) Type3(std::move(other._Type3)); break;
-				#line 538 "Collections.ast"
+				#line 544 "Collections.ast"
 				case _TAG__Type4: new (&_Type4) Type4(std::move(other._Type4)); break;
 				
 			}
 		}
-		#line 534 "Collections.ast"
+		#line 540 "Collections.ast"
 		public: Union4(__self&& other) { __move(std::move(other)); }
 		#line 9999 "Collections.ast"
 		private: void __destroy() {
 			switch (__union_internal_tag) {
-				#line 535 "Collections.ast"
+				#line 541 "Collections.ast"
 				case _TAG__Type1: _Type1.~Type1(); break;
-				#line 536 "Collections.ast"
+				#line 542 "Collections.ast"
 				case _TAG__Type2: _Type2.~Type2(); break;
-				#line 537 "Collections.ast"
+				#line 543 "Collections.ast"
 				case _TAG__Type3: _Type3.~Type3(); break;
-				#line 538 "Collections.ast"
+				#line 544 "Collections.ast"
 				case _TAG__Type4: _Type4.~Type4(); break;
 				
 			}
 		}
-		#line 534 "Collections.ast"
+		#line 540 "Collections.ast"
 		public: ~Union4() { __destroy(); }
-		#line 535 "Collections.ast"
+		#line 541 "Collections.ast"
 		Union4& operator=(CppAdvance::In<Type1> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type1;
 			new (&_Type1) Type1(value); return *this;
 		}
-		#line 536 "Collections.ast"
+		#line 542 "Collections.ast"
 		Union4& operator=(CppAdvance::In<Type2> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type2;
 			new (&_Type2) Type2(value); return *this;
 		}
-		#line 537 "Collections.ast"
+		#line 543 "Collections.ast"
 		Union4& operator=(CppAdvance::In<Type3> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type3;
 			new (&_Type3) Type3(value); return *this;
 		}
-		#line 538 "Collections.ast"
+		#line 544 "Collections.ast"
 		Union4& operator=(CppAdvance::In<Type4> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type4;
 			new (&_Type4) Type4(value); return *this;
 		}
-		#line 534 "Collections.ast"
+		#line 540 "Collections.ast"
 		public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }
-		#line 534 "Collections.ast"
+		#line 540 "Collections.ast"
 		public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }
-		#line 535 "Collections.ast"
+		#line 541 "Collections.ast"
 		public: auto GetType1() { if (__union_internal_tag != _TAG__Type1) throw std::logic_error("Type mismatch in the discriminated union"); return _Type1; }
-		#line 536 "Collections.ast"
+		#line 542 "Collections.ast"
 		public: auto GetType2() { if (__union_internal_tag != _TAG__Type2) throw std::logic_error("Type mismatch in the discriminated union"); return _Type2; }
-		#line 537 "Collections.ast"
+		#line 543 "Collections.ast"
 		public: auto GetType3() { if (__union_internal_tag != _TAG__Type3) throw std::logic_error("Type mismatch in the discriminated union"); return _Type3; }
-		#line 538 "Collections.ast"
+		#line 544 "Collections.ast"
 		public: auto GetType4() { if (__union_internal_tag != _TAG__Type4) throw std::logic_error("Type mismatch in the discriminated union"); return _Type4; }
 		#line 9999 "Collections.ast"
 		public: template<class __SomeT> bool Is() const noexcept {
@@ -2411,31 +2419,31 @@ namespace System::Application {
 	};
 	
 	template<class T1, class T2, class T3, class T4, class T5> class __Class_Union5;
-	#line 541 "Collections.ast"
+	#line 547 "Collections.ast"
 	template<class T1, class T2, class T3, class T4, class T5> struct Union5 final : public CppAdvance::Union {
 		public: using __self = Union5<T1, T2, T3, T4, T5>;
 		public: using __class = __Class_Union5<T1, T2, T3, T4, T5>;
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-		#line 542 "Collections.ast"
+		#line 548 "Collections.ast"
 		public: using Type1 = T1; ADV_CHECK_REF_STRUCT("T1", T1);
-		#line 543 "Collections.ast"
+		#line 549 "Collections.ast"
 		public: using Type2 = T2; ADV_CHECK_REF_STRUCT("T2", T2);
-		#line 544 "Collections.ast"
+		#line 550 "Collections.ast"
 		public: using Type3 = T3; ADV_CHECK_REF_STRUCT("T3", T3);
-		#line 545 "Collections.ast"
+		#line 551 "Collections.ast"
 		public: using Type4 = T4; ADV_CHECK_REF_STRUCT("T4", T4);
-		#line 546 "Collections.ast"
+		#line 552 "Collections.ast"
 		public: using Type5 = T5; ADV_CHECK_REF_STRUCT("T5", T5);
 		private: union {
-			#line 542 "Collections.ast"
+			#line 548 "Collections.ast"
 			Type1 _Type1;
-			#line 543 "Collections.ast"
+			#line 549 "Collections.ast"
 			Type2 _Type2;
-			#line 544 "Collections.ast"
+			#line 550 "Collections.ast"
 			Type3 _Type3;
-			#line 545 "Collections.ast"
+			#line 551 "Collections.ast"
 			Type4 _Type4;
-			#line 546 "Collections.ast"
+			#line 552 "Collections.ast"
 			Type5 _Type5;
 			
 		};
@@ -2443,117 +2451,117 @@ namespace System::Application {
 			_TAG__Type1, _TAG__Type2, _TAG__Type3, _TAG__Type4, _TAG__Type5
 		} __union_internal_tag;
 		public:
-		#line 541 "Collections.ast"
+		#line 547 "Collections.ast"
 		static constexpr int __variants = 5;
-		#line 542 "Collections.ast"
+		#line 548 "Collections.ast"
 		Union5(CppAdvance::In<Type1> value) : __union_internal_tag{ _TAG__Type1 } { new (&_Type1) Type1(value); }
-		#line 543 "Collections.ast"
+		#line 549 "Collections.ast"
 		Union5(CppAdvance::In<Type2> value) : __union_internal_tag{ _TAG__Type2 } { new (&_Type2) Type2(value); }
-		#line 544 "Collections.ast"
+		#line 550 "Collections.ast"
 		Union5(CppAdvance::In<Type3> value) : __union_internal_tag{ _TAG__Type3 } { new (&_Type3) Type3(value); }
-		#line 545 "Collections.ast"
+		#line 551 "Collections.ast"
 		Union5(CppAdvance::In<Type4> value) : __union_internal_tag{ _TAG__Type4 } { new (&_Type4) Type4(value); }
-		#line 546 "Collections.ast"
+		#line 552 "Collections.ast"
 		Union5(CppAdvance::In<Type5> value) : __union_internal_tag{ _TAG__Type5 } { new (&_Type5) Type5(value); }
 		#line 9999 "Collections.ast"
 		private: void __copy(const __self& other) {
 			__union_internal_tag = other.__union_internal_tag;
 			switch (__union_internal_tag) {
-				#line 542 "Collections.ast"
+				#line 548 "Collections.ast"
 				case _TAG__Type1: new (&_Type1) Type1(other._Type1); break;
-				#line 543 "Collections.ast"
+				#line 549 "Collections.ast"
 				case _TAG__Type2: new (&_Type2) Type2(other._Type2); break;
-				#line 544 "Collections.ast"
+				#line 550 "Collections.ast"
 				case _TAG__Type3: new (&_Type3) Type3(other._Type3); break;
-				#line 545 "Collections.ast"
+				#line 551 "Collections.ast"
 				case _TAG__Type4: new (&_Type4) Type4(other._Type4); break;
-				#line 546 "Collections.ast"
+				#line 552 "Collections.ast"
 				case _TAG__Type5: new (&_Type5) Type5(other._Type5); break;
 				
 			}
 		}
-		#line 541 "Collections.ast"
+		#line 547 "Collections.ast"
 		public: Union5(const __self& other) { __copy(other); }
 		#line 9999 "Collections.ast"
 		private: void __move(__self&& other) {
 			__union_internal_tag = other.__union_internal_tag;
 			switch (__union_internal_tag) {
-				#line 542 "Collections.ast"
+				#line 548 "Collections.ast"
 				case _TAG__Type1: new (&_Type1) Type1(std::move(other._Type1)); break;
-				#line 543 "Collections.ast"
+				#line 549 "Collections.ast"
 				case _TAG__Type2: new (&_Type2) Type2(std::move(other._Type2)); break;
-				#line 544 "Collections.ast"
+				#line 550 "Collections.ast"
 				case _TAG__Type3: new (&_Type3) Type3(std::move(other._Type3)); break;
-				#line 545 "Collections.ast"
+				#line 551 "Collections.ast"
 				case _TAG__Type4: new (&_Type4) Type4(std::move(other._Type4)); break;
-				#line 546 "Collections.ast"
+				#line 552 "Collections.ast"
 				case _TAG__Type5: new (&_Type5) Type5(std::move(other._Type5)); break;
 				
 			}
 		}
-		#line 541 "Collections.ast"
+		#line 547 "Collections.ast"
 		public: Union5(__self&& other) { __move(std::move(other)); }
 		#line 9999 "Collections.ast"
 		private: void __destroy() {
 			switch (__union_internal_tag) {
-				#line 542 "Collections.ast"
+				#line 548 "Collections.ast"
 				case _TAG__Type1: _Type1.~Type1(); break;
-				#line 543 "Collections.ast"
+				#line 549 "Collections.ast"
 				case _TAG__Type2: _Type2.~Type2(); break;
-				#line 544 "Collections.ast"
+				#line 550 "Collections.ast"
 				case _TAG__Type3: _Type3.~Type3(); break;
-				#line 545 "Collections.ast"
+				#line 551 "Collections.ast"
 				case _TAG__Type4: _Type4.~Type4(); break;
-				#line 546 "Collections.ast"
+				#line 552 "Collections.ast"
 				case _TAG__Type5: _Type5.~Type5(); break;
 				
 			}
 		}
-		#line 541 "Collections.ast"
+		#line 547 "Collections.ast"
 		public: ~Union5() { __destroy(); }
-		#line 542 "Collections.ast"
+		#line 548 "Collections.ast"
 		Union5& operator=(CppAdvance::In<Type1> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type1;
 			new (&_Type1) Type1(value); return *this;
 		}
-		#line 543 "Collections.ast"
+		#line 549 "Collections.ast"
 		Union5& operator=(CppAdvance::In<Type2> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type2;
 			new (&_Type2) Type2(value); return *this;
 		}
-		#line 544 "Collections.ast"
+		#line 550 "Collections.ast"
 		Union5& operator=(CppAdvance::In<Type3> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type3;
 			new (&_Type3) Type3(value); return *this;
 		}
-		#line 545 "Collections.ast"
+		#line 551 "Collections.ast"
 		Union5& operator=(CppAdvance::In<Type4> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type4;
 			new (&_Type4) Type4(value); return *this;
 		}
-		#line 546 "Collections.ast"
+		#line 552 "Collections.ast"
 		Union5& operator=(CppAdvance::In<Type5> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type5;
 			new (&_Type5) Type5(value); return *this;
 		}
-		#line 541 "Collections.ast"
+		#line 547 "Collections.ast"
 		public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }
-		#line 541 "Collections.ast"
+		#line 547 "Collections.ast"
 		public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }
-		#line 542 "Collections.ast"
+		#line 548 "Collections.ast"
 		public: auto GetType1() { if (__union_internal_tag != _TAG__Type1) throw std::logic_error("Type mismatch in the discriminated union"); return _Type1; }
-		#line 543 "Collections.ast"
+		#line 549 "Collections.ast"
 		public: auto GetType2() { if (__union_internal_tag != _TAG__Type2) throw std::logic_error("Type mismatch in the discriminated union"); return _Type2; }
-		#line 544 "Collections.ast"
+		#line 550 "Collections.ast"
 		public: auto GetType3() { if (__union_internal_tag != _TAG__Type3) throw std::logic_error("Type mismatch in the discriminated union"); return _Type3; }
-		#line 545 "Collections.ast"
+		#line 551 "Collections.ast"
 		public: auto GetType4() { if (__union_internal_tag != _TAG__Type4) throw std::logic_error("Type mismatch in the discriminated union"); return _Type4; }
-		#line 546 "Collections.ast"
+		#line 552 "Collections.ast"
 		public: auto GetType5() { if (__union_internal_tag != _TAG__Type5) throw std::logic_error("Type mismatch in the discriminated union"); return _Type5; }
 		#line 9999 "Collections.ast"
 		public: template<class __SomeT> bool Is() const noexcept {
@@ -2587,35 +2595,35 @@ namespace System::Application {
 	};
 	
 	template<class T1, class T2, class T3, class T4, class T5, class T6> class __Class_Union6;
-	#line 549 "Collections.ast"
+	#line 555 "Collections.ast"
 	template<class T1, class T2, class T3, class T4, class T5, class T6> struct Union6 final : public CppAdvance::Union {
 		public: using __self = Union6<T1, T2, T3, T4, T5, T6>;
 		public: using __class = __Class_Union6<T1, T2, T3, T4, T5, T6>;
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-		#line 550 "Collections.ast"
+		#line 556 "Collections.ast"
 		public: using Type1 = T1; ADV_CHECK_REF_STRUCT("T1", T1);
-		#line 551 "Collections.ast"
+		#line 557 "Collections.ast"
 		public: using Type2 = T2; ADV_CHECK_REF_STRUCT("T2", T2);
-		#line 552 "Collections.ast"
+		#line 558 "Collections.ast"
 		public: using Type3 = T3; ADV_CHECK_REF_STRUCT("T3", T3);
-		#line 553 "Collections.ast"
+		#line 559 "Collections.ast"
 		public: using Type4 = T4; ADV_CHECK_REF_STRUCT("T4", T4);
-		#line 554 "Collections.ast"
+		#line 560 "Collections.ast"
 		public: using Type5 = T5; ADV_CHECK_REF_STRUCT("T5", T5);
-		#line 555 "Collections.ast"
+		#line 561 "Collections.ast"
 		public: using Type6 = T6; ADV_CHECK_REF_STRUCT("T6", T6);
 		private: union {
-			#line 550 "Collections.ast"
+			#line 556 "Collections.ast"
 			Type1 _Type1;
-			#line 551 "Collections.ast"
+			#line 557 "Collections.ast"
 			Type2 _Type2;
-			#line 552 "Collections.ast"
+			#line 558 "Collections.ast"
 			Type3 _Type3;
-			#line 553 "Collections.ast"
+			#line 559 "Collections.ast"
 			Type4 _Type4;
-			#line 554 "Collections.ast"
+			#line 560 "Collections.ast"
 			Type5 _Type5;
-			#line 555 "Collections.ast"
+			#line 561 "Collections.ast"
 			Type6 _Type6;
 			
 		};
@@ -2623,133 +2631,133 @@ namespace System::Application {
 			_TAG__Type1, _TAG__Type2, _TAG__Type3, _TAG__Type4, _TAG__Type5, _TAG__Type6
 		} __union_internal_tag;
 		public:
-		#line 549 "Collections.ast"
-		static constexpr int __variants = 6;
-		#line 550 "Collections.ast"
-		Union6(CppAdvance::In<Type1> value) : __union_internal_tag{ _TAG__Type1 } { new (&_Type1) Type1(value); }
-		#line 551 "Collections.ast"
-		Union6(CppAdvance::In<Type2> value) : __union_internal_tag{ _TAG__Type2 } { new (&_Type2) Type2(value); }
-		#line 552 "Collections.ast"
-		Union6(CppAdvance::In<Type3> value) : __union_internal_tag{ _TAG__Type3 } { new (&_Type3) Type3(value); }
-		#line 553 "Collections.ast"
-		Union6(CppAdvance::In<Type4> value) : __union_internal_tag{ _TAG__Type4 } { new (&_Type4) Type4(value); }
-		#line 554 "Collections.ast"
-		Union6(CppAdvance::In<Type5> value) : __union_internal_tag{ _TAG__Type5 } { new (&_Type5) Type5(value); }
 		#line 555 "Collections.ast"
+		static constexpr int __variants = 6;
+		#line 556 "Collections.ast"
+		Union6(CppAdvance::In<Type1> value) : __union_internal_tag{ _TAG__Type1 } { new (&_Type1) Type1(value); }
+		#line 557 "Collections.ast"
+		Union6(CppAdvance::In<Type2> value) : __union_internal_tag{ _TAG__Type2 } { new (&_Type2) Type2(value); }
+		#line 558 "Collections.ast"
+		Union6(CppAdvance::In<Type3> value) : __union_internal_tag{ _TAG__Type3 } { new (&_Type3) Type3(value); }
+		#line 559 "Collections.ast"
+		Union6(CppAdvance::In<Type4> value) : __union_internal_tag{ _TAG__Type4 } { new (&_Type4) Type4(value); }
+		#line 560 "Collections.ast"
+		Union6(CppAdvance::In<Type5> value) : __union_internal_tag{ _TAG__Type5 } { new (&_Type5) Type5(value); }
+		#line 561 "Collections.ast"
 		Union6(CppAdvance::In<Type6> value) : __union_internal_tag{ _TAG__Type6 } { new (&_Type6) Type6(value); }
 		#line 9999 "Collections.ast"
 		private: void __copy(const __self& other) {
 			__union_internal_tag = other.__union_internal_tag;
 			switch (__union_internal_tag) {
-				#line 550 "Collections.ast"
+				#line 556 "Collections.ast"
 				case _TAG__Type1: new (&_Type1) Type1(other._Type1); break;
-				#line 551 "Collections.ast"
+				#line 557 "Collections.ast"
 				case _TAG__Type2: new (&_Type2) Type2(other._Type2); break;
-				#line 552 "Collections.ast"
+				#line 558 "Collections.ast"
 				case _TAG__Type3: new (&_Type3) Type3(other._Type3); break;
-				#line 553 "Collections.ast"
+				#line 559 "Collections.ast"
 				case _TAG__Type4: new (&_Type4) Type4(other._Type4); break;
-				#line 554 "Collections.ast"
+				#line 560 "Collections.ast"
 				case _TAG__Type5: new (&_Type5) Type5(other._Type5); break;
-				#line 555 "Collections.ast"
+				#line 561 "Collections.ast"
 				case _TAG__Type6: new (&_Type6) Type6(other._Type6); break;
 				
 			}
 		}
-		#line 549 "Collections.ast"
+		#line 555 "Collections.ast"
 		public: Union6(const __self& other) { __copy(other); }
 		#line 9999 "Collections.ast"
 		private: void __move(__self&& other) {
 			__union_internal_tag = other.__union_internal_tag;
 			switch (__union_internal_tag) {
-				#line 550 "Collections.ast"
+				#line 556 "Collections.ast"
 				case _TAG__Type1: new (&_Type1) Type1(std::move(other._Type1)); break;
-				#line 551 "Collections.ast"
+				#line 557 "Collections.ast"
 				case _TAG__Type2: new (&_Type2) Type2(std::move(other._Type2)); break;
-				#line 552 "Collections.ast"
+				#line 558 "Collections.ast"
 				case _TAG__Type3: new (&_Type3) Type3(std::move(other._Type3)); break;
-				#line 553 "Collections.ast"
+				#line 559 "Collections.ast"
 				case _TAG__Type4: new (&_Type4) Type4(std::move(other._Type4)); break;
-				#line 554 "Collections.ast"
+				#line 560 "Collections.ast"
 				case _TAG__Type5: new (&_Type5) Type5(std::move(other._Type5)); break;
-				#line 555 "Collections.ast"
+				#line 561 "Collections.ast"
 				case _TAG__Type6: new (&_Type6) Type6(std::move(other._Type6)); break;
 				
 			}
 		}
-		#line 549 "Collections.ast"
+		#line 555 "Collections.ast"
 		public: Union6(__self&& other) { __move(std::move(other)); }
 		#line 9999 "Collections.ast"
 		private: void __destroy() {
 			switch (__union_internal_tag) {
-				#line 550 "Collections.ast"
+				#line 556 "Collections.ast"
 				case _TAG__Type1: _Type1.~Type1(); break;
-				#line 551 "Collections.ast"
+				#line 557 "Collections.ast"
 				case _TAG__Type2: _Type2.~Type2(); break;
-				#line 552 "Collections.ast"
+				#line 558 "Collections.ast"
 				case _TAG__Type3: _Type3.~Type3(); break;
-				#line 553 "Collections.ast"
+				#line 559 "Collections.ast"
 				case _TAG__Type4: _Type4.~Type4(); break;
-				#line 554 "Collections.ast"
+				#line 560 "Collections.ast"
 				case _TAG__Type5: _Type5.~Type5(); break;
-				#line 555 "Collections.ast"
+				#line 561 "Collections.ast"
 				case _TAG__Type6: _Type6.~Type6(); break;
 				
 			}
 		}
-		#line 549 "Collections.ast"
+		#line 555 "Collections.ast"
 		public: ~Union6() { __destroy(); }
-		#line 550 "Collections.ast"
+		#line 556 "Collections.ast"
 		Union6& operator=(CppAdvance::In<Type1> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type1;
 			new (&_Type1) Type1(value); return *this;
 		}
-		#line 551 "Collections.ast"
+		#line 557 "Collections.ast"
 		Union6& operator=(CppAdvance::In<Type2> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type2;
 			new (&_Type2) Type2(value); return *this;
 		}
-		#line 552 "Collections.ast"
+		#line 558 "Collections.ast"
 		Union6& operator=(CppAdvance::In<Type3> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type3;
 			new (&_Type3) Type3(value); return *this;
 		}
-		#line 553 "Collections.ast"
+		#line 559 "Collections.ast"
 		Union6& operator=(CppAdvance::In<Type4> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type4;
 			new (&_Type4) Type4(value); return *this;
 		}
-		#line 554 "Collections.ast"
+		#line 560 "Collections.ast"
 		Union6& operator=(CppAdvance::In<Type5> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type5;
 			new (&_Type5) Type5(value); return *this;
 		}
-		#line 555 "Collections.ast"
+		#line 561 "Collections.ast"
 		Union6& operator=(CppAdvance::In<Type6> value) {
 			__destroy();
 			__union_internal_tag = _TAG__Type6;
 			new (&_Type6) Type6(value); return *this;
 		}
-		#line 549 "Collections.ast"
-		public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }
-		#line 549 "Collections.ast"
-		public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }
-		#line 550 "Collections.ast"
-		public: auto GetType1() { if (__union_internal_tag != _TAG__Type1) throw std::logic_error("Type mismatch in the discriminated union"); return _Type1; }
-		#line 551 "Collections.ast"
-		public: auto GetType2() { if (__union_internal_tag != _TAG__Type2) throw std::logic_error("Type mismatch in the discriminated union"); return _Type2; }
-		#line 552 "Collections.ast"
-		public: auto GetType3() { if (__union_internal_tag != _TAG__Type3) throw std::logic_error("Type mismatch in the discriminated union"); return _Type3; }
-		#line 553 "Collections.ast"
-		public: auto GetType4() { if (__union_internal_tag != _TAG__Type4) throw std::logic_error("Type mismatch in the discriminated union"); return _Type4; }
-		#line 554 "Collections.ast"
-		public: auto GetType5() { if (__union_internal_tag != _TAG__Type5) throw std::logic_error("Type mismatch in the discriminated union"); return _Type5; }
 		#line 555 "Collections.ast"
+		public: __self& operator=(const __self& other) { __destroy(); __copy(other); return *this; }
+		#line 555 "Collections.ast"
+		public: __self& operator=(__self&& other) { __destroy(); __move(std::move(other)); return *this; }
+		#line 556 "Collections.ast"
+		public: auto GetType1() { if (__union_internal_tag != _TAG__Type1) throw std::logic_error("Type mismatch in the discriminated union"); return _Type1; }
+		#line 557 "Collections.ast"
+		public: auto GetType2() { if (__union_internal_tag != _TAG__Type2) throw std::logic_error("Type mismatch in the discriminated union"); return _Type2; }
+		#line 558 "Collections.ast"
+		public: auto GetType3() { if (__union_internal_tag != _TAG__Type3) throw std::logic_error("Type mismatch in the discriminated union"); return _Type3; }
+		#line 559 "Collections.ast"
+		public: auto GetType4() { if (__union_internal_tag != _TAG__Type4) throw std::logic_error("Type mismatch in the discriminated union"); return _Type4; }
+		#line 560 "Collections.ast"
+		public: auto GetType5() { if (__union_internal_tag != _TAG__Type5) throw std::logic_error("Type mismatch in the discriminated union"); return _Type5; }
+		#line 561 "Collections.ast"
 		public: auto GetType6() { if (__union_internal_tag != _TAG__Type6) throw std::logic_error("Type mismatch in the discriminated union"); return _Type6; }
 		#line 9999 "Collections.ast"
 		public: template<class __SomeT> bool Is() const noexcept {
@@ -2785,64 +2793,64 @@ namespace System::Application {
 		
 	};
 	
-	#line 558 "Collections.ast"
-	template<class T> using __extension_558_T = T;
-	#line 561 "Collections.ast"
-	template<class T> inline auto operator*(__extension_558_T<T> const& __this LIFETIMEBOUND, CppAdvance::In<CppAdvance::f32> f)  -> const CppAdvance::f32;
-	#line 563 "Collections.ast"
-	template<class T> inline auto PrintInterface(__extension_558_T<T> const& __this LIFETIMEBOUND, CppAdvance::i32 x)  -> const CppAdvance::i32;
-	#line 571 "Collections.ast"
-	template<class T> inline const CppAdvance::f32 getAt(__extension_558_T<T> const& __this LIFETIMEBOUND, CppAdvance::f32 r, CppAdvance::f32 g, CppAdvance::f32 b);
-	#line 571 "Collections.ast"
-	template<class T> inline const CppAdvance::f32 _operator_subscript(__extension_558_T<T> const& __this LIFETIMEBOUND, CppAdvance::f32 r, CppAdvance::f32 g, CppAdvance::f32 b) { return getAt(__this, r, g, b); }
-	#line 573 "Collections.ast"
-	template<class T> inline auto __construct_(CppAdvance::ConstructorProxy<__extension_558_T<T>> __ctordata, CppAdvance::i32 x, CppAdvance::Str txt)  -> decltype(auto);
-	#line 578 "Collections.ast"
-	template<class T> inline auto __construct_(CppAdvance::ConstructorProxy<__extension_558_T<T>> __ctordata, typename CppAdvance::MemorySpace mem, CppAdvance::i32 x, CppAdvance::Str txt)  -> decltype(auto);
-	#line 559 "Collections.ast"
-	template<class T> inline auto getAsString(__extension_558_T<T> const& __this ) -> const CppAdvance::Str;
+	#line 564 "Collections.ast"
+	template<class T> using __extension_564_T = T;
+	#line 567 "Collections.ast"
+	template<class T> inline auto operator*(__extension_564_T<T> const& __this LIFETIMEBOUND, CppAdvance::In<CppAdvance::f32> f)  -> const CppAdvance::f32;
+	#line 569 "Collections.ast"
+	template<class T> inline auto PrintInterface(__extension_564_T<T> const& __this LIFETIMEBOUND, CppAdvance::i32 x)  -> const CppAdvance::i32;
+	#line 577 "Collections.ast"
+	template<class T> inline const CppAdvance::f32 getAt(__extension_564_T<T> const& __this LIFETIMEBOUND, CppAdvance::f32 r, CppAdvance::f32 g, CppAdvance::f32 b);
+	#line 577 "Collections.ast"
+	template<class T> inline const CppAdvance::f32 _operator_subscript(__extension_564_T<T> const& __this LIFETIMEBOUND, CppAdvance::f32 r, CppAdvance::f32 g, CppAdvance::f32 b) { return getAt(__this, r, g, b); }
+	#line 579 "Collections.ast"
+	template<class T> inline auto __construct_(CppAdvance::ConstructorProxy<__extension_564_T<T>> __ctordata, CppAdvance::i32 x, CppAdvance::Str txt)  -> decltype(auto);
+	#line 584 "Collections.ast"
+	template<class T> inline auto __construct_(CppAdvance::ConstructorProxy<__extension_564_T<T>> __ctordata, typename CppAdvance::MemorySpace mem, CppAdvance::i32 x, CppAdvance::Str txt)  -> decltype(auto);
+	#line 565 "Collections.ast"
+	template<class T> inline auto getAsString(__extension_564_T<T> const& __this ) -> const CppAdvance::Str;
 	
-	#line 587 "Collections.ast"
-	template<class T> using __extension_587_T = T;
-	#line 589 "Collections.ast"
+	#line 593 "Collections.ast"
+	template<class T> using __extension_593_T = T;
+	#line 595 "Collections.ast"
 	template<class T> inline constexpr auto __static_GetSuperCount(CppAdvance::i32 x, CppAdvance::i32 y)  -> const CppAdvance::i32;
-	#line 588 "Collections.ast"
+	#line 594 "Collections.ast"
 	template<class T> inline constexpr auto __static_getCount3() -> const CppAdvance::i32;
 	
-	#line 592 "Collections.ast"
-	template<class T> requires(CppAdvance::TypeIs<T, CppAdvance::i32>()) using __extension_592_T = T;
-	#line 596 "Collections.ast"
-	template<class T> [[clang::annotate("UserAttr: AllowPostfix")]] inline constexpr auto _operator_bsl_mul_div(__extension_592_T<T> const& __this LIFETIMEBOUND)  -> const CppAdvance::i32;
-	template<class T> [[clang::annotate("UserAttr: AllowPostfix")]] inline constexpr auto _operator_bsl_mul_div_postfix(__extension_592_T<T> & __this)  -> decltype(auto);
-	#line 599 "Collections.ast"
-	template<class T> [[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_bsl_mul_div(__extension_592_T<T> const& __this LIFETIMEBOUND, CppAdvance::f32 other)  -> const CppAdvance::f32;
-	template<class T> [[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_bsl_mul_div(CppAdvance::f32 other, const __extension_592_T<T> & __this)  -> decltype(auto);
-	#line 593 "Collections.ast"
-	template<class T> inline constexpr auto getkm(__extension_592_T<T> const& __this ) -> const CppAdvance::i32;
-	
+	#line 598 "Collections.ast"
+	template<class T> requires(CppAdvance::TypeIs<T, CppAdvance::i32>()) using __extension_598_T = T;
 	#line 602 "Collections.ast"
-	using __extension_602_f64 = CppAdvance::f64;
-	#line 603 "Collections.ast"
-	inline constexpr auto getkm(__extension_602_f64 const& __this ) -> const CppAdvance::f64;
+	template<class T> [[clang::annotate("UserAttr: AllowPostfix")]] inline constexpr auto _operator_bsl_mul_div(__extension_598_T<T> const& __this LIFETIMEBOUND)  -> const CppAdvance::i32;
+	template<class T> [[clang::annotate("UserAttr: AllowPostfix")]] inline constexpr auto _operator_bsl_mul_div_postfix(__extension_598_T<T> & __this)  -> decltype(auto);
+	#line 605 "Collections.ast"
+	template<class T> [[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_bsl_mul_div(__extension_598_T<T> const& __this LIFETIMEBOUND, CppAdvance::f32 other)  -> const CppAdvance::f32;
+	template<class T> [[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_bsl_mul_div(CppAdvance::f32 other, const __extension_598_T<T> & __this)  -> decltype(auto);
+	#line 599 "Collections.ast"
+	template<class T> inline constexpr auto getkm(__extension_598_T<T> const& __this ) -> const CppAdvance::i32;
 	
-	#line 606 "Collections.ast"
-	using __extension_606_str = CppAdvance::Str;
-	#line 607 "Collections.ast"
-	inline constexpr auto getkm(__extension_606_str const& __this ) -> const CppAdvance::Str;
+	#line 608 "Collections.ast"
+	using __extension_608_f64 = CppAdvance::f64;
+	#line 609 "Collections.ast"
+	inline constexpr auto getkm(__extension_608_f64 const& __this ) -> const CppAdvance::f64;
+	
+	#line 612 "Collections.ast"
+	using __extension_612_str = CppAdvance::Str;
+	#line 613 "Collections.ast"
+	inline constexpr auto getkm(__extension_612_str const& __this ) -> const CppAdvance::Str;
 	
 	class __Class_TestStruct;
 	#pragma pack(push, 1)
-	#line 614 "Collections.ast"
+	#line 620 "Collections.ast"
 	struct alignas((alignof(CppAdvance::i64))) TestStruct final : public CppAdvance::Struct {
 		public: using __self = TestStruct;
 		public: using __class = __Class_TestStruct;
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-		#line 615 "Collections.ast"
+		#line 621 "Collections.ast"
 		private: typename System::CInt x : 4; ADV_CHECK_REF_STRUCT("System.CInt", typename System::CInt);
-		#line 616 "Collections.ast"
+		#line 622 "Collections.ast"
 		private: typename System::CInt y : 4; ADV_CHECK_REF_STRUCT("System.CInt", typename System::CInt);
 		public: TestStruct(typename System::CInt _x, typename System::CInt _y) : x{_x}, y{_y} {}
-		#line 618 "Collections.ast"
+		#line 624 "Collections.ast"
 		static_assert(CppAdvance::usize(sizeof(CppAdvance::i32)) == CppAdvance::i32(4), "i32 must be 4 bytes");
 		template <size_t I> friend auto& get(TestStruct&);
 		template <size_t I> friend const auto& get(const TestStruct&);
@@ -2850,10 +2858,10 @@ namespace System::Application {
 	};
 	#pragma pack(pop)
 	
-	#line 638 "Collections.ast"
-	using __extension_638_Vector3 = Vector3;
-	#line 640 "Collections.ast"
-	inline auto getNext(__extension_638_Vector3 const& __this LIFETIMEBOUND)  -> const Next;
+	#line 644 "Collections.ast"
+	using __extension_644_Vector3 = Vector3;
+	#line 646 "Collections.ast"
+	inline auto getNext(__extension_644_Vector3 const& __this LIFETIMEBOUND)  -> const Next;
 	
 	
 	#line 64 "Collections.ast"
@@ -2885,7 +2893,7 @@ namespace System::Application {
 	#line 64 "Collections.ast"
 	ADV_CHECK_FOR_CONCRETE(Vector3);
 	
-#line 186 "Collections.ast"
+#line 192 "Collections.ast"
 	class __Class_BaseClass : public CppAdvance::Object {
 		public: using __self = BaseClass;
 		private: using ___super = CppAdvance::Object;
@@ -2894,16 +2902,16 @@ namespace System::Application {
 		friend class __self::__weak_ref;
 		#define ADV_PROPERTY_SELF __selfClass
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-		#line 187 "Collections.ast"
+		#line 193 "Collections.ast"
 		public: inline virtual auto getNext() const  -> const Next;
 		
 #define ADV_PROPERTY_SELF __self
 	};
 	
-	#line 186 "Collections.ast"
+	#line 192 "Collections.ast"
 	ADV_CHECK_FOR_CONCRETE(BaseClass);
 	
-#line 190 "Collections.ast"
+#line 196 "Collections.ast"
 	class ADV_NOVTABLE __Class_VectorClass ADV_ABSTRACT : public CppAdvance::ClassParent<BaseClass> {
 		public: using __self = VectorClass;
 		private: using ___super = CppAdvance::ClassParent<BaseClass>;
@@ -2913,83 +2921,83 @@ namespace System::Application {
 		#define ADV_PROPERTY_SELF __selfClass
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
 		public: using NestedClass = __self::NestedClass;
-		#line 199 "Collections.ast"
+		#line 205 "Collections.ast"
 		private: friend class TestStruct; friend class __Class_TestStruct;
-		#line 200 "Collections.ast"
+		#line 206 "Collections.ast"
 		private: template<class T> friend class TestStruct2; template<class T> friend class __Class_TestStruct2;
-		#line 201 "Collections.ast"
+		#line 207 "Collections.ast"
 		private: friend const CppAdvance::i32 func3(CppAdvance::i32 x);
-		#line 193 "Collections.ast"
+		#line 199 "Collections.ast"
 		public: mutable CppAdvance::f32 x; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-		#line 193 "Collections.ast"
+		#line 199 "Collections.ast"
 		public: mutable CppAdvance::f32 y; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-		#line 193 "Collections.ast"
+		#line 199 "Collections.ast"
 		public: mutable CppAdvance::f32 z; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-		#line 222 "Collections.ast"
+		#line 228 "Collections.ast"
 		public: static CppAdvance::i32 Count2; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
-		#line 224 "Collections.ast"
+		#line 230 "Collections.ast"
 		public: static const Vector3 ZERO; ADV_CHECK_REF_STRUCT("Vector3", Vector3);
-		#line 223 "Collections.ast"
+		#line 229 "Collections.ast"
 		public: static constexpr auto BYTES = CppAdvance::i32(24);
-		#line 225 "Collections.ast"
+		#line 231 "Collections.ast"
 		public: using Coords = __ntuples::NamedTuple_6893f862d6c49683;
-		#line 217 "Collections.ast"
+		#line 223 "Collections.ast"
 		public: virtual auto setCount(const CppAdvance::i32& value) -> __selfClass& = 0;
-		#line 217 "Collections.ast"
+		#line 223 "Collections.ast"
 		public: virtual auto getCount() const  -> CppAdvance::i32 = 0;
 		#line 9999 "Collections.ast"
 		ADV_PROPERTY_GETTER_SETTER(public, Count, public, getCount, public, setCount, CppAdvance::i32);
-		#line 220 "Collections.ast"
+		#line 226 "Collections.ast"
 		public: virtual auto setName(const CppAdvance::Str& value) -> __selfClass& = 0;
-		#line 220 "Collections.ast"
+		#line 226 "Collections.ast"
 		public: virtual auto getName() const  -> CppAdvance::Str = 0;
 		#line 9999 "Collections.ast"
 		ADV_PROPERTY_GETTER_SETTER(public, Name, public, getName, public, setName, CppAdvance::Str);
-		#line 204 "Collections.ast"
+		#line 210 "Collections.ast"
 		public: inline constexpr auto format() const noexcept -> const CppAdvance::Str;
-		#line 242 "Collections.ast"
+		#line 248 "Collections.ast"
 		protected: inline constexpr __Class_VectorClass()  = default;
-		#line 244 "Collections.ast"
-		protected: inline constexpr __Class_VectorClass(CppAdvance::f32 x, CppAdvance::f32 y, CppAdvance::f32 z) noexcept;
 		#line 250 "Collections.ast"
+		protected: inline constexpr __Class_VectorClass(CppAdvance::f32 x, CppAdvance::f32 y, CppAdvance::f32 z) noexcept;
+		#line 256 "Collections.ast"
 		protected: template<class U> inline constexpr explicit __Class_VectorClass(U f) ;
-		#line 255 "Collections.ast"
+		#line 261 "Collections.ast"
 		protected: inline explicit __Class_VectorClass(CppAdvance::In<__self> other) ;
 		inline __Class_VectorClass(__selfClass& copy) : __Class_VectorClass(__self(copy)) {}
-		#line 259 "Collections.ast"
+		#line 265 "Collections.ast"
 		public: inline ~__Class_VectorClass() noexcept;
-		#line 264 "Collections.ast"
+		#line 270 "Collections.ast"
 		public: inline explicit operator CppAdvance::f32() const noexcept;
 		public: inline CppAdvance::f32& getAt(CppAdvance::i32 idx);
 		inline const CppAdvance::f32& getAt(CppAdvance::i32 idx) const;
-		#line 296 "Collections.ast"
+		#line 302 "Collections.ast"
 		public: inline auto _operator_subscript(CppAdvance::i32 idx)  LIFETIMEBOUND -> CppAdvance::f32&;
 		public: inline auto _operator_subscript(CppAdvance::i32 idx) const  -> const CppAdvance::f32&;
 		public: inline const CppAdvance::f32 getAt(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3);
 		inline const CppAdvance::f32 getAt(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const;
-		#line 297 "Collections.ast"
+		#line 303 "Collections.ast"
 		public: inline auto _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  -> const CppAdvance::f32;
 		public: inline auto _operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const  -> const CppAdvance::f32;
-		#line 299 "Collections.ast"
+		#line 305 "Collections.ast"
 		public: virtual auto getX() const  -> const CppAdvance::f32 = 0;
-		#line 300 "Collections.ast"
+		#line 306 "Collections.ast"
 		public: inline virtual auto getNext() const  -> const Next final;
-		#line 303 "Collections.ast"
+		#line 309 "Collections.ast"
 		public: inline constexpr static auto Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z)  -> const CppAdvance::i32;
-		#line 308 "Collections.ast"
+		#line 314 "Collections.ast"
 		public: inline constexpr auto Reset() const  -> void;
-		#line 316 "Collections.ast"
+		#line 322 "Collections.ast"
 		public: template<class U> inline constexpr auto TemplateMethod(U x, U y, U z) const  -> const Coords;
 		
 #define ADV_PROPERTY_SELF __self
 	};
 	
-	#line 190 "Collections.ast"
+	#line 196 "Collections.ast"
 	ADV_CHECK_FOR_ABSTRACT(VectorClass);
-	#line 190 "Collections.ast"
+	#line 196 "Collections.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(VectorClass, BaseClass, BaseClass, VectorClass);
 	
-#line 335 "Collections.ast"
+#line 341 "Collections.ast"
 	class __Class_ConcreteVectorClass : public CppAdvance::ClassParent<VectorClass> {
 		public: using __self = ConcreteVectorClass;
 		private: using ___super = CppAdvance::ClassParent<VectorClass>;
@@ -2997,71 +3005,71 @@ namespace System::Application {
 		friend class __self;
 		friend class __self::__weak_ref;
 		#define ADV_PROPERTY_SELF __selfClass
-		#line 335 "Collections.ast"
+		#line 341 "Collections.ast"
 		ADV_CHECK_INTERFACE(IInterface, IInterface);
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-		#line 336 "Collections.ast"
+		#line 342 "Collections.ast"
 		public: using ElementType = CppAdvance::i32;
-		#line 348 "Collections.ast"
+		#line 354 "Collections.ast"
 		private: mutable CppAdvance::Str p_Name = CppAdvance::Str{u"ConcreteVectorClass"}; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
-		#line 348 "Collections.ast"
+		#line 354 "Collections.ast"
 		public: inline auto setName(const CppAdvance::Str& value) -> __selfClass&;
-		#line 348 "Collections.ast"
+		#line 354 "Collections.ast"
 		public: inline auto getName() const  -> CppAdvance::Str;
 		#line 9999 "Collections.ast"
 		ADV_PROPERTY_GETTER_SETTER(public, Name, public, getName, public, setName, CppAdvance::Str);
-		#line 350 "Collections.ast"
+		#line 356 "Collections.ast"
 		private: mutable CppAdvance::i32 p_ZZ = CppAdvance::i32(5); ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
-		#line 350 "Collections.ast"
+		#line 356 "Collections.ast"
 		public: inline auto setZZ(const CppAdvance::i32& value) -> __selfClass&;
-		#line 350 "Collections.ast"
+		#line 356 "Collections.ast"
 		public: inline auto getZZ() const  -> CppAdvance::i32;
 		#line 9999 "Collections.ast"
 		ADV_PROPERTY_GETTER_SETTER(public, ZZ, public, getZZ, public, setZZ, CppAdvance::i32);
-		#line 352 "Collections.ast"
+		#line 358 "Collections.ast"
 		private: mutable CppAdvance::i32 p_Count = CppAdvance::i32(1); ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
-		#line 357 "Collections.ast"
+		#line 363 "Collections.ast"
 		private: virtual auto setCount(const CppAdvance::i32& value) -> __selfClass& final;
-		#line 353 "Collections.ast"
+		#line 359 "Collections.ast"
 		public: virtual auto getCount() const  -> CppAdvance::i32 final;
 		#line 9999 "Collections.ast"
 		ADV_PROPERTY_GETTER_SETTER(public, Count, public, getCount, private, setCount, CppAdvance::i32);
-		#line 364 "Collections.ast"
+		#line 370 "Collections.ast"
 		public: inline constexpr auto getCount123() const  -> CppAdvance::i32;
 		#line 9999 "Collections.ast"
 		ADV_PROPERTY_GETTER(public, Count123, getCount123, CppAdvance::i32);
-		#line 374 "Collections.ast"
+		#line 380 "Collections.ast"
 		public: inline constexpr static auto getName2()  -> CppAdvance::Str;
 		#line 9999 "Collections.ast"
 		ADV_PROPERTY_GETTER_STATIC(public, , Name2, getName2, CppAdvance::Str);
-		#line 338 "Collections.ast"
-		public: inline constexpr __Class_ConcreteVectorClass()  = default;
-		#line 340 "Collections.ast"
-		public: inline constexpr __Class_ConcreteVectorClass(CppAdvance::f32 x, CppAdvance::f32 y, CppAdvance::f32 z) noexcept;
 		#line 344 "Collections.ast"
+		public: inline constexpr __Class_ConcreteVectorClass()  = default;
+		#line 346 "Collections.ast"
+		public: inline constexpr __Class_ConcreteVectorClass(CppAdvance::f32 x, CppAdvance::f32 y, CppAdvance::f32 z) noexcept;
+		#line 350 "Collections.ast"
 		public: inline constexpr  __Class_ConcreteVectorClass(CppAdvance::i32 i) noexcept;
-		#line 366 "Collections.ast"
+		#line 372 "Collections.ast"
 		public: inline virtual auto getX() const  -> const CppAdvance::f32 final;
-		#line 368 "Collections.ast"
+		#line 374 "Collections.ast"
 		public: inline auto operator+(const ConcreteVectorClass& other) const  -> const ConcreteVectorClass;
-		#line 369 "Collections.ast"
+		#line 375 "Collections.ast"
 		public: inline auto GetMagicNumber(CppAdvance::In<VectorClass> i) const  -> const CppAdvance::f32;
-		#line 371 "Collections.ast"
+		#line 377 "Collections.ast"
 		public: inline auto operator==(CppAdvance::In<__self> other) const  -> const bool;
-		#line 373 "Collections.ast"
+		#line 379 "Collections.ast"
 		public: inline constexpr static auto AbstractStaticMethod(CppAdvance::i32 i)  -> const CppAdvance::i32;
 		
 #define ADV_PROPERTY_SELF __self
 	};
 	
-	#line 335 "Collections.ast"
+	#line 341 "Collections.ast"
 	ADV_CHECK_FOR_CONCRETE(ConcreteVectorClass);
-	#line 335 "Collections.ast"
+	#line 341 "Collections.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(ConcreteVectorClass, VectorClass, VectorClass, ConcreteVectorClass);
-	#line 335 "Collections.ast"
+	#line 341 "Collections.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(ConcreteVectorClass, IInterface, IInterface, ConcreteVectorClass);
 	
-#line 382 "Collections.ast"
+#line 388 "Collections.ast"
 	class __Class_Next : public CppAdvance::Object {
 		public: using __self = Next;
 		private: using ___super = CppAdvance::Object;
@@ -3070,32 +3078,32 @@ namespace System::Application {
 		friend class __self::__weak_ref;
 		#define ADV_PROPERTY_SELF __selfClass
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-		#line 383 "Collections.ast"
+		#line 389 "Collections.ast"
 		public: mutable CppAdvance::i32 i; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
-		#line 384 "Collections.ast"
-		public: mutable CppAdvance::Nullable<Next>::__weak_ref v;
-		#line 386 "Collections.ast"
-		public: inline __Class_Next()  = default;
-		#line 388 "Collections.ast"
-		public: inline ~__Class_Next() ;
 		#line 390 "Collections.ast"
+		public: mutable CppAdvance::Nullable<Next>::__weak_ref v;
+		#line 392 "Collections.ast"
+		public: inline __Class_Next()  = default;
+		#line 394 "Collections.ast"
+		public: inline ~__Class_Next() ;
+		#line 396 "Collections.ast"
 		public: inline explicit __Class_Next(CppAdvance::i32 i) ;
-		#line 395 "Collections.ast"
+		#line 401 "Collections.ast"
 		public: inline explicit __Class_Next(CppAdvance::In<__self> other) ;
 		inline __Class_Next(__selfClass& copy) : __Class_Next(__self(copy)) {}
-		#line 399 "Collections.ast"
+		#line 405 "Collections.ast"
 		public: inline auto operator*() const  -> const CppAdvance::i32;
-		#line 401 "Collections.ast"
+		#line 407 "Collections.ast"
 		public: inline auto printNext() const  -> void;
 		
 #define ADV_PROPERTY_SELF __self
 	};
 	
-	#line 382 "Collections.ast"
+	#line 388 "Collections.ast"
 	ADV_CHECK_FOR_CONCRETE(Next);
 	
 
-	#line 437 "Collections.ast"
+	#line 443 "Collections.ast"
 	class __Class_DayOfWeek final : public CppAdvance::ValueType
 	{
 		#line 9999 "Collections.ast"
@@ -3105,11 +3113,11 @@ namespace System::Application {
 		operator __underlying() const noexcept { return __value; }
 		
 	};
-	#line 437 "Collections.ast"
+	#line 443 "Collections.ast"
 	ADV_CHECK_FOR_CONCRETE(DayOfWeek);
 	
 
-	#line 448 "Collections.ast"
+	#line 454 "Collections.ast"
 	class __Class_Options final : public CppAdvance::ValueType
 	{
 		#line 9999 "Collections.ast"
@@ -3120,11 +3128,11 @@ namespace System::Application {
 		auto getIsWeekend() const -> bool { return __value.getIsWeekend(); }
 		
 	};
-	#line 448 "Collections.ast"
+	#line 454 "Collections.ast"
 	ADV_CHECK_FOR_CONCRETE(Options);
 	
 
-	#line 463 "Collections.ast"
+	#line 469 "Collections.ast"
 	class __Class_Text final : public CppAdvance::ValueType
 	{
 		#line 9999 "Collections.ast"
@@ -3135,10 +3143,10 @@ namespace System::Application {
 		auto ToShortString() const  -> CppAdvance::Str const { ADV_EXPRESSION_BODY(__value.ToShortString()); }
 		
 	};
-	#line 463 "Collections.ast"
+	#line 469 "Collections.ast"
 	ADV_CHECK_FOR_CONCRETE(Text);
 	
-#line 478 "Collections.ast"
+#line 484 "Collections.ast"
 	class __Class_ComplexVariant final : public CppAdvance::EnumClass {
 		public: using __self = ComplexVariant;
 		private: using ___super = CppAdvance::EnumClass;
@@ -3147,53 +3155,53 @@ namespace System::Application {
 		friend class __self::__weak_ref;
 		#define ADV_PROPERTY_SELF __selfClass
 		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-		#line 485 "Collections.ast"
+		#line 491 "Collections.ast"
 		public: const CppAdvance::i32 i; ADV_CHECK_REF_STRUCT("i32", CppAdvance::i32);
-		#line 486 "Collections.ast"
+		#line 492 "Collections.ast"
 		public: const CppAdvance::f32 f; ADV_CHECK_REF_STRUCT("f32", CppAdvance::f32);
-		#line 487 "Collections.ast"
+		#line 493 "Collections.ast"
 		public: const CppAdvance::Str s; ADV_CHECK_REF_STRUCT("str", CppAdvance::Str);
 		private: __Class_ComplexVariant(CppAdvance::i32 _i, CppAdvance::f32 _f, CppAdvance::Str _s) : i{_i}, f{_f}, s{_s} {}
-		#line 479 "Collections.ast"
+		#line 485 "Collections.ast"
 		public: static  const __self Value1;
-		#line 480 "Collections.ast"
+		#line 486 "Collections.ast"
 		public: static  const __self Value2;
-		#line 481 "Collections.ast"
+		#line 487 "Collections.ast"
 		public: static  const __self Value3;
-		#line 482 "Collections.ast"
+		#line 488 "Collections.ast"
 		public: static  const __self Value4;
-		#line 478 "Collections.ast"
+		#line 484 "Collections.ast"
 		private: static  const __self __values[];
-		#line 478 "Collections.ast"
+		#line 484 "Collections.ast"
 		public: static std::span<const __self> GetValues() noexcept { return { __values, 4 }; }
-		#line 478 "Collections.ast"
+		#line 484 "Collections.ast"
 		public: static constexpr int __variants = 4;
-		#line 499 "Collections.ast"
+		#line 505 "Collections.ast"
 		public: inline constexpr auto getCount123() const  -> CppAdvance::i32;
 		#line 9999 "Collections.ast"
 		ADV_PROPERTY_GETTER(public, Count123, getCount123, CppAdvance::i32);
-		#line 501 "Collections.ast"
+		#line 507 "Collections.ast"
 		public: inline constexpr static auto getCount10()  -> CppAdvance::i32;
 		#line 9999 "Collections.ast"
 		ADV_PROPERTY_GETTER_STATIC(public, , Count10, getCount10, CppAdvance::i32);
-		#line 490 "Collections.ast"
+		#line 496 "Collections.ast"
 		public: inline auto operator*() const  -> const CppAdvance::i32;
-		#line 492 "Collections.ast"
+		#line 498 "Collections.ast"
 		public: inline auto printVariant() const  -> void;
-		#line 497 "Collections.ast"
+		#line 503 "Collections.ast"
 		public: inline auto GetMagicNumber(CppAdvance::In<VectorClass> f) const  -> const CppAdvance::f32;
 		
 #define ADV_PROPERTY_SELF __self
 	};
 	
-	#line 478 "Collections.ast"
+	#line 484 "Collections.ast"
 	ADV_CHECK_FOR_CONCRETE(ComplexVariant);
 	
 
-	#line 504 "Collections.ast"
+	#line 510 "Collections.ast"
 	class __Class_Media final : public CppAdvance::ValueType
 	{
-		#line 504 "Collections.ast"
+		#line 510 "Collections.ast"
 		ADV_CHECK_INTERFACE(IMagicNumber, IMagicNumber);
 		#line 9999 "Collections.ast"
 		public: using __underlying = Media; using __self = __underlying;
@@ -3205,13 +3213,13 @@ namespace System::Application {
 		auto GetMagicNumber(CppAdvance::In<VectorClass> f) const  -> CppAdvance::f32 const { ADV_EXPRESSION_BODY(__value.GetMagicNumber(f)); }
 		
 	};
-	#line 504 "Collections.ast"
+	#line 510 "Collections.ast"
 	ADV_CHECK_FOR_CONCRETE(Media);
-	#line 504 "Collections.ast"
+	#line 510 "Collections.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(Media, IMagicNumber, IMagicNumber, Media);
 	
 
-	#line 523 "Collections.ast"
+	#line 529 "Collections.ast"
 	template<class T1, class T2> class __Class_Union2 final : public CppAdvance::ValueType
 	{
 		#line 9999 "Collections.ast"
@@ -3223,7 +3231,7 @@ namespace System::Application {
 	};
 	
 
-	#line 528 "Collections.ast"
+	#line 534 "Collections.ast"
 	template<class T1, class T2, class T3> class __Class_Union3 final : public CppAdvance::ValueType
 	{
 		#line 9999 "Collections.ast"
@@ -3235,7 +3243,7 @@ namespace System::Application {
 	};
 	
 
-	#line 534 "Collections.ast"
+	#line 540 "Collections.ast"
 	template<class T1, class T2, class T3, class T4> class __Class_Union4 final : public CppAdvance::ValueType
 	{
 		#line 9999 "Collections.ast"
@@ -3247,7 +3255,7 @@ namespace System::Application {
 	};
 	
 
-	#line 541 "Collections.ast"
+	#line 547 "Collections.ast"
 	template<class T1, class T2, class T3, class T4, class T5> class __Class_Union5 final : public CppAdvance::ValueType
 	{
 		#line 9999 "Collections.ast"
@@ -3259,7 +3267,7 @@ namespace System::Application {
 	};
 	
 
-	#line 549 "Collections.ast"
+	#line 555 "Collections.ast"
 	template<class T1, class T2, class T3, class T4, class T5, class T6> class __Class_Union6 final : public CppAdvance::ValueType
 	{
 		#line 9999 "Collections.ast"
@@ -3271,7 +3279,7 @@ namespace System::Application {
 	};
 	
 
-	#line 614 "Collections.ast"
+	#line 620 "Collections.ast"
 	class __Class_TestStruct final : public CppAdvance::ValueType
 	{
 		#line 9999 "Collections.ast"
@@ -3281,7 +3289,7 @@ namespace System::Application {
 		operator __underlying() const noexcept { return __value; }
 		
 	};
-	#line 614 "Collections.ast"
+	#line 620 "Collections.ast"
 	ADV_CHECK_FOR_CONCRETE(TestStruct);
 	
 namespace __ntuples {
@@ -3363,15 +3371,15 @@ namespace System::Application {//###############################################
 	template<class T, int32_t U> auto sum(T a, T b)  -> decltype(auto);
 #line 55 "Collections.ast"
 	template<> inline constexpr auto sum<CppAdvance::i32, CppAdvance::i32(15)>(CppAdvance::i32 a, CppAdvance::i32 b)  -> decltype(auto);
-#line 76 "Collections.ast"
+#line 82 "Collections.ast"
 	inline auto func4(CppAdvance::i32 x)  -> const CppAdvance::i32;
-#line 380 "Collections.ast"
+#line 386 "Collections.ast"
 	inline auto _operator_subscript(CppAdvance::In<VectorClass> vec, CppAdvance::f32 x, CppAdvance::f32 y)  -> const CppAdvance::f32;
-#line 610 "Collections.ast"
+#line 616 "Collections.ast"
 	inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32;
-#line 621 "Collections.ast"
+#line 627 "Collections.ast"
 	template<class T1, class T2> inline auto ttest(T1 x, T2 y)  -> const CppAdvance::i32;
-#line 624 "Collections.ast"
+#line 630 "Collections.ast"
 	template<class... TArgs> inline auto vsum(TArgs&&... args)  -> decltype(auto);
 //###############################################################################
 //# Global compile-time constants
@@ -3417,184 +3425,190 @@ inline constexpr auto LONG_CONSTANT = NORMAL_CONSTANT<CppAdvance::i64>;
 		#line 61 "Collections.ast"
 		print(CppAdvance::Str{u"Span deiniting"}); 
 	}
-#line 76 "Collections.ast"
-	inline auto func4(CppAdvance::i32 x)  -> const CppAdvance::i32
+#line 77 "Collections.ast"
+	inline Vector3::__sctor::~__sctor() 
 	{
 		#line 77 "Collections.ast"
-		return CppAdvance::i32(0);
-	}
-#line 81 "Collections.ast"
-	inline constexpr auto Vector3::format() const noexcept -> const CppAdvance::Str
-	{
-		#line 81 "Collections.ast"
-		ADV_EXPRESSION_BODY(CppAdvance::Str{u"test"}); 
+		ADV_EXPRESSION_BODY(print(CppAdvance::Str{u"Static destructor call!"})); 
 	}
 #line 82 "Collections.ast"
-	inline constexpr auto Vector3::HashCode() const  -> const CppAdvance::usize
-	{
-		#line 82 "Collections.ast"
-		ADV_EXPRESSION_BODY(CppAdvance::u32(654321U)); 
-	}
-#line 83 "Collections.ast"
-	inline constexpr auto Vector3::AStaticMethod(CppAdvance::i32 i)  -> const CppAdvance::i32
+	inline auto func4(CppAdvance::i32 x)  -> const CppAdvance::i32
 	{
 		#line 83 "Collections.ast"
+		return CppAdvance::i32(0);
+	}
+#line 87 "Collections.ast"
+	inline constexpr auto Vector3::format() const noexcept -> const CppAdvance::Str
+	{
+		#line 87 "Collections.ast"
+		ADV_EXPRESSION_BODY(CppAdvance::Str{u"test"}); 
+	}
+#line 88 "Collections.ast"
+	inline constexpr auto Vector3::HashCode() const  -> const CppAdvance::usize
+	{
+		#line 88 "Collections.ast"
+		ADV_EXPRESSION_BODY(CppAdvance::u32(654321U)); 
+	}
+#line 89 "Collections.ast"
+	inline constexpr auto Vector3::AStaticMethod(CppAdvance::i32 i)  -> const CppAdvance::i32
+	{
+		#line 89 "Collections.ast"
 		ADV_EXPRESSION_BODY(i * CppAdvance::i32(2)); 
 	}
-#line 98 "Collections.ast"
+#line 104 "Collections.ast"
 	inline constexpr auto Vector3::getName() const  -> CppAdvance::Str 
 	{
-		#line 98 "Collections.ast"
+		#line 104 "Collections.ast"
 		ADV_EXPRESSION_BODY(CppAdvance::Str{u"Vector3"}); 
 	}
 	
-#line 110 "Collections.ast"
+#line 116 "Collections.ast"
 	inline constexpr auto Vector3::__Class_NestedStruct::count(CppAdvance::i32 i)  -> const CppAdvance::i32
 	{
-		#line 110 "Collections.ast"
+		#line 116 "Collections.ast"
 		ADV_EXPRESSION_BODY(i * CppAdvance::i32(10)); 
 	}
-#line 117 "Collections.ast"
+#line 123 "Collections.ast"
 	template<class U> inline constexpr Vector3::Vector3(U f)  :
-	#line 118 "Collections.ast"
+	#line 124 "Collections.ast"
 	Vector3(f, f, f)
 	{
-		#line 119 "Collections.ast"
+		#line 125 "Collections.ast"
 		this->x = f;
 	}
-#line 122 "Collections.ast"
+#line 128 "Collections.ast"
 	inline Vector3::~Vector3() noexcept
 	{
-		#line 122 "Collections.ast"
+		#line 128 "Collections.ast"
 		print(CppAdvance::Str{u"Vector3 deiniting"}); 
 	}
-#line 124 "Collections.ast"
+#line 130 "Collections.ast"
 	inline constexpr Vector3::operator CppAdvance::f32() const noexcept
 	{
-		#line 124 "Collections.ast"
+		#line 130 "Collections.ast"
 		ADV_EXPRESSION_BODY(y); 
 	}
-#line 126 "Collections.ast"
+#line 132 "Collections.ast"
 	inline auto Vector3::operator+(const __self& other) const  -> const __self
 	{
-		#line 126 "Collections.ast"
+		#line 132 "Collections.ast"
 		ADV_EXPRESSION_BODY(__self{ADV_UPCS(x)((*this).__ref()) + ADV_UPCS(x)(other.__ref()), ADV_UPCS(y)((*this).__ref()) + ADV_UPCS(y)(other.__ref()), ADV_UPCS(z)((*this).__ref()) + ADV_UPCS(z)(other.__ref())}); 
 	}
-#line 128 "Collections.ast"
+#line 134 "Collections.ast"
 	inline auto Vector3::operator++()  -> __self&
 	{
-		#line 129 "Collections.ast"
-		++x;
-		#line 130 "Collections.ast"
-		++y;
-		#line 131 "Collections.ast"
-		++z;
-		#line 132 "Collections.ast"
-		++Count;
 		#line 135 "Collections.ast"
+		++x;
+		#line 136 "Collections.ast"
+		++y;
+		#line 137 "Collections.ast"
+		++z;
+		#line 138 "Collections.ast"
+		++Count;
+		#line 141 "Collections.ast"
 		return (*this);
 	}
-	#line 128 "Collections.ast"
+	#line 134 "Collections.ast"
 	inline auto Vector3::operator++(int)  -> __self { auto copy = CppAdvance::New<__self>(__self(*this)); ++(*this); return copy; }
-#line 138 "Collections.ast"
-	auto Vector3::_operator_subscript(CppAdvance::i32 idx)  -> __IndexerAccessor_138<CppAdvance::f32>
+#line 144 "Collections.ast"
+	auto Vector3::_operator_subscript(CppAdvance::i32 idx)  -> __IndexerAccessor_144<CppAdvance::f32>
 	{
-		return __IndexerAccessor_138<CppAdvance::f32>{ *this, idx };
+		return __IndexerAccessor_144<CppAdvance::f32>{ *this, idx };
 	}
 
-	#line 138 "Collections.ast"
-	auto Vector3::_operator_subscript(CppAdvance::i32 idx)  const  -> const __IndexerAccessor_138<CppAdvance::f32>
+	#line 144 "Collections.ast"
+	auto Vector3::_operator_subscript(CppAdvance::i32 idx)  const  -> const __IndexerAccessor_144<CppAdvance::f32>
 	{
-		return __IndexerAccessor_138<CppAdvance::f32>{ *this, idx };
+		return __IndexerAccessor_144<CppAdvance::f32>{ *this, idx };
 	}
 
-	#line 138 "Collections.ast"
+	#line 144 "Collections.ast"
 	auto Vector3::getAt(CppAdvance::i32 idx)  -> const CppAdvance::f32
 	{
-		#line 140 "Collections.ast"
+		#line 146 "Collections.ast"
 		print(CppAdvance::Str{u"Read"});
-		#line 141 "Collections.ast"
+		#line 147 "Collections.ast"
 		return x;
 	}
-	#line 138 "Collections.ast"
+	#line 144 "Collections.ast"
 	auto Vector3::getAt(CppAdvance::i32 idx) const  -> const CppAdvance::f32
 	{
-		#line 140 "Collections.ast"
+		#line 146 "Collections.ast"
 		print(CppAdvance::Str{u"Read"});
-		#line 141 "Collections.ast"
+		#line 147 "Collections.ast"
 		return x;
 	}
-	#line 143 "Collections.ast"
+	#line 149 "Collections.ast"
 	auto Vector3::setAt(CppAdvance::i32 idx, const CppAdvance::f32& value)  -> void 
 	{
-		#line 144 "Collections.ast"
+		#line 150 "Collections.ast"
 		if (value < CppAdvance::i32(10)) {
-			#line 144 "Collections.ast"
+			#line 150 "Collections.ast"
 			return ;
 		}
-		#line 145 "Collections.ast"
+		#line 151 "Collections.ast"
 		x = CppAdvance::i32(5);
 	}
-#line 148 "Collections.ast"
+#line 154 "Collections.ast"
 	inline constexpr auto Vector3::_operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  -> const CppAdvance::f32
 	{
-		#line 148 "Collections.ast"
+		#line 154 "Collections.ast"
 		ADV_EXPRESSION_BODY(y + z); 
 	}
-	#line 148 "Collections.ast"
+	#line 154 "Collections.ast"
 	inline constexpr auto Vector3::_operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  const  -> const CppAdvance::f32
 	{
-		#line 148 "Collections.ast"
+		#line 154 "Collections.ast"
 		ADV_EXPRESSION_BODY(y + z); 
 	}
-	#line 148 "Collections.ast"
+	#line 154 "Collections.ast"
 	inline constexpr auto Vector3::getAt(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  -> const CppAdvance::f32 { return _operator_subscript(idx, idx2, idx3); }
-	#line 148 "Collections.ast"
+	#line 154 "Collections.ast"
 	inline constexpr auto Vector3::getAt(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const  -> const CppAdvance::f32 { return _operator_subscript(idx, idx2, idx3); }
-#line 150 "Collections.ast"
+#line 156 "Collections.ast"
 	inline constexpr auto Vector3::getX() const  -> const CppAdvance::f32
 	{
-		#line 150 "Collections.ast"
+		#line 156 "Collections.ast"
 		ADV_EXPRESSION_BODY(x); 
 	}
-#line 154 "Collections.ast"
+#line 160 "Collections.ast"
 	inline constexpr auto Vector3::Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z)  -> const CppAdvance::i32
 	{
-		#line 155 "Collections.ast"
+		#line 161 "Collections.ast"
 		return y + z;
 	}
-#line 160 "Collections.ast"
+#line 166 "Collections.ast"
 	inline constexpr auto Vector3::Reset()  -> void
 	{
-		#line 161 "Collections.ast"
+		#line 167 "Collections.ast"
 		x = CppAdvance::i32(0);
-		#line 162 "Collections.ast"
+		#line 168 "Collections.ast"
 		y = CppAdvance::i32(0);
-		#line 163 "Collections.ast"
+		#line 169 "Collections.ast"
 		z = CppAdvance::i32(0);
 	}
-#line 168 "Collections.ast"
+#line 174 "Collections.ast"
 	template<class U> inline constexpr auto Vector3::TemplateMethod(U x, U y, U z)  -> const typename Vector3::Coords
 	{
-		#line 169 "Collections.ast"
+		#line 175 "Collections.ast"
 		class __Class_LocalStruct;
-		#line 169 "Collections.ast"
+		#line 175 "Collections.ast"
 		struct LocalStruct : public CppAdvance::Struct
 		{
 			public: using __self = LocalStruct;
 			public: using __class = __Class_LocalStruct;
 			public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-			#line 170 "Collections.ast"
-			#line 170 "Collections.ast"
+			#line 176 "Collections.ast"
+			#line 176 "Collections.ast"
 			public: CppAdvance::f32 x{}; 
-			#line 170 "Collections.ast"
+			#line 176 "Collections.ast"
 			public: CppAdvance::f32 y{}; 
-			#line 170 "Collections.ast"
+			#line 176 "Collections.ast"
 			public: CppAdvance::f32 z{}; 
 			
 			
 		};
-		#line 169 "Collections.ast"
+		#line 175 "Collections.ast"
 		class __Class_LocalStruct : public CppAdvance::ValueType
 		{
 			#line 9999 "Collections.ast"
@@ -3604,151 +3618,151 @@ inline constexpr auto LONG_CONSTANT = NORMAL_CONSTANT<CppAdvance::i64>;
 			operator __underlying() const noexcept { return __value; }
 			
 		};
-		#line 179 "Collections.ast"
+		#line 185 "Collections.ast"
 		ADV_UFCS(_operator_subscript)((*this).__ref(), CppAdvance::i32(0)) = CppAdvance::i32(13);
-		#line 181 "Collections.ast"
+		#line 187 "Collections.ast"
 		return { x, y, z };
 	}
-#line 187 "Collections.ast"
+#line 193 "Collections.ast"
 	inline auto __Class_BaseClass::getNext() const  -> const Next
 	{
-		#line 187 "Collections.ast"
+		#line 193 "Collections.ast"
 		ADV_EXPRESSION_BODY(CppAdvance::New<Next>(CppAdvance::i32(5))); 
 	}
-#line 204 "Collections.ast"
+#line 210 "Collections.ast"
 	inline constexpr auto __Class_VectorClass::format() const noexcept -> const CppAdvance::Str
 	{
-		#line 204 "Collections.ast"
+		#line 210 "Collections.ast"
 		ADV_EXPRESSION_BODY(CppAdvance::Str{u"test"}); 
 	}
-#line 233 "Collections.ast"
+#line 239 "Collections.ast"
 	inline constexpr VectorClass::__Class_NestedClass::__Class_NestedClass(CppAdvance::f32 x, CppAdvance::f32 y, CppAdvance::f32 z) noexcept : 
-	#line 234 "Collections.ast"
+	#line 240 "Collections.ast"
 	x{x}, 
-	#line 235 "Collections.ast"
+	#line 241 "Collections.ast"
 	y{y}, 
-	#line 236 "Collections.ast"
+	#line 242 "Collections.ast"
 	z{z}
 	{
-	}
-#line 238 "Collections.ast"
-	inline constexpr auto VectorClass::__Class_NestedClass::count(CppAdvance::i32 i)  -> const CppAdvance::i32
-	{
-		#line 238 "Collections.ast"
-		ADV_EXPRESSION_BODY(i * CppAdvance::i32(10)); 
 	}
 #line 244 "Collections.ast"
+	inline constexpr auto VectorClass::__Class_NestedClass::count(CppAdvance::i32 i)  -> const CppAdvance::i32
+	{
+		#line 244 "Collections.ast"
+		ADV_EXPRESSION_BODY(i * CppAdvance::i32(10)); 
+	}
+#line 250 "Collections.ast"
 	inline constexpr __Class_VectorClass::__Class_VectorClass(CppAdvance::f32 x, CppAdvance::f32 y, CppAdvance::f32 z) noexcept : 
-	#line 245 "Collections.ast"
+	#line 251 "Collections.ast"
 	x{x}, 
-	#line 246 "Collections.ast"
+	#line 252 "Collections.ast"
 	y{y}, 
-	#line 247 "Collections.ast"
+	#line 253 "Collections.ast"
 	z{z}
 	{
 	}
-#line 250 "Collections.ast"
+#line 256 "Collections.ast"
 	template<class U> inline constexpr __Class_VectorClass::__Class_VectorClass(U f)  :
-	#line 251 "Collections.ast"
+	#line 257 "Collections.ast"
 	__Class_VectorClass(f, f, f)
 	{
-		#line 252 "Collections.ast"
+		#line 258 "Collections.ast"
 		this->x = f;
 	}
-#line 255 "Collections.ast"
+#line 261 "Collections.ast"
 	inline __Class_VectorClass::__Class_VectorClass(CppAdvance::In<__self> other)  :
-	#line 256 "Collections.ast"
+	#line 262 "Collections.ast"
 	__Class_VectorClass(ADV_UPCS_NONLOCAL(x)(other.__ref()), ADV_UPCS_NONLOCAL(y)(other.__ref()), ADV_UPCS_NONLOCAL(z)(other.__ref()))
 	{
 	}
-#line 259 "Collections.ast"
+#line 265 "Collections.ast"
 	inline __Class_VectorClass::~__Class_VectorClass() noexcept
 	{
-		#line 259 "Collections.ast"
+		#line 265 "Collections.ast"
 		print(CppAdvance::Str{u"VectorClass deiniting"}); 
 	}
-#line 264 "Collections.ast"
+#line 270 "Collections.ast"
 	inline __Class_VectorClass::operator CppAdvance::f32() const noexcept
 	{
-		#line 264 "Collections.ast"
+		#line 270 "Collections.ast"
 		ADV_EXPRESSION_BODY(y); 
 	}
-#line 296 "Collections.ast"
+#line 302 "Collections.ast"
 	inline auto __Class_VectorClass::_operator_subscript(CppAdvance::i32 idx)  -> CppAdvance::f32&
 	{
-		#line 296 "Collections.ast"
+		#line 302 "Collections.ast"
 		ADV_EXPRESSION_BODY(x); 
 	}
-	#line 296 "Collections.ast"
+	#line 302 "Collections.ast"
 	inline auto __Class_VectorClass::_operator_subscript(CppAdvance::i32 idx)  const  -> const CppAdvance::f32&
 	{
-		#line 296 "Collections.ast"
+		#line 302 "Collections.ast"
 		ADV_EXPRESSION_BODY(x); 
 	}
-	#line 296 "Collections.ast"
+	#line 302 "Collections.ast"
 	inline auto __Class_VectorClass::getAt(CppAdvance::i32 idx)  -> CppAdvance::f32& { return _operator_subscript(idx); }
-	#line 296 "Collections.ast"
+	#line 302 "Collections.ast"
 	inline auto __Class_VectorClass::getAt(CppAdvance::i32 idx) const  -> const CppAdvance::f32& { return _operator_subscript(idx); }
-#line 297 "Collections.ast"
+#line 303 "Collections.ast"
 	inline auto __Class_VectorClass::_operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  -> const CppAdvance::f32
 	{
-		#line 297 "Collections.ast"
+		#line 303 "Collections.ast"
 		ADV_EXPRESSION_BODY(y + z); 
 	}
-	#line 297 "Collections.ast"
+	#line 303 "Collections.ast"
 	inline auto __Class_VectorClass::_operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  const  -> const CppAdvance::f32
 	{
-		#line 297 "Collections.ast"
+		#line 303 "Collections.ast"
 		ADV_EXPRESSION_BODY(y + z); 
 	}
-	#line 297 "Collections.ast"
+	#line 303 "Collections.ast"
 	inline auto __Class_VectorClass::getAt(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3)  -> const CppAdvance::f32 { return _operator_subscript(idx, idx2, idx3); }
-	#line 297 "Collections.ast"
+	#line 303 "Collections.ast"
 	inline auto __Class_VectorClass::getAt(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const  -> const CppAdvance::f32 { return _operator_subscript(idx, idx2, idx3); }
-#line 300 "Collections.ast"
+#line 306 "Collections.ast"
 	inline auto __Class_VectorClass::getNext() const  -> const Next
 	{
-		#line 300 "Collections.ast"
+		#line 306 "Collections.ast"
 		ADV_EXPRESSION_BODY(___super::getNext()); 
 	}
-#line 303 "Collections.ast"
+#line 309 "Collections.ast"
 	inline constexpr auto __Class_VectorClass::Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z)  -> const CppAdvance::i32
 	{
-		#line 304 "Collections.ast"
+		#line 310 "Collections.ast"
 		return y + z;
 	}
-#line 308 "Collections.ast"
+#line 314 "Collections.ast"
 	inline constexpr auto __Class_VectorClass::Reset() const  -> void
 	{
-		#line 309 "Collections.ast"
+		#line 315 "Collections.ast"
 		x = CppAdvance::i32(0);
-		#line 310 "Collections.ast"
+		#line 316 "Collections.ast"
 		y = CppAdvance::i32(0);
-		#line 311 "Collections.ast"
+		#line 317 "Collections.ast"
 		z = CppAdvance::i32(0);
 	}
-#line 316 "Collections.ast"
+#line 322 "Collections.ast"
 	template<class U> inline constexpr auto __Class_VectorClass::TemplateMethod(U x, U y, U z) const  -> const typename __Class_VectorClass::Coords
 	{
-		#line 317 "Collections.ast"
+		#line 323 "Collections.ast"
 		class __Class_LocalStruct;
-		#line 317 "Collections.ast"
+		#line 323 "Collections.ast"
 		struct LocalStruct : public CppAdvance::Struct
 		{
 			public: using __self = LocalStruct;
 			public: using __class = __Class_LocalStruct;
 			public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
-			#line 318 "Collections.ast"
-			#line 318 "Collections.ast"
+			#line 324 "Collections.ast"
+			#line 324 "Collections.ast"
 			public: CppAdvance::f32 x{}; 
-			#line 318 "Collections.ast"
+			#line 324 "Collections.ast"
 			public: CppAdvance::f32 y{}; 
-			#line 318 "Collections.ast"
+			#line 324 "Collections.ast"
 			public: CppAdvance::f32 z{}; 
 			
 			
 		};
-		#line 317 "Collections.ast"
+		#line 323 "Collections.ast"
 		class __Class_LocalStruct : public CppAdvance::ValueType
 		{
 			#line 9999 "Collections.ast"
@@ -3758,186 +3772,186 @@ inline constexpr auto LONG_CONSTANT = NORMAL_CONSTANT<CppAdvance::i64>;
 			operator __underlying() const noexcept { return __value; }
 			
 		};
-		#line 327 "Collections.ast"
+		#line 333 "Collections.ast"
 		ADV_UFCS(_operator_subscript)((*this).__ref(), CppAdvance::i32(0)) = CppAdvance::i32(13);
-		#line 329 "Collections.ast"
+		#line 335 "Collections.ast"
 		return { x, y, z };
 	}
-#line 340 "Collections.ast"
+#line 346 "Collections.ast"
 	inline constexpr __Class_ConcreteVectorClass::__Class_ConcreteVectorClass(CppAdvance::f32 x, CppAdvance::f32 y, CppAdvance::f32 z) noexcept :
-	#line 341 "Collections.ast"
+	#line 347 "Collections.ast"
 	___super(x, y, z)
 	{
 	}
-#line 344 "Collections.ast"
+#line 350 "Collections.ast"
 	inline constexpr __Class_ConcreteVectorClass::__Class_ConcreteVectorClass(CppAdvance::i32 i) noexcept :
-	#line 345 "Collections.ast"
+	#line 351 "Collections.ast"
 	___super(CppAdvance::f32{i}, CppAdvance::f32{i}, CppAdvance::f32{i})
 	{
 	}
-#line 348 "Collections.ast"
+#line 354 "Collections.ast"
 	inline auto __Class_ConcreteVectorClass::setName(const CppAdvance::Str& value) -> __selfClass& { p_Name = value; return *this;}
-	#line 348 "Collections.ast"
+	#line 354 "Collections.ast"
 	inline auto __Class_ConcreteVectorClass::getName() const  -> CppAdvance::Str { return p_Name; }
 	
-#line 350 "Collections.ast"
+#line 356 "Collections.ast"
 	inline auto __Class_ConcreteVectorClass::setZZ(const CppAdvance::i32& value) -> __selfClass& { p_ZZ = value; return *this;}
-	#line 350 "Collections.ast"
+	#line 356 "Collections.ast"
 	inline auto __Class_ConcreteVectorClass::getZZ() const  -> CppAdvance::i32 { return p_ZZ; }
 	
-#line 364 "Collections.ast"
+#line 370 "Collections.ast"
 	inline constexpr auto __Class_ConcreteVectorClass::getCount123() const  -> CppAdvance::i32 
 	{
-		#line 364 "Collections.ast"
+		#line 370 "Collections.ast"
 		ADV_EXPRESSION_BODY(CppAdvance::i32(1500)); 
 	}
 	
-#line 366 "Collections.ast"
+#line 372 "Collections.ast"
 	inline auto __Class_ConcreteVectorClass::getX() const  -> const CppAdvance::f32
 	{
-		#line 366 "Collections.ast"
+		#line 372 "Collections.ast"
 		ADV_EXPRESSION_BODY(x); 
 	}
-#line 368 "Collections.ast"
+#line 374 "Collections.ast"
 	inline auto __Class_ConcreteVectorClass::operator+(const ConcreteVectorClass& other) const  -> const ConcreteVectorClass
 	{
-		#line 368 "Collections.ast"
+		#line 374 "Collections.ast"
 		ADV_EXPRESSION_BODY(CppAdvance::New<ConcreteVectorClass>(ADV_UPCS(x)((*this).__ref()) + ADV_UPCS(x)(other.__ref()), ADV_UPCS(y)((*this).__ref()) + ADV_UPCS(y)(other.__ref()), ADV_UPCS(z)((*this).__ref()) + ADV_UPCS(z)(other.__ref()))); 
 	}
-#line 369 "Collections.ast"
+#line 375 "Collections.ast"
 	inline auto __Class_ConcreteVectorClass::GetMagicNumber(CppAdvance::In<VectorClass> i) const  -> const CppAdvance::f32
 	{
-		#line 369 "Collections.ast"
+		#line 375 "Collections.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(x)((*this).__ref()) * ADV_UPCS(x)(i.__ref())); 
 	}
-#line 371 "Collections.ast"
+#line 377 "Collections.ast"
 	inline auto __Class_ConcreteVectorClass::operator==(CppAdvance::In<__self> other) const  -> const bool
 	{
-		#line 371 "Collections.ast"
+		#line 377 "Collections.ast"
 		ADV_EXPRESSION_BODY(x == ADV_UPCS(x)(other.__ref()) && y == ADV_UPCS(y)(other.__ref()) && z == ADV_UPCS(z)(other.__ref())); 
 	}
-#line 373 "Collections.ast"
+#line 379 "Collections.ast"
 	inline constexpr auto __Class_ConcreteVectorClass::AbstractStaticMethod(CppAdvance::i32 i)  -> const CppAdvance::i32
 	{
-		#line 373 "Collections.ast"
+		#line 379 "Collections.ast"
 		ADV_EXPRESSION_BODY(i * CppAdvance::i32(2)); 
 	}
-#line 374 "Collections.ast"
+#line 380 "Collections.ast"
 	inline constexpr auto __Class_ConcreteVectorClass::getName2()  -> CppAdvance::Str 
 	{
-		#line 374 "Collections.ast"
+		#line 380 "Collections.ast"
 		ADV_EXPRESSION_BODY(CppAdvance::Str{u"abc"}); 
 	}
 	
-#line 380 "Collections.ast"
+#line 386 "Collections.ast"
 	inline auto _operator_subscript(CppAdvance::In<VectorClass> vec, CppAdvance::f32 x, CppAdvance::f32 y)  -> const CppAdvance::f32
 	{
-		#line 380 "Collections.ast"
+		#line 386 "Collections.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(x)(vec.__ref()) * x + ADV_UPCS(y)(vec.__ref()) * y); 
 	}
-#line 388 "Collections.ast"
+#line 394 "Collections.ast"
 	inline __Class_Next::~__Class_Next() 
 	{
-		#line 388 "Collections.ast"
+		#line 394 "Collections.ast"
 		print(CppAdvance::Str{u"Next deiniting"}); 
 	}
-#line 390 "Collections.ast"
+#line 396 "Collections.ast"
 	inline __Class_Next::__Class_Next(CppAdvance::i32 i)  : 
-	#line 391 "Collections.ast"
+	#line 397 "Collections.ast"
 	i{i}
 	{
 	}
-#line 395 "Collections.ast"
+#line 401 "Collections.ast"
 	inline __Class_Next::__Class_Next(CppAdvance::In<__self> other)  : 
-	#line 396 "Collections.ast"
+	#line 402 "Collections.ast"
 	i{CppAdvance::i32(0)}
 	{
 	}
-#line 399 "Collections.ast"
+#line 405 "Collections.ast"
 	inline auto __Class_Next::operator*() const  -> const CppAdvance::i32
 	{
-		#line 399 "Collections.ast"
+		#line 405 "Collections.ast"
 		ADV_EXPRESSION_BODY(i); 
 	}
-#line 401 "Collections.ast"
+#line 407 "Collections.ast"
 	inline auto __Class_Next::printNext() const  -> void
 	{
-		#line 402 "Collections.ast"
+		#line 408 "Collections.ast"
 		auto func2 = [__this = __self::__weak_ref(*this)] (CppAdvance::i32 x, CppAdvance::i32 y) -> const CppAdvance::i32 
 		{
-			#line 402 "Collections.ast"
+			#line 408 "Collections.ast"
 			auto j = x * y * ADV_UPCS(i)((*(__this)).__ref()); 
-			#line 402 "Collections.ast"
+			#line 408 "Collections.ast"
 			return j * CppAdvance::i32(2);
 		}; 
-		#line 403 "Collections.ast"
+		#line 409 "Collections.ast"
 		print(CppAdvance::Str{u"This is printNext function in optional chaining call"});
-		#line 404 "Collections.ast"
+		#line 410 "Collections.ast"
 		print(func2(CppAdvance::i32(3), CppAdvance::i32(4)));
 	}
-#line 461 "Collections.ast"
+#line 467 "Collections.ast"
 	inline auto Options::getIsWeekend() const  -> bool 
 	{
-		#line 461 "Collections.ast"
+		#line 467 "Collections.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(HasFlag)(Weekend.__ref(), (*this))); 
 	}
 	
-#line 472 "Collections.ast"
+#line 478 "Collections.ast"
 	inline auto Text::ToShortString() const  -> const CppAdvance::Str
 	{
-		#line 473 "Collections.ast"
+		#line 479 "Collections.ast"
 		return Value;
 	}
-#line 490 "Collections.ast"
+#line 496 "Collections.ast"
 	inline auto __Class_ComplexVariant::operator*() const  -> const CppAdvance::i32
 	{
-		#line 490 "Collections.ast"
+		#line 496 "Collections.ast"
 		ADV_EXPRESSION_BODY(i); 
 	}
-#line 492 "Collections.ast"
+#line 498 "Collections.ast"
 	inline auto __Class_ComplexVariant::printVariant() const  -> void
 	{
-		#line 493 "Collections.ast"
+		#line 499 "Collections.ast"
 		print(CppAdvance::Str{u"This is printVariant function in optional chaining call"});
-		#line 494 "Collections.ast"
+		#line 500 "Collections.ast"
 		print(s);
 	}
-#line 497 "Collections.ast"
+#line 503 "Collections.ast"
 	inline auto __Class_ComplexVariant::GetMagicNumber(CppAdvance::In<VectorClass> f) const  -> const CppAdvance::f32
 	{
-		#line 497 "Collections.ast"
+		#line 503 "Collections.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(f)((*this).__ref()) * ADV_UPCS(x)(f.__ref())); 
 	}
-#line 499 "Collections.ast"
+#line 505 "Collections.ast"
 	inline constexpr auto __Class_ComplexVariant::getCount123() const  -> CppAdvance::i32 
 	{
-		#line 499 "Collections.ast"
+		#line 505 "Collections.ast"
 		ADV_EXPRESSION_BODY(CppAdvance::i32(1234567890)); 
 	}
 	
-#line 501 "Collections.ast"
+#line 507 "Collections.ast"
 	inline constexpr auto __Class_ComplexVariant::getCount10()  -> CppAdvance::i32 
 	{
-		#line 501 "Collections.ast"
+		#line 507 "Collections.ast"
 		ADV_EXPRESSION_BODY(CppAdvance::i32(12345)); 
 	}
 	
-#line 610 "Collections.ast"
+#line 616 "Collections.ast"
 	inline auto getSum(CppAdvance::In<VectorClass> vec)  -> const CppAdvance::f32
 	{
-		#line 610 "Collections.ast"
+		#line 616 "Collections.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(x)(vec.__ref()) + ADV_UPCS(y)(vec.__ref()) + ADV_UPCS(z)(vec.__ref())); 
 	}
-#line 621 "Collections.ast"
+#line 627 "Collections.ast"
 	template<class T1, class T2> inline auto ttest(T1 x, T2 y)  -> const CppAdvance::i32
 	{
-		#line 621 "Collections.ast"
+		#line 627 "Collections.ast"
 		ADV_EXPRESSION_BODY(ADV_USFCS((T2), GetInt)()); 
 	}
-#line 624 "Collections.ast"
+#line 630 "Collections.ast"
 	template<class... TArgs> inline auto vsum(TArgs&&... args)  -> decltype(auto)
 	{
-		#line 625 "Collections.ast"
+		#line 631 "Collections.ast"
 		ADV_EXPRESSION_BODY((args + ... + CppAdvance::i32(1))); 
 	}
 #line 9999 "Collections.ast"
@@ -3949,7 +3963,7 @@ inline constexpr auto LONG_CONSTANT = NORMAL_CONSTANT<CppAdvance::i64>;
 	inline Vector3::NestedStruct__Unowned& Vector3::NestedStruct__Unowned::ADV_CLASS_UNOWNED_ASSIGN_REF(NestedStruct__Unowned)
 	inline Vector3::NestedStruct__Weak::ADV_CLASS_WEAK_CTOR_REF(NestedStruct__Weak)
 	inline Vector3::NestedStruct__Weak& Vector3::NestedStruct__Weak::ADV_CLASS_WEAK_ASSIGN_REF(NestedStruct__Weak)
-	#line 110 "Collections.ast"
+	#line 116 "Collections.ast"
 	inline constexpr decltype(auto) Vector3::NestedStruct::count(CppAdvance::i32 i){ ADV_EXPRESSION_BODY(__class::count(i)); }
 	
 #line 9999 "Collections.ast"
@@ -3968,7 +3982,7 @@ inline constexpr auto LONG_CONSTANT = NORMAL_CONSTANT<CppAdvance::i64>;
 	inline VectorClass::NestedClass__Unowned& VectorClass::NestedClass__Unowned::ADV_CLASS_UNOWNED_ASSIGN_REF(NestedClass__Unowned)
 	inline VectorClass::NestedClass__Weak::ADV_CLASS_WEAK_CTOR_REF(NestedClass__Weak)
 	inline VectorClass::NestedClass__Weak& VectorClass::NestedClass__Weak::ADV_CLASS_WEAK_ASSIGN_REF(NestedClass__Weak)
-	#line 238 "Collections.ast"
+	#line 244 "Collections.ast"
 	inline constexpr decltype(auto) VectorClass::NestedClass::count(CppAdvance::i32 i){ ADV_EXPRESSION_BODY(__class::count(i)); }
 	inline VectorClass::ADV_CLASS_STRONG_CTOR_REF(VectorClass)
 	inline VectorClass& VectorClass::ADV_CLASS_STRONG_ASSIGN_REF(VectorClass)
@@ -3979,16 +3993,16 @@ inline constexpr auto LONG_CONSTANT = NORMAL_CONSTANT<CppAdvance::i64>;
 	inline decltype(auto) VectorClass::getCount2() { return __class::Count2; }
 	inline void VectorClass::setCount2(const CppAdvance::i32& value) { __class::Count2 = value; }
 	inline decltype(auto) VectorClass::getZERO() { return __class::ZERO; }
-	#line 264 "Collections.ast"
+	#line 270 "Collections.ast"
 	inline VectorClass::operator CppAdvance::f32() const noexcept{ ADV_EXPRESSION_BODY(__ref().operator CppAdvance::f32()); }
 	inline VectorClass__Unowned::operator CppAdvance::f32() const noexcept{ ADV_EXPRESSION_BODY(__ref().operator CppAdvance::f32()); }
-	#line 296 "Collections.ast"
+	#line 302 "Collections.ast"
 	inline decltype(auto) VectorClass::_operator_subscript(CppAdvance::i32 idx) const  LIFETIMEBOUND{ ADV_EXPRESSION_BODY(__ref()._operator_subscript(idx)); }
 	inline decltype(auto) VectorClass__Unowned::_operator_subscript(CppAdvance::i32 idx) const  LIFETIMEBOUND{ ADV_EXPRESSION_BODY(__ref()._operator_subscript(idx)); }
-	#line 297 "Collections.ast"
+	#line 303 "Collections.ast"
 	inline decltype(auto) VectorClass::_operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const { ADV_EXPRESSION_BODY(__ref()._operator_subscript(idx, idx2, idx3)); }
 	inline decltype(auto) VectorClass__Unowned::_operator_subscript(CppAdvance::i32 idx, CppAdvance::i32 idx2, CppAdvance::i32 idx3) const { ADV_EXPRESSION_BODY(__ref()._operator_subscript(idx, idx2, idx3)); }
-	#line 303 "Collections.ast"
+	#line 309 "Collections.ast"
 	inline constexpr decltype(auto) VectorClass::Method(CppAdvance::i32 x, CppAdvance::i32 y, CppAdvance::i32 z){ ADV_EXPRESSION_BODY(__class::Method(x, y, z)); }
 	
 #line 9999 "Collections.ast"
@@ -3999,15 +4013,15 @@ inline constexpr auto LONG_CONSTANT = NORMAL_CONSTANT<CppAdvance::i64>;
 	inline ConcreteVectorClass__Unowned& ConcreteVectorClass__Unowned::ADV_CLASS_UNOWNED_ASSIGN_REF(ConcreteVectorClass__Unowned)
 	inline ConcreteVectorClass__Weak::ADV_CLASS_WEAK_CTOR_REF(ConcreteVectorClass__Weak)
 	inline ConcreteVectorClass__Weak& ConcreteVectorClass__Weak::ADV_CLASS_WEAK_ASSIGN_REF(ConcreteVectorClass__Weak)
-	#line 344 "Collections.ast"
+	#line 350 "Collections.ast"
 	inline ConcreteVectorClass::ConcreteVectorClass(CppAdvance::i32 i)noexcept : ___super(new (::operator new(sizeof(__class))) __class(i)) {}
-	#line 368 "Collections.ast"
+	#line 374 "Collections.ast"
 	inline decltype(auto) ConcreteVectorClass::operator+(const ConcreteVectorClass& other) const { ADV_EXPRESSION_BODY(__ref().operator+(other)); }
 	inline decltype(auto) ConcreteVectorClass__Unowned::operator+(const ConcreteVectorClass& other) const { ADV_EXPRESSION_BODY(__ref().operator+(other)); }
-	#line 371 "Collections.ast"
+	#line 377 "Collections.ast"
 	inline decltype(auto) ConcreteVectorClass::operator==(CppAdvance::In<__self> other) const { ADV_EXPRESSION_BODY(__ref().operator==(other)); }
 	inline decltype(auto) ConcreteVectorClass__Unowned::operator==(CppAdvance::In<__self> other) const { ADV_EXPRESSION_BODY(__ref().operator==(other)); }
-	#line 373 "Collections.ast"
+	#line 379 "Collections.ast"
 	inline constexpr decltype(auto) ConcreteVectorClass::AbstractStaticMethod(CppAdvance::i32 i){ ADV_EXPRESSION_BODY(__class::AbstractStaticMethod(i)); }
 	
 #line 9999 "Collections.ast"
@@ -4018,14 +4032,14 @@ inline constexpr auto LONG_CONSTANT = NORMAL_CONSTANT<CppAdvance::i64>;
 	inline Next__Unowned& Next__Unowned::ADV_CLASS_UNOWNED_ASSIGN_REF(Next__Unowned)
 	inline Next__Weak::ADV_CLASS_WEAK_CTOR_REF(Next__Weak)
 	inline Next__Weak& Next__Weak::ADV_CLASS_WEAK_ASSIGN_REF(Next__Weak)
-	#line 399 "Collections.ast"
+	#line 405 "Collections.ast"
 	inline decltype(auto) Next::operator*() const { ADV_EXPRESSION_BODY(__ref().operator*()); }
 	inline decltype(auto) Next__Unowned::operator*() const { ADV_EXPRESSION_BODY(__ref().operator*()); }
 	
-#line 409 "Collections.ast"
-	inline constexpr auto TestInt(__extension_408_Next const& __this LIFETIMEBOUND, CppAdvance::i32 j)  -> const CppAdvance::i32
+#line 415 "Collections.ast"
+	inline constexpr auto TestInt(__extension_414_Next const& __this LIFETIMEBOUND, CppAdvance::i32 j)  -> const CppAdvance::i32
 	{
-		#line 409 "Collections.ast"
+		#line 415 "Collections.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(i)(__this.__ref()) + j * CppAdvance::i32(2)); 
 	}
 	
@@ -4037,12 +4051,12 @@ inline constexpr auto LONG_CONSTANT = NORMAL_CONSTANT<CppAdvance::i64>;
 	
 inline const CppAdvance::f32 IInterface::DefaultMethod(CppAdvance::In<VectorClass> f) const 
 	{
-		#line 426 "Collections.ast"
+		#line 432 "Collections.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(GetMagicNumber)((*this).__ref(), f)); 
 	}
 	inline const CppAdvance::i32 IInterface::SomeStaticMethod(CppAdvance::i32 i) 
 	{
-		#line 434 "Collections.ast"
+		#line 440 "Collections.ast"
 		ADV_EXPRESSION_BODY(i * CppAdvance::i32(123)); 
 	}
 	#line 9999 "Collections.ast"
@@ -4065,7 +4079,7 @@ inline const CppAdvance::f32 IInterface::DefaultMethod(CppAdvance::In<VectorClas
 	FORCE_INLINE decltype(auto) ComplexVariant::getValue3() noexcept { return __class::Value3; }
 	FORCE_INLINE decltype(auto) ComplexVariant::getValue4() noexcept { return __class::Value4; }
 	FORCE_INLINE decltype(auto) ComplexVariant::GetValues() noexcept { return __class::GetValues(); }
-	#line 490 "Collections.ast"
+	#line 496 "Collections.ast"
 	inline decltype(auto) ComplexVariant::operator*() const { ADV_EXPRESSION_BODY(__ref().operator*()); }
 	inline decltype(auto) ComplexVariant__Unowned::operator*() const { ADV_EXPRESSION_BODY(__ref().operator*()); }
 	
@@ -4081,123 +4095,123 @@ inline const CppAdvance::f32 IInterface::DefaultMethod(CppAdvance::In<VectorClas
 	
 #line 9999 "Collections.ast"
 	
-#line 561 "Collections.ast"
-	template<class T> inline auto operator*(__extension_558_T<T> const& __this LIFETIMEBOUND, CppAdvance::In<CppAdvance::f32> f)  -> const CppAdvance::f32
+#line 567 "Collections.ast"
+	template<class T> inline auto operator*(__extension_564_T<T> const& __this LIFETIMEBOUND, CppAdvance::In<CppAdvance::f32> f)  -> const CppAdvance::f32
 	{
-		#line 561 "Collections.ast"
+		#line 567 "Collections.ast"
 		ADV_EXPRESSION_BODY(f * CppAdvance::i32(10)); 
 	}
 	
-#line 563 "Collections.ast"
-	template<class T> inline auto PrintInterface(__extension_558_T<T> const& __this LIFETIMEBOUND, CppAdvance::i32 x)  -> const CppAdvance::i32
+#line 569 "Collections.ast"
+	template<class T> inline auto PrintInterface(__extension_564_T<T> const& __this LIFETIMEBOUND, CppAdvance::i32 x)  -> const CppAdvance::i32
 	{
-		#line 564 "Collections.ast"
+		#line 570 "Collections.ast"
 		print(CppAdvance::Str{u"PrintInterface Begin"});
-		#line 565 "Collections.ast"
+		#line 571 "Collections.ast"
 		print(ADV_UPCS(Name)(__this.__ref()));
-		#line 566 "Collections.ast"
+		#line 572 "Collections.ast"
 		print(x);
-		#line 567 "Collections.ast"
+		#line 573 "Collections.ast"
 		print(CppAdvance::Str{u"PrintInterface End"});
-		#line 568 "Collections.ast"
+		#line 574 "Collections.ast"
 		return x * CppAdvance::i32(11);
 	}
 	
-#line 571 "Collections.ast"
-	template<class T> inline const CppAdvance::f32 getAt(__extension_558_T<T> const& __this LIFETIMEBOUND, CppAdvance::f32 r, CppAdvance::f32 g, CppAdvance::f32 b)
+#line 577 "Collections.ast"
+	template<class T> inline const CppAdvance::f32 getAt(__extension_564_T<T> const& __this LIFETIMEBOUND, CppAdvance::f32 r, CppAdvance::f32 g, CppAdvance::f32 b)
 	{
-		#line 571 "Collections.ast"
+		#line 577 "Collections.ast"
 		ADV_EXPRESSION_BODY(r + g + b); 
 	}
-	#line 573 "Collections.ast"
-	template<class T> inline auto __construct_(CppAdvance::ConstructorProxy<__extension_558_T<T>> __ctordata, CppAdvance::i32 x, CppAdvance::Str txt)  -> decltype(auto)
+	#line 579 "Collections.ast"
+	template<class T> inline auto __construct_(CppAdvance::ConstructorProxy<__extension_564_T<T>> __ctordata, CppAdvance::i32 x, CppAdvance::Str txt)  -> decltype(auto)
 	{
-		#line 574 "Collections.ast"
-		auto __this = new (__ctordata.memory) typename CppAdvance::ConstructorProxy<T>::ConstructingType(x, x, x);
-		#line 575 "Collections.ast"
-		print(txt);
-		return __this;
-	}
-	
-#line 578 "Collections.ast"
-	template<class T> inline auto __construct_(CppAdvance::ConstructorProxy<__extension_558_T<T>> __ctordata, typename CppAdvance::MemorySpace mem, CppAdvance::i32 x, CppAdvance::Str txt)  -> decltype(auto)
-	{
-		#line 579 "Collections.ast"
-		auto __this = new (__ctordata.memory) typename CppAdvance::ConstructorProxy<T>::ConstructingType(x, x, x);
 		#line 580 "Collections.ast"
+		auto __this = new (__ctordata.memory) typename CppAdvance::ConstructorProxy<T>::ConstructingType(x, x, x);
+		#line 581 "Collections.ast"
 		print(txt);
 		return __this;
 	}
 	
-#line 559 "Collections.ast"
-	template<class T> inline auto getAsString(__extension_558_T<T> const& __this ) -> const CppAdvance::Str
+#line 584 "Collections.ast"
+	template<class T> inline auto __construct_(CppAdvance::ConstructorProxy<__extension_564_T<T>> __ctordata, typename CppAdvance::MemorySpace mem, CppAdvance::i32 x, CppAdvance::Str txt)  -> decltype(auto)
 	{
-		#line 559 "Collections.ast"
+		#line 585 "Collections.ast"
+		auto __this = new (__ctordata.memory) typename CppAdvance::ConstructorProxy<T>::ConstructingType(x, x, x);
+		#line 586 "Collections.ast"
+		print(txt);
+		return __this;
+	}
+	
+#line 565 "Collections.ast"
+	template<class T> inline auto getAsString(__extension_564_T<T> const& __this ) -> const CppAdvance::Str
+	{
+		#line 565 "Collections.ast"
 		ADV_EXPRESSION_BODY(CppAdvance::Str{u"AsString"}); 
 	}
 	#line 9999 "Collections.ast"
 	
-#line 589 "Collections.ast"
+#line 595 "Collections.ast"
 	template<class T> inline constexpr auto __static_GetSuperCount(CppAdvance::i32 x, CppAdvance::i32 y)  -> const CppAdvance::i32
 	{
-		#line 589 "Collections.ast"
+		#line 595 "Collections.ast"
 		ADV_EXPRESSION_BODY(x * y + x + y); 
 	}
 	
-#line 588 "Collections.ast"
+#line 594 "Collections.ast"
 	template<class T> inline constexpr auto __static_getCount3() -> const CppAdvance::i32
 	{
-		#line 588 "Collections.ast"
+		#line 594 "Collections.ast"
 		ADV_EXPRESSION_BODY(CppAdvance::i32(333)); 
 	}
 	#line 9999 "Collections.ast"
 	
-#line 596 "Collections.ast"
-	template<class T> inline constexpr auto _operator_bsl_mul_div(__extension_592_T<T> const& __this LIFETIMEBOUND)  -> const CppAdvance::i32
+#line 602 "Collections.ast"
+	template<class T> inline constexpr auto _operator_bsl_mul_div(__extension_598_T<T> const& __this LIFETIMEBOUND)  -> const CppAdvance::i32
 	{
-		#line 596 "Collections.ast"
+		#line 602 "Collections.ast"
 		ADV_EXPRESSION_BODY(__this / CppAdvance::i32(2)); 
 	}
-	template<class T> inline constexpr auto _operator_bsl_mul_div_postfix(__extension_592_T<T> & __this)  -> decltype(auto) { auto copy = __this; ADV_UFCS(_operator_bsl_mul_div)(__this); return copy; }
+	template<class T> inline constexpr auto _operator_bsl_mul_div_postfix(__extension_598_T<T> & __this)  -> decltype(auto) { auto copy = __this; ADV_UFCS(_operator_bsl_mul_div)(__this); return copy; }
 	
-#line 599 "Collections.ast"
-	template<class T> inline constexpr auto _operator_bsl_mul_div(__extension_592_T<T> const& __this LIFETIMEBOUND, CppAdvance::f32 other)  -> const CppAdvance::f32
+#line 605 "Collections.ast"
+	template<class T> inline constexpr auto _operator_bsl_mul_div(__extension_598_T<T> const& __this LIFETIMEBOUND, CppAdvance::f32 other)  -> const CppAdvance::f32
 	{
-		#line 599 "Collections.ast"
+		#line 605 "Collections.ast"
 		ADV_EXPRESSION_BODY(CppAdvance::f32{__this} * other * CppAdvance::i32(2)); 
 	}
-	template<class T> inline constexpr auto _operator_bsl_mul_div(CppAdvance::f32 other, const __extension_592_T<T> & __this)  -> decltype(auto) { return ADV_UFCS(_operator_bsl_mul_div)(__this, other); }
+	template<class T> inline constexpr auto _operator_bsl_mul_div(CppAdvance::f32 other, const __extension_598_T<T> & __this)  -> decltype(auto) { return ADV_UFCS(_operator_bsl_mul_div)(__this, other); }
 	
-#line 593 "Collections.ast"
-	template<class T> inline constexpr auto getkm(__extension_592_T<T> const& __this ) -> const CppAdvance::i32
+#line 599 "Collections.ast"
+	template<class T> inline constexpr auto getkm(__extension_598_T<T> const& __this ) -> const CppAdvance::i32
 	{
-		#line 593 "Collections.ast"
+		#line 599 "Collections.ast"
 		ADV_EXPRESSION_BODY(__this * CppAdvance::i32(1000)); 
 	}
 	#line 9999 "Collections.ast"
 	
-#line 603 "Collections.ast"
-	inline constexpr auto getkm(__extension_602_f64 const& __this ) -> const CppAdvance::f64
+#line 609 "Collections.ast"
+	inline constexpr auto getkm(__extension_608_f64 const& __this ) -> const CppAdvance::f64
 	{
-		#line 603 "Collections.ast"
+		#line 609 "Collections.ast"
 		ADV_EXPRESSION_BODY(__this * CppAdvance::f32(1000.0f)); 
 	}
 	#line 9999 "Collections.ast"
 	
-#line 607 "Collections.ast"
-	inline constexpr auto getkm(__extension_606_str const& __this ) -> const CppAdvance::Str
+#line 613 "Collections.ast"
+	inline constexpr auto getkm(__extension_612_str const& __this ) -> const CppAdvance::Str
 	{
-		#line 607 "Collections.ast"
+		#line 613 "Collections.ast"
 		ADV_EXPRESSION_BODY(CppAdvance::Str{u"1000km"}); 
 	}
 	#line 9999 "Collections.ast"
 	
 #line 9999 "Collections.ast"
 	
-#line 640 "Collections.ast"
-	inline auto getNext(__extension_638_Vector3 const& __this LIFETIMEBOUND)  -> const Next
+#line 646 "Collections.ast"
+	inline auto getNext(__extension_644_Vector3 const& __this LIFETIMEBOUND)  -> const Next
 	{
-		#line 640 "Collections.ast"
+		#line 646 "Collections.ast"
 		ADV_EXPRESSION_BODY(CppAdvance::New<Next>(ADV_UPCS(x)(__this.__ref()))); 
 	}
 	

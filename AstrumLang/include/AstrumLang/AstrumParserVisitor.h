@@ -467,7 +467,11 @@ public:
 
     virtual std::any visitImplicitSpecification(AstrumParser::ImplicitSpecificationContext *context) = 0;
 
+    virtual std::any visitStaticConstructor(AstrumParser::StaticConstructorContext *context) = 0;
+
     virtual std::any visitDestructor(AstrumParser::DestructorContext *context) = 0;
+
+    virtual std::any visitStaticDestructor(AstrumParser::StaticDestructorContext *context) = 0;
 
     virtual std::any visitConversionFunction(AstrumParser::ConversionFunctionContext *context) = 0;
 

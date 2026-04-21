@@ -140,20 +140,20 @@ public:
     RuleOperatorFunctionId = 214, RuleConstructor = 215, RuleConstructorBody = 216, 
     RuleMemberInitializationList = 217, RuleDelegatingConstructorBody = 218, 
     RuleDelegatingConstructorStatement = 219, RuleMemberInitializationStatement = 220, 
-    RuleImplicitSpecification = 221, RuleDestructor = 222, RuleConversionFunction = 223, 
-    RuleConversionFunctionId = 224, RuleIndexer = 225, RuleIndexerProperty = 226, 
-    RuleIndexerGetter = 227, RuleIndexerSetter = 228, RuleInterfaceIndexer = 229, 
-    RuleTemplateParams = 230, RuleTemplateParamDeclaration = 231, RuleTemplateTypename = 232, 
-    RuleTemplateArgumentList = 233, RuleTemplateArgument = 234, RuleConstraintClause = 235, 
-    RuleTypeTrait = 236, RuleTemplateDeductionGuide = 237, RuleAttributeSpecifierSeq = 238, 
-    RuleAttributeSpecifier = 239, RuleAttributeArgumentClause = 240, RuleAssignmentOperator = 241, 
-    RuleShiftOperator = 242, RuleUnaryPrefixOperator = 243, RuleUnaryCustomOperator = 244, 
-    RuleRefCaptureOperator = 245, RuleUnaryPostfixOperator = 246, RuleNot = 247, 
-    RuleOperator = 248, RuleLiteral = 249, RuleInterpolatedStringLiteral = 250, 
-    RuleInterpolatedRegularStringLiteral = 251, RuleInterpolatedRegularStringPart = 252, 
-    RuleInterpolatedVerbatiumStringLiteral = 253, RuleInterpolatedVerbatiumStringPart = 254, 
-    RuleInterpolatedMultilineStringLiteral = 255, RuleInterpolatedMultilineStringPart = 256, 
-    RuleInterpolatedExpression = 257
+    RuleImplicitSpecification = 221, RuleStaticConstructor = 222, RuleDestructor = 223, 
+    RuleStaticDestructor = 224, RuleConversionFunction = 225, RuleConversionFunctionId = 226, 
+    RuleIndexer = 227, RuleIndexerProperty = 228, RuleIndexerGetter = 229, 
+    RuleIndexerSetter = 230, RuleInterfaceIndexer = 231, RuleTemplateParams = 232, 
+    RuleTemplateParamDeclaration = 233, RuleTemplateTypename = 234, RuleTemplateArgumentList = 235, 
+    RuleTemplateArgument = 236, RuleConstraintClause = 237, RuleTypeTrait = 238, 
+    RuleTemplateDeductionGuide = 239, RuleAttributeSpecifierSeq = 240, RuleAttributeSpecifier = 241, 
+    RuleAttributeArgumentClause = 242, RuleAssignmentOperator = 243, RuleShiftOperator = 244, 
+    RuleUnaryPrefixOperator = 245, RuleUnaryCustomOperator = 246, RuleRefCaptureOperator = 247, 
+    RuleUnaryPostfixOperator = 248, RuleNot = 249, RuleOperator = 250, RuleLiteral = 251, 
+    RuleInterpolatedStringLiteral = 252, RuleInterpolatedRegularStringLiteral = 253, 
+    RuleInterpolatedRegularStringPart = 254, RuleInterpolatedVerbatiumStringLiteral = 255, 
+    RuleInterpolatedVerbatiumStringPart = 256, RuleInterpolatedMultilineStringLiteral = 257, 
+    RuleInterpolatedMultilineStringPart = 258, RuleInterpolatedExpression = 259
   };
 
   explicit AstrumParser(antlr4::TokenStream *input);
@@ -395,7 +395,9 @@ public:
   class DelegatingConstructorStatementContext;
   class MemberInitializationStatementContext;
   class ImplicitSpecificationContext;
+  class StaticConstructorContext;
   class DestructorContext;
+  class StaticDestructorContext;
   class ConversionFunctionContext;
   class ConversionFunctionIdContext;
   class IndexerContext;
@@ -3173,6 +3175,8 @@ public:
     FriendDeclarationContext *friendDeclaration();
     ExternMethodDeclarationContext *externMethodDeclaration();
     DestructorContext *destructor();
+    StaticConstructorContext *staticConstructor();
+    StaticDestructorContext *staticDestructor();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -3278,6 +3282,8 @@ public:
     ConstantDeclarationContext *constantDeclaration();
     AliasDeclarationContext *aliasDeclaration();
     AssociatedTypeDeclarationContext *associatedTypeDeclaration();
+    StaticConstructorContext *staticConstructor();
+    StaticDestructorContext *staticDestructor();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -4329,6 +4335,21 @@ public:
 
   ImplicitSpecificationContext* implicitSpecification();
 
+  class ASTRUMLANG_API StaticConstructorContext : public antlr4::ParserRuleContext {
+  public:
+    StaticConstructorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Static();
+    FunctionBodyContext *functionBody();
+    ShortFunctionBodyContext *shortFunctionBody();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  StaticConstructorContext* staticConstructor();
+
   class ASTRUMLANG_API DestructorContext : public antlr4::ParserRuleContext {
   public:
     DestructorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -4346,6 +4367,22 @@ public:
   };
 
   DestructorContext* destructor();
+
+  class ASTRUMLANG_API StaticDestructorContext : public antlr4::ParserRuleContext {
+  public:
+    StaticDestructorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Tilde();
+    antlr4::tree::TerminalNode *Static();
+    FunctionBodyContext *functionBody();
+    ShortFunctionBodyContext *shortFunctionBody();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  StaticDestructorContext* staticDestructor();
 
   class ASTRUMLANG_API ConversionFunctionContext : public antlr4::ParserRuleContext {
   public:
