@@ -1120,6 +1120,8 @@ namespace AstrumLang {
 		std::any visitStaticConstructor(AstrumParser::StaticConstructorContext* ctx) override;
 
 		std::any visitStaticDestructor(AstrumParser::StaticDestructorContext* ctx) override;
+
+		std::any visitLockStatement(AstrumParser::LockStatementContext* ctx) override;
 	};
 
 }  // namespace AstrumLang

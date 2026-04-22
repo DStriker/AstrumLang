@@ -461,8 +461,7 @@ namespace AstrumLang {
 
 			printEnumClassData(type.get());
 			out << "\n" << std::string(depth, '\t');
-			if (type->staticConstructor.has_value() || type->staticDestructor.has_value())
-			{
+			if (type->staticConstructor.has_value() || type->staticDestructor.has_value()) {
 				auto func = type->staticConstructor.has_value() ? *type->staticConstructor
 				                                                : *type->staticDestructor;
 				if (func.parentTemplateParams) {
@@ -489,7 +488,7 @@ namespace AstrumLang {
 				} else {
 					out << parent;
 				}
-                out << "::__sctor ";
+				out << "::__sctor ";
 				if (pos != parent.npos) {
 					out << parent.substr(0, pos);
 					out << "<";
@@ -1519,12 +1518,10 @@ namespace AstrumLang {
 				out << "#endif " << std::endl << std::string(depth, '\t');
 			}
 		}
-		if (type->staticConstructor.has_value() || type->staticDestructor.has_value())
-		{
+		if (type->staticConstructor.has_value() || type->staticDestructor.has_value()) {
 			out << "private: class __sctor {\n" << std::string(++depth, '\t');
 			out << "static __sctor instance;\n" << std::string(depth, '\t');
-			if (auto ctor = type->staticConstructor)
-			{
+			if (auto ctor = type->staticConstructor) {
 				if (!ctor->compilationCondition.empty()) {
 					out << "#if " << ctor->compilationCondition << std::endl
 					    << std::string(depth, '\t');
@@ -12221,6 +12218,8 @@ namespace AstrumLang {
 			printVersionSelectionStatement(select);
 		} else if (auto cpp = ctx->inlineCppStatement()) {
 			printInlineCppStatement(cpp);
+		} else if (auto lock = ctx->lockStatement()) {
+			printLockStatement(lock);
 		}
 	}
 
@@ -12869,6 +12868,19 @@ namespace AstrumLang {
 			}
 		}
 		out << ";";
+	}
+
+	void AstrumCodegen::printLockStatement(AstrumParser::LockStatementContext* ctx) {
+		out << "{ std::lock_guard __mutex_lock(";
+		printConditionalExpression(ctx->conditionalExpression());
+		out << ");\n" << std::string(++depth, '\t');
+		if (auto comp = ctx->compoundStatement())
+		{
+			printCompoundStatement(comp);
+		} else {
+			printStatement(ctx->statement());
+		}
+		out << "\n" << std::string(--depth, '\t') << "}";
 	}
 
 	void AstrumCodegen::printTryBlock(AstrumParser::TryBlockContext* ctx) {
@@ -14144,7 +14156,7 @@ namespace AstrumLang {
 			const MethodDefinition& func = sema.methods[pos];
 
 			if (func.isInline || func.parentTemplateParams ||
-			     func.parentTemplateSpecializationArgs) {
+			    func.parentTemplateSpecializationArgs) {
 				out.switchTo(true);
 				emptyLine = true;
 			}
@@ -14219,7 +14231,7 @@ namespace AstrumLang {
 			}
 			out.switchTo(false);
 		}
-		
+
 		refParameters.clear();
 		sema.symbolContexts.pop();
 	}

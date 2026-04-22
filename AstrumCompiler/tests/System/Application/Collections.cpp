@@ -13,7 +13,7 @@ namespace System::Application {
 //###############################################################################
 //# Global compile-time constants
 //###############################################################################
-#line 637 "Collections.ast"
+#line 640 "Collections.ast"
 inline constexpr CppAdvance::usize PRIVATE_CONSTANT = CppAdvance::usize(34U);
 //###############################################################################
 //# Global variable declarations
@@ -22,35 +22,35 @@ inline constexpr CppAdvance::usize PRIVATE_CONSTANT = CppAdvance::usize(34U);
 volatile CppAdvance::Unsafe::__VolatileRawPtr<const CppAdvance::char16> globalVar{};
 #line 5 "Collections.ast"
 extern const CppAdvance::Unsafe::__RawPtr<CppAdvance::i32> globalVar1 = nullptr;
-#line 638 "Collections.ast"
+#line 641 "Collections.ast"
 static CppAdvance::i32 globalVar2 = CppAdvance::i32(8);
-#line 639 "Collections.ast"
+#line 642 "Collections.ast"
 static const CppAdvance::i32 globalVar3 = CppAdvance::i32(456);
-#line 106 "Collections.ast"
+#line 109 "Collections.ast"
 thread_local CppAdvance::i32 Vector3::Count2 = CppAdvance::i32(123);
-#line 108 "Collections.ast"
+#line 111 "Collections.ast"
 const Vector3 Vector3::ZERO = Vector3{CppAdvance::i32(0), CppAdvance::i32(0), CppAdvance::i32(0)};
-#line 228 "Collections.ast"
+#line 231 "Collections.ast"
 CppAdvance::i32 __Class_VectorClass::Count2 = CppAdvance::i32(123);
-#line 230 "Collections.ast"
+#line 233 "Collections.ast"
 const Vector3 __Class_VectorClass::ZERO = Vector3{CppAdvance::i32(0), CppAdvance::i32(0), CppAdvance::i32(0)};
-#line 91 "Collections.ast"
+#line 94 "Collections.ast"
 CppAdvance::i32 Vector3::p_Count = CppAdvance::i32(1);
-#line 91 "Collections.ast"
+#line 94 "Collections.ast"
 Vector3::__Property_Count<> Vector3::Count;
-#line 228 "Collections.ast"
+#line 231 "Collections.ast"
 __Class_VectorClass::__self::__Property_Count2<> __Class_VectorClass::__self::Count2;
-#line 230 "Collections.ast"
+#line 233 "Collections.ast"
 __Class_VectorClass::__self::__Property_ZERO<> __Class_VectorClass::__self::ZERO;
-#line 380 "Collections.ast"
+#line 383 "Collections.ast"
 __Class_ConcreteVectorClass::__Property_Name2<> __Class_ConcreteVectorClass::Name2;
-#line 380 "Collections.ast"
+#line 383 "Collections.ast"
 __Class_ConcreteVectorClass::__self::__Property_Name2<> __Class_ConcreteVectorClass::__self::Name2;
-#line 507 "Collections.ast"
+#line 510 "Collections.ast"
 __Class_ComplexVariant::__Property_Count10<> __Class_ComplexVariant::Count10;
-#line 507 "Collections.ast"
+#line 510 "Collections.ast"
 __Class_ComplexVariant::__self::__Property_Count10<> __Class_ComplexVariant::__self::Count10;
-#line 526 "Collections.ast"
+#line 529 "Collections.ast"
 Media::__Property_Count10<> Media::Count10;
 
 	
@@ -80,23 +80,23 @@ Media::__Property_Count10<> Media::Count10;
 	
 	
 	
-	#line 485 "Collections.ast"
+	#line 488 "Collections.ast"
 const __Class_ComplexVariant::__self __Class_ComplexVariant::Value1 = __Class_ComplexVariant::__self{ new (::operator new(sizeof(__Class_ComplexVariant))) __Class_ComplexVariant(CppAdvance::i32(1), CppAdvance::f32(2.13f), CppAdvance::Str{u"Value1"}) };
-	#line 485 "Collections.ast"
+	#line 488 "Collections.ast"
 __Class_ComplexVariant::__self::__Property_Value1<> __Class_ComplexVariant::__self::Value1;
-	#line 486 "Collections.ast"
+	#line 489 "Collections.ast"
 const __Class_ComplexVariant::__self __Class_ComplexVariant::Value2 = __Class_ComplexVariant::__self{ new (::operator new(sizeof(__Class_ComplexVariant))) __Class_ComplexVariant(CppAdvance::i32(2), CppAdvance::f32(4.13f), CppAdvance::Str{u"Value2"}) };
-	#line 486 "Collections.ast"
+	#line 489 "Collections.ast"
 __Class_ComplexVariant::__self::__Property_Value2<> __Class_ComplexVariant::__self::Value2;
-	#line 487 "Collections.ast"
+	#line 490 "Collections.ast"
 const __Class_ComplexVariant::__self __Class_ComplexVariant::Value3 = __Class_ComplexVariant::__self{ new (::operator new(sizeof(__Class_ComplexVariant))) __Class_ComplexVariant(CppAdvance::i32(3), CppAdvance::f32(6.13f), CppAdvance::Str{u"Value3"}) };
-	#line 487 "Collections.ast"
+	#line 490 "Collections.ast"
 __Class_ComplexVariant::__self::__Property_Value3<> __Class_ComplexVariant::__self::Value3;
-	#line 488 "Collections.ast"
+	#line 491 "Collections.ast"
 const __Class_ComplexVariant::__self __Class_ComplexVariant::Value4 = __Class_ComplexVariant::__self{ new (::operator new(sizeof(__Class_ComplexVariant))) __Class_ComplexVariant(CppAdvance::i32(4), CppAdvance::f32(8.13f), CppAdvance::Str{u"Value4"}) };
-	#line 488 "Collections.ast"
+	#line 491 "Collections.ast"
 __Class_ComplexVariant::__self::__Property_Value4<> __Class_ComplexVariant::__self::Value4;
-	#line 484 "Collections.ast"
+	#line 487 "Collections.ast"
 const __Class_ComplexVariant::__self __Class_ComplexVariant::__values[] = { Value1, Value2, Value3, Value4 };
 	
 	
@@ -165,26 +165,26 @@ const __Class_ComplexVariant::__self __Class_ComplexVariant::__values[] = { Valu
 		#line 74 "Collections.ast"
 		print(CppAdvance::Str{u"Static constructor call!"});
 	}
-#line 96 "Collections.ast"
+#line 99 "Collections.ast"
 	auto Vector3::setCount(const CppAdvance::i32& value) -> void 
 	{
-		#line 97 "Collections.ast"
+		#line 100 "Collections.ast"
 		print(CppAdvance::Str{u"Write"});
-		#line 98 "Collections.ast"
+		#line 101 "Collections.ast"
 		if (value > CppAdvance::i32(10)) [[likely]] {
-			#line 99 "Collections.ast"
+			#line 102 "Collections.ast"
 			p_Count = value / CppAdvance::i32(10);
 		} else {
-			#line 100 "Collections.ast"
+			#line 103 "Collections.ast"
 			p_Count = value;
 		}
 	}
-	#line 92 "Collections.ast"
+	#line 95 "Collections.ast"
 	auto Vector3::getCount()  -> CppAdvance::i32 
 	{
-		#line 93 "Collections.ast"
+		#line 96 "Collections.ast"
 		print(CppAdvance::Str{u"Read"});
-		#line 94 "Collections.ast"
+		#line 97 "Collections.ast"
 		return p_Count * CppAdvance::i32(10);
 	}
 	
@@ -192,27 +192,27 @@ const __Class_ComplexVariant::__self __Class_ComplexVariant::__values[] = { Valu
 	
 	
 	
-	#line 363 "Collections.ast"
+	#line 366 "Collections.ast"
 	auto __Class_ConcreteVectorClass::setCount(const CppAdvance::i32& value) -> __selfClass& 
 	{
-		#line 364 "Collections.ast"
+		#line 367 "Collections.ast"
 		print(CppAdvance::Str{u"Write"});
-		#line 365 "Collections.ast"
+		#line 368 "Collections.ast"
 		if (value > CppAdvance::i32(10)) {
-			#line 365 "Collections.ast"
+			#line 368 "Collections.ast"
 			p_Count = value / CppAdvance::i32(10);
 		} else {
-			#line 366 "Collections.ast"
+			#line 369 "Collections.ast"
 			p_Count = value;
 		}
 		return *this;
 	}
-	#line 359 "Collections.ast"
+	#line 362 "Collections.ast"
 	auto __Class_ConcreteVectorClass::getCount() const  -> CppAdvance::i32 
 	{
-		#line 360 "Collections.ast"
+		#line 363 "Collections.ast"
 		print(CppAdvance::Str{u"Read"});
-		#line 361 "Collections.ast"
+		#line 364 "Collections.ast"
 		return p_Count * CppAdvance::i32(10);
 	}
 	
@@ -221,10 +221,10 @@ const __Class_ComplexVariant::__self __Class_ComplexVariant::__values[] = { Valu
 
 
 
-#line 481 "Collections.ast"
+#line 484 "Collections.ast"
 	inline auto Text::getShortString() const  -> CppAdvance::Str 
 	{
-		#line 481 "Collections.ast"
+		#line 484 "Collections.ast"
 		ADV_EXPRESSION_BODY(Value); 
 	}
 	

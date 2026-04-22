@@ -223,6 +223,7 @@ statement
     | iterationStatement
     | jumpStatement
     | tryBlock
+    | lockStatement
     | functionDefinition
     | Unsafe? compoundStatement
     | inlineCppStatement
@@ -349,6 +350,11 @@ exceptionHandler
 exceptionDeclaration
     : Identifier (Colon simpleTypeSpecifier (Or simpleTypeSpecifier)*)?
     | Ellipsis
+    ;
+
+lockStatement
+    : Lock conditionalExpression compoundStatement
+    | Lock LeftParen conditionalExpression RightParen statement
     ;
 
 // expressions

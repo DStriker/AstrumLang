@@ -143,6 +143,8 @@ public:
 
     virtual std::any visitExceptionDeclaration(AstrumParser::ExceptionDeclarationContext *context) = 0;
 
+    virtual std::any visitLockStatement(AstrumParser::LockStatementContext *context) = 0;
+
     virtual std::any visitExpression(AstrumParser::ExpressionContext *context) = 0;
 
     virtual std::any visitRangeExpression(AstrumParser::RangeExpressionContext *context) = 0;

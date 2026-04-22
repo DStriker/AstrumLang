@@ -49,6 +49,8 @@ namespace CppAdvance {
 
 #define ADV_FORWARD(x) std::forward<decltype(x)>(x)
 
+#define ASTRUM_NAMEOF(x) #x
+
 #define ADV_EXPRESSION_BODY(...)                                                                   \
 	if constexpr (!std::is_void_v<decltype(__VA_ARGS__)>)                                          \
 		return __VA_ARGS__;                                                                        \

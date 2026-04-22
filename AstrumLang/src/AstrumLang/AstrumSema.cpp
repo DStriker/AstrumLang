@@ -8123,4 +8123,16 @@ namespace AstrumLang {
 		return 0;
 	}
 
+	std::any AstrumSema::visitLockStatement(AstrumParser::LockStatementContext* ctx) {
+		if (!firstPass)
+			initStates.push(initStates.top());
+
+		visitChildren(ctx);
+
+		if (!firstPass)
+			initStates.pop();
+
+		return 0;
+	}
+
 }  // namespace AstrumLang

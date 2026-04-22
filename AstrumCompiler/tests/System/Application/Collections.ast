@@ -80,6 +80,9 @@ public struct Vector3
 	friend TestStruct2<T>;
 	friend func3: (x: i32) -> i32;
 	friend func4: (x: i32) -> i32 {
+		/*lock x {
+			print("Critical section");
+		}*/
 		return 0;
 	}
 
