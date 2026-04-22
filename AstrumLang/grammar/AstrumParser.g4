@@ -224,6 +224,7 @@ statement
     | jumpStatement
     | tryBlock
     | lockStatement
+    | yieldStatement
     | functionDefinition
     | Unsafe? compoundStatement
     | inlineCppStatement
@@ -319,6 +320,10 @@ expressionSeq
 
 jumpStatement
     : (Break Identifier? | Continue Identifier? | Return (expression | bracedInitList | collectionExpression)?) Semi
+    ;
+
+yieldStatement
+    : Yield (expression | bracedInitList | collectionExpression | Break) Semi
     ;
 
 versionSelectionStatement
@@ -544,6 +549,7 @@ unaryExpressionTail
     | Alignof LeftParen theTypeId RightParen
     | Nameof LeftParen (theTypeId | expression) RightParen
     | Offsetof LeftParen theTypeId Comma Identifier RightParen
+    | Await (expression | bracedInitList | collectionExpression)
     ;
 
 newExpression

@@ -8135,4 +8135,22 @@ namespace AstrumLang {
 		return 0;
 	}
 
+	std::any AstrumSema::visitYieldStatement(AstrumParser::YieldStatementContext* ctx) {
+		visitChildren(ctx);
+		if (!firstPass) {
+			if (isUnitTestBody) {
+				notifyErrorListeners("Unit test cannot yield value", ctx->Yield()->getSymbol());
+			}
+			if (ctx->Yield() &&
+			    std::any_of(outParams.begin(), outParams.end(), [&](const auto& param) {
+				    return !initStates.top().definitelyAssigned.contains(param);
+			    })) {
+				notifyErrorListeners("Each branch of a function must initialize all out parameters",
+				                     ctx->Yield()->getSymbol());
+			}
+		}
+
+		return 0;
+	}
+
 }  // namespace AstrumLang

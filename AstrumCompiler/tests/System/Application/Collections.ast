@@ -83,6 +83,11 @@ public struct Vector3
 		/*lock x {
 			print("Critical section");
 		}*/
+		xyz:= await asyncFunc();
+		if x > 10 {
+			yield break;
+		}
+		yield x+2;
 		return 0;
 	}
 

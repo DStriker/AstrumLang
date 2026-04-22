@@ -131,6 +131,8 @@ public:
 
     virtual std::any visitJumpStatement(AstrumParser::JumpStatementContext *context) = 0;
 
+    virtual std::any visitYieldStatement(AstrumParser::YieldStatementContext *context) = 0;
+
     virtual std::any visitVersionSelectionStatement(AstrumParser::VersionSelectionStatementContext *context) = 0;
 
     virtual std::any visitVersionSelectionStatementBlock(AstrumParser::VersionSelectionStatementBlockContext *context) = 0;

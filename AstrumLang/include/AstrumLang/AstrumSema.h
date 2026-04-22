@@ -1122,6 +1122,8 @@ namespace AstrumLang {
 		std::any visitStaticDestructor(AstrumParser::StaticDestructorContext* ctx) override;
 
 		std::any visitLockStatement(AstrumParser::LockStatementContext* ctx) override;
+
+		std::any visitYieldStatement(AstrumParser::YieldStatementContext* ctx) override;
 	};
 
 }  // namespace AstrumLang

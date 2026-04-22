@@ -236,6 +236,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitYieldStatement(AstrumParser::YieldStatementContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitVersionSelectionStatement(AstrumParser::VersionSelectionStatementContext *ctx) override {
     return visitChildren(ctx);
   }

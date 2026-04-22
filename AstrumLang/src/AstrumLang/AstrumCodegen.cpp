@@ -12220,6 +12220,8 @@ namespace AstrumLang {
 			printInlineCppStatement(cpp);
 		} else if (auto lock = ctx->lockStatement()) {
 			printLockStatement(lock);
+		} else if (auto y = ctx->yieldStatement()) {
+			printYieldStatement(y);
 		}
 	}
 
@@ -12874,13 +12876,28 @@ namespace AstrumLang {
 		out << "{ std::lock_guard __mutex_lock(";
 		printConditionalExpression(ctx->conditionalExpression());
 		out << ");\n" << std::string(++depth, '\t');
-		if (auto comp = ctx->compoundStatement())
-		{
+		if (auto comp = ctx->compoundStatement()) {
 			printCompoundStatement(comp);
 		} else {
 			printStatement(ctx->statement());
 		}
 		out << "\n" << std::string(--depth, '\t') << "}";
+	}
+
+	void AstrumCodegen::printYieldStatement(AstrumParser::YieldStatementContext* ctx) {
+		if (ctx->Break()) {
+			out << "co_return;";
+		} else {
+			out << "co_yield ";
+			if (auto expr = ctx->expression()) {
+				printExpression(expr);
+			} else if (auto init = ctx->bracedInitList()) {
+				printBracedInitList(init);
+			} else if (auto coll = ctx->collectionExpression()) {
+				printCollectionExpression(coll);
+			}
+			out << ";";
+		}
 	}
 
 	void AstrumCodegen::printTryBlock(AstrumParser::TryBlockContext* ctx) {
@@ -18434,6 +18451,16 @@ namespace AstrumLang {
 			if (ctx->Identifier())
 				printIdentifier(ctx->Identifier());
 			out << "))";
+		} else if (ctx->Await()) {
+			out << "co_await ";
+			if (auto expr = ctx->expression())
+			{
+				printExpression(expr);
+			} else if (auto braced = ctx->bracedInitList()) {
+				printBracedInitList(braced);
+			} else if (auto coll = ctx->collectionExpression()) {
+				printCollectionExpression(coll);
+			}
 		}
 	}
 
