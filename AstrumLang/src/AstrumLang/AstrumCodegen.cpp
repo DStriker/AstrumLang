@@ -12308,7 +12308,7 @@ namespace AstrumLang {
 						out << " = *__tmp" << i;
 						out << ";\n" << std::string(depth, '\t');
 					} else {
-						auto txt = prereq->threeWayComparisonExpression()->getText();
+						auto txt = prereq->threeWayComparisonExpression(0)->getText();
 						if (std::all_of(txt.begin(), txt.end(),
 						                [](char c) { return std::isalnum(c) || c == '_'; })) {
 							if (isNull) {
@@ -12422,11 +12422,11 @@ namespace AstrumLang {
 					} else /*if (pattern->Let())*/
 					{
 						out << "decltype(";
-						printThreeWayComparisonExpression(prereq->threeWayComparisonExpression());
+						printThreeWayComparisonExpression(prereq->threeWayComparisonExpression(0));
 						out << ")::__self";
 					}
 					out << ">(";
-					printThreeWayComparisonExpression(prereq->threeWayComparisonExpression());
+					printThreeWayComparisonExpression(prereq->threeWayComparisonExpression(0));
 					out << ");\n" << std::string(depth, '\t');
 				}
 				out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
@@ -12487,7 +12487,7 @@ namespace AstrumLang {
 							out << " = *__tmp" << prereqIndex;
 							out << ";\n" << std::string(depth, '\t');
 						} else {
-							auto txt = prereq->threeWayComparisonExpression()->getText();
+							auto txt = prereq->threeWayComparisonExpression(0)->getText();
 							if (std::all_of(txt.begin(), txt.end(),
 							                [](char c) { return std::isalnum(c) || c == '_'; })) {
 								if (isNull) {
@@ -17656,8 +17656,20 @@ namespace AstrumLang {
 	}
 
 	void AstrumCodegen::printRelationalExpression(AstrumParser::RelationalExpressionContext* ctx) {
-		if (ctx->threeWayComparisonExpression()) {
-			if (ctx->As()) {
+		if (!ctx->threeWayComparisonExpression().empty()) {
+			if (ctx->In())
+			{
+				if (ctx->not_())
+					out << "!";
+				std::string ufcs = "ADV_UFCS";
+				if (!functionBody)
+					ufcs += "_NONLOCAL";
+				out << ufcs << "(_operator_in)(";
+				printThreeWayComparisonExpression(ctx->threeWayComparisonExpression(1));
+				out << ", ";
+				printThreeWayComparisonExpression(ctx->threeWayComparisonExpression(0));
+				out << ")";
+			} else if (ctx->As()) {
 				out << "CppAdvance::Cast<";
 				if (ctx->Question()) {
 					out << "false";
@@ -17667,7 +17679,7 @@ namespace AstrumLang {
 				out << ", ";
 				printTypeId(ctx->theTypeId());
 				out << ">(";
-				printThreeWayComparisonExpression(ctx->threeWayComparisonExpression());
+				printThreeWayComparisonExpression(ctx->threeWayComparisonExpression(0));
 				out << ")";
 			} else if (ctx->Is()) {
 				bool skipFirst = false;
@@ -17698,13 +17710,13 @@ namespace AstrumLang {
 						}
 					}
 				}
-				printPatternList(ctx->patternList(), ctx->threeWayComparisonExpression(), tmpName,
+				printPatternList(ctx->patternList(), ctx->threeWayComparisonExpression(0), tmpName,
 				                 "", false, false, skipFirst);
 
 				out << ")";
 				currentIs = nullptr;
 			} else {
-				printThreeWayComparisonExpression(ctx->threeWayComparisonExpression());
+				printThreeWayComparisonExpression(ctx->threeWayComparisonExpression(0));
 			}
 		} else if (ctx->Greater()) {
 			printRelationalExpression(ctx->relationalExpression(0));
@@ -18984,7 +18996,7 @@ namespace AstrumLang {
 			if (ctx->Doublecolon()) {
 				if (currentIs) {
 					out << "decltype(";
-					printThreeWayComparisonExpression(currentIs->threeWayComparisonExpression());
+					printThreeWayComparisonExpression(currentIs->threeWayComparisonExpression(0));
 					out << ")";
 				} else if (currentEquality && !currentEquality->equalityExpression().empty()) {
 					out << "decltype(";

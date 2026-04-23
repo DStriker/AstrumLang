@@ -82,12 +82,15 @@ public struct Vector3
 	friend func4: (x: i32) -> i32 {
 		/*lock x {
 			print("Critical section");
-		}*/
+		}
 		xyz:= await asyncFunc();
 		if x > 10 {
 			yield break;
 		}
 		yield x+2;
+		if x not in 0..5 {
+			print("x=5");
+		}*/
 		return 0;
 	}
 

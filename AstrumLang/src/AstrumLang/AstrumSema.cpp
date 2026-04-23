@@ -2285,7 +2285,7 @@ namespace AstrumLang {
 	std::any AstrumSema::visitRelationalExpression(AstrumParser::RelationalExpressionContext* ctx) {
 		visitChildren(ctx);
 
-		if (!ctx->relationalExpression().empty() || ctx->Is()) {
+		if (!ctx->relationalExpression().empty() || ctx->Is() || ctx->In()) {
 			typeStack.push("bool");
 			if (ctx->Is()) {
 				if (isCondition && firstPass) {
@@ -2302,7 +2302,7 @@ namespace AstrumLang {
 						}
 						symbolTable[!pattern->Identifier().empty()
 						                ? pattern->Identifier(0)->getText()
-						                : ctx->threeWayComparisonExpression()->getText()] = type;
+						                : ctx->threeWayComparisonExpression(0)->getText()] = type;
 					}
 				}
 			}

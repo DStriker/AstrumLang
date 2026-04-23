@@ -1727,7 +1727,8 @@ public:
   public:
     RelationalExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    ThreeWayComparisonExpressionContext *threeWayComparisonExpression();
+    std::vector<ThreeWayComparisonExpressionContext *> threeWayComparisonExpression();
+    ThreeWayComparisonExpressionContext* threeWayComparisonExpression(size_t i);
     antlr4::tree::TerminalNode *As();
     TheTypeIdContext *theTypeId();
     antlr4::tree::TerminalNode *Is();
@@ -1735,6 +1736,8 @@ public:
     antlr4::tree::TerminalNode *Question();
     antlr4::tree::TerminalNode *Type();
     TypeTraitContext *typeTrait();
+    antlr4::tree::TerminalNode *In();
+    NotContext *not_();
     std::vector<RelationalExpressionContext *> relationalExpression();
     RelationalExpressionContext* relationalExpression(size_t i);
     antlr4::tree::TerminalNode *Less();

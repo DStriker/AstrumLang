@@ -419,6 +419,7 @@ threeWayComparisonExpression
 relationalExpression
     : threeWayComparisonExpression (As Question? theTypeId | Is patternList)?
     | Type theTypeId Is typeTrait
+    | threeWayComparisonExpression not? In threeWayComparisonExpression
     | relationalExpression (Less | Greater | LessEqual | GreaterEqual | Op6) relationalExpression
     ;
 
