@@ -223,6 +223,7 @@ statement
     | iterationStatement
     | jumpStatement
     | tryBlock
+    | deferStatement
     | lockStatement
     | yieldStatement
     | functionDefinition
@@ -360,6 +361,10 @@ exceptionDeclaration
 lockStatement
     : Lock conditionalExpression compoundStatement
     | Lock LeftParen conditionalExpression RightParen statement
+    ;
+
+deferStatement
+    : Defer (expression Semi | compoundStatement)
     ;
 
 // expressions

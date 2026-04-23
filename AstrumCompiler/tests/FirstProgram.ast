@@ -91,6 +91,11 @@ main: ()
 		print(oy);
 		print(oz);
 		assert ox == 1;
+		defer print("Deferred call");
+		defer {
+			print("ox == ");
+			print(ox);
+		}
 		//assert(oz == "abc", "oz must be abcd");
 		static assert(sizeof(i32) == 4, "i32 must be 4 bytes");
 		//if (nxt is ConcreteVectorClass or i32) and (nxt2 is VectorClass) {

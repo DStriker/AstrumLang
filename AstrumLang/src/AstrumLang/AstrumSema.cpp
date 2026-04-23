@@ -8153,4 +8153,16 @@ namespace AstrumLang {
 		return 0;
 	}
 
+	std::any AstrumSema::visitDeferStatement(AstrumParser::DeferStatementContext* ctx) {
+		if (!firstPass)
+			initStates.push(initStates.top());
+
+		visitChildren(ctx);
+
+		if (!firstPass)
+			initStates.pop();
+
+		return 0;
+	}
+
 }  // namespace AstrumLang

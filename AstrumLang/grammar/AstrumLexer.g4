@@ -125,6 +125,8 @@ Declval: 'declval';
 
 Default: 'default';
 
+Defer: 'defer';
+
 Delete: 'delete';
 
 Do: 'do';

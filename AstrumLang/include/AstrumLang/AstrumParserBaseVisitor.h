@@ -268,6 +268,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitDeferStatement(AstrumParser::DeferStatementContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitExpression(AstrumParser::ExpressionContext *ctx) override {
     return visitChildren(ctx);
   }

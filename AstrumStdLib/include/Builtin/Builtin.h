@@ -15,6 +15,7 @@
 #include "Str.h"
 #include "Tests.h"
 #include "Types.h"
+#include "Defer.h"
 #include "UnsafeContext.h"
 
 namespace CppAdvance {

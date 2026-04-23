@@ -151,6 +151,7 @@ namespace AstrumLang {
 		void printJumpStatement(AstrumParser::JumpStatementContext* ctx);
 		void printLockStatement(AstrumParser::LockStatementContext* ctx);
 		void printYieldStatement(AstrumParser::YieldStatementContext* ctx);
+		void printDeferStatement(AstrumParser::DeferStatementContext* ctx);
 		void printTryBlock(AstrumParser::TryBlockContext* ctx);
 		void printExceptionHandler(AstrumParser::ExceptionHandlerContext* ctx);
 		void printExceptionDeclaration(AstrumParser::ExceptionDeclarationContext* ctx, int i = 0);

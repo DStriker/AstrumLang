@@ -12222,6 +12222,8 @@ namespace AstrumLang {
 			printLockStatement(lock);
 		} else if (auto y = ctx->yieldStatement()) {
 			printYieldStatement(y);
+		} else if (auto defer = ctx->deferStatement()) {
+			printDeferStatement(defer);
 		}
 	}
 
@@ -12898,6 +12900,19 @@ namespace AstrumLang {
 			}
 			out << ";";
 		}
+	}
+
+	void AstrumCodegen::printDeferStatement(AstrumParser::DeferStatementContext* ctx) {
+		out << "CppAdvance::Defer __defer_" << ctx->getStart()->getLine() << "_"
+		    << ctx->getStart()->getCharPositionInLine() << "{[&]() {";
+		if (auto comp = ctx->compoundStatement())
+		{
+			printCompoundStatement(comp);
+		} else {
+			printExpression(ctx->expression());
+			out << ";";
+		}
+		out << "}};";
 	}
 
 	void AstrumCodegen::printTryBlock(AstrumParser::TryBlockContext* ctx) {
@@ -17657,8 +17672,7 @@ namespace AstrumLang {
 
 	void AstrumCodegen::printRelationalExpression(AstrumParser::RelationalExpressionContext* ctx) {
 		if (!ctx->threeWayComparisonExpression().empty()) {
-			if (ctx->In())
-			{
+			if (ctx->In()) {
 				if (ctx->not_())
 					out << "!";
 				std::string ufcs = "ADV_UFCS";
@@ -18465,8 +18479,7 @@ namespace AstrumLang {
 			out << "))";
 		} else if (ctx->Await()) {
 			out << "co_await ";
-			if (auto expr = ctx->expression())
-			{
+			if (auto expr = ctx->expression()) {
 				printExpression(expr);
 			} else if (auto braced = ctx->bracedInitList()) {
 				printBracedInitList(braced);

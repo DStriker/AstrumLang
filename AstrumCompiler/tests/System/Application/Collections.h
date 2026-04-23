@@ -3434,11 +3434,6 @@ inline constexpr auto LONG_CONSTANT = NORMAL_CONSTANT<CppAdvance::i64>;
 #line 82 "Collections.ast"
 	inline auto func4(CppAdvance::i32 x)  -> const CppAdvance::i32
 	{
-		#line 91 "Collections.ast"
-		if (ADV_UFCS(_operator_in)(Range(CppAdvance::i32(0), CppAdvance::i32(5), false), x)) {
-			#line 92 "Collections.ast"
-			print(CppAdvance::Str{u"x=5"});
-		}
 		#line 94 "Collections.ast"
 		return CppAdvance::i32(0);
 	}
