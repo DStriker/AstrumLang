@@ -4347,7 +4347,7 @@ namespace CppAdvance {
 	};
 
 	template <class T, class U>
-	constexpr auto operator<=>(U lhs, SafeInt<T> rhs) noexcept {
+	constexpr auto operator<=>(U lhs, SafeInt<T> rhs) noexcept requires(std::is_integral_v<U>) {
 		if (GreaterThanTest<T, U, ValidComparison<T, U>::method>::GreaterThan((T) rhs, lhs)) {
 			return std::strong_ordering::less;
 		}
@@ -4358,7 +4358,7 @@ namespace CppAdvance {
 	}
 
 	template <class T, class U>
-	constexpr auto operator<=>(SafeInt<T> lhs, U rhs) noexcept {
+	constexpr auto operator<=>(const SafeInt<T>& lhs, U rhs) noexcept {
 		if (GreaterThanTest<U, T, ValidComparison<U, T>::method>::GreaterThan(rhs, (T) lhs)) {
 			return std::strong_ordering::less;
 		}
@@ -4369,7 +4369,7 @@ namespace CppAdvance {
 	}
 
 	template <class T, class U>
-	constexpr auto operator<=>(SafeInt<U> lhs, SafeInt<T> rhs) noexcept {
+	constexpr auto operator<=>(const SafeInt<U>& lhs, SafeInt<T> rhs) noexcept {
 		if (GreaterThanTest<T, U, ValidComparison<T, U>::method>::GreaterThan((T) rhs, (U) lhs)) {
 			return std::strong_ordering::less;
 		}
@@ -4440,54 +4440,54 @@ namespace CppAdvance {
 	//}
 
 	template <class T, class U>
-	constexpr bool operator==(SafeInt<T> lhs, SafeInt<U> rhs) noexcept {
+	constexpr bool operator==(const SafeInt<T>& lhs, SafeInt<U> rhs) noexcept {
 		return EqualityTest<T, U, ValidComparison<T, U>::method>::IsEquals((T) lhs, (U) rhs);
 	}
 
-	template <class T, class U>
-	constexpr bool operator==(U lhs, SafeInt<T> rhs) noexcept {
+	/*template <class T, class U>
+	constexpr bool operator==(U lhs, SafeInt<T> rhs) noexcept requires(std::is_integral_v<U>) {
 		return EqualityTest<T, U, ValidComparison<T, U>::method>::IsEquals((T) rhs, lhs);
-	}
+	}*/
 
 	template <class T, class U>
-	constexpr bool operator==(SafeInt<T> lhs, U rhs) noexcept {
+	constexpr bool operator==(const SafeInt<T>& lhs, U rhs) noexcept {
 		return EqualityTest<T, U, ValidComparison<T, U>::method>::IsEquals((T) lhs, rhs);
 	}
 
-	template <class T>
+	/*template <class T>
 	constexpr bool operator==(bool lhs, SafeInt<T> rhs) noexcept {
 		return lhs == ((T) rhs == 0 ? false : true);
-	}
+	}*/
 
-	template <class T>
+	/*template <class T>
 	constexpr bool operator==(SafeInt<T> lhs, bool rhs) noexcept {
-		return rhs == ((T) lhs == 0 ? false : true);
-	}
+	    return rhs == ((T) lhs == 0 ? false : true);
+	}*/
 
 	template <class T, class U>
-	constexpr bool operator!=(SafeInt<T> lhs, SafeInt<U> rhs) noexcept {
+	constexpr bool operator!=(const SafeInt<T>& lhs, SafeInt<U> rhs) noexcept {
 		return !EqualityTest<T, U, ValidComparison<T, U>::method>::IsEquals((T) lhs, (U) rhs);
 	}
 
-	template <class T, class U>
-	constexpr bool operator!=(U lhs, SafeInt<T> rhs) noexcept {
-		return !EqualityTest<T, U, ValidComparison<T, U>::method>::IsEquals((T) rhs, lhs);
-	}
+	/*template <class T, class U>
+	constexpr bool operator!=(U lhs, SafeInt<T> rhs) noexcept requires(std::is_integral_v<U>) {
+	    return !EqualityTest<T, U, ValidComparison<T, U>::method>::IsEquals((T) rhs, lhs);
+	}*/
 
 	template <class T, class U>
-	constexpr bool operator!=(SafeInt<T> lhs, U rhs) noexcept {
-		return !EqualityTest<T, U, ValidComparison<T, U>::method>::IsEquals((T) lhs, rhs);
+	constexpr bool operator!=(const SafeInt<T>& lhs, U rhs) noexcept {
+	    return !EqualityTest<T, U, ValidComparison<T, U>::method>::IsEquals((T) lhs, rhs);
 	}
 
-	template <class T>
+	/*template <class T>
 	constexpr bool operator!=(bool lhs, SafeInt<T> rhs) noexcept {
-		return ((T) rhs == 0 ? false : true) != lhs;
-	}
+	    return ((T) rhs == 0 ? false : true) != lhs;
+	}*/
 
-	template <class T>
+	/*template <class T>
 	constexpr bool operator!=(SafeInt<T> lhs, bool rhs) noexcept {
-		return ((T) lhs == 0 ? false : true) != rhs;
-	}
+	    return ((T) lhs == 0 ? false : true) != rhs;
+	}*/
 
 	template <class T, class U, int method>
 	class ModulusSimpleCaseHelper;
@@ -4541,7 +4541,7 @@ namespace CppAdvance {
 	};
 
 	template <class T, class U>
-	constexpr SafeInt<T> operator%(U lhs, SafeInt<T> rhs) {
+	constexpr SafeInt<T> operator%(U lhs, SafeInt<T> rhs) requires(std::is_integral_v<U>) {
 		SafeInt<T> result;
 		if (ModulusSimpleCaseHelper < T, U,
 		    (sizeof(T) == sizeof(U)) &&
@@ -4554,7 +4554,7 @@ namespace CppAdvance {
 	}
 
 	template <class T, class U>
-	CONSTEXPR_MULTIPLY SafeInt<T> operator*(U lhs, SafeInt<T> rhs) {
+	CONSTEXPR_MULTIPLY SafeInt<T> operator*(U lhs, SafeInt<T> rhs) requires(std::is_integral_v<U>) {
 		T result = 0;
 		MultiplicationHelper<T, U, MultiplicationMethod<T, U>::method>::MultiplyThrow((T) rhs, lhs,
 		                                                                              result);
@@ -4690,7 +4690,7 @@ namespace CppAdvance {
 	};
 
 	template <class T, class U>
-	constexpr SafeInt<T> operator/(U lhs, SafeInt<T> rhs) {
+	constexpr SafeInt<T> operator/(U lhs, SafeInt<T> rhs) requires(std::is_integral_v<U>) {
 		SafeInt<T> result;
 		if (DivisionCornerCaseHelper<
 		        T, U, (int) DivisionMethod<U, T>::method == (int) DivisionState_UnsignedSigned>::
@@ -4707,14 +4707,14 @@ namespace CppAdvance {
 	}
 
 	template <class T, class U>
-	constexpr SafeInt<T> operator+(U lhs, SafeInt<T> rhs) {
+	constexpr SafeInt<T> operator+(U lhs, SafeInt<T> rhs) requires(std::is_integral_v<U>) {
 		T result {0};
 		AdditionHelper<T, U, AdditionMethod<T, U>::method>::AdditionThrow((T) rhs, lhs, result);
 		return SafeInt<T>(result);
 	}
 
 	template <class T, class U>
-	constexpr SafeInt<T> operator-(U lhs, SafeInt<T> rhs) {
+	constexpr SafeInt<T> operator-(U lhs, SafeInt<T> rhs) requires(std::is_integral_v<U>) {
 		T result {0};
 		SubtractionHelper<U, T, SubtractionMethod2<U, T>::method>::SubtractThrow(lhs, rhs.ref(),
 		                                                                         result);
@@ -4794,7 +4794,7 @@ namespace CppAdvance {
 	}
 
 	template <class T, class U>
-	constexpr static SafeInt<U> operator<<(U lhs, SafeInt<T> bits) {
+	constexpr static SafeInt<U> operator<<(U lhs, SafeInt<T> bits) requires(std::is_integral_v<U>) {
 		if (ValidBitCount<T, U>(bits)) {
 			return SafeInt<U>((U) (lhs << (T) bits));
 		}
@@ -4802,7 +4802,7 @@ namespace CppAdvance {
 	}
 
 	template <class T, class U>
-	constexpr static SafeInt<U> operator>>(U lhs, SafeInt<T> bits) {
+	constexpr static SafeInt<U> operator>>(U lhs, SafeInt<T> bits) requires(std::is_integral_v<U>) {
 		if (ValidBitCount<T, U>(bits)) {
 			return SafeInt<U>((U) (lhs >> (T) bits));
 		}
@@ -4810,17 +4810,17 @@ namespace CppAdvance {
 	}
 
 	template <class T, class U>
-	constexpr SafeInt<T> operator&(U lhs, SafeInt<T> rhs) noexcept {
+	constexpr SafeInt<T> operator&(U lhs, SafeInt<T> rhs) noexcept requires(std::is_integral_v<U>) {
 		return SafeInt<T>(BinaryAndHelper<T, U, BinaryMethod<T, U>::method>::And((T) rhs, lhs));
 	}
 
 	template <class T, class U>
-	constexpr SafeInt<T> operator|(U lhs, SafeInt<T> rhs) noexcept {
+	constexpr SafeInt<T> operator|(U lhs, SafeInt<T> rhs) noexcept requires(std::is_integral_v<U>) {
 		return SafeInt<T>(BinaryOrHelper<T, U, BinaryMethod<T, U>::method>::Or((T) rhs, lhs));
 	}
 
 	template <class T, class U>
-	constexpr SafeInt<T> operator^(U lhs, SafeInt<T> rhs) noexcept {
+	constexpr SafeInt<T> operator^(U lhs, SafeInt<T> rhs) noexcept requires(std::is_integral_v<U>) {
 		return SafeInt<T>(BinaryXorHelper<T, U, BinaryMethod<T, U>::method>::Xor((T) rhs, lhs));
 	}
 }  // namespace CppAdvance

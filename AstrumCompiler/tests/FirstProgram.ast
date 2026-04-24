@@ -91,7 +91,6 @@ main: ()
 		print(oy);
 		print(oz);
 		assert ox == 1;
-		defer print("Deferred call");
 		defer {
 			print("ox == ");
 			print(ox);
@@ -118,6 +117,23 @@ main: ()
 
 		//print(var.GetStrongReferenceCount());
 		on: object? = vec;
+		print(Vector3.lazyInt);
+		//Vector3.lazyInt++;
+		print(123 + 256);
+		print(123 + Vector3.lazyInt);
+		print(Vector3.lazyInt + 123);
+		print(Vector3.lazyInt - 123);
+		print(Vector3.lazyInt * 123);
+		print(Vector3.lazyInt / 123);
+		print(Vector3.lazyInt % 123);
+		print(Vector3.lazyInt & 123);
+		print(Vector3.lazyInt | 123);
+		print(Vector3.lazyInt ^ 123);
+		print(i32(Vector3.lazyInt == 123));
+		print(i32(123 == Vector3.lazyInt));
+		print(i32(Vector3.lazyInt <= 123));
+		print(i32(123 <= Vector3.lazyInt));
+		//print(Vector3.lazyInt << 123);
 	}
 	print(nxt!.GetStrongReferenceCount());
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);

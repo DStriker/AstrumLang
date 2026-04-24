@@ -872,6 +872,7 @@ namespace AstrumLang {
 		bool isConst       = false;
 		bool isVolatile    = false;
 		bool isThreadLocal = false;
+		bool isLazy        = false;
 		bool isStatic      = false;
 		bool isMutable     = false;
 		bool isUnowned     = false;
@@ -885,6 +886,8 @@ namespace AstrumLang {
 					isVolatile = true;
 				else if (d->Thread_local())
 					isThreadLocal = true;
+				else if (d->Lazy())
+					isLazy = true;
 				else if (d->Static()) {
 					isStatic = true;
 					if (!functionBody && !isTypeDefinitionBody())
@@ -936,6 +939,11 @@ namespace AstrumLang {
 		}
 		if (isUnowned && isWeak) {
 			notifyErrorListeners("The reference cannot be unowned and weak at the same time",
+			                     ctx->declSpecifierSeq()->getStart());
+		}
+
+		if (isLazy && !isStatic && !isThreadLocal) {
+			notifyErrorListeners("Only static variable can be lazy",
 			                     ctx->declSpecifierSeq()->getStart());
 		}
 
@@ -1082,10 +1090,50 @@ namespace AstrumLang {
 				    isConst,
 				    isVolatile,
 				    isThreadLocal,
+				    isLazy,
 				    unsafeDepth > 0,
 				    false,
 				    isUnowned,
 				    isWeak});
+			} else if (isLazy) {
+				auto lastTparams     = getLastTypeTemplateParams();
+				auto lastSpec        = getLastTypeTemplateSpecializationArgs();
+				auto lastConstraints = getLastTypeConstraints();
+				auto fullType        = getCurrentFullTypeName();
+				SourcePosition pos   = {ctx->getStart()->getLine(),
+                                      ctx->getStart()->getCharPositionInLine()};
+				auto property        = PropertyDefinition {id->getText(),
+                                                    ctx->theTypeId(),
+                                                    pos,
+                                                    ctx->initializerClause(),
+                                                    nullptr,
+                                                    nullptr,
+                                                    nullptr,
+                                                    attributes,
+                                                    *access,
+                                                    getCurrentCompilationCondition(),
+                                                    currentType,
+                                                    fullType,
+                                                    lastTparams,
+                                                    lastSpec,
+                                                    lastConstraints,
+                                                    true,
+                                                    isConst,
+                                                    true,
+                                                    false,
+                                                    isPrivateTypeDefinition,
+                                                    isProtectedTypeDefinition,
+                                                    isUnsafeTypeDefinition,
+                                                    false,
+                                                    false,
+                                                    false,
+                                                    false,
+                                                    false,
+                                                    false,
+                                                    true};
+				structStack.top()->properties.emplace_back(property);
+				if (currentTypeKind.top() != TypeKind::Extension)
+					properties.insert_or_assign(pos, property);
 			} else {
 				if (currentTypeKind.top() == TypeKind::UnionStruct &&
 				    *access != AccessSpecifier::Private)
@@ -1109,6 +1157,7 @@ namespace AstrumLang {
 				    isConst,
 				    isVolatile,
 				    isThreadLocal,
+				    isLazy,
 				    unsafeDepth > 0,
 				    false,
 				    isUnowned,
@@ -1134,6 +1183,7 @@ namespace AstrumLang {
 					    isConst,
 					    isVolatile,
 					    isThreadLocal,
+					    isLazy,
 					    isUnsafeTypeDefinition,
 					    getLastTypeTemplateSpecializationArgs() != nullptr,
 					    isUnowned,
@@ -1216,6 +1266,7 @@ namespace AstrumLang {
 			    *access,
 			    getCurrentCompilationCondition(),
 			    getCurrentFullTypeName(),
+			    false,
 			    false,
 			    false,
 			    false,
@@ -1361,6 +1412,7 @@ namespace AstrumLang {
 			    isConst,
 			    false,
 			    false,
+			    false,
 			    unsafeDepth > 0,
 			    false});
 		}
@@ -1383,6 +1435,7 @@ namespace AstrumLang {
 		bool isConst       = false;
 		bool isVolatile    = false;
 		bool isThreadLocal = false;
+		bool isLazy        = false;
 		bool isStatic      = false;
 		bool isMutable     = false;
 		bool isUnowned     = false;
@@ -1396,6 +1449,8 @@ namespace AstrumLang {
 					isVolatile = true;
 				else if (d->Thread_local())
 					isThreadLocal = true;
+				else if (d->Lazy())
+					isLazy = true;
 				else if (d->Static()) {
 					isStatic = true;
 					if (!functionBody && !isTypeDefinitionBody())
@@ -1442,6 +1497,10 @@ namespace AstrumLang {
 		}
 		if (isUnowned && isWeak) {
 			notifyErrorListeners("The reference cannot be unowned and weak at the same time",
+			                     ctx->declSpecifierSeq()->getStart());
+		}
+		if (isLazy) {
+			notifyErrorListeners("Cannot to initialize multiple variables by lazy",
 			                     ctx->declSpecifierSeq()->getStart());
 		}
 
@@ -1555,6 +1614,7 @@ namespace AstrumLang {
 					    isConst,
 					    isVolatile,
 					    isThreadLocal,
+					    isLazy,
 					    unsafeDepth > 0,
 					    false,
 					    isUnowned,
@@ -1581,6 +1641,7 @@ namespace AstrumLang {
 					    isConst,
 					    isVolatile,
 					    isThreadLocal,
+					    isLazy,
 					    unsafeDepth > 0,
 					    false,
 					    isUnowned,
@@ -1606,6 +1667,7 @@ namespace AstrumLang {
 						    isConst,
 						    isVolatile,
 						    isThreadLocal,
+						    isLazy,
 						    isUnsafeTypeDefinition,
 						    getLastTypeTemplateSpecializationArgs() != nullptr,
 						    isUnowned,

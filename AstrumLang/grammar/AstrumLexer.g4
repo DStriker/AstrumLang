@@ -189,6 +189,8 @@ Internal: 'internal';
 
 Is: 'is';
 
+Lazy: 'lazy';
+
 Let: 'let';
 
 Lock: 'lock';

@@ -66,7 +66,7 @@ public struct Vector3
 	public {
 		x, y, z: i32;
 		//t: Test111 { get; private set; }
-
+		
 		//if debug _version: i32;
 	}
 
@@ -75,6 +75,8 @@ public struct Vector3
 	}
 
 	~static => print("Static destructor call!");
+
+	public static lazy lazyInt: i32 = 123;
 	
 	friend TestStruct;
 	friend TestStruct2<T>;

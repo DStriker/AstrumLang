@@ -33,6 +33,7 @@ namespace AstrumLang {
 		bool isConst              = false;
 		bool isVolatile           = false;
 		bool isThreadLocal        = false;
+		bool isLazy               = false;
 		bool isUnsafe             = false;
 		bool isTypeSpecialization = false;
 		bool isUnowned            = false;
@@ -158,6 +159,7 @@ namespace AstrumLang {
 		bool isFinal         = false;
 		bool isInline        = false;
 		bool isConstexpr     = false;
+		bool isLazy          = false;
 	};
 
 	struct NamedTuple {

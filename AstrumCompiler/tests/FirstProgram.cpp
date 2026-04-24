@@ -87,52 +87,80 @@ ADV_ENTRY_POINT(MyApp::Main)
 			#line 93 "FirstProgram.ast"
 			ADV_ASSERT((ox == CppAdvance::i32(1)), u"ox==1");
 			#line 94 "FirstProgram.ast"
-			CppAdvance::Defer __defer_94_2{[&]() {print(CppAdvance::Str{u"Deferred call"});}};
-			#line 95 "FirstProgram.ast"
-			CppAdvance::Defer __defer_95_2{[&]() {{
-				#line 96 "FirstProgram.ast"
+			CppAdvance::Defer __defer_94_2{[&]() {{
+				#line 95 "FirstProgram.ast"
 				print(CppAdvance::Str{u"ox == "});
-				#line 97 "FirstProgram.ast"
+				#line 96 "FirstProgram.ast"
 				print(ox);
 			}}};
-			#line 100 "FirstProgram.ast"
+			#line 99 "FirstProgram.ast"
 			static_assert(CppAdvance::usize(sizeof(CppAdvance::i32)) == CppAdvance::i32(4), "i32 must be 4 bytes");
-			#line 102 "FirstProgram.ast"
+			#line 101 "FirstProgram.ast"
 			const auto& [x, y, z] = vec;
-			#line 103 "FirstProgram.ast"
+			#line 102 "FirstProgram.ast"
 			ADV_UFCS(_operator_subscript)(vec.__ref(), CppAdvance::i32(1)) = CppAdvance::i32(5);
-			#line 104 "FirstProgram.ast"
+			#line 103 "FirstProgram.ast"
 			print(CppAdvance::Cast<true, CppAdvance::f32>((*(cv1))));
-			#line 105 "FirstProgram.ast"
+			#line 104 "FirstProgram.ast"
 			print(CppAdvance::Cast<true, CppAdvance::i32>(((CppAdvance::Is((*(cv1)), (cv2))))));
-			#line 106 "FirstProgram.ast"
+			#line 105 "FirstProgram.ast"
 			auto func = [] (const auto x) { ADV_EXPRESSION_BODY(x * x); }; 
-			#line 107 "FirstProgram.ast"
+			#line 106 "FirstProgram.ast"
 			print(func(CppAdvance::i32(12)));
-			#line 108 "FirstProgram.ast"
+			#line 107 "FirstProgram.ast"
 			auto nx = CppAdvance::New<Next>(CppAdvance::i32(5)); 
-			#line 110 "FirstProgram.ast"
+			#line 109 "FirstProgram.ast"
 			CppAdvance::LocalFunction<const CppAdvance::i32(CppAdvance::i32)> factorial; factorial = [&] (CppAdvance::i32 x) -> const CppAdvance::i32 
 			{
-				#line 111 "FirstProgram.ast"
+				#line 110 "FirstProgram.ast"
 				ADV_EXPRESSION_BODY(x == CppAdvance::i32(0) ? CppAdvance::i32(1) : x * factorial(x - CppAdvance::i32(1))); return 0;
 			};
-			#line 112 "FirstProgram.ast"
+			#line 111 "FirstProgram.ast"
 			using SimpleAction = CppAdvance::FunctionRef<void()>;
-			#line 114 "FirstProgram.ast"
+			#line 113 "FirstProgram.ast"
 			print(vsum(CppAdvance::i32(1), CppAdvance::i32(2), CppAdvance::i32(3), CppAdvance::i32(4), CppAdvance::i32(5), CppAdvance::i32(6)));
-			#line 115 "FirstProgram.ast"
+			#line 114 "FirstProgram.ast"
 			print(ADV_USFCS((IInterface), SomeStaticMethod)(CppAdvance::i32(5)));
-			#line 116 "FirstProgram.ast"
+			#line 115 "FirstProgram.ast"
 			auto ints = std::initializer_list{CppAdvance::i32(0), CppAdvance::i32(2), CppAdvance::i32(4), CppAdvance::i32(6)}; 
-			#line 117 "FirstProgram.ast"
+			#line 116 "FirstProgram.ast"
 			auto mapping = std::initializer_list{std::make_pair(CppAdvance::Str{u"key1"}, CppAdvance::i32(1)), std::make_pair(CppAdvance::Str{u"key2"}, CppAdvance::i32(2)), std::make_pair(CppAdvance::Str{u"key3"}, CppAdvance::i32(3))}; 
-			#line 120 "FirstProgram.ast"
+			#line 119 "FirstProgram.ast"
 			CppAdvance::Nullable<CppAdvance::ObjectRef> on = vec; 
+			#line 120 "FirstProgram.ast"
+			print(ADV_USPCS(lazyInt, Vector3)());
+			#line 122 "FirstProgram.ast"
+			print(CppAdvance::i32(123) + CppAdvance::i32(256));
+			#line 123 "FirstProgram.ast"
+			print(CppAdvance::i32(123) + ADV_USPCS(lazyInt, Vector3)());
+			#line 124 "FirstProgram.ast"
+			print(ADV_USPCS(lazyInt, Vector3)() + CppAdvance::i32(123));
+			#line 125 "FirstProgram.ast"
+			print(ADV_USPCS(lazyInt, Vector3)() - CppAdvance::i32(123));
+			#line 126 "FirstProgram.ast"
+			print(ADV_USPCS(lazyInt, Vector3)() * CppAdvance::i32(123));
+			#line 127 "FirstProgram.ast"
+			print(ADV_USPCS(lazyInt, Vector3)() / CppAdvance::i32(123));
+			#line 128 "FirstProgram.ast"
+			print(ADV_USPCS(lazyInt, Vector3)() % CppAdvance::i32(123));
+			#line 129 "FirstProgram.ast"
+			print(ADV_USPCS(lazyInt, Vector3)() & CppAdvance::i32(123));
+			#line 130 "FirstProgram.ast"
+			print(ADV_USPCS(lazyInt, Vector3)() | CppAdvance::i32(123));
+			#line 131 "FirstProgram.ast"
+			print(ADV_USPCS(lazyInt, Vector3)() ^ CppAdvance::i32(123));
+			#line 132 "FirstProgram.ast"
+			print(CppAdvance::i32{ADV_USPCS(lazyInt, Vector3)() == CppAdvance::i32(123)});
+			#line 133 "FirstProgram.ast"
+			print(CppAdvance::i32{CppAdvance::i32(123) == ADV_USPCS(lazyInt, Vector3)()});
+			#line 134 "FirstProgram.ast"
+			print(CppAdvance::i32{ADV_USPCS(lazyInt, Vector3)() <= CppAdvance::i32(123)});
+			#line 135 "FirstProgram.ast"
+			print(CppAdvance::i32{CppAdvance::i32(123) <= ADV_USPCS(lazyInt, Vector3)()});
 		}
-		#line 122 "FirstProgram.ast"
+		#line 138 "FirstProgram.ast"
 		print(ADV_UFCS(GetStrongReferenceCount)((*(nxt)).__ref()));
-		#line 123 "FirstProgram.ast"
+		#line 139 "FirstProgram.ast"
 		print(ADV_UPCS(x)(ADV_UPCS(x)(ADV_USFCS((Test1::Test2::TestClass), makeTestClass)(CppAdvance::i32(3), CppAdvance::f32(3.14f)).__ref()).__ref()));
 		return 0;
 	}

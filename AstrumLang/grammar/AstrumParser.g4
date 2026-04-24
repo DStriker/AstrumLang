@@ -143,6 +143,7 @@ declSpecifier
     | Mutable
     | Const
     | Volatile
+    | Lazy
     | Let
     | Unowned
     | Weak

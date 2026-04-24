@@ -1279,12 +1279,6 @@ struct ___dependent_false : std::false_type {};
 			return get() == static_cast<_PropertyType>(other);                                     \
 		}                                                                                          \
 		template <class _ElemRight>                                                                \
-		requires !std::same_as<std::decay_t<_ElemRight>,                                           \
-		                       __Property_##propertyName<>> friend FORCE_INLINE decltype(auto)     \
-		operator==(_ElemRight&& other, const __Property_##propertyName<>& _this) {                 \
-			return _this.get() == static_cast<__VA_ARGS__>(other);                                 \
-		}                                                                                          \
-		template <class _ElemRight>                                                                \
 		FORCE_INLINE decltype(auto) operator!=(_ElemRight&& other) const {                         \
 			return get() != static_cast<_PropertyType>(other);                                     \
 		}                                                                                          \
@@ -1947,6 +1941,221 @@ struct ___dependent_false : std::false_type {};
 			}                                                                                      \
 		};                                                                                         \
 	}
+
+#define ADV_PROPERTY_GETTER_LAZY(accessSpecifier, dllAccessSpecifier, propertyName, initFunc,  \
+                                   ...)                                                            \
+                                                                                                   \
+   private:                                                                                        \
+	template <class _PropertyType = __VA_ARGS__>                                                   \
+	struct __Property_##propertyName {                                                             \
+		FORCE_INLINE __VA_ARGS__ get() const { static __VA_ARGS__ data = ADV_PROPERTY_SELF::initFunc(); return data; }           \
+		FORCE_INLINE operator __VA_ARGS__() const { return get(); }                                \
+		FORCE_INLINE decltype(auto) __ref() const { return get(); }                                \
+                                                                                                   \
+		FORCE_INLINE decltype(auto) operator+() const requires requires(_PropertyType t) {         \
+			t = +t;                                                                                \
+		}                                                                                          \
+		{ return +get(); }                                                                         \
+		FORCE_INLINE decltype(auto) operator-() const requires requires(_PropertyType t) {         \
+			t = -t;                                                                                \
+		}                                                                                          \
+		{ return -get(); }                                                                         \
+		FORCE_INLINE decltype(auto) operator~() const requires requires(_PropertyType t) {         \
+			t = ~t;                                                                                \
+		}                                                                                          \
+		{ return ~get(); }                                                                         \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator+(_ElemRight&& other) const {                          \
+			return get() + static_cast<_PropertyType>(other);                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		requires !std::same_as<std::decay_t<_ElemRight>,                                           \
+		                       __Property_##propertyName<>> friend FORCE_INLINE decltype(auto)     \
+		operator+(_ElemRight&& other, const __Property_##propertyName<>& _this) {                  \
+			return _this.get() + static_cast<__VA_ARGS__>(other);                                  \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator-(_ElemRight&& other) const {                          \
+			return get() - static_cast<_PropertyType>(other);                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		requires !std::same_as<std::decay_t<_ElemRight>,                                           \
+		                       __Property_##propertyName<>> friend FORCE_INLINE decltype(auto)     \
+		operator-(_ElemRight&& other, const __Property_##propertyName<>& _this) {                  \
+			return static_cast<__VA_ARGS__>(other) - _this.get();                                  \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator*(_ElemRight&& other) const {                          \
+			return get() * static_cast<_PropertyType>(other);                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		requires !std::same_as<std::decay_t<_ElemRight>,                                           \
+		                       __Property_##propertyName<>> friend FORCE_INLINE decltype(auto)     \
+		operator*(_ElemRight&& other, const __Property_##propertyName<>& _this) {                  \
+			return _this.get() * static_cast<__VA_ARGS__>(other);                                  \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator/(_ElemRight&& other) const {                          \
+			return get() / static_cast<_PropertyType>(other);                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		requires !std::same_as<std::decay_t<_ElemRight>,                                           \
+		                       __Property_##propertyName<>> friend FORCE_INLINE decltype(auto)     \
+		operator/(_ElemRight&& other, const __Property_##propertyName<>& _this) {                  \
+			return static_cast<__VA_ARGS__>(other) / _this.get();                                  \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator%(_ElemRight&& other) const {                          \
+			return get() % static_cast<_PropertyType>(other);                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		requires !std::same_as<std::decay_t<_ElemRight>,                                           \
+		                       __Property_##propertyName<>> friend FORCE_INLINE decltype(auto)     \
+		operator%(_ElemRight&& other, const __Property_##propertyName<>& _this) {                  \
+			return static_cast<__VA_ARGS__>(other) % _this.get();                                  \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator&(_ElemRight&& other) const {                          \
+			return get() & static_cast<_PropertyType>(other);                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		requires !std::same_as<std::decay_t<_ElemRight>,                                           \
+		                       __Property_##propertyName<>> friend FORCE_INLINE decltype(auto)     \
+		operator&(_ElemRight&& other, const __Property_##propertyName<>& _this) {                  \
+			return static_cast<__VA_ARGS__>(other) & _this.get();                                  \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator|(_ElemRight&& other) const {                          \
+			return get() | static_cast<_PropertyType>(other);                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		requires !std::same_as<std::decay_t<_ElemRight>,                                           \
+		                       __Property_##propertyName<>> friend FORCE_INLINE decltype(auto)     \
+		operator|(_ElemRight&& other, const __Property_##propertyName<>& _this) {                  \
+			return _this.get() | static_cast<__VA_ARGS__>(other);                                  \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator^(_ElemRight&& other) const {                          \
+			return get() ^ static_cast<_PropertyType>(other);                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		requires !std::same_as<std::decay_t<_ElemRight>,                                           \
+		                       __Property_##propertyName<>> friend FORCE_INLINE decltype(auto)     \
+		operator^(_ElemRight&& other, const __Property_##propertyName<>& _this) {                  \
+			return static_cast<__VA_ARGS__>(other) ^ _this.get();                                  \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator<<(_ElemRight&& other) const {                         \
+			return get() << static_cast<_PropertyType>(other);                                     \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		requires !std::same_as<std::decay_t<_ElemRight>,                                           \
+		                       __Property_##propertyName<>> friend FORCE_INLINE decltype(auto)     \
+		operator<<(_ElemRight&& other, const __Property_##propertyName<>& _this) {                 \
+			return static_cast<__VA_ARGS__>(other) << _this.get();                                 \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator>>(_ElemRight&& other) const {                         \
+			return get() >> static_cast<_PropertyType>(other);                                     \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		requires !std::same_as<std::decay_t<_ElemRight>,                                           \
+		                       __Property_##propertyName<>> friend FORCE_INLINE decltype(auto)     \
+		operator>>(_ElemRight&& other, const __Property_##propertyName<>& _this) {                 \
+			return static_cast<__VA_ARGS__>(other) >> _this.get();                                 \
+		}                                                                                          \
+		template <class... _ElemRight>                                                             \
+		FORCE_INLINE decltype(auto) _operator_subscript(_ElemRight&&... other) {                   \
+			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);          \
+		}                                                                                          \
+		template <class... _ElemRight>                                                             \
+		FORCE_INLINE decltype(auto) _operator_subscript(_ElemRight&&... other) const {             \
+			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);          \
+		}                                                                                          \
+		template <class... Args>                                                                   \
+		FORCE_INLINE decltype(auto) operator()(Args&&... other) {                                  \
+			return get()(std::forward<Args>(other)...);                                            \
+		}                                                                                          \
+		template <class... Args>                                                                   \
+		FORCE_INLINE decltype(auto) operator()(Args&&... other) const {                            \
+			return get()(std::forward<Args>(other)...);                                            \
+		}                                                                                          \
+		template <class Ch>                                                                        \
+		friend FORCE_INLINE decltype(auto) operator<<(                                             \
+		    std::basic_ostream<Ch>& stream,                                                        \
+		    const __Property_##propertyName<_PropertyType>& elem) {                                \
+			return stream << elem.get();                                                           \
+		}                                                                                          \
+		FORCE_INLINE decltype(auto) operator*() requires requires(_PropertyType t) { *t; }         \
+		{ return *get(); }                                                                         \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator==(_ElemRight&& other) const {                         \
+			return get() == static_cast<_PropertyType>(other);                                     \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		requires !std::same_as<std::decay_t<_ElemRight>,                                           \
+		                       __Property_##propertyName<>> friend FORCE_INLINE decltype(auto)     \
+		operator==(_ElemRight&& other, const __Property_##propertyName<>& _this) {                 \
+			return _this.get() == static_cast<__VA_ARGS__>(other);                                 \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator!=(_ElemRight&& other) const {                         \
+			return get() != static_cast<_PropertyType>(other);                                     \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		requires !std::same_as<std::decay_t<_ElemRight>,                                           \
+		                       __Property_##propertyName<>> friend FORCE_INLINE decltype(auto)     \
+		operator!=(_ElemRight&& other, const __Property_##propertyName<>& _this) {                 \
+			return _this.get() != static_cast<__VA_ARGS__>(other);                                 \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator<(_ElemRight&& other) const {                          \
+			return get() < static_cast<_PropertyType>(other);                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		requires !std::same_as<std::decay_t<_ElemRight>,                                           \
+		                       __Property_##propertyName<>> friend FORCE_INLINE decltype(auto)     \
+		operator<(_ElemRight&& other, const __Property_##propertyName<>& _this) {                  \
+			return _this.get() > static_cast<__VA_ARGS__>(other);                                  \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator<=(_ElemRight&& other) const {                         \
+			return get() <= static_cast<_PropertyType>(other);                                     \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		requires !std::same_as<std::decay_t<_ElemRight>,                                           \
+		                       __Property_##propertyName<>> friend FORCE_INLINE decltype(auto)     \
+		operator<=(_ElemRight&& other, const __Property_##propertyName<>& _this) {                 \
+			return _this.get() >= static_cast<__VA_ARGS__>(other);                                 \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator>(_ElemRight&& other) const {                          \
+			return get() > static_cast<_PropertyType>(other);                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		requires !std::same_as<std::decay_t<_ElemRight>,                                           \
+		                       __Property_##propertyName<>> friend FORCE_INLINE decltype(auto)     \
+		operator>(_ElemRight&& other, const __Property_##propertyName<>& _this) {                  \
+			return _this.get() < static_cast<__VA_ARGS__>(other);                                  \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator>=(_ElemRight&& other) const {                         \
+			return get() >= static_cast<_PropertyType>(other);                                     \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		requires !std::same_as<std::decay_t<_ElemRight>,                                           \
+		                       __Property_##propertyName<>> friend FORCE_INLINE decltype(auto)     \
+		operator>=(_ElemRight&& other, const __Property_##propertyName<>& _this) {                 \
+			return _this.get() <= static_cast<__VA_ARGS__>(other);                                 \
+		}                                                                                          \
+		FORCE_INLINE explicit operator bool() const                                                \
+		    requires(!std::is_same_v<_PropertyType, bool>) {                                       \
+			return static_cast<bool>(get());                                                       \
+		}                                                                                          \
+	};                                                                                             \
+	accessSpecifier:                                                                               \
+	static dllAccessSpecifier __Property_##propertyName<> propertyName;
+
 
 #define ADV_CHECK_REF_STRUCT(Type, ...)                                                            \
 	static_assert(!std::is_base_of_v<CppAdvance::RefStruct, ##__VA_ARGS__>,                        \

@@ -2473,6 +2473,23 @@ namespace AstrumLang {
 						out << " = 0";
 				}
 				out << ";" << std::endl << std::string(depth, '\t');
+			} else if (prop.isLazy) {
+				out << "#line " << prop.pos.line << " \"" << filename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				out << "private: ";
+				if (!CompilerSettings::get().dllName.empty() && !type->templateParams) {
+					if (prop.access == AccessSpecifier::Public ||
+					    prop.access == AccessSpecifier::Protected ||
+					    prop.access == AccessSpecifier::Private)
+						out << CompilerSettings::get().dllName << "_API ";
+					else
+						out << CompilerSettings::get().dllName << "_HIDDEN ";
+				}
+				out << "static auto __lazy_init_" << prop.id << "() -> ";
+				if (prop.isConst)
+					out << "const ";
+				printTypeId(prop.type);
+				out << ";" << std::endl << std::string(depth, '\t');
 			} else if (!prop.setter) {
 				out << "#line " << prop.pos.line << " \"" << filename << ".ast\"\n"
 				    << std::string(depth, '\t');
@@ -2643,6 +2660,37 @@ namespace AstrumLang {
 						out << "&";
 					out << ")";
 				}
+			} else if (prop.isLazy) {
+				out << "ADV_PROPERTY_GETTER_LAZY(";
+				switch (prop.access) {
+					case AccessSpecifier::Public:
+					case AccessSpecifier::Internal:
+						out << "public";
+						break;
+					case AccessSpecifier::Protected:
+					case AccessSpecifier::ProtectedInternal:
+						out << "protected";
+						break;
+					case AccessSpecifier::Private:
+						out << "private";
+						break;
+				}
+
+				out << ", ";
+				if (!CompilerSettings::get().dllName.empty()) {
+					out << CompilerSettings::get().dllName;
+					if (prop.access == AccessSpecifier::Internal ||
+					    prop.access == AccessSpecifier::ProtectedInternal) {
+						out << "_HIDDEN";
+					} else {
+						out << "_API";
+					}
+				}
+				out << ", " << prop.id << ", __lazy_init_" << prop.id << ", ";
+				if (prop.isConst)
+					out << "const ";
+				printTypeId(prop.type);
+				out << ")";
 			} else {
 				out << "ADV_PROPERTY_GETTER";
 				if (prop.isStatic)
@@ -4701,6 +4749,37 @@ namespace AstrumLang {
 						out << "&";
 					out << ")";
 				}
+			} else if (prop.isLazy) {
+				out << "ADV_PROPERTY_GETTER_LAZY(";
+				switch (prop.access) {
+					case AccessSpecifier::Public:
+					case AccessSpecifier::Internal:
+						out << "public";
+						break;
+					case AccessSpecifier::Protected:
+					case AccessSpecifier::ProtectedInternal:
+						out << "protected";
+						break;
+					case AccessSpecifier::Private:
+						out << "private";
+						break;
+				}
+
+				out << ", ";
+				if (!CompilerSettings::get().dllName.empty()) {
+					out << CompilerSettings::get().dllName;
+					if (prop.access == AccessSpecifier::Internal ||
+					    prop.access == AccessSpecifier::ProtectedInternal) {
+						out << "_HIDDEN";
+					} else {
+						out << "_API";
+					}
+				}
+				out << ", " << prop.id << ", __lazy_init_" << prop.id << ", ";
+				if (prop.isConst)
+					out << "const ";
+				printTypeId(prop.type);
+				out << ")";
 			} else {
 				out << "ADV_PROPERTY_GETTER_STATIC(";
 				switch (prop.access) {
@@ -4768,7 +4847,8 @@ namespace AstrumLang {
 			                        false,
 			                        false,
 			                        false,
-			                        false});
+			                        false,
+			                        prop.isLazy});
 		}
 		out << "#define ADV_PROPERTY_SELF __self\n" << std::string(depth, '\t');
 		for (const auto& func : type->methods) {
@@ -12905,8 +12985,7 @@ namespace AstrumLang {
 	void AstrumCodegen::printDeferStatement(AstrumParser::DeferStatementContext* ctx) {
 		out << "CppAdvance::Defer __defer_" << ctx->getStart()->getLine() << "_"
 		    << ctx->getStart()->getCharPositionInLine() << "{[&]() {";
-		if (auto comp = ctx->compoundStatement())
-		{
+		if (auto comp = ctx->compoundStatement()) {
 			printCompoundStatement(comp);
 		} else {
 			printExpression(ctx->expression());
@@ -13492,7 +13571,10 @@ namespace AstrumLang {
 			}
 			printMemberDeclarationCompoundStatement(compound);
 		} else if (auto member = ctx->memberBlockDeclaration()) {
-			if (isStructDeclaration) {
+			if (isStructDeclaration ||
+			    member->simpleDeclaration() && member->simpleDeclaration()->declSpecifierSeq() &&
+			        member->simpleDeclaration()->declSpecifierSeq()->getText().find("lazy") !=
+			            std::string::npos) {
 				checkForRefStruct = prevCheckForRefStruct;
 				printMemberBlockDeclaration(member);
 			}
@@ -16719,19 +16801,20 @@ namespace AstrumLang {
 	    AstrumParser::MemberBlockDeclarationContext* ctx) {
 		if (!currentAccessSpecifier)
 			currentAccessSpecifier = AccessSpecifier::Private;
-		switch (*currentAccessSpecifier) {
-			case AccessSpecifier::Public:
-			case AccessSpecifier::Internal:
-				out << "public: ";
-				break;
-			case AccessSpecifier::Protected:
-			case AccessSpecifier::ProtectedInternal:
-				out << "protected: ";
-				break;
-			case AccessSpecifier::Private:
-				out << "private: ";
-				break;
-		}
+		if (isStructDeclaration)
+			switch (*currentAccessSpecifier) {
+				case AccessSpecifier::Public:
+				case AccessSpecifier::Internal:
+					out << "public: ";
+					break;
+				case AccessSpecifier::Protected:
+				case AccessSpecifier::ProtectedInternal:
+					out << "protected: ";
+					break;
+				case AccessSpecifier::Private:
+					out << "private: ";
+					break;
+			}
 
 		if (auto decl = ctx->simpleDeclaration()) {
 			printSimpleDeclaration(decl);
@@ -16754,6 +16837,66 @@ namespace AstrumLang {
 	}
 
 	void AstrumCodegen::printSimpleDeclaration(AstrumParser::SimpleDeclarationContext* ctx) {
+		SourcePosition pos = {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()};
+		if (sema.properties.contains(pos)) {
+			auto prop = sema.properties[pos];
+			if (prop.parentTemplateParams)
+				out.switchTo(true);
+			else
+				out.switchTo(false);
+			out << "#line " << pos.line << " \"" << filename << ".ast\"\n"
+			    << std::string(depth, '\t');
+			if (prop.parentTemplateParams) {
+				printTemplateParams(prop.parentTemplateParams);
+				out << " ";
+				if (prop.parentConstraints) {
+					printConstraintClause(prop.parentConstraints);
+					out << " ";
+				}
+			} else if (prop.parentTemplateSpecializationArgs) {
+				out << "template<> ";
+			}
+
+			out << "auto ";
+			auto parent = prop.parentType;
+			StringReplace(parent, ".", "::");
+			StringReplace(parent, "::::::", "...");
+			auto pos = parent.find("<{{specialization}}>");
+			if (pos != parent.npos) {
+				out << parent.substr(0, pos);
+				out << "<";
+				printTemplateArgumentList(prop.parentTemplateSpecializationArgs);
+				out << ">";
+				out << parent.substr(pos + 20);
+			} else {
+				out << parent;
+			}
+			currentShortType        = prop.shortType;
+			currentTypeWithTemplate = parent;
+			out << "::__lazy_init_" << prop.id << "() ";
+			if (!prop.isStatic) {
+				out << "const ";
+			}
+
+			out << " -> ";
+			if (prop.isConst)
+				out << "const ";
+			printTypeId(prop.type);
+			out << " ";
+
+			currentShortType.clear();
+			currentTypeWithTemplate.clear();
+
+			out << " { return ";
+			if (prop.initializer)
+				printInitializerClause(prop.initializer);
+			else
+				out << "{}";
+			out << "; }";
+
+			out << std::endl << std::string(depth, '\t');
+			return;
+		}
 		if (!functionBody) {
 			emptyLine = true;
 			return;
