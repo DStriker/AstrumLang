@@ -1,13 +1,13 @@
-#include "Int128.h"
+#include "Builtin/Int128.h"
 
 #include <bit>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
 
-#include "Exceptions.h"
+#include "Builtin/Exceptions.h"
 
-namespace CppAdvance {
+namespace Builtin {
 	inline int Fls128(UInt128 n) {
 		if (uint64_t hi = n.high64()) {
 			return 127 - std::countl_zero(hi);
@@ -100,7 +100,7 @@ namespace CppAdvance {
 		return i128(__Details::BitCastToSigned(remainder.high64()), remainder.low64());
 	}
 
-	CPPADVANCE_DLLEXPORT std::string UInt128::ToFormattedString(UInt128 v,
+	ASTRUMSTD_API std::string UInt128::ToFormattedString(UInt128 v,
 	                                                            std::ios_base::fmtflags flags) {
 		// Select a divisor which is the largest power of the base < 2^64.
 		UInt128 div;
@@ -145,7 +145,7 @@ namespace CppAdvance {
 		return os.str();
 	}
 
-	CPPADVANCE_DLLEXPORT std::string Int128::toString() const {
+	ASTRUMSTD_API std::string Int128::toString() const {
 		std::string result;
 		if (_high < 0)
 			result = "-";
@@ -153,4 +153,4 @@ namespace CppAdvance {
 		return result;
 	}
 
-}  // namespace CppAdvance
+}  // namespace Builtin

@@ -1,11 +1,11 @@
-#include "Builtin.h"
+#include "Builtin/Builtin.h"
 
-#include "UnsafeContext.h"
+#include "Builtin/UnsafeContext.h"
 
 NullRefT NullRef {};
 
-namespace CppAdvance {
-#ifdef CPPADVANCE_CONTEXT_SAFETY_CHECKS
+namespace Builtin {
+#ifdef Builtin_CONTEXT_SAFETY_CHECKS
 	thread_local int UnsafeContextGuard::depth = 0;
 #endif
 
@@ -25,4 +25,4 @@ namespace CppAdvance {
 	int AstrumMainStartup(int argc, char** argv) {
 		return ApplicationMainPtr(/*forward arguments*/);
 	}
-}  // namespace CppAdvance
+}  // namespace Builtin

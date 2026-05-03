@@ -1,7 +1,7 @@
 #pragma once
 #include "Int128.h"
 
-namespace CppAdvance {
+namespace Builtin {
 	template <class T>
 	struct Float {
 		static_assert(std::is_floating_point<T>::value, "T must be a floating point type");
@@ -949,4 +949,4 @@ namespace CppAdvance {
 	using f64  = Float<double>;
 	using fext = Float<long double>;
 
-}  // namespace CppAdvance
+}  // namespace Builtin

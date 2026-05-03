@@ -4,7 +4,7 @@
 #include <cassert>
 #include <string>
 
-namespace CppAdvance {
+namespace Builtin {
 	namespace __detail {
 		template <typename CharT>
 		struct from_chars_result {
@@ -176,4 +176,4 @@ namespace CppAdvance {
 
 		return {Next, std::errc {}};
 	}
-}  // namespace CppAdvance
+}  // namespace Builtin

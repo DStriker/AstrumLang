@@ -1,7 +1,7 @@
 #pragma once
 #include "Floating.h"
 
-namespace CppAdvance {
+namespace Builtin {
 	struct DecimalLiteral {
 		i64 integerPart;
 		u64 fractionalPart;

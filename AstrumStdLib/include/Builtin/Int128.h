@@ -1,9 +1,9 @@
 #pragma once
 #include "Integer.h"
 #include "StringUtils.h"
-#define INT128_MIN CppAdvance::Int128::minValue()
-#define INT128_MAX CppAdvance::Int128::maxValue()
-#define UINT128_MAX CppAdvance::UInt128::maxValue()
+#define INT128_MIN Builtin::Int128::minValue()
+#define INT128_MAX Builtin::Int128::maxValue()
+#define UINT128_MAX Builtin::UInt128::maxValue()
 
 #ifdef MSVC
 #if defined(_M_X64) && !defined(_M_ARM64EC)
@@ -15,7 +15,7 @@
 #include <stdexcept>
 #include <xiosbase>
 
-namespace CppAdvance {
+namespace Builtin {
 	class Int128;
 	constexpr uint64_t Int128Low64(Int128 v) noexcept;
 	constexpr i64 Int128High64(Int128 v) noexcept;
@@ -103,84 +103,84 @@ namespace CppAdvance {
 		constexpr explicit operator bool() const noexcept { return _low || _high; }
 
 		constexpr explicit operator char() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<char>(_low);
 		}
 		constexpr explicit operator signed char() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<signed char>(_low);
 		}
 		constexpr explicit operator unsigned char() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<unsigned char>(_low);
 		}
 		constexpr explicit operator wchar_t() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<wchar_t>(_low);
 		}
 		constexpr explicit operator short() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<short>(_low);
 		}
 		constexpr explicit operator unsigned short() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<unsigned short>(_low);
 		}
 		constexpr explicit operator int() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<int>(_low);
 		}
 		constexpr explicit operator unsigned() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<unsigned>(_low);
 		}
 		constexpr explicit operator long() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<long>(_low);
 		}
 		constexpr explicit operator unsigned long() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<unsigned long>(_low);
 		}
 		constexpr explicit operator int64_t() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<int64_t>(_low);
 		}
 		constexpr explicit operator uint64_t() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
@@ -188,56 +188,56 @@ namespace CppAdvance {
 		}
 
 		constexpr explicit operator i8() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<signed char>(_low);
 		}
 		constexpr explicit operator u8() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<unsigned char>(_low);
 		}
 		constexpr explicit operator i16() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<short>(_low);
 		}
 		constexpr explicit operator u16() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<unsigned short>(_low);
 		}
 		constexpr explicit operator i32() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<int>(_low);
 		}
 		constexpr explicit operator u32() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<unsigned>(_low);
 		}
 		constexpr explicit operator i64() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<int64_t>(_low);
 		}
 		constexpr explicit operator u64() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high > 0)
 				throw IntegerOverflowException();
 #endif
@@ -716,7 +716,7 @@ namespace CppAdvance {
 			return *this;
 		}
 
-		CPPADVANCE_DLLEXPORT UInt128 operator/(UInt128 rhs) const;
+		ASTRUMSTD_API UInt128 operator/(UInt128 rhs) const;
 
 		UInt128 operator/(i8 rhs) const { return operator/(UInt128(rhs)); }
 
@@ -765,7 +765,7 @@ namespace CppAdvance {
 			return *this;
 		}
 
-		CPPADVANCE_DLLEXPORT UInt128 operator%(UInt128 rhs) const;
+		ASTRUMSTD_API UInt128 operator%(UInt128 rhs) const;
 
 		UInt128 operator%(i8 rhs) const { return operator%(UInt128(rhs)); }
 
@@ -1133,153 +1133,153 @@ namespace CppAdvance {
 			return lhs != rhs.low64();
 		}
 
-		constexpr std::strong_ordering operator<=>(UInt128 rhs) const noexcept {
+		constexpr int operator<=>(UInt128 rhs) const noexcept {
 			if (const uint64_t lhsHigh = _high, rhsHigh = rhs._high; lhsHigh < rhsHigh) {
-				return std::strong_ordering::less;
+				return -1;
 			} else if (lhsHigh > rhsHigh) {
-				return std::strong_ordering::greater;
+				return 1;
 			}
 
 			if (const uint64_t lhsLow = _low, rhsLow = rhs._low; lhsLow < rhsLow) {
-				return std::strong_ordering::less;
+				return -1;
 			} else if (lhsLow > rhsLow) {
-				return std::strong_ordering::greater;
+				return 1;
 			}
-			return std::strong_ordering::equal;
+			return 0;
 		}
 
-		constexpr auto operator<=>(i8 rhs) const noexcept {
+		constexpr int operator<=>(i8 rhs) const noexcept {
 			if (_high != 0)
-				return std::strong_ordering::greater;
+				return 1;
 			if (rhs < 0)
-				return std::strong_ordering::greater;
+				return 1;
 			return _low <=> rhs;
 		}
 
-		constexpr auto operator<=>(i16 rhs) const noexcept {
+		constexpr int operator<=>(i16 rhs) const noexcept {
 			if (_high != 0)
-				return std::strong_ordering::greater;
+				return 1;
 			if (rhs < 0)
-				return std::strong_ordering::greater;
+				return 1;
 			return _low <=> rhs;
 		}
 
-		constexpr auto operator<=>(i32 rhs) const noexcept {
+		constexpr int operator<=>(i32 rhs) const noexcept {
 			if (_high != 0)
-				return std::strong_ordering::greater;
+				return 1;
 			if (rhs < 0)
-				return std::strong_ordering::greater;
+				return 1;
 			return _low <=> rhs;
 		}
 
-		constexpr auto operator<=>(i64 rhs) const noexcept {
+		constexpr int operator<=>(i64 rhs) const noexcept {
 			if (_high != 0)
-				return std::strong_ordering::greater;
+				return 1;
 			if (rhs < 0)
-				return std::strong_ordering::greater;
+				return 1;
 			return _low <=> rhs;
 		}
 
-		constexpr auto operator<=>(u8 rhs) const noexcept {
+		constexpr int operator<=>(u8 rhs) const noexcept {
 			if (_high != 0)
-				return std::strong_ordering::greater;
+				return 1;
 			return _low <=> rhs;
 		}
 
-		constexpr auto operator<=>(u16 rhs) const noexcept {
+		constexpr int operator<=>(u16 rhs) const noexcept {
 			if (_high != 0)
-				return std::strong_ordering::greater;
+				return 1;
 			return _low <=> rhs;
 		}
 
-		constexpr auto operator<=>(u32 rhs) const noexcept {
+		constexpr int operator<=>(u32 rhs) const noexcept {
 			if (_high != 0)
-				return std::strong_ordering::greater;
+				return 1;
 			return _low <=> rhs;
 		}
 
-		constexpr auto operator<=>(u64 rhs) const noexcept {
+		constexpr int operator<=>(u64 rhs) const noexcept {
 			if (_high != 0)
-				return std::strong_ordering::greater;
+				return 1;
 			return _low <=> rhs;
 		}
 
 		template <typename OtherT>
-		constexpr auto operator<=>(OtherT rhs) const noexcept requires(std::is_integral_v<OtherT>) {
+		constexpr int operator<=>(OtherT rhs) const noexcept requires(std::is_integral_v<OtherT>) {
 			if (_high != 0)
-				return std::strong_ordering::greater;
+				return 1;
 			if constexpr (std::numeric_limits<OtherT>::is_signed) {
 				if (rhs < 0)
-					return std::strong_ordering::greater;
+					return 1;
 			}
 			return _low <=> rhs;
 		}
 
 		template <typename OtherT>
-		friend constexpr auto operator<=>(OtherT lhs, UInt128 rhs) noexcept
+		friend constexpr int operator<=>(OtherT lhs, UInt128 rhs) noexcept
 		    requires(std::is_integral_v<OtherT>) {
 			if (rhs.high64() != 0)
-				return std::strong_ordering::less;
+				return -1;
 			if constexpr (std::numeric_limits<OtherT>::is_signed) {
 				if (lhs < 0)
-					return std::strong_ordering::less;
+					return -1;
 			}
 			return lhs <=> rhs.low64();
 		}
 
-		friend constexpr auto operator<=>(i8 lhs, UInt128 rhs) noexcept {
+		friend constexpr int operator<=>(i8 lhs, UInt128 rhs) noexcept {
 			if (rhs.high64() != 0)
-				return std::strong_ordering::less;
+				return -1;
 			if (lhs < 0)
-				return std::strong_ordering::less;
+				return -1;
 			return lhs <=> rhs.low64();
 		}
 
-		friend constexpr auto operator<=>(i16 lhs, UInt128 rhs) noexcept {
+		friend constexpr int operator<=>(i16 lhs, UInt128 rhs) noexcept {
 			if (rhs.high64() != 0)
-				return std::strong_ordering::less;
+				return -1;
 			if (lhs < 0)
-				return std::strong_ordering::less;
+				return -1;
 			return lhs <=> rhs.low64();
 		}
 
-		friend constexpr auto operator<=>(i32 lhs, UInt128 rhs) noexcept {
+		friend constexpr int operator<=>(i32 lhs, UInt128 rhs) noexcept {
 			if (rhs.high64() != 0)
-				return std::strong_ordering::less;
+				return -1;
 			if (lhs < 0)
-				return std::strong_ordering::less;
+				return -1;
 			return lhs <=> rhs.low64();
 		}
 
-		friend constexpr auto operator<=>(i64 lhs, UInt128 rhs) noexcept {
+		friend constexpr int operator<=>(i64 lhs, UInt128 rhs) noexcept {
 			if (rhs.high64() != 0)
-				return std::strong_ordering::less;
+				return -1;
 			if (lhs < 0)
-				return std::strong_ordering::less;
+				return -1;
 			return lhs <=> rhs.low64();
 		}
 
-		friend constexpr auto operator<=>(u8 lhs, UInt128 rhs) noexcept {
+		friend constexpr int operator<=>(u8 lhs, UInt128 rhs) noexcept {
 			if (rhs.high64() != 0)
-				return std::strong_ordering::less;
+				return -1;
 			return lhs <=> rhs.low64();
 		}
 
-		friend constexpr auto operator<=>(u16 lhs, UInt128 rhs) noexcept {
+		friend constexpr int operator<=>(u16 lhs, UInt128 rhs) noexcept {
 			if (rhs.high64() != 0)
-				return std::strong_ordering::less;
+				return -1;
 			return lhs <=> rhs.low64();
 		}
 
-		friend constexpr auto operator<=>(u32 lhs, UInt128 rhs) noexcept {
+		friend constexpr int operator<=>(u32 lhs, UInt128 rhs) noexcept {
 			if (rhs.high64() != 0)
-				return std::strong_ordering::less;
+				return -1;
 			return lhs <=> rhs.low64();
 		}
 
-		friend constexpr auto operator<=>(u64 lhs, UInt128 rhs) noexcept {
+		friend constexpr int operator<=>(u64 lhs, UInt128 rhs) noexcept {
 			if (rhs.high64() != 0)
-				return std::strong_ordering::less;
+				return -1;
 			return lhs <=> rhs.low64();
 		}
 
@@ -1292,14 +1292,14 @@ namespace CppAdvance {
 			UInt128 tmp;
 			auto inputEnd = input.data() + input.size();
 			auto ret      = FromChars(input.data(), inputEnd, tmp);
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (ret.ec == std::errc::result_out_of_range)
 				throw IntegerOverflowException();
 #endif
 			return tmp;
 		}
 
-		CPPADVANCE_DLLEXPORT static std::string ToFormattedString(UInt128 v,
+		ASTRUMSTD_API static std::string ToFormattedString(UInt128 v,
 		                                                          std::ios_base::fmtflags flags);
 
 		std::string toString() const {
@@ -1361,7 +1361,7 @@ namespace CppAdvance {
 
 		constexpr explicit Int128(UInt128 value)
 		    : _low(value.low64()), _high(static_cast<int64_t>((uint64_t) value.high64())) {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (value > UInt128(INT128_MAX))
 				throw IntegerOverflowException();
 #endif
@@ -1415,7 +1415,7 @@ namespace CppAdvance {
 			return static_cast<signed char>(static_cast<int64_t>(*this));
 		}
 		constexpr explicit operator unsigned char() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high != 0)
 				throw IntegerOverflowException();
 #endif
@@ -1428,7 +1428,7 @@ namespace CppAdvance {
 			return static_cast<short>(static_cast<int64_t>(*this));
 		}
 		constexpr explicit operator unsigned short() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high != 0)
 				throw IntegerOverflowException();
 #endif
@@ -1438,7 +1438,7 @@ namespace CppAdvance {
 			return static_cast<int>(static_cast<int64_t>(*this));
 		}
 		constexpr explicit operator unsigned() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high != 0)
 				throw IntegerOverflowException();
 #endif
@@ -1448,14 +1448,14 @@ namespace CppAdvance {
 			return static_cast<long>(static_cast<int64_t>(*this));
 		}
 		constexpr explicit operator unsigned long() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high != 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<unsigned long>(_low);
 		}
 		constexpr explicit operator int64_t() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (*this < std::numeric_limits<int64_t>::min() ||
 			    *this > std::numeric_limits<int64_t>::max())
 				throw IntegerOverflowException();
@@ -1463,7 +1463,7 @@ namespace CppAdvance {
 			return __Details::BitCastToSigned(_low);
 		}
 		constexpr explicit operator uint64_t() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high != 0)
 				throw IntegerOverflowException();
 #endif
@@ -1473,7 +1473,7 @@ namespace CppAdvance {
 			return static_cast<signed char>(static_cast<int64_t>(*this));
 		}
 		constexpr explicit operator u8() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high != 0)
 				throw IntegerOverflowException();
 #endif
@@ -1483,7 +1483,7 @@ namespace CppAdvance {
 			return static_cast<short>(static_cast<int64_t>(*this));
 		}
 		constexpr explicit operator u16() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high != 0)
 				throw IntegerOverflowException();
 #endif
@@ -1493,14 +1493,14 @@ namespace CppAdvance {
 			return static_cast<int>(static_cast<int64_t>(*this));
 		}
 		constexpr explicit operator u32() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high != 0)
 				throw IntegerOverflowException();
 #endif
 			return static_cast<unsigned>(_low);
 		}
 		constexpr explicit operator i64() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (*this < std::numeric_limits<int64_t>::min() ||
 			    *this > std::numeric_limits<int64_t>::max())
 				throw IntegerOverflowException();
@@ -1508,7 +1508,7 @@ namespace CppAdvance {
 			return __Details::BitCastToSigned(_low);
 		}
 		constexpr explicit operator u64() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (_high != 0)
 				throw IntegerOverflowException();
 #endif
@@ -1749,7 +1749,7 @@ namespace CppAdvance {
 		inline Int128 operator*(Int128 rhs) const {
 			const auto product = std::bit_cast<UInt128>(*this) * std::bit_cast<UInt128>(rhs);
 			auto result = Int128(__Details::BitCastToSigned(product.high64()), product.low64());
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (*this > 0) {
 				if ((rhs > 0 && result < *this) || (rhs < 0 && result > *this))
 					throw IntegerOverflowException();
@@ -1973,7 +1973,7 @@ namespace CppAdvance {
 			return *this;
 		}
 
-		CPPADVANCE_DLLEXPORT Int128 operator/(Int128 rhs) const;
+		ASTRUMSTD_API Int128 operator/(Int128 rhs) const;
 
 		Int128 operator/(i8 rhs) const { return operator/(Int128(rhs)); }
 
@@ -2022,7 +2022,7 @@ namespace CppAdvance {
 			return *this;
 		}
 
-		CPPADVANCE_DLLEXPORT Int128 operator%(Int128 rhs) const;
+		ASTRUMSTD_API Int128 operator%(Int128 rhs) const;
 
 		Int128 operator%(i8 rhs) const { return operator%(Int128(rhs)); }
 
@@ -2111,7 +2111,7 @@ namespace CppAdvance {
 		constexpr Int128& operator+() noexcept { return *this; }
 
 		constexpr Int128 operator-() const {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (*this == INT128_MIN)
 				throw IntegerOverflowException();
 #endif
@@ -2236,77 +2236,77 @@ namespace CppAdvance {
 			return Int128(lhs) != rhs;
 		}
 
-		constexpr std::strong_ordering operator<=>(Int128 rhs) const noexcept {
+		constexpr int operator<=>(Int128 rhs) const noexcept {
 			if (const int64_t lhsHigh = _high, rhsHigh = rhs._high; lhsHigh < rhsHigh) {
-				return std::strong_ordering::less;
+				return -1;
 			} else if (lhsHigh > rhsHigh) {
-				return std::strong_ordering::greater;
+				return 1;
 			}
 
 			if (const uint64_t lhsLow = _low, rhsLow = rhs._low; lhsLow < rhsLow) {
-				return std::strong_ordering::less;
+				return -1;
 			} else if (lhsLow > rhsLow) {
-				return std::strong_ordering::greater;
+				return 1;
 			}
-			return std::strong_ordering::equal;
+			return 0;
 		}
 
-		constexpr auto operator<=>(i8 rhs) const noexcept { return *this <=> Int128(rhs); }
+		constexpr int operator<=>(i8 rhs) const noexcept { return *this <=> Int128(rhs); }
 
-		constexpr auto operator<=>(i16 rhs) const noexcept { return *this <=> Int128(rhs); }
+		constexpr int operator<=>(i16 rhs) const noexcept { return *this <=> Int128(rhs); }
 
-		constexpr auto operator<=>(i32 rhs) const noexcept { return *this <=> Int128(rhs); }
+		constexpr int operator<=>(i32 rhs) const noexcept { return *this <=> Int128(rhs); }
 
-		constexpr auto operator<=>(i64 rhs) const noexcept { return *this <=> Int128(rhs); }
+		constexpr int operator<=>(i64 rhs) const noexcept { return *this <=> Int128(rhs); }
 
-		constexpr auto operator<=>(u8 rhs) const noexcept { return *this <=> Int128(rhs); }
+		constexpr int operator<=>(u8 rhs) const noexcept { return *this <=> Int128(rhs); }
 
-		constexpr auto operator<=>(u16 rhs) const noexcept { return *this <=> Int128(rhs); }
+		constexpr int operator<=>(u16 rhs) const noexcept { return *this <=> Int128(rhs); }
 
-		constexpr auto operator<=>(u32 rhs) const noexcept { return *this <=> Int128(rhs); }
+		constexpr int operator<=>(u32 rhs) const noexcept { return *this <=> Int128(rhs); }
 
-		constexpr auto operator<=>(u64 rhs) const noexcept { return *this <=> Int128(rhs); }
+		constexpr int operator<=>(u64 rhs) const noexcept { return *this <=> Int128(rhs); }
 
 		template <typename OtherT>
-		constexpr auto operator<=>(OtherT rhs) const noexcept requires(std::is_integral_v<OtherT>) {
+		constexpr int operator<=>(OtherT rhs) const noexcept requires(std::is_integral_v<OtherT>) {
 			return *this <=> Int128(rhs);
 		}
 
 		template <typename OtherT>
-		friend constexpr auto operator<=>(OtherT lhs, Int128 rhs) noexcept
+		friend constexpr int operator<=>(OtherT lhs, Int128 rhs) noexcept
 		    requires(std::is_integral_v<OtherT>) {
 			return Int128(lhs) <=> rhs;
 		}
 
-		friend constexpr auto operator<=>(i8 lhs, Int128 rhs) noexcept {
+		friend constexpr int operator<=>(i8 lhs, Int128 rhs) noexcept {
 			return Int128(lhs) <=> rhs;
 		}
 
-		friend constexpr auto operator<=>(i16 lhs, Int128 rhs) noexcept {
+		friend constexpr int operator<=>(i16 lhs, Int128 rhs) noexcept {
 			return Int128(lhs) <=> rhs;
 		}
 
-		friend constexpr auto operator<=>(i32 lhs, Int128 rhs) noexcept {
+		friend constexpr int operator<=>(i32 lhs, Int128 rhs) noexcept {
 			return Int128(lhs) <=> rhs;
 		}
 
-		friend constexpr auto operator<=>(i64 lhs, Int128 rhs) noexcept {
+		friend constexpr int operator<=>(i64 lhs, Int128 rhs) noexcept {
 			return Int128(lhs) <=> rhs;
 		}
 
-		friend constexpr auto operator<=>(u8 lhs, Int128 rhs) noexcept {
+		friend constexpr int operator<=>(u8 lhs, Int128 rhs) noexcept {
 			return Int128(lhs) <=> rhs;
 		}
 
-		friend constexpr auto operator<=>(u16 lhs, Int128 rhs) noexcept {
+		friend constexpr int operator<=>(u16 lhs, Int128 rhs) noexcept {
 			return Int128(lhs) <=> rhs;
 		}
 
-		friend constexpr auto operator<=>(u32 lhs, Int128 rhs) noexcept {
+		friend constexpr int operator<=>(u32 lhs, Int128 rhs) noexcept {
 			return Int128(lhs) <=> rhs;
 		}
 
-		friend constexpr auto operator<=>(u64 lhs, Int128 rhs) noexcept {
+		friend constexpr int operator<=>(u64 lhs, Int128 rhs) noexcept {
 			return Int128(lhs) <=> rhs;
 		}
 
@@ -2314,14 +2314,14 @@ namespace CppAdvance {
 			Int128 tmp;
 			auto inputEnd = input.data() + input.size();
 			auto ret      = FromChars(input.data(), inputEnd, tmp);
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (ret.ec == std::errc::result_out_of_range)
 				throw IntegerOverflowException();
 #endif
 			return tmp;
 		}
 
-		CPPADVANCE_DLLEXPORT std::string toString() const;
+		ASTRUMSTD_API std::string toString() const;
 
 	   private:
 		static constexpr Int128 addResult(Int128 result, Int128 lhs) {
@@ -2338,7 +2338,7 @@ namespace CppAdvance {
 
 	inline constexpr UInt128::UInt128(Int128 value)
 	    : _low(Int128Low64(value)), _high(static_cast<uint64_t>(Int128High64(value))) {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 		if (value < 0)
 			throw IntegerOverflowException();
 #endif
@@ -2350,14 +2350,14 @@ namespace CppAdvance {
 
 	namespace __details {
 		inline constexpr void checkRhsForZero(const UInt128& divisor) {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (divisor == 0)
 				throw DivisionByZeroException();
 #endif
 		}
 
 		inline constexpr void checkIntCornerCase(const Int128& lhs, const Int128& rhs) {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifdef Builtin_OVERFLOW_CHECKS
 			if (lhs == INT128_MIN && rhs == -1)
 				throw IntegerOverflowException();
 #endif
@@ -2366,34 +2366,36 @@ namespace CppAdvance {
 
 	using i128 = Int128;
 	using u128 = UInt128;
-}  // namespace CppAdvance
+}  // namespace Builtin
 
 template <>
-struct std::_Sign_base<CppAdvance::UInt128,
+struct std::_Sign_base<Builtin::UInt128,
                        false> {  // determine whether integral type _Ty is signed or unsigned
 	static constexpr bool _Signed   = false;
 	static constexpr bool _Unsigned = true;
 };
 
 template <>
-struct std::_Sign_base<CppAdvance::Int128,
+struct std::_Sign_base<Builtin::Int128,
                        false> {  // determine whether integral type _Ty is signed or unsigned
 	static constexpr bool _Signed   = true;
 	static constexpr bool _Unsigned = false;
 };
-
+#ifdef MSVC
+#pragma warning(disable : 5285)
+#endif
 template <>
-struct std::make_unsigned<CppAdvance::UInt128> {  // unsigned partner to _Ty
-	using type = CppAdvance::UInt128;
+struct std::make_unsigned<Builtin::UInt128> {  // unsigned partner to _Ty
+	using type = Builtin::UInt128;
 };
 
 template <>
-struct std::make_unsigned<CppAdvance::Int128> {  // unsigned partner to _Ty
-	using type = CppAdvance::UInt128;
+struct std::make_unsigned<Builtin::Int128> {  // unsigned partner to _Ty
+	using type = Builtin::UInt128;
 };
 
 template <>
-class std::numeric_limits<CppAdvance::UInt128> {
+class std::numeric_limits<Builtin::UInt128> {
    public:
 	static constexpr bool is_specialized    = true;
 	static constexpr bool is_signed         = false;
@@ -2419,19 +2421,19 @@ class std::numeric_limits<CppAdvance::UInt128> {
 	static constexpr bool traps                         = std::numeric_limits<uint64_t>::traps;
 	static constexpr bool tinyness_before               = false;
 
-	static constexpr CppAdvance::UInt128(min)() { return 0u; }
-	static constexpr CppAdvance::UInt128 lowest() { return 0u; }
-	static constexpr CppAdvance::UInt128(max)() { return UINT128_MAX; }
-	static constexpr CppAdvance::UInt128 epsilon() { return 0u; }
-	static constexpr CppAdvance::UInt128 round_error() { return 0u; }
-	static constexpr CppAdvance::UInt128 infinity() { return 0u; }
-	static constexpr CppAdvance::UInt128 quiet_NaN() { return 0u; }
-	static constexpr CppAdvance::UInt128 signaling_NaN() { return 0u; }
-	static constexpr CppAdvance::UInt128 denorm_min() { return 0u; }
+	static constexpr Builtin::UInt128(min)() { return 0u; }
+	static constexpr Builtin::UInt128 lowest() { return 0u; }
+	static constexpr Builtin::UInt128(max)() { return UINT128_MAX; }
+	static constexpr Builtin::UInt128 epsilon() { return 0u; }
+	static constexpr Builtin::UInt128 round_error() { return 0u; }
+	static constexpr Builtin::UInt128 infinity() { return 0u; }
+	static constexpr Builtin::UInt128 quiet_NaN() { return 0u; }
+	static constexpr Builtin::UInt128 signaling_NaN() { return 0u; }
+	static constexpr Builtin::UInt128 denorm_min() { return 0u; }
 };
 
 template <>
-class std::numeric_limits<CppAdvance::Int128> {
+class std::numeric_limits<Builtin::Int128> {
    public:
 	static constexpr bool is_specialized    = true;
 	static constexpr bool is_signed         = true;
@@ -2457,13 +2459,13 @@ class std::numeric_limits<CppAdvance::Int128> {
 	static constexpr bool traps                         = std::numeric_limits<uint64_t>::traps;
 	static constexpr bool tinyness_before               = false;
 
-	static constexpr CppAdvance::Int128(min)() { return INT128_MIN; }
-	static constexpr CppAdvance::Int128 lowest() { return INT128_MIN; }
-	static constexpr CppAdvance::Int128(max)() { return INT128_MAX; }
-	static constexpr CppAdvance::Int128 epsilon() { return 0; }
-	static constexpr CppAdvance::Int128 round_error() { return 0; }
-	static constexpr CppAdvance::Int128 infinity() { return 0; }
-	static constexpr CppAdvance::Int128 quiet_NaN() { return 0; }
-	static constexpr CppAdvance::Int128 signaling_NaN() { return 0; }
-	static constexpr CppAdvance::Int128 denorm_min() { return 0; }
+	static constexpr Builtin::Int128(min)() { return INT128_MIN; }
+	static constexpr Builtin::Int128 lowest() { return INT128_MIN; }
+	static constexpr Builtin::Int128(max)() { return INT128_MAX; }
+	static constexpr Builtin::Int128 epsilon() { return 0; }
+	static constexpr Builtin::Int128 round_error() { return 0; }
+	static constexpr Builtin::Int128 infinity() { return 0; }
+	static constexpr Builtin::Int128 quiet_NaN() { return 0; }
+	static constexpr Builtin::Int128 signaling_NaN() { return 0; }
+	static constexpr Builtin::Int128 denorm_min() { return 0; }
 };

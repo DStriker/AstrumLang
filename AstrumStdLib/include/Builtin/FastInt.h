@@ -7,12 +7,19 @@
 
 #include "CompilerUtils.h"
 
-namespace CppAdvance {
+namespace Builtin {
+	struct Struct {};
+
 	template <class T>
-	struct FastInt {
+	class __Class_FastInt;
+
+	template <class T>
+	struct FastInt : public Struct {
 		static_assert(std::is_integral_v<T> || std::is_enum_v<T>, "T must be integer");
 		template <class U>
 		friend struct FastInt;
+		using __self  = FastInt<T>;
+		using __class = __Class_FastInt<T>;
 		constexpr decltype(auto) __ref() const noexcept { return *this; }
 
 		constexpr FastInt() noexcept = default; /* {
@@ -413,6 +420,11 @@ namespace CppAdvance {
 		}
 
 		template <class U>
+		constexpr FastInt<T> operator&(FastInt<U> rhs) const noexcept {
+			return (*this & (U) rhs);
+		}
+
+		template <class U>
 		constexpr FastInt<T> operator&(U rhs) const noexcept {
 			return FastInt<T>(value & rhs);
 		}
@@ -436,6 +448,11 @@ namespace CppAdvance {
 
 		constexpr FastInt<T> operator|(FastInt<T> rhs) const noexcept {
 			return FastInt<T>(value | (T) rhs);
+		}
+
+		template <class U>
+		constexpr FastInt<T> operator|(FastInt<U> rhs) const noexcept {
+			return (*this | (U) rhs);
 		}
 
 		template <class U>
@@ -465,6 +482,11 @@ namespace CppAdvance {
 		}
 
 		template <class U>
+		constexpr FastInt<T> operator^(FastInt<U> rhs) const noexcept {
+			return (*this ^ (U) rhs);
+		}
+
+		template <class U>
 		constexpr FastInt<T> operator^(U rhs) const noexcept {
 			return FastInt<T>(value ^ rhs);
 		}
@@ -489,217 +511,221 @@ namespace CppAdvance {
 	   private:
 		T value {};
 	};
-}  // namespace CppAdvance
+
+}  // namespace Builtin
 
 template <class T, class U>
-constexpr auto operator<=>(U lhs, CppAdvance::FastInt<T> rhs) noexcept
+constexpr auto operator<=>(const U& lhs, Builtin::FastInt<T> rhs) noexcept
     requires(std::is_integral_v<U>) {
 	if (lhs < (T) rhs) {
-		return std::strong_ordering::less;
+		return -1;
 	}
 	if (lhs > (T) rhs) {
-		return std::strong_ordering::greater;
+		return 1;
 	}
-	return std::strong_ordering::equal;
+	return 0;
 }
 
 template <class T, class U>
-constexpr auto operator<=>(const CppAdvance::FastInt<T>& lhs, U rhs) noexcept {
+constexpr auto operator<=>(const Builtin::FastInt<T>& lhs, const U& rhs) noexcept
+    requires(std::is_integral_v<U>) {
 	if ((T) lhs < rhs) {
-		return std::strong_ordering::less;
+		return -1;
 	}
 	if ((T) lhs > rhs) {
-		return std::strong_ordering::greater;
+		return 1;
 	}
-	return std::strong_ordering::equal;
+	return 0;
 }
 
 template <class T, class U>
-constexpr auto operator<=>(const CppAdvance::FastInt<U>& lhs,
-                           const CppAdvance::FastInt<T>& rhs) noexcept {
+constexpr auto operator<=>(const Builtin::FastInt<U>& lhs,
+                           const Builtin::FastInt<T>& rhs) noexcept {
 	if ((U) lhs < (T) rhs) {
-		return std::strong_ordering::less;
+		return -1;
 	}
 	if ((U) lhs > (T) rhs) {
-		return std::strong_ordering::greater;
+		return 1;
 	}
-	return std::strong_ordering::equal;
+	return 0;
 }
 
 template <class T, class U>
-constexpr bool operator==(const CppAdvance::FastInt<T>& lhs,
-                          const CppAdvance::FastInt<U>& rhs) noexcept {
+constexpr bool operator==(const Builtin::FastInt<T>& lhs,
+                          const Builtin::FastInt<U>& rhs) noexcept {
 	return lhs.ref() == rhs.ref();
 }
 
 template <class T, class U>
-constexpr bool operator==(const CppAdvance::FastInt<T>& lhs, U rhs) noexcept {
-	return lhs == (CppAdvance::FastInt<T>) rhs;
+constexpr bool operator==(const Builtin::FastInt<T>& lhs, const U& rhs) noexcept
+    requires(std::is_integral_v<U>) {
+	return lhs == (Builtin::FastInt<T>) rhs;
 }
 
 template <class T, class U>
-constexpr bool operator==(U lhs, const CppAdvance::FastInt<T>& rhs) noexcept
+constexpr bool operator==(const U& lhs, const Builtin::FastInt<T>& rhs) noexcept
     requires(std::is_integral_v<U>) {
 	return (T) lhs == rhs.ref();
 }
 
 //template <class T>
-//constexpr bool operator==(bool lhs, CppAdvance::FastInt<T> rhs) noexcept {
+//constexpr bool operator==(bool lhs, Builtin::FastInt<T> rhs) noexcept {
 //	return lhs == ((T) rhs == 0 ? false : true);
 //}
 //
 //template <class T>
-//constexpr bool operator==(CppAdvance::FastInt<T> lhs, bool rhs) noexcept {
+//constexpr bool operator==(Builtin::FastInt<T> lhs, bool rhs) noexcept {
 //	return rhs == ((T) lhs == 0 ? false : true);
 //}
 
 template <class T, class U>
-constexpr bool operator!=(const CppAdvance::FastInt<T>& lhs, const CppAdvance::FastInt<U>& rhs) noexcept {
+constexpr bool operator!=(const Builtin::FastInt<T>& lhs, const Builtin::FastInt<U>& rhs) noexcept {
 	return (T) lhs != (U) rhs;
 }
 
 template <class T, class U>
-constexpr bool operator!=(const CppAdvance::FastInt<T>& lhs, U rhs) noexcept {
-	return lhs != (CppAdvance::FastInt<T>) rhs;
+constexpr bool operator!=(const Builtin::FastInt<T>& lhs, const U& rhs) noexcept
+    requires(std::is_integral_v<U>) {
+	return lhs != (Builtin::FastInt<T>) rhs;
 }
 
 template <class T, class U>
-constexpr bool operator!=(U lhs, CppAdvance::FastInt<T> rhs) noexcept
+constexpr bool operator!=(const U& lhs, Builtin::FastInt<T> rhs) noexcept
     requires(std::is_integral_v<U>) {
 	return (T) rhs != lhs;
 }
 
 //template <class T>
-//constexpr bool operator!=(bool lhs, CppAdvance::FastInt<T> rhs) noexcept {
+//constexpr bool operator!=(bool lhs, Builtin::FastInt<T> rhs) noexcept {
 //	return ((T) rhs == 0 ? false : true) != lhs;
 //}
 //
 //template <class T>
-//constexpr bool operator!=(CppAdvance::FastInt<T> lhs, bool rhs) noexcept {
+//constexpr bool operator!=(Builtin::FastInt<T> lhs, bool rhs) noexcept {
 //	return ((T) lhs == 0 ? false : true) != rhs;
 //}
 
 template <class T, class U>
-constexpr CppAdvance::FastInt<T> operator%(U lhs, CppAdvance::FastInt<T> rhs) requires(
+constexpr Builtin::FastInt<T> operator%(U lhs, Builtin::FastInt<T> rhs) requires(
     std::is_integral_v<U>) {
 	return lhs % (T) rhs;
 }
 
 template <class T, class U>
-constexpr CppAdvance::FastInt<T> operator*(U lhs, CppAdvance::FastInt<T> rhs) requires(
+constexpr Builtin::FastInt<T> operator*(U lhs, Builtin::FastInt<T> rhs) requires(
     std::is_integral_v<U>) {
 	return lhs * (T) rhs;
 }
 
 template <class T, class U>
-constexpr CppAdvance::FastInt<T> operator/(U lhs, CppAdvance::FastInt<T> rhs) requires(
+constexpr Builtin::FastInt<T> operator/(U lhs, Builtin::FastInt<T> rhs) requires(
     std::is_integral_v<U>) {
 	return lhs / (T) rhs;
 }
 
 template <class T, class U>
-constexpr CppAdvance::FastInt<T> operator+(U lhs, CppAdvance::FastInt<T> rhs) requires(
+constexpr Builtin::FastInt<T> operator+(U lhs, Builtin::FastInt<T> rhs) requires(
     std::is_integral_v<U>) {
 	return lhs + (T) rhs;
 }
 
 template <class T, class U>
-constexpr CppAdvance::FastInt<T> operator-(U lhs, CppAdvance::FastInt<T> rhs) requires(
+constexpr Builtin::FastInt<T> operator-(U lhs, Builtin::FastInt<T> rhs) requires(
     std::is_integral_v<U>) {
 	return lhs - (T) rhs;
 }
 
 template <class T, class U>
-constexpr T& operator+=(T& lhs, CppAdvance::FastInt<U> rhs) requires(std::is_integral_v<T>) {
+constexpr T& operator+=(T& lhs, Builtin::FastInt<U> rhs) requires(std::is_integral_v<T>) {
 	lhs += (U) rhs;
 	return lhs;
 }
 
 template <class T, class U>
-constexpr T& operator-=(T& lhs, CppAdvance::FastInt<U> rhs) requires(std::is_integral_v<T>) {
+constexpr T& operator-=(T& lhs, Builtin::FastInt<U> rhs) requires(std::is_integral_v<T>) {
 	lhs -= (U) rhs;
 	return lhs;
 }
 
 template <class T, class U>
-constexpr T& operator*=(T& lhs, CppAdvance::FastInt<U> rhs) requires(std::is_integral_v<T>) {
+constexpr T& operator*=(T& lhs, Builtin::FastInt<U> rhs) requires(std::is_integral_v<T>) {
 	lhs *= (U) rhs;
 	return lhs;
 }
 
 template <class T, class U>
-constexpr T& operator/=(T& lhs, CppAdvance::FastInt<U> rhs) requires(std::is_integral_v<T>) {
+constexpr T& operator/=(T& lhs, Builtin::FastInt<U> rhs) requires(std::is_integral_v<T>) {
 	lhs /= (U) rhs;
 	return lhs;
 }
 
 template <class T, class U>
-constexpr T& operator%=(T& lhs, CppAdvance::FastInt<U> rhs) requires(std::is_integral_v<T>) {
+constexpr T& operator%=(T& lhs, Builtin::FastInt<U> rhs) requires(std::is_integral_v<T>) {
 	lhs %= (U) rhs;
 	return lhs;
 }
 
 template <class T, class U>
-constexpr T& operator&=(T& lhs, CppAdvance::FastInt<U> rhs) noexcept
+constexpr T& operator&=(T& lhs, Builtin::FastInt<U> rhs) noexcept
     requires(std::is_integral_v<T>) {
 	lhs &= (U) rhs;
 	return lhs;
 }
 
 template <class T, class U>
-constexpr T& operator|=(T& lhs, CppAdvance::FastInt<U> rhs) noexcept
+constexpr T& operator|=(T& lhs, Builtin::FastInt<U> rhs) noexcept
     requires(std::is_integral_v<T>) {
 	lhs |= (U) rhs;
 	return lhs;
 }
 
 template <class T, class U>
-constexpr T& operator^=(T& lhs, CppAdvance::FastInt<U> rhs) noexcept
+constexpr T& operator^=(T& lhs, Builtin::FastInt<U> rhs) noexcept
     requires(std::is_integral_v<T>) {
 	lhs ^= (U) rhs;
 	return lhs;
 }
 
 template <class T, class U>
-constexpr T& operator<<=(T& lhs, CppAdvance::FastInt<U> rhs) noexcept
+constexpr T& operator<<=(T& lhs, Builtin::FastInt<U> rhs) noexcept
     requires(std::is_integral_v<T>) {
 	lhs <<= (U) rhs;
 	return lhs;
 }
 
 template <class T, class U>
-constexpr T& operator>>=(T& lhs, CppAdvance::FastInt<U> rhs) noexcept
+constexpr T& operator>>=(T& lhs, Builtin::FastInt<U> rhs) noexcept
     requires(std::is_integral_v<T>) {
 	lhs >>= (U) rhs;
 	return lhs;
 }
 
 template <class T, class U>
-constexpr static CppAdvance::FastInt<U> operator<<(U lhs, CppAdvance::FastInt<T> bits) requires(
+constexpr static Builtin::FastInt<U> operator<<(U lhs, Builtin::FastInt<T> bits) requires(
     std::is_integral_v<U>) {
 	return (lhs << (T) bits);
 }
 
 template <class T, class U>
-constexpr static CppAdvance::FastInt<U> operator>>(U lhs, CppAdvance::FastInt<T> bits) requires(
+constexpr static Builtin::FastInt<U> operator>>(U lhs, Builtin::FastInt<T> bits) requires(
     std::is_integral_v<U>) {
 	return (lhs >> (T) bits);
 }
 
 template <class T, class U>
-constexpr CppAdvance::FastInt<T> operator&(U lhs, CppAdvance::FastInt<T> rhs) noexcept
+constexpr Builtin::FastInt<T> operator&(U lhs, Builtin::FastInt<T> rhs) noexcept
     requires(std::is_integral_v<U>) {
 	return (lhs & (T) rhs);
 }
 
 template <class T, class U>
-constexpr CppAdvance::FastInt<T> operator|(U lhs, CppAdvance::FastInt<T> rhs) noexcept
+constexpr Builtin::FastInt<T> operator|(U lhs, Builtin::FastInt<T> rhs) noexcept
     requires(std::is_integral_v<U>) {
 	return (lhs | (T) rhs);
 }
 
 template <class T, class U>
-constexpr CppAdvance::FastInt<T> operator^(U lhs, CppAdvance::FastInt<T> rhs) noexcept
+constexpr Builtin::FastInt<T> operator^(U lhs, Builtin::FastInt<T> rhs) noexcept
     requires(std::is_integral_v<U>) {
 	return (lhs ^ (T) rhs);
 }

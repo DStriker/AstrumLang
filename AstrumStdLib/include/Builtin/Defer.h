@@ -1,6 +1,6 @@
 #pragma once
 
-namespace CppAdvance
+namespace Builtin
 {
 	template<class F>
 	struct Defer {

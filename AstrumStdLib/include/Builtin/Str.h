@@ -1,7 +1,7 @@
 #pragma once
 #include "Char.h"
 
-namespace CppAdvance {
+namespace Builtin {
 	struct Str {
 		constexpr decltype(auto) __ref() const noexcept { return *this; }
 		constexpr Str() noexcept : chars {nullptr}, len(0) {}
@@ -44,4 +44,4 @@ namespace CppAdvance {
 		    : formatString(formatString), args(args...) {}
 	};
 
-}  // namespace CppAdvance
+}  // namespace Builtin

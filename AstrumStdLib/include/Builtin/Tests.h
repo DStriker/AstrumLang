@@ -1,14 +1,16 @@
 #pragma once
 #include "DebugPrint.h"
 #include "Exceptions.h"
+#if defined(_DEBUG) && !defined(ADV_UNITTEST)
 #define ADV_ENABLE_ASSERT_CHECKS
+#endif
 #if defined(ADV_ENABLE_ASSERT_CHECKS) || defined(ADV_UNITTEST)
-#define ADV_ASSERT(condition, ...) CppAdvance::Assert(condition, __VA_ARGS__);
+#define ADV_ASSERT(condition, ...) Builtin::Assert(condition, __VA_ARGS__);
 #else
 #define ADV_ASSERT(...)
 #endif  // (ADV_ENABLE_ASSERT_CHECKS) || defined(ADV_UNITTEST)
 
-namespace CppAdvance {
+namespace Builtin {
 	struct AssertException : public std::runtime_error {
 		AssertException() : std::runtime_error("Assertion failed") {}
 	};
@@ -26,13 +28,15 @@ namespace CppAdvance {
 			print(message);
 			throw AssertException {};
 			// breakpoint
+			__debugbreak();
 		}
 #elif defined(ADV_UNITTEST)
 		if (condition) {
 			GetAssertInfo().PassedAsserts++;
 		} else {
 			GetAssertInfo().FailedAsserts++;
+			__debugbreak();
 		}
 #endif
 	}
-}  // namespace CppAdvance
+}  // namespace Builtin

@@ -76,7 +76,7 @@ public struct Vector3
 
 	~static => print("Static destructor call!");
 
-	public static lazy lazyInt: i32 = 123;
+	public static lazy lazyInt: i32 = () { print("Lazy initialization!"); return 123; }();
 	
 	friend TestStruct;
 	friend TestStruct2<T>;
@@ -594,7 +594,7 @@ public extension <T> {
         print(txt);
 	}
 
-	this(mem: CppAdvance.MemorySpace, x: i32, txt: str) = {
+	this(mem: Builtin.MemorySpace, x: i32, txt: str) = {
 		this(x, x, x);
         print(txt);
 	}

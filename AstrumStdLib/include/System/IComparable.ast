@@ -1,0 +1,14 @@
+package System;
+
+public interface IAbstractComparable {
+    operator<=>?: (in other: object?) -> i32;
+}
+
+public operator<?: (lhs, rhs)  -> bool => (lhs <=>? rhs) < 0;
+public operator>?: (lhs, rhs)  -> bool => (lhs <=>? rhs) > 0;
+public operator<=?: (lhs, rhs) -> bool => (lhs <=>? rhs) <= 0;
+public operator>=?: (lhs, rhs) -> bool => (lhs <=>? rhs) >= 0;
+
+public interface IComparable<in T> {
+    operator<=>: (in other: T?) -> i32;
+}

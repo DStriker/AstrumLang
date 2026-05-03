@@ -11,7 +11,7 @@
 #pragma warning(disable : 26455)
 #endif
 
-namespace CppAdvance {
+namespace Builtin {
 
 	struct IntegerOverflowException : public std::runtime_error {
 		IntegerOverflowException() : std::runtime_error("Integer overflow") {}
@@ -25,6 +25,10 @@ namespace CppAdvance {
 		SafetyException() : std::runtime_error("Context safety violation") {}
 	};
 
+	struct InvalidOperationException : public std::runtime_error {
+		InvalidOperationException() : std::runtime_error("Invalid operation") {}
+	};
+
 	template <class T>
 	inline void Throw(const T& e) requires(std::is_base_of_v<std::exception, T>) {
 #ifndef NDEBUG
@@ -33,7 +37,7 @@ namespace CppAdvance {
 		throw e;
 	}
 
-}  // namespace CppAdvance
+}  // namespace Builtin
 
 #ifdef MSVC
 #pragma warning(default : 26455)

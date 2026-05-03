@@ -1,5 +1,6 @@
 #pragma once
 #include "AstrumSema.h"
+#include "StringUtils.h"
 
 namespace AstrumLang {
 	class ASTRUMLANG_API AstrumCodegen {
@@ -31,6 +32,8 @@ namespace AstrumLang {
 		std::string lastEnumValue;
 		std::optional<AccessSpecifier> currentAccessSpecifier;
 		std::string filename;
+		std::string fullFilename;
+		std::string currentExtensionName;
 		int depth                       = 0;
 		int varargDepth                 = -1;
 		int currentTupleSize            = 0;
@@ -114,11 +117,12 @@ namespace AstrumLang {
 		std::ofstream hout;
 		StreamSwitcher out {cppout, hout};
 
-		AstrumCodegen(/*const*/ AstrumSema& sem)
-		    : filename {sem.filename},
+		AstrumCodegen(/*const*/ AstrumSema& sem) : filename {sem.filename}, fullFilename {(sem.filenamePath / sem.filename).string()},
 		      sema {sem},
 		      cppout {sem.filenamePath / (sem.filename + ".cpp")},
-		      hout {sem.filenamePath / (sem.filename + ".h")} {}
+		      hout {sem.filenamePath / (sem.filename + ".h")} {
+			StringReplace(fullFilename, "\\", "\\\\");
+		}
 
 		void printFirstPass();
 		void printSecondPass();

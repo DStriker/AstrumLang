@@ -6,7 +6,7 @@
 
 #include "CompilerUtils.h"
 
-namespace CppAdvance {
+namespace Builtin {
 	class Object;
 	class ObjectSideTable;
 
@@ -334,11 +334,11 @@ namespace CppAdvance {
 	class RefCounts {
 		std::atomic<Bits> _refCount;
 
-		CPPADVANCE_DLLEXPORT Object* incrementSlow(Bits old, unsigned inc);
-		CPPADVANCE_DLLEXPORT void incrementNonAtomicSlow(Bits old, unsigned inc);
-		CPPADVANCE_DLLEXPORT bool tryIncrementSlow(Bits old);
-		CPPADVANCE_DLLEXPORT bool tryIncrementNonAtomicSlow(Bits old);
-		CPPADVANCE_DLLEXPORT void incrementUnownedSlow(unsigned inc);
+		ASTRUMSTD_API Object* incrementSlow(Bits old, unsigned inc);
+		ASTRUMSTD_API void incrementNonAtomicSlow(Bits old, unsigned inc);
+		ASTRUMSTD_API bool tryIncrementSlow(Bits old);
+		ASTRUMSTD_API bool tryIncrementNonAtomicSlow(Bits old);
+		ASTRUMSTD_API void incrementUnownedSlow(unsigned inc);
 
 		template <bool PerformDeinit>
 		bool doDecrementSideTable(Bits old, unsigned dec);
@@ -973,4 +973,4 @@ namespace CppAdvance {
 		auto prefix = ((char*) this - offset);
 		return *(Object**) prefix;
 	}
-}  // namespace CppAdvance
+}  // namespace Builtin

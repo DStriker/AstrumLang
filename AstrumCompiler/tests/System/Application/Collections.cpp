@@ -13,46 +13,46 @@ namespace System::Application {
 //###############################################################################
 //# Global compile-time constants
 //###############################################################################
-#line 650 "Collections.ast"
-inline constexpr CppAdvance::usize PRIVATE_CONSTANT = CppAdvance::usize(34U);
+#line 650 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+inline constexpr Builtin::usize PRIVATE_CONSTANT = Builtin::usize(34U);
 //###############################################################################
 //# Global variable declarations
 //###############################################################################
-#line 4 "Collections.ast"
-volatile CppAdvance::Unsafe::__VolatileRawPtr<const CppAdvance::char16> globalVar{};
-#line 5 "Collections.ast"
-extern const CppAdvance::Unsafe::__RawPtr<CppAdvance::i32> globalVar1 = nullptr;
-#line 651 "Collections.ast"
-static CppAdvance::i32 globalVar2 = CppAdvance::i32(8);
-#line 652 "Collections.ast"
-static const CppAdvance::i32 globalVar3 = CppAdvance::i32(456);
-#line 119 "Collections.ast"
-thread_local CppAdvance::i32 Vector3::Count2 = CppAdvance::i32(123);
-#line 121 "Collections.ast"
-const Vector3 Vector3::ZERO = Vector3{CppAdvance::i32(0), CppAdvance::i32(0), CppAdvance::i32(0)};
-#line 241 "Collections.ast"
-CppAdvance::i32 __Class_VectorClass::Count2 = CppAdvance::i32(123);
-#line 243 "Collections.ast"
-const Vector3 __Class_VectorClass::ZERO = Vector3{CppAdvance::i32(0), CppAdvance::i32(0), CppAdvance::i32(0)};
-#line 104 "Collections.ast"
-CppAdvance::i32 Vector3::p_Count = CppAdvance::i32(1);
-#line 79 "Collections.ast"
+#line 4 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+volatile Builtin::Unsafe::__VolatileRawPtr<const Builtin::char16> globalVar{};
+#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+extern const Builtin::Unsafe::__RawPtr<Builtin::i32> globalVar1 = nullptr;
+#line 651 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+static Builtin::i32 globalVar2 = Builtin::i32(8);
+#line 652 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+static const Builtin::i32 globalVar3 = Builtin::i32(456);
+#line 119 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+thread_local Builtin::i32 Vector3::Count2 = Builtin::i32(123);
+#line 121 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+const Vector3 Vector3::ZERO = Vector3{Builtin::i32(0), Builtin::i32(0), Builtin::i32(0)};
+#line 241 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+Builtin::i32 __Class_VectorClass::Count2 = Builtin::i32(123);
+#line 243 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+const Vector3 __Class_VectorClass::ZERO = Vector3{Builtin::i32(0), Builtin::i32(0), Builtin::i32(0)};
+#line 104 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+Builtin::i32 Vector3::p_Count = Builtin::i32(1);
+#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 Vector3::__Property_lazyInt<> Vector3::lazyInt;
-#line 104 "Collections.ast"
+#line 104 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 Vector3::__Property_Count<> Vector3::Count;
-#line 241 "Collections.ast"
+#line 241 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 __Class_VectorClass::__self::__Property_Count2<> __Class_VectorClass::__self::Count2;
-#line 243 "Collections.ast"
+#line 243 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 __Class_VectorClass::__self::__Property_ZERO<> __Class_VectorClass::__self::ZERO;
-#line 393 "Collections.ast"
+#line 393 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 __Class_ConcreteVectorClass::__Property_Name2<> __Class_ConcreteVectorClass::Name2;
-#line 393 "Collections.ast"
+#line 393 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 __Class_ConcreteVectorClass::__self::__Property_Name2<> __Class_ConcreteVectorClass::__self::Name2;
-#line 520 "Collections.ast"
+#line 520 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 __Class_ComplexVariant::__Property_Count10<> __Class_ComplexVariant::Count10;
-#line 520 "Collections.ast"
+#line 520 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 __Class_ComplexVariant::__self::__Property_Count10<> __Class_ComplexVariant::__self::Count10;
-#line 539 "Collections.ast"
+#line 539 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 Media::__Property_Count10<> Media::Count10;
 
 	
@@ -82,23 +82,23 @@ Media::__Property_Count10<> Media::Count10;
 	
 	
 	
-	#line 498 "Collections.ast"
-const __Class_ComplexVariant::__self __Class_ComplexVariant::Value1 = __Class_ComplexVariant::__self{ new (::operator new(sizeof(__Class_ComplexVariant))) __Class_ComplexVariant(CppAdvance::i32(1), CppAdvance::f32(2.13f), CppAdvance::Str{u"Value1"}) };
-	#line 498 "Collections.ast"
+	#line 498 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+const __Class_ComplexVariant::__self __Class_ComplexVariant::Value1 = __Class_ComplexVariant::__self{ new (::operator new(sizeof(__Class_ComplexVariant))) __Class_ComplexVariant(Builtin::i32(1), Builtin::f32(2.13f), Builtin::Str{u"Value1"}) };
+	#line 498 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 __Class_ComplexVariant::__self::__Property_Value1<> __Class_ComplexVariant::__self::Value1;
-	#line 499 "Collections.ast"
-const __Class_ComplexVariant::__self __Class_ComplexVariant::Value2 = __Class_ComplexVariant::__self{ new (::operator new(sizeof(__Class_ComplexVariant))) __Class_ComplexVariant(CppAdvance::i32(2), CppAdvance::f32(4.13f), CppAdvance::Str{u"Value2"}) };
-	#line 499 "Collections.ast"
+	#line 499 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+const __Class_ComplexVariant::__self __Class_ComplexVariant::Value2 = __Class_ComplexVariant::__self{ new (::operator new(sizeof(__Class_ComplexVariant))) __Class_ComplexVariant(Builtin::i32(2), Builtin::f32(4.13f), Builtin::Str{u"Value2"}) };
+	#line 499 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 __Class_ComplexVariant::__self::__Property_Value2<> __Class_ComplexVariant::__self::Value2;
-	#line 500 "Collections.ast"
-const __Class_ComplexVariant::__self __Class_ComplexVariant::Value3 = __Class_ComplexVariant::__self{ new (::operator new(sizeof(__Class_ComplexVariant))) __Class_ComplexVariant(CppAdvance::i32(3), CppAdvance::f32(6.13f), CppAdvance::Str{u"Value3"}) };
-	#line 500 "Collections.ast"
+	#line 500 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+const __Class_ComplexVariant::__self __Class_ComplexVariant::Value3 = __Class_ComplexVariant::__self{ new (::operator new(sizeof(__Class_ComplexVariant))) __Class_ComplexVariant(Builtin::i32(3), Builtin::f32(6.13f), Builtin::Str{u"Value3"}) };
+	#line 500 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 __Class_ComplexVariant::__self::__Property_Value3<> __Class_ComplexVariant::__self::Value3;
-	#line 501 "Collections.ast"
-const __Class_ComplexVariant::__self __Class_ComplexVariant::Value4 = __Class_ComplexVariant::__self{ new (::operator new(sizeof(__Class_ComplexVariant))) __Class_ComplexVariant(CppAdvance::i32(4), CppAdvance::f32(8.13f), CppAdvance::Str{u"Value4"}) };
-	#line 501 "Collections.ast"
+	#line 501 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+const __Class_ComplexVariant::__self __Class_ComplexVariant::Value4 = __Class_ComplexVariant::__self{ new (::operator new(sizeof(__Class_ComplexVariant))) __Class_ComplexVariant(Builtin::i32(4), Builtin::f32(8.13f), Builtin::Str{u"Value4"}) };
+	#line 501 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 __Class_ComplexVariant::__self::__Property_Value4<> __Class_ComplexVariant::__self::Value4;
-	#line 497 "Collections.ast"
+	#line 497 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 const __Class_ComplexVariant::__self __Class_ComplexVariant::__values[] = { Value1, Value2, Value3, Value4 };
 	
 	
@@ -127,33 +127,33 @@ const __Class_ComplexVariant::__self __Class_ComplexVariant::__values[] = { Valu
 	
 	
 	
-	#line 10 "Collections.ast"
-	extern "C" CppAdvance::i32 ExternalCounter;
-#line 14 "Collections.ast"
-	extern "C" auto __stdcall externalFunc(CppAdvance::i32 a, CppAdvance::Str b) -> const CppAdvance::Str;
+	#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+	extern "C" Builtin::i32 ExternalCounter;
+#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+	extern "C" auto __stdcall externalFunc(Builtin::i32 a, Builtin::Str b) -> const Builtin::Str;
 
 
 
-#line 29 "Collections.ast"
-	auto printParams(CppAdvance::Str s, std::initializer_list<CppAdvance::i32> params)  -> void
+#line 29 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+	auto printParams(Builtin::Str s, std::initializer_list<Builtin::i32> params)  -> void
 	{
-		#line 30 "Collections.ast"
+		#line 30 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 		print(s);
-		#line 31 "Collections.ast"
+		#line 31 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 		for (const auto& param : params) 
 		{
-			#line 32 "Collections.ast"
+			#line 32 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 			print(param);
 		}
 	}
 
-#line 36 "Collections.ast"
-	auto printParams(CppAdvance::Str s, std::initializer_list<CppAdvance::Str> params)  -> void
+#line 36 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+	auto printParams(Builtin::Str s, std::initializer_list<Builtin::Str> params)  -> void
 	{
-		#line 37 "Collections.ast"
+		#line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 		for (const auto& param : params) 
 		{
-			#line 38 "Collections.ast"
+			#line 38 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 			print(param);
 		}
 	}
@@ -161,63 +161,69 @@ const __Class_ComplexVariant::__self __Class_ComplexVariant::__values[] = { Valu
 
 
 
-#line 73 "Collections.ast"
+#line 73 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 	Vector3::__sctor::__sctor() 
 	{
-		#line 74 "Collections.ast"
-		print(CppAdvance::Str{u"Static constructor call!"});
+		#line 74 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+		print(Builtin::Str{u"Static constructor call!"});
 	}
-#line 79 "Collections.ast"
-	auto Vector3::__lazy_init_lazyInt()  -> CppAdvance::i32  { return CppAdvance::i32(123); }
-	#line 109 "Collections.ast"
-	auto Vector3::setCount(const CppAdvance::i32& value) -> void 
+#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+	auto Vector3::__lazy_init_lazyInt()  -> Builtin::i32  { return [] () 
 	{
-		#line 110 "Collections.ast"
-		print(CppAdvance::Str{u"Write"});
-		#line 111 "Collections.ast"
-		if (value > CppAdvance::i32(10)) [[likely]] {
-			#line 112 "Collections.ast"
-			p_Count = value / CppAdvance::i32(10);
+		#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+		print(Builtin::Str{u"Lazy initialization!"});
+		#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+		return Builtin::i32(123);
+	}(); }
+	#line 109 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+	auto Vector3::setCount(const Builtin::i32& value) -> void 
+	{
+		#line 110 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+		print(Builtin::Str{u"Write"});
+		#line 111 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+		if (value > Builtin::i32(10)) [[likely]] {
+			#line 112 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+			p_Count = value / Builtin::i32(10);
 		} else {
-			#line 113 "Collections.ast"
+			#line 113 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 			p_Count = value;
 		}
 	}
-	#line 105 "Collections.ast"
-	auto Vector3::getCount()  -> CppAdvance::i32 
+	#line 105 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+	auto Vector3::getCount()  -> Builtin::i32 
 	{
-		#line 106 "Collections.ast"
-		print(CppAdvance::Str{u"Read"});
-		#line 107 "Collections.ast"
-		return p_Count * CppAdvance::i32(10);
+		#line 106 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+		print(Builtin::Str{u"Read"});
+		#line 107 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+		return p_Count * Builtin::i32(10);
 	}
 	
 
 	
 	
 	
-	#line 376 "Collections.ast"
-	auto __Class_ConcreteVectorClass::setCount(const CppAdvance::i32& value) -> __selfClass& 
+	#line 376 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+	auto __Class_ConcreteVectorClass::setCount(const Builtin::i32& value) -> __selfClass& 
 	{
-		#line 377 "Collections.ast"
-		print(CppAdvance::Str{u"Write"});
-		#line 378 "Collections.ast"
-		if (value > CppAdvance::i32(10)) {
-			#line 378 "Collections.ast"
-			p_Count = value / CppAdvance::i32(10);
+		#line 377 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+		print(Builtin::Str{u"Write"});
+		#line 378 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+		if (value > Builtin::i32(10)) {
+			#line 378 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+			p_Count = value / Builtin::i32(10);
 		} else {
-			#line 379 "Collections.ast"
+			#line 379 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
 			p_Count = value;
 		}
 		return *this;
 	}
-	#line 372 "Collections.ast"
-	auto __Class_ConcreteVectorClass::getCount() const  -> CppAdvance::i32 
+	#line 372 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+	auto __Class_ConcreteVectorClass::getCount() const  -> Builtin::i32 
 	{
-		#line 373 "Collections.ast"
-		print(CppAdvance::Str{u"Read"});
-		#line 374 "Collections.ast"
-		return p_Count * CppAdvance::i32(10);
+		#line 373 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+		print(Builtin::Str{u"Read"});
+		#line 374 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+		return p_Count * Builtin::i32(10);
 	}
 	
 
@@ -225,8 +231,8 @@ const __Class_ComplexVariant::__self __Class_ComplexVariant::__values[] = { Valu
 
 
 
-#line 494 "Collections.ast"
-	inline auto Text::getShortString() const  -> CppAdvance::Str 
+#line 494 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\System\\Application\\Collections.ast"
+	inline auto Text::getShortString() const  -> Builtin::Str 
 	{
 		#line 494 "Collections.ast"
 		ADV_EXPRESSION_BODY(Value); 

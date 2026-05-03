@@ -9,23 +9,38 @@
 #include "RefCounts.h"
 #include "Str.h"
 
-namespace System {
-	template <class T>
-	struct Optional;
+namespace Builtin {
+	struct Struct;
+	struct Enum;
+	struct Union;
 }
 
-namespace CppAdvance {
+namespace System {
+	template <class T>
+	class Optional;
+}
+
+namespace __extensions
+{
+	template <typename T>
+	struct __proxy {
+		T val;
+		operator T() const { return val; }
+	};
+}
+
+namespace Builtin {
 	struct EmptyType {
 		using __class = EmptyType;
 	};
 
-	struct Struct {
+	/*struct Struct {
 		constexpr Struct() noexcept = default;
 
 		Str ToString() const { return u"Struct"; }
 
 		usize HashCode() const { return 123456u; }
-	};
+	};*/
 
 	struct RefStruct {
 		Str ToString() const { return u"Struct"; }
@@ -227,12 +242,20 @@ namespace CppAdvance {
 		                                   std::is_base_of_v<Enum, T> ||
 		                                   std::is_base_of_v<Union, T> ||
 		                                   std::is_base_of_v<FuncBase, T>) {
+			static_assert(!IsNullable<std::decay_t<T>>,
+			              "Cannot to assign optional value to object variable, use object?");
 			void* ptr = ::operator new(sizeof(T::__class));
 			_obj      = new (ptr) T::__class(value);
 		}
 
-		template <class T>
-		ObjectRef(T value) requires(IsPrimitiveType<std::remove_cv_t<T>>);
+		template<class T>
+		ObjectRef(const System::Optional<T>& value) {
+			static_assert(false,
+			              "Cannot to assign optional value to object variable, use object?");
+		}
+
+		/* template <class T>
+		ObjectRef(T value) requires(IsPrimitiveType<std::remove_cv_t<T>>);*/
 
 		ObjectRef(Object* obj, InitTag) : _obj(obj) {}
 
@@ -277,6 +300,8 @@ namespace CppAdvance {
 		                                              std::is_base_of_v<Enum, T> ||
 		                                              std::is_base_of_v<Union, T> ||
 		                                              std::is_base_of_v<FuncBase, T>) {
+			static_assert(!IsNullable<std::decay_t<T>>,
+			              "Cannot to assign optional value to object variable, use object?");
 			if (_obj) {
 				Release(_obj);
 			}
@@ -287,7 +312,12 @@ namespace CppAdvance {
 		}
 
 		template <class T>
-		ObjectRef& operator=(T value) requires(IsPrimitiveType<std::remove_cv_t<T>>);
+		ObjectRef& operator=(const System::Optional<T>& value) {
+			static_assert(false, "Cannot to assign optional value to object variable, use object?");
+		}
+
+		/* template <class T>
+		ObjectRef& operator=(T value) requires(IsPrimitiveType<std::remove_cv_t<T>>);*/
 	};
 
 	class ObjectRef__Unowned {
@@ -416,7 +446,7 @@ namespace CppAdvance {
 		friend class OptionalUnownedRef;
 
 		FORCE_INLINE OptionalStrongRef() noexcept : ref {nullptr} {}
-		// FORCE_INLINE OptionalStrongRef(const OptionalStrongRef& other) : ref(other.ref) {}
+		//FORCE_INLINE OptionalStrongRef(const OptionalStrongRef& other) : ref(other.ref) {}
 		template <class U>
 		FORCE_INLINE OptionalStrongRef(const OptionalStrongRef<U>& other) : ref(other.ref) {}
 		// FORCE_INLINE OptionalStrongRef(OptionalStrongRef&& other) noexcept :
@@ -439,8 +469,18 @@ namespace CppAdvance {
 		    OptionalStrongRef(U&& other)
 		    : ref(std::forward<U>(other)) {}
 		template <class U>
-		requires(std::same_as<T, ObjectRef>) OptionalStrongRef(U&& other)
+		requires(std::same_as<T, ObjectRef> && !IsNullable<std::decay_t<U>>)
+		    OptionalStrongRef(U&& other)
 		    : ref(std::forward<U>(other)) {}
+		template<class U>
+		requires(std::same_as<T, ObjectRef>) 
+			OptionalStrongRef(const System::Optional<U>& other) {
+			if (!other.IsValid()) {
+				ref = nullptr;
+			} else {
+				ref = *other;
+			}
+		}
 
 		template <class U>
 		FORCE_INLINE OptionalStrongRef& operator=(const OptionalStrongRef<U>& other) {
@@ -488,8 +528,19 @@ namespace CppAdvance {
 		}
 
 		template <class U>
-		requires(std::same_as<T, ObjectRef>) OptionalStrongRef& operator=(U&& other) {
+		requires(std::same_as<T, ObjectRef> && !IsNullable<std::decay_t<U>>) OptionalStrongRef& operator=(
+		    U&& other) {
 			ref = std::forward<U>(other);
+			return *this;
+		}
+
+		template <class U>
+		requires(std::same_as<T, ObjectRef>) OptionalStrongRef& operator=(const System::Optional<U>& other) {
+			if (!other.IsValid()) {
+				ref = nullptr;
+			} else {
+				ref = *other;
+			}
 			return *this;
 		}
 
@@ -532,96 +583,96 @@ namespace CppAdvance {
 
 		FORCE_INLINE explicit operator bool() const noexcept { return ref._obj != nullptr; }
 
-		FORCE_INLINE bool isValid() const noexcept { return ref._obj != nullptr; }
+		FORCE_INLINE bool IsValid() const noexcept { return ref._obj != nullptr; }
 
 		template <class F>
-		auto andThen(F&& func) & {
+		auto AndThen(F&& func) & {
 			using return_type = std::invoke_result_t<F, const T&>;
 			if constexpr (std::is_void_v<return_type>) {
-				if (isValid())
+				if (IsValid())
 					std::invoke(std::forward<F>(func), ref);
 			} else {
 				using wrapped_type = Nullable<return_type>;
-				if (!isValid())
+				if (!IsValid())
 					return wrapped_type(nullptr);
 				return wrapped_type(std::invoke(std::forward<F>(func), ref));
 			}
 		}
 
 		template <class F>
-		auto andThen(F&& func) const& {
+		auto AndThen(F&& func) const& {
 			using return_type = std::invoke_result_t<F, const T&>;
 			if constexpr (std::is_void_v<return_type>) {
-				if (isValid())
+				if (IsValid())
 					std::invoke(std::forward<F>(func), ref);
 			} else {
 				using wrapped_type = Nullable<return_type>;
-				if (!isValid())
+				if (!IsValid())
 					return wrapped_type(nullptr);
 				return wrapped_type(std::invoke(std::forward<F>(func), ref));
 			}
 		}
 
 		template <class F>
-		auto andThen(F&& func) && {
+		auto AndThen(F&& func) && {
 			using return_type = std::invoke_result_t<F, const T&>;
 			if constexpr (std::is_void_v<return_type>) {
-				if (isValid())
+				if (IsValid())
 					std::invoke(std::forward<F>(func), std::move(ref));
 			} else {
 				using wrapped_type = Nullable<return_type>;
-				if (!isValid())
+				if (!IsValid())
 					return wrapped_type(nullptr);
 				return wrapped_type(std::invoke(std::forward<F>(func), std::move(ref)));
 			}
 		}
 
 		template <class F>
-		auto andThen(F&& func) const&& {
+		auto AndThen(F&& func) const&& {
 			using return_type = std::invoke_result_t<F, const T&>;
 			if constexpr (std::is_void_v<return_type>) {
-				if (isValid())
+				if (IsValid())
 					std::invoke(std::forward<F>(func), std::move(ref));
 			} else {
 				using wrapped_type = Nullable<return_type>;
-				if (!isValid())
+				if (!IsValid())
 					return wrapped_type(nullptr);
 				return wrapped_type(std::invoke(std::forward<F>(func), std::move(ref)));
 			}
 		}
 
 		template <class F>
-		std::remove_cv_t<T> valueOr(F&& func) const& {
+		std::remove_cv_t<T> ValueOr(F&& func) const& {
 			using X = std::remove_cv_t<T>;
 			using U = std::invoke_result_t<F>;
 			static_assert(std::is_convertible_v<const T&, X>,
 			              "Must be able to convert const T& to remove_cv_t<T>");
 			static_assert(std::is_convertible_v<U, X>,
 			              "Default value must be convertible to left side of the expression");
-			if (isValid())
+			if (IsValid())
 				return ref;
 			return std::invoke(std::forward<F>(func));
 		}
 
 		template <class F>
-		std::remove_cv_t<T> valueOr(F&& func) && {
+		std::remove_cv_t<T> ValueOr(F&& func) && {
 			using X = std::remove_cv_t<T>;
 			using U = std::invoke_result_t<F>;
 			static_assert(std::is_convertible_v<T, X>,
 			              "Must be able to convert T to remove_cv_t<T>");
 			static_assert(std::is_convertible_v<U, X>,
 			              "Default value must be convertible to left side of the expression");
-			if (isValid())
+			if (IsValid())
 				return std::move(ref);
 			return std::invoke(std::forward<F>(func));
 		}
 
 		template <class F>
-		OptionalStrongRef& assignIfNull(F&& func) {
+		OptionalStrongRef& AssignIfNull(F&& func) {
 			using return_type = std::invoke_result_t<F>;
 			static_assert(std::is_assignable_v<T, return_type>,
 			              "Default value must be convertible to left side of the expression");
-			if (!isValid())
+			if (!IsValid())
 				ref = std::invoke(std::forward<F>(func));
 			return *this;
 		}
@@ -718,96 +769,96 @@ namespace CppAdvance {
 
 		FORCE_INLINE explicit operator bool() const noexcept { return ref._obj != nullptr; }
 
-		FORCE_INLINE bool isValid() const noexcept { return ref._obj != nullptr; }
+		FORCE_INLINE bool IsValid() const noexcept { return ref._obj != nullptr; }
 
 		template <class F>
-		auto andThen(F&& func) & {
+		auto AndThen(F&& func) & {
 			using return_type = std::invoke_result_t<F, const T&>;
 			if constexpr (std::is_void_v<return_type>) {
-				if (isValid())
+				if (IsValid())
 					std::invoke(std::forward<F>(func), ref);
 			} else {
 				using wrapped_type = Nullable<return_type>;
-				if (!isValid())
+				if (!IsValid())
 					return wrapped_type(nullptr);
 				return wrapped_type(std::invoke(std::forward<F>(func), ref));
 			}
 		}
 
 		template <class F>
-		auto andThen(F&& func) const& {
+		auto AndThen(F&& func) const& {
 			using return_type = std::invoke_result_t<F, const T&>;
 			if constexpr (std::is_void_v<return_type>) {
-				if (isValid())
+				if (IsValid())
 					std::invoke(std::forward<F>(func), ref);
 			} else {
 				using wrapped_type = Nullable<return_type>;
-				if (!isValid())
+				if (!IsValid())
 					return wrapped_type(nullptr);
 				return wrapped_type(std::invoke(std::forward<F>(func), ref));
 			}
 		}
 
 		template <class F>
-		auto andThen(F&& func) && {
+		auto AndThen(F&& func) && {
 			using return_type = std::invoke_result_t<F, const T&>;
 			if constexpr (std::is_void_v<return_type>) {
-				if (isValid())
+				if (IsValid())
 					std::invoke(std::forward<F>(func), std::move(ref));
 			} else {
 				using wrapped_type = Nullable<return_type>;
-				if (!isValid())
+				if (!IsValid())
 					return wrapped_type(nullptr);
 				return wrapped_type(std::invoke(std::forward<F>(func), std::move(ref)));
 			}
 		}
 
 		template <class F>
-		auto andThen(F&& func) const&& {
+		auto AndThen(F&& func) const&& {
 			using return_type = std::invoke_result_t<F, const T&>;
 			if constexpr (std::is_void_v<return_type>) {
-				if (isValid())
+				if (IsValid())
 					std::invoke(std::forward<F>(func), std::move(ref));
 			} else {
 				using wrapped_type = Nullable<return_type>;
-				if (!isValid())
+				if (!IsValid())
 					return wrapped_type(nullptr);
 				return wrapped_type(std::invoke(std::forward<F>(func), std::move(ref)));
 			}
 		}
 
 		template <class F>
-		std::remove_cv_t<T> valueOr(F&& func) const& {
+		std::remove_cv_t<T> ValueOr(F&& func) const& {
 			using X = std::remove_cv_t<T>;
 			using U = std::invoke_result_t<F>;
 			static_assert(std::is_convertible_v<const T&, X>,
 			              "Must be able to convert const T& to remove_cv_t<T>");
 			static_assert(std::is_convertible_v<U, X>,
 			              "Default value must be convertible to left side of the expression");
-			if (isValid())
+			if (IsValid())
 				return ref;
 			return std::invoke(std::forward<F>(func));
 		}
 
 		template <class F>
-		std::remove_cv_t<T> valueOr(F&& func) && {
+		std::remove_cv_t<T> ValueOr(F&& func) && {
 			using X = std::remove_cv_t<T>;
 			using U = std::invoke_result_t<F>;
 			static_assert(std::is_convertible_v<T, X>,
 			              "Must be able to convert T to remove_cv_t<T>");
 			static_assert(std::is_convertible_v<U, X>,
 			              "Default value must be convertible to left side of the expression");
-			if (isValid())
+			if (IsValid())
 				return std::move(ref);
 			return std::invoke(std::forward<F>(func));
 		}
 
 		template <class F>
-		OptionalUnownedRef& assignIfNull(F&& func) {
+		OptionalUnownedRef& AssignIfNull(F&& func) {
 			using return_type = std::invoke_result_t<F>;
 			static_assert(std::is_assignable_v<T, return_type>,
 			              "Default value must be convertible to left side of the expression");
-			if (!isValid())
+			if (!IsValid())
 				ref = std::invoke(std::forward<F>(func));
 			return *this;
 		}
@@ -891,7 +942,7 @@ namespace CppAdvance {
 			if (_obj) {
 				auto ptr = _obj->tryRetain();
 				if (ptr) {
-					return __strong_ref(ptr, CppAdvance::ObjectRef::InitTag());
+					return __strong_ref(ptr, Builtin::ObjectRef::InitTag());
 				}
 				return nullptr;
 			}
@@ -920,9 +971,9 @@ namespace CppAdvance {
 
 		FORCE_INLINE bool operator!=(decltype(nullptr)) const noexcept { return _obj != nullptr; }
 
-		FORCE_INLINE explicit operator bool() const noexcept { return isValid(); }
+		FORCE_INLINE explicit operator bool() const noexcept { return IsValid(); }
 
-		FORCE_INLINE bool isValid() const {
+		FORCE_INLINE bool IsValid() const {
 			if (_obj) {
 				return !_obj->isDeiniting();
 			}
@@ -930,37 +981,37 @@ namespace CppAdvance {
 		}
 
 		template <class F>
-		auto andThen(F&& func) const {
+		auto AndThen(F&& func) const {
 			using return_type = std::invoke_result_t<F, const __strong_ref&>;
 			auto strong       = pin();
 			if constexpr (std::is_void_v<return_type>) {
-				if (strong.isValid())
+				if (strong.IsValid())
 					std::invoke(std::forward<F>(func), *strong);
 			} else {
 				using wrapped_type = Nullable<return_type>;
-				if (!strong.isValid())
+				if (!strong.IsValid())
 					return wrapped_type(nullptr);
 				return wrapped_type(std::invoke(std::forward<F>(func), *strong));
 			}
 		}
 
 		template <class F>
-		__strong_ref valueOr(F&& func) const {
+		__strong_ref ValueOr(F&& func) const {
 			using return_type = std::invoke_result_t<F>;
 			static_assert(std::is_convertible_v<return_type, __strong_ref>,
 			              "Default value must be convertible to left side of the expression");
 			auto strong = pin();
-			if (strong.isValid())
+			if (strong.IsValid())
 				return *strong;
 			return std::invoke(std::forward<F>(func));
 		}
 
 		template <class F>
-		ObjectRef__Weak& assignIfNull(F&& func) {
+		ObjectRef__Weak& AssignIfNull(F&& func) {
 			using return_type = std::invoke_result_t<F>;
 			static_assert(std::is_assignable_v<__weak_ref, return_type>,
 			              "Default value must be convertible to left side of the expression");
-			if (!isValid())
+			if (!IsValid())
 				*this = std::invoke(std::forward<F>(func));
 			return *this;
 		}
@@ -1067,7 +1118,7 @@ namespace CppAdvance {
 		    : __value {value} {}
 		operator __underlying() const noexcept { return __value; }
 	};
-
+	/*
 	template <class T>
 	inline ObjectRef::ObjectRef(T value) requires(IsPrimitiveType<std::remove_cv_t<T>>) {
 		using boxed_type = __Class_Basic<std::remove_cv_t<T>>;
@@ -1084,7 +1135,7 @@ namespace CppAdvance {
 		_obj      = new (ptr) boxed_type(value);
 
 		return *this;
-	}
+	}*/
 
 	template <class T, class U>
 	bool IdentityEquals(T lhs, U rhs) noexcept {
@@ -1112,12 +1163,12 @@ namespace CppAdvance {
 		if constexpr (isLeftObject && isRightObject) {
 			return GetObjectReference(&lhs) == GetObjectReference(&rhs);
 		} else if constexpr (IsNullable<leftType> && IsNullable<rightType>) {
-			return lhs.isValid() == rhs.isValid() &&
-			       (!lhs.isValid() || getObjectReference(lhs) == getObjectReference(rhs));
+			return lhs.IsValid() == rhs.IsValid() &&
+			       (!lhs.IsValid() || getObjectReference(lhs) == getObjectReference(rhs));
 		} else if constexpr (isLeftObject && IsNullable<rightType>) {
-			return rhs.isValid() && GetObjectReference(&lhs) == getObjectReference(rhs);
+			return rhs.IsValid() && GetObjectReference(&lhs) == getObjectReference(rhs);
 		} else if constexpr (IsNullable<leftType> && isRightObject) {
-			return lhs.isValid() && getObjectReference(lhs) == GetObjectReference(&rhs);
+			return lhs.IsValid() && getObjectReference(lhs) == GetObjectReference(&rhs);
 		} else if constexpr (requires { std::declval<leftType> == std::declval<rightType>; }) {
 			return lhs == rhs;
 		}
@@ -1145,7 +1196,7 @@ namespace CppAdvance {
 			return std::forward<T>(value);
 		} else if constexpr (isInputOptionalType) {
 			if constexpr (isOutputOptionalType || !Force) {
-				if (!value.isValid()) {
+				if (!value.IsValid()) {
 					return nullptr;
 				}
 			}
@@ -1274,7 +1325,7 @@ namespace CppAdvance {
 		if constexpr (std::same_as<inputType, U> || std::derived_from<inputType, U>) {
 			return true;
 		} else if constexpr (isInputOptionalType) {
-			if (!value.isValid()) {
+			if (!value.IsValid()) {
 				return std::same_as<inputType, decltype(nullptr)>;
 			}
 
@@ -1487,7 +1538,8 @@ namespace CppAdvance {
 				    MemorySpace {Memory - static_cast<unsigned>(sizeof(typename T::__class))},
 				    std::forward<Args>(args)...);
 			} else if constexpr (requires {
-				                     __construct_(std::declval<ConstructorProxy<T>>(), MemorySpace,
+				                     __construct_(std::declval<ConstructorProxy<T>>(),
+				                                  MemorySpace {},
 				                                  std::declval<Args>()...);
 			                     }) {
 				obj = __construct_(
@@ -1599,4 +1651,28 @@ namespace CppAdvance {
 	}
 
 	struct UncheckedTag {};
-}  // namespace CppAdvance
+
+#ifdef Builtin_OVERFLOW_CHECKS
+	template <class T>
+	class __Class_SafeInt final : public ValueType {
+	   public:
+		using __underlying = SafeInt<T>;
+		using __self       = __underlying;
+		__self __value;
+		__Class_SafeInt(const __underlying& value) noexcept : __value {value} {}
+		operator __underlying() const noexcept { return __value; }
+	};
+#else
+	template <class T>
+	class __Class_FastInt final : public ValueType {
+	   public:
+		using __underlying = FastInt<T>;
+		using __self       = __underlying;
+		__self __value;
+		__Class_FastInt(const __underlying& value) noexcept : __value {value} {}
+		operator __underlying() const noexcept { return __value; }
+	};
+#endif
+}  // namespace Builtin
+
+inline bool _operator_ne_eq_qst(auto lhs, auto rhs) { return !_operator_eq_eq_qst(lhs, rhs); }

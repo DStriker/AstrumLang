@@ -8,7 +8,7 @@
 #define GET_ELEMENT_AT                                                                             \
 	out << "_parent.getAt(";                                                                       \
 	if (isUnchecked) {                                                                             \
-		out << "CppAdvance::UncheckedTag{}, ";                                                     \
+		out << "Builtin::UncheckedTag{}, ";                                                        \
 	}                                                                                              \
 	for (auto param : params) {                                                                    \
 		bool first = true;                                                                         \
@@ -25,7 +25,7 @@
 #define GET_ELEMENT_AT_EXTERNAL                                                                    \
 	out << "getAt(_parent, ";                                                                      \
 	if (isUnchecked) {                                                                             \
-		out << "CppAdvance::UncheckedTag{}, ";                                                     \
+		out << "Builtin::UncheckedTag{}, ";                                                        \
 	}                                                                                              \
 	for (auto param : params) {                                                                    \
 		bool first = true;                                                                         \
@@ -212,7 +212,7 @@ namespace AstrumLang {
 					if (!var.compilationCondition.empty()) {
 						out << "#if " << var.compilationCondition << std::endl;
 					}
-					out << "#line " << var.pos.line << " \"" << filename << ".ast\"\n";
+					out << "#line " << var.pos.line << " \"" << fullFilename << ".ast\"\n";
 					if (var.access == AccessSpecifier::Protected)
 						out << "namespace __" << filename << "_Protected { ";
 					if (var.isUnsafe)
@@ -261,7 +261,7 @@ namespace AstrumLang {
 				if (!var.compilationCondition.empty()) {
 					out << "#if " << var.compilationCondition << std::endl;
 				}
-				out << "#line " << var.pos.line << " \"" << filename << ".ast\"\n";
+				out << "#line " << var.pos.line << " \"" << fullFilename << ".ast\"\n";
 				if (var.access == AccessSpecifier::Private) {
 					out << "static ";
 				} else if (var.access == AccessSpecifier::Protected) {
@@ -354,7 +354,7 @@ namespace AstrumLang {
 			if (!field.compilationCondition.empty()) {
 				out << "#if " << field.compilationCondition << std::endl;
 			}
-			out << "#line " << field.pos.line << " \"" << filename << ".ast\"\n";
+			out << "#line " << field.pos.line << " \"" << fullFilename << ".ast\"\n";
 			if (field.templateParams) {
 				printTemplateParams(field.templateParams);
 				out << " ";
@@ -413,7 +413,7 @@ namespace AstrumLang {
 			if (!prop.compilationCondition.empty()) {
 				out << "#if " << prop.compilationCondition << std::endl;
 			}
-			out << "#line " << pos.line << " \"" << filename << ".ast\"\n";
+			out << "#line " << pos.line << " \"" << fullFilename << ".ast\"\n";
 			if (prop.parentTemplateParams) {
 				printTemplateParams(prop.parentTemplateParams);
 				out << " ";
@@ -531,7 +531,7 @@ namespace AstrumLang {
 			if (!var.compilationCondition.empty()) {
 				out << "#if " << var.compilationCondition << std::endl;
 			}
-			out << "#line " << var.pos.line << " \"" << filename << ".ast\"\n";
+			out << "#line " << var.pos.line << " \"" << fullFilename << ".ast\"\n";
 			if (var.access == AccessSpecifier::Protected)
 				out << "namespace __" << filename << "_Protected { ";
 			if (var.templateParams) {
@@ -606,7 +606,7 @@ namespace AstrumLang {
 			if (!alias.compilationCondition.empty()) {
 				out << "#if " << alias.compilationCondition << std::endl;
 			}
-			out << "#line " << alias.pos.line << " \"" << filename << ".ast\"\n";
+			out << "#line " << alias.pos.line << " \"" << fullFilename << ".ast\"\n";
 			if (alias.access == AccessSpecifier::Protected)
 				out << "namespace __" << filename << "_Protected { ";
 			if (alias.templateParams) {
@@ -650,7 +650,7 @@ namespace AstrumLang {
 			if (!func.compilationCondition.empty()) {
 				out << "#if " << func.compilationCondition << std::endl;
 			}
-			out << "#line " << func.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << func.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			isUnsafe = func.isUnsafe;
 			if (func.access == AccessSpecifier::Protected) {
@@ -738,7 +738,7 @@ namespace AstrumLang {
 			} else if (func.expression && func.id != "operator delete") {
 				out << "decltype(auto)";
 			} else if (isMainFunction) {
-				out << "CppAdvance::i32";
+				out << "Builtin::i32";
 			} else {
 				out << "void";
 			}
@@ -922,7 +922,7 @@ namespace AstrumLang {
 				}
 			}
 		}
-		out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+		out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 		    << std::string(depth, '\t');
 		bool isVariadicTemplateStruct = false;
 		if (type->templateParams) {
@@ -995,21 +995,21 @@ namespace AstrumLang {
 		}
 		switch (type->kind) {
 			case TypeKind::Struct:
-				out << " final : public CppAdvance::Struct";
+				out << " final : public Builtin::Struct";
 				break;
 			case TypeKind::RefStruct:
-				out << " final : public CppAdvance::RefStruct";
+				out << " final : public Builtin::RefStruct";
 				break;
 			case TypeKind::UnionStruct:
 				break;
 			case TypeKind::Enum:
-				out << " final : public CppAdvance::Enum";
+				out << " final : public Builtin::Enum";
 				break;
 			case TypeKind::EnumClass:
-				out << " final : public CppAdvance::EnumClass";
+				out << " final : public Builtin::EnumClass";
 				break;
 			case TypeKind::Union:
-				out << " final : public CppAdvance::Union";
+				out << " final : public Builtin::Union";
 				break;
 			case TypeKind::Class: {
 				if (type->isFinal)
@@ -1018,9 +1018,9 @@ namespace AstrumLang {
 					out << " ADV_ABSTRACT";
 				out << " : ";
 				if (!type->interfaces) {
-					out << "public CppAdvance::Object";
+					out << "public Builtin::Object";
 				} else {
-					out << "public CppAdvance::ClassParent<";
+					out << "public Builtin::ClassParent<";
 					printBaseSpecifier(type->interfaces->baseSpecifier(0));
 					out << ">";
 				}
@@ -1030,7 +1030,7 @@ namespace AstrumLang {
 				if (type->interfaces) {
 					printBaseSpecifier(type->interfaces->baseSpecifier(0));
 				} else {
-					out << "CppAdvance::StaticClass";
+					out << "Builtin::StaticClass";
 				}
 				break;
 			default:
@@ -1080,9 +1080,9 @@ namespace AstrumLang {
 		} else if (type->kind == TypeKind::Class) {
 			out << "private: using ___super = ";
 			if (!type->interfaces) {
-				out << "CppAdvance::Object";
+				out << "Builtin::Object";
 			} else {
-				out << "CppAdvance::ClassParent<";
+				out << "Builtin::ClassParent<";
 				printBaseSpecifier(type->interfaces->baseSpecifier(0));
 				out << ">";
 			}
@@ -1116,7 +1116,7 @@ namespace AstrumLang {
 						first = false;
 						continue;
 					}
-					out << "#line " << iface->getStart()->getLine() << " \"" << filename
+					out << "#line " << iface->getStart()->getLine() << " \"" << fullFilename
 					    << ".ast\"\n"
 					    << std::string(depth, '\t');
 					out << "ADV_CHECK_INTERFACE(" << iface->getText() << ", ";
@@ -1128,7 +1128,7 @@ namespace AstrumLang {
 				}
 			}
 		} else if (type->kind == TypeKind::EnumClass) {
-			out << "private: using ___super = CppAdvance::EnumClass;\n" << std::string(depth, '\t');
+			out << "private: using ___super = Builtin::EnumClass;\n" << std::string(depth, '\t');
 			out << "public: using __selfClass = __Class_" << type->id << ";\n"
 			    << std::string(depth, '\t');
 			out << "friend class __self;\n" << std::string(depth, '\t');
@@ -1136,7 +1136,7 @@ namespace AstrumLang {
 			out << "#define ADV_PROPERTY_SELF __selfClass\n" << std::string(depth, '\t');
 			if (type->interfaces) {
 				for (auto iface : type->interfaces->baseSpecifier()) {
-					out << "#line " << iface->getStart()->getLine() << " \"" << filename
+					out << "#line " << iface->getStart()->getLine() << " \"" << fullFilename
 					    << ".ast\"\n"
 					    << std::string(depth, '\t');
 					out << "ADV_CHECK_INTERFACE(" << iface->getText() << ", ";
@@ -1150,7 +1150,8 @@ namespace AstrumLang {
 		} else if (type->kind == TypeKind::StaticClass) {
 			if (type->interfaces) {
 				auto base = type->interfaces->baseSpecifier(0);
-				out << "#line " << base->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+				out << "#line " << base->getStart()->getLine() << " \"" << fullFilename
+				    << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "ADV_CHECK_STATIC_CLASS(" << base->getText() << ", ";
 				if (base->nestedNameSpecifier()) {
@@ -1272,7 +1273,7 @@ namespace AstrumLang {
 				out << "#if " << friendType.compilationCondition << std::endl
 				    << std::string(depth, '\t');
 			}
-			out << "#line " << friendType.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << friendType.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t') << "private: ";
 			if (friendType.templateParams) {
 				printTemplateParams(friendType.templateParams);
@@ -1296,7 +1297,7 @@ namespace AstrumLang {
 			if (!decl.compilationCondition.empty()) {
 				out << "#if " << decl.compilationCondition << std::endl << std::string(depth, '\t');
 			}
-			out << "#line " << decl.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << decl.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t') << "private: ";
 			out << "friend ";
 			if (auto t = decl.returnType) {
@@ -1329,7 +1330,7 @@ namespace AstrumLang {
 			if (!decl.compilationCondition.empty()) {
 				out << "#if " << decl.compilationCondition << std::endl << std::string(depth, '\t');
 			}
-			out << "#line " << decl.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << decl.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t') << "private: ";
 			if (decl.attributes) {
 				for (auto attr : decl.attributes->attributeSpecifier()) {
@@ -1388,7 +1389,7 @@ namespace AstrumLang {
 				out << "#if " << field.compilationCondition << std::endl
 				    << std::string(depth, '\t');
 			}
-			out << "#line " << field.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << field.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			bool hasVisibility =
 			    !isPrivateStruct && field.isStatic && !CompilerSettings::get().dllName.empty();
@@ -1526,7 +1527,7 @@ namespace AstrumLang {
 					out << "#if " << ctor->compilationCondition << std::endl
 					    << std::string(depth, '\t');
 				}
-				out << "#line " << ctor->pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << ctor->pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "__sctor();\n" << std::string(depth, '\t');
 				if (!ctor->compilationCondition.empty()) {
@@ -1538,7 +1539,7 @@ namespace AstrumLang {
 					out << "#if " << dtor->compilationCondition << std::endl
 					    << std::string(depth, '\t');
 				}
-				out << "#line " << dtor->pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << dtor->pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "~__sctor();\n" << std::string(depth, '\t');
 				if (!dtor->compilationCondition.empty()) {
@@ -1549,23 +1550,23 @@ namespace AstrumLang {
 		}
 
 		if (type->kind == TypeKind::Enum) {
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "private: ";
 			if (type->enumBase) {
 				printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
 			} else {
-				out << "CppAdvance::i32";
+				out << "Builtin::i32";
 			}
 			out << " __value;\n" << std::string(depth, '\t');
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "public: constexpr auto getValue() const noexcept { return __value; } "
 			       "ADV_PROPERTY_GETTER(public, Value, getValue, ";
 			if (type->enumBase) {
 				printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
 			} else {
-				out << "CppAdvance::i32";
+				out << "Builtin::i32";
 			}
 			out << ")\n" << std::string(depth, '\t');
 		}
@@ -1576,7 +1577,10 @@ namespace AstrumLang {
 				                     return !field.isStatic && !field.isThreadLocal &&
 				                            field.compilationCondition.empty();
 			                     });
-			if (!regularFields.empty()) {
+			if (!regularFields.empty() &&
+			    std::all_of(regularFields.begin(), regularFields.end(), [](const auto& field) {
+				    return field.access == AccessSpecifier::Public;
+			    })) {
 				if (type->kind == TypeKind::EnumClass) {
 					out << "private: __Class_";
 					out << type->id << "(";
@@ -1618,7 +1622,7 @@ namespace AstrumLang {
 
 		for (const auto& constant : type->constants) {
 			if (type->kind == TypeKind::EnumClass && !constant.type) {
-				out << "#line " << constant.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "public: ";
 				if (constant.attributes) {
@@ -1645,7 +1649,7 @@ namespace AstrumLang {
 				}
 				out << " const __self " << constant.id << ";\n" << std::string(depth, '\t');
 			} else if (type->kind == TypeKind::Union) {
-				out << "#line " << constant.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				if (auto clause = constant.unionEnumerator) {
 					if (!clause->Identifier().empty()) {
@@ -1737,7 +1741,7 @@ namespace AstrumLang {
 					out << "#if " << constant.compilationCondition << std::endl
 					    << std::string(depth, '\t');
 				}
-				out << "#line " << constant.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				switch (constant.access) {
 					case AccessSpecifier::Public:
@@ -1819,9 +1823,9 @@ namespace AstrumLang {
 			currentDeclarationName.clear();
 		}
 		if (type->kind == TypeKind::Enum) {
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
-			out << "private: static constexpr CppAdvance::Str __names[] = {";
+			out << "private: static constexpr Builtin::Str __names[] = {";
 			bool first = true;
 			for (const auto& constant : type->constants) {
 				if (!first)
@@ -1830,77 +1834,77 @@ namespace AstrumLang {
 				out << "u\"" << constant.id << "\"";
 			}
 			out << "};\n" << std::string(depth, '\t');
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "public: static constexpr int __variants = " << type->constants.size() << ";\n"
 			    << std::string(depth, '\t');
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
-			out << "public: static constexpr std::span<const CppAdvance::Str> GetNames() noexcept "
+			out << "public: static constexpr std::span<const Builtin::Str> GetNames() noexcept "
 			       "{ return __names; }\n"
 			    << std::string(depth, '\t');
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "private: static const " << type->id << " __values[];\n"
 			    << std::string(depth, '\t');
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "public: static constexpr std::span<const " << type->id
 			    << "> GetValues() noexcept;\n"
 			    << std::string(depth, '\t');
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "public: constexpr operator bool() const noexcept { return "
 			       "static_cast<bool>(__value); } \n"
 			    << std::string(depth, '\t');
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "public: constexpr bool operator ==(const __self& that) const noexcept { return "
 			       "__value == that.__value; } \n"
 			    << std::string(depth, '\t');
 			if (type->isAbstract)  // flags
 			{
-				out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "public: constexpr " << type->id << " operator &(" << type->id
 				    << " other) const noexcept { return (__value & other.__value); }\n"
 				    << std::string(depth, '\t');
-				out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "public: constexpr bool HasFlag(" << type->id
 				    << " other) const noexcept { return static_cast<bool>(__value & "
 				       "other.__value); }\n"
 				    << std::string(depth, '\t');
-				out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "public: constexpr const " << type->id << " operator |(" << type->id
 				    << " other) const noexcept { return (__value | other.__value); }\n"
 				    << std::string(depth, '\t');
-				out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "public: constexpr " << type->id << "& operator |=(" << type->id
 				    << " other) noexcept { __value |= other.__value; return *this; }\n"
 				    << std::string(depth, '\t');
-				out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "public: constexpr " << type->id << "& AddFlag(" << type->id
 				    << " other) noexcept { __value |= other.__value; return *this; }\n"
 				    << std::string(depth, '\t');
-				out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "public: constexpr " << type->id << " RemoveFlag(" << type->id
 				    << " other) noexcept { __value &=~ other.__value; return __value; }\n"
 				    << std::string(depth, '\t');
 			}
 		} else if (type->kind == TypeKind::EnumClass) {
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "private: static ";
 			if (!CompilerSettings::get().dllName.empty()) {
 				out << CompilerSettings::get().dllName << "_API";
 			}
 			out << " const __self __values[];\n" << std::string(depth, '\t');
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			int i = 0;
 			for (const auto& constant : type->constants) {
@@ -1912,7 +1916,7 @@ namespace AstrumLang {
 			       "__values, "
 			    << std::to_string(i) << " }; }\n"
 			    << std::string(depth, '\t');
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "public: static constexpr int __variants = " << i << ";\n"
 			    << std::string(depth, '\t');
@@ -1920,7 +1924,7 @@ namespace AstrumLang {
 			// union data
 			out << "private: union {\n" << std::string(++depth, '\t');
 			for (const auto& constant : type->constants) {
-				out << "#line " << constant.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				if (!constant.unionEnumerator) {
 					out << "__UnionType_";
@@ -1948,15 +1952,15 @@ namespace AstrumLang {
 			    << std::string(--depth, '\t') << "} __union_internal_tag;\n"
 			    << std::string(depth, '\t');
 			out << "public:\n" << std::string(depth, '\t');
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "static constexpr int __variants = " << type->constants.size() << ";\n"
 			    << std::string(depth, '\t');
 			// value initialization
 			for (const auto& constant : type->constants) {
-				out << "#line " << constant.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
-				out << type->id << "(CppAdvance::In<";
+				out << type->id << "(Builtin::In<";
 				if (!constant.unionEnumerator) {
 					out << "__UnionType_";
 				}
@@ -1969,13 +1973,13 @@ namespace AstrumLang {
 				out << constant.id << "(value); }\n" << std::string(depth, '\t');
 			}
 			// copy initialization
-			out << "#line 9999 \"" << filename << ".ast\"\n" << std::string(depth, '\t');
+			out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
 			out << "private: void __copy(const __self& other) {\n" << std::string(++depth, '\t');
 			out << "__union_internal_tag = other.__union_internal_tag;\n"
 			    << std::string(depth, '\t');
 			out << "switch (__union_internal_tag) {\n" << std::string(++depth, '\t');
 			for (const auto& constant : type->constants) {
-				out << "#line " << constant.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "case _TAG__" << constant.id << ": new (&_" << constant.id << ") ";
 				if (!constant.unionEnumerator) {
@@ -1988,18 +1992,18 @@ namespace AstrumLang {
 			    << std::string(--depth, '\t') << "}\n"
 			    << std::string(--depth, '\t') << "}\n"
 			    << std::string(depth, '\t');
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "public: " << type->id << "(const __self& other) { __copy(other); }\n"
 			    << std::string(depth, '\t');
 			// move initialization
-			out << "#line 9999 \"" << filename << ".ast\"\n" << std::string(depth, '\t');
+			out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
 			out << "private: void __move(__self&& other) {\n" << std::string(++depth, '\t');
 			out << "__union_internal_tag = other.__union_internal_tag;\n"
 			    << std::string(depth, '\t');
 			out << "switch (__union_internal_tag) {\n" << std::string(++depth, '\t');
 			for (const auto& constant : type->constants) {
-				out << "#line " << constant.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "case _TAG__" << constant.id << ": new (&_" << constant.id << ") ";
 				if (!constant.unionEnumerator) {
@@ -2012,16 +2016,16 @@ namespace AstrumLang {
 			    << std::string(--depth, '\t') << "}\n"
 			    << std::string(--depth, '\t') << "}\n"
 			    << std::string(depth, '\t');
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "public: " << type->id << "(__self&& other) { __move(std::move(other)); }\n"
 			    << std::string(depth, '\t');
 			// deinitialization
-			out << "#line 9999 \"" << filename << ".ast\"\n" << std::string(depth, '\t');
+			out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
 			out << "private: void __destroy() {\n" << std::string(++depth, '\t');
 			out << "switch (__union_internal_tag) {\n" << std::string(++depth, '\t');
 			for (const auto& constant : type->constants) {
-				out << "#line " << constant.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "case _TAG__" << constant.id << ": _" << constant.id << ".~";
 				if (!constant.unionEnumerator) {
@@ -2033,14 +2037,14 @@ namespace AstrumLang {
 			    << std::string(--depth, '\t') << "}\n"
 			    << std::string(--depth, '\t') << "}\n"
 			    << std::string(depth, '\t');
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "public: ~" << type->id << "() { __destroy(); }\n" << std::string(depth, '\t');
 			// value assignment
 			for (const auto& constant : type->constants) {
-				out << "#line " << constant.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
-				out << type->id << "& operator=(CppAdvance::In<";
+				out << type->id << "& operator=(Builtin::In<";
 				if (!constant.unionEnumerator) {
 					out << "__UnionType_";
 				}
@@ -2057,20 +2061,20 @@ namespace AstrumLang {
 				out << "\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
 			}
 			// copy assignment
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "public: __self& operator=(const __self& other) { __destroy(); __copy(other); "
 			       "return *this; }\n"
 			    << std::string(depth, '\t');
 			// move assignment
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "public: __self& operator=(__self&& other) { __destroy(); "
 			       "__move(std::move(other)); return *this; }\n"
 			    << std::string(depth, '\t');
 			// data getters
 			for (const auto& constant : type->constants) {
-				out << "#line " << constant.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "public: auto Get" << constant.id
 				    << "() { if (__union_internal_tag != _TAG__" << constant.id
@@ -2080,7 +2084,7 @@ namespace AstrumLang {
 				    << std::string(depth, '\t');
 			}
 			// type checking
-			out << "#line 9999 \"" << filename << ".ast\"\n" << std::string(depth, '\t');
+			out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
 			out << "public: template<class __SomeT> bool Is() const noexcept {\n"
 			    << std::string(++depth, '\t');
 			first = true;
@@ -2100,8 +2104,8 @@ namespace AstrumLang {
 			    << std::string(--depth, '\t') << "}\n"
 			    << std::string(depth, '\t');
 			// type casting
-			out << "#line 9999 \"" << filename << ".ast\"\n" << std::string(depth, '\t');
-			out << "public: template<class __SomeT> CppAdvance::Nullable<__SomeT> As() const "
+			out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
+			out << "public: template<class __SomeT> Builtin::Nullable<__SomeT> As() const "
 			       "noexcept {\n"
 			    << std::string(++depth, '\t');
 			first = true;
@@ -2124,7 +2128,7 @@ namespace AstrumLang {
 			    << std::string(--depth, '\t') << "}\n"
 			    << std::string(depth, '\t');
 			// equality checking
-			/*out << "#line 9999 \"" << filename << ".ast\"\n" << std::string(depth, '\t');
+			/*out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
 			out << "public: bool operator==(const __self& other) const noexcept {\n" <<
 			std::string(++depth, '\t'); out << "if (__union_internal_tag !=
 			other.__union_internal_tag) return false;\n" << std::string(depth, '\t'); first = true;
@@ -2138,7 +2142,7 @@ namespace AstrumLang {
 			}
 			out << "return false;\n" << std::string(--depth, '\t') << "}\n" << std::string(depth,
 			'\t');*/
-			out << "#line 9999 \"" << filename << ".ast\"\n" << std::string(depth, '\t');
+			out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
 			out << "public: template<class __SomeT> bool operator==(const __SomeT& other) const "
 			       "noexcept {\n"
 			    << std::string(++depth, '\t');
@@ -2165,7 +2169,7 @@ namespace AstrumLang {
 				out << "#if " << alias.compilationCondition << std::endl
 				    << std::string(depth, '\t');
 			}
-			out << "#line " << alias.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << alias.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			switch (alias.access) {
 				case AccessSpecifier::Public:
@@ -2204,7 +2208,7 @@ namespace AstrumLang {
 			AccessSpecifier setAccess = prop.access;
 			if (prop.setter) {
 				if (sema.propertiesNeedField.contains(prop.setter)) {
-					out << "#line " << prop.pos.line << " \"" << filename << ".ast\"\n"
+					out << "#line " << prop.pos.line << " \"" << fullFilename << ".ast\"\n"
 					    << std::string(depth, '\t');
 					out << "private: ";
 					if (prop.attributes) {
@@ -2273,7 +2277,7 @@ namespace AstrumLang {
 					out << ";" << std::endl << std::string(depth, '\t');
 				}
 
-				out << "#line " << prop.setter->getStart()->getLine() << " \"" << filename
+				out << "#line " << prop.setter->getStart()->getLine() << " \"" << fullFilename
 				    << ".ast\"\n"
 				    << std::string(depth, '\t');
 				if (auto acc = prop.setter->accessSpecifier()) {
@@ -2361,7 +2365,7 @@ namespace AstrumLang {
 				out << ";" << std::endl << std::string(depth, '\t');
 			}
 			if (prop.getter) {
-				out << "#line " << prop.getter->getStart()->getLine() << " \"" << filename
+				out << "#line " << prop.getter->getStart()->getLine() << " \"" << fullFilename
 				    << ".ast\"\n"
 				    << std::string(depth, '\t');
 				if (auto acc = prop.getter->accessSpecifier()) {
@@ -2474,7 +2478,7 @@ namespace AstrumLang {
 				}
 				out << ";" << std::endl << std::string(depth, '\t');
 			} else if (prop.isLazy) {
-				out << "#line " << prop.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << prop.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "private: ";
 				if (!CompilerSettings::get().dllName.empty() && !type->templateParams) {
@@ -2491,7 +2495,7 @@ namespace AstrumLang {
 				printTypeId(prop.type);
 				out << ";" << std::endl << std::string(depth, '\t');
 			} else if (!prop.setter) {
-				out << "#line " << prop.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << prop.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				switch (getAccess) {
 					case AccessSpecifier::Public:
@@ -2550,7 +2554,7 @@ namespace AstrumLang {
 				}
 				out << ";" << std::endl << std::string(depth, '\t');
 			}
-			out << "#line 9999 \"" << filename << ".ast\"\n" << std::string(depth, '\t');
+			out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
 			auto parent = prop.parentType;
 			StringReplace(parent, ".", "::");
 			StringReplace(parent, "::::::", "...");
@@ -2744,7 +2748,7 @@ namespace AstrumLang {
 				}
 			}
 			if (func.indexerSetter) {
-				out << "#line 9999 \"" << filename << ".ast\"\n" << std::string(depth, '\t');
+				out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
 				out << "private: template<class __IdxT = ";
 				printTypeId(func.returnType);
 				if (func.isRefReturn)
@@ -2841,7 +2845,7 @@ namespace AstrumLang {
 				out << "template<class _ElemRight> FORCE_INLINE auto& operator=(_ElemRight&& "
 				       "other) { _parent.setAt(";
 				if (isUnchecked) {
-					out << "CppAdvance::UncheckedTag{}, ";
+					out << "Builtin::UncheckedTag{}, ";
 				}
 				for (auto param : func.indexerParams->paramDeclList()->paramDeclaration()) {
 					if (auto t = param->theTypeId()) {
@@ -2881,7 +2885,7 @@ namespace AstrumLang {
 				out << "FORCE_INLINE decltype(auto) __ref() const { return ";
 				out << "const_cast<std::remove_cvref_t<decltype(_parent)> const&>(_parent).getAt(";
 				if (isUnchecked) {
-					out << "CppAdvance::UncheckedTag{}, ";
+					out << "Builtin::UncheckedTag{}, ";
 				}
 				for (auto param : params) {
 					bool first = true;
@@ -2991,7 +2995,7 @@ namespace AstrumLang {
 					}
 					out << "void setAt(";
 					if (isUnchecked) {
-						out << "CppAdvance::UncheckedTag, ";
+						out << "Builtin::UncheckedTag, ";
 					}
 					printParamDeclClause(func.indexerParams);
 					out << ", const ";
@@ -3102,7 +3106,7 @@ namespace AstrumLang {
 					out << "&";
 				out << " getAt(";
 				if (isUnchecked) {
-					out << "CppAdvance::UncheckedTag, ";
+					out << "Builtin::UncheckedTag, ";
 				}
 				printParamDeclClause(func.indexerParams);
 				out << ")";
@@ -3158,7 +3162,7 @@ namespace AstrumLang {
 					out << "&";
 				out << " getAt(";
 				if (isUnchecked) {
-					out << "CppAdvance::UncheckedTag, ";
+					out << "Builtin::UncheckedTag, ";
 				}
 				printParamDeclClause(func.indexerParams);
 				out << ") const";
@@ -3168,7 +3172,7 @@ namespace AstrumLang {
 					out << " final";
 				out << ";\n" << std::string(depth, '\t');
 			}
-			out << "#line " << func.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << func.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			switch (func.access) {
 				case AccessSpecifier::Public:
@@ -3283,7 +3287,7 @@ namespace AstrumLang {
 			else if (isIndexer) {
 				out << "(";
 				if (isUnchecked) {
-					out << "CppAdvance::UncheckedTag, ";
+					out << "Builtin::UncheckedTag, ";
 				}
 				printParamDeclClause(func.indexerParams);
 				out << ")";
@@ -3574,7 +3578,7 @@ namespace AstrumLang {
 				out << "#if " << assert_.compilationCondition << std::endl
 				    << std::string(depth, '\t');
 			}
-			out << "#line " << assert_.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << assert_.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "static_assert(";
 			printConstantExpression(assert_.expression);
@@ -3585,22 +3589,22 @@ namespace AstrumLang {
 		}
 
 		if (type->kind == TypeKind::Enum) {
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "public: constexpr operator ";
 			if (type->enumBase) {
 				printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
 			} else {
-				out << "CppAdvance::i32";
+				out << "Builtin::i32";
 			}
 			out << "() const noexcept { return __value; }\n" << std::string(depth, '\t');
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "private: constexpr " << type->id << "(";
 			if (type->enumBase) {
 				printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
 			} else {
-				out << "CppAdvance::i32";
+				out << "Builtin::i32";
 			}
 			out << " value) : __value(value) {}\n" << std::string(depth, '\t');
 		}
@@ -3679,7 +3683,7 @@ namespace AstrumLang {
 		}
 
 		currentTupleSize = 0;
-		if (type->kind == TypeKind::Struct && !isVariadicTemplateStruct) {
+		if (type->kind == TypeKind::Struct && !isVariadicTemplateStruct && !type->templateParams) {
 			int i = 0;
 			for (const auto& field : type->fields) {
 				if (field.isStatic || field.isThreadLocal ||
@@ -3820,7 +3824,7 @@ namespace AstrumLang {
 		} else if (type->kind == TypeKind::Class || type->kind == TypeKind::EnumClass) {
 			out << "\n" << std::string(depth, '\t');
 			if (!type->templateSpecializationArgs && !type->templateParams) {
-				out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				if (type->isAbstract) {
 					out << "ADV_CHECK_FOR_ABSTRACT(" << type->id << ");";
@@ -3831,7 +3835,7 @@ namespace AstrumLang {
 				out << "\n" << std::string(depth, '\t');
 				if (type->interfaces) {
 					for (auto iface : type->interfaces->baseSpecifier()) {
-						out << "#line " << iface->getStart()->getLine() << " \"" << filename
+						out << "#line " << iface->getStart()->getLine() << " \"" << fullFilename
 						    << ".ast\"\n"
 						    << std::string(depth, '\t');
 						out << "ADV_CHECK_INTERFACE_IMPLEMENTATION(" << type->id << ", ";
@@ -3860,7 +3864,7 @@ namespace AstrumLang {
 		if (!type->compilationCondition.empty()) {
 			out << "#if " << type->compilationCondition << std::endl << std::string(depth, '\t');
 		}
-		out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+		out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 		    << std::string(depth, '\t');
 		if (type->templateParams) {
 			printTemplateParams(type->templateParams);
@@ -3879,12 +3883,13 @@ namespace AstrumLang {
 			out << ">";
 		}
 
-		out << " final : public CppAdvance::ValueType";
+		out << " final : public Builtin::ValueType";
 
 		out << "\n" << std::string(depth++, '\t') << "{\n" << std::string(depth, '\t');
 		if (type->interfaces) {
 			for (auto iface : type->interfaces->baseSpecifier()) {
-				out << "#line " << iface->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+				out << "#line " << iface->getStart()->getLine() << " \"" << fullFilename
+				    << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "ADV_CHECK_INTERFACE(" << iface->getText() << ", ";
 				if (iface->nestedNameSpecifier()) {
@@ -3894,7 +3899,7 @@ namespace AstrumLang {
 				out << ");\n" << std::string(depth, '\t');
 			}
 		}
-		out << "#line 9999 \"" << filename << ".ast\"\n" << std::string(depth, '\t');
+		out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
 		out << "public: using __underlying = " << type->id;
 		if (type->templateSpecializationArgs) {
 			out << "<";
@@ -4129,12 +4134,12 @@ namespace AstrumLang {
 		}
 		out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
 		if (!type->templateSpecializationArgs && !type->templateParams) {
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "ADV_CHECK_FOR_CONCRETE(" << type->id << ");\n" << std::string(depth, '\t');
 			if (type->interfaces) {
 				for (auto iface : type->interfaces->baseSpecifier()) {
-					out << "#line " << iface->getStart()->getLine() << " \"" << filename
+					out << "#line " << iface->getStart()->getLine() << " \"" << fullFilename
 					    << ".ast\"\n"
 					    << std::string(depth, '\t');
 					out << "ADV_CHECK_INTERFACE_IMPLEMENTATION(" << type->id << ", ";
@@ -4168,7 +4173,7 @@ namespace AstrumLang {
 			} else {
 				out << "template<> ";
 			}
-			out << "inline constexpr bool CppAdvance::__details::cheapCopy<";
+			out << "inline constexpr bool Builtin::__details::cheapCopy<";
 			if (!sema.packageName.empty()) {
 				out << sema.packageName << "::";
 			}
@@ -4192,7 +4197,7 @@ namespace AstrumLang {
 				++depth;
 			}
 		}
-		out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+		out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 		    << std::string(depth, '\t');
 		if (type->templateParams) {
 			printTemplateParams(type->templateParams);
@@ -4217,11 +4222,11 @@ namespace AstrumLang {
 			out << " final";
 		out << " : ";
 		if (type->kind == TypeKind::EnumClass) {
-			out << "public CppAdvance::EnumClassRef";
+			out << "public Builtin::EnumClassRef";
 		} else if (!type->interfaces) {
-			out << "public CppAdvance::ObjectRef";
+			out << "public Builtin::ObjectRef";
 		} else {
-			out << "public CppAdvance::ClassRefParent<";
+			out << "public Builtin::ClassRefParent<";
 			printBaseSpecifier(type->interfaces->baseSpecifier(0));
 			out << ">";
 		}
@@ -4246,11 +4251,11 @@ namespace AstrumLang {
 		}
 		out << ";\n" << std::string(depth, '\t');
 		if (type->kind == TypeKind::EnumClass) {
-			out << "private: using ___super = CppAdvance::EnumClassRef";
+			out << "private: using ___super = Builtin::EnumClassRef";
 		} else if (!type->interfaces) {
-			out << "private: using ___super = CppAdvance::ObjectRef";
+			out << "private: using ___super = Builtin::ObjectRef";
 		} else {
-			out << "private: using ___super = CppAdvance::ClassRefParent<";
+			out << "private: using ___super = Builtin::ClassRefParent<";
 			printBaseSpecifier(type->interfaces->baseSpecifier(0));
 			out << ">";
 		}
@@ -4859,7 +4864,7 @@ namespace AstrumLang {
 			if (!func.compilationCondition.empty()) {
 				out << "#if " << func.compilationCondition << std::endl << std::string(depth, '\t');
 			}
-			out << "#line " << func.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << func.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			switch (func.access) {
 				case AccessSpecifier::Public:
@@ -5046,7 +5051,7 @@ namespace AstrumLang {
 			}
 		}
 		if (type->kind == TypeKind::EnumClass) {
-			out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "public: FORCE_INLINE static decltype(auto) GetValues() noexcept;\n"
 			    << std::string(depth, '\t');
@@ -5146,7 +5151,7 @@ namespace AstrumLang {
 
 		out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
 
-		out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+		out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 		    << std::string(depth, '\t');
 		if (type->templateParams) {
 			printTemplateParams(type->templateParams);
@@ -5171,9 +5176,9 @@ namespace AstrumLang {
 			out << " final";
 		out << " : ";
 		if (!type->interfaces) {
-			out << "public CppAdvance::ObjectRef__Unowned";
+			out << "public Builtin::ObjectRef__Unowned";
 		} else {
-			out << "public CppAdvance::ClassRefParentUnowned<";
+			out << "public Builtin::ClassRefParentUnowned<";
 			printBaseSpecifier(type->interfaces->baseSpecifier(0));
 			out << ">";
 		}
@@ -5255,9 +5260,9 @@ namespace AstrumLang {
 		}
 		out << ";\n" << std::string(depth, '\t');
 		if (!type->interfaces) {
-			out << "private: using ___super = CppAdvance::ObjectRef__Unowned";
+			out << "private: using ___super = Builtin::ObjectRef__Unowned";
 		} else {
-			out << "private: using ___super = CppAdvance::ClassRefParentUnowned<";
+			out << "private: using ___super = Builtin::ClassRefParentUnowned<";
 			printBaseSpecifier(type->interfaces->baseSpecifier(0));
 			out << ">";
 		}
@@ -5283,7 +5288,7 @@ namespace AstrumLang {
 		}
 		out << ";\n" << std::string(depth, '\t');
 		out << "public: FORCE_INLINE decltype(auto) __ref() const noexcept { "
-		       "CppAdvance::UnownedCheck(_obj); return *reinterpret_cast<__class*>(_obj); }\n"
+		       "Builtin::UnownedCheck(_obj); return *reinterpret_cast<__class*>(_obj); }\n"
 		    << std::string(depth, '\t');
 		out << "ADV_CLASS_FROM_PTR(" << type->id << "__Unowned)\n" << std::string(depth, '\t');
 		out << "ADV_CLASS_UNOWNED_COMMON_CTORS(" << type->id << "__Unowned)\n"
@@ -5296,7 +5301,7 @@ namespace AstrumLang {
 			if (!func.compilationCondition.empty()) {
 				out << "#if " << func.compilationCondition << std::endl << std::string(depth, '\t');
 			}
-			out << "#line " << func.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << func.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			switch (func.access) {
 				case AccessSpecifier::Public:
@@ -5419,7 +5424,7 @@ namespace AstrumLang {
 		}
 
 		out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
-		out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+		out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 		    << std::string(depth, '\t');
 		if (type->templateParams) {
 			printTemplateParams(type->templateParams);
@@ -5444,9 +5449,9 @@ namespace AstrumLang {
 			out << " final";
 		out << " : ";
 		if (!type->interfaces) {
-			out << "public CppAdvance::ObjectRef__Weak";
+			out << "public Builtin::ObjectRef__Weak";
 		} else {
-			out << "public CppAdvance::ClassRefParentWeak<";
+			out << "public Builtin::ClassRefParentWeak<";
 			printBaseSpecifier(type->interfaces->baseSpecifier(0));
 			out << ">";
 		}
@@ -5528,9 +5533,9 @@ namespace AstrumLang {
 		}
 		out << ";\n" << std::string(depth, '\t');
 		if (!type->interfaces) {
-			out << "private: using ___super = CppAdvance::ObjectRef__Weak";
+			out << "private: using ___super = Builtin::ObjectRef__Weak";
 		} else {
-			out << "private: using ___super = CppAdvance::ClassRefParentWeak<";
+			out << "private: using ___super = Builtin::ClassRefParentWeak<";
 			printBaseSpecifier(type->interfaces->baseSpecifier(0));
 			out << ">";
 		}
@@ -5582,7 +5587,7 @@ namespace AstrumLang {
 			out << "template<> ";
 		}
 
-		out << "inline constexpr bool CppAdvance::__details::cheapCopy<";
+		out << "inline constexpr bool Builtin::__details::cheapCopy<";
 		if (!sema.packageName.empty()) {
 			out << sema.packageName << "::";
 		}
@@ -5626,7 +5631,7 @@ namespace AstrumLang {
 				methodIds[&method] = sema.getInterfaceMethodId(type->id + "_" + method.id,
 				                                               method.params->paramDeclClause());
 			}
-			out << "#line " << method.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << method.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "template<class __AnyType";
 			if (type->templateParams) {
@@ -5650,7 +5655,7 @@ namespace AstrumLang {
 			if (method.indexerParams) {
 				bool first = true;
 				if (isUnchecked) {
-					out << "CppAdvance::UncheckedTag{}";
+					out << "Builtin::UncheckedTag{}";
 					first = false;
 				}
 				for (auto param : method.indexerParams->paramDeclList()->paramDeclaration()) {
@@ -5688,13 +5693,17 @@ namespace AstrumLang {
 			if (!method.isDefault) {
 				out << " || requires";
 				if (method.isStatic) {
-					out << " { { __static_" << method.id << "<__AnyType>(";
+					out << " { { [] { using namespace __extensions; ";
+					if (method.returnType)
+						out << "return";
+					out << " __static_" << method.id << "<__AnyType>(";
 				} else {
-					out << "(typename __AnyType::__class t) { {" << method.id << "(t";
+					out << "(__AnyType t) { {" << method.id
+					    << "(__extensions::__proxy<__AnyType>{t}";
 				}
 				if (method.indexerParams) {
 					if (isUnchecked) {
-						out << ", CppAdvance::UncheckedTag{}";
+						out << ", Builtin::UncheckedTag{}";
 					}
 					for (auto param : method.indexerParams->paramDeclList()->paramDeclaration()) {
 						out << ", ";
@@ -5714,7 +5723,10 @@ namespace AstrumLang {
 						out << ">()";
 					}
 				}
-				out << ")} -> ";
+				if (method.isStatic)
+					");}() } -> ";
+				else
+					out << ")} -> ";
 				if (method.returnType) {
 					out << "std::convertible_to<";
 					printTypeId(method.returnType);
@@ -5726,10 +5738,53 @@ namespace AstrumLang {
 				}
 
 				out << "; }";
+
+				if (!method.isStatic) {
+					out << " || requires { { [] { using namespace __extensions; ";
+					if (method.returnType)
+						out << "return ";
+					out << method.id << "(std::declval<__AnyType>()";
+					if (method.indexerParams) {
+						if (isUnchecked) {
+							out << ", Builtin::UncheckedTag{}";
+						}
+						for (auto param :
+						     method.indexerParams->paramDeclList()->paramDeclaration()) {
+							out << ", ";
+							out << "std::declval<";
+							printTypeId(param->theTypeId());
+							out << ">()";
+						}
+					} else if (method.params && method.params->paramDeclClause()) {
+						bool first = method.isStatic;
+						for (auto param : method.params->paramDeclClause()
+						                      ->paramDeclList()
+						                      ->paramDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							out << "std::declval<";
+							printTypeId(param->theTypeId());
+							out << ">()";
+						}
+					}
+					out << "); }() } -> ";
+					if (method.returnType) {
+						out << "std::convertible_to<";
+						printTypeId(method.returnType);
+						if (method.isRefReturn)
+							out << "&";
+						out << ">";
+					} else {
+						out << "std::same_as<void>";
+					}
+
+					out << "; }";
+				}
 			}
 			out << ";\n" << std::string(depth, '\t');
 			if (method.indexerSetter) {
-				out << "#line " << method.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << method.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "template<class __AnyType";
 				if (type->templateParams) {
@@ -5746,7 +5801,7 @@ namespace AstrumLang {
 				if (method.indexerParams) {
 					bool first = true;
 					if (isUnchecked) {
-						out << "CppAdvance::UncheckedTag{}";
+						out << "Builtin::UncheckedTag{}";
 						first = false;
 					}
 					for (auto param : method.indexerParams->paramDeclList()->paramDeclaration()) {
@@ -5760,10 +5815,10 @@ namespace AstrumLang {
 				}
 				out << ",std::declval<";
 				printTypeId(method.returnType);
-				out << ">())} -> std::same_as<void>; } || requires(typename __AnyType::__class t) "
-				       "{ {setAt(t";
+				out << ">())} -> std::same_as<void>; } || requires(__AnyType t) "
+				       "{ {setAt(__extensions::__proxy<__AnyType>{t}";
 				if (isUnchecked) {
-					out << ", CppAdvance::UncheckedTag{}";
+					out << ", Builtin::UncheckedTag{}";
 				}
 				if (method.params && method.params->paramDeclClause()) {
 					for (auto param :
@@ -5791,7 +5846,7 @@ namespace AstrumLang {
 		for (const auto& prop : type->properties) {
 			propertyIds[&prop] = sema.getInterfaceMethodId(type->id + "_" + prop.id, nullptr);
 			auto id            = propertyIds[&prop];
-			out << "#line " << prop.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << prop.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "template<class __AnyType";
 			if (type->templateParams) {
@@ -5804,20 +5859,21 @@ namespace AstrumLang {
 			interfaceRequirements.emplace_back("__HasMethodImplementation_get" + id);
 			out << "> concept __HasMethodImplementation_get" << id;
 			if (prop.isStatic) {
-				out << " = requires { __AnyType::" << prop.id << "; } || requires { __static_get"
-				    << prop.id << "<__AnyType>(); };\n"
+				out << " = requires { __AnyType::" << prop.id
+				    << "; } || requires { [] { using namespace __extensions; __static_get"
+				    << prop.id << "<__AnyType>(); }(); };\n"
 				    << std::string(depth, '\t');
 			} else {
 				out << " = requires(typename __AnyType::__class t) { {t.get" << prop.id
 				    << "()} -> std::convertible_to<";
 				printTypeId(prop.type);
-				out << ">; } || requires(typename __AnyType::__class t) { {get" << prop.id
-				    << "(t)} -> std::convertible_to<";
+				out << ">; } || requires(__AnyType t) { {get" << prop.id
+				    << "(__extensions::__proxy<__AnyType>{t})} -> std::convertible_to<";
 				printTypeId(prop.type);
 				out << ">; };\n" << std::string(depth, '\t');
 			}
 			if (prop.setter) {
-				out << "#line " << prop.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << prop.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "template<class __AnyType";
 				if (type->templateParams) {
@@ -5831,8 +5887,8 @@ namespace AstrumLang {
 				    << " = requires(typename __AnyType::__class t) { t.set" << prop.id
 				    << "(std::declval<";
 				printTypeId(prop.type);
-				out << ">()); } || requires(typename __AnyType::__class t) { set" << prop.id
-				    << "(t, std::declval<";
+				out << ">()); } || requires(__AnyType t) { set" << prop.id
+				    << "(__extensions::__proxy<__AnyType>{t}, std::declval<";
 				printTypeId(prop.type);
 				out << ">()); };\n" << std::string(depth, '\t');
 			}
@@ -5841,7 +5897,7 @@ namespace AstrumLang {
 			if (associatedType.type != nullptr)
 				continue;
 
-			out << "#line " << associatedType.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << associatedType.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "template<class __AnyType";
 			if (type->templateParams) {
@@ -5860,7 +5916,8 @@ namespace AstrumLang {
 		// check base interfaces
 		if (type->interfaces) {
 			for (auto iface : type->interfaces->baseSpecifier()) {
-				out << "#line " << iface->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+				out << "#line " << iface->getStart()->getLine() << " \"" << fullFilename
+				    << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "ADV_CHECK_INTERFACE(" << iface->getText() << ", ";
 				if (iface->nestedNameSpecifier()) {
@@ -5872,7 +5929,7 @@ namespace AstrumLang {
 		}
 		// print interface virtual table
 		out << "namespace __vtables {\n" << std::string(++depth, '\t');
-		out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+		out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 		    << std::string(depth, '\t');
 		if (type->templateParams) {
 			printTemplateParams(type->templateParams);
@@ -5913,10 +5970,10 @@ namespace AstrumLang {
 			} else {
 				out << "void";
 			}
-			out << "(CppAdvance::Object*";
+			out << "(Builtin::Object*";
 			if (method.indexerParams) {
 				if (isUnchecked) {
-					out << ", CppAdvance::UncheckedTag";
+					out << ", Builtin::UncheckedTag";
 				}
 				out << ", ";
 				printParamDeclClause(method.indexerParams);
@@ -5926,7 +5983,7 @@ namespace AstrumLang {
 			}
 			out << ");\n" << std::string(depth, '\t');
 			out << "fn_" << id << "* fnptr_" << id << ";\n" << std::string(depth, '\t');
-			out << "#line " << method.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << method.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "template<class __AnyType> static ";
 			if (method.returnType) {
@@ -5938,10 +5995,10 @@ namespace AstrumLang {
 			} else {
 				out << "void";
 			}
-			out << " impl_" << id << "(CppAdvance::Object* obj";
+			out << " impl_" << id << "(Builtin::Object* obj";
 			if (method.indexerParams) {
 				if (isUnchecked) {
-					out << ", CppAdvance::UncheckedTag __tag";
+					out << ", Builtin::UncheckedTag __tag";
 				}
 				out << ", ";
 				printParamDeclClause(method.indexerParams);
@@ -5996,21 +6053,21 @@ namespace AstrumLang {
 			}
 			out << "\n" << std::string(depth, '\t');
 			if (method.indexerSetter) {
-				out << "using fn_set" << id << " = void(CppAdvance::Object*, ";
+				out << "using fn_set" << id << " = void(Builtin::Object*, ";
 				if (isUnchecked) {
-					out << "CppAdvance::UncheckedTag, ";
+					out << "Builtin::UncheckedTag, ";
 				}
 				printParamDeclClause(method.indexerParams);
 				out << ", const ";
 				printTypeId(method.returnType);
 				out << "&);\n" << std::string(depth, '\t');
 				out << "fn_set" << id << "* fnptr_set" << id << ";\n" << std::string(depth, '\t');
-				out << "#line " << method.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << method.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "template<class __AnyType> static void impl_set" << id
-				    << "(CppAdvance::Object* obj, ";
+				    << "(Builtin::Object* obj, ";
 				if (isUnchecked) {
-					out << "CppAdvance::UncheckedTag __tag, ";
+					out << "Builtin::UncheckedTag __tag, ";
 				}
 				printParamDeclClause(method.indexerParams);
 				out << ", const ";
@@ -6035,11 +6092,11 @@ namespace AstrumLang {
 			printTypeId(prop.type);
 			if (prop.isRef)
 				out << "&";
-			out << "(CppAdvance::Object*);\n" << std::string(depth, '\t');
+			out << "(Builtin::Object*);\n" << std::string(depth, '\t');
 
 			out << "fn_get" << prop.id << "* fnptr_get" << prop.id << ";\n"
 			    << std::string(depth, '\t');
-			out << "#line " << prop.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << prop.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "template<class __AnyType> static ";
 			if (prop.isConst)
@@ -6047,20 +6104,20 @@ namespace AstrumLang {
 			printTypeId(prop.type);
 			if (prop.isRef)
 				out << "&";
-			out << " impl_get" << prop.id << "(CppAdvance::Object* obj) { return ADV_UFCS(get"
+			out << " impl_get" << prop.id << "(Builtin::Object* obj) { return ADV_UFCS(get"
 			    << prop.id << ")(*static_cast<typename __AnyType::__class*>(obj)); }\n"
 			    << std::string(depth, '\t');
 
 			if (prop.setter) {
-				out << "using fn_set" << prop.id << " = void(CppAdvance::Object*, const ";
+				out << "using fn_set" << prop.id << " = void(Builtin::Object*, const ";
 				printTypeId(prop.type);
 				out << "&);\n" << std::string(depth, '\t');
 				out << "fn_set" << prop.id << "* fnptr_set" << prop.id << ";\n"
 				    << std::string(depth, '\t');
-				out << "#line " << prop.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << prop.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "template<class __AnyType> static void impl_set" << prop.id
-				    << "(CppAdvance::Object* obj, const ";
+				    << "(Builtin::Object* obj, const ";
 				printTypeId(prop.type);
 				out << "& value) { ADV_UFCS(set" << prop.id
 				    << ")(*static_cast<typename __AnyType::__class*>(obj), value); }\n"
@@ -6072,7 +6129,7 @@ namespace AstrumLang {
 		    << std::string(--depth, '\t') << "}\n"
 		    << std::string(depth, '\t');
 		// virtual table instantiation
-		out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+		out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 		    << std::string(depth, '\t');
 		out << "template<class __AnyType";
 		if (type->templateParams) {
@@ -6216,7 +6273,7 @@ namespace AstrumLang {
 		}
 		out << "};\n" << std::string(depth, '\t');
 		// print concept for static polymorphism
-		out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+		out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 		    << std::string(depth, '\t');
 		out << "template<class __AnyType";
 		if (type->templateParams) {
@@ -6271,7 +6328,7 @@ namespace AstrumLang {
 		}
 		out << ";\n" << std::string(depth, '\t');
 		// print interface reference
-		out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+		out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 		    << std::string(depth, '\t');
 		if (type->templateParams) {
 			printTemplateParams(type->templateParams);
@@ -6285,7 +6342,7 @@ namespace AstrumLang {
 		if (isUnsafe)
 			out << "[[clang::annotate(\"unsafe\")]] ";
 		out << type->id;
-		out << " final : public CppAdvance::InterfaceRef {\n"
+		out << " final : public Builtin::InterfaceRef {\n"
 		    << std::string(++depth, '\t') << "public: using __self = " << type->id;
 		if (type->templateParams) {
 			out << "<";
@@ -6316,8 +6373,8 @@ namespace AstrumLang {
 			out << ">";
 		}
 		out << ";\n" << std::string(depth, '\t');
-		out << "public: using __class = CppAdvance::Object;\n" << std::string(depth, '\t');
-		out << "public: using ___super = CppAdvance::InterfaceRef;\n" << std::string(depth, '\t');
+		out << "public: using __class = Builtin::Object;\n" << std::string(depth, '\t');
+		out << "public: using ___super = Builtin::InterfaceRef;\n" << std::string(depth, '\t');
 		out << "private: friend class " << type->id << "__Unowned";
 		if (type->templateParams) {
 			out << "<";
@@ -6525,7 +6582,7 @@ namespace AstrumLang {
 					out << "...";
 			}
 			out << ">& other) : ___super(other._obj), _vtable{ reinterpret_cast<const "
-			       "__vtable*>(other._vtable) } { CppAdvance::Retain(_obj); }\n"
+			       "__vtable*>(other._vtable) } { Builtin::Retain(_obj); }\n"
 			    << std::string(depth, '\t');
 
 			CTOR_TEMPLATE_PARAMS;
@@ -6540,10 +6597,10 @@ namespace AstrumLang {
 				if (param->Ellipsis())
 					out << "...";
 			}
-			out << ">& other) { if (_obj) CppAdvance::Release(_obj); _obj = other._obj; \n"
+			out << ">& other) { if (_obj) Builtin::Release(_obj); _obj = other._obj; \n"
 			    << std::string(depth, '\t');
 			out << "_vtable = reinterpret_cast<const __vtable*>(other._vtable); "
-			       "CppAdvance::Retain(_obj); return *this; }\n"
+			       "Builtin::Retain(_obj); return *this; }\n"
 			    << std::string(depth, '\t');
 
 			CTOR_TEMPLATE_PARAMS;
@@ -6597,56 +6654,56 @@ namespace AstrumLang {
 				if (param->Ellipsis())
 					out << "...";
 			}
-			out << ">&& other) { if (_obj) CppAdvance::Release(_obj); _obj = other._obj; \n"
+			out << ">&& other) { if (_obj) Builtin::Release(_obj); _obj = other._obj; \n"
 			    << std::string(depth, '\t');
 			out << "_vtable = reinterpret_cast<const __vtable*>(other._vtable); other._obj = "
 			       "nullptr; other._vtable = nullptr; return *this; }\n"
 			    << std::string(depth, '\t');
 		}
 		out << "public: template<class __AnyType> requires "
-		       "std::derived_from<std::remove_cvref_t<__AnyType>, CppAdvance::InterfaceRef> && "
+		       "std::derived_from<std::remove_cvref_t<__AnyType>, Builtin::InterfaceRef> && "
 		       "std::derived_from<typename std::remove_cvref_t<__AnyType>::__vtable, __vtable>\n"
 		    << std::string(depth, '\t');
 		out << type->id
-		    << "(const __AnyType& value) : ___super(CppAdvance::GetObjectReference(&value)), "
-		       "_vtable{ CppAdvance::GetVTableFromInterface(&value) } \n"
+		    << "(const __AnyType& value) : ___super(Builtin::GetObjectReference(&value)), "
+		       "_vtable{ Builtin::GetVTableFromInterface(&value) } \n"
 		    << std::string(depth++, '\t') << "{\n"
 		    << std::string(depth, '\t');
-		out << "CppAdvance::Retain(_obj);\n"
+		out << "Builtin::Retain(_obj);\n"
 		    << std::string(--depth, '\t') << "}\n"
 		    << std::string(depth, '\t');
 		out << "public: template<class __AnyType> requires "
-		       "std::derived_from<std::remove_cvref_t<__AnyType>, CppAdvance::InterfaceRef> && "
+		       "std::derived_from<std::remove_cvref_t<__AnyType>, Builtin::InterfaceRef> && "
 		       "std::derived_from<typename std::remove_cvref_t<__AnyType>::__vtable, __vtable> && "
 		       "std::is_rvalue_reference_v<__AnyType&&>\n"
 		    << std::string(depth, '\t');
 		out << type->id
-		    << "(__AnyType&& value) : ___super(CppAdvance::GetObjectReference(&value)), _vtable{ "
-		       "CppAdvance::GetVTableFromInterface(&value) } \n"
+		    << "(__AnyType&& value) : ___super(Builtin::GetObjectReference(&value)), _vtable{ "
+		       "Builtin::GetVTableFromInterface(&value) } \n"
 		    << std::string(depth++, '\t') << "{\n"
 		    << std::string(depth, '\t');
-		out << "CppAdvance::ClearObjectReference((CppAdvance::ObjectRef*)&value);\n"
+		out << "Builtin::ClearObjectReference((Builtin::ObjectRef*)&value);\n"
 		    << std::string(--depth, '\t') << "}\n"
 		    << std::string(depth, '\t');
 		out << "public: template<class __AnyType> requires "
-		       "std::derived_from<std::remove_cvref_t<__AnyType>, CppAdvance::InterfaceRef> && "
+		       "std::derived_from<std::remove_cvref_t<__AnyType>, Builtin::InterfaceRef> && "
 		       "std::derived_from<typename std::remove_cvref_t<__AnyType>::__vtable, __vtable>\n"
 		    << std::string(depth, '\t');
 		out << type->id
-		    << "& operator=(const __AnyType& value) { if (_obj) CppAdvance::Release(_obj); _obj = "
-		       "CppAdvance::GetObjectReference(&value); CppAdvance::Retain(_obj); _vtable = "
-		       "CppAdvance::GetVTableFromInterface(&value); return *this; } \n"
+		    << "& operator=(const __AnyType& value) { if (_obj) Builtin::Release(_obj); _obj = "
+		       "Builtin::GetObjectReference(&value); Builtin::Retain(_obj); _vtable = "
+		       "Builtin::GetVTableFromInterface(&value); return *this; } \n"
 		    << std::string(depth, '\t');
 		out << "public: template<class __AnyType> requires "
-		       "std::derived_from<std::remove_cvref_t<__AnyType>, CppAdvance::InterfaceRef> && "
+		       "std::derived_from<std::remove_cvref_t<__AnyType>, Builtin::InterfaceRef> && "
 		       "std::derived_from<typename std::remove_cvref_t<__AnyType>::__vtable, __vtable> && "
 		       "std::is_rvalue_reference_v<__AnyType&&>\n"
 		    << std::string(depth, '\t');
 		out << type->id
-		    << "& operator=(__AnyType&& value) { if (_obj) CppAdvance::Release(_obj); _obj = "
-		       "CppAdvance::GetObjectReference(&value); _vtable = "
-		       "CppAdvance::GetVTableFromInterface(&value); "
-		       "CppAdvance::ClearObjectReference((CppAdvance::ObjectRef*)&value); return *this; } "
+		    << "& operator=(__AnyType&& value) { if (_obj) Builtin::Release(_obj); _obj = "
+		       "Builtin::GetObjectReference(&value); _vtable = "
+		       "Builtin::GetVTableFromInterface(&value); "
+		       "Builtin::ClearObjectReference((Builtin::ObjectRef*)&value); return *this; } "
 		       "\n"
 		    << std::string(depth, '\t');
 		out << "public: template<class __AnyType> " << type->id
@@ -6664,20 +6721,20 @@ namespace AstrumLang {
 		}
 		out << ">,\"Cannot initialize interface " << type->id << " from this type\");\n"
 		    << std::string(depth, '\t');
-		out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, "
+		out << "if constexpr (std::is_base_of_v<Builtin::InterfaceRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::Retain(_obj); "
+		out << "_obj = Builtin::GetObjectReference(&value); Builtin::Retain(_obj); "
 		    << "if constexpr(std::is_base_of_v<__vtable,typename "
 		       "std::remove_cvref_t<__AnyType>::__vtable>) _vtable = "
-		       "CppAdvance::GetVTableFromInterface(&value);\n"
+		       "Builtin::GetVTableFromInterface(&value);\n"
 		    << std::string(depth, '\t')
 		    << "else static_assert(false, \"Incompatible interfaces\");\n"
 		    << std::string(--depth, '\t');
-		out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, "
+		out << "} else if constexpr (std::is_base_of_v<Builtin::ObjectRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::Retain(_obj);\n"
+		out << "_obj = Builtin::GetObjectReference(&value); Builtin::Retain(_obj);\n"
 		    << std::string(depth, '\t') << "_vtable = &__vtable_" << type->id
 		    << "_for<std::remove_cvref_t<__AnyType>";
 		if (type->templateParams) {
@@ -6690,12 +6747,12 @@ namespace AstrumLang {
 		}
 		out << ">;\n"
 		    << std::string(--depth, '\t')
-		    << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef__Unowned, "
+		    << "} else if constexpr (std::is_base_of_v<Builtin::ObjectRef__Unowned, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
 		out << "_obj = "
-		       "CppAdvance::GetObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value)); "
-		       "CppAdvance::Retain(_obj);\n"
+		       "Builtin::GetObjectReference(reinterpret_cast<Builtin::ObjectRef*>(&value)); "
+		       "Builtin::Retain(_obj);\n"
 		    << std::string(depth, '\t') << "_vtable = &__vtable_" << type->id
 		    << "_for<std::remove_cvref_t<__AnyType>";
 		if (type->templateParams) {
@@ -6708,7 +6765,7 @@ namespace AstrumLang {
 		}
 		out << ">;\n"
 		    << std::string(--depth, '\t')
-		    << "} else if constexpr (std::is_base_of_v<CppAdvance::Struct, "
+		    << "} else if constexpr (std::is_base_of_v<Builtin::Struct, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
 		out << "_obj = new (::operator new(sizeof(typename "
@@ -6726,7 +6783,7 @@ namespace AstrumLang {
 		}
 		out << ">;\n"
 		    << std::string(--depth, '\t')
-		    << "} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_" << type->id
+		    << "} else { _obj = (Builtin::Object*)value.obj; _vtable = &__vtable_" << type->id
 		    << "_for<typename __AnyType::__type";
 		if (type->templateParams) {
 			for (auto param : type->templateParams->templateParamDeclaration()) {
@@ -6753,22 +6810,22 @@ namespace AstrumLang {
 		}
 		out << ">,\"Cannot initialize interface " << type->id << " from this type\");\n"
 		    << std::string(depth, '\t');
-		out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, "
+		out << "if constexpr (std::is_base_of_v<Builtin::InterfaceRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = CppAdvance::GetObjectReference(&value); "
-		       "CppAdvance::ClearObjectReference((CppAdvance::ObjectRef*)&value); "
+		out << "_obj = Builtin::GetObjectReference(&value); "
+		       "Builtin::ClearObjectReference((Builtin::ObjectRef*)&value); "
 		    << "if constexpr(std::is_base_of_v<__vtable,typename "
 		       "std::remove_cvref_t<__AnyType>::__vtable>) _vtable = "
-		       "CppAdvance::GetVTableFromInterface(&value);\n"
+		       "Builtin::GetVTableFromInterface(&value);\n"
 		    << std::string(depth, '\t')
 		    << "else static_assert(false, \"Incompatible interfaces\");\n"
 		    << std::string(--depth, '\t');
-		out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, "
+		out << "} else if constexpr (std::is_base_of_v<Builtin::ObjectRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = CppAdvance::GetObjectReference(&value); "
-		       "CppAdvance::ClearObjectReference((CppAdvance::ObjectRef*)&value);\n"
+		out << "_obj = Builtin::GetObjectReference(&value); "
+		       "Builtin::ClearObjectReference((Builtin::ObjectRef*)&value);\n"
 		    << std::string(depth, '\t') << "_vtable = &__vtable_" << type->id
 		    << "_for<std::remove_cvref_t<__AnyType>";
 		if (type->templateParams) {
@@ -6781,12 +6838,12 @@ namespace AstrumLang {
 		}
 		out << ">;\n"
 		    << std::string(--depth, '\t')
-		    << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef__Unowned, "
+		    << "} else if constexpr (std::is_base_of_v<Builtin::ObjectRef__Unowned, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
 		out << "_obj = "
-		       "CppAdvance::GetObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value)); "
-		       "CppAdvance::Retain(_obj);\n"
+		       "Builtin::GetObjectReference(reinterpret_cast<Builtin::ObjectRef*>(&value)); "
+		       "Builtin::Retain(_obj);\n"
 		    << std::string(depth, '\t') << "_vtable = &__vtable_" << type->id
 		    << "_for<std::remove_cvref_t<__AnyType>";
 		if (type->templateParams) {
@@ -6799,7 +6856,7 @@ namespace AstrumLang {
 		}
 		out << ">;\n"
 		    << std::string(--depth, '\t')
-		    << "} else if constexpr (std::is_base_of_v<CppAdvance::Struct, "
+		    << "} else if constexpr (std::is_base_of_v<Builtin::Struct, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
 		out << "_obj = new (::operator new(sizeof(typename "
@@ -6817,7 +6874,7 @@ namespace AstrumLang {
 		}
 		out << ">;\n"
 		    << std::string(--depth, '\t')
-		    << "} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_" << type->id
+		    << "} else { _obj = (Builtin::Object*)value.obj; _vtable = &__vtable_" << type->id
 		    << "_for<typename __AnyType::__type";
 		if (type->templateParams) {
 			for (auto param : type->templateParams->templateParamDeclaration()) {
@@ -6830,10 +6887,10 @@ namespace AstrumLang {
 		out << ">; }\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
 
 		out << "public: template<class __AnyType, class __FixedType = "
-		       "std::decay_t<__AnyType>::__self> requires std::is_base_of_v<CppAdvance::Object, "
+		       "std::decay_t<__AnyType>::__self> requires std::is_base_of_v<Builtin::Object, "
 		       "std::decay_t<__AnyType>> "
 		    << type->id
-		    << "(__AnyType&& value) : ___super((CppAdvance::Object*)&value), _vtable{ &__vtable_"
+		    << "(__AnyType&& value) : ___super((Builtin::Object*)&value), _vtable{ &__vtable_"
 		    << type->id << "_for<__FixedType";
 		if (type->templateParams) {
 			for (auto param : type->templateParams->templateParamDeclaration()) {
@@ -6853,7 +6910,7 @@ namespace AstrumLang {
 			}
 		}
 		out << ">, \"Cannot initialize interface " << type->id
-		    << " from this type\"); CppAdvance::Retain(_obj); }\n"
+		    << " from this type\"); Builtin::Retain(_obj); }\n"
 		    << std::string(depth, '\t');
 
 		out << "public: template<class __AnyType> " << type->id
@@ -6870,21 +6927,21 @@ namespace AstrumLang {
 		}
 		out << ">,\"Cannot initialize interface " << type->id << " from this type\");\n"
 		    << std::string(depth, '\t');
-		out << "if (_obj) CppAdvance::Release(_obj);\n" << std::string(depth, '\t');
-		out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, "
+		out << "if (_obj) Builtin::Release(_obj);\n" << std::string(depth, '\t');
+		out << "if constexpr (std::is_base_of_v<Builtin::InterfaceRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::Retain(_obj); "
+		out << "_obj = Builtin::GetObjectReference(&value); Builtin::Retain(_obj); "
 		    << "if constexpr(std::is_base_of_v<__vtable,typename "
 		       "std::remove_cvref_t<__AnyType>::__vtable>) _vtable = "
-		       "CppAdvance::GetVTableFromInterface(&value);\n"
+		       "Builtin::GetVTableFromInterface(&value);\n"
 		    << std::string(depth, '\t')
 		    << "else static_assert(false, \"Incompatible interfaces\");\n"
 		    << std::string(--depth, '\t');
-		out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, "
+		out << "} else if constexpr (std::is_base_of_v<Builtin::ObjectRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::Retain(_obj);\n"
+		out << "_obj = Builtin::GetObjectReference(&value); Builtin::Retain(_obj);\n"
 		    << std::string(depth, '\t') << "_vtable = &__vtable_" << type->id
 		    << "_for<std::remove_cvref_t<__AnyType>";
 		if (type->templateParams) {
@@ -6897,12 +6954,12 @@ namespace AstrumLang {
 		}
 		out << ">;\n"
 		    << std::string(--depth, '\t')
-		    << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef__Unowned, "
+		    << "} else if constexpr (std::is_base_of_v<Builtin::ObjectRef__Unowned, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
 		out << "_obj = "
-		       "CppAdvance::GetObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value)); "
-		       "CppAdvance::Retain(_obj);\n"
+		       "Builtin::GetObjectReference(reinterpret_cast<Builtin::ObjectRef*>(&value)); "
+		       "Builtin::Retain(_obj);\n"
 		    << std::string(depth, '\t') << "_vtable = &__vtable_" << type->id
 		    << "_for<std::remove_cvref_t<__AnyType>";
 		if (type->templateParams) {
@@ -6915,7 +6972,7 @@ namespace AstrumLang {
 		}
 		out << ">;\n"
 		    << std::string(--depth, '\t')
-		    << "} else if constexpr (std::is_base_of_v<CppAdvance::Struct, "
+		    << "} else if constexpr (std::is_base_of_v<Builtin::Struct, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
 		out << "_obj = new (::operator new(sizeof(typename "
@@ -6933,7 +6990,7 @@ namespace AstrumLang {
 		}
 		out << ">;\n"
 		    << std::string(--depth, '\t')
-		    << "} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_" << type->id
+		    << "} else { _obj = (Builtin::Object*)value.obj; _vtable = &__vtable_" << type->id
 		    << "_for<typename __AnyType::__type";
 		if (type->templateParams) {
 			for (auto param : type->templateParams->templateParamDeclaration()) {
@@ -6960,23 +7017,23 @@ namespace AstrumLang {
 		}
 		out << ">,\"Cannot initialize interface " << type->id << " from this type\");\n"
 		    << std::string(depth, '\t');
-		out << "if (_obj) CppAdvance::Release(_obj);\n" << std::string(depth, '\t');
-		out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, "
+		out << "if (_obj) Builtin::Release(_obj);\n" << std::string(depth, '\t');
+		out << "if constexpr (std::is_base_of_v<Builtin::InterfaceRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = CppAdvance::GetObjectReference(&value); "
-		       "CppAdvance::ClearObjectReference((CppAdvance::ObjectRef*)&value); "
+		out << "_obj = Builtin::GetObjectReference(&value); "
+		       "Builtin::ClearObjectReference((Builtin::ObjectRef*)&value); "
 		    << "if constexpr(std::is_base_of_v<__vtable,typename "
 		       "std::remove_cvref_t<__AnyType>::__vtable>) _vtable = "
-		       "CppAdvance::GetVTableFromInterface(&value);\n"
+		       "Builtin::GetVTableFromInterface(&value);\n"
 		    << std::string(depth, '\t')
 		    << "else static_assert(false, \"Incompatible interfaces\");\n"
 		    << std::string(--depth, '\t');
-		out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, "
+		out << "} else if constexpr (std::is_base_of_v<Builtin::ObjectRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = CppAdvance::GetObjectReference(&value); "
-		       "CppAdvance::ClearObjectReference((CppAdvance::ObjectRef*)&value);\n"
+		out << "_obj = Builtin::GetObjectReference(&value); "
+		       "Builtin::ClearObjectReference((Builtin::ObjectRef*)&value);\n"
 		    << std::string(depth, '\t') << "_vtable = &__vtable_" << type->id
 		    << "_for<std::remove_cvref_t<__AnyType>";
 		if (type->templateParams) {
@@ -6989,12 +7046,12 @@ namespace AstrumLang {
 		}
 		out << ">;\n"
 		    << std::string(--depth, '\t')
-		    << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef__Unowned, "
+		    << "} else if constexpr (std::is_base_of_v<Builtin::ObjectRef__Unowned, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
 		out << "_obj = "
-		       "CppAdvance::GetObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value)); "
-		       "CppAdvance::Retain(_obj);\n"
+		       "Builtin::GetObjectReference(reinterpret_cast<Builtin::ObjectRef*>(&value)); "
+		       "Builtin::Retain(_obj);\n"
 		    << std::string(depth, '\t') << "_vtable = &__vtable_" << type->id
 		    << "_for<std::remove_cvref_t<__AnyType>";
 		if (type->templateParams) {
@@ -7007,7 +7064,7 @@ namespace AstrumLang {
 		}
 		out << ">;\n"
 		    << std::string(--depth, '\t')
-		    << "} else if constexpr (std::is_base_of_v<CppAdvance::Struct, "
+		    << "} else if constexpr (std::is_base_of_v<Builtin::Struct, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
 		out << "_obj = new (::operator new(sizeof(typename "
@@ -7025,7 +7082,7 @@ namespace AstrumLang {
 		}
 		out << ">;\n"
 		    << std::string(--depth, '\t')
-		    << "} else { _obj = (CppAdvance::Object*)value.obj; _vtable = &__vtable_" << type->id
+		    << "} else { _obj = (Builtin::Object*)value.obj; _vtable = &__vtable_" << type->id
 		    << "_for<typename __AnyType::__type";
 		if (type->templateParams) {
 			for (auto param : type->templateParams->templateParamDeclaration()) {
@@ -7040,7 +7097,7 @@ namespace AstrumLang {
 		    << std::string(depth, '\t');
 
 		out << "public: template<class __AnyType, class __FixedType = "
-		       "std::decay_t<__AnyType>::__self> requires std::is_base_of_v<CppAdvance::Object, "
+		       "std::decay_t<__AnyType>::__self> requires std::is_base_of_v<Builtin::Object, "
 		       "std::decay_t<__AnyType>> "
 		    << type->id << "& operator=(__AnyType&& value) { static_assert(__ImplementsInterface_"
 		    << type->id << "<__FixedType";
@@ -7054,8 +7111,8 @@ namespace AstrumLang {
 		}
 		out << ">, \"Cannot initialize interface " << type->id << " from this type\"); \n "
 		    << std::string(depth, '\t')
-		    << "if (_obj) CppAdvance::Release(_obj); _obj = (CppAdvance::Object*)&value; "
-		       "CppAdvance::Retain(_obj); \n"
+		    << "if (_obj) Builtin::Release(_obj); _obj = (Builtin::Object*)&value; "
+		       "Builtin::Retain(_obj); \n"
 		    << std::string(depth, '\t') << "_vtable = &__vtable_" << type->id << "_for<__FixedType";
 		if (type->templateParams) {
 			for (auto param : type->templateParams->templateParamDeclaration()) {
@@ -7068,7 +7125,7 @@ namespace AstrumLang {
 		out << ">; return *this; }\n" << std::string(depth, '\t');
 		// method default implementations and final methods
 		for (const auto& constant : type->constants) {
-			out << "#line " << constant.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			if (constant.templateParams) {
 				isFunctionDeclaration = true;
@@ -7096,7 +7153,7 @@ namespace AstrumLang {
 		for (const auto& alias : type->typeAliases) {
 			if (!alias.type)
 				continue;
-			out << "#line " << alias.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << alias.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			if (alias.templateParams) {
 				isFunctionDeclaration = true;
@@ -7111,7 +7168,7 @@ namespace AstrumLang {
 		}
 		for (const auto& method : type->methods) {
 			if (method.isFinal) {
-				out << "#line " << method.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << method.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "public: ";
 				if (method.attributes) {
@@ -7172,9 +7229,50 @@ namespace AstrumLang {
 				out << ";\n" << std::string(depth, '\t');
 				continue;
 			}
-			if (!method.isDefault)
+			if (!method.isDefault && !method.isStatic && !method.indexerParams) {
+				out << "#line " << method.pos.line << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				out << "public: FORCE_INLINE ";
+				if (method.returnType)
+				{
+					if (method.returnType) {
+						if (method.isConstReturn || !method.isRefReturn)
+							out << "const ";
+						printTypeId(method.returnType);
+					} else if (method.expression) {
+						out << "decltype(auto)";
+					} else {
+						out << "void";
+					}
+					if (method.isRefReturn)
+						out << "&";
+				}
+				out << " " << method.id << "(";
+				first = true;
+				if (method.params) {
+					if (auto params = method.params->paramDeclClause()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printParamDeclClause(params);
+					}
+				}
+				out << ") const ";
+				if (method.exceptionSpecification)
+					printExceptionSpecification(method.exceptionSpecification);
+				out << "{ ADV_EXPRESSION_BODY(_vtable->fnptr_" << methodIds[&method] <<"(_obj";
+				if (method.params) {
+					if (auto params = method.params->paramDeclClause()) {
+						for (auto param : params->paramDeclList()->paramDeclaration()) {
+							out << ", ";
+							printIdentifier(param->Identifier());
+						}
+					}
+				}
+				out << ")); }\n" << std::string(depth,'\t');
 				continue;
-			out << "#line " << method.pos.line << " \"" << filename << ".ast\"\n"
+			}
+			out << "#line " << method.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "public: ";
 			if (method.attributes) {
@@ -7242,7 +7340,7 @@ namespace AstrumLang {
 		out << "class ";
 		if (isUnsafe)
 			out << "[[clang::annotate(\"unsafe\")]] ";
-		out << type->id << "__Unowned final : public CppAdvance::InterfaceRef__Unowned {\n"
+		out << type->id << "__Unowned final : public Builtin::InterfaceRef__Unowned {\n"
 		    << std::string(++depth, '\t') << "public: using __self = " << type->id << "__Unowned";
 		if (type->templateParams) {
 			out << "<";
@@ -7273,8 +7371,8 @@ namespace AstrumLang {
 			out << ">";
 		}
 		out << ";\n" << std::string(depth, '\t');
-		out << "public: using __class = CppAdvance::Object;\n" << std::string(depth, '\t');
-		out << "public: using ___super = CppAdvance::InterfaceRef__Unowned;\n"
+		out << "public: using __class = Builtin::Object;\n" << std::string(depth, '\t');
+		out << "public: using ___super = Builtin::InterfaceRef__Unowned;\n"
 		    << std::string(depth, '\t');
 		out << "private: friend class " << type->id;
 		if (type->templateParams) {
@@ -7364,7 +7462,7 @@ namespace AstrumLang {
 					out << "...";
 			}
 			out << ">& other) : ___super(other._obj), _vtable{ reinterpret_cast<const "
-			       "__vtable*>(other._vtable) } { CppAdvance::UnownedRetain(_obj); }\n"
+			       "__vtable*>(other._vtable) } { Builtin::UnownedRetain(_obj); }\n"
 			    << std::string(depth, '\t');
 
 			CTOR_TEMPLATE_PARAMS;
@@ -7379,10 +7477,10 @@ namespace AstrumLang {
 				if (param->Ellipsis())
 					out << "...";
 			}
-			out << ">& other) { if (_obj) CppAdvance::UnownedRelease(_obj); _obj = other._obj; \n"
+			out << ">& other) { if (_obj) Builtin::UnownedRelease(_obj); _obj = other._obj; \n"
 			    << std::string(depth, '\t');
 			out << "_vtable = reinterpret_cast<const __vtable*>(other._vtable); "
-			       "CppAdvance::UnownedRetain(_obj); return *this; }\n"
+			       "Builtin::UnownedRetain(_obj); return *this; }\n"
 			    << std::string(depth, '\t');
 
 			CTOR_TEMPLATE_PARAMS;
@@ -7436,34 +7534,34 @@ namespace AstrumLang {
 				if (param->Ellipsis())
 					out << "...";
 			}
-			out << ">&& other) { if (_obj) CppAdvance::UnownedRelease(_obj); _obj = other._obj; \n"
+			out << ">&& other) { if (_obj) Builtin::UnownedRelease(_obj); _obj = other._obj; \n"
 			    << std::string(depth, '\t');
 			out << "_vtable = reinterpret_cast<const __vtable*>(other._vtable); other._obj = "
 			       "nullptr; other._vtable = nullptr; return *this; }\n"
 			    << std::string(depth, '\t');
 		}
 		out << "public: template<class __AnyType> requires "
-		       "std::derived_from<std::remove_cvref_t<__AnyType>, CppAdvance::InterfaceRef> && "
+		       "std::derived_from<std::remove_cvref_t<__AnyType>, Builtin::InterfaceRef> && "
 		       "std::derived_from<typename std::remove_cvref_t<__AnyType>::__vtable, __vtable>\n"
 		    << std::string(depth, '\t');
 		out << type->id
 		    << "__Unowned(const __AnyType& value) : "
-		       "___super(CppAdvance::GetObjectReference(&value)), _vtable{ "
-		       "CppAdvance::GetVTableFromInterface(&value) } \n"
+		       "___super(Builtin::GetObjectReference(&value)), _vtable{ "
+		       "Builtin::GetVTableFromInterface(&value) } \n"
 		    << std::string(depth++, '\t') << "{\n"
 		    << std::string(depth, '\t');
-		out << "CppAdvance::UnownedRetain(_obj);\n"
+		out << "Builtin::UnownedRetain(_obj);\n"
 		    << std::string(--depth, '\t') << "}\n"
 		    << std::string(depth, '\t');
 		out << "public: template<class __AnyType> requires "
-		       "std::derived_from<std::remove_cvref_t<__AnyType>, CppAdvance::InterfaceRef> && "
+		       "std::derived_from<std::remove_cvref_t<__AnyType>, Builtin::InterfaceRef> && "
 		       "std::derived_from<typename std::remove_cvref_t<__AnyType>::__vtable, __vtable>\n"
 		    << std::string(depth, '\t');
 		out << type->id
 		    << "__Unowned& operator=(const __AnyType& value) { if (_obj) "
-		       "CppAdvance::UnownedRelease(_obj); _obj = CppAdvance::GetObjectReference(&value); "
-		       "CppAdvance::UnownedRetain(_obj); _vtable = "
-		       "CppAdvance::GetVTableFromInterface(&value); return *this; } \n"
+		       "Builtin::UnownedRelease(_obj); _obj = Builtin::GetObjectReference(&value); "
+		       "Builtin::UnownedRetain(_obj); _vtable = "
+		       "Builtin::GetVTableFromInterface(&value); return *this; } \n"
 		    << std::string(depth, '\t');
 		out << "public: template<class __AnyType> requires __ImplementsInterface_" << type->id
 		    << "<__AnyType";
@@ -7479,21 +7577,21 @@ namespace AstrumLang {
 		    << "__Unowned(const __AnyType& value) : ___super(nullptr), _vtable{ nullptr } \n"
 		    << std::string(depth++, '\t') << "{\n"
 		    << std::string(depth, '\t');
-		out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, "
+		out << "if constexpr (std::is_base_of_v<Builtin::InterfaceRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = CppAdvance::GetObjectReferenceFromInterface(&value); "
-		       "CppAdvance::UnownedRetain(_obj); "
+		out << "_obj = Builtin::GetObjectReferenceFromInterface(&value); "
+		       "Builtin::UnownedRetain(_obj); "
 		    << "if constexpr(std::is_base_of_v<__vtable,typename "
 		       "std::remove_cvref_t<__AnyType>::__vtable>) _vtable = "
-		       "CppAdvance::GetVTableFromInterface(&value);\n"
+		       "Builtin::GetVTableFromInterface(&value);\n"
 		    << std::string(depth, '\t')
 		    << "else static_assert(false, \"Incompatible interfaces\");\n"
 		    << std::string(--depth, '\t');
-		out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, "
+		out << "} else if constexpr (std::is_base_of_v<Builtin::ObjectRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::UnownedRetain(_obj);\n"
+		out << "_obj = Builtin::GetObjectReference(&value); Builtin::UnownedRetain(_obj);\n"
 		    << std::string(depth, '\t') << "_vtable = &__vtable_" << type->id
 		    << "_for<std::remove_cvref_t<__AnyType>";
 		if (type->templateParams) {
@@ -7506,12 +7604,12 @@ namespace AstrumLang {
 		}
 		out << ">;\n"
 		    << std::string(--depth, '\t')
-		    << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef__Unowned, "
+		    << "} else if constexpr (std::is_base_of_v<Builtin::ObjectRef__Unowned, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
 		out << "_obj = "
-		       "CppAdvance::GetObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value)); "
-		       "CppAdvance::UnownedRetain(_obj);\n"
+		       "Builtin::GetObjectReference(reinterpret_cast<Builtin::ObjectRef*>(&value)); "
+		       "Builtin::UnownedRetain(_obj);\n"
 		    << std::string(depth, '\t') << "_vtable = &__vtable_" << type->id
 		    << "_for<std::remove_cvref_t<__AnyType>";
 		if (type->templateParams) {
@@ -7542,21 +7640,21 @@ namespace AstrumLang {
 		    << "__Unowned(__AnyType&& value) : ___super(nullptr), _vtable{ nullptr } \n"
 		    << std::string(depth++, '\t') << "{\n"
 		    << std::string(depth, '\t');
-		out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, "
+		out << "if constexpr (std::is_base_of_v<Builtin::InterfaceRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = CppAdvance::GetObjectReferenceFromInterface(&value); "
-		       "CppAdvance::UnownedRetain(_obj);"
+		out << "_obj = Builtin::GetObjectReferenceFromInterface(&value); "
+		       "Builtin::UnownedRetain(_obj);"
 		    << "if constexpr(std::is_base_of_v<__vtable,typename "
 		       "std::remove_cvref_t<__AnyType>::__vtable>) _vtable = "
-		       "CppAdvance::GetVTableFromInterface(&value);\n"
+		       "Builtin::GetVTableFromInterface(&value);\n"
 		    << std::string(depth, '\t')
 		    << "else static_assert(false, \"Incompatible interfaces\");\n"
 		    << std::string(--depth, '\t');
-		out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, "
+		out << "} else if constexpr (std::is_base_of_v<Builtin::ObjectRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::UnownedRetain(_obj);\n"
+		out << "_obj = Builtin::GetObjectReference(&value); Builtin::UnownedRetain(_obj);\n"
 		    << std::string(depth, '\t') << "_vtable = &__vtable_" << type->id
 		    << "_for<std::remove_cvref_t<__AnyType>";
 		if (type->templateParams) {
@@ -7569,12 +7667,12 @@ namespace AstrumLang {
 		}
 		out << ">;\n"
 		    << std::string(--depth, '\t')
-		    << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef__Unowned, "
+		    << "} else if constexpr (std::is_base_of_v<Builtin::ObjectRef__Unowned, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
 		out << "_obj = "
-		       "CppAdvance::GetObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value)); "
-		       "CppAdvance::ClearObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value));"
+		       "Builtin::GetObjectReference(reinterpret_cast<Builtin::ObjectRef*>(&value)); "
+		       "Builtin::ClearObjectReference(reinterpret_cast<Builtin::ObjectRef*>(&value));"
 		       "\n"
 		    << std::string(depth, '\t') << "_vtable = &__vtable_" << type->id
 		    << "_for<std::remove_cvref_t<__AnyType>";
@@ -7604,22 +7702,22 @@ namespace AstrumLang {
 		}
 		out << "> " << type->id << "__Unowned& operator=(const __AnyType& value) {\n"
 		    << std::string(++depth, '\t');
-		out << "if (_obj) CppAdvance::Release(_obj);\n" << std::string(depth, '\t');
-		out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, "
+		out << "if (_obj) Builtin::Release(_obj);\n" << std::string(depth, '\t');
+		out << "if constexpr (std::is_base_of_v<Builtin::InterfaceRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = CppAdvance::GetObjectReferenceFromInterface(&value); "
-		       "CppAdvance::UnownedRetain(_obj); "
+		out << "_obj = Builtin::GetObjectReferenceFromInterface(&value); "
+		       "Builtin::UnownedRetain(_obj); "
 		    << "if constexpr(std::is_base_of_v<__vtable,typename "
 		       "std::remove_cvref_t<__AnyType>::__vtable>) _vtable = "
-		       "CppAdvance::GetVTableFromInterface(&value);\n"
+		       "Builtin::GetVTableFromInterface(&value);\n"
 		    << std::string(depth, '\t')
 		    << "else static_assert(false, \"Incompatible interfaces\");\n"
 		    << std::string(--depth, '\t');
-		out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, "
+		out << "} else if constexpr (std::is_base_of_v<Builtin::ObjectRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::UnownedRetain(_obj);\n"
+		out << "_obj = Builtin::GetObjectReference(&value); Builtin::UnownedRetain(_obj);\n"
 		    << std::string(depth, '\t') << "_vtable = &__vtable_" << type->id
 		    << "_for<std::remove_cvref_t<__AnyType>";
 		if (type->templateParams) {
@@ -7632,12 +7730,12 @@ namespace AstrumLang {
 		}
 		out << ">;\n"
 		    << std::string(--depth, '\t')
-		    << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef__Unowned, "
+		    << "} else if constexpr (std::is_base_of_v<Builtin::ObjectRef__Unowned, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
 		out << "_obj = "
-		       "CppAdvance::GetObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value)); "
-		       "CppAdvance::UnownedRetain(_obj);\n"
+		       "Builtin::GetObjectReference(reinterpret_cast<Builtin::ObjectRef*>(&value)); "
+		       "Builtin::UnownedRetain(_obj);\n"
 		    << std::string(depth, '\t') << "_vtable = &__vtable_" << type->id
 		    << "_for<std::remove_cvref_t<__AnyType>";
 		if (type->templateParams) {
@@ -7667,22 +7765,22 @@ namespace AstrumLang {
 		out << "> && std::is_rvalue_reference_v<__AnyType&&> " << type->id
 		    << "__Unowned& operator=(__AnyType&& value) {\n"
 		    << std::string(++depth, '\t');
-		out << "if (_obj) CppAdvance::Release(_obj);\n" << std::string(depth, '\t');
-		out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, "
+		out << "if (_obj) Builtin::Release(_obj);\n" << std::string(depth, '\t');
+		out << "if constexpr (std::is_base_of_v<Builtin::InterfaceRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = CppAdvance::GetObjectReferenceFromInterface(&value); "
-		       "CppAdvance::UnownedRetain(_obj); "
+		out << "_obj = Builtin::GetObjectReferenceFromInterface(&value); "
+		       "Builtin::UnownedRetain(_obj); "
 		    << "if constexpr(std::is_base_of_v<__vtable,typename "
 		       "std::remove_cvref_t<__AnyType>::__vtable>) _vtable = "
-		       "CppAdvance::GetVTableFromInterface(&value);\n"
+		       "Builtin::GetVTableFromInterface(&value);\n"
 		    << std::string(depth, '\t')
 		    << "else static_assert(false, \"Incompatible interfaces\");\n"
 		    << std::string(--depth, '\t');
-		out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, "
+		out << "} else if constexpr (std::is_base_of_v<Builtin::ObjectRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = CppAdvance::GetObjectReference(&value); CppAdvance::UnownedRetain(_obj);\n"
+		out << "_obj = Builtin::GetObjectReference(&value); Builtin::UnownedRetain(_obj);\n"
 		    << std::string(depth, '\t') << "_vtable = &__vtable_" << type->id
 		    << "_for<std::remove_cvref_t<__AnyType>";
 		if (type->templateParams) {
@@ -7695,12 +7793,12 @@ namespace AstrumLang {
 		}
 		out << ">;\n"
 		    << std::string(--depth, '\t')
-		    << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef__Unowned, "
+		    << "} else if constexpr (std::is_base_of_v<Builtin::ObjectRef__Unowned, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
 		out << "_obj = "
-		       "CppAdvance::GetObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value)); "
-		       "CppAdvance::ClearObjectReference(reinterpret_cast<CppAdvance::ObjectRef*>(&value));"
+		       "Builtin::GetObjectReference(reinterpret_cast<Builtin::ObjectRef*>(&value)); "
+		       "Builtin::ClearObjectReference(reinterpret_cast<Builtin::ObjectRef*>(&value));"
 		       "\n"
 		    << std::string(depth, '\t') << "_vtable = &__vtable_" << type->id
 		    << "_for<std::remove_cvref_t<__AnyType>";
@@ -7731,7 +7829,7 @@ namespace AstrumLang {
 		out << "class ";
 		if (isUnsafe)
 			out << "[[clang::annotate(\"unsafe\")]] ";
-		out << type->id << "__Weak final : public CppAdvance::ObjectRef__Weak {\n"
+		out << type->id << "__Weak final : public Builtin::ObjectRef__Weak {\n"
 		    << std::string(++depth, '\t') << "public: using __self = " << type->id << "__Weak";
 		if (type->templateParams) {
 			out << "<";
@@ -7762,9 +7860,8 @@ namespace AstrumLang {
 			out << ">";
 		}
 		out << ";\n" << std::string(depth, '\t');
-		out << "public: using __class = CppAdvance::Object;\n" << std::string(depth, '\t');
-		out << "public: using ___super = CppAdvance::ObjectRef__Weak;\n"
-		    << std::string(depth, '\t');
+		out << "public: using __class = Builtin::Object;\n" << std::string(depth, '\t');
+		out << "public: using ___super = Builtin::ObjectRef__Weak;\n" << std::string(depth, '\t');
 		out << "private: friend class " << type->id;
 		if (type->templateParams) {
 			out << "<";
@@ -7874,23 +7971,23 @@ namespace AstrumLang {
 			    << std::string(depth, '\t');
 		}
 		out << "public: template<class __AnyType> requires "
-		       "std::derived_from<std::remove_cvref_t<__AnyType>, CppAdvance::InterfaceRef> && "
+		       "std::derived_from<std::remove_cvref_t<__AnyType>, Builtin::InterfaceRef> && "
 		       "std::derived_from<typename std::remove_cvref_t<__AnyType>::__vtable, __vtable>\n"
 		    << std::string(depth, '\t');
 		out << type->id
 		    << "__Weak(const __AnyType& value) : "
-		       "___super(formWeakRef(CppAdvance::GetObjectReferenceFromInterface(&value))), "
-		       "_vtable{ CppAdvance::GetVTableFromInterface(&value) } \n"
+		       "___super(formWeakRef(Builtin::GetObjectReferenceFromInterface(&value))), "
+		       "_vtable{ Builtin::GetVTableFromInterface(&value) } \n"
 		    << std::string(depth, '\t') << "{}\n"
 		    << std::string(depth, '\t');
 		out << "public: template<class __AnyType> requires "
-		       "std::derived_from<std::remove_cvref_t<__AnyType>, CppAdvance::InterfaceRef> && "
+		       "std::derived_from<std::remove_cvref_t<__AnyType>, Builtin::InterfaceRef> && "
 		       "std::derived_from<typename std::remove_cvref_t<__AnyType>::__vtable, __vtable>\n"
 		    << std::string(depth, '\t');
 		out << type->id
 		    << "__Weak& operator=(const __AnyType& value) { if (_obj) _obj->decrementWeak(); _obj "
-		       "= formWeakRef(CppAdvance::GetObjectReferenceFromInterface(&value)); _vtable = "
-		       "CppAdvance::GetVTableFromInterface(&value); return *this; } \n"
+		       "= formWeakRef(Builtin::GetObjectReferenceFromInterface(&value)); _vtable = "
+		       "Builtin::GetVTableFromInterface(&value); return *this; } \n"
 		    << std::string(depth, '\t');
 		out << "public: template<class __AnyType> requires __ImplementsInterface_" << type->id
 		    << "<__AnyType";
@@ -7906,20 +8003,20 @@ namespace AstrumLang {
 		    << "__Weak(const __AnyType& value) : ___super(nullptr), _vtable{ nullptr } \n"
 		    << std::string(depth++, '\t') << "{\n"
 		    << std::string(depth, '\t');
-		out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, "
+		out << "if constexpr (std::is_base_of_v<Builtin::InterfaceRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = formWeakRef(CppAdvance::GetObjectReferenceFromInterface(&value)); "
+		out << "_obj = formWeakRef(Builtin::GetObjectReferenceFromInterface(&value)); "
 		    << "if constexpr(std::is_base_of_v<__vtable,typename "
 		       "std::remove_cvref_t<__AnyType>::__vtable>) _vtable = "
-		       "CppAdvance::GetVTableFromInterface(&value);\n"
+		       "Builtin::GetVTableFromInterface(&value);\n"
 		    << std::string(depth, '\t')
 		    << "else static_assert(false, \"Incompatible interfaces\");\n"
 		    << std::string(--depth, '\t');
-		out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, "
+		out << "} else if constexpr (std::is_base_of_v<Builtin::ObjectRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = formWeakRef(CppAdvance::GetObjectReference(&value)); \n"
+		out << "_obj = formWeakRef(Builtin::GetObjectReference(&value)); \n"
 		    << std::string(depth, '\t') << "_vtable = &__vtable_" << type->id
 		    << "_for<std::remove_cvref_t<__AnyType>";
 		if (type->templateParams) {
@@ -7950,20 +8047,20 @@ namespace AstrumLang {
 		out << "> " << type->id << "__Weak& operator=(const __AnyType& value) {\n"
 		    << std::string(++depth, '\t');
 		out << "if (_obj) _obj->decrementWeak();\n" << std::string(depth, '\t');
-		out << "if constexpr (std::is_base_of_v<CppAdvance::InterfaceRef, "
+		out << "if constexpr (std::is_base_of_v<Builtin::InterfaceRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = formWeakRef(CppAdvance::GetObjectReferenceFromInterface(&value)); "
+		out << "_obj = formWeakRef(Builtin::GetObjectReferenceFromInterface(&value)); "
 		    << "if constexpr(std::is_base_of_v<__vtable,typename "
 		       "std::remove_cvref_t<__AnyType>::__vtable>) _vtable = "
-		       "CppAdvance::GetVTableFromInterface(&value);\n"
+		       "Builtin::GetVTableFromInterface(&value);\n"
 		    << std::string(depth, '\t')
 		    << "else static_assert(false, \"Incompatible interfaces\");\n"
 		    << std::string(--depth, '\t');
-		out << "} else if constexpr (std::is_base_of_v<CppAdvance::ObjectRef, "
+		out << "} else if constexpr (std::is_base_of_v<Builtin::ObjectRef, "
 		       "std::remove_cvref_t<__AnyType>>) {\n"
 		    << std::string(depth++, '\t');
-		out << "_obj = formWeakRef(CppAdvance::GetObjectReference(&value)); \n"
+		out << "_obj = formWeakRef(Builtin::GetObjectReference(&value)); \n"
 		    << std::string(depth, '\t') << "_vtable = &__vtable_" << type->id
 		    << "_for<std::remove_cvref_t<__AnyType>";
 		if (type->templateParams) {
@@ -8035,7 +8132,7 @@ namespace AstrumLang {
 					printIdentifier(param->Identifier());
 				}
 			}
-			out << "> requires std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> && "
+			out << "> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && "
 			       "std::derived_from<typename __AnyInterface::__vtable, typename "
 			    << type->id << "::__vtable> ";
 			out << "FORCE_INLINE ";
@@ -8106,16 +8203,16 @@ namespace AstrumLang {
 			} else {
 				if (method.isDefault) {
 					out << " {\n" << std::string(++depth, '\t');
-					out << "auto func = CppAdvance::GetVTableFromInterface(&iface)->fnptr_"
+					out << "auto func = Builtin::GetVTableFromInterface(&iface)->fnptr_"
 					    << methodIds[&method] << ";\n"
 					    << std::string(depth, '\t');
 					out << "if (func) { ADV_EXPRESSION_BODY(func";
 				} else {
 					out << " { "
-					       "ADV_EXPRESSION_BODY(CppAdvance::GetVTableFromInterface(&iface)->fnptr_"
+					       "ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_"
 					    << methodIds[&method];
 				}
-				out << "(CppAdvance::GetObjectReferenceFromInterface(&iface)";
+				out << "(Builtin::GetObjectReferenceFromInterface(&iface)";
 				if (method.params) {
 					if (auto params = method.params->paramDeclClause()) {
 						for (auto param : params->paramDeclList()->paramDeclaration()) {
@@ -8196,14 +8293,14 @@ namespace AstrumLang {
 							}
 						}
 						out << "template<class __AnyInterface> requires "
-						       "std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> && "
+						       "std::derived_from<__AnyInterface, Builtin::InterfaceRef> && "
 						       "std::derived_from<typename __AnyInterface::__vtable, typename "
 						    << type->id << "::__vtable> ";
 						out << "FORCE_INLINE void setAt(";
 						out << "const __AnyInterface&";
 						out << " iface, ";
 						if (isUnchecked) {
-							out << "CppAdvance::UncheckedTag, ";
+							out << "Builtin::UncheckedTag, ";
 						}
 						printParamDeclClause(method.indexerParams);
 						out << ", const ";
@@ -8212,11 +8309,11 @@ namespace AstrumLang {
 						if (method.exceptionSpecification)
 							printExceptionSpecification(method.exceptionSpecification);
 
-						out << " { CppAdvance::GetVTableFromInterface(&iface)->fnptr_set"
+						out << " { Builtin::GetVTableFromInterface(&iface)->fnptr_set"
 						    << methodIds[&method];
-						out << "(CppAdvance::GetObjectReferenceFromInterface(&iface)";
+						out << "(Builtin::GetObjectReferenceFromInterface(&iface)";
 						if (isUnchecked) {
-							out << ", CppAdvance::UncheckedTag{}";
+							out << ", Builtin::UncheckedTag{}";
 						}
 						for (auto param :
 						     method.indexerParams->paramDeclList()->paramDeclaration()) {
@@ -8226,7 +8323,7 @@ namespace AstrumLang {
 						out << ", value); }\n" << std::string(depth, '\t');
 
 						// accessor
-						out << "#line 9999 \"" << filename << ".ast\"\n"
+						out << "#line 9999 \"" << fullFilename << ".ast\"\n"
 						    << std::string(depth, '\t');
 						out << "template<class __AnyInterface, class __IdxT = ";
 						printTypeId(method.returnType);
@@ -8264,7 +8361,7 @@ namespace AstrumLang {
 						out << "template<class _ElemRight> FORCE_INLINE auto& "
 						       "operator=(_ElemRight&& other) { setAt(_parent, ";
 						if (isUnchecked) {
-							out << ", CppAdvance::UncheckedTag{}";
+							out << ", Builtin::UncheckedTag{}";
 						}
 						for (auto param :
 						     method.indexerParams->paramDeclList()->paramDeclaration()) {
@@ -8295,7 +8392,7 @@ namespace AstrumLang {
 						out << "; }\n" << std::string(depth, '\t');
 						out << "FORCE_INLINE decltype(auto) __ref() { return getAt(_parent, ";
 						if (isUnchecked) {
-							out << ", CppAdvance::UncheckedTag{}";
+							out << ", Builtin::UncheckedTag{}";
 						}
 						for (auto param : params) {
 							bool first = true;
@@ -8344,14 +8441,14 @@ namespace AstrumLang {
 						}
 					}
 					out << "template<class __AnyInterface> requires "
-					       "std::derived_from<__AnyInterface, CppAdvance::InterfaceRef> && "
+					       "std::derived_from<__AnyInterface, Builtin::InterfaceRef> && "
 					       "std::derived_from<typename __AnyInterface::__vtable, typename "
 					    << type->id << "::__vtable> ";
 					out << "FORCE_INLINE decltype(auto) _operator_subscript(";
 					out << "const __AnyInterface&";
 					out << " iface, ";
 					if (isUnchecked) {
-						out << "CppAdvance::UncheckedTag __tag, ";
+						out << "Builtin::UncheckedTag __tag, ";
 					}
 					printParamDeclClause(method.indexerParams);
 					out << ") ";
@@ -8423,7 +8520,7 @@ namespace AstrumLang {
 				}
 			}
 			out << "template<class __AnyInterface> requires std::derived_from<__AnyInterface, "
-			       "CppAdvance::InterfaceRef> && std::derived_from<typename "
+			       "Builtin::InterfaceRef> && std::derived_from<typename "
 			       "__AnyInterface::__vtable, typename "
 			    << type->id << "::__vtable> ";
 			out << "FORCE_INLINE ";
@@ -8439,21 +8536,21 @@ namespace AstrumLang {
 			}
 			out << " get" << prop.id << "(";
 			out << "const __AnyInterface&";
-			out << " iface) { return CppAdvance::GetVTableFromInterface(&iface)->fnptr_get"
-			    << prop.id << "(CppAdvance::GetObjectReferenceFromInterface(&iface)); }\n"
+			out << " iface) { return Builtin::GetVTableFromInterface(&iface)->fnptr_get" << prop.id
+			    << "(Builtin::GetObjectReferenceFromInterface(&iface)); }\n"
 			    << std::string(depth, '\t');
 			if (prop.setter) {
 				// setter
 				out << "template<class __AnyInterface> requires std::derived_from<__AnyInterface, "
-				       "CppAdvance::InterfaceRef> && std::derived_from<typename "
+				       "Builtin::InterfaceRef> && std::derived_from<typename "
 				       "__AnyInterface::__vtable, typename "
 				    << type->id << "::__vtable> ";
 				out << "FORCE_INLINE void set" << prop.id << "(";
 				out << "const __AnyInterface&";
 				out << " iface, const ";
 				printTypeId(prop.type);
-				out << "& value) { CppAdvance::GetVTableFromInterface(&iface)->fnptr_set" << prop.id
-				    << "(CppAdvance::GetObjectReferenceFromInterface(&iface), value); }\n"
+				out << "& value) { Builtin::GetVTableFromInterface(&iface)->fnptr_set" << prop.id
+				    << "(Builtin::GetObjectReferenceFromInterface(&iface), value); }\n"
 				    << std::string(depth, '\t');
 
 				// accessor
@@ -8464,7 +8561,7 @@ namespace AstrumLang {
 
 				// dispatcher function
 				out << "template<class __AnyInterface> requires std::derived_from<__AnyInterface, "
-				       "CppAdvance::InterfaceRef> && std::derived_from<typename "
+				       "Builtin::InterfaceRef> && std::derived_from<typename "
 				       "__AnyInterface::__vtable, typename "
 				    << type->id << "::__vtable> ";
 				out << "FORCE_INLINE decltype(auto) _get_property_" << prop.id << "(";
@@ -8486,11 +8583,15 @@ namespace AstrumLang {
 	}
 
 	void AstrumCodegen::printExtension(StructDefinition* type) {
+		isExtension = true;
+		currentExtensionName = "__extension_" + filename + "_" + std::to_string(type->pos.line) + "_" + type->id;
 		sema.symbolContexts.push(sema.symbolContexts.top());
 		if (!type->compilationCondition.empty()) {
 			out << "#if " << type->compilationCondition << std::endl;
 		}
-		out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n"
+		out << std::string(depth, '\t') << "} namespace __extensions { using namespace "
+		    << sema.packageName << ";\n";
+		out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 		    << std::string(depth, '\t');
 		if (type->templateParams) {
 			printTemplateParams(type->templateParams);
@@ -8500,7 +8601,7 @@ namespace AstrumLang {
 				out << " ";
 			}
 		}
-		out << "using __extension_" << type->pos.line << "_" << type->id << " = ";
+		out << "using __extension_" << filename << "_" << type->pos.line << "_" << type->id << " = ";
 		if (type->extensionType) {
 			printTypeId(type->extensionType);
 		} else {
@@ -8533,7 +8634,8 @@ namespace AstrumLang {
 				    << std::string(++depth, '\t');
 			}
 			for (auto iface : type->interfaces->baseSpecifier()) {
-				out << "#line " << iface->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+				out << "#line " << iface->getStart()->getLine() << " \"" << fullFilename
+				    << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "ADV_CHECK_INTERFACE(" << iface->getText() << ", ";
 				if (iface->nestedNameSpecifier()) {
@@ -8548,7 +8650,7 @@ namespace AstrumLang {
 		}
 
 		for (const auto& func : type->methods) {
-			out << "#line " << func.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << func.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			if (func.indexerParams) {
 				bool isInline    = func.isInline;
@@ -8609,7 +8711,7 @@ namespace AstrumLang {
 				printTypeId(func.returnType);
 				if (func.isRefReturn)
 					out << "&";
-				out << " getAt(__extension_" << type->pos.line << "_" << type->id;
+				out << " getAt(__extension_" << filename << "_" << type->pos.line << "_" << type->id;
 				if (type->templateParams) {
 					out << "<";
 					bool first = true;
@@ -8631,14 +8733,14 @@ namespace AstrumLang {
 					out << "LIFETIMEBOUND";
 				out << ", ";
 				if (isUnchecked) {
-					out << "CppAdvance::UncheckedTag, ";
+					out << "Builtin::UncheckedTag, ";
 				}
 				printParamDeclClause(func.indexerParams);
 				out << ")";
 				if (func.exceptionSpecification)
 					printExceptionSpecification(func.exceptionSpecification);
 				out << ";\n" << std::string(depth, '\t');
-				out << "#line " << func.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << func.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				if (func.attributes) {
 					for (auto attr : func.attributes->attributeSpecifier()) {
@@ -8680,7 +8782,7 @@ namespace AstrumLang {
 				printTypeId(func.returnType);
 				if (func.isRefReturn)
 					out << "&";
-				out << " _operator_subscript(__extension_" << type->pos.line << "_" << type->id;
+				out << " _operator_subscript(__extension_" << filename << "_" << type->pos.line << "_" << type->id;
 				if (type->templateParams) {
 					out << "<";
 					bool first = true;
@@ -8702,7 +8804,7 @@ namespace AstrumLang {
 					out << "LIFETIMEBOUND";
 				out << ", ";
 				if (isUnchecked) {
-					out << "CppAdvance::UncheckedTag, ";
+					out << "Builtin::UncheckedTag, ";
 				}
 				printParamDeclClause(func.indexerParams);
 				out << ")";
@@ -8710,7 +8812,7 @@ namespace AstrumLang {
 					printExceptionSpecification(func.exceptionSpecification);
 				out << " { return getAt(__this";
 				if (isUnchecked) {
-					out << ", CppAdvance::UncheckedTag{}";
+					out << ", Builtin::UncheckedTag{}";
 				}
 				for (auto param : func.indexerParams->paramDeclList()->paramDeclaration()) {
 					out << ", ";
@@ -8768,7 +8870,8 @@ namespace AstrumLang {
 			}
 
 			if (!type->templateParams && func.isStatic) {
-				out << "template<class __TT> requires std::same_as<__TT, __extension_"
+				out << "template<class __TT> requires std::same_as<__TT, __extension_" << filename
+				    << "_"
 				    << type->pos.line << "_" << type->id;
 				if (type->templateParams) {
 					out << "<";
@@ -8818,7 +8921,7 @@ namespace AstrumLang {
 			}
 			out << "(";
 			if (!func.isConstructor && !func.isStatic) {
-				out << "__extension_" << type->pos.line << "_" << type->id;
+				out << "__extension_" << filename << "_" << type->pos.line << "_" << type->id;
 				if (type->templateParams) {
 					out << "<";
 					bool first = true;
@@ -8839,7 +8942,7 @@ namespace AstrumLang {
 				if (!func.isMutating)
 					out << "LIFETIMEBOUND";
 			} else if (func.isConstructor) {
-				out << "CppAdvance::ConstructorProxy<__extension_" << type->pos.line << "_"
+				out << "Builtin::ConstructorProxy<__extension_" << filename << "_" << type->pos.line << "_"
 				    << type->id;
 				if (type->templateParams && !type->id.empty()) {
 					out << "<";
@@ -8874,7 +8977,7 @@ namespace AstrumLang {
 				if (func.isConstructor) {
 					out << "decltype(auto)";
 				} else if (func.returnType->getText() == "self") {
-					out << "typename __extension_" << type->pos.line << "_" << type->id;
+					out << "typename __extension_" << filename << "_" << type->pos.line << "_" << type->id;
 					if (type->templateParams && !type->id.empty()) {
 						out << "<";
 						bool first = true;
@@ -8946,7 +9049,7 @@ namespace AstrumLang {
 					out << "inline ";
 				}
 
-				out << "auto " << func.id << "(__extension_" << type->pos.line << "_" << type->id;
+				out << "auto " << func.id << "(__extension_" << filename << "_" << type->pos.line << "_" << type->id;
 				if (type->templateParams) {
 					out << "<";
 					bool first = true;
@@ -8966,7 +9069,7 @@ namespace AstrumLang {
 				if (func.exceptionSpecification)
 					printExceptionSpecification(func.exceptionSpecification);
 				out << " -> ";
-				out << "typename __extension_" << type->pos.line << "_" << type->id;
+				out << "typename __extension_" << filename << "_" << type->pos.line << "_" << type->id;
 				if (type->templateParams) {
 					out << "<";
 					bool first = true;
@@ -9029,7 +9132,7 @@ namespace AstrumLang {
 				out << "auto " << func.id;
 				if (!func.params->paramDeclClause()) {
 					if (func.id.starts_with("_operator_"))
-						out << "_postfix(__extension_" << type->pos.line << "_" << type->id;
+						out << "_postfix(__extension_" << filename << "_" << type->pos.line << "_" << type->id;
 					if (type->templateParams) {
 						out << "<";
 						bool first = true;
@@ -9047,7 +9150,7 @@ namespace AstrumLang {
 				} else {
 					out << "(";
 					printParamDeclClause(func.params->paramDeclClause());
-					out << ", const __extension_" << type->pos.line << "_" << type->id;
+					out << ", const __extension_" << filename << "_" << type->pos.line << "_" << type->id;
 					if (type->templateParams) {
 						out << "<";
 						bool first = true;
@@ -9073,7 +9176,7 @@ namespace AstrumLang {
 		}
 
 		for (const auto& prop : type->properties) {
-			out << "#line " << prop.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << prop.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 
 			if (prop.attributes) {
@@ -9107,7 +9210,8 @@ namespace AstrumLang {
 				out << " ";
 			}
 			if (!type->templateParams && prop.isStatic) {
-				out << "template<class __TT> requires std::same_as<__TT, __extension_"
+				out << "template<class __TT> requires std::same_as<__TT, __extension_" << filename
+				    << "_"
 				    << type->pos.line << "_" << type->id;
 				if (type->templateParams) {
 					out << "<";
@@ -9149,7 +9253,7 @@ namespace AstrumLang {
 				out << "__static_";
 			out << "get" << prop.id << "(";
 			if (!prop.isStatic) {
-				out << "__extension_" << type->pos.line << "_" << type->id;
+				out << "__extension_" << filename << "_" << type->pos.line << "_" << type->id;
 				if (type->templateParams) {
 					out << "<";
 					bool first = true;
@@ -9181,7 +9285,8 @@ namespace AstrumLang {
 
 		if (!type->templateParams && !type->templateSpecializationArgs && type->interfaces) {
 			for (auto iface : type->interfaces->baseSpecifier()) {
-				out << "#line " << iface->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+				out << "#line " << iface->getStart()->getLine() << " \"" << fullFilename
+				    << ".ast\"\n"
 				    << std::string(depth, '\t');
 				out << "ADV_CHECK_INTERFACE_IMPLEMENTATION(" << type->id << ", ";
 				auto name = iface->className()->Identifier();
@@ -9196,9 +9301,34 @@ namespace AstrumLang {
 			}
 		}
 
+		out << "} namespace " << sema.packageName << "{\n";
+		for (const auto& func : type->methods) {
+			out << "using __extensions::";
+			if (func.indexerParams) {
+				out << "getAt; using __extensions::_operator_subscript";
+			} else if (func.isStatic) {
+				out << "__static_" << func.id;
+			} else if (func.isConstructor) {
+				out << "__construct_";
+			} else {
+				out << func.id;
+			}
+			out << ";\n";
+		}
+		for (const auto& prop : type->properties) {
+			out << "using __extensions::";
+			if (prop.isStatic) {
+				out << "__static_get" << prop.id;
+			} else {
+				out << "get" << prop.id;
+			}
+			out << ";\n";
+		}
+
 		if (!type->compilationCondition.empty()) {
 			out << "#endif " << std::endl;
 		}
+		isExtension = false;
 	}
 
 	void AstrumCodegen::printEnumClassData(StructDefinition* type) {
@@ -9215,7 +9345,7 @@ namespace AstrumLang {
 				StringReplace(parentType, ".", "::");
 				StringReplace(parentType, "::::::", "...");
 			}
-			out << "#line " << constant.pos.line << " \"" << filename << ".ast\"\n";
+			out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n";
 			out << "const " << parentType << "::__self " << parentType << "::" << constant.id
 			    << " = ";
 			out << parentType << "::__self{ new (::operator new(sizeof(" << parentType << "))) "
@@ -9223,13 +9353,13 @@ namespace AstrumLang {
 			printExpressionList(constant.expressionList);
 			out << ") };";
 			out << "\n" << std::string(depth, '\t');
-			out << "#line " << constant.pos.line << " \"" << filename << ".ast\"\n";
+			out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n";
 			out << parentType << "::__self::__Property_" << constant.id << "<> " << parentType
 			    << "::__self::" << constant.id << ";\n"
 			    << std::string(depth, '\t');
 		}
 
-		out << "#line " << type->pos.line << " \"" << filename << ".ast\"\n";
+		out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n";
 		out << "const " << parentType << "::__self " << parentType << "::__values[] = { ";
 		bool first = true;
 		for (const auto& constant : type->constants) {
@@ -9294,7 +9424,7 @@ namespace AstrumLang {
 					out << "#if " << constant.compilationCondition << std::endl
 					    << std::string(depth, '\t');
 				}
-				out << "#line " << constant.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				if (type->templateParams) {
 					printTemplateParams(type->templateParams);
@@ -9314,7 +9444,7 @@ namespace AstrumLang {
 					if (type->enumBase) {
 						printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
 					} else {
-						out << "CppAdvance::i32";
+						out << "Builtin::i32";
 					}
 					out << "(";
 					printConstantExpression(constant.expression);
@@ -9337,21 +9467,20 @@ namespace AstrumLang {
 					if (type->enumBase) {
 						printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
 					} else {
-						out << "CppAdvance::i32";
+						out << "Builtin::i32";
 					}
 					out << "(";
-					out << "CppAdvance::i64(" << lastEnumValue
-					    << ".__value) << 1 ? CppAdvance::i64(" << lastEnumValue
-					    << ".__value) << 1 : 1";
+					out << "Builtin::i64(" << lastEnumValue << ".__value) << 1 ? Builtin::i64("
+					    << lastEnumValue << ".__value) << 1 : 1";
 					out << ")";
 				} else {
 					if (type->enumBase) {
 						printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
 					} else {
-						out << "CppAdvance::i32";
+						out << "Builtin::i32";
 					}
 					out << "(";
-					out << "CppAdvance::i64(" << lastEnumValue << ".__value) + 1";
+					out << "Builtin::i64(" << lastEnumValue << ".__value) + 1";
 					out << ")";
 				}
 				out << ";" << std::endl << std::string(depth, '\t');
@@ -9628,10 +9757,10 @@ namespace AstrumLang {
 				    << " { ";
 			}
 			out << "namespace __ntuples {\n" << std::string(++depth, '\t');
-			out << "#line 9999 \"" << filename << ".ast\"\n" << std::string(depth, '\t');
-			out << "struct " << tuple.id << " final : public CppAdvance::Struct { \n"
+			out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
+			out << "struct " << tuple.id << " final : public Builtin::Struct { \n"
 			    << std::string(++depth, '\t');
-			out << "using __class = CppAdvance::__Class_Basic<" << tuple.id << ">;";
+			out << "using __class = Builtin::__Class_Basic<" << tuple.id << ">;";
 			for (const auto& [field, type] : tuple.fields) {
 				out << "\n" << std::string(depth, '\t');
 				printTypeId(type);
@@ -9644,7 +9773,7 @@ namespace AstrumLang {
 				if (!first)
 					out << ", ";
 				first = false;
-				out << "CppAdvance::In<";
+				out << "Builtin::In<";
 				printTypeId(type);
 				out << "> _" << field;
 			}
@@ -9740,7 +9869,7 @@ namespace AstrumLang {
 					out << "__" << StringUpper(filename) << "_PROTECTED_";
 				out << ver.id << std::endl;
 			}
-			out << "#line " << ver.pos.line << " \"" << filename << ".ast\"\n";
+			out << "#line " << ver.pos.line << " \"" << fullFilename << ".ast\"\n";
 			out << "#define ADV_VERSION_";
 			if (ver.access == AccessSpecifier::Protected)
 				out << "__" << StringUpper(filename) << "_PROTECTED_";
@@ -9873,6 +10002,8 @@ namespace AstrumLang {
 					if (!type->compilationCondition.empty()) {
 						out << "#if " << type->compilationCondition << std::endl;
 					}
+					out << "} namespace __extensions { using namespace " << sema.packageName
+					    << ";\n";
 					if (type->access == AccessSpecifier::Protected) {
 						out << "namespace __" << filename << "_Protected"
 						    << (type->isUnsafe ? "__Unsafe" : "") << " {\n"
@@ -9881,7 +10012,7 @@ namespace AstrumLang {
 						out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
 						    << std::string(++depth, '\t');
 					}
-					out << "#line " << func.pos.line << " \"" << filename << ".ast\"\n"
+					out << "#line " << func.pos.line << " \"" << fullFilename << ".ast\"\n"
 					    << std::string(depth, '\t');
 					if (func.indexerParams) {
 						bool isInline    = func.isInline;
@@ -9912,7 +10043,7 @@ namespace AstrumLang {
 						printTypeId(func.returnType);
 						if (func.isRefReturn)
 							out << "&";
-						out << " getAt(__extension_" << type->pos.line << "_" << type->id;
+						out << " getAt(__extension_" << filename << "_" << type->pos.line << "_" << type->id;
 						if (type->templateParams) {
 							out << "<";
 							bool first = true;
@@ -9966,6 +10097,7 @@ namespace AstrumLang {
 
 					if (!type->templateParams && func.isStatic) {
 						out << "template<class __TT> requires std::same_as<__TT, __extension_"
+						    << filename << "_"
 						    << type->pos.line << "_" << type->id;
 						if (type->templateParams) {
 							out << "<";
@@ -10007,7 +10139,7 @@ namespace AstrumLang {
 					}
 					out << "(";
 					if (!func.isConstructor && !func.isStatic) {
-						out << "__extension_" << type->pos.line << "_" << type->id;
+						out << "__extension_" << filename << "_" << type->pos.line << "_" << type->id;
 						if (type->templateParams) {
 							out << "<";
 							bool first = true;
@@ -10028,7 +10160,7 @@ namespace AstrumLang {
 						if (!func.isMutating)
 							out << "LIFETIMEBOUND";
 					} else if (func.isConstructor) {
-						out << "CppAdvance::ConstructorProxy<__extension_" << type->pos.line << "_"
+						out << "Builtin::ConstructorProxy<__extension_" << filename << "_" << type->pos.line << "_"
 						    << type->id;
 						if (type->templateParams && !type->id.empty()) {
 							out << "<";
@@ -10063,7 +10195,7 @@ namespace AstrumLang {
 						if (func.isConstructor) {
 							out << "decltype(auto)";
 						} else if (func.returnType->getText() == "self") {
-							out << "typename __extension_" << type->pos.line << "_" << type->id;
+							out << "typename __extension_" << filename << "_" << type->pos.line << "_" << type->id;
 							if (type->templateParams) {
 								out << "<";
 								bool first = true;
@@ -10121,7 +10253,7 @@ namespace AstrumLang {
 							out << "inline ";
 						}
 
-						out << "auto " << func.id << "(__extension_" << type->pos.line << "_"
+						out << "auto " << func.id << "(__extension_" << filename << "_" << type->pos.line << "_"
 						    << type->id;
 						if (type->templateParams) {
 							out << "<";
@@ -10142,7 +10274,7 @@ namespace AstrumLang {
 						if (func.exceptionSpecification)
 							printExceptionSpecification(func.exceptionSpecification);
 						out << " -> ";
-						out << "typename __extension_" << type->pos.line << "_" << type->id;
+						out << "typename __extension_" << filename << "_" << type->pos.line << "_" << type->id;
 						if (type->templateParams) {
 							out << "<";
 							bool first = true;
@@ -10177,7 +10309,7 @@ namespace AstrumLang {
 						if (!func.params->paramDeclClause()) {
 							if (func.id.starts_with("_operator_"))
 								out << "_postfix";
-							out << "(__extension_" << type->pos.line << "_" << type->id;
+							out << "(__extension_" << filename << "_" << type->pos.line << "_" << type->id;
 							if (type->templateParams) {
 								out << "<";
 								bool first = true;
@@ -10196,7 +10328,7 @@ namespace AstrumLang {
 						} else {
 							out << "(";
 							printParamDeclClause(func.params->paramDeclClause());
-							out << ", const __extension_" << type->pos.line << "_" << type->id;
+							out << ", const __extension_" << filename << "_" << type->pos.line << "_" << type->id;
 							if (type->templateParams) {
 								out << "<";
 								bool first = true;
@@ -10239,13 +10371,24 @@ namespace AstrumLang {
 					if (type->access == AccessSpecifier::Protected || type->isUnsafe)
 						out << "\n" << std::string(--depth, '\t') << "}";
 					out << std::endl;
+					out << "} namespace " << sema.packageName << "{\n";
 					if (!type->compilationCondition.empty()) {
 						out << "#endif " << std::endl;
 					}
 				}
 
 				for (const auto& prop : type->properties) {
-					out << "#line " << prop.pos.line << " \"" << filename << ".ast\"\n"
+					if (type->access != AccessSpecifier::Private &&
+					    (type->templateParams || prop.isInline || prop.isConstexpr)) {
+						out.switchTo(true);
+						emptyLine = true;
+					} else {
+						out.switchTo(false);
+					}
+
+					out << "} namespace __extensions { using namespace " << sema.packageName
+					    << ";\n";
+					out << "#line " << prop.pos.line << " \"" << fullFilename << ".ast\"\n"
 					    << std::string(depth, '\t');
 
 					if (type->templateParams) {
@@ -10254,6 +10397,7 @@ namespace AstrumLang {
 					}
 					if (!type->templateParams && prop.isStatic) {
 						out << "template<class __TT> requires std::same_as<__TT, __extension_"
+						    << filename << "_"
 						    << type->pos.line << "_" << type->id;
 						if (type->templateParams) {
 							out << "<";
@@ -10286,7 +10430,7 @@ namespace AstrumLang {
 						out << "__static_";
 					out << "get" << prop.id << "(";
 					if (!prop.isStatic) {
-						out << "__extension_" << type->pos.line << "_" << type->id;
+						out << "__extension_" << filename << "_" << type->pos.line << "_" << type->id;
 						if (type->templateParams) {
 							out << "<";
 							bool first = true;
@@ -10321,6 +10465,7 @@ namespace AstrumLang {
 						printShortFunctionBody(parent->shortFunctionBody());
 					}
 					out << std::endl << std::string(depth, '\t');
+					out << "} namespace " << sema.packageName << "{\n";
 				}
 				currentTemplateParams   = nullptr;
 				currentTemplateSpecArgs = nullptr;
@@ -10345,7 +10490,7 @@ namespace AstrumLang {
 				    << std::string(++depth, '\t');
 			}
 
-			out << "#line 9999 \"" << filename << ".ast\"\n" << std::string(depth, '\t');
+			out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
 			currentType.clear();
 			printTypeSpecialFunctionDefinitions(type.get(), nullptr);
 
@@ -11176,7 +11321,7 @@ namespace AstrumLang {
 			if (!func.compilationCondition.empty()) {
 				out << "#if " << func.compilationCondition << std::endl << std::string(depth, '\t');
 			}
-			out << "#line " << func.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << func.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 
 			isFunctionDeclaration = true;
@@ -11873,15 +12018,21 @@ namespace AstrumLang {
 		if (ctx->moduleName()) {
 			auto name = ctx->moduleName()->getText();
 			StringReplace(name, ".", "::");
+			bool isSamePackage = false;
 			if (!isPackage) {
-				name = name.substr(0, name.rfind("::"));
+				auto pos = name.rfind("::");
+				if (pos != std::string::npos) {
+					name = name.substr(0, pos);
+				} else {
+					isSamePackage = true;
+				}
 			}
 			if (ctx->As()) {
 				out << "namespace ";
 				auto id = ctx->Identifier()->getText();
 				out << id << " = " << name << ";\n";
 				sema.cppParser.namespaces.insert(id);
-			} else {
+			} else if (!isSamePackage) {
 				out << "using namespace " << name << ";\n";
 			}
 		}
@@ -12003,7 +12154,7 @@ namespace AstrumLang {
 	void AstrumCodegen::printExternVariableDeclaration(
 	    AstrumParser::ExternVariableDeclarationContext* ctx) {
 		if (!functionBody)
-			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 		out << "extern ";
 		AstrumParser::AttributeSpecifierSeqContext* attributes = nullptr;
@@ -12030,7 +12181,7 @@ namespace AstrumLang {
 	void AstrumCodegen::printExternFunctionDeclaration(
 	    AstrumParser::ExternFunctionDeclarationContext* ctx) {
 		if (!functionBody)
-			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 		out << "extern ";
 		AstrumParser::AttributeSpecifierSeqContext* attributes = nullptr;
@@ -12073,7 +12224,7 @@ namespace AstrumLang {
 	void AstrumCodegen::printTemplateDeductionGuide(
 	    AstrumParser::TemplateDeductionGuideContext* ctx) {
 		out.switchTo(true);
-		out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+		out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 		    << std::string(depth, '\t');
 		if (ctx->templateParams()) {
 			printTemplateParams(ctx->templateParams());
@@ -12217,17 +12368,17 @@ namespace AstrumLang {
 	}
 
 	void AstrumCodegen::printStatement(AstrumParser::StatementContext* ctx) {
-		out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+		out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 		    << std::string(depth, '\t');
 		if (sema.parameterPrerequisites.contains(ctx)) {
 			for (const auto& [id, type] : sema.parameterPrerequisites[ctx]) {
-				out << "CppAdvance::DeferredInit<";
+				out << "Builtin::DeferredInit<";
 				printTypeId(type);
 				out << "> " << id << "; ";
 			}
 			out << "\n"
 			    << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine() << " \""
-			    << filename << ".ast\"\n"
+			    << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 		}
 		if (sema.stackallocPrerequisites.contains(ctx)) {
@@ -12236,28 +12387,28 @@ namespace AstrumLang {
 				auto init    = expr->newInitializer();
 				auto mem     = expr->memorySpaceSetter();
 				auto varName = GetStackObjectVarName(type);
-				out << "#line " << type->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+				out << "#line " << type->getStart()->getLine() << " \"" << fullFilename
+				    << ".ast\"\n"
 				    << std::string(depth, '\t');
 
 				if (mem) {
-					out << "CppAdvance::StackallocWithExtraMemory<";
+					out << "Builtin::StackallocWithExtraMemory<";
 					printTypeId(type);
 					out << ", unsigned(";
 					printConstantExpression(mem->constantExpression());
 					out << ")> " << varName << "(";
 				} else {
-					out << "CppAdvance::Stackalloc<";
+					out << "Builtin::Stackalloc<";
 					printTypeId(type);
 					out << "> " << varName << "(";
 				}
 				if (init) {
 					printClassInitializer(type, init);
 				}
-				out << "); CppAdvance::InitStackObject((CppAdvance::Object*)" << varName
-				    << ".obj);\n"
+				out << "); Builtin::InitStackObject((Builtin::Object*)" << varName << ".obj);\n"
 				    << std::string(depth, '\t');
 			}
-			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 		}
 		if (sema.conditionalPrerequisites.contains(ctx)) {
@@ -12337,7 +12488,7 @@ namespace AstrumLang {
 			out << "{";
 		++depth;
 		if (isUnsafe)
-			out << "\tusing namespace CppAdvance::Unsafe;\tusing namespace __Unsafe;\tusing "
+			out << "\tusing namespace Builtin::Unsafe;\tusing namespace __Unsafe;\tusing "
 			       "namespace __"
 			    << filename << "_Protected__Unsafe;";
 		bool funcTopLevel = functionProlog;
@@ -12345,7 +12496,7 @@ namespace AstrumLang {
 			if (isUnsafe) {
 				out << "\n"
 				    << std::string(depth, '\t')
-				    << "CppAdvance::CheckForUnsafeContext(); CppAdvance::UnsafeContextGuard "
+				    << "Builtin::CheckForUnsafeContext(); Builtin::UnsafeContextGuard "
 				       "__unsafe_context_guard"
 				    << ctx->getStart()->getLine() << "{};";
 			}
@@ -12370,7 +12521,7 @@ namespace AstrumLang {
 					              pattern->shiftExpression()->getText() == "null";
 					if (!isNull && pattern->not_() || isNull && !pattern->not_())
 						continue;
-					out << "#line " << prereq->getStart()->getLine() << " \"" << filename
+					out << "#line " << prereq->getStart()->getLine() << " \"" << fullFilename
 					    << ".ast\"\n"
 					    << std::string(depth, '\t');
 					if (pattern->Let()) {
@@ -12408,7 +12559,7 @@ namespace AstrumLang {
 			}
 			ifProlog = false;
 		} else if (isUnsafe) {
-			out << "\tCppAdvance::UnsafeContextGuard __unsafe_context_guard"
+			out << "\tBuiltin::UnsafeContextGuard __unsafe_context_guard"
 			    << ctx->getStart()->getLine() << "{};";
 		}
 
@@ -12487,10 +12638,10 @@ namespace AstrumLang {
 					if (pattern->shiftExpression() &&
 					    pattern->shiftExpression()->getText() == "null")
 						continue;
-					out << "#line " << prereq->getStart()->getLine() << " \"" << filename
+					out << "#line " << prereq->getStart()->getLine() << " \"" << fullFilename
 					    << ".ast\"\n"
 					    << std::string(depth, '\t');
-					out << "auto __tmp" << prereqIndex++ << " = CppAdvance::Cast<false, ";
+					out << "auto __tmp" << prereqIndex++ << " = Builtin::Cast<false, ";
 					if (pattern->theTypeId()) {
 						printTypeId(pattern->theTypeId());
 					} else if (pattern->shiftExpression()) {
@@ -12503,15 +12654,15 @@ namespace AstrumLang {
 							out << ")";
 					} else /*if (pattern->Let())*/
 					{
-						out << "decltype(";
+						out << "std::decay_t<decltype(";
 						printThreeWayComparisonExpression(prereq->threeWayComparisonExpression(0));
-						out << ")::__self";
+						out << ")>::__self";
 					}
 					out << ">(";
 					printThreeWayComparisonExpression(prereq->threeWayComparisonExpression(0));
 					out << ");\n" << std::string(depth, '\t');
 				}
-				out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 			}
 			out << "if " << (ctx->Static() || ctx->Consteval() ? "constexpr " : "") << "(";
@@ -12549,7 +12700,7 @@ namespace AstrumLang {
 						              pattern->shiftExpression()->getText() == "null";
 						if (!isNull && pattern->not_() || isNull && !pattern->not_())
 							continue;
-						out << "#line " << prereq->getStart()->getLine() << " \"" << filename
+						out << "#line " << prereq->getStart()->getLine() << " \"" << fullFilename
 						    << ".ast\"\n"
 						    << std::string(depth, '\t');
 						if (pattern->Let()) {
@@ -12609,10 +12760,10 @@ namespace AstrumLang {
 			if (ctx->switchStatementBranch().back()->patternList()->getText() != "_") {
 				out << " else { using __switchType = decltype(";
 				printThreeWayComparisonExpression(ctx->threeWayComparisonExpression());
-				out << "); static_assert((!std::derived_from<__switchType, CppAdvance::Enum> &&"
-				    << " !std::derived_from<__switchType, CppAdvance::EnumClassRef> && "
-				       "!std::derived_from<__switchType, CppAdvance::Union>) "
-				    << "|| CppAdvance::GetVariantsCount<__switchType>() <= "
+				out << "); static_assert((!std::derived_from<__switchType, Builtin::Enum> &&"
+				    << " !std::derived_from<__switchType, Builtin::EnumClassRef> && "
+				       "!std::derived_from<__switchType, Builtin::Union>) "
+				    << "|| Builtin::GetVariantsCount<__switchType>() <= "
 				    << switchProcessedVariants.top().first + switchProcessedVariants.top().second
 				    << ", "
 				    << "\"Switch does not handle all possible variants, add a default branch\"); }";
@@ -12635,12 +12786,12 @@ namespace AstrumLang {
 		auto tmpName = "__tmp__valid_" + std::to_string(switchExpr->getStart()->getLine());
 		auto pattern = ctx->patternList()->pattern(0);
 		if (branchIndex == 0) {
-			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
-			out << "auto " << tmpName << " = CppAdvance::Cast<false, ";
-			out << "decltype(";
+			out << "auto " << tmpName << " = Builtin::Cast<false, ";
+			out << "std::decay_t<decltype(";
 			printThreeWayComparisonExpression(switchExpr);
-			out << ")::__self";
+			out << ")>::__self";
 			out << ">(";
 			printThreeWayComparisonExpression(switchExpr);
 			out << ");\n" << std::string(depth, '\t');
@@ -12648,10 +12799,10 @@ namespace AstrumLang {
 
 		auto isDefault = ctx->patternList()->getText() == "_";
 		if (pattern->theTypeId() && !isDefault || pattern->shiftExpression() && pattern->Let()) {
-			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			tmpName = "__tmp" + std::to_string(branchIndex);
-			out << "auto " << tmpName << " = CppAdvance::Cast<false, ";
+			out << "auto " << tmpName << " = Builtin::Cast<false, ";
 			if (pattern->theTypeId()) {
 				printTypeId(pattern->theTypeId());
 			} else if (pattern->shiftExpression()) {
@@ -12663,7 +12814,7 @@ namespace AstrumLang {
 		}
 
 		if (!isDefault) {
-			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "if(";
 			bool skipFirst = false;
@@ -12672,7 +12823,7 @@ namespace AstrumLang {
 			if (!isNull) {
 				if (pattern->not_())
 					out << "!";
-				out << tmpName << ".isValid()";
+				out << tmpName << ".IsValid()";
 				if (!(pattern->Let() && !pattern->shiftExpression()) &&
 				    (!pattern->theTypeId() || !pattern->propertyPattern().empty())) {
 					if (pattern->not_()) {
@@ -12699,7 +12850,8 @@ namespace AstrumLang {
 			out << " {\n" << std::string(++depth, '\t');
 			if (!isNull && !pattern->not_() || isNull && pattern->not_()) {
 				if (pattern->Let()) {
-					out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+					out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename
+					    << ".ast\"\n"
 					    << std::string(depth, '\t');
 					out << "const auto& [";
 					bool first = true;
@@ -12720,17 +12872,19 @@ namespace AstrumLang {
 					auto txt = switchExpr->getText();
 					if (std::all_of(txt.begin(), txt.end(),
 					                [](char c) { return std::isalnum(c) || c == '_'; })) {
-						out << "#line " << ctx->getStart()->getLine() << " \"" << filename
+						out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename
 						    << ".ast\"\n"
 						    << std::string(depth, '\t');
 						if (isNull) {
 							out << "auto " << tmpName << " = *" << txt << "; ";
 						}
-						out << "const auto& " << txt << " = ";
-						if (!isNull)
-							out << "*";
-						out << tmpName;
-						out << ";\n" << std::string(depth, '\t');
+						if (txt != "this") {
+							out << "const auto& " << txt << " = ";
+							if (!isNull)
+								out << "*";
+							out << tmpName << ";";
+						}
+						out << "\n" << std::string(depth, '\t');
 					}
 				}
 			}
@@ -12983,7 +13137,7 @@ namespace AstrumLang {
 	}
 
 	void AstrumCodegen::printDeferStatement(AstrumParser::DeferStatementContext* ctx) {
-		out << "CppAdvance::Defer __defer_" << ctx->getStart()->getLine() << "_"
+		out << "Builtin::Defer __defer_" << ctx->getStart()->getLine() << "_"
 		    << ctx->getStart()->getCharPositionInLine() << "{[&]() {";
 		if (auto comp = ctx->compoundStatement()) {
 			printCompoundStatement(comp);
@@ -13203,7 +13357,7 @@ namespace AstrumLang {
 				out << "class __Class_" << ctx->structHead()->className()->getText() << ";\n"
 				    << std::string(depth, '\t');
 			}
-			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			printStructHead(ctx->structHead());
 			out << "\n"
@@ -13232,7 +13386,7 @@ namespace AstrumLang {
 			out << "\n" << std::string(depth, '\t') << "};";
 			if (!ctx->structHead()->Ref()) {
 				out << "\n" << std::string(depth, '\t');
-				out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				if (auto tparams = ctx->structHead()->templateParams()) {
 					printTemplateParams(tparams);
@@ -13242,7 +13396,7 @@ namespace AstrumLang {
 				}
 				out << "class __Class_";
 				printClassName(ctx->structHead()->className());
-				out << " : public CppAdvance::ValueType";
+				out << " : public Builtin::ValueType";
 				if (ctx->structHead()->baseClause()) {
 					for (auto iface :
 					     ctx->structHead()->baseClause()->baseSpecifierList()->baseSpecifier()) {
@@ -13259,7 +13413,7 @@ namespace AstrumLang {
 				if (ctx->structHead()->baseClause()) {
 					for (auto iface :
 					     ctx->structHead()->baseClause()->baseSpecifierList()->baseSpecifier()) {
-						out << "#line " << iface->getStart()->getLine() << " \"" << filename
+						out << "#line " << iface->getStart()->getLine() << " \"" << fullFilename
 						    << ".ast\"\n"
 						    << std::string(depth, '\t');
 						out << "ADV_CHECK_INTERFACE(" << iface->getText() << ", ";
@@ -13270,7 +13424,7 @@ namespace AstrumLang {
 						out << ");\n" << std::string(depth, '\t');
 					}
 				}
-				out << "#line 9999 \"" << filename << ".ast\"\n" << std::string(depth, '\t');
+				out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
 				printClassName(ctx->structHead()->className());
 				if (auto tparams = ctx->structHead()->templateParams()) {
 					out << "<";
@@ -13490,9 +13644,9 @@ namespace AstrumLang {
 		printClassName(ctx->className());
 		currentShortType = ctx->className()->getText();
 		if (ctx->Ref()) {
-			out << " : public CppAdvance::RefStruct";
+			out << " : public Builtin::RefStruct";
 		} else {
-			out << " : public CppAdvance::Struct";
+			out << " : public Builtin::Struct";
 			checkForRefStruct = true;
 		}
 	}
@@ -13532,7 +13686,8 @@ namespace AstrumLang {
 	    AstrumParser::StructMemberSpecificationContext* ctx) {
 		for (auto decl : ctx->structMemberDeclaration()) {
 			if (isStructDeclaration)
-				out << "#line " << decl->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+				out << "#line " << decl->getStart()->getLine() << " \"" << fullFilename
+				    << ".ast\"\n"
 				    << std::string(depth, '\t');
 			printStructMemberDeclaration(decl);
 			if (isStructDeclaration)
@@ -13656,7 +13811,7 @@ namespace AstrumLang {
 	    AstrumParser::MemberDeclarationCompoundStatementContext* ctx) {
 		for (auto decl : ctx->structMemberDeclaration()) {
 			if (isStructDeclaration)
-				out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 			printStructMemberDeclaration(decl);
 			if (isStructDeclaration)
@@ -13750,7 +13905,7 @@ namespace AstrumLang {
 		auto op = ctx->operator_();
 		if (op->In()) {
 			out << "_operator_in";
-		} else if (op->DoubleCaret() || op->Tilde() || op->TildeAssign() || op->DoubleStar() ||
+		} else if (op->DoubleCaret() || op->Tilde() || op->TildeAssign() || op->DoubleStar()  || op->Dollar() || op->Hash() ||
 		           op->DoubleStarAssign() || op->Greater().size() > 2 ||
 		           op->SignedRightShiftAssign() || op->Op1() || op->Op2() || op->Op3() ||
 		           op->Op4() || op->Op5() || op->Op6() || op->Op7() || op->Op8() || op->Op9() ||
@@ -13823,7 +13978,7 @@ namespace AstrumLang {
 				    << std::string(++depth, '\t');
 			}
 
-			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			if (func.parentTemplateParams) {
 				printTemplateParams(func.parentTemplateParams);
@@ -13973,8 +14128,8 @@ namespace AstrumLang {
 		if (isDelegating && !isExtension) {
 			out << " :\n"
 			    << std::string(depth, '\t') << "#line "
-			    << ctx->delegatingConstructorStatement()->getStart()->getLine() << " \"" << filename
-			    << ".ast\"\n"
+			    << ctx->delegatingConstructorStatement()->getStart()->getLine() << " \""
+			    << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			printDelegatingConstructorStatement(ctx->delegatingConstructorStatement());
 			isDelegatingThis = ctx->delegatingConstructorStatement()->This();
@@ -14003,7 +14158,7 @@ namespace AstrumLang {
 					initializedMemberStatements.insert(init);
 					out << "\n"
 					    << std::string(depth, '\t') << "#line " << init->getStart()->getLine()
-					    << " \"" << filename << ".ast\"\n"
+					    << " \"" << fullFilename << ".ast\"\n"
 					    << std::string(depth, '\t');
 					printMemberInitializationStatement(init, false);
 				}
@@ -14015,7 +14170,7 @@ namespace AstrumLang {
 		out << "{";
 		++depth;
 		if (isUnsafe)
-			out << "\tusing namespace CppAdvance::Unsafe;\tusing namespace __Unsafe;\tusing "
+			out << "\tusing namespace Builtin::Unsafe;\tusing namespace __Unsafe;\tusing "
 			       "namespace __"
 			    << filename << "_Protected__Unsafe;";
 		bool funcTopLevel = functionProlog;
@@ -14023,7 +14178,7 @@ namespace AstrumLang {
 			if (isUnsafe) {
 				out << "\n"
 				    << std::string(depth, '\t')
-				    << "CppAdvance::CheckForUnsafeContext(); CppAdvance::UnsafeContextGuard "
+				    << "Builtin::CheckForUnsafeContext(); Builtin::UnsafeContextGuard "
 				       "__unsafe_context_guard"
 				    << ctx->getStart()->getLine() << "{};";
 			}
@@ -14034,7 +14189,7 @@ namespace AstrumLang {
 			}
 			functionProlog = false;
 		} else if (isUnsafe) {
-			out << "\tCppAdvance::UnsafeContextGuard __unsafe_context_guard"
+			out << "\tBuiltin::UnsafeContextGuard __unsafe_context_guard"
 			    << ctx->getStart()->getLine() << "{};";
 		}
 
@@ -14042,8 +14197,8 @@ namespace AstrumLang {
 		if (isExtension) {
 			out << "\n"
 			    << std::string(depth, '\t') << "#line "
-			    << ctx->delegatingConstructorStatement()->getStart()->getLine() << " \"" << filename
-			    << ".ast\"\n"
+			    << ctx->delegatingConstructorStatement()->getStart()->getLine() << " \""
+			    << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			printDelegatingConstructorStatement(ctx->delegatingConstructorStatement());
 		}
@@ -14052,7 +14207,7 @@ namespace AstrumLang {
 				continue;
 			out << "\n"
 			    << std::string(depth, '\t') << "#line " << stat->getStart()->getLine() << " \""
-			    << filename << ".ast\"\n"
+			    << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			printMemberInitializationStatement(stat, true);
 		}
@@ -14082,7 +14237,7 @@ namespace AstrumLang {
 	void AstrumCodegen::printDelegatingConstructorStatement(
 	    AstrumParser::DelegatingConstructorStatementContext* ctx) {
 		if (isExtension) {
-			out << "auto __this = new (__ctordata.memory) typename CppAdvance::ConstructorProxy<"
+			out << "auto __this = new (__ctordata.memory) typename Builtin::ConstructorProxy<"
 			    << currentType;
 			bool first = true;
 			if (currentTemplateParams) {
@@ -14141,7 +14296,7 @@ namespace AstrumLang {
 				    << std::string(++depth, '\t');
 			}
 
-			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			if (func.parentTemplateParams) {
 				printTemplateParams(func.parentTemplateParams);
@@ -14286,7 +14441,7 @@ namespace AstrumLang {
 				    << std::string(++depth, '\t');
 			}
 
-			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			if (func.parentTemplateParams) {
 				printTemplateParams(func.parentTemplateParams);
@@ -14373,7 +14528,7 @@ namespace AstrumLang {
 				    << std::string(++depth, '\t');
 			}
 
-			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			if (func.parentTemplateParams) {
 				printTemplateParams(func.parentTemplateParams);
@@ -14461,7 +14616,7 @@ namespace AstrumLang {
 				    << std::string(++depth, '\t');
 			}
 
-			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			if (func.parentTemplateParams) {
 				printTemplateParams(func.parentTemplateParams);
@@ -14653,7 +14808,7 @@ namespace AstrumLang {
 				    << std::string(++depth, '\t');
 			}
 
-			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			if (func.parentTemplateParams) {
 				printTemplateParams(func.parentTemplateParams);
@@ -14697,7 +14852,7 @@ namespace AstrumLang {
 			isUnsafe = func.isUnsafe;
 			out << "(";
 			if (isUnchecked) {
-				out << "CppAdvance::UncheckedTag, ";
+				out << "Builtin::UncheckedTag, ";
 			}
 			printParamDeclClause(func.indexerParams);
 			out << ") ";
@@ -14780,7 +14935,7 @@ namespace AstrumLang {
 			if (!func.isConstReturn && !func.isStatic && !func.isMutating) {
 				out << std::endl
 				    << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine() << " \""
-				    << filename << ".ast\"\n"
+				    << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				if (func.parentTemplateParams) {
 					printTemplateParams(func.parentTemplateParams);
@@ -14820,7 +14975,7 @@ namespace AstrumLang {
 				isUnsafe = func.isUnsafe;
 				out << "(";
 				if (isUnchecked) {
-					out << "CppAdvance::UncheckedTag, ";
+					out << "Builtin::UncheckedTag, ";
 				}
 				printParamDeclClause(func.indexerParams);
 				out << ") ";
@@ -14914,7 +15069,7 @@ namespace AstrumLang {
 			}
 
 			out << "\n" << std::string(depth, '\t');
-			out << "#line " << func.pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << func.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			if (func.parentTemplateParams) {
 				printTemplateParams(func.parentTemplateParams);
@@ -14952,7 +15107,7 @@ namespace AstrumLang {
 			isUnsafe = func.isUnsafe;
 			out << "(";
 			if (isUnchecked) {
-				out << "CppAdvance::UncheckedTag, ";
+				out << "Builtin::UncheckedTag, ";
 			}
 			printParamDeclClause(func.indexerParams);
 			out << ") ";
@@ -14994,7 +15149,7 @@ namespace AstrumLang {
 			currentTypeWithTemplate.clear();
 			if (!func.isConstReturn && !func.isStatic && !func.isMutating) {
 				out << "\n" << std::string(depth, '\t');
-				out << "#line " << func.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << func.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				if (func.parentTemplateParams) {
 					printTemplateParams(func.parentTemplateParams);
@@ -15032,7 +15187,7 @@ namespace AstrumLang {
 				isUnsafe = func.isUnsafe;
 				out << "(";
 				if (isUnchecked) {
-					out << "CppAdvance::UncheckedTag, ";
+					out << "Builtin::UncheckedTag, ";
 				}
 				printParamDeclClause(func.indexerParams);
 				out << ") const ";
@@ -15087,8 +15242,8 @@ namespace AstrumLang {
 				}
 
 				out << "\n" << std::string(depth, '\t');
-				out << "#line " << func.indexerSetter->getStart()->getLine() << " \"" << filename
-				    << ".ast\"\n"
+				out << "#line " << func.indexerSetter->getStart()->getLine() << " \""
+				    << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				if (func.parentTemplateParams) {
 					printTemplateParams(func.parentTemplateParams);
@@ -15123,7 +15278,7 @@ namespace AstrumLang {
 				isUnsafe = func.isUnsafe;
 				out << "(";
 				if (isUnchecked) {
-					out << "CppAdvance::UncheckedTag, ";
+					out << "Builtin::UncheckedTag, ";
 				}
 				printParamDeclClause(func.indexerParams);
 				out << ", const ";
@@ -15172,7 +15327,7 @@ namespace AstrumLang {
 			funcname    = "_operator_subscript";
 
 			if (!ctx->returnType()->Const()) {
-				out << "#line " << ctx->getStart()->getLine() << " \"" << filename << "\"";
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << "\"";
 				out << "\n" << std::string(depth, '\t');
 
 				switch (*currentAccessSpecifier) {
@@ -15207,7 +15362,7 @@ namespace AstrumLang {
 				}
 				out << "\n" << std::string(depth, '\t');
 			}
-			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << "\"";
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << "\"";
 			out << "\n" << std::string(depth, '\t');
 
 			switch (*currentAccessSpecifier) {
@@ -15300,7 +15455,7 @@ namespace AstrumLang {
 					emptyLine = true;
 				}
 
-				out << "#line " << prop.setter->getStart()->getLine() << " \"" << filename
+				out << "#line " << prop.setter->getStart()->getLine() << " \"" << fullFilename
 				    << ".ast\"\n"
 				    << std::string(depth, '\t');
 				if (prop.parentTemplateParams) {
@@ -15390,7 +15545,7 @@ namespace AstrumLang {
 					emptyLine = true;
 				}
 
-				out << "#line " << prop.getter->getStart()->getLine() << " \"" << filename
+				out << "#line " << prop.getter->getStart()->getLine() << " \"" << fullFilename
 				    << ".ast\"\n"
 				    << std::string(depth, '\t');
 				if (prop.parentTemplateParams) {
@@ -15453,7 +15608,7 @@ namespace AstrumLang {
 
 				out << std::endl << std::string(depth, '\t');
 			} else if (!prop.setter) {
-				out << "#line " << prop.pos.line << " \"" << filename << ".ast\"\n"
+				out << "#line " << prop.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				if (prop.parentTemplateParams) {
 					printTemplateParams(prop.parentTemplateParams);
@@ -15579,7 +15734,8 @@ namespace AstrumLang {
 					isInline = true;
 				}
 
-				out << "#line " << setter->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+				out << "#line " << setter->getStart()->getLine() << " \"" << fullFilename
+				    << ".ast\"\n"
 				    << std::string(depth, '\t');
 
 				setAccess = *currentAccessSpecifier;
@@ -15656,7 +15812,8 @@ namespace AstrumLang {
 					isInline = true;
 				}
 
-				out << "#line " << getter->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+				out << "#line " << getter->getStart()->getLine() << " \"" << fullFilename
+				    << ".ast\"\n"
 				    << std::string(depth, '\t');
 				getAccess = *currentAccessSpecifier;
 				if (getter->protectedInternal())
@@ -15715,7 +15872,7 @@ namespace AstrumLang {
 
 				out << std::endl << std::string(depth, '\t');
 			} else if (!setter) {
-				out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 
 				getAccess = *currentAccessSpecifier;
@@ -15776,7 +15933,7 @@ namespace AstrumLang {
 				out << std::endl << std::string(depth, '\t');
 			}
 
-			out << "#line 9999 \"" << filename << ".ast\"\n" << std::string(depth, '\t');
+			out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
 			if (setter) {
 				if (getter) {
 					out << "ADV_PROPERTY_GETTER_SETTER";
@@ -15963,7 +16120,7 @@ namespace AstrumLang {
 				}
 				out << ")\n" << std::string(depth, '\t');
 			}
-			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			if (isMainFunction) {
 				out << "extern \"C\" ";
@@ -16028,7 +16185,7 @@ namespace AstrumLang {
 			} else if (ctx->shortFunctionBody() && func.id != "operator delete") {
 				out << "decltype(auto)";
 			} else if (isMainFunction) {
-				out << "CppAdvance::i32";
+				out << "Builtin::i32";
 			} else {
 				out << "void";
 			}
@@ -16044,7 +16201,7 @@ namespace AstrumLang {
 
 			if (func.isCommutative) {
 				out << std::endl << std::string(depth, '\t');
-				out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				if (func.templateParams) {
 					printTemplateParams(func.templateParams);
@@ -16127,7 +16284,7 @@ namespace AstrumLang {
 					    << std::string(++depth, '\t');
 				}
 
-				out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				if (func.parentTemplateParams) {
 					printTemplateParams(func.parentTemplateParams);
@@ -16247,7 +16404,7 @@ namespace AstrumLang {
 				if (func.id == "operator++" || func.id == "operator--") {
 					out << std::endl
 					    << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine()
-					    << " \"" << filename << ".ast\"\n"
+					    << " \"" << fullFilename << ".ast\"\n"
 					    << std::string(depth, '\t');
 					if (func.parentTemplateParams) {
 						printTemplateParams(func.parentTemplateParams);
@@ -16278,14 +16435,14 @@ namespace AstrumLang {
 					isVariadicTemplate = false;
 					if (func.exceptionSpecification)
 						printExceptionSpecification(func.exceptionSpecification);
-					out << " -> __self { auto copy = CppAdvance::New<__self>(__self(*this)); "
+					out << " -> __self { auto copy = Builtin::New<__self>(__self(*this)); "
 					       "++(*this); return copy; }";
 					currentShortType.clear();
 					currentTypeWithTemplate.clear();
 				} else if (func.isCommutative) {
 					out << std::endl
 					    << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine()
-					    << " \"" << filename << ".ast\"\n"
+					    << " \"" << fullFilename << ".ast\"\n"
 					    << std::string(depth, '\t');
 					if (func.parentTemplateParams) {
 						printTemplateParams(func.parentTemplateParams);
@@ -16521,7 +16678,7 @@ namespace AstrumLang {
 		if (isStatic) {
 			out << "static ";
 		}
-		out << "CppAdvance::LocalFunction<";
+		out << "Builtin::LocalFunction<";
 		if (auto ret = ctx->returnType()) {
 			if (ret->Const() || !ret->Ref()) {
 				out << "const ";
@@ -16588,7 +16745,7 @@ namespace AstrumLang {
 		if (auto clause = ctx->paramDeclClause()) {
 			printParamDeclClause(clause);
 		} else if (isMainFunction) {
-			// out << "CppAdvance::Array<CppAdvance::Str>";
+			// out << "Builtin::Array<Builtin::Str>";
 		}
 		out << ")";
 	}
@@ -16640,11 +16797,11 @@ namespace AstrumLang {
 			if (type == InRef)
 				out << "const ";
 			else if (type == In)
-				out << "CppAdvance::In<";
+				out << "Builtin::In<";
 			else if (type == Ref || type == Inout)
-				out << "CppAdvance::MutableRef<std::remove_cvref_t<";
+				out << "Builtin::MutableRef<std::remove_cvref_t<";
 			else if (type == Out) {
-				out << "CppAdvance::Out<std::remove_cvref_t<";
+				out << "Builtin::Out<std::remove_cvref_t<";
 				symbolTable[id] = "#Out";
 			}
 			if (isVarargs && !isVariadicTemplate)
@@ -16669,7 +16826,7 @@ namespace AstrumLang {
 			if (type == In || type == InRef)
 				out << "const auto&";
 			else if (type == Ref || type == Inout)
-				out << "CppAdvance::MutableRef<auto>";
+				out << "Builtin::MutableRef<auto>";
 			else if (type == Move || type == Forward)
 				out << "auto&&";
 			else if (type == Value)
@@ -16737,7 +16894,7 @@ namespace AstrumLang {
 			out << "{";
 			++depth;
 			if (isUnsafe)
-				out << "\tusing namespace CppAdvance::Unsafe;\tusing namespace __Unsafe;\tusing "
+				out << "\tusing namespace Builtin::Unsafe;\tusing namespace __Unsafe;\tusing "
 				       "namespace __"
 				    << filename << "_Protected__Unsafe;";
 			for (const auto& [id, type] : refParameters) {
@@ -16747,7 +16904,7 @@ namespace AstrumLang {
 			}
 			out << "\n"
 			    << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine() << " \""
-			    << filename << ".ast\"\n"
+			    << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			if (!isDestructor)
 				out << "ADV_EXPRESSION_BODY(";
@@ -16844,7 +17001,7 @@ namespace AstrumLang {
 				out.switchTo(true);
 			else
 				out.switchTo(false);
-			out << "#line " << pos.line << " \"" << filename << ".ast\"\n"
+			out << "#line " << pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			if (prop.parentTemplateParams) {
 				printTemplateParams(prop.parentTemplateParams);
@@ -16913,7 +17070,7 @@ namespace AstrumLang {
 		}
 		if (auto t = ctx->theTypeId()) {
 			if (ctx->Void()) {
-				out << "CppAdvance::DeferredInit<";
+				out << "Builtin::DeferredInit<";
 				symbolTable[id] = "#DeferredInit";
 			} else {
 				symbolTable[id] = t->getText();
@@ -16933,13 +17090,13 @@ namespace AstrumLang {
 			symbolTable[id] = "";
 			if (ctx->Star()) {
 				if (ctx->Const()) {
-					out << (isUnsafe ? "CppAdvance::Unsafe::" : "")
+					out << (isUnsafe ? "Builtin::Unsafe::" : "")
 					    << (isVolatile ? "__VolatileRawPtr" : "__RawPtr")
 					    << "<const std::remove_pointer_t<decltype(";
 					printInitializerClause(ctx->initializerClause());
 					out << ")>> ";
 				} else {
-					out << (isUnsafe ? "CppAdvance::Unsafe::" : "")
+					out << (isUnsafe ? "Builtin::Unsafe::" : "")
 					    << (isVolatile ? "__VolatileRawPtr" : "__RawPtr");
 				}
 			} else if (isUnowned) {
@@ -17094,49 +17251,54 @@ namespace AstrumLang {
 				out << "bool";
 			}
 		} else if (ctx->I8()) {
-			out << "CppAdvance::i8";
+			out << "Builtin::i8";
 		} else if (ctx->U8()) {
-			out << "CppAdvance::u8";
+			out << "Builtin::u8";
 		} else if (ctx->I16()) {
-			out << "CppAdvance::i16";
+			out << "Builtin::i16";
 		} else if (ctx->U16()) {
-			out << "CppAdvance::u16";
+			out << "Builtin::u16";
 		} else if (ctx->I32()) {
-			out << "CppAdvance::i32";
+			out << "Builtin::i32";
 		} else if (ctx->U32()) {
-			out << "CppAdvance::u32";
+			out << "Builtin::u32";
 		} else if (ctx->I64()) {
-			out << "CppAdvance::i64";
+			out << "Builtin::i64";
 		} else if (ctx->U64()) {
-			out << "CppAdvance::u64";
+			out << "Builtin::u64";
 		} else if (ctx->I128()) {
-			out << "CppAdvance::i128";
+			out << "Builtin::i128";
 		} else if (ctx->U128()) {
-			out << "CppAdvance::u128";
+			out << "Builtin::u128";
 		} else if (ctx->Isize()) {
-			out << "CppAdvance::isize";
+			out << "Builtin::isize";
 		} else if (ctx->Usize()) {
-			out << "CppAdvance::usize";
+			out << "Builtin::usize";
 		} else if (ctx->F32()) {
-			out << "CppAdvance::f32";
+			out << "Builtin::f32";
 		} else if (ctx->F64()) {
-			out << "CppAdvance::f64";
+			out << "Builtin::f64";
 		} else if (ctx->Fext()) {
-			out << "CppAdvance::fext";
+			out << "Builtin::fext";
 		} else if (ctx->Byte()) {
-			out << "CppAdvance::char8";
+			out << "Builtin::char8";
 		} else if (ctx->Char()) {
-			out << "CppAdvance::char16";
+			out << "Builtin::char16";
 		} else if (ctx->Rune()) {
-			out << "CppAdvance::char32";
+			out << "Builtin::char32";
 		} else if (ctx->Bool()) {
 			out << "bool";
 		} else if (ctx->Str()) {
-			out << "CppAdvance::Str";
+			out << "Builtin::Str";
 		} else if (ctx->Object()) {
-			out << "CppAdvance::ObjectRef";
+			out << "Builtin::ObjectRef";
 		} else if (ctx->Self()) {
-			out << "__self";
+			if (isExtension)
+			{
+				out << currentExtensionName;
+			} else {
+				out << "__self";
+			}
 		} else if (auto decl = ctx->decltypeSpecifier()) {
 			out << "decltype(";
 			printExpression(decl->expression());
@@ -17146,7 +17308,7 @@ namespace AstrumLang {
 			printTypeId(decl->theTypeId());
 			out << ">";
 		} else if (auto f = ctx->functionTypeId()) {
-			out << "CppAdvance::FunctionRef<";
+			out << "Builtin::FunctionRef<";
 			if (f->Void()) {
 				out << "void";
 			} else {
@@ -17397,7 +17559,7 @@ namespace AstrumLang {
 		functionBody   = true;
 		out.switchTo(false);
 		out << "#ifdef ADV_UNITTEST\n" << std::string(depth, '\t');
-		out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+		out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 		    << std::string(depth, '\t');
 		out << "static bool " << sema.getUnitTestId(ctx) << " = []()";
 		printCompoundStatement(ctx->compoundStatement());
@@ -17509,7 +17671,7 @@ namespace AstrumLang {
 		} else if (ctx->RightShiftAssign()) {
 			out << " >>= ";
 		} else if (ctx->DoubleQuestionAssign()) {
-			out << ".assignIfNull([&]() FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { return ";
+			out << ".AssignIfNull([&]() FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { return ";
 		}
 	}
 
@@ -17585,7 +17747,7 @@ namespace AstrumLang {
 
 	void AstrumCodegen::printThrowExpression(AstrumParser::ThrowExpressionContext* ctx) {
 		if (auto expr = ctx->assignmentExpression()) {
-			out << "CppAdvance::Throw(";
+			out << "Builtin::Throw(";
 			printAssignmentExpression(expr);
 			out << ")";
 		} else {
@@ -17617,7 +17779,7 @@ namespace AstrumLang {
 			printCollectionExpression(coll);
 		} else if (ctx->Out()) {
 			auto id = ctx->Identifier()->getText();
-			out << "CppAdvance::Out(&";
+			out << "Builtin::Out(&";
 			printIdentifier(ctx->Identifier());
 			out << ")";
 			symbolTable[id] = "#DeferredInit";
@@ -17646,7 +17808,7 @@ namespace AstrumLang {
 		lvalue = false;
 		if (ctx->assignmentExpression()) {
 			if (!ctx->expression()) {
-				out << "CppAdvance::ElvisOperator(";
+				out << "Builtin::ElvisOperator(";
 				printNullCoalescingExpression(ctx->nullCoalescingExpression());
 				out << ", [&]() FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { return ";
 				printAssignmentExpression(ctx->assignmentExpression());
@@ -17669,7 +17831,7 @@ namespace AstrumLang {
 		printLogicalOrExpression(ctx->logicalOrExpression());
 		auto expressions = ctx->nullCoalescingBranch();
 		for (auto orExpr : expressions) {
-			out << ".valueOr([&]() FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ";
+			out << ".ValueOr([&]() FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ";
 			if (auto expr = orExpr->logicalOrExpression()) {
 				out << "return ";
 				printLogicalOrExpression(expr);
@@ -17786,14 +17948,14 @@ namespace AstrumLang {
 			currentEquality = ctx;
 			printEqualityExpression(ctx->equalityExpression(1));
 		} else if (ctx->IdentityEqual()) {
-			out << "CppAdvance::IdentityEquals(";
+			out << "Builtin::IdentityEquals(";
 			printEqualityExpression(ctx->equalityExpression(0));
 			out << ", ";
 			currentEquality = ctx;
 			printEqualityExpression(ctx->equalityExpression(1));
 			out << ")";
 		} else if (ctx->NotIdentityEqual()) {
-			out << "!CppAdvance::IdentityEquals(";
+			out << "!Builtin::IdentityEquals(";
 			printEqualityExpression(ctx->equalityExpression(0));
 			out << ", ";
 			currentEquality = ctx;
@@ -17827,7 +17989,7 @@ namespace AstrumLang {
 				printThreeWayComparisonExpression(ctx->threeWayComparisonExpression(0));
 				out << ")";
 			} else if (ctx->As()) {
-				out << "CppAdvance::Cast<";
+				out << "Builtin::Cast<";
 				if (ctx->Question()) {
 					out << "false";
 				} else {
@@ -17853,7 +18015,7 @@ namespace AstrumLang {
 							if (pattern->not_())
 								out << "!";
 							tmpName = "__tmp" + std::to_string(it - patterns.begin());
-							out << tmpName << ".isValid()";
+							out << tmpName << ".IsValid()";
 							if (!(pattern->Let() && !pattern->shiftExpression()) &&
 							    (!pattern->theTypeId() || !pattern->propertyPattern().empty())) {
 								if (pattern->not_()) {
@@ -17876,21 +18038,29 @@ namespace AstrumLang {
 				printThreeWayComparisonExpression(ctx->threeWayComparisonExpression(0));
 			}
 		} else if (ctx->Greater()) {
+			out << "(";
 			printRelationalExpression(ctx->relationalExpression(0));
-			out << " > ";
+			out << " <=> ";
 			printRelationalExpression(ctx->relationalExpression(1));
+			out << ") > 0";
 		} else if (ctx->Less()) {
+			out << "(";
 			printRelationalExpression(ctx->relationalExpression(0));
-			out << " < ";
+			out << " <=> ";
 			printRelationalExpression(ctx->relationalExpression(1));
+			out << ") < 0";
 		} else if (ctx->GreaterEqual()) {
+			out << "(";
 			printRelationalExpression(ctx->relationalExpression(0));
-			out << " >= ";
+			out << " <=> ";
 			printRelationalExpression(ctx->relationalExpression(1));
+			out << ") >= 0";
 		} else if (ctx->LessEqual()) {
+			out << "(";
 			printRelationalExpression(ctx->relationalExpression(0));
-			out << " <= ";
+			out << " <=> ";
 			printRelationalExpression(ctx->relationalExpression(1));
+			out << ") <= 0";
 		} else if (auto trait = ctx->typeTrait()) {
 			bool typeIs = false;
 			if (trait->not_())
@@ -17901,34 +18071,34 @@ namespace AstrumLang {
 				out << "std::is_null_pointer_v<";
 			} else if (trait->Struct()) {
 				if (trait->Ref()) {
-					out << "std::is_base_of_v<CppAdvance::RefStruct, ";
+					out << "std::is_base_of_v<Builtin::RefStruct, ";
 				} else if (trait->Union()) {
 					out << "std::is_union_v<";
 				} else {
-					out << "std::is_base_of_v<CppAdvance::Struct, ";
+					out << "std::is_base_of_v<Builtin::Struct, ";
 				}
 			} else if (trait->Enum()) {
 				if (trait->Class()) {
-					out << "std::is_base_of_v<CppAdvance::EnumClassRef, ";
+					out << "std::is_base_of_v<Builtin::EnumClassRef, ";
 				} else {
-					out << "std::is_base_of_v<CppAdvance::Enum, ";
+					out << "std::is_base_of_v<Builtin::Enum, ";
 				}
 			} else if (trait->Union()) {
-				out << "std::is_base_of_v<CppAdvance::Union, ";
+				out << "std::is_base_of_v<Builtin::Union, ";
 			} else if (trait->Class()) {
-				out << "std::is_base_of_v<CppAdvance::ObjectRef, ";
+				out << "std::is_base_of_v<Builtin::ObjectRef, ";
 			} else if (trait->Interface()) {
-				out << "std::is_base_of_v<CppAdvance::InterfaceRef, ";
+				out << "std::is_base_of_v<Builtin::InterfaceRef, ";
 			} else if (trait->Unowned()) {
-				out << "std::is_base_of_v<CppAdvance::ObjectRef__Unowned, ";
+				out << "std::is_base_of_v<Builtin::ObjectRef__Unowned, ";
 			} else if (trait->Weak()) {
-				out << "std::is_base_of_v<CppAdvance::ObjectRef__Weak, ";
+				out << "std::is_base_of_v<Builtin::ObjectRef__Weak, ";
 			} else if (trait->Arrow()) {
-				out << "std::is_base_of_v<CppAdvance::FuncBase, ";
+				out << "std::is_base_of_v<Builtin::FuncBase, ";
 			} else if (trait->Star()) {
-				out << "CppAdvance::is_instance_of_v<";
+				out << "Builtin::is_instance_of_v<";
 			} else if (trait->Question()) {
-				out << "CppAdvance::IsNullable<";
+				out << "Builtin::IsNullable<";
 			} else if (!trait->Amp().empty()) {
 				if (trait->Amp().size() > 1) {
 					out << "std::is_rvalue_reference_v<";
@@ -17946,7 +18116,7 @@ namespace AstrumLang {
 			} else if (trait->Final()) {
 				out << "std::is_final_v<";
 			} else if (trait->Less()) {
-				out << "CppAdvance::is_instance_of_v<";
+				out << "Builtin::is_instance_of_v<";
 			} else if (trait->New()) {
 				if (trait->theTypeId().empty()) {
 					if (trait->Default()) {
@@ -17982,16 +18152,16 @@ namespace AstrumLang {
 			} else if (trait->Operator_()) {
 				out << "std::convertible_to<";
 			} else if (!trait->Or().empty()) {
-				out << "CppAdvance::IsAnyOf<";
+				out << "Builtin::IsAnyOf<";
 			} else {
-				out << "CppAdvance::TypeIs<";
+				out << "Builtin::TypeIs<";
 				typeIs = true;
 			}
 
 			printTypeId(ctx->theTypeId());
 
 			if (trait->Star()) {
-				out << ", CppAdvance::RawPtr";
+				out << ", Builtin::RawPtr";
 			} else if (trait->Less()) {
 				out << ", ";
 				printTypeId(trait->theTypeId(0));
@@ -18077,7 +18247,7 @@ namespace AstrumLang {
 					if (!first) {
 						out << "\n"
 						    << std::string(depth + 1, '\t') << "#line "
-						    << ctx->getStart()->getLine() << " \"" << filename << ".ast\"";
+						    << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"";
 						out << "\n" << std::string(depth + 1, '\t') << " && ";
 					}
 					first = false;
@@ -18097,7 +18267,7 @@ namespace AstrumLang {
 					if (!first) {
 						out << "\n"
 						    << std::string(depth + 1, '\t') << "#line "
-						    << ctx->getStart()->getLine() << " \"" << filename << ".ast\"";
+						    << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"";
 						out << "\n" << std::string(depth + 1, '\t') << " && ";
 					}
 					first = false;
@@ -18108,7 +18278,7 @@ namespace AstrumLang {
 				}
 				out << ")";
 			} else {
-				out << "CppAdvance::Is";
+				out << "Builtin::Is";
 				if (auto type = pattern->theTypeId()) {
 					out << "<typename ";
 					printTypeId(type);
@@ -18354,10 +18524,10 @@ namespace AstrumLang {
 			if (ctx->switchExpressionBranch().back()->patternList()->getText() != "_") {
 				out << " else { using __switchType = decltype(";
 				printThreeWayComparisonExpression(ctx->threeWayComparisonExpression());
-				out << "); static_assert((!std::derived_from<__switchType, CppAdvance::Enum> &&"
-				    << " !std::derived_from<__switchType, CppAdvance::EnumClassRef> && "
-				       "!std::derived_from<__switchType, CppAdvance::Union>) "
-				    << "|| CppAdvance::GetVariantsCount<__switchType>() <= "
+				out << "); static_assert((!std::derived_from<__switchType, Builtin::Enum> &&"
+				    << " !std::derived_from<__switchType, Builtin::EnumClassRef> && "
+				       "!std::derived_from<__switchType, Builtin::Union>) "
+				    << "|| Builtin::GetVariantsCount<__switchType>() <= "
 				    << switchProcessedVariants.top().first + switchProcessedVariants.top().second
 				    << ", "
 				    << "\"Switch does not handle all possible variants, add a default branch\"); }";
@@ -18381,12 +18551,12 @@ namespace AstrumLang {
 		auto tmpName = "__tmp__valid_" + std::to_string(switchExpr->getStart()->getLine());
 		auto pattern = ctx->patternList()->pattern(0);
 		if (branchIndex == 0) {
-			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
-			out << "auto " << tmpName << " = CppAdvance::Cast<false, ";
-			out << "decltype(";
+			out << "auto " << tmpName << " = Builtin::Cast<false, ";
+			out << "std::decay_t<decltype(";
 			printThreeWayComparisonExpression(switchExpr);
-			out << ")::__self";
+			out << ")>::__self";
 			out << ">(";
 			printThreeWayComparisonExpression(switchExpr);
 			out << ");\n" << std::string(depth, '\t');
@@ -18394,10 +18564,10 @@ namespace AstrumLang {
 
 		auto isDefault = ctx->patternList()->getText() == "_";
 		if (pattern->theTypeId() && !isDefault || pattern->shiftExpression() && pattern->Let()) {
-			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			tmpName = "__tmp" + std::to_string(branchIndex);
-			out << "auto " << tmpName << " = CppAdvance::Cast<false, ";
+			out << "auto " << tmpName << " = Builtin::Cast<false, ";
 			if (pattern->theTypeId()) {
 				printTypeId(pattern->theTypeId());
 			} else if (pattern->shiftExpression()) {
@@ -18409,7 +18579,7 @@ namespace AstrumLang {
 		}
 
 		if (!isDefault) {
-			out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "if(";
 			bool skipFirst = false;
@@ -18418,7 +18588,7 @@ namespace AstrumLang {
 			if (!isNull) {
 				if (pattern->not_())
 					out << "!";
-				out << tmpName << ".isValid()";
+				out << tmpName << ".IsValid()";
 				if (!(pattern->Let() && !pattern->shiftExpression()) &&
 				    (!pattern->theTypeId() || !pattern->propertyPattern().empty())) {
 					if (pattern->not_()) {
@@ -18435,7 +18605,8 @@ namespace AstrumLang {
 			out << ") {\n" << std::string(++depth, '\t');
 			if (!isNull && !pattern->not_() || isNull && pattern->not_()) {
 				if (pattern->Let()) {
-					out << "#line " << ctx->getStart()->getLine() << " \"" << filename << ".ast\"\n"
+					out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename
+					    << ".ast\"\n"
 					    << std::string(depth, '\t');
 					out << "const auto& [";
 					bool first = true;
@@ -18456,17 +18627,19 @@ namespace AstrumLang {
 					auto txt = switchExpr->getText();
 					if (std::all_of(txt.begin(), txt.end(),
 					                [](char c) { return std::isalnum(c) || c == '_'; })) {
-						out << "#line " << ctx->getStart()->getLine() << " \"" << filename
+						out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename
 						    << ".ast\"\n"
 						    << std::string(depth, '\t');
 						if (isNull) {
 							out << "auto " << tmpName << " = *" << txt << "; ";
 						}
-						out << "const auto& " << txt << " = ";
-						if (!isNull)
-							out << "*";
-						out << tmpName;
-						out << ";\n" << std::string(depth, '\t');
+						if (txt != "this") {
+							out << "const auto& " << txt << " = ";
+							if (!isNull)
+								out << "*";
+							out << tmpName << ";";
+						}
+						out << "\n" << std::string(depth, '\t');
 					}
 				}
 			}
@@ -18526,7 +18699,7 @@ namespace AstrumLang {
 				std::string ufcs = "ADV_UFCS";
 				if (!functionBody)
 					ufcs += "_NONLOCAL";
-				out << ufcs << "(_operator_dollar)(";
+				out << ufcs << "(_operator_dol)(";
 				paren = true;
 			} else if (upo->Caret()) {
 				std::string ufcs = "ADV_UFCS";
@@ -18540,25 +18713,31 @@ namespace AstrumLang {
 					ufcs += "_NONLOCAL";
 				out << ufcs << "(_operator_xor_xor)(";
 				paren = true;
+			} else if (upo->Hash()) {
+				std::string ufcs = "ADV_UFCS";
+				if (!functionBody)
+					ufcs += "_NONLOCAL";
+				out << ufcs << "(_operator_hsh)(";
+				paren = true;
 			}
 		} else if (ctx->PlusPlus()) {
 			out << "++";
 		} else if (ctx->MinusMinus()) {
 			out << "--";
 		} else if (ctx->Sizeof()) {
-			out << "CppAdvance::usize(sizeof ";
+			out << "Builtin::usize(sizeof ";
 			paren = true;
 		} else if (ctx->Nameof()) {
-			out << "CppAdvance::Str(ASTRUM_NAMEOF(";
+			out << "Builtin::Str(ASTRUM_NAMEOF(";
 			paren = true;
 		} else if (ctx->refCaptureOperator()) {
-			out << "CppAdvance::MutableRef<std::remove_cvref_t<decltype(";
+			out << "Builtin::MutableRef<std::remove_cvref_t<decltype(";
 			printUnaryExpressionTail(ctx->unaryExpressionTail());
 			out << ")>>(";
 			paren = true;
 		} else if (ctx->Out()) {
 			isOutExpression = true;
-			out << "CppAdvance::Out(&";
+			out << "Builtin::Out(&";
 			paren = true;
 		} else if (ctx->unaryCustomOperator()) {
 			std::string ufcs = "ADV_UFCS";
@@ -18586,7 +18765,7 @@ namespace AstrumLang {
 		if (auto postfix = ctx->fullPostfixExpression()) {
 			printFullPostfixExpression(postfix);
 		} else if (ctx->Sizeof()) {
-			out << "CppAdvance::usize(sizeof";
+			out << "Builtin::usize(sizeof";
 			if (ctx->Ellipsis())
 				out << "...";
 			out << "(";
@@ -18597,7 +18776,7 @@ namespace AstrumLang {
 			out << "))";
 		} else if (ctx->Alignof()) {
 			if (!isAlignas) {
-				out << "CppAdvance::usize(";
+				out << "Builtin::usize(";
 			}
 			out << "alignof(";
 			printTypeId(ctx->theTypeId());
@@ -18606,14 +18785,14 @@ namespace AstrumLang {
 			}
 			out << ")";
 		} else if (ctx->Nameof()) {
-			out << "CppAdvance::Str(ASTRUM_NAMEOF(";
+			out << "Builtin::Str(ASTRUM_NAMEOF(";
 			if (ctx->theTypeId())
 				printTypeId(ctx->theTypeId());
 			if (ctx->expression())
 				printExpression(ctx->expression());
 			out << "))";
 		} else if (ctx->Offsetof()) {
-			out << "CppAdvance::usize(offsetof(";
+			out << "Builtin::usize(offsetof(";
 			if (ctx->theTypeId())
 				printTypeId(ctx->theTypeId());
 			out << ", ";
@@ -18634,11 +18813,11 @@ namespace AstrumLang {
 
 	void AstrumCodegen::printNewExpression(AstrumParser::NewExpressionContext* ctx) {
 		if (auto mem = ctx->memorySpaceSetter()) {
-			out << "CppAdvance::NewWithExtraMemory<(unsigned)";
+			out << "Builtin::NewWithExtraMemory<(unsigned)";
 			printConstantExpression(mem->constantExpression());
 			out << ", ";
 		} else {
-			out << "CppAdvance::New<";
+			out << "Builtin::New<";
 		}
 
 		printTypeId(ctx->theTypeId());
@@ -18677,6 +18856,12 @@ namespace AstrumLang {
 	void AstrumCodegen::printPostfixExpression(AstrumParser::PostfixExpressionContext* ctx) {
 		if (ignoredExpressions.contains(ctx))
 			return;
+
+		if (ctx->simpleTypeSpecifier() && literalMinus) {
+			out << "-";
+			literalMinus = false;
+		}
+
 		if (ctx->LeftParen()) {
 			if (auto expr = ctx->postfixExpression()) {
 				auto txt    = expr->getText();
@@ -18759,7 +18944,7 @@ namespace AstrumLang {
 										if (!ignoredExpressions.contains(
 										        expr->postfixExpression())) {
 											printPostfixExpression(expr->postfixExpression());
-											out << ".andThen([&](const auto& value) "
+											out << ".AndThen([&](const auto& value) "
 											       "FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA "
 											       "{ ADV_EXPRESSION_BODY(";
 										}
@@ -18775,7 +18960,7 @@ namespace AstrumLang {
 										if (!ignoredExpressions.contains(innerExpr)) {
 											printPostfixExpression(innerExpr);
 											ignoredExpressions.insert(innerExpr);
-											out << ".andThen([&](const auto& value) "
+											out << ".AndThen([&](const auto& value) "
 											       "FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA "
 											       "{ ADV_EXPRESSION_BODY(";
 										}
@@ -18797,6 +18982,32 @@ namespace AstrumLang {
 								if (ctx->expressionList())
 									out << ", ";
 							}
+							varargDepth = prev;
+							startDone   = true;
+							if (extension)
+								++currentArg;
+						}
+					} else if (expr->Dot() && expr->simpleTypeSpecifier()) {
+						functionCallExpressions.insert(expr->idExpression());
+						auto funcname = expr->idExpression()->getText();
+						bool tpl      = false;
+						if (funcname.find('<') != funcname.npos) {
+							tpl      = true;
+							funcname = funcname.substr(0, funcname.find('<'));
+						}
+
+						if (funcname != currentDeclarationName) {
+							std::string ufcs = "ADV_USFCS";
+							if (tpl)
+								ufcs += "_TEMPLATE";
+							if (!functionBody)
+								ufcs += "_NONLOCAL";
+							out << ufcs << "((";
+							printSimpleTypeSpecifier(expr->simpleTypeSpecifier());
+							out << "), ";
+							printIdExpression(expr->idExpression());
+							out << ")(";
+
 							varargDepth = prev;
 							startDone   = true;
 							if (extension)
@@ -18944,7 +19155,7 @@ namespace AstrumLang {
 				if (ctx->Question()) {
 					if (!ignoredExpressions.contains(ctx->postfixExpression())) {
 						printPostfixExpression(ctx->postfixExpression());
-						out << ".andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG "
+						out << ".AndThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG "
 						       "FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
 					}
 					out << ufcs << "(" << funcname << ")(value.__ref(), ";
@@ -18957,7 +19168,7 @@ namespace AstrumLang {
 					if (!ignoredExpressions.contains(innerExpr)) {
 						printPostfixExpression(innerExpr);
 						ignoredExpressions.insert(innerExpr);
-						out << ".andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG "
+						out << ".AndThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG "
 						       "FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
 					}
 
@@ -18975,7 +19186,7 @@ namespace AstrumLang {
 				auto attr =
 				    ctx->attributeSpecifierSeq()->attributeSpecifier(0)->Identifier()->getText();
 				if (attr == "Unchecked") {
-					out << "CppAdvance::UncheckedTag{}, ";
+					out << "Builtin::UncheckedTag{}, ";
 				}
 			}
 			printExpressionList(ctx->expressionList());
@@ -18988,6 +19199,14 @@ namespace AstrumLang {
 			} else if (ctx->Type()) {
 				printSimpleTypeSpecifier(ctx->simpleTypeSpecifier());
 				out << "::__static_getType()";
+			} else if (ctx->simpleTypeSpecifier() && ctx->idExpression()) {
+				if (!functionCallExpressions.contains(ctx->idExpression())) {
+					out << "ADV_USPCS(";
+					printIdExpression(ctx->idExpression());
+					out << ", ";
+					printSimpleTypeSpecifier(ctx->simpleTypeSpecifier());
+					out << ")()";
+				}
 			} else {
 				auto txt         = ctx->getText();
 				auto dotpos      = txt.rfind('.');
@@ -19022,7 +19241,7 @@ namespace AstrumLang {
 						} else if (!functionCallExpressions.contains(ctx->idExpression())) {
 							if (!ignoredExpressions.contains(expr)) {
 								printPostfixExpression(expr);
-								out << ".andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG "
+								out << ".AndThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG "
 								       "FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
 							}
 							if (!ctx->Greater()) {
@@ -19036,7 +19255,7 @@ namespace AstrumLang {
 						} else {
 							if (!ignoredExpressions.contains(expr)) {
 								printPostfixExpression(expr);
-								out << ".andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG "
+								out << ".AndThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG "
 								       "FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(value.__ref().";
 							} else {
 								out << "value.__ref().";
@@ -19052,7 +19271,7 @@ namespace AstrumLang {
 							if (!ignoredExpressions.contains(innerExpr)) {
 								printPostfixExpression(innerExpr);
 								ignoredExpressions.insert(innerExpr);
-								out << ".andThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG "
+								out << ".AndThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG "
 								       "FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
 							}
 
@@ -19111,7 +19330,7 @@ namespace AstrumLang {
 			out << "(";
 			auto parens = 1;
 			if (op->Amp()) {
-				out << (isUnsafe ? "CppAdvance::Unsafe::" : "") << "__RawPtr(std::addressof(";
+				out << (isUnsafe ? "Builtin::Unsafe::" : "") << "__RawPtr(std::addressof(";
 				parens += 2;
 			} else if (op->Exclamation()) {
 				out << "*(";
@@ -19179,8 +19398,10 @@ namespace AstrumLang {
 				}
 				out << "::";
 			}
-			if (literalMinus)
+			if (literalMinus) {
 				out << "-";
+				literalMinus = false;
+			}
 			auto txt = id->getText();
 			if (lvalue) {
 				currentType = symbolTable[txt];
@@ -19192,8 +19413,10 @@ namespace AstrumLang {
 			    (symbolTable[txt] == "#DeferredInit" || symbolTable[txt] == "#Out"))
 				out << ".value()";
 		} else if (auto t = ctx->theTypeId()) {
-			if (literalMinus)
+			if (literalMinus) {
 				out << "-";
+				literalMinus = false;
+			}
 			printTypeId(t);
 			out << "::";
 			if (ctx->Identifier()) {
@@ -19202,8 +19425,10 @@ namespace AstrumLang {
 				out << "__static_getType()";
 			}
 		} else if (auto expr = ctx->expression()) {
-			if (literalMinus)
+			if (literalMinus) {
 				out << "-";
+				literalMinus = false;
+			}
 			out << "(";
 			printExpression(expr);
 			out << ")";
@@ -19448,7 +19673,7 @@ namespace AstrumLang {
 			out << ")";
 		} else {
 			for (auto i = 0; i < pointerDepth; i++)
-				out << (isUnsafe ? "CppAdvance::Unsafe::" : "")
+				out << (isUnsafe ? "Builtin::Unsafe::" : "")
 				    << (isVolatile ? "__VolatileRawPtr<" : "__RawPtr<");
 			if (auto cv = ctx->cvQualifier()) {
 				if (cv->Const())
@@ -19531,11 +19756,11 @@ namespace AstrumLang {
 		if (type == InRef)
 			out << "const ";
 		else if (type == In)
-			out << "CppAdvance::In<";
+			out << "Builtin::In<";
 		else if (type == Ref || type == Inout)
-			out << "CppAdvance::MutableRef<std::remove_cvref_t<";
+			out << "Builtin::MutableRef<std::remove_cvref_t<";
 		else if (type == Out) {
-			out << "CppAdvance::Out<std::remove_cvref_t<";
+			out << "Builtin::Out<std::remove_cvref_t<";
 		}
 		if (isVarargs && !isVariadicTemplate)
 			out << "std::initializer_list<";
@@ -19557,14 +19782,14 @@ namespace AstrumLang {
 		if (auto post = ctx->typePostfix()) {
 			for (auto decl : post->arrayDeclarator()) {
 				if (decl->Question())
-					out << "CppAdvance::Nullable<";
+					out << "Builtin::Nullable<";
 				printArrayDeclarator(decl);
 				brackets += 1 + bool(decl->Question());
 			}
 		}
 
 		if (ctx->Question())
-			out << "CppAdvance::Nullable<";
+			out << "Builtin::Nullable<";
 		if (ctx->typeSpecifierSeq()) {
 			printTypeSpecifierSeq(ctx->typeSpecifierSeq());
 		} else if (ctx->theTypeId()) {
@@ -19583,11 +19808,11 @@ namespace AstrumLang {
 
 	void AstrumCodegen::printArrayDeclarator(AstrumParser::ArrayDeclaratorContext* ctx) {
 		if (ctx->constantExpression()) {
-			out << "CppAdvance::InlineArray<";
+			out << "Builtin::InlineArray<";
 			printConstantExpression(ctx->constantExpression());
 			out << ", ";
 		} else {
-			out << "CppAdvance::Array<";
+			out << "Builtin::Array<";
 		}
 	}
 
@@ -19808,30 +20033,27 @@ namespace AstrumLang {
 		StringReplace(txt, "_", "");
 		StringReplace(txt, "0o", "0");
 		if (txt.ends_with("i8")) {
-			out << "CppAdvance::i8(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 2)
-			    << ")";
+			out << "Builtin::i8(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 2) << ")";
 		} else if (txt.ends_with("i16")) {
-			out << "CppAdvance::i16(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3)
-			    << ")";
+			out << "Builtin::i16(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3) << ")";
 		} else if (txt.ends_with("i32")) {
-			out << "CppAdvance::i32(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3)
-			    << ")";
+			out << "Builtin::i32(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3) << ")";
 		} else if (txt.ends_with("i64")) {
-			out << "CppAdvance::i64(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3)
+			out << "Builtin::i64(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3)
 			    << "LL)";
 		} else if (txt.ends_with("u8")) {
-			out << "CppAdvance::u8(" << txt.substr(0, txt.length() - 2) << "U)";
+			out << "Builtin::u8(" << txt.substr(0, txt.length() - 2) << "U)";
 		} else if (txt.ends_with("u16")) {
-			out << "CppAdvance::u16(" << txt.substr(0, txt.length() - 3) << "U)";
+			out << "Builtin::u16(" << txt.substr(0, txt.length() - 3) << "U)";
 		} else if (txt.ends_with("u32")) {
-			out << "CppAdvance::u32(" << txt.substr(0, txt.length() - 3) << "U)";
+			out << "Builtin::u32(" << txt.substr(0, txt.length() - 3) << "U)";
 		} else if (txt.ends_with("u64")) {
-			out << "CppAdvance::u64(" << txt.substr(0, txt.length() - 3) << "ULL)";
+			out << "Builtin::u64(" << txt.substr(0, txt.length() - 3) << "ULL)";
 		} else if (txt.ends_with("iz")) {
-			out << "CppAdvance::isize(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 2)
+			out << "Builtin::isize(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 2)
 			    << ")";
 		} else if (txt.ends_with("uz")) {
-			out << "CppAdvance::usize(" << txt.substr(0, txt.length() - 2) << "U)";
+			out << "Builtin::usize(" << txt.substr(0, txt.length() - 2) << "U)";
 		} else if (txt.ends_with("i128")) {
 			auto base   = 10;
 			auto offset = 0;
@@ -19852,10 +20074,10 @@ namespace AstrumLang {
 			    std::from_chars(txt.c_str() + offset, txt.c_str() + txt.length(), value, base);
 			if ((int) result.ec || value > (uint64_t(INT64_MAX) + 1) ||
 			    (!minus && value == (uint64_t(INT64_MAX) + 1))) {
-				out << "CppAdvance::i128::Parse(\"" << (minus ? "-" : "")
+				out << "Builtin::i128::Parse(\"" << (minus ? "-" : "")
 				    << txt.substr(0, txt.length() - 4) << "\")";
 			} else {
-				out << "CppAdvance::i128(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 4)
+				out << "Builtin::i128(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 4)
 				    << "LL)";
 			}
 		} else if (txt.ends_with("u128")) {
@@ -19877,9 +20099,9 @@ namespace AstrumLang {
 			auto result =
 			    std::from_chars(txt.c_str() + offset, txt.c_str() + txt.length(), value, base);
 			if ((int) result.ec) {
-				out << "CppAdvance::u128::Parse(\"" << txt.substr(0, txt.length() - 4) << "\")";
+				out << "Builtin::u128::Parse(\"" << txt.substr(0, txt.length() - 4) << "\")";
 			} else {
-				out << "CppAdvance::u128(" << txt.substr(0, txt.length() - 4) << "ULL)";
+				out << "Builtin::u128(" << txt.substr(0, txt.length() - 4) << "ULL)";
 			}
 		} else if (txt.ends_with("big")) {
 			auto base   = 10;
@@ -19901,7 +20123,7 @@ namespace AstrumLang {
 			    std::from_chars(txt.c_str() + offset, txt.c_str() + txt.length(), value, base);
 			if ((int) result.ec || value > (uint64_t(INT64_MAX) + 1) ||
 			    (!minus && value == (uint64_t(INT64_MAX) + 1))) {
-				out << "BigInt(CppAdvance::BigIntLiteral{\"" << (minus ? "-" : "")
+				out << "BigInt(Builtin::BigIntLiteral{\"" << (minus ? "-" : "")
 				    << txt.substr(0, txt.length() - 3) << "\"})";
 			} else {
 				out << "BigInt(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3) << "LL)";
@@ -19922,7 +20144,7 @@ namespace AstrumLang {
 				}
 			}
 			if (txt == "0u") {
-				out << "CppAdvance::u32(0U)";
+				out << "Builtin::u32(0U)";
 			} else {
 				auto value = 0ull;
 				auto result =
@@ -19931,16 +20153,16 @@ namespace AstrumLang {
 					if (txt[0] != '0' && (txt.length() < 40 ||
 					                      (txt.length() == 40 &&
 					                       (txt < "340282366920938463463374607431768211455")))) {
-						out << "CppAdvance::u128::Parse(\"" << txt.substr(0, txt.length() - 1)
+						out << "Builtin::u128::Parse(\"" << txt.substr(0, txt.length() - 1)
 						    << "\")";
 					} else {
-						out << "CppAdvance::BigIntLiteral{\"" << txt.substr(0, txt.length() - 1)
+						out << "Builtin::BigIntLiteral{\"" << txt.substr(0, txt.length() - 1)
 						    << "\"}";
 					}
 				} else if (value > UINT32_MAX) {
-					out << "CppAdvance::u64(" << txt.substr(0, txt.length() - 1) << "ULL)";
+					out << "Builtin::u64(" << txt.substr(0, txt.length() - 1) << "ULL)";
 				} else {
-					out << "CppAdvance::u32(" << txt.substr(0, txt.length() - 1) << "U)";
+					out << "Builtin::u32(" << txt.substr(0, txt.length() - 1) << "U)";
 				}
 			}
 		} else {
@@ -19967,60 +20189,57 @@ namespace AstrumLang {
 				     (txt.length() == 39 &&
 				      (txt < "170141183460469231731687303715884105728" ||
 				       (txt == "170141183460469231731687303715884105728" && minus))))) {
-					out << "CppAdvance::i128::Parse(\"" << (minus ? "-" : "") << txt << "\")";
+					out << "Builtin::i128::Parse(\"" << (minus ? "-" : "") << txt << "\")";
 				} else {
-					out << "CppAdvance::BigIntLiteral{\"" << (minus ? "-" : "") << txt << "\"}";
+					out << "Builtin::BigIntLiteral{\"" << (minus ? "-" : "") << txt << "\"}";
 				}
 			} else if (value > 9223372036854775808 || (value == 9223372036854775808 && !minus)) {
-				out << "CppAdvance::i128::Parse(\"" << (minus ? "-" : "") << txt << "\")";
+				out << "Builtin::i128::Parse(\"" << (minus ? "-" : "") << txt << "\")";
 			} else if (value > 2147483648 || (value == 2147483648 && !minus)) {
-				out << "CppAdvance::i64(" << (minus ? "-" : "") << txt << "LL)";
+				out << "Builtin::i64(" << (minus ? "-" : "") << txt << "LL)";
 			} else if (!currentType.empty()) {
 				if (currentType == "i8" && value < 128) {
-					out << "CppAdvance::i8((signed char)" << (minus ? "-" : "") << txt << ")";
+					out << "Builtin::i8((signed char)" << (minus ? "-" : "") << txt << ")";
 				} else if (currentType == "i16" && value < 32768) {
-					out << "CppAdvance::i16((short)" << (minus ? "-" : "") << txt << ")";
+					out << "Builtin::i16((short)" << (minus ? "-" : "") << txt << ")";
 				} else if (!minus) {
 					if (currentType == "u8" && value < 256) {
-						out << "CppAdvance::u8((unsigned char)" << txt << ")";
+						out << "Builtin::u8((unsigned char)" << txt << ")";
 					} else if (currentType == "u16" && value < 65536) {
-						out << "CppAdvance::u16((unsigned short)" << txt << ")";
+						out << "Builtin::u16((unsigned short)" << txt << ")";
 					} else if (currentType == "u32") {
-						out << "CppAdvance::u32(" << txt << "U)";
+						out << "Builtin::u32(" << txt << "U)";
 					} else if (currentType == "u64") {
-						out << "CppAdvance::u64(" << txt << "ULL)";
+						out << "Builtin::u64(" << txt << "ULL)";
 					} else if (currentType == "u128") {
-						out << "CppAdvance::u128(" << txt << "ULL)";
+						out << "Builtin::u128(" << txt << "ULL)";
 					} else if (currentType == "usize") {
-						out << "CppAdvance::usize(" << txt << "U)";
+						out << "Builtin::usize(" << txt << "U)";
 					} else {
-						out << "CppAdvance::i32(" << txt << ")";
+						out << "Builtin::i32(" << txt << ")";
 					}
 				} else {
-					out << "CppAdvance::i32(" << (minus ? "-" : "") << txt << ")";
+					out << "Builtin::i32(" << (minus ? "-" : "") << txt << ")";
 				}
 
 			} else {
-				out << "CppAdvance::i32(" << (minus ? "-" : "") << txt << ")";
+				out << "Builtin::i32(" << (minus ? "-" : "") << txt << ")";
 			}
 		}
 	}
 	void AstrumCodegen::printFloatLiteral(std::string txt, bool minus) {
 		StringReplace(txt, "_", "");
 		if (txt.ends_with("fext")) {
-			out << "CppAdvance::fext(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 4)
+			out << "Builtin::fext(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 4)
 			    << "L)";
 		} else if (txt.ends_with("f")) {
-			out << "CppAdvance::f32(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 1)
-			    << "f)";
+			out << "Builtin::f32(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 1) << "f)";
 		} else if (txt.ends_with("f32")) {
-			out << "CppAdvance::f32(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3)
-			    << "f)";
+			out << "Builtin::f32(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3) << "f)";
 		} else if (txt.ends_with("f64")) {
-			out << "CppAdvance::f64(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3)
-			    << ")";
+			out << "Builtin::f64(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3) << ")";
 		} else {
-			out << "CppAdvance::f64(" << (minus ? "-" : "") << txt << ")";
+			out << "Builtin::f64(" << (minus ? "-" : "") << txt << ")";
 		}
 	}
 
@@ -20037,29 +20256,29 @@ namespace AstrumLang {
 		if (minus)
 			ipart = -ipart;
 		int radix = parts[1].length();
-		out << "Decimal<" << radix << ">(CppAdvance::DecimalLiteral{" << ipart << ", " << fpart
+		out << "Decimal<" << radix << ">(Builtin::DecimalLiteral{" << ipart << ", " << fpart
 		    << "u})";
 	}
 
 	void AstrumCodegen::printCharacterLiteral(std::string txt) {
 		if (txt.starts_with('b')) {
-			out << "CppAdvance::char8(" << txt.substr(1) << ")";
+			out << "Builtin::char8(" << txt.substr(1) << ")";
 		} else if (txt.starts_with('U')) {
-			out << "CppAdvance::char32(" << txt << ")";
+			out << "Builtin::char32(" << txt << ")";
 		} else {
 			txt = txt.substr(1, txt.length() - 2);
 			if (txt.starts_with('\\')) {
 				if (txt[1] == 'x' && txt.length() > 6) {
-					out << "CppAdvance::char32(U'" << txt << "')";
+					out << "Builtin::char32(U'" << txt << "')";
 				} else if (txt[1] == 'U') {
-					out << "CppAdvance::char32(U'" << txt << "')";
+					out << "Builtin::char32(U'" << txt << "')";
 				} else {
-					out << "CppAdvance::char16(u'" << txt << "')";
+					out << "Builtin::char16(u'" << txt << "')";
 				}
 			} else if (txt.length() > 3) {
-				out << "CppAdvance::char32(U'" << txt << "')";
+				out << "Builtin::char32(U'" << txt << "')";
 			} else {
-				out << "CppAdvance::char16(u'" << txt << "')";
+				out << "Builtin::char16(u'" << txt << "')";
 			}
 		}
 	}
@@ -20077,11 +20296,11 @@ namespace AstrumLang {
 			txt    = txt.substr(1);
 		}
 		if (txt.starts_with('"') || txt.starts_with('R')) {
-			out << "CppAdvance::" << str << "{" << prefix << txt << "}";
+			out << "Builtin::" << str << "{" << prefix << txt << "}";
 		} else if (txt.starts_with('`')) {
 			auto contents = txt.substr(1, txt.length() - 2);
 			StringReplace(contents, "``", "`");
-			out << "CppAdvance::" << str << "{" << prefix << "R\"_grave_(" << contents
+			out << "Builtin::" << str << "{" << prefix << "R\"_grave_(" << contents
 			    << ")_grave_\"}";
 		}
 	}
@@ -20089,7 +20308,7 @@ namespace AstrumLang {
 	void AstrumCodegen::printMultilineStringLiteral(std::string txt) {
 		auto contents = txt.substr(3, txt.length() - 6);
 		auto lines    = StringSplit(contents, '\n');
-		out << "CppAdvance::Str{uR\"_multi_(";
+		out << "Builtin::Str{uR\"_multi_(";
 		int i      = -1;
 		bool first = true;
 		for (auto& line : lines) {
@@ -20118,7 +20337,7 @@ namespace AstrumLang {
 		if (currentDeclaration && !currentDeclaration->theTypeId()) {
 			out << "String(";
 		}
-		out << "CppAdvance::StringInterpolation(u";
+		out << "Builtin::StringInterpolation(u";
 		std::vector<AstrumParser::NullCoalescingExpressionContext*> expressions;
 		auto processExpression = [&](auto expr) {
 			out << "{";

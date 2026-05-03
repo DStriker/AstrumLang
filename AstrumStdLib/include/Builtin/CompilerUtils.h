@@ -18,15 +18,15 @@
 #if defined(GCC) || defined(CLANG)
 #define NORETURN __attribute__((noreturn))
 #define STDCALL
-#define CPPADVANCE_DLLEXPORT __attribute__((__visibility__("default")))
+#define ASTRUMSTD_API __attribute__((__visibility__("default")))
 #define WEAK __attribute__((weak))
 #else
 #define NORETURN __declspec(noreturn)
 #define STDCALL __stdcall
-#ifdef LIBASTRUMSTD_DLL_BUILD
-#define CPPADVANCE_DLLEXPORT __declspec(dllexport)
+#ifdef ASTRUMSTD_EXPORTS
+#define ASTRUMSTD_API __declspec(dllexport)
 #else
-#define CPPADVANCE_DLLEXPORT __declspec(dllimport)
+#define ASTRUMSTD_API __declspec(dllimport)
 #endif
 #define WEAK
 #endif

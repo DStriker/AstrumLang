@@ -40,6 +40,12 @@ namespace AstrumLang {
 				get().libraryPaths.emplace_back(str.substr(3));
 			} else if (str.starts_with("-l:")) {
 				get().libraries.emplace_back(str.substr(3));
+			} else if (str.starts_with("-root:")) {
+				auto root = str.substr(6);
+				if (root.starts_with('"')) {
+					root = root.substr(1, root.length() - 2);
+				}
+				get().rootPath = root;
 			} else if (str == "-unittest") {
 				get().unitTestMode = true;
 			} else if (str == "-O0") {
@@ -55,6 +61,9 @@ namespace AstrumLang {
 			} else if (str == "run") {
 				get().buildMode = true;
 				get().runMode   = true;
+			} else if (str == "-std") {
+				get().stdMode = true;
+				get().dllName = "ASTRUMSTD";
 			} else if (str == "-backend:clang") {
 				get().backend = CompilerBackend::Clang;
 			} else if (str == "-backend:msvc") {
@@ -116,7 +125,35 @@ namespace AstrumLang {
 				std::string src = arg;
 				if (src.starts_with("\""))
 					src = src.substr(1, src.length() - 2);
-				if (src.ends_with(".ast") || src.ends_with(".astrum")) {
+				if (src.ends_with("*")) {
+					fs::path srcPath = src.substr(0, src.length() - 1);
+					if (!srcPath.is_absolute())
+						srcPath = fs::current_path() / srcPath;
+					if (!fs::exists(srcPath) || !fs::is_directory(srcPath)) {
+						std::cout << "[WARNING] Directory not found: " << srcPath << std::endl;
+						continue;
+					}
+
+					for (const auto& entry :
+					     std::filesystem::recursive_directory_iterator(srcPath)) {
+						const auto& entryPath = entry.path();
+						auto src              = entryPath.string();
+						if (src.ends_with(".ast") || src.ends_with(".astrum")) {
+							auto headerPath = entryPath;
+							auto cppPath    = entryPath;
+							headerPath.replace_extension("h");
+							cppPath.replace_extension("cpp");
+							auto lastAstrumTime = fs::last_write_time(entryPath);
+							get().sourceFiles.emplace_back(src);
+							if (!fs::exists(headerPath) || !fs::exists(cppPath) ||
+							    fs::last_write_time(headerPath) < lastAstrumTime ||
+							    fs::last_write_time(cppPath) < lastAstrumTime) {
+								get().modifiedFiles.emplace_back(src);
+							}
+						}
+					}
+
+				} else if (src.ends_with(".ast") || src.ends_with(".astrum")) {
 					fs::path srcPath = src;
 					if (!srcPath.is_absolute())
 						srcPath = fs::current_path() / srcPath;

@@ -1,16 +1,19 @@
 #pragma once
-//#define CPPADVANCE_OVERFLOW_CHECKS
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+#ifndef NDEBUG
+#define Builtin_OVERFLOW_CHECKS
+#endif  // DEBUG
+
+#ifdef Builtin_OVERFLOW_CHECKS
 #include "SafeInt.h"
 #else
 #include "FastInt.h"
 #endif
 #include <string_view>
 
-#include "CInterop.h"
+#include "System/CInterop.h"
 
-namespace CppAdvance {
-#ifdef CPPADVANCE_OVERFLOW_CHECKS
+namespace Builtin {
+#ifdef Builtin_OVERFLOW_CHECKS
 	using i8    = SafeInt<int8_t>;
 	using i16   = SafeInt<int16_t>;
 	using i32   = SafeInt<int32_t>;
@@ -168,4 +171,4 @@ namespace CppAdvance {
 	// template <class T, template <class...> class U>
 	// concept SpecializationOf = std::invocable<decltype([]<typename... Args>(U<Args...> const&) {
 	// }), T > ;
-}  // namespace CppAdvance
+}  // namespace Builtin

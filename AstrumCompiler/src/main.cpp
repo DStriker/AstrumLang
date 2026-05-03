@@ -108,7 +108,8 @@ int main(int argc, const char* argv[]) {
 		return 0;
 	}
 
-	Compiler::compile();
+	if (!Compiler::compile())
+		return -1;
 
 	return 0;
 }

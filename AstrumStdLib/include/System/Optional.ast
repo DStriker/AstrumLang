@@ -1,0 +1,95 @@
+package System;
+
+public import IComparable;
+
+//@OptionalType
+public struct <T> Optional
+{
+    static assert(type T is struct or type T is enum, "T must be a struct or an enum");
+    public const __IS_ADV_NULLABLE :== true;
+
+    public Value: T {
+        get == {
+            if (!HasValue)
+                throw Builtin.InvalidOperationException();
+            return field;
+        }
+        private set == { field = value; }
+    }
+    public HasValue: bool = false { get; private set; }
+
+    public this() == default;
+
+    public implicit this(value: T) == {
+        Value = value;
+        HasValue = true;
+    }
+
+    public implicit this(_: decltype(null)) == {
+        HasValue = false;
+    }
+
+    public IsValid: () -> bool noexcept ==> HasValue;
+
+    public operator!: () -> T ==> Value;
+    public operator bool noexcept ==> HasValue;
+
+    public operator T ==> Value;
+
+    public AndThen: <F> (forward func: F) -> forward = 
+    {
+        type TResult = std.invoke_result_t<F, T>;
+        static if type TResult is void {
+            if (HasValue)
+                std.invoke(forward func, Value);
+        } else {
+            if (HasValue)
+                return std.invoke(forward func, Value) as TResult?;
+            return null;
+        }
+    }
+
+    public ValueOr: <F> (forward func: F) -> decay(T) = 
+    {
+        type TOrigin = decay(T);
+        type TResult = std.invoke_result_t<F>;
+        static assert(type T is operator TOrigin, "T must be convertible to TOrigin");
+        static assert(type TResult is operator TOrigin, "TResult must be convertible to TOrigin");
+        if (HasValue)
+            return Value;
+
+        return std.invoke(forward func);
+    }
+
+    public AssignIfNull: <F> (forward func: F) -> ref self =
+    {
+        type TResult = std.invoke_result_t<F>;
+        static assert(type TResult is operator T, "TResult must be convertible to T");
+        if (!HasValue)
+            Value = std.invoke(forward func);
+        return this;
+    }
+
+    public operator==: (rhs: self) -> bool ==
+    {
+        if HasValue && rhs.HasValue {
+            return Value == rhs.Value;
+        }
+        return HasValue == rhs.HasValue;
+    }
+
+    public operator==: (_: decltype(null)) -> bool ==> !HasValue;
+
+    public operator<=>: (rhs: self) -> i32 ==
+    {
+        static assert(type T is IComparable<T>, "T must implement IComparable<T>");
+        if HasValue {
+            if (rhs.HasValue)
+                return (Value <=> rhs.Value);
+            return 1;
+        }
+        if (rhs.HasValue)
+            return -1;
+        return 0;
+    }
+}

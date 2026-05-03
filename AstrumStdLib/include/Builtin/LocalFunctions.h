@@ -1,7 +1,7 @@
 #pragma once
 #include <functional>
 
-namespace CppAdvance {
+namespace Builtin {
 	template <class>
 	class LocalFunction;
 
@@ -23,4 +23,4 @@ namespace CppAdvance {
 
 		R operator()(Args... args) const { return func(std::forward<Args>(args)...); }
 	};
-}  // namespace CppAdvance
+}  // namespace Builtin

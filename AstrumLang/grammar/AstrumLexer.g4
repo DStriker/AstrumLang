@@ -77,7 +77,7 @@ MultilineStringLiteral: '\'\'\'' MultilineStringItem*? '\'\'\'';
 
 BooleanLiteral: False_ | True_;
 
-Directive: '#' ~ [\n]* -> channel (HIDDEN);
+// Directive: '#' ~ [\n]* -> channel (HIDDEN);
 
 // keywords
 
@@ -425,6 +425,8 @@ DoubleDotEqual: '..=';
 
 Dollar: '$';
 
+Hash: '#';
+
 Ellipsis: '...';
 
 Apostroph: '`';
@@ -442,7 +444,7 @@ Op1: (
 
 Op2: '|' OperatorChar+;
 
-Op10: ('**' | '^^') OperatorChar+;
+Op10: ('**' | '^^' | '$' | '#') OperatorChar+;
 
 Op3: '^' OperatorChar+;
 
@@ -590,8 +592,8 @@ fragment Schar: ~ ["\\\r\n] | Escapesequence | Universalcharactername;
 
 fragment Rawstring: 'R"' ( '\\' ["()] | ~[\r\n (])*? '(' ~[)]*? ')' ( '\\' ["()] | ~[\r\n "])*? '"';
 
-fragment OperatorChar: [=!+\-*/%<>\\&|^~];
+fragment OperatorChar: [=!+\-*/%<>\\&|^~$#?];
 
-fragment NonCmpOpChar: [+\-*/%\\&|^~];
+fragment NonCmpOpChar: [+\-*/%\\&|^~$#?];
 
-fragment NonGtLtOpChar: [=!+\-*/%\\&|^~];
+fragment NonGtLtOpChar: [=!+\-*/%\\&|^~$#?];

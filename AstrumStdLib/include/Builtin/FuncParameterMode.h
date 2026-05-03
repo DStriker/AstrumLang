@@ -1,7 +1,7 @@
 #pragma once
 #include <type_traits>
 
-namespace CppAdvance {
+namespace Builtin {
 	class ObjectRef;
 
 	namespace __details {
@@ -141,4 +141,4 @@ namespace CppAdvance {
 			}
 		}
 	};
-}  // namespace CppAdvance
+}  // namespace Builtin

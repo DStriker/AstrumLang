@@ -1,4 +1,4 @@
-﻿package MyApp.Main;
+﻿/*package MyApp.Main;
 
 import System.Application;
 
@@ -47,7 +47,7 @@ main: ()
 	print(vc.Name);
 	print(vc.Count);
 	print(vc.getX());
-	print(VectorClass.BYTES);*/
+	print(VectorClass.BYTES);
 	//nxtm: IInterface? = new ConcreteVectorClass(1,2,3);
 	nxtm :IInterface? = new ConcreteVectorClass(11,12,13);
 	nxt :IInterface? = nxtm;
@@ -114,27 +114,130 @@ main: ()
 		print(IInterface.SomeStaticMethod(5));
 		ints := [0,2,4,6];
 		mapping := ["key1": 1, "key2": 2, "key3": 3];
+		
 
 		//print(var.GetStrongReferenceCount());
 		on: object? = vec;
 		print(Vector3.lazyInt);
 		//Vector3.lazyInt++;
-		print(123 + 256);
-		print(123 + Vector3.lazyInt);
-		print(Vector3.lazyInt + 123);
-		print(Vector3.lazyInt - 123);
-		print(Vector3.lazyInt * 123);
-		print(Vector3.lazyInt / 123);
-		print(Vector3.lazyInt % 123);
-		print(Vector3.lazyInt & 123);
-		print(Vector3.lazyInt | 123);
-		print(Vector3.lazyInt ^ 123);
-		print(i32(Vector3.lazyInt == 123));
-		print(i32(123 == Vector3.lazyInt));
-		print(i32(Vector3.lazyInt <= 123));
-		print(i32(123 <= Vector3.lazyInt));
-		//print(Vector3.lazyInt << 123);
+		
 	}
 	print(nxt!.GetStrongReferenceCount());
 	print(Test1.Test2.TestClass.makeTestClass(3,3.14f).x.x);
+
+	static assert(sizeof(i8) == 1, "i8 should be 1 byte");
+
+    a: i8 = 5;
+    b:= 10i8;
+
+    // add with various types
+    assert a + 10i8 == 15;
+    assert a + 10u8 == 15;
+    assert a + 10i16 == 15;
+    assert a + 10u16 == 15;
+    assert a + 10i32 == 15;
+    assert a + 10u32 == 15;
+    assert a + 10i64 == 15;
+    assert a + 10u64 == 15;
+    assert a + 10i128 == 15;
+    assert a + 10u128 == 15;
+
+    // basic arithmetic
+    assert a - 12 == -7;
+    assert a * 2 == 10;
+    assert a / 2 == 2;
+    assert a % 2 == 1;
+    assert (a & 1) == 1;
+    assert (a | 1) == 5;
+    assert (a ^ 1) == 4;
+    assert a << 1 == 10;
+    assert a >> 1 == 2;
+
+    // assignment
+    a = 5;
+    /*a++;
+    a--;
+    a += 5;
+    a -= 5;
+    a *= 2;
+    a /= 2;
+    a %= 1;
+    a &= 1;
+    a |= 1;
+    a ^= 1;
+    a <<= 1;
+    a >>= 1;*
+
+    // comparisons
+    assert a == 5;
+    assert a != 6;
+    assert a < 6;
+    assert a <= 5;
+    assert a > 4;
+    assert a >= 5;
+}
+*/
+package System;
+
+public type Int8 = i8;
+
+public extension i8 {
+    //operator +*/: (other: i8) -> i8 ==> this + other;
+
+}
+
+
+test "Int8"
+{
+    static assert(sizeof(i8) == 1, "i8 should be 1 byte");
+
+    a: i8 = 5;
+    b:= 10i8;
+
+    // add with various types
+    assert a + 10i8 == 15;
+    assert a + 10u8 == 15;
+    assert a + 10i16 == 15;
+    assert a + 10u16 == 15;
+    assert a + 10i32 == 15;
+    assert a + 10u32 == 15;
+    assert a + 10i64 == 15;
+    assert a + 10u64 == 15;
+    assert a + 10i128 == 15;
+    assert a + 10u128 == 15;
+
+    // basic arithmetic
+    assert a - 12 == -7;
+    assert a * 2 == 10;
+    assert a / 2 == 2;
+    assert a % 2 == 1;
+    assert (a & 1) == 1;
+    assert (a | 1) == 5;
+    assert (a ^ 1) == 4;
+    assert a << 1 == 10;
+    assert a >> 1 == 2;
+
+    // assignment
+    a = 5;
+    /*a++;
+    a--;
+    a += 5;
+    a -= 5;
+    a *= 2;
+    a /= 2;
+    a %= 1;
+    a &= 1;
+    a |= 1;
+    a ^= 1;
+    a <<= 1;
+    a >>= 1;*/
+
+    // comparisons
+    assert a == 5;
+    assert a != 6;
+    assert a < 6;
+    assert a <= 5;
+    assert a > 4;
+    assert a >= 5;
+	assert i8.Min == -128;
 }

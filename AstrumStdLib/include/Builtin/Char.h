@@ -1,7 +1,7 @@
 #pragma once
 #include "Integer.h"
 
-namespace CppAdvance {
+namespace Builtin {
 	template <class T>
 	struct Character {
 		constexpr decltype(auto) __ref() const noexcept { return *this; }
@@ -293,4 +293,4 @@ namespace CppAdvance {
 	using char8  = Character<char8_t>;
 	using char16 = Character<char16_t>;
 	using char32 = Character<char32_t>;
-}  // namespace CppAdvance
+}  // namespace Builtin

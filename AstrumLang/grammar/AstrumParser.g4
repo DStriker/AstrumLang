@@ -590,7 +590,7 @@ postfixExpression
     | Move postfixExpression
     | Forward postfixExpression
     | postfixExpression Dot IntegerLiteral
-    | simpleTypeSpecifier Dot Type
+    | simpleTypeSpecifier Dot (Type | idExpression)
     | postfixExpression Question? Dot Greater? idExpression
     | postfixExpression unaryPostfixOperator
     ;
@@ -1413,6 +1413,7 @@ unaryPrefixOperator
     | Tilde
     | not
     | Dollar
+    | Hash
     | Caret
     | DoubleCaret
     ;
@@ -1455,6 +1456,8 @@ operator
     | Mod
     | Caret
     | DoubleCaret
+    | Dollar
+    | Hash
     | Amp
     | Exclamation
     | VertLine

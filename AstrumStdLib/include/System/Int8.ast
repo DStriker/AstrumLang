@@ -1,0 +1,131 @@
+package System;
+
+public import System.Numerics.IMinMaxValue;
+
+public import Optional;
+
+public type Int8 = i8;
+public type SByte = i8;
+
+public extension i8: IMinMaxValue {
+    static Min: self ==> -128_i8;  //-0x80
+    static Max: self ==> +127_i8;  //+0x7F
+}
+
+public extension i8 {
+    static One: self ==> 1_i8;
+    static Zero: self ==> 0_i8;
+    static MinusOne: self ==> -1_i8;
+}
+
+// comparisons
+public extension i8 {
+    // Equals to dynamic object
+    operator==?: (in obj: object?) -> bool
+    {
+        if obj is self {
+            return this == obj;
+        }
+        
+        return false;
+    }
+
+    // Compare to optional type
+    operator<=>: (rhs: self?) -> i32 ==
+    {
+        if rhs is not null {
+            return this <=> rhs;
+        }
+
+        return 1;
+    }
+}
+
+// Compare to dynamic object
+public extension i8: IAbstractComparable {
+    operator<=>?: (in obj: object?) -> i32
+    {
+        if obj is self {
+            return this <=> obj;
+        }
+        if obj is not null {
+            throw Builtin.InvalidOperationException();
+        }
+        return 1;
+    }
+}
+
+static assert(sizeof(i8) == 1, "i8 should be 1 byte");
+static assert(i8.Min == -0x80, "i8.Min should be -0x80");
+static assert(i8.Max == 0x7F, "i8.Max should be 0x7F");
+static assert(type i8 is IComparable<i8>, "i8 should implement IComparable<i8>");
+
+test "Int8"
+{
+    a: i8 = 5i8;
+
+    // add with various types
+    assert a + 10i8 == 15;
+    assert a + 10u8 == 15;
+    assert a + 10i16 == 15;
+    assert a + 10u16 == 15;
+    assert a + 10i32 == 15;
+    assert a + 10u32 == 15;
+    assert a + 10i64 == 15;
+    assert a + 10u64 == 15;
+    assert a + 10i128 == 15;
+    assert a + 10u128 == 15;
+
+    // basic arithmetic
+    assert a - 12 == -7;
+    assert a * 2 == 10;
+    assert a / 2 == 2;
+    assert a % 2 == 1;
+    assert (a & 1) == 1;
+    assert (a | 1) == 5;
+    assert (a ^ 1) == 4;
+    assert a << 1 == 10;
+    assert a >> 1 == 2;
+
+    // comparisons
+    assert a == 5;
+    assert a != 6;
+    assert a < 6;
+    assert a <= 5;
+    assert a > 4;
+    assert a >= 5;
+
+    // assignment
+    a = 5_i8;
+    a++;
+    a--;
+    a += 5;
+    a -= 5;
+    a *= 2;
+    a /= 2;
+    a %= 1;
+    a &= 1;
+    a |= 1;
+    a ^= 1;
+    a <<= 1;
+    a >>= 1;
+    assert a == 0;
+    a = 10i8;
+
+    b: i8 = 5i8;
+    c: i8? = null;
+    d: i8? = 5i8;
+    assert a != b;
+    assert b != c;
+    assert b > c;
+    assert c != b;
+    assert c == null;
+    assert d != null;
+    assert c < d;
+    assert b == d;
+    o: object? = c;
+    o = d;
+    assert b !=? o;
+    icomp: IComparable<i8> = a;
+    assert icomp > b;
+}

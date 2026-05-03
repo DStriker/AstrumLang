@@ -1,9 +1,9 @@
 #pragma once
 #include "Exceptions.h"
 
-namespace CppAdvance {
+namespace Builtin {
 	struct UnsafeContextGuard {
-#ifdef CPPADVANCE_CONTEXT_SAFETY_CHECKS
+#ifdef Builtin_CONTEXT_SAFETY_CHECKS
 		UnsafeContextGuard() { ++depth; }
 
 		~UnsafeContextGuard() { --depth; }
@@ -16,9 +16,9 @@ namespace CppAdvance {
 	};
 
 	inline void CheckForUnsafeContext() {
-#ifdef CPPADVANCE_CONTEXT_SAFETY_CHECKS
+#ifdef Builtin_CONTEXT_SAFETY_CHECKS
 		if (!UnsafeContextGuard::isUnsafe())
 			throw SafetyException;
 #endif
 	}
-}  // namespace CppAdvance
+}  // namespace Builtin

@@ -343,6 +343,15 @@ namespace AstrumLang {
 				case '\\':
 					result += "bsl";
 					break;
+				case '$':
+					result += "dol";
+					break;
+				case '#':
+					result += "hsh";
+					break;
+				case '?':
+					result += "qst";
+					break;
 				default:
 					break;
 			}
@@ -617,10 +626,13 @@ namespace AstrumLang {
 
 	std::any AstrumSema::visitImportDeclaration(AstrumParser::ImportDeclarationContext* ctx) {
 		auto loadModule = [&](const std::string& path, const std::string& originalName) {
-			auto foundFile = CompilerSettings::findFileInIncludePaths(path);
+			auto foundFile = CompilerSettings::findFileInIncludePaths(path, filenamePath);
 			if (!foundFile.has_value()) {
-				notifyErrorListeners("Cannot find module " + originalName,
-				                     ctx->Import()->getSymbol());
+				foundFile = CompilerSettings::findFileInIncludePaths(path + ".ast", filenamePath);
+				if (!foundFile.has_value()) {
+					notifyErrorListeners("Cannot find module " + originalName,
+					                     ctx->Import()->getSymbol());
+				}
 			}
 
 			if (ctx->As()) {
@@ -2350,7 +2362,7 @@ namespace AstrumLang {
 		if (!ctx->relationalExpression().empty() || ctx->Is() || ctx->In()) {
 			typeStack.push("bool");
 			if (ctx->Is()) {
-				if (isCondition && firstPass) {
+				if (isCondition && !firstPass && ctx->patternList()) {
 					auto patterns = ctx->patternList();
 					auto pattern  = patterns->pattern()[0];
 					auto ops      = patterns->patternCombinationOperator();
@@ -2358,13 +2370,16 @@ namespace AstrumLang {
 					                               pattern->getText() == "_")) &&
 					    std::all_of(ops.begin(), ops.end(), [](auto op) { return !op->Or(); })) {
 						ifPrerequisites[currentIfStatement].push_back(ctx);
-						auto type = pattern->theTypeId()->getText();
-						if (auto pos = type.find('<'); pos != std::string::npos) {
-							type = type.substr(0, pos);
+						if (pattern->theTypeId()) {
+							auto type = pattern->theTypeId()->getText();
+							if (auto pos = type.find('<'); pos != std::string::npos) {
+								type = type.substr(0, pos);
+							}
+							symbolTable[!pattern->Identifier().empty()
+							                ? pattern->Identifier(0)->getText()
+							                : ctx->threeWayComparisonExpression(0)->getText()] =
+							    type;
 						}
-						symbolTable[!pattern->Identifier().empty()
-						                ? pattern->Identifier(0)->getText()
-						                : ctx->threeWayComparisonExpression(0)->getText()] = type;
 					}
 				}
 			}
@@ -3149,7 +3164,7 @@ namespace AstrumLang {
 		if (lvalue && ctx->idExpression() && ctx->idExpression()->unqualifiedId()) {
 			auto uid = ctx->idExpression()->unqualifiedId();
 			auto txt = uid->getText();
-			if (initStates.top().potentiallyAssigned.contains(txt) &&
+			if (!initStates.empty() && initStates.top().potentiallyAssigned.contains(txt) &&
 			    !initStates.top().definitelyAssigned.contains(txt)) {
 				if (isAssignment && loopDepth <= 0) {
 					initStates.top().definitelyAssigned.insert(txt);
@@ -4923,7 +4938,11 @@ namespace AstrumLang {
 				properties.insert_or_assign(pos, property);
 		}
 
+		if (!firstPass)
+			initStates.push(InitState {});
 		visitChildren(ctx);
+		if (!firstPass)
+			initStates.pop();
 
 		propertyBody  = false;
 		isRefProperty = false;
@@ -5921,7 +5940,8 @@ namespace AstrumLang {
 					}
 				} else if (op->In()) {
 					id = "_operator_in";
-				} else if (op->DoubleCaret() || op->Tilde() || op->TildeAssign() ||
+				} else if (op->DoubleCaret() || op->Tilde() || op->TildeAssign() || 
+				           op->Dollar() || op->Hash() ||
 				           op->DoubleStar() || op->DoubleStarAssign() || op->Greater().size() > 2 ||
 				           op->SignedRightShiftAssign() || op->Op1() || op->Op2() || op->Op3() ||
 				           op->Op4() || op->Op5() || op->Op6() || op->Op7() || op->Op8() ||
@@ -6366,11 +6386,21 @@ namespace AstrumLang {
 			if (ctx->Identifier())
 				id = ctx->Identifier()->getText();
 			else if (ctx->operatorFunctionId()) {
-				id = ctx->operatorFunctionId()->getText();
-				if (ctx->operatorFunctionId()->operator_()->Exclamation())
+				id      = ctx->operatorFunctionId()->getText();
+				auto op = ctx->operatorFunctionId()->operator_();
+				if (op->Exclamation())
 					id = "operator*";
 				StringReplace(id, "operator", "operator ");
 				isOperator = true;
+				if (op->In()) {
+					id = "_operator_in";
+				} else if (op->DoubleCaret() || op->Tilde() || op->TildeAssign() || op->Dollar() || op->Hash() ||
+				           op->DoubleStar() || op->DoubleStarAssign() || op->Greater().size() > 2 ||
+				           op->SignedRightShiftAssign() || op->Op1() || op->Op2() || op->Op3() ||
+				           op->Op4() || op->Op5() || op->Op6() || op->Op7() || op->Op8() ||
+				           op->Op9() || op->Op10()) {
+					id = getCustomOperatorName(op->getText());
+				}
 			}
 			if (isOperator && !id.ends_with("new") && !id.ends_with("delete"))
 				StringReplace(id, " ", "");

@@ -3,6 +3,6 @@
 #include <iostream>
 #include <stdexcept>
 
-namespace CppAdvance
+namespace Builtin
 {
 }

@@ -1,7 +1,7 @@
 #pragma once
 #include "Integer.h"
 
-namespace CppAdvance::Unsafe {
+namespace Builtin::Unsafe {
 	template <class T>
 	struct __RawPtr {
 		constexpr decltype(auto) __ref() const noexcept { return *this; }
@@ -262,4 +262,4 @@ namespace CppAdvance::Unsafe {
 	constexpr __RawPtr<T> UnsafeCastToPointer(usize value) noexcept {
 		return reinterpret_cast<T*>((size_t) value);
 	}
-}  // namespace CppAdvance::Unsafe
+}  // namespace Builtin::Unsafe

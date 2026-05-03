@@ -1,8 +1,8 @@
-#include "RefCounts.h"
+#include "Builtin/RefCounts.h"
 
-namespace CppAdvance {
+namespace Builtin {
 	template <>
-	CPPADVANCE_DLLEXPORT ObjectSideTable* RefCounts<InlineRefCountBits>::formWeakRef() {
+	ObjectSideTable* RefCounts<InlineRefCountBits>::formWeakRef() {
 		auto table = allocateSideTable(true);
 		if (table)
 			return table->incrementWeak();
@@ -91,7 +91,7 @@ namespace CppAdvance {
 	template bool RefCounts<SideTableRefCountBits>::tryIncrementSlow(SideTableRefCountBits oldbits);
 
 	template <>
-	CPPADVANCE_DLLEXPORT void RefCounts<InlineRefCountBits>::incrementNonAtomicSlow(
+	void RefCounts<InlineRefCountBits>::incrementNonAtomicSlow(
 	    InlineRefCountBits old, unsigned inc) {
 		if (old.isImmortal(false)) {
 			return;
@@ -106,7 +106,7 @@ namespace CppAdvance {
 	}
 
 	template <>
-	CPPADVANCE_DLLEXPORT void RefCounts<SideTableRefCountBits>::incrementNonAtomicSlow(
+	void RefCounts<SideTableRefCountBits>::incrementNonAtomicSlow(
 	    SideTableRefCountBits old, unsigned inc) {
 		if (old.isImmortal(false)) {
 			return;
@@ -115,7 +115,7 @@ namespace CppAdvance {
 	}
 
 	template <>
-	CPPADVANCE_DLLEXPORT Object* RefCounts<InlineRefCountBits>::incrementSlow(
+	Object* RefCounts<InlineRefCountBits>::incrementSlow(
 	    InlineRefCountBits old, unsigned inc) {
 		if (old.isImmortal(false)) {
 			return getObject();
@@ -131,7 +131,7 @@ namespace CppAdvance {
 	}
 
 	template <>
-	CPPADVANCE_DLLEXPORT Object* RefCounts<SideTableRefCountBits>::incrementSlow(
+	Object* RefCounts<SideTableRefCountBits>::incrementSlow(
 	    SideTableRefCountBits old, unsigned inc) {
 		if (old.isImmortal(false)) {
 			return getObject();
@@ -139,4 +139,4 @@ namespace CppAdvance {
 		// overflow error
 		return getObject();
 	}
-}  // namespace CppAdvance
+}  // namespace Builtin

@@ -49,6 +49,7 @@ namespace AstrumLang {
 		std::vector<std::string> libraries;
 		std::string dllName;
 		std::string exePath;
+		std::string rootPath;
 		InstructionSet instructionSet = InstructionSet::Default;
 		CompilerBackend backend       = CompilerBackend::Clang;
 		int optimizationLevel         = -1;
@@ -58,6 +59,7 @@ namespace AstrumLang {
 		bool debugBuild               = false;
 		bool versionMode              = false;
 		bool helpMode                 = false;
+		bool stdMode                  = false;
 
 		static CompilerSettings& get();
 		static void setupFromCmd(std::span<const char*> args);

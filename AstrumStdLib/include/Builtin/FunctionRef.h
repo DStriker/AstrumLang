@@ -1,7 +1,7 @@
 #pragma once
 #include "Types.h"
 
-namespace CppAdvance {
+namespace Builtin {
 	struct TypeDummy {
 		template <typename T>
 		operator T() const;
@@ -508,4 +508,4 @@ namespace CppAdvance {
 			return *this;
 		}
 	};
-}  // namespace CppAdvance
+}  // namespace Builtin

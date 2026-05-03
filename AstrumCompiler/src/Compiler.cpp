@@ -170,30 +170,58 @@ namespace AstrumLang {
 
 	bool Compiler::build(const std::vector<std::string>& sources, const std::string& exePath) {
 		std::string cmd;
-		auto backend           = CompilerSettings::get().backend;
-		auto dllName           = CompilerSettings::get().dllName;
-		auto optimizationLevel = CompilerSettings::get().optimizationLevel;
-		auto instructionSet    = CompilerSettings::get().instructionSet;
-		std::string quotes     = "\"";
+		auto backend                   = CompilerSettings::get().backend;
+		auto dllName                   = CompilerSettings::get().dllName;
+		std::filesystem::path rootPath = CompilerSettings::get().rootPath;
+		auto optimizationLevel         = CompilerSettings::get().optimizationLevel;
+		auto instructionSet            = CompilerSettings::get().instructionSet;
+		auto unitTestBuild             = CompilerSettings::get().unitTestMode;
+		auto stdBuild                  = CompilerSettings::get().stdMode;
+		std::string quotes             = "\"";
+
+		if (stdBuild) {
+			dllName = "ASTRUMSTD";
+		}
+
 #ifdef _WIN32
 		auto vsPath = ExecCmd(L"vswhere -latest -property installationPath");
 		StringTrim(vsPath);
+		/////////////
+		//vsPath = "C:\\Program Files\\Microsoft Visual Studio\\18\\Insiders";
+		/////////////
 		std::ofstream bat("astrum_build.bat");
 		bat << "@echo off\ncall \"";
 		bat << vsPath;
 		bat << R"(\VC\Auxiliary\Build\vcvars64.bat")";
 		bat << "\n";
 #endif
+		constexpr const char* stdBuiltinSources[] = {"Builtin/Builtin.cpp", "Builtin/Int128.cpp",
+		                                             "Builtin/RefCounts.cpp"};
+		constexpr auto testMainFile               = "test_main.cpp";
+
 		if (backend == CompilerBackend::Clang || backend == CompilerBackend::Gnu) {
 			if (backend == CompilerBackend::Clang) {
 				cmd += "clang++ ";
 			} else {
 				cmd += "g++ ";
 			}
+			if (!dllName.empty() && !unitTestBuild) {
+#ifdef __APPLE__
+				cmd += "-dynamiclib";
+#else
+				cmd += "-shared";
+#endif
+			}
 			for (const auto& path : CompilerSettings::get().includePaths) {
 				cmd += " -I ";
 				cmd += quotes;
 				cmd += path;
+				cmd += quotes;
+			}
+			if (!rootPath.empty()) {
+				cmd += " -I ";
+				cmd += quotes;
+				cmd += rootPath.string();
 				cmd += quotes;
 			}
 			for (const auto& src : sources) {
@@ -203,6 +231,28 @@ namespace AstrumLang {
 				srcPath.replace_extension("cpp");
 				cmd += srcPath.string();
 				cmd += quotes;
+			}
+			if (!rootPath.empty()) {
+				if (!dllName.empty() && unitTestBuild)
+				{
+					cmd += " ";
+					cmd += quotes;
+					cmd += rootPath.string();
+					cmd += "/";
+					cmd += testMainFile;
+					cmd += quotes;
+				}
+				if (stdBuild) {
+					rootPath.replace_filename("src");
+					for (auto src : stdBuiltinSources) {
+						cmd += " ";
+						cmd += quotes;
+						cmd += rootPath.string();
+						cmd += "/";
+						cmd += src;
+						cmd += quotes;
+					}
+				}
 			}
 			for (const auto& path : CompilerSettings::get().libraryPaths) {
 				cmd += " -L";
@@ -235,6 +285,10 @@ namespace AstrumLang {
 					cmd += std::to_string(optimizationLevel);
 				}
 				cmd += " -DNDEBUG";
+			}
+
+			if (unitTestBuild) {
+				cmd += " -DADV_UNITTEST";
 			}
 
 			switch (instructionSet) {
@@ -274,15 +328,22 @@ namespace AstrumLang {
 					break;
 			}
 
-			cmd +=
-			    " -W -g -fstack-protector-strong -std=c++20 -D_CONSOLE -D_UNICODE -DUNICODE "
-			    "-L. -lastrumstd";
+			cmd += " -W -g -fstack-protector-strong -std=c++20 -D_CONSOLE -D_UNICODE -DUNICODE ";
+			if (!stdBuild)
+				cmd += "-L. -lastrumstd";
 		} else if (backend == CompilerBackend::VisualCpp) {
 			cmd += "cl /nologo /EHsc /W1";
 			for (const auto& path : CompilerSettings::get().includePaths) {
 				cmd += " /I";
 				cmd += quotes;
 				cmd += path;
+				cmd += quotes;
+			}
+
+			if (!rootPath.empty()) {
+				cmd += " /I";
+				cmd += quotes;
+				cmd += rootPath.string();
 				cmd += quotes;
 			}
 			for (const auto& src : sources) {
@@ -293,6 +354,27 @@ namespace AstrumLang {
 				cmd += srcPath.string();
 				cmd += quotes;
 			}
+			if (!rootPath.empty()) {
+				if (!dllName.empty() && unitTestBuild) {
+					cmd += " ";
+					cmd += quotes;
+					cmd += rootPath.string();
+					cmd += "/";
+					cmd += testMainFile;
+					cmd += quotes;
+				}
+				if (stdBuild) {
+					rootPath.replace_filename("src");
+					for (auto src : stdBuiltinSources) {
+						cmd += " ";
+						cmd += quotes;
+						cmd += rootPath.string();
+						cmd += "/";
+						cmd += src;
+						cmd += quotes;
+					}
+				}
+			}
 			if (!dllName.empty()) {
 				std::transform(dllName.begin(), dllName.end(), dllName.begin(), ::toupper);
 				cmd += " /D ";
@@ -300,6 +382,9 @@ namespace AstrumLang {
 				cmd += dllName;
 				cmd += "_EXPORTS";
 				cmd += quotes;
+			}
+			if (unitTestBuild) {
+				cmd += " /D ADV_UNITTEST";
 			}
 			cmd += " /Fe:";
 			cmd += quotes;
@@ -315,6 +400,9 @@ namespace AstrumLang {
 					cmd += std::to_string(optimizationLevel);
 				}
 				cmd += R"( /RTC1 /sdl /D ""DEBUG"" /D ""_DEBUG"" /MDd)";
+				if (!dllName.empty() && !unitTestBuild) {
+					cmd += " /LDd";
+				}
 			} else {
 				if (optimizationLevel == -1 || optimizationLevel == 3) {
 					cmd += " /O2";
@@ -325,6 +413,9 @@ namespace AstrumLang {
 					cmd += std::to_string(optimizationLevel);
 				}
 				cmd += R"( /MD /Ob2 /D ""NDEBUG"")";
+				if (!dllName.empty() && !unitTestBuild) {
+					cmd += " /LD";
+				}
 			}
 
 			switch (instructionSet) {
@@ -407,7 +498,10 @@ namespace AstrumLang {
 			}
 
 			cmd +=
-			    R"( /GS /Zc:wchar_t /Gm- /Zi /Zc:inline /fp:precise /D ""_CONSOLE"" /D ""_UNICODE"" /D ""UNICODE"" /errorReport:prompt /WX- /Zc:forScope /Gd /std:c++latest /wd4005 /wd4584 /wd4190 /we4297 /we4715 /we26447 /we26815 /we26816 /external:W0 ""libastrumstd.lib"")";
+			    R"( /GS /Zc:wchar_t /Gm- /MP /Zi /Zc:inline /fp:precise /D ""_CONSOLE"" /D ""_UNICODE"" /D ""UNICODE"" /errorReport:prompt /WX- /Zc:forScope /Gd /std:c++latest /wd4005 /wd4584 /wd4190 /we4297 /we4715 /we26447 /we26815 /we26816 /external:W0)";
+			if (!stdBuild) {
+				cmd += " \"libastrumstd.lib\"";
+			}
 
 			auto libPaths = CompilerSettings::get().libraryPaths;
 			if (!libPaths.empty()) {
@@ -445,10 +539,17 @@ namespace AstrumLang {
 	bool Compiler::compile() {
 		// creates file with dllexport macro if dll build mode enabled
 		preprocessDLL();
+
+		// setup main function for DLL tests
+		if (CompilerSettings::get().unitTestMode && (!CompilerSettings::get().dllName.empty() || CompilerSettings::get().stdMode))
+		{
+			preprocessTests();
+		}
+
 		// fills symbol table with system symbols
 		CppSymbolParser::initializeSystemSymbolTable();
 
-		const auto& sourceFiles = CompilerSettings::get().sourceFiles;
+		const auto& sourceFiles   = CompilerSettings::get().sourceFiles;
 		const auto& modifiedFiles = CompilerSettings::get().modifiedFiles;
 		if (!modifiedFiles.empty())
 			std::cout << "The following modules will be compiled:\n";
@@ -653,7 +754,12 @@ namespace AstrumLang {
 		if (!DLLName.empty()) {
 			std::transform(DLLName.begin(), DLLName.end(), DLLName.begin(), ::toupper);
 			std::ofstream exportFile;
-			exportFile.open(DLLName + "_export.h");
+			auto path     = DLLName + "_export.h";
+			auto rootPath = CompilerSettings::get().rootPath;
+			if (!rootPath.empty()) {
+				path = rootPath + "/" + path;
+			}
+			exportFile.open(path);
 			exportFile << "#pragma once\n"
 			           << "#if defined _WIN32 || defined __CYGWIN__\n"
 			           << "#ifdef " << DLLName << "_EXPORTS\n"
@@ -668,6 +774,18 @@ namespace AstrumLang {
 			           << "_HIDDEN __attribute__((visibility(\"hidden\")))\n"
 			           << "#endif\n";
 		}
+	}
+
+	void Compiler::preprocessTests() {
+		std::ofstream mainFile;
+		std::string path     = "test_main.cpp";
+		auto rootPath = CompilerSettings::get().rootPath;
+		if (!rootPath.empty()) {
+			path = rootPath + "/" + path;
+		}
+		mainFile.open(path);
+		mainFile << "#include \"Builtin/Builtin.h\"\n"
+		         << "int main(int argc, char** argv) { return Builtin::TestMain(argc, argv); }\n";
 	}
 
 }  // namespace AstrumLang
