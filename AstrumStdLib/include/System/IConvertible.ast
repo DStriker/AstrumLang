@@ -1,0 +1,24 @@
+package System;
+
+public interface IConvertible
+{
+    ToBoolean: () -> bool;
+    ToInt8: () -> i8;
+    ToUInt8: () -> u8;
+    ToInt16: () -> i16;
+    ToUInt16: () -> u16;
+    ToInt32: () -> i32;
+    ToUInt32: () -> u32;
+    ToInt64: () -> i64;
+    ToUInt64: () -> u64;
+    ToInt128: () -> i128;
+    ToUInt128: () -> u128;
+    ToIsize: () -> isize;
+    ToUsize: () -> usize;
+    ToFloat32: () -> f32;
+    ToFloat64: () -> f64;
+    ToByte: () -> byte;
+    ToChar: () -> char;
+    //ToString: () -> string;
+    //ToDateTime: () -> DateTime;
+}

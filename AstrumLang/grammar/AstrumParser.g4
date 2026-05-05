@@ -577,7 +577,7 @@ newInitializer
     ;
 
 fullPostfixExpression
-    : postfixExpression (PlusPlus | MinusMinus | unaryCustomOperator)?
+    : postfixExpression (PlusPlus | MinusMinus | unaryPostfixOperator | unaryCustomOperator)?
     ;
 
 postfixExpression
@@ -592,7 +592,7 @@ postfixExpression
     | postfixExpression Dot IntegerLiteral
     | simpleTypeSpecifier Dot (Type | idExpression)
     | postfixExpression Question? Dot Greater? idExpression
-    | postfixExpression unaryPostfixOperator
+    | postfixExpression Exclamation
     ;
 
 tupleExpression
@@ -1436,7 +1436,6 @@ refCaptureOperator
 unaryPostfixOperator
     : (Star | DoubleStar)+
     | Amp
-    | Exclamation
     ;
 
 not
@@ -1456,8 +1455,6 @@ operator
     | Mod
     | Caret
     | DoubleCaret
-    | Dollar
-    | Hash
     | Amp
     | Exclamation
     | VertLine
@@ -1471,6 +1468,7 @@ operator
     | TildeAssign
     | StarAssign
     | DoubleStarAssign
+    | DivAssign
     | ModAssign
     | XorAssign
     | AndAssign

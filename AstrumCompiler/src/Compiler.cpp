@@ -652,6 +652,9 @@ namespace AstrumLang {
 				if (auto searchInIncludes =
 				        CompilerSettings::findFileInIncludePaths(name, srcPath.parent_path())) {
 					auto dir = (std::filesystem::path(*searchInIncludes).parent_path()).string();
+#ifdef _WIN32
+					StringReplace(dir, "/", "\\");
+#endif
 					auto activeDependencies =
 					    sourceFiles |
 					    std::views::filter([&](const auto& file) { return file.starts_with(dir); });

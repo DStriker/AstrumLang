@@ -2268,6 +2268,7 @@ public:
     PostfixExpressionContext *postfixExpression();
     antlr4::tree::TerminalNode *PlusPlus();
     antlr4::tree::TerminalNode *MinusMinus();
+    UnaryPostfixOperatorContext *unaryPostfixOperator();
     UnaryCustomOperatorContext *unaryCustomOperator();
 
 
@@ -2300,7 +2301,7 @@ public:
     AttributeSpecifierSeqContext *attributeSpecifierSeq();
     antlr4::tree::TerminalNode *IntegerLiteral();
     antlr4::tree::TerminalNode *Greater();
-    UnaryPostfixOperatorContext *unaryPostfixOperator();
+    antlr4::tree::TerminalNode *Exclamation();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -4919,7 +4920,6 @@ public:
     std::vector<antlr4::tree::TerminalNode *> DoubleStar();
     antlr4::tree::TerminalNode* DoubleStar(size_t i);
     antlr4::tree::TerminalNode *Amp();
-    antlr4::tree::TerminalNode *Exclamation();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -4957,8 +4957,6 @@ public:
     antlr4::tree::TerminalNode *Mod();
     antlr4::tree::TerminalNode *Caret();
     antlr4::tree::TerminalNode *DoubleCaret();
-    antlr4::tree::TerminalNode *Dollar();
-    antlr4::tree::TerminalNode *Hash();
     antlr4::tree::TerminalNode *Amp();
     antlr4::tree::TerminalNode *Exclamation();
     antlr4::tree::TerminalNode *VertLine();
@@ -4974,6 +4972,7 @@ public:
     antlr4::tree::TerminalNode *TildeAssign();
     antlr4::tree::TerminalNode *StarAssign();
     antlr4::tree::TerminalNode *DoubleStarAssign();
+    antlr4::tree::TerminalNode *DivAssign();
     antlr4::tree::TerminalNode *ModAssign();
     antlr4::tree::TerminalNode *XorAssign();
     antlr4::tree::TerminalNode *AndAssign();

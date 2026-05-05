@@ -1,0 +1,16 @@
+package System.Numerics;
+
+public interface IShiftOperators<TRight, TResult> {
+    operator>>: (rhs: TRight) -> TResult;
+    operator<<: (rhs: TRight) -> TResult;
+    operator>>>: (rhs: TRight) -> TResult;
+}
+
+public interface IShiftArithmetic {
+    operator>>: (amount: i32) -> self;
+    operator>>=: (amount: i32) -> self;
+    operator<<: (amount: i32) -> self;
+    operator<<=: (amount: i32) -> self;
+    operator>>>: (amount: i32) -> self;
+    operator>>>=: (amount: i32) -> self;
+}

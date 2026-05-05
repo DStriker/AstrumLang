@@ -1,0 +1,19 @@
+package System.Numerics;
+
+public interface IBitwiseOperators<TRight, TResult> {
+    operator&: (rhs: TRight) -> TResult;
+    operator|: (rhs: TRight) -> TResult;
+    operator^: (rhs: TRight) -> TResult;
+    operator~: () -> TResult;
+}
+
+
+public interface IBitwiseArithmetic {
+    operator&: (rhs: self) -> self;
+    operator&=: (rhs: self) -> self;
+    operator|: (rhs: self) -> self;
+    operator|=: (rhs: self) -> self;
+    operator^: (rhs: self) -> self;
+    operator^=: (rhs: self) -> self;
+    operator~: () -> self;
+}

@@ -2,6 +2,6 @@ package System.Numerics;
 
 public interface IMinMaxValue
 {
-    static Min: self;
-    static Max: self;
+    static MinValue: self;
+    static MaxValue: self;
 }

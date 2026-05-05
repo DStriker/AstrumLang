@@ -2,6 +2,7 @@
 #ifndef __ASTRUM_INCLUDE_PARSER
 #include "Builtin/Builtin.h"
 #endif
+#include "ASTRUMSTD_export.h"
 
 namespace System {
 namespace __Unsafe {} namespace __Ordering_Protected__Unsafe {}
@@ -24,11 +25,11 @@ class __Class_Ordering;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
 		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, Builtin::i32)
 		#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
-		public: static const Ordering Less;
+		public: static ASTRUMSTD_HIDDEN const Ordering Less;
 		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
-		public: static const Ordering Equal;
+		public: static ASTRUMSTD_HIDDEN const Ordering Equal;
 		#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
-		public: static const Ordering Greater;
+		public: static ASTRUMSTD_HIDDEN const Ordering Greater;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
 		private: static constexpr Builtin::Str __names[] = {u"Less", u"Equal", u"Greater"};
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"

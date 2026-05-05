@@ -1,0 +1,9 @@
+package System.Numerics;
+
+public interface IUnaryNegationOperators<TResult> {
+    operator-: () -> TResult;
+}
+
+public interface IUnaryNegatable {
+    operator-: () -> self;
+}

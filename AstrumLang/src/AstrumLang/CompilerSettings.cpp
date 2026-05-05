@@ -211,7 +211,7 @@ namespace AstrumLang {
 		}
 
 		// throw std::runtime_error("File not found: " + fileName);
-		std::cout << "[WARNING] File not found: " << fileName << std::endl;
+		//std::cout << "[WARNING] File not found: " << fileName << std::endl;
 		return {};
 	}
 }  // namespace AstrumLang

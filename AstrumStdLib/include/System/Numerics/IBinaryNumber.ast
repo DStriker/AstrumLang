@@ -1,0 +1,14 @@
+package System.Numerics;
+
+public import INumber;
+public import IBitwiseOperators;
+
+public interface IBinaryNumber:
+    INumber,
+    IBitwiseArithmetic
+{
+    static AllBitsSet: self;
+
+    IsPow2: bool { get; }
+    Log2: self { get; }
+}

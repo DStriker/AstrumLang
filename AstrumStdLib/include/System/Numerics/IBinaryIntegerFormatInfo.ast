@@ -1,0 +1,19 @@
+package System.Numerics;
+
+public import IBinaryInteger;
+public import IMinMaxValue;
+
+interface IBinaryIntegerFormatInfo:
+    IBinaryInteger,
+    IMinMaxValue
+{
+    static IsSigned: bool;
+    static MaxDigitCount: i32;
+    static MaxHexDigitCount: i32;
+    static MaxValueDiv10: self;
+
+    //static OverflowMessage: string;
+    MultiplyBy10: self { get; }
+    MultiplyBy16: self { get; }
+    IsGreaterThanAsUnsigned: (rhs: self) -> bool;
+}

@@ -3779,7 +3779,7 @@ namespace Builtin {
 	struct Struct {};
 	template <class T>
 	class __Class_SafeInt;
-
+	
 	template <class T>
 	struct SafeInt : public Struct {
 		static_assert(__details::NumericType<T>::isInt, "T must be integer");
@@ -4060,6 +4060,7 @@ namespace Builtin {
 		}
 
 		constexpr SafeInt<T> operator~() const noexcept { return SafeInt<T>((T) ~value); }
+		constexpr SafeInt<T> _operator_not() const noexcept { return SafeInt<T>((T) ~value); }
 
 		template <class U>
 		constexpr SafeInt<T> operator%(U rhs) const {
@@ -4361,6 +4362,13 @@ namespace Builtin {
 		constexpr SafeInt<T>& operator^=(SafeInt<U> rhs) noexcept {
 			value = BinaryXorHelper<T, U, BinaryMethod<T, U>::method>::Xor(value, (U) rhs);
 			return *this;
+		}
+
+		template<class U>
+		inline constexpr auto __builtin_UnsafeNarrow() noexcept {
+			auto result = U{};
+			result.value = value;
+			return result;
 		}
 
 	   private:
@@ -4730,12 +4738,12 @@ namespace Builtin {
 		return SafeInt<T>(ret);
 	}
 
-	template <class T, class U>
+	/* template <class T, class U>
 	constexpr SafeInt<T> operator+(U lhs, SafeInt<T> rhs) requires(std::is_integral_v<U>) {
 		T result {0};
 		AdditionHelper<T, U, AdditionMethod<T, U>::method>::AdditionThrow((T) rhs, lhs, result);
 		return SafeInt<T>(result);
-	}
+	}*/
 
 	template <class T, class U>
 	constexpr SafeInt<T> operator-(U lhs, SafeInt<T> rhs) requires(std::is_integral_v<U>) {
@@ -4851,3 +4859,8 @@ namespace Builtin {
 }  // namespace Builtin
 
 inline constexpr bool operator!=(auto lhs, auto rhs) { return !(lhs == rhs); }
+
+template<class T, class U>
+inline constexpr auto UnsafeCast(Builtin::SafeInt<U> value) noexcept {
+	return value.__builtin_UnsafeNarrow<T>();
+}

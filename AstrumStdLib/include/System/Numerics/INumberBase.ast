@@ -1,0 +1,70 @@
+package System.Numerics;
+
+public import IAdditionOperators;
+public import IDecrementOperators;
+public import IDivisionOperators;
+public import System.IEquatable;
+public import IIncrementOperators;
+public import IMultiplyOperators;
+public import ISubtractionOperators;
+public import IUnaryNegationOperators;
+public import IUnaryPlusOperators;
+
+public interface INumberBase:
+    IAdditiveArithmetic,
+    IDecrementable,
+    IDivisibleArithmetic,
+    ISelfEquatable,
+    IIncrementable,
+    IMultiplicativeArithmetic,
+    ISubtractableArithmetic,
+    IUnaryPlus,
+    IUnaryNegatable
+    // ISpanFormattable, ISpanParsable
+{
+    static One: self;
+    static Zero: self;
+    static Radix: i32;
+
+    Abs: self { get; }
+    IsCanonical: bool { get; }
+    IsComplexNumber: bool { get; }
+    IsEvenInteger: bool { get; }
+    IsFinite: bool { get; }
+    IsImaginaryNumber: bool { get; }
+    IsInfinity: bool { get; }
+    IsInteger: bool { get; }
+    IsNaN: bool { get; }
+    IsNegative: bool { get; }
+    IsNegativeInfinity: bool { get; }
+    IsNormal: bool { get; }
+    IsOddInteger: bool { get; }
+    IsPositive: bool { get; }
+    IsPositiveInfinity: bool { get; }
+    IsRealNumber: bool { get; }
+    IsSubnormal: bool { get; }
+    IsZero: bool { get; }
+
+    MaxMagnitude: (rhs: self) -> self;
+    MaxMagnitudeNumber: (rhs: self) -> self;
+    MinMagnitude: (rhs: self) -> self;
+    MinMagnitudeNumber: (rhs: self) -> self;
+    Parse: (input: str) -> self;
+    TryParse: (input: str) -> self?;
+    //Format
+
+    
+    // Narrow conversions
+    NarrowToInt8: () -> i8;
+    NarrowToUInt8: () -> u8;
+    NarrowToInt16: () -> i16;
+    NarrowToUInt16: () -> u16;
+    NarrowToInt32: () -> i32;
+    NarrowToUInt32: () -> u32;
+    NarrowToInt64: () -> i64;
+    NarrowToUInt64: () -> u64;
+    NarrowToInt128: () -> i128;
+    NarrowToUInt128: () -> u128;
+    NarrowToIsize: () -> isize;
+    NarrowToUsize: () -> usize;
+}

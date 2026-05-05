@@ -2692,7 +2692,39 @@ namespace AstrumLang {
 		if (!checkForCurrentPass())
 			return 0;
 
+		if (auto upo = ctx->unaryPostfixOperator()) {
+			if (!upo->Star().empty() || !upo->DoubleStar().empty()) {
+				if (unsafeDepth <= 0)
+					notifyErrorListeners(
+					    "Cannot to use dereferencing of the raw pointer in the safe context",
+					    upo->getStart());
+			} else if (upo->Amp()) {
+				if (unsafeDepth <= 0)
+					notifyErrorListeners("Cannot to get raw address in the safe context",
+					                     upo->getStart());
+			}
+		}
+
 		visitChildren(ctx);
+
+		if (auto upo = ctx->unaryPostfixOperator()) {
+			if (!upo->Star().empty() || !upo->DoubleStar().empty()) {
+				if (!typeStack.empty()) {
+					if (typeStack.top().starts_with('*'))
+						typeStack.push(
+						    typeStack.top().substr(typeStack.top().find_first_not_of('*')));
+					else {
+						if (!currentSubtype.empty())
+							typeStack.push(currentSubtype);
+						else
+							typeStack.push(functionTable[typeStack.top() + ".operator*"]);
+					}
+				}
+			}
+			if (upo->Amp()) {
+				typeStack.push("*" + typeStack.top());
+			}
+		}
 
 		if (!typeStack.empty() && !typeStack.top().empty()) {
 			if (ctx->unaryCustomOperator()) {
@@ -2722,18 +2754,7 @@ namespace AstrumLang {
 		}
 
 		if (checkForCurrentPass()) {
-			if (auto upo = ctx->unaryPostfixOperator()) {
-				if (!upo->Star().empty() || !upo->DoubleStar().empty()) {
-					if (unsafeDepth <= 0)
-						notifyErrorListeners(
-						    "Cannot to use dereferencing of the raw pointer in the safe context",
-						    upo->getStart());
-				} else if (upo->Amp()) {
-					if (unsafeDepth <= 0)
-						notifyErrorListeners("Cannot to get raw address in the safe context",
-						                     upo->getStart());
-				}
-			} else if (ctx->Dot()) {
+			if (ctx->Dot()) {
 				if (unsafeDepth == 0) {
 					auto txt = ctx->getText();
 					auto pos = txt.rfind('.');
@@ -2767,24 +2788,7 @@ namespace AstrumLang {
 				return 0;
 		}
 
-		if (auto upo = ctx->unaryPostfixOperator()) {
-			if (!upo->Star().empty() || !upo->DoubleStar().empty()) {
-				if (!typeStack.empty()) {
-					if (typeStack.top().starts_with('*'))
-						typeStack.push(
-						    typeStack.top().substr(typeStack.top().find_first_not_of('*')));
-					else {
-						if (!currentSubtype.empty())
-							typeStack.push(currentSubtype);
-						else
-							typeStack.push(functionTable[typeStack.top() + ".operator*"]);
-					}
-				}
-			}
-			if (upo->Amp()) {
-				typeStack.push("*" + typeStack.top());
-			}
-		} else if (ctx->Dot()) {
+		if (ctx->Dot()) {
 			if (unsafeDepth == 0) {
 				std::string txt = contextTypes[ctx->postfixExpression()] + "." +
 				                  ctx->getText().substr(ctx->getText().rfind('.') + 1);
@@ -5764,7 +5768,7 @@ namespace AstrumLang {
 			}
 
 			if ((templateParams || templateSpecializationArgs) && isTypeDefinitionBody()) {
-				if (currentTypeKind.top() == TypeKind::Interface)
+				if (currentTypeKind.top() == TypeKind::Interface && !isFinal)
 					notifyErrorListeners("Interface method cannot be generic", ctx->getStart());
 				else if (currentTypeKind.top() == TypeKind::Extension && isStatic)
 					notifyErrorListeners("Static extension method cannot be generic",
@@ -5941,7 +5945,6 @@ namespace AstrumLang {
 				} else if (op->In()) {
 					id = "_operator_in";
 				} else if (op->DoubleCaret() || op->Tilde() || op->TildeAssign() || 
-				           op->Dollar() || op->Hash() ||
 				           op->DoubleStar() || op->DoubleStarAssign() || op->Greater().size() > 2 ||
 				           op->SignedRightShiftAssign() || op->Op1() || op->Op2() || op->Op3() ||
 				           op->Op4() || op->Op5() || op->Op6() || op->Op7() || op->Op8() ||
@@ -6394,7 +6397,7 @@ namespace AstrumLang {
 				isOperator = true;
 				if (op->In()) {
 					id = "_operator_in";
-				} else if (op->DoubleCaret() || op->Tilde() || op->TildeAssign() || op->Dollar() || op->Hash() ||
+				} else if (op->DoubleCaret() || op->Tilde() || op->TildeAssign() ||
 				           op->DoubleStar() || op->DoubleStarAssign() || op->Greater().size() > 2 ||
 				           op->SignedRightShiftAssign() || op->Op1() || op->Op2() || op->Op3() ||
 				           op->Op4() || op->Op5() || op->Op6() || op->Op7() || op->Op8() ||

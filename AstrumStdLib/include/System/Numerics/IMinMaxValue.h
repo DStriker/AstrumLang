@@ -2,6 +2,7 @@
 #ifndef __ASTRUM_INCLUDE_PARSER
 #include "Builtin/Builtin.h"
 #endif
+#include "ASTRUMSTD_export.h"
 
 namespace System::Numerics {
 namespace __Unsafe {} namespace __IMinMaxValue_Protected__Unsafe {}
@@ -20,9 +21,9 @@ template<> inline constexpr bool Builtin::__details::cheapCopy<System::Numerics:
 
 namespace System::Numerics {
 	#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IMinMaxValue.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get06cfee9341ce2994 = requires { __AnyType::Min; } || requires { [] { using namespace __extensions; __static_getMin<__AnyType>(); }(); };
+	template<class __AnyType> concept __HasMethodImplementation_get2f27c51c3bbc4fcd = requires { __AnyType::__self::MinValue; } || requires { [] { using namespace __extensions; __static_getMinValue<typename __AnyType::__self>(); }(); };
 	#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IMinMaxValue.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get06ebdc9341e685b6 = requires { __AnyType::Max; } || requires { [] { using namespace __extensions; __static_getMax<__AnyType>(); }(); };
+	template<class __AnyType> concept __HasMethodImplementation_getce381a8f20ff17b7 = requires { __AnyType::__self::MaxValue; } || requires { [] { using namespace __extensions; __static_getMaxValue<typename __AnyType::__self>(); }(); };
 	namespace __vtables {
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IMinMaxValue.ast"
 		struct __vtable_IMinMaxValue
@@ -33,7 +34,7 @@ namespace System::Numerics {
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IMinMaxValue.ast"
 	template<class __AnyType> inline constexpr __vtables::__vtable_IMinMaxValue __vtable_IMinMaxValue_for = {};
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IMinMaxValue.ast"
-	template<class __AnyType> concept __ImplementsInterface_IMinMaxValue = __HasMethodImplementation_get06cfee9341ce2994<__AnyType> && __HasMethodImplementation_get06ebdc9341e685b6<__AnyType>;
+	template<class __AnyType> concept __ImplementsInterface_IMinMaxValue = __HasMethodImplementation_get2f27c51c3bbc4fcd<__AnyType> && __HasMethodImplementation_getce381a8f20ff17b7<__AnyType>;
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IMinMaxValue.ast"
 	class IMinMaxValue final : public Builtin::InterfaceRef {
 		public: using __self = IMinMaxValue;

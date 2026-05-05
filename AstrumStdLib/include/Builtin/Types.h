@@ -24,8 +24,363 @@ namespace __extensions
 {
 	template <typename T>
 	struct __proxy {
+		using __self = typename std::decay_t<T>::__self;
+		using __class = typename std::decay_t<T>::__class;
+		using __property_underlying_type = __self;
+
 		T val;
-		operator T() const { return val; }
+
+		inline constexpr operator __self() const { return val; }
+		inline constexpr operator __self&() { return val; }
+		/*
+		 __self get() const { return val; }
+		decltype(auto) __ref() const { return get(); }
+
+				FORCE_INLINE decltype(auto) operator+() const requires requires(__self t) { t = +t; }
+		{ return +get(); }
+		FORCE_INLINE decltype(auto) operator-() const requires requires(__self t) { t = -t; }
+		{ return -get(); }
+		FORCE_INLINE decltype(auto) operator~() const requires requires(__self t) { t = ~t; }
+		{ return ~get(); }
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator+(_ElemRight&& other) const {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (get() +
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return (get() + other);
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator-(_ElemRight&& other) const {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (get() -
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return (get() - other);
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator*(_ElemRight&& other) const {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (get() *
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return (get() * other);
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator/(_ElemRight&& other) const {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (get() /
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return (get() / other);
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator%(_ElemRight&& other) const {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (get() %
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return (get() % other);
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator&(_ElemRight&& other) const {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (get() &
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return (get() & other);
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator|(_ElemRight&& other) const {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (get() |
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return (get() | other);
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator^(_ElemRight&& other) const {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (get() ^
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return (get() ^ other);
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator<<(_ElemRight&& other) const {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (
+				    get()
+				    << static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				           std::forward<_ElemRight>(other)));
+			} else {
+				return (get() << other);
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator>>(_ElemRight&& other) const {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (get() >>
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return (get() >> other);
+			}
+		}
+		template <class... _ElemRight>
+		FORCE_INLINE decltype(auto) _operator_subscript(_ElemRight&&... other) {
+			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);
+		}
+		template <class... _ElemRight>
+		FORCE_INLINE decltype(auto) _operator_subscript(_ElemRight&&... other) const {
+			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);
+		}
+		template <class... Args>
+		FORCE_INLINE decltype(auto) operator()(Args&&... other) {
+			return get()(std::forward<Args>(other)...);
+		}
+		template <class... Args>
+		FORCE_INLINE decltype(auto) operator()(Args&&... other) const {
+			return get()(std::forward<Args>(other)...);
+		}
+		FORCE_INLINE decltype(auto) operator*() requires requires(__self t) { *t; }
+		{ return *get(); }
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator==(_ElemRight&& other) const {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (get() ==
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return (get() == other);
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator!=(_ElemRight&& other) const {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (get() !=
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return (get() != other);
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE int operator<=>(_ElemRight&& other) const {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (get() <=>
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return (get() <=> other);
+			}
+		}
+		FORCE_INLINE explicit operator bool() const requires(!std::is_same_v<__self, bool>) {
+			return static_cast<bool>(get());
+		}
+
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator=(_ElemRight&& other) {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (
+				    val =
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return val = other;
+			}
+		}
+
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator+=(
+		    _ElemRight&& other) {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (val +=
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return val += other;
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator-=(
+		    _ElemRight&& other) {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (val -=
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return val -= other;
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator*=(
+		    _ElemRight&& other) {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (val *=
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return val *= other;
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator/=(
+		    _ElemRight&& other) {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (val /=
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return val /= other;
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator%=(
+		    _ElemRight&& other) {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (val %=
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return val %= other;
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator&=(
+		    _ElemRight&& other) {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (val &=
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return val &= other;
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator|=(
+		    _ElemRight&& other) {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (val |=
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return val |= other;
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator^=(
+		    _ElemRight&& other) {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (val ^=
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return val ^= other;
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator<<=(
+		    _ElemRight&& other)  {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (val <<=
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return val <<= other;
+			}
+		}
+		template <class _ElemRight>
+		FORCE_INLINE decltype(auto) operator>>=(
+		    _ElemRight&& other)  {
+			if constexpr (requires {
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;
+			              }) {
+				return (val >>=
+				        static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(
+				            std::forward<_ElemRight>(other)));
+			} else {
+				return val >>= other;
+			}
+		}
+		FORCE_INLINE decltype(auto) operator++() requires requires(__self t) { ++t; }
+		{ return ++val; }
+		FORCE_INLINE decltype(auto) operator++(int) requires requires(__self t) { t++; }
+		{
+			auto copy = get();
+			++val;
+			return copy;
+		}
+		FORCE_INLINE decltype(auto) operator--() requires requires(__self t) { --t; }
+		{ return --val; }
+		FORCE_INLINE decltype(auto) operator--(int) requires requires(__self t) { t--; }
+		{
+			auto copy = get();
+			--val;
+			return copy;
+		}                     */                                                                     
 	};
 }
 
@@ -1145,6 +1500,11 @@ namespace Builtin {
 		                              std::derived_from<leftType, ObjectRef__Unowned>;
 		constexpr bool isRightObject = std::derived_from<rightType, ObjectRef> ||
 		                               std::derived_from<rightType, ObjectRef__Unowned>;
+		constexpr bool isLeftNullable = IsNullable<leftType>;
+		constexpr bool isRightNullable = IsNullable<rightType>;
+		constexpr bool isLeftSystemOptional = is_instance_of_v<leftType, System::Optional>;
+		constexpr bool isRightSystemOptional = is_instance_of_v<rightType, System::Optional>;
+
 		auto getObjectReference = []<class Obj>(Obj&& obj) {
 			using T = std::decay_t<Obj>;
 
@@ -1162,14 +1522,18 @@ namespace Builtin {
 
 		if constexpr (isLeftObject && isRightObject) {
 			return GetObjectReference(&lhs) == GetObjectReference(&rhs);
-		} else if constexpr (IsNullable<leftType> && IsNullable<rightType>) {
-			return lhs.IsValid() == rhs.IsValid() &&
-			       (!lhs.IsValid() || getObjectReference(lhs) == getObjectReference(rhs));
-		} else if constexpr (isLeftObject && IsNullable<rightType>) {
+		} else if constexpr (isLeftNullable && isRightNullable) {
+			if constexpr (isLeftSystemOptional && isRightSystemOptional) {
+				return lhs == rhs;
+			} else if constexpr (!isLeftSystemOptional && !isRightSystemOptional) {
+				return lhs.IsValid() == rhs.IsValid() &&
+				       (!lhs.IsValid() || getObjectReference(lhs) == getObjectReference(rhs));
+			}
+		} else if constexpr (isLeftObject && isRightNullable && !isRightSystemOptional) {
 			return rhs.IsValid() && GetObjectReference(&lhs) == getObjectReference(rhs);
-		} else if constexpr (IsNullable<leftType> && isRightObject) {
+		} else if constexpr (isLeftNullable && !isLeftSystemOptional && isRightObject) {
 			return lhs.IsValid() && getObjectReference(lhs) == GetObjectReference(&rhs);
-		} else if constexpr (requires { std::declval<leftType> == std::declval<rightType>; }) {
+		} else if constexpr (requires { std::declval<leftType>() == std::declval<rightType>(); }) {
 			return lhs == rhs;
 		}
 
@@ -1661,6 +2025,7 @@ namespace Builtin {
 		__self __value;
 		__Class_SafeInt(const __underlying& value) noexcept : __value {value} {}
 		operator __underlying() const noexcept { return __value; }
+		__self _operator_not() const noexcept { return ~__value; }
 	};
 #else
 	template <class T>
@@ -1671,8 +2036,10 @@ namespace Builtin {
 		__self __value;
 		__Class_FastInt(const __underlying& value) noexcept : __value {value} {}
 		operator __underlying() const noexcept { return __value; }
+		__self _operator_not() const noexcept { return ~__value; }
 	};
 #endif
 }  // namespace Builtin
 
-inline bool _operator_ne_eq_qst(auto lhs, auto rhs) { return !_operator_eq_eq_qst(lhs, rhs); }
+inline bool _operator_ne_eq_qst(auto lhs, auto rhs) { return !_operator_eq_eq_qst(__extensions::__proxy{lhs}, rhs);
+}

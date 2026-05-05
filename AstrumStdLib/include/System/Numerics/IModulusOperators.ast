@@ -1,0 +1,10 @@
+package System.Numerics;
+
+public interface IModulusOperators<TRight, TResult> {
+    operator%: (rhs: TRight) -> TResult;
+}
+
+public interface IModulusArithmetic {
+    operator%: (rhs: self) -> self;
+    operator%=: (rhs: self) -> self;
+}

@@ -1,0 +1,99 @@
+package System.Numerics;
+
+public import System.IComparable;
+public import INumberBase;
+public import IModulusOperators;
+
+public interface INumber:
+    INumberBase,
+    ISelfComparable,
+    IAbstractComparable,
+    IModulusArithmetic
+{
+    Sign: i32 { get; }
+
+    Clamp: (min: self, max: self) -> self;
+    CopySign: (sign: self) -> self;
+
+    Max: (rhs: self) -> self;
+    MaxNumber: (rhs: self) -> self;
+
+    Min: (rhs: self) -> self;
+    MinNumber: (rhs: self) -> self;
+
+    static final DefaultSign: <T: is INumber> (num: T) -> i32 ==
+    {
+        if num != T.Zero {
+            return num.IsNegative ? -1 : +1;
+        }
+        return 0;
+    }
+
+    static final DefaultCopySign: <T: is INumber> (num: T, sign: T) -> T ==
+    {
+        result := num;
+        
+        if num.IsNegative != sign.IsNegative {
+            result = -result;
+        }
+
+        return result;
+    }
+
+    static final DefaultClamp: <T: is INumber> (num: T, min: T, max: T) -> T
+    {
+        if min > max {
+            throw Builtin.InvalidOperationException();
+        }
+
+        result := num;
+        result = DefaultMax(result, min);
+        result = DefaultMin(result, max);
+
+        return result;
+    }
+
+    static final DefaultMax: <T: is INumber> (lhs: T, rhs: T) -> T ==
+    {
+        if lhs != rhs {
+            if !lhs.IsNaN {
+                return rhs < lhs ? lhs : rhs;
+            }
+
+            return lhs;
+        }
+
+        return rhs.IsNegative ? lhs : rhs;
+    }
+
+    static final DefaultMaxNumber: <T: is INumber> (lhs: T, rhs: T) -> T ==
+    {
+        if lhs != rhs {
+            if !rhs.IsNaN {
+                return rhs < lhs ? lhs : rhs;
+            }
+
+            return lhs;
+        }
+
+        return rhs.IsNegative ? lhs : rhs;
+    }
+
+    static final DefaultMin: <T: is INumber> (lhs: T, rhs: T) -> T ==
+    {
+        if (lhs != rhs) and !lhs.IsNaN {
+            return lhs < rhs ? lhs : rhs;
+        }
+
+        return rhs.IsNegative ? lhs : rhs;
+    }
+
+    static final DefaultMinNumber: <T: is INumber> (lhs: T, rhs: T) -> T ==
+    {
+        if (lhs != rhs) and !rhs.IsNaN {
+            return lhs < rhs ? lhs : rhs;
+        }
+
+        return rhs.IsNegative ? lhs : rhs;
+    }
+}

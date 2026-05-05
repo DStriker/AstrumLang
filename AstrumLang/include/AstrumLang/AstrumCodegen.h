@@ -62,6 +62,7 @@ namespace AstrumLang {
 		bool isPrivateStruct            = false;
 		bool isDestructor               = false;
 		bool isExtension                = false;
+		bool isInterface                = false;
 		bool functionProlog             = false;
 		bool checkForRefStruct          = false;
 		bool isAlignas                  = false;
@@ -70,6 +71,7 @@ namespace AstrumLang {
 		bool isUnitTestBody             = false;
 		bool isMainFunction             = false;
 		bool isLambda                   = false;
+		bool isVtableUsing              = false;
 
 		class StreamSwitcher {
 			std::ofstream* file1;
@@ -117,7 +119,9 @@ namespace AstrumLang {
 		std::ofstream hout;
 		StreamSwitcher out {cppout, hout};
 
-		AstrumCodegen(/*const*/ AstrumSema& sem) : filename {sem.filename}, fullFilename {(sem.filenamePath / sem.filename).string()},
+		AstrumCodegen(/*const*/ AstrumSema& sem)
+		    : filename {sem.filename},
+		      fullFilename {(sem.filenamePath / sem.filename).string()},
 		      sema {sem},
 		      cppout {sem.filenamePath / (sem.filename + ".cpp")},
 		      hout {sem.filenamePath / (sem.filename + ".h")} {

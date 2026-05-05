@@ -1,0 +1,10 @@
+package System.Numerics;
+
+public interface IAdditionOperators<TRight, TResult> {
+    operator+: (rhs: TRight) -> TResult;
+}
+
+public interface IAdditiveArithmetic {
+    operator+: (rhs: self) -> self;
+    operator+=: (rhs: self) -> self;
+}

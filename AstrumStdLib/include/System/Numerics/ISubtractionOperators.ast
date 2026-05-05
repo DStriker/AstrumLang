@@ -1,0 +1,10 @@
+package System.Numerics;
+
+public interface ISubtractionOperators<TRight, TResult> {
+    operator-: (rhs: TRight) -> TResult;
+}
+
+public interface ISubtractableArithmetic {
+    operator-: (rhs: self) -> self;
+    operator-=: (rhs: self) -> self;
+}

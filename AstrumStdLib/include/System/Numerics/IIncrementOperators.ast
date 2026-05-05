@@ -1,0 +1,9 @@
+package System.Numerics;
+
+public interface IIncrementOperators<TSelf> {
+    operator++: () -> TSelf;
+}
+
+public interface IIncrementable {
+    operator++: () -> self;
+}

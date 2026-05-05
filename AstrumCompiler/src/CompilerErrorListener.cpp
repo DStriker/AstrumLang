@@ -26,11 +26,12 @@ namespace AstrumLang {
 
 		std::cout << "\x1b[0m" << std::endl;
 
-		for (std::filesystem::path file : CompilerSettings::get().sourceFiles)
-		{
-			file.replace_extension("h");
-			std::filesystem::remove(file);
-		}
+		//for (std::filesystem::path file : CompilerSettings::get().sourceFiles)
+		//{
+		std::filesystem::path file = filename;
+		file.replace_extension("h");
+		std::filesystem::remove(file);
+		//}
 
 		std::exit(-1);
 	}

@@ -1,24 +1,19 @@
 package System;
 
-public import System.Numerics.IMinMaxValue;
+public import System.Numerics.IBinaryIntegerFormatInfo;
+public import System.Numerics.ISignedNumber;
 
 public import Optional;
+public import IConvertible;
 
 public type Int8 = i8;
 public type SByte = i8;
 
 public extension i8: IMinMaxValue {
-    static Min: self ==> -128_i8;  //-0x80
-    static Max: self ==> +127_i8;  //+0x7F
+    static MinValue: self ==> -128_i8;  //-0x80
+    static MaxValue: self ==> +127_i8;  //+0x7F
 }
 
-public extension i8 {
-    static One: self ==> 1_i8;
-    static Zero: self ==> 0_i8;
-    static MinusOne: self ==> -1_i8;
-}
-
-// comparisons
 public extension i8 {
     // Equals to dynamic object
     operator==?: (in obj: object?) -> bool
@@ -39,6 +34,15 @@ public extension i8 {
 
         return 1;
     }
+
+    // Unsigned right shift
+    operator>>>: (amount: i32) -> self ==> UnsafeCast<i8>(UnsafeCast<u8>(this) >> amount);
+    mut operator>>>=: (amount: i32) -> ref self ==> this = this >>> amount;
+
+    HashCode: u64 ==> UnsafeCast<u64>(this);
+
+    //ToString: (in output: string) -> string
+    //static Parse: (input: str) -> i8?
 }
 
 // Compare to dynamic object
@@ -49,16 +53,291 @@ public extension i8: IAbstractComparable {
             return this <=> obj;
         }
         if obj is not null {
+            //InvalidArgumentException
             throw Builtin.InvalidOperationException();
         }
         return 1;
     }
 }
 
+// Conversions
+public extension i8: IConvertible {
+    ToBoolean: () -> bool ==> this != 0;
+    ToInt8: () -> i8 ==> this;
+    ToUInt8: () -> u8 == {
+        if this < 0 {
+            throw Builtin.IntegerOverflowException();
+        }
+        return this as u8;
+    }
+    ToInt16: () -> i16 ==> this;
+    ToUInt16: () -> u16 == {
+        if this < 0 {
+            throw Builtin.IntegerOverflowException();
+        }
+        return this as u16;
+    }
+    ToInt32: () -> i32 ==> this;
+    ToUInt32: () -> u32 == {
+        if this < 0 {
+            throw Builtin.IntegerOverflowException();
+        }
+        return this as u32;
+    }
+    ToInt64: () -> i64 ==> this;
+    ToUInt64: () -> u64 == {
+        if this < 0 {
+            throw Builtin.IntegerOverflowException();
+        }
+        return this as u64;
+    }
+    ToInt128: () -> i128 ==> this;
+    ToUInt128: () -> u128 == {
+        if this < 0 {
+            throw Builtin.IntegerOverflowException();
+        }
+        return this as u128;
+    }
+    ToIsize: () -> isize ==> this;
+    ToUsize: () -> usize == {
+        if this < 0 {
+            throw Builtin.IntegerOverflowException();
+        }
+        return this as usize;
+    }
+    ToFloat32: () -> f32 ==> this;
+    ToFloat64: () -> f64 ==> this;
+    ToByte: () -> byte == {
+        if this < 0 {
+            throw Builtin.IntegerOverflowException();
+        }
+        return this as byte;
+    }
+    ToChar: () -> char == {
+        if this < 0 {
+            throw Builtin.IntegerOverflowException();
+        }
+        return this as char;
+    }
+    //ToString: () -> string;
+    //ToDateTime: () -> DateTime;
+}
+
+public extension i8: INumberBase {
+    static One: self ==> 1_i8;
+    static Zero: self ==> 0_i8;
+    static Radix: i32 ==> 2;
+
+    Abs: self ==> this < 0 ? -this : this;
+    IsCanonical: bool ==> true;
+    IsComplexNumber: bool ==> false;
+    IsEvenInteger: bool ==> (this & 1_i8) == 0;
+    IsFinite: bool ==> true;
+    IsImaginaryNumber: bool ==> false;
+    IsInfinity: bool ==> false;
+    IsInteger: bool ==> true;
+    IsNaN: bool ==> false;
+    IsNegative: bool ==> this < 0;
+    IsNegativeInfinity: bool ==> false;
+    IsNormal: bool ==> this != 0;
+    IsOddInteger: bool ==> (this & 1_i8) != 0;
+    IsPositive: bool ==> this >= 0;
+    IsPositiveInfinity: bool ==> false;
+    IsRealNumber: bool ==> true;
+    IsSubnormal: bool ==> false;
+    IsZero: bool ==> this == 0;
+
+    MaxMagnitude: (rhs: self) -> self
+    {
+        absX := this;
+        if absX < 0 {
+            absX = UnsafeCast<self>(-i32(absX));
+            if absX < 0 {
+                return this;
+            }
+        }
+
+        absY := rhs;
+        if absY < 0 {
+            absY = UnsafeCast<self>(-i32(absY));
+            if absY < 0 {
+                return rhs;
+            }
+        }
+
+        if absX > absY {
+            return this;
+        }
+
+        if absX == absY {
+            return this.IsNegative ? rhs : this;
+        }
+
+        return rhs;
+    }
+
+    MaxMagnitudeNumber: (rhs: self) -> self => this.MaxMagnitude(rhs);
+
+    MinMagnitude: (rhs: self) -> self
+    {
+        absX := this;
+        if absX < 0 {
+            absX = UnsafeCast<self>(-i32(absX));
+            if absX < 0 {
+                return rhs;
+            }
+        }
+
+        absY := rhs;
+        if absY < 0 {
+            absY = UnsafeCast<self>(-i32(absY));
+            if absY < 0 {
+                return this;
+            }
+        }
+
+        if absX < absY {
+            return this;
+        }
+
+        if absX == absY {
+            return this.IsNegative ? this : rhs;
+        }
+
+        return rhs;
+    }
+
+    MinMagnitudeNumber: (rhs: self) -> self => this.MinMagnitude(rhs);
+
+    Parse: (input: str) -> self
+    {
+        return 0_i8;//TODO
+    }
+
+    TryParse: (input: str) -> self?
+    {
+        return 0_i8;
+    }
+
+    
+    // Narrow conversions
+    NarrowToInt8: () -> i8 ==> this;
+    NarrowToUInt8: () -> u8 ==> UnsafeCast<u8>(this);
+    NarrowToInt16: () -> i16 ==> this;
+    NarrowToUInt16: () -> u16 ==> UnsafeCast<u16>(this);
+    NarrowToInt32: () -> i32 ==> this;
+    NarrowToUInt32: () -> u32 ==> UnsafeCast<u32>(this);
+    NarrowToInt64: () -> i64 ==> this;
+    NarrowToUInt64: () -> u64 ==> UnsafeCast<u64>(this);
+    NarrowToInt128: () -> i128 ==> this;
+    NarrowToUInt128: () -> u128 ==> u128(this);
+    NarrowToIsize: () -> isize ==> this;
+    NarrowToUsize: () -> usize ==> UnsafeCast<usize>(this);
+}
+
+public extension i8: ISignedNumber {
+    static MinusOne: self ==> -1_i8;
+}
+
+public extension i8: INumber {
+    Sign: i32 ==> INumber.DefaultSign(this);//Math.Sign
+
+    CopySign: (sign: self) -> self
+    {
+        absValue := this;
+        if absValue < 0 {
+            absValue = UnsafeCast<self>(-i32(absValue));
+        }
+
+        if sign >= 0 {
+            if absValue < 0 {
+                throw Builtin.IntegerOverflowException();
+            }
+
+            return absValue;
+        }
+
+        return UnsafeCast<self>(-i32(absValue));
+    }
+
+    Max: (rhs: self) -> self ==> INumber.DefaultMax(this, rhs);//Math.Max
+    MaxNumber: (rhs: self) -> self ==> this.Max(rhs);
+    Min: (rhs: self) -> self ==> INumber.DefaultMin(this, rhs);//Math.Min
+    MinNumber: (rhs: self) -> self ==> this.Min(rhs);
+    Clamp: (min: self, max: self) -> self => INumber.DefaultClamp(this, min, max);//Math.Clamp
+}
+
+public extension i8: IBinaryNumber {
+    static AllBitsSet: self ==> i8.MinusOne;
+
+    IsPow2: bool ==> /*(this & (this - 1_i8)) == 0*/false; //BitOperations
+    Log2: self =
+    {
+        if this < 0 {
+            throw Builtin.InvalidOperationException();//ArgumentOutOfRangeException
+        }
+
+        return 0i8; //BitOperations
+    }
+}
+
+public extension i8: IBinaryInteger {
+    DivRem: (rhs: self) -> (self, self) ==> (this / rhs, this % rhs);
+
+    LeadingZeroCount: self ==> 8_i8;//BitOperations.LeadingZeroCount
+    PopCount: self ==> 0_i8;//BitOperations.PopCount
+    TrailingZeroCount: self ==> 8_i8;//BitOperations.TrailingZeroCount
+    ByteCount: usize ==> sizeof(self);
+
+    ShortestBitLength: usize ==
+    {
+        if this >= 0 {
+            return (sizeof(self) * 8) - this.LeadingZeroCount;
+        }
+
+        return (sizeof(self) * 8) + 1 - (~this).LeadingZeroCount;
+    }
+
+    RotateLeft: (shiftAmount: i32) -> self ==>
+        UnsafeCast<i8>((this << (shiftAmount & 7)) | (UnsafeCast<u8>(this) >> ((8 - shiftAmount) & 7)));
+    RotateRight: (shiftAmount: i32) -> self ==> 
+        UnsafeCast<i8>((UnsafeCast<u8>(this) >> (shiftAmount & 7)) | (this << ((8 - shiftAmount) & 7)));
+
+}
+
+public extension i8: IBinaryIntegerFormatInfo {
+    static IsSigned: bool ==> true;
+    static MaxDigitCount: i32 ==> 3;
+    static MaxHexDigitCount: i32 ==> 2;
+    static MaxValueDiv10: self ==> i8.MaxValue / 10i8;
+
+    MultiplyBy10: self ==> UnsafeCast<self>(i32(this) * 10);
+    MultiplyBy16: self ==> UnsafeCast<self>(i32(this) * 16);
+
+    IsGreaterThanAsUnsigned: (rhs: self) -> bool ==> this.NarrowToUInt8() > rhs.NarrowToUInt8();
+}
+
 static assert(sizeof(i8) == 1, "i8 should be 1 byte");
-static assert(i8.Min == -0x80, "i8.Min should be -0x80");
-static assert(i8.Max == 0x7F, "i8.Max should be 0x7F");
+static assert(i8.MinValue == -0x80, "i8.Min should be -0x80");
+static assert(i8.MaxValue == 0x7F, "i8.Max should be 0x7F");
+static assert(i8.One >>% 3 == 0b0010_0000, "i8.One >>% 3 == 0b0010_0000");
+static assert(i8.IsSigned, "i8 must be signed");
+static assert(i8.MaxDigitCount == 3, "i8 max digit count must be 3");
 static assert(type i8 is IComparable<i8>, "i8 should implement IComparable<i8>");
+static assert(type i8 is IEquatable<i8>, "i8 should implement IEquatable<i8>");
+static assert(type i8 is ISelfComparable, "i8 should implement ISelfComparable");
+static assert(type i8 is ISelfEquatable, "i8 should implement ISelfEquatable");
+static assert(type i8 is IAdditionOperators<i8, i8>, "i8 should implement IAdditionOperators<i8, i8>");
+static assert(type i8 is ISubtractionOperators<i8, i8>, "i8 should implement ISubtractionOperators<i8, i8>");
+static assert(type i8 is IMultiplyOperators<i8, i8>, "i8 should implement IMultiplyOperators<i8, i8>");
+static assert(type i8 is IDivisionOperators<i8, i8>, "i8 should implement IDivisionOperators<i8, i8>");
+static assert(type i8 is IModulusOperators<i8, i8>, "i8 should implement IModulusOperators<i8, i8>");
+static assert(type i8 is IBitwiseOperators<i8, i8>, "i8 should implement IBitwiseOperators<i8, i8>");
+static assert(type i8 is IShiftOperators<i8, i8>, "i8 should implement IShiftOperators<i8, i8>");
+static assert(type i8 is IUnaryPlusOperators<i8>, "i8 should implement IUnaryPlusOperators<i8>");
+static assert(type i8 is IUnaryNegationOperators<i8>, "i8 should implement IUnaryNegationOperators<i8>");
+static assert(type i8 is IIncrementOperators<i8>, "i8 should implement IIncrementOperators<i8>");
+static assert(type i8 is IDecrementOperators<i8>, "i8 should implement IDecrementOperators<i8>");
 
 test "Int8"
 {
@@ -86,8 +365,14 @@ test "Int8"
     assert (a ^ 1) == 4;
     assert a << 1 == 10;
     assert a >> 1 == 2;
+    a = -5; // 1111 1011
+    a >>>= 2; // 0011 1110
+    assert a == 0b0011_1110;
+    assert a >>> 2 == 0b0000_1111;
+    assert a >>> 7 == 0;
 
     // comparisons
+    a = 5;
     assert a == 5;
     assert a != 6;
     assert a < 6;
@@ -111,21 +396,76 @@ test "Int8"
     a >>= 1;
     assert a == 0;
     a = 10i8;
+    assert ~a == -11;
 
+    // optionals
     b: i8 = 5i8;
     c: i8? = null;
     d: i8? = 5i8;
     assert a != b;
     assert b != c;
+    assert b !== c;
     assert b > c;
     assert c != b;
     assert c == null;
     assert d != null;
     assert c < d;
     assert b == d;
+    assert b === d;
+
+    // dynamic polymorphism
     o: object? = c;
     o = d;
     assert b !=? o;
     icomp: IComparable<i8> = a;
     assert icomp > b;
+
+    // hash code
+    assert a.HashCode == 10;
+    assert #a == 10;
+    b = -6i8;
+    assert #b == 18446744073709551610;
+
+    assert b.ToInt32() == -6;
+    assert b.NarrowToUInt64() == 18446744073709551610;
+
+    // INumberBase
+    assert b.Abs == 6;
+    assert b.IsFinite;
+    assert b.IsInteger;
+    assert b.IsNegative;
+    assert a.IsPositive;
+    assert !b.IsPositive;
+    assert b.IsCanonical;
+    assert !b.IsComplexNumber;
+    assert b.IsRealNumber;
+    assert !b.IsImaginaryNumber;
+    assert b.IsEvenInteger;
+    assert !b.IsOddInteger;
+    assert !b.IsInfinity;
+    assert !b.IsPositiveInfinity;
+    assert !b.IsNegativeInfinity;
+    assert !b.IsNaN;
+    assert b.IsNormal;
+    assert !b.IsSubnormal;
+    assert !b.IsZero;
+
+    // INumber
+    assert a.Sign == +1;
+    assert b.Sign == -1;
+    assert a.CopySign(b) == -10;
+    assert a.Max(b) == a;
+    assert a.Min(b) == b;
+    assert a.MaxNumber(b) == a;
+    assert a.MinNumber(b) == b;
+    assert b.Clamp(-5, +5) == -5;
+
+    // IBinaryInteger
+    assert 0b1010_i8 <<% 3 == 0b0101_0000;
+    assert 0b1010_i8 <<% 5 == 0b0100_0001;
+    assert 0b1010_i8 >>% 3 == 0b0100_0001;
+    assert 0b1010_i8 >>% 5 == 0b0101_0000;
+
+    assert a.MultiplyBy10 == 100;
+    assert a.MultiplyBy16 == 160 + 2i32 * i8.MinValue;
 }

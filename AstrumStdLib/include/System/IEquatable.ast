@@ -1,0 +1,9 @@
+package System;
+
+public interface IEquatable<T> {
+    operator==: (rhs: T?) -> bool;
+}
+
+public interface ISelfEquatable {
+    operator==: (rhs: self) -> bool;
+}

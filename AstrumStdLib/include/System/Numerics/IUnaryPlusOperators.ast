@@ -1,0 +1,9 @@
+package System.Numerics;
+
+public interface IUnaryPlusOperators<TResult> {
+    operator+: () -> TResult;
+}
+
+public interface IUnaryPlus {
+    operator+: () -> self;
+}

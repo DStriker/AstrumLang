@@ -1,0 +1,46 @@
+package System.Numerics;
+
+public import IBinaryNumber;
+public import IShiftOperators;
+
+public interface IBinaryInteger: 
+    IBinaryNumber, 
+    IShiftArithmetic
+{
+    DivRem: (rhs: self) -> (self, self);
+
+    LeadingZeroCount: self { get; }
+    TrailingZeroCount: self { get; }
+    PopCount: self { get; }
+    ByteCount: usize { get; }
+    ShortestBitLength: usize { get; }
+
+    RotateLeft: (amount: i32) -> self;
+    RotateRight: (amount: i32) -> self;
+
+    //ReadBigEndian
+    //ReadLittleEndian
+    //WriteBigEndian
+    //WriteLittleEndian
+
+    static final DefaultDivRem: <T: is IBinaryInteger> (lhs: T, rhs: T) -> (T, T) =
+    {
+        quotient := lhs / rhs;
+        return (quotient, (lhs - (quotient * rhs)));
+    }
+
+    static final DefaultLeadingZeroCount: <T: is IBinaryInteger> (value: T) -> T =
+    {
+        static assert(type T is struct, "T must be a struct");
+        bitCount := T(value.ByteCount * 8u64);
+        if value == T.Zero {
+            return T(bitCount);
+        }
+
+        return (bitCount - T.One) ^ value.Log2;
+    }
+}
+
+operator<<%: <T: is IBinaryInteger> (lhs: T, shiftAmount: i32) -> T ==> lhs.RotateLeft(shiftAmount);
+operator>>%: <T: is IBinaryInteger> (lhs: T, shiftAmount: i32) -> T ==> lhs.RotateRight(shiftAmount);
+

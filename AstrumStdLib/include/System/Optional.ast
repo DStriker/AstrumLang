@@ -1,6 +1,7 @@
 package System;
 
 public import IComparable;
+public import IEquatable;
 
 //@OptionalType
 public struct <T> Optional
@@ -72,6 +73,7 @@ public struct <T> Optional
 
     public operator==: (rhs: self) -> bool ==
     {
+        static assert(type T is ISelfEquatable, "T must implement ISelfEquatable");
         if HasValue && rhs.HasValue {
             return Value == rhs.Value;
         }
@@ -82,7 +84,7 @@ public struct <T> Optional
 
     public operator<=>: (rhs: self) -> i32 ==
     {
-        static assert(type T is IComparable<T>, "T must implement IComparable<T>");
+        static assert(type T is ISelfComparable, "T must implement ISelfComparable");
         if HasValue {
             if (rhs.HasValue)
                 return (Value <=> rhs.Value);
