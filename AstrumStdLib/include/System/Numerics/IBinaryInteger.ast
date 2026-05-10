@@ -2,21 +2,25 @@ package System.Numerics;
 
 public import IBinaryNumber;
 public import IShiftOperators;
+public import IIntDivOperators;
+public import IIntPowerOperators;
 
 public interface IBinaryInteger: 
     IBinaryNumber, 
-    IShiftArithmetic
+    IShiftArithmetic,
+    IIntegerDivisibleArithmetic,
+    IIntegerPowerArithmetic
 {
-    DivRem: (rhs: self) -> (self, self);
+    static IsSigned: bool;
+    
+    TrailingOneCount: u32 { get; }
+    TrailingZeroCount: u32 { get; }
+    ByteCount: u32 { get; }
+    CheckedIsqrt: self? { get; }
+    Isqrt: self { get; }
+    Log2Ceiling: self { get; }
 
-    LeadingZeroCount: self { get; }
-    TrailingZeroCount: self { get; }
-    PopCount: self { get; }
-    ByteCount: usize { get; }
-    ShortestBitLength: usize { get; }
-
-    RotateLeft: (amount: i32) -> self;
-    RotateRight: (amount: i32) -> self;
+    NextMultipleOf: (rhs: self) -> self;
 
     //ReadBigEndian
     //ReadLittleEndian
@@ -29,18 +33,4 @@ public interface IBinaryInteger:
         return (quotient, (lhs - (quotient * rhs)));
     }
 
-    static final DefaultLeadingZeroCount: <T: is IBinaryInteger> (value: T) -> T =
-    {
-        static assert(type T is struct, "T must be a struct");
-        bitCount := T(value.ByteCount * 8u64);
-        if value == T.Zero {
-            return T(bitCount);
-        }
-
-        return (bitCount - T.One) ^ value.Log2;
-    }
 }
-
-operator<<%: <T: is IBinaryInteger> (lhs: T, shiftAmount: i32) -> T ==> lhs.RotateLeft(shiftAmount);
-operator>>%: <T: is IBinaryInteger> (lhs: T, shiftAmount: i32) -> T ==> lhs.RotateRight(shiftAmount);
-

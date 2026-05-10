@@ -72,6 +72,9 @@ namespace AstrumLang {
 		bool isMainFunction             = false;
 		bool isLambda                   = false;
 		bool isVtableUsing              = false;
+		bool isInterfaceConcept         = false;
+		bool isVoidReturn               = false;
+		bool isClearModule              = false;
 
 		class StreamSwitcher {
 			std::ofstream* file1;

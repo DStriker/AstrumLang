@@ -145,9 +145,9 @@ namespace AstrumLang {
 							cppPath.replace_extension("cpp");
 							auto lastAstrumTime = fs::last_write_time(entryPath);
 							get().sourceFiles.emplace_back(src);
-							if (!fs::exists(headerPath) || !fs::exists(cppPath) ||
+							if (!fs::exists(headerPath) ||
 							    fs::last_write_time(headerPath) < lastAstrumTime ||
-							    fs::last_write_time(cppPath) < lastAstrumTime) {
+							    fs::exists(cppPath) && fs::last_write_time(cppPath) < lastAstrumTime) {
 								get().modifiedFiles.emplace_back(src);
 							}
 						}
@@ -167,9 +167,9 @@ namespace AstrumLang {
 					cppPath.replace_extension("cpp");
 					auto lastAstrumTime = fs::last_write_time(srcPath);
 					get().sourceFiles.emplace_back(src);
-					if (!fs::exists(headerPath) || !fs::exists(cppPath) ||
+					if (!fs::exists(headerPath) ||
 					    fs::last_write_time(headerPath) < lastAstrumTime ||
-					    fs::last_write_time(cppPath) < lastAstrumTime) {
+					    fs::exists(cppPath) && fs::last_write_time(cppPath) < lastAstrumTime) {
 						get().modifiedFiles.emplace_back(src);
 					}
 				} else {

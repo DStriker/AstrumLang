@@ -22,20 +22,18 @@ class IBinaryIntegerFormatInfo__Weak;
 template<> inline constexpr bool Builtin::__details::cheapCopy<System::Numerics::IBinaryIntegerFormatInfo> = false;
 
 namespace System::Numerics {
-	#line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
+	#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
 	template<class __AnyType> concept __HasMethodImplementation_49f56b338c01c9c9 = requires(typename __AnyType::__class t) { {t.IsGreaterThanAsUnsigned(std::declval<typename __AnyType::__self>())} -> std::convertible_to<bool>; }  || requires(typename __AnyType::__self t) { {IsGreaterThanAsUnsigned(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<bool>; } || requires { { [] { using namespace __extensions; return IsGreaterThanAsUnsigned(std::declval<typename __AnyType::__self>(), std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<bool>; };
 	#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get70b6927cfa650f13 = requires { __AnyType::__self::IsSigned; } || requires { [] { using namespace __extensions; __static_getIsSigned<typename __AnyType::__self>(); }(); };
-	#line 11 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
 	template<class __AnyType> concept __HasMethodImplementation_getec9414692050f40b = requires { __AnyType::__self::MaxDigitCount; } || requires { [] { using namespace __extensions; __static_getMaxDigitCount<typename __AnyType::__self>(); }(); };
-	#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
+	#line 11 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
 	template<class __AnyType> concept __HasMethodImplementation_get85627ea2861a8ab0 = requires { __AnyType::__self::MaxHexDigitCount; } || requires { [] { using namespace __extensions; __static_getMaxHexDigitCount<typename __AnyType::__self>(); }(); };
-	#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
+	#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
 	template<class __AnyType> concept __HasMethodImplementation_getbf8d0c9067b307b2 = requires { __AnyType::__self::MaxValueDiv10; } || requires { [] { using namespace __extensions; __static_getMaxValueDiv10<typename __AnyType::__self>(); }(); };
+	#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
+	template<class __AnyType> concept __HasMethodImplementation_get16321500413499ff = requires(typename __AnyType::__class t) { {t.getMultiplyBy10()} -> std::convertible_to<typename __AnyType::__self>; } || requires(typename __AnyType::__self t) { {getMultiplyBy10(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::__self>; };
 	#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get16321500413499ff = requires(typename __AnyType::__class t) { {t.getMultiplyBy10()} -> std::convertible_to<Builtin::OptionalStrongRef<Builtin::ObjectRef>>; } || requires(typename __AnyType::__self t) { {getMultiplyBy10(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<Builtin::OptionalStrongRef<Builtin::ObjectRef>>; };
-	#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get1632130041349699 = requires(typename __AnyType::__class t) { {t.getMultiplyBy16()} -> std::convertible_to<Builtin::OptionalStrongRef<Builtin::ObjectRef>>; } || requires(typename __AnyType::__self t) { {getMultiplyBy16(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<Builtin::OptionalStrongRef<Builtin::ObjectRef>>; };
+	template<class __AnyType> concept __HasMethodImplementation_get1632130041349699 = requires(typename __AnyType::__class t) { {t.getMultiplyBy16()} -> std::convertible_to<typename __AnyType::__self>; } || requires(typename __AnyType::__self t) { {getMultiplyBy16(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::__self>; };
 	#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
 	ADV_CHECK_INTERFACE(IBinaryInteger, IBinaryInteger);
 	#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
@@ -46,15 +44,15 @@ namespace System::Numerics {
 		{
 			using fn_49f56b338c01c9c9 = const bool(Builtin::Object*, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs);
 			fn_49f56b338c01c9c9* fnptr_49f56b338c01c9c9;
-			#line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
+			#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
 			template<class __AnyType> static const bool impl_49f56b338c01c9c9(Builtin::Object* obj, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) { ADV_EXPRESSION_BODY(ADV_UFCS(IsGreaterThanAsUnsigned)(*static_cast<typename __AnyType::__class*>(obj), rhs)); }
 			using fn_getMultiplyBy10 = Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*);
 			fn_getMultiplyBy10* fnptr_getMultiplyBy10;
-			#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
+			#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
 			template<class __AnyType> static Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_getMultiplyBy10(Builtin::Object* obj) { return ADV_UFCS(getMultiplyBy10)(*static_cast<typename __AnyType::__class*>(obj)); }
 			using fn_getMultiplyBy16 = Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*);
 			fn_getMultiplyBy16* fnptr_getMultiplyBy16;
-			#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
+			#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
 			template<class __AnyType> static Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_getMultiplyBy16(Builtin::Object* obj) { return ADV_UFCS(getMultiplyBy16)(*static_cast<typename __AnyType::__class*>(obj)); }
 			
 		};
@@ -67,7 +65,7 @@ namespace System::Numerics {
 		, &__vtables::__vtable_IBinaryIntegerFormatInfo::template impl_getMultiplyBy16<__AnyType>
 		};
 	#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
-	template<class __AnyType> concept __ImplementsInterface_IBinaryIntegerFormatInfo = __ImplementsInterface_IBinaryInteger<__AnyType> && __ImplementsInterface_IMinMaxValue<__AnyType> && __HasMethodImplementation_49f56b338c01c9c9<__AnyType> && __HasMethodImplementation_get70b6927cfa650f13<__AnyType> && __HasMethodImplementation_getec9414692050f40b<__AnyType> && __HasMethodImplementation_get85627ea2861a8ab0<__AnyType> && __HasMethodImplementation_getbf8d0c9067b307b2<__AnyType> && __HasMethodImplementation_get16321500413499ff<__AnyType> && __HasMethodImplementation_get1632130041349699<__AnyType>;
+	template<class __AnyType> concept __ImplementsInterface_IBinaryIntegerFormatInfo = __ImplementsInterface_IBinaryInteger<__AnyType> && __ImplementsInterface_IMinMaxValue<__AnyType> && __HasMethodImplementation_49f56b338c01c9c9<__AnyType> && __HasMethodImplementation_getec9414692050f40b<__AnyType> && __HasMethodImplementation_get85627ea2861a8ab0<__AnyType> && __HasMethodImplementation_getbf8d0c9067b307b2<__AnyType> && __HasMethodImplementation_get16321500413499ff<__AnyType> && __HasMethodImplementation_get1632130041349699<__AnyType>;
 	#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
 	class IBinaryIntegerFormatInfo final : public Builtin::InterfaceRef {
 		public: using __self = IBinaryIntegerFormatInfo;
@@ -169,7 +167,7 @@ namespace System::Numerics {
 		public: template<class __AnyType, class __FixedType = std::decay_t<__AnyType>::__self> requires std::is_base_of_v<Builtin::Object, std::decay_t<__AnyType>> IBinaryIntegerFormatInfo& operator=(__AnyType&& value) { static_assert(__ImplementsInterface_IBinaryIntegerFormatInfo<__FixedType>, "Cannot initialize interface IBinaryIntegerFormatInfo from this type"); 
  		if (_obj) Builtin::Release(_obj); _obj = (Builtin::Object*)&value; Builtin::Retain(_obj); 
 		_vtable = &__vtable_IBinaryIntegerFormatInfo_for<__FixedType>; return *this; }
-		#line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
+		#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
 		public: FORCE_INLINE const bool IsGreaterThanAsUnsigned(Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) const { ADV_EXPRESSION_BODY(_vtable->fnptr_49f56b338c01c9c9(_obj, rhs)); }
 		
 	};

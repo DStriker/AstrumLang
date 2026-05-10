@@ -55,7 +55,7 @@ namespace Builtin {
 		*remainder_ret = dividend;
 	}
 
-	UInt128 UInt128::operator/(UInt128 rhs) const {
+	UInt128 UInt128::Div(UInt128 rhs) const {
 		UInt128 quotient  = 0u;
 		UInt128 remainder = 0u;
 		DivModImpl(*this, rhs, &quotient, &remainder);
@@ -78,7 +78,7 @@ namespace Builtin {
 		return v.high64() < 0 ? InverseUint128(std::bit_cast<u128>(v)) : std::bit_cast<u128>(v);
 	}
 
-	Int128 Int128::operator/(Int128 rhs) const {
+	Int128 Int128::Div(Int128 rhs) const {
 		if (*this == INT128_MIN && rhs == -1)
 			throw IntegerOverflowException();
 		u128 quotient;

@@ -1,21 +1,7 @@
 #pragma once
-#include <cmath>
-#include <cstddef>
-#include <cstdint>
-#include <limits>
-#include <type_traits>
-
-#include "CompilerUtils.h"
-#ifdef MSVC
-#if defined(_M_X64) && !defined(_M_ARM64EC)
-#include "intrin.h"
-#pragma intrinsic(_rotl8, _rotl16)
-#pragma intrinsic(_rotr8, _rotr16)
-#endif
-#endif
+#include "CheckedArithmetic.h"
 
 namespace Builtin {
-	struct Struct {};
 
 	template <class T>
 	class __Class_FastInt;
@@ -26,8 +12,11 @@ namespace Builtin {
 		template <class U>
 		friend struct FastInt;
 		using __self  = FastInt<T>;
-		using __class = __Class_FastInt<T>;
-		constexpr decltype(auto) __ref() const noexcept { return *this; }
+		using __class      = __Class_FastInt<T>;
+		using __underlying = T;
+		using Unsigned     = FastInt<std::make_unsigned_t<T>>;
+		constexpr __self& __ref() noexcept { return *this; }
+		constexpr const __self& __ref() const noexcept { return *this; }
 
 		constexpr FastInt() noexcept = default; /* {
 		    //static_assert(std::is_integral_v<T> || std::is_enum_v<T>, "T must be integer");
@@ -222,11 +211,12 @@ namespace Builtin {
 
 		constexpr operator long double() const noexcept { return value; }
 
-		T* ptr() noexcept { return &value; }
+		T* __builtin_ptr() noexcept { return &value; }
 
-		const T* ptr() const noexcept { return &value; }
+		const T* __builtin_ptr() const noexcept { return &value; }
 
-		constexpr const T& ref() const noexcept { return value; }
+		constexpr T& __builtin_ref() noexcept { return value; }
+		constexpr const T& __builtin_ref() const noexcept { return value; }
 
 		/*T* operator&()  noexcept {
 		    return &value;
@@ -314,24 +304,48 @@ namespace Builtin {
 		}
 
 		template <class U>
-		constexpr FastInt<T> operator/(U rhs) const noexcept {
+		constexpr FastInt<T> Div(U rhs) const {
+			if (rhs == 0)
+				throw DivisionByZeroException();
 			return FastInt<T>(value / rhs);
 		}
 
 		template <class U>
-		constexpr FastInt<T> operator/(FastInt<U> rhs) const noexcept {
+		constexpr FastInt<T> Div(FastInt<U> rhs) const {
+			if (rhs == 0)
+				throw DivisionByZeroException();
 			return FastInt<T>(value / (U) rhs);
 		}
 
 		template <class U>
-		constexpr FastInt<T>& operator/=(U rhs) noexcept {
+		constexpr FastInt<T>& DivAssign(U rhs) {
+			if (rhs == 0)
+				throw DivisionByZeroException();
 			value /= rhs;
 			return *this;
 		}
 
 		template <class U>
-		constexpr FastInt<T>& operator/=(FastInt<U> rhs) noexcept {
+		constexpr FastInt<T>& DivAssign(FastInt<U> rhs) {
+			if (rhs == 0)
+				throw DivisionByZeroException();
 			value /= (U) rhs;
+			return *this;
+		}
+
+		template <class U>
+		constexpr FastInt<T>& operator/=(U rhs) {
+			if (rhs == 0)
+				throw DivisionByZeroException();
+			value = (T) std::round((double) value / (double) rhs);
+			return *this;
+		}
+
+		template <class U>
+		constexpr FastInt<T>& operator/=(FastInt<U> rhs) {
+			if (rhs == 0)
+				throw DivisionByZeroException();
+			value = (T)std::round((double) value / (double) rhs);
 			return *this;
 		}
 
@@ -559,7 +573,7 @@ namespace Builtin {
 
 	template <class T, class U>
 	constexpr bool operator==(const FastInt<T>& lhs, const FastInt<U>& rhs) noexcept {
-		return lhs.ref() == rhs.ref();
+		return lhs.__builtin_ref() == rhs.__builtin_ref();
 	}
 
 	template <class T, class U>
@@ -571,7 +585,7 @@ namespace Builtin {
 	template <class T, class U>
 	constexpr bool operator==(const U& lhs, const FastInt<T>& rhs) noexcept
 	    requires(std::is_integral_v<U>) {
-		return (T) lhs == rhs.ref();
+		return (T) lhs == rhs.__builtin_ref();
 	}
 
 	template <class T, class U>
@@ -602,7 +616,9 @@ namespace Builtin {
 	}
 
 	template <class T, class U>
-	constexpr FastInt<T> operator/(U lhs, FastInt<T> rhs) requires(std::is_integral_v<U>) {
+	constexpr FastInt<T> Div(U lhs, FastInt<T> rhs) requires(std::is_integral_v<U>) {
+		if (rhs == 0)
+			throw DivisionByZeroException();
 		return lhs / (T) rhs;
 	}
 
@@ -636,7 +652,9 @@ namespace Builtin {
 
 	template <class T, class U>
 	constexpr T& operator/=(T& lhs, FastInt<U> rhs) requires(std::is_integral_v<T>) {
-		lhs /= (U) rhs;
+		if (rhs == 0)
+			throw DivisionByZeroException();
+		lhs = (T) std::round((double) lhs / (double) rhs);
 		return lhs;
 	}
 

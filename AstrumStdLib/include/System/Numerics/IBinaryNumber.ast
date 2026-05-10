@@ -11,4 +11,9 @@ public interface IBinaryNumber:
 
     IsPow2: bool { get; }
     Log2: self { get; }
+    Log10: self { get; }
+
+    Log: (base: self) -> self;
+    Midpoint: (rhs: self) -> self;
+    IsMultipleOf: (rhs: self) -> bool;
 }

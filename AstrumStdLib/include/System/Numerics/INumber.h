@@ -210,19 +210,19 @@ namespace System::Numerics {
 		#line 22 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
 		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> MinNumber(Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) const { ADV_EXPRESSION_BODY(_vtable->fnptr_86d33de9ae4e5ded(_obj, rhs)); }
 		#line 24 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
-		public: template<__ImplementsInterface_INumber T> static const Builtin::i32 DefaultSign(T num) ;
+		public: template<__ImplementsInterface_INumber T> static const Builtin::i32 DefaultSign(T num) noexcept;
 		#line 32 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
 		public: template<__ImplementsInterface_INumber T> static const T DefaultCopySign(T num, T sign) ;
 		#line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
 		public: template<__ImplementsInterface_INumber T> static const T DefaultClamp(T num, T min, T max) ;
 		#line 56 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
-		public: template<__ImplementsInterface_INumber T> static const T DefaultMax(T lhs, T rhs) ;
+		public: template<__ImplementsInterface_INumber T> static const T DefaultMax(T lhs, T rhs) noexcept;
 		#line 69 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
-		public: template<__ImplementsInterface_INumber T> static const T DefaultMaxNumber(T lhs, T rhs) ;
+		public: template<__ImplementsInterface_INumber T> static const T DefaultMaxNumber(T lhs, T rhs) noexcept;
 		#line 82 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
-		public: template<__ImplementsInterface_INumber T> static const T DefaultMin(T lhs, T rhs) ;
+		public: template<__ImplementsInterface_INumber T> static const T DefaultMin(T lhs, T rhs) noexcept;
 		#line 91 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
-		public: template<__ImplementsInterface_INumber T> static const T DefaultMinNumber(T lhs, T rhs) ;
+		public: template<__ImplementsInterface_INumber T> static const T DefaultMinNumber(T lhs, T rhs) noexcept;
 		
 	};
 	class INumber__Unowned final : public Builtin::InterfaceRef__Unowned {
@@ -349,7 +349,7 @@ namespace System::Numerics {
 //# Function definitions
 //###############################################################################
 
-template<__ImplementsInterface_INumber T> inline const Builtin::i32 INumber::DefaultSign(T num) 
+template<__ImplementsInterface_INumber T> inline const Builtin::i32 INumber::DefaultSign(T num) noexcept
 	{
 		#line 26 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
 		if (num != ADV_USPCS(Zero, T)()) {
@@ -387,7 +387,7 @@ template<__ImplementsInterface_INumber T> inline const Builtin::i32 INumber::Def
 		#line 53 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
 		return result;
 	}
-	template<__ImplementsInterface_INumber T> inline const T INumber::DefaultMax(T lhs, T rhs) 
+	template<__ImplementsInterface_INumber T> inline const T INumber::DefaultMax(T lhs, T rhs) noexcept
 	{
 		#line 58 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
 		if (lhs != rhs) {
@@ -402,7 +402,7 @@ template<__ImplementsInterface_INumber T> inline const Builtin::i32 INumber::Def
 		#line 66 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
 		return ADV_UPCS(IsNegative)(rhs.__ref()) ? lhs : rhs;
 	}
-	template<__ImplementsInterface_INumber T> inline const T INumber::DefaultMaxNumber(T lhs, T rhs) 
+	template<__ImplementsInterface_INumber T> inline const T INumber::DefaultMaxNumber(T lhs, T rhs) noexcept
 	{
 		#line 71 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
 		if (lhs != rhs) {
@@ -417,7 +417,7 @@ template<__ImplementsInterface_INumber T> inline const Builtin::i32 INumber::Def
 		#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
 		return ADV_UPCS(IsNegative)(rhs.__ref()) ? lhs : rhs;
 	}
-	template<__ImplementsInterface_INumber T> inline const T INumber::DefaultMin(T lhs, T rhs) 
+	template<__ImplementsInterface_INumber T> inline const T INumber::DefaultMin(T lhs, T rhs) noexcept
 	{
 		#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
 		if ((lhs != rhs) && !ADV_UPCS(IsNaN)(lhs.__ref())) {
@@ -427,7 +427,7 @@ template<__ImplementsInterface_INumber T> inline const Builtin::i32 INumber::Def
 		#line 88 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
 		return ADV_UPCS(IsNegative)(rhs.__ref()) ? lhs : rhs;
 	}
-	template<__ImplementsInterface_INumber T> inline const T INumber::DefaultMinNumber(T lhs, T rhs) 
+	template<__ImplementsInterface_INumber T> inline const T INumber::DefaultMinNumber(T lhs, T rhs) noexcept
 	{
 		#line 93 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
 		if ((lhs != rhs) && !ADV_UPCS(IsNaN)(rhs.__ref())) {

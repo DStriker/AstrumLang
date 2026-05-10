@@ -1,0 +1,14 @@
+package System.Numerics;
+
+public interface IIntDivOperators<TRight, TResult> {
+    operator\: (rhs: TRight) -> TResult;
+}
+
+public interface IIntegerDivisibleArithmetic {
+    // integer division
+    operator\: (rhs: self) -> self;
+    // integer division and assign
+    operator\=: (rhs: self) -> self;
+    // integer division without remainder
+    operator\\: (rhs: self) -> self?;
+}

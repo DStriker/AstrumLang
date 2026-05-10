@@ -69,10 +69,14 @@ using Builtin::usize;
 #define ASTRUM_NAMEOF(x) #x
 
 #define ADV_EXPRESSION_BODY(...)                                                                   \
+	ADV_WARNING_DISABLE(4552, );                                                                   \
+	ADV_WARNING_DISABLE(4834, );                                                                  \
 	if constexpr (!std::is_void_v<decltype(__VA_ARGS__)>)                                          \
 		return __VA_ARGS__;                                                                        \
 	else                                                                                           \
-		__VA_ARGS__;
+		__VA_ARGS__;																				\
+	ADV_WARNING_POP;                                                                               \
+	ADV_WARNING_POP;
 
 template <class T>
 struct ___dependent_false : std::false_type {};
@@ -175,6 +179,12 @@ struct ___dependent_false : std::false_type {};
 			                     MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                         \
 			                     (__extensions::__proxy{ADV_FORWARD(obj)}, ADV_FORWARD(params)...);                       \
 		                     }) {                                                                  \
+			if constexpr (std::is_lvalue_reference_v<Obj&&> &&                                     \
+			              !std::is_const_v<std::remove_reference_t<Obj>>) {			   \
+				return MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(									\
+					__extensions::__proxy <decltype(ADV_FORWARD(obj))> {ADV_FORWARD(obj)},     \
+				    ADV_FORWARD(params)...);              \
+			} else																					\
 			return MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(                        \
 			    __extensions::__proxy{ADV_FORWARD(obj)},                     \
 			                                                 ADV_FORWARD(params)...);              \

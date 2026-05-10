@@ -13,17 +13,16 @@ using Int8 = Builtin::i8;
 //###############################################################################
 //# Type definitions
 //###############################################################################
+	} namespace __extensions { using namespace System;
 #line 184 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\FirstProgram.ast"
-	using __extension_184_i8 = Builtin::i8;
-	
+	using __extension_FirstProgram_184_i8 = Builtin::i8;
+	} namespace System{
+
 	//###############################################################################
-//# Free function declarations
-//###############################################################################
-//###############################################################################
 //# Function definitions
 //###############################################################################
 
-#line 9999 "FirstProgram.ast"
+#line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumCompiler\\tests\\FirstProgram.ast"
 	
 
 }

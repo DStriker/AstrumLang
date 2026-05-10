@@ -7,10 +7,24 @@ public interface IShiftOperators<TRight, TResult> {
 }
 
 public interface IShiftArithmetic {
+    // shr
     operator>>: (amount: i32) -> self;
+    // shr-assign
     operator>>=: (amount: i32) -> self;
+    // shl
     operator<<: (amount: i32) -> self;
+    // shl-assign
     operator<<=: (amount: i32) -> self;
+    // unsigned shr
     operator>>>: (amount: i32) -> self;
+    // unsigned shr-assign
     operator>>>=: (amount: i32) -> self;
+    // unbounded shl
+    operator<<\: (amount: u32) -> self;
+    // unbounded shl and assign
+    operator<<\=: (amount: u32) -> self;
+    // unbounded shr
+    operator>>\: (amount: u32) -> self;
+    // unbounded shr and assign
+    operator>>\=: (amount: u32) -> self;
 }

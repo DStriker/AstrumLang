@@ -8,6 +8,7 @@
 #include "Integer.h"
 #include "RefCounts.h"
 #include "Str.h"
+#include "FuncParameterMode.h"
 
 namespace Builtin {
 	struct Struct;
@@ -32,6 +33,9 @@ namespace __extensions
 
 		inline constexpr operator __self() const { return val; }
 		inline constexpr operator __self&() { return val; }
+		inline constexpr operator Builtin::MutableRef<__self>() {
+			return Builtin::MutableRef<__self>(val);
+		}
 		/*
 		 __self get() const { return val; }
 		decltype(auto) __ref() const { return get(); }
@@ -2041,5 +2045,5 @@ namespace Builtin {
 #endif
 }  // namespace Builtin
 
-inline bool _operator_ne_eq_qst(auto lhs, auto rhs) { return !_operator_eq_eq_qst(__extensions::__proxy{lhs}, rhs);
+inline bool _operator_ne_eq_mul(auto lhs, auto rhs) { return !_operator_eq_eq_mul(__extensions::__proxy{lhs}, rhs);
 }

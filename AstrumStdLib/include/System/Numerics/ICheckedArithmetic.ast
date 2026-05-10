@@ -1,0 +1,188 @@
+package System.Numerics;
+
+public import System.Optional;
+
+public interface ICheckedArithmetic
+{
+    type Unsigned;
+    // checked add
+    operator+?: (rhs: self) -> self?;
+    // checked add and conditional assign
+    operator+?=: (rhs: self) -> self;
+    // conditional increment
+    operator++?: () -> self;
+    // strict add
+    operator+!: (rhs: self) -> self;
+    // strict add and assign
+    operator+!=: (rhs: self) -> self;
+    // strict increment
+    operator++!: () -> self;
+    // wrapping add
+    operator+%: (rhs: self) -> self;
+    // wrapping add and assign
+    operator+%=: (rhs: self) -> self;
+    // wrapping increment
+    operator++%: () -> self;
+    // saturating add
+    operator+|: (rhs: self) -> self;
+    // saturating add and assign
+    operator+|=: (rhs: self) -> self;
+    // saturating increment
+    operator++|: () -> self;
+    // overflowing add
+    operator+%?: (rhs: self) -> (self, bool);
+    // carrying add
+    CarryingAdd: (rhs: self, carry: bool) -> (self, bool);
+    // checked sub
+    operator-?: (rhs: self) -> self?;
+    // checked sub and conditional assign
+    operator-?=: (rhs: self) -> self;
+    // conditional decrement
+    operator--?: () -> self;
+    // strict sub
+    operator-!: (rhs: self) -> self;
+    // strict sub and assign
+    operator-!=: (rhs: self) -> self;
+    // strict decrement
+    operator--!: () -> self;
+    // wrapping sub
+    operator-%: (rhs: self) -> self;
+    // wrapping sub and assign
+    operator-%=: (rhs: self) -> self;
+    // wrapping decrement
+    operator--%: () -> self;
+    // saturating sub
+    operator-|: (rhs: self) -> self;
+    // saturating sub and assign
+    operator-|=: (rhs: self) -> self;
+    // saturating decrement
+    operator--|: () -> self;
+    // borrowing sub
+    BorrowingSub: (rhs: self, carry: bool) -> (self, bool);
+    // overflowing sub
+    operator-%?: (rhs: self) -> (self, bool);
+    // checked mul
+    operator*?: (rhs: self) -> self?;
+    // checked mul and conditional assign
+    operator*?=: (rhs: self) -> self;
+    // strict mul
+    operator*!: (rhs: self) -> self;
+    // strict mul and assign
+    operator*!=: (rhs: self) -> self;
+    // wrapping mul
+    operator*%: (rhs: self) -> self;
+    // wrapping mul and assign
+    operator*%=: (rhs: self) -> self;
+    // saturating mul
+    operator*|: (rhs: self) -> self;
+    // saturating mul and assign
+    operator*|=: (rhs: self) -> self;
+    // overflowing mul
+    operator*%?: (rhs: self) -> (self, bool);
+    // widening mul
+    operator*>: (rhs: self) -> (self.Unsigned, self);
+    // carrying mul
+    CarryingMul: (rhs: self, carry: self) -> (self.Unsigned, self);
+    // checked div
+    operator\?: (rhs: self) -> self?;
+    // checked div and conditional assign
+    operator\?=: (rhs: self) -> self;
+    // strict div
+    operator\!: (rhs: self) -> self;
+    // strict div and assign
+    operator\!=: (rhs: self) -> self;
+    // wrapping div
+    operator\%: (rhs: self) -> self;
+    // wrapping div and assign
+    operator\%=: (rhs: self) -> self;
+    // saturating div
+    operator\|: (rhs: self) -> self;
+    // saturating div and assign
+    operator\|=: (rhs: self) -> self;
+    // overflowing div
+    operator\%?: (rhs: self) -> (self, bool);
+    // checked integer division without remainder
+    operator\\?: (rhs: self) -> self?;
+    // checked integer division without remainder and assign
+    operator\\?=: (rhs: self) -> self;
+    // checked mod
+    operator%?: (rhs: self) -> self?;
+    // checked mod and conditional assign
+    operator%?=: (rhs: self) -> self;
+    // strict mod
+    operator%!: (rhs: self) -> self;
+    // strict mod and assign
+    operator%!=: (rhs: self) -> self;
+    // wrapping mod
+    operator%%: (rhs: self) -> self;
+    // wrapping mod and assign
+    operator%%=: (rhs: self) -> self;
+    // overflowing mod
+    operator%%?: (rhs: self) -> (self, bool);
+    // checked neg
+    operator-?: () -> self?;
+    // strict neg
+    operator-!: () -> self;
+    // wrapping neg
+    operator-%: () -> self;
+   // saturating neg
+    operator-|: () -> self;
+    // overflowing neg
+    operator-%?: () -> (self, bool);
+    // checked shl
+    operator<<?: (amount: i32) -> self?;
+    // checked shl and conditional assign
+    operator<<?=: (amount: i32) -> self;
+    // strict shl
+    operator<<!: (amount: i32) -> self;
+    // strict shl and assign
+    operator<<!=: (amount: i32) -> self;
+    // wrapping shl
+    operator<<%: (amount: i32) -> self;
+    // wrapping shl and assign
+    operator<<%=: (amount: i32) -> self;
+    // overflowing shl
+    operator<<%?: (amount: i32) -> (self, bool);
+    // checked shr
+    operator>>?: (amount: i32) -> self?;
+    // checked shr and conditional assign
+    operator>>?=: (amount: i32) -> self;
+    // strict shr
+    operator>>!: (amount: i32) -> self;
+    // strict shr and assign
+    operator>>!=: (amount: i32) -> self;
+    // wrapping shr
+    operator>>%: (amount: i32) -> self;
+    // wrapping shr and assign
+    operator>>%=: (amount: i32) -> self;
+    // overflowing shr
+    operator>>%?: (amount: i32) -> (self, bool);
+    // checked ipow
+    operator^^?: (exp: u32) -> self?;
+    // checked ipow and assign
+    operator^^?=: (exp: u32) -> self;
+    // strict ipow
+    operator^^!: (exp: u32) -> self;
+    // strict ipow and assign
+    operator^^!=: (exp: u32) -> self;
+    // wrapping ipow
+    operator^^%: (exp: u32) -> self;
+    // wrapping ipow and assign
+    operator^^%=: (exp: u32) -> self;
+    // saturating ipow
+    operator^^|: (exp: u32) -> self;
+    // saturating ipow and assign
+    operator^^|=: (exp: u32) -> self;
+    // overflowing ipow
+    operator^^%?: (exp: u32) -> (self, bool);
+    // checked abs
+    CheckedAbs: self? { get; }
+    // strict abs
+    StrictAbs: self { get; }
+    // wrapping abs
+    WrappingAbs: self { get; }
+    // saturating abs
+    SaturatingAbs: self { get; }
+    // overflowing abs
+    OverflowingAbs: (self, bool) { get; }
+}

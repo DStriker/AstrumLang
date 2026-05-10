@@ -225,10 +225,12 @@ namespace AstrumLang {
 				cmd += quotes;
 			}
 			for (const auto& src : sources) {
-				cmd += " ";
-				cmd += quotes;
 				std::filesystem::path srcPath = src;
 				srcPath.replace_extension("cpp");
+				if (!std::filesystem::exists(srcPath))
+					continue;
+				cmd += " ";
+				cmd += quotes;
 				cmd += srcPath.string();
 				cmd += quotes;
 			}
@@ -347,10 +349,12 @@ namespace AstrumLang {
 				cmd += quotes;
 			}
 			for (const auto& src : sources) {
-				cmd += " ";
-				cmd += quotes;
 				std::filesystem::path srcPath = src;
 				srcPath.replace_extension("cpp");
+				if (!std::filesystem::exists(srcPath))
+					continue;
+				cmd += " ";
+				cmd += quotes;
 				cmd += srcPath.string();
 				cmd += quotes;
 			}

@@ -125,14 +125,14 @@ namespace Builtin {
 
 		if constexpr (std::is_signed_v<T>) {
 			if (Minus_sign) {
-				Risky_val = static_cast<Unsigned>(Abs_int_min / Base);
+				Risky_val = static_cast<Unsigned>(Div(Abs_int_min, Base));
 				Max_digit = static_cast<Unsigned>(Abs_int_min % Base);
 			} else {
-				Risky_val = static_cast<Unsigned>(Int_max / Base);
+				Risky_val = static_cast<Unsigned>(Div(Int_max, Base));
 				Max_digit = static_cast<Unsigned>(Int_max % Base);
 			}
 		} else {
-			Risky_val = static_cast<Unsigned>(Uint_max / Base);
+			Risky_val = static_cast<Unsigned>(Div(Uint_max, Base));
 			Max_digit = static_cast<Unsigned>(Uint_max % Base);
 		}
 

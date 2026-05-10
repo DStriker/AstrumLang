@@ -306,46 +306,70 @@ namespace System::Numerics {
 template<> inline constexpr bool Builtin::__details::cheapCopy<System::Numerics::IShiftArithmetic> = false;
 
 namespace System::Numerics {
-	#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
-	template<class __AnyType> concept __HasMethodImplementation_a9302f7f567b3aa0 = requires(typename __AnyType::__class t) { {t.operator>>(std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {operator>>(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return std::declval<typename __AnyType::__self>() >>std::declval<Builtin::i32>();}() } -> std::convertible_to<typename __AnyType::__self>; };
 	#line 11 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
-	template<class __AnyType> concept __HasMethodImplementation_ebc0d8112f8dbde5 = requires(typename __AnyType::__class t) { {t.operator>>=(std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {operator>>=(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return std::declval<typename __AnyType::__self>() >>=std::declval<Builtin::i32>();}() } -> std::convertible_to<typename __AnyType::__self>; };
-	#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
-	template<class __AnyType> concept __HasMethodImplementation_b72a0b65362ec5e8 = requires(typename __AnyType::__class t) { {t.operator<<(std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {operator<<(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return std::declval<typename __AnyType::__self>() <<std::declval<Builtin::i32>();}() } -> std::convertible_to<typename __AnyType::__self>; };
+	template<class __AnyType> concept __HasMethodImplementation_a9302f7f567b3aa0 = requires(typename __AnyType::__class t) { {t.operator>>(std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {operator>>(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return std::declval<typename __AnyType::__self>() >>std::declval<Builtin::i32>();}() } -> std::convertible_to<typename __AnyType::__self>; };
 	#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
-	template<class __AnyType> concept __HasMethodImplementation_80e3c7915cb7a40d = requires(typename __AnyType::__class t) { {t.operator<<=(std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {operator<<=(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return std::declval<typename __AnyType::__self>() <<=std::declval<Builtin::i32>();}() } -> std::convertible_to<typename __AnyType::__self>; };
-	#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
-	template<class __AnyType> concept __HasMethodImplementation_d941d3ef72559c1d = requires(typename __AnyType::__class t) { {t._operator_gt_gt_gt(std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {_operator_gt_gt_gt(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return _operator_gt_gt_gt(std::declval<typename __AnyType::__self>(), std::declval<Builtin::i32>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
+	template<class __AnyType> concept __HasMethodImplementation_ebc0d8112f8dbde5 = requires(typename __AnyType::__class t) { {t.operator>>=(std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {operator>>=(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return std::declval<typename __AnyType::__self>() >>=std::declval<Builtin::i32>();}() } -> std::convertible_to<typename __AnyType::__self>; };
 	#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+	template<class __AnyType> concept __HasMethodImplementation_b72a0b65362ec5e8 = requires(typename __AnyType::__class t) { {t.operator<<(std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {operator<<(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return std::declval<typename __AnyType::__self>() <<std::declval<Builtin::i32>();}() } -> std::convertible_to<typename __AnyType::__self>; };
+	#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+	template<class __AnyType> concept __HasMethodImplementation_80e3c7915cb7a40d = requires(typename __AnyType::__class t) { {t.operator<<=(std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {operator<<=(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return std::declval<typename __AnyType::__self>() <<=std::declval<Builtin::i32>();}() } -> std::convertible_to<typename __AnyType::__self>; };
+	#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+	template<class __AnyType> concept __HasMethodImplementation_d941d3ef72559c1d = requires(typename __AnyType::__class t) { {t._operator_gt_gt_gt(std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {_operator_gt_gt_gt(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return _operator_gt_gt_gt(std::declval<typename __AnyType::__self>(), std::declval<Builtin::i32>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
+	#line 21 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
 	template<class __AnyType> concept __HasMethodImplementation_d7091ff23d5e3ada = requires(typename __AnyType::__class t) { {t._operator_gt_gt_gt_eq(std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {_operator_gt_gt_gt_eq(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return _operator_gt_gt_gt_eq(std::declval<typename __AnyType::__self>(), std::declval<Builtin::i32>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
+	#line 23 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+	template<class __AnyType> concept __HasMethodImplementation_12876516ce11fc33 = requires(typename __AnyType::__class t) { {t._operator_lt_lt_bsl(std::declval<Builtin::u32>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {_operator_lt_lt_bsl(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::u32>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return _operator_lt_lt_bsl(std::declval<typename __AnyType::__self>(), std::declval<Builtin::u32>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
+	#line 25 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+	template<class __AnyType> concept __HasMethodImplementation_e19068bc2641ba30 = requires(typename __AnyType::__class t) { {t._operator_lt_lt_bsl_eq(std::declval<Builtin::u32>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {_operator_lt_lt_bsl_eq(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::u32>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return _operator_lt_lt_bsl_eq(std::declval<typename __AnyType::__self>(), std::declval<Builtin::u32>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
+	#line 27 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+	template<class __AnyType> concept __HasMethodImplementation_6669e0df8e298bed = requires(typename __AnyType::__class t) { {t._operator_gt_gt_bsl(std::declval<Builtin::u32>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {_operator_gt_gt_bsl(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::u32>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return _operator_gt_gt_bsl(std::declval<typename __AnyType::__self>(), std::declval<Builtin::u32>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
+	#line 29 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+	template<class __AnyType> concept __HasMethodImplementation_8c7ae758eab0efb2 = requires(typename __AnyType::__class t) { {t._operator_gt_gt_bsl_eq(std::declval<Builtin::u32>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {_operator_gt_gt_bsl_eq(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::u32>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return _operator_gt_gt_bsl_eq(std::declval<typename __AnyType::__self>(), std::declval<Builtin::u32>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
 	namespace __vtables {
 		#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
 		struct __vtable_IShiftArithmetic
 		{
 			using fn_a9302f7f567b3aa0 = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::i32 amount);
 			fn_a9302f7f567b3aa0* fnptr_a9302f7f567b3aa0;
-			#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+			#line 11 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
 			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_a9302f7f567b3aa0(Builtin::Object* obj, Builtin::i32 amount) { ADV_EXPRESSION_BODY(ADV_UFCS(operator>>)(*static_cast<typename __AnyType::__class*>(obj), amount)); }
 			using fn_ebc0d8112f8dbde5 = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::i32 amount);
 			fn_ebc0d8112f8dbde5* fnptr_ebc0d8112f8dbde5;
-			#line 11 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+			#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
 			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_ebc0d8112f8dbde5(Builtin::Object* obj, Builtin::i32 amount) { ADV_EXPRESSION_BODY(ADV_UFCS(operator>>=)(*static_cast<typename __AnyType::__class*>(obj), amount)); }
 			using fn_b72a0b65362ec5e8 = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::i32 amount);
 			fn_b72a0b65362ec5e8* fnptr_b72a0b65362ec5e8;
-			#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+			#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
 			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_b72a0b65362ec5e8(Builtin::Object* obj, Builtin::i32 amount) { ADV_EXPRESSION_BODY(ADV_UFCS(operator<<)(*static_cast<typename __AnyType::__class*>(obj), amount)); }
 			using fn_80e3c7915cb7a40d = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::i32 amount);
 			fn_80e3c7915cb7a40d* fnptr_80e3c7915cb7a40d;
-			#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+			#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
 			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_80e3c7915cb7a40d(Builtin::Object* obj, Builtin::i32 amount) { ADV_EXPRESSION_BODY(ADV_UFCS(operator<<=)(*static_cast<typename __AnyType::__class*>(obj), amount)); }
 			using fn_d941d3ef72559c1d = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::i32 amount);
 			fn_d941d3ef72559c1d* fnptr_d941d3ef72559c1d;
-			#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+			#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
 			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_d941d3ef72559c1d(Builtin::Object* obj, Builtin::i32 amount) { ADV_EXPRESSION_BODY(ADV_UFCS(_operator_gt_gt_gt)(*static_cast<typename __AnyType::__class*>(obj), amount)); }
 			using fn_d7091ff23d5e3ada = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::i32 amount);
 			fn_d7091ff23d5e3ada* fnptr_d7091ff23d5e3ada;
-			#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+			#line 21 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
 			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_d7091ff23d5e3ada(Builtin::Object* obj, Builtin::i32 amount) { ADV_EXPRESSION_BODY(ADV_UFCS(_operator_gt_gt_gt_eq)(*static_cast<typename __AnyType::__class*>(obj), amount)); }
+			using fn_12876516ce11fc33 = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::u32 amount);
+			fn_12876516ce11fc33* fnptr_12876516ce11fc33;
+			#line 23 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_12876516ce11fc33(Builtin::Object* obj, Builtin::u32 amount) { ADV_EXPRESSION_BODY(ADV_UFCS(_operator_lt_lt_bsl)(*static_cast<typename __AnyType::__class*>(obj), amount)); }
+			using fn_e19068bc2641ba30 = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::u32 amount);
+			fn_e19068bc2641ba30* fnptr_e19068bc2641ba30;
+			#line 25 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_e19068bc2641ba30(Builtin::Object* obj, Builtin::u32 amount) { ADV_EXPRESSION_BODY(ADV_UFCS(_operator_lt_lt_bsl_eq)(*static_cast<typename __AnyType::__class*>(obj), amount)); }
+			using fn_6669e0df8e298bed = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::u32 amount);
+			fn_6669e0df8e298bed* fnptr_6669e0df8e298bed;
+			#line 27 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_6669e0df8e298bed(Builtin::Object* obj, Builtin::u32 amount) { ADV_EXPRESSION_BODY(ADV_UFCS(_operator_gt_gt_bsl)(*static_cast<typename __AnyType::__class*>(obj), amount)); }
+			using fn_8c7ae758eab0efb2 = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::u32 amount);
+			fn_8c7ae758eab0efb2* fnptr_8c7ae758eab0efb2;
+			#line 29 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_8c7ae758eab0efb2(Builtin::Object* obj, Builtin::u32 amount) { ADV_EXPRESSION_BODY(ADV_UFCS(_operator_gt_gt_bsl_eq)(*static_cast<typename __AnyType::__class*>(obj), amount)); }
 			
 		};
 	}
@@ -356,9 +380,13 @@ namespace System::Numerics {
 		, &__vtables::__vtable_IShiftArithmetic::template impl_80e3c7915cb7a40d<__AnyType>
 		, &__vtables::__vtable_IShiftArithmetic::template impl_d941d3ef72559c1d<__AnyType>
 		, &__vtables::__vtable_IShiftArithmetic::template impl_d7091ff23d5e3ada<__AnyType>
+		, &__vtables::__vtable_IShiftArithmetic::template impl_12876516ce11fc33<__AnyType>
+		, &__vtables::__vtable_IShiftArithmetic::template impl_e19068bc2641ba30<__AnyType>
+		, &__vtables::__vtable_IShiftArithmetic::template impl_6669e0df8e298bed<__AnyType>
+		, &__vtables::__vtable_IShiftArithmetic::template impl_8c7ae758eab0efb2<__AnyType>
 		};
 	#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
-	template<class __AnyType> concept __ImplementsInterface_IShiftArithmetic = __HasMethodImplementation_a9302f7f567b3aa0<__AnyType> && __HasMethodImplementation_ebc0d8112f8dbde5<__AnyType> && __HasMethodImplementation_b72a0b65362ec5e8<__AnyType> && __HasMethodImplementation_80e3c7915cb7a40d<__AnyType> && __HasMethodImplementation_d941d3ef72559c1d<__AnyType> && __HasMethodImplementation_d7091ff23d5e3ada<__AnyType>;
+	template<class __AnyType> concept __ImplementsInterface_IShiftArithmetic = __HasMethodImplementation_a9302f7f567b3aa0<__AnyType> && __HasMethodImplementation_ebc0d8112f8dbde5<__AnyType> && __HasMethodImplementation_b72a0b65362ec5e8<__AnyType> && __HasMethodImplementation_80e3c7915cb7a40d<__AnyType> && __HasMethodImplementation_d941d3ef72559c1d<__AnyType> && __HasMethodImplementation_d7091ff23d5e3ada<__AnyType> && __HasMethodImplementation_12876516ce11fc33<__AnyType> && __HasMethodImplementation_e19068bc2641ba30<__AnyType> && __HasMethodImplementation_6669e0df8e298bed<__AnyType> && __HasMethodImplementation_8c7ae758eab0efb2<__AnyType>;
 	#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
 	class IShiftArithmetic final : public Builtin::InterfaceRef {
 		public: using __self = IShiftArithmetic;
@@ -460,18 +488,26 @@ namespace System::Numerics {
 		public: template<class __AnyType, class __FixedType = std::decay_t<__AnyType>::__self> requires std::is_base_of_v<Builtin::Object, std::decay_t<__AnyType>> IShiftArithmetic& operator=(__AnyType&& value) { static_assert(__ImplementsInterface_IShiftArithmetic<__FixedType>, "Cannot initialize interface IShiftArithmetic from this type"); 
  		if (_obj) Builtin::Release(_obj); _obj = (Builtin::Object*)&value; Builtin::Retain(_obj); 
 		_vtable = &__vtable_IShiftArithmetic_for<__FixedType>; return *this; }
-		#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
-		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> operator>>(Builtin::i32 amount) const { ADV_EXPRESSION_BODY(_vtable->fnptr_a9302f7f567b3aa0(_obj, amount)); }
 		#line 11 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
-		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> operator>>=(Builtin::i32 amount) const { ADV_EXPRESSION_BODY(_vtable->fnptr_ebc0d8112f8dbde5(_obj, amount)); }
-		#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
-		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> operator<<(Builtin::i32 amount) const { ADV_EXPRESSION_BODY(_vtable->fnptr_b72a0b65362ec5e8(_obj, amount)); }
+		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> operator>>(Builtin::i32 amount) const { ADV_EXPRESSION_BODY(_vtable->fnptr_a9302f7f567b3aa0(_obj, amount)); }
 		#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
-		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> operator<<=(Builtin::i32 amount) const { ADV_EXPRESSION_BODY(_vtable->fnptr_80e3c7915cb7a40d(_obj, amount)); }
-		#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
-		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_gt_gt_gt(Builtin::i32 amount) const { ADV_EXPRESSION_BODY(_vtable->fnptr_d941d3ef72559c1d(_obj, amount)); }
+		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> operator>>=(Builtin::i32 amount) const { ADV_EXPRESSION_BODY(_vtable->fnptr_ebc0d8112f8dbde5(_obj, amount)); }
 		#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> operator<<(Builtin::i32 amount) const { ADV_EXPRESSION_BODY(_vtable->fnptr_b72a0b65362ec5e8(_obj, amount)); }
+		#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> operator<<=(Builtin::i32 amount) const { ADV_EXPRESSION_BODY(_vtable->fnptr_80e3c7915cb7a40d(_obj, amount)); }
+		#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_gt_gt_gt(Builtin::i32 amount) const { ADV_EXPRESSION_BODY(_vtable->fnptr_d941d3ef72559c1d(_obj, amount)); }
+		#line 21 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
 		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_gt_gt_gt_eq(Builtin::i32 amount) const { ADV_EXPRESSION_BODY(_vtable->fnptr_d7091ff23d5e3ada(_obj, amount)); }
+		#line 23 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_lt_lt_bsl(Builtin::u32 amount) const { ADV_EXPRESSION_BODY(_vtable->fnptr_12876516ce11fc33(_obj, amount)); }
+		#line 25 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_lt_lt_bsl_eq(Builtin::u32 amount) const { ADV_EXPRESSION_BODY(_vtable->fnptr_e19068bc2641ba30(_obj, amount)); }
+		#line 27 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_gt_gt_bsl(Builtin::u32 amount) const { ADV_EXPRESSION_BODY(_vtable->fnptr_6669e0df8e298bed(_obj, amount)); }
+		#line 29 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IShiftOperators.ast"
+		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_gt_gt_bsl_eq(Builtin::u32 amount) const { ADV_EXPRESSION_BODY(_vtable->fnptr_8c7ae758eab0efb2(_obj, amount)); }
 		
 	};
 	class IShiftArithmetic__Unowned final : public Builtin::InterfaceRef__Unowned {
@@ -592,6 +628,10 @@ namespace System::Numerics {
 	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IShiftArithmetic::__vtable> FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> operator<<=(const __AnyInterface& iface, Builtin::i32 amount)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_80e3c7915cb7a40d(Builtin::GetObjectReferenceFromInterface(&iface), amount)); }
 	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IShiftArithmetic::__vtable> FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_gt_gt_gt(const __AnyInterface& iface, Builtin::i32 amount)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_d941d3ef72559c1d(Builtin::GetObjectReferenceFromInterface(&iface), amount)); }
 	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IShiftArithmetic::__vtable> FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_gt_gt_gt_eq(const __AnyInterface& iface, Builtin::i32 amount)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_d7091ff23d5e3ada(Builtin::GetObjectReferenceFromInterface(&iface), amount)); }
+	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IShiftArithmetic::__vtable> FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_lt_lt_bsl(const __AnyInterface& iface, Builtin::u32 amount)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_12876516ce11fc33(Builtin::GetObjectReferenceFromInterface(&iface), amount)); }
+	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IShiftArithmetic::__vtable> FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_lt_lt_bsl_eq(const __AnyInterface& iface, Builtin::u32 amount)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_e19068bc2641ba30(Builtin::GetObjectReferenceFromInterface(&iface), amount)); }
+	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IShiftArithmetic::__vtable> FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_gt_gt_bsl(const __AnyInterface& iface, Builtin::u32 amount)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_6669e0df8e298bed(Builtin::GetObjectReferenceFromInterface(&iface), amount)); }
+	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IShiftArithmetic::__vtable> FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_gt_gt_bsl_eq(const __AnyInterface& iface, Builtin::u32 amount)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_8c7ae758eab0efb2(Builtin::GetObjectReferenceFromInterface(&iface), amount)); }
 	
 	//###############################################################################
 //# Function definitions

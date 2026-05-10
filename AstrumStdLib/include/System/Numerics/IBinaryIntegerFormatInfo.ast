@@ -7,7 +7,6 @@ interface IBinaryIntegerFormatInfo:
     IBinaryInteger,
     IMinMaxValue
 {
-    static IsSigned: bool;
     static MaxDigitCount: i32;
     static MaxHexDigitCount: i32;
     static MaxValueDiv10: self;

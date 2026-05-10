@@ -458,7 +458,7 @@ Op6: [<>] NonGtLtOpChar OperatorChar*;
 
 Op8: [+\-~] OperatorChar+;
 
-Op9: [*/%\\] OperatorChar+;
+Op9: '\\' | [*/%\\] OperatorChar+;
 
 // string interpolation
 

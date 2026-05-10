@@ -1,11 +1,10 @@
-#include "ISignedNumber.h"
+#include "Math.h"
 
-namespace System::Numerics {
+namespace System {
 //###############################################################################
 //# Type definitions
 //###############################################################################
 
 	
 	
-
 }

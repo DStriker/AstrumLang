@@ -477,6 +477,9 @@ namespace AstrumLang {
 		std::unordered_map<AstrumParser::SelectionStatementContext*,
 		                   std::vector<AstrumParser::RelationalExpressionContext*>>
 		    ifPrerequisites;
+		std::unordered_map<AstrumParser::SelectionStatementContext*,
+		                   AstrumParser::DeclaratorContext*>
+		    ifLetPrerequisites;
 		std::unordered_map<std::string, NamedTuple> namedTuples;
 		std::unordered_map<AstrumParser::ConstructorBodyContext*, std::unordered_set<std::string>>
 		    currentFields;

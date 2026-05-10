@@ -2,9 +2,12 @@ package System;
 
 public import System.Numerics.IBinaryIntegerFormatInfo;
 public import System.Numerics.ISignedNumber;
+public import System.Numerics.IFixedWidthInteger;
 
 public import Optional;
 public import IConvertible;
+
+import Math;
 
 public type Int8 = i8;
 public type SByte = i8;
@@ -16,7 +19,7 @@ public extension i8: IMinMaxValue {
 
 public extension i8 {
     // Equals to dynamic object
-    operator==?: (in obj: object?) -> bool
+    operator==*: (in obj: object?) -> bool
     {
         if obj is self {
             return this == obj;
@@ -26,7 +29,7 @@ public extension i8 {
     }
 
     // Compare to optional type
-    operator<=>: (rhs: self?) -> i32 ==
+    operator<=>: (rhs: self?) -> i32 noexcept ==
     {
         if rhs is not null {
             return this <=> rhs;
@@ -35,9 +38,30 @@ public extension i8 {
         return 1;
     }
 
-    // Unsigned right shift
+    // Unsigned right shift (logical shift)
     operator>>>: (amount: i32) -> self ==> UnsafeCast<i8>(UnsafeCast<u8>(this) >> amount);
     mut operator>>>=: (amount: i32) -> ref self ==> this = this >>> amount;
+
+    // unbounded shl
+    operator<<\: (amount: u32) -> self noexcept ==
+    {
+        if amount >= self.BitWidth {
+            return 0i8;
+        }
+        return Builtin.UncheckedShiftLeft(this, amount as i32);
+    }
+    // unbounded shl and assign
+    mut operator<<\=: (amount: u32) -> ref self noexcept ==> this = this <<\ amount;
+    // unbounded shr
+    operator>>\: (amount: u32) -> self noexcept ==
+    {
+        if amount >= self.BitWidth {
+            return this.IsPositive ? 0i8 : -1i8;
+        }
+        return Builtin.UncheckedShiftRight(this, amount as i32);
+    }
+    // unbounded shr and assign
+    mut operator>>\=: (amount: u32) -> ref self noexcept ==> this = this >>\ amount;
 
     HashCode: u64 ==> UnsafeCast<u64>(this);
 
@@ -47,7 +71,7 @@ public extension i8 {
 
 // Compare to dynamic object
 public extension i8: IAbstractComparable {
-    operator<=>?: (in obj: object?) -> i32
+    operator<=>*: (in obj: object?) -> i32
     {
         if obj is self {
             return this <=> obj;
@@ -62,51 +86,51 @@ public extension i8: IAbstractComparable {
 
 // Conversions
 public extension i8: IConvertible {
-    ToBoolean: () -> bool ==> this != 0;
-    ToInt8: () -> i8 ==> this;
+    ToBoolean: () -> bool noexcept ==> this != 0;
+    ToInt8: () -> i8 noexcept ==> this;
     ToUInt8: () -> u8 == {
         if this < 0 {
             throw Builtin.IntegerOverflowException();
         }
         return this as u8;
     }
-    ToInt16: () -> i16 ==> this;
+    ToInt16: () -> i16 noexcept ==> this;
     ToUInt16: () -> u16 == {
         if this < 0 {
             throw Builtin.IntegerOverflowException();
         }
         return this as u16;
     }
-    ToInt32: () -> i32 ==> this;
+    ToInt32: () -> i32 noexcept ==> this;
     ToUInt32: () -> u32 == {
         if this < 0 {
             throw Builtin.IntegerOverflowException();
         }
         return this as u32;
     }
-    ToInt64: () -> i64 ==> this;
+    ToInt64: () -> i64 noexcept ==> this;
     ToUInt64: () -> u64 == {
         if this < 0 {
             throw Builtin.IntegerOverflowException();
         }
         return this as u64;
     }
-    ToInt128: () -> i128 ==> this;
+    ToInt128: () -> i128 noexcept ==> this;
     ToUInt128: () -> u128 == {
         if this < 0 {
             throw Builtin.IntegerOverflowException();
         }
         return this as u128;
     }
-    ToIsize: () -> isize ==> this;
+    ToIsize: () -> isize noexcept ==> this;
     ToUsize: () -> usize == {
         if this < 0 {
             throw Builtin.IntegerOverflowException();
         }
         return this as usize;
     }
-    ToFloat32: () -> f32 ==> this;
-    ToFloat64: () -> f64 ==> this;
+    ToFloat32: () -> f32 noexcept ==> this;
+    ToFloat64: () -> f64 noexcept ==> this;
     ToByte: () -> byte == {
         if this < 0 {
             throw Builtin.IntegerOverflowException();
@@ -123,12 +147,120 @@ public extension i8: IConvertible {
     //ToDateTime: () -> DateTime;
 }
 
+public extension i8: IDivisibleArithmetic {
+    // integer division with remainder
+    operator/%: <T> (rhs: T) -> (self, self) ==
+    {
+        static assert(type T is IBinaryInteger, "Operator /% implemented only for integer types");
+        return (this \ rhs, this % rhs);
+    }
+    // division with rounding to nearest integer
+    operator/~: <T> (rhs: T) -> self ==
+    {
+        result:= this;
+        result /= rhs;
+        return result;
+    }
+    // rounding division and assign
+    mut operator/~=: (rhs) -> ref self ==> this /= rhs;
+    // division with rounding down (floor division)
+    operator/<: <T> (rhs: T) -> self ==
+    {
+        static if type T is IBinaryInteger {
+            div, rem := this /% rhs;
+            if rem == 0 {
+                return div;
+            }
+            correction := (this ^ rhs) >> (self.BitWidth - 1);
+            return div + correction;
+        } else {
+            return (f64(this) /< rhs) as self;
+        }
+    }
+    // floor division and assign
+    mut operator/<=: (rhs) -> ref self ==> this = self(this /< rhs);
+    // division with rounding up (ceil division)
+    operator/>: <T> (rhs: T) -> self ==
+    {
+        static if type T is IBinaryInteger {
+            div, rem := this /% rhs;
+            if rem == 0 {
+                return div;
+            }
+            correction := 1i8 + ((this ^ rhs) >> (self.BitWidth - 1));
+            return div + correction;
+        } else {
+            return (f64(this) /> rhs) as self;
+        }
+    }
+    // ceil division and assign
+    mut operator/>=: (rhs) -> ref self ==> this = self(this /> rhs);
+}
+
+public extension i8: IIntegerDivisibleArithmetic {
+    // integer division
+    operator\: <T> (rhs: T) -> self ==> this.Div(rhs);
+    // integer division and assign
+    mut operator\=: <T> (rhs: T) -> ref self ==> this.DivAssign(rhs);
+    
+    // Integer division without remainder
+    // Returns null if this % rhs != 0
+    // Throws DivisionByZeroException during rhs == 0
+    operator\\: <T> (rhs: T) -> self? ==
+    {
+        static assert(type T is IBinaryInteger, "Operator \\\\? implemented only for integer types");
+        result: self;
+        if Builtin.DivExact(this, rhs, result) {
+            return result;
+        }
+        return null;
+    }
+}
+
+public extension i8: IIntegerPowerArithmetic {
+    // Raises this to the power of exp, using exponentiation by squaring
+    // Throws IntegerOverflowException in the debug build if the result is out of range
+    operator^^: (exp: u32) -> self ==
+    {
+        @Unlikely
+        if exp == 0 {
+            return 1_i8;
+        }
+
+        base := this;
+        result := 1_i8;
+
+        if consteval {
+            while exp > 1 {
+                if (exp & 1) == 1 {
+                    result *= base;
+                }
+                exp.DivAssign(2);
+                base *= base;
+            }
+            return result * base;
+        } else {
+            for {
+                if (exp & 1) == 1 {
+                    result *= base;
+                    if (exp == 1) 
+                        return result;
+                }
+                exp.DivAssign(2);
+                base *= base;
+            }
+        }
+    }
+
+    mut operator^^=: (exp: u32) -> ref self ==> this = this ^^ exp;
+}
+
 public extension i8: INumberBase {
     static One: self ==> 1_i8;
     static Zero: self ==> 0_i8;
     static Radix: i32 ==> 2;
 
-    Abs: self ==> this < 0 ? -this : this;
+    Abs: self ==> this.IsNegative ? -this : this;
     IsCanonical: bool ==> true;
     IsComplexNumber: bool ==> false;
     IsEvenInteger: bool ==> (this & 1_i8) == 0;
@@ -147,7 +279,7 @@ public extension i8: INumberBase {
     IsSubnormal: bool ==> false;
     IsZero: bool ==> this == 0;
 
-    MaxMagnitude: (rhs: self) -> self
+    MaxMagnitude: (rhs: self) -> self noexcept
     {
         absX := this;
         if absX < 0 {
@@ -176,9 +308,9 @@ public extension i8: INumberBase {
         return rhs;
     }
 
-    MaxMagnitudeNumber: (rhs: self) -> self => this.MaxMagnitude(rhs);
+    MaxMagnitudeNumber: (rhs: self) -> self noexcept => this.MaxMagnitude(rhs);
 
-    MinMagnitude: (rhs: self) -> self
+    MinMagnitude: (rhs: self) -> self noexcept
     {
         absX := this;
         if absX < 0 {
@@ -207,32 +339,32 @@ public extension i8: INumberBase {
         return rhs;
     }
 
-    MinMagnitudeNumber: (rhs: self) -> self => this.MinMagnitude(rhs);
+    MinMagnitudeNumber: (rhs: self) -> self noexcept => this.MinMagnitude(rhs);
 
     Parse: (input: str) -> self
     {
         return 0_i8;//TODO
     }
 
-    TryParse: (input: str) -> self?
+    TryParse: (input: str) -> self? noexcept
     {
         return 0_i8;
     }
 
     
     // Narrow conversions
-    NarrowToInt8: () -> i8 ==> this;
-    NarrowToUInt8: () -> u8 ==> UnsafeCast<u8>(this);
-    NarrowToInt16: () -> i16 ==> this;
-    NarrowToUInt16: () -> u16 ==> UnsafeCast<u16>(this);
-    NarrowToInt32: () -> i32 ==> this;
-    NarrowToUInt32: () -> u32 ==> UnsafeCast<u32>(this);
-    NarrowToInt64: () -> i64 ==> this;
-    NarrowToUInt64: () -> u64 ==> UnsafeCast<u64>(this);
-    NarrowToInt128: () -> i128 ==> this;
-    NarrowToUInt128: () -> u128 ==> u128(this);
-    NarrowToIsize: () -> isize ==> this;
-    NarrowToUsize: () -> usize ==> UnsafeCast<usize>(this);
+    NarrowToInt8: () -> i8 noexcept ==> this;
+    NarrowToUInt8: () -> u8 noexcept ==> UnsafeCast<u8>(this);
+    NarrowToInt16: () -> i16 noexcept ==> this;
+    NarrowToUInt16: () -> u16 noexcept ==> UnsafeCast<u16>(this);
+    NarrowToInt32: () -> i32 noexcept ==> this;
+    NarrowToUInt32: () -> u32 noexcept ==> UnsafeCast<u32>(this);
+    NarrowToInt64: () -> i64 noexcept ==> this;
+    NarrowToUInt64: () -> u64 noexcept ==> UnsafeCast<u64>(this);
+    NarrowToInt128: () -> i128 noexcept ==> this;
+    NarrowToUInt128: () -> u128 noexcept ==> u128(this);
+    NarrowToIsize: () -> isize noexcept ==> this;
+    NarrowToUsize: () -> usize noexcept ==> UnsafeCast<usize>(this);
 }
 
 public extension i8: ISignedNumber {
@@ -260,69 +392,907 @@ public extension i8: INumber {
         return UnsafeCast<self>(-i32(absValue));
     }
 
-    Max: (rhs: self) -> self ==> INumber.DefaultMax(this, rhs);//Math.Max
-    MaxNumber: (rhs: self) -> self ==> this.Max(rhs);
-    Min: (rhs: self) -> self ==> INumber.DefaultMin(this, rhs);//Math.Min
-    MinNumber: (rhs: self) -> self ==> this.Min(rhs);
+    Max: (rhs: self) -> self noexcept ==> INumber.DefaultMax(this, rhs);//Math.Max
+    MaxNumber: (rhs: self) -> self noexcept ==> this.Max(rhs);
+    Min: (rhs: self) -> self noexcept ==> INumber.DefaultMin(this, rhs);//Math.Min
+    MinNumber: (rhs: self) -> self noexcept ==> this.Min(rhs);
     Clamp: (min: self, max: self) -> self => INumber.DefaultClamp(this, min, max);//Math.Clamp
 }
 
 public extension i8: IBinaryNumber {
+    // 0xFF bit representation
     static AllBitsSet: self ==> i8.MinusOne;
 
-    IsPow2: bool ==> /*(this & (this - 1_i8)) == 0*/false; //BitOperations
-    Log2: self =
+    // Returns true if this is a power of 2
+    IsPow2: bool ==> this.IsPositive && this.PopCount == 1;
+
+    // Binary logarithm (rounded down)
+    // Returns null if this <= 0
+    CheckedLog2: self? ==
     {
-        if this < 0 {
-            throw Builtin.InvalidOperationException();//ArgumentOutOfRangeException
+        if this <= 0 {
+            return null;
         }
 
-        return 0i8; //BitOperations
+        return (self.BitWidth - 1 - this.LeadingZeroCount) as self;
+    } 
+    // Binary logarithm (rounded down)
+    // Throws InvalidOperationException if this <= 0
+    Log2: self ==
+    {
+        if let result := this.CheckedLog2 {
+            return result;
+        }
+        throw Builtin.InvalidOperationException();
+    }
+
+    // Common logarithm (base 10, rounded down)
+    // Returns null if this <= 0
+    CheckedLog10: self? ==
+    {
+        if this <= 0 {
+            return null;
+        }
+
+        let val := this as u32;
+        const C1: u32 == 0b11_00000000u - 10;
+        const C2: u32 == 0b10_00000000u - 100;
+        return (((val + C1) & (val + C2)) >> 8) as self;
+    }
+    // Common logarithm (base 10, rounded down)
+    // Throws InvalidOperationException if this <= 0
+    Log10: self ==
+    {
+        if let result := this.CheckedLog10 {
+            return result;
+        }
+        throw Builtin.InvalidOperationException();
+    }
+
+    // Logarithm of the number with respect to an arbitrary base
+    // Returns null if this <= 0 or base <= 1
+    CheckedLog: (base: self) -> self? noexcept ==
+    {
+        if this <= 0 or base <= 1 {
+            return null;
+        }
+
+        if consteval {
+            if base == 2 {
+                return this.CheckedLog2;
+            }
+            if base == 10 {
+                return this.CheckedLog10;
+            }
+        }
+
+        if this < base {
+            return 0i8;
+        }
+
+        n: self = 1i8;
+        r := base;
+        let baseRatio := this \ base;
+        while r <= baseRatio {
+            ++n;
+            r *= base;
+        }
+
+        return n;
+    }
+
+    // Logarithm of the number with respect to an arbitrary base
+    // Throws InvalidArgumentException base <= 1
+    // Throws InvalidOperationException if this <= 0
+    Log: (base: self) -> self
+    {
+        if let result := this.CheckedLog(base) {
+            return result;
+        }
+        throw Builtin.InvalidOperationException();
+    }
+
+    // Average between two numbers
+    // Safe rounded towards zero, overflow-proof
+    Midpoint: (rhs: self) -> self noexcept ==
+    {
+        let result := ((this ^ rhs) >> 1) + (this & rhs);
+        let correction := result < 0;
+        return result + ((correction as self) & (this ^ rhs));
+    }
+
+    // Returns true if this is a multiple of rhs
+    IsMultipleOf: (rhs: self) -> bool noexcept ==
+    {
+        if rhs == 0 {
+            return this == 0;
+        }
+
+        if rhs == -1 {
+            return true;
+        }
+
+        return this % rhs == 0;
     }
 }
 
-public extension i8: IBinaryInteger {
-    DivRem: (rhs: self) -> (self, self) ==> (this / rhs, this % rhs);
-
-    LeadingZeroCount: self ==> 8_i8;//BitOperations.LeadingZeroCount
-    PopCount: self ==> 0_i8;//BitOperations.PopCount
-    TrailingZeroCount: self ==> 8_i8;//BitOperations.TrailingZeroCount
-    ByteCount: usize ==> sizeof(self);
-
-    ShortestBitLength: usize ==
+public extension i8: ICheckedArithmetic {
+    // Checked add
+    // Returns null during overflow
+    operator+?: <T> (rhs: T) -> self? noexcept ==
     {
-        if this >= 0 {
-            return (sizeof(self) * 8) - this.LeadingZeroCount;
+        static assert(type T is IBinaryInteger, "Operator +? implemented only for integer types");
+        result: self;
+        if Builtin.SafeAdd(this, rhs, result) {
+            return result;
         }
-
-        return (sizeof(self) * 8) + 1 - (~this).LeadingZeroCount;
+        return null;
+    }
+    mut operator+?=: <T> (rhs: T) -> ref self noexcept ==
+    {
+        static assert(type T is IBinaryInteger, "Operator +?= implemented only for integer types");
+        if let result := this +? rhs {
+            this = result;
+        }
+        return this;
     }
 
-    RotateLeft: (shiftAmount: i32) -> self ==>
-        UnsafeCast<i8>((this << (shiftAmount & 7)) | (UnsafeCast<u8>(this) >> ((8 - shiftAmount) & 7)));
-    RotateRight: (shiftAmount: i32) -> self ==> 
-        UnsafeCast<i8>((UnsafeCast<u8>(this) >> (shiftAmount & 7)) | (this << ((8 - shiftAmount) & 7)));
+    // Strict add
+    // Throws IntegerOverflowException during overflow
+    operator+!: <T> (rhs: T) -> self ==
+    {
+        static assert(type T is IBinaryInteger, "Operator +! implemented only for integer types");
+        result: self;
+        Builtin.StrictAdd(this, rhs, result);
+        return result;
+    }
+    mut operator+!=: <T> (rhs: T) -> ref self ==> this = this +! rhs;
+
+    // Wrapping add
+    // Wraps result during overflow
+    operator+%: <T> (rhs: T) -> self noexcept ==
+    {
+        static assert(type T is IBinaryInteger, "Operator +% implemented only for integer types");
+        result: self;
+        Builtin.WrappingAdd(this, rhs, result);
+        return result;
+    }
+    mut operator+%=: <T> (rhs: T) -> ref self noexcept ==> this = this +% rhs;
+
+    // Saturating add
+    // Clamps result during overflow
+    operator+|: <T> (rhs: T) -> self noexcept ==
+    {
+        static assert(type T is IBinaryInteger, "Operator +| implemented only for integer types");
+        result: self;
+        Builtin.SaturatingAdd(this, rhs, result);
+        return result;
+    }
+    mut operator+|=: <T> (rhs: T) -> ref self noexcept ==> this = this +| rhs;
+
+    // Overflowing add
+    // Returns tuple of (result of wrapping add, overflowed)
+    operator+%?: <T> (rhs: T) -> (self, bool) noexcept {
+        static assert(type T is IBinaryInteger, "Operator +%? implemented only for integer types");
+        result: self;
+        overflowed:= !Builtin.SafeAdd(this, rhs, result);
+        return (result, overflowed);
+    }
+
+    @Commutative
+    mut operator++?: () -> ref self ==> this +?= 1_i8;
+    
+    @Commutative
+    mut operator++!: () -> ref self ==> this +!= 1_i8;
+    
+    @Commutative
+    mut operator++%: () -> ref self ==> this +%= 1_i8;
+
+    @Commutative
+    mut operator++|: () -> ref self ==> this +|= 1_i8;
+
+    // Calculates this + rhs + carry
+    // Returns tuple of (result of wrapping add, overflowed)
+    CarryingAdd: (rhs: self, carry: bool) -> (self, bool) noexcept ==
+    {
+        result: self;
+        overflowed := Builtin.CarryingAdd(this, rhs, carry, result);
+        return (result, overflowed);
+    }
+    
+    // Calculates this - rhs - carry
+    // Returns tuple of (result of wrapping add, overflowed)
+    BorrowingSub: (rhs: self, carry: bool) -> (self, bool) noexcept ==
+    {
+        result: self;
+        overflowed := Builtin.BorrowingSub(this, rhs, carry, result);
+        return (result, overflowed);
+    }
+
+    // Checked sub
+    // Returns null during overflow
+    operator-?: <T> (rhs: T) -> self? noexcept ==
+    {
+        static assert(type T is IBinaryInteger, "Operator -? implemented only for integer types");
+        result: self;
+        if Builtin.SafeSubtract(this, rhs, result) {
+            return result;
+        }
+        return null;
+    }
+    mut operator-?=: <T> (rhs: T) -> ref self noexcept ==
+    {
+        static assert(type T is IBinaryInteger, "Operator -?= implemented only for integer types");
+        if let result := this -? rhs {
+            this = result;
+        }
+        return this;
+    }
+
+    // Strict sub
+    // Throws IntegerOverflowException during overflow
+    operator-!: <T> (rhs: T) -> self ==
+    {
+        static assert(type T is IBinaryInteger, "Operator -! implemented only for integer types");
+        result: self;
+        Builtin.StrictSubtract(this, rhs, result);
+        return result;
+    }
+    mut operator-!=: <T> (rhs: T) -> ref self ==> this = this -! rhs;
+
+    // Wrapping sub
+    // Wraps result during overflow
+    operator-%: <T> (rhs: T) -> self noexcept ==
+    {
+        static assert(type T is IBinaryInteger, "Operator -% implemented only for integer types");
+        result: self;
+        Builtin.WrappingSubtract(this, rhs, result);
+        return result;
+    }
+    mut operator-%=: <T> (rhs: T) -> ref self noexcept ==> this = this -% rhs;
+
+    // Saturating sub
+    // Clamps result during overflow
+    operator-|: <T> (rhs: T) -> self noexcept ==
+    {
+        static assert(type T is IBinaryInteger, "Operator -| implemented only for integer types");
+        result: self;
+        Builtin.SaturatingSubtract(this, rhs, result);
+        return result;
+    }
+    mut operator-|=: <T> (rhs: T) -> ref self noexcept ==> this = this -| rhs;
+
+    // Overflowing sub
+    // Returns tuple of (result of wrapping sub, overflowed)
+    operator-%?: <T> (rhs: T) -> (self, bool) noexcept {
+        static assert(type T is IBinaryInteger, "Operator -%? implemented only for integer types");
+        result: self;
+        overflowed:= !Builtin.SafeSubtract(this, rhs, result);
+        return (result, overflowed);
+    }
+
+    @Commutative
+    mut operator--?: () -> ref self ==> this -?= 1_i8;
+    
+    @Commutative
+    mut operator--!: () -> ref self ==> this -!= 1_i8;
+    
+    @Commutative
+    mut operator--%: () -> ref self ==> this -%= 1_i8;
+
+    @Commutative
+    mut operator--|: () -> ref self ==> this -|= 1_i8;
+
+    // Checked mul
+    // Returns null during overflow
+    operator*?: <T> (rhs: T) -> self? noexcept ==
+    {
+        static assert(type T is IBinaryInteger, "Operator *? implemented only for integer types");
+        result: self;
+        if Builtin.SafeMultiply(this, rhs, result) {
+            return result;
+        }
+        return null;
+    }
+    mut operator*?=: <T> (rhs: T) -> ref self noexcept ==
+    {
+        static assert(type T is IBinaryInteger, "Operator *?= implemented only for integer types");
+        if let result := this *? rhs {
+            this = result;
+        }
+        return this;
+    }
+
+    // Strict mul
+    // Throws IntegerOverflowException during overflow
+    operator*!: <T> (rhs: T) -> self ==
+    {
+        static assert(type T is IBinaryInteger, "Operator *! implemented only for integer types");
+        result: self;
+        Builtin.StrictMultiply(this, rhs, result);
+        return result;
+    }
+    mut operator*!=: <T> (rhs: T) -> ref self ==> this = this *! rhs;
+
+    // Wrapping mul
+    // Wraps result during overflow
+    operator*%: <T> (rhs: T) -> self noexcept ==
+    {
+        static assert(type T is IBinaryInteger, "Operator *% implemented only for integer types");
+        result: self;
+        Builtin.WrappingMultiply(this, rhs, result);
+        return result;
+    }
+    mut operator*%=: <T> (rhs: T) -> ref self noexcept ==> this = this *% rhs;
+
+    // Saturating mul
+    // Clamps result during overflow
+    operator*|: <T> (rhs: T) -> self noexcept ==
+    {
+        static assert(type T is IBinaryInteger, "Operator *| implemented only for integer types");
+        result: self;
+        Builtin.SaturatingMultiply(this, rhs, result);
+        return result;
+    }
+    mut operator*|=: <T> (rhs: T) -> ref self noexcept ==> this = this *| rhs;
+
+    // Overflowing mul
+    // Returns tuple of (result of wrapping mul, overflowed)
+    operator*%?: <T> (rhs: T) -> (self, bool) noexcept {
+        static assert(type T is IBinaryInteger, "Operator *%? implemented only for integer types");
+        result: self;
+        overflowed:= !Builtin.SafeMultiply(this, rhs, result);
+        return (result, overflowed);
+    }
+
+    // widening mul
+    // Returns tuple of (low bits, high bits)
+    operator*>: (rhs: self) -> (u8, i8) noexcept ==
+    {
+        low, high := Builtin.WideningMul8(this, rhs);
+        return (low, high);
+    }
+
+    // carrying mul
+    // Calculates this * rhs + carry
+    // Returns tuple of (low bits, high bits)
+    CarryingMul: (rhs: self, carry: self) -> (u8, i8) noexcept ==
+    {
+        low, high := Builtin.CarryingMul8(this, rhs, carry);
+        return (low, high);
+    }
+
+    // Checked div
+    // Returns null during overflow and division by zero
+    operator\?: <T> (rhs: T) -> self? noexcept ==
+    {
+        static assert(type T is IBinaryInteger, "Operator \\? implemented only for integer types");
+        result: self;
+        if Builtin.SafeDivide(this, rhs, result) {
+            return result;
+        }
+        return null;
+    }
+    mut operator\?=: <T> (rhs: T) -> ref self noexcept ==
+    {
+        static assert(type T is IBinaryInteger, "Operator \\?= implemented only for integer types");
+        if let result := this \? rhs {
+            this = result;
+        }
+        return this;
+    }
+
+    // Strict div
+    // Throws DivisionByZeroException during rhs == 0
+    // Throws IntegerOverflowException during overflow
+    operator\!: <T> (rhs: T) -> self ==
+    {
+        static assert(type T is IBinaryInteger, "Operator \\! implemented only for integer types");
+        result: self;
+        Builtin.StrictDivide(this, rhs, result);
+        return result;
+    }
+    mut operator\!=: <T> (rhs: T) -> ref self ==> this = this \! rhs;
+
+    // Wrapping div
+    // Wraps result during overflow
+    // Throws DivisionByZeroException during rhs == 0
+    operator\%: <T> (rhs: T) -> self ==
+    {
+        static assert(type T is IBinaryInteger, "Operator \\% implemented only for integer types");
+        result: self;
+        Builtin.WrappingDivide(this, rhs, result);
+        return result;
+    }
+    mut operator\%=: <T> (rhs: T) -> ref self ==> this = this \% rhs;
+
+    // Saturating div
+    // Clamps result during overflow
+    // Throws DivisionByZeroException during rhs == 0
+    operator\|: <T> (rhs: T) -> self ==
+    {
+        static assert(type T is IBinaryInteger, "Operator \\| implemented only for integer types");
+        result: self;
+        Builtin.SaturatingDivide(this, rhs, result);
+        return result;
+    }
+    mut operator\|=: <T> (rhs: T) -> ref self ==> this = this \| rhs;
+
+    // Overflowing div
+    // Returns tuple of (result of wrapping div, overflowed)
+    // Throws DivisionByZeroException during rhs == 0
+    operator\%?: <T> (rhs: T) -> (self, bool) {
+        static assert(type T is IBinaryInteger, "Operator \\%? implemented only for integer types");
+        result: self;
+        overflowed:= !Builtin.SafeDivide(this, rhs, result);
+        return (result, overflowed);
+    }
+
+    // checked integer division without remainder
+    // Returns null if this % rhs != 0 and division by zero
+    operator\\?: <T> (rhs: T) -> self? noexcept ==
+    {
+        static assert(type T is IBinaryInteger, "Operator \\\\? implemented only for integer types");
+        result: self;
+        if Builtin.SafeDivExact(this, rhs, result) {
+            return result;
+        }
+        return null;
+    }
+    // checked integer division without remainder and conditional assign
+    mut operator\\?=: <T> (rhs: T) -> ref self noexcept ==
+    {
+        static assert(type T is IBinaryInteger, "Operator \\\\?= implemented only for integer types");
+        if let result := this \\? rhs {
+            this = result;
+        }
+        return this;
+    }
+    
+    // Checked mod
+    // Returns null during overflow and division by zero
+    operator%?: <T> (rhs: T) -> self? noexcept ==
+    {
+        static assert(type T is IBinaryInteger, "Operator %? implemented only for integer types");
+        result: self;
+        if Builtin.SafeModulus(this, rhs, result) {
+            return result;
+        }
+        return null;
+    }
+    mut operator%?=: <T> (rhs: T) -> ref self noexcept ==
+    {
+        static assert(type T is IBinaryInteger, "Operator %?= implemented only for integer types");
+        if let result := this %? rhs {
+            this = result;
+        }
+        return this;
+    }
+
+    // Strict mod
+    // Throws modisionByZeroException during rhs == 0
+    // Throws IntegerOverflowException during overflow
+    operator%!: <T> (rhs: T) -> self ==
+    {
+        static assert(type T is IBinaryInteger, "Operator %! implemented only for integer types");
+        result: self;
+        Builtin.StrictModulus(this, rhs, result);
+        return result;
+    }
+    mut operator%!=: <T> (rhs: T) -> ref self ==> this = this %! rhs;
+
+    // Wrapping mod
+    // Wraps result during overflow
+    // Throws DivisionByZeroException during rhs == 0
+    operator%%: <T> (rhs: T) -> self ==
+    {
+        static assert(type T is IBinaryInteger, "Operator %% implemented only for integer types");
+        result: self;
+        Builtin.WrappingModulus(this, rhs, result);
+        return result;
+    }
+    mut operator%%=: <T> (rhs: T) -> ref self ==> this = this %% rhs;
+
+    // Overflowing mod
+    // Returns tuple of (result of wrapping mod, overflowed)
+    // Throws DivisionByZeroException during rhs == 0
+    operator%%?: <T> (rhs: T) -> (self, bool) {
+        static assert(type T is IBinaryInteger, "Operator %%? implemented only for integer types");
+        result: self;
+        overflowed:= !Builtin.SafeModulus(this, rhs, result);
+        return (result, overflowed);
+    }
+
+    // Checked negate
+    // Returns null during this == i8.MinValue
+    operator-?: () -> self? noexcept ==
+    {
+        result: self;
+        if Builtin.SafeNegate(this, result) {
+            return result;
+        }
+        return null;
+    }
+    // Strict negate
+    // Throws IntegerOverflowException during this == i8.MinValue
+    operator-!: () -> self == 
+    {
+        result: self;
+        Builtin.StrictNegate(this, result);
+        return result;
+    }
+    // Wrapping negate
+    operator-%: () -> self ==
+    {
+        result: self;
+        Builtin.WrappingNegate(this, result);
+        return result;
+    }
+    // Saturating negate
+    // Returns i8.MaxValue during this == i8.MinValue
+    operator-|: () -> self ==
+    {
+        result: self;
+        Builtin.SaturatingNegate(this, result);
+        return result;
+    }
+    // Overflowing negate
+    // Returns tuple of (result of wrapping negate, overflowed)
+    operator-%?: () -> (self, bool) ==
+    {
+        result: self;
+        overflowed:= !Builtin.SafeNegate(this, result);
+        return (result, overflowed);
+    }
+
+    // checked shl
+    operator<<?: (amount: i32) -> self? noexcept ==
+    {
+        if amount >= 0 && amount < self.BitWidth {
+            return Builtin.UncheckedShiftLeft(this, amount);
+        }
+        return null;
+    }
+    // checked shl and conditional assign
+    mut operator<<?=: (amount: i32) -> ref self noexcept ==
+    {
+        if amount >= 0 && amount < self.BitWidth {
+            return this <<= amount;
+        }
+        return this;
+    }
+    // strict shl
+    operator<<!: (amount: i32) -> self ==
+    {
+        if amount >= 0 && amount < self.BitWidth {
+            return Builtin.UncheckedShiftLeft(this, amount);
+        }
+        throw Builtin.IntegerOverflowException();
+    }
+    // strict shl and assign
+    mut operator<<!=: (amount: i32) -> ref self ==> this = this <<! amount;
+    // wrapping shl
+    operator<<%: (amount: i32) -> self noexcept ==> 
+        Builtin.UncheckedShiftLeft(this, amount & (self.BitWidth - 1));
+    // wrapping shl and assign
+    mut operator<<%=: (amount: i32) -> ref self noexcept ==> this = this <<% amount;
+    // overflowing shl
+    operator<<%?: (amount: i32) -> (self, bool) noexcept ==> 
+        (this <<% amount, amount < 0 || amount >= self.BitWidth);
+    // checked shr
+    operator>>?: (amount: i32) -> self? noexcept ==
+    {
+        if amount >= 0 && amount < self.BitWidth {
+            return this >> amount;
+        }
+        return null;
+    }
+    // checked shr and conditional assign
+    mut operator>>?=: (amount: i32) -> ref self noexcept ==
+    {
+        if amount >= 0 && amount < self.BitWidth {
+            return this >>= amount;
+        }
+        return this;
+    }
+    // strict shr
+    operator>>!: (amount: i32) -> self ==
+    {
+        if amount >= 0 && amount < self.BitWidth {
+            return this >> amount;
+        }
+        throw Builtin.IntegerOverflowException();
+    }
+    // strict shr and assign
+    mut operator>>!=: (amount: i32) -> ref self ==> this = this >>! amount;
+    // wrapping shr
+    operator>>%: (amount: i32) -> self noexcept ==> 
+        Builtin.UncheckedShiftRight(this, amount & (self.BitWidth - 1));
+    // wrapping shr and assign
+    mut operator>>%=: (amount: i32) -> ref self noexcept ==> this = this >>% amount;
+    // overflowing shr
+    operator>>%?: (amount: i32) -> (self, bool) noexcept ==> 
+        (this >>% amount, amount < 0 || amount >= self.BitWidth);
+
+    
+    // checked ipow
+    // Returns null during overflow
+    operator^^?: (exp: u32) -> self? noexcept ==
+    {
+        @Unlikely
+        if exp == 0 {
+            return 1_i8;
+        }
+
+        base := this;
+        result := 1_i8;
+
+        for {
+            if (exp & 1) == 1 {
+                if let mul := result *? base {
+                    result = mul;
+                } else {
+                    return null;
+                }
+                if (exp == 1) 
+                    return result;
+            }
+            exp.DivAssign(2);
+            if let mul := base *? base {
+                base = mul;
+            } else {
+                return null;
+            }
+        }
+    }
+    // checked ipow and assign
+    mut operator^^?=: (exp: u32) -> ref self noexcept ==
+    {
+        if result := this ^^? exp {
+            return this = result;
+        }
+        return this;
+    }
+    // strict ipow
+    operator^^!: (exp: u32) -> self ==
+    {
+        @Unlikely
+        if exp == 0 {
+            return 1_i8;
+        }
+
+        base := this;
+        result := 1_i8;
+
+        for {
+            if (exp & 1) == 1 {
+                result *!= base;
+                if (exp == 1) 
+                    return result;
+            }
+            exp.DivAssign(2);
+            base *!= base;
+        }
+    }
+    // strict ipow and assign
+    mut operator^^!=: (exp: u32) -> ref self ==> this = this ^^! exp;
+    // wrapping ipow
+    operator^^%: (exp: u32) -> self noexcept ==
+    {
+        @Unlikely
+        if exp == 0 {
+            return 1_i8;
+        }
+
+        base := this;
+        result := 1_i8;
+
+        if consteval {
+            while exp > 1 {
+                if (exp & 1) == 1 {
+                    result *%= base;
+                }
+                exp.DivAssign(2);
+                base *%= base;
+            }
+            return result *% base;
+        } else {
+            for {
+                if (exp & 1) == 1 {
+                    result *%= base;
+                    if (exp == 1) 
+                        return result;
+                }
+                exp.DivAssign(2);
+                base *%= base;
+            }
+        }
+    }
+    // wrapping ipow and assign
+    mut operator^^%=: (exp: u32) -> ref self noexcept ==> this = this ^^% exp;
+    // saturating ipow
+    operator^^|: (exp: u32) -> self noexcept ==
+    {
+        if let result := this ^^? exp {
+            return result;
+        }
+
+        return (this.IsNegative && exp % 2 == 1) ? self.MinValue : self.MaxValue;
+    }
+    // saturating ipow and assign
+    mut operator^^|=: (exp: u32) -> ref self noexcept ==> this = this ^^| exp;
+    // overflowing ipow
+    operator^^%?: (exp: u32) -> (self, bool) noexcept ==
+    {
+        @Unlikely
+        if exp == 0 {
+            return (1_i8, false);
+        }
+
+        base := this;
+        result := 1_i8;
+        overflowed := false;
+        tmp := (0i8, false);
+
+        for {
+            if (exp & 1) == 1 {
+                tmp = result *%? base;
+                if exp == 1 {
+                    tmp.1 |= overflowed;
+                    return tmp;
+                }
+                result = tmp.0;
+                overflowed |= tmp.1;
+            }
+            exp.DivAssign(2);
+            tmp = base *%? base;
+            base = tmp.0;
+            overflowed |= tmp.1;
+        }
+    }
+
+    // checked absolute
+    // Returns null during this == i8.MinValue
+    CheckedAbs: self? ==> this.IsNegative ? -?this : this;
+    // strict absolute
+    // Throws IntegerOverflowException during this == i8.MinValue
+    StrictAbs: self ==> this.IsNegative ? -!this : this;
+    // wrapping absolute
+    // Returns i8.MinValue during this == i8.MinValue
+    WrappingAbs: self ==> this.IsNegative ? -%this : this;
+    // saturating absolute
+    // Returns i8.MaxValue during this == i8.MinValue
+    SaturatingAbs: self ==> this.IsNegative ? -|this : this;
+    // overflowing absolute
+    // Returns tuple of (result of wrapping absolute, overflowed)
+    OverflowingAbs: (self, bool) ==> this.IsNegative ? -%?this : (this, false);
+}
+
+public extension i8: IBinaryInteger {
+    static IsSigned: bool ==> true;
+
+    TrailingZeroCount: u32 ==> Builtin.TrailingZeroCount(this);
+    TrailingOneCount: u32 ==> Builtin.TrailingZeroCount(~this);
+    ByteCount: u32 ==> sizeof(self) as u32;
+
+    // checked integer square root
+    // Returns null during this < 0
+    CheckedIsqrt: self? {
+        if this.IsNegative {
+            return null;
+        }
+        const MAX_RESULT :== Math.Isqrt8(self.MaxValue as u8) as self;
+        let result := Math.Isqrt8(this as u8) as self;
+        assume result >= 0; 
+        assume result <= MAX_RESULT;
+        return result;
+    }
+    // Integer square root (rounding down)
+    // Throws InvalidOperationException during this < 0
+    Isqrt: self = {
+        if let result := this.CheckedIsqrt {
+            return result;
+        }
+        throw Builtin.InvalidOperationException();
+    }
+
+    // Binary logarithm (rounding up)
+    // Throws InvalidOperationException during this <= 0
+    Log2Ceiling: self ==
+    {
+        result := this.Log2;
+        if this.PopCount != 1 {
+            ++result;
+        }
+
+        return result;
+    }
+
+    // Returns smallest value >= this that is a multiple of rhs (for positive rhs)
+    // Returns largest value <= this that is a multiple of rhs (for negative rhs)
+    // Throws DivisionByZeroException during rhs == 0
+    // Throws IntegerOverflowException during overflow in the debug build
+    NextMultipleOf: (rhs: self) -> self ==
+    {
+        if rhs == -1 {
+            return this;
+        }
+
+        let remainder := this % rhs;
+        let mod := (remainder > 0 && rhs < 0) or (remainder < 0 && rhs > 0) 
+            ? remainder + rhs : remainder;
+        
+        return mod == 0 ? this : this + (rhs - mod);
+    }
+
+    // Returns smallest value >= this that is a multiple of rhs (for positive rhs)
+    // Returns largest value <= this that is a multiple of rhs (for negative rhs)
+    // Returns null during rhs == 0 or overflow in the debug build
+    CheckedNextMultipleOf: (rhs: self) -> self? noexcept ==
+    {
+        if rhs == -1 {
+            return this;
+        }
+
+        remainder: self;
+        if let r := this %? rhs {
+            remainder = r;
+        } else return null;
+
+        let mod := (remainder > 0 && rhs < 0) or (remainder < 0 && rhs > 0) 
+            ? remainder + rhs : remainder;
+        
+        if mod == 0 {
+            return this;
+        }
+        return this +? (rhs - mod);
+    }
+}
+
+public extension i8: IFixedWidthInteger {
+    static BitWidth: u32 ==> 8u;
+
+    LeadingZeroCount: u32 ==> Builtin.LeadingZeroCount(this);
+    LeadingOneCount: u32 ==> Builtin.LeadingZeroCount(~this);
+    PopCount: u32 ==> Builtin.PopCount(this);
+    ZeroCount: u32 ==> Builtin.PopCount(~this);
+    ByteSwapped: self ==> this;
+    BigEndian: self ==> this;
+    LittleEndian: self ==> this;
+    ReverseBits: self ==> Builtin.ReverseBits8(this);
+
+    ShortestBitLength: u32 ==
+    {
+        if this >= 0 {
+            return self.BitWidth - this.LeadingZeroCount;
+        }
+
+        return self.BitWidth + 1u - this.LeadingOneCount;
+    }
+
+    RotateLeft: (shiftAmount: i32) -> self noexcept ==> Builtin.RotateLeft(this, shiftAmount);
+    RotateRight: (shiftAmount: i32) -> self noexcept ==> Builtin.RotateRight(this, shiftAmount);
 
 }
 
 public extension i8: IBinaryIntegerFormatInfo {
-    static IsSigned: bool ==> true;
     static MaxDigitCount: i32 ==> 3;
     static MaxHexDigitCount: i32 ==> 2;
-    static MaxValueDiv10: self ==> i8.MaxValue / 10i8;
+    static MaxValueDiv10: self ==> i8.MaxValue \ 10;
 
-    MultiplyBy10: self ==> UnsafeCast<self>(i32(this) * 10);
-    MultiplyBy16: self ==> UnsafeCast<self>(i32(this) * 16);
+    MultiplyBy10: self ==> this *% 10;
+    MultiplyBy16: self ==> this *% 16;
 
-    IsGreaterThanAsUnsigned: (rhs: self) -> bool ==> this.NarrowToUInt8() > rhs.NarrowToUInt8();
+    IsGreaterThanAsUnsigned: (rhs: self) -> bool noexcept ==> this.NarrowToUInt8() > rhs.NarrowToUInt8();
 }
 
 static assert(sizeof(i8) == 1, "i8 should be 1 byte");
 static assert(i8.MinValue == -0x80, "i8.Min should be -0x80");
 static assert(i8.MaxValue == 0x7F, "i8.Max should be 0x7F");
-static assert(i8.One >>% 3 == 0b0010_0000, "i8.One >>% 3 == 0b0010_0000");
+static assert(i8.One >>~ 3 == 0b0010_0000, "i8.One >>% 3 == 0b0010_0000");
 static assert(i8.IsSigned, "i8 must be signed");
 static assert(i8.MaxDigitCount == 3, "i8 max digit count must be 3");
+static assert(2i8 ^^ 6u == 64, "2i8 ^^ 6u == 64i8");
 static assert(type i8 is IComparable<i8>, "i8 should implement IComparable<i8>");
 static assert(type i8 is IEquatable<i8>, "i8 should implement IEquatable<i8>");
 static assert(type i8 is ISelfComparable, "i8 should implement ISelfComparable");
@@ -330,7 +1300,8 @@ static assert(type i8 is ISelfEquatable, "i8 should implement ISelfEquatable");
 static assert(type i8 is IAdditionOperators<i8, i8>, "i8 should implement IAdditionOperators<i8, i8>");
 static assert(type i8 is ISubtractionOperators<i8, i8>, "i8 should implement ISubtractionOperators<i8, i8>");
 static assert(type i8 is IMultiplyOperators<i8, i8>, "i8 should implement IMultiplyOperators<i8, i8>");
-static assert(type i8 is IDivisionOperators<i8, i8>, "i8 should implement IDivisionOperators<i8, i8>");
+static assert(type i8 is IDivisionOperators<i8, f64>, "i8 should implement IDivisionOperators<i8, f64>");
+static assert(type i8 is IIntDivOperators<i8, i8>, "i8 should implement IIntDivOperators<i8, i8>");
 static assert(type i8 is IModulusOperators<i8, i8>, "i8 should implement IModulusOperators<i8, i8>");
 static assert(type i8 is IBitwiseOperators<i8, i8>, "i8 should implement IBitwiseOperators<i8, i8>");
 static assert(type i8 is IShiftOperators<i8, i8>, "i8 should implement IShiftOperators<i8, i8>");
@@ -338,6 +1309,8 @@ static assert(type i8 is IUnaryPlusOperators<i8>, "i8 should implement IUnaryPlu
 static assert(type i8 is IUnaryNegationOperators<i8>, "i8 should implement IUnaryNegationOperators<i8>");
 static assert(type i8 is IIncrementOperators<i8>, "i8 should implement IIncrementOperators<i8>");
 static assert(type i8 is IDecrementOperators<i8>, "i8 should implement IDecrementOperators<i8>");
+static assert(i8.MaxValue +% 1i8 == i8.MinValue, "i8.MaxValue +% 1i8 == i8.MinValue");
+static assert(i8.MaxValue +| 1i8 == i8.MaxValue, "i8.MaxValue +| 1i8 == i8.MaxValue");
 
 test "Int8"
 {
@@ -358,7 +1331,7 @@ test "Int8"
     // basic arithmetic
     assert a - 12 == -7;
     assert a * 2 == 10;
-    assert a / 2 == 2;
+    assert a \ 2 == 2;
     assert a % 2 == 1;
     assert (a & 1) == 1;
     assert (a | 1) == 5;
@@ -387,7 +1360,7 @@ test "Int8"
     a += 5;
     a -= 5;
     a *= 2;
-    a /= 2;
+    a \= 2;
     a %= 1;
     a &= 1;
     a |= 1;
@@ -416,7 +1389,7 @@ test "Int8"
     // dynamic polymorphism
     o: object? = c;
     o = d;
-    assert b !=? o;
+    assert b !=* o;
     icomp: IComparable<i8> = a;
     assert icomp > b;
 
@@ -431,6 +1404,15 @@ test "Int8"
 
     // INumberBase
     assert b.Abs == 6;
+    assert b.CheckedAbs == 6;
+    assert i8.MinValue.CheckedAbs == null;
+    assert b.StrictAbs == 6;
+    assert i8.MinValue.WrappingAbs == i8.MinValue;
+    assert i8.MinValue.SaturatingAbs == i8.MaxValue;
+    {
+        result, overflowed := i8.MinValue.OverflowingAbs;
+        assert result == i8.MinValue && overflowed;
+    }
     assert b.IsFinite;
     assert b.IsInteger;
     assert b.IsNegative;
@@ -461,11 +1443,264 @@ test "Int8"
     assert b.Clamp(-5, +5) == -5;
 
     // IBinaryInteger
-    assert 0b1010_i8 <<% 3 == 0b0101_0000;
-    assert 0b1010_i8 <<% 5 == 0b0100_0001;
-    assert 0b1010_i8 >>% 3 == 0b0100_0001;
-    assert 0b1010_i8 >>% 5 == 0b0101_0000;
+    assert 2i8.Log2 == 1;
+    assert 16i8.Log2 == 4;
+    assert 64i8.Log2 == 6;
+    assert 120i8.Log2 == 6;
+    assert 2i8.Log2Ceiling == 1;
+    assert 16i8.Log2Ceiling == 4;
+    assert 65i8.Log2Ceiling == 7;
+    assert 120i8.Log2Ceiling == 7;
+    assert 0i8.CheckedLog2 == null;
+    assert 5i8.Log10 == 0;
+    assert a.Log10 == 1;
+    assert i8.MaxValue.Log10 == 2;
+    assert 5i8.Log(5i8) == 1;
+    assert 5i8.CheckedLog(-5i8) == null;
+    assert a.Midpoint(30i8) == 20;
+    assert 100i8.Midpoint(i8.MaxValue) == 113;
+    assert a.NextMultipleOf(10i8) == 10;
+    assert 11i8.NextMultipleOf(10i8) == 20;
+    assert 60i8.NextMultipleOf(8i8) == 64;
+    assert (-13i8).NextMultipleOf(4i8) == -12;
+    assert (-13i8).NextMultipleOf(-4i8) == -16;
+    assert a.ByteCount == 1;
+    assert a.ByteSwapped == a;
+    assert 0b1010_i8 <<~ 3 == 0b0101_0000;
+    assert 0b1010_i8 <<~ 5 == 0b0100_0001;
+    assert 0b1010_i8 >>~ 3 == 0b0100_0001;
+    assert 0b1010_i8 >>~ 5 == 0b0101_0000;
+
+    assert a.IsMultipleOf(5);
+    assert !a.IsMultipleOf(6);
 
     assert a.MultiplyBy10 == 100;
     assert a.MultiplyBy16 == 160 + 2i32 * i8.MinValue;
+
+    // ICheckedArithmetic
+    assert a +? 100i8 == 110;
+    assert a +? i8.MaxValue == null;
+    a +?= 5i8;
+    assert a == 15;
+    a +?= 120i8;
+    assert a == 15;
+    assert a +! 100i8 == 115;
+    assert a +% 100i8 == 115;
+    assert a +% 113i8 == i8.MinValue;
+    a +%= i8.MaxValue;
+    assert a == -114;
+    assert a +| (-115i8) == i8.MinValue;
+    a +|= i8.MaxValue;
+    assert a == 13;
+    assert a +| 120i8 == i8.MaxValue;
+    {
+        result, overflowed := a +%? 120i8;
+        assert result == -123 && overflowed;
+    }
+
+    a = i8.MaxValue - 1;
+    assert a++? == i8.MaxValue - 1;
+    assert a == i8.MaxValue;
+    a++%;
+    assert a == i8.MinValue;
+    a = i8.MaxValue;
+    a++|;
+    assert a == i8.MaxValue;
+
+    {
+        result, overflowed := a.CarryingAdd(0i8, false);
+        assert result == i8.MaxValue && !overflowed;
+    }
+    {
+        result, overflowed := a.CarryingAdd(-5i8, true);
+        //assert result == 123 && !overflowed;
+    }
+    {
+        result, overflowed := a.CarryingAdd(0i8, true);
+        assert result == i8.MinValue && overflowed;
+    }
+    {
+        result, overflowed := a.CarryingAdd(10i8, true);
+        assert result == -118 && overflowed;
+    }
+
+    assert a -? 100i8 == 27;
+    assert -a -? i8.MaxValue == null;
+    a -?= 5i8;
+    assert a == 122;
+    a -?= 120i8;
+    assert a == 2;
+    assert a -! 100i8 == -98;
+    assert -a -% 127i8 == i8.MaxValue;
+    assert a -% 113i8 == -111;
+    a -%= i8.MaxValue;
+    assert a == -125;
+    assert a -| 4 == i8.MinValue;
+    a -|= i8.MaxValue;
+    assert a == i8.MinValue;
+    {
+        result, overflowed := a -%? 2i8;
+        assert result == 126 && overflowed;
+    }
+
+    a = i8.MinValue + 1;
+    assert a--? == i8.MinValue + 1;
+    assert a == i8.MinValue;
+    a--%;
+    assert a == i8.MaxValue;
+    a = i8.MinValue;
+    a--|;
+    assert a == i8.MinValue;
+
+    {
+        result, overflowed := a.BorrowingSub(0i8, false);
+        assert result == i8.MinValue && !overflowed;
+    }
+    {
+        result, overflowed := a.BorrowingSub(-5i8, true);
+        assert result == -124 && !overflowed;
+    }
+    {
+        result, overflowed := a.BorrowingSub(0i8, true);
+        assert result == i8.MaxValue && overflowed;
+    }
+    {
+        result, overflowed := a.BorrowingSub(10i8, true);
+        assert result == 117 && overflowed;
+    }
+
+    assert a *? 1i8 == i8.MinValue;
+    assert a *? 2i8 == null;
+    a *?= 5i8;
+    assert a == i8.MinValue;
+    a = 15;
+    assert a == 15;
+    assert a *! 3i8 == 45;
+    assert a *% 6i8 == 90;
+    assert a *% 9i8 == -121;
+    a *%= 6i8;
+    assert a == 90;
+    assert a *| (-10i8) == i8.MinValue;
+    a *|= 2i8;
+    assert a == i8.MaxValue;
+    assert a *| 2i8 == i8.MaxValue;
+    {
+        result, overflowed := a *%? 2i8;
+        assert result == -2 && overflowed;
+    }
+    a = 5;
+    {
+        low, high := a *> (120i8);
+        assert low == 88 && high == 2;
+    }
+    {
+        low, high := a *> (-100i8);
+        assert low == 12 && high == -2;
+    }
+    a = i8.MaxValue;
+    {
+        low, high := a.CarryingMul(2i8, 12i8);
+        assert low == 10 && high == 1;
+    }
+    {
+        low, high := a.CarryingMul(-2i8, -12i8);
+        assert low == 246 && high == -2;
+    }
+
+    a = 10;
+    assert a \ 6 == 1;
+    a /= 6;
+    assert a == 2;
+    a = 10;
+    {
+        div, rem := a /% 6;
+        assert div == 1 && rem == 4;
+    }
+    assert a \? 5 == 2;
+    assert a \? 0 == null;
+    assert i8.MinValue \? (-1i8) == null;
+
+    assert a \! 5 == 2;
+    a \%= 5;
+    assert a == 2;
+    a = 10;
+    assert i8.MinValue \% (-1i8) == i8.MinValue;
+    a \|= 5;
+    assert a == 2;
+    a = 10;
+    assert i8.MinValue \| (-1i8) == i8.MaxValue;
+    {
+        result, overflowed := i8.MinValue \%? (-1i8);
+        assert result == i8.MinValue && overflowed;
+    }
+
+    assert a \\ 5 == 2;
+    assert a \\ 6 == null;
+    assert a \\? 0 == null;
+
+    assert a /~ 6 == 2;
+    assert a /< 6 == 1;
+    assert a /> 6 == 2;
+    assert a /~ (-6) == -2;
+    assert a /< (-6) == -2;
+    assert a /> (-6) == -1;
+
+    assert a %? 5 == 0;
+    assert a %? 0 == null;
+    assert i8.MinValue %? (-1i8) == null;
+
+    assert a %! 6 == 4;
+    a %%= 6;
+    assert a == 4;
+    a = 10;
+    assert i8.MinValue %% (-1i8) == 0;
+    {
+        result, overflowed := i8.MinValue %%? (-1i8);
+        assert result == 0 && overflowed;
+    }
+
+    assert -?a == -10;
+    assert -?i8.MinValue == null;
+    assert -!a == -10;
+    assert -%a == -10;
+    assert -%i8.MinValue == i8.MinValue;
+    assert -|a == -10;
+    assert -|i8.MinValue == i8.MaxValue;
+
+    assert i8.MaxValue >>\ 4u == 0b0000_0111;
+    assert i8.MaxValue >>\ 10u == 0;
+    assert i8.MinValue >>\ 10u == -1;
+    assert i8.MaxValue <<\ 10u == 0;
+    assert i8.MaxValue >>? 4 == 0b0000_0111;
+    assert i8.MaxValue >>? 10 == null;
+    assert i8.MaxValue <<? 10 == null;
+    assert i8.MaxValue >>! 4 == 0b0000_0111;
+    assert i8.MaxValue >>% 12 == 0b0000_0111;
+    a = i8.MaxValue;
+    a >>%= 12;
+    assert a <<% 12 == 0b0111_0000;
+    {
+        result, overflowed := i8.MaxValue >>%? 12;
+        assert result == 0b0000_0111 && overflowed;
+    }
+
+    // integer exponentiation
+    assert a ^^ 2u == 49;
+    a ^^= 2u;
+    assert a == 49;
+    assert 3i8 ^^ 4u == 81;
+    assert 3i8 ^^? 4u == 81;
+    assert 3i8 ^^? 5u == null;
+    a ^^?= 2u;
+    assert a == 49;
+    assert 3i8 ^^! 4u == 81;
+    assert 3i8 ^^% 5u == -13;
+    a ^^%= 2u;
+    assert a == 97;
+    assert 3i8 ^^| 4u == 81;
+    assert 3i8 ^^| 5u == i8.MaxValue;
+    {
+        result, overflowed := 3i8 ^^%? 5u;
+        assert result == -13 && overflowed;
+    }
 }

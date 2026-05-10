@@ -1,0 +1,10 @@
+package System.Numerics;
+
+public interface IIntPowerOperators<TRight, TResult> {
+    operator^^: (rhs: TRight) -> TResult;
+}
+
+public interface IIntegerPowerArithmetic {
+    operator^^: (rhs: u32) -> self;
+    operator^^=: (rhs: u32) -> self;
+}

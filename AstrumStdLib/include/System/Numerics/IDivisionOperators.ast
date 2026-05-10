@@ -5,6 +5,22 @@ public interface IDivisionOperators<TRight, TResult> {
 }
 
 public interface IDivisibleArithmetic {
-    operator/: (rhs: self) -> self;
+    // real division
+    operator/: (rhs: self) -> f64;
+    // division and assign (division with round for integers)
     operator/=: (rhs: self) -> self;
+    // division with remainder
+    operator/%: (rhs: self) -> (self, self);
+    // division with rounding to nearest integer
+    operator/~: (rhs: self) -> self;
+    // rounding division and assign
+    operator/~=: (rhs: self) -> self;
+    // division with rounding down (floor division)
+    operator/<: (rhs: self) -> self;
+    // floor division and assign
+    operator/<=: (rhs: self) -> self;
+    // division with rounding up (ceil division)
+    operator/>: (rhs: self) -> self;
+    // ceil division and assign
+    operator/>=: (rhs: self) -> self;
 }

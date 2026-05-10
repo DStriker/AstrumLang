@@ -1,4 +1,4 @@
-#include "IBinaryInteger.h"
+#include "IFixedWidthInteger.h"
 
 namespace System::Numerics {
 //###############################################################################

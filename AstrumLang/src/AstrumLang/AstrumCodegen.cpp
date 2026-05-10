@@ -5615,6 +5615,7 @@ namespace AstrumLang {
 		std::map<const MethodDefinition*, std::string> methodIds;
 		std::map<const PropertyDefinition*, std::string> propertyIds;
 		std::vector<std::string> interfaceRequirements;
+		isInterfaceConcept = true;
 		for (const auto& method : type->methods) {
 			if (method.isFinal)
 				continue;
@@ -5675,8 +5676,12 @@ namespace AstrumLang {
 						out << ", ";
 					first = false;
 					out << "std::declval<";
-					if (param->theTypeId()->getText() == "self") {
+					auto txt = param->theTypeId()->getText();
+					if (txt == "self") {
 						out << "typename __AnyType::__self";
+					} else if (txt.starts_with("self.")) {
+						StringReplace(txt, "self.", "typename __AnyType::");
+						out << txt;
 					} else {
 						printTypeId(param->theTypeId());
 					}
@@ -5686,8 +5691,12 @@ namespace AstrumLang {
 			out << ")} -> ";
 			if (method.returnType) {
 				out << "std::convertible_to<";
-				if (method.returnType->getText() == "self") {
+				auto txt = method.returnType->getText();
+				if (txt == "self") {
 					out << "typename __AnyType::__self";
+				} else if (txt.starts_with("self.")) {
+					StringReplace(txt, "self.", "typename __AnyType::");
+					out << txt;
 				} else {
 					printTypeId(method.returnType);
 				}
@@ -5742,8 +5751,12 @@ namespace AstrumLang {
 					out << ")} -> ";
 				if (method.returnType) {
 					out << "std::convertible_to<";
-					if (method.returnType->getText() == "self") {
+					auto txt = method.returnType->getText();
+					if (txt == "self") {
 						out << "typename __AnyType::__self";
+					} else if (txt.starts_with("self.")) {
+						StringReplace(txt, "self.", "typename __AnyType::");
+						out << txt;
 					} else {
 						printTypeId(method.returnType);
 					}
@@ -5769,9 +5782,13 @@ namespace AstrumLang {
 						} else {
 							out << "std::declval<typename __AnyType::__self>() " << builtinOperator
 							    << "std::declval<";
-							auto t = params->paramDeclList()->paramDeclaration(0)->theTypeId();
-							if (t->getText() == "self") {
+							auto t   = params->paramDeclList()->paramDeclaration(0)->theTypeId();
+							auto txt = t->getText();
+							if (txt == "self") {
 								out << "typename __AnyType::__self";
+							} else if (txt.starts_with("self.")) {
+								StringReplace(txt, "self.", "typename __AnyType::");
+								out << txt;
 							} else {
 								printTypeId(t);
 							}
@@ -5913,7 +5930,8 @@ namespace AstrumLang {
 				    << "()} -> std::convertible_to<";
 				printTypeId(prop.type);
 				out << ">; } || requires(typename __AnyType::__self t) { {get" << prop.id
-				    << "(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<";
+				    << "(__extensions::__proxy<typename __AnyType::__self>{t})} -> "
+				       "std::convertible_to<";
 				printTypeId(prop.type);
 				out << ">; };\n" << std::string(depth, '\t');
 			}
@@ -5938,6 +5956,7 @@ namespace AstrumLang {
 				out << ">()); };\n" << std::string(depth, '\t');
 			}
 		}
+		isInterfaceConcept = false;
 		for (const auto& associatedType : type->typeAliases) {
 			if (associatedType.type != nullptr)
 				continue;
@@ -6010,7 +6029,8 @@ namespace AstrumLang {
 			if (method.returnType) {
 				if (method.isConstReturn || !method.isRefReturn)
 					out << "const ";
-				if (method.returnType->getText() == "self") {
+				auto txt = method.returnType->getText();
+				if (txt == "self" || txt.starts_with("self.")) {
 					out << "Builtin::OptionalStrongRef<Builtin::ObjectRef>";
 				} else {
 					printTypeId(method.returnType);
@@ -6040,7 +6060,8 @@ namespace AstrumLang {
 			if (method.returnType) {
 				if (method.isConstReturn || !method.isRefReturn)
 					out << "const ";
-				if (method.returnType->getText() == "self") {
+				auto txt = method.returnType->getText();
+				if (txt == "self" || txt.starts_with("self.")) {
 					out << "Builtin::OptionalStrongRef<Builtin::ObjectRef>";
 				} else {
 					printTypeId(method.returnType);
@@ -9463,7 +9484,7 @@ namespace AstrumLang {
 			// out.switchTo(true);
 			if (!sema.symbolContexts.empty())
 				sema.symbolContexts.push(sema.symbolContexts.top());
-			
+
 			isPrivateStruct = type->access == AccessSpecifier::Private;
 			if (isPrivateStruct == firstPass) {
 				continue;
@@ -9485,6 +9506,14 @@ namespace AstrumLang {
 				printClassRef(type.get());
 			} else if (type->kind == TypeKind::Interface) {
 				printInterface(type.get());
+				isClearModule =
+				    sema.globalVariables.size() == 0 && sema.globalFunctions.size() == 0;
+				for (const auto& t : sema.globalStructs) {
+					if (type->kind != TypeKind::Interface) {
+						isClearModule = false;
+						break;
+					}
+				}
 			} else if (type->kind == TypeKind::Extension) {
 				printExtension(type.get());
 			} else {
@@ -9790,7 +9819,7 @@ namespace AstrumLang {
 				}
 			}
 			if (!sema.symbolContexts.empty())
-			sema.symbolContexts.pop();
+				sema.symbolContexts.pop();
 		}
 		for (const auto& type : sema.globalStructs) {
 			if (type->kind == TypeKind::RefStruct || type->kind == TypeKind::StaticClass ||
@@ -9974,7 +10003,7 @@ namespace AstrumLang {
 		for (const auto& type : sema.globalStructs) {
 			if (type->kind == TypeKind::Interface) {
 				isInterface = true;
-				bool first = true;
+				bool first  = true;
 				for (const auto& method : type->methods) {
 					if ((!method.isDefault || method.isStatic) && !method.isFinal)
 						continue;
@@ -9984,6 +10013,7 @@ namespace AstrumLang {
 							emptyLine = true;
 						} else {
 							out.switchTo(false);
+							isClearModule = false;
 						}
 						if (!type->compilationCondition.empty()) {
 							out << "#if " << type->compilationCondition << std::endl;
@@ -10012,6 +10042,7 @@ namespace AstrumLang {
 					}
 					out << "inline ";
 
+					isVoidReturn = false;
 					if (method.returnType) {
 						if (method.isConstReturn || !method.isRefReturn)
 							out << "const ";
@@ -10020,6 +10051,7 @@ namespace AstrumLang {
 						out << "decltype(auto)";
 					} else {
 						out << "void";
+						isVoidReturn = true;
 					}
 					if (method.isRefReturn)
 						out << "&";
@@ -10079,6 +10111,7 @@ namespace AstrumLang {
 
 				currentTemplateSpecArgs = type->templateSpecializationArgs;
 				for (const auto& func : type->methods) {
+					isVoidReturn = func.isConstructor;
 					if (type->access != AccessSpecifier::Private &&
 					    (type->templateParams || func.isInline)) {
 						out.switchTo(true);
@@ -10314,6 +10347,7 @@ namespace AstrumLang {
 						out << "decltype(auto)";
 					} else {
 						out << "void";
+						isVoidReturn = true;
 					}
 
 					auto parent =
@@ -10470,6 +10504,7 @@ namespace AstrumLang {
 				}
 
 				for (const auto& prop : type->properties) {
+					isVoidReturn = false;
 					if (type->access != AccessSpecifier::Private &&
 					    (type->templateParams || prop.isInline || prop.isConstexpr)) {
 						out.switchTo(true);
@@ -12081,6 +12116,10 @@ namespace AstrumLang {
 
 		hout.close();
 		cppout.close();
+
+		if (isClearModule) {
+			std::filesystem::remove(sema.filenamePath / (sema.filename + ".cpp"));
+		}
 	}
 
 	void AstrumCodegen::printImportDeclaration(AstrumParser::ImportDeclarationContext* ctx) {
@@ -12651,6 +12690,24 @@ namespace AstrumLang {
 					++i;
 				}
 			}
+			if (sema.ifLetPrerequisites.contains(currentIf)) {
+				auto prereq = sema.ifLetPrerequisites[currentIf];
+				if (prereq->identifierSeq()->Identifier().size() == 1) {
+					out << "\n" << std::string(depth, '\t');
+					out << "#line " << prereq->getStart()->getLine() << " \"" << fullFilename
+					    << ".ast\"\n"
+					    << std::string(depth, '\t');
+					out << "auto __tmp0 = *";
+					auto id = prereq->identifierSeq()->Identifier(0);
+					printIdentifier(id);
+					out << "; ";
+					out << "const auto& ";
+					printIdentifier(id);
+					out << " = "
+					    << "__tmp0;\n"
+					    << std::string(depth, '\t');
+				}
+			}
 			ifProlog = false;
 		} else if (isUnsafe) {
 			out << "\tBuiltin::UnsafeContextGuard __unsafe_context_guard"
@@ -12683,13 +12740,16 @@ namespace AstrumLang {
 					out << ";";
 				} else if (isMainFunction) {
 					out << "\n" << std::string(depth, '\t') << "return 0;";
+				} else if (!isVoidReturn) {
+					out << "\n" << std::string(depth, '\t') << "return {};";
 				}
 			}
 			if (isPropertySetter)
 				out << "\n" << std::string(depth, '\t') << "return *this;";
-		}
-		if (isUnitTestBody) {
-			out << "\n" << std::string(depth, '\t') << "return true;";
+
+			if (isUnitTestBody) {
+				out << "\n" << std::string(depth, '\t') << "return true;";
+			}
 		}
 		out << "\n" << std::string(--depth, '\t') << "}";
 		if (!prevLabel.empty())
@@ -12759,7 +12819,7 @@ namespace AstrumLang {
 				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 			}
-			out << "if " << (ctx->Static() || ctx->Consteval() ? "constexpr " : "") << "(";
+			out << "if " << (ctx->Static() ? "constexpr " : "") << "(";
 			if (ctx->Consteval()) {
 				if (ctx->not_())
 					out << "!";
@@ -12782,8 +12842,15 @@ namespace AstrumLang {
 			auto prevLabel = currentLabel;
 			currentLabel.clear();
 			if (auto block = ctx->compoundStatement()) {
-				ifProlog = true;
+				ifProlog   = true;
+				bool ifLet = sema.ifLetPrerequisites.contains(ctx);
+				if (ifLet) {
+					out << "{" << std::endl << std::string(++depth, '\t');
+				}
 				printCompoundStatement(block);
+				if (ifLet) {
+					out << std::endl << std::string(--depth, '\t') << "}";
+				}
 			} else {
 				out << "{" << std::endl << std::string(++depth, '\t');
 				if (!prerequisites.empty()) {
@@ -14048,6 +14115,7 @@ namespace AstrumLang {
 	void AstrumCodegen::printConstructor(AstrumParser::ConstructorContext* ctx) {
 		if (ctx->Default())
 			return;
+		isVoidReturn = true;
 		sema.symbolContexts.push(sema.symbolContexts.top());
 		bool prevUnsafe    = isUnsafe;
 		SourcePosition pos = {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()};
@@ -14370,6 +14438,7 @@ namespace AstrumLang {
 		bool prevUnsafe    = isUnsafe;
 		SourcePosition pos = {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()};
 		isDestructor       = true;
+		isVoidReturn       = true;
 		if (sema.methods.contains(pos)) {
 			const MethodDefinition& func = sema.methods[pos];
 			if (func.access != AccessSpecifier::Private &&
@@ -14515,6 +14584,7 @@ namespace AstrumLang {
 	void AstrumCodegen::printStaticConstructor(AstrumParser::StaticConstructorContext* ctx) {
 		sema.symbolContexts.push(sema.symbolContexts.top());
 		SourcePosition pos = {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()};
+		isVoidReturn       = true;
 		if (sema.methods.contains(pos)) {
 			const MethodDefinition& func = sema.methods[pos];
 
@@ -14602,6 +14672,7 @@ namespace AstrumLang {
 	void AstrumCodegen::printStaticDestructor(AstrumParser::StaticDestructorContext* ctx) {
 		sema.symbolContexts.push(sema.symbolContexts.top());
 		SourcePosition pos = {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()};
+		isVoidReturn       = true;
 		if (sema.methods.contains(pos)) {
 			const MethodDefinition& func = sema.methods[pos];
 
@@ -15503,6 +15574,7 @@ namespace AstrumLang {
 		bool prevUnsafe    = isUnsafe;
 		bool isInline      = false;
 		bool isConstexpr   = false;
+		isVoidReturn       = false;
 		SourcePosition pos = {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()};
 		if (sema.properties.contains(pos)) {
 			const PropertyDefinition& prop = sema.properties[pos];
@@ -15597,6 +15669,7 @@ namespace AstrumLang {
 					out << "& ";
 				} else {
 					out << "-> void ";
+					isVoidReturn = true;
 				}
 
 				currentShortType.clear();
@@ -16179,6 +16252,8 @@ namespace AstrumLang {
 	}
 
 	void AstrumCodegen::printFunctionDefinition(AstrumParser::FunctionDefinitionContext* ctx) {
+		isFunctionDeclaration = false;
+		isVoidReturn          = false;
 		sema.symbolContexts.push(sema.symbolContexts.top());
 		auto pfunc =
 		    std::find_if(sema.globalFunctions.begin(), sema.globalFunctions.end(), [&](auto f) {
@@ -16282,6 +16357,7 @@ namespace AstrumLang {
 				out << "Builtin::i32";
 			} else {
 				out << "void";
+				isVoidReturn = true;
 			}
 			if (func.isRefReturn)
 				out << "&";
@@ -16480,6 +16556,7 @@ namespace AstrumLang {
 					out << "decltype(auto)";
 				} else {
 					out << "void";
+					isVoidReturn = true;
 				}
 				if (func.isRefReturn)
 					out << "&";
@@ -16744,6 +16821,7 @@ namespace AstrumLang {
 					out << "decltype(auto)";
 				} else {
 					out << "void";
+					isVoidReturn = true;
 				}
 				/*if (isOverride) out << " override ";
 				if (isFinal) out << " final ";*/
@@ -16765,6 +16843,7 @@ namespace AstrumLang {
 
 	void AstrumCodegen::printLocalFunction(AstrumParser::FunctionDefinitionContext* ctx) {
 		bool isStatic = false;
+		isVoidReturn  = false;
 		for (auto spec : ctx->functionSpecifier()) {
 			if (spec->Static())
 				isStatic = true;
@@ -16824,6 +16903,8 @@ namespace AstrumLang {
 				out << "&";
 			}
 			out << " ";
+		} else {
+			isVoidReturn = true;
 		}
 		if (ctx->functionBody()) {
 			functionProlog = true;
@@ -16929,8 +17010,7 @@ namespace AstrumLang {
 
 		if (isVariadicTemplate && isVarargs)
 			out << "...";
-		out << " ";
-		printIdentifier(ctx->Identifier());
+		out << " " << id;
 
 		if (ctx->LifetimeAnnotation())
 			out << " LIFETIMEBOUND";
@@ -17389,6 +17469,8 @@ namespace AstrumLang {
 		} else if (ctx->Self()) {
 			if (isExtension) {
 				out << currentExtensionName;
+			} else if (isInterfaceConcept) {
+				out << "typename __AnyType::__self";
 			} else if (isInterface) {
 				out << "Builtin::OptionalStrongRef<Builtin::ObjectRef>";
 			} else {
@@ -17635,7 +17717,9 @@ namespace AstrumLang {
 			if (ctx->conditionalExpression().size() > 1) {
 				printConditionalExpression(ctx->conditionalExpression(1));
 			} else {
-				out << 'u' << '"' << ctx->conditionalExpression(0)->getText() << '"';
+				auto txt = ctx->conditionalExpression(0)->getText();
+				StringReplace(txt, "\\", "\\\\");
+				out << 'u' << '"' << txt << '"';
 			}
 			out << ");";
 		}
@@ -17652,11 +17736,13 @@ namespace AstrumLang {
 			return;
 		isUnitTestBody = true;
 		functionBody   = true;
+		isVoidReturn   = true;
 		out.switchTo(false);
 		out << "#ifdef ADV_UNITTEST\n" << std::string(depth, '\t');
 		out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 		    << std::string(depth, '\t');
 		out << "static bool " << sema.getUnitTestId(ctx) << " = []()";
+		functionProlog = true;
 		printCompoundStatement(ctx->compoundStatement());
 		out << "();\n" << std::string(depth, '\t');
 		out << "#endif" << std::string(depth, '\t');
@@ -18563,34 +18649,34 @@ namespace AstrumLang {
 	}
 
 	void AstrumCodegen::printPowerExpression(AstrumParser::PowerExpressionContext* ctx) {
-		if (ctx->switchExpression()) {
+		if (!ctx->powerExpression()) {
 			printSwitchExpression(ctx->switchExpression());
 		} else if (ctx->DoubleStar()) {
 			std::string ufcs = "ADV_UFCS";
 			if (!functionBody)
 				ufcs += "_NONLOCAL";
 			out << ufcs << "(_operator_mul_mul)(";
-			printPowerExpression(ctx->powerExpression(0));
+			printSwitchExpression(ctx->switchExpression());
 			out << ", ";
-			printPowerExpression(ctx->powerExpression(1));
+			printPowerExpression(ctx->powerExpression());
 			out << ")";
 		} else if (ctx->DoubleCaret()) {
 			std::string ufcs = "ADV_UFCS";
 			if (!functionBody)
 				ufcs += "_NONLOCAL";
 			out << ufcs << "(_operator_xor_xor)(";
-			printPowerExpression(ctx->powerExpression(0));
+			printSwitchExpression(ctx->switchExpression());
 			out << ", ";
-			printPowerExpression(ctx->powerExpression(1));
+			printPowerExpression(ctx->powerExpression());
 			out << ")";
 		} else {
 			std::string ufcs = "ADV_UFCS";
 			if (!functionBody)
 				ufcs += "_NONLOCAL";
 			out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op10()->getText()) << ")(";
-			printPowerExpression(ctx->powerExpression(0));
+			printSwitchExpression(ctx->switchExpression());
 			out << ", ";
-			printPowerExpression(ctx->powerExpression(1));
+			printPowerExpression(ctx->powerExpression());
 			out << ")";
 		}
 	}
@@ -19607,6 +19693,7 @@ namespace AstrumLang {
 
 	void AstrumCodegen::printLambdaExpression(AstrumParser::LambdaExpressionContext* ctx) {
 		bool isMutable = false;
+		isVoidReturn   = false;
 		out << '[';
 		if (auto list = ctx->lambdaCaptureList()) {
 			auto clause = list->lambdaCaptureClause();
@@ -19688,6 +19775,8 @@ namespace AstrumLang {
 				}
 			}
 			out << " ";
+		} else {
+			isVoidReturn = true;
 		}
 		if (ctx->constraintClause()) {
 			printConstraintClause(ctx->constraintClause());
@@ -19883,6 +19972,10 @@ namespace AstrumLang {
 
 	void AstrumCodegen::printSingleTypeId(AstrumParser::SingleTypeIdContext* ctx) {
 		int brackets = 0;
+		if (isInterface && !isInterfaceConcept && ctx->getText().starts_with("self.")) {
+			out << "Builtin::OptionalStrongRef<Builtin::ObjectRef>";
+			return;
+		}
 		if (auto post = ctx->typePostfix()) {
 			for (auto decl : post->arrayDeclarator()) {
 				if (decl->Question())
@@ -19989,6 +20082,17 @@ namespace AstrumLang {
 				out << "decltype(";
 				printExpression(decl->expression());
 				out << ")";
+			}
+			if (ctx->Self()) {
+				if (isExtension) {
+					out << currentExtensionName;
+				} else if (isInterfaceConcept) {
+					out << "__AnyType::__self";
+				} else if (isInterface) {
+					out << "Builtin::OptionalStrongRef<Builtin::ObjectRef>";
+				} else {
+					out << "__self";
+				}
 			}
 			out << "::";
 		}

@@ -109,11 +109,20 @@ namespace Builtin {
 			return *this;
 		}
 
-		constexpr explicit(sizeof(T) > sizeof(float)) operator float() noexcept { return value; }
+		constexpr explicit(sizeof(T) > sizeof(float)) operator float() const noexcept { return value; }
 
-		constexpr explicit(sizeof(T) > sizeof(double)) operator double() noexcept { return value; }
+		constexpr explicit(sizeof(T) > sizeof(double)) operator double() const noexcept { return value; }
 
-		constexpr operator long double() noexcept { return value; }
+		constexpr operator long double() const noexcept { return value; }
+		
+		constexpr explicit operator i8() const { return static_cast<int8_t>(value); }
+		constexpr explicit operator i16() const { return static_cast<int16_t>(value); }
+		constexpr explicit operator i32() const { return static_cast<int32_t>(value); }
+		constexpr explicit operator i64() const { return static_cast<int64_t>(value); }
+		constexpr explicit operator u8() const { return static_cast<uint8_t>(value); }
+		constexpr explicit operator u16() const { return static_cast<uint16_t>(value); }
+		constexpr explicit operator u32() const { return static_cast<uint32_t>(value); }
+		constexpr explicit operator u64() const { return static_cast<uint64_t>(value); }
 
 		template <class U>
 		constexpr auto operator+(Float<U> rhs) const noexcept {
@@ -948,5 +957,13 @@ namespace Builtin {
 	using f32  = Float<float>;
 	using f64  = Float<double>;
 	using fext = Float<long double>;
+
+	template<class T, class U>
+	inline constexpr f64 operator/(T lhs, U rhs) noexcept 
+		requires(std::convertible_to<T, f64>&& std::convertible_to<U, f64> &&
+	             !std::is_same_v<T, f32> && !std::is_same_v<T, f64> && !std::is_same_v<U, f32> &&
+	             !std::is_same_v<U, f64>) {
+        return static_cast<f64>(lhs) / static_cast<f64>(rhs);
+	}
 
 }  // namespace Builtin

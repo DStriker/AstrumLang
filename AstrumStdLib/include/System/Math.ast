@@ -1,0 +1,26 @@
+package System;
+
+public import Int8;
+
+public static class Math {
+    /*private _generateIsqrtLookupTable: () -> (u8, u8)[256] ==
+    {
+        result: (u8, u8)[256];
+        n: usize = 0;
+        rootN: usize = 0;
+
+        while n < 256 {
+            result[n] = (rootN as u8, (n - rootN ^^ 2u) as u8);
+            n++;
+            if n == (rootN + 1) ^^ 2u {
+                rootN++;
+            }
+        }
+
+        return result;
+    }
+
+    private _isqrtLookupTable: (u8, u8)[256] == _generateIsqrtLookupTable();*/
+
+    public Isqrt8: (num: u8) -> u8 ==> /*_isqrtLookupTable[num].0*/0u8;
+}

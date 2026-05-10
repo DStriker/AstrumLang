@@ -12,7 +12,7 @@
 #pragma warning(error : 4172 26815 26816)
 #pragma warning(disable : 4514 5045)
 #pragma warning(push)
-#pragma warning(disable : 4987 4820 4987 4820)
+#pragma warning(disable : 4987 4820 4987 4820 4552 4834)
 #endif
 
 #if defined(GCC) || defined(CLANG)

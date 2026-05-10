@@ -1,0 +1,40 @@
+package System.Numerics;
+
+public import IBinaryInteger;
+public import ICheckedArithmetic;
+public import IMinMaxValue;
+
+public interface IFixedWidthInteger:
+    IBinaryInteger,
+    ICheckedArithmetic,
+    IMinMaxValue
+{
+    static BitWidth: u32;
+
+    LeadingZeroCount: u32 { get; }
+    LeadingOneCount: u32 { get; }
+    PopCount: u32 { get; }
+    ZeroCount: u32 { get; }
+    ShortestBitLength: u32 { get; }
+    ByteSwapped: self { get; }
+    ReverseBits: self { get; }
+    BigEndian: self { get; }
+    LittleEndian: self { get; }
+
+    RotateLeft: (amount: i32) -> self;
+    RotateRight: (amount: i32) -> self;
+
+    static final DefaultLeadingZeroCount: <T: is IFixedWidthInteger> (value: T) -> T =
+    {
+        static assert(type T is struct, "T must be a struct");
+        bitCount := T(value.ByteCount * 8u64);
+        if value == T.Zero {
+            return T(bitCount);
+        }
+
+        return (bitCount - T.One) ^ value.Log2;
+    }
+}
+
+operator<<~: <T: is IFixedWidthInteger> (lhs: T, shiftAmount: i32) -> T ==> lhs.RotateLeft(shiftAmount);
+operator>>~: <T: is IFixedWidthInteger> (lhs: T, shiftAmount: i32) -> T ==> lhs.RotateRight(shiftAmount);

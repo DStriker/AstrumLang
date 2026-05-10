@@ -399,8 +399,7 @@ switchExpressionBranch
     ;
 
 powerExpression
-    : switchExpression
-    | powerExpression (DoubleStar | DoubleCaret | Op10) powerExpression
+    : switchExpression ((DoubleStar | DoubleCaret | Op10) powerExpression)?
     ;
 
 multiplicativeExpression
@@ -808,7 +807,7 @@ namedTupleField
     ;
 
 nestedNameSpecifier
-    : (typename | namespaceName | decltypeSpecifier) Dot
+    : (typename | namespaceName | decltypeSpecifier | Self) Dot
     | nestedNameSpecifier (Identifier | simpleTemplateId) Dot
     ;
 

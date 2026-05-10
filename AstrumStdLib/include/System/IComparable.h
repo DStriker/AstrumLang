@@ -27,23 +27,23 @@ template<> inline constexpr bool Builtin::__details::cheapCopy<System::IAbstract
 
 namespace System {
 	#line 4 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-	template<class __AnyType> concept __HasMethodImplementation_ebb8f6f8d5632898 = requires(typename __AnyType::__class t) { {t._operator_lt_eq_gt_qst(std::declval<Builtin::Nullable<Builtin::ObjectRef>>())} -> std::convertible_to<Builtin::i32>; }  || requires(typename __AnyType::__self t) { {_operator_lt_eq_gt_qst(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::Nullable<Builtin::ObjectRef>>())} -> std::convertible_to<Builtin::i32>; } || requires { { [] { using namespace __extensions; return _operator_lt_eq_gt_qst(std::declval<typename __AnyType::__self>(), std::declval<Builtin::Nullable<Builtin::ObjectRef>>()); }() } -> std::convertible_to<Builtin::i32>; };
+	template<class __AnyType> concept __HasMethodImplementation_cecbb84ea7c02c36 = requires(typename __AnyType::__class t) { {t._operator_lt_eq_gt_mul(std::declval<Builtin::Nullable<Builtin::ObjectRef>>())} -> std::convertible_to<Builtin::i32>; }  || requires(typename __AnyType::__self t) { {_operator_lt_eq_gt_mul(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::Nullable<Builtin::ObjectRef>>())} -> std::convertible_to<Builtin::i32>; } || requires { { [] { using namespace __extensions; return _operator_lt_eq_gt_mul(std::declval<typename __AnyType::__self>(), std::declval<Builtin::Nullable<Builtin::ObjectRef>>()); }() } -> std::convertible_to<Builtin::i32>; };
 	namespace __vtables {
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
 		struct __vtable_IAbstractComparable
 		{
-			using fn_ebb8f6f8d5632898 = const Builtin::i32(Builtin::Object*, Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> other);
-			fn_ebb8f6f8d5632898* fnptr_ebb8f6f8d5632898;
+			using fn_cecbb84ea7c02c36 = const Builtin::i32(Builtin::Object*, Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> other);
+			fn_cecbb84ea7c02c36* fnptr_cecbb84ea7c02c36;
 			#line 4 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-			template<class __AnyType> static const Builtin::i32 impl_ebb8f6f8d5632898(Builtin::Object* obj, Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> other) { ADV_EXPRESSION_BODY(ADV_UFCS(_operator_lt_eq_gt_qst)(*static_cast<typename __AnyType::__class*>(obj), other)); }
+			template<class __AnyType> static const Builtin::i32 impl_cecbb84ea7c02c36(Builtin::Object* obj, Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> other) { ADV_EXPRESSION_BODY(ADV_UFCS(_operator_lt_eq_gt_mul)(*static_cast<typename __AnyType::__class*>(obj), other)); }
 			
 		};
 	}
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-	template<class __AnyType> inline constexpr __vtables::__vtable_IAbstractComparable __vtable_IAbstractComparable_for = {&__vtables::__vtable_IAbstractComparable::template impl_ebb8f6f8d5632898<__AnyType>
+	template<class __AnyType> inline constexpr __vtables::__vtable_IAbstractComparable __vtable_IAbstractComparable_for = {&__vtables::__vtable_IAbstractComparable::template impl_cecbb84ea7c02c36<__AnyType>
 		};
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-	template<class __AnyType> concept __ImplementsInterface_IAbstractComparable = __HasMethodImplementation_ebb8f6f8d5632898<__AnyType>;
+	template<class __AnyType> concept __ImplementsInterface_IAbstractComparable = __HasMethodImplementation_cecbb84ea7c02c36<__AnyType>;
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
 	class IAbstractComparable final : public Builtin::InterfaceRef {
 		public: using __self = IAbstractComparable;
@@ -146,7 +146,7 @@ namespace System {
  		if (_obj) Builtin::Release(_obj); _obj = (Builtin::Object*)&value; Builtin::Retain(_obj); 
 		_vtable = &__vtable_IAbstractComparable_for<__FixedType>; return *this; }
 		#line 4 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-		public: FORCE_INLINE const Builtin::i32 _operator_lt_eq_gt_qst(Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> other) const { ADV_EXPRESSION_BODY(_vtable->fnptr_ebb8f6f8d5632898(_obj, other)); }
+		public: FORCE_INLINE const Builtin::i32 _operator_lt_eq_gt_mul(Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> other) const { ADV_EXPRESSION_BODY(_vtable->fnptr_cecbb84ea7c02c36(_obj, other)); }
 		
 	};
 	class IAbstractComparable__Unowned final : public Builtin::InterfaceRef__Unowned {
@@ -261,7 +261,7 @@ namespace System {
 		}
 		
 	};
-	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IAbstractComparable::__vtable> FORCE_INLINE const Builtin::i32 _operator_lt_eq_gt_qst(const __AnyInterface& iface, Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> other)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_ebb8f6f8d5632898(Builtin::GetObjectReferenceFromInterface(&iface), other)); }
+	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IAbstractComparable::__vtable> FORCE_INLINE const Builtin::i32 _operator_lt_eq_gt_mul(const __AnyInterface& iface, Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> other)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_cecbb84ea7c02c36(Builtin::GetObjectReferenceFromInterface(&iface), other)); }
 	
 	
 }
@@ -772,40 +772,40 @@ namespace System {
 //# Free function declarations
 //###############################################################################
 #line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-	inline auto _operator_lt_qst(auto lhs, auto rhs)  -> const bool;
+	inline auto _operator_lt_mul(auto lhs, auto rhs)  -> const bool;
 #line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-	inline auto _operator_gt_qst(auto lhs, auto rhs)  -> const bool;
+	inline auto _operator_gt_mul(auto lhs, auto rhs)  -> const bool;
 #line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-	inline auto _operator_lt_eq_qst(auto lhs, auto rhs)  -> const bool;
+	inline auto _operator_lt_eq_mul(auto lhs, auto rhs)  -> const bool;
 #line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-	inline auto _operator_gt_eq_qst(auto lhs, auto rhs)  -> const bool;
+	inline auto _operator_gt_eq_mul(auto lhs, auto rhs)  -> const bool;
 //###############################################################################
 //# Function definitions
 //###############################################################################
 
 #line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-	inline auto _operator_lt_qst(auto lhs, auto rhs)  -> const bool
+	inline auto _operator_lt_mul(auto lhs, auto rhs)  -> const bool
 	{
 		#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-		ADV_EXPRESSION_BODY(((ADV_UFCS(_operator_lt_eq_gt_qst)(lhs, rhs)) <=> Builtin::i32(0)) < 0); 
+		ADV_EXPRESSION_BODY(((ADV_UFCS(_operator_lt_eq_gt_mul)(lhs, rhs)) <=> Builtin::i32(0)) < 0); 
 	}
 #line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-	inline auto _operator_gt_qst(auto lhs, auto rhs)  -> const bool
+	inline auto _operator_gt_mul(auto lhs, auto rhs)  -> const bool
 	{
 		#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-		ADV_EXPRESSION_BODY(((ADV_UFCS(_operator_lt_eq_gt_qst)(lhs, rhs)) <=> Builtin::i32(0)) > 0); 
+		ADV_EXPRESSION_BODY(((ADV_UFCS(_operator_lt_eq_gt_mul)(lhs, rhs)) <=> Builtin::i32(0)) > 0); 
 	}
 #line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-	inline auto _operator_lt_eq_qst(auto lhs, auto rhs)  -> const bool
+	inline auto _operator_lt_eq_mul(auto lhs, auto rhs)  -> const bool
 	{
 		#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-		ADV_EXPRESSION_BODY(((ADV_UFCS(_operator_lt_eq_gt_qst)(lhs, rhs)) <=> Builtin::i32(0)) <= 0); 
+		ADV_EXPRESSION_BODY(((ADV_UFCS(_operator_lt_eq_gt_mul)(lhs, rhs)) <=> Builtin::i32(0)) <= 0); 
 	}
 #line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-	inline auto _operator_gt_eq_qst(auto lhs, auto rhs)  -> const bool
+	inline auto _operator_gt_eq_mul(auto lhs, auto rhs)  -> const bool
 	{
 		#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-		ADV_EXPRESSION_BODY(((ADV_UFCS(_operator_lt_eq_gt_qst)(lhs, rhs)) <=> Builtin::i32(0)) >= 0); 
+		ADV_EXPRESSION_BODY(((ADV_UFCS(_operator_lt_eq_gt_mul)(lhs, rhs)) <=> Builtin::i32(0)) >= 0); 
 	}
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
 	

@@ -1,0 +1,10 @@
+package System.Numerics;
+
+public interface IPowerOperators<TRight, TResult> {
+    operator**: (rhs: TRight) -> TResult;
+}
+
+public interface IPowerArithmetic {
+    operator**: (rhs: f64) -> f64;
+    operator**=: (rhs: f64) -> self;
+}

@@ -716,52 +716,54 @@ namespace Builtin {
 			return *this;
 		}
 
-		ASTRUMSTD_API UInt128 operator/(UInt128 rhs) const;
-
-		UInt128 operator/(i8 rhs) const { return operator/(UInt128(rhs)); }
-
-		UInt128 operator/(i16 rhs) const { return operator/(UInt128(rhs)); }
-
-		UInt128 operator/(i32 rhs) const { return operator/(UInt128(rhs)); }
-
-		UInt128 operator/(i64 rhs) const { return operator/(UInt128(rhs)); }
-
-		UInt128 operator/(u8 rhs) const { return operator/(UInt128(rhs)); }
-
-		UInt128 operator/(u16 rhs) const { return operator/(UInt128(rhs)); }
-
-		UInt128 operator/(u32 rhs) const { return operator/(UInt128(rhs)); }
-
-		UInt128 operator/(u64 rhs) const { return operator/(UInt128(rhs)); }
+		ASTRUMSTD_API UInt128 Div(UInt128 rhs) const;
 
 		template <typename OtherT>
-		UInt128 operator/(OtherT rhs) const requires(std::is_integral_v<OtherT>) {
-			return operator/(UInt128(rhs));
+		UInt128 Div(OtherT rhs) const requires(std::is_integral_v<OtherT>) {
+			return Div(UInt128(rhs));
 		}
 
 		template <typename OtherT>
-		friend OtherT operator/(OtherT lhs, UInt128 rhs) requires(std::is_integral_v<OtherT>) {
+		friend OtherT Div(OtherT lhs, const UInt128& rhs) requires(std::is_integral_v<OtherT>) {
 			return lhs / (OtherT) rhs;
 		}
 
-		friend inline i8 operator/(i8 lhs, UInt128 rhs) { return lhs / (i8) rhs; }
+		UInt128 Div(i8 rhs) const { return Div(UInt128(rhs)); }
 
-		friend inline i16 operator/(i16 lhs, UInt128 rhs) { return lhs / (i16) rhs; }
+		UInt128 Div(i16 rhs) const { return Div(UInt128(rhs)); }
 
-		friend inline i32 operator/(i32 lhs, UInt128 rhs) { return lhs / (i32) rhs; }
+		UInt128 Div(i32 rhs) const { return Div(UInt128(rhs)); }
 
-		friend inline i64 operator/(i64 lhs, UInt128 rhs) { return lhs / (i64) rhs; }
+		UInt128 Div(i64 rhs) const { return Div(UInt128(rhs)); }
 
-		friend inline u8 operator/(u8 lhs, UInt128 rhs) { return lhs / (u8) rhs; }
+		UInt128 Div(u8 rhs) const { return Div(UInt128(rhs)); }
 
-		friend inline u16 operator/(u16 lhs, UInt128 rhs) { return lhs / (u16) rhs; }
+		UInt128 Div(u16 rhs) const { return Div(UInt128(rhs)); }
 
-		friend inline u32 operator/(u32 lhs, UInt128 rhs) { return lhs / (u32) rhs; }
+		UInt128 Div(u32 rhs) const { return Div(UInt128(rhs)); }
 
-		friend inline u64 operator/(u64 lhs, UInt128 rhs) { return lhs / (u64) rhs; }
+		UInt128 Div(u64 rhs) const { return Div(UInt128(rhs)); }
 
-		UInt128& operator/=(UInt128 other) {
-			*this = *this / other;
+		friend inline i8 Div(i8 lhs, const UInt128& rhs) { return lhs.Div((i8) rhs); }
+
+		friend inline i16 Div(i16 lhs, const UInt128& rhs) { return lhs.Div((i16) rhs);
+		}
+
+		friend inline i32 Div(i32 lhs, const UInt128& rhs) { return lhs.Div((i32) rhs);
+		}
+
+		friend inline i64 Div(i64 lhs, const UInt128& rhs) { return lhs.Div((i64) rhs); }
+
+		friend inline u8 Div(u8 lhs, const UInt128& rhs) { return lhs.Div((u8) rhs); }
+
+		friend inline u16 Div(u16 lhs, const UInt128& rhs) { return lhs.Div((u16) rhs); }
+
+		friend inline u32 Div(u32 lhs, const UInt128& rhs) { return lhs.Div((u32) rhs); }
+
+		friend inline u64 Div(u64 lhs, const UInt128& rhs) { return lhs.Div((u64) rhs); }
+
+		UInt128& DivAssign(UInt128 other) {
+			*this = this->Div(other);
 			return *this;
 		}
 
@@ -1973,52 +1975,53 @@ namespace Builtin {
 			return *this;
 		}
 
-		ASTRUMSTD_API Int128 operator/(Int128 rhs) const;
-
-		Int128 operator/(i8 rhs) const { return operator/(Int128(rhs)); }
-
-		Int128 operator/(i16 rhs) const { return operator/(Int128(rhs)); }
-
-		Int128 operator/(i32 rhs) const { return operator/(Int128(rhs)); }
-
-		Int128 operator/(i64 rhs) const { return operator/(Int128(rhs)); }
-
-		Int128 operator/(u8 rhs) const { return operator/(Int128(rhs)); }
-
-		Int128 operator/(u16 rhs) const { return operator/(Int128(rhs)); }
-
-		Int128 operator/(u32 rhs) const { return operator/(Int128(rhs)); }
-
-		Int128 operator/(u64 rhs) const { return operator/(Int128(rhs)); }
+		ASTRUMSTD_API Int128 Div(Int128 rhs) const;
 
 		template <typename OtherT>
-		Int128 operator/(OtherT rhs) const requires(std::is_integral_v<OtherT>) {
-			return operator/(Int128(rhs));
+		Int128 Div(OtherT rhs) const requires(std::is_integral_v<OtherT>) {
+			return Div(Int128(rhs));
 		}
 
 		template <typename OtherT>
-		friend OtherT operator/(OtherT lhs, Int128 rhs) requires(std::is_integral_v<OtherT>) {
+		friend OtherT Div(OtherT lhs, const Int128& rhs) requires(std::is_integral_v<OtherT>) {
 			return lhs / (OtherT) rhs;
 		}
 
-		friend inline i8 operator/(i8 lhs, Int128 rhs) { return lhs / (i8) rhs; }
+		Int128 Div(i8 rhs) const { return Div(Int128(rhs)); }
 
-		friend inline i16 operator/(i16 lhs, Int128 rhs) { return lhs / (i16) rhs; }
+		Int128 Div(i16 rhs) const { return Div(Int128(rhs)); }
 
-		friend inline i32 operator/(i32 lhs, Int128 rhs) { return lhs / (i32) rhs; }
+		Int128 Div(i32 rhs) const { return Div(Int128(rhs)); }
 
-		friend inline i64 operator/(i64 lhs, Int128 rhs) { return lhs / (i64) rhs; }
+		Int128 Div(i64 rhs) const { return Div(Int128(rhs)); }
 
-		friend inline u8 operator/(u8 lhs, Int128 rhs) { return lhs / (u8) rhs; }
+		Int128 Div(u8 rhs) const { return Div(Int128(rhs)); }
 
-		friend inline u16 operator/(u16 lhs, Int128 rhs) { return lhs / (u16) rhs; }
+		Int128 Div(u16 rhs) const { return Div(Int128(rhs)); }
 
-		friend inline u32 operator/(u32 lhs, Int128 rhs) { return lhs / (u32) rhs; }
+		Int128 Div(u32 rhs) const { return Div(Int128(rhs)); }
 
-		friend inline u64 operator/(u64 lhs, Int128 rhs) { return lhs / (u64) rhs; }
+		Int128 Div(u64 rhs) const { return Div(Int128(rhs)); }
 
-		Int128& operator/=(Int128 other) {
-			*this = *this / other;
+		friend inline i8 Div(i8 lhs, Int128 rhs) { return lhs.Div((i8) rhs);
+		}
+
+		friend inline i16 Div(i16 lhs, Int128 rhs) { return lhs.Div((i16) rhs); }
+
+		friend inline i32 Div(i32 lhs, Int128 rhs) { return lhs.Div((i32) rhs); }
+
+		friend inline i64 Div(i64 lhs, Int128 rhs) { return lhs.Div((i64) rhs); }
+
+		friend inline u8 Div(u8 lhs, Int128 rhs) { return lhs.Div((u8) rhs); }
+
+		friend inline u16 Div(u16 lhs, Int128 rhs) { return lhs.Div((u16) rhs); }
+
+		friend inline u32 Div(u32 lhs, Int128 rhs) { return lhs.Div((u32) rhs); }
+
+		friend inline u64 Div(u64 lhs, Int128 rhs) { return lhs.Div((u64) rhs); }
+
+		Int128& DivAssign(Int128 other) {
+			*this = this->Div(other);
 			return *this;
 		}
 
@@ -2366,6 +2369,17 @@ namespace Builtin {
 
 	using i128 = Int128;
 	using u128 = UInt128;
+
+	template<std::integral U>
+	inline constexpr i128 Div(i128 lhs, U rhs) {
+		return lhs.Div(rhs);
+	}
+
+	template <std::integral U>
+	inline constexpr u128 Div(u128 lhs, U rhs) {
+		return lhs.Div(rhs);
+	}
+
 }  // namespace Builtin
 
 template <>
