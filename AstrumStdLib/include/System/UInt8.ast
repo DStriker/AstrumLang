@@ -1116,8 +1116,8 @@ public extension u8: IBinaryIntegerFormatInfo {
     static MaxHexDigitCount: i32 ==> 2;
     static MaxValueDiv10: self ==> u8.MaxValue \ 10;
 
-    MultiplyBy10: self ==> this *% 10;
-    MultiplyBy16: self ==> this *% 16;
+    MultiplyBy10: self ==> this *% 10u8;
+    MultiplyBy16: self ==> this *% 16u8;
 
     IsGreaterThanAsUnsigned: (rhs: self) -> bool noexcept ==> this > rhs;
 }
@@ -1316,14 +1316,14 @@ test "UInt8"
     assert 127u8.NextPow2 == 128;
     assert 129u8.CheckedNextPow2 == null;
 
-    assert a.IsMultipleOf(5);
-    assert !a.IsMultipleOf(6);
+    assert a.IsMultipleOf(5u8);
+    assert !a.IsMultipleOf(6u8);
 
     assert a.MultiplyBy10 == 100;
     assert a.MultiplyBy16 == 160;
 
     // ICheckedArithmetic
-    assert a +? 100u8 == 110;
+    assert a +? 100u8 == 110u8;
     assert a +? u8.MaxValue == null;
     a +?= 5u8;
     assert a == 15;
@@ -1365,7 +1365,7 @@ test "UInt8"
         assert result == 10 && overflowed;
     }
 
-    assert a -? 100u8 == 155;
+    assert a -? 100u8 == 155u8;
     assert 10u8 -? u8.MaxValue == null;
     a -?= 133u8;
     assert a == 122;
@@ -1375,7 +1375,7 @@ test "UInt8"
     assert a -% 255u8 == 3;
     a -%= u8.MaxValue;
     assert a == 3;
-    assert a -| 4 == u8.MinValue;
+    assert a -| 4u8 == u8.MinValue;
     a -|= u8.MaxValue;
     assert a == u8.MinValue;
     {
@@ -1442,33 +1442,33 @@ test "UInt8"
     assert a == 2;
     a = 10;
     {
-        div, rem := a /% 6;
+        div, rem := a /% 6u8;
         assert div == 1 && rem == 4;
     }
-    assert a \? 5 == 2;
-    assert a \? 0 == null;
+    assert a \? 5u8 == 2u8;
+    assert a \? 0u8 == null;
 
-    assert a \! 5 == 2;
-    a \%= 5;
+    assert a \! 5u8 == 2;
+    a \%= 5u8;
     assert a == 2;
     a = 10;
-    a \|= 5;
+    a \|= 5u8;
     assert a == 2;
     a = 10;
 
-    assert a \\ 5 == 2;
-    assert a \\ 6 == null;
-    assert a \\? 0 == null;
+    assert a \\ 5u8 == 2u8;
+    assert a \\ 6u8 == null;
+    assert a \\? 0u8 == null;
 
-    assert a /~ 6 == 2;
-    assert a /< 6 == 1;
-    assert a /> 6 == 2;
+    assert a /~ 6u8 == 2;
+    assert a /< 6u8 == 1;
+    assert a /> 6u8 == 2;
 
-    assert a %? 5 == 0;
-    assert a %? 0 == null;
+    assert a %? 5u8 == 0u8;
+    assert a %? 0u8 == null;
 
-    assert a %! 6 == 4;
-    a %%= 6;
+    assert a %! 6u8 == 4;
+    a %%= 6u8;
     assert a == 4;
     a = 10;
 
@@ -1476,7 +1476,7 @@ test "UInt8"
     assert u8.MaxValue >>\ 10u == 0;
     assert u8.MinValue >>\ 10u == 0;
     assert u8.MaxValue <<\ 10u == 0;
-    assert u8.MaxValue >>? 4 == 0b0000_1111;
+    assert u8.MaxValue >>? 4 == 0b0000_1111u8;
     assert u8.MaxValue >>? 10 == null;
     assert u8.MaxValue <<? 10 == null;
     assert u8.MaxValue >>! 4 == 0b0000_1111;
@@ -1495,7 +1495,7 @@ test "UInt8"
     a ^^= 2u;
     assert a == 49;
     assert 3u8 ^^ 4u == 81;
-    assert 3u8 ^^? 4u == 81;
+    assert 3u8 ^^? 4u == 81u8;
     assert 3u8 ^^? 6u == null;
     a ^^?= 2u;
     assert a == 49;

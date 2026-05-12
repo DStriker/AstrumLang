@@ -1336,8 +1336,8 @@ public extension i16: IBinaryIntegerFormatInfo {
     static MaxHexDigitCount: i32 ==> 4;
     static MaxValueDiv10: self ==> i16.MaxValue \ 10;
 
-    MultiplyBy10: self ==> this *% 10;
-    MultiplyBy16: self ==> this *% 16;
+    MultiplyBy10: self ==> this *% 10i16;
+    MultiplyBy16: self ==> this *% 16i16;
 
     IsGreaterThanAsUnsigned: (rhs: self) -> bool noexcept ==> this.NarrowToUInt16() > rhs.NarrowToUInt16();
 }
@@ -1460,7 +1460,7 @@ test "Int16"
 
     // INumberBase
     assert b.Abs == 6;
-    assert b.CheckedAbs == 6;
+    assert b.CheckedAbs == 6i16;
     assert i16.MinValue.CheckedAbs == null;
     assert b.StrictAbs == 6;
     assert i16.MinValue.WrappingAbs == i16.MinValue;
@@ -1496,7 +1496,7 @@ test "Int16"
     assert a.Min(b) == b;
     assert a.MaxNumber(b) == a;
     assert a.MinNumber(b) == b;
-    assert b.Clamp(-5, +5) == -5;
+    assert b.Clamp(-5i16, +5i16) == -5;
 
     // IBinaryInteger
     assert 2i16.Log2 == 1;
@@ -1527,14 +1527,14 @@ test "Int16"
     assert 0b1010_i16 >>~ 3 == 0b0100_0000_0000_0001;
     assert 0b1010_i16 >>~ 5 == 0b0101_0000_0000_0000;
 
-    assert a.IsMultipleOf(5);
-    assert !a.IsMultipleOf(6);
+    assert a.IsMultipleOf(5i16);
+    assert !a.IsMultipleOf(6i16);
 
     assert a.MultiplyBy10 == 100;
     assert a.MultiplyBy16 == 160;
 
     // ICheckedArithmetic
-    assert a +? 100i16 == 110;
+    assert a +? 100i16 == 110i16;
     assert a +? i16.MaxValue == null;
     a +?= 5i16;
     assert a == 15;
@@ -1580,7 +1580,7 @@ test "Int16"
         assert result == -32758 && overflowed;
     }
 
-    assert a -? 1000i16 == 31767;
+    assert a -? 1000i16 == 31767i16;
     assert -a -? i16.MaxValue == null;
     a -?= 5000i16;
     assert a == 27767;
@@ -1669,19 +1669,19 @@ test "Int16"
     assert a == 167;
     a = 10000;
     {
-        div, rem := a /% 60;
+        div, rem := a /% 60i16;
         assert div == 166 && rem == 40;
     }
-    assert a \? 5 == 2000;
-    assert a \? 0 == null;
+    assert a \? 5i16 == 2000i16;
+    assert a \? 0i16 == null;
     assert i16.MinValue \? (-1i16) == null;
 
-    assert a \! 5 == 2000;
-    a \%= 5;
+    assert a \! 5i16 == 2000;
+    a \%= 5i16;
     assert a == 2000;
     a = 10;
     assert i16.MinValue \% (-1i16) == i16.MinValue;
-    a \|= 5;
+    a \|= 5i16;
     assert a == 2;
     a = 10;
     assert i16.MinValue \| (-1i16) == i16.MaxValue;
@@ -1690,23 +1690,23 @@ test "Int16"
         assert result == i16.MinValue && overflowed;
     }
 
-    assert a \\ 5 == 2;
-    assert a \\ 6 == null;
-    assert a \\? 0 == null;
+    assert a \\ 5i16 == 2i16;
+    assert a \\ 6i16 == null;
+    assert a \\? 0i16 == null;
 
-    assert a /~ 6 == 2;
-    assert a /< 6 == 1;
-    assert a /> 6 == 2;
-    assert a /~ (-6) == -2;
-    assert a /< (-6) == -2;
-    assert a /> (-6) == -1;
+    assert a /~ 6i16 == 2;
+    assert a /< 6i16 == 1;
+    assert a /> 6i16 == 2;
+    assert a /~ (-6i16) == -2;
+    assert a /< (-6i16) == -2;
+    assert a /> (-6i16) == -1;
 
-    assert a %? 5 == 0;
-    assert a %? 0 == null;
+    assert a %? 5i16 == 0i16;
+    assert a %? 0i16 == null;
     assert i16.MinValue %? (-1i16) == null;
 
-    assert a %! 6 == 4;
-    a %%= 6;
+    assert a %! 6i16 == 4;
+    a %%= 6i16;
     assert a == 4;
     a = 10;
     assert i16.MinValue %% (-1i16) == 0;
@@ -1715,7 +1715,7 @@ test "Int16"
         assert result == 0 && overflowed;
     }
 
-    assert -?a == -10;
+    assert -?a == -10i16;
     assert -?i16.MinValue == null;
     assert -!a == -10;
     assert -%a == -10;
@@ -1727,7 +1727,7 @@ test "Int16"
     assert i16.MaxValue >>\ 20u == 0;
     assert i16.MinValue >>\ 20u == -1;
     assert i16.MaxValue <<\ 20u == 0;
-    assert i16.MaxValue >>? 4 == 0b0000_0111_1111_1111;
+    assert i16.MaxValue >>? 4 == 0b0000_0111_1111_1111i16;
     assert i16.MaxValue >>? 20 == null;
     assert i16.MaxValue <<? 20 == null;
     assert i16.MaxValue >>! 4 == 0b0000_0111_1111_1111;
@@ -1746,7 +1746,7 @@ test "Int16"
     a ^^= 2u;
     assert a == 22500;
     assert 30i16 ^^ 3u == 27000;
-    assert 30i16 ^^? 3u == 27000;
+    assert 30i16 ^^? 3u == 27000i16;
     assert 30i16 ^^? 4u == null;
     a ^^?= 2u;
     assert a == 22500;

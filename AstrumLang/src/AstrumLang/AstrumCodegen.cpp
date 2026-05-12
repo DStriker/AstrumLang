@@ -733,6 +733,7 @@ namespace AstrumLang {
 				if (func.isConstReturn || !func.isRefReturn)
 					out << "const ";
 				printTypeId(func.returnType);
+				currentType = func.returnType->getText();
 			} else if (func.isForwardReturn) {
 				out << "decltype(auto)";
 			} else if (func.expression && func.id != "operator delete") {
@@ -2257,6 +2258,7 @@ namespace AstrumLang {
 					else if (type->kind == TypeKind::Class)
 						out << "mutable ";
 					printTypeId(prop.type);
+					currentType = prop.type->getText();
 					if (prop.isRef)
 						out << "&";
 					out << " p_" << prop.id;
@@ -2345,6 +2347,7 @@ namespace AstrumLang {
 				}
 				out << "auto set" << prop.id << "(const ";
 				printTypeId(prop.type);
+				currentType = prop.type->getText();
 				out << "& value) ";
 				if (!prop.isStatic) {
 					out << "-> __self";
@@ -2466,6 +2469,7 @@ namespace AstrumLang {
 				if (prop.isConst)
 					out << "const ";
 				printTypeId(prop.type);
+				currentType = prop.type->getText();
 				if (prop.isRef)
 					out << "&";
 				if (type->kind == TypeKind::Class) {
@@ -2751,6 +2755,7 @@ namespace AstrumLang {
 				out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
 				out << "private: template<class __IdxT = ";
 				printTypeId(func.returnType);
+				currentType = func.returnType->getText();
 				if (func.isRefReturn)
 					out << "&";
 				out << "> struct __IndexerAccessor_" << func.pos.line << " {\n"
@@ -3102,6 +3107,7 @@ namespace AstrumLang {
 				if (func.isConstReturn || !func.isRefReturn)
 					out << "const ";
 				printTypeId(func.returnType);
+				currentType = func.returnType->getText();
 				if (func.isRefReturn)
 					out << "&";
 				out << " getAt(";
@@ -3158,6 +3164,7 @@ namespace AstrumLang {
 				}
 				out << "const ";
 				printTypeId(func.returnType);
+				currentType = func.returnType->getText();
 				if (func.isRefReturn)
 					out << "&";
 				out << " getAt(";
@@ -3268,6 +3275,7 @@ namespace AstrumLang {
 			if (func.isConverter) {
 				out << "operator ";
 				printTypeId(func.returnType);
+				currentType = func.returnType->getText();
 				if (func.isConstReturn)
 					out << " const&";
 				else if (func.isRefReturn)
@@ -3311,6 +3319,7 @@ namespace AstrumLang {
 				if (func.indexerSetter) {
 					out << "__IndexerAccessor_" << func.pos.line << "<";
 					printTypeId(func.returnType);
+					currentType = func.returnType->getText();
 					if (func.isRefReturn)
 						out << "&";
 					out << ">";
@@ -3322,6 +3331,7 @@ namespace AstrumLang {
 						out << "__selfClass";
 					} else {
 						printTypeId(func.returnType);
+						currentType = func.returnType->getText();
 					}
 
 					if (func.isRefReturn)
@@ -3563,6 +3573,7 @@ namespace AstrumLang {
 					out << ">";
 				} else {
 					printTypeId(func.returnType);
+					currentType = func.returnType->getText();
 					if (func.isRefReturn)
 						out << "&";
 				}
@@ -3999,6 +4010,7 @@ namespace AstrumLang {
 			if (method.isConverter) {
 				out << "operator ";
 				printTypeId(method.returnType);
+				currentType = method.returnType->getText();
 				if (method.isConstReturn)
 					out << " const&";
 				else if (method.isRefReturn)
@@ -4029,6 +4041,7 @@ namespace AstrumLang {
 					printParamDeclClause(method.indexerParams);
 					out << ", const ";
 					printTypeId(method.returnType);
+					currentType = method.returnType->getText();
 					out << "& value) ";
 					if (method.exceptionSpecification)
 						printExceptionSpecification(method.exceptionSpecification);
@@ -4098,6 +4111,7 @@ namespace AstrumLang {
 						out << "__selfClass";
 					} else {
 						printTypeId(method.returnType);
+						currentType = method.returnType->getText();
 					}
 					if (method.isConstReturn || !method.isRefReturn)
 						out << " const";
@@ -4927,6 +4941,7 @@ namespace AstrumLang {
 			if (func.isConverter) {
 				out << "operator ";
 				printTypeId(func.returnType);
+				currentType = func.returnType->getText();
 				if (func.isConstReturn)
 					out << " const&";
 				else if (func.isRefReturn)
@@ -5123,6 +5138,7 @@ namespace AstrumLang {
 			}
 			out << "friend ";
 			if (auto t = func.returnType) {
+				currentType = t->getText();
 				if (t->Const() || !t->Ref())
 					out << "const ";
 				printTypeId(t->theTypeId());
@@ -5353,6 +5369,7 @@ namespace AstrumLang {
 			if (func.isConverter) {
 				out << "operator ";
 				printTypeId(func.returnType);
+				currentType = func.returnType->getText();
 				if (func.isConstReturn)
 					out << " const&";
 				else if (func.isRefReturn)
@@ -5696,6 +5713,7 @@ namespace AstrumLang {
 			}
 			out << ")} -> ";
 			if (method.returnType) {
+				currentType = method.returnType->getText();
 				out << "std::convertible_to<";
 				auto txt = method.returnType->getText();
 				if (txt == "self") {
@@ -8810,6 +8828,7 @@ namespace AstrumLang {
 				if (!func.isMutating && (func.isConstReturn || !func.isRefReturn))
 					out << "const ";
 				printTypeId(func.returnType);
+				currentType = func.returnType->getText();
 				if (func.isRefReturn)
 					out << "&";
 				out << " getAt(__extension_" << filename << "_" << type->pos.line << "_"
@@ -8882,6 +8901,7 @@ namespace AstrumLang {
 				if (!func.isMutating && (func.isConstReturn || !func.isRefReturn))
 					out << "const ";
 				printTypeId(func.returnType);
+				currentType = func.returnType->getText();
 				if (func.isRefReturn)
 					out << "&";
 				out << " _operator_subscript(__extension_" << filename << "_" << type->pos.line
@@ -9088,7 +9108,8 @@ namespace AstrumLang {
 				if (func.exceptionSpecification)
 					printExceptionSpecification(func.exceptionSpecification);
 				out << " -> ";
-				if (func.returnType || func.isConstructor) {
+			    if (func.returnType || func.isConstructor) {
+				    if (func.returnType) currentType = func.returnType->getText();
 					if (!func.isMutating && (!func.isRefReturn || func.isConstReturn))
 						out << "const ";
 					if (func.isConstructor) {
@@ -9113,7 +9134,8 @@ namespace AstrumLang {
 							out << "::__class";
 						}
 					} else {
-						printTypeId(func.returnType);
+					    printTypeId(func.returnType);
+					    currentType = func.returnType->getText();
 					}
 
 					if (func.isRefReturn)
@@ -10095,7 +10117,8 @@ namespace AstrumLang {
 						out << "inline ";
 
 						isVoidReturn = false;
-						if (method.returnType) {
+					    if (method.returnType) {
+						    currentType = method.returnType->getText();
 							if (method.isConstReturn || !method.isRefReturn)
 								out << "const ";
 							printTypeId(method.returnType);
@@ -10212,7 +10235,8 @@ namespace AstrumLang {
 							}
 							if (!func.isMutating && (func.isConstReturn || !func.isRefReturn))
 								out << "const ";
-							printTypeId(func.returnType);
+						    printTypeId(func.returnType);
+						    currentType = func.returnType->getText();
 							if (func.isRefReturn)
 								out << "&";
 							out << " getAt(__extension_" << filename << "_" << type->pos.line << "_"
@@ -10370,6 +10394,8 @@ namespace AstrumLang {
 							printExceptionSpecification(func.exceptionSpecification);
 						out << " -> ";
 						if (func.returnType || func.isConstructor) {
+						    if (func.returnType)
+							    currentType = func.returnType->getText();
 							if (!func.isMutating && (!func.isRefReturn || func.isConstReturn))
 								out << "const ";
 							if (func.isConstructor) {
@@ -10651,7 +10677,8 @@ namespace AstrumLang {
 						out << " -> ";
 						if (!prop.isRef || prop.isConst)
 							out << "const ";
-						printTypeId(prop.type);
+					    printTypeId(prop.type);
+					    currentType = prop.type->getText();
 						if (prop.isRef)
 							out << "&";
 						auto parent =
@@ -12667,6 +12694,7 @@ namespace AstrumLang {
 			} else if (auto defer = ctx->deferStatement()) {
 				printDeferStatement(defer);
 			}
+		    currentType.clear();
 		}
 
 		void AstrumCodegen::printDeclarationStatement(AstrumParser::DeclarationStatementContext *

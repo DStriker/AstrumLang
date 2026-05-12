@@ -86,67 +86,67 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 		#line 1373 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		Builtin::i16 a = Builtin::i16(5); 
 		#line 1376 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a + Builtin::i16(10) == Builtin::i16((short)15)), u"a+10i16==15");
+		ADV_ASSERT((a + Builtin::i16(10) == Builtin::i32(15)), u"a+10i16==15");
 		#line 1377 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a + Builtin::u8(10U) == Builtin::i16((short)15)), u"a+10u8==15");
+		ADV_ASSERT((a + Builtin::u8(10U) == Builtin::i32(15)), u"a+10u8==15");
 		#line 1378 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a + Builtin::i16(10) == Builtin::i16((short)15)), u"a+10i16==15");
+		ADV_ASSERT((a + Builtin::i16(10) == Builtin::i32(15)), u"a+10i16==15");
 		#line 1379 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a + Builtin::u16(10U) == Builtin::i16((short)15)), u"a+10u16==15");
+		ADV_ASSERT((a + Builtin::u16(10U) == Builtin::i32(15)), u"a+10u16==15");
 		#line 1380 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a + Builtin::i32(10) == Builtin::i16((short)15)), u"a+10i32==15");
+		ADV_ASSERT((a + Builtin::i32(10) == Builtin::i32(15)), u"a+10i32==15");
 		#line 1381 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a + Builtin::u32(10U) == Builtin::i16((short)15)), u"a+10u32==15");
+		ADV_ASSERT((a + Builtin::u32(10U) == Builtin::i32(15)), u"a+10u32==15");
 		#line 1382 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a + Builtin::i64(10LL) == Builtin::i16((short)15)), u"a+10i64==15");
+		ADV_ASSERT((a + Builtin::i64(10LL) == Builtin::i32(15)), u"a+10i64==15");
 		#line 1383 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a + Builtin::u64(10ULL) == Builtin::i16((short)15)), u"a+10u64==15");
+		ADV_ASSERT((a + Builtin::u64(10ULL) == Builtin::i32(15)), u"a+10u64==15");
 		#line 1384 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a + Builtin::i128(10LL) == Builtin::i16((short)15)), u"a+10i128==15");
+		ADV_ASSERT((a + Builtin::i128(10LL) == Builtin::i32(15)), u"a+10i128==15");
 		#line 1385 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a + Builtin::u128(10ULL) == Builtin::i16((short)15)), u"a+10u128==15");
+		ADV_ASSERT((a + Builtin::u128(10ULL) == Builtin::i32(15)), u"a+10u128==15");
 		#line 1388 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a - Builtin::i16((short)12) == Builtin::i16((short)-7)), u"a-12==-7");
+		ADV_ASSERT((a - Builtin::i32(12) == Builtin::i32(-7)), u"a-12==-7");
 		#line 1389 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a * Builtin::i16((short)2) == Builtin::i16((short)10)), u"a*2==10");
+		ADV_ASSERT((a * Builtin::i32(2) == Builtin::i32(10)), u"a*2==10");
 		#line 1390 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_bsl)(a, Builtin::i16((short)2)) == Builtin::i16((short)2)), u"a\\2==2");
+		ADV_ASSERT((ADV_UFCS(_operator_bsl)(a, Builtin::i32(2)) == Builtin::i32(2)), u"a\\2==2");
 		#line 1391 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a % Builtin::i16((short)2) == Builtin::i16((short)1)), u"a%2==1");
+		ADV_ASSERT((a % Builtin::i32(2) == Builtin::i32(1)), u"a%2==1");
 		#line 1392 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT(((a & Builtin::i16((short)1)) == Builtin::i16((short)1)), u"(a&1)==1");
+		ADV_ASSERT(((a & Builtin::i32(1)) == Builtin::i32(1)), u"(a&1)==1");
 		#line 1393 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT(((a | Builtin::i16((short)1)) == Builtin::i16((short)5)), u"(a|1)==5");
+		ADV_ASSERT(((a | Builtin::i32(1)) == Builtin::i32(5)), u"(a|1)==5");
 		#line 1394 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT(((a ^ Builtin::i16((short)1)) == Builtin::i16((short)4)), u"(a^1)==4");
+		ADV_ASSERT(((a ^ Builtin::i32(1)) == Builtin::i32(4)), u"(a^1)==4");
 		#line 1395 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a << Builtin::i16((short)1) == Builtin::i16((short)10)), u"a<<1==10");
+		ADV_ASSERT((a << Builtin::i32(1) == Builtin::i32(10)), u"a<<1==10");
 		#line 1396 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a >> Builtin::i16((short)1) == Builtin::i16((short)2)), u"a>>1==2");
+		ADV_ASSERT((a >> Builtin::i32(1) == Builtin::i32(2)), u"a>>1==2");
 		#line 1397 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		a = Builtin::i16((short)-5);
 		#line 1398 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_UFCS(_operator_gt_gt_gt_eq)(a, Builtin::i16((short)2));
 		#line 1399 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a == Builtin::i16((short)0b0011111111111110)), u"a==0b0011_1111_1111_1110");
+		ADV_ASSERT((a == Builtin::i32(0b0011111111111110)), u"a==0b0011_1111_1111_1110");
 		#line 1400 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_gt)(a, Builtin::i16((short)2)) == Builtin::i16((short)0b0000111111111111)), u"a>>>2==0b0000_1111_1111_1111");
+		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_gt)(a, Builtin::i32(2)) == Builtin::i32(0b0000111111111111)), u"a>>>2==0b0000_1111_1111_1111");
 		#line 1401 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_gt)(a, Builtin::i16((short)7)) == Builtin::i16((short)0b0000000001111111)), u"a>>>7==0b0000_0000_0111_1111");
+		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_gt)(a, Builtin::i32(7)) == Builtin::i32(0b0000000001111111)), u"a>>>7==0b0000_0000_0111_1111");
 		#line 1404 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		a = Builtin::i16((short)5);
 		#line 1405 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a == Builtin::i16((short)5)), u"a==5");
+		ADV_ASSERT((a == Builtin::i32(5)), u"a==5");
 		#line 1406 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a != Builtin::i16((short)6)), u"a!=6");
+		ADV_ASSERT((a != Builtin::i32(6)), u"a!=6");
 		#line 1407 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT(((a <=> Builtin::i16((short)6)) < 0), u"a<6");
+		ADV_ASSERT(((a <=> Builtin::i32(6)) < 0), u"a<6");
 		#line 1408 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT(((a <=> Builtin::i16((short)5)) <= 0), u"a<=5");
+		ADV_ASSERT(((a <=> Builtin::i32(5)) <= 0), u"a<=5");
 		#line 1409 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT(((a <=> Builtin::i16((short)4)) > 0), u"a>4");
+		ADV_ASSERT(((a <=> Builtin::i32(4)) > 0), u"a>4");
 		#line 1410 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT(((a <=> Builtin::i16((short)5)) >= 0), u"a>=5");
+		ADV_ASSERT(((a <=> Builtin::i32(5)) >= 0), u"a>=5");
 		#line 1413 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		a = Builtin::i16(5);
 		#line 1414 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
@@ -174,11 +174,11 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 		#line 1425 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		a >>= Builtin::i16((short)1);
 		#line 1426 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a == Builtin::i16((short)0)), u"a==0");
+		ADV_ASSERT((a == Builtin::i32(0)), u"a==0");
 		#line 1427 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		a = Builtin::i16(10);
 		#line 1428 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_not)(a) == Builtin::i16((short)-11)), u"~a==-11");
+		ADV_ASSERT((ADV_UFCS(_operator_not)(a) == Builtin::i32(-11)), u"~a==-11");
 		#line 1431 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		Builtin::i16 b = Builtin::i16(5); 
 		#line 1432 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
@@ -224,17 +224,17 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 		#line 1456 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UPCS(HashCode)(b) == Builtin::i128::Parse("18446744073709551610")), u"#b==18446744073709551610");
 		#line 1458 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(ToInt32)(b.__ref()) == Builtin::i16((short)-6)), u"b.ToInt32()==-6");
+		ADV_ASSERT((ADV_UFCS(ToInt32)(b.__ref()) == Builtin::i32(-6)), u"b.ToInt32()==-6");
 		#line 1459 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(NarrowToUInt64)(b.__ref()) == Builtin::i128::Parse("18446744073709551610")), u"b.NarrowToUInt64()==18446744073709551610");
 		#line 1462 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(Abs)(b.__ref()) == Builtin::i16((short)6)), u"b.Abs==6");
+		ADV_ASSERT((ADV_UPCS(Abs)(b.__ref()) == Builtin::i32(6)), u"b.Abs==6");
 		#line 1463 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(CheckedAbs)(b.__ref()) == Builtin::i16((short)6)), u"b.CheckedAbs==6");
+		ADV_ASSERT((ADV_UPCS(CheckedAbs)(b.__ref()) == Builtin::i16(6)), u"b.CheckedAbs==6i16");
 		#line 1464 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UPCS(CheckedAbs)(ADV_USPCS(MinValue, Builtin::i16)().__ref()) == nullptr), u"i16.MinValue.CheckedAbs==null");
 		#line 1465 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(StrictAbs)(b.__ref()) == Builtin::i16((short)6)), u"b.StrictAbs==6");
+		ADV_ASSERT((ADV_UPCS(StrictAbs)(b.__ref()) == Builtin::i32(6)), u"b.StrictAbs==6");
 		#line 1466 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UPCS(WrappingAbs)(ADV_USPCS(MinValue, Builtin::i16)().__ref()) == ADV_USPCS(MinValue, Builtin::i16)()), u"i16.MinValue.WrappingAbs==i16.MinValue");
 		#line 1467 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
@@ -283,11 +283,11 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 		#line 1489 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((!ADV_UPCS(IsZero)(b.__ref())), u"!b.IsZero");
 		#line 1492 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(Sign)(a.__ref()) == +Builtin::i16((short)1)), u"a.Sign==+1");
+		ADV_ASSERT((ADV_UPCS(Sign)(a.__ref()) == +Builtin::i32(1)), u"a.Sign==+1");
 		#line 1493 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(Sign)(b.__ref()) == Builtin::i16((short)-1)), u"b.Sign==-1");
+		ADV_ASSERT((ADV_UPCS(Sign)(b.__ref()) == Builtin::i32(-1)), u"b.Sign==-1");
 		#line 1494 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(CopySign)(a.__ref(), b) == Builtin::i16((short)-10)), u"a.CopySign(b)==-10");
+		ADV_ASSERT((ADV_UFCS(CopySign)(a.__ref(), b) == Builtin::i32(-10)), u"a.CopySign(b)==-10");
 		#line 1495 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(Max)(a.__ref(), b) == a), u"a.Max(b)==a");
 		#line 1496 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
@@ -297,97 +297,97 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 		#line 1498 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(MinNumber)(a.__ref(), b) == b), u"a.MinNumber(b)==b");
 		#line 1499 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(Clamp)(b.__ref(), Builtin::i16((short)-5), +Builtin::i16((short)5)) == Builtin::i16((short)-5)), u"b.Clamp(-5,+5)==-5");
+		ADV_ASSERT((ADV_UFCS(Clamp)(b.__ref(), Builtin::i16(-5), +Builtin::i16(5)) == Builtin::i32(-5)), u"b.Clamp(-5i16,+5i16)==-5");
 		#line 1502 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(Log2)(Builtin::i16(2).__ref()) == Builtin::i16((short)1)), u"2i16.Log2==1");
+		ADV_ASSERT((ADV_UPCS(Log2)(Builtin::i16(2).__ref()) == Builtin::i32(1)), u"2i16.Log2==1");
 		#line 1503 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(Log2)(Builtin::i16(16).__ref()) == Builtin::i16((short)4)), u"16i16.Log2==4");
+		ADV_ASSERT((ADV_UPCS(Log2)(Builtin::i16(16).__ref()) == Builtin::i32(4)), u"16i16.Log2==4");
 		#line 1504 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(Log2)(Builtin::i16(64).__ref()) == Builtin::i16((short)6)), u"64i16.Log2==6");
+		ADV_ASSERT((ADV_UPCS(Log2)(Builtin::i16(64).__ref()) == Builtin::i32(6)), u"64i16.Log2==6");
 		#line 1505 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(Log2)(Builtin::i16(20000).__ref()) == Builtin::i16((short)14)), u"20_000i16.Log2==14");
+		ADV_ASSERT((ADV_UPCS(Log2)(Builtin::i16(20000).__ref()) == Builtin::i32(14)), u"20_000i16.Log2==14");
 		#line 1506 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(Log2Ceiling)(Builtin::i16(2).__ref()) == Builtin::i16((short)1)), u"2i16.Log2Ceiling==1");
+		ADV_ASSERT((ADV_UPCS(Log2Ceiling)(Builtin::i16(2).__ref()) == Builtin::i32(1)), u"2i16.Log2Ceiling==1");
 		#line 1507 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(Log2Ceiling)(Builtin::i16(16).__ref()) == Builtin::i16((short)4)), u"16i16.Log2Ceiling==4");
+		ADV_ASSERT((ADV_UPCS(Log2Ceiling)(Builtin::i16(16).__ref()) == Builtin::i32(4)), u"16i16.Log2Ceiling==4");
 		#line 1508 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(Log2Ceiling)(Builtin::i16(65).__ref()) == Builtin::i16((short)7)), u"65i16.Log2Ceiling==7");
+		ADV_ASSERT((ADV_UPCS(Log2Ceiling)(Builtin::i16(65).__ref()) == Builtin::i32(7)), u"65i16.Log2Ceiling==7");
 		#line 1509 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(Log2Ceiling)(Builtin::i16(20000).__ref()) == Builtin::i16((short)15)), u"20_000i16.Log2Ceiling==15");
+		ADV_ASSERT((ADV_UPCS(Log2Ceiling)(Builtin::i16(20000).__ref()) == Builtin::i32(15)), u"20_000i16.Log2Ceiling==15");
 		#line 1510 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UPCS(CheckedLog2)(Builtin::i16(0).__ref()) == nullptr), u"0i16.CheckedLog2==null");
 		#line 1511 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(Log10)(Builtin::i16(5).__ref()) == Builtin::i16((short)0)), u"5i16.Log10==0");
+		ADV_ASSERT((ADV_UPCS(Log10)(Builtin::i16(5).__ref()) == Builtin::i32(0)), u"5i16.Log10==0");
 		#line 1512 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(Log10)(a.__ref()) == Builtin::i16((short)1)), u"a.Log10==1");
+		ADV_ASSERT((ADV_UPCS(Log10)(a.__ref()) == Builtin::i32(1)), u"a.Log10==1");
 		#line 1513 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(Log10)(ADV_USPCS(MaxValue, Builtin::i16)().__ref()) == Builtin::i16((short)4)), u"i16.MaxValue.Log10==4");
+		ADV_ASSERT((ADV_UPCS(Log10)(ADV_USPCS(MaxValue, Builtin::i16)().__ref()) == Builtin::i32(4)), u"i16.MaxValue.Log10==4");
 		#line 1514 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(Log)(Builtin::i16(5).__ref(), Builtin::i16(5)) == Builtin::i16((short)1)), u"5i16.Log(5i16)==1");
+		ADV_ASSERT((ADV_UFCS(Log)(Builtin::i16(5).__ref(), Builtin::i16(5)) == Builtin::i32(1)), u"5i16.Log(5i16)==1");
 		#line 1515 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(CheckedLog)(Builtin::i16(5).__ref(), Builtin::i16(-5)) == nullptr), u"5i16.CheckedLog(-5i16)==null");
 		#line 1516 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(Midpoint)(a.__ref(), Builtin::i16(30)) == Builtin::i16((short)20)), u"a.Midpoint(30i16)==20");
+		ADV_ASSERT((ADV_UFCS(Midpoint)(a.__ref(), Builtin::i16(30)) == Builtin::i32(20)), u"a.Midpoint(30i16)==20");
 		#line 1517 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(Midpoint)(Builtin::i16(10000).__ref(), ADV_USPCS(MaxValue, Builtin::i16)()) == Builtin::i16((short)21383)), u"10_000i16.Midpoint(i16.MaxValue)==21_383");
+		ADV_ASSERT((ADV_UFCS(Midpoint)(Builtin::i16(10000).__ref(), ADV_USPCS(MaxValue, Builtin::i16)()) == Builtin::i32(21383)), u"10_000i16.Midpoint(i16.MaxValue)==21_383");
 		#line 1518 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(NextMultipleOf)(a.__ref(), Builtin::i16(10)) == Builtin::i16((short)10)), u"a.NextMultipleOf(10i16)==10");
+		ADV_ASSERT((ADV_UFCS(NextMultipleOf)(a.__ref(), Builtin::i16(10)) == Builtin::i32(10)), u"a.NextMultipleOf(10i16)==10");
 		#line 1519 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(NextMultipleOf)(Builtin::i16(11).__ref(), Builtin::i16(10)) == Builtin::i16((short)20)), u"11i16.NextMultipleOf(10i16)==20");
+		ADV_ASSERT((ADV_UFCS(NextMultipleOf)(Builtin::i16(11).__ref(), Builtin::i16(10)) == Builtin::i32(20)), u"11i16.NextMultipleOf(10i16)==20");
 		#line 1520 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(NextMultipleOf)(Builtin::i16(10345).__ref(), Builtin::i16(80)) == Builtin::i16((short)10400)), u"10_345i16.NextMultipleOf(80i16)==10_400");
+		ADV_ASSERT((ADV_UFCS(NextMultipleOf)(Builtin::i16(10345).__ref(), Builtin::i16(80)) == Builtin::i32(10400)), u"10_345i16.NextMultipleOf(80i16)==10_400");
 		#line 1521 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(NextMultipleOf)((Builtin::i16(-13)).__ref(), Builtin::i16(4)) == Builtin::i16((short)-12)), u"(-13i16).NextMultipleOf(4i16)==-12");
+		ADV_ASSERT((ADV_UFCS(NextMultipleOf)((Builtin::i16(-13)).__ref(), Builtin::i16(4)) == Builtin::i32(-12)), u"(-13i16).NextMultipleOf(4i16)==-12");
 		#line 1522 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(NextMultipleOf)((Builtin::i16(-13)).__ref(), Builtin::i16(-4)) == Builtin::i16((short)-16)), u"(-13i16).NextMultipleOf(-4i16)==-16");
+		ADV_ASSERT((ADV_UFCS(NextMultipleOf)((Builtin::i16(-13)).__ref(), Builtin::i16(-4)) == Builtin::i32(-16)), u"(-13i16).NextMultipleOf(-4i16)==-16");
 		#line 1523 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(ByteCount)(a.__ref()) == Builtin::i16((short)2)), u"a.ByteCount==2");
+		ADV_ASSERT((ADV_UPCS(ByteCount)(a.__ref()) == Builtin::i32(2)), u"a.ByteCount==2");
 		#line 1524 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(ByteSwapped)(Builtin::i16(0x7b23).__ref()) == Builtin::i16((short)0x237b)), u"0x7b23_i16.ByteSwapped==0x237b");
+		ADV_ASSERT((ADV_UPCS(ByteSwapped)(Builtin::i16(0x7b23).__ref()) == Builtin::i32(0x237b)), u"0x7b23_i16.ByteSwapped==0x237b");
 		#line 1525 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_lt_lt_not)(Builtin::i16(0b1010), Builtin::i16((short)3)) == Builtin::i16((short)0b01010000)), u"0b1010_i16<<~3==0b0101_0000");
+		ADV_ASSERT((ADV_UFCS(_operator_lt_lt_not)(Builtin::i16(0b1010), Builtin::i32(3)) == Builtin::i32(0b01010000)), u"0b1010_i16<<~3==0b0101_0000");
 		#line 1526 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_lt_lt_not)(Builtin::i16(0b1010), Builtin::i16((short)5)) == Builtin::i16((short)0b101000000)), u"0b1010_i16<<~5==0b1_0100_0000");
+		ADV_ASSERT((ADV_UFCS(_operator_lt_lt_not)(Builtin::i16(0b1010), Builtin::i32(5)) == Builtin::i32(0b101000000)), u"0b1010_i16<<~5==0b1_0100_0000");
 		#line 1527 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_not)(Builtin::i16(0b1010), Builtin::i16((short)3)) == Builtin::i16((short)0b0100000000000001)), u"0b1010_i16>>~3==0b0100_0000_0000_0001");
+		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_not)(Builtin::i16(0b1010), Builtin::i32(3)) == Builtin::i32(0b0100000000000001)), u"0b1010_i16>>~3==0b0100_0000_0000_0001");
 		#line 1528 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_not)(Builtin::i16(0b1010), Builtin::i16((short)5)) == Builtin::i16((short)0b0101000000000000)), u"0b1010_i16>>~5==0b0101_0000_0000_0000");
+		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_not)(Builtin::i16(0b1010), Builtin::i32(5)) == Builtin::i32(0b0101000000000000)), u"0b1010_i16>>~5==0b0101_0000_0000_0000");
 		#line 1530 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(IsMultipleOf)(a.__ref(), Builtin::i16((short)5))), u"a.IsMultipleOf(5)");
+		ADV_ASSERT((ADV_UFCS(IsMultipleOf)(a.__ref(), Builtin::i16(5))), u"a.IsMultipleOf(5i16)");
 		#line 1531 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((!ADV_UFCS(IsMultipleOf)(a.__ref(), Builtin::i16((short)6))), u"!a.IsMultipleOf(6)");
+		ADV_ASSERT((!ADV_UFCS(IsMultipleOf)(a.__ref(), Builtin::i16(6))), u"!a.IsMultipleOf(6i16)");
 		#line 1533 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(MultiplyBy10)(a.__ref()) == Builtin::i16((short)100)), u"a.MultiplyBy10==100");
+		ADV_ASSERT((ADV_UPCS(MultiplyBy10)(a.__ref()) == Builtin::i32(100)), u"a.MultiplyBy10==100");
 		#line 1534 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UPCS(MultiplyBy16)(a.__ref()) == Builtin::i16((short)160)), u"a.MultiplyBy16==160");
+		ADV_ASSERT((ADV_UPCS(MultiplyBy16)(a.__ref()) == Builtin::i32(160)), u"a.MultiplyBy16==160");
 		#line 1537 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_add_qst)(a, Builtin::i16(100)) == Builtin::i16((short)110)), u"a+?100i16==110");
+		ADV_ASSERT((ADV_UFCS(_operator_add_qst)(a, Builtin::i16(100)) == Builtin::i16(110)), u"a+?100i16==110i16");
 		#line 1538 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(_operator_add_qst)(a, ADV_USPCS(MaxValue, Builtin::i16)()) == nullptr), u"a+?i16.MaxValue==null");
 		#line 1539 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_UFCS(_operator_add_qst_eq)(a, Builtin::i16(5));
 		#line 1540 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a == Builtin::i16((short)15)), u"a==15");
+		ADV_ASSERT((a == Builtin::i32(15)), u"a==15");
 		#line 1541 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_UFCS(_operator_add_qst_eq)(a, Builtin::i16(32760));
 		#line 1542 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a == Builtin::i16((short)15)), u"a==15");
+		ADV_ASSERT((a == Builtin::i32(15)), u"a==15");
 		#line 1543 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_add_ne)(a, Builtin::i16(100)) == Builtin::i16((short)115)), u"a+!100i16==115");
+		ADV_ASSERT((ADV_UFCS(_operator_add_ne)(a, Builtin::i16(100)) == Builtin::i32(115)), u"a+!100i16==115");
 		#line 1544 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_add_mod)(a, Builtin::i16(100)) == Builtin::i16((short)115)), u"a+%100i16==115");
+		ADV_ASSERT((ADV_UFCS(_operator_add_mod)(a, Builtin::i16(100)) == Builtin::i32(115)), u"a+%100i16==115");
 		#line 1545 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(_operator_add_mod)(a, Builtin::i16(32753)) == ADV_USPCS(MinValue, Builtin::i16)()), u"a+%32753i16==i16.MinValue");
 		#line 1546 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_UFCS(_operator_add_mod_eq)(a, ADV_USPCS(MaxValue, Builtin::i16)());
 		#line 1547 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a == Builtin::i16((short)-32754)), u"a==-32754");
+		ADV_ASSERT((a == Builtin::i32(-32754)), u"a==-32754");
 		#line 1548 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(_operator_add_or)(a, (Builtin::i16(-32760))) == ADV_USPCS(MinValue, Builtin::i16)()), u"a+|(-32760i16)==i16.MinValue");
 		#line 1549 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_UFCS(_operator_add_or_eq)(a, ADV_USPCS(MaxValue, Builtin::i16)());
 		#line 1550 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a == Builtin::i16((short)13)), u"a==13");
+		ADV_ASSERT((a == Builtin::i32(13)), u"a==13");
 		#line 1551 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(_operator_add_or)(a, Builtin::i16(32760)) == ADV_USPCS(MaxValue, Builtin::i16)()), u"a+|32760i16==i16.MaxValue");
 		#line 1552 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
@@ -395,12 +395,12 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			#line 1553 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			const auto& [result, overflowed] = ADV_UFCS(_operator_add_mod_qst)(a, Builtin::i16(32760));
 			#line 1554 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			ADV_ASSERT((result == Builtin::i16((short)-32763) && overflowed), u"result==-32763&&overflowed");
+			ADV_ASSERT((result == Builtin::i32(-32763) && overflowed), u"result==-32763&&overflowed");
 		}
 		#line 1557 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		a = ADV_USPCS(MaxValue, Builtin::i16)() - Builtin::i16((short)1);
 		#line 1558 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_add_add_qst_postfix)(a) == ADV_USPCS(MaxValue, Builtin::i16)() - Builtin::i16((short)1)), u"a++?==i16.MaxValue-1");
+		ADV_ASSERT((ADV_UFCS(_operator_add_add_qst_postfix)(a) == ADV_USPCS(MaxValue, Builtin::i16)() - Builtin::i32(1)), u"a++?==i16.MaxValue-1");
 		#line 1559 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((a == ADV_USPCS(MaxValue, Builtin::i16)()), u"a==i16.MaxValue");
 		#line 1560 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
@@ -425,7 +425,7 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			#line 1571 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			const auto& [result, overflowed] = ADV_UFCS(CarryingAdd)(a.__ref(), Builtin::i16(-5), true);
 			#line 1572 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			ADV_ASSERT((result == Builtin::i16((short)32763) && !overflowed), u"result==32763&&!overflowed");
+			ADV_ASSERT((result == Builtin::i32(32763) && !overflowed), u"result==32763&&!overflowed");
 		}
 		#line 1574 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		{
@@ -439,30 +439,30 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			#line 1579 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			const auto& [result, overflowed] = ADV_UFCS(CarryingAdd)(a.__ref(), Builtin::i16(10), true);
 			#line 1580 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			ADV_ASSERT((result == Builtin::i16((short)-32758) && overflowed), u"result==-32758&&overflowed");
+			ADV_ASSERT((result == Builtin::i32(-32758) && overflowed), u"result==-32758&&overflowed");
 		}
 		#line 1583 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_sub_qst)(a, Builtin::i16(1000)) == Builtin::i16((short)31767)), u"a-?1000i16==31767");
+		ADV_ASSERT((ADV_UFCS(_operator_sub_qst)(a, Builtin::i16(1000)) == Builtin::i16(31767)), u"a-?1000i16==31767i16");
 		#line 1584 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(_operator_sub_qst)(-a, ADV_USPCS(MaxValue, Builtin::i16)()) == nullptr), u"-a-?i16.MaxValue==null");
 		#line 1585 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_UFCS(_operator_sub_qst_eq)(a, Builtin::i16(5000));
 		#line 1586 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a == Builtin::i16((short)27767)), u"a==27767");
+		ADV_ASSERT((a == Builtin::i32(27767)), u"a==27767");
 		#line 1587 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_UFCS(_operator_sub_qst_eq)(a, Builtin::i16(1));
 		#line 1588 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a == Builtin::i16((short)27766)), u"a==27766");
+		ADV_ASSERT((a == Builtin::i32(27766)), u"a==27766");
 		#line 1589 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_sub_ne)(a, Builtin::i16(1000)) == Builtin::i16((short)26766)), u"a-!1000i16==26766");
+		ADV_ASSERT((ADV_UFCS(_operator_sub_ne)(a, Builtin::i16(1000)) == Builtin::i32(26766)), u"a-!1000i16==26766");
 		#line 1590 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(_operator_sub_mod)(-a, Builtin::i16(5003)) == ADV_USPCS(MaxValue, Builtin::i16)()), u"-a-%5003i16==i16.MaxValue");
 		#line 1591 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_sub_mod)(a, Builtin::i16(10000)) == Builtin::i16((short)17766)), u"a-%10000i16==17766");
+		ADV_ASSERT((ADV_UFCS(_operator_sub_mod)(a, Builtin::i16(10000)) == Builtin::i32(17766)), u"a-%10000i16==17766");
 		#line 1592 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_UFCS(_operator_sub_mod_eq)(a, ADV_USPCS(MaxValue, Builtin::i16)());
 		#line 1593 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a == Builtin::i16((short)-5001)), u"a==-5001");
+		ADV_ASSERT((a == Builtin::i32(-5001)), u"a==-5001");
 		#line 1594 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(_operator_sub_or)(a, Builtin::i16(30000)) == ADV_USPCS(MinValue, Builtin::i16)()), u"a-|30000i16==i16.MinValue");
 		#line 1595 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
@@ -474,12 +474,12 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			#line 1598 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			const auto& [result, overflowed] = ADV_UFCS(_operator_sub_mod_qst)(a, Builtin::i16(27769));
 			#line 1599 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			ADV_ASSERT((result == Builtin::i16((short)4999) && overflowed), u"result==4999&&overflowed");
+			ADV_ASSERT((result == Builtin::i32(4999) && overflowed), u"result==4999&&overflowed");
 		}
 		#line 1602 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		a = ADV_USPCS(MinValue, Builtin::i16)() + Builtin::i16((short)1);
 		#line 1603 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_sub_sub_qst_postfix)(a) == ADV_USPCS(MinValue, Builtin::i16)() + Builtin::i16((short)1)), u"a--?==i16.MinValue+1");
+		ADV_ASSERT((ADV_UFCS(_operator_sub_sub_qst_postfix)(a) == ADV_USPCS(MinValue, Builtin::i16)() + Builtin::i32(1)), u"a--?==i16.MinValue+1");
 		#line 1604 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((a == ADV_USPCS(MinValue, Builtin::i16)()), u"a==i16.MinValue");
 		#line 1605 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
@@ -504,7 +504,7 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			#line 1616 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			const auto& [result, overflowed] = ADV_UFCS(BorrowingSub)(a.__ref(), Builtin::i16(-5), true);
 			#line 1617 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			ADV_ASSERT((result == Builtin::i16((short)-32764) && !overflowed), u"result==-32764&&!overflowed");
+			ADV_ASSERT((result == Builtin::i32(-32764) && !overflowed), u"result==-32764&&!overflowed");
 		}
 		#line 1619 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		{
@@ -518,7 +518,7 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			#line 1624 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			const auto& [result, overflowed] = ADV_UFCS(BorrowingSub)(a.__ref(), Builtin::i16(10), true);
 			#line 1625 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			ADV_ASSERT((result == Builtin::i16((short)32757) && overflowed), u"result==32757&&overflowed");
+			ADV_ASSERT((result == Builtin::i32(32757) && overflowed), u"result==32757&&overflowed");
 		}
 		#line 1628 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(_operator_mul_qst)(a, Builtin::i16(1)) == ADV_USPCS(MinValue, Builtin::i16)()), u"a*?1i16==i16.MinValue");
@@ -531,17 +531,17 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 		#line 1632 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		a = Builtin::i16((short)15);
 		#line 1633 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a == Builtin::i16((short)15)), u"a==15");
+		ADV_ASSERT((a == Builtin::i32(15)), u"a==15");
 		#line 1634 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_mul_ne)(a, Builtin::i16(3)) == Builtin::i16((short)45)), u"a*!3i16==45");
+		ADV_ASSERT((ADV_UFCS(_operator_mul_ne)(a, Builtin::i16(3)) == Builtin::i32(45)), u"a*!3i16==45");
 		#line 1635 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_mul_mod)(a, Builtin::i16(6)) == Builtin::i16((short)90)), u"a*%6i16==90");
+		ADV_ASSERT((ADV_UFCS(_operator_mul_mod)(a, Builtin::i16(6)) == Builtin::i32(90)), u"a*%6i16==90");
 		#line 1636 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_mul_mod)(a, Builtin::i16(3000)) == Builtin::i16((short)-20536)), u"a*%3000i16==-20536");
+		ADV_ASSERT((ADV_UFCS(_operator_mul_mod)(a, Builtin::i16(3000)) == Builtin::i32(-20536)), u"a*%3000i16==-20536");
 		#line 1637 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_UFCS(_operator_mul_mod_eq)(a, Builtin::i16(6));
 		#line 1638 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a == Builtin::i16((short)90)), u"a==90");
+		ADV_ASSERT((a == Builtin::i32(90)), u"a==90");
 		#line 1639 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(_operator_mul_or)(a, (Builtin::i16(-1000))) == ADV_USPCS(MinValue, Builtin::i16)()), u"a*|(-1000i16)==i16.MinValue");
 		#line 1640 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
@@ -555,7 +555,7 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			#line 1644 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			const auto& [result, overflowed] = ADV_UFCS(_operator_mul_mod_qst)(a, Builtin::i16(2));
 			#line 1645 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			ADV_ASSERT((result == Builtin::i16((short)-2) && overflowed), u"result==-2&&overflowed");
+			ADV_ASSERT((result == Builtin::i32(-2) && overflowed), u"result==-2&&overflowed");
 		}
 		#line 1647 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		a = Builtin::i16((short)500);
@@ -564,14 +564,14 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			#line 1649 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			const auto& [low, high] = ADV_UFCS(_operator_mul_gt)(a, (Builtin::i16(150)));
 			#line 1650 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			ADV_ASSERT((low == Builtin::i16((short)9464) && high == Builtin::i16((short)1)), u"low==9464&&high==1");
+			ADV_ASSERT((low == Builtin::i32(9464) && high == Builtin::i32(1)), u"low==9464&&high==1");
 		}
 		#line 1652 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		{
 			#line 1653 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			const auto& [low, high] = ADV_UFCS(_operator_mul_gt)(a, (Builtin::i16(-150)));
 			#line 1654 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			ADV_ASSERT((low == Builtin::i32(56072) && high == Builtin::i16((short)-2)), u"low==56072&&high==-2");
+			ADV_ASSERT((low == Builtin::i32(56072) && high == Builtin::i32(-2)), u"low==56072&&high==-2");
 		}
 		#line 1656 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		a = ADV_USPCS(MaxValue, Builtin::i16)();
@@ -580,52 +580,52 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			#line 1658 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			const auto& [low, high] = ADV_UFCS(CarryingMul)(a.__ref(), Builtin::i16(2), Builtin::i16(12));
 			#line 1659 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			ADV_ASSERT((low == Builtin::i16((short)10) && high == Builtin::i16((short)1)), u"low==10&&high==1");
+			ADV_ASSERT((low == Builtin::i32(10) && high == Builtin::i32(1)), u"low==10&&high==1");
 		}
 		#line 1661 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		{
 			#line 1662 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			const auto& [low, high] = ADV_UFCS(CarryingMul)(a.__ref(), Builtin::i16(-2), Builtin::i16(-12));
 			#line 1663 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			ADV_ASSERT((low == Builtin::i32(65526) && high == Builtin::i16((short)-2)), u"low==65526&&high==-2");
+			ADV_ASSERT((low == Builtin::i32(65526) && high == Builtin::i32(-2)), u"low==65526&&high==-2");
 		}
 		#line 1666 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		a = Builtin::i16((short)10000);
 		#line 1667 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_bsl)(a, Builtin::i16((short)60)) == Builtin::i16((short)166)), u"a\\60==166");
+		ADV_ASSERT((ADV_UFCS(_operator_bsl)(a, Builtin::i32(60)) == Builtin::i32(166)), u"a\\60==166");
 		#line 1668 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		a /= Builtin::i16((short)60);
 		#line 1669 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a == Builtin::i16((short)167)), u"a==167");
+		ADV_ASSERT((a == Builtin::i32(167)), u"a==167");
 		#line 1670 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		a = Builtin::i16((short)10000);
 		#line 1671 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		{
 			#line 1672 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			const auto& [div, rem] = ADV_UFCS(_operator_div_mod)(a, Builtin::i16((short)60));
+			const auto& [div, rem] = ADV_UFCS(_operator_div_mod)(a, Builtin::i16(60));
 			#line 1673 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			ADV_ASSERT((div == Builtin::i16((short)166) && rem == Builtin::i16((short)40)), u"div==166&&rem==40");
+			ADV_ASSERT((div == Builtin::i32(166) && rem == Builtin::i32(40)), u"div==166&&rem==40");
 		}
 		#line 1675 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_bsl_qst)(a, Builtin::i16((short)5)) == Builtin::i16((short)2000)), u"a\\?5==2000");
+		ADV_ASSERT((ADV_UFCS(_operator_bsl_qst)(a, Builtin::i16(5)) == Builtin::i16(2000)), u"a\\?5i16==2000i16");
 		#line 1676 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_bsl_qst)(a, Builtin::i16((short)0)) == nullptr), u"a\\?0==null");
+		ADV_ASSERT((ADV_UFCS(_operator_bsl_qst)(a, Builtin::i16(0)) == nullptr), u"a\\?0i16==null");
 		#line 1677 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(_operator_bsl_qst)(ADV_USPCS(MinValue, Builtin::i16)(), (Builtin::i16(-1))) == nullptr), u"i16.MinValue\\?(-1i16)==null");
 		#line 1679 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_bsl_ne)(a, Builtin::i16((short)5)) == Builtin::i16((short)2000)), u"a\\!5==2000");
+		ADV_ASSERT((ADV_UFCS(_operator_bsl_ne)(a, Builtin::i16(5)) == Builtin::i32(2000)), u"a\\!5i16==2000");
 		#line 1680 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_UFCS(_operator_bsl_mod_eq)(a, Builtin::i16((short)5));
+		ADV_UFCS(_operator_bsl_mod_eq)(a, Builtin::i16(5));
 		#line 1681 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a == Builtin::i16((short)2000)), u"a==2000");
+		ADV_ASSERT((a == Builtin::i32(2000)), u"a==2000");
 		#line 1682 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		a = Builtin::i16((short)10);
 		#line 1683 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(_operator_bsl_mod)(ADV_USPCS(MinValue, Builtin::i16)(), (Builtin::i16(-1))) == ADV_USPCS(MinValue, Builtin::i16)()), u"i16.MinValue\\%(-1i16)==i16.MinValue");
 		#line 1684 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_UFCS(_operator_bsl_or_eq)(a, Builtin::i16((short)5));
+		ADV_UFCS(_operator_bsl_or_eq)(a, Builtin::i16(5));
 		#line 1685 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a == Builtin::i16((short)2)), u"a==2");
+		ADV_ASSERT((a == Builtin::i32(2)), u"a==2");
 		#line 1686 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		a = Builtin::i16((short)10);
 		#line 1687 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
@@ -638,121 +638,121 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			ADV_ASSERT((result == ADV_USPCS(MinValue, Builtin::i16)() && overflowed), u"result==i16.MinValue&&overflowed");
 		}
 		#line 1693 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_bsl_bsl)(a, Builtin::i16((short)5)) == Builtin::i16((short)2)), u"a\\\\5==2");
+		ADV_ASSERT((ADV_UFCS(_operator_bsl_bsl)(a, Builtin::i16(5)) == Builtin::i16(2)), u"a\\\\5i16==2i16");
 		#line 1694 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_bsl_bsl)(a, Builtin::i16((short)6)) == nullptr), u"a\\\\6==null");
+		ADV_ASSERT((ADV_UFCS(_operator_bsl_bsl)(a, Builtin::i16(6)) == nullptr), u"a\\\\6i16==null");
 		#line 1695 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_bsl_bsl_qst)(a, Builtin::i16((short)0)) == nullptr), u"a\\\\?0==null");
+		ADV_ASSERT((ADV_UFCS(_operator_bsl_bsl_qst)(a, Builtin::i16(0)) == nullptr), u"a\\\\?0i16==null");
 		#line 1697 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_div_not)(a, Builtin::i16((short)6)) == Builtin::i16((short)2)), u"a/~6==2");
+		ADV_ASSERT((ADV_UFCS(_operator_div_not)(a, Builtin::i16(6)) == Builtin::i32(2)), u"a/~6i16==2");
 		#line 1698 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_div_lt)(a, Builtin::i16((short)6)) == Builtin::i16((short)1)), u"a/<6==1");
+		ADV_ASSERT((ADV_UFCS(_operator_div_lt)(a, Builtin::i16(6)) == Builtin::i32(1)), u"a/<6i16==1");
 		#line 1699 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_div_gt)(a, Builtin::i16((short)6)) == Builtin::i16((short)2)), u"a/>6==2");
+		ADV_ASSERT((ADV_UFCS(_operator_div_gt)(a, Builtin::i16(6)) == Builtin::i32(2)), u"a/>6i16==2");
 		#line 1700 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_div_not)(a, (Builtin::i16((short)-6))) == Builtin::i16((short)-2)), u"a/~(-6)==-2");
+		ADV_ASSERT((ADV_UFCS(_operator_div_not)(a, (Builtin::i16(-6))) == Builtin::i32(-2)), u"a/~(-6i16)==-2");
 		#line 1701 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_div_lt)(a, (Builtin::i16((short)-6))) == Builtin::i16((short)-2)), u"a/<(-6)==-2");
+		ADV_ASSERT((ADV_UFCS(_operator_div_lt)(a, (Builtin::i16(-6))) == Builtin::i32(-2)), u"a/<(-6i16)==-2");
 		#line 1702 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_div_gt)(a, (Builtin::i16((short)-6))) == Builtin::i16((short)-1)), u"a/>(-6)==-1");
+		ADV_ASSERT((ADV_UFCS(_operator_div_gt)(a, (Builtin::i16(-6))) == Builtin::i32(-1)), u"a/>(-6i16)==-1");
 		#line 1704 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_mod_qst)(a, Builtin::i16((short)5)) == Builtin::i16((short)0)), u"a%?5==0");
+		ADV_ASSERT((ADV_UFCS(_operator_mod_qst)(a, Builtin::i16(5)) == Builtin::i16(0)), u"a%?5i16==0i16");
 		#line 1705 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_mod_qst)(a, Builtin::i16((short)0)) == nullptr), u"a%?0==null");
+		ADV_ASSERT((ADV_UFCS(_operator_mod_qst)(a, Builtin::i16(0)) == nullptr), u"a%?0i16==null");
 		#line 1706 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(_operator_mod_qst)(ADV_USPCS(MinValue, Builtin::i16)(), (Builtin::i16(-1))) == nullptr), u"i16.MinValue%?(-1i16)==null");
 		#line 1708 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_mod_ne)(a, Builtin::i16((short)6)) == Builtin::i16((short)4)), u"a%!6==4");
+		ADV_ASSERT((ADV_UFCS(_operator_mod_ne)(a, Builtin::i16(6)) == Builtin::i32(4)), u"a%!6i16==4");
 		#line 1709 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_UFCS(_operator_mod_mod_eq)(a, Builtin::i16((short)6));
+		ADV_UFCS(_operator_mod_mod_eq)(a, Builtin::i16(6));
 		#line 1710 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a == Builtin::i16((short)4)), u"a==4");
+		ADV_ASSERT((a == Builtin::i32(4)), u"a==4");
 		#line 1711 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		a = Builtin::i16((short)10);
 		#line 1712 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_mod_mod)(ADV_USPCS(MinValue, Builtin::i16)(), (Builtin::i16(-1))) == Builtin::i16((short)0)), u"i16.MinValue%%(-1i16)==0");
+		ADV_ASSERT((ADV_UFCS(_operator_mod_mod)(ADV_USPCS(MinValue, Builtin::i16)(), (Builtin::i16(-1))) == Builtin::i32(0)), u"i16.MinValue%%(-1i16)==0");
 		#line 1713 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		{
 			#line 1714 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			const auto& [result, overflowed] = ADV_UFCS(_operator_mod_mod_qst)(ADV_USPCS(MinValue, Builtin::i16)(), (Builtin::i16(-1)));
 			#line 1715 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			ADV_ASSERT((result == Builtin::i16((short)0) && overflowed), u"result==0&&overflowed");
+			ADV_ASSERT((result == Builtin::i32(0) && overflowed), u"result==0&&overflowed");
 		}
 		#line 1718 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_sub_qst)(a) == Builtin::i16((short)-10)), u"-?a==-10");
+		ADV_ASSERT((ADV_UFCS(_operator_sub_qst)(a) == Builtin::i16(-10)), u"-?a==-10i16");
 		#line 1719 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(_operator_sub_qst)(ADV_USPCS(MinValue, Builtin::i16)()) == nullptr), u"-?i16.MinValue==null");
 		#line 1720 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_sub_ne)(a) == Builtin::i16((short)-10)), u"-!a==-10");
+		ADV_ASSERT((ADV_UFCS(_operator_sub_ne)(a) == Builtin::i32(-10)), u"-!a==-10");
 		#line 1721 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_sub_mod)(a) == Builtin::i16((short)-10)), u"-%a==-10");
+		ADV_ASSERT((ADV_UFCS(_operator_sub_mod)(a) == Builtin::i32(-10)), u"-%a==-10");
 		#line 1722 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(_operator_sub_mod)(ADV_USPCS(MinValue, Builtin::i16)()) == ADV_USPCS(MinValue, Builtin::i16)()), u"-%i16.MinValue==i16.MinValue");
 		#line 1723 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_sub_or)(a) == Builtin::i16((short)-10)), u"-|a==-10");
+		ADV_ASSERT((ADV_UFCS(_operator_sub_or)(a) == Builtin::i32(-10)), u"-|a==-10");
 		#line 1724 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(_operator_sub_or)(ADV_USPCS(MinValue, Builtin::i16)()) == ADV_USPCS(MaxValue, Builtin::i16)()), u"-|i16.MinValue==i16.MaxValue");
 		#line 1726 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_bsl)(ADV_USPCS(MaxValue, Builtin::i16)(), Builtin::u32(4U)) == Builtin::i16((short)0b0000011111111111)), u"i16.MaxValue>>\\4u==0b0000_0111_1111_1111");
+		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_bsl)(ADV_USPCS(MaxValue, Builtin::i16)(), Builtin::u32(4U)) == Builtin::i32(0b0000011111111111)), u"i16.MaxValue>>\\4u==0b0000_0111_1111_1111");
 		#line 1727 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_bsl)(ADV_USPCS(MaxValue, Builtin::i16)(), Builtin::u32(20U)) == Builtin::i16((short)0)), u"i16.MaxValue>>\\20u==0");
+		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_bsl)(ADV_USPCS(MaxValue, Builtin::i16)(), Builtin::u32(20U)) == Builtin::i32(0)), u"i16.MaxValue>>\\20u==0");
 		#line 1728 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_bsl)(ADV_USPCS(MinValue, Builtin::i16)(), Builtin::u32(20U)) == Builtin::i16((short)-1)), u"i16.MinValue>>\\20u==-1");
+		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_bsl)(ADV_USPCS(MinValue, Builtin::i16)(), Builtin::u32(20U)) == Builtin::i32(-1)), u"i16.MinValue>>\\20u==-1");
 		#line 1729 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_lt_lt_bsl)(ADV_USPCS(MaxValue, Builtin::i16)(), Builtin::u32(20U)) == Builtin::i16((short)0)), u"i16.MaxValue<<\\20u==0");
+		ADV_ASSERT((ADV_UFCS(_operator_lt_lt_bsl)(ADV_USPCS(MaxValue, Builtin::i16)(), Builtin::u32(20U)) == Builtin::i32(0)), u"i16.MaxValue<<\\20u==0");
 		#line 1730 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_qst)(ADV_USPCS(MaxValue, Builtin::i16)(), Builtin::i16((short)4)) == Builtin::i16((short)0b0000011111111111)), u"i16.MaxValue>>?4==0b0000_0111_1111_1111");
+		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_qst)(ADV_USPCS(MaxValue, Builtin::i16)(), Builtin::i32(4)) == Builtin::i16(0b0000011111111111)), u"i16.MaxValue>>?4==0b0000_0111_1111_1111i16");
 		#line 1731 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_qst)(ADV_USPCS(MaxValue, Builtin::i16)(), Builtin::i16((short)20)) == nullptr), u"i16.MaxValue>>?20==null");
+		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_qst)(ADV_USPCS(MaxValue, Builtin::i16)(), Builtin::i32(20)) == nullptr), u"i16.MaxValue>>?20==null");
 		#line 1732 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_lt_lt_qst)(ADV_USPCS(MaxValue, Builtin::i16)(), Builtin::i16((short)20)) == nullptr), u"i16.MaxValue<<?20==null");
+		ADV_ASSERT((ADV_UFCS(_operator_lt_lt_qst)(ADV_USPCS(MaxValue, Builtin::i16)(), Builtin::i32(20)) == nullptr), u"i16.MaxValue<<?20==null");
 		#line 1733 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_ne)(ADV_USPCS(MaxValue, Builtin::i16)(), Builtin::i16((short)4)) == Builtin::i16((short)0b0000011111111111)), u"i16.MaxValue>>!4==0b0000_0111_1111_1111");
+		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_ne)(ADV_USPCS(MaxValue, Builtin::i16)(), Builtin::i32(4)) == Builtin::i32(0b0000011111111111)), u"i16.MaxValue>>!4==0b0000_0111_1111_1111");
 		#line 1734 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_mod)(ADV_USPCS(MaxValue, Builtin::i16)(), Builtin::i16((short)20)) == Builtin::i16((short)0b0000011111111111)), u"i16.MaxValue>>%20==0b0000_0111_1111_1111");
+		ADV_ASSERT((ADV_UFCS(_operator_gt_gt_mod)(ADV_USPCS(MaxValue, Builtin::i16)(), Builtin::i32(20)) == Builtin::i32(0b0000011111111111)), u"i16.MaxValue>>%20==0b0000_0111_1111_1111");
 		#line 1735 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		a = ADV_USPCS(MaxValue, Builtin::i16)();
 		#line 1736 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_UFCS(_operator_gt_gt_mod_eq)(a, Builtin::i16((short)20));
 		#line 1737 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_lt_lt_mod)(a, Builtin::i16((short)20)) == Builtin::i16((short)0b0111111111110000)), u"a<<%20==0b0111_1111_1111_0000");
+		ADV_ASSERT((ADV_UFCS(_operator_lt_lt_mod)(a, Builtin::i32(20)) == Builtin::i32(0b0111111111110000)), u"a<<%20==0b0111_1111_1111_0000");
 		#line 1738 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		{
 			#line 1739 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			const auto& [result, overflowed] = ADV_UFCS(_operator_gt_gt_mod_qst)(ADV_USPCS(MaxValue, Builtin::i16)(), Builtin::i16((short)20));
+			const auto& [result, overflowed] = ADV_UFCS(_operator_gt_gt_mod_qst)(ADV_USPCS(MaxValue, Builtin::i16)(), Builtin::i32(20));
 			#line 1740 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			ADV_ASSERT((result == Builtin::i16((short)0b0000011111111111) && overflowed), u"result==0b0000_0111_1111_1111&&overflowed");
+			ADV_ASSERT((result == Builtin::i32(0b0000011111111111) && overflowed), u"result==0b0000_0111_1111_1111&&overflowed");
 		}
 		#line 1744 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		a = Builtin::i16((short)150);
 		#line 1745 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_xor_xor)(a, Builtin::u32(2U)) == Builtin::i16((short)22500)), u"a^^2u==22500");
+		ADV_ASSERT((ADV_UFCS(_operator_xor_xor)(a, Builtin::u32(2U)) == Builtin::i32(22500)), u"a^^2u==22500");
 		#line 1746 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_UFCS(_operator_xor_xor_eq)(a, Builtin::u32(2U));
 		#line 1747 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a == Builtin::i16((short)22500)), u"a==22500");
+		ADV_ASSERT((a == Builtin::i32(22500)), u"a==22500");
 		#line 1748 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_xor_xor)(Builtin::i16(30), Builtin::u32(3U)) == Builtin::i16((short)27000)), u"30i16^^3u==27000");
+		ADV_ASSERT((ADV_UFCS(_operator_xor_xor)(Builtin::i16(30), Builtin::u32(3U)) == Builtin::i32(27000)), u"30i16^^3u==27000");
 		#line 1749 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_xor_xor_qst)(Builtin::i16(30), Builtin::u32(3U)) == Builtin::i16((short)27000)), u"30i16^^?3u==27000");
+		ADV_ASSERT((ADV_UFCS(_operator_xor_xor_qst)(Builtin::i16(30), Builtin::u32(3U)) == Builtin::i16(27000)), u"30i16^^?3u==27000i16");
 		#line 1750 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(_operator_xor_xor_qst)(Builtin::i16(30), Builtin::u32(4U)) == nullptr), u"30i16^^?4u==null");
 		#line 1751 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_UFCS(_operator_xor_xor_qst_eq)(a, Builtin::u32(2U));
 		#line 1752 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a == Builtin::i16((short)22500)), u"a==22500");
+		ADV_ASSERT((a == Builtin::i32(22500)), u"a==22500");
 		#line 1753 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_xor_xor_ne)(Builtin::i16(30), Builtin::u32(3U)) == Builtin::i16((short)27000)), u"30i16^^!3u==27000");
+		ADV_ASSERT((ADV_UFCS(_operator_xor_xor_ne)(Builtin::i16(30), Builtin::u32(3U)) == Builtin::i32(27000)), u"30i16^^!3u==27000");
 		#line 1754 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_xor_xor_mod)(Builtin::i16(30), Builtin::u32(4U)) == Builtin::i16((short)23568)), u"30i16^^%4u==23568");
+		ADV_ASSERT((ADV_UFCS(_operator_xor_xor_mod)(Builtin::i16(30), Builtin::u32(4U)) == Builtin::i32(23568)), u"30i16^^%4u==23568");
 		#line 1755 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		a = Builtin::i16((short)30);
 		#line 1756 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_UFCS(_operator_xor_xor_mod_eq)(a, Builtin::u32(2U));
 		#line 1757 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((a == Builtin::i16((short)900)), u"a==900");
+		ADV_ASSERT((a == Builtin::i32(900)), u"a==900");
 		#line 1758 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_xor_xor_or)(Builtin::i16(30), Builtin::u32(3U)) == Builtin::i16((short)27000)), u"30i16^^|3u==27000");
+		ADV_ASSERT((ADV_UFCS(_operator_xor_xor_or)(Builtin::i16(30), Builtin::u32(3U)) == Builtin::i32(27000)), u"30i16^^|3u==27000");
 		#line 1759 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_ASSERT((ADV_UFCS(_operator_xor_xor_or)(Builtin::i16(30), Builtin::u32(4U)) == ADV_USPCS(MaxValue, Builtin::i16)()), u"30i16^^|4u==i16.MaxValue");
 		#line 1760 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
@@ -760,7 +760,7 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			#line 1761 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			const auto& [result, overflowed] = ADV_UFCS(_operator_xor_xor_mod_qst)(Builtin::i16(30), Builtin::u32(4U));
 			#line 1762 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			ADV_ASSERT((result == Builtin::i16((short)23568) && overflowed), u"result==23568&&overflowed");
+			ADV_ASSERT((result == Builtin::i32(23568) && overflowed), u"result==23568&&overflowed");
 		}
 		return true;
 	}();
@@ -816,7 +816,7 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			}
 		}
 		#line 83 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		return Builtin::i16((short)1);
+		return Builtin::i32(1);
 	}
 	
 } namespace System{

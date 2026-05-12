@@ -858,7 +858,7 @@ using __extensions::getMultiplyBy16;
 			}
 		}
 		#line 38 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-		return Builtin::u8((unsigned char)1);
+		return Builtin::i32(1);
 	}
 	
 } namespace System{
@@ -943,7 +943,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto ToBoolean(__extension_UInt8_88_u8 const& __this LIFETIMEBOUND) noexcept -> const bool
 	{
 		#line 89 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-		ADV_EXPRESSION_BODY(__this != Builtin::u8((unsigned char)0)); 
+		ADV_EXPRESSION_BODY(__this != Builtin::i32(0)); 
 	}
 	
 } namespace System{
@@ -952,7 +952,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto ToInt8(__extension_UInt8_88_u8 const& __this LIFETIMEBOUND)  -> const Builtin::i8
 	{
 		#line 91 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-		if ((__this <=> Builtin::u8((unsigned char)0x7F)) > 0) {
+		if ((__this <=> Builtin::i8((signed char)0x7F)) > 0) {
 			#line 92 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
 			Builtin::Throw(Builtin::IntegerOverflowException{});
 		}
@@ -1234,7 +1234,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto _operator_xor_xor(__extension_UInt8_176_u8 const& __this LIFETIMEBOUND, Builtin::u32 exp)  -> const typename __extension_UInt8_176_u8
 	{
 		#line 181 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-		if (exp == Builtin::u8((unsigned char)0)) [[unlikely]] {
+		if (exp == Builtin::i32(0)) [[unlikely]] {
 			#line 183 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
 			return Builtin::u8(1U);
 		}
@@ -1462,7 +1462,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto __static_getRadix<__extension_UInt8_214_u8>::get() -> const Builtin::i32
 	{
 		#line 217 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-		ADV_EXPRESSION_BODY(Builtin::u8((unsigned char)2)); 
+		ADV_EXPRESSION_BODY(Builtin::i32(2)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1494,7 +1494,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsEvenInteger(__extension_UInt8_214_u8 const& __this ) -> const bool
 	{
 		#line 222 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-		ADV_EXPRESSION_BODY((__this & Builtin::u8(1U)) == Builtin::u8((unsigned char)0)); 
+		ADV_EXPRESSION_BODY((__this & Builtin::u8(1U)) == Builtin::i32(0)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1558,7 +1558,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsNormal(__extension_UInt8_214_u8 const& __this ) -> const bool
 	{
 		#line 230 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-		ADV_EXPRESSION_BODY(__this != Builtin::u8((unsigned char)0)); 
+		ADV_EXPRESSION_BODY(__this != Builtin::i32(0)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1566,7 +1566,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsOddInteger(__extension_UInt8_214_u8 const& __this ) -> const bool
 	{
 		#line 231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-		ADV_EXPRESSION_BODY((__this & Builtin::u8(1U)) != Builtin::u8((unsigned char)0)); 
+		ADV_EXPRESSION_BODY((__this & Builtin::u8(1U)) != Builtin::i32(0)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1606,7 +1606,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsZero(__extension_UInt8_214_u8 const& __this ) -> const bool
 	{
 		#line 236 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-		ADV_EXPRESSION_BODY(__this == Builtin::u8((unsigned char)0)); 
+		ADV_EXPRESSION_BODY(__this == Builtin::i32(0)); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
@@ -1672,7 +1672,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getSign(__extension_UInt8_273_u8 const& __this ) -> const Builtin::i32
 	{
 		#line 274 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-		ADV_EXPRESSION_BODY(__this == Builtin::u8((unsigned char)0) ? Builtin::u8((unsigned char)0) : +Builtin::u8((unsigned char)1)); 
+		ADV_EXPRESSION_BODY(__this == Builtin::i32(0) ? Builtin::i32(0) : +Builtin::i32(1)); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
@@ -1682,19 +1682,19 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto CheckedLog(__extension_UInt8_285_u8 const& __this LIFETIMEBOUND, __extension_UInt8_1114_u8 base) noexcept -> const Builtin::Nullable<__extension_UInt8_1114_u8>
 	{
 		#line 339 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-		if (__this == Builtin::u8((unsigned char)0) || (base <=> Builtin::u8((unsigned char)1)) <= 0) {
+		if (__this == Builtin::i32(0) || (base <=> Builtin::i32(1)) <= 0) {
 			#line 340 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
 			return nullptr;
 		}
 		#line 343 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
 		if (std::is_constant_evaluated()) {
 			#line 344 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-			if (base == Builtin::u8((unsigned char)2)) {
+			if (base == Builtin::i32(2)) {
 				#line 345 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
 				return ADV_UPCS(CheckedLog2)(__this.__ref());
 			}
 			#line 347 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-			if (base == Builtin::u8((unsigned char)10)) {
+			if (base == Builtin::i32(10)) {
 				#line 348 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
 				return ADV_UPCS(CheckedLog10)(__this.__ref());
 			}
@@ -1810,7 +1810,7 @@ using __extensions::getMultiplyBy16;
 		#line 322 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
 		constexpr Builtin::u32 C2 = Builtin::u32(0b1000000000U) - Builtin::u32(100U);
 		#line 323 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-		return Builtin::Cast<true, __extension_UInt8_1114_u8>((((val + C1) & (val + C2)) >> Builtin::u32(8U)));
+		return Builtin::Cast<true, __extension_UInt8_1114_u8>((((val + C1) & (val + C2)) >> Builtin::i32(8)));
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -3308,7 +3308,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto __static_getMaxDigitCount<__extension_UInt8_1114_u8>::get() -> const Builtin::i32
 	{
 		#line 1115 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-		ADV_EXPRESSION_BODY(Builtin::u8((unsigned char)3)); 
+		ADV_EXPRESSION_BODY(Builtin::i32(3)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -3316,7 +3316,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto __static_getMaxHexDigitCount<__extension_UInt8_1114_u8>::get() -> const Builtin::i32
 	{
 		#line 1116 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-		ADV_EXPRESSION_BODY(Builtin::u8((unsigned char)2)); 
+		ADV_EXPRESSION_BODY(Builtin::i32(2)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -3324,7 +3324,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto __static_getMaxValueDiv10<__extension_UInt8_1114_u8>::get() -> const __extension_UInt8_1114_u8
 	{
 		#line 1117 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_bsl)(ADV_USPCS(MaxValue, Builtin::u8)(), Builtin::u8((unsigned char)10))); 
+		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_bsl)(ADV_USPCS(MaxValue, Builtin::u8)(), Builtin::i32(10))); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -3332,7 +3332,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getMultiplyBy10(__extension_UInt8_1114_u8 const& __this ) -> const __extension_UInt8_1114_u8
 	{
 		#line 1119 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_mul_mod)(__this, Builtin::u8((unsigned char)10))); 
+		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_mul_mod)(__this, Builtin::u8(10U))); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -3340,7 +3340,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getMultiplyBy16(__extension_UInt8_1114_u8 const& __this ) -> const __extension_UInt8_1114_u8
 	{
 		#line 1120 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_mul_mod)(__this, Builtin::u8((unsigned char)16))); 
+		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_mul_mod)(__this, Builtin::u8(16U))); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"

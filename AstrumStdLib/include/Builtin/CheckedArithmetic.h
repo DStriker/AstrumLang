@@ -278,7 +278,7 @@ namespace Builtin {
 		}
 
 		NODISCARD constexpr static bool Negative(T t, T& out) {
-			out = -t;
+			out = -std::make_signed_t<T>(t);
 			return false;
 		}
 	};
@@ -5343,7 +5343,8 @@ namespace Builtin {
 		constexpr bool isStd = requires { typename std::decay_t<T>::__underlying; };
 		using TInt =
 		    std::conditional_t<isStd, typename std::decay_t<T>::__underlying, std::decay_t<T>>;
-		result.__builtin_ref() = -TInt(t);
+		using TSigned = std::make_signed_t<TInt>;
+		result.__builtin_ref() = TInt(-TSigned(t));
 	}
 
 	template <class T>

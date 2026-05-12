@@ -647,7 +647,7 @@ namespace Builtin {
 		if (GreaterThanTest<T, U, ValidComparison<T, U>::method>::GreaterThan((T) rhs, (U) lhs)) {
 			return -1;
 		}
-		if (GreaterThanTest<T, U, ValidComparison<T, U>::method>::GreaterThan((T) lhs, (U) rhs)) {
+		if (GreaterThanTest<U, T, ValidComparison<U, T>::method>::GreaterThan((U) lhs, (T) rhs)) {
 			return 1;
 		}
 		return 0;
