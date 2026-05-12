@@ -705,7 +705,7 @@ namespace Builtin {
 	template <class T, class U>
 	class ModulusHelper<T, U, ComparisonMethod_Ok> {
 	   public:
-		NODISCARD constexpr static SafeIntErrorCode Modulus(const T& t, const U& u,
+		constexpr static SafeIntErrorCode Modulus(const T& t, const U& u,
 		                                                    T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
@@ -735,7 +735,7 @@ namespace Builtin {
 	template <class T, class U>
 	class ModulusHelper<T, U, ComparisonMethod_CastInt> {
 	   public:
-		NODISCARD constexpr static SafeIntErrorCode Modulus(const T& t, const U& u,
+		constexpr static SafeIntErrorCode Modulus(const T& t, const U& u,
 		                                                    T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
@@ -765,7 +765,7 @@ namespace Builtin {
 	template <class T, class U>
 	class ModulusHelper<T, U, ComparisonMethod_CastInt64> {
 	   public:
-		NODISCARD constexpr static SafeIntErrorCode Modulus(const T& t, const U& u,
+		constexpr static SafeIntErrorCode Modulus(const T& t, const U& u,
 		                                                    T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
@@ -795,7 +795,7 @@ namespace Builtin {
 	template <class T, class U>
 	class ModulusHelper<T, U, ComparisonMethod_UnsignedT> {
 	   public:
-		NODISCARD constexpr static SafeIntErrorCode Modulus(const T& t, const U& u,
+		constexpr static SafeIntErrorCode Modulus(const T& t, const U& u,
 		                                                    T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
@@ -824,7 +824,7 @@ namespace Builtin {
 	template <class T, class U>
 	class ModulusHelper<T, U, ComparisonMethod_UnsignedU> {
 	   public:
-		NODISCARD constexpr static SafeIntErrorCode Modulus(const T& t, const U& u,
+		constexpr static SafeIntErrorCode Modulus(const T& t, const U& u,
 		                                                    T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
@@ -2764,7 +2764,7 @@ namespace Builtin {
 	template <class T, class U>
 	class DivisionHelper<T, U, DivisionState_OK> {
 	   public:
-		NODISCARD constexpr static SafeIntErrorCode Divide(const T& t, const U& u,
+		constexpr static SafeIntErrorCode Divide(const T& t, const U& u,
 		                                                   T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
@@ -2794,7 +2794,7 @@ namespace Builtin {
 	template <class T, class U>
 	class DivisionHelper<T, U, DivisionState_UnsignedSigned> {
 	   public:
-		NODISCARD constexpr static SafeIntErrorCode Divide(const T& t, const U& u,
+		constexpr static SafeIntErrorCode Divide(const T& t, const U& u,
 		                                                   T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
@@ -2843,7 +2843,7 @@ namespace Builtin {
 	template <class T, class U>
 	class DivisionHelper<T, U, DivisionState_SignedUnsigned32> {
 	   public:
-		NODISCARD constexpr static SafeIntErrorCode Divide(const T& t, const U& u,
+		constexpr static SafeIntErrorCode Divide(const T& t, const U& u,
 		                                                   T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
@@ -2897,7 +2897,7 @@ namespace Builtin {
 	template <class T, class U>
 	class DivisionHelper<T, U, DivisionState_SignedUnsigned64> {
 	   public:
-		NODISCARD constexpr static SafeIntErrorCode Divide(const T& t, const U& u,
+		constexpr static SafeIntErrorCode Divide(const T& t, const U& u,
 		                                                   T& result) noexcept {
 			static_assert(__details::IntTraits<U>::isUint64, "U must be Uint64");
 			if (u == 0)
@@ -2944,7 +2944,7 @@ namespace Builtin {
 	template <class T, class U>
 	class DivisionHelper<T, U, DivisionState_SignedUnsigned> {
 	   public:
-		NODISCARD constexpr static SafeIntErrorCode Divide(const T& t, const U& u,
+		constexpr static SafeIntErrorCode Divide(const T& t, const U& u,
 		                                                   T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
@@ -2974,7 +2974,7 @@ namespace Builtin {
 	template <class T, class U>
 	class DivisionHelper<T, U, DivisionState_SignedSigned> {
 	   public:
-		NODISCARD constexpr static SafeIntErrorCode Divide(const T& t, const U& u,
+		constexpr static SafeIntErrorCode Divide(const T& t, const U& u,
 		                                                   T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
@@ -2984,9 +2984,11 @@ namespace Builtin {
 				return SafeInt_NoError;
 			}
 
-			result = (T) (t / u);
-			if (t == std::numeric_limits<T>::min() && u == (U) -1)
+			if (t == std::numeric_limits<T>::min() && u == (U) -1) {
+				result = t;
 				return SafeInt_Overflow;
+			}
+			result = (T) (t / u);
 			return SafeInt_NoError;
 		}
 
@@ -3081,8 +3083,8 @@ namespace Builtin {
 	   public:
 		NODISCARD constexpr static bool Addition(const T& t, const U& u, T& result) noexcept {
 			int32_t tmp = t + u;
+			result      = (T) tmp;
 			if (tmp <= (int32_t) std::numeric_limits<T>::max()) {
-				result = (T) tmp;
 				return true;
 			}
 			return false;
@@ -3563,7 +3565,7 @@ namespace Builtin {
 			return false;
 		}
 
-		NODISCARD constexpr static SaturatingStatus Addition(const T& t, const U& u,
+		NODISCARD constexpr static SaturatingStatus AdditionSat(const T& t, const U& u,
 		                                                     T& result) noexcept {
 			static_assert(__details::IntTraits<T>::isInt64 && __details::IntTraits<T>::isUint64,
 			              "T must be Int64, U Uint64");
@@ -6039,6 +6041,61 @@ namespace Builtin {
 	}
 
 	inline constexpr int64_t ReverseBits64(int64_t n) { return (int64_t) ReverseBits64u(n); }
+
+	template<class T>
+	inline T ByteSwap16(T src) noexcept
+	{
+#if USE_INTRINSICS
+#ifdef MSVC
+		return (typename T::__underlying)_byteswap_ushort(src);
+#else
+		return (typename T::__underlying) __builtin_bswap16(src);
+#endif
+#else
+		return (typename T::__underlying) ((src << 8) | (src >> 8));
+#endif
+	}
+
+	template <class T>
+	inline T ByteSwap32(T src) noexcept {
+#if USE_INTRINSICS
+#ifdef MSVC
+		return (typename T::__underlying) _byteswap_ulong(src);
+#else
+		return (typename T::__underlying) __builtin_bswap32(src);
+#endif
+#else
+		return (typename T::__underlying) (((src << 24) | (src >> 24)) | ((src << 8) & 0x00FF0000) |
+		       ((src >> 8) & 0x0000FF00));
+#endif
+	}
+
+	template <class T>
+	inline T ByteSwap64(T src) noexcept {
+#if USE_INTRINSICS
+#ifdef MSVC
+		return (typename T::__underlying) _byteswap_uint64(src);
+#else
+		return (typename T::__underlying) __builtin_bswap64(src);
+#endif
+#else
+		return (typename T::__underlying) (((src << 56) | (src >> 56)) 
+			| ((src << 40) & 0x00FF000000000000) 
+			| ((src >> 40) & 0x000000FF00000000) 
+			| ((src << 24) & 0x0000FF0000000000) 
+			| ((src >> 24) & 0x00000000FF000000) 
+			| ((src << 8) & 0x00000000FF000000) 
+			| ((src >> 8) & 0x0000000000FF0000));
+#endif
+	}
+
+	inline constexpr bool IsLittleEndian() noexcept {
+		return std::endian::native == std::endian::little;
+	}
+
+	inline constexpr bool IsBigEndian() noexcept {
+		return std::endian::native == std::endian::big;
+	}
 
 	struct Struct {};
 }  // namespace Builtin

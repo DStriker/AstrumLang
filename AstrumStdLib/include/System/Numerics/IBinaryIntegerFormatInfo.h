@@ -24,12 +24,15 @@ template<> inline constexpr bool Builtin::__details::cheapCopy<System::Numerics:
 namespace System::Numerics {
 	#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
 	template<class __AnyType> concept __HasMethodImplementation_49f56b338c01c9c9 = requires(typename __AnyType::__class t) { {t.IsGreaterThanAsUnsigned(std::declval<typename __AnyType::__self>())} -> std::convertible_to<bool>; }  || requires(typename __AnyType::__self t) { {IsGreaterThanAsUnsigned(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<bool>; } || requires { { [] { using namespace __extensions; return IsGreaterThanAsUnsigned(std::declval<typename __AnyType::__self>(), std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<bool>; };
+	} namespace __extensions { template<class _TT> struct __static_getMaxDigitCount; } namespace System::Numerics {
 	#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_getec9414692050f40b = requires { __AnyType::__self::MaxDigitCount; } || requires { [] { using namespace __extensions; __static_getMaxDigitCount<typename __AnyType::__self>(); }(); };
+	template<class __AnyType> concept __HasMethodImplementation_getec9414692050f40b = requires { __AnyType::__self::MaxDigitCount; } || requires { [] { using namespace __extensions; __static_getMaxDigitCount<typename __AnyType::__self>::get(); }(); };
+	} namespace __extensions { template<class _TT> struct __static_getMaxHexDigitCount; } namespace System::Numerics {
 	#line 11 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get85627ea2861a8ab0 = requires { __AnyType::__self::MaxHexDigitCount; } || requires { [] { using namespace __extensions; __static_getMaxHexDigitCount<typename __AnyType::__self>(); }(); };
+	template<class __AnyType> concept __HasMethodImplementation_get85627ea2861a8ab0 = requires { __AnyType::__self::MaxHexDigitCount; } || requires { [] { using namespace __extensions; __static_getMaxHexDigitCount<typename __AnyType::__self>::get(); }(); };
+	} namespace __extensions { template<class _TT> struct __static_getMaxValueDiv10; } namespace System::Numerics {
 	#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_getbf8d0c9067b307b2 = requires { __AnyType::__self::MaxValueDiv10; } || requires { [] { using namespace __extensions; __static_getMaxValueDiv10<typename __AnyType::__self>(); }(); };
+	template<class __AnyType> concept __HasMethodImplementation_getbf8d0c9067b307b2 = requires { __AnyType::__self::MaxValueDiv10; } || requires { [] { using namespace __extensions; __static_getMaxValueDiv10<typename __AnyType::__self>::get(); }(); };
 	#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"
 	template<class __AnyType> concept __HasMethodImplementation_get16321500413499ff = requires(typename __AnyType::__class t) { {t.getMultiplyBy10()} -> std::convertible_to<typename __AnyType::__self>; } || requires(typename __AnyType::__self t) { {getMultiplyBy10(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::__self>; };
 	#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryIntegerFormatInfo.ast"

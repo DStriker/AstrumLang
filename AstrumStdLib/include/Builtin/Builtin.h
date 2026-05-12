@@ -254,8 +254,12 @@ struct ___dependent_false : std::false_type {};
 
 #define ADV_USFCS_CONSTRAINT_PARAM(...) /*empty*/
 #define ADV_USFCS_CONSTRAINT_ARG(TYPE, TEMPKW, ...)                                                \
-	requires { ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(ADV_FORWARD(params)...); }            \
-	|| requires { [&]() { using namespace __extensions;  __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>(ADV_FORWARD(params)...); }(); }
+	requires { ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(ADV_FORWARD(params)...); }             \
+	|| requires { __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>:: get(std::declval<Args>()...); }      \
+	|| requires {                                                                                  \
+		__extensions::template __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(                    \
+		    std::declval<Args>()...);                                                              \
+	}
 #if defined(_MSC_VER)
 #undef ADV_USFCS_CONSTRAINT_PARAM
 #undef ADV_USFCS_CONSTRAINT_ARG
@@ -263,8 +267,8 @@ struct ___dependent_false : std::false_type {};
 	, bool IsViable = (requires {                                                                   \
 		ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(std::declval<Args>()...);                     \
 	}                                                                                              \
-	|| requires { __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>(std::declval<Args>()...); }		\
-	|| requires { __extensions::template __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>(std::declval<Args>()...); })
+	|| requires { __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(std::declval<Args>()...); }		\
+	|| requires { __extensions::template __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(std::declval<Args>()...); })
 #define ADV_USFCS_CONSTRAINT_ARG(...) IsViable
 #endif
 
@@ -279,13 +283,13 @@ struct ___dependent_false : std::false_type {};
 			              ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);    \
 		              }) {                                                                         \
 			return ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);           \
-		} else if constexpr (requires {[&]() { using namespace __extensions;  __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>(ADV_FORWARD(params)...); }();}) {  \
-			return [&]() { using namespace __extensions;  ADV_EXPRESSION_BODY(__static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>(ADV_FORWARD(params)...)); }();        \
+		} else if constexpr (requires {[&]() { using namespace __extensions;  __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(ADV_FORWARD(params)...); }();}) {  \
+			return [&]() { using namespace __extensions;  ADV_EXPRESSION_BODY(__static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(ADV_FORWARD(params)...)); }();        \
 		} else {                                                                                   \
 			static_assert(false,                                                                   \
 			              "Method " #__VA_ARGS__ " not found by USFCS system for type " #TYPE);    \
 			ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);                  \
-			__static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>(ADV_FORWARD(params)...);               \
+			__static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(ADV_FORWARD(params)...);               \
 		}                                                                                          \
 	}
 
@@ -402,8 +406,8 @@ struct ___dependent_false : std::false_type {};
 		requires noexcept(__VA_ARGS__ ::get##PROPERTY());                                          \
 	}                                                                                              \
 	|| requires {                                                                                  \
-		requires requires { []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>(); }(); };                              \
-		requires noexcept([]() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>(); }());                                  \
+		requires requires { []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>::get(); }(); };                              \
+		requires noexcept([]() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>::get(); }());                                  \
 	}
 
 #if defined(__GNUC__) && !defined(__clang__)
@@ -421,14 +425,14 @@ struct ___dependent_false : std::false_type {};
 #define ADV_USPCS_CONSTRAINT_PARAM(PROPERTY, ...) /*empty*/
 #define ADV_USPCS_CONSTRAINT_ARG(PROPERTY, ...)                                                    \
 	requires { __VA_ARGS__ ::##PROPERTY; }   ||                                                      \
-	requires { []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>(); }(); }
+	requires { []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>::get(); }(); }
 #if defined(_MSC_VER)
 #undef ADV_USPCS_CONSTRAINT_PARAM
 #undef ADV_USPCS_CONSTRAINT_ARG
 #define ADV_USPCS_CONSTRAINT_PARAM(PROPERTY, ...)                                                  \
 	, bool IsViable = (                                                                            \
 	      requires { __VA_ARGS__ ::##PROPERTY; } ||                                                \
-	      requires { []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>(); }(); })
+	      requires { []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>::get(); }(); })
 #define ADV_USPCS_CONSTRAINT_ARG(PROPERTY, ...) IsViable
 #endif
 
@@ -442,12 +446,12 @@ struct ___dependent_false : std::false_type {};
 		if constexpr (requires { __VA_ARGS__ ::##PROPERTY; }) {                                    \
 			return std::add_lvalue_reference_t<decltype(__VA_ARGS__ ::##PROPERTY)>(                \
 			    __VA_ARGS__ ::##PROPERTY);                                                         \
-		} else if constexpr (requires { []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>(); }(); }) {                \
-			return []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>(); }();                                          \
+		} else if constexpr (requires { []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>::get(); }(); }) {                \
+			return []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>::get(); }();                                          \
 		} else {                                                                                   \
 			static_assert(false, "Property " #PROPERTY " not found for this type " #__VA_ARGS__);  \
 			__VA_ARGS__ ::##PROPERTY;                                                              \
-			__static_get##PROPERTY<__VA_ARGS__>();                                                 \
+			__static_get##PROPERTY<__VA_ARGS__>::get();                                                 \
 		}                                                                                          \
 	}
 

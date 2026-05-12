@@ -15,10 +15,13 @@ public interface IBinaryInteger:
     
     TrailingOneCount: u32 { get; }
     TrailingZeroCount: u32 { get; }
+    MinimalBitWidth: u32 { get; }
     ByteCount: u32 { get; }
     CheckedIsqrt: self? { get; }
     Isqrt: self { get; }
     Log2Ceiling: self { get; }
+    PrevPow2: self { get; }
+    NextPow2: self { get; }
 
     NextMultipleOf: (rhs: self) -> self;
 

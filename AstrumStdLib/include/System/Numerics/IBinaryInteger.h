@@ -24,22 +24,29 @@ class IBinaryInteger__Weak;
 template<> inline constexpr bool Builtin::__details::cheapCopy<System::Numerics::IBinaryInteger> = false;
 
 namespace System::Numerics {
-	#line 23 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
+	#line 26 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
 	template<class __AnyType> concept __HasMethodImplementation_3fc27e014b17f068 = requires(typename __AnyType::__class t) { {t.NextMultipleOf(std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {NextMultipleOf(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return NextMultipleOf(std::declval<typename __AnyType::__self>(), std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
+	} namespace __extensions { template<class _TT> struct __static_getIsSigned; } namespace System::Numerics {
 	#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get32cc0e126f12555a = requires { __AnyType::__self::IsSigned; } || requires { [] { using namespace __extensions; __static_getIsSigned<typename __AnyType::__self>(); }(); };
+	template<class __AnyType> concept __HasMethodImplementation_get32cc0e126f12555a = requires { __AnyType::__self::IsSigned; } || requires { [] { using namespace __extensions; __static_getIsSigned<typename __AnyType::__self>::get(); }(); };
 	#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
 	template<class __AnyType> concept __HasMethodImplementation_getc54655ceca57b801 = requires(typename __AnyType::__class t) { {t.getTrailingOneCount()} -> std::convertible_to<Builtin::u32>; } || requires(typename __AnyType::__self t) { {getTrailingOneCount(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<Builtin::u32>; };
 	#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
 	template<class __AnyType> concept __HasMethodImplementation_get81c979ea538ee3cf = requires(typename __AnyType::__class t) { {t.getTrailingZeroCount()} -> std::convertible_to<Builtin::u32>; } || requires(typename __AnyType::__self t) { {getTrailingZeroCount(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<Builtin::u32>; };
 	#line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
-	template<class __AnyType> concept __HasMethodImplementation_getc1bf0c58bf8ec63f = requires(typename __AnyType::__class t) { {t.getByteCount()} -> std::convertible_to<Builtin::u32>; } || requires(typename __AnyType::__self t) { {getByteCount(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<Builtin::u32>; };
+	template<class __AnyType> concept __HasMethodImplementation_get451b85e08477124c = requires(typename __AnyType::__class t) { {t.getMinimalBitWidth()} -> std::convertible_to<Builtin::u32>; } || requires(typename __AnyType::__self t) { {getMinimalBitWidth(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<Builtin::u32>; };
 	#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
-	template<class __AnyType> concept __HasMethodImplementation_getd5b9536006d7e554 = requires(typename __AnyType::__class t) { {t.getCheckedIsqrt()} -> std::convertible_to<Builtin::Nullable<typename __AnyType::__self>>; } || requires(typename __AnyType::__self t) { {getCheckedIsqrt(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<Builtin::Nullable<typename __AnyType::__self>>; };
+	template<class __AnyType> concept __HasMethodImplementation_getc1bf0c58bf8ec63f = requires(typename __AnyType::__class t) { {t.getByteCount()} -> std::convertible_to<Builtin::u32>; } || requires(typename __AnyType::__self t) { {getByteCount(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<Builtin::u32>; };
 	#line 20 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get290d77e00232725b = requires(typename __AnyType::__class t) { {t.getIsqrt()} -> std::convertible_to<typename __AnyType::__self>; } || requires(typename __AnyType::__self t) { {getIsqrt(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::__self>; };
+	template<class __AnyType> concept __HasMethodImplementation_getd5b9536006d7e554 = requires(typename __AnyType::__class t) { {t.getCheckedIsqrt()} -> std::convertible_to<Builtin::Nullable<typename __AnyType::__self>>; } || requires(typename __AnyType::__self t) { {getCheckedIsqrt(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<Builtin::Nullable<typename __AnyType::__self>>; };
 	#line 21 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
+	template<class __AnyType> concept __HasMethodImplementation_get290d77e00232725b = requires(typename __AnyType::__class t) { {t.getIsqrt()} -> std::convertible_to<typename __AnyType::__self>; } || requires(typename __AnyType::__self t) { {getIsqrt(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::__self>; };
+	#line 22 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
 	template<class __AnyType> concept __HasMethodImplementation_get7fe13569a14ec76d = requires(typename __AnyType::__class t) { {t.getLog2Ceiling()} -> std::convertible_to<typename __AnyType::__self>; } || requires(typename __AnyType::__self t) { {getLog2Ceiling(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::__self>; };
+	#line 23 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
+	template<class __AnyType> concept __HasMethodImplementation_get7d74b5ed512062b3 = requires(typename __AnyType::__class t) { {t.getPrevPow2()} -> std::convertible_to<typename __AnyType::__self>; } || requires(typename __AnyType::__self t) { {getPrevPow2(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::__self>; };
+	#line 24 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
+	template<class __AnyType> concept __HasMethodImplementation_getfb476229a2bfb8fb = requires(typename __AnyType::__class t) { {t.getNextPow2()} -> std::convertible_to<typename __AnyType::__self>; } || requires(typename __AnyType::__self t) { {getNextPow2(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::__self>; };
 	#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
 	ADV_CHECK_INTERFACE(IBinaryNumber, IBinaryNumber);
 	#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
@@ -54,7 +61,7 @@ namespace System::Numerics {
 		{
 			using fn_3fc27e014b17f068 = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs);
 			fn_3fc27e014b17f068* fnptr_3fc27e014b17f068;
-			#line 23 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
+			#line 26 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
 			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_3fc27e014b17f068(Builtin::Object* obj, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) { ADV_EXPRESSION_BODY(ADV_UFCS(NextMultipleOf)(*static_cast<typename __AnyType::__class*>(obj), rhs)); }
 			using fn_getTrailingOneCount = Builtin::u32(Builtin::Object*);
 			fn_getTrailingOneCount* fnptr_getTrailingOneCount;
@@ -64,22 +71,34 @@ namespace System::Numerics {
 			fn_getTrailingZeroCount* fnptr_getTrailingZeroCount;
 			#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
 			template<class __AnyType> static Builtin::u32 impl_getTrailingZeroCount(Builtin::Object* obj) { return ADV_UFCS(getTrailingZeroCount)(*static_cast<typename __AnyType::__class*>(obj)); }
+			using fn_getMinimalBitWidth = Builtin::u32(Builtin::Object*);
+			fn_getMinimalBitWidth* fnptr_getMinimalBitWidth;
+			#line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
+			template<class __AnyType> static Builtin::u32 impl_getMinimalBitWidth(Builtin::Object* obj) { return ADV_UFCS(getMinimalBitWidth)(*static_cast<typename __AnyType::__class*>(obj)); }
 			using fn_getByteCount = Builtin::u32(Builtin::Object*);
 			fn_getByteCount* fnptr_getByteCount;
-			#line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
+			#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
 			template<class __AnyType> static Builtin::u32 impl_getByteCount(Builtin::Object* obj) { return ADV_UFCS(getByteCount)(*static_cast<typename __AnyType::__class*>(obj)); }
 			using fn_getCheckedIsqrt = Builtin::Nullable<Builtin::OptionalStrongRef<Builtin::ObjectRef>>(Builtin::Object*);
 			fn_getCheckedIsqrt* fnptr_getCheckedIsqrt;
-			#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
+			#line 20 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
 			template<class __AnyType> static Builtin::Nullable<Builtin::OptionalStrongRef<Builtin::ObjectRef>> impl_getCheckedIsqrt(Builtin::Object* obj) { return ADV_UFCS(getCheckedIsqrt)(*static_cast<typename __AnyType::__class*>(obj)); }
 			using fn_getIsqrt = Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*);
 			fn_getIsqrt* fnptr_getIsqrt;
-			#line 20 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
+			#line 21 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
 			template<class __AnyType> static Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_getIsqrt(Builtin::Object* obj) { return ADV_UFCS(getIsqrt)(*static_cast<typename __AnyType::__class*>(obj)); }
 			using fn_getLog2Ceiling = Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*);
 			fn_getLog2Ceiling* fnptr_getLog2Ceiling;
-			#line 21 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
+			#line 22 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
 			template<class __AnyType> static Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_getLog2Ceiling(Builtin::Object* obj) { return ADV_UFCS(getLog2Ceiling)(*static_cast<typename __AnyType::__class*>(obj)); }
+			using fn_getPrevPow2 = Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*);
+			fn_getPrevPow2* fnptr_getPrevPow2;
+			#line 23 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
+			template<class __AnyType> static Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_getPrevPow2(Builtin::Object* obj) { return ADV_UFCS(getPrevPow2)(*static_cast<typename __AnyType::__class*>(obj)); }
+			using fn_getNextPow2 = Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*);
+			fn_getNextPow2* fnptr_getNextPow2;
+			#line 24 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
+			template<class __AnyType> static Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_getNextPow2(Builtin::Object* obj) { return ADV_UFCS(getNextPow2)(*static_cast<typename __AnyType::__class*>(obj)); }
 			
 		};
 	}
@@ -91,13 +110,16 @@ namespace System::Numerics {
 		, &__vtables::__vtable_IBinaryInteger::template impl_3fc27e014b17f068<__AnyType>
 		, &__vtables::__vtable_IBinaryInteger::template impl_getTrailingOneCount<__AnyType>
 		, &__vtables::__vtable_IBinaryInteger::template impl_getTrailingZeroCount<__AnyType>
+		, &__vtables::__vtable_IBinaryInteger::template impl_getMinimalBitWidth<__AnyType>
 		, &__vtables::__vtable_IBinaryInteger::template impl_getByteCount<__AnyType>
 		, &__vtables::__vtable_IBinaryInteger::template impl_getCheckedIsqrt<__AnyType>
 		, &__vtables::__vtable_IBinaryInteger::template impl_getIsqrt<__AnyType>
 		, &__vtables::__vtable_IBinaryInteger::template impl_getLog2Ceiling<__AnyType>
+		, &__vtables::__vtable_IBinaryInteger::template impl_getPrevPow2<__AnyType>
+		, &__vtables::__vtable_IBinaryInteger::template impl_getNextPow2<__AnyType>
 		};
 	#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
-	template<class __AnyType> concept __ImplementsInterface_IBinaryInteger = __ImplementsInterface_IBinaryNumber<__AnyType> && __ImplementsInterface_IShiftArithmetic<__AnyType> && __ImplementsInterface_IIntegerDivisibleArithmetic<__AnyType> && __ImplementsInterface_IIntegerPowerArithmetic<__AnyType> && __HasMethodImplementation_3fc27e014b17f068<__AnyType> && __HasMethodImplementation_get32cc0e126f12555a<__AnyType> && __HasMethodImplementation_getc54655ceca57b801<__AnyType> && __HasMethodImplementation_get81c979ea538ee3cf<__AnyType> && __HasMethodImplementation_getc1bf0c58bf8ec63f<__AnyType> && __HasMethodImplementation_getd5b9536006d7e554<__AnyType> && __HasMethodImplementation_get290d77e00232725b<__AnyType> && __HasMethodImplementation_get7fe13569a14ec76d<__AnyType>;
+	template<class __AnyType> concept __ImplementsInterface_IBinaryInteger = __ImplementsInterface_IBinaryNumber<__AnyType> && __ImplementsInterface_IShiftArithmetic<__AnyType> && __ImplementsInterface_IIntegerDivisibleArithmetic<__AnyType> && __ImplementsInterface_IIntegerPowerArithmetic<__AnyType> && __HasMethodImplementation_3fc27e014b17f068<__AnyType> && __HasMethodImplementation_get32cc0e126f12555a<__AnyType> && __HasMethodImplementation_getc54655ceca57b801<__AnyType> && __HasMethodImplementation_get81c979ea538ee3cf<__AnyType> && __HasMethodImplementation_get451b85e08477124c<__AnyType> && __HasMethodImplementation_getc1bf0c58bf8ec63f<__AnyType> && __HasMethodImplementation_getd5b9536006d7e554<__AnyType> && __HasMethodImplementation_get290d77e00232725b<__AnyType> && __HasMethodImplementation_get7fe13569a14ec76d<__AnyType> && __HasMethodImplementation_get7d74b5ed512062b3<__AnyType> && __HasMethodImplementation_getfb476229a2bfb8fb<__AnyType>;
 	#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
 	class IBinaryInteger final : public Builtin::InterfaceRef {
 		public: using __self = IBinaryInteger;
@@ -199,9 +221,9 @@ namespace System::Numerics {
 		public: template<class __AnyType, class __FixedType = std::decay_t<__AnyType>::__self> requires std::is_base_of_v<Builtin::Object, std::decay_t<__AnyType>> IBinaryInteger& operator=(__AnyType&& value) { static_assert(__ImplementsInterface_IBinaryInteger<__FixedType>, "Cannot initialize interface IBinaryInteger from this type"); 
  		if (_obj) Builtin::Release(_obj); _obj = (Builtin::Object*)&value; Builtin::Retain(_obj); 
 		_vtable = &__vtable_IBinaryInteger_for<__FixedType>; return *this; }
-		#line 23 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
+		#line 26 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
 		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> NextMultipleOf(Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) const { ADV_EXPRESSION_BODY(_vtable->fnptr_3fc27e014b17f068(_obj, rhs)); }
-		#line 30 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
+		#line 33 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
 		public: template<__ImplementsInterface_IBinaryInteger T> static const std::tuple<T, T> DefaultDivRem(T lhs, T rhs) ;
 		
 	};
@@ -320,10 +342,13 @@ namespace System::Numerics {
 	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IBinaryInteger::__vtable> FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> NextMultipleOf(const __AnyInterface& iface, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_3fc27e014b17f068(Builtin::GetObjectReferenceFromInterface(&iface), rhs)); }
 	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IBinaryInteger::__vtable> FORCE_INLINE const Builtin::u32 getTrailingOneCount(const __AnyInterface& iface) { return Builtin::GetVTableFromInterface(&iface)->fnptr_getTrailingOneCount(Builtin::GetObjectReferenceFromInterface(&iface)); }
 	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IBinaryInteger::__vtable> FORCE_INLINE const Builtin::u32 getTrailingZeroCount(const __AnyInterface& iface) { return Builtin::GetVTableFromInterface(&iface)->fnptr_getTrailingZeroCount(Builtin::GetObjectReferenceFromInterface(&iface)); }
+	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IBinaryInteger::__vtable> FORCE_INLINE const Builtin::u32 getMinimalBitWidth(const __AnyInterface& iface) { return Builtin::GetVTableFromInterface(&iface)->fnptr_getMinimalBitWidth(Builtin::GetObjectReferenceFromInterface(&iface)); }
 	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IBinaryInteger::__vtable> FORCE_INLINE const Builtin::u32 getByteCount(const __AnyInterface& iface) { return Builtin::GetVTableFromInterface(&iface)->fnptr_getByteCount(Builtin::GetObjectReferenceFromInterface(&iface)); }
 	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IBinaryInteger::__vtable> FORCE_INLINE const Builtin::Nullable<Builtin::OptionalStrongRef<Builtin::ObjectRef>> getCheckedIsqrt(const __AnyInterface& iface) { return Builtin::GetVTableFromInterface(&iface)->fnptr_getCheckedIsqrt(Builtin::GetObjectReferenceFromInterface(&iface)); }
 	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IBinaryInteger::__vtable> FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> getIsqrt(const __AnyInterface& iface) { return Builtin::GetVTableFromInterface(&iface)->fnptr_getIsqrt(Builtin::GetObjectReferenceFromInterface(&iface)); }
 	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IBinaryInteger::__vtable> FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> getLog2Ceiling(const __AnyInterface& iface) { return Builtin::GetVTableFromInterface(&iface)->fnptr_getLog2Ceiling(Builtin::GetObjectReferenceFromInterface(&iface)); }
+	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IBinaryInteger::__vtable> FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> getPrevPow2(const __AnyInterface& iface) { return Builtin::GetVTableFromInterface(&iface)->fnptr_getPrevPow2(Builtin::GetObjectReferenceFromInterface(&iface)); }
+	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IBinaryInteger::__vtable> FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> getNextPow2(const __AnyInterface& iface) { return Builtin::GetVTableFromInterface(&iface)->fnptr_getNextPow2(Builtin::GetObjectReferenceFromInterface(&iface)); }
 	
 	//###############################################################################
 //# Function definitions
@@ -331,9 +356,9 @@ namespace System::Numerics {
 
 template<__ImplementsInterface_IBinaryInteger T> inline const std::tuple<T, T> IBinaryInteger::DefaultDivRem(T lhs, T rhs) 
 	{
-		#line 32 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
+		#line 35 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
 		auto quotient = lhs / rhs; 
-		#line 33 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
+		#line 36 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
 		return std::make_tuple(quotient, (lhs - (quotient * rhs)));
 	}
 	#line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"

@@ -229,8 +229,8 @@ namespace Builtin {
 		constexpr const FastInt<T>& operator+() const noexcept { return *this; }
 
 		constexpr FastInt<T> operator-() const {
-			static_assert(std::numeric_limits<T>::is_signed,
-			              "Cannot to negate the unsigned number");
+			//static_assert(std::numeric_limits<T>::is_signed,
+			              //"Cannot to negate the unsigned number");
 			return (T) -value;
 		}
 
@@ -260,24 +260,37 @@ namespace Builtin {
 		constexpr FastInt<T> _operator_not() const noexcept { return (T) ~value; }
 
 		template <class U>
-		constexpr FastInt<T> operator%(U rhs) const noexcept {
-			return value % rhs;
+		constexpr FastInt<T> operator%(U rhs) const {
+			if (rhs == 0)
+				throw DivisionByZeroException();
+			T result = 0;
+			ModulusHelper<T, U, ValidComparison<T, U>::method>::Modulus(value, (U) rhs,
+			                                                                 result);
+			return FastInt<T>(result);
 		}
 
 		template <class U>
-		constexpr FastInt<T> operator%(FastInt<U> rhs) const noexcept {
-			return FastInt<T>(value % (U) rhs);
+		constexpr FastInt<T> operator%(FastInt<U> rhs) const {
+			if (rhs == 0)
+				throw DivisionByZeroException();
+			T result = 0;
+			ModulusHelper<T, U, ValidComparison<T, U>::method>::Modulus(value, (U) rhs, result);
+			return FastInt<T>(result);
 		}
 
 		template <class U>
-		constexpr FastInt<T>& operator%=(U rhs) noexcept {
-			value %= rhs;
+		constexpr FastInt<T>& operator%=(U rhs) {
+			if (rhs == 0)
+				throw DivisionByZeroException();
+			ModulusHelper<T, U, ValidComparison<T, U>::method>::Modulus(value, rhs, value);
 			return *this;
 		}
 
 		template <class U>
-		constexpr FastInt<T>& operator%=(FastInt<U> rhs) noexcept {
-			value %= (U) rhs;
+		constexpr FastInt<T>& operator%=(FastInt<U> rhs) {
+			if (rhs == 0)
+				throw DivisionByZeroException();
+			ModulusHelper<T, U, ValidComparison<T, U>::method>::Modulus(value, (U)rhs, value);
 			return *this;
 		}
 
@@ -307,21 +320,25 @@ namespace Builtin {
 		constexpr FastInt<T> Div(U rhs) const {
 			if (rhs == 0)
 				throw DivisionByZeroException();
-			return FastInt<T>(value / rhs);
+			T result = 0;
+			DivisionHelper<T, U, DivisionMethod<T, U>::method>::Divide(value, (U) rhs, result);
+			return result;
 		}
 
 		template <class U>
 		constexpr FastInt<T> Div(FastInt<U> rhs) const {
 			if (rhs == 0)
 				throw DivisionByZeroException();
-			return FastInt<T>(value / (U) rhs);
+			T result = 0;
+			DivisionHelper<T, U, DivisionMethod<T, U>::method>::Divide(value, (U) rhs, result);
+			return result;
 		}
 
 		template <class U>
 		constexpr FastInt<T>& DivAssign(U rhs) {
 			if (rhs == 0)
 				throw DivisionByZeroException();
-			value /= rhs;
+			DivisionHelper<T, U, DivisionMethod<T, U>::method>::Divide(value, rhs, value);
 			return *this;
 		}
 
@@ -329,7 +346,7 @@ namespace Builtin {
 		constexpr FastInt<T>& DivAssign(FastInt<U> rhs) {
 			if (rhs == 0)
 				throw DivisionByZeroException();
-			value /= (U) rhs;
+			DivisionHelper<T, U, DivisionMethod<T, U>::method>::Divide(value, (U)rhs, value);
 			return *this;
 		}
 
@@ -538,10 +555,10 @@ namespace Builtin {
 	template <class T, class U>
 	constexpr auto operator<=>(const FastInt<U>& lhs,
 	                           const FastInt<T>& rhs) noexcept {
-		if ((U) lhs < (T) rhs) {
+		if (GreaterThanTest<T, U, ValidComparison<T, U>::method>::GreaterThan((T) rhs, (U) lhs)) {
 			return -1;
 		}
-		if ((U) lhs > (T) rhs) {
+		if (GreaterThanTest<T, U, ValidComparison<T, U>::method>::GreaterThan((T) lhs, (U) rhs)) {
 			return 1;
 		}
 		return 0;
@@ -550,10 +567,10 @@ namespace Builtin {
 	template <class T, class U>
 	constexpr auto operator<=>(const U& lhs, const FastInt<T>& rhs) noexcept
 	    requires(std::is_integral_v<U>) {
-		if (lhs < (T) rhs) {
+		if (GreaterThanTest<T, U, ValidComparison<T, U>::method>::GreaterThan((T) rhs, lhs)) {
 			return -1;
 		}
-		if (lhs > (T) rhs) {
+		if (GreaterThanTest<U, T, ValidComparison<U, T>::method>::GreaterThan(lhs, (T) rhs)) {
 			return 1;
 		}
 		return 0;
@@ -562,10 +579,10 @@ namespace Builtin {
 	template <class T, class U>
 	constexpr auto operator<=>(const FastInt<T>& lhs, const U& rhs) noexcept
 	    requires(std::is_integral_v<U>) {
-		if ((T) lhs < rhs) {
+		if (GreaterThanTest<U, T, ValidComparison<U, T>::method>::GreaterThan(rhs, (T) lhs)) {
 			return -1;
 		}
-		if ((T) lhs > rhs) {
+		if (GreaterThanTest<T, U, ValidComparison<T, U>::method>::GreaterThan((T) lhs, rhs)) {
 			return 1;
 		}
 		return 0;
@@ -573,41 +590,45 @@ namespace Builtin {
 
 	template <class T, class U>
 	constexpr bool operator==(const FastInt<T>& lhs, const FastInt<U>& rhs) noexcept {
-		return lhs.__builtin_ref() == rhs.__builtin_ref();
+		return EqualityTest<T, U, ValidComparison<T, U>::method>::IsEquals((T) lhs, (U) rhs);
 	}
 
 	template <class T, class U>
 	constexpr bool operator==(const FastInt<T>& lhs, const U& rhs) noexcept
 	    requires(std::is_integral_v<U>) {
-		return lhs == (FastInt<T>) rhs;
+		return EqualityTest<T, U, ValidComparison<T, U>::method>::IsEquals((T) lhs, rhs);
 	}
 
 	template <class T, class U>
 	constexpr bool operator==(const U& lhs, const FastInt<T>& rhs) noexcept
 	    requires(std::is_integral_v<U>) {
-		return (T) lhs == rhs.__builtin_ref();
+		return EqualityTest<T, U, ValidComparison<T, U>::method>::IsEquals((T) rhs, lhs);
 	}
 
 	template <class T, class U>
 	constexpr bool operator!=(const FastInt<T>& lhs, const FastInt<U>& rhs) noexcept {
-		return (T) lhs != (U) rhs;
+		return !(lhs == rhs);
 	}
 
 	template <class T, class U>
 	constexpr bool operator!=(const FastInt<T>& lhs, const U& rhs) noexcept
 	    requires(std::is_integral_v<U>) {
-		return lhs != (FastInt<T>) rhs;
+		return !(lhs == rhs);
 	}
 
 	template <class T, class U>
 	constexpr bool operator!=(const U& lhs, FastInt<T> rhs) noexcept
 	    requires(std::is_integral_v<U>) {
-		return (T) rhs != lhs;
+		return !(lhs == rhs);
 	}
 
 	template <class T, class U>
 	constexpr FastInt<T> operator%(U lhs, FastInt<T> rhs) requires(std::is_integral_v<U>) {
-		return lhs % (T) rhs;
+		if (rhs == 0)
+			throw DivisionByZeroException();
+		T result = 0;
+		ModulusHelper<U, T, ValidComparison<U, T>::method>::Modulus(value, (T) rhs, result);
+		return FastInt<T>(result);
 	}
 
 	template <class T, class U>
@@ -619,7 +640,9 @@ namespace Builtin {
 	constexpr FastInt<T> Div(U lhs, FastInt<T> rhs) requires(std::is_integral_v<U>) {
 		if (rhs == 0)
 			throw DivisionByZeroException();
-		return lhs / (T) rhs;
+		T result = 0;
+		DivisionHelper<U, T, DivisionMethod<U, T>::method>::Divide(value, (T) rhs, result);
+		return result;
 	}
 
 	template <class T, class U>
@@ -660,7 +683,10 @@ namespace Builtin {
 
 	template <class T, class U>
 	constexpr T& operator%=(T& lhs, FastInt<U> rhs) requires(std::is_integral_v<T>) {
-		lhs %= (U) rhs;
+		if (rhs == 0)
+			throw DivisionByZeroException();
+
+		ModulusHelper<T, U, ValidComparison<T, U>::method>::Modulus(lhs, (U) rhs, lhs);
 		return lhs;
 	}
 

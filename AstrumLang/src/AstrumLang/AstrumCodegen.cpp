@@ -5633,6 +5633,12 @@ namespace AstrumLang {
 				methodIds[&method] = sema.getInterfaceMethodId(type->id + "_" + method.id,
 				                                               method.params->paramDeclClause());
 			}
+			if (method.isStatic)
+			{
+				out << "} namespace __extensions { template<class _TT> struct __static_"
+				    << method.id << "; } namespace " << sema.packageName << " {\n"
+				    << std::string(depth, '\t');
+			}
 			out << "#line " << method.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "template<class __AnyType";
@@ -5714,7 +5720,7 @@ namespace AstrumLang {
 					out << " { { [] { using namespace __extensions; ";
 					if (method.returnType)
 						out << "return";
-					out << " __static_" << method.id << "<typename __AnyType::__self>(";
+					out << " __static_" << method.id << "<typename __AnyType::__self>::get(";
 				} else {
 					out << "(typename __AnyType::__self t) { {" << method.id
 					    << "(__extensions::__proxy<typename __AnyType::__self>{t}";
@@ -5908,6 +5914,11 @@ namespace AstrumLang {
 		for (const auto& prop : type->properties) {
 			propertyIds[&prop] = sema.getInterfaceMethodId(type->id + "_" + prop.id, nullptr);
 			auto id            = propertyIds[&prop];
+			if (prop.isStatic) {
+				out << "} namespace __extensions { template<class _TT> struct __static_get"
+				    << prop.id << "; } namespace " << sema.packageName << " {\n"
+				    << std::string(depth, '\t');
+			}
 			out << "#line " << prop.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "template<class __AnyType";
@@ -5923,7 +5934,7 @@ namespace AstrumLang {
 			if (prop.isStatic) {
 				out << " = requires { __AnyType::__self::" << prop.id
 				    << "; } || requires { [] { using namespace __extensions; __static_get"
-				    << prop.id << "<typename __AnyType::__self>(); }(); };\n"
+				    << prop.id << "<typename __AnyType::__self>::get(); }(); };\n"
 				    << std::string(depth, '\t');
 			} else {
 				out << " = requires(typename __AnyType::__class t) { {t.get" << prop.id
@@ -8962,114 +8973,94 @@ namespace AstrumLang {
 			}
 
 			if (!type->templateParams && func.isStatic) {
-				out << "template<class __TT> requires std::same_as<__TT, __extension_" << filename
-				    << "_" << type->pos.line << "_" << type->id;
-				if (type->templateParams) {
-					out << "<";
-					bool first = true;
-					for (auto param : type->templateParams->templateParamDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(param->Identifier());
-						if (param->Ellipsis())
-							out << "...";
-					}
-					out << ">";
-				}
-				out << "> ";
-			}
-
-			if (func.isConsteval) {
-				out << "inline consteval ";
-			} else if (func.isConstexpr) {
-				out << "inline constexpr ";
-			} else if (func.isInline) {
-				out << "inline ";
-			} else if (!CompilerSettings::get().dllName.empty() && !func.templateParams &&
-			           !type->templateParams) {
-				if (func.access == AccessSpecifier::Public ||
-				    func.access == AccessSpecifier::Protected ||
-				    func.access == AccessSpecifier::Private)
-					out << CompilerSettings::get().dllName << "_API ";
-				else
-					out << CompilerSettings::get().dllName << "_HIDDEN ";
-			}
-
-			// bool isRegularMethod = !func.isConstructor;
-			out << "auto ";
-			if (func.isConstructor) {
-				out << "__construct_";
-			} else if (func.isStatic) {
-				out << "__static_" << func.id;
-			} else {
-				out << func.id;
-				if (func.templateSpecializationArgs) {
-					out << "<";
-					printTemplateArgumentList(func.templateSpecializationArgs);
-					out << ">";
-				}
-			}
-			out << "(";
-			if (!func.isConstructor && !func.isStatic) {
-				out << "__extension_" << filename << "_" << type->pos.line << "_" << type->id;
-				if (type->templateParams) {
-					out << "<";
-					bool first = true;
-					for (auto param : type->templateParams->templateParamDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(param->Identifier());
-						if (param->Ellipsis())
-							out << "...";
-					}
-					out << ">";
-				}
-				out << " ";
-				if (!func.isMutating)
-					out << "const";
-				out << "& __this ";
-				if (!func.isMutating)
-					out << "LIFETIMEBOUND";
-			} else if (func.isConstructor) {
-				out << "Builtin::ConstructorProxy<__extension_" << filename << "_" << type->pos.line
-				    << "_" << type->id;
-				if (type->templateParams && !type->id.empty()) {
-					out << "<";
-					bool first = true;
-					for (auto param : type->templateParams->templateParamDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(param->Identifier());
-						if (param->Ellipsis())
-							out << "...";
-					}
-					out << ">";
-				}
-				out << "> __ctordata";
-			}
-			if (func.params && func.params->paramDeclClause()) {
-				if (!func.isStatic)
-					out << ", ";
-				printParamDeclClause(func.params->paramDeclClause());
-			}
-			out << ")";
-			isVariadicTemplate    = false;
-			isFunctionDeclaration = false;
-			out << " ";
-			if (func.exceptionSpecification)
-				printExceptionSpecification(func.exceptionSpecification);
-			out << " -> ";
-			if (func.returnType || func.isConstructor) {
-				if (!func.isMutating && (!func.isRefReturn || func.isConstReturn))
-					out << "const ";
+				out << "template<class __TT> struct ";
 				if (func.isConstructor) {
-					out << "decltype(auto)";
-				} else if (func.returnType->getText() == "self") {
-					out << "typename __extension_" << filename << "_" << type->pos.line << "_"
-					    << type->id;
+					out << "__construct_";
+				} else if (func.isStatic) {
+					out << "__static_" << func.id;
+				}
+				out << "; template<> struct ";
+				if (func.isConstructor) {
+					out << "__construct_";
+				} else if (func.isStatic) {
+					out << "__static_" << func.id;
+				}
+				out << "<__extension_" << filename << "_" << type->pos.line << "_" << type->id
+				    << "> { static ";
+				/*
+				<< filename
+				<< "_" << type->pos.line << "_" << type->id;
+			if (type->templateParams) {
+				out << "<";
+				bool first = true;
+				for (auto param : type->templateParams->templateParamDeclaration()) {
+				    if (!first)
+				        out << ", ";
+				    first = false;
+				    printIdentifier(param->Identifier());
+				    if (param->Ellipsis())
+				        out << "...";
+				}
+				out << ">";
+			}
+			out << "> ";*/
+			}
+
+				if (func.isConsteval) {
+					out << "inline consteval ";
+				} else if (func.isConstexpr) {
+					out << "inline constexpr ";
+				} else if (func.isInline) {
+					out << "inline ";
+				} else if (!CompilerSettings::get().dllName.empty() && !func.templateParams &&
+				           !type->templateParams) {
+					if (func.access == AccessSpecifier::Public ||
+					    func.access == AccessSpecifier::Protected ||
+					    func.access == AccessSpecifier::Private)
+						out << CompilerSettings::get().dllName << "_API ";
+					else
+						out << CompilerSettings::get().dllName << "_HIDDEN ";
+				}
+
+				// bool isRegularMethod = !func.isConstructor;
+				out << "auto ";
+				if (func.isConstructor) {
+					out << "__construct_";
+				} else if (func.isStatic) {
+					out << "get";
+				} else {
+					out << func.id;
+					if (func.templateSpecializationArgs) {
+						out << "<";
+						printTemplateArgumentList(func.templateSpecializationArgs);
+						out << ">";
+					}
+				}
+				out << "(";
+				if (!func.isConstructor && !func.isStatic) {
+					out << "__extension_" << filename << "_" << type->pos.line << "_" << type->id;
+					if (type->templateParams) {
+						out << "<";
+						bool first = true;
+						for (auto param : type->templateParams->templateParamDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(param->Identifier());
+							if (param->Ellipsis())
+								out << "...";
+						}
+						out << ">";
+					}
+					out << " ";
+					if (!func.isMutating)
+						out << "const";
+					out << "& __this ";
+					if (!func.isMutating)
+						out << "LIFETIMEBOUND";
+				} else if (func.isConstructor) {
+					out << "Builtin::ConstructorProxy<__extension_" << filename << "_"
+					    << type->pos.line << "_" << type->id;
 					if (type->templateParams && !type->id.empty()) {
 						out << "<";
 						bool first = true;
@@ -9083,151 +9074,108 @@ namespace AstrumLang {
 						}
 						out << ">";
 					}
-					if (type->kind == TypeKind::Class && func.isRefReturn) {
-						out << "::__class";
-					}
-				} else {
-					printTypeId(func.returnType);
+					out << "> __ctordata";
 				}
-
-				if (func.isRefReturn)
-					out << "&";
-			} else if (func.isForwardReturn) {
-				out << "decltype(auto)";
-			} else if (func.expression) {
-				out << "decltype(auto)";
-			} else {
-				out << "void";
-			}
-
-			out << ";" << std::endl << std::string(depth, '\t');
-			if (func.id == "operator++" || func.id == "operator--") {
-				if (func.attributes) {
-					for (auto attr : func.attributes->attributeSpecifier()) {
-						auto attrName = attr->Identifier()->getText();
-						if (attrName == "Deprecated") {
-							out << "[[deprecated";
-							if (attr->attributeArgumentClause())
-								out << "("
-								    << attr->attributeArgumentClause()->expressionList()->getText()
-								    << ")";
-							out << "]] ";
-						} else if (attrName == "Unused") {
-							out << "[[maybe_unused]] ";
-						} else if (attrName == "NoDiscard") {
-							out << "[[nodiscard]] ";
-						} else if (attrName == "NoReturn") {
-							out << "[[noreturn]] ";
-						} else if (attrName == "ForceInline") {
-							out << "FORCE_INLINE ";
-						} else if (attrName == "NoInline") {
-							out << "NOINLINE ";
-						} else {
-							printAttributeSpecifier(attr);
-							out << " ";
-						}
-					}
+				if (func.params && func.params->paramDeclClause()) {
+					if (!func.isStatic)
+						out << ", ";
+					printParamDeclClause(func.params->paramDeclClause());
 				}
-				if (type->templateParams) {
-					printTemplateParams(type->templateParams);
-					out << " ";
-				}
-				isFunctionDeclaration = true;
-				if (func.isConsteval) {
-					out << "inline consteval ";
-				} else if (func.isConstexpr) {
-					out << "inline constexpr ";
-				} else {
-					out << "inline ";
-				}
-
-				out << "auto " << func.id << "(__extension_" << filename << "_" << type->pos.line
-				    << "_" << type->id;
-				if (type->templateParams) {
-					out << "<";
-					bool first = true;
-					for (auto param : type->templateParams->templateParamDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(param->Identifier());
-						if (param->Ellipsis())
-							out << "...";
-					}
-					out << ">";
-				}
-				out << " & __this, int) ";
+				out << ")";
 				isVariadicTemplate    = false;
 				isFunctionDeclaration = false;
+				out << " ";
 				if (func.exceptionSpecification)
 					printExceptionSpecification(func.exceptionSpecification);
 				out << " -> ";
-				out << "typename __extension_" << filename << "_" << type->pos.line << "_"
-				    << type->id;
-				if (type->templateParams) {
-					out << "<";
-					bool first = true;
-					for (auto param : type->templateParams->templateParamDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(param->Identifier());
-						if (param->Ellipsis())
-							out << "...";
+				if (func.returnType || func.isConstructor) {
+					if (!func.isMutating && (!func.isRefReturn || func.isConstReturn))
+						out << "const ";
+					if (func.isConstructor) {
+						out << "decltype(auto)";
+					} else if (func.returnType->getText() == "self") {
+						out << "typename __extension_" << filename << "_" << type->pos.line << "_"
+						    << type->id;
+						if (type->templateParams && !type->id.empty()) {
+							out << "<";
+							bool first = true;
+							for (auto param : type->templateParams->templateParamDeclaration()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printIdentifier(param->Identifier());
+								if (param->Ellipsis())
+									out << "...";
+							}
+							out << ">";
+						}
+						if (type->kind == TypeKind::Class && func.isRefReturn) {
+							out << "::__class";
+						}
+					} else {
+						printTypeId(func.returnType);
 					}
-					out << ">";
+
+					if (func.isRefReturn)
+						out << "&";
+				} else if (func.isForwardReturn) {
+					out << "decltype(auto)";
+				} else if (func.expression) {
+					out << "decltype(auto)";
+				} else {
+					out << "void";
 				}
-				out << ";" << std::endl << std::string(depth, '\t');
-			} else if (func.isCommutative) {
-				if (type->templateParams) {
-					printTemplateParams(type->templateParams);
-					out << " ";
+
+				out << ";";
+				if (func.isStatic)
+				{
+				    out << " };";
 				}
-				if (func.templateParams) {
-					printTemplateParams(func.templateParams);
-					out << " ";
-				}
-				if (func.attributes) {
-					for (auto attr : func.attributes->attributeSpecifier()) {
-						auto attrName = attr->Identifier()->getText();
-						if (attrName == "Deprecated") {
-							out << "[[deprecated";
-							if (attr->attributeArgumentClause())
-								out << "("
-								    << attr->attributeArgumentClause()->expressionList()->getText()
-								    << ")";
-							out << "]] ";
-						} else if (attrName == "Unused") {
-							out << "[[maybe_unused]] ";
-						} else if (attrName == "NoDiscard") {
-							out << "[[nodiscard]] ";
-						} else if (attrName == "NoReturn") {
-							out << "[[noreturn]] ";
-						} else if (attrName == "ForceInline") {
-							out << "FORCE_INLINE ";
-						} else if (attrName == "NoInline") {
-							out << "NOINLINE ";
-						} else {
-							printAttributeSpecifier(attr);
-							out << " ";
+				out << std::endl << std::string(depth, '\t');
+				if (func.id == "operator++" || func.id == "operator--") {
+					if (func.attributes) {
+						for (auto attr : func.attributes->attributeSpecifier()) {
+							auto attrName = attr->Identifier()->getText();
+							if (attrName == "Deprecated") {
+								out << "[[deprecated";
+								if (attr->attributeArgumentClause())
+									out << "("
+									    << attr->attributeArgumentClause()
+									           ->expressionList()
+									           ->getText()
+									    << ")";
+								out << "]] ";
+							} else if (attrName == "Unused") {
+								out << "[[maybe_unused]] ";
+							} else if (attrName == "NoDiscard") {
+								out << "[[nodiscard]] ";
+							} else if (attrName == "NoReturn") {
+								out << "[[noreturn]] ";
+							} else if (attrName == "ForceInline") {
+								out << "FORCE_INLINE ";
+							} else if (attrName == "NoInline") {
+								out << "NOINLINE ";
+							} else {
+								printAttributeSpecifier(attr);
+								out << " ";
+							}
 						}
 					}
-				}
+					if (type->templateParams) {
+						printTemplateParams(type->templateParams);
+						out << " ";
+					}
+					isFunctionDeclaration = true;
+					if (func.isConsteval) {
+						out << "inline consteval ";
+					} else if (func.isConstexpr) {
+						out << "inline constexpr ";
+					} else {
+						out << "inline ";
+					}
 
-				isFunctionDeclaration = true;
-				if (func.isConsteval) {
-					out << "inline consteval ";
-				} else if (func.isConstexpr) {
-					out << "inline constexpr ";
-				} else {
-					out << "inline ";
-				}
-
-				out << "auto " << func.id;
-				if (!func.params->paramDeclClause()) {
-					if (func.id.starts_with("_operator_"))
-						out << "_postfix(__extension_" << filename << "_" << type->pos.line << "_"
-						    << type->id;
+					out << "auto " << func.id << "(__extension_" << filename << "_"
+					    << type->pos.line << "_" << type->id;
 					if (type->templateParams) {
 						out << "<";
 						bool first = true;
@@ -9241,11 +9189,13 @@ namespace AstrumLang {
 						}
 						out << ">";
 					}
-					out << " & __this) ";
-				} else {
-					out << "(";
-					printParamDeclClause(func.params->paramDeclClause());
-					out << ", const __extension_" << filename << "_" << type->pos.line << "_"
+					out << " & __this, int) ";
+					isVariadicTemplate    = false;
+					isFunctionDeclaration = false;
+					if (func.exceptionSpecification)
+						printExceptionSpecification(func.exceptionSpecification);
+					out << " -> ";
+					out << "typename __extension_" << filename << "_" << type->pos.line << "_"
 					    << type->id;
 					if (type->templateParams) {
 						out << "<";
@@ -9260,764 +9210,972 @@ namespace AstrumLang {
 						}
 						out << ">";
 					}
-					out << " & __this) ";
-				}
-
-				isVariadicTemplate    = false;
-				isFunctionDeclaration = false;
-				if (func.exceptionSpecification)
-					printExceptionSpecification(func.exceptionSpecification);
-				out << " -> decltype(auto);" << std::endl << std::string(depth, '\t');
-			}
-		}
-
-		for (const auto& prop : type->properties) {
-			out << "#line " << prop.pos.line << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-
-			if (prop.attributes) {
-				for (auto attr : prop.attributes->attributeSpecifier()) {
-					auto attrName = attr->Identifier()->getText();
-					if (attrName == "Deprecated") {
-						out << "[[deprecated";
-						if (attr->attributeArgumentClause())
-							out << "("
-							    << attr->attributeArgumentClause()->expressionList()->getText()
-							    << ")";
-						out << "]] ";
-					} else if (attrName == "Unused") {
-						out << "[[maybe_unused]] ";
-					} else if (attrName == "NoDiscard") {
-						out << "[[nodiscard]] ";
-					} else if (attrName == "NoReturn") {
-						out << "[[noreturn]] ";
-					} else if (attrName == "ForceInline") {
-						out << "FORCE_INLINE ";
-					} else if (attrName == "NoInline") {
-						out << "NOINLINE ";
-					} else {
-						printAttributeSpecifier(attr);
+					out << ";" << std::endl << std::string(depth, '\t');
+				} else if (func.isCommutative) {
+					if (type->templateParams) {
+						printTemplateParams(type->templateParams);
 						out << " ";
 					}
-				}
-			}
-			if (type->templateParams) {
-				printTemplateParams(type->templateParams);
-				out << " ";
-			}
-			if (!type->templateParams && prop.isStatic) {
-				out << "template<class __TT> requires std::same_as<__TT, __extension_" << filename
-				    << "_" << type->pos.line << "_" << type->id;
-				if (type->templateParams) {
-					out << "<";
-					bool first = true;
-					for (auto param : type->templateParams->templateParamDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(param->Identifier());
-						if (param->Ellipsis())
-							out << "...";
+					if (func.templateParams) {
+						printTemplateParams(func.templateParams);
+						out << " ";
 					}
-					out << ">";
-				}
-				out << "> ";
-			}
-			isUnsafe = prop.isUnsafe;
-			if (isUnsafe) {
-				out << "[[clang::annotate(\"unsafe\")]] ";
-			}
-
-			isFunctionDeclaration = true;
-
-			if (prop.isConstexpr) {
-				out << "inline constexpr ";
-			} else if (prop.isInline) {
-				out << "inline ";
-			} else if (!CompilerSettings::get().dllName.empty() && !type->templateParams) {
-				if (prop.access == AccessSpecifier::Public ||
-				    prop.access == AccessSpecifier::Protected ||
-				    prop.access == AccessSpecifier::Private)
-					out << CompilerSettings::get().dllName << "_API ";
-				else
-					out << CompilerSettings::get().dllName << "_HIDDEN ";
-			}
-
-			out << "auto ";
-			if (prop.isStatic)
-				out << "__static_";
-			out << "get" << prop.id << "(";
-			if (!prop.isStatic) {
-				out << "__extension_" << filename << "_" << type->pos.line << "_" << type->id;
-				if (type->templateParams) {
-					out << "<";
-					bool first = true;
-					for (auto param : type->templateParams->templateParamDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(param->Identifier());
-						if (param->Ellipsis())
-							out << "...";
+					if (func.attributes) {
+						for (auto attr : func.attributes->attributeSpecifier()) {
+							auto attrName = attr->Identifier()->getText();
+							if (attrName == "Deprecated") {
+								out << "[[deprecated";
+								if (attr->attributeArgumentClause())
+									out << "("
+									    << attr->attributeArgumentClause()
+									           ->expressionList()
+									           ->getText()
+									    << ")";
+								out << "]] ";
+							} else if (attrName == "Unused") {
+								out << "[[maybe_unused]] ";
+							} else if (attrName == "NoDiscard") {
+								out << "[[nodiscard]] ";
+							} else if (attrName == "NoReturn") {
+								out << "[[noreturn]] ";
+							} else if (attrName == "ForceInline") {
+								out << "FORCE_INLINE ";
+							} else if (attrName == "NoInline") {
+								out << "NOINLINE ";
+							} else {
+								printAttributeSpecifier(attr);
+								out << " ";
+							}
+						}
 					}
-					out << ">";
-				}
-				out << " const& __this ";
-				if (prop.isRef)
-					out << "LIFETIMEBOUND";
-			}
-			out << ")";
-			isVariadicTemplate    = false;
-			isFunctionDeclaration = false;
-			out << " -> ";
-			if (!prop.isRef || prop.isConst)
-				out << "const ";
-			printTypeId(prop.type);
-			if (prop.isRef)
-				out << "&";
-			out << ";" << std::endl << std::string(depth, '\t');
-		}
 
-		if (!type->templateParams && !type->templateSpecializationArgs && type->interfaces) {
-			for (auto iface : type->interfaces->baseSpecifier()) {
-				out << "#line " << iface->getStart()->getLine() << " \"" << fullFilename
-				    << ".ast\"\n"
+					isFunctionDeclaration = true;
+					if (func.isConsteval) {
+						out << "inline consteval ";
+					} else if (func.isConstexpr) {
+						out << "inline constexpr ";
+					} else {
+						out << "inline ";
+					}
+
+					out << "auto " << func.id;
+					if (!func.params->paramDeclClause()) {
+						if (func.id.starts_with("_operator_"))
+							out << "_postfix(__extension_" << filename << "_" << type->pos.line
+							    << "_" << type->id;
+						if (type->templateParams) {
+							out << "<";
+							bool first = true;
+							for (auto param : type->templateParams->templateParamDeclaration()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printIdentifier(param->Identifier());
+								if (param->Ellipsis())
+									out << "...";
+							}
+							out << ">";
+						}
+						out << " & __this) ";
+					} else {
+						out << "(";
+						printParamDeclClause(func.params->paramDeclClause());
+						out << ", const __extension_" << filename << "_" << type->pos.line << "_"
+						    << type->id;
+						if (type->templateParams) {
+							out << "<";
+							bool first = true;
+							for (auto param : type->templateParams->templateParamDeclaration()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printIdentifier(param->Identifier());
+								if (param->Ellipsis())
+									out << "...";
+							}
+							out << ">";
+						}
+						out << " & __this) ";
+					}
+
+					isVariadicTemplate    = false;
+					isFunctionDeclaration = false;
+					if (func.exceptionSpecification)
+						printExceptionSpecification(func.exceptionSpecification);
+					out << " -> decltype(auto);" << std::endl << std::string(depth, '\t');
+				}
+			}
+
+			for (const auto& prop : type->properties) {
+				out << "#line " << prop.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
-				out << "ADV_CHECK_INTERFACE_IMPLEMENTATION(" << type->id << ", ";
-				auto name = iface->className()->Identifier();
-				auto tid  = iface->className()->simpleTemplateId();
-				if (tid)
-					name = tid->templateName()->Identifier();
-				printIdentifier(name);
-				out << ", ";
-				printBaseSpecifier(iface);
-				out << ", " << type->id;
-				out << ");\n" << std::string(depth, '\t');
-			}
-		}
 
-		out << "} namespace " << sema.packageName << "{\n";
-		for (const auto& func : type->methods) {
-			out << "using __extensions::";
-			if (func.indexerParams) {
-				out << "getAt; using __extensions::_operator_subscript";
-			} else if (func.isStatic) {
-				out << "__static_" << func.id;
-			} else if (func.isConstructor) {
-				out << "__construct_";
-			} else {
-				out << func.id;
-			}
-			out << ";\n";
-		}
-		for (const auto& prop : type->properties) {
-			out << "using __extensions::";
-			if (prop.isStatic) {
-				out << "__static_get" << prop.id;
-			} else {
-				out << "get" << prop.id;
-			}
-			out << ";\n";
-		}
-
-		if (!type->compilationCondition.empty()) {
-			out << "#endif " << std::endl;
-		}
-		isExtension = false;
-	}
-
-	void AstrumCodegen::printEnumClassData(StructDefinition* type) {
-		for (const auto& nested : type->nestedStructs) { printEnumClassData(nested.get()); }
-		if (type->kind != TypeKind::EnumClass)
-			return;
-		std::string parentType;
-		for (const auto& constant : type->constants) {
-			if (constant.type)
-				continue;
-
-			if (parentType.empty()) {
-				parentType = constant.parentType;
-				StringReplace(parentType, ".", "::");
-				StringReplace(parentType, "::::::", "...");
-			}
-			out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n";
-			out << "const " << parentType << "::__self " << parentType << "::" << constant.id
-			    << " = ";
-			out << parentType << "::__self{ new (::operator new(sizeof(" << parentType << "))) "
-			    << parentType << "(";
-			printExpressionList(constant.expressionList);
-			out << ") };";
-			out << "\n" << std::string(depth, '\t');
-			out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n";
-			out << parentType << "::__self::__Property_" << constant.id << "<> " << parentType
-			    << "::__self::" << constant.id << ";\n"
-			    << std::string(depth, '\t');
-		}
-
-		out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n";
-		out << "const " << parentType << "::__self " << parentType << "::__values[] = { ";
-		bool first = true;
-		for (const auto& constant : type->constants) {
-			if (constant.type)
-				continue;
-			if (!first)
-				out << ", ";
-			first = false;
-
-			out << constant.id;
-		}
-		out << " };\n" << std::string(depth, '\t');
-	}
-
-	void AstrumCodegen::printTypeDefinitions() {
-		out.switchTo(firstPass);
-		if (!sema.namedTuples.empty() || !sema.globalStructs.empty()) {
-			out << "//"
-			       "###############################################################################"
-			       "\n";
-			out << "//# Type definitions\n";
-			out << "//"
-			       "###############################################################################"
-			       "\n";
-		}
-		for (const auto& type : sema.globalStructs) {
-			// out.switchTo(true);
-			if (!sema.symbolContexts.empty())
-				sema.symbolContexts.push(sema.symbolContexts.top());
-
-			isPrivateStruct = type->access == AccessSpecifier::Private;
-			if (isPrivateStruct == firstPass) {
-				continue;
-			}
-			isUnsafe = type->isUnsafe;
-
-			if (type->access == AccessSpecifier::Protected) {
-				out << "namespace __" << filename << "_Protected" << (isUnsafe ? "__Unsafe" : "")
-				    << " { \n"
-				    << std::string(++depth, '\t');
-			} else if (isUnsafe) {
-				out << "namespace __Unsafe { \n" << std::string(++depth, '\t');
-			}
-
-			selfConstants.clear();
-			enumValues.clear();
-			isNested = false;
-			if (type->kind == TypeKind::Class || type->kind == TypeKind::EnumClass) {
-				printClassRef(type.get());
-			} else if (type->kind == TypeKind::Interface) {
-				printInterface(type.get());
-				isClearModule =
-				    sema.globalVariables.size() == 0 && sema.globalFunctions.size() == 0;
-				for (const auto& t : sema.globalStructs) {
-					if (type->kind != TypeKind::Interface) {
-						isClearModule = false;
-						break;
+				if (prop.attributes) {
+					for (auto attr : prop.attributes->attributeSpecifier()) {
+						auto attrName = attr->Identifier()->getText();
+						if (attrName == "Deprecated") {
+							out << "[[deprecated";
+							if (attr->attributeArgumentClause())
+								out << "("
+								    << attr->attributeArgumentClause()->expressionList()->getText()
+								    << ")";
+							out << "]] ";
+						} else if (attrName == "Unused") {
+							out << "[[maybe_unused]] ";
+						} else if (attrName == "NoDiscard") {
+							out << "[[nodiscard]] ";
+						} else if (attrName == "NoReturn") {
+							out << "[[noreturn]] ";
+						} else if (attrName == "ForceInline") {
+							out << "FORCE_INLINE ";
+						} else if (attrName == "NoInline") {
+							out << "NOINLINE ";
+						} else {
+							printAttributeSpecifier(attr);
+							out << " ";
+						}
 					}
 				}
-			} else if (type->kind == TypeKind::Extension) {
-				printExtension(type.get());
-			} else {
-				printType(type.get());
-			}
-
-			if (!type->compilationCondition.empty()) {
-				out << "#if " << type->compilationCondition << std::endl;
-			}
-			lastEnumValue.clear();
-			for (const auto& constant : selfConstants) {
-				out << "\n" << std::string(depth, '\t');
-				if (!constant.compilationCondition.empty()) {
-					out << "#if " << constant.compilationCondition << std::endl
-					    << std::string(depth, '\t');
-				}
-				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
-				    << std::string(depth, '\t');
 				if (type->templateParams) {
 					printTemplateParams(type->templateParams);
 					out << " ";
-				} else if (type->templateSpecializationArgs) {
-					out << "template<> ";
 				}
-				auto parentType = constant.parentType;
-				StringReplace(parentType, ".", "::");
-				StringReplace(parentType, "::::::", "...");
-				out << "inline constexpr " << parentType << " " << parentType << "::" << constant.id
-				    << " = ";
-				currentDeclarationName = constant.id;
-				if (constant.initializer) {
-					printInitializerClause(constant.initializer);
-				} else if (constant.expression) {
-					if (type->enumBase) {
-						printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
-					} else {
-						out << "Builtin::i32";
+				if (!type->templateParams && prop.isStatic) {
+				    /* out << "template<class __TT> requires std::same_as<__TT, __extension_"
+					    << filename << "_" << type->pos.line << "_" << type->id;
+					if (type->templateParams) {
+						out << "<";
+						bool first = true;
+						for (auto param : type->templateParams->templateParamDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(param->Identifier());
+							if (param->Ellipsis())
+								out << "...";
+						}
+						out << ">";
 					}
-					out << "(";
-					printConstantExpression(constant.expression);
-					out << ")";
-				} else if (lastEnumValue.empty()) {
-					if (type->isAbstract)  // flags
-					{
-						if (type->enumBase) {
-							printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
-							out << "(1)";
-						} else
-							out << "1";
-					} else if (type->enumBase) {
-						printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
-						out << "()";
-					} else
-						out << "0";
-				} else if (type->isAbstract)  // flags
-				{
-					if (type->enumBase) {
-						printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
-					} else {
-						out << "Builtin::i32";
-					}
-					out << "(";
-					out << "Builtin::i64(" << lastEnumValue << ".__value) << 1 ? Builtin::i64("
-					    << lastEnumValue << ".__value) << 1 : 1";
-					out << ")";
-				} else {
-					if (type->enumBase) {
-						printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
-					} else {
-						out << "Builtin::i32";
-					}
-					out << "(";
-					out << "Builtin::i64(" << lastEnumValue << ".__value) + 1";
-					out << ")";
+					out << "> ";*/
+				    out << "template<class __TT> struct __static_get" << prop.id;
+				    out << "; template<> struct __static_get" << prop.id;
+				    out << "<__extension_" << filename << "_" << type->pos.line << "_" << type->id
+				        << "> { static ";
 				}
-				out << ";" << std::endl << std::string(depth, '\t');
-				lastEnumValue = constant.id;
-				if (!constant.compilationCondition.empty()) {
-					out << "#endif " << std::endl << std::string(depth, '\t');
+				isUnsafe = prop.isUnsafe;
+				if (isUnsafe) {
+					out << "[[clang::annotate(\"unsafe\")]] ";
 				}
-				currentDeclarationName.clear();
+
+				isFunctionDeclaration = true;
+
+				if (prop.isConstexpr) {
+					out << "inline constexpr ";
+				} else if (prop.isInline) {
+					out << "inline ";
+				} else if (!CompilerSettings::get().dllName.empty() && !type->templateParams) {
+					if (prop.access == AccessSpecifier::Public ||
+					    prop.access == AccessSpecifier::Protected ||
+					    prop.access == AccessSpecifier::Private)
+						out << CompilerSettings::get().dllName << "_API ";
+					else
+						out << CompilerSettings::get().dllName << "_HIDDEN ";
+				}
+
+				out << "auto get";
+				if (!prop.isStatic)
+					out << prop.id;
+				out << "(";
+				if (!prop.isStatic) {
+					out << "__extension_" << filename << "_" << type->pos.line << "_" << type->id;
+					if (type->templateParams) {
+						out << "<";
+						bool first = true;
+						for (auto param : type->templateParams->templateParamDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(param->Identifier());
+							if (param->Ellipsis())
+								out << "...";
+						}
+						out << ">";
+					}
+					out << " const& __this ";
+					if (prop.isRef)
+						out << "LIFETIMEBOUND";
+				}
+				out << ")";
+				isVariadicTemplate    = false;
+				isFunctionDeclaration = false;
+				out << " -> ";
+				if (!prop.isRef || prop.isConst)
+					out << "const ";
+				printTypeId(prop.type);
+				if (prop.isRef)
+					out << "&";
+				out << ";";
+
+			    if (prop.isStatic) {
+				    out << " };";
+			    }
+				out << std::endl << std::string(depth, '\t');
 			}
-			std::set<std::string> enums;
-			for (const auto& [originName, values] : enumValues) {
-				auto name = originName;
-				StringReplace(name, ".", "::");
-				enums.insert(name);
-				out << "inline constexpr " << name << " " << name << "::"
-				    << "__values[] = {";
-				bool first = true;
-				for (const auto& constant : values) {
-					if (!first)
-						out << ", ";
-					first = false;
-					out << constant;
-				}
-				out << "};\n" << std::string(depth, '\t');
-				out << "inline constexpr std::span<const " << name << "> " << name << "::"
-				    << "GetValues() noexcept { return __values; }\n"
-				    << std::string(depth, '\t');
-			}
-			for (const auto& eenum : enums) {
-				auto name = eenum;
-				StringReplace(name, "::", "__");
-				out << "#define ADV_USING_ENUM_" << name << " \\\n" << std::string(depth, '\t');
-				for (const auto& constant : enumValues[eenum]) {
-					out << "constexpr auto " << constant << " = " << eenum << "::" << constant
-					    << ";\\\n"
+
+			if (!type->templateParams && !type->templateSpecializationArgs && type->interfaces) {
+				for (auto iface : type->interfaces->baseSpecifier()) {
+					out << "#line " << iface->getStart()->getLine() << " \"" << fullFilename
+					    << ".ast\"\n"
 					    << std::string(depth, '\t');
+					out << "ADV_CHECK_INTERFACE_IMPLEMENTATION(" << type->id << ", ";
+					auto name = iface->className()->Identifier();
+					auto tid  = iface->className()->simpleTemplateId();
+					if (tid)
+						name = tid->templateName()->Identifier();
+					printIdentifier(name);
+					out << ", ";
+					printBaseSpecifier(iface);
+					out << ", " << type->id;
+					out << ");\n" << std::string(depth, '\t');
 				}
-				out << "\n" << std::string(depth, '\t');
 			}
+
+			out << "} namespace " << sema.packageName << "{\n";
+			for (const auto& func : type->methods) {
+				out << "using __extensions::";
+				if (func.indexerParams) {
+					out << "getAt; using __extensions::_operator_subscript";
+				} else if (func.isStatic) {
+					out << "__static_" << func.id;
+				} else if (func.isConstructor) {
+					out << "__construct_";
+				} else {
+					out << func.id;
+				}
+				out << ";\n";
+			}
+			for (const auto& prop : type->properties) {
+				out << "using __extensions::";
+				if (prop.isStatic) {
+					out << "__static_get" << prop.id;
+				} else {
+					out << "get" << prop.id;
+				}
+				out << ";\n";
+			}
+
 			if (!type->compilationCondition.empty()) {
 				out << "#endif " << std::endl;
 			}
+			isExtension = false;
+		}
 
-			if (type->access == AccessSpecifier::Protected || type->isUnsafe)
+		void AstrumCodegen::printEnumClassData(StructDefinition * type) {
+			for (const auto& nested : type->nestedStructs) { printEnumClassData(nested.get()); }
+			if (type->kind != TypeKind::EnumClass)
+				return;
+			std::string parentType;
+			for (const auto& constant : type->constants) {
+				if (constant.type)
+					continue;
+
+				if (parentType.empty()) {
+					parentType = constant.parentType;
+					StringReplace(parentType, ".", "::");
+					StringReplace(parentType, "::::::", "...");
+				}
+				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n";
+				out << "const " << parentType << "::__self " << parentType << "::" << constant.id
+				    << " = ";
+				out << parentType << "::__self{ new (::operator new(sizeof(" << parentType << "))) "
+				    << parentType << "(";
+				printExpressionList(constant.expressionList);
+				out << ") };";
+				out << "\n" << std::string(depth, '\t');
+				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n";
+				out << parentType << "::__self::__Property_" << constant.id << "<> " << parentType
+				    << "::__self::" << constant.id << ";\n"
+				    << std::string(depth, '\t');
+			}
+
+			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n";
+			out << "const " << parentType << "::__self " << parentType << "::__values[] = { ";
+			bool first = true;
+			for (const auto& constant : type->constants) {
+				if (constant.type)
+					continue;
+				if (!first)
+					out << ", ";
+				first = false;
+
+				out << constant.id;
+			}
+			out << " };\n" << std::string(depth, '\t');
+		}
+
+		void AstrumCodegen::printTypeDefinitions() {
+			out.switchTo(firstPass);
+			if (!sema.namedTuples.empty() || !sema.globalStructs.empty()) {
+				out << "//"
+				       "###########################################################################"
+				       "####"
+				       "\n";
+				out << "//# Type definitions\n";
+				out << "//"
+				       "###########################################################################"
+				       "####"
+				       "\n";
+			}
+			for (const auto& type : sema.globalStructs) {
+				// out.switchTo(true);
+				if (!sema.symbolContexts.empty())
+					sema.symbolContexts.push(sema.symbolContexts.top());
+
+				isPrivateStruct = type->access == AccessSpecifier::Private;
+				if (isPrivateStruct == firstPass) {
+					continue;
+				}
+				isUnsafe = type->isUnsafe;
+
+				if (type->access == AccessSpecifier::Protected) {
+					out << "namespace __" << filename << "_Protected"
+					    << (isUnsafe ? "__Unsafe" : "") << " { \n"
+					    << std::string(++depth, '\t');
+				} else if (isUnsafe) {
+					out << "namespace __Unsafe { \n" << std::string(++depth, '\t');
+				}
+
+				selfConstants.clear();
+				enumValues.clear();
+				isNested = false;
+				if (type->kind == TypeKind::Class || type->kind == TypeKind::EnumClass) {
+					printClassRef(type.get());
+				} else if (type->kind == TypeKind::Interface) {
+					printInterface(type.get());
+					isClearModule =
+					    sema.globalVariables.size() == 0 && sema.globalFunctions.size() == 0;
+					for (const auto& t : sema.globalStructs) {
+						if (type->kind != TypeKind::Interface) {
+							isClearModule = false;
+							break;
+						}
+					}
+				} else if (type->kind == TypeKind::Extension) {
+					printExtension(type.get());
+				} else {
+					printType(type.get());
+				}
+
+				if (!type->compilationCondition.empty()) {
+					out << "#if " << type->compilationCondition << std::endl;
+				}
+				lastEnumValue.clear();
+				for (const auto& constant : selfConstants) {
+					out << "\n" << std::string(depth, '\t');
+					if (!constant.compilationCondition.empty()) {
+						out << "#if " << constant.compilationCondition << std::endl
+						    << std::string(depth, '\t');
+					}
+					out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
+					    << std::string(depth, '\t');
+					if (type->templateParams) {
+						printTemplateParams(type->templateParams);
+						out << " ";
+					} else if (type->templateSpecializationArgs) {
+						out << "template<> ";
+					}
+					auto parentType = constant.parentType;
+					StringReplace(parentType, ".", "::");
+					StringReplace(parentType, "::::::", "...");
+					out << "inline constexpr " << parentType << " " << parentType
+					    << "::" << constant.id << " = ";
+					currentDeclarationName = constant.id;
+					if (constant.initializer) {
+						printInitializerClause(constant.initializer);
+					} else if (constant.expression) {
+						if (type->enumBase) {
+							printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
+						} else {
+							out << "Builtin::i32";
+						}
+						out << "(";
+						printConstantExpression(constant.expression);
+						out << ")";
+					} else if (lastEnumValue.empty()) {
+						if (type->isAbstract)  // flags
+						{
+							if (type->enumBase) {
+								printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
+								out << "(1)";
+							} else
+								out << "1";
+						} else if (type->enumBase) {
+							printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
+							out << "()";
+						} else
+							out << "0";
+					} else if (type->isAbstract)  // flags
+					{
+						if (type->enumBase) {
+							printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
+						} else {
+							out << "Builtin::i32";
+						}
+						out << "(";
+						out << "Builtin::i64(" << lastEnumValue << ".__value) << 1 ? Builtin::i64("
+						    << lastEnumValue << ".__value) << 1 : 1";
+						out << ")";
+					} else {
+						if (type->enumBase) {
+							printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
+						} else {
+							out << "Builtin::i32";
+						}
+						out << "(";
+						out << "Builtin::i64(" << lastEnumValue << ".__value) + 1";
+						out << ")";
+					}
+					out << ";" << std::endl << std::string(depth, '\t');
+					lastEnumValue = constant.id;
+					if (!constant.compilationCondition.empty()) {
+						out << "#endif " << std::endl << std::string(depth, '\t');
+					}
+					currentDeclarationName.clear();
+				}
+				std::set<std::string> enums;
+				for (const auto& [originName, values] : enumValues) {
+					auto name = originName;
+					StringReplace(name, ".", "::");
+					enums.insert(name);
+					out << "inline constexpr " << name << " " << name << "::"
+					    << "__values[] = {";
+					bool first = true;
+					for (const auto& constant : values) {
+						if (!first)
+							out << ", ";
+						first = false;
+						out << constant;
+					}
+					out << "};\n" << std::string(depth, '\t');
+					out << "inline constexpr std::span<const " << name << "> " << name << "::"
+					    << "GetValues() noexcept { return __values; }\n"
+					    << std::string(depth, '\t');
+				}
+				for (const auto& eenum : enums) {
+					auto name = eenum;
+					StringReplace(name, "::", "__");
+					out << "#define ADV_USING_ENUM_" << name << " \\\n" << std::string(depth, '\t');
+					for (const auto& constant : enumValues[eenum]) {
+						out << "constexpr auto " << constant << " = " << eenum << "::" << constant
+						    << ";\\\n"
+						    << std::string(depth, '\t');
+					}
+					out << "\n" << std::string(depth, '\t');
+				}
+				if (!type->compilationCondition.empty()) {
+					out << "#endif " << std::endl;
+				}
+
+				if (type->access == AccessSpecifier::Protected || type->isUnsafe)
+					out << "\n" << std::string(--depth, '\t') << "}";
+				out << std::endl << std::string(depth, '\t');
+				if (currentTupleSize > 0) {
+					if (!sema.packageName.empty()) {
+						out << "\n}\n";
+						depth = 0;
+					}
+					out << "namespace std {\n" << std::string(++depth, '\t');
+					if (type->templateParams) {
+						printTemplateParams(type->templateParams);
+					} else {
+						out << "template<>";
+					}
+					out << " struct tuple_size<";
+					if (!sema.packageName.empty()) {
+						out << sema.packageName << "::";
+					}
+					out << type->id;
+					if (type->templateParams) {
+						out << "<";
+						bool first = true;
+						for (auto param : type->templateParams->templateParamDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(param->Identifier());
+							if (param->Ellipsis())
+								out << "...";
+						}
+						out << ">";
+					} else if (type->templateSpecializationArgs) {
+						out << "<";
+						bool first = true;
+						for (auto param : type->templateSpecializationArgs->templateArgument()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printTemplateArgument(param);
+						}
+						out << ">";
+					}
+					out << "> : integral_constant<size_t, " << currentTupleSize << "> {}; \n"
+					    << std::string(depth, '\t');
+					int i = 0;
+					for (const auto& field : type->fields) {
+						if (field.isStatic || field.isThreadLocal ||
+						    field.access != AccessSpecifier::Public)
+							continue;
+						if (type->templateParams) {
+							printTemplateParams(type->templateParams);
+						} else {
+							out << "template<>";
+						}
+						out << " struct tuple_element<" << i++ << ", ";
+						if (!sema.packageName.empty()) {
+							out << sema.packageName << "::";
+						}
+						out << type->id;
+						if (type->templateParams) {
+							out << "<";
+							bool first = true;
+							for (auto param : type->templateParams->templateParamDeclaration()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printIdentifier(param->Identifier());
+								if (param->Ellipsis())
+									out << "...";
+							}
+							out << ">";
+						} else if (type->templateSpecializationArgs) {
+							out << "<";
+							bool first = true;
+							for (auto param :
+							     type->templateSpecializationArgs->templateArgument()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printTemplateArgument(param);
+							}
+							out << ">";
+						}
+						out << "> { using type = decltype(std::declval<";
+						if (!sema.packageName.empty()) {
+							out << sema.packageName << "::";
+						}
+						out << type->id;
+						if (type->templateParams) {
+							out << "<";
+							bool first = true;
+							for (auto param : type->templateParams->templateParamDeclaration()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printIdentifier(param->Identifier());
+								if (param->Ellipsis())
+									out << "...";
+							}
+							out << ">";
+						} else if (type->templateSpecializationArgs) {
+							out << "<";
+							bool first = true;
+							for (auto param :
+							     type->templateSpecializationArgs->templateArgument()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printTemplateArgument(param);
+							}
+							out << ">";
+						}
+						out << ">().__ref()." << field.id;
+						out << "); };\n" << std::string(depth, '\t');
+					}
+
+					for (const auto& prop : type->properties) {
+						if (!prop.setter || !sema.propertiesNeedField.contains(prop.setter) ||
+						    prop.isStatic || prop.access != AccessSpecifier::Public)
+							continue;
+						if (type->templateParams) {
+							printTemplateParams(type->templateParams);
+						} else {
+							out << "template<>";
+						}
+						out << " struct tuple_element<" << i++ << ", ";
+						if (!sema.packageName.empty()) {
+							out << sema.packageName << "::";
+						}
+						out << type->id;
+						if (type->templateParams) {
+							out << "<";
+							bool first = true;
+							for (auto param : type->templateParams->templateParamDeclaration()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printIdentifier(param->Identifier());
+								if (param->Ellipsis())
+									out << "...";
+							}
+							out << ">";
+						} else if (type->templateSpecializationArgs) {
+							out << "<";
+							bool first = true;
+							for (auto param :
+							     type->templateSpecializationArgs->templateArgument()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printTemplateArgument(param);
+							}
+							out << ">";
+						}
+						out << "> { using type = decltype(std::declval<";
+						if (!sema.packageName.empty()) {
+							out << sema.packageName << "::";
+						}
+						out << type->id;
+						if (type->templateParams) {
+							out << "<";
+							bool first = true;
+							for (auto param : type->templateParams->templateParamDeclaration()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printIdentifier(param->Identifier());
+								if (param->Ellipsis())
+									out << "...";
+							}
+							out << ">";
+						} else if (type->templateSpecializationArgs) {
+							out << "<";
+							bool first = true;
+							for (auto param :
+							     type->templateSpecializationArgs->templateArgument()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printTemplateArgument(param);
+							}
+							out << ">";
+						}
+						out << ">().__ref().p_" << prop.id;
+						out << "); };\n" << std::string(depth, '\t');
+					}
+					out << "\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+					if (!sema.packageName.empty()) {
+						out << "\nnamespace " << sema.packageName << " {";
+						++depth;
+					}
+				}
+				if (!sema.symbolContexts.empty())
+					sema.symbolContexts.pop();
+			}
+			for (const auto& type : sema.globalStructs) {
+				if (type->kind == TypeKind::RefStruct || type->kind == TypeKind::StaticClass ||
+				    type->kind == TypeKind::Interface || type->kind == TypeKind::Extension)
+					continue;
+				isPrivateStruct = type->access == AccessSpecifier::Private;
+				if (isPrivateStruct == firstPass) {
+					continue;
+				}
+				isUnsafe = type->isUnsafe;
+
+				if (type->access == AccessSpecifier::Protected) {
+					out << "namespace __" << filename << "_Protected"
+					    << (isUnsafe ? "__Unsafe" : "") << " { \n"
+					    << std::string(++depth, '\t');
+				} else if (isUnsafe) {
+					out << "namespace __Unsafe { \n" << std::string(++depth, '\t');
+				}
+
+				selfConstants.clear();
+				if (type->kind == TypeKind::Struct || type->kind == TypeKind::Enum ||
+				    type->kind == TypeKind::Struct || type->kind == TypeKind::Union ||
+				    type->kind == TypeKind::UnionStruct) {
+					printStructWrapper(type.get());
+				} else if (type->kind == TypeKind::Class || type->kind == TypeKind::EnumClass) {
+					printType(type.get());
+				}
+
+				if (type->access == AccessSpecifier::Protected || type->isUnsafe)
+					out << "\n" << std::string(--depth, '\t') << "}";
+				out << std::endl;
+			}
+			isUnsafe = false;
+			for (const auto& [id, tuple] : sema.namedTuples) {
+				// out.switchTo(true);
+				if ((tuple.access == AccessSpecifier::Private) == firstPass) {
+					// out.switchTo(false);
+					continue;
+				}
+				if (tuple.access == AccessSpecifier::Protected) {
+					out << "namespace __" << filename << "_Protected"
+					    << (isUnsafe ? "__Unsafe" : "") << " { ";
+				}
+				out << "namespace __ntuples {\n" << std::string(++depth, '\t');
+				out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
+				out << "struct " << tuple.id << " final : public Builtin::Struct { \n"
+				    << std::string(++depth, '\t');
+				out << "using __class = Builtin::__Class_Basic<" << tuple.id << ">;";
+				for (const auto& [field, type] : tuple.fields) {
+					out << "\n" << std::string(depth, '\t');
+					printTypeId(type);
+					out << " " << field << ";";
+				}
+				out << "\n" << std::string(depth, '\t') << tuple.id << "() = default;";
+				out << "\n" << std::string(depth, '\t') << tuple.id << "(";
+				bool first = true;
+				for (const auto& [field, type] : tuple.fields) {
+					if (!first)
+						out << ", ";
+					first = false;
+					out << "Builtin::In<";
+					printTypeId(type);
+					out << "> _" << field;
+				}
+				out << ") : ";
+				first = true;
+				for (const auto& [field, type] : tuple.fields) {
+					if (!first)
+						out << ", ";
+					first = false;
+					out << field << "{_" << field << "}";
+				}
+				out << " {}";
+				out << "\n"
+				    << std::string(depth, '\t')
+				    << "FORCE_INLINE decltype(auto) __ref() noexcept { return *this; }";
+				out << "\n"
+				    << std::string(depth, '\t')
+				    << "FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }";
+				auto fullName = id;
+				StringReplace(fullName, ".", "::");
+				out << "\n" << std::string(depth, '\t');
+				out << "template <size_t I> friend auto& get(" << fullName << "&);\n"
+				    << std::string(depth, '\t');
+				out << "template <size_t I> friend const auto& get(const " << fullName << "&);\n"
+				    << std::string(depth, '\t');
+				out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
+				int i = 0;
+				for (const auto& [field, type] : tuple.fields) {
+					out << "template <> inline auto& get<" << i << ">(" << fullName
+					    << "& t) { return t." << field << "; }\n"
+					    << std::string(depth, '\t');
+					out << "template <> inline const auto& get<" << i++ << ">(const " << fullName
+					    << "& t) { return t." << field << "; }\n"
+					    << std::string(depth, '\t');
+				}
 				out << "\n" << std::string(--depth, '\t') << "}";
-			out << std::endl << std::string(depth, '\t');
-			if (currentTupleSize > 0) {
+				if (tuple.access == AccessSpecifier::Protected)
+					out << " } ";
+				out << std::endl;
 				if (!sema.packageName.empty()) {
 					out << "\n}\n";
 					depth = 0;
 				}
 				out << "namespace std {\n" << std::string(++depth, '\t');
-				if (type->templateParams) {
-					printTemplateParams(type->templateParams);
-				} else {
-					out << "template<>";
-				}
-				out << " struct tuple_size<";
 				if (!sema.packageName.empty()) {
-					out << sema.packageName << "::";
+					fullName = sema.packageName + "::" + fullName;
 				}
-				out << type->id;
-				if (type->templateParams) {
-					out << "<";
-					bool first = true;
-					for (auto param : type->templateParams->templateParamDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(param->Identifier());
-						if (param->Ellipsis())
-							out << "...";
-					}
-					out << ">";
-				} else if (type->templateSpecializationArgs) {
-					out << "<";
-					bool first = true;
-					for (auto param : type->templateSpecializationArgs->templateArgument()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printTemplateArgument(param);
-					}
-					out << ">";
-				}
-				out << "> : integral_constant<size_t, " << currentTupleSize << "> {}; \n"
+				out << "template <> struct tuple_size<" << fullName
+				    << "> : integral_constant<size_t, " << tuple.fields.size() << "> {};\n"
 				    << std::string(depth, '\t');
-				int i = 0;
-				for (const auto& field : type->fields) {
-					if (field.isStatic || field.isThreadLocal ||
-					    field.access != AccessSpecifier::Public)
-						continue;
-					if (type->templateParams) {
-						printTemplateParams(type->templateParams);
-					} else {
-						out << "template<>";
-					}
-					out << " struct tuple_element<" << i++ << ", ";
-					if (!sema.packageName.empty()) {
-						out << sema.packageName << "::";
-					}
-					out << type->id;
-					if (type->templateParams) {
-						out << "<";
-						bool first = true;
-						for (auto param : type->templateParams->templateParamDeclaration()) {
-							if (!first)
-								out << ", ";
-							first = false;
-							printIdentifier(param->Identifier());
-							if (param->Ellipsis())
-								out << "...";
-						}
-						out << ">";
-					} else if (type->templateSpecializationArgs) {
-						out << "<";
-						bool first = true;
-						for (auto param : type->templateSpecializationArgs->templateArgument()) {
-							if (!first)
-								out << ", ";
-							first = false;
-							printTemplateArgument(param);
-						}
-						out << ">";
-					}
-					out << "> { using type = decltype(std::declval<";
-					if (!sema.packageName.empty()) {
-						out << sema.packageName << "::";
-					}
-					out << type->id;
-					if (type->templateParams) {
-						out << "<";
-						bool first = true;
-						for (auto param : type->templateParams->templateParamDeclaration()) {
-							if (!first)
-								out << ", ";
-							first = false;
-							printIdentifier(param->Identifier());
-							if (param->Ellipsis())
-								out << "...";
-						}
-						out << ">";
-					} else if (type->templateSpecializationArgs) {
-						out << "<";
-						bool first = true;
-						for (auto param : type->templateSpecializationArgs->templateArgument()) {
-							if (!first)
-								out << ", ";
-							first = false;
-							printTemplateArgument(param);
-						}
-						out << ">";
-					}
-					out << ">().__ref()." << field.id;
-					out << "); };\n" << std::string(depth, '\t');
+
+				i = 0;
+				for (const auto& [field, type] : tuple.fields) {
+					out << "template <> struct tuple_element<" << i++ << ", " << fullName
+					    << "> { using type = decltype(std::declval<" << fullName << ">()." << field
+					    << "); };\n"
+					    << std::string(depth, '\t');
 				}
 
-				for (const auto& prop : type->properties) {
-					if (!prop.setter || !sema.propertiesNeedField.contains(prop.setter) ||
-					    prop.isStatic || prop.access != AccessSpecifier::Public)
-						continue;
-					if (type->templateParams) {
-						printTemplateParams(type->templateParams);
-					} else {
-						out << "template<>";
-					}
-					out << " struct tuple_element<" << i++ << ", ";
-					if (!sema.packageName.empty()) {
-						out << sema.packageName << "::";
-					}
-					out << type->id;
-					if (type->templateParams) {
-						out << "<";
-						bool first = true;
-						for (auto param : type->templateParams->templateParamDeclaration()) {
-							if (!first)
-								out << ", ";
-							first = false;
-							printIdentifier(param->Identifier());
-							if (param->Ellipsis())
-								out << "...";
-						}
-						out << ">";
-					} else if (type->templateSpecializationArgs) {
-						out << "<";
-						bool first = true;
-						for (auto param : type->templateSpecializationArgs->templateArgument()) {
-							if (!first)
-								out << ", ";
-							first = false;
-							printTemplateArgument(param);
-						}
-						out << ">";
-					}
-					out << "> { using type = decltype(std::declval<";
-					if (!sema.packageName.empty()) {
-						out << sema.packageName << "::";
-					}
-					out << type->id;
-					if (type->templateParams) {
-						out << "<";
-						bool first = true;
-						for (auto param : type->templateParams->templateParamDeclaration()) {
-							if (!first)
-								out << ", ";
-							first = false;
-							printIdentifier(param->Identifier());
-							if (param->Ellipsis())
-								out << "...";
-						}
-						out << ">";
-					} else if (type->templateSpecializationArgs) {
-						out << "<";
-						bool first = true;
-						for (auto param : type->templateSpecializationArgs->templateArgument()) {
-							if (!first)
-								out << ", ";
-							first = false;
-							printTemplateArgument(param);
-						}
-						out << ">";
-					}
-					out << ">().__ref().p_" << prop.id;
-					out << "); };\n" << std::string(depth, '\t');
-				}
-				out << "\n" << std::string(--depth, '\t') << "}\n" << std::string(depth, '\t');
+				out << "\n" << std::string(--depth, '\t') << "}";
+				out << std::endl;
 				if (!sema.packageName.empty()) {
 					out << "\nnamespace " << sema.packageName << " {";
 					++depth;
 				}
 			}
-			if (!sema.symbolContexts.empty())
-				sema.symbolContexts.pop();
+			isUnsafe = false;
+			// depth = 0;
 		}
-		for (const auto& type : sema.globalStructs) {
-			if (type->kind == TypeKind::RefStruct || type->kind == TypeKind::StaticClass ||
-			    type->kind == TypeKind::Interface || type->kind == TypeKind::Extension)
-				continue;
-			isPrivateStruct = type->access == AccessSpecifier::Private;
-			if (isPrivateStruct == firstPass) {
-				continue;
-			}
-			isUnsafe = type->isUnsafe;
 
-			if (type->access == AccessSpecifier::Protected) {
-				out << "namespace __" << filename << "_Protected" << (isUnsafe ? "__Unsafe" : "")
-				    << " { \n"
-				    << std::string(++depth, '\t');
-			} else if (isUnsafe) {
-				out << "namespace __Unsafe { \n" << std::string(++depth, '\t');
-			}
-
-			selfConstants.clear();
-			if (type->kind == TypeKind::Struct || type->kind == TypeKind::Enum ||
-			    type->kind == TypeKind::Struct || type->kind == TypeKind::Union ||
-			    type->kind == TypeKind::UnionStruct) {
-				printStructWrapper(type.get());
-			} else if (type->kind == TypeKind::Class || type->kind == TypeKind::EnumClass) {
-				printType(type.get());
-			}
-
-			if (type->access == AccessSpecifier::Protected || type->isUnsafe)
-				out << "\n" << std::string(--depth, '\t') << "}";
-			out << std::endl;
-		}
-		isUnsafe = false;
-		for (const auto& [id, tuple] : sema.namedTuples) {
-			// out.switchTo(true);
-			if ((tuple.access == AccessSpecifier::Private) == firstPass) {
-				// out.switchTo(false);
-				continue;
-			}
-			if (tuple.access == AccessSpecifier::Protected) {
-				out << "namespace __" << filename << "_Protected" << (isUnsafe ? "__Unsafe" : "")
-				    << " { ";
-			}
-			out << "namespace __ntuples {\n" << std::string(++depth, '\t');
-			out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
-			out << "struct " << tuple.id << " final : public Builtin::Struct { \n"
-			    << std::string(++depth, '\t');
-			out << "using __class = Builtin::__Class_Basic<" << tuple.id << ">;";
-			for (const auto& [field, type] : tuple.fields) {
-				out << "\n" << std::string(depth, '\t');
-				printTypeId(type);
-				out << " " << field << ";";
-			}
-			out << "\n" << std::string(depth, '\t') << tuple.id << "() = default;";
-			out << "\n" << std::string(depth, '\t') << tuple.id << "(";
-			bool first = true;
-			for (const auto& [field, type] : tuple.fields) {
-				if (!first)
-					out << ", ";
-				first = false;
-				out << "Builtin::In<";
-				printTypeId(type);
-				out << "> _" << field;
-			}
-			out << ") : ";
-			first = true;
-			for (const auto& [field, type] : tuple.fields) {
-				if (!first)
-					out << ", ";
-				first = false;
-				out << field << "{_" << field << "}";
-			}
-			out << " {}";
-			out << "\n"
-			    << std::string(depth, '\t')
-			    << "FORCE_INLINE decltype(auto) __ref() noexcept { return *this; }";
-			out << "\n"
-			    << std::string(depth, '\t')
-			    << "FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }";
-			auto fullName = id;
-			StringReplace(fullName, ".", "::");
-			out << "\n" << std::string(depth, '\t');
-			out << "template <size_t I> friend auto& get(" << fullName << "&);\n"
-			    << std::string(depth, '\t');
-			out << "template <size_t I> friend const auto& get(const " << fullName << "&);\n"
-			    << std::string(depth, '\t');
-			out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
-			int i = 0;
-			for (const auto& [field, type] : tuple.fields) {
-				out << "template <> inline auto& get<" << i << ">(" << fullName
-				    << "& t) { return t." << field << "; }\n"
-				    << std::string(depth, '\t');
-				out << "template <> inline const auto& get<" << i++ << ">(const " << fullName
-				    << "& t) { return t." << field << "; }\n"
-				    << std::string(depth, '\t');
-			}
-			out << "\n" << std::string(--depth, '\t') << "}";
-			if (tuple.access == AccessSpecifier::Protected)
-				out << " } ";
-			out << std::endl;
-			if (!sema.packageName.empty()) {
-				out << "\n}\n";
-				depth = 0;
-			}
-			out << "namespace std {\n" << std::string(++depth, '\t');
-			if (!sema.packageName.empty()) {
-				fullName = sema.packageName + "::" + fullName;
-			}
-			out << "template <> struct tuple_size<" << fullName << "> : integral_constant<size_t, "
-			    << tuple.fields.size() << "> {};\n"
-			    << std::string(depth, '\t');
-
-			i = 0;
-			for (const auto& [field, type] : tuple.fields) {
-				out << "template <> struct tuple_element<" << i++ << ", " << fullName
-				    << "> { using type = decltype(std::declval<" << fullName << ">()." << field
-				    << "); };\n"
-				    << std::string(depth, '\t');
-			}
-
-			out << "\n" << std::string(--depth, '\t') << "}";
-			out << std::endl;
-			if (!sema.packageName.empty()) {
-				out << "\nnamespace " << sema.packageName << " {";
-				++depth;
-			}
-		}
-		isUnsafe = false;
-		// depth = 0;
-	}
-
-	void AstrumCodegen::printVersions() {
-		out.switchTo(true);
-		if (!sema.versions.empty()) {
-			out << "//"
-			       "###############################################################################"
-			       "\n";
-			out << "//# Versions\n";
-			out << "//"
-			       "###############################################################################"
-			       "\n";
-		}
-		for (const auto& ver : sema.versions) {
+		void AstrumCodegen::printVersions() {
 			out.switchTo(true);
-			if (ver.access == AccessSpecifier::Private) {
-				out.switchTo(false);
+			if (!sema.versions.empty()) {
+				out << "//"
+				       "###########################################################################"
+				       "####"
+				       "\n";
+				out << "//# Versions\n";
+				out << "//"
+				       "###########################################################################"
+				       "####"
+				       "\n";
 			}
-			if (!ver.compilationCondition.empty()) {
-				out << "#if " << ver.compilationCondition << std::endl;
-			}
-			if (ver.isDefault) {
-				out << "#ifndef ADV_VERSION_";
+			for (const auto& ver : sema.versions) {
+				out.switchTo(true);
+				if (ver.access == AccessSpecifier::Private) {
+					out.switchTo(false);
+				}
+				if (!ver.compilationCondition.empty()) {
+					out << "#if " << ver.compilationCondition << std::endl;
+				}
+				if (ver.isDefault) {
+					out << "#ifndef ADV_VERSION_";
+					if (ver.access == AccessSpecifier::Protected)
+						out << "__" << StringUpper(filename) << "_PROTECTED_";
+					out << ver.id << std::endl;
+				}
+				out << "#line " << ver.pos.line << " \"" << fullFilename << ".ast\"\n";
+				out << "#define ADV_VERSION_";
 				if (ver.access == AccessSpecifier::Protected)
 					out << "__" << StringUpper(filename) << "_PROTECTED_";
-				out << ver.id << std::endl;
-			}
-			out << "#line " << ver.pos.line << " \"" << fullFilename << ".ast\"\n";
-			out << "#define ADV_VERSION_";
-			if (ver.access == AccessSpecifier::Protected)
-				out << "__" << StringUpper(filename) << "_PROTECTED_";
-			out << ver.id << " " << ver.value;
-			out << std::endl;
-			if (ver.isDefault)
-				out << "#endif\n";
-			if (!ver.compilationCondition.empty()) {
-				out << "#endif " << std::endl;
+				out << ver.id << " " << ver.value;
+				out << std::endl;
+				if (ver.isDefault)
+					out << "#endif\n";
+				if (!ver.compilationCondition.empty()) {
+					out << "#endif " << std::endl;
+				}
 			}
 		}
-	}
 
-	void AstrumCodegen::printRefStructCheck(AstrumParser::TheTypeIdContext* type) {
-		out << " ADV_CHECK_REF_STRUCT(";
-		auto t = type->getText();
-		StringReplace(t, "\"", "\\\"");
-		out << "\"" << t << "\", ";
-		printTypeId(type);
-		out << ")";
-	}
+		void AstrumCodegen::printRefStructCheck(AstrumParser::TheTypeIdContext * type) {
+			out << " ADV_CHECK_REF_STRUCT(";
+			auto t = type->getText();
+			StringReplace(t, "\"", "\\\"");
+			out << "\"" << t << "\", ";
+			printTypeId(type);
+			out << ")";
+		}
 
-	void AstrumCodegen::printSpecialFunctionDefinitions() {
-		for (const auto& type : sema.globalStructs) {
-			if (type->kind == TypeKind::Interface) {
-				isInterface = true;
-				bool first  = true;
-				for (const auto& method : type->methods) {
-					if ((!method.isDefault || method.isStatic) && !method.isFinal)
-						continue;
-					if (first) {
-						if (type->access != AccessSpecifier::Private) {
+		void AstrumCodegen::printSpecialFunctionDefinitions() {
+			for (const auto& type : sema.globalStructs) {
+				if (type->kind == TypeKind::Interface) {
+					isInterface = true;
+					bool first  = true;
+					for (const auto& method : type->methods) {
+						if ((!method.isDefault || method.isStatic) && !method.isFinal)
+							continue;
+						if (first) {
+							if (type->access != AccessSpecifier::Private) {
+								out.switchTo(true);
+								emptyLine = true;
+							} else {
+								out.switchTo(false);
+								isClearModule = false;
+							}
+							if (!type->compilationCondition.empty()) {
+								out << "#if " << type->compilationCondition << std::endl;
+							}
+							if (type->access == AccessSpecifier::Protected) {
+								out << "namespace __" << filename << "_Protected"
+								    << (type->isUnsafe ? "__Unsafe" : "") << " {\n"
+								    << std::string(++depth, '\t');
+							} else if (type->isUnsafe) {
+								out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
+								    << std::string(++depth, '\t');
+							}
+						}
+						first = false;
+						if (type->templateParams) {
+							printTemplateParams(type->templateParams);
+							out << " ";
+						}
+						if (method.templateParams) {
+							printTemplateParams(method.templateParams);
+							out << " ";
+						}
+						if (method.constraints) {
+							printConstraintClause(method.constraints);
+							out << " ";
+						}
+						out << "inline ";
+
+						isVoidReturn = false;
+						if (method.returnType) {
+							if (method.isConstReturn || !method.isRefReturn)
+								out << "const ";
+							printTypeId(method.returnType);
+						} else if (method.isStatic) {
+							out << "decltype(auto)";
+						} else {
+							out << "void";
+							isVoidReturn = true;
+						}
+						if (method.isRefReturn)
+							out << "&";
+						out << " " << type->id;
+						bool first = true;
+						if (type->templateParams) {
+							out << "<";
+							for (auto param : type->templateParams->templateParamDeclaration()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printIdentifier(param->Identifier());
+								if (param->Ellipsis())
+									out << "...";
+							}
+							out << ">";
+						}
+						auto id = method.id;
+						if (!method.isFinal)
+							id = "__default_" + id;
+						out << "::" << id << "(";
+						first = true;
+						if (method.params) {
+							if (auto params = method.params->paramDeclClause()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printParamDeclClause(params);
+							}
+						}
+						out << ") ";
+						if (!method.isStatic)
+							out << "const ";
+						if (method.exceptionSpecification)
+							printExceptionSpecification(method.exceptionSpecification);
+						auto func = static_cast<AstrumParser::FunctionDefinitionContext*>(
+						    method.params->parent);
+						if (func->functionBody()) {
+							functionProlog = true;
+							printFunctionBody(func->functionBody());
+						} else if (func->shortFunctionBody()) {
+							printShortFunctionBody(func->shortFunctionBody());
+						}
+						out << "\n" << std::string(depth, '\t');
+					}
+					isInterface = false;
+				} else if (type->kind == TypeKind::Extension) {
+					isExtension           = true;
+					currentType           = type->id;
+					currentTemplateParams = nullptr;
+					if (type->templateParams) {
+						auto parent = static_cast<AstrumParser::ExtensionHeadContext*>(
+						    type->templateParams->parent);
+						if (parent->theTypeId())
+							currentTemplateParams = type->templateParams;
+					}
+
+					currentTemplateSpecArgs = type->templateSpecializationArgs;
+					for (const auto& func : type->methods) {
+						isVoidReturn = func.isConstructor;
+						if (type->access != AccessSpecifier::Private &&
+						    (type->templateParams || func.isInline)) {
 							out.switchTo(true);
 							emptyLine = true;
 						} else {
 							out.switchTo(false);
-							isClearModule = false;
 						}
 						if (!type->compilationCondition.empty()) {
 							out << "#if " << type->compilationCondition << std::endl;
 						}
+						out << "} namespace __extensions { using namespace " << sema.packageName
+						    << ";\n";
 						if (type->access == AccessSpecifier::Protected) {
 							out << "namespace __" << filename << "_Protected"
 							    << (type->isUnsafe ? "__Unsafe" : "") << " {\n"
@@ -10026,125 +10184,75 @@ namespace AstrumLang {
 							out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
 							    << std::string(++depth, '\t');
 						}
-					}
-					first = false;
-					if (type->templateParams) {
-						printTemplateParams(type->templateParams);
-						out << " ";
-					}
-					if (method.templateParams) {
-						printTemplateParams(method.templateParams);
-						out << " ";
-					}
-					if (method.constraints) {
-						printConstraintClause(method.constraints);
-						out << " ";
-					}
-					out << "inline ";
+						out << "#line " << func.pos.line << " \"" << fullFilename << ".ast\"\n"
+						    << std::string(depth, '\t');
+						if (func.indexerParams) {
+							bool isInline    = func.isInline;
+							bool isConstexpr = func.isConstexpr;
+							bool isUnchecked = false;
+							if (func.attributes)
+								for (auto attr : func.attributes->attributeSpecifier()) {
+									auto attrName = attr->Identifier()->getText();
+									if (attrName == "Unchecked")
+										isUnchecked = true;
+								}
 
-					isVoidReturn = false;
-					if (method.returnType) {
-						if (method.isConstReturn || !method.isRefReturn)
-							out << "const ";
-						printTypeId(method.returnType);
-					} else if (method.isStatic) {
-						out << "decltype(auto)";
-					} else {
-						out << "void";
-						isVoidReturn = true;
-					}
-					if (method.isRefReturn)
-						out << "&";
-					out << " " << type->id;
-					bool first = true;
-					if (type->templateParams) {
-						out << "<";
-						for (auto param : type->templateParams->templateParamDeclaration()) {
-							if (!first)
-								out << ", ";
-							first = false;
-							printIdentifier(param->Identifier());
-							if (param->Ellipsis())
-								out << "...";
-						}
-						out << ">";
-					}
-					auto id = method.id;
-					if (!method.isFinal)
-						id = "__default_" + id;
-					out << "::" << id << "(";
-					first = true;
-					if (method.params) {
-						if (auto params = method.params->paramDeclClause()) {
-							if (!first)
-								out << ", ";
-							first = false;
-							printParamDeclClause(params);
-						}
-					}
-					out << ") ";
-					if (!method.isStatic)
-						out << "const ";
-					if (method.exceptionSpecification)
-						printExceptionSpecification(method.exceptionSpecification);
-					auto func = static_cast<AstrumParser::FunctionDefinitionContext*>(
-					    method.params->parent);
-					if (func->functionBody()) {
-						functionProlog = true;
-						printFunctionBody(func->functionBody());
-					} else if (func->shortFunctionBody()) {
-						printShortFunctionBody(func->shortFunctionBody());
-					}
-					out << "\n" << std::string(depth, '\t');
-				}
-				isInterface = false;
-			} else if (type->kind == TypeKind::Extension) {
-				isExtension           = true;
-				currentType           = type->id;
-				currentTemplateParams = nullptr;
-				if (type->templateParams) {
-					auto parent = static_cast<AstrumParser::ExtensionHeadContext*>(
-					    type->templateParams->parent);
-					if (parent->theTypeId())
-						currentTemplateParams = type->templateParams;
-				}
-
-				currentTemplateSpecArgs = type->templateSpecializationArgs;
-				for (const auto& func : type->methods) {
-					isVoidReturn = func.isConstructor;
-					if (type->access != AccessSpecifier::Private &&
-					    (type->templateParams || func.isInline)) {
-						out.switchTo(true);
-						emptyLine = true;
-					} else {
-						out.switchTo(false);
-					}
-					if (!type->compilationCondition.empty()) {
-						out << "#if " << type->compilationCondition << std::endl;
-					}
-					out << "} namespace __extensions { using namespace " << sema.packageName
-					    << ";\n";
-					if (type->access == AccessSpecifier::Protected) {
-						out << "namespace __" << filename << "_Protected"
-						    << (type->isUnsafe ? "__Unsafe" : "") << " {\n"
-						    << std::string(++depth, '\t');
-					} else if (type->isUnsafe) {
-						out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
-						    << std::string(++depth, '\t');
-					}
-					out << "#line " << func.pos.line << " \"" << fullFilename << ".ast\"\n"
-					    << std::string(depth, '\t');
-					if (func.indexerParams) {
-						bool isInline    = func.isInline;
-						bool isConstexpr = func.isConstexpr;
-						bool isUnchecked = false;
-						if (func.attributes)
-							for (auto attr : func.attributes->attributeSpecifier()) {
-								auto attrName = attr->Identifier()->getText();
-								if (attrName == "Unchecked")
-									isUnchecked = true;
+							if (type->templateParams) {
+								printTemplateParams(type->templateParams);
+								out << " ";
 							}
-
+							isUnsafe = func.isUnsafe;
+							if (isUnsafe) {
+								out << "[[clang::annotate(\"unsafe\")]] ";
+							}
+							if (isConstexpr) {
+								out << "inline constexpr ";
+							} else if (isInline) {
+								out << "inline ";
+							}
+							if (!func.isMutating && (func.isConstReturn || !func.isRefReturn))
+								out << "const ";
+							printTypeId(func.returnType);
+							if (func.isRefReturn)
+								out << "&";
+							out << " getAt(__extension_" << filename << "_" << type->pos.line << "_"
+							    << type->id;
+							if (type->templateParams) {
+								out << "<";
+								bool first = true;
+								for (auto param :
+								     type->templateParams->templateParamDeclaration()) {
+									if (!first)
+										out << ", ";
+									first = false;
+									printIdentifier(param->Identifier());
+									if (param->Ellipsis())
+										out << "...";
+								}
+								out << ">";
+							}
+							out << " ";
+							if (!func.isMutating)
+								out << "const";
+							out << "& __this ";
+							if (!func.isMutating)
+								out << "LIFETIMEBOUND";
+							out << ", ";
+							printParamDeclClause(func.indexerParams);
+							out << ")";
+							if (func.exceptionSpecification)
+								printExceptionSpecification(func.exceptionSpecification);
+							auto parent = static_cast<AstrumParser::IndexerContext*>(
+							    func.indexerParams->parent);
+							if (parent->functionBody()) {
+								functionProlog = true;
+								printFunctionBody(parent->functionBody());
+							} else if (parent->shortFunctionBody()) {
+								printShortFunctionBody(parent->shortFunctionBody());
+							}
+							out << "\n" << std::string(depth, '\t');
+							continue;
+						}
 						if (type->templateParams) {
 							printTemplateParams(type->templateParams);
 							out << " ";
@@ -10153,169 +10261,203 @@ namespace AstrumLang {
 						if (isUnsafe) {
 							out << "[[clang::annotate(\"unsafe\")]] ";
 						}
-						if (isConstexpr) {
+
+						if (func.templateParams) {
+							printTemplateParams(func.templateParams);
+							out << " ";
+						} else if (func.templateSpecializationArgs) {
+							out << "template<> ";
+						}
+
+						if (!type->templateParams && func.isStatic) {
+						    /*out << "template<class __TT> requires std::same_as<__TT, __extension_"
+						        << filename << "_" << type->pos.line << "_" << type->id;
+						    if (type->templateParams) {
+						        out << "<";
+						        bool first = true;
+						        for (auto param :
+						             type->templateParams->templateParamDeclaration()) {
+						            if (!first)
+						                out << ", ";
+						            first = false;
+						            printIdentifier(param->Identifier());
+						            if (param->Ellipsis())
+						                out << "...";
+						        }
+						        out << ">";
+						    }
+						    out << "> ";*/
+						    //out << "template<> ";
+						}
+
+						if (func.isConsteval) {
+							out << "inline consteval ";
+						} else if (func.isConstexpr) {
 							out << "inline constexpr ";
-						} else if (isInline) {
+						} else if (func.isInline) {
 							out << "inline ";
 						}
-						if (!func.isMutating && (func.isConstReturn || !func.isRefReturn))
-							out << "const ";
-						printTypeId(func.returnType);
-						if (func.isRefReturn)
-							out << "&";
-						out << " getAt(__extension_" << filename << "_" << type->pos.line << "_"
-						    << type->id;
-						if (type->templateParams) {
-							out << "<";
-							bool first = true;
-							for (auto param : type->templateParams->templateParamDeclaration()) {
-								if (!first)
-									out << ", ";
-								first = false;
-								printIdentifier(param->Identifier());
-								if (param->Ellipsis())
-									out << "...";
+
+						// bool isRegularMethod = !func.isConstructor;
+						out << "auto ";
+						if (func.isConstructor) {
+							out << "__construct_";
+						} else if (func.isStatic) {
+						    out << "__static_" << func.id;
+						    out << "<__extension_" << filename << "_" << type->pos.line << "_"
+						        << type->id << ">::get";
+						} else {
+							out << func.id;
+							if (func.templateSpecializationArgs) {
+								out << "<";
+								printTemplateArgumentList(func.templateSpecializationArgs);
+								out << ">";
 							}
-							out << ">";
 						}
-						out << " ";
-						if (!func.isMutating)
-							out << "const";
-						out << "& __this ";
-						if (!func.isMutating)
-							out << "LIFETIMEBOUND";
-						out << ", ";
-						printParamDeclClause(func.indexerParams);
+						out << "(";
+						if (!func.isConstructor && !func.isStatic) {
+							out << "__extension_" << filename << "_" << type->pos.line << "_"
+							    << type->id;
+							if (type->templateParams) {
+								out << "<";
+								bool first = true;
+								for (auto param :
+								     type->templateParams->templateParamDeclaration()) {
+									if (!first)
+										out << ", ";
+									first = false;
+									printIdentifier(param->Identifier());
+									if (param->Ellipsis())
+										out << "...";
+								}
+								out << ">";
+							}
+							out << " ";
+							if (!func.isMutating)
+								out << "const";
+							out << "& __this ";
+							if (!func.isMutating)
+								out << "LIFETIMEBOUND";
+						} else if (func.isConstructor) {
+							out << "Builtin::ConstructorProxy<__extension_" << filename << "_"
+							    << type->pos.line << "_" << type->id;
+							if (type->templateParams && !type->id.empty()) {
+								out << "<";
+								bool first = true;
+								for (auto param :
+								     type->templateParams->templateParamDeclaration()) {
+									if (!first)
+										out << ", ";
+									first = false;
+									printIdentifier(param->Identifier());
+									if (param->Ellipsis())
+										out << "...";
+								}
+								out << ">";
+							}
+							out << "> __ctordata";
+						}
+						if (func.params && func.params->paramDeclClause()) {
+							if (!func.isStatic)
+								out << ", ";
+							printParamDeclClause(func.params->paramDeclClause());
+						}
 						out << ")";
+						isVariadicTemplate    = false;
+						isFunctionDeclaration = false;
+						out << " ";
 						if (func.exceptionSpecification)
 							printExceptionSpecification(func.exceptionSpecification);
-						auto parent =
-						    static_cast<AstrumParser::IndexerContext*>(func.indexerParams->parent);
+						out << " -> ";
+						if (func.returnType || func.isConstructor) {
+							if (!func.isMutating && (!func.isRefReturn || func.isConstReturn))
+								out << "const ";
+							if (func.isConstructor) {
+								out << "decltype(auto)";
+							} else if (func.returnType->getText() == "self") {
+								out << "typename __extension_" << filename << "_" << type->pos.line
+								    << "_" << type->id;
+								if (type->templateParams) {
+									out << "<";
+									bool first = true;
+									for (auto param :
+									     type->templateParams->templateParamDeclaration()) {
+										if (!first)
+											out << ", ";
+										first = false;
+										printIdentifier(param->Identifier());
+										if (param->Ellipsis())
+											out << "...";
+									}
+									out << ">";
+								}
+								if (type->kind == TypeKind::Class && func.isRefReturn) {
+									out << "::__class";
+								}
+							} else {
+								printTypeId(func.returnType);
+							}
+
+							if (func.isRefReturn)
+								out << "&";
+						} else if (func.isForwardReturn) {
+							out << "decltype(auto)";
+						} else if (func.expression) {
+							out << "decltype(auto)";
+						} else {
+							out << "void";
+							isVoidReturn = true;
+						}
+
+						auto parent = static_cast<AstrumParser::FunctionDefinitionContext*>(
+						    func.params->parent);
 						if (parent->functionBody()) {
 							functionProlog = true;
 							printFunctionBody(parent->functionBody());
 						} else if (parent->shortFunctionBody()) {
 							printShortFunctionBody(parent->shortFunctionBody());
+						} else if (auto constructor =
+						               dynamic_cast<AstrumParser::ConstructorContext*>(
+						                   func.params->parent)) {
+							printConstructorBody(constructor->constructorBody());
 						}
-						out << "\n" << std::string(depth, '\t');
-						continue;
-					}
-					if (type->templateParams) {
-						printTemplateParams(type->templateParams);
-						out << " ";
-					}
-					isUnsafe = func.isUnsafe;
-					if (isUnsafe) {
-						out << "[[clang::annotate(\"unsafe\")]] ";
-					}
-
-					if (func.templateParams) {
-						printTemplateParams(func.templateParams);
-						out << " ";
-					} else if (func.templateSpecializationArgs) {
-						out << "template<> ";
-					}
-
-					if (!type->templateParams && func.isStatic) {
-						out << "template<class __TT> requires std::same_as<__TT, __extension_"
-						    << filename << "_" << type->pos.line << "_" << type->id;
-						if (type->templateParams) {
-							out << "<";
-							bool first = true;
-							for (auto param : type->templateParams->templateParamDeclaration()) {
-								if (!first)
-									out << ", ";
-								first = false;
-								printIdentifier(param->Identifier());
-								if (param->Ellipsis())
-									out << "...";
+						out << std::endl << std::string(depth, '\t');
+						if (func.id == "operator++" || func.id == "operator--") {
+							if (type->templateParams) {
+								printTemplateParams(type->templateParams);
+								out << " ";
 							}
-							out << ">";
-						}
-						out << "> ";
-					}
-
-					if (func.isConsteval) {
-						out << "inline consteval ";
-					} else if (func.isConstexpr) {
-						out << "inline constexpr ";
-					} else if (func.isInline) {
-						out << "inline ";
-					}
-
-					// bool isRegularMethod = !func.isConstructor;
-					out << "auto ";
-					if (func.isConstructor) {
-						out << "__construct_";
-					} else if (func.isStatic) {
-						out << "__static_" << func.id;
-					} else {
-						out << func.id;
-						if (func.templateSpecializationArgs) {
-							out << "<";
-							printTemplateArgumentList(func.templateSpecializationArgs);
-							out << ">";
-						}
-					}
-					out << "(";
-					if (!func.isConstructor && !func.isStatic) {
-						out << "__extension_" << filename << "_" << type->pos.line << "_"
-						    << type->id;
-						if (type->templateParams) {
-							out << "<";
-							bool first = true;
-							for (auto param : type->templateParams->templateParamDeclaration()) {
-								if (!first)
-									out << ", ";
-								first = false;
-								printIdentifier(param->Identifier());
-								if (param->Ellipsis())
-									out << "...";
+							isFunctionDeclaration = true;
+							if (func.isConsteval) {
+								out << "inline consteval ";
+							} else if (func.isConstexpr) {
+								out << "inline constexpr ";
+							} else {
+								out << "inline ";
 							}
-							out << ">";
-						}
-						out << " ";
-						if (!func.isMutating)
-							out << "const";
-						out << "& __this ";
-						if (!func.isMutating)
-							out << "LIFETIMEBOUND";
-					} else if (func.isConstructor) {
-						out << "Builtin::ConstructorProxy<__extension_" << filename << "_"
-						    << type->pos.line << "_" << type->id;
-						if (type->templateParams && !type->id.empty()) {
-							out << "<";
-							bool first = true;
-							for (auto param : type->templateParams->templateParamDeclaration()) {
-								if (!first)
-									out << ", ";
-								first = false;
-								printIdentifier(param->Identifier());
-								if (param->Ellipsis())
-									out << "...";
+
+							out << "auto " << func.id << "(__extension_" << filename << "_"
+							    << type->pos.line << "_" << type->id;
+							if (type->templateParams) {
+								out << "<";
+								bool first = true;
+								for (auto param :
+								     type->templateParams->templateParamDeclaration()) {
+									if (!first)
+										out << ", ";
+									first = false;
+									printIdentifier(param->Identifier());
+									if (param->Ellipsis())
+										out << "...";
+								}
+								out << ">";
 							}
-							out << ">";
-						}
-						out << "> __ctordata";
-					}
-					if (func.params && func.params->paramDeclClause()) {
-						if (!func.isStatic)
-							out << ", ";
-						printParamDeclClause(func.params->paramDeclClause());
-					}
-					out << ")";
-					isVariadicTemplate    = false;
-					isFunctionDeclaration = false;
-					out << " ";
-					if (func.exceptionSpecification)
-						printExceptionSpecification(func.exceptionSpecification);
-					out << " -> ";
-					if (func.returnType || func.isConstructor) {
-						if (!func.isMutating && (!func.isRefReturn || func.isConstReturn))
-							out << "const ";
-						if (func.isConstructor) {
-							out << "decltype(auto)";
-						} else if (func.returnType->getText() == "self") {
+							out << " & __this, int) ";
+							isVariadicTemplate    = false;
+							isFunctionDeclaration = false;
+							if (func.exceptionSpecification)
+								printExceptionSpecification(func.exceptionSpecification);
+							out << " -> ";
 							out << "typename __extension_" << filename << "_" << type->pos.line
 							    << "_" << type->id;
 							if (type->templateParams) {
@@ -10332,108 +10474,158 @@ namespace AstrumLang {
 								}
 								out << ">";
 							}
-							if (type->kind == TypeKind::Class && func.isRefReturn) {
-								out << "::__class";
+							out << " { auto copy = __this.__ref(); __this.__ref()." << func.id
+							    << "(); return copy; }" << std::endl
+							    << std::string(depth, '\t');
+						} else if (func.isCommutative) {
+							if (type->templateParams) {
+								printTemplateParams(type->templateParams);
+								out << " ";
 							}
-						} else {
-							printTypeId(func.returnType);
+							isFunctionDeclaration = true;
+							if (func.isConsteval) {
+								out << "inline consteval ";
+							} else if (func.isConstexpr) {
+								out << "inline constexpr ";
+							} else {
+								out << "inline ";
+							}
+
+							out << "auto " << func.id;
+							if (!func.params->paramDeclClause()) {
+								if (func.id.starts_with("_operator_"))
+									out << "_postfix";
+								out << "(__extension_" << filename << "_" << type->pos.line << "_"
+								    << type->id;
+								if (type->templateParams) {
+									out << "<";
+									bool first = true;
+									for (auto param :
+									     type->templateParams->templateParamDeclaration()) {
+										if (!first)
+											out << ", ";
+										first = false;
+										printIdentifier(param->Identifier());
+										if (param->Ellipsis())
+											out << "...";
+									}
+									out << ">";
+								}
+								out << " & __this) ";
+							} else {
+								out << "(";
+								printParamDeclClause(func.params->paramDeclClause());
+								out << ", const __extension_" << filename << "_" << type->pos.line
+								    << "_" << type->id;
+								if (type->templateParams) {
+									out << "<";
+									bool first = true;
+									for (auto param :
+									     type->templateParams->templateParamDeclaration()) {
+										if (!first)
+											out << ", ";
+										first = false;
+										printIdentifier(param->Identifier());
+										if (param->Ellipsis())
+											out << "...";
+									}
+									out << ">";
+								}
+								out << " & __this) ";
+							}
+
+							isVariadicTemplate    = false;
+							isFunctionDeclaration = false;
+							if (func.exceptionSpecification)
+								printExceptionSpecification(func.exceptionSpecification);
+							out << " -> decltype(auto)";
+
+							if (!func.params->paramDeclClause()) {
+								out << " { auto copy = __this; ADV_UFCS(" << func.id
+								    << ")(__this); return copy; }";
+							} else {
+								out << " { return ADV_UFCS(" << func.id << ")(__this, ";
+								out << func.params->paramDeclClause()
+								           ->paramDeclList()
+								           ->paramDeclaration(0)
+								           ->Identifier()
+								           ->getText();
+								out << "); }";
+							}
+
+							out << std::endl << std::string(depth, '\t');
 						}
 
-						if (func.isRefReturn)
-							out << "&";
-					} else if (func.isForwardReturn) {
-						out << "decltype(auto)";
-					} else if (func.expression) {
-						out << "decltype(auto)";
-					} else {
-						out << "void";
-						isVoidReturn = true;
+						if (type->access == AccessSpecifier::Protected || type->isUnsafe)
+							out << "\n" << std::string(--depth, '\t') << "}";
+						out << std::endl;
+						out << "} namespace " << sema.packageName << "{\n";
+						if (!type->compilationCondition.empty()) {
+							out << "#endif " << std::endl;
+						}
 					}
 
-					auto parent =
-					    static_cast<AstrumParser::FunctionDefinitionContext*>(func.params->parent);
-					if (parent->functionBody()) {
-						functionProlog = true;
-						printFunctionBody(parent->functionBody());
-					} else if (parent->shortFunctionBody()) {
-						printShortFunctionBody(parent->shortFunctionBody());
-					} else if (auto constructor = dynamic_cast<AstrumParser::ConstructorContext*>(
-					               func.params->parent)) {
-						printConstructorBody(constructor->constructorBody());
-					}
-					out << std::endl << std::string(depth, '\t');
-					if (func.id == "operator++" || func.id == "operator--") {
-						if (type->templateParams) {
-							printTemplateParams(type->templateParams);
-							out << " ";
-						}
-						isFunctionDeclaration = true;
-						if (func.isConsteval) {
-							out << "inline consteval ";
-						} else if (func.isConstexpr) {
-							out << "inline constexpr ";
+					for (const auto& prop : type->properties) {
+						isVoidReturn = false;
+						if (type->access != AccessSpecifier::Private &&
+						    (type->templateParams || prop.isInline || prop.isConstexpr)) {
+							out.switchTo(true);
+							emptyLine = true;
 						} else {
-							out << "inline ";
+							out.switchTo(false);
 						}
 
-						out << "auto " << func.id << "(__extension_" << filename << "_"
-						    << type->pos.line << "_" << type->id;
-						if (type->templateParams) {
-							out << "<";
-							bool first = true;
-							for (auto param : type->templateParams->templateParamDeclaration()) {
-								if (!first)
-									out << ", ";
-								first = false;
-								printIdentifier(param->Identifier());
-								if (param->Ellipsis())
-									out << "...";
-							}
-							out << ">";
-						}
-						out << " & __this, int) ";
-						isVariadicTemplate    = false;
-						isFunctionDeclaration = false;
-						if (func.exceptionSpecification)
-							printExceptionSpecification(func.exceptionSpecification);
-						out << " -> ";
-						out << "typename __extension_" << filename << "_" << type->pos.line << "_"
-						    << type->id;
-						if (type->templateParams) {
-							out << "<";
-							bool first = true;
-							for (auto param : type->templateParams->templateParamDeclaration()) {
-								if (!first)
-									out << ", ";
-								first = false;
-								printIdentifier(param->Identifier());
-								if (param->Ellipsis())
-									out << "...";
-							}
-							out << ">";
-						}
-						out << " { auto copy = __this.__ref(); __this.__ref()." << func.id
-						    << "(); return copy; }" << std::endl
+						out << "} namespace __extensions { using namespace " << sema.packageName
+						    << ";\n";
+						out << "#line " << prop.pos.line << " \"" << fullFilename << ".ast\"\n"
 						    << std::string(depth, '\t');
-					} else if (func.isCommutative) {
+
 						if (type->templateParams) {
 							printTemplateParams(type->templateParams);
 							out << " ";
 						}
-						isFunctionDeclaration = true;
-						if (func.isConsteval) {
-							out << "inline consteval ";
-						} else if (func.isConstexpr) {
+						if (!type->templateParams && prop.isStatic) {
+							/*out << "template<class __TT> requires std::same_as<__TT, __extension_"
+							    << filename << "_" << type->pos.line << "_" << type->id;
+							if (type->templateParams) {
+								out << "<";
+								bool first = true;
+								for (auto param :
+								     type->templateParams->templateParamDeclaration()) {
+									if (!first)
+										out << ", ";
+									first = false;
+									printIdentifier(param->Identifier());
+									if (param->Ellipsis())
+										out << "...";
+								}
+								out << ">";
+							}
+							out << "> ";*/
+						    //out << "template<> ";
+						}
+						isUnsafe = prop.isUnsafe;
+						if (isUnsafe) {
+							out << "[[clang::annotate(\"unsafe\")]] ";
+						}
+
+						if (prop.isConstexpr) {
 							out << "inline constexpr ";
-						} else {
+						} else if (prop.isInline) {
 							out << "inline ";
 						}
 
-						out << "auto " << func.id;
-						if (!func.params->paramDeclClause()) {
-							if (func.id.starts_with("_operator_"))
-								out << "_postfix";
-							out << "(__extension_" << filename << "_" << type->pos.line << "_"
+						out << "auto ";
+					    if (prop.isStatic) {
+						    out << "__static_get" << prop.id;
+						    out << "<__extension_" << filename << "_" << type->pos.line << "_"
+						        << type->id << ">::get";
+					    } else {
+						    out << "get" << prop.id;
+					    }
+						out << "(";
+						if (!prop.isStatic) {
+							out << "__extension_" << filename << "_" << type->pos.line << "_"
 							    << type->id;
 							if (type->templateParams) {
 								out << "<";
@@ -10449,855 +10641,84 @@ namespace AstrumLang {
 								}
 								out << ">";
 							}
-							out << " & __this) ";
-						} else {
-							out << "(";
-							printParamDeclClause(func.params->paramDeclClause());
-							out << ", const __extension_" << filename << "_" << type->pos.line
-							    << "_" << type->id;
-							if (type->templateParams) {
-								out << "<";
-								bool first = true;
-								for (auto param :
-								     type->templateParams->templateParamDeclaration()) {
-									if (!first)
-										out << ", ";
-									first = false;
-									printIdentifier(param->Identifier());
-									if (param->Ellipsis())
-										out << "...";
-								}
-								out << ">";
-							}
-							out << " & __this) ";
+							out << " const& __this ";
+							if (prop.isRef)
+								out << "LIFETIMEBOUND";
 						}
-
+						out << ")";
 						isVariadicTemplate    = false;
 						isFunctionDeclaration = false;
-						if (func.exceptionSpecification)
-							printExceptionSpecification(func.exceptionSpecification);
-						out << " -> decltype(auto)";
-
-						if (!func.params->paramDeclClause()) {
-							out << " { auto copy = __this; ADV_UFCS(" << func.id
-							    << ")(__this); return copy; }";
-						} else {
-							out << " { return ADV_UFCS(" << func.id << ")(__this, ";
-							out << func.params->paramDeclClause()
-							           ->paramDeclList()
-							           ->paramDeclaration(0)
-							           ->Identifier()
-							           ->getText();
-							out << "); }";
-						}
-
-						out << std::endl << std::string(depth, '\t');
-					}
-
-					if (type->access == AccessSpecifier::Protected || type->isUnsafe)
-						out << "\n" << std::string(--depth, '\t') << "}";
-					out << std::endl;
-					out << "} namespace " << sema.packageName << "{\n";
-					if (!type->compilationCondition.empty()) {
-						out << "#endif " << std::endl;
-					}
-				}
-
-				for (const auto& prop : type->properties) {
-					isVoidReturn = false;
-					if (type->access != AccessSpecifier::Private &&
-					    (type->templateParams || prop.isInline || prop.isConstexpr)) {
-						out.switchTo(true);
-						emptyLine = true;
-					} else {
-						out.switchTo(false);
-					}
-
-					out << "} namespace __extensions { using namespace " << sema.packageName
-					    << ";\n";
-					out << "#line " << prop.pos.line << " \"" << fullFilename << ".ast\"\n"
-					    << std::string(depth, '\t');
-
-					if (type->templateParams) {
-						printTemplateParams(type->templateParams);
-						out << " ";
-					}
-					if (!type->templateParams && prop.isStatic) {
-						out << "template<class __TT> requires std::same_as<__TT, __extension_"
-						    << filename << "_" << type->pos.line << "_" << type->id;
-						if (type->templateParams) {
-							out << "<";
-							bool first = true;
-							for (auto param : type->templateParams->templateParamDeclaration()) {
-								if (!first)
-									out << ", ";
-								first = false;
-								printIdentifier(param->Identifier());
-								if (param->Ellipsis())
-									out << "...";
-							}
-							out << ">";
-						}
-						out << "> ";
-					}
-					isUnsafe = prop.isUnsafe;
-					if (isUnsafe) {
-						out << "[[clang::annotate(\"unsafe\")]] ";
-					}
-
-					if (prop.isConstexpr) {
-						out << "inline constexpr ";
-					} else if (prop.isInline) {
-						out << "inline ";
-					}
-
-					out << "auto ";
-					if (prop.isStatic)
-						out << "__static_";
-					out << "get" << prop.id << "(";
-					if (!prop.isStatic) {
-						out << "__extension_" << filename << "_" << type->pos.line << "_"
-						    << type->id;
-						if (type->templateParams) {
-							out << "<";
-							bool first = true;
-							for (auto param : type->templateParams->templateParamDeclaration()) {
-								if (!first)
-									out << ", ";
-								first = false;
-								printIdentifier(param->Identifier());
-								if (param->Ellipsis())
-									out << "...";
-							}
-							out << ">";
-						}
-						out << " const& __this ";
+						out << " -> ";
+						if (!prop.isRef || prop.isConst)
+							out << "const ";
+						printTypeId(prop.type);
 						if (prop.isRef)
-							out << "LIFETIMEBOUND";
+							out << "&";
+						auto parent =
+						    static_cast<AstrumParser::PropertyContext*>(prop.type->parent);
+						if (parent->functionBody()) {
+							functionProlog = true;
+							printFunctionBody(parent->functionBody());
+						} else if (parent->shortFunctionBody()) {
+							printShortFunctionBody(parent->shortFunctionBody());
+						}
+						out << std::endl << std::string(depth, '\t');
+						out << "} namespace " << sema.packageName << "{\n";
 					}
-					out << ")";
-					isVariadicTemplate    = false;
-					isFunctionDeclaration = false;
-					out << " -> ";
-					if (!prop.isRef || prop.isConst)
-						out << "const ";
-					printTypeId(prop.type);
-					if (prop.isRef)
-						out << "&";
-					auto parent = static_cast<AstrumParser::PropertyContext*>(prop.type->parent);
-					if (parent->functionBody()) {
-						functionProlog = true;
-						printFunctionBody(parent->functionBody());
-					} else if (parent->shortFunctionBody()) {
-						printShortFunctionBody(parent->shortFunctionBody());
-					}
-					out << std::endl << std::string(depth, '\t');
-					out << "} namespace " << sema.packageName << "{\n";
+					currentTemplateParams   = nullptr;
+					currentTemplateSpecArgs = nullptr;
+					isExtension             = false;
 				}
-				currentTemplateParams   = nullptr;
-				currentTemplateSpecArgs = nullptr;
-				isExtension             = false;
-			}
-			// if (type->kind != TypeKind::Class && type->kind != TypeKind::EnumClass) continue;
-			if (type->access != AccessSpecifier::Private) {
-				out.switchTo(true);
-				emptyLine = true;
-			} else {
-				out.switchTo(false);
-			}
-			if (!type->compilationCondition.empty()) {
-				out << "#if " << type->compilationCondition << std::endl;
-			}
-			if (type->access == AccessSpecifier::Protected) {
-				out << "namespace __" << filename << "_Protected"
-				    << (type->isUnsafe ? "__Unsafe" : "") << " {\n"
-				    << std::string(++depth, '\t');
-			} else if (type->isUnsafe) {
-				out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
-				    << std::string(++depth, '\t');
-			}
+				// if (type->kind != TypeKind::Class && type->kind != TypeKind::EnumClass) continue;
+				if (type->access != AccessSpecifier::Private) {
+					out.switchTo(true);
+					emptyLine = true;
+				} else {
+					out.switchTo(false);
+				}
+				if (!type->compilationCondition.empty()) {
+					out << "#if " << type->compilationCondition << std::endl;
+				}
+				if (type->access == AccessSpecifier::Protected) {
+					out << "namespace __" << filename << "_Protected"
+					    << (type->isUnsafe ? "__Unsafe" : "") << " {\n"
+					    << std::string(++depth, '\t');
+				} else if (type->isUnsafe) {
+					out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
+					    << std::string(++depth, '\t');
+				}
 
-			out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
-			currentType.clear();
-			printTypeSpecialFunctionDefinitions(type.get(), nullptr);
+				out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
+				currentType.clear();
+				printTypeSpecialFunctionDefinitions(type.get(), nullptr);
 
-			if (type->access == AccessSpecifier::Protected || type->isUnsafe)
-				out << "\n" << std::string(--depth, '\t') << "}";
-			out << std::endl;
-			if (!type->compilationCondition.empty()) {
-				out << "#endif " << std::endl;
-			}
-		}
-	}
-
-	void AstrumCodegen::printTypeSpecialFunctionDefinitions(StructDefinition* type,
-	                                                        StructDefinition* parent) {
-		for (const auto& nested : type->nestedStructs) {
-			printTypeSpecialFunctionDefinitions(nested.get(), type);
-		}
-		if (type->kind != TypeKind::Class && type->kind != TypeKind::EnumClass)
-			return;
-		if (!type->isAbstract && type->isDefaultConstructible &&
-		    type->kind != TypeKind::EnumClass) {
-			if (parent) {
-				if (parent->templateParams) {
-					printTemplateParams(parent->templateParams);
-					out << " ";
-
-					if (parent->constraints) {
-						printConstraintClause(parent->constraints);
-						out << " ";
-					}
-				} else if (parent->templateSpecializationArgs) {
-					out << "template<> ";
+				if (type->access == AccessSpecifier::Protected || type->isUnsafe)
+					out << "\n" << std::string(--depth, '\t') << "}";
+				out << std::endl;
+				if (!type->compilationCondition.empty()) {
+					out << "#endif " << std::endl;
 				}
 			}
-			if (type->templateParams) {
-				printTemplateParams(type->templateParams);
-				out << " ";
-				if (type->constraints) {
-					printConstraintClause(type->constraints);
-					out << " ";
-				}
-			} else if (type->templateSpecializationArgs) {
-				out << "template<> ";
-			}
-			out << "inline ";
-			if (parent) {
-				out << parent->id;
-				if (parent->templateSpecializationArgs) {
-					out << "<";
-					printTemplateArgumentList(parent->templateSpecializationArgs);
-					out << ">";
-				} else if (parent->templateParams) {
-					out << "<";
-					bool first = true;
-					for (auto tparam : parent->templateParams->templateParamDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(tparam->Identifier());
-						if (tparam->Ellipsis())
-							out << "...";
-					}
-					out << ">";
-				}
-				out << "::";
-			}
-			out << type->id;
-			if (type->templateSpecializationArgs) {
-				out << "<";
-				printTemplateArgumentList(type->templateSpecializationArgs);
-				out << ">";
-			} else if (type->templateParams) {
-				out << "<";
-				bool first = true;
-				for (auto tparam : type->templateParams->templateParamDeclaration()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printIdentifier(tparam->Identifier());
-					if (tparam->Ellipsis())
-						out << "...";
-				}
-				out << ">";
-			}
-
-			out << "::ADV_CLASS_DEFAULT_CTOR(" << type->id << ")\n" << std::string(depth, '\t');
 		}
 
-		if (parent) {
-			if (parent->templateParams) {
-				printTemplateParams(parent->templateParams);
-				out << " ";
-
-				if (parent->constraints) {
-					printConstraintClause(parent->constraints);
-					out << " ";
-				}
-			} else if (parent->templateSpecializationArgs) {
-				out << "template<> ";
+		void AstrumCodegen::printTypeSpecialFunctionDefinitions(StructDefinition * type,
+		                                                        StructDefinition * parent) {
+			for (const auto& nested : type->nestedStructs) {
+				printTypeSpecialFunctionDefinitions(nested.get(), type);
 			}
-		}
-		if (type->templateParams) {
-			printTemplateParams(type->templateParams);
-			out << " ";
-			if (type->constraints) {
-				printConstraintClause(type->constraints);
-				out << " ";
-			}
-		} else if (type->templateSpecializationArgs) {
-			out << "template<> ";
-		}
-		out << "inline ";
-		if (parent) {
-			out << parent->id;
-			if (parent->templateSpecializationArgs) {
-				out << "<";
-				printTemplateArgumentList(parent->templateSpecializationArgs);
-				out << ">";
-			} else if (parent->templateParams) {
-				out << "<";
-				bool first = true;
-				for (auto tparam : parent->templateParams->templateParamDeclaration()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printIdentifier(tparam->Identifier());
-					if (tparam->Ellipsis())
-						out << "...";
-				}
-				out << ">";
-			}
-			out << "::";
-		}
-		out << type->id;
-		if (type->templateSpecializationArgs) {
-			out << "<";
-			printTemplateArgumentList(type->templateSpecializationArgs);
-			out << ">";
-		} else if (type->templateParams) {
-			out << "<";
-			bool first = true;
-			for (auto tparam : type->templateParams->templateParamDeclaration()) {
-				if (!first)
-					out << ", ";
-				first = false;
-				printIdentifier(tparam->Identifier());
-				if (tparam->Ellipsis())
-					out << "...";
-			}
-			out << ">";
-		}
-
-		out << "::ADV_CLASS_STRONG_CTOR_REF(" << type->id << ")\n" << std::string(depth, '\t');
-
-		if (parent) {
-			if (parent->templateParams) {
-				printTemplateParams(parent->templateParams);
-				out << " ";
-				if (parent->constraints) {
-					printConstraintClause(parent->constraints);
-					out << " ";
-				}
-			} else if (parent->templateSpecializationArgs) {
-				out << "template<> ";
-			}
-		}
-		if (type->templateParams) {
-			printTemplateParams(type->templateParams);
-			out << " ";
-			if (type->constraints) {
-				printConstraintClause(type->constraints);
-				out << " ";
-			}
-		} else if (type->templateSpecializationArgs) {
-			out << "template<> ";
-		}
-		out << "inline ";
-		if (parent) {
-			out << parent->id;
-			if (parent->templateSpecializationArgs) {
-				out << "<";
-				printTemplateArgumentList(parent->templateSpecializationArgs);
-				out << ">";
-			} else if (parent->templateParams) {
-				out << "<";
-				bool first = true;
-				for (auto tparam : parent->templateParams->templateParamDeclaration()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printIdentifier(tparam->Identifier());
-					if (tparam->Ellipsis())
-						out << "...";
-				}
-				out << ">";
-			}
-			out << "::";
-		}
-		out << type->id;
-		if (type->templateSpecializationArgs) {
-			out << "<";
-			printTemplateArgumentList(type->templateSpecializationArgs);
-			out << ">";
-		} else if (type->templateParams) {
-			out << "<";
-			bool first = true;
-			for (auto tparam : type->templateParams->templateParamDeclaration()) {
-				if (!first)
-					out << ", ";
-				first = false;
-				printIdentifier(tparam->Identifier());
-				if (tparam->Ellipsis())
-					out << "...";
-			}
-			out << ">";
-		}
-
-		out << "& ";
-		if (parent) {
-			out << parent->id;
-			if (parent->templateSpecializationArgs) {
-				out << "<";
-				printTemplateArgumentList(parent->templateSpecializationArgs);
-				out << ">";
-			} else if (parent->templateParams) {
-				out << "<";
-				bool first = true;
-				for (auto tparam : parent->templateParams->templateParamDeclaration()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printIdentifier(tparam->Identifier());
-					if (tparam->Ellipsis())
-						out << "...";
-				}
-				out << ">";
-			}
-			out << "::";
-		}
-		out << type->id;
-		if (type->templateSpecializationArgs) {
-			out << "<";
-			printTemplateArgumentList(type->templateSpecializationArgs);
-			out << ">";
-		} else if (type->templateParams) {
-			out << "<";
-			bool first = true;
-			for (auto tparam : type->templateParams->templateParamDeclaration()) {
-				if (!first)
-					out << ", ";
-				first = false;
-				printIdentifier(tparam->Identifier());
-				if (tparam->Ellipsis())
-					out << "...";
-			}
-			out << ">";
-		}
-		out << "::ADV_CLASS_STRONG_ASSIGN_REF(" << type->id << ")\n" << std::string(depth, '\t');
-
-		if (parent) {
-			if (parent->templateParams) {
-				printTemplateParams(parent->templateParams);
-				out << " ";
-				if (parent->constraints) {
-					printConstraintClause(parent->constraints);
-					out << " ";
-				}
-			} else if (parent->templateSpecializationArgs) {
-				out << "template<> ";
-			}
-		}
-		if (type->templateParams) {
-			printTemplateParams(type->templateParams);
-			out << " ";
-			if (type->constraints) {
-				printConstraintClause(type->constraints);
-				out << " ";
-			}
-		} else if (type->templateSpecializationArgs) {
-			out << "template<> ";
-		}
-		out << "inline ";
-		if (parent) {
-			out << parent->id;
-			if (parent->templateSpecializationArgs) {
-				out << "<";
-				printTemplateArgumentList(parent->templateSpecializationArgs);
-				out << ">";
-			} else if (parent->templateParams) {
-				out << "<";
-				bool first = true;
-				for (auto tparam : parent->templateParams->templateParamDeclaration()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printIdentifier(tparam->Identifier());
-					if (tparam->Ellipsis())
-						out << "...";
-				}
-				out << ">";
-			}
-			out << "::";
-		}
-		out << type->id << "__Unowned";
-		if (type->templateSpecializationArgs) {
-			out << "<";
-			printTemplateArgumentList(type->templateSpecializationArgs);
-			out << ">";
-		} else if (type->templateParams) {
-			out << "<";
-			bool first = true;
-			for (auto tparam : type->templateParams->templateParamDeclaration()) {
-				if (!first)
-					out << ", ";
-				first = false;
-				printIdentifier(tparam->Identifier());
-				if (tparam->Ellipsis())
-					out << "...";
-			}
-			out << ">";
-		}
-
-		out << "::ADV_CLASS_UNOWNED_CTOR_REF(" << type->id << "__Unowned)\n"
-		    << std::string(depth, '\t');
-
-		if (parent) {
-			if (parent->templateParams) {
-				printTemplateParams(parent->templateParams);
-				out << " ";
-				if (parent->constraints) {
-					printConstraintClause(parent->constraints);
-					out << " ";
-				}
-			} else if (parent->templateSpecializationArgs) {
-				out << "template<> ";
-			}
-		}
-		if (type->templateParams) {
-			printTemplateParams(type->templateParams);
-			out << " ";
-			if (type->constraints) {
-				printConstraintClause(type->constraints);
-				out << " ";
-			}
-		} else if (type->templateSpecializationArgs) {
-			out << "template<> ";
-		}
-		out << "inline ";
-		if (parent) {
-			out << parent->id;
-			if (parent->templateSpecializationArgs) {
-				out << "<";
-				printTemplateArgumentList(parent->templateSpecializationArgs);
-				out << ">";
-			} else if (parent->templateParams) {
-				out << "<";
-				bool first = true;
-				for (auto tparam : parent->templateParams->templateParamDeclaration()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printIdentifier(tparam->Identifier());
-					if (tparam->Ellipsis())
-						out << "...";
-				}
-				out << ">";
-			}
-			out << "::";
-		}
-		out << type->id << "__Unowned";
-		if (type->templateSpecializationArgs) {
-			out << "<";
-			printTemplateArgumentList(type->templateSpecializationArgs);
-			out << ">";
-		} else if (type->templateParams) {
-			out << "<";
-			bool first = true;
-			for (auto tparam : type->templateParams->templateParamDeclaration()) {
-				if (!first)
-					out << ", ";
-				first = false;
-				printIdentifier(tparam->Identifier());
-				if (tparam->Ellipsis())
-					out << "...";
-			}
-			out << ">";
-		}
-
-		out << "& ";
-		if (parent) {
-			out << parent->id;
-			if (parent->templateSpecializationArgs) {
-				out << "<";
-				printTemplateArgumentList(parent->templateSpecializationArgs);
-				out << ">";
-			} else if (parent->templateParams) {
-				out << "<";
-				bool first = true;
-				for (auto tparam : parent->templateParams->templateParamDeclaration()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printIdentifier(tparam->Identifier());
-					if (tparam->Ellipsis())
-						out << "...";
-				}
-				out << ">";
-			}
-			out << "::";
-		}
-		out << type->id << "__Unowned";
-		if (type->templateSpecializationArgs) {
-			out << "<";
-			printTemplateArgumentList(type->templateSpecializationArgs);
-			out << ">";
-		} else if (type->templateParams) {
-			out << "<";
-			bool first = true;
-			for (auto tparam : type->templateParams->templateParamDeclaration()) {
-				if (!first)
-					out << ", ";
-				first = false;
-				printIdentifier(tparam->Identifier());
-				if (tparam->Ellipsis())
-					out << "...";
-			}
-			out << ">";
-		}
-		out << "::ADV_CLASS_UNOWNED_ASSIGN_REF(" << type->id << "__Unowned)\n"
-		    << std::string(depth, '\t');
-
-		if (parent) {
-			if (parent->templateParams) {
-				printTemplateParams(parent->templateParams);
-				out << " ";
-				if (parent->constraints) {
-					printConstraintClause(parent->constraints);
-					out << " ";
-				}
-			} else if (parent->templateSpecializationArgs) {
-				out << "template<> ";
-			}
-		}
-		if (type->templateParams) {
-			printTemplateParams(type->templateParams);
-			out << " ";
-			if (type->constraints) {
-				printConstraintClause(type->constraints);
-				out << " ";
-			}
-		} else if (type->templateSpecializationArgs) {
-			out << "template<> ";
-		}
-		out << "inline ";
-		if (parent) {
-			out << parent->id;
-			if (parent->templateSpecializationArgs) {
-				out << "<";
-				printTemplateArgumentList(parent->templateSpecializationArgs);
-				out << ">";
-			} else if (parent->templateParams) {
-				out << "<";
-				bool first = true;
-				for (auto tparam : parent->templateParams->templateParamDeclaration()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printIdentifier(tparam->Identifier());
-					if (tparam->Ellipsis())
-						out << "...";
-				}
-				out << ">";
-			}
-			out << "::";
-		}
-		out << type->id << "__Weak";
-		if (type->templateSpecializationArgs) {
-			out << "<";
-			printTemplateArgumentList(type->templateSpecializationArgs);
-			out << ">";
-		} else if (type->templateParams) {
-			out << "<";
-			bool first = true;
-			for (auto tparam : type->templateParams->templateParamDeclaration()) {
-				if (!first)
-					out << ", ";
-				first = false;
-				printIdentifier(tparam->Identifier());
-				if (tparam->Ellipsis())
-					out << "...";
-			}
-			out << ">";
-		}
-
-		out << "::ADV_CLASS_WEAK_CTOR_REF(" << type->id << "__Weak)\n" << std::string(depth, '\t');
-
-		if (parent) {
-			if (parent->templateParams) {
-				printTemplateParams(parent->templateParams);
-				out << " ";
-				if (parent->constraints) {
-					printConstraintClause(parent->constraints);
-					out << " ";
-				}
-			} else if (parent->templateSpecializationArgs) {
-				out << "template<> ";
-			}
-		}
-		if (type->templateParams) {
-			printTemplateParams(type->templateParams);
-			out << " ";
-			if (type->constraints) {
-				printConstraintClause(type->constraints);
-				out << " ";
-			}
-		} else if (type->templateSpecializationArgs) {
-			out << "template<> ";
-		}
-		out << "inline ";
-		if (parent) {
-			out << parent->id;
-			if (parent->templateSpecializationArgs) {
-				out << "<";
-				printTemplateArgumentList(parent->templateSpecializationArgs);
-				out << ">";
-			} else if (parent->templateParams) {
-				out << "<";
-				bool first = true;
-				for (auto tparam : parent->templateParams->templateParamDeclaration()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printIdentifier(tparam->Identifier());
-					if (tparam->Ellipsis())
-						out << "...";
-				}
-				out << ">";
-			}
-			out << "::";
-		}
-		out << type->id << "__Weak";
-		if (type->templateSpecializationArgs) {
-			out << "<";
-			printTemplateArgumentList(type->templateSpecializationArgs);
-			out << ">";
-		} else if (type->templateParams) {
-			out << "<";
-			bool first = true;
-			for (auto tparam : type->templateParams->templateParamDeclaration()) {
-				if (!first)
-					out << ", ";
-				first = false;
-				printIdentifier(tparam->Identifier());
-				if (tparam->Ellipsis())
-					out << "...";
-			}
-			out << ">";
-		}
-
-		out << "& ";
-		if (parent) {
-			out << parent->id;
-			if (parent->templateSpecializationArgs) {
-				out << "<";
-				printTemplateArgumentList(parent->templateSpecializationArgs);
-				out << ">";
-			} else if (parent->templateParams) {
-				out << "<";
-				bool first = true;
-				for (auto tparam : parent->templateParams->templateParamDeclaration()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printIdentifier(tparam->Identifier());
-					if (tparam->Ellipsis())
-						out << "...";
-				}
-				out << ">";
-			}
-			out << "::";
-		}
-		out << type->id << "__Weak";
-		if (type->templateSpecializationArgs) {
-			out << "<";
-			printTemplateArgumentList(type->templateSpecializationArgs);
-			out << ">";
-		} else if (type->templateParams) {
-			out << "<";
-			bool first = true;
-			for (auto tparam : type->templateParams->templateParamDeclaration()) {
-				if (!first)
-					out << ", ";
-				first = false;
-				printIdentifier(tparam->Identifier());
-				if (tparam->Ellipsis())
-					out << "...";
-			}
-			out << ">";
-		}
-		out << "::ADV_CLASS_WEAK_ASSIGN_REF(" << type->id << "__Weak)\n"
-		    << std::string(depth, '\t');
-
-		for (const auto& field : type->fields) {
-			if (!field.isStatic && !field.isThreadLocal)
-				continue;
-
-			if (!field.compilationCondition.empty()) {
-				out << "#if " << field.compilationCondition << std::endl
-				    << std::string(depth, '\t');
-			}
-
-			if (parent) {
-				if (parent->templateParams) {
-					printTemplateParams(parent->templateParams);
-					out << " ";
-					if (parent->constraints) {
-						printConstraintClause(parent->constraints);
-						out << " ";
-					}
-				} else if (parent->templateSpecializationArgs) {
-					out << "template<> ";
-				}
-			}
-			if (type->templateParams) {
-				printTemplateParams(type->templateParams);
-				out << " ";
-				if (type->constraints) {
-					printConstraintClause(type->constraints);
-					out << " ";
-				}
-			} else if (type->templateSpecializationArgs) {
-				out << "template<> ";
-			}
-			out << "inline decltype(auto) ";
-			if (parent) {
-				out << parent->id;
-				if (parent->templateSpecializationArgs) {
-					out << "<";
-					printTemplateArgumentList(parent->templateSpecializationArgs);
-					out << ">";
-				} else if (parent->templateParams) {
-					out << "<";
-					bool first = true;
-					for (auto tparam : parent->templateParams->templateParamDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(tparam->Identifier());
-						if (tparam->Ellipsis())
-							out << "...";
-					}
-					out << ">";
-				}
-				out << "::";
-			}
-			out << type->id;
-			if (type->templateSpecializationArgs) {
-				out << "<";
-				printTemplateArgumentList(type->templateSpecializationArgs);
-				out << ">";
-			} else if (type->templateParams) {
-				out << "<";
-				bool first = true;
-				for (auto tparam : type->templateParams->templateParamDeclaration()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printIdentifier(tparam->Identifier());
-					if (tparam->Ellipsis())
-						out << "...";
-				}
-				out << ">";
-			}
-			out << "::get" << field.id << "() { return __class::" << field.id << "; }\n"
-			    << std::string(depth, '\t');
-			if (!field.isConst) {
+			if (type->kind != TypeKind::Class && type->kind != TypeKind::EnumClass)
+				return;
+			if (!type->isAbstract && type->isDefaultConstructible &&
+			    type->kind != TypeKind::EnumClass) {
 				if (parent) {
 					if (parent->templateParams) {
 						printTemplateParams(parent->templateParams);
 						out << " ";
+
+						if (parent->constraints) {
+							printConstraintClause(parent->constraints);
+							out << " ";
+						}
 					} else if (parent->templateSpecializationArgs) {
 						out << "template<> ";
 					}
@@ -11305,10 +10726,14 @@ namespace AstrumLang {
 				if (type->templateParams) {
 					printTemplateParams(type->templateParams);
 					out << " ";
+					if (type->constraints) {
+						printConstraintClause(type->constraints);
+						out << " ";
+					}
 				} else if (type->templateSpecializationArgs) {
 					out << "template<> ";
 				}
-				out << "inline void ";
+				out << "inline ";
 				if (parent) {
 					out << parent->id;
 					if (parent->templateSpecializationArgs) {
@@ -11348,114 +10773,15 @@ namespace AstrumLang {
 					}
 					out << ">";
 				}
-				out << "::set" << field.id << "(const ";
-				printTypeId(field.type);
-				out << "& value) { __class::" << field.id << " = value; }\n"
-				    << std::string(depth, '\t');
-			}
-			if (!field.compilationCondition.empty()) {
-				out << "#endif " << std::endl << std::string(depth, '\t');
-			}
-		}
 
-		if (type->kind == TypeKind::EnumClass) {
-			for (const auto& constant : type->constants) {
-				if (constant.type)
-					continue;
-				if (parent) {
-					if (parent->templateParams) {
-						printTemplateParams(parent->templateParams);
-						out << " ";
-						if (parent->constraints) {
-							printConstraintClause(parent->constraints);
-							out << " ";
-						}
-					} else if (parent->templateSpecializationArgs) {
-						out << "template<> ";
-					}
-				}
-				out << "FORCE_INLINE decltype(auto) ";
-				if (parent) {
-					out << parent->id;
-					if (parent->templateSpecializationArgs) {
-						out << "<";
-						printTemplateArgumentList(parent->templateSpecializationArgs);
-						out << ">";
-					} else if (parent->templateParams) {
-						out << "<";
-						bool first = true;
-						for (auto tparam : parent->templateParams->templateParamDeclaration()) {
-							if (!first)
-								out << ", ";
-							first = false;
-							printIdentifier(tparam->Identifier());
-							if (tparam->Ellipsis())
-								out << "...";
-						}
-						out << ">";
-					}
-					out << "::";
-				}
-				out << type->id;
-				out << "::get" << constant.id << "() noexcept { return __class::" << constant.id
-				    << "; }\n"
-				    << std::string(depth, '\t');
+				out << "::ADV_CLASS_DEFAULT_CTOR(" << type->id << ")\n" << std::string(depth, '\t');
 			}
+
 			if (parent) {
 				if (parent->templateParams) {
 					printTemplateParams(parent->templateParams);
 					out << " ";
-					if (parent->constraints) {
-						printConstraintClause(parent->constraints);
-						out << " ";
-					}
-				} else if (parent->templateSpecializationArgs) {
-					out << "template<> ";
-				}
-			}
-			out << "FORCE_INLINE decltype(auto) ";
-			if (parent) {
-				out << parent->id;
-				if (parent->templateSpecializationArgs) {
-					out << "<";
-					printTemplateArgumentList(parent->templateSpecializationArgs);
-					out << ">";
-				} else if (parent->templateParams) {
-					out << "<";
-					bool first = true;
-					for (auto tparam : parent->templateParams->templateParamDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(tparam->Identifier());
-						if (tparam->Ellipsis())
-							out << "...";
-					}
-					out << ">";
-				}
-				out << "::";
-			}
-			out << type->id;
-			out << "::GetValues() noexcept { return __class::GetValues(); }\n"
-			    << std::string(depth, '\t');
-		}
 
-		for (const auto& func : type->methods) {
-			if (!func.isStatic && !func.isConverter && !func.id.starts_with("operator") &&
-			    !func.id.starts_with("_operator") &&
-			    !(func.isConstructor && func.implicitSpecification))
-				continue;
-			if (!func.compilationCondition.empty()) {
-				out << "#if " << func.compilationCondition << std::endl << std::string(depth, '\t');
-			}
-			out << "#line " << func.pos.line << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-
-			isFunctionDeclaration = true;
-			if (parent) {
-				if (parent->templateParams) {
-					printTemplateParams(parent->templateParams);
-					out << " ";
 					if (parent->constraints) {
 						printConstraintClause(parent->constraints);
 						out << " ";
@@ -11474,29 +10800,7 @@ namespace AstrumLang {
 			} else if (type->templateSpecializationArgs) {
 				out << "template<> ";
 			}
-			if (func.templateParams) {
-				printTemplateParams(func.templateParams);
-				out << " ";
-			} else if (func.templateSpecializationArgs) {
-				out << "template<> ";
-			}
-
 			out << "inline ";
-			if (func.isConstexpr && !func.isConstructor)
-				out << "constexpr ";
-
-			bool isRegularMethod = !func.isConverter && !func.isConstructor;
-			if (func.isCommutative) {
-				if (func.returnType) {
-					out << "const ";
-					printTypeId(func.returnType);
-					out << " ";
-				} else {
-					out << "decltype(auto) ";
-				}
-			} else if (isRegularMethod) {
-				out << "decltype(auto) ";
-			}
 			if (parent) {
 				out << parent->id;
 				if (parent->templateSpecializationArgs) {
@@ -11536,57 +10840,1089 @@ namespace AstrumLang {
 				}
 				out << ">";
 			}
-			out << "::";
-			if (func.isConverter) {
-				out << "operator ";
-				printTypeId(func.returnType);
-				if (func.isConstReturn)
-					out << " const&";
-				else if (func.isRefReturn)
-					out << " &";
-			} else if (func.isConstructor) {
-				out << type->id;
-			} else
-				out << func.id;
-			if (func.id.ends_with(" new") || func.id.ends_with(" delete"))
-				isNewDeleteOperator = true;
-			if (func.templateSpecializationArgs) {
-				out << "<";
-				printTemplateArgumentList(func.templateSpecializationArgs);
-				out << ">";
+
+			out << "::ADV_CLASS_STRONG_CTOR_REF(" << type->id << ")\n" << std::string(depth, '\t');
+
+			if (parent) {
+				if (parent->templateParams) {
+					printTemplateParams(parent->templateParams);
+					out << " ";
+					if (parent->constraints) {
+						printConstraintClause(parent->constraints);
+						out << " ";
+					}
+				} else if (parent->templateSpecializationArgs) {
+					out << "template<> ";
+				}
 			}
-			bool isIndexer = func.indexerParams;
-			if (func.params)
-				printFunctionParameters(func.params);
-			else if (isIndexer) {
-				out << "(";
-				printParamDeclClause(func.indexerParams);
-				out << ")";
-			} else
-				out << "()";
-			isVariadicTemplate    = false;
-			isFunctionDeclaration = false;
-			if (!func.isConstructor && !func.isStatic)
-				out << " const ";
-			if (func.exceptionSpecification)
-				printExceptionSpecification(func.exceptionSpecification);
-
-			if (!func.isStatic && func.isRefReturn)
-				out << " LIFETIMEBOUND";
-
-			if (func.isConstructor) {
-				out << " : ___super(new (::operator new(sizeof(__class))) __class(";
-				if (auto clause = func.params->paramDeclClause()) {
+			if (type->templateParams) {
+				printTemplateParams(type->templateParams);
+				out << " ";
+				if (type->constraints) {
+					printConstraintClause(type->constraints);
+					out << " ";
+				}
+			} else if (type->templateSpecializationArgs) {
+				out << "template<> ";
+			}
+			out << "inline ";
+			if (parent) {
+				out << parent->id;
+				if (parent->templateSpecializationArgs) {
+					out << "<";
+					printTemplateArgumentList(parent->templateSpecializationArgs);
+					out << ">";
+				} else if (parent->templateParams) {
+					out << "<";
 					bool first = true;
-					for (auto param : clause->paramDeclList()->paramDeclaration()) {
+					for (auto tparam : parent->templateParams->templateParamDeclaration()) {
 						if (!first)
 							out << ", ";
 						first = false;
-						printIdentifier(param->Identifier());
+						printIdentifier(tparam->Identifier());
+						if (tparam->Ellipsis())
+							out << "...";
+					}
+					out << ">";
+				}
+				out << "::";
+			}
+			out << type->id;
+			if (type->templateSpecializationArgs) {
+				out << "<";
+				printTemplateArgumentList(type->templateSpecializationArgs);
+				out << ">";
+			} else if (type->templateParams) {
+				out << "<";
+				bool first = true;
+				for (auto tparam : type->templateParams->templateParamDeclaration()) {
+					if (!first)
+						out << ", ";
+					first = false;
+					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis())
+						out << "...";
+				}
+				out << ">";
+			}
+
+			out << "& ";
+			if (parent) {
+				out << parent->id;
+				if (parent->templateSpecializationArgs) {
+					out << "<";
+					printTemplateArgumentList(parent->templateSpecializationArgs);
+					out << ">";
+				} else if (parent->templateParams) {
+					out << "<";
+					bool first = true;
+					for (auto tparam : parent->templateParams->templateParamDeclaration()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printIdentifier(tparam->Identifier());
+						if (tparam->Ellipsis())
+							out << "...";
+					}
+					out << ">";
+				}
+				out << "::";
+			}
+			out << type->id;
+			if (type->templateSpecializationArgs) {
+				out << "<";
+				printTemplateArgumentList(type->templateSpecializationArgs);
+				out << ">";
+			} else if (type->templateParams) {
+				out << "<";
+				bool first = true;
+				for (auto tparam : type->templateParams->templateParamDeclaration()) {
+					if (!first)
+						out << ", ";
+					first = false;
+					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis())
+						out << "...";
+				}
+				out << ">";
+			}
+			out << "::ADV_CLASS_STRONG_ASSIGN_REF(" << type->id << ")\n"
+			    << std::string(depth, '\t');
+
+			if (parent) {
+				if (parent->templateParams) {
+					printTemplateParams(parent->templateParams);
+					out << " ";
+					if (parent->constraints) {
+						printConstraintClause(parent->constraints);
+						out << " ";
+					}
+				} else if (parent->templateSpecializationArgs) {
+					out << "template<> ";
+				}
+			}
+			if (type->templateParams) {
+				printTemplateParams(type->templateParams);
+				out << " ";
+				if (type->constraints) {
+					printConstraintClause(type->constraints);
+					out << " ";
+				}
+			} else if (type->templateSpecializationArgs) {
+				out << "template<> ";
+			}
+			out << "inline ";
+			if (parent) {
+				out << parent->id;
+				if (parent->templateSpecializationArgs) {
+					out << "<";
+					printTemplateArgumentList(parent->templateSpecializationArgs);
+					out << ">";
+				} else if (parent->templateParams) {
+					out << "<";
+					bool first = true;
+					for (auto tparam : parent->templateParams->templateParamDeclaration()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printIdentifier(tparam->Identifier());
+						if (tparam->Ellipsis())
+							out << "...";
+					}
+					out << ">";
+				}
+				out << "::";
+			}
+			out << type->id << "__Unowned";
+			if (type->templateSpecializationArgs) {
+				out << "<";
+				printTemplateArgumentList(type->templateSpecializationArgs);
+				out << ">";
+			} else if (type->templateParams) {
+				out << "<";
+				bool first = true;
+				for (auto tparam : type->templateParams->templateParamDeclaration()) {
+					if (!first)
+						out << ", ";
+					first = false;
+					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis())
+						out << "...";
+				}
+				out << ">";
+			}
+
+			out << "::ADV_CLASS_UNOWNED_CTOR_REF(" << type->id << "__Unowned)\n"
+			    << std::string(depth, '\t');
+
+			if (parent) {
+				if (parent->templateParams) {
+					printTemplateParams(parent->templateParams);
+					out << " ";
+					if (parent->constraints) {
+						printConstraintClause(parent->constraints);
+						out << " ";
+					}
+				} else if (parent->templateSpecializationArgs) {
+					out << "template<> ";
+				}
+			}
+			if (type->templateParams) {
+				printTemplateParams(type->templateParams);
+				out << " ";
+				if (type->constraints) {
+					printConstraintClause(type->constraints);
+					out << " ";
+				}
+			} else if (type->templateSpecializationArgs) {
+				out << "template<> ";
+			}
+			out << "inline ";
+			if (parent) {
+				out << parent->id;
+				if (parent->templateSpecializationArgs) {
+					out << "<";
+					printTemplateArgumentList(parent->templateSpecializationArgs);
+					out << ">";
+				} else if (parent->templateParams) {
+					out << "<";
+					bool first = true;
+					for (auto tparam : parent->templateParams->templateParamDeclaration()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printIdentifier(tparam->Identifier());
+						if (tparam->Ellipsis())
+							out << "...";
+					}
+					out << ">";
+				}
+				out << "::";
+			}
+			out << type->id << "__Unowned";
+			if (type->templateSpecializationArgs) {
+				out << "<";
+				printTemplateArgumentList(type->templateSpecializationArgs);
+				out << ">";
+			} else if (type->templateParams) {
+				out << "<";
+				bool first = true;
+				for (auto tparam : type->templateParams->templateParamDeclaration()) {
+					if (!first)
+						out << ", ";
+					first = false;
+					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis())
+						out << "...";
+				}
+				out << ">";
+			}
+
+			out << "& ";
+			if (parent) {
+				out << parent->id;
+				if (parent->templateSpecializationArgs) {
+					out << "<";
+					printTemplateArgumentList(parent->templateSpecializationArgs);
+					out << ">";
+				} else if (parent->templateParams) {
+					out << "<";
+					bool first = true;
+					for (auto tparam : parent->templateParams->templateParamDeclaration()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printIdentifier(tparam->Identifier());
+						if (tparam->Ellipsis())
+							out << "...";
+					}
+					out << ">";
+				}
+				out << "::";
+			}
+			out << type->id << "__Unowned";
+			if (type->templateSpecializationArgs) {
+				out << "<";
+				printTemplateArgumentList(type->templateSpecializationArgs);
+				out << ">";
+			} else if (type->templateParams) {
+				out << "<";
+				bool first = true;
+				for (auto tparam : type->templateParams->templateParamDeclaration()) {
+					if (!first)
+						out << ", ";
+					first = false;
+					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis())
+						out << "...";
+				}
+				out << ">";
+			}
+			out << "::ADV_CLASS_UNOWNED_ASSIGN_REF(" << type->id << "__Unowned)\n"
+			    << std::string(depth, '\t');
+
+			if (parent) {
+				if (parent->templateParams) {
+					printTemplateParams(parent->templateParams);
+					out << " ";
+					if (parent->constraints) {
+						printConstraintClause(parent->constraints);
+						out << " ";
+					}
+				} else if (parent->templateSpecializationArgs) {
+					out << "template<> ";
+				}
+			}
+			if (type->templateParams) {
+				printTemplateParams(type->templateParams);
+				out << " ";
+				if (type->constraints) {
+					printConstraintClause(type->constraints);
+					out << " ";
+				}
+			} else if (type->templateSpecializationArgs) {
+				out << "template<> ";
+			}
+			out << "inline ";
+			if (parent) {
+				out << parent->id;
+				if (parent->templateSpecializationArgs) {
+					out << "<";
+					printTemplateArgumentList(parent->templateSpecializationArgs);
+					out << ">";
+				} else if (parent->templateParams) {
+					out << "<";
+					bool first = true;
+					for (auto tparam : parent->templateParams->templateParamDeclaration()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printIdentifier(tparam->Identifier());
+						if (tparam->Ellipsis())
+							out << "...";
+					}
+					out << ">";
+				}
+				out << "::";
+			}
+			out << type->id << "__Weak";
+			if (type->templateSpecializationArgs) {
+				out << "<";
+				printTemplateArgumentList(type->templateSpecializationArgs);
+				out << ">";
+			} else if (type->templateParams) {
+				out << "<";
+				bool first = true;
+				for (auto tparam : type->templateParams->templateParamDeclaration()) {
+					if (!first)
+						out << ", ";
+					first = false;
+					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis())
+						out << "...";
+				}
+				out << ">";
+			}
+
+			out << "::ADV_CLASS_WEAK_CTOR_REF(" << type->id << "__Weak)\n"
+			    << std::string(depth, '\t');
+
+			if (parent) {
+				if (parent->templateParams) {
+					printTemplateParams(parent->templateParams);
+					out << " ";
+					if (parent->constraints) {
+						printConstraintClause(parent->constraints);
+						out << " ";
+					}
+				} else if (parent->templateSpecializationArgs) {
+					out << "template<> ";
+				}
+			}
+			if (type->templateParams) {
+				printTemplateParams(type->templateParams);
+				out << " ";
+				if (type->constraints) {
+					printConstraintClause(type->constraints);
+					out << " ";
+				}
+			} else if (type->templateSpecializationArgs) {
+				out << "template<> ";
+			}
+			out << "inline ";
+			if (parent) {
+				out << parent->id;
+				if (parent->templateSpecializationArgs) {
+					out << "<";
+					printTemplateArgumentList(parent->templateSpecializationArgs);
+					out << ">";
+				} else if (parent->templateParams) {
+					out << "<";
+					bool first = true;
+					for (auto tparam : parent->templateParams->templateParamDeclaration()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printIdentifier(tparam->Identifier());
+						if (tparam->Ellipsis())
+							out << "...";
+					}
+					out << ">";
+				}
+				out << "::";
+			}
+			out << type->id << "__Weak";
+			if (type->templateSpecializationArgs) {
+				out << "<";
+				printTemplateArgumentList(type->templateSpecializationArgs);
+				out << ">";
+			} else if (type->templateParams) {
+				out << "<";
+				bool first = true;
+				for (auto tparam : type->templateParams->templateParamDeclaration()) {
+					if (!first)
+						out << ", ";
+					first = false;
+					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis())
+						out << "...";
+				}
+				out << ">";
+			}
+
+			out << "& ";
+			if (parent) {
+				out << parent->id;
+				if (parent->templateSpecializationArgs) {
+					out << "<";
+					printTemplateArgumentList(parent->templateSpecializationArgs);
+					out << ">";
+				} else if (parent->templateParams) {
+					out << "<";
+					bool first = true;
+					for (auto tparam : parent->templateParams->templateParamDeclaration()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printIdentifier(tparam->Identifier());
+						if (tparam->Ellipsis())
+							out << "...";
+					}
+					out << ">";
+				}
+				out << "::";
+			}
+			out << type->id << "__Weak";
+			if (type->templateSpecializationArgs) {
+				out << "<";
+				printTemplateArgumentList(type->templateSpecializationArgs);
+				out << ">";
+			} else if (type->templateParams) {
+				out << "<";
+				bool first = true;
+				for (auto tparam : type->templateParams->templateParamDeclaration()) {
+					if (!first)
+						out << ", ";
+					first = false;
+					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis())
+						out << "...";
+				}
+				out << ">";
+			}
+			out << "::ADV_CLASS_WEAK_ASSIGN_REF(" << type->id << "__Weak)\n"
+			    << std::string(depth, '\t');
+
+			for (const auto& field : type->fields) {
+				if (!field.isStatic && !field.isThreadLocal)
+					continue;
+
+				if (!field.compilationCondition.empty()) {
+					out << "#if " << field.compilationCondition << std::endl
+					    << std::string(depth, '\t');
+				}
+
+				if (parent) {
+					if (parent->templateParams) {
+						printTemplateParams(parent->templateParams);
+						out << " ";
+						if (parent->constraints) {
+							printConstraintClause(parent->constraints);
+							out << " ";
+						}
+					} else if (parent->templateSpecializationArgs) {
+						out << "template<> ";
 					}
 				}
-				out << ")) {}";
-			} else {
+				if (type->templateParams) {
+					printTemplateParams(type->templateParams);
+					out << " ";
+					if (type->constraints) {
+						printConstraintClause(type->constraints);
+						out << " ";
+					}
+				} else if (type->templateSpecializationArgs) {
+					out << "template<> ";
+				}
+				out << "inline decltype(auto) ";
+				if (parent) {
+					out << parent->id;
+					if (parent->templateSpecializationArgs) {
+						out << "<";
+						printTemplateArgumentList(parent->templateSpecializationArgs);
+						out << ">";
+					} else if (parent->templateParams) {
+						out << "<";
+						bool first = true;
+						for (auto tparam : parent->templateParams->templateParamDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(tparam->Identifier());
+							if (tparam->Ellipsis())
+								out << "...";
+						}
+						out << ">";
+					}
+					out << "::";
+				}
+				out << type->id;
+				if (type->templateSpecializationArgs) {
+					out << "<";
+					printTemplateArgumentList(type->templateSpecializationArgs);
+					out << ">";
+				} else if (type->templateParams) {
+					out << "<";
+					bool first = true;
+					for (auto tparam : type->templateParams->templateParamDeclaration()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printIdentifier(tparam->Identifier());
+						if (tparam->Ellipsis())
+							out << "...";
+					}
+					out << ">";
+				}
+				out << "::get" << field.id << "() { return __class::" << field.id << "; }\n"
+				    << std::string(depth, '\t');
+				if (!field.isConst) {
+					if (parent) {
+						if (parent->templateParams) {
+							printTemplateParams(parent->templateParams);
+							out << " ";
+						} else if (parent->templateSpecializationArgs) {
+							out << "template<> ";
+						}
+					}
+					if (type->templateParams) {
+						printTemplateParams(type->templateParams);
+						out << " ";
+					} else if (type->templateSpecializationArgs) {
+						out << "template<> ";
+					}
+					out << "inline void ";
+					if (parent) {
+						out << parent->id;
+						if (parent->templateSpecializationArgs) {
+							out << "<";
+							printTemplateArgumentList(parent->templateSpecializationArgs);
+							out << ">";
+						} else if (parent->templateParams) {
+							out << "<";
+							bool first = true;
+							for (auto tparam : parent->templateParams->templateParamDeclaration()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printIdentifier(tparam->Identifier());
+								if (tparam->Ellipsis())
+									out << "...";
+							}
+							out << ">";
+						}
+						out << "::";
+					}
+					out << type->id;
+					if (type->templateSpecializationArgs) {
+						out << "<";
+						printTemplateArgumentList(type->templateSpecializationArgs);
+						out << ">";
+					} else if (type->templateParams) {
+						out << "<";
+						bool first = true;
+						for (auto tparam : type->templateParams->templateParamDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(tparam->Identifier());
+							if (tparam->Ellipsis())
+								out << "...";
+						}
+						out << ">";
+					}
+					out << "::set" << field.id << "(const ";
+					printTypeId(field.type);
+					out << "& value) { __class::" << field.id << " = value; }\n"
+					    << std::string(depth, '\t');
+				}
+				if (!field.compilationCondition.empty()) {
+					out << "#endif " << std::endl << std::string(depth, '\t');
+				}
+			}
+
+			if (type->kind == TypeKind::EnumClass) {
+				for (const auto& constant : type->constants) {
+					if (constant.type)
+						continue;
+					if (parent) {
+						if (parent->templateParams) {
+							printTemplateParams(parent->templateParams);
+							out << " ";
+							if (parent->constraints) {
+								printConstraintClause(parent->constraints);
+								out << " ";
+							}
+						} else if (parent->templateSpecializationArgs) {
+							out << "template<> ";
+						}
+					}
+					out << "FORCE_INLINE decltype(auto) ";
+					if (parent) {
+						out << parent->id;
+						if (parent->templateSpecializationArgs) {
+							out << "<";
+							printTemplateArgumentList(parent->templateSpecializationArgs);
+							out << ">";
+						} else if (parent->templateParams) {
+							out << "<";
+							bool first = true;
+							for (auto tparam : parent->templateParams->templateParamDeclaration()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printIdentifier(tparam->Identifier());
+								if (tparam->Ellipsis())
+									out << "...";
+							}
+							out << ">";
+						}
+						out << "::";
+					}
+					out << type->id;
+					out << "::get" << constant.id << "() noexcept { return __class::" << constant.id
+					    << "; }\n"
+					    << std::string(depth, '\t');
+				}
+				if (parent) {
+					if (parent->templateParams) {
+						printTemplateParams(parent->templateParams);
+						out << " ";
+						if (parent->constraints) {
+							printConstraintClause(parent->constraints);
+							out << " ";
+						}
+					} else if (parent->templateSpecializationArgs) {
+						out << "template<> ";
+					}
+				}
+				out << "FORCE_INLINE decltype(auto) ";
+				if (parent) {
+					out << parent->id;
+					if (parent->templateSpecializationArgs) {
+						out << "<";
+						printTemplateArgumentList(parent->templateSpecializationArgs);
+						out << ">";
+					} else if (parent->templateParams) {
+						out << "<";
+						bool first = true;
+						for (auto tparam : parent->templateParams->templateParamDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(tparam->Identifier());
+							if (tparam->Ellipsis())
+								out << "...";
+						}
+						out << ">";
+					}
+					out << "::";
+				}
+				out << type->id;
+				out << "::GetValues() noexcept { return __class::GetValues(); }\n"
+				    << std::string(depth, '\t');
+			}
+
+			for (const auto& func : type->methods) {
+				if (!func.isStatic && !func.isConverter && !func.id.starts_with("operator") &&
+				    !func.id.starts_with("_operator") &&
+				    !(func.isConstructor && func.implicitSpecification))
+					continue;
+				if (!func.compilationCondition.empty()) {
+					out << "#if " << func.compilationCondition << std::endl
+					    << std::string(depth, '\t');
+				}
+				out << "#line " << func.pos.line << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+
+				isFunctionDeclaration = true;
+				if (parent) {
+					if (parent->templateParams) {
+						printTemplateParams(parent->templateParams);
+						out << " ";
+						if (parent->constraints) {
+							printConstraintClause(parent->constraints);
+							out << " ";
+						}
+					} else if (parent->templateSpecializationArgs) {
+						out << "template<> ";
+					}
+				}
+				if (type->templateParams) {
+					printTemplateParams(type->templateParams);
+					out << " ";
+					if (type->constraints) {
+						printConstraintClause(type->constraints);
+						out << " ";
+					}
+				} else if (type->templateSpecializationArgs) {
+					out << "template<> ";
+				}
+				if (func.templateParams) {
+					printTemplateParams(func.templateParams);
+					out << " ";
+				} else if (func.templateSpecializationArgs) {
+					out << "template<> ";
+				}
+
+				out << "inline ";
+				if (func.isConstexpr && !func.isConstructor)
+					out << "constexpr ";
+
+				bool isRegularMethod = !func.isConverter && !func.isConstructor;
+				if (func.isCommutative) {
+					if (func.returnType) {
+						out << "const ";
+						printTypeId(func.returnType);
+						out << " ";
+					} else {
+						out << "decltype(auto) ";
+					}
+				} else if (isRegularMethod) {
+					out << "decltype(auto) ";
+				}
+				if (parent) {
+					out << parent->id;
+					if (parent->templateSpecializationArgs) {
+						out << "<";
+						printTemplateArgumentList(parent->templateSpecializationArgs);
+						out << ">";
+					} else if (parent->templateParams) {
+						out << "<";
+						bool first = true;
+						for (auto tparam : parent->templateParams->templateParamDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(tparam->Identifier());
+							if (tparam->Ellipsis())
+								out << "...";
+						}
+						out << ">";
+					}
+					out << "::";
+				}
+				out << type->id;
+				if (type->templateSpecializationArgs) {
+					out << "<";
+					printTemplateArgumentList(type->templateSpecializationArgs);
+					out << ">";
+				} else if (type->templateParams) {
+					out << "<";
+					bool first = true;
+					for (auto tparam : type->templateParams->templateParamDeclaration()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printIdentifier(tparam->Identifier());
+						if (tparam->Ellipsis())
+							out << "...";
+					}
+					out << ">";
+				}
+				out << "::";
+				if (func.isConverter) {
+					out << "operator ";
+					printTypeId(func.returnType);
+					if (func.isConstReturn)
+						out << " const&";
+					else if (func.isRefReturn)
+						out << " &";
+				} else if (func.isConstructor) {
+					out << type->id;
+				} else
+					out << func.id;
+				if (func.id.ends_with(" new") || func.id.ends_with(" delete"))
+					isNewDeleteOperator = true;
+				if (func.templateSpecializationArgs) {
+					out << "<";
+					printTemplateArgumentList(func.templateSpecializationArgs);
+					out << ">";
+				}
+				bool isIndexer = func.indexerParams;
+				if (func.params)
+					printFunctionParameters(func.params);
+				else if (isIndexer) {
+					out << "(";
+					printParamDeclClause(func.indexerParams);
+					out << ")";
+				} else
+					out << "()";
+				isVariadicTemplate    = false;
+				isFunctionDeclaration = false;
+				if (!func.isConstructor && !func.isStatic)
+					out << " const ";
+				if (func.exceptionSpecification)
+					printExceptionSpecification(func.exceptionSpecification);
+
+				if (!func.isStatic && func.isRefReturn)
+					out << " LIFETIMEBOUND";
+
+				if (func.isConstructor) {
+					out << " : ___super(new (::operator new(sizeof(__class))) __class(";
+					if (auto clause = func.params->paramDeclClause()) {
+						bool first = true;
+						for (auto param : clause->paramDeclList()->paramDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(param->Identifier());
+						}
+					}
+					out << ")) {}";
+				} else {
+					out << "{ ADV_EXPRESSION_BODY(";
+					if (func.isStatic) {
+						out << "__class::";
+					} else {
+						out << "__ref().";
+					}
+					if (func.templateParams)
+						out << "template ";
+					if (func.isConverter) {
+						out << "operator ";
+						if (func.isConstReturn)
+							out << "const ";
+						printTypeId(func.returnType);
+						if (func.isRefReturn)
+							out << "&";
+					} else {
+						out << func.id;
+					}
+
+					if (func.templateSpecializationArgs) {
+						out << "<";
+						bool first = true;
+						for (auto tparam : func.templateSpecializationArgs->templateArgument()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printTemplateArgument(tparam);
+						}
+						out << ">";
+					} else if (func.templateParams) {
+						out << "<";
+						bool first = true;
+						for (auto tparam : func.templateParams->templateParamDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(tparam->Identifier());
+							if (tparam->Ellipsis())
+								out << "...";
+						}
+						out << ">";
+					}
+					out << "(";
+					if (func.params) {
+						if (auto clause = func.params->paramDeclClause()) {
+							bool first = true;
+							for (auto param : clause->paramDeclList()->paramDeclaration()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printIdentifier(param->Identifier());
+							}
+						}
+					} else if (func.indexerParams) {
+						bool first = true;
+						for (auto param : func.indexerParams->paramDeclList()->paramDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(param->Identifier());
+						}
+					}
+					out << ")); }";
+				}
+				out << std::endl << std::string(depth, '\t');
+				if (func.isConstructor)
+					continue;
+				if (func.id == "operator++" || func.id == "operator--") {
+					if (parent) {
+						if (parent->templateParams) {
+							printTemplateParams(parent->templateParams);
+							out << " ";
+							if (parent->constraints) {
+								printConstraintClause(parent->constraints);
+								out << " ";
+							}
+						} else if (parent->templateSpecializationArgs) {
+							out << "template<> ";
+						}
+					}
+					if (type->templateParams) {
+						printTemplateParams(type->templateParams);
+						out << " ";
+						if (type->constraints) {
+							printConstraintClause(type->constraints);
+							out << " ";
+						}
+					} else if (type->templateSpecializationArgs) {
+						out << "template<> ";
+					}
+
+					isFunctionDeclaration = true;
+					out << "inline ";
+					if (func.isConstexpr)
+						"constexpr ";
+
+					out << "auto ";
+					if (parent) {
+						out << parent->id;
+						if (parent->templateSpecializationArgs) {
+							out << "<";
+							printTemplateArgumentList(parent->templateSpecializationArgs);
+							out << ">";
+						} else if (parent->templateParams) {
+							out << "<";
+							bool first = true;
+							for (auto tparam : parent->templateParams->templateParamDeclaration()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printIdentifier(tparam->Identifier());
+								if (tparam->Ellipsis())
+									out << "...";
+							}
+							out << ">";
+						}
+						out << "::";
+					}
+					out << type->id;
+					if (type->templateSpecializationArgs) {
+						out << "<";
+						printTemplateArgumentList(type->templateSpecializationArgs);
+						out << ">";
+					} else if (type->templateParams) {
+						out << "<";
+						bool first = true;
+						for (auto tparam : type->templateParams->templateParamDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(tparam->Identifier());
+							if (tparam->Ellipsis())
+								out << "...";
+						}
+						out << ">";
+					}
+					out << "::";
+					out << func.id << "(int) ";
+					isVariadicTemplate    = false;
+					isFunctionDeclaration = false;
+					if (func.exceptionSpecification)
+						printExceptionSpecification(func.exceptionSpecification);
+					out << " -> " << type->id << " { return ";
+					if (func.isStatic)
+						out << "__class::";
+					else
+						out << "__ref().";
+					out << func.id << "(1); }" << std::endl << std::string(depth, '\t');
+				}
+				if (func.isStatic)
+					continue;
+				if (parent) {
+					if (parent->templateParams) {
+						printTemplateParams(parent->templateParams);
+						out << " ";
+						if (parent->constraints) {
+							printConstraintClause(parent->constraints);
+							out << " ";
+						}
+					} else if (parent->templateSpecializationArgs) {
+						out << "template<> ";
+					}
+				}
+				if (type->templateParams) {
+					printTemplateParams(type->templateParams);
+					out << " ";
+					if (type->constraints) {
+						printConstraintClause(type->constraints);
+						out << " ";
+					}
+				} else if (type->templateSpecializationArgs) {
+					out << "template<> ";
+				}
+				if (func.templateParams) {
+					printTemplateParams(func.templateParams);
+					out << " ";
+				} else if (func.templateSpecializationArgs) {
+					out << "template<> ";
+				}
+
+				out << "inline ";
+				if (func.isConstexpr)
+					"constexpr ";
+
+				isRegularMethod = !func.isConverter;
+				if (isRegularMethod)
+					out << "decltype(auto) ";
+				if (parent) {
+					out << parent->id;
+					if (parent->templateSpecializationArgs) {
+						out << "<";
+						printTemplateArgumentList(parent->templateSpecializationArgs);
+						out << ">";
+					} else if (parent->templateParams) {
+						out << "<";
+						bool first = true;
+						for (auto tparam : parent->templateParams->templateParamDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(tparam->Identifier());
+							if (tparam->Ellipsis())
+								out << "...";
+						}
+						out << ">";
+					}
+					out << "::";
+				}
+				out << type->id << "__Unowned";
+				if (type->templateSpecializationArgs) {
+					out << "<";
+					printTemplateArgumentList(type->templateSpecializationArgs);
+					out << ">";
+				} else if (type->templateParams) {
+					out << "<";
+					bool first = true;
+					for (auto tparam : type->templateParams->templateParamDeclaration()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printIdentifier(tparam->Identifier());
+						if (tparam->Ellipsis())
+							out << "...";
+					}
+					out << ">";
+				}
+				out << "::";
+				if (func.isConverter) {
+					out << "operator ";
+					printTypeId(func.returnType);
+					if (func.isConstReturn)
+						out << " const&";
+					else if (func.isRefReturn)
+						out << " &";
+				} else
+					out << func.id;
+				if (func.id.ends_with(" new") || func.id.ends_with(" delete"))
+					isNewDeleteOperator = true;
+				if (func.templateSpecializationArgs) {
+					out << "<";
+					printTemplateArgumentList(func.templateSpecializationArgs);
+					out << ">";
+				}
+				isIndexer = func.indexerParams;
+				if (func.params)
+					printFunctionParameters(func.params);
+				else if (isIndexer) {
+					out << "(";
+					printParamDeclClause(func.indexerParams);
+					out << ")";
+				} else
+					out << "()";
+				isVariadicTemplate    = false;
+				isFunctionDeclaration = false;
+				if (!func.isStatic)
+					out << " const ";
+				if (func.exceptionSpecification)
+					printExceptionSpecification(func.exceptionSpecification);
+
+				if (!func.isStatic && func.isRefReturn)
+					out << " LIFETIMEBOUND";
+
 				out << "{ ADV_EXPRESSION_BODY(";
 				if (func.isStatic) {
 					out << "__class::";
@@ -11649,51 +11985,67 @@ namespace AstrumLang {
 						printIdentifier(param->Identifier());
 					}
 				}
-				out << ")); }";
-			}
-			out << std::endl << std::string(depth, '\t');
-			if (func.isConstructor)
-				continue;
-			if (func.id == "operator++" || func.id == "operator--") {
-				if (parent) {
-					if (parent->templateParams) {
-						printTemplateParams(parent->templateParams);
+				out << ")); }" << std::endl << std::string(depth, '\t');
+				if (func.id == "operator++" || func.id == "operator--") {
+					if (parent) {
+						if (parent->templateParams) {
+							printTemplateParams(parent->templateParams);
+							out << " ";
+							if (parent->constraints) {
+								printConstraintClause(parent->constraints);
+								out << " ";
+							}
+						} else if (parent->templateSpecializationArgs) {
+							out << "template<> ";
+						}
+					}
+					if (type->templateParams) {
+						printTemplateParams(type->templateParams);
 						out << " ";
-						if (parent->constraints) {
-							printConstraintClause(parent->constraints);
+						if (type->constraints) {
+							printConstraintClause(type->constraints);
 							out << " ";
 						}
-					} else if (parent->templateSpecializationArgs) {
+					} else if (type->templateSpecializationArgs) {
 						out << "template<> ";
 					}
-				}
-				if (type->templateParams) {
-					printTemplateParams(type->templateParams);
-					out << " ";
-					if (type->constraints) {
-						printConstraintClause(type->constraints);
-						out << " ";
+
+					isFunctionDeclaration = true;
+					out << "inline ";
+					if (func.isConstexpr)
+						"constexpr ";
+
+					out << "auto ";
+					if (parent) {
+						out << parent->id;
+						if (parent->templateSpecializationArgs) {
+							out << "<";
+							printTemplateArgumentList(parent->templateSpecializationArgs);
+							out << ">";
+						} else if (parent->templateParams) {
+							out << "<";
+							bool first = true;
+							for (auto tparam : parent->templateParams->templateParamDeclaration()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printIdentifier(tparam->Identifier());
+								if (tparam->Ellipsis())
+									out << "...";
+							}
+							out << ">";
+						}
+						out << "::";
 					}
-				} else if (type->templateSpecializationArgs) {
-					out << "template<> ";
-				}
-
-				isFunctionDeclaration = true;
-				out << "inline ";
-				if (func.isConstexpr)
-					"constexpr ";
-
-				out << "auto ";
-				if (parent) {
-					out << parent->id;
-					if (parent->templateSpecializationArgs) {
+					out << type->id << "__Unowned";
+					if (type->templateSpecializationArgs) {
 						out << "<";
-						printTemplateArgumentList(parent->templateSpecializationArgs);
+						printTemplateArgumentList(type->templateSpecializationArgs);
 						out << ">";
-					} else if (parent->templateParams) {
+					} else if (type->templateParams) {
 						out << "<";
 						bool first = true;
-						for (auto tparam : parent->templateParams->templateParamDeclaration()) {
+						for (auto tparam : type->templateParams->templateParamDeclaration()) {
 							if (!first)
 								out << ", ";
 							first = false;
@@ -11704,1157 +12056,677 @@ namespace AstrumLang {
 						out << ">";
 					}
 					out << "::";
-				}
-				out << type->id;
-				if (type->templateSpecializationArgs) {
-					out << "<";
-					printTemplateArgumentList(type->templateSpecializationArgs);
-					out << ">";
-				} else if (type->templateParams) {
-					out << "<";
-					bool first = true;
-					for (auto tparam : type->templateParams->templateParamDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(tparam->Identifier());
-						if (tparam->Ellipsis())
-							out << "...";
-					}
-					out << ">";
-				}
-				out << "::";
-				out << func.id << "(int) ";
-				isVariadicTemplate    = false;
-				isFunctionDeclaration = false;
-				if (func.exceptionSpecification)
-					printExceptionSpecification(func.exceptionSpecification);
-				out << " -> " << type->id << " { return ";
-				if (func.isStatic)
-					out << "__class::";
-				else
-					out << "__ref().";
-				out << func.id << "(1); }" << std::endl << std::string(depth, '\t');
-			}
-			if (func.isStatic)
-				continue;
-			if (parent) {
-				if (parent->templateParams) {
-					printTemplateParams(parent->templateParams);
-					out << " ";
-					if (parent->constraints) {
-						printConstraintClause(parent->constraints);
-						out << " ";
-					}
-				} else if (parent->templateSpecializationArgs) {
-					out << "template<> ";
-				}
-			}
-			if (type->templateParams) {
-				printTemplateParams(type->templateParams);
-				out << " ";
-				if (type->constraints) {
-					printConstraintClause(type->constraints);
-					out << " ";
-				}
-			} else if (type->templateSpecializationArgs) {
-				out << "template<> ";
-			}
-			if (func.templateParams) {
-				printTemplateParams(func.templateParams);
-				out << " ";
-			} else if (func.templateSpecializationArgs) {
-				out << "template<> ";
-			}
-
-			out << "inline ";
-			if (func.isConstexpr)
-				"constexpr ";
-
-			isRegularMethod = !func.isConverter;
-			if (isRegularMethod)
-				out << "decltype(auto) ";
-			if (parent) {
-				out << parent->id;
-				if (parent->templateSpecializationArgs) {
-					out << "<";
-					printTemplateArgumentList(parent->templateSpecializationArgs);
-					out << ">";
-				} else if (parent->templateParams) {
-					out << "<";
-					bool first = true;
-					for (auto tparam : parent->templateParams->templateParamDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(tparam->Identifier());
-						if (tparam->Ellipsis())
-							out << "...";
-					}
-					out << ">";
-				}
-				out << "::";
-			}
-			out << type->id << "__Unowned";
-			if (type->templateSpecializationArgs) {
-				out << "<";
-				printTemplateArgumentList(type->templateSpecializationArgs);
-				out << ">";
-			} else if (type->templateParams) {
-				out << "<";
-				bool first = true;
-				for (auto tparam : type->templateParams->templateParamDeclaration()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printIdentifier(tparam->Identifier());
-					if (tparam->Ellipsis())
-						out << "...";
-				}
-				out << ">";
-			}
-			out << "::";
-			if (func.isConverter) {
-				out << "operator ";
-				printTypeId(func.returnType);
-				if (func.isConstReturn)
-					out << " const&";
-				else if (func.isRefReturn)
-					out << " &";
-			} else
-				out << func.id;
-			if (func.id.ends_with(" new") || func.id.ends_with(" delete"))
-				isNewDeleteOperator = true;
-			if (func.templateSpecializationArgs) {
-				out << "<";
-				printTemplateArgumentList(func.templateSpecializationArgs);
-				out << ">";
-			}
-			isIndexer = func.indexerParams;
-			if (func.params)
-				printFunctionParameters(func.params);
-			else if (isIndexer) {
-				out << "(";
-				printParamDeclClause(func.indexerParams);
-				out << ")";
-			} else
-				out << "()";
-			isVariadicTemplate    = false;
-			isFunctionDeclaration = false;
-			if (!func.isStatic)
-				out << " const ";
-			if (func.exceptionSpecification)
-				printExceptionSpecification(func.exceptionSpecification);
-
-			if (!func.isStatic && func.isRefReturn)
-				out << " LIFETIMEBOUND";
-
-			out << "{ ADV_EXPRESSION_BODY(";
-			if (func.isStatic) {
-				out << "__class::";
-			} else {
-				out << "__ref().";
-			}
-			if (func.templateParams)
-				out << "template ";
-			if (func.isConverter) {
-				out << "operator ";
-				if (func.isConstReturn)
-					out << "const ";
-				printTypeId(func.returnType);
-				if (func.isRefReturn)
-					out << "&";
-			} else {
-				out << func.id;
-			}
-
-			if (func.templateSpecializationArgs) {
-				out << "<";
-				bool first = true;
-				for (auto tparam : func.templateSpecializationArgs->templateArgument()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printTemplateArgument(tparam);
-				}
-				out << ">";
-			} else if (func.templateParams) {
-				out << "<";
-				bool first = true;
-				for (auto tparam : func.templateParams->templateParamDeclaration()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printIdentifier(tparam->Identifier());
-					if (tparam->Ellipsis())
-						out << "...";
-				}
-				out << ">";
-			}
-			out << "(";
-			if (func.params) {
-				if (auto clause = func.params->paramDeclClause()) {
-					bool first = true;
-					for (auto param : clause->paramDeclList()->paramDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(param->Identifier());
-					}
-				}
-			} else if (func.indexerParams) {
-				bool first = true;
-				for (auto param : func.indexerParams->paramDeclList()->paramDeclaration()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printIdentifier(param->Identifier());
-				}
-			}
-			out << ")); }" << std::endl << std::string(depth, '\t');
-			if (func.id == "operator++" || func.id == "operator--") {
-				if (parent) {
-					if (parent->templateParams) {
-						printTemplateParams(parent->templateParams);
-						out << " ";
-						if (parent->constraints) {
-							printConstraintClause(parent->constraints);
-							out << " ";
-						}
-					} else if (parent->templateSpecializationArgs) {
-						out << "template<> ";
-					}
-				}
-				if (type->templateParams) {
-					printTemplateParams(type->templateParams);
-					out << " ";
-					if (type->constraints) {
-						printConstraintClause(type->constraints);
-						out << " ";
-					}
-				} else if (type->templateSpecializationArgs) {
-					out << "template<> ";
+					out << func.id << "(int) ";
+					isVariadicTemplate    = false;
+					isFunctionDeclaration = false;
+					if (func.exceptionSpecification)
+						printExceptionSpecification(func.exceptionSpecification);
+					out << " -> " << type->id << " { return ";
+					if (func.isStatic)
+						out << "__class::";
+					else
+						out << "__ref().";
+					out << func.id << "(1); }" << std::endl << std::string(depth, '\t');
 				}
 
-				isFunctionDeclaration = true;
-				out << "inline ";
-				if (func.isConstexpr)
-					"constexpr ";
-
-				out << "auto ";
-				if (parent) {
-					out << parent->id;
-					if (parent->templateSpecializationArgs) {
-						out << "<";
-						printTemplateArgumentList(parent->templateSpecializationArgs);
-						out << ">";
-					} else if (parent->templateParams) {
-						out << "<";
-						bool first = true;
-						for (auto tparam : parent->templateParams->templateParamDeclaration()) {
-							if (!first)
-								out << ", ";
-							first = false;
-							printIdentifier(tparam->Identifier());
-							if (tparam->Ellipsis())
-								out << "...";
-						}
-						out << ">";
-					}
-					out << "::";
+				if (!func.compilationCondition.empty()) {
+					out << "#endif " << std::endl << std::string(depth, '\t');
 				}
-				out << type->id << "__Unowned";
-				if (type->templateSpecializationArgs) {
-					out << "<";
-					printTemplateArgumentList(type->templateSpecializationArgs);
-					out << ">";
-				} else if (type->templateParams) {
-					out << "<";
-					bool first = true;
-					for (auto tparam : type->templateParams->templateParamDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(tparam->Identifier());
-						if (tparam->Ellipsis())
-							out << "...";
-					}
-					out << ">";
-				}
-				out << "::";
-				out << func.id << "(int) ";
-				isVariadicTemplate    = false;
-				isFunctionDeclaration = false;
-				if (func.exceptionSpecification)
-					printExceptionSpecification(func.exceptionSpecification);
-				out << " -> " << type->id << " { return ";
-				if (func.isStatic)
-					out << "__class::";
-				else
-					out << "__ref().";
-				out << func.id << "(1); }" << std::endl << std::string(depth, '\t');
+				isNewDeleteOperator = false;
 			}
-
-			if (!func.compilationCondition.empty()) {
-				out << "#endif " << std::endl << std::string(depth, '\t');
-			}
-			isNewDeleteOperator = false;
-		}
-	}
-
-	void AstrumCodegen::printFirstPass() {
-		symbolTable.clear();
-
-		//.h header
-		out.switchTo(true);
-		out << "#pragma once\n#ifndef __ASTRUM_INCLUDE_PARSER\n";
-		out << "#include \"Builtin/Builtin.h\"\n#endif\n";
-		if (!CompilerSettings::get().dllName.empty()) {
-			out << "#include \"" << CompilerSettings::get().dllName << "_export.h\"\n";
 		}
 
-		for (auto decl : sema.ast->importDeclaration()) {
-			if (decl->moduleName() && decl->moduleName()->nestedPackageName()) {
-				auto name = decl->moduleName()->nestedPackageName()->getText();
-				name      = name.substr(0, name.length() - 1);
+		void AstrumCodegen::printFirstPass() {
+			symbolTable.clear();
+
+			//.h header
+			out.switchTo(true);
+			out << "#pragma once\n#ifndef __ASTRUM_INCLUDE_PARSER\n";
+			out << "#include \"Builtin/Builtin.h\"\n#endif\n";
+			if (!CompilerSettings::get().dllName.empty()) {
+				out << "#include \"" << CompilerSettings::get().dllName << "_export.h\"\n";
+			}
+
+			for (auto decl : sema.ast->importDeclaration()) {
+				if (decl->moduleName() && decl->moduleName()->nestedPackageName()) {
+					auto name = decl->moduleName()->nestedPackageName()->getText();
+					name      = name.substr(0, name.length() - 1);
+					StringReplace(name, ".", "::");
+					importedPackages.insert(name);
+				}
+				printImportDeclaration(decl);
+			}
+
+			out.switchTo(true);
+			if (!sema.packageName.empty()) {
+				out << "\nnamespace " << sema.packageName << " {";
+				++depth;
+			}
+			out << std::endl
+			    << "namespace __Unsafe {} namespace __" << filename << "_Protected__Unsafe {}"
+			    << std::endl;
+
+			//.cpp header
+			out.switchTo(false);
+			out << "#include \"" << filename << ".h\"\n";
+			if (!sema.packageName.empty()) {
+				out << "\nnamespace " << sema.packageName << " {\n";
+			}
+
+			sema.symbolContexts.push({});
+			sema.symbolContexts.push({});
+			sema.typeset.globalTypes.erase("result");
+
+			// versions
+			printVersions();
+
+			// type forward declarations
+			printForwardDeclarations();
+
+			// global type aliases
+			printGlobalTypeAliases();
+
+			// type definitions
+			printTypeDefinitions();
+
+			// global functions
+			printGlobalFunctions();
+
+			// global consts
+			printGlobalConstants();
+
+			// global vars declaration
+			printGlobalVariables();
+
+			hout.close();
+		}
+
+		void AstrumCodegen::printSecondPass() {
+			firstPass = false;
+
+			hout.open(sema.filenamePath / (sema.filename + ".h"), std::ios::app);
+			out.switchTo(true);
+
+			sema.symbolContexts.push({});
+			sema.symbolContexts.push({});
+			sema.typeset.globalTypes.erase("result");
+
+			// private type aliases
+			printGlobalTypeAliases();
+
+			// private type definitions
+			printTypeDefinitions();
+
+			// private functions
+			printGlobalFunctions();
+
+			// private consts
+			printGlobalConstants();
+
+			// private vars and global/static variables initialization
+			printGlobalVariables();
+
+			// function definitions
+			out << "//"
+			       "###############################################################################"
+			       "\n";
+			out << "//# Function definitions\n";
+			out << "//"
+			       "###############################################################################"
+			       "\n";
+
+			out << std::endl;
+			out.switchTo(false);
+			// depth = 0;
+			printDeclarationSeq(sema.ast->declarationSeq());
+			printSpecialFunctionDefinitions();
+			sema.symbolContexts.pop();
+
+			if (!sema.packageName.empty()) {
+				out.switchTo(true);
+				out << "\n}";
+				out.switchTo(false);
+				out << "\n}";
+				--depth;
+			}
+
+			hout.close();
+			cppout.close();
+
+			if (isClearModule) {
+				std::filesystem::remove(sema.filenamePath / (sema.filename + ".cpp"));
+			}
+		}
+
+		void AstrumCodegen::printImportDeclaration(AstrumParser::ImportDeclarationContext * ctx) {
+			if (ctx->Public()) {
+				out.switchTo(true);
+			} else {
+				out.switchTo(false);
+			}
+
+			out << "#include ";
+			bool isPackage = false;
+			if (ctx->StringLiteral()) {
+				out << ctx->StringLiteral()->getText();
+			} else {
+				out << '"';
+				std::string name = ctx->moduleName()->getText();
+				StringReplace(name, ".", "/");
+				out << name;
+				if (auto found =
+				        CompilerSettings::findFileInIncludePaths(name, sema.filenamePath)) {
+					std::filesystem::path packagePath = *found;
+					if (packagePath.filename().string() == "package.h") {
+						isPackage = true;
+						out << "/package";
+					}
+				}
+				out << ".h\"";
+			}
+			out << "\n";
+			if (ctx->moduleName()) {
+				auto name = ctx->moduleName()->getText();
 				StringReplace(name, ".", "::");
-				importedPackages.insert(name);
-			}
-			printImportDeclaration(decl);
-		}
-
-		out.switchTo(true);
-		if (!sema.packageName.empty()) {
-			out << "\nnamespace " << sema.packageName << " {";
-			++depth;
-		}
-		out << std::endl
-		    << "namespace __Unsafe {} namespace __" << filename << "_Protected__Unsafe {}"
-		    << std::endl;
-
-		//.cpp header
-		out.switchTo(false);
-		out << "#include \"" << filename << ".h\"\n";
-		if (!sema.packageName.empty()) {
-			out << "\nnamespace " << sema.packageName << " {\n";
-		}
-
-		sema.symbolContexts.push({});
-		sema.symbolContexts.push({});
-		sema.typeset.globalTypes.erase("result");
-
-		// versions
-		printVersions();
-
-		// type forward declarations
-		printForwardDeclarations();
-
-		// global type aliases
-		printGlobalTypeAliases();
-
-		// type definitions
-		printTypeDefinitions();
-
-		// global functions
-		printGlobalFunctions();
-
-		// global consts
-		printGlobalConstants();
-
-		// global vars declaration
-		printGlobalVariables();
-
-		hout.close();
-	}
-
-	void AstrumCodegen::printSecondPass() {
-		firstPass = false;
-
-		hout.open(sema.filenamePath / (sema.filename + ".h"), std::ios::app);
-		out.switchTo(true);
-
-		sema.symbolContexts.push({});
-		sema.symbolContexts.push({});
-		sema.typeset.globalTypes.erase("result");
-
-		// private type aliases
-		printGlobalTypeAliases();
-
-		// private type definitions
-		printTypeDefinitions();
-
-		// private functions
-		printGlobalFunctions();
-
-		// private consts
-		printGlobalConstants();
-
-		// private vars and global/static variables initialization
-		printGlobalVariables();
-
-		// function definitions
-		out << "//"
-		       "###############################################################################\n";
-		out << "//# Function definitions\n";
-		out << "//"
-		       "###############################################################################\n";
-
-		out << std::endl;
-		out.switchTo(false);
-		// depth = 0;
-		printDeclarationSeq(sema.ast->declarationSeq());
-		printSpecialFunctionDefinitions();
-		sema.symbolContexts.pop();
-
-		if (!sema.packageName.empty()) {
-			out.switchTo(true);
-			out << "\n}";
-			out.switchTo(false);
-			out << "\n}";
-			--depth;
-		}
-
-		hout.close();
-		cppout.close();
-
-		if (isClearModule) {
-			std::filesystem::remove(sema.filenamePath / (sema.filename + ".cpp"));
-		}
-	}
-
-	void AstrumCodegen::printImportDeclaration(AstrumParser::ImportDeclarationContext* ctx) {
-		if (ctx->Public()) {
-			out.switchTo(true);
-		} else {
-			out.switchTo(false);
-		}
-
-		out << "#include ";
-		bool isPackage = false;
-		if (ctx->StringLiteral()) {
-			out << ctx->StringLiteral()->getText();
-		} else {
-			out << '"';
-			std::string name = ctx->moduleName()->getText();
-			StringReplace(name, ".", "/");
-			out << name;
-			if (auto found = CompilerSettings::findFileInIncludePaths(name, sema.filenamePath)) {
-				std::filesystem::path packagePath = *found;
-				if (packagePath.filename().string() == "package.h") {
-					isPackage = true;
-					out << "/package";
+				bool isSamePackage = false;
+				if (!isPackage) {
+					auto pos = name.rfind("::");
+					if (pos != std::string::npos) {
+						name = name.substr(0, pos);
+					} else {
+						isSamePackage = true;
+					}
+				}
+				if (ctx->As()) {
+					out << "namespace ";
+					auto id = ctx->Identifier()->getText();
+					out << id << " = " << name << ";\n";
+					sema.cppParser.namespaces.insert(id);
+				} else if (!isSamePackage) {
+					out << "using namespace " << name << ";\n";
 				}
 			}
-			out << ".h\"";
 		}
-		out << "\n";
-		if (ctx->moduleName()) {
-			auto name = ctx->moduleName()->getText();
-			StringReplace(name, ".", "::");
-			bool isSamePackage = false;
-			if (!isPackage) {
-				auto pos = name.rfind("::");
-				if (pos != std::string::npos) {
-					name = name.substr(0, pos);
-				} else {
-					isSamePackage = true;
-				}
-			}
-			if (ctx->As()) {
-				out << "namespace ";
-				auto id = ctx->Identifier()->getText();
-				out << id << " = " << name << ";\n";
-				sema.cppParser.namespaces.insert(id);
-			} else if (!isSamePackage) {
-				out << "using namespace " << name << ";\n";
+
+		void AstrumCodegen::printDeclarationSeq(AstrumParser::DeclarationSeqContext * ctx) {
+			for (auto declaration : ctx->declaration()) {
+				emptyLine  = false;
+				isVolatile = false;
+				isUnowned  = false;
+				isWeak     = false;
+				printDeclaration(declaration);
+				if (!emptyLine)
+					out << "\n";
 			}
 		}
-	}
 
-	void AstrumCodegen::printDeclarationSeq(AstrumParser::DeclarationSeqContext* ctx) {
-		for (auto declaration : ctx->declaration()) {
-			emptyLine  = false;
-			isVolatile = false;
-			isUnowned  = false;
-			isWeak     = false;
-			printDeclaration(declaration);
-			if (!emptyLine)
-				out << "\n";
-		}
-	}
-
-	void AstrumCodegen::printDeclaration(AstrumParser::DeclarationContext* ctx) {
-		if (auto decl = ctx->blockDeclaration()) {
-			printBlockDeclaration(decl);
-		} else if (auto type = ctx->structDefinition()) {
-			printStructDefinition(type);
-		} else if (auto type = ctx->classDefinition()) {
-			printClassDefinition(type);
-		} else if (auto type = ctx->enumDefinition()) {
-			printEnumDefinition(type);
-		} else if (auto type = ctx->enumClassDefinition()) {
-			printEnumClassDefinition(type);
-		} else if (auto func = ctx->functionDefinition()) {
-			printFunctionDefinition(func);
-		} else if (auto ext = ctx->externVariableDeclaration()) {
-			printExternVariableDeclaration(ext);
-		} else if (auto ext = ctx->externFunctionDeclaration()) {
-			printExternFunctionDeclaration(ext);
-		} else if (auto compound = ctx->declarationCompoundStatement()) {
-			if (ctx->Unsafe() || ctx->symbolSpecifierSeq() && ctx->symbolSpecifierSeq()->Unsafe())
-				isUnsafe = true;
-			printDeclarationCompoundStatement(compound);
-			isUnsafe = false;
-		} else if (ctx->versionDefinition()) {
-			emptyLine = true;
-		} else if (auto condition = ctx->versionConditionalDeclaration()) {
-			if (auto decl = condition->versionIfDeclaration()->declaration()) {
-				if (auto func = decl->functionDefinition()) {
-					printFunctionDefinition(func);
-				}
-				if (auto elseBranch = condition->versionElseDeclaration()) {
-					decl = elseBranch->declaration();
+		void AstrumCodegen::printDeclaration(AstrumParser::DeclarationContext * ctx) {
+			if (auto decl = ctx->blockDeclaration()) {
+				printBlockDeclaration(decl);
+			} else if (auto type = ctx->structDefinition()) {
+				printStructDefinition(type);
+			} else if (auto type = ctx->classDefinition()) {
+				printClassDefinition(type);
+			} else if (auto type = ctx->enumDefinition()) {
+				printEnumDefinition(type);
+			} else if (auto type = ctx->enumClassDefinition()) {
+				printEnumClassDefinition(type);
+			} else if (auto func = ctx->functionDefinition()) {
+				printFunctionDefinition(func);
+			} else if (auto ext = ctx->externVariableDeclaration()) {
+				printExternVariableDeclaration(ext);
+			} else if (auto ext = ctx->externFunctionDeclaration()) {
+				printExternFunctionDeclaration(ext);
+			} else if (auto compound = ctx->declarationCompoundStatement()) {
+				if (ctx->Unsafe() ||
+				    ctx->symbolSpecifierSeq() && ctx->symbolSpecifierSeq()->Unsafe())
+					isUnsafe = true;
+				printDeclarationCompoundStatement(compound);
+				isUnsafe = false;
+			} else if (ctx->versionDefinition()) {
+				emptyLine = true;
+			} else if (auto condition = ctx->versionConditionalDeclaration()) {
+				if (auto decl = condition->versionIfDeclaration()->declaration()) {
 					if (auto func = decl->functionDefinition()) {
 						printFunctionDefinition(func);
 					}
+					if (auto elseBranch = condition->versionElseDeclaration()) {
+						decl = elseBranch->declaration();
+						if (auto func = decl->functionDefinition()) {
+							printFunctionDefinition(func);
+						}
+					}
 				}
+			} else if (auto decl = ctx->templateDeductionGuide()) {
+				printTemplateDeductionGuide(decl);
+			} else if (auto decl = ctx->unitTestDeclaration()) {
+				printUnitTestDeclaration(decl);
 			}
-		} else if (auto decl = ctx->templateDeductionGuide()) {
-			printTemplateDeductionGuide(decl);
-		} else if (auto decl = ctx->unitTestDeclaration()) {
-			printUnitTestDeclaration(decl);
 		}
-	}
 
-	void AstrumCodegen::printBlockDeclaration(AstrumParser::BlockDeclarationContext* ctx) {
-		if (auto decl = ctx->simpleDeclaration()) {
-			printSimpleDeclaration(decl);
-		} else if (auto decl = ctx->simpleMultiDeclaration()) {
-			printSimpleMultiDeclaration(decl);
-		} else if (auto decl = ctx->deconstructionDeclaration()) {
-			printDeconstructionDeclaration(decl);
-		} else if (auto decl = ctx->refDeclaration()) {
-			printRefDeclaration(decl);
-		} else if (auto decl = ctx->multiDeclaration()) {
-			printMultiDeclaration(decl);
-		} else if (auto decl = ctx->constantDeclaration()) {
-			printConstantDeclaration(decl);
-		} else if (auto decl = ctx->forwardVarDeclaration()) {
-			printForwardVarDeclaration(decl);
-		} else if (auto decl = ctx->aliasDeclaration()) {
-			printAliasDeclaration(decl);
-		} else if (auto decl = ctx->assertDeclaration()) {
-			printAssertDeclaration(decl);
-		} else if (auto decl = ctx->assumeDeclaration()) {
-			printAssumeDeclaration(decl);
-		}
-		isVolatile = false;
-		isUnowned  = false;
-		isWeak     = false;
-	}
-
-	void AstrumCodegen::printDeclSpecifierSeq(AstrumParser::DeclSpecifierSeqContext* ctx) {
-		bool isConst = false;
-		for (auto spec : ctx->declSpecifier()) {
-			if (spec->Const() || spec->Let()) {
-				isConst = true;
-				continue;
+		void AstrumCodegen::printBlockDeclaration(AstrumParser::BlockDeclarationContext * ctx) {
+			if (auto decl = ctx->simpleDeclaration()) {
+				printSimpleDeclaration(decl);
+			} else if (auto decl = ctx->simpleMultiDeclaration()) {
+				printSimpleMultiDeclaration(decl);
+			} else if (auto decl = ctx->deconstructionDeclaration()) {
+				printDeconstructionDeclaration(decl);
+			} else if (auto decl = ctx->refDeclaration()) {
+				printRefDeclaration(decl);
+			} else if (auto decl = ctx->multiDeclaration()) {
+				printMultiDeclaration(decl);
+			} else if (auto decl = ctx->constantDeclaration()) {
+				printConstantDeclaration(decl);
+			} else if (auto decl = ctx->forwardVarDeclaration()) {
+				printForwardVarDeclaration(decl);
+			} else if (auto decl = ctx->aliasDeclaration()) {
+				printAliasDeclaration(decl);
+			} else if (auto decl = ctx->assertDeclaration()) {
+				printAssertDeclaration(decl);
+			} else if (auto decl = ctx->assumeDeclaration()) {
+				printAssumeDeclaration(decl);
 			}
-			printDeclSpecifier(spec);
-			out << " ";
+			isVolatile = false;
+			isUnowned  = false;
+			isWeak     = false;
 		}
-		if (isConst)
-			out << "const ";
-	}
 
-	void AstrumCodegen::printDeclSpecifier(AstrumParser::DeclSpecifierContext* ctx) {
-		if (ctx->Mutable()) {
-			out << "mutable";
-		} else if (ctx->Static()) {
-			out << "static";
-		} else if (ctx->Thread_local()) {
-			out << "thread_local";
-		} else if (ctx->Volatile()) {
-			isVolatile = true;
-			out << "volatile";
-		} else if (ctx->Unowned()) {
-			isUnowned = true;
-		} else if (ctx->Weak()) {
-			isWeak = true;
-		}
-	}
-
-	void AstrumCodegen::printExternVariableDeclaration(
-	    AstrumParser::ExternVariableDeclarationContext* ctx) {
-		if (!functionBody)
-			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-		out << "extern ";
-		AstrumParser::AttributeSpecifierSeqContext* attributes = nullptr;
-		if (auto parent = dynamic_cast<AstrumParser::DeclarationContext*>(ctx->parent)) {
-			attributes = parent->attributeSpecifierSeq();
-		}
-		if (attributes) {
-			for (auto attr : attributes->attributeSpecifier()) {
-				if (attr->Identifier()->getText() == "CLink") {
-					out << "\"C\" ";
+		void AstrumCodegen::printDeclSpecifierSeq(AstrumParser::DeclSpecifierSeqContext * ctx) {
+			bool isConst = false;
+			for (auto spec : ctx->declSpecifier()) {
+				if (spec->Const() || spec->Let()) {
+					isConst = true;
+					continue;
 				}
-			}
-		}
-		isDeclaration = true;
-		printTypeId(ctx->theTypeId());
-		isDeclaration = false;
-		out << " ";
-		printIdentifier(ctx->Identifier());
-		// if (ctx->theTypeId()->arrayDeclarator())
-		// printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
-		out << ";";
-	}
-
-	void AstrumCodegen::printExternFunctionDeclaration(
-	    AstrumParser::ExternFunctionDeclarationContext* ctx) {
-		if (!functionBody)
-			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-		out << "extern ";
-		AstrumParser::AttributeSpecifierSeqContext* attributes = nullptr;
-		if (auto parent = dynamic_cast<AstrumParser::DeclarationContext*>(ctx->parent)) {
-			attributes = parent->attributeSpecifierSeq();
-		}
-		bool isStdCall = false;
-		if (attributes) {
-			for (auto attr : attributes->attributeSpecifier()) {
-				auto txt = attr->Identifier()->getText();
-				if (txt == "CLink") {
-					out << "\"C\" ";
-				} else if (txt == "StdCall") {
-					isStdCall = true;
-				}
-			}
-		}
-		out << "auto ";
-		if (isStdCall) {
-			out << "__stdcall ";
-		}
-		printIdentifier(ctx->Identifier());
-		printFunctionParameters(ctx->functionParams());
-		if (ctx->exceptionSpecification())
-			printExceptionSpecification(ctx->exceptionSpecification());
-		out << " -> ";
-		auto ret = ctx->returnType();
-		if (auto tid = ret->theTypeId()) {
-			if (ret->Const() || !ret->Ref())
-				out << "const ";
-			printTypeId(tid);
-		} else {
-			out << "void";
-		}
-		if (ret->Ref())
-			out << "&";
-		out << ";";
-	}
-
-	void AstrumCodegen::printTemplateDeductionGuide(
-	    AstrumParser::TemplateDeductionGuideContext* ctx) {
-		out.switchTo(true);
-		out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-		    << std::string(depth, '\t');
-		if (ctx->templateParams()) {
-			printTemplateParams(ctx->templateParams());
-			out << " ";
-			if (ctx->constraintClause()) {
-				printConstraintClause(ctx->constraintClause());
+				printDeclSpecifier(spec);
 				out << " ";
 			}
+			if (isConst)
+				out << "const ";
 		}
 
-		if (ctx->implicitSpecification()) {
-			printImplicitSpecification(ctx->implicitSpecification());
+		void AstrumCodegen::printDeclSpecifier(AstrumParser::DeclSpecifierContext * ctx) {
+			if (ctx->Mutable()) {
+				out << "mutable";
+			} else if (ctx->Static()) {
+				out << "static";
+			} else if (ctx->Thread_local()) {
+				out << "thread_local";
+			} else if (ctx->Volatile()) {
+				isVolatile = true;
+				out << "volatile";
+			} else if (ctx->Unowned()) {
+				isUnowned = true;
+			} else if (ctx->Weak()) {
+				isWeak = true;
+			}
+		}
+
+		void AstrumCodegen::printExternVariableDeclaration(
+		    AstrumParser::ExternVariableDeclarationContext * ctx) {
+			if (!functionBody)
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+			out << "extern ";
+			AstrumParser::AttributeSpecifierSeqContext* attributes = nullptr;
+			if (auto parent = dynamic_cast<AstrumParser::DeclarationContext*>(ctx->parent)) {
+				attributes = parent->attributeSpecifierSeq();
+			}
+			if (attributes) {
+				for (auto attr : attributes->attributeSpecifier()) {
+					if (attr->Identifier()->getText() == "CLink") {
+						out << "\"C\" ";
+					}
+				}
+			}
+			isDeclaration = true;
+			printTypeId(ctx->theTypeId());
+			isDeclaration = false;
 			out << " ";
-		} else if (ctx->theTypeId().size() == 1) {
-			out << "explicit ";
+			printIdentifier(ctx->Identifier());
+			// if (ctx->theTypeId()->arrayDeclarator())
+			// printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
+			out << ";";
 		}
 
-		printIdentifier(ctx->templateName()->Identifier());
-		out << "(";
-		bool first = true;
-		for (auto tid : ctx->theTypeId()) {
-			if (!first)
-				out << ", ";
-			first = false;
-			printTypeId(tid);
-		}
-		out << ") -> ";
-		printSimpleTemplateId(ctx->simpleTemplateId());
-		out << ";";
-	}
-
-	std::string GetStackObjectVarName(AstrumParser::TheTypeIdContext* type) {
-		return "__obj_" + std::to_string(type->getStart()->getLine()) + "_" +
-		       std::to_string(type->getStart()->getCharPositionInLine());
-	}
-
-	std::string GetAnonymousVarName(SourcePosition pos) {
-		return "__var_" + std::to_string(pos.line) + "_" + std::to_string(pos.column);
-	}
-
-	void AstrumCodegen::printClassInitializer(AstrumParser::TheTypeIdContext* type,
-	                                          AstrumParser::NewInitializerContext* init) {
-		if (auto expressions = init->expressionList()) {
-			// printExpressionList(expr);
-			int paramCount = expressions->expressionListPart().size();
-			std::set<std::string> namedArgs;
-			for (auto param : expressions->expressionListPart()) {
-				if (auto id = param->Identifier()) {
-					namedArgs.insert(id->getText());
+		void AstrumCodegen::printExternFunctionDeclaration(
+		    AstrumParser::ExternFunctionDeclarationContext * ctx) {
+			if (!functionBody)
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+			out << "extern ";
+			AstrumParser::AttributeSpecifierSeqContext* attributes = nullptr;
+			if (auto parent = dynamic_cast<AstrumParser::DeclarationContext*>(ctx->parent)) {
+				attributes = parent->attributeSpecifierSeq();
+			}
+			bool isStdCall = false;
+			if (attributes) {
+				for (auto attr : attributes->attributeSpecifier()) {
+					auto txt = attr->Identifier()->getText();
+					if (txt == "CLink") {
+						out << "\"C\" ";
+					} else if (txt == "StdCall") {
+						isStdCall = true;
+					}
 				}
 			}
-			auto txt  = type->getText();
-			auto txt2 = txt;
-			auto pos  = txt.rfind('.');
-			if (pos != txt.npos)
-				txt2 = txt.substr(pos + 1);
-			pos = txt.rfind('<');
-			if (pos != txt.npos)
-				txt = txt.substr(0, pos);
-			txt2         = txt + "." + txt2;
-			bool params  = sema.cppParser.parametersTable.contains(txt2);
-			bool printed = false;
-			if (!namedArgs.empty() && params) {
-				std::string signature;
-				if (params) {
-					for (const auto& signatures : sema.cppParser.parametersTable[txt2]) {
-						auto args = StringSplit(signatures, ",,");
-						if (args.size() >= paramCount) {
-							int i = 0;
-							for (const auto& arg : args) {
-								if (namedArgs.contains(arg.substr(0, arg.find('='))))
-									++i;
-								if (namedArgs.size() == i) {
-									signature = signatures;
-									break;
-								}
-							}
-						}
-						if (!signature.empty())
-							break;
-					}
-				}
-
-				if (signature.empty())
-					out << "Signature not found!";
-				else {
-					printed    = true;
-					auto args  = StringSplit(signature, ",,");
-					paramCount = args.size();
-					std::unordered_map<int, std::string> argOrder;
-					std::unordered_map<std::string, std::string> defaultValues;
-					int i = 0;
-					for (const auto& arg : args) {
-						auto pos      = arg.find('=');
-						argOrder[i++] = arg.substr(0, pos);
-						if (pos != arg.npos)
-							defaultValues[arg.substr(0, pos)] = arg.substr(pos + 1);
-					}
-
-					int currentArg = 0;
-					while (auto param = expressions->expressionListPart(currentArg)) {
-						if (param->Identifier())
-							break;
-						if (currentArg > 0)
-							out << ", ";
-						printExpressionListPart(param);
-						++currentArg;
-					}
-
-					std::unordered_map<std::string, AstrumParser::ExpressionListPartContext*>
-					    namedArgValues;
-					for (i = currentArg; i < expressions->expressionListPart().size(); ++i) {
-						auto param = expressions->expressionListPart(i);
-						if (param->Identifier()) {
-							namedArgValues[param->Identifier()->getText()] = param;
-						}
-					}
-
-					while (currentArg < paramCount) {
-						if (currentArg > 0)
-							out << ", ";
-						auto arg = argOrder[currentArg];
-						if (namedArgValues.contains(arg)) {
-							printExpressionListPart(namedArgValues[arg]);
-						} else if (defaultValues.contains(arg)) {
-							out << defaultValues[arg];
-						} else if (sema.activeDefaultParams.contains(txt) &&
-						           sema.activeDefaultParams[txt].contains(arg)) {
-							printInitializerClause(sema.activeDefaultParams[txt][arg]);
-						}
-						++currentArg;
-					}
-				}
+			out << "auto ";
+			if (isStdCall) {
+				out << "__stdcall ";
+			}
+			printIdentifier(ctx->Identifier());
+			printFunctionParameters(ctx->functionParams());
+			if (ctx->exceptionSpecification())
+				printExceptionSpecification(ctx->exceptionSpecification());
+			out << " -> ";
+			auto ret = ctx->returnType();
+			if (auto tid = ret->theTypeId()) {
+				if (ret->Const() || !ret->Ref())
+					out << "const ";
+				printTypeId(tid);
 			} else {
-				printExpressionList(init->expressionList());
+				out << "void";
 			}
-		} else if (auto braced = init->bracedInitList()) {
-			out << "std::initializer_list";
-			printBracedInitList(braced);
+			if (ret->Ref())
+				out << "&";
+			out << ";";
 		}
-	}
 
-	void AstrumCodegen::printStatement(AstrumParser::StatementContext* ctx) {
-		out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-		    << std::string(depth, '\t');
-		if (sema.parameterPrerequisites.contains(ctx)) {
-			for (const auto& [id, type] : sema.parameterPrerequisites[ctx]) {
-				out << "Builtin::DeferredInit<";
-				printTypeId(type);
-				out << "> " << id << "; ";
-			}
-			out << "\n"
-			    << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine() << " \""
-			    << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-		}
-		if (sema.stackallocPrerequisites.contains(ctx)) {
-			for (auto expr : sema.stackallocPrerequisites[ctx]) {
-				auto type    = expr->theTypeId();
-				auto init    = expr->newInitializer();
-				auto mem     = expr->memorySpaceSetter();
-				auto varName = GetStackObjectVarName(type);
-				out << "#line " << type->getStart()->getLine() << " \"" << fullFilename
-				    << ".ast\"\n"
-				    << std::string(depth, '\t');
-
-				if (mem) {
-					out << "Builtin::StackallocWithExtraMemory<";
-					printTypeId(type);
-					out << ", unsigned(";
-					printConstantExpression(mem->constantExpression());
-					out << ")> " << varName << "(";
-				} else {
-					out << "Builtin::Stackalloc<";
-					printTypeId(type);
-					out << "> " << varName << "(";
-				}
-				if (init) {
-					printClassInitializer(type, init);
-				}
-				out << "); Builtin::InitStackObject((Builtin::Object*)" << varName << ".obj);\n"
-				    << std::string(depth, '\t');
-			}
+		void AstrumCodegen::printTemplateDeductionGuide(
+		    AstrumParser::TemplateDeductionGuideContext * ctx) {
+			out.switchTo(true);
 			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
-		}
-		if (sema.conditionalPrerequisites.contains(ctx)) {
-			const auto& prerequisites = sema.conditionalPrerequisites[ctx];
-			lvalue                    = true;
-			auto last                 = prerequisites.size() - 1;
-			out << "if (";
-			for (int i = last; i >= 0; --i) {
-				if (i < last)
-					out << " && ";
-				printPostfixExpression(prerequisites[i]);
+			if (ctx->templateParams()) {
+				printTemplateParams(ctx->templateParams());
+				out << " ";
+				if (ctx->constraintClause()) {
+					printConstraintClause(ctx->constraintClause());
+					out << " ";
+				}
 			}
-			out << ") ";
-			lvalue = false;
-		}
-		if (auto decl = ctx->declarationStatement()) {
-			printDeclarationStatement(decl);
-		} else if (auto expr = ctx->expressionStatement()) {
-			printExpressionStatement(expr);
-		} else if (auto block = ctx->compoundStatement()) {
-			if (ctx->Unsafe())
-				isUnsafe = true;
-			printCompoundStatement(block);
-			isUnsafe = false;
-		} else if (auto select = ctx->selectionStatement()) {
-			printSelectionStatement(select);
-		} else if (auto iter = ctx->iterationStatement()) {
-			printIterationStatement(iter);
-		} else if (auto label = ctx->labeledStatement()) {
-			printLabeledStatement(label);
-		} else if (auto jump = ctx->jumpStatement()) {
-			printJumpStatement(jump);
-		} else if (auto try_ = ctx->tryBlock()) {
-			printTryBlock(try_);
-		} else if (auto func = ctx->functionDefinition()) {
-			printLocalFunction(func);
-		} else if (auto select = ctx->versionSelectionStatement()) {
-			printVersionSelectionStatement(select);
-		} else if (auto cpp = ctx->inlineCppStatement()) {
-			printInlineCppStatement(cpp);
-		} else if (auto lock = ctx->lockStatement()) {
-			printLockStatement(lock);
-		} else if (auto y = ctx->yieldStatement()) {
-			printYieldStatement(y);
-		} else if (auto defer = ctx->deferStatement()) {
-			printDeferStatement(defer);
-		}
-	}
 
-	void AstrumCodegen::printDeclarationStatement(AstrumParser::DeclarationStatementContext* ctx) {
-		if (auto block = ctx->blockDeclaration()) {
-			printBlockDeclaration(block);
-		} else if (auto ext = ctx->externVariableDeclaration()) {
-			printExternVariableDeclaration(ext);
-		} else if (auto ext = ctx->externFunctionDeclaration()) {
-			printExternFunctionDeclaration(ext);
-		} else if (auto def = ctx->structDefinition()) {
-			printStructDefinition(def);
-		}
-	}
+			if (ctx->implicitSpecification()) {
+				printImplicitSpecification(ctx->implicitSpecification());
+				out << " ";
+			} else if (ctx->theTypeId().size() == 1) {
+				out << "explicit ";
+			}
 
-	void AstrumCodegen::printDeclarationCompoundStatement(
-	    AstrumParser::DeclarationCompoundStatementContext* ctx) {
-		for (auto decl : ctx->declaration()) {
-			printDeclaration(decl);
-			if (!emptyLine)
-				out << std::endl;
+			printIdentifier(ctx->templateName()->Identifier());
+			out << "(";
+			bool first = true;
+			for (auto tid : ctx->theTypeId()) {
+				if (!first)
+					out << ", ";
+				first = false;
+				printTypeId(tid);
+			}
+			out << ") -> ";
+			printSimpleTemplateId(ctx->simpleTemplateId());
+			out << ";";
 		}
-	}
 
-	void AstrumCodegen::printCompoundStatement(AstrumParser::CompoundStatementContext* ctx) {
-		sema.symbolContexts.push(sema.symbolContexts.top());
-		auto prevLabel = currentLabel;
-		currentLabel.clear();
-		out << "{";
-		if (!prevLabel.empty())
-			out << "{";
-		++depth;
-		if (isUnsafe)
-			out << "\tusing namespace Builtin::Unsafe;\tusing namespace __Unsafe;\tusing "
-			       "namespace __"
-			    << filename << "_Protected__Unsafe;";
-		bool funcTopLevel = functionProlog;
-		if (functionProlog) {
-			if (isUnsafe) {
-				out << "\n"
-				    << std::string(depth, '\t')
-				    << "Builtin::CheckForUnsafeContext(); Builtin::UnsafeContextGuard "
-				       "__unsafe_context_guard"
-				    << ctx->getStart()->getLine() << "{};";
-			}
-			for (const auto& [id, type] : refParameters) {
-				out << "\n" << std::string(depth, '\t');
-				printTypeId(type);
-				out << "& " << id << " = __" << id << "__;";
-			}
-			for (const auto& [id, type] : namedReturns) {
-				out << "\n" << std::string(depth, '\t');
-				printTypeId(type);
-				out << " " << id << ";";
-			}
-			functionProlog = false;
-		} else if (ifProlog) {
-			if (sema.ifPrerequisites.contains(currentIf)) {
-				out << "\n" << std::string(depth, '\t');
-				int i = 0;
-				for (auto prereq : sema.ifPrerequisites[currentIf]) {
-					auto pattern = prereq->patternList()->pattern(0);
-					bool isNull  = pattern->shiftExpression() &&
-					              pattern->shiftExpression()->getText() == "null";
-					if (!isNull && pattern->not_() || isNull && !pattern->not_())
-						continue;
-					out << "#line " << prereq->getStart()->getLine() << " \"" << fullFilename
-					    << ".ast\"\n"
-					    << std::string(depth, '\t');
-					if (pattern->Let()) {
-						out << "const auto& [";
-						bool first = true;
-						for (auto id : pattern->Identifier()) {
-							if (!first)
-								out << ", ";
-							first = false;
-							printIdentifier(id);
-						}
-						out << "] = ";
-						out << "*__tmp" << i << "; \n" << std::string(depth, '\t');
-					} else if (pattern->theTypeId() && !pattern->Identifier().empty()) {
-						out << "const auto& ";
-						printIdentifier(pattern->Identifier(0));
-						out << " = *__tmp" << i;
-						out << ";\n" << std::string(depth, '\t');
-					} else {
-						auto txt = prereq->threeWayComparisonExpression(0)->getText();
-						if (std::all_of(txt.begin(), txt.end(),
-						                [](char c) { return std::isalnum(c) || c == '_'; })) {
-							if (isNull) {
-								out << "auto __tmp" << i << " = *" << txt << "; ";
+		std::string GetStackObjectVarName(AstrumParser::TheTypeIdContext * type) {
+			return "__obj_" + std::to_string(type->getStart()->getLine()) + "_" +
+			       std::to_string(type->getStart()->getCharPositionInLine());
+		}
+
+		std::string GetAnonymousVarName(SourcePosition pos) {
+			return "__var_" + std::to_string(pos.line) + "_" + std::to_string(pos.column);
+		}
+
+		void AstrumCodegen::printClassInitializer(AstrumParser::TheTypeIdContext * type,
+		                                          AstrumParser::NewInitializerContext * init) {
+			if (auto expressions = init->expressionList()) {
+				// printExpressionList(expr);
+				int paramCount = expressions->expressionListPart().size();
+				std::set<std::string> namedArgs;
+				for (auto param : expressions->expressionListPart()) {
+					if (auto id = param->Identifier()) {
+						namedArgs.insert(id->getText());
+					}
+				}
+				auto txt  = type->getText();
+				auto txt2 = txt;
+				auto pos  = txt.rfind('.');
+				if (pos != txt.npos)
+					txt2 = txt.substr(pos + 1);
+				pos = txt.rfind('<');
+				if (pos != txt.npos)
+					txt = txt.substr(0, pos);
+				txt2         = txt + "." + txt2;
+				bool params  = sema.cppParser.parametersTable.contains(txt2);
+				bool printed = false;
+				if (!namedArgs.empty() && params) {
+					std::string signature;
+					if (params) {
+						for (const auto& signatures : sema.cppParser.parametersTable[txt2]) {
+							auto args = StringSplit(signatures, ",,");
+							if (args.size() >= paramCount) {
+								int i = 0;
+								for (const auto& arg : args) {
+									if (namedArgs.contains(arg.substr(0, arg.find('='))))
+										++i;
+									if (namedArgs.size() == i) {
+										signature = signatures;
+										break;
+									}
+								}
 							}
-							out << "const auto& " << txt << " = ";
-							if (!isNull)
-								out << "*";
-							out << "__tmp" << i;
-							out << ";\n" << std::string(depth, '\t');
+							if (!signature.empty())
+								break;
 						}
 					}
-					++i;
-				}
-			}
-			if (sema.ifLetPrerequisites.contains(currentIf)) {
-				auto prereq = sema.ifLetPrerequisites[currentIf];
-				if (prereq->identifierSeq()->Identifier().size() == 1) {
-					out << "\n" << std::string(depth, '\t');
-					out << "#line " << prereq->getStart()->getLine() << " \"" << fullFilename
-					    << ".ast\"\n"
-					    << std::string(depth, '\t');
-					out << "auto __tmp0 = *";
-					auto id = prereq->identifierSeq()->Identifier(0);
-					printIdentifier(id);
-					out << "; ";
-					out << "const auto& ";
-					printIdentifier(id);
-					out << " = "
-					    << "__tmp0;\n"
-					    << std::string(depth, '\t');
-				}
-			}
-			ifProlog = false;
-		} else if (isUnsafe) {
-			out << "\tBuiltin::UnsafeContextGuard __unsafe_context_guard"
-			    << ctx->getStart()->getLine() << "{};";
-		}
 
-		isUnsafe = false;
-		for (auto stat : ctx->statement()) {
-			out << "\n" << std::string(depth, '\t');
-			printStatement(stat);
-		}
+					if (signature.empty())
+						out << "Signature not found!";
+					else {
+						printed    = true;
+						auto args  = StringSplit(signature, ",,");
+						paramCount = args.size();
+						std::unordered_map<int, std::string> argOrder;
+						std::unordered_map<std::string, std::string> defaultValues;
+						int i = 0;
+						for (const auto& arg : args) {
+							auto pos      = arg.find('=');
+							argOrder[i++] = arg.substr(0, pos);
+							if (pos != arg.npos)
+								defaultValues[arg.substr(0, pos)] = arg.substr(pos + 1);
+						}
 
-		if (funcTopLevel) {
-			if (!ctx->statement().empty() && !ctx->statement().back()->jumpStatement()) {
-				if (!namedReturns.empty()) {
-					out << "\n" << std::string(depth, '\t') << "return ";
-					if (namedReturns.size() == 1) {
-						out << namedReturns[0].first;
-					} else {
-						out << "{";
-						bool first = true;
-						for (const auto& var : namedReturns) {
-							if (!first)
+						int currentArg = 0;
+						while (auto param = expressions->expressionListPart(currentArg)) {
+							if (param->Identifier())
+								break;
+							if (currentArg > 0)
 								out << ", ";
-							first = false;
-							out << var.first;
+							printExpressionListPart(param);
+							++currentArg;
 						}
-						out << "}";
+
+						std::unordered_map<std::string, AstrumParser::ExpressionListPartContext*>
+						    namedArgValues;
+						for (i = currentArg; i < expressions->expressionListPart().size(); ++i) {
+							auto param = expressions->expressionListPart(i);
+							if (param->Identifier()) {
+								namedArgValues[param->Identifier()->getText()] = param;
+							}
+						}
+
+						while (currentArg < paramCount) {
+							if (currentArg > 0)
+								out << ", ";
+							auto arg = argOrder[currentArg];
+							if (namedArgValues.contains(arg)) {
+								printExpressionListPart(namedArgValues[arg]);
+							} else if (defaultValues.contains(arg)) {
+								out << defaultValues[arg];
+							} else if (sema.activeDefaultParams.contains(txt) &&
+							           sema.activeDefaultParams[txt].contains(arg)) {
+								printInitializerClause(sema.activeDefaultParams[txt][arg]);
+							}
+							++currentArg;
+						}
 					}
-					out << ";";
-				} else if (isMainFunction) {
-					out << "\n" << std::string(depth, '\t') << "return 0;";
-				} else if (!isVoidReturn) {
-					out << "\n" << std::string(depth, '\t') << "return {};";
+				} else {
+					printExpressionList(init->expressionList());
 				}
-			}
-			if (isPropertySetter)
-				out << "\n" << std::string(depth, '\t') << "return *this;";
-
-			if (isUnitTestBody) {
-				out << "\n" << std::string(depth, '\t') << "return true;";
+			} else if (auto braced = init->bracedInitList()) {
+				out << "std::initializer_list";
+				printBracedInitList(braced);
 			}
 		}
-		out << "\n" << std::string(--depth, '\t') << "}";
-		if (!prevLabel.empty())
-			out << " BREAK_" << prevLabel << ":; }";
-		prevLabel = currentLabel;
-		sema.symbolContexts.pop();
-	}
 
-	void AstrumCodegen::printScopeSafeCompoundStatement(
-	    AstrumParser::ScopeSafeCompoundStatementContext* ctx) {
-		bool first = true;
-		for (auto stat : ctx->statement()) {
-			if (!first)
-				out << "\n" << std::string(depth, '\t');
-			printStatement(stat);
-			first = false;
-		}
-	}
-
-	void AstrumCodegen::printExpressionStatement(AstrumParser::ExpressionStatementContext* ctx) {
-		if (auto expr = ctx->expression()) {
-			printExpression(expr);
-		}
-		out << ";";
-	}
-
-	void AstrumCodegen::printSelectionStatement(AstrumParser::SelectionStatementContext* ctx) {
-		currentIf = ctx;
-		if (ctx->If()) {
-			std::vector<AstrumParser::RelationalExpressionContext*> prerequisites;
-			if (sema.ifPrerequisites.contains(ctx)) {
-				prerequisites = sema.ifPrerequisites[ctx];
+		void AstrumCodegen::printStatement(AstrumParser::StatementContext * ctx) {
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
+			    << std::string(depth, '\t');
+			if (sema.parameterPrerequisites.contains(ctx)) {
+				for (const auto& [id, type] : sema.parameterPrerequisites[ctx]) {
+					out << "Builtin::DeferredInit<";
+					printTypeId(type);
+					out << "> " << id << "; ";
+				}
+				out << "\n"
+				    << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine() << " \""
+				    << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
 			}
-
-			int prereqIndex = 0;
-			if (!prerequisites.empty()) {
-				out << "{\n" << std::string(++depth, '\t');
-				for (auto prereq : prerequisites) {
-					auto pattern = prereq->patternList()->pattern(0);
-					if (pattern->shiftExpression() &&
-					    pattern->shiftExpression()->getText() == "null")
-						continue;
-					out << "#line " << prereq->getStart()->getLine() << " \"" << fullFilename
+			if (sema.stackallocPrerequisites.contains(ctx)) {
+				for (auto expr : sema.stackallocPrerequisites[ctx]) {
+					auto type    = expr->theTypeId();
+					auto init    = expr->newInitializer();
+					auto mem     = expr->memorySpaceSetter();
+					auto varName = GetStackObjectVarName(type);
+					out << "#line " << type->getStart()->getLine() << " \"" << fullFilename
 					    << ".ast\"\n"
 					    << std::string(depth, '\t');
-					out << "auto __tmp" << prereqIndex++ << " = Builtin::Cast<false, ";
-					if (pattern->theTypeId()) {
-						printTypeId(pattern->theTypeId());
-					} else if (pattern->shiftExpression()) {
-						if (!pattern->Let())
-							out << "decltype(";
-						currentIs = prereq;
-						printShiftExpression(pattern->shiftExpression());
-						currentIs = nullptr;
-						if (!pattern->Let())
-							out << ")";
-					} else /*if (pattern->Let())*/
-					{
-						out << "std::decay_t<decltype(";
-						printThreeWayComparisonExpression(prereq->threeWayComparisonExpression(0));
-						out << ")>::__self";
+
+					if (mem) {
+						out << "Builtin::StackallocWithExtraMemory<";
+						printTypeId(type);
+						out << ", unsigned(";
+						printConstantExpression(mem->constantExpression());
+						out << ")> " << varName << "(";
+					} else {
+						out << "Builtin::Stackalloc<";
+						printTypeId(type);
+						out << "> " << varName << "(";
 					}
-					out << ">(";
-					printThreeWayComparisonExpression(prereq->threeWayComparisonExpression(0));
-					out << ");\n" << std::string(depth, '\t');
+					if (init) {
+						printClassInitializer(type, init);
+					}
+					out << "); Builtin::InitStackObject((Builtin::Object*)" << varName << ".obj);\n"
+					    << std::string(depth, '\t');
 				}
 				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 			}
-			out << "if " << (ctx->Static() ? "constexpr " : "") << "(";
-			if (ctx->Consteval()) {
-				if (ctx->not_())
-					out << "!";
-				out << "std::is_constant_evaluated()";
-			} else {
-				printCondition(ctx->condition());
-			}
-			out << ") ";
-			if (ctx->attributeSpecifierSeq()) {
-				auto attr =
-				    ctx->attributeSpecifierSeq()->attributeSpecifier(0)->Identifier()->getText();
-				if (attr == "Likely") {
-					out << "[[likely]] ";
-				} else if (attr == "Unlikely") {
-					out << "[[unlikely]] ";
+			if (sema.conditionalPrerequisites.contains(ctx)) {
+				const auto& prerequisites = sema.conditionalPrerequisites[ctx];
+				lvalue                    = true;
+				auto last                 = prerequisites.size() - 1;
+				out << "if (";
+				for (int i = last; i >= 0; --i) {
+					if (i < last)
+						out << " && ";
+					printPostfixExpression(prerequisites[i]);
 				}
+				out << ") ";
+				lvalue = false;
 			}
-			if (!currentLabel.empty())
-				out << "{";
+			if (auto decl = ctx->declarationStatement()) {
+				printDeclarationStatement(decl);
+			} else if (auto expr = ctx->expressionStatement()) {
+				printExpressionStatement(expr);
+			} else if (auto block = ctx->compoundStatement()) {
+				if (ctx->Unsafe())
+					isUnsafe = true;
+				printCompoundStatement(block);
+				isUnsafe = false;
+			} else if (auto select = ctx->selectionStatement()) {
+				printSelectionStatement(select);
+			} else if (auto iter = ctx->iterationStatement()) {
+				printIterationStatement(iter);
+			} else if (auto label = ctx->labeledStatement()) {
+				printLabeledStatement(label);
+			} else if (auto jump = ctx->jumpStatement()) {
+				printJumpStatement(jump);
+			} else if (auto try_ = ctx->tryBlock()) {
+				printTryBlock(try_);
+			} else if (auto func = ctx->functionDefinition()) {
+				printLocalFunction(func);
+			} else if (auto select = ctx->versionSelectionStatement()) {
+				printVersionSelectionStatement(select);
+			} else if (auto cpp = ctx->inlineCppStatement()) {
+				printInlineCppStatement(cpp);
+			} else if (auto lock = ctx->lockStatement()) {
+				printLockStatement(lock);
+			} else if (auto y = ctx->yieldStatement()) {
+				printYieldStatement(y);
+			} else if (auto defer = ctx->deferStatement()) {
+				printDeferStatement(defer);
+			}
+		}
+
+		void AstrumCodegen::printDeclarationStatement(AstrumParser::DeclarationStatementContext *
+		                                              ctx) {
+			if (auto block = ctx->blockDeclaration()) {
+				printBlockDeclaration(block);
+			} else if (auto ext = ctx->externVariableDeclaration()) {
+				printExternVariableDeclaration(ext);
+			} else if (auto ext = ctx->externFunctionDeclaration()) {
+				printExternFunctionDeclaration(ext);
+			} else if (auto def = ctx->structDefinition()) {
+				printStructDefinition(def);
+			}
+		}
+
+		void AstrumCodegen::printDeclarationCompoundStatement(
+		    AstrumParser::DeclarationCompoundStatementContext * ctx) {
+			for (auto decl : ctx->declaration()) {
+				printDeclaration(decl);
+				if (!emptyLine)
+					out << std::endl;
+			}
+		}
+
+		void AstrumCodegen::printCompoundStatement(AstrumParser::CompoundStatementContext * ctx) {
+			sema.symbolContexts.push(sema.symbolContexts.top());
 			auto prevLabel = currentLabel;
 			currentLabel.clear();
-			if (auto block = ctx->compoundStatement()) {
-				ifProlog   = true;
-				bool ifLet = sema.ifLetPrerequisites.contains(ctx);
-				if (ifLet) {
-					out << "{" << std::endl << std::string(++depth, '\t');
+			out << "{";
+			if (!prevLabel.empty())
+				out << "{";
+			++depth;
+			if (isUnsafe)
+				out << "\tusing namespace Builtin::Unsafe;\tusing namespace __Unsafe;\tusing "
+				       "namespace __"
+				    << filename << "_Protected__Unsafe;";
+			bool funcTopLevel = functionProlog;
+			if (functionProlog) {
+				if (isUnsafe) {
+					out << "\n"
+					    << std::string(depth, '\t')
+					    << "Builtin::CheckForUnsafeContext(); Builtin::UnsafeContextGuard "
+					       "__unsafe_context_guard"
+					    << ctx->getStart()->getLine() << "{};";
 				}
-				printCompoundStatement(block);
-				if (ifLet) {
-					out << std::endl << std::string(--depth, '\t') << "}";
+				for (const auto& [id, type] : refParameters) {
+					out << "\n" << std::string(depth, '\t');
+					printTypeId(type);
+					out << "& " << id << " = __" << id << "__;";
 				}
-			} else {
-				out << "{" << std::endl << std::string(++depth, '\t');
-				if (!prerequisites.empty()) {
-					prereqIndex = 0;
+				for (const auto& [id, type] : namedReturns) {
+					out << "\n" << std::string(depth, '\t');
+					printTypeId(type);
+					out << " " << id << ";";
+				}
+				functionProlog = false;
+			} else if (ifProlog) {
+				if (sema.ifPrerequisites.contains(currentIf)) {
+					out << "\n" << std::string(depth, '\t');
+					int i = 0;
 					for (auto prereq : sema.ifPrerequisites[currentIf]) {
 						auto pattern = prereq->patternList()->pattern(0);
 						bool isNull  = pattern->shiftExpression() &&
@@ -12874,1008 +12746,1228 @@ namespace AstrumLang {
 								printIdentifier(id);
 							}
 							out << "] = ";
-							out << "*__tmp" << prereqIndex << "; \n" << std::string(depth, '\t');
+							out << "*__tmp" << i << "; \n" << std::string(depth, '\t');
 						} else if (pattern->theTypeId() && !pattern->Identifier().empty()) {
 							out << "const auto& ";
 							printIdentifier(pattern->Identifier(0));
-							out << " = *__tmp" << prereqIndex;
+							out << " = *__tmp" << i;
 							out << ";\n" << std::string(depth, '\t');
 						} else {
 							auto txt = prereq->threeWayComparisonExpression(0)->getText();
 							if (std::all_of(txt.begin(), txt.end(),
 							                [](char c) { return std::isalnum(c) || c == '_'; })) {
 								if (isNull) {
-									out << "auto __tmp" << prereqIndex << " = *" << txt << "; ";
+									out << "auto __tmp" << i << " = *" << txt << "; ";
 								}
 								out << "const auto& " << txt << " = ";
 								if (!isNull)
 									out << "*";
-								out << "__tmp" << prereqIndex;
+								out << "__tmp" << i;
 								out << ";\n" << std::string(depth, '\t');
 							}
 						}
-						++prereqIndex;
+						++i;
 					}
 				}
-				printStatement(ctx->statement());
-				out << std::endl << std::string(--depth, '\t') << "}";
-			}
-			if (ctx->Else()) {
-				out << " else {" << std::endl << std::string(++depth, '\t');
-				printStatement(ctx->elseBranch()->statement());
-				out << std::endl << std::string(--depth, '\t') << "}";
-			}
-			if (!prevLabel.empty())
-				out << " BREAK_" << prevLabel << ":; }";
-			currentLabel = prevLabel;
-			if (!prerequisites.empty()) {
-				out << "\n" << std::string(--depth, '\t') << "}";
-			}
-		} else if (ctx->Switch()) {
-			switchStatements.push(ctx);
-			switchProcessedVariants.push({0, 0});
-			int i = 0;
-			for (auto branch : ctx->switchStatementBranch()) {
-				printSwitchStatementBranch(branch, ctx->threeWayComparisonExpression(), i++);
-			}
-			if (ctx->switchStatementBranch().back()->patternList()->getText() != "_") {
-				out << " else { using __switchType = decltype(";
-				printThreeWayComparisonExpression(ctx->threeWayComparisonExpression());
-				out << "); static_assert((!std::derived_from<__switchType, Builtin::Enum> &&"
-				    << " !std::derived_from<__switchType, Builtin::EnumClassRef> && "
-				       "!std::derived_from<__switchType, Builtin::Union>) "
-				    << "|| Builtin::GetVariantsCount<__switchType>() <= "
-				    << switchProcessedVariants.top().first + switchProcessedVariants.top().second
-				    << ", "
-				    << "\"Switch does not handle all possible variants, add a default branch\"); }";
-			}
-			out << "\n";
-			for (auto branch : ctx->switchStatementBranch()) {
-				out << std::string(--depth, '\t') << "}\n";
-			}
-			switchProcessedVariants.pop();
-			switchStatements.pop();
-		}
-	}
-
-	void AstrumCodegen::printSwitchStatementBranch(
-	    AstrumParser::SwitchStatementBranchContext* ctx,
-	    AstrumParser::ThreeWayComparisonExpressionContext* switchExpr, int branchIndex) {
-		if (branchIndex > 0)
-			out << "else ";
-		out << "{\n" << std::string(++depth, '\t');
-		auto tmpName = "__tmp__valid_" + std::to_string(switchExpr->getStart()->getLine());
-		auto pattern = ctx->patternList()->pattern(0);
-		if (branchIndex == 0) {
-			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			out << "auto " << tmpName << " = Builtin::Cast<false, ";
-			out << "std::decay_t<decltype(";
-			printThreeWayComparisonExpression(switchExpr);
-			out << ")>::__self";
-			out << ">(";
-			printThreeWayComparisonExpression(switchExpr);
-			out << ");\n" << std::string(depth, '\t');
-		}
-
-		auto isDefault = ctx->patternList()->getText() == "_";
-		if (pattern->theTypeId() && !isDefault || pattern->shiftExpression() && pattern->Let()) {
-			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			tmpName = "__tmp" + std::to_string(branchIndex);
-			out << "auto " << tmpName << " = Builtin::Cast<false, ";
-			if (pattern->theTypeId()) {
-				printTypeId(pattern->theTypeId());
-			} else if (pattern->shiftExpression()) {
-				printShiftExpression(pattern->shiftExpression());
-			}
-			out << ">(";
-			printThreeWayComparisonExpression(switchExpr);
-			out << ");\n" << std::string(depth, '\t');
-		}
-
-		if (!isDefault) {
-			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			out << "if(";
-			bool skipFirst = false;
-			bool isNull =
-			    pattern->shiftExpression() && pattern->shiftExpression()->getText() == "null";
-			if (!isNull) {
-				if (pattern->not_())
-					out << "!";
-				out << tmpName << ".IsValid()";
-				if (!(pattern->Let() && !pattern->shiftExpression()) &&
-				    (!pattern->theTypeId() || !pattern->propertyPattern().empty())) {
-					if (pattern->not_()) {
-						out << " || ";
-					} else {
-						out << " && ";
-					}
-				} else {
-					skipFirst = true;
-				}
-			}
-			printPatternList(ctx->patternList(), switchExpr, !isNull ? tmpName : "", "", false,
-			                 false, skipFirst);
-			out << ") ";
-			if (ctx->attributeSpecifierSeq()) {
-				auto attr =
-				    ctx->attributeSpecifierSeq()->attributeSpecifier(0)->Identifier()->getText();
-				if (attr == "Likely") {
-					out << "[[likely]] ";
-				} else if (attr == "Unlikely") {
-					out << "[[unlikely]] ";
-				}
-			}
-			out << " {\n" << std::string(++depth, '\t');
-			if (!isNull && !pattern->not_() || isNull && pattern->not_()) {
-				if (pattern->Let()) {
-					out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename
-					    << ".ast\"\n"
-					    << std::string(depth, '\t');
-					out << "const auto& [";
-					bool first = true;
-					for (auto id : pattern->Identifier()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(id);
-					}
-					out << "] = ";
-					out << "*" << tmpName << "; \n" << std::string(depth, '\t');
-				} else if (pattern->theTypeId() && !pattern->Identifier().empty()) {
-					out << "const auto& ";
-					printIdentifier(pattern->Identifier(0));
-					out << " = *" << tmpName;
-					out << ";\n" << std::string(depth, '\t');
-				} else {
-					auto txt = switchExpr->getText();
-					if (std::all_of(txt.begin(), txt.end(),
-					                [](char c) { return std::isalnum(c) || c == '_'; })) {
-						out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename
-						    << ".ast\"\n"
-						    << std::string(depth, '\t');
-						if (isNull) {
-							out << "auto " << tmpName << " = *" << txt << "; ";
-						}
-						if (txt != "this") {
-							out << "const auto& " << txt << " = ";
-							if (!isNull)
-								out << "*";
-							out << tmpName << ";";
-						}
+				if (sema.ifLetPrerequisites.contains(currentIf)) {
+					auto prereq = sema.ifLetPrerequisites[currentIf];
+					if (prereq->identifierSeq()->Identifier().size() == 1) {
 						out << "\n" << std::string(depth, '\t');
-					}
-				}
-			}
-			printStatement(ctx->statement());
-			out << "\n" << std::string(--depth, '\t') << "}";
-		} else {
-			printStatement(ctx->statement());
-		}
-		out << "\n" << std::string(depth, '\t');
-	}
-
-	void AstrumCodegen::printIterationStatement(AstrumParser::IterationStatementContext* ctx) {
-		auto prevLabel = currentLabel;
-		currentLabel.clear();
-		if (ctx->Do()) {
-			out << "do ";
-			if (!prevLabel.empty())
-				out << "{";
-			out << "\n" << std::string(depth, '\t');
-			auto stat = ctx->statement();
-			if (stat->compoundStatement()) {
-				printStatement(stat);
-			} else {
-				out << "{\n" << std::string(++depth, '\t');
-				printStatement(stat);
-				out << "\n" << std::string(--depth, '\t') << "}";
-			}
-			if (!prevLabel.empty()) {
-				out << " ADV_LOOP_LABELS(" << prevLabel << ") }";
-			}
-			out << " while (";
-			printLogicalOrExpression(ctx->doWhileCondition()->logicalOrExpression());
-			out << ");";
-		} else if (ctx->While()) {
-			out << "while (";
-			printLoopCondition(ctx->whileCondition());
-			out << ") ";
-			if (!prevLabel.empty())
-				out << "{";
-			out << "\n" << std::string(depth, '\t');
-			if (auto compound = ctx->compoundStatement()) {
-				printCompoundStatement(compound);
-			} else {
-				out << "{\n" << std::string(++depth, '\t');
-				printStatement(ctx->statement());
-				out << "\n" << std::string(--depth, '\t') << "}";
-			}
-			if (!prevLabel.empty()) {
-				out << " ADV_LOOP_LABELS(" << prevLabel << ") }";
-			}
-		} else if (ctx->For()) {
-			out << "for (";
-			if (ctx->In()) {
-				if (auto init = ctx->forInitStatement()) {
-					printForInitStatement(init);
-					out << "; ";
-				}
-				auto decl = ctx->forRangeDeclaration();
-				if (decl->Amp() && !decl->Const() && !decl->Let()) {
-					out << "auto& ";
-				} else {
-					out << "const auto& ";
-				}
-				auto ids = decl->identifierSeq()->Identifier();
-				if (ids.size() == 1) {
-					printIdentifier(ids[0]);
-				} else {
-					out << "[";
-					bool first = true;
-					for (auto id : ids) {
-						if (!first)
-							out << ", ";
-						printIdentifier(id);
-						first = false;
-					}
-					out << "]";
-				}
-				out << " : ";
-				auto coll = ctx->forRangeInitializer();
-				if (auto expr = coll->logicalOrExpression()) {
-					printLogicalOrExpression(expr);
-				} else if (auto expr = coll->bracedInitList()) {
-					printBracedInitList(coll->bracedInitList());
-				} else {
-					printCollectionExpression(coll->collectionExpression());
-				}
-				out << ") ";
-			} else if (auto init = ctx->forInitStatement()) {
-				printForInitStatement(init);
-				if (auto condition = ctx->whileCondition()) {
-					printLoopCondition(condition);
-				}
-				out << "; ";
-				if (auto expr = ctx->expressionSeq()) {
-					printExpressionSeq(expr);
-				}
-				out << ") ";
-			} else {
-				out << ";;) ";
-			}
-			if (!prevLabel.empty())
-				out << "{";
-			out << std::endl << std::string(depth, '\t');
-			if (auto compound = ctx->compoundStatement()) {
-				printCompoundStatement(ctx->compoundStatement());
-			} else {
-				out << "{\n" << std::string(++depth, '\t');
-				printStatement(ctx->statement());
-				out << "\n" << std::string(--depth, '\t') << "}";
-			}
-			if (!prevLabel.empty()) {
-				out << " ADV_LOOP_LABELS(" << prevLabel << ") }";
-			}
-		}
-		currentLabel = prevLabel;
-	}
-
-	void AstrumCodegen::printForInitStatement(AstrumParser::ForInitStatementContext* ctx) {
-		if (auto expr = ctx->logicalOrExpression()) {
-			printLogicalOrExpression(expr);
-			out << "; ";
-		} else if (auto decl = ctx->blockDeclaration()) {
-			printBlockDeclaration(decl);
-		} else {
-			out << "; ";
-		}
-	}
-
-	void AstrumCodegen::printVersionSelectionStatement(
-	    AstrumParser::VersionSelectionStatementContext* ctx) {
-		out << "#if ";
-		if (auto condition = ctx->condition()) {
-			isVersionCondition = true;
-			printCondition(ctx->condition());
-			isVersionCondition = false;
-			out << std::endl << std::string(depth, '\t');
-			printVersionSelectionStatementBlock(ctx->versionSelectionStatementBlock(0));
-		} else if (ctx->Debug()) {
-			if (ctx->not_())
-				out << "!";
-			if (auto id = ctx->Identifier()) {
-				out << "ADV_DEBUG_";
-				printIdentifier(id);
-			} else {
-				out << "_DEBUG";
-			}
-			out << std::endl << std::string(depth, '\t');
-			printScopeSafeCompoundStatement(ctx->scopeSafeCompoundStatement());
-		}
-		if (ctx->Else()) {
-			out << std::endl
-			    << std::string(depth, '\t') << "#else" << std::endl
-			    << std::string(depth, '\t');
-			printVersionSelectionStatementBlock(ctx->versionSelectionStatementBlock().back());
-		}
-		out << std::endl << std::string(depth, '\t') << "#endif";
-	}
-
-	void AstrumCodegen::printVersionSelectionStatementBlock(
-	    AstrumParser::VersionSelectionStatementBlockContext* ctx) {
-		if (auto compound = ctx->scopeSafeCompoundStatement()) {
-			printScopeSafeCompoundStatement(compound);
-		} else {
-			printStatement(ctx->statement());
-		}
-	}
-
-	void AstrumCodegen::printLabeledStatement(AstrumParser::LabeledStatementContext* ctx) {
-		auto label     = ctx->Identifier()->getText();
-		auto prevLabel = currentLabel;
-		currentLabel   = label;
-		if (auto iter = ctx->iterationStatement()) {
-			printIterationStatement(iter);
-		} else if (auto select = ctx->selectionStatement()) {
-			printSelectionStatement(select);
-		} else if (auto compound = ctx->compoundStatement()) {
-			printCompoundStatement(compound);
-		}
-		currentLabel = prevLabel;
-	}
-
-	void AstrumCodegen::printJumpStatement(AstrumParser::JumpStatementContext* ctx) {
-		if (ctx->Return()) {
-			out << "return ";
-			if (auto expr = ctx->expression()) {
-				printExpression(expr);
-			} else if (auto init = ctx->bracedInitList()) {
-				printBracedInitList(init);
-			} else if (auto coll = ctx->collectionExpression()) {
-				printCollectionExpression(coll);
-			} else if (!namedReturns.empty()) {
-				if (namedReturns.size() == 1) {
-					out << namedReturns.begin()->first;
-				} else {
-					out << "{";
-					bool first = true;
-					for (const auto& var : namedReturns) {
-						if (!first)
-							out << ", ";
-						first = false;
-						out << var.first;
-					}
-					out << "}";
-				}
-			}
-		} else if (ctx->Break()) {
-			if (auto id = ctx->Identifier()) {
-				out << "goto BREAK_";
-				printIdentifier(id);
-			} else {
-				out << "break";
-			}
-		} else if (ctx->Continue()) {
-			if (auto id = ctx->Identifier()) {
-				out << "goto CONTINUE_";
-				printIdentifier(id);
-			} else {
-				out << "continue";
-			}
-		}
-		out << ";";
-	}
-
-	void AstrumCodegen::printLockStatement(AstrumParser::LockStatementContext* ctx) {
-		out << "{ std::lock_guard __mutex_lock(";
-		printConditionalExpression(ctx->conditionalExpression());
-		out << ");\n" << std::string(++depth, '\t');
-		if (auto comp = ctx->compoundStatement()) {
-			printCompoundStatement(comp);
-		} else {
-			printStatement(ctx->statement());
-		}
-		out << "\n" << std::string(--depth, '\t') << "}";
-	}
-
-	void AstrumCodegen::printYieldStatement(AstrumParser::YieldStatementContext* ctx) {
-		if (ctx->Break()) {
-			out << "co_return;";
-		} else {
-			out << "co_yield ";
-			if (auto expr = ctx->expression()) {
-				printExpression(expr);
-			} else if (auto init = ctx->bracedInitList()) {
-				printBracedInitList(init);
-			} else if (auto coll = ctx->collectionExpression()) {
-				printCollectionExpression(coll);
-			}
-			out << ";";
-		}
-	}
-
-	void AstrumCodegen::printDeferStatement(AstrumParser::DeferStatementContext* ctx) {
-		out << "Builtin::Defer __defer_" << ctx->getStart()->getLine() << "_"
-		    << ctx->getStart()->getCharPositionInLine() << "{[&]() {";
-		if (auto comp = ctx->compoundStatement()) {
-			printCompoundStatement(comp);
-		} else {
-			printExpression(ctx->expression());
-			out << ";";
-		}
-		out << "}};";
-	}
-
-	void AstrumCodegen::printTryBlock(AstrumParser::TryBlockContext* ctx) {
-		out << "try \n" << std::string(depth, '\t');
-		printCompoundStatement(ctx->compoundStatement());
-		for (auto handler : ctx->exceptionHandler()) { printExceptionHandler(handler); }
-	}
-
-	void AstrumCodegen::printExceptionHandler(AstrumParser::ExceptionHandlerContext* ctx) {
-		if (!ctx->exceptionDeclaration()->Or().empty()) {
-			auto size = ctx->exceptionDeclaration()->simpleTypeSpecifier().size();
-			for (int i = 0; i < size; ++i) {
-				out << " catch (";
-				printExceptionDeclaration(ctx->exceptionDeclaration(), i);
-				out << ") \n" << std::string(depth, '\t');
-				printCompoundStatement(ctx->compoundStatement());
-			}
-		} else {
-			out << " catch (";
-			printExceptionDeclaration(ctx->exceptionDeclaration());
-			out << ") \n" << std::string(depth, '\t');
-			printCompoundStatement(ctx->compoundStatement());
-		}
-	}
-
-	void AstrumCodegen::printExceptionDeclaration(AstrumParser::ExceptionDeclarationContext* ctx,
-	                                              int i) {
-		if (ctx->Ellipsis()) {
-			out << "...";
-		} else {
-			out << "const ";
-			if (auto t = ctx->simpleTypeSpecifier(i)) {
-				printSimpleTypeSpecifier(t);
-			} else {
-				out << "std::exception";
-			}
-			out << "& ";
-			printIdentifier(ctx->Identifier());
-		}
-	}
-
-	void AstrumCodegen::printInlineCppStatement(AstrumParser::InlineCppStatementContext* ctx) {
-		auto src = ctx->StringLiteral()->getText();
-		int i    = 0;
-		while (src[i] == '"' || src[i] == '\'' || src[i] == '`') { i++; }
-		out << src.substr(i, src.length() - 2 * i);
-	}
-
-	void AstrumCodegen::printCondition(AstrumParser::ConditionContext* ctx) {
-		isCondition = true;
-		if (auto decl = ctx->simpleDeclaration()) {
-			printSimpleDeclaration(decl);
-		}
-		if (auto expr = ctx->logicalOrExpression()) {
-			printLogicalOrExpression(expr);
-		}
-		if (auto decl = ctx->declarator()) {
-			printDeclarator(decl);
-		}
-		isCondition = false;
-	}
-
-	void AstrumCodegen::printLoopCondition(AstrumParser::WhileConditionContext* ctx) {
-		if (auto expr = ctx->logicalOrExpression()) {
-			printLogicalOrExpression(expr);
-		} else {
-			printDeclarator(ctx->declarator());
-		}
-	}
-
-	void AstrumCodegen::printDeclarator(AstrumParser::DeclaratorContext* ctx) {
-		const auto& ids = ctx->identifierSeq()->Identifier();
-
-		bool first   = true;
-		bool isArray = false;
-		for (auto idctx : ids) {
-			auto id = idctx->getText();
-			if (ctx->Const() || ctx->Let()) {
-				out << "const ";
-			}
-			if (auto t = ctx->theTypeId()) {
-				symbolTable[id] = t->getText();
-				isDeclaration   = true;
-				printTypeId(t);
-				isDeclaration = false;
-				// isArray = t->arrayDeclarator();
-				out << " ";
-			} else {
-				symbolTable[id] = "";
-				out << "auto ";
-			}
-			currentType = symbolTable[id];
-			out << id;
-			// if (isArray) printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
-			if (auto expr = ctx->initializerClause()) {
-				out << " = ";
-				if (first) {
-					printInitializerClause(ctx->initializerClause());
-				} else {
-					printIdentifier(ids[0]);
-				}
-			}
-			first = false;
-		}
-	}
-
-	void AstrumCodegen::printTemplateParams(AstrumParser::TemplateParamsContext* ctx,
-	                                        bool printTemplateKeyword) {
-		if (printTemplateKeyword)
-			out << "template";
-		out << "<";
-		bool first                 = true;
-		isTemplateParamDeclaration = true;
-		for (auto decl : ctx->templateParamDeclaration()) {
-			if (!first)
-				out << ", ";
-			first = false;
-			printTemplateParamDeclaration(decl);
-		}
-		out << ">";
-		isTemplateParamDeclaration = false;
-	}
-
-	void AstrumCodegen::printTemplateParamDeclaration(
-	    AstrumParser::TemplateParamDeclarationContext* ctx) {
-		if (auto ttp = ctx->templateParams()) {
-			printTemplateParams(ttp);
-			out << " ";
-		}
-
-		if (auto t = ctx->templateTypename()) {
-			if (auto name = t->theTypeId()) {
-				printTypeId(name);
-			} else if (t->Is()) {
-				out << "__ImplementsInterface_";
-				if (t->simpleTemplateId()) {
-					printSimpleTemplateId(t->simpleTemplateId());
-				} else {
-					printIdentifier(t->Identifier());
-				}
-			} else {
-				out << "class";
-			}
-		} else if (auto expr = ctx->conditionalExpression()) {
-			out << "decltype(";
-			printConditionalExpression(expr);
-			out << ")";
-		} else {
-			out << "class";
-		}
-		if (ctx->Ellipsis()) {
-			out << "...";
-			isVariadicTemplate = true;
-		}
-		out << " ";
-		printIdentifier(ctx->Identifier());
-
-		if (isFunctionDeclaration) {
-			if (ctx->Assign()) {
-				bool prev                  = isTemplateParamDeclaration;
-				isTemplateParamDeclaration = false;
-				out << " = ";
-				if (auto type = ctx->theTypeId()) {
-					printTypeId(type);
-				} else {
-					printConditionalExpression(ctx->conditionalExpression());
-				}
-				isTemplateParamDeclaration = prev;
-			}
-		} else if (!sema.symbolContexts.empty()) {
-			sema.typeset.insert(ctx->Identifier()->getText());
-		}
-	}
-
-	void AstrumCodegen::printTemplateIdentifier(AstrumParser::TemplateIdContext* ctx) {
-		printSimpleTemplateId(ctx->simpleTemplateId());
-	}
-
-	void AstrumCodegen::printSimpleTemplateId(AstrumParser::SimpleTemplateIdContext* ctx) {
-		out << ctx->templateName()->getText() << "<";
-		if (auto args = ctx->templateArgumentList()) {
-			printTemplateArgumentList(args);
-		}
-		out << ">";
-	}
-
-	void AstrumCodegen::printClassName(AstrumParser::ClassNameContext* ctx) {
-		if (auto id = ctx->simpleTemplateId()) {
-			printSimpleTemplateId(id);
-		} else {
-			printIdentifier(ctx->Identifier());
-		}
-	}
-
-	void AstrumCodegen::printStructDefinition(AstrumParser::StructDefinitionContext* ctx) {
-		isStructDeclaration    = functionBody;
-		currentAccessSpecifier = std::nullopt;
-		auto prevTypeName      = currentShortType;
-		if (isStructDeclaration) {
-			if (!ctx->structHead()->Ref() && !ctx->structHead()->className()->simpleTemplateId()) {
-				if (auto tparams = ctx->structHead()->templateParams()) {
-					printTemplateParams(tparams);
-					out << " ";
-					if (ctx->structHead()->constraintClause()) {
-						printConstraintClause(ctx->structHead()->constraintClause());
-						out << " ";
-					}
-				}
-				out << "class __Class_" << ctx->structHead()->className()->getText() << ";\n"
-				    << std::string(depth, '\t');
-			}
-			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			printStructHead(ctx->structHead());
-			out << "\n"
-			    << std::string(depth++, '\t') << "{"
-			    << "\n"
-			    << std::string(depth, '\t');
-			out << "public: using __self = ";
-			printClassName(ctx->structHead()->className());
-			out << ";\n" << std::string(depth, '\t');
-			if (!ctx->structHead()->Ref()) {
-				out << "public: using __class = __Class_";
-				printClassName(ctx->structHead()->className());
-				out << ";\n" << std::string(depth, '\t');
-			}
-			out << "public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } "
-			       "FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }\n"
-			    << std::string(depth, '\t');
-		}
-
-		if (ctx->structMemberSpecification())
-			printStructMemberSpecification(ctx->structMemberSpecification());
-
-		if (functionBody) {
-			if (depth > 0)
-				--depth;
-			out << "\n" << std::string(depth, '\t') << "};";
-			if (!ctx->structHead()->Ref()) {
-				out << "\n" << std::string(depth, '\t');
-				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-				    << std::string(depth, '\t');
-				if (auto tparams = ctx->structHead()->templateParams()) {
-					printTemplateParams(tparams);
-					out << " ";
-				} else if (ctx->structHead()->className()->simpleTemplateId()) {
-					out << "template<> ";
-				}
-				out << "class __Class_";
-				printClassName(ctx->structHead()->className());
-				out << " : public Builtin::ValueType";
-				if (ctx->structHead()->baseClause()) {
-					for (auto iface :
-					     ctx->structHead()->baseClause()->baseSpecifierList()->baseSpecifier()) {
-						out << ", public ";
-						if (iface->nestedNameSpecifier()) {
-							printNestedNameSpecifier(iface->nestedNameSpecifier());
-						}
-						printClassName(iface->className());
-						out << "::__class";
-					}
-				}
-
-				out << "\n" << std::string(depth++, '\t') << "{\n" << std::string(depth, '\t');
-				if (ctx->structHead()->baseClause()) {
-					for (auto iface :
-					     ctx->structHead()->baseClause()->baseSpecifierList()->baseSpecifier()) {
-						out << "#line " << iface->getStart()->getLine() << " \"" << fullFilename
+						out << "#line " << prereq->getStart()->getLine() << " \"" << fullFilename
 						    << ".ast\"\n"
 						    << std::string(depth, '\t');
-						out << "ADV_CHECK_INTERFACE(" << iface->getText() << ", ";
-						if (iface->nestedNameSpecifier()) {
-							printNestedNameSpecifier(iface->nestedNameSpecifier());
-						}
-						printClassName(iface->className());
-						out << ");\n" << std::string(depth, '\t');
+						out << "auto __tmp0 = *";
+						auto id = prereq->identifierSeq()->Identifier(0);
+						printIdentifier(id);
+						out << "; ";
+						out << "const auto& ";
+						printIdentifier(id);
+						out << " = "
+						    << "__tmp0;\n"
+						    << std::string(depth, '\t');
 					}
 				}
-				out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
-				printClassName(ctx->structHead()->className());
-				if (auto tparams = ctx->structHead()->templateParams()) {
-					out << "<";
-					bool first = true;
-					for (auto tparam : tparams->templateParamDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(tparam->Identifier());
-						if (tparam->Ellipsis())
-							out << "...";
-					}
-					out << ">";
-				}
-				out << " "
-				    << "__value;\n"
-				    << std::string(depth, '\t');
-				out << "public: using __underlying = ";
-				printClassName(ctx->structHead()->className());
-				if (auto tparams = ctx->structHead()->templateParams()) {
-					out << "<";
-					bool first = true;
-					for (auto tparam : tparams->templateParamDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(tparam->Identifier());
-						if (tparam->Ellipsis())
-							out << "...";
-					}
-					out << ">";
-				}
-				out << "; using __self = __underlying;\n" << std::string(depth, '\t');
-				if (ctx->structMemberSpecification()) {
-					for (auto decl : ctx->structMemberSpecification()->structMemberDeclaration()) {
-						if (!decl->structDefinition() ||
-						    decl->accessSpecifier() && decl->accessSpecifier()->Public() ||
-						    decl->protectedInternal())
-							continue;
-						auto id = decl->structDefinition()->structHead()->className();
-						if (auto tparams =
-						        decl->structDefinition()->structHead()->templateParams()) {
-							printTemplateParams(tparams);
-							out << " ";
-						}
-						out << "using " << id->getText() << " = typename __self::" << id->getText();
-						if (auto tparams =
-						        decl->structDefinition()->structHead()->templateParams()) {
-							out << "<";
+				ifProlog = false;
+			} else if (isUnsafe) {
+				out << "\tBuiltin::UnsafeContextGuard __unsafe_context_guard"
+				    << ctx->getStart()->getLine() << "{};";
+			}
+
+			isUnsafe = false;
+			for (auto stat : ctx->statement()) {
+				out << "\n" << std::string(depth, '\t');
+				printStatement(stat);
+			}
+
+			if (funcTopLevel) {
+				if (!ctx->statement().empty() && !ctx->statement().back()->jumpStatement()) {
+					if (!namedReturns.empty()) {
+						out << "\n" << std::string(depth, '\t') << "return ";
+						if (namedReturns.size() == 1) {
+							out << namedReturns[0].first;
+						} else {
+							out << "{";
 							bool first = true;
-							for (auto tparam : tparams->templateParamDeclaration()) {
+							for (const auto& var : namedReturns) {
 								if (!first)
 									out << ", ";
 								first = false;
-								printIdentifier(tparam->Identifier());
-								if (tparam->Ellipsis())
-									out << "...";
+								out << var.first;
 							}
-							out << ">";
+							out << "}";
 						}
-						out << ";\n" << std::string(depth, '\t');
+						out << ";";
+					} else if (isMainFunction) {
+						out << "\n" << std::string(depth, '\t') << "return 0;";
+					} else if (!isVoidReturn) {
+						out << "\n" << std::string(depth, '\t') << "return {};";
 					}
 				}
+				if (isPropertySetter)
+					out << "\n" << std::string(depth, '\t') << "return *this;";
 
-				out << "__Class_" << ctx->structHead()->className()->getText()
-				    << "(const __underlying& value) "
-				       "noexcept(std::is_nothrow_copy_constructible_v<__underlying>)"
-				    << " : __value{value} {}\n"
-				    << std::string(depth, '\t');
-				out << "operator __underlying() const noexcept { return __value; }\n"
-				    << std::string(depth, '\t');
-				if (ctx->structMemberSpecification()) {
-					auto decls = ctx->structMemberSpecification()->structMemberDeclaration();
-					for (auto decl : ctx->structMemberSpecification()->structMemberDeclaration()) {
-						if (decl->accessSpecifier() && !decl->accessSpecifier()->Public() ||
-						    decl->protectedInternal())
+				if (isUnitTestBody) {
+					out << "\n" << std::string(depth, '\t') << "return true;";
+				}
+			}
+			out << "\n" << std::string(--depth, '\t') << "}";
+			if (!prevLabel.empty())
+				out << " BREAK_" << prevLabel << ":; }";
+			prevLabel = currentLabel;
+			sema.symbolContexts.pop();
+		}
+
+		void AstrumCodegen::printScopeSafeCompoundStatement(
+		    AstrumParser::ScopeSafeCompoundStatementContext * ctx) {
+			bool first = true;
+			for (auto stat : ctx->statement()) {
+				if (!first)
+					out << "\n" << std::string(depth, '\t');
+				printStatement(stat);
+				first = false;
+			}
+		}
+
+		void AstrumCodegen::printExpressionStatement(AstrumParser::ExpressionStatementContext *
+		                                             ctx) {
+			if (auto expr = ctx->expression()) {
+				printExpression(expr);
+			}
+			out << ";";
+		}
+
+		void AstrumCodegen::printSelectionStatement(AstrumParser::SelectionStatementContext * ctx) {
+			currentIf = ctx;
+			if (ctx->If()) {
+				std::vector<AstrumParser::RelationalExpressionContext*> prerequisites;
+				if (sema.ifPrerequisites.contains(ctx)) {
+					prerequisites = sema.ifPrerequisites[ctx];
+				}
+
+				int prereqIndex = 0;
+				if (!prerequisites.empty()) {
+					out << "{\n" << std::string(++depth, '\t');
+					for (auto prereq : prerequisites) {
+						auto pattern = prereq->patternList()->pattern(0);
+						if (pattern->shiftExpression() &&
+						    pattern->shiftExpression()->getText() == "null")
 							continue;
-						if (auto cond = decl->memberVersionConditionalDeclaration()) {
-							if (auto inner =
-							        cond->memberVersionIfDeclaration()->structMemberDeclaration())
-								decls.push_back(inner);
-							if (auto stat = cond->memberVersionIfDeclaration()
-							                    ->memberDeclarationCompoundStatement()) {
-								for (auto d : stat->structMemberDeclaration()) {
-									decls.push_back(d);
+						out << "#line " << prereq->getStart()->getLine() << " \"" << fullFilename
+						    << ".ast\"\n"
+						    << std::string(depth, '\t');
+						out << "auto __tmp" << prereqIndex++ << " = Builtin::Cast<false, ";
+						if (pattern->theTypeId()) {
+							printTypeId(pattern->theTypeId());
+						} else if (pattern->shiftExpression()) {
+							if (!pattern->Let())
+								out << "decltype(";
+							currentIs = prereq;
+							printShiftExpression(pattern->shiftExpression());
+							currentIs = nullptr;
+							if (!pattern->Let())
+								out << ")";
+						} else /*if (pattern->Let())*/
+						{
+							out << "std::decay_t<decltype(";
+							printThreeWayComparisonExpression(
+							    prereq->threeWayComparisonExpression(0));
+							out << ")>::__self";
+						}
+						out << ">(";
+						printThreeWayComparisonExpression(prereq->threeWayComparisonExpression(0));
+						out << ");\n" << std::string(depth, '\t');
+					}
+					out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename
+					    << ".ast\"\n"
+					    << std::string(depth, '\t');
+				}
+				out << "if " << (ctx->Static() ? "constexpr " : "") << "(";
+				if (ctx->Consteval()) {
+					if (ctx->not_())
+						out << "!";
+					out << "std::is_constant_evaluated()";
+				} else {
+					printCondition(ctx->condition());
+				}
+				out << ") ";
+				if (ctx->attributeSpecifierSeq()) {
+					auto attr = ctx->attributeSpecifierSeq()
+					                ->attributeSpecifier(0)
+					                ->Identifier()
+					                ->getText();
+					if (attr == "Likely") {
+						out << "[[likely]] ";
+					} else if (attr == "Unlikely") {
+						out << "[[unlikely]] ";
+					}
+				}
+				if (!currentLabel.empty())
+					out << "{";
+				auto prevLabel = currentLabel;
+				currentLabel.clear();
+				if (auto block = ctx->compoundStatement()) {
+					ifProlog   = true;
+					bool ifLet = sema.ifLetPrerequisites.contains(ctx);
+					if (ifLet) {
+						out << "{" << std::endl << std::string(++depth, '\t');
+					}
+					printCompoundStatement(block);
+					if (ifLet) {
+						out << std::endl << std::string(--depth, '\t') << "}";
+					}
+				} else {
+					out << "{" << std::endl << std::string(++depth, '\t');
+					if (!prerequisites.empty()) {
+						prereqIndex = 0;
+						for (auto prereq : sema.ifPrerequisites[currentIf]) {
+							auto pattern = prereq->patternList()->pattern(0);
+							bool isNull  = pattern->shiftExpression() &&
+							              pattern->shiftExpression()->getText() == "null";
+							if (!isNull && pattern->not_() || isNull && !pattern->not_())
+								continue;
+							out << "#line " << prereq->getStart()->getLine() << " \""
+							    << fullFilename << ".ast\"\n"
+							    << std::string(depth, '\t');
+							if (pattern->Let()) {
+								out << "const auto& [";
+								bool first = true;
+								for (auto id : pattern->Identifier()) {
+									if (!first)
+										out << ", ";
+									first = false;
+									printIdentifier(id);
+								}
+								out << "] = ";
+								out << "*__tmp" << prereqIndex << "; \n"
+								    << std::string(depth, '\t');
+							} else if (pattern->theTypeId() && !pattern->Identifier().empty()) {
+								out << "const auto& ";
+								printIdentifier(pattern->Identifier(0));
+								out << " = *__tmp" << prereqIndex;
+								out << ";\n" << std::string(depth, '\t');
+							} else {
+								auto txt = prereq->threeWayComparisonExpression(0)->getText();
+								if (std::all_of(txt.begin(), txt.end(), [](char c) {
+									    return std::isalnum(c) || c == '_';
+								    })) {
+									if (isNull) {
+										out << "auto __tmp" << prereqIndex << " = *" << txt << "; ";
+									}
+									out << "const auto& " << txt << " = ";
+									if (!isNull)
+										out << "*";
+									out << "__tmp" << prereqIndex;
+									out << ";\n" << std::string(depth, '\t');
 								}
 							}
-							if (auto elseDecl = cond->memberVersionElseDeclaration()) {
-								if (auto inner = cond->memberVersionElseDeclaration()
+							++prereqIndex;
+						}
+					}
+					printStatement(ctx->statement());
+					out << std::endl << std::string(--depth, '\t') << "}";
+				}
+				if (ctx->Else()) {
+					out << " else {" << std::endl << std::string(++depth, '\t');
+					printStatement(ctx->elseBranch()->statement());
+					out << std::endl << std::string(--depth, '\t') << "}";
+				}
+				if (!prevLabel.empty())
+					out << " BREAK_" << prevLabel << ":; }";
+				currentLabel = prevLabel;
+				if (!prerequisites.empty()) {
+					out << "\n" << std::string(--depth, '\t') << "}";
+				}
+			} else if (ctx->Switch()) {
+				switchStatements.push(ctx);
+				switchProcessedVariants.push({0, 0});
+				int i = 0;
+				for (auto branch : ctx->switchStatementBranch()) {
+					printSwitchStatementBranch(branch, ctx->threeWayComparisonExpression(), i++);
+				}
+				if (ctx->switchStatementBranch().back()->patternList()->getText() != "_") {
+					out << " else { using __switchType = decltype(";
+					printThreeWayComparisonExpression(ctx->threeWayComparisonExpression());
+					out << "); static_assert((!std::derived_from<__switchType, Builtin::Enum> &&"
+					    << " !std::derived_from<__switchType, Builtin::EnumClassRef> && "
+					       "!std::derived_from<__switchType, Builtin::Union>) "
+					    << "|| Builtin::GetVariantsCount<__switchType>() <= "
+					    << switchProcessedVariants.top().first +
+					           switchProcessedVariants.top().second
+					    << ", "
+					    << "\"Switch does not handle all possible variants, add a default "
+					       "branch\"); }";
+				}
+				out << "\n";
+				for (auto branch : ctx->switchStatementBranch()) {
+					out << std::string(--depth, '\t') << "}\n";
+				}
+				switchProcessedVariants.pop();
+				switchStatements.pop();
+			}
+		}
+
+		void AstrumCodegen::printSwitchStatementBranch(
+		    AstrumParser::SwitchStatementBranchContext * ctx,
+		    AstrumParser::ThreeWayComparisonExpressionContext * switchExpr, int branchIndex) {
+			if (branchIndex > 0)
+				out << "else ";
+			out << "{\n" << std::string(++depth, '\t');
+			auto tmpName = "__tmp__valid_" + std::to_string(switchExpr->getStart()->getLine());
+			auto pattern = ctx->patternList()->pattern(0);
+			if (branchIndex == 0) {
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				out << "auto " << tmpName << " = Builtin::Cast<false, ";
+				out << "std::decay_t<decltype(";
+				printThreeWayComparisonExpression(switchExpr);
+				out << ")>::__self";
+				out << ">(";
+				printThreeWayComparisonExpression(switchExpr);
+				out << ");\n" << std::string(depth, '\t');
+			}
+
+			auto isDefault = ctx->patternList()->getText() == "_";
+			if (pattern->theTypeId() && !isDefault ||
+			    pattern->shiftExpression() && pattern->Let()) {
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				tmpName = "__tmp" + std::to_string(branchIndex);
+				out << "auto " << tmpName << " = Builtin::Cast<false, ";
+				if (pattern->theTypeId()) {
+					printTypeId(pattern->theTypeId());
+				} else if (pattern->shiftExpression()) {
+					printShiftExpression(pattern->shiftExpression());
+				}
+				out << ">(";
+				printThreeWayComparisonExpression(switchExpr);
+				out << ");\n" << std::string(depth, '\t');
+			}
+
+			if (!isDefault) {
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				out << "if(";
+				bool skipFirst = false;
+				bool isNull =
+				    pattern->shiftExpression() && pattern->shiftExpression()->getText() == "null";
+				if (!isNull) {
+					if (pattern->not_())
+						out << "!";
+					out << tmpName << ".IsValid()";
+					if (!(pattern->Let() && !pattern->shiftExpression()) &&
+					    (!pattern->theTypeId() || !pattern->propertyPattern().empty())) {
+						if (pattern->not_()) {
+							out << " || ";
+						} else {
+							out << " && ";
+						}
+					} else {
+						skipFirst = true;
+					}
+				}
+				printPatternList(ctx->patternList(), switchExpr, !isNull ? tmpName : "", "", false,
+				                 false, skipFirst);
+				out << ") ";
+				if (ctx->attributeSpecifierSeq()) {
+					auto attr = ctx->attributeSpecifierSeq()
+					                ->attributeSpecifier(0)
+					                ->Identifier()
+					                ->getText();
+					if (attr == "Likely") {
+						out << "[[likely]] ";
+					} else if (attr == "Unlikely") {
+						out << "[[unlikely]] ";
+					}
+				}
+				out << " {\n" << std::string(++depth, '\t');
+				if (!isNull && !pattern->not_() || isNull && pattern->not_()) {
+					if (pattern->Let()) {
+						out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename
+						    << ".ast\"\n"
+						    << std::string(depth, '\t');
+						out << "const auto& [";
+						bool first = true;
+						for (auto id : pattern->Identifier()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(id);
+						}
+						out << "] = ";
+						out << "*" << tmpName << "; \n" << std::string(depth, '\t');
+					} else if (pattern->theTypeId() && !pattern->Identifier().empty()) {
+						out << "const auto& ";
+						printIdentifier(pattern->Identifier(0));
+						out << " = *" << tmpName;
+						out << ";\n" << std::string(depth, '\t');
+					} else {
+						auto txt = switchExpr->getText();
+						if (std::all_of(txt.begin(), txt.end(),
+						                [](char c) { return std::isalnum(c) || c == '_'; })) {
+							out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename
+							    << ".ast\"\n"
+							    << std::string(depth, '\t');
+							if (isNull) {
+								out << "auto " << tmpName << " = *" << txt << "; ";
+							}
+							if (txt != "this") {
+								out << "const auto& " << txt << " = ";
+								if (!isNull)
+									out << "*";
+								out << tmpName << ";";
+							}
+							out << "\n" << std::string(depth, '\t');
+						}
+					}
+				}
+				printStatement(ctx->statement());
+				out << "\n" << std::string(--depth, '\t') << "}";
+			} else {
+				printStatement(ctx->statement());
+			}
+			out << "\n" << std::string(depth, '\t');
+		}
+
+		void AstrumCodegen::printIterationStatement(AstrumParser::IterationStatementContext * ctx) {
+			auto prevLabel = currentLabel;
+			currentLabel.clear();
+			if (ctx->Do()) {
+				out << "do ";
+				if (!prevLabel.empty())
+					out << "{";
+				out << "\n" << std::string(depth, '\t');
+				auto stat = ctx->statement();
+				if (stat->compoundStatement()) {
+					printStatement(stat);
+				} else {
+					out << "{\n" << std::string(++depth, '\t');
+					printStatement(stat);
+					out << "\n" << std::string(--depth, '\t') << "}";
+				}
+				if (!prevLabel.empty()) {
+					out << " ADV_LOOP_LABELS(" << prevLabel << ") }";
+				}
+				out << " while (";
+				printLogicalOrExpression(ctx->doWhileCondition()->logicalOrExpression());
+				out << ");";
+			} else if (ctx->While()) {
+				out << "while (";
+				printLoopCondition(ctx->whileCondition());
+				out << ") ";
+				if (!prevLabel.empty())
+					out << "{";
+				out << "\n" << std::string(depth, '\t');
+				if (auto compound = ctx->compoundStatement()) {
+					printCompoundStatement(compound);
+				} else {
+					out << "{\n" << std::string(++depth, '\t');
+					printStatement(ctx->statement());
+					out << "\n" << std::string(--depth, '\t') << "}";
+				}
+				if (!prevLabel.empty()) {
+					out << " ADV_LOOP_LABELS(" << prevLabel << ") }";
+				}
+			} else if (ctx->For()) {
+				out << "for (";
+				if (ctx->In()) {
+					if (auto init = ctx->forInitStatement()) {
+						printForInitStatement(init);
+						out << "; ";
+					}
+					auto decl = ctx->forRangeDeclaration();
+					if (decl->Amp() && !decl->Const() && !decl->Let()) {
+						out << "auto& ";
+					} else {
+						out << "const auto& ";
+					}
+					auto ids = decl->identifierSeq()->Identifier();
+					if (ids.size() == 1) {
+						printIdentifier(ids[0]);
+					} else {
+						out << "[";
+						bool first = true;
+						for (auto id : ids) {
+							if (!first)
+								out << ", ";
+							printIdentifier(id);
+							first = false;
+						}
+						out << "]";
+					}
+					out << " : ";
+					auto coll = ctx->forRangeInitializer();
+					if (auto expr = coll->logicalOrExpression()) {
+						printLogicalOrExpression(expr);
+					} else if (auto expr = coll->bracedInitList()) {
+						printBracedInitList(coll->bracedInitList());
+					} else {
+						printCollectionExpression(coll->collectionExpression());
+					}
+					out << ") ";
+				} else if (auto init = ctx->forInitStatement()) {
+					printForInitStatement(init);
+					if (auto condition = ctx->whileCondition()) {
+						printLoopCondition(condition);
+					}
+					out << "; ";
+					if (auto expr = ctx->expressionSeq()) {
+						printExpressionSeq(expr);
+					}
+					out << ") ";
+				} else {
+					out << ";;) ";
+				}
+				if (!prevLabel.empty())
+					out << "{";
+				out << std::endl << std::string(depth, '\t');
+				if (auto compound = ctx->compoundStatement()) {
+					printCompoundStatement(ctx->compoundStatement());
+				} else {
+					out << "{\n" << std::string(++depth, '\t');
+					printStatement(ctx->statement());
+					out << "\n" << std::string(--depth, '\t') << "}";
+				}
+				if (!prevLabel.empty()) {
+					out << " ADV_LOOP_LABELS(" << prevLabel << ") }";
+				}
+			}
+			currentLabel = prevLabel;
+		}
+
+		void AstrumCodegen::printForInitStatement(AstrumParser::ForInitStatementContext * ctx) {
+			if (auto expr = ctx->logicalOrExpression()) {
+				printLogicalOrExpression(expr);
+				out << "; ";
+			} else if (auto decl = ctx->blockDeclaration()) {
+				printBlockDeclaration(decl);
+			} else {
+				out << "; ";
+			}
+		}
+
+		void AstrumCodegen::printVersionSelectionStatement(
+		    AstrumParser::VersionSelectionStatementContext * ctx) {
+			out << "#if ";
+			if (auto condition = ctx->condition()) {
+				isVersionCondition = true;
+				printCondition(ctx->condition());
+				isVersionCondition = false;
+				out << std::endl << std::string(depth, '\t');
+				printVersionSelectionStatementBlock(ctx->versionSelectionStatementBlock(0));
+			} else if (ctx->Debug()) {
+				if (ctx->not_())
+					out << "!";
+				if (auto id = ctx->Identifier()) {
+					out << "ADV_DEBUG_";
+					printIdentifier(id);
+				} else {
+					out << "_DEBUG";
+				}
+				out << std::endl << std::string(depth, '\t');
+				printScopeSafeCompoundStatement(ctx->scopeSafeCompoundStatement());
+			}
+			if (ctx->Else()) {
+				out << std::endl
+				    << std::string(depth, '\t') << "#else" << std::endl
+				    << std::string(depth, '\t');
+				printVersionSelectionStatementBlock(ctx->versionSelectionStatementBlock().back());
+			}
+			out << std::endl << std::string(depth, '\t') << "#endif";
+		}
+
+		void AstrumCodegen::printVersionSelectionStatementBlock(
+		    AstrumParser::VersionSelectionStatementBlockContext * ctx) {
+			if (auto compound = ctx->scopeSafeCompoundStatement()) {
+				printScopeSafeCompoundStatement(compound);
+			} else {
+				printStatement(ctx->statement());
+			}
+		}
+
+		void AstrumCodegen::printLabeledStatement(AstrumParser::LabeledStatementContext * ctx) {
+			auto label     = ctx->Identifier()->getText();
+			auto prevLabel = currentLabel;
+			currentLabel   = label;
+			if (auto iter = ctx->iterationStatement()) {
+				printIterationStatement(iter);
+			} else if (auto select = ctx->selectionStatement()) {
+				printSelectionStatement(select);
+			} else if (auto compound = ctx->compoundStatement()) {
+				printCompoundStatement(compound);
+			}
+			currentLabel = prevLabel;
+		}
+
+		void AstrumCodegen::printJumpStatement(AstrumParser::JumpStatementContext * ctx) {
+			if (ctx->Return()) {
+				out << "return ";
+				if (auto expr = ctx->expression()) {
+					printExpression(expr);
+				} else if (auto init = ctx->bracedInitList()) {
+					printBracedInitList(init);
+				} else if (auto coll = ctx->collectionExpression()) {
+					printCollectionExpression(coll);
+				} else if (!namedReturns.empty()) {
+					if (namedReturns.size() == 1) {
+						out << namedReturns.begin()->first;
+					} else {
+						out << "{";
+						bool first = true;
+						for (const auto& var : namedReturns) {
+							if (!first)
+								out << ", ";
+							first = false;
+							out << var.first;
+						}
+						out << "}";
+					}
+				}
+			} else if (ctx->Break()) {
+				if (auto id = ctx->Identifier()) {
+					out << "goto BREAK_";
+					printIdentifier(id);
+				} else {
+					out << "break";
+				}
+			} else if (ctx->Continue()) {
+				if (auto id = ctx->Identifier()) {
+					out << "goto CONTINUE_";
+					printIdentifier(id);
+				} else {
+					out << "continue";
+				}
+			}
+			out << ";";
+		}
+
+		void AstrumCodegen::printLockStatement(AstrumParser::LockStatementContext * ctx) {
+			out << "{ std::lock_guard __mutex_lock(";
+			printConditionalExpression(ctx->conditionalExpression());
+			out << ");\n" << std::string(++depth, '\t');
+			if (auto comp = ctx->compoundStatement()) {
+				printCompoundStatement(comp);
+			} else {
+				printStatement(ctx->statement());
+			}
+			out << "\n" << std::string(--depth, '\t') << "}";
+		}
+
+		void AstrumCodegen::printYieldStatement(AstrumParser::YieldStatementContext * ctx) {
+			if (ctx->Break()) {
+				out << "co_return;";
+			} else {
+				out << "co_yield ";
+				if (auto expr = ctx->expression()) {
+					printExpression(expr);
+				} else if (auto init = ctx->bracedInitList()) {
+					printBracedInitList(init);
+				} else if (auto coll = ctx->collectionExpression()) {
+					printCollectionExpression(coll);
+				}
+				out << ";";
+			}
+		}
+
+		void AstrumCodegen::printDeferStatement(AstrumParser::DeferStatementContext * ctx) {
+			out << "Builtin::Defer __defer_" << ctx->getStart()->getLine() << "_"
+			    << ctx->getStart()->getCharPositionInLine() << "{[&]() {";
+			if (auto comp = ctx->compoundStatement()) {
+				printCompoundStatement(comp);
+			} else {
+				printExpression(ctx->expression());
+				out << ";";
+			}
+			out << "}};";
+		}
+
+		void AstrumCodegen::printTryBlock(AstrumParser::TryBlockContext * ctx) {
+			out << "try \n" << std::string(depth, '\t');
+			printCompoundStatement(ctx->compoundStatement());
+			for (auto handler : ctx->exceptionHandler()) { printExceptionHandler(handler); }
+		}
+
+		void AstrumCodegen::printExceptionHandler(AstrumParser::ExceptionHandlerContext * ctx) {
+			if (!ctx->exceptionDeclaration()->Or().empty()) {
+				auto size = ctx->exceptionDeclaration()->simpleTypeSpecifier().size();
+				for (int i = 0; i < size; ++i) {
+					out << " catch (";
+					printExceptionDeclaration(ctx->exceptionDeclaration(), i);
+					out << ") \n" << std::string(depth, '\t');
+					printCompoundStatement(ctx->compoundStatement());
+				}
+			} else {
+				out << " catch (";
+				printExceptionDeclaration(ctx->exceptionDeclaration());
+				out << ") \n" << std::string(depth, '\t');
+				printCompoundStatement(ctx->compoundStatement());
+			}
+		}
+
+		void AstrumCodegen::printExceptionDeclaration(
+		    AstrumParser::ExceptionDeclarationContext * ctx, int i) {
+			if (ctx->Ellipsis()) {
+				out << "...";
+			} else {
+				out << "const ";
+				if (auto t = ctx->simpleTypeSpecifier(i)) {
+					printSimpleTypeSpecifier(t);
+				} else {
+					out << "std::exception";
+				}
+				out << "& ";
+				printIdentifier(ctx->Identifier());
+			}
+		}
+
+		void AstrumCodegen::printInlineCppStatement(AstrumParser::InlineCppStatementContext * ctx) {
+			auto src = ctx->StringLiteral()->getText();
+			int i    = 0;
+			while (src[i] == '"' || src[i] == '\'' || src[i] == '`') { i++; }
+			out << src.substr(i, src.length() - 2 * i);
+		}
+
+		void AstrumCodegen::printCondition(AstrumParser::ConditionContext * ctx) {
+			isCondition = true;
+			if (auto decl = ctx->simpleDeclaration()) {
+				printSimpleDeclaration(decl);
+			}
+			if (auto expr = ctx->logicalOrExpression()) {
+				printLogicalOrExpression(expr);
+			}
+			if (auto decl = ctx->declarator()) {
+				printDeclarator(decl);
+			}
+			isCondition = false;
+		}
+
+		void AstrumCodegen::printLoopCondition(AstrumParser::WhileConditionContext * ctx) {
+			if (auto expr = ctx->logicalOrExpression()) {
+				printLogicalOrExpression(expr);
+			} else {
+				printDeclarator(ctx->declarator());
+			}
+		}
+
+		void AstrumCodegen::printDeclarator(AstrumParser::DeclaratorContext * ctx) {
+			const auto& ids = ctx->identifierSeq()->Identifier();
+
+			bool first   = true;
+			bool isArray = false;
+			for (auto idctx : ids) {
+				auto id = idctx->getText();
+				if (ctx->Const() || ctx->Let()) {
+					out << "const ";
+				}
+				if (auto t = ctx->theTypeId()) {
+					symbolTable[id] = t->getText();
+					isDeclaration   = true;
+					printTypeId(t);
+					isDeclaration = false;
+					// isArray = t->arrayDeclarator();
+					out << " ";
+				} else {
+					symbolTable[id] = "";
+					out << "auto ";
+				}
+				currentType = symbolTable[id];
+				out << id;
+				// if (isArray) printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
+				if (auto expr = ctx->initializerClause()) {
+					out << " = ";
+					if (first) {
+						printInitializerClause(ctx->initializerClause());
+					} else {
+						printIdentifier(ids[0]);
+					}
+				}
+				first = false;
+			}
+		}
+
+		void AstrumCodegen::printTemplateParams(AstrumParser::TemplateParamsContext * ctx,
+		                                        bool printTemplateKeyword) {
+			if (printTemplateKeyword)
+				out << "template";
+			out << "<";
+			bool first                 = true;
+			isTemplateParamDeclaration = true;
+			for (auto decl : ctx->templateParamDeclaration()) {
+				if (!first)
+					out << ", ";
+				first = false;
+				printTemplateParamDeclaration(decl);
+			}
+			out << ">";
+			isTemplateParamDeclaration = false;
+		}
+
+		void AstrumCodegen::printTemplateParamDeclaration(
+		    AstrumParser::TemplateParamDeclarationContext * ctx) {
+			if (auto ttp = ctx->templateParams()) {
+				printTemplateParams(ttp);
+				out << " ";
+			}
+
+			if (auto t = ctx->templateTypename()) {
+				if (auto name = t->theTypeId()) {
+					printTypeId(name);
+				} else if (t->Is()) {
+					out << "__ImplementsInterface_";
+					if (t->simpleTemplateId()) {
+						printSimpleTemplateId(t->simpleTemplateId());
+					} else {
+						printIdentifier(t->Identifier());
+					}
+				} else {
+					out << "class";
+				}
+			} else if (auto expr = ctx->conditionalExpression()) {
+				out << "decltype(";
+				printConditionalExpression(expr);
+				out << ")";
+			} else {
+				out << "class";
+			}
+			if (ctx->Ellipsis()) {
+				out << "...";
+				isVariadicTemplate = true;
+			}
+			out << " ";
+			printIdentifier(ctx->Identifier());
+
+			if (isFunctionDeclaration) {
+				if (ctx->Assign()) {
+					bool prev                  = isTemplateParamDeclaration;
+					isTemplateParamDeclaration = false;
+					out << " = ";
+					if (auto type = ctx->theTypeId()) {
+						printTypeId(type);
+					} else {
+						printConditionalExpression(ctx->conditionalExpression());
+					}
+					isTemplateParamDeclaration = prev;
+				}
+			} else if (!sema.symbolContexts.empty()) {
+				sema.typeset.insert(ctx->Identifier()->getText());
+			}
+		}
+
+		void AstrumCodegen::printTemplateIdentifier(AstrumParser::TemplateIdContext * ctx) {
+			printSimpleTemplateId(ctx->simpleTemplateId());
+		}
+
+		void AstrumCodegen::printSimpleTemplateId(AstrumParser::SimpleTemplateIdContext * ctx) {
+			out << ctx->templateName()->getText() << "<";
+			if (auto args = ctx->templateArgumentList()) {
+				printTemplateArgumentList(args);
+			}
+			out << ">";
+		}
+
+		void AstrumCodegen::printClassName(AstrumParser::ClassNameContext * ctx) {
+			if (auto id = ctx->simpleTemplateId()) {
+				printSimpleTemplateId(id);
+			} else {
+				printIdentifier(ctx->Identifier());
+			}
+		}
+
+		void AstrumCodegen::printStructDefinition(AstrumParser::StructDefinitionContext * ctx) {
+			isStructDeclaration    = functionBody;
+			currentAccessSpecifier = std::nullopt;
+			auto prevTypeName      = currentShortType;
+			if (isStructDeclaration) {
+				if (!ctx->structHead()->Ref() &&
+				    !ctx->structHead()->className()->simpleTemplateId()) {
+					if (auto tparams = ctx->structHead()->templateParams()) {
+						printTemplateParams(tparams);
+						out << " ";
+						if (ctx->structHead()->constraintClause()) {
+							printConstraintClause(ctx->structHead()->constraintClause());
+							out << " ";
+						}
+					}
+					out << "class __Class_" << ctx->structHead()->className()->getText() << ";\n"
+					    << std::string(depth, '\t');
+				}
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				printStructHead(ctx->structHead());
+				out << "\n"
+				    << std::string(depth++, '\t') << "{"
+				    << "\n"
+				    << std::string(depth, '\t');
+				out << "public: using __self = ";
+				printClassName(ctx->structHead()->className());
+				out << ";\n" << std::string(depth, '\t');
+				if (!ctx->structHead()->Ref()) {
+					out << "public: using __class = __Class_";
+					printClassName(ctx->structHead()->className());
+					out << ";\n" << std::string(depth, '\t');
+				}
+				out << "public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } "
+				       "FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }\n"
+				    << std::string(depth, '\t');
+			}
+
+			if (ctx->structMemberSpecification())
+				printStructMemberSpecification(ctx->structMemberSpecification());
+
+			if (functionBody) {
+				if (depth > 0)
+					--depth;
+				out << "\n" << std::string(depth, '\t') << "};";
+				if (!ctx->structHead()->Ref()) {
+					out << "\n" << std::string(depth, '\t');
+					out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename
+					    << ".ast\"\n"
+					    << std::string(depth, '\t');
+					if (auto tparams = ctx->structHead()->templateParams()) {
+						printTemplateParams(tparams);
+						out << " ";
+					} else if (ctx->structHead()->className()->simpleTemplateId()) {
+						out << "template<> ";
+					}
+					out << "class __Class_";
+					printClassName(ctx->structHead()->className());
+					out << " : public Builtin::ValueType";
+					if (ctx->structHead()->baseClause()) {
+						for (auto iface : ctx->structHead()
+						                      ->baseClause()
+						                      ->baseSpecifierList()
+						                      ->baseSpecifier()) {
+							out << ", public ";
+							if (iface->nestedNameSpecifier()) {
+								printNestedNameSpecifier(iface->nestedNameSpecifier());
+							}
+							printClassName(iface->className());
+							out << "::__class";
+						}
+					}
+
+					out << "\n" << std::string(depth++, '\t') << "{\n" << std::string(depth, '\t');
+					if (ctx->structHead()->baseClause()) {
+						for (auto iface : ctx->structHead()
+						                      ->baseClause()
+						                      ->baseSpecifierList()
+						                      ->baseSpecifier()) {
+							out << "#line " << iface->getStart()->getLine() << " \"" << fullFilename
+							    << ".ast\"\n"
+							    << std::string(depth, '\t');
+							out << "ADV_CHECK_INTERFACE(" << iface->getText() << ", ";
+							if (iface->nestedNameSpecifier()) {
+								printNestedNameSpecifier(iface->nestedNameSpecifier());
+							}
+							printClassName(iface->className());
+							out << ");\n" << std::string(depth, '\t');
+						}
+					}
+					out << "#line 9999 \"" << fullFilename << ".ast\"\n"
+					    << std::string(depth, '\t');
+					printClassName(ctx->structHead()->className());
+					if (auto tparams = ctx->structHead()->templateParams()) {
+						out << "<";
+						bool first = true;
+						for (auto tparam : tparams->templateParamDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(tparam->Identifier());
+							if (tparam->Ellipsis())
+								out << "...";
+						}
+						out << ">";
+					}
+					out << " "
+					    << "__value;\n"
+					    << std::string(depth, '\t');
+					out << "public: using __underlying = ";
+					printClassName(ctx->structHead()->className());
+					if (auto tparams = ctx->structHead()->templateParams()) {
+						out << "<";
+						bool first = true;
+						for (auto tparam : tparams->templateParamDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(tparam->Identifier());
+							if (tparam->Ellipsis())
+								out << "...";
+						}
+						out << ">";
+					}
+					out << "; using __self = __underlying;\n" << std::string(depth, '\t');
+					if (ctx->structMemberSpecification()) {
+						for (auto decl :
+						     ctx->structMemberSpecification()->structMemberDeclaration()) {
+							if (!decl->structDefinition() ||
+							    decl->accessSpecifier() && decl->accessSpecifier()->Public() ||
+							    decl->protectedInternal())
+								continue;
+							auto id = decl->structDefinition()->structHead()->className();
+							if (auto tparams =
+							        decl->structDefinition()->structHead()->templateParams()) {
+								printTemplateParams(tparams);
+								out << " ";
+							}
+							out << "using " << id->getText()
+							    << " = typename __self::" << id->getText();
+							if (auto tparams =
+							        decl->structDefinition()->structHead()->templateParams()) {
+								out << "<";
+								bool first = true;
+								for (auto tparam : tparams->templateParamDeclaration()) {
+									if (!first)
+										out << ", ";
+									first = false;
+									printIdentifier(tparam->Identifier());
+									if (tparam->Ellipsis())
+										out << "...";
+								}
+								out << ">";
+							}
+							out << ";\n" << std::string(depth, '\t');
+						}
+					}
+
+					out << "__Class_" << ctx->structHead()->className()->getText()
+					    << "(const __underlying& value) "
+					       "noexcept(std::is_nothrow_copy_constructible_v<__underlying>)"
+					    << " : __value{value} {}\n"
+					    << std::string(depth, '\t');
+					out << "operator __underlying() const noexcept { return __value; }\n"
+					    << std::string(depth, '\t');
+					if (ctx->structMemberSpecification()) {
+						auto decls = ctx->structMemberSpecification()->structMemberDeclaration();
+						for (auto decl :
+						     ctx->structMemberSpecification()->structMemberDeclaration()) {
+							if (decl->accessSpecifier() && !decl->accessSpecifier()->Public() ||
+							    decl->protectedInternal())
+								continue;
+							if (auto cond = decl->memberVersionConditionalDeclaration()) {
+								if (auto inner = cond->memberVersionIfDeclaration()
 								                     ->structMemberDeclaration())
 									decls.push_back(inner);
-								if (auto stat = cond->memberVersionElseDeclaration()
+								if (auto stat = cond->memberVersionIfDeclaration()
 								                    ->memberDeclarationCompoundStatement()) {
 									for (auto d : stat->structMemberDeclaration()) {
 										decls.push_back(d);
 									}
 								}
-							}
-						}
-
-						if (auto cond = decl->memberDeclarationCompoundStatement()) {
-							for (auto d : cond->structMemberDeclaration()) { decls.push_back(d); }
-						}
-					}
-
-					for (auto decl : decls) {
-						if (auto prop = decl->property()) {
-							if (prop->Static())
-								continue;
-							AstrumParser::PropertySetterContext* setter = nullptr;
-							AstrumParser::PropertyGetterContext* getter = nullptr;
-							if (auto body = prop->propertyBody()) {
-								setter = body->propertySetter();
-								getter = body->propertyGetter();
-							}
-							auto id = prop->Identifier()->getText();
-							if (setter &&
-							    (!setter->accessSpecifier() && !setter->protectedInternal())) {
-								out << "__underlying& set" << id << "(const ";
-								printTypeId(prop->theTypeId());
-								out << "& value) { return __value.set" << id << "(value); }\n"
-								    << std::string(depth, '\t');
-							}
-							if (getter && !getter->accessSpecifier() &&
-							        !getter->protectedInternal() ||
-							    !setter && !getter) {
-								out << "auto get" << id << "() const -> ";
-								if (prop->Const())
-									out << "const ";
-								printTypeId(prop->theTypeId());
-								if (prop->Ref())
-									out << "&";
-								out << " { return __value.get" << id << "(); }\n"
-								    << std::string(depth, '\t');
-							}
-						} else if (auto method = decl->functionDefinition()) {
-							if (method->templateParams() || method->simpleTemplateId() ||
-							    method->functionParams() && !method->returnType() &&
-							        method->shortFunctionBody())
-								continue;
-							bool isStatic = false;
-							bool isMut    = false;
-							for (auto spec : method->functionSpecifier()) {
-								if (spec->Static())
-									isStatic = true;
-								if (spec->Mutable())
-									isMut = true;
-							}
-							if (isStatic)
-								continue;
-							// std::string id;
-
-							out << "auto ";
-							if (method->Identifier())
-								printIdentifier(method->Identifier());
-							if (method->operatorFunctionId())
-								printOperatorFunctionId(method->operatorFunctionId());
-
-							printFunctionParameters(method->functionParams());
-							if (!isMut)
-								out << " const ";
-							if (method->exceptionSpecification())
-								printExceptionSpecification(method->exceptionSpecification());
-							out << " -> ";
-							if (method->returnType() && method->returnType()->theTypeId()) {
-								printTypeId(method->returnType()->theTypeId());
-								if (method->returnType()->Const() || !method->returnType()->Ref())
-									out << " const";
-								if (method->returnType()->Ref())
-									out << " &";
-							} else {
-								out << "void";
-							}
-							out << " { ADV_EXPRESSION_BODY(__value.";
-							if (method->Identifier())
-								printIdentifier(method->Identifier());
-							if (method->operatorFunctionId())
-								printOperatorFunctionId(method->operatorFunctionId());
-							out << "(";
-							bool first = true;
-							if (auto params = method->functionParams()->paramDeclClause()) {
-								for (auto param : params->paramDeclList()->paramDeclaration()) {
-									if (!first)
-										out << ", ";
-									first = false;
-									printIdentifier(param->Identifier());
+								if (auto elseDecl = cond->memberVersionElseDeclaration()) {
+									if (auto inner = cond->memberVersionElseDeclaration()
+									                     ->structMemberDeclaration())
+										decls.push_back(inner);
+									if (auto stat = cond->memberVersionElseDeclaration()
+									                    ->memberDeclarationCompoundStatement()) {
+										for (auto d : stat->structMemberDeclaration()) {
+											decls.push_back(d);
+										}
+									}
 								}
 							}
 
-							out << ")); }\n" << std::string(depth, '\t');
+							if (auto cond = decl->memberDeclarationCompoundStatement()) {
+								for (auto d : cond->structMemberDeclaration()) {
+									decls.push_back(d);
+								}
+							}
+						}
+
+						for (auto decl : decls) {
+							if (auto prop = decl->property()) {
+								if (prop->Static())
+									continue;
+								AstrumParser::PropertySetterContext* setter = nullptr;
+								AstrumParser::PropertyGetterContext* getter = nullptr;
+								if (auto body = prop->propertyBody()) {
+									setter = body->propertySetter();
+									getter = body->propertyGetter();
+								}
+								auto id = prop->Identifier()->getText();
+								if (setter &&
+								    (!setter->accessSpecifier() && !setter->protectedInternal())) {
+									out << "__underlying& set" << id << "(const ";
+									printTypeId(prop->theTypeId());
+									out << "& value) { return __value.set" << id << "(value); }\n"
+									    << std::string(depth, '\t');
+								}
+								if (getter && !getter->accessSpecifier() &&
+								        !getter->protectedInternal() ||
+								    !setter && !getter) {
+									out << "auto get" << id << "() const -> ";
+									if (prop->Const())
+										out << "const ";
+									printTypeId(prop->theTypeId());
+									if (prop->Ref())
+										out << "&";
+									out << " { return __value.get" << id << "(); }\n"
+									    << std::string(depth, '\t');
+								}
+							} else if (auto method = decl->functionDefinition()) {
+								if (method->templateParams() || method->simpleTemplateId() ||
+								    method->functionParams() && !method->returnType() &&
+								        method->shortFunctionBody())
+									continue;
+								bool isStatic = false;
+								bool isMut    = false;
+								for (auto spec : method->functionSpecifier()) {
+									if (spec->Static())
+										isStatic = true;
+									if (spec->Mutable())
+										isMut = true;
+								}
+								if (isStatic)
+									continue;
+								// std::string id;
+
+								out << "auto ";
+								if (method->Identifier())
+									printIdentifier(method->Identifier());
+								if (method->operatorFunctionId())
+									printOperatorFunctionId(method->operatorFunctionId());
+
+								printFunctionParameters(method->functionParams());
+								if (!isMut)
+									out << " const ";
+								if (method->exceptionSpecification())
+									printExceptionSpecification(method->exceptionSpecification());
+								out << " -> ";
+								if (method->returnType() && method->returnType()->theTypeId()) {
+									printTypeId(method->returnType()->theTypeId());
+									if (method->returnType()->Const() ||
+									    !method->returnType()->Ref())
+										out << " const";
+									if (method->returnType()->Ref())
+										out << " &";
+								} else {
+									out << "void";
+								}
+								out << " { ADV_EXPRESSION_BODY(__value.";
+								if (method->Identifier())
+									printIdentifier(method->Identifier());
+								if (method->operatorFunctionId())
+									printOperatorFunctionId(method->operatorFunctionId());
+								out << "(";
+								bool first = true;
+								if (auto params = method->functionParams()->paramDeclClause()) {
+									for (auto param : params->paramDeclList()->paramDeclaration()) {
+										if (!first)
+											out << ", ";
+										first = false;
+										printIdentifier(param->Identifier());
+									}
+								}
+
+								out << ")); }\n" << std::string(depth, '\t');
+							}
 						}
 					}
+					out << "\n" << std::string(--depth, '\t') << "};";
 				}
-				out << "\n" << std::string(--depth, '\t') << "};";
 			}
+
+			currentShortType = prevTypeName;
 		}
 
-		currentShortType = prevTypeName;
-	}
-
-	void AstrumCodegen::printStructHead(AstrumParser::StructHeadContext* ctx) {
-		if (!isStructDeclaration)
-			return;
-		if (auto tparams = ctx->templateParams()) {
-			printTemplateParams(tparams);
-			out << " ";
-			if (ctx->constraintClause()) {
-				printConstraintClause(ctx->constraintClause());
+		void AstrumCodegen::printStructHead(AstrumParser::StructHeadContext * ctx) {
+			if (!isStructDeclaration)
+				return;
+			if (auto tparams = ctx->templateParams()) {
+				printTemplateParams(tparams);
 				out << " ";
+				if (ctx->constraintClause()) {
+					printConstraintClause(ctx->constraintClause());
+					out << " ";
+				}
+			} else if (auto name = ctx->className()) {
+				if (name->simpleTemplateId()) {
+					out << "template<> ";
+				}
 			}
-		} else if (auto name = ctx->className()) {
-			if (name->simpleTemplateId()) {
-				out << "template<> ";
-			}
-		}
-		out << "struct ";
-		printClassName(ctx->className());
-		currentShortType = ctx->className()->getText();
-		if (ctx->Ref()) {
-			out << " : public Builtin::RefStruct";
-		} else {
-			out << " : public Builtin::Struct";
-			checkForRefStruct = true;
-		}
-	}
-
-	void AstrumCodegen::printClassDefinition(AstrumParser::ClassDefinitionContext* ctx) {
-		isStructDeclaration    = functionBody;
-		currentAccessSpecifier = std::nullopt;
-		auto prevTypeName      = currentShortType;
-
-		if (ctx->structMemberSpecification())
-			printStructMemberSpecification(ctx->structMemberSpecification());
-
-		currentShortType = prevTypeName;
-	}
-
-	void AstrumCodegen::printClassHead(AstrumParser::ClassHeadContext* ctx) {
-		if (!isStructDeclaration)
-			return;
-		if (auto tparams = ctx->templateParams()) {
-			printTemplateParams(tparams);
-			out << " ";
-			if (ctx->constraintClause()) {
-				printConstraintClause(ctx->constraintClause());
-				out << " ";
-			}
-		} else if (auto name = ctx->className()) {
-			if (name->simpleTemplateId()) {
-				out << "template<> ";
+			out << "struct ";
+			printClassName(ctx->className());
+			currentShortType = ctx->className()->getText();
+			if (ctx->Ref()) {
+				out << " : public Builtin::RefStruct";
+			} else {
+				out << " : public Builtin::Struct";
+				checkForRefStruct = true;
 			}
 		}
-		out << "class ";
-		printClassName(ctx->className());
-		currentShortType = ctx->className()->getText();
-	}
 
-	void AstrumCodegen::printStructMemberSpecification(
-	    AstrumParser::StructMemberSpecificationContext* ctx) {
-		for (auto decl : ctx->structMemberDeclaration()) {
-			if (isStructDeclaration)
-				out << "#line " << decl->getStart()->getLine() << " \"" << fullFilename
-				    << ".ast\"\n"
-				    << std::string(depth, '\t');
-			printStructMemberDeclaration(decl);
-			if (isStructDeclaration)
-				out << "\n" << std::string(depth, '\t');
-		}
-	}
-
-	void AstrumCodegen::printStructMemberDeclaration(
-	    AstrumParser::StructMemberDeclarationContext* ctx) {
-		auto prevAccess            = currentAccessSpecifier;
-		auto prevCheckForRefStruct = checkForRefStruct;
-		checkForRefStruct          = false;
-		if (ctx->protectedInternal()) {
-			currentAccessSpecifier = AccessSpecifier::ProtectedInternal;
-		} else if (auto access = ctx->accessSpecifier()) {
-			if (access->Public())
-				currentAccessSpecifier = AccessSpecifier::Public;
-			else if (access->Internal())
-				currentAccessSpecifier = AccessSpecifier::Internal;
-			else if (access->Protected())
-				currentAccessSpecifier = AccessSpecifier::Protected;
-			else if (access->Private())
-				currentAccessSpecifier = AccessSpecifier::Private;
-		}
-		if (auto compound = ctx->memberDeclarationCompoundStatement()) {
+		void AstrumCodegen::printClassDefinition(AstrumParser::ClassDefinitionContext * ctx) {
+			isStructDeclaration    = functionBody;
 			currentAccessSpecifier = std::nullopt;
-			if (auto access = ctx->symbolSpecifierSeq()->accessSpecifier()) {
+			auto prevTypeName      = currentShortType;
+
+			if (ctx->structMemberSpecification())
+				printStructMemberSpecification(ctx->structMemberSpecification());
+
+			currentShortType = prevTypeName;
+		}
+
+		void AstrumCodegen::printClassHead(AstrumParser::ClassHeadContext * ctx) {
+			if (!isStructDeclaration)
+				return;
+			if (auto tparams = ctx->templateParams()) {
+				printTemplateParams(tparams);
+				out << " ";
+				if (ctx->constraintClause()) {
+					printConstraintClause(ctx->constraintClause());
+					out << " ";
+				}
+			} else if (auto name = ctx->className()) {
+				if (name->simpleTemplateId()) {
+					out << "template<> ";
+				}
+			}
+			out << "class ";
+			printClassName(ctx->className());
+			currentShortType = ctx->className()->getText();
+		}
+
+		void AstrumCodegen::printStructMemberSpecification(
+		    AstrumParser::StructMemberSpecificationContext * ctx) {
+			for (auto decl : ctx->structMemberDeclaration()) {
+				if (isStructDeclaration)
+					out << "#line " << decl->getStart()->getLine() << " \"" << fullFilename
+					    << ".ast\"\n"
+					    << std::string(depth, '\t');
+				printStructMemberDeclaration(decl);
+				if (isStructDeclaration)
+					out << "\n" << std::string(depth, '\t');
+			}
+		}
+
+		void AstrumCodegen::printStructMemberDeclaration(
+		    AstrumParser::StructMemberDeclarationContext * ctx) {
+			auto prevAccess            = currentAccessSpecifier;
+			auto prevCheckForRefStruct = checkForRefStruct;
+			checkForRefStruct          = false;
+			if (ctx->protectedInternal()) {
+				currentAccessSpecifier = AccessSpecifier::ProtectedInternal;
+			} else if (auto access = ctx->accessSpecifier()) {
 				if (access->Public())
 					currentAccessSpecifier = AccessSpecifier::Public;
 				else if (access->Internal())
@@ -13885,1226 +13977,1128 @@ namespace AstrumLang {
 				else if (access->Private())
 					currentAccessSpecifier = AccessSpecifier::Private;
 			}
-			printMemberDeclarationCompoundStatement(compound);
-		} else if (auto member = ctx->memberBlockDeclaration()) {
-			if (isStructDeclaration ||
-			    member->simpleDeclaration() && member->simpleDeclaration()->declSpecifierSeq() &&
-			        member->simpleDeclaration()->declSpecifierSeq()->getText().find("lazy") !=
-			            std::string::npos) {
-				checkForRefStruct = prevCheckForRefStruct;
-				printMemberBlockDeclaration(member);
-			}
-		} else if (auto func = ctx->functionDefinition()) {
-			printFunctionDefinition(func);
-		} else if (auto func = ctx->constructor()) {
-			printConstructor(func);
-		} else if (auto func = ctx->destructor()) {
-			printDestructor(func);
-		} else if (auto func = ctx->staticConstructor()) {
-			printStaticConstructor(func);
-		} else if (auto func = ctx->staticDestructor()) {
-			printStaticDestructor(func);
-		} else if (auto func = ctx->conversionFunction()) {
-			printConversionFunction(func);
-		} else if (auto func = ctx->indexer()) {
-			printIndexer(func);
-		} else if (auto prop = ctx->property()) {
-			printProperty(prop);
-		} else if (auto fr = ctx->friendDeclaration()) {
-			printFriendDeclaration(fr);
-		} else if (auto func = ctx->functionTemplateDeclaration()) {
-			if (isStructDeclaration) {
-				printFunctionTemplateDeclaration(func);
-			}
-		} else if (auto vdecl = ctx->memberVersionConditionalDeclaration()) {
-			if (isStructDeclaration) {
-				out << "#if ";
-				if (vdecl->condition()) {
-					isVersionCondition = true;
-					printCondition(vdecl->condition());
-					isVersionCondition = false;
+			if (auto compound = ctx->memberDeclarationCompoundStatement()) {
+				currentAccessSpecifier = std::nullopt;
+				if (auto access = ctx->symbolSpecifierSeq()->accessSpecifier()) {
+					if (access->Public())
+						currentAccessSpecifier = AccessSpecifier::Public;
+					else if (access->Internal())
+						currentAccessSpecifier = AccessSpecifier::Internal;
+					else if (access->Protected())
+						currentAccessSpecifier = AccessSpecifier::Protected;
+					else if (access->Private())
+						currentAccessSpecifier = AccessSpecifier::Private;
 				}
-
-				if (vdecl->Debug()) {
-					if (vdecl->not_())
-						out << "!";
-					if (auto id = vdecl->Identifier()) {
-						out << "ADV_DEBUG_";
-						printIdentifier(id);
-					} else {
-						out << "_DEBUG";
+				printMemberDeclarationCompoundStatement(compound);
+			} else if (auto member = ctx->memberBlockDeclaration()) {
+				if (isStructDeclaration ||
+				    member->simpleDeclaration() &&
+				        member->simpleDeclaration()->declSpecifierSeq() &&
+				        member->simpleDeclaration()->declSpecifierSeq()->getText().find("lazy") !=
+				            std::string::npos) {
+					checkForRefStruct = prevCheckForRefStruct;
+					printMemberBlockDeclaration(member);
+				}
+			} else if (auto func = ctx->functionDefinition()) {
+				printFunctionDefinition(func);
+			} else if (auto func = ctx->constructor()) {
+				printConstructor(func);
+			} else if (auto func = ctx->destructor()) {
+				printDestructor(func);
+			} else if (auto func = ctx->staticConstructor()) {
+				printStaticConstructor(func);
+			} else if (auto func = ctx->staticDestructor()) {
+				printStaticDestructor(func);
+			} else if (auto func = ctx->conversionFunction()) {
+				printConversionFunction(func);
+			} else if (auto func = ctx->indexer()) {
+				printIndexer(func);
+			} else if (auto prop = ctx->property()) {
+				printProperty(prop);
+			} else if (auto fr = ctx->friendDeclaration()) {
+				printFriendDeclaration(fr);
+			} else if (auto func = ctx->functionTemplateDeclaration()) {
+				if (isStructDeclaration) {
+					printFunctionTemplateDeclaration(func);
+				}
+			} else if (auto vdecl = ctx->memberVersionConditionalDeclaration()) {
+				if (isStructDeclaration) {
+					out << "#if ";
+					if (vdecl->condition()) {
+						isVersionCondition = true;
+						printCondition(vdecl->condition());
+						isVersionCondition = false;
 					}
-				}
-				out << std::endl << std::string(depth, '\t');
 
-				if (auto decl = vdecl->memberVersionIfDeclaration()) {
-					if (auto member = decl->structMemberDeclaration()) {
-						printStructMemberDeclaration(member);
-					} else {
-						printMemberDeclarationCompoundStatement(
-						    decl->memberDeclarationCompoundStatement());
+					if (vdecl->Debug()) {
+						if (vdecl->not_())
+							out << "!";
+						if (auto id = vdecl->Identifier()) {
+							out << "ADV_DEBUG_";
+							printIdentifier(id);
+						} else {
+							out << "_DEBUG";
+						}
 					}
-				}
-				if (auto decl = vdecl->memberVersionElseDeclaration()) {
-					out << "#else" << std::endl << std::string(depth, '\t');
-					if (auto member = decl->structMemberDeclaration()) {
-						printStructMemberDeclaration(member);
-					} else {
-						printMemberDeclarationCompoundStatement(
-						    decl->memberDeclarationCompoundStatement());
+					out << std::endl << std::string(depth, '\t');
+
+					if (auto decl = vdecl->memberVersionIfDeclaration()) {
+						if (auto member = decl->structMemberDeclaration()) {
+							printStructMemberDeclaration(member);
+						} else {
+							printMemberDeclarationCompoundStatement(
+							    decl->memberDeclarationCompoundStatement());
+						}
 					}
+					if (auto decl = vdecl->memberVersionElseDeclaration()) {
+						out << "#else" << std::endl << std::string(depth, '\t');
+						if (auto member = decl->structMemberDeclaration()) {
+							printStructMemberDeclaration(member);
+						} else {
+							printMemberDeclarationCompoundStatement(
+							    decl->memberDeclarationCompoundStatement());
+						}
+					}
+					out << "#endif" << std::endl << std::string(depth, '\t');
 				}
-				out << "#endif" << std::endl << std::string(depth, '\t');
+			} else if (auto type = ctx->structDefinition()) {
+				printStructDefinition(type);
+			} else if (auto type = ctx->classDefinition()) {
+				printClassDefinition(type);
+			} else if (auto type = ctx->enumDefinition()) {
+				printEnumDefinition(type);
+			} else if (auto type = ctx->enumClassDefinition()) {
+				printEnumClassDefinition(type);
 			}
-		} else if (auto type = ctx->structDefinition()) {
-			printStructDefinition(type);
-		} else if (auto type = ctx->classDefinition()) {
-			printClassDefinition(type);
-		} else if (auto type = ctx->enumDefinition()) {
-			printEnumDefinition(type);
-		} else if (auto type = ctx->enumClassDefinition()) {
-			printEnumClassDefinition(type);
+			currentAccessSpecifier = prevAccess;
 		}
-		currentAccessSpecifier = prevAccess;
-	}
 
-	void AstrumCodegen::printMemberDeclarationCompoundStatement(
-	    AstrumParser::MemberDeclarationCompoundStatementContext* ctx) {
-		for (auto decl : ctx->structMemberDeclaration()) {
-			if (isStructDeclaration)
-				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-				    << std::string(depth, '\t');
-			printStructMemberDeclaration(decl);
-			if (isStructDeclaration)
-				out << "\n" << std::string(depth, '\t');
-		}
-	}
-
-	void AstrumCodegen::printEnumDefinition(AstrumParser::EnumDefinitionContext* ctx) {
-		if (isStructDeclaration || functionBody)
-			return;
-
-		if (ctx->enumMemberSpecification()) {
-			printEnumMemberSpecification(ctx->enumMemberSpecification());
-		}
-	}
-
-	void AstrumCodegen::printEnumMemberSpecification(
-	    AstrumParser::EnumMemberSpecificationContext* ctx) {
-		for (auto decl : ctx->enumMemberDeclaration()) { printEnumMemberDeclaration(decl); }
-	}
-
-	void AstrumCodegen::printEnumMemberDeclaration(
-	    AstrumParser::EnumMemberDeclarationContext* ctx) {
-		if (ctx->functionDefinition()) {
-			printFunctionDefinition(ctx->functionDefinition());
-		} else if (ctx->property()) {
-			printProperty(ctx->property());
-		}
-	}
-
-	void AstrumCodegen::printEnumClassDefinition(AstrumParser::EnumClassDefinitionContext* ctx) {
-		if (isStructDeclaration || functionBody)
-			return;
-
-		currentType = ctx->enumClassHead()->Identifier()->getText();
-		printEnumClassList(ctx->enumClassList());
-		if (ctx->enumClassMemberSpecification()) {
-			printEnumClassMemberSpecification(ctx->enumClassMemberSpecification());
-		}
-	}
-
-	void AstrumCodegen::printEnumClassList(AstrumParser::EnumClassListContext* ctx) {}
-
-	void AstrumCodegen::printEnumClassEnumerator(
-	    AstrumParser::ClassEnumeratorDefinitionContext* ctx) {}
-
-	void AstrumCodegen::printEnumClassMemberSpecification(
-	    AstrumParser::EnumClassMemberSpecificationContext* ctx) {
-		for (auto decl : ctx->structMemberDeclaration()) { printStructMemberDeclaration(decl); }
-	}
-
-	void AstrumCodegen::printAttributeSpecifierSeq(
-	    AstrumParser::AttributeSpecifierSeqContext* ctx) {
-		for (auto attr : ctx->attributeSpecifier()) {
-			printAttributeSpecifier(attr);
-			out << " ";
-		}
-	}
-
-	void AstrumCodegen::printAttributeSpecifier(AstrumParser::AttributeSpecifierContext* ctx) {
-		out << "[[clang::annotate(\"UserAttr: ";
-		if (ctx->nestedNameSpecifier()) {
-			printNestedNameSpecifier(ctx->nestedNameSpecifier());
-		}
-		printIdentifier(ctx->Identifier());
-		if (ctx->attributeArgumentClause()) {
-			printAttributeArgumentClause(ctx->attributeArgumentClause());
-		}
-		out << "\")]]";
-	}
-
-	void AstrumCodegen::printAttributeArgumentClause(
-	    AstrumParser::AttributeArgumentClauseContext* ctx) {
-		out << "(";
-		printExpressionList(ctx->expressionList());
-		out << ")";
-	}
-
-	void AstrumCodegen::printOperator(AstrumParser::OperatorContext* ctx) { out << ctx->getText(); }
-
-	void AstrumCodegen::printOperatorTemplateId(AstrumParser::OperatorTemplateIdContext* ctx) {
-		printOperatorFunctionId(ctx->operatorFunctionId());
-		out << "<";
-		if (auto args = ctx->templateArgumentList()) {
-			printTemplateArgumentList(args);
-		}
-		out << ">";
-	}
-
-	void AstrumCodegen::printOperatorFunctionId(AstrumParser::OperatorFunctionIdContext* ctx) {
-		auto op = ctx->operator_();
-		if (op->In()) {
-			out << "_operator_in";
-		} else if (op->DoubleCaret() || op->Tilde() || op->TildeAssign() || op->DoubleStar() ||
-		           op->DoubleStarAssign() || op->Greater().size() > 2 ||
-		           op->SignedRightShiftAssign() || op->Op1() || op->Op2() || op->Op3() ||
-		           op->Op4() || op->Op5() || op->Op6() || op->Op7() || op->Op8() || op->Op9() ||
-		           op->Op10()) {
-			out << sema.getCustomOperatorName(op->getText());
-		} else {
-			out << "operator ";
-			printOperator(ctx->operator_());
-		}
-	}
-
-	void AstrumCodegen::printConversionFunctionId(AstrumParser::ConversionFunctionIdContext* ctx) {
-		out << "operator ";
-		printTypeId(ctx->theTypeId());
-	}
-
-	void AstrumCodegen::printTemplateArgumentList(AstrumParser::TemplateArgumentListContext* ctx) {
-		bool first = true;
-		for (auto arg : ctx->templateArgument()) {
-			if (!first)
-				out << ", ";
-			first = false;
-			printTemplateArgument(arg);
-		}
-	}
-
-	void AstrumCodegen::printTemplateArgument(AstrumParser::TemplateArgumentContext* ctx) {
-		if (auto t = ctx->theTypeId()) {
-			printTypeId(t);
-		} else if (auto expr = ctx->conditionalExpression()) {
-			printConditionalExpression(expr);
-		} else if (auto id = ctx->idExpression()) {
-			printIdExpression(id);
-		}
-		if (ctx->Ellipsis())
-			out << "...";
-	}
-
-	void AstrumCodegen::printBaseSpecifier(AstrumParser::BaseSpecifierContext* ctx) {
-		if (ctx->nestedNameSpecifier()) {
-			printNestedNameSpecifier(ctx->nestedNameSpecifier());
-		}
-		printClassName(ctx->className());
-	}
-
-	void AstrumCodegen::printConstructor(AstrumParser::ConstructorContext* ctx) {
-		if (ctx->Default())
-			return;
-		isVoidReturn = true;
-		sema.symbolContexts.push(sema.symbolContexts.top());
-		bool prevUnsafe    = isUnsafe;
-		SourcePosition pos = {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()};
-		if (sema.methods.contains(pos)) {
-			const MethodDefinition& func = sema.methods[pos];
-
-			if (func.access != AccessSpecifier::Private &&
-			    (func.isInline || func.templateParams || func.parentTemplateParams ||
-			     func.parentTemplateSpecializationArgs)) {
-				out.switchTo(true);
-				emptyLine = true;
-			}
-			if (!func.compilationCondition.empty()) {
-				out << "#if " << func.compilationCondition << std::endl;
-			}
-			if (func.isProtectedType) {
-				out << "namespace __" << filename << "_Protected"
-				    << (func.isUnsafeType ? "__Unsafe" : "") << " {\n"
-				    << std::string(++depth, '\t');
-			} else if (func.isUnsafeType) {
-				out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
-				    << std::string(++depth, '\t');
-			}
-
-			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			if (func.parentTemplateParams) {
-				printTemplateParams(func.parentTemplateParams);
-				out << " ";
-				if (func.parentConstraints) {
-					printConstraintClause(func.parentConstraints);
-					out << " ";
-				}
-			} else if (func.parentTemplateSpecializationArgs) {
-				out << "template<> ";
-			}
-			if (func.templateParams) {
-				printTemplateParams(func.templateParams);
-				out << " ";
-				if (func.constraints) {
-					printConstraintClause(func.constraints);
-					out << " ";
-				}
-			}
-			if (func.isConsteval) {
-				out << "inline consteval ";
-			} else if (func.isConstexpr) {
-				out << "inline constexpr ";
-			} else if (func.isInline) {
-				out << "inline ";
-			}
-
-			auto parent = func.parentType;
-			StringReplace(parent, ".", "::");
-			StringReplace(parent, "::::::", "...");
-			auto pos = parent.find("<{{specialization}}>");
-			if (pos != parent.npos) {
-				out << parent.substr(0, pos);
-				out << "<";
-				printTemplateArgumentList(func.parentTemplateSpecializationArgs);
-				out << ">";
-				out << parent.substr(pos + 20);
-			} else {
-				out << parent;
-			}
-			currentShortType        = func.shortType;
-			currentTypeWithTemplate = parent;
-			out << "::" << func.id;
-			isUnsafe = func.isUnsafe;
-			printFunctionParameters(func.params);
-			isVariadicTemplate = false;
-			out << " ";
-			if (func.exceptionSpecification)
-				printExceptionSpecification(func.exceptionSpecification);
-			isUnsafe = func.isUnsafe;
-			currentShortType.clear();
-			currentTypeWithTemplate.clear();
-			currentType = func.id;
-			if (auto body = ctx->constructorBody()) {
-				functionProlog = true;
-				printConstructorBody(body);
-			} else {
-				printDelegatingConstructorBody(ctx->delegatingConstructorBody());
-			}
-			if (func.isProtectedType || func.isUnsafeType)
-				out << "\n" << std::string(--depth, '\t') << "}";
-			out << std::endl;
-			if (!func.compilationCondition.empty()) {
-				out << "#endif " << std::endl;
-			}
-			out.switchTo(false);
-		} else {
-			if (!currentAccessSpecifier)
-				currentAccessSpecifier = AccessSpecifier::Private;
-			switch (*currentAccessSpecifier) {
-				case AccessSpecifier::Public:
-				case AccessSpecifier::Internal:
-					out << "public: ";
-					break;
-				case AccessSpecifier::Protected:
-				case AccessSpecifier::ProtectedInternal:
-					out << "protected: ";
-					break;
-				case AccessSpecifier::Private:
-					out << "private: ";
-					break;
-			}
-
-			if (auto tparams = ctx->templateParams()) {
-				printTemplateParams(tparams);
-				out << " ";
-			}
-
-			bool isInline    = false;
-			bool isConstexpr = false;
-			isUnsafe         = ctx->Unsafe();
-			if (ctx->Inline())
-				isInline = true;
-
-			if (auto body = ctx->constructorBody()) {
-				if (body->Equal())
-					isConstexpr = true;
-				else if (body->Assign())
-					isInline = true;
-			} else if (auto body = ctx->delegatingConstructorBody()) {
-				if (body->EqualArrow())
-					isConstexpr = true;
-				else if (body->AssignArrow())
-					isInline = true;
-			}
-
-			if (isConstexpr) {
-				out << "inline constexpr ";
-			} else if (isInline) {
-				out << "inline ";
-			}
-
-			if (ctx->implicitSpecification()) {
-				printImplicitSpecification(ctx->implicitSpecification());
-			} else if (ctx->functionParams()->paramDeclClause() && ctx->functionParams()
-			                                                               ->paramDeclClause()
-			                                                               ->paramDeclList()
-			                                                               ->paramDeclaration()
-			                                                               .size() == 1) {
-				out << "explicit ";
-			}
-
-			out << currentShortType;
-
-			printFunctionParameters(ctx->functionParams());
-			isVariadicTemplate = false;
-			out << " ";
-			if (ctx->exceptionSpecification())
-				printExceptionSpecification(ctx->exceptionSpecification());
-			if (auto body = ctx->constructorBody()) {
-				printConstructorBody(body);
-			} else if (auto body = ctx->delegatingConstructorBody()) {
-				printDelegatingConstructorBody(ctx->delegatingConstructorBody());
-			} else {
-				out << " = default;";
-			}
-			out << std::endl;
-		}
-		isUnsafe = prevUnsafe;
-		refParameters.clear();
-		sema.symbolContexts.pop();
-	}
-
-	void AstrumCodegen::printConstructorBody(AstrumParser::ConstructorBodyContext* ctx) {
-		bool isDelegating     = ctx->delegatingConstructorStatement();
-		bool isDelegatingThis = false;
-		if (isDelegating && !isExtension) {
-			out << " :\n"
-			    << std::string(depth, '\t') << "#line "
-			    << ctx->delegatingConstructorStatement()->getStart()->getLine() << " \""
-			    << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			printDelegatingConstructorStatement(ctx->delegatingConstructorStatement());
-			isDelegatingThis = ctx->delegatingConstructorStatement()->This();
-		}
-		bool first = true;
-		std::unordered_set<std::string> initializedFields;
-		std::unordered_set<AstrumParser::MemberInitializationStatementContext*>
-		    initializedMemberStatements;
-		std::vector<AstrumParser::MemberInitializationStatementContext*>
-		    memberInitializationStatements;
-		if (ctx->memberInitializationList())
-			memberInitializationStatements =
-			    ctx->memberInitializationList()->memberInitializationStatement();
-		bool prev    = functionBody;
-		functionBody = true;
-		if (!isDelegatingThis && !isExtension) {
-			for (auto init : memberInitializationStatements) {
-				auto id = init->Identifier()->getText();
-				if (sema.currentFields[ctx].contains(id) && !initializedFields.contains(id)) {
-					if (first && !isDelegating)
-						out << " : ";
-					else
-						out << ", ";
-					first = false;
-					initializedFields.insert(id);
-					initializedMemberStatements.insert(init);
-					out << "\n"
-					    << std::string(depth, '\t') << "#line " << init->getStart()->getLine()
-					    << " \"" << fullFilename << ".ast\"\n"
+		void AstrumCodegen::printMemberDeclarationCompoundStatement(
+		    AstrumParser::MemberDeclarationCompoundStatementContext * ctx) {
+			for (auto decl : ctx->structMemberDeclaration()) {
+				if (isStructDeclaration)
+					out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename
+					    << ".ast\"\n"
 					    << std::string(depth, '\t');
-					printMemberInitializationStatement(init, false);
-				}
+				printStructMemberDeclaration(decl);
+				if (isStructDeclaration)
+					out << "\n" << std::string(depth, '\t');
 			}
-		}
-		out << "\n" << std::string(depth, '\t');
-		sema.symbolContexts.push(sema.symbolContexts.top());
-		currentLabel.clear();
-		out << "{";
-		++depth;
-		if (isUnsafe)
-			out << "\tusing namespace Builtin::Unsafe;\tusing namespace __Unsafe;\tusing "
-			       "namespace __"
-			    << filename << "_Protected__Unsafe;";
-		bool funcTopLevel = functionProlog;
-		if (functionProlog) {
-			if (isUnsafe) {
-				out << "\n"
-				    << std::string(depth, '\t')
-				    << "Builtin::CheckForUnsafeContext(); Builtin::UnsafeContextGuard "
-				       "__unsafe_context_guard"
-				    << ctx->getStart()->getLine() << "{};";
-			}
-			for (const auto& [id, type] : refParameters) {
-				out << "\n" << std::string(depth, '\t');
-				printTypeId(type);
-				out << "& " << id << " = __" << id << "__;";
-			}
-			functionProlog = false;
-		} else if (isUnsafe) {
-			out << "\tBuiltin::UnsafeContextGuard __unsafe_context_guard"
-			    << ctx->getStart()->getLine() << "{};";
 		}
 
-		isUnsafe = false;
-		if (isExtension) {
-			out << "\n"
-			    << std::string(depth, '\t') << "#line "
-			    << ctx->delegatingConstructorStatement()->getStart()->getLine() << " \""
-			    << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			printDelegatingConstructorStatement(ctx->delegatingConstructorStatement());
-		}
-		for (auto stat : memberInitializationStatements) {
-			if (initializedMemberStatements.contains(stat))
-				continue;
-			out << "\n"
-			    << std::string(depth, '\t') << "#line " << stat->getStart()->getLine() << " \""
-			    << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			printMemberInitializationStatement(stat, true);
-		}
-		for (auto stat : ctx->statement()) {
-			out << "\n" << std::string(depth, '\t');
-			printStatement(stat);
-		}
-		if (isExtension) {
-			out << "\n" << std::string(depth, '\t');
-			out << "return __this;";
-		}
-		out << "\n" << std::string(--depth, '\t') << "}";
-		sema.symbolContexts.pop();
-		functionBody = prev;
-	}
+		void AstrumCodegen::printEnumDefinition(AstrumParser::EnumDefinitionContext * ctx) {
+			if (isStructDeclaration || functionBody)
+				return;
 
-	void AstrumCodegen::printDelegatingConstructorBody(
-	    AstrumParser::DelegatingConstructorBodyContext* ctx) {
-		out << " : ";
-		if (ctx->delegatingConstructorStatement())
-			printDelegatingConstructorStatement(ctx->delegatingConstructorStatement());
-		else if (ctx->memberInitializationStatement())
-			printMemberInitializationStatement(ctx->memberInitializationStatement());
-		out << " {}";
-	}
+			if (ctx->enumMemberSpecification()) {
+				printEnumMemberSpecification(ctx->enumMemberSpecification());
+			}
+		}
 
-	void AstrumCodegen::printDelegatingConstructorStatement(
-	    AstrumParser::DelegatingConstructorStatementContext* ctx) {
-		if (isExtension) {
-			out << "auto __this = new (__ctordata.memory) typename Builtin::ConstructorProxy<"
-			    << currentType;
-			bool first = true;
-			if (currentTemplateParams) {
-				out << "<";
-				for (auto param : currentTemplateParams->templateParamDeclaration()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printIdentifier(param->Identifier());
-					if (param->Ellipsis())
-						out << "...";
-				}
-				out << ">";
-			} else if (currentTemplateSpecArgs) {
-				out << "<";
-				printTemplateArgumentList(currentTemplateSpecArgs);
-				out << ">";
+		void AstrumCodegen::printEnumMemberSpecification(
+		    AstrumParser::EnumMemberSpecificationContext * ctx) {
+			for (auto decl : ctx->enumMemberDeclaration()) { printEnumMemberDeclaration(decl); }
+		}
+
+		void AstrumCodegen::printEnumMemberDeclaration(AstrumParser::EnumMemberDeclarationContext *
+		                                               ctx) {
+			if (ctx->functionDefinition()) {
+				printFunctionDefinition(ctx->functionDefinition());
+			} else if (ctx->property()) {
+				printProperty(ctx->property());
 			}
-			out << ">::ConstructingType(";
-			printExpressionList(ctx->expressionList());
-			out << ");";
-		} else {
-			if (ctx->This()) {
-				out << currentType;
-			} else if (ctx->Super()) {
-				out << "___super";
+		}
+
+		void AstrumCodegen::printEnumClassDefinition(AstrumParser::EnumClassDefinitionContext *
+		                                             ctx) {
+			if (isStructDeclaration || functionBody)
+				return;
+
+			currentType = ctx->enumClassHead()->Identifier()->getText();
+			printEnumClassList(ctx->enumClassList());
+			if (ctx->enumClassMemberSpecification()) {
+				printEnumClassMemberSpecification(ctx->enumClassMemberSpecification());
 			}
+		}
+
+		void AstrumCodegen::printEnumClassList(AstrumParser::EnumClassListContext * ctx) {}
+
+		void AstrumCodegen::printEnumClassEnumerator(
+		    AstrumParser::ClassEnumeratorDefinitionContext * ctx) {}
+
+		void AstrumCodegen::printEnumClassMemberSpecification(
+		    AstrumParser::EnumClassMemberSpecificationContext * ctx) {
+			for (auto decl : ctx->structMemberDeclaration()) { printStructMemberDeclaration(decl); }
+		}
+
+		void AstrumCodegen::printAttributeSpecifierSeq(AstrumParser::AttributeSpecifierSeqContext *
+		                                               ctx) {
+			for (auto attr : ctx->attributeSpecifier()) {
+				printAttributeSpecifier(attr);
+				out << " ";
+			}
+		}
+
+		void AstrumCodegen::printAttributeSpecifier(AstrumParser::AttributeSpecifierContext * ctx) {
+			out << "[[clang::annotate(\"UserAttr: ";
+			if (ctx->nestedNameSpecifier()) {
+				printNestedNameSpecifier(ctx->nestedNameSpecifier());
+			}
+			printIdentifier(ctx->Identifier());
+			if (ctx->attributeArgumentClause()) {
+				printAttributeArgumentClause(ctx->attributeArgumentClause());
+			}
+			out << "\")]]";
+		}
+
+		void AstrumCodegen::printAttributeArgumentClause(
+		    AstrumParser::AttributeArgumentClauseContext * ctx) {
 			out << "(";
 			printExpressionList(ctx->expressionList());
 			out << ")";
 		}
-	}
 
-	void AstrumCodegen::printDestructor(AstrumParser::DestructorContext* ctx) {
-		sema.symbolContexts.push(sema.symbolContexts.top());
-		bool prevUnsafe    = isUnsafe;
-		SourcePosition pos = {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()};
-		isDestructor       = true;
-		isVoidReturn       = true;
-		if (sema.methods.contains(pos)) {
-			const MethodDefinition& func = sema.methods[pos];
-			if (func.access != AccessSpecifier::Private &&
-			    (func.isInline || func.parentTemplateParams ||
-			     func.parentTemplateSpecializationArgs)) {
-				out.switchTo(true);
-				emptyLine = true;
-			}
-			if (!func.compilationCondition.empty()) {
-				out << "#if " << func.compilationCondition << std::endl;
-			}
-			if (func.isProtectedType) {
-				out << "namespace __" << filename << "_Protected"
-				    << (func.isUnsafeType ? "__Unsafe" : "") << " {\n"
-				    << std::string(++depth, '\t');
-			} else if (func.isUnsafeType) {
-				out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
-				    << std::string(++depth, '\t');
-			}
-
-			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			if (func.parentTemplateParams) {
-				printTemplateParams(func.parentTemplateParams);
-				out << " ";
-				if (func.parentConstraints) {
-					printConstraintClause(func.parentConstraints);
-					out << " ";
-				}
-			} else if (func.parentTemplateSpecializationArgs) {
-				out << "template<> ";
-			}
-			if (func.isConstexpr) {
-				out << "inline constexpr ";
-			} else if (func.isInline) {
-				out << "inline ";
-			}
-
-			auto parent = func.parentType;
-			StringReplace(parent, ".", "::");
-			StringReplace(parent, "::::::", "...");
-			auto pos = parent.find("<{{specialization}}>");
-			if (pos != parent.npos) {
-				out << parent.substr(0, pos);
-				out << "<";
-				printTemplateArgumentList(func.parentTemplateSpecializationArgs);
-				out << ">";
-				out << parent.substr(pos + 20);
-			} else {
-				out << parent;
-			}
-			currentShortType        = func.shortType;
-			currentTypeWithTemplate = parent;
-			out << "::" << func.id;
-			isUnsafe           = func.isUnsafe;
-			isVariadicTemplate = false;
-			out << "() ";
-			if (func.exceptionSpecification)
-				printExceptionSpecification(func.exceptionSpecification);
-			isUnsafe = func.isUnsafe;
-			currentShortType.clear();
-			currentTypeWithTemplate.clear();
-			currentType = func.id;
-			if (auto body = ctx->functionBody()) {
-				functionProlog = true;
-				printFunctionBody(body);
-			} else {
-				printShortFunctionBody(ctx->shortFunctionBody());
-			}
-			if (func.isProtectedType || func.isUnsafeType)
-				out << "\n" << std::string(--depth, '\t') << "}";
-			out << std::endl;
-			if (!func.compilationCondition.empty()) {
-				out << "#endif " << std::endl;
-			}
-			out.switchTo(false);
-		} else {
-			out << "public: ";
-
-			bool isInline    = false;
-			bool isConstexpr = false;
-			if (ctx->Inline())
-				isInline = true;
-
-			if (auto body = ctx->functionBody()) {
-				if (body->Equal())
-					isConstexpr = true;
-				else if (body->Assign())
-					isInline = true;
-			} else if (auto body = ctx->shortFunctionBody()) {
-				if (body->EqualArrow())
-					isConstexpr = true;
-				else if (body->AssignArrow())
-					isInline = true;
-			}
-
-			if (isConstexpr) {
-				out << "inline constexpr ";
-			} else if (isInline) {
-				out << "inline ";
-			}
-
-			out << "~" << currentShortType << "() ";
-			if (ctx->exceptionSpecification())
-				printExceptionSpecification(ctx->exceptionSpecification());
-			if (auto body = ctx->functionBody()) {
-				functionProlog = true;
-				printFunctionBody(body);
-			} else {
-				printShortFunctionBody(ctx->shortFunctionBody());
-			}
-			out << std::endl;
-		}
-		isDestructor = false;
-		isUnsafe     = prevUnsafe;
-		sema.symbolContexts.pop();
-	}
-
-	void AstrumCodegen::printMemberInitializationStatement(
-	    AstrumParser::MemberInitializationStatementContext* ctx, bool insideBody) {
-		if (ctx->This() && insideBody) {
-			if (isExtension)
-				out << "__";
-			out << "this->";
-		}
-		printIdentifier(ctx->Identifier());
-		if (insideBody)
-			out << " = ";
-		auto txt = ctx->initializerClause()->getText();
-		if (refParameters.contains(txt) && !insideBody) {
-			out << "(__" << txt << "__)";
-		} else {
-			if (!insideBody)
-				out << "{";
-			printInitializerClause(ctx->initializerClause());
-			if (insideBody)
-				out << ";";
-			else
-				out << "}";
-		}
-	}
-
-	void AstrumCodegen::printStaticConstructor(AstrumParser::StaticConstructorContext* ctx) {
-		sema.symbolContexts.push(sema.symbolContexts.top());
-		SourcePosition pos = {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()};
-		isVoidReturn       = true;
-		if (sema.methods.contains(pos)) {
-			const MethodDefinition& func = sema.methods[pos];
-
-			if (func.isInline || func.parentTemplateParams ||
-			    func.parentTemplateSpecializationArgs) {
-				out.switchTo(true);
-				emptyLine = true;
-			}
-			if (!func.compilationCondition.empty()) {
-				out << "#if " << func.compilationCondition << std::endl;
-			}
-			if (func.isProtectedType) {
-				out << "namespace __" << filename << "_Protected"
-				    << (func.isUnsafeType ? "__Unsafe" : "") << " {\n"
-				    << std::string(++depth, '\t');
-			} else if (func.isUnsafeType) {
-				out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
-				    << std::string(++depth, '\t');
-			}
-
-			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			if (func.parentTemplateParams) {
-				printTemplateParams(func.parentTemplateParams);
-				out << " ";
-				if (func.parentConstraints) {
-					printConstraintClause(func.parentConstraints);
-					out << " ";
-				}
-			} else if (func.parentTemplateSpecializationArgs) {
-				out << "template<> ";
-			}
-			if (func.templateParams) {
-				printTemplateParams(func.templateParams);
-				out << " ";
-				if (func.constraints) {
-					printConstraintClause(func.constraints);
-					out << " ";
-				}
-			}
-			if (func.isConstexpr) {
-				out << "inline constexpr ";
-			} else if (func.isInline) {
-				out << "inline ";
-			}
-
-			auto parent = func.parentType;
-			StringReplace(parent, ".", "::");
-			StringReplace(parent, "::::::", "...");
-			auto pos = parent.find("<{{specialization}}>");
-			if (pos != parent.npos) {
-				out << parent.substr(0, pos);
-				out << "<";
-				printTemplateArgumentList(func.parentTemplateSpecializationArgs);
-				out << ">";
-				out << parent.substr(pos + 20);
-			} else {
-				out << parent;
-			}
-			currentShortType        = func.shortType;
-			currentTypeWithTemplate = parent;
-			out << "::__sctor::__sctor() ";
-			currentShortType.clear();
-			currentTypeWithTemplate.clear();
-			currentType = func.id;
-			if (auto body = ctx->functionBody()) {
-				functionProlog = true;
-				printFunctionBody(body);
-			} else {
-				printShortFunctionBody(ctx->shortFunctionBody());
-			}
-			if (func.isProtectedType || func.isUnsafeType)
-				out << "\n" << std::string(--depth, '\t') << "}";
-			out << std::endl;
-			if (!func.compilationCondition.empty()) {
-				out << "#endif " << std::endl;
-			}
-			out.switchTo(false);
+		void AstrumCodegen::printOperator(AstrumParser::OperatorContext * ctx) {
+			out << ctx->getText();
 		}
 
-		refParameters.clear();
-		sema.symbolContexts.pop();
-	}
-
-	void AstrumCodegen::printStaticDestructor(AstrumParser::StaticDestructorContext* ctx) {
-		sema.symbolContexts.push(sema.symbolContexts.top());
-		SourcePosition pos = {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()};
-		isVoidReturn       = true;
-		if (sema.methods.contains(pos)) {
-			const MethodDefinition& func = sema.methods[pos];
-
-			if (func.isInline || func.parentTemplateParams ||
-			    func.parentTemplateSpecializationArgs) {
-				out.switchTo(true);
-				emptyLine = true;
+		void AstrumCodegen::printOperatorTemplateId(AstrumParser::OperatorTemplateIdContext * ctx) {
+			printOperatorFunctionId(ctx->operatorFunctionId());
+			out << "<";
+			if (auto args = ctx->templateArgumentList()) {
+				printTemplateArgumentList(args);
 			}
-			if (!func.compilationCondition.empty()) {
-				out << "#if " << func.compilationCondition << std::endl;
-			}
-			if (func.isProtectedType) {
-				out << "namespace __" << filename << "_Protected"
-				    << (func.isUnsafeType ? "__Unsafe" : "") << " {\n"
-				    << std::string(++depth, '\t');
-			} else if (func.isUnsafeType) {
-				out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
-				    << std::string(++depth, '\t');
-			}
-
-			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			if (func.parentTemplateParams) {
-				printTemplateParams(func.parentTemplateParams);
-				out << " ";
-				if (func.parentConstraints) {
-					printConstraintClause(func.parentConstraints);
-					out << " ";
-				}
-			} else if (func.parentTemplateSpecializationArgs) {
-				out << "template<> ";
-			}
-			if (func.templateParams) {
-				printTemplateParams(func.templateParams);
-				out << " ";
-				if (func.constraints) {
-					printConstraintClause(func.constraints);
-					out << " ";
-				}
-			}
-			if (func.isConstexpr) {
-				out << "inline constexpr ";
-			} else if (func.isInline) {
-				out << "inline ";
-			}
-
-			auto parent = func.parentType;
-			StringReplace(parent, ".", "::");
-			StringReplace(parent, "::::::", "...");
-			auto pos = parent.find("<{{specialization}}>");
-			if (pos != parent.npos) {
-				out << parent.substr(0, pos);
-				out << "<";
-				printTemplateArgumentList(func.parentTemplateSpecializationArgs);
-				out << ">";
-				out << parent.substr(pos + 20);
-			} else {
-				out << parent;
-			}
-			currentShortType        = func.shortType;
-			currentTypeWithTemplate = parent;
-			out << "::__sctor::~__sctor() ";
-			currentShortType.clear();
-			currentTypeWithTemplate.clear();
-			currentType = func.id;
-			if (auto body = ctx->functionBody()) {
-				functionProlog = true;
-				printFunctionBody(body);
-			} else {
-				printShortFunctionBody(ctx->shortFunctionBody());
-			}
-			if (func.isProtectedType || func.isUnsafeType)
-				out << "\n" << std::string(--depth, '\t') << "}";
-			out << std::endl;
-			if (!func.compilationCondition.empty()) {
-				out << "#endif " << std::endl;
-			}
-			out.switchTo(false);
+			out << ">";
 		}
 
-		refParameters.clear();
-		sema.symbolContexts.pop();
-	}
-
-	void AstrumCodegen::printConversionFunction(AstrumParser::ConversionFunctionContext* ctx) {
-		sema.symbolContexts.push(sema.symbolContexts.top());
-		bool prevUnsafe    = isUnsafe;
-		SourcePosition pos = {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()};
-		if (sema.methods.contains(pos)) {
-			const MethodDefinition& func = sema.methods[pos];
-			if (func.access != AccessSpecifier::Private &&
-			    (func.isInline || func.templateParams || func.parentTemplateParams ||
-			     func.parentTemplateSpecializationArgs)) {
-				out.switchTo(true);
-				emptyLine = true;
-			}
-			if (!func.compilationCondition.empty()) {
-				out << "#if " << func.compilationCondition << std::endl;
-			}
-			if (func.isProtectedType) {
-				out << "namespace __" << filename << "_Protected"
-				    << (func.isUnsafeType ? "__Unsafe" : "") << " {\n"
-				    << std::string(++depth, '\t');
-			} else if (func.isUnsafeType) {
-				out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
-				    << std::string(++depth, '\t');
-			}
-
-			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			if (func.parentTemplateParams) {
-				printTemplateParams(func.parentTemplateParams);
-				out << " ";
-				if (func.parentConstraints) {
-					printConstraintClause(func.parentConstraints);
-					out << " ";
-				}
-			} else if (func.parentTemplateSpecializationArgs) {
-				out << "template<> ";
-			}
-			if (func.templateParams) {
-				printTemplateParams(func.templateParams);
-				out << " ";
-				if (func.constraints) {
-					printConstraintClause(func.constraints);
-					out << " ";
-				}
-			}
-			if (func.isConsteval) {
-				out << "inline consteval ";
-			} else if (func.isConstexpr) {
-				out << "inline constexpr ";
-			} else if (func.isInline) {
-				out << "inline ";
-			}
-
-			auto parent = func.parentType;
-			StringReplace(parent, ".", "::");
-			StringReplace(parent, "::::::", "...");
-			auto pos = parent.find("<{{specialization}}>");
-			if (pos != parent.npos) {
-				out << parent.substr(0, pos);
-				out << "<";
-				printTemplateArgumentList(func.parentTemplateSpecializationArgs);
-				out << ">";
-				out << parent.substr(pos + 20);
+		void AstrumCodegen::printOperatorFunctionId(AstrumParser::OperatorFunctionIdContext * ctx) {
+			auto op = ctx->operator_();
+			if (op->In()) {
+				out << "_operator_in";
+			} else if (op->DoubleCaret() || op->Tilde() || op->TildeAssign() || op->DoubleStar() ||
+			           op->DoubleStarAssign() || op->Greater().size() > 2 ||
+			           op->SignedRightShiftAssign() || op->Op1() || op->Op2() || op->Op3() ||
+			           op->Op4() || op->Op5() || op->Op6() || op->Op7() || op->Op8() || op->Op9() ||
+			           op->Op10()) {
+				out << sema.getCustomOperatorName(op->getText());
 			} else {
-				out << parent;
+				out << "operator ";
+				printOperator(ctx->operator_());
 			}
-			currentShortType        = func.shortType;
-			currentTypeWithTemplate = parent;
-			out << "::"
-			    << "operator ";
-			isUnsafe = func.isUnsafe;
-			printTypeId(func.returnType);
-			if (func.isConstReturn)
-				out << " const&";
-			else if (func.isRefReturn)
-				out << " &";
-			out << "() const ";
-			isVariadicTemplate = false;
-			if (func.exceptionSpecification)
-				printExceptionSpecification(func.exceptionSpecification);
-			/*if (func.isOverride) out << " override ";
-			if (func.isFinal) out << " final ";*/
-			isUnsafe = func.isUnsafe;
-			currentShortType.clear();
-			currentTypeWithTemplate.clear();
-			if (auto body = ctx->functionBody()) {
-				functionProlog = true;
-				printFunctionBody(body);
-			} else {
-				printShortFunctionBody(ctx->shortFunctionBody());
-			}
-			if (func.isProtectedType || func.isUnsafeType)
-				out << "\n" << std::string(--depth, '\t') << "}";
-			out << std::endl;
-			if (!func.compilationCondition.empty()) {
-				out << "#endif " << std::endl;
-			}
-			out.switchTo(false);
-		} else {
-			if (!currentAccessSpecifier)
-				currentAccessSpecifier = AccessSpecifier::Private;
-			switch (*currentAccessSpecifier) {
-				case AccessSpecifier::Public:
-				case AccessSpecifier::Internal:
-					out << "public: ";
-					break;
-				case AccessSpecifier::Protected:
-				case AccessSpecifier::ProtectedInternal:
-					out << "protected: ";
-					break;
-				case AccessSpecifier::Private:
-					out << "private: ";
-					break;
-			}
-
-			if (ctx->templateParams()) {
-				printTemplateParams(ctx->templateParams());
-				out << " ";
-			}
-
-			bool isInline    = false;
-			bool isConstexpr = false;
-			bool isVirtual   = false;
-			bool isOverride  = false;
-			bool isFinal     = false;
-			isUnsafe         = false;
-			for (auto spec : ctx->functionSpecifier()) {
-				if (spec->Inline())
-					isInline = true;
-				if (spec->Virtual())
-					isVirtual = true;
-				if (spec->Override())
-					isOverride = true;
-				if (spec->Final())
-					isFinal = true;
-				if (spec->Unsafe())
-					isUnsafe = true;
-			}
-
-			if (auto body = ctx->functionBody()) {
-				if (body->Equal())
-					isConstexpr = true;
-				else if (body->Assign())
-					isInline = true;
-			} else if (auto body = ctx->shortFunctionBody()) {
-				if (body->EqualArrow())
-					isConstexpr = true;
-				else if (body->AssignArrow())
-					isInline = true;
-			}
-
-			if (isConstexpr) {
-				out << "inline constexpr ";
-			} else if (isInline) {
-				out << "inline ";
-			}
-
-			if (ctx->implicitSpecification()) {
-				printImplicitSpecification(ctx->implicitSpecification());
-			} else {
-				out << "explicit ";
-			}
-
-			printConversionFunctionId(ctx->conversionFunctionId());
-			out << "() const ";
-			isVariadicTemplate = false;
-			if (ctx->exceptionSpecification())
-				printExceptionSpecification(ctx->exceptionSpecification());
-			/*if (isOverride) out << " override ";
-			if (isFinal) out << " final ";*/
-			currentShortType.clear();
-			currentTypeWithTemplate.clear();
-			if (auto body = ctx->functionBody()) {
-				functionProlog = true;
-				printFunctionBody(body);
-			} else {
-				printShortFunctionBody(ctx->shortFunctionBody());
-			}
-			out << std::endl;
 		}
-		isUnsafe = prevUnsafe;
-		sema.symbolContexts.pop();
-	}
 
-	void AstrumCodegen::printIndexer(AstrumParser::IndexerContext* ctx) {
-		sema.symbolContexts.push(sema.symbolContexts.top());
-		bool prevUnsafe       = isUnsafe;
-		bool prevFunctionBody = functionBody;
+		void AstrumCodegen::printConversionFunctionId(AstrumParser::ConversionFunctionIdContext *
+		                                              ctx) {
+			out << "operator ";
+			printTypeId(ctx->theTypeId());
+		}
 
-		SourcePosition pos = {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()};
-		if (sema.methods.contains(pos)) {
-			const MethodDefinition& func = sema.methods[pos];
-			if (func.access != AccessSpecifier::Private &&
-			    (func.isInline || func.templateParams || func.indexerSetter ||
-			     func.parentTemplateParams || func.parentTemplateSpecializationArgs)) {
-				out.switchTo(true);
-				emptyLine = true;
+		void AstrumCodegen::printTemplateArgumentList(AstrumParser::TemplateArgumentListContext *
+		                                              ctx) {
+			bool first = true;
+			for (auto arg : ctx->templateArgument()) {
+				if (!first)
+					out << ", ";
+				first = false;
+				printTemplateArgument(arg);
 			}
-			bool isUnchecked = false;
-			if (func.attributes)
-				for (auto attr : func.attributes->attributeSpecifier()) {
-					auto attrName = attr->Identifier()->getText();
-					if (attrName == "Unchecked")
-						isUnchecked = true;
+		}
+
+		void AstrumCodegen::printTemplateArgument(AstrumParser::TemplateArgumentContext * ctx) {
+			if (auto t = ctx->theTypeId()) {
+				printTypeId(t);
+			} else if (auto expr = ctx->conditionalExpression()) {
+				printConditionalExpression(expr);
+			} else if (auto id = ctx->idExpression()) {
+				printIdExpression(id);
+			}
+			if (ctx->Ellipsis())
+				out << "...";
+		}
+
+		void AstrumCodegen::printBaseSpecifier(AstrumParser::BaseSpecifierContext * ctx) {
+			if (ctx->nestedNameSpecifier()) {
+				printNestedNameSpecifier(ctx->nestedNameSpecifier());
+			}
+			printClassName(ctx->className());
+		}
+
+		void AstrumCodegen::printConstructor(AstrumParser::ConstructorContext * ctx) {
+			if (ctx->Default())
+				return;
+			isVoidReturn = true;
+			sema.symbolContexts.push(sema.symbolContexts.top());
+			bool prevUnsafe    = isUnsafe;
+			SourcePosition pos = {ctx->getStart()->getLine(),
+			                      ctx->getStart()->getCharPositionInLine()};
+			if (sema.methods.contains(pos)) {
+				const MethodDefinition& func = sema.methods[pos];
+
+				if (func.access != AccessSpecifier::Private &&
+				    (func.isInline || func.templateParams || func.parentTemplateParams ||
+				     func.parentTemplateSpecializationArgs)) {
+					out.switchTo(true);
+					emptyLine = true;
 				}
-			if (!func.compilationCondition.empty()) {
-				out << "#if " << func.compilationCondition << std::endl;
-			}
-			if (func.isProtectedType) {
-				out << "namespace __" << filename << "_Protected"
-				    << (func.isUnsafeType ? "__Unsafe" : "") << " {\n"
-				    << std::string(++depth, '\t');
-			} else if (func.isUnsafeType) {
-				out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
-				    << std::string(++depth, '\t');
-			}
-
-			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			if (func.parentTemplateParams) {
-				printTemplateParams(func.parentTemplateParams);
-				out << " ";
-				if (func.parentConstraints) {
-					printConstraintClause(func.parentConstraints);
-					out << " ";
+				if (!func.compilationCondition.empty()) {
+					out << "#if " << func.compilationCondition << std::endl;
 				}
-			} else if (func.parentTemplateSpecializationArgs) {
-				out << "template<> ";
-			}
-			if (func.templateParams) {
-				printTemplateParams(func.templateParams);
-				out << " ";
-			}
-			if (func.isConsteval) {
-				out << "inline consteval ";
-			} else if (func.isConstexpr) {
-				out << "inline constexpr ";
-			} else if (func.isInline) {
-				out << "inline ";
-			}
-
-			out << "auto ";
-			auto parent = func.parentType;
-			StringReplace(parent, ".", "::");
-			StringReplace(parent, "::::::", "...");
-			auto pos = parent.find("<{{specialization}}>");
-			if (pos != parent.npos) {
-				out << parent.substr(0, pos);
-				out << "<";
-				printTemplateArgumentList(func.parentTemplateSpecializationArgs);
-				out << ">";
-				out << parent.substr(pos + 20);
-			} else {
-				out << parent;
-			}
-			currentShortType        = func.shortType;
-			currentTypeWithTemplate = parent;
-			out << "::" << func.id;
-			isUnsafe = func.isUnsafe;
-			out << "(";
-			if (isUnchecked) {
-				out << "Builtin::UncheckedTag, ";
-			}
-			printParamDeclClause(func.indexerParams);
-			out << ") ";
-			isVariadicTemplate = false;
-			if (!func.isStatic) {
-				if (func.isConstReturn)
-					out << "const ";
-			}
-			if (func.exceptionSpecification)
-				printExceptionSpecification(func.exceptionSpecification);
-			out << " -> ";
-			if (func.isConstReturn)
-				out << "const ";
-			if (func.indexerSetter) {
-				out << "__IndexerAccessor_" << func.pos.line << "<";
-				printTypeId(func.returnType);
-				if (func.isRefReturn)
-					out << "&";
-				out << ">";
-			} else if (func.returnType) {
-				auto ret = func.returnType;
-				if (!func.isRefReturn)
-					out << "const ";
-				printTypeId(ret);
-				if (func.isRefReturn)
-					out << "&";
-				if (auto idc = ctx->returnType()->Identifier()) {
-					auto id = idc->getText();
-					namedReturns.emplace_back(id, ret);
-					symbolTable[id] = ret->getText();
-				} else if (ret->VertLine().empty() && ret->singleTypeId(0)->typeSpecifierSeq() &&
-				           ret->singleTypeId(0)->typeSpecifierSeq()->simpleTypeSpecifier()) {
-					auto tup = ret->singleTypeId(0)
-					               ->typeSpecifierSeq()
-					               ->simpleTypeSpecifier()
-					               ->namedTupleField();
-					for (auto element : tup) {
-						auto id = element->Identifier()->getText();
-						namedReturns.emplace_back(id, element->theTypeId());
-						symbolTable[id] = element->theTypeId()->getText();
-					}
+				if (func.isProtectedType) {
+					out << "namespace __" << filename << "_Protected"
+					    << (func.isUnsafeType ? "__Unsafe" : "") << " {\n"
+					    << std::string(++depth, '\t');
+				} else if (func.isUnsafeType) {
+					out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
+					    << std::string(++depth, '\t');
 				}
-			} else if (func.isForwardReturn) {
-				out << "decltype(auto)";
-			} else if (ctx->returnType() && ctx->returnType()->Ref()) {
-				out << "auto";
-			} else if (ctx->shortFunctionBody()) {
-				out << "decltype(auto)";
-			} else {
-				out << "void";
-			}
-			/*if (func.isOverride) out << " override ";
-			if (func.isFinal) out << " final ";*/
-			currentShortType.clear();
-			currentTypeWithTemplate.clear();
 
-			isNewDeleteOperator = false;
-			if (func.indexerSetter) {
-				out << "\n" << std::string(depth++, '\t') << "{\n" << std::string(depth, '\t');
-				out << "return __IndexerAccessor_" << func.pos.line << "<";
-				printTypeId(func.returnType);
-				if (func.isRefReturn)
-					out << "&";
-				out << ">";
-				out << "{ *this, ";
-				bool first = true;
-				for (auto param : func.indexerParams->paramDeclList()->paramDeclaration()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printIdentifier(param->Identifier());
-				}
-				out << " };\n" << std::string(--depth, '\t') << "}\n";
-			} else if (auto body = ctx->functionBody()) {
-				functionProlog = true;
-				printFunctionBody(body);
-			} else if (auto body = ctx->shortFunctionBody()) {
-				printShortFunctionBody(body);
-			}
-			if (!func.isConstReturn && !func.isStatic && !func.isMutating) {
-				out << std::endl
-				    << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine() << " \""
-				    << fullFilename << ".ast\"\n"
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
 				if (func.parentTemplateParams) {
 					printTemplateParams(func.parentTemplateParams);
 					out << " ";
+					if (func.parentConstraints) {
+						printConstraintClause(func.parentConstraints);
+						out << " ";
+					}
+				} else if (func.parentTemplateSpecializationArgs) {
+					out << "template<> ";
+				}
+				if (func.templateParams) {
+					printTemplateParams(func.templateParams);
+					out << " ";
+					if (func.constraints) {
+						printConstraintClause(func.constraints);
+						out << " ";
+					}
+				}
+				if (func.isConsteval) {
+					out << "inline consteval ";
+				} else if (func.isConstexpr) {
+					out << "inline constexpr ";
+				} else if (func.isInline) {
+					out << "inline ";
+				}
+
+				auto parent = func.parentType;
+				StringReplace(parent, ".", "::");
+				StringReplace(parent, "::::::", "...");
+				auto pos = parent.find("<{{specialization}}>");
+				if (pos != parent.npos) {
+					out << parent.substr(0, pos);
+					out << "<";
+					printTemplateArgumentList(func.parentTemplateSpecializationArgs);
+					out << ">";
+					out << parent.substr(pos + 20);
+				} else {
+					out << parent;
+				}
+				currentShortType        = func.shortType;
+				currentTypeWithTemplate = parent;
+				out << "::" << func.id;
+				isUnsafe = func.isUnsafe;
+				printFunctionParameters(func.params);
+				isVariadicTemplate = false;
+				out << " ";
+				if (func.exceptionSpecification)
+					printExceptionSpecification(func.exceptionSpecification);
+				isUnsafe = func.isUnsafe;
+				currentShortType.clear();
+				currentTypeWithTemplate.clear();
+				currentType = func.id;
+				if (auto body = ctx->constructorBody()) {
+					functionProlog = true;
+					printConstructorBody(body);
+				} else {
+					printDelegatingConstructorBody(ctx->delegatingConstructorBody());
+				}
+				if (func.isProtectedType || func.isUnsafeType)
+					out << "\n" << std::string(--depth, '\t') << "}";
+				out << std::endl;
+				if (!func.compilationCondition.empty()) {
+					out << "#endif " << std::endl;
+				}
+				out.switchTo(false);
+			} else {
+				if (!currentAccessSpecifier)
+					currentAccessSpecifier = AccessSpecifier::Private;
+				switch (*currentAccessSpecifier) {
+					case AccessSpecifier::Public:
+					case AccessSpecifier::Internal:
+						out << "public: ";
+						break;
+					case AccessSpecifier::Protected:
+					case AccessSpecifier::ProtectedInternal:
+						out << "protected: ";
+						break;
+					case AccessSpecifier::Private:
+						out << "private: ";
+						break;
+				}
+
+				if (auto tparams = ctx->templateParams()) {
+					printTemplateParams(tparams);
+					out << " ";
+				}
+
+				bool isInline    = false;
+				bool isConstexpr = false;
+				isUnsafe         = ctx->Unsafe();
+				if (ctx->Inline())
+					isInline = true;
+
+				if (auto body = ctx->constructorBody()) {
+					if (body->Equal())
+						isConstexpr = true;
+					else if (body->Assign())
+						isInline = true;
+				} else if (auto body = ctx->delegatingConstructorBody()) {
+					if (body->EqualArrow())
+						isConstexpr = true;
+					else if (body->AssignArrow())
+						isInline = true;
+				}
+
+				if (isConstexpr) {
+					out << "inline constexpr ";
+				} else if (isInline) {
+					out << "inline ";
+				}
+
+				if (ctx->implicitSpecification()) {
+					printImplicitSpecification(ctx->implicitSpecification());
+				} else if (ctx->functionParams()->paramDeclClause() && ctx->functionParams()
+				                                                               ->paramDeclClause()
+				                                                               ->paramDeclList()
+				                                                               ->paramDeclaration()
+				                                                               .size() == 1) {
+					out << "explicit ";
+				}
+
+				out << currentShortType;
+
+				printFunctionParameters(ctx->functionParams());
+				isVariadicTemplate = false;
+				out << " ";
+				if (ctx->exceptionSpecification())
+					printExceptionSpecification(ctx->exceptionSpecification());
+				if (auto body = ctx->constructorBody()) {
+					printConstructorBody(body);
+				} else if (auto body = ctx->delegatingConstructorBody()) {
+					printDelegatingConstructorBody(ctx->delegatingConstructorBody());
+				} else {
+					out << " = default;";
+				}
+				out << std::endl;
+			}
+			isUnsafe = prevUnsafe;
+			refParameters.clear();
+			sema.symbolContexts.pop();
+		}
+
+		void AstrumCodegen::printConstructorBody(AstrumParser::ConstructorBodyContext * ctx) {
+			bool isDelegating     = ctx->delegatingConstructorStatement();
+			bool isDelegatingThis = false;
+			if (isDelegating && !isExtension) {
+				out << " :\n"
+				    << std::string(depth, '\t') << "#line "
+				    << ctx->delegatingConstructorStatement()->getStart()->getLine() << " \""
+				    << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				printDelegatingConstructorStatement(ctx->delegatingConstructorStatement());
+				isDelegatingThis = ctx->delegatingConstructorStatement()->This();
+			}
+			bool first = true;
+			std::unordered_set<std::string> initializedFields;
+			std::unordered_set<AstrumParser::MemberInitializationStatementContext*>
+			    initializedMemberStatements;
+			std::vector<AstrumParser::MemberInitializationStatementContext*>
+			    memberInitializationStatements;
+			if (ctx->memberInitializationList())
+				memberInitializationStatements =
+				    ctx->memberInitializationList()->memberInitializationStatement();
+			bool prev    = functionBody;
+			functionBody = true;
+			if (!isDelegatingThis && !isExtension) {
+				for (auto init : memberInitializationStatements) {
+					auto id = init->Identifier()->getText();
+					if (sema.currentFields[ctx].contains(id) && !initializedFields.contains(id)) {
+						if (first && !isDelegating)
+							out << " : ";
+						else
+							out << ", ";
+						first = false;
+						initializedFields.insert(id);
+						initializedMemberStatements.insert(init);
+						out << "\n"
+						    << std::string(depth, '\t') << "#line " << init->getStart()->getLine()
+						    << " \"" << fullFilename << ".ast\"\n"
+						    << std::string(depth, '\t');
+						printMemberInitializationStatement(init, false);
+					}
+				}
+			}
+			out << "\n" << std::string(depth, '\t');
+			sema.symbolContexts.push(sema.symbolContexts.top());
+			currentLabel.clear();
+			out << "{";
+			++depth;
+			if (isUnsafe)
+				out << "\tusing namespace Builtin::Unsafe;\tusing namespace __Unsafe;\tusing "
+				       "namespace __"
+				    << filename << "_Protected__Unsafe;";
+			bool funcTopLevel = functionProlog;
+			if (functionProlog) {
+				if (isUnsafe) {
+					out << "\n"
+					    << std::string(depth, '\t')
+					    << "Builtin::CheckForUnsafeContext(); Builtin::UnsafeContextGuard "
+					       "__unsafe_context_guard"
+					    << ctx->getStart()->getLine() << "{};";
+				}
+				for (const auto& [id, type] : refParameters) {
+					out << "\n" << std::string(depth, '\t');
+					printTypeId(type);
+					out << "& " << id << " = __" << id << "__;";
+				}
+				functionProlog = false;
+			} else if (isUnsafe) {
+				out << "\tBuiltin::UnsafeContextGuard __unsafe_context_guard"
+				    << ctx->getStart()->getLine() << "{};";
+			}
+
+			isUnsafe = false;
+			if (isExtension) {
+				out << "\n"
+				    << std::string(depth, '\t') << "#line "
+				    << ctx->delegatingConstructorStatement()->getStart()->getLine() << " \""
+				    << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				printDelegatingConstructorStatement(ctx->delegatingConstructorStatement());
+			}
+			for (auto stat : memberInitializationStatements) {
+				if (initializedMemberStatements.contains(stat))
+					continue;
+				out << "\n"
+				    << std::string(depth, '\t') << "#line " << stat->getStart()->getLine() << " \""
+				    << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				printMemberInitializationStatement(stat, true);
+			}
+			for (auto stat : ctx->statement()) {
+				out << "\n" << std::string(depth, '\t');
+				printStatement(stat);
+			}
+			if (isExtension) {
+				out << "\n" << std::string(depth, '\t');
+				out << "return __this;";
+			}
+			out << "\n" << std::string(--depth, '\t') << "}";
+			sema.symbolContexts.pop();
+			functionBody = prev;
+		}
+
+		void AstrumCodegen::printDelegatingConstructorBody(
+		    AstrumParser::DelegatingConstructorBodyContext * ctx) {
+			out << " : ";
+			if (ctx->delegatingConstructorStatement())
+				printDelegatingConstructorStatement(ctx->delegatingConstructorStatement());
+			else if (ctx->memberInitializationStatement())
+				printMemberInitializationStatement(ctx->memberInitializationStatement());
+			out << " {}";
+		}
+
+		void AstrumCodegen::printDelegatingConstructorStatement(
+		    AstrumParser::DelegatingConstructorStatementContext * ctx) {
+			if (isExtension) {
+				out << "auto __this = new (__ctordata.memory) typename Builtin::ConstructorProxy<"
+				    << currentType;
+				bool first = true;
+				if (currentTemplateParams) {
+					out << "<";
+					for (auto param : currentTemplateParams->templateParamDeclaration()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printIdentifier(param->Identifier());
+						if (param->Ellipsis())
+							out << "...";
+					}
+					out << ">";
+				} else if (currentTemplateSpecArgs) {
+					out << "<";
+					printTemplateArgumentList(currentTemplateSpecArgs);
+					out << ">";
+				}
+				out << ">::ConstructingType(";
+				printExpressionList(ctx->expressionList());
+				out << ");";
+			} else {
+				if (ctx->This()) {
+					out << currentType;
+				} else if (ctx->Super()) {
+					out << "___super";
+				}
+				out << "(";
+				printExpressionList(ctx->expressionList());
+				out << ")";
+			}
+		}
+
+		void AstrumCodegen::printDestructor(AstrumParser::DestructorContext * ctx) {
+			sema.symbolContexts.push(sema.symbolContexts.top());
+			bool prevUnsafe    = isUnsafe;
+			SourcePosition pos = {ctx->getStart()->getLine(),
+			                      ctx->getStart()->getCharPositionInLine()};
+			isDestructor       = true;
+			isVoidReturn       = true;
+			if (sema.methods.contains(pos)) {
+				const MethodDefinition& func = sema.methods[pos];
+				if (func.access != AccessSpecifier::Private &&
+				    (func.isInline || func.parentTemplateParams ||
+				     func.parentTemplateSpecializationArgs)) {
+					out.switchTo(true);
+					emptyLine = true;
+				}
+				if (!func.compilationCondition.empty()) {
+					out << "#if " << func.compilationCondition << std::endl;
+				}
+				if (func.isProtectedType) {
+					out << "namespace __" << filename << "_Protected"
+					    << (func.isUnsafeType ? "__Unsafe" : "") << " {\n"
+					    << std::string(++depth, '\t');
+				} else if (func.isUnsafeType) {
+					out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
+					    << std::string(++depth, '\t');
+				}
+
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				if (func.parentTemplateParams) {
+					printTemplateParams(func.parentTemplateParams);
+					out << " ";
+					if (func.parentConstraints) {
+						printConstraintClause(func.parentConstraints);
+						out << " ";
+					}
+				} else if (func.parentTemplateSpecializationArgs) {
+					out << "template<> ";
+				}
+				if (func.isConstexpr) {
+					out << "inline constexpr ";
+				} else if (func.isInline) {
+					out << "inline ";
+				}
+
+				auto parent = func.parentType;
+				StringReplace(parent, ".", "::");
+				StringReplace(parent, "::::::", "...");
+				auto pos = parent.find("<{{specialization}}>");
+				if (pos != parent.npos) {
+					out << parent.substr(0, pos);
+					out << "<";
+					printTemplateArgumentList(func.parentTemplateSpecializationArgs);
+					out << ">";
+					out << parent.substr(pos + 20);
+				} else {
+					out << parent;
+				}
+				currentShortType        = func.shortType;
+				currentTypeWithTemplate = parent;
+				out << "::" << func.id;
+				isUnsafe           = func.isUnsafe;
+				isVariadicTemplate = false;
+				out << "() ";
+				if (func.exceptionSpecification)
+					printExceptionSpecification(func.exceptionSpecification);
+				isUnsafe = func.isUnsafe;
+				currentShortType.clear();
+				currentTypeWithTemplate.clear();
+				currentType = func.id;
+				if (auto body = ctx->functionBody()) {
+					functionProlog = true;
+					printFunctionBody(body);
+				} else {
+					printShortFunctionBody(ctx->shortFunctionBody());
+				}
+				if (func.isProtectedType || func.isUnsafeType)
+					out << "\n" << std::string(--depth, '\t') << "}";
+				out << std::endl;
+				if (!func.compilationCondition.empty()) {
+					out << "#endif " << std::endl;
+				}
+				out.switchTo(false);
+			} else {
+				out << "public: ";
+
+				bool isInline    = false;
+				bool isConstexpr = false;
+				if (ctx->Inline())
+					isInline = true;
+
+				if (auto body = ctx->functionBody()) {
+					if (body->Equal())
+						isConstexpr = true;
+					else if (body->Assign())
+						isInline = true;
+				} else if (auto body = ctx->shortFunctionBody()) {
+					if (body->EqualArrow())
+						isConstexpr = true;
+					else if (body->AssignArrow())
+						isInline = true;
+				}
+
+				if (isConstexpr) {
+					out << "inline constexpr ";
+				} else if (isInline) {
+					out << "inline ";
+				}
+
+				out << "~" << currentShortType << "() ";
+				if (ctx->exceptionSpecification())
+					printExceptionSpecification(ctx->exceptionSpecification());
+				if (auto body = ctx->functionBody()) {
+					functionProlog = true;
+					printFunctionBody(body);
+				} else {
+					printShortFunctionBody(ctx->shortFunctionBody());
+				}
+				out << std::endl;
+			}
+			isDestructor = false;
+			isUnsafe     = prevUnsafe;
+			sema.symbolContexts.pop();
+		}
+
+		void AstrumCodegen::printMemberInitializationStatement(
+		    AstrumParser::MemberInitializationStatementContext * ctx, bool insideBody) {
+			if (ctx->This() && insideBody) {
+				if (isExtension)
+					out << "__";
+				out << "this->";
+			}
+			printIdentifier(ctx->Identifier());
+			if (insideBody)
+				out << " = ";
+			auto txt = ctx->initializerClause()->getText();
+			if (refParameters.contains(txt) && !insideBody) {
+				out << "(__" << txt << "__)";
+			} else {
+				if (!insideBody)
+					out << "{";
+				printInitializerClause(ctx->initializerClause());
+				if (insideBody)
+					out << ";";
+				else
+					out << "}";
+			}
+		}
+
+		void AstrumCodegen::printStaticConstructor(AstrumParser::StaticConstructorContext * ctx) {
+			sema.symbolContexts.push(sema.symbolContexts.top());
+			SourcePosition pos = {ctx->getStart()->getLine(),
+			                      ctx->getStart()->getCharPositionInLine()};
+			isVoidReturn       = true;
+			if (sema.methods.contains(pos)) {
+				const MethodDefinition& func = sema.methods[pos];
+
+				if (func.isInline || func.parentTemplateParams ||
+				    func.parentTemplateSpecializationArgs) {
+					out.switchTo(true);
+					emptyLine = true;
+				}
+				if (!func.compilationCondition.empty()) {
+					out << "#if " << func.compilationCondition << std::endl;
+				}
+				if (func.isProtectedType) {
+					out << "namespace __" << filename << "_Protected"
+					    << (func.isUnsafeType ? "__Unsafe" : "") << " {\n"
+					    << std::string(++depth, '\t');
+				} else if (func.isUnsafeType) {
+					out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
+					    << std::string(++depth, '\t');
+				}
+
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				if (func.parentTemplateParams) {
+					printTemplateParams(func.parentTemplateParams);
+					out << " ";
+					if (func.parentConstraints) {
+						printConstraintClause(func.parentConstraints);
+						out << " ";
+					}
+				} else if (func.parentTemplateSpecializationArgs) {
+					out << "template<> ";
+				}
+				if (func.templateParams) {
+					printTemplateParams(func.templateParams);
+					out << " ";
+					if (func.constraints) {
+						printConstraintClause(func.constraints);
+						out << " ";
+					}
+				}
+				if (func.isConstexpr) {
+					out << "inline constexpr ";
+				} else if (func.isInline) {
+					out << "inline ";
+				}
+
+				auto parent = func.parentType;
+				StringReplace(parent, ".", "::");
+				StringReplace(parent, "::::::", "...");
+				auto pos = parent.find("<{{specialization}}>");
+				if (pos != parent.npos) {
+					out << parent.substr(0, pos);
+					out << "<";
+					printTemplateArgumentList(func.parentTemplateSpecializationArgs);
+					out << ">";
+					out << parent.substr(pos + 20);
+				} else {
+					out << parent;
+				}
+				currentShortType        = func.shortType;
+				currentTypeWithTemplate = parent;
+				out << "::__sctor::__sctor() ";
+				currentShortType.clear();
+				currentTypeWithTemplate.clear();
+				currentType = func.id;
+				if (auto body = ctx->functionBody()) {
+					functionProlog = true;
+					printFunctionBody(body);
+				} else {
+					printShortFunctionBody(ctx->shortFunctionBody());
+				}
+				if (func.isProtectedType || func.isUnsafeType)
+					out << "\n" << std::string(--depth, '\t') << "}";
+				out << std::endl;
+				if (!func.compilationCondition.empty()) {
+					out << "#endif " << std::endl;
+				}
+				out.switchTo(false);
+			}
+
+			refParameters.clear();
+			sema.symbolContexts.pop();
+		}
+
+		void AstrumCodegen::printStaticDestructor(AstrumParser::StaticDestructorContext * ctx) {
+			sema.symbolContexts.push(sema.symbolContexts.top());
+			SourcePosition pos = {ctx->getStart()->getLine(),
+			                      ctx->getStart()->getCharPositionInLine()};
+			isVoidReturn       = true;
+			if (sema.methods.contains(pos)) {
+				const MethodDefinition& func = sema.methods[pos];
+
+				if (func.isInline || func.parentTemplateParams ||
+				    func.parentTemplateSpecializationArgs) {
+					out.switchTo(true);
+					emptyLine = true;
+				}
+				if (!func.compilationCondition.empty()) {
+					out << "#if " << func.compilationCondition << std::endl;
+				}
+				if (func.isProtectedType) {
+					out << "namespace __" << filename << "_Protected"
+					    << (func.isUnsafeType ? "__Unsafe" : "") << " {\n"
+					    << std::string(++depth, '\t');
+				} else if (func.isUnsafeType) {
+					out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
+					    << std::string(++depth, '\t');
+				}
+
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				if (func.parentTemplateParams) {
+					printTemplateParams(func.parentTemplateParams);
+					out << " ";
+					if (func.parentConstraints) {
+						printConstraintClause(func.parentConstraints);
+						out << " ";
+					}
+				} else if (func.parentTemplateSpecializationArgs) {
+					out << "template<> ";
+				}
+				if (func.templateParams) {
+					printTemplateParams(func.templateParams);
+					out << " ";
+					if (func.constraints) {
+						printConstraintClause(func.constraints);
+						out << " ";
+					}
+				}
+				if (func.isConstexpr) {
+					out << "inline constexpr ";
+				} else if (func.isInline) {
+					out << "inline ";
+				}
+
+				auto parent = func.parentType;
+				StringReplace(parent, ".", "::");
+				StringReplace(parent, "::::::", "...");
+				auto pos = parent.find("<{{specialization}}>");
+				if (pos != parent.npos) {
+					out << parent.substr(0, pos);
+					out << "<";
+					printTemplateArgumentList(func.parentTemplateSpecializationArgs);
+					out << ">";
+					out << parent.substr(pos + 20);
+				} else {
+					out << parent;
+				}
+				currentShortType        = func.shortType;
+				currentTypeWithTemplate = parent;
+				out << "::__sctor::~__sctor() ";
+				currentShortType.clear();
+				currentTypeWithTemplate.clear();
+				currentType = func.id;
+				if (auto body = ctx->functionBody()) {
+					functionProlog = true;
+					printFunctionBody(body);
+				} else {
+					printShortFunctionBody(ctx->shortFunctionBody());
+				}
+				if (func.isProtectedType || func.isUnsafeType)
+					out << "\n" << std::string(--depth, '\t') << "}";
+				out << std::endl;
+				if (!func.compilationCondition.empty()) {
+					out << "#endif " << std::endl;
+				}
+				out.switchTo(false);
+			}
+
+			refParameters.clear();
+			sema.symbolContexts.pop();
+		}
+
+		void AstrumCodegen::printConversionFunction(AstrumParser::ConversionFunctionContext * ctx) {
+			sema.symbolContexts.push(sema.symbolContexts.top());
+			bool prevUnsafe    = isUnsafe;
+			SourcePosition pos = {ctx->getStart()->getLine(),
+			                      ctx->getStart()->getCharPositionInLine()};
+			if (sema.methods.contains(pos)) {
+				const MethodDefinition& func = sema.methods[pos];
+				if (func.access != AccessSpecifier::Private &&
+				    (func.isInline || func.templateParams || func.parentTemplateParams ||
+				     func.parentTemplateSpecializationArgs)) {
+					out.switchTo(true);
+					emptyLine = true;
+				}
+				if (!func.compilationCondition.empty()) {
+					out << "#if " << func.compilationCondition << std::endl;
+				}
+				if (func.isProtectedType) {
+					out << "namespace __" << filename << "_Protected"
+					    << (func.isUnsafeType ? "__Unsafe" : "") << " {\n"
+					    << std::string(++depth, '\t');
+				} else if (func.isUnsafeType) {
+					out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
+					    << std::string(++depth, '\t');
+				}
+
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				if (func.parentTemplateParams) {
+					printTemplateParams(func.parentTemplateParams);
+					out << " ";
+					if (func.parentConstraints) {
+						printConstraintClause(func.parentConstraints);
+						out << " ";
+					}
+				} else if (func.parentTemplateSpecializationArgs) {
+					out << "template<> ";
+				}
+				if (func.templateParams) {
+					printTemplateParams(func.templateParams);
+					out << " ";
+					if (func.constraints) {
+						printConstraintClause(func.constraints);
+						out << " ";
+					}
+				}
+				if (func.isConsteval) {
+					out << "inline consteval ";
+				} else if (func.isConstexpr) {
+					out << "inline constexpr ";
+				} else if (func.isInline) {
+					out << "inline ";
+				}
+
+				auto parent = func.parentType;
+				StringReplace(parent, ".", "::");
+				StringReplace(parent, "::::::", "...");
+				auto pos = parent.find("<{{specialization}}>");
+				if (pos != parent.npos) {
+					out << parent.substr(0, pos);
+					out << "<";
+					printTemplateArgumentList(func.parentTemplateSpecializationArgs);
+					out << ">";
+					out << parent.substr(pos + 20);
+				} else {
+					out << parent;
+				}
+				currentShortType        = func.shortType;
+				currentTypeWithTemplate = parent;
+				out << "::"
+				    << "operator ";
+				isUnsafe = func.isUnsafe;
+				printTypeId(func.returnType);
+				if (func.isConstReturn)
+					out << " const&";
+				else if (func.isRefReturn)
+					out << " &";
+				out << "() const ";
+				isVariadicTemplate = false;
+				if (func.exceptionSpecification)
+					printExceptionSpecification(func.exceptionSpecification);
+				/*if (func.isOverride) out << " override ";
+				if (func.isFinal) out << " final ";*/
+				isUnsafe = func.isUnsafe;
+				currentShortType.clear();
+				currentTypeWithTemplate.clear();
+				if (auto body = ctx->functionBody()) {
+					functionProlog = true;
+					printFunctionBody(body);
+				} else {
+					printShortFunctionBody(ctx->shortFunctionBody());
+				}
+				if (func.isProtectedType || func.isUnsafeType)
+					out << "\n" << std::string(--depth, '\t') << "}";
+				out << std::endl;
+				if (!func.compilationCondition.empty()) {
+					out << "#endif " << std::endl;
+				}
+				out.switchTo(false);
+			} else {
+				if (!currentAccessSpecifier)
+					currentAccessSpecifier = AccessSpecifier::Private;
+				switch (*currentAccessSpecifier) {
+					case AccessSpecifier::Public:
+					case AccessSpecifier::Internal:
+						out << "public: ";
+						break;
+					case AccessSpecifier::Protected:
+					case AccessSpecifier::ProtectedInternal:
+						out << "protected: ";
+						break;
+					case AccessSpecifier::Private:
+						out << "private: ";
+						break;
+				}
+
+				if (ctx->templateParams()) {
+					printTemplateParams(ctx->templateParams());
+					out << " ";
+				}
+
+				bool isInline    = false;
+				bool isConstexpr = false;
+				bool isVirtual   = false;
+				bool isOverride  = false;
+				bool isFinal     = false;
+				isUnsafe         = false;
+				for (auto spec : ctx->functionSpecifier()) {
+					if (spec->Inline())
+						isInline = true;
+					if (spec->Virtual())
+						isVirtual = true;
+					if (spec->Override())
+						isOverride = true;
+					if (spec->Final())
+						isFinal = true;
+					if (spec->Unsafe())
+						isUnsafe = true;
+				}
+
+				if (auto body = ctx->functionBody()) {
+					if (body->Equal())
+						isConstexpr = true;
+					else if (body->Assign())
+						isInline = true;
+				} else if (auto body = ctx->shortFunctionBody()) {
+					if (body->EqualArrow())
+						isConstexpr = true;
+					else if (body->AssignArrow())
+						isInline = true;
+				}
+
+				if (isConstexpr) {
+					out << "inline constexpr ";
+				} else if (isInline) {
+					out << "inline ";
+				}
+
+				if (ctx->implicitSpecification()) {
+					printImplicitSpecification(ctx->implicitSpecification());
+				} else {
+					out << "explicit ";
+				}
+
+				printConversionFunctionId(ctx->conversionFunctionId());
+				out << "() const ";
+				isVariadicTemplate = false;
+				if (ctx->exceptionSpecification())
+					printExceptionSpecification(ctx->exceptionSpecification());
+				/*if (isOverride) out << " override ";
+				if (isFinal) out << " final ";*/
+				currentShortType.clear();
+				currentTypeWithTemplate.clear();
+				if (auto body = ctx->functionBody()) {
+					functionProlog = true;
+					printFunctionBody(body);
+				} else {
+					printShortFunctionBody(ctx->shortFunctionBody());
+				}
+				out << std::endl;
+			}
+			isUnsafe = prevUnsafe;
+			sema.symbolContexts.pop();
+		}
+
+		void AstrumCodegen::printIndexer(AstrumParser::IndexerContext * ctx) {
+			sema.symbolContexts.push(sema.symbolContexts.top());
+			bool prevUnsafe       = isUnsafe;
+			bool prevFunctionBody = functionBody;
+
+			SourcePosition pos = {ctx->getStart()->getLine(),
+			                      ctx->getStart()->getCharPositionInLine()};
+			if (sema.methods.contains(pos)) {
+				const MethodDefinition& func = sema.methods[pos];
+				if (func.access != AccessSpecifier::Private &&
+				    (func.isInline || func.templateParams || func.indexerSetter ||
+				     func.parentTemplateParams || func.parentTemplateSpecializationArgs)) {
+					out.switchTo(true);
+					emptyLine = true;
+				}
+				bool isUnchecked = false;
+				if (func.attributes)
+					for (auto attr : func.attributes->attributeSpecifier()) {
+						auto attrName = attr->Identifier()->getText();
+						if (attrName == "Unchecked")
+							isUnchecked = true;
+					}
+				if (!func.compilationCondition.empty()) {
+					out << "#if " << func.compilationCondition << std::endl;
+				}
+				if (func.isProtectedType) {
+					out << "namespace __" << filename << "_Protected"
+					    << (func.isUnsafeType ? "__Unsafe" : "") << " {\n"
+					    << std::string(++depth, '\t');
+				} else if (func.isUnsafeType) {
+					out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
+					    << std::string(++depth, '\t');
+				}
+
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				if (func.parentTemplateParams) {
+					printTemplateParams(func.parentTemplateParams);
+					out << " ";
+					if (func.parentConstraints) {
+						printConstraintClause(func.parentConstraints);
+						out << " ";
+					}
 				} else if (func.parentTemplateSpecializationArgs) {
 					out << "template<> ";
 				}
@@ -15145,10 +15139,15 @@ namespace AstrumLang {
 				printParamDeclClause(func.indexerParams);
 				out << ") ";
 				isVariadicTemplate = false;
-				out << " const ";
+				if (!func.isStatic) {
+					if (func.isConstReturn)
+						out << "const ";
+				}
 				if (func.exceptionSpecification)
 					printExceptionSpecification(func.exceptionSpecification);
-				out << " -> const ";
+				out << " -> ";
+				if (func.isConstReturn)
+					out << "const ";
 				if (func.indexerSetter) {
 					out << "__IndexerAccessor_" << func.pos.line << "<";
 					printTypeId(func.returnType);
@@ -15157,6 +15156,8 @@ namespace AstrumLang {
 					out << ">";
 				} else if (func.returnType) {
 					auto ret = func.returnType;
+					if (!func.isRefReturn)
+						out << "const ";
 					printTypeId(ret);
 					if (func.isRefReturn)
 						out << "&";
@@ -15198,7 +15199,8 @@ namespace AstrumLang {
 					printTypeId(func.returnType);
 					if (func.isRefReturn)
 						out << "&";
-					out << ">{ *this, ";
+					out << ">";
+					out << "{ *this, ";
 					bool first = true;
 					for (auto param : func.indexerParams->paramDeclList()->paramDeclaration()) {
 						if (!first)
@@ -15213,106 +15215,146 @@ namespace AstrumLang {
 				} else if (auto body = ctx->shortFunctionBody()) {
 					printShortFunctionBody(body);
 				}
-				currentShortType.clear();
-				currentTypeWithTemplate.clear();
-			}
+				if (!func.isConstReturn && !func.isStatic && !func.isMutating) {
+					out << std::endl
+					    << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine()
+					    << " \"" << fullFilename << ".ast\"\n"
+					    << std::string(depth, '\t');
+					if (func.parentTemplateParams) {
+						printTemplateParams(func.parentTemplateParams);
+						out << " ";
+					} else if (func.parentTemplateSpecializationArgs) {
+						out << "template<> ";
+					}
+					if (func.templateParams) {
+						printTemplateParams(func.templateParams);
+						out << " ";
+					}
+					if (func.isConsteval) {
+						out << "inline consteval ";
+					} else if (func.isConstexpr) {
+						out << "inline constexpr ";
+					} else if (func.isInline) {
+						out << "inline ";
+					}
 
-			bool isInline = func.isInline;
-			if (func.indexerGetter) {
-				if (auto body = func.indexerGetter->functionBody()) {
-					isInline = body->Assign() || body->Equal();
-				} else if (auto body = func.indexerGetter->shortFunctionBody()) {
-					isInline = body->AssignArrow() || body->EqualArrow();
+					out << "auto ";
+					auto parent = func.parentType;
+					StringReplace(parent, ".", "::");
+					StringReplace(parent, "::::::", "...");
+					auto pos = parent.find("<{{specialization}}>");
+					if (pos != parent.npos) {
+						out << parent.substr(0, pos);
+						out << "<";
+						printTemplateArgumentList(func.parentTemplateSpecializationArgs);
+						out << ">";
+						out << parent.substr(pos + 20);
+					} else {
+						out << parent;
+					}
+					currentShortType        = func.shortType;
+					currentTypeWithTemplate = parent;
+					out << "::" << func.id;
+					isUnsafe = func.isUnsafe;
+					out << "(";
+					if (isUnchecked) {
+						out << "Builtin::UncheckedTag, ";
+					}
+					printParamDeclClause(func.indexerParams);
+					out << ") ";
+					isVariadicTemplate = false;
+					out << " const ";
+					if (func.exceptionSpecification)
+						printExceptionSpecification(func.exceptionSpecification);
+					out << " -> const ";
+					if (func.indexerSetter) {
+						out << "__IndexerAccessor_" << func.pos.line << "<";
+						printTypeId(func.returnType);
+						if (func.isRefReturn)
+							out << "&";
+						out << ">";
+					} else if (func.returnType) {
+						auto ret = func.returnType;
+						printTypeId(ret);
+						if (func.isRefReturn)
+							out << "&";
+						if (auto idc = ctx->returnType()->Identifier()) {
+							auto id = idc->getText();
+							namedReturns.emplace_back(id, ret);
+							symbolTable[id] = ret->getText();
+						} else if (ret->VertLine().empty() &&
+						           ret->singleTypeId(0)->typeSpecifierSeq() &&
+						           ret->singleTypeId(0)
+						               ->typeSpecifierSeq()
+						               ->simpleTypeSpecifier()) {
+							auto tup = ret->singleTypeId(0)
+							               ->typeSpecifierSeq()
+							               ->simpleTypeSpecifier()
+							               ->namedTupleField();
+							for (auto element : tup) {
+								auto id = element->Identifier()->getText();
+								namedReturns.emplace_back(id, element->theTypeId());
+								symbolTable[id] = element->theTypeId()->getText();
+							}
+						}
+					} else if (func.isForwardReturn) {
+						out << "decltype(auto)";
+					} else if (ctx->returnType() && ctx->returnType()->Ref()) {
+						out << "auto";
+					} else if (ctx->shortFunctionBody()) {
+						out << "decltype(auto)";
+					} else {
+						out << "void";
+					}
+					/*if (func.isOverride) out << " override ";
+					if (func.isFinal) out << " final ";*/
+					currentShortType.clear();
+					currentTypeWithTemplate.clear();
+
+					isNewDeleteOperator = false;
+					if (func.indexerSetter) {
+						out << "\n"
+						    << std::string(depth++, '\t') << "{\n"
+						    << std::string(depth, '\t');
+						out << "return __IndexerAccessor_" << func.pos.line << "<";
+						printTypeId(func.returnType);
+						if (func.isRefReturn)
+							out << "&";
+						out << ">{ *this, ";
+						bool first = true;
+						for (auto param : func.indexerParams->paramDeclList()->paramDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(param->Identifier());
+						}
+						out << " };\n" << std::string(--depth, '\t') << "}\n";
+					} else if (auto body = ctx->functionBody()) {
+						functionProlog = true;
+						printFunctionBody(body);
+					} else if (auto body = ctx->shortFunctionBody()) {
+						printShortFunctionBody(body);
+					}
+					currentShortType.clear();
+					currentTypeWithTemplate.clear();
 				}
-			}
 
-			if (func.access != AccessSpecifier::Private && isInline) {
-				out.switchTo(true);
-				emptyLine = true;
-			} else {
-				out.switchTo(false);
-			}
-
-			out << "\n" << std::string(depth, '\t');
-			out << "#line " << func.pos.line << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			if (func.parentTemplateParams) {
-				printTemplateParams(func.parentTemplateParams);
-				out << " ";
-			} else if (func.parentTemplateSpecializationArgs) {
-				out << "template<> ";
-			}
-			if (func.templateParams) {
-				printTemplateParams(func.templateParams);
-				out << " ";
-			}
-			if (func.isConstexpr) {
-				out << "inline constexpr ";
-			} else if (func.isInline) {
-				out << "inline ";
-			}
-
-			out << "auto ";
-			parent = func.parentType;
-			StringReplace(parent, ".", "::");
-			StringReplace(parent, "::::::", "...");
-			pos = parent.find("<{{specialization}}>");
-			if (pos != parent.npos) {
-				out << parent.substr(0, pos);
-				out << "<";
-				printTemplateArgumentList(func.parentTemplateSpecializationArgs);
-				out << ">";
-				out << parent.substr(pos + 20);
-			} else {
-				out << parent;
-			}
-			currentShortType        = func.shortType;
-			currentTypeWithTemplate = parent;
-			out << "::getAt";
-			isUnsafe = func.isUnsafe;
-			out << "(";
-			if (isUnchecked) {
-				out << "Builtin::UncheckedTag, ";
-			}
-			printParamDeclClause(func.indexerParams);
-			out << ") ";
-			isVariadicTemplate = false;
-			if (!func.isStatic) {
-				if (func.isConstReturn)
-					out << "const ";
-			}
-			if (func.exceptionSpecification)
-				printExceptionSpecification(func.exceptionSpecification);
-			out << " -> ";
-			if (func.isConstReturn || !func.isRefReturn)
-				out << "const ";
-			printTypeId(func.returnType);
-			if (func.isRefReturn)
-				out << "&";
-			/*if (func.isOverride) out << " override ";
-			if (func.isFinal) out << " final ";*/
-
-			if (func.indexerGetter) {
-				if (auto body = func.indexerGetter->functionBody()) {
-					functionProlog = true;
-					printFunctionBody(body);
-				} else if (auto body = func.indexerGetter->shortFunctionBody()) {
-					printShortFunctionBody(body);
+				bool isInline = func.isInline;
+				if (func.indexerGetter) {
+					if (auto body = func.indexerGetter->functionBody()) {
+						isInline = body->Assign() || body->Equal();
+					} else if (auto body = func.indexerGetter->shortFunctionBody()) {
+						isInline = body->AssignArrow() || body->EqualArrow();
+					}
 				}
-			} else {
-				out << " { return _operator_subscript(";
-				bool first = true;
-				for (auto param : func.indexerParams->paramDeclList()->paramDeclaration()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printIdentifier(param->Identifier());
+
+				if (func.access != AccessSpecifier::Private && isInline) {
+					out.switchTo(true);
+					emptyLine = true;
+				} else {
+					out.switchTo(false);
 				}
-				out << "); }";
-			}
-			currentShortType.clear();
-			currentTypeWithTemplate.clear();
-			if (!func.isConstReturn && !func.isStatic && !func.isMutating) {
+
 				out << "\n" << std::string(depth, '\t');
 				out << "#line " << func.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
@@ -15326,97 +15368,6 @@ namespace AstrumLang {
 					printTemplateParams(func.templateParams);
 					out << " ";
 				}
-				if (func.isConstexpr) {
-					out << "inline constexpr ";
-				} else if (func.isInline) {
-					out << "inline ";
-				}
-
-				out << "auto ";
-				auto parent = func.parentType;
-				StringReplace(parent, ".", "::");
-				StringReplace(parent, "::::::", "...");
-				auto pos = parent.find("<{{specialization}}>");
-				if (pos != parent.npos) {
-					out << parent.substr(0, pos);
-					out << "<";
-					printTemplateArgumentList(func.parentTemplateSpecializationArgs);
-					out << ">";
-					out << parent.substr(pos + 20);
-				} else {
-					out << parent;
-				}
-				currentShortType        = func.shortType;
-				currentTypeWithTemplate = parent;
-				out << "::getAt";
-				isUnsafe = func.isUnsafe;
-				out << "(";
-				if (isUnchecked) {
-					out << "Builtin::UncheckedTag, ";
-				}
-				printParamDeclClause(func.indexerParams);
-				out << ") const ";
-				isVariadicTemplate = false;
-				if (func.exceptionSpecification)
-					printExceptionSpecification(func.exceptionSpecification);
-				out << " -> ";
-				out << "const ";
-				printTypeId(func.returnType);
-				if (func.isRefReturn)
-					out << "&";
-				if (func.isOverride)
-					out << " override ";
-				if (func.isFinal)
-					out << " final ";
-
-				if (func.indexerGetter) {
-					if (auto body = func.indexerGetter->functionBody()) {
-						functionProlog = true;
-						printFunctionBody(body);
-					} else if (auto body = func.indexerGetter->shortFunctionBody()) {
-						printShortFunctionBody(body);
-					}
-				} else {
-					out << " { return _operator_subscript(";
-					bool first = true;
-					for (auto param : func.indexerParams->paramDeclList()->paramDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(param->Identifier());
-					}
-					out << "); }";
-				}
-				currentShortType.clear();
-				currentTypeWithTemplate.clear();
-			}
-
-			if (func.indexerSetter) {
-				isInline = false;
-				if (auto body = func.indexerSetter->functionBody()) {
-					isInline = body->Assign() || body->Equal();
-				} else if (auto body = func.indexerSetter->shortFunctionBody()) {
-					isInline = body->AssignArrow() || body->EqualArrow();
-				}
-
-				if (func.access != AccessSpecifier::Private && isInline) {
-					out.switchTo(true);
-					emptyLine = true;
-				} else {
-					out.switchTo(false);
-				}
-
-				out << "\n" << std::string(depth, '\t');
-				out << "#line " << func.indexerSetter->getStart()->getLine() << " \""
-				    << fullFilename << ".ast\"\n"
-				    << std::string(depth, '\t');
-				if (func.parentTemplateParams) {
-					printTemplateParams(func.parentTemplateParams);
-					out << " ";
-				} else if (func.parentTemplateSpecializationArgs) {
-					out << "template<> ";
-				}
-
 				if (func.isConstexpr) {
 					out << "inline constexpr ";
 				} else if (func.isInline) {
@@ -15439,59 +15390,265 @@ namespace AstrumLang {
 				}
 				currentShortType        = func.shortType;
 				currentTypeWithTemplate = parent;
-				out << "::setAt";
+				out << "::getAt";
 				isUnsafe = func.isUnsafe;
 				out << "(";
 				if (isUnchecked) {
 					out << "Builtin::UncheckedTag, ";
 				}
 				printParamDeclClause(func.indexerParams);
-				out << ", const ";
-				printTypeId(func.returnType);
-				out << "& value) ";
+				out << ") ";
 				isVariadicTemplate = false;
+				if (!func.isStatic) {
+					if (func.isConstReturn)
+						out << "const ";
+				}
 				if (func.exceptionSpecification)
 					printExceptionSpecification(func.exceptionSpecification);
-				out << " -> void ";
-				if (!func.isStatic) {
-					/*if (func.isOverride) out << "override ";
-					if (func.isFinal) out << "final ";*/
-				}
+				out << " -> ";
+				if (func.isConstReturn || !func.isRefReturn)
+					out << "const ";
+				printTypeId(func.returnType);
+				if (func.isRefReturn)
+					out << "&";
+				/*if (func.isOverride) out << " override ";
+				if (func.isFinal) out << " final ";*/
 
-				if (auto body = func.indexerSetter->functionBody()) {
-					functionProlog = true;
-					printFunctionBody(body);
-				} else if (auto body = func.indexerSetter->shortFunctionBody()) {
-					printShortFunctionBody(body);
+				if (func.indexerGetter) {
+					if (auto body = func.indexerGetter->functionBody()) {
+						functionProlog = true;
+						printFunctionBody(body);
+					} else if (auto body = func.indexerGetter->shortFunctionBody()) {
+						printShortFunctionBody(body);
+					}
+				} else {
+					out << " { return _operator_subscript(";
+					bool first = true;
+					for (auto param : func.indexerParams->paramDeclList()->paramDeclaration()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printIdentifier(param->Identifier());
+					}
+					out << "); }";
 				}
 				currentShortType.clear();
 				currentTypeWithTemplate.clear();
-			}
+				if (!func.isConstReturn && !func.isStatic && !func.isMutating) {
+					out << "\n" << std::string(depth, '\t');
+					out << "#line " << func.pos.line << " \"" << fullFilename << ".ast\"\n"
+					    << std::string(depth, '\t');
+					if (func.parentTemplateParams) {
+						printTemplateParams(func.parentTemplateParams);
+						out << " ";
+					} else if (func.parentTemplateSpecializationArgs) {
+						out << "template<> ";
+					}
+					if (func.templateParams) {
+						printTemplateParams(func.templateParams);
+						out << " ";
+					}
+					if (func.isConstexpr) {
+						out << "inline constexpr ";
+					} else if (func.isInline) {
+						out << "inline ";
+					}
 
-			if (func.isProtectedType || func.isUnsafeType)
-				out << "\n" << std::string(--depth, '\t') << "}";
-			out << std::endl;
-			if (!func.compilationCondition.empty()) {
-				out << "#endif " << std::endl;
-			}
-			out.switchTo(false);
-		} else {
-			AstrumParser::IndexerGetterContext* getter = nullptr;
-			AstrumParser::IndexerSetterContext* setter = nullptr;
+					out << "auto ";
+					auto parent = func.parentType;
+					StringReplace(parent, ".", "::");
+					StringReplace(parent, "::::::", "...");
+					auto pos = parent.find("<{{specialization}}>");
+					if (pos != parent.npos) {
+						out << parent.substr(0, pos);
+						out << "<";
+						printTemplateArgumentList(func.parentTemplateSpecializationArgs);
+						out << ">";
+						out << parent.substr(pos + 20);
+					} else {
+						out << parent;
+					}
+					currentShortType        = func.shortType;
+					currentTypeWithTemplate = parent;
+					out << "::getAt";
+					isUnsafe = func.isUnsafe;
+					out << "(";
+					if (isUnchecked) {
+						out << "Builtin::UncheckedTag, ";
+					}
+					printParamDeclClause(func.indexerParams);
+					out << ") const ";
+					isVariadicTemplate = false;
+					if (func.exceptionSpecification)
+						printExceptionSpecification(func.exceptionSpecification);
+					out << " -> ";
+					out << "const ";
+					printTypeId(func.returnType);
+					if (func.isRefReturn)
+						out << "&";
+					if (func.isOverride)
+						out << " override ";
+					if (func.isFinal)
+						out << " final ";
 
-			if (auto prop = ctx->indexerProperty()) {
-				getter = prop->indexerGetter();
-				setter = prop->indexerSetter();
-			}
+					if (func.indexerGetter) {
+						if (auto body = func.indexerGetter->functionBody()) {
+							functionProlog = true;
+							printFunctionBody(body);
+						} else if (auto body = func.indexerGetter->shortFunctionBody()) {
+							printShortFunctionBody(body);
+						}
+					} else {
+						out << " { return _operator_subscript(";
+						bool first = true;
+						for (auto param : func.indexerParams->paramDeclList()->paramDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(param->Identifier());
+						}
+						out << "); }";
+					}
+					currentShortType.clear();
+					currentTypeWithTemplate.clear();
+				}
 
-			if (!currentAccessSpecifier)
-				currentAccessSpecifier = AccessSpecifier::Private;
-			std::string funcname;
+				if (func.indexerSetter) {
+					isInline = false;
+					if (auto body = func.indexerSetter->functionBody()) {
+						isInline = body->Assign() || body->Equal();
+					} else if (auto body = func.indexerSetter->shortFunctionBody()) {
+						isInline = body->AssignArrow() || body->EqualArrow();
+					}
 
-			auto params = ctx->paramDeclClause()->paramDeclList()->paramDeclaration();
-			funcname    = "_operator_subscript";
+					if (func.access != AccessSpecifier::Private && isInline) {
+						out.switchTo(true);
+						emptyLine = true;
+					} else {
+						out.switchTo(false);
+					}
 
-			if (!ctx->returnType()->Const()) {
+					out << "\n" << std::string(depth, '\t');
+					out << "#line " << func.indexerSetter->getStart()->getLine() << " \""
+					    << fullFilename << ".ast\"\n"
+					    << std::string(depth, '\t');
+					if (func.parentTemplateParams) {
+						printTemplateParams(func.parentTemplateParams);
+						out << " ";
+					} else if (func.parentTemplateSpecializationArgs) {
+						out << "template<> ";
+					}
+
+					if (func.isConstexpr) {
+						out << "inline constexpr ";
+					} else if (func.isInline) {
+						out << "inline ";
+					}
+
+					out << "auto ";
+					parent = func.parentType;
+					StringReplace(parent, ".", "::");
+					StringReplace(parent, "::::::", "...");
+					pos = parent.find("<{{specialization}}>");
+					if (pos != parent.npos) {
+						out << parent.substr(0, pos);
+						out << "<";
+						printTemplateArgumentList(func.parentTemplateSpecializationArgs);
+						out << ">";
+						out << parent.substr(pos + 20);
+					} else {
+						out << parent;
+					}
+					currentShortType        = func.shortType;
+					currentTypeWithTemplate = parent;
+					out << "::setAt";
+					isUnsafe = func.isUnsafe;
+					out << "(";
+					if (isUnchecked) {
+						out << "Builtin::UncheckedTag, ";
+					}
+					printParamDeclClause(func.indexerParams);
+					out << ", const ";
+					printTypeId(func.returnType);
+					out << "& value) ";
+					isVariadicTemplate = false;
+					if (func.exceptionSpecification)
+						printExceptionSpecification(func.exceptionSpecification);
+					out << " -> void ";
+					if (!func.isStatic) {
+						/*if (func.isOverride) out << "override ";
+						if (func.isFinal) out << "final ";*/
+					}
+
+					if (auto body = func.indexerSetter->functionBody()) {
+						functionProlog = true;
+						printFunctionBody(body);
+					} else if (auto body = func.indexerSetter->shortFunctionBody()) {
+						printShortFunctionBody(body);
+					}
+					currentShortType.clear();
+					currentTypeWithTemplate.clear();
+				}
+
+				if (func.isProtectedType || func.isUnsafeType)
+					out << "\n" << std::string(--depth, '\t') << "}";
+				out << std::endl;
+				if (!func.compilationCondition.empty()) {
+					out << "#endif " << std::endl;
+				}
+				out.switchTo(false);
+			} else {
+				AstrumParser::IndexerGetterContext* getter = nullptr;
+				AstrumParser::IndexerSetterContext* setter = nullptr;
+
+				if (auto prop = ctx->indexerProperty()) {
+					getter = prop->indexerGetter();
+					setter = prop->indexerSetter();
+				}
+
+				if (!currentAccessSpecifier)
+					currentAccessSpecifier = AccessSpecifier::Private;
+				std::string funcname;
+
+				auto params = ctx->paramDeclClause()->paramDeclList()->paramDeclaration();
+				funcname    = "_operator_subscript";
+
+				if (!ctx->returnType()->Const()) {
+					out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << "\"";
+					out << "\n" << std::string(depth, '\t');
+
+					switch (*currentAccessSpecifier) {
+						case AccessSpecifier::Public:
+						case AccessSpecifier::Internal:
+							out << "public: ";
+							break;
+						case AccessSpecifier::Protected:
+						case AccessSpecifier::ProtectedInternal:
+							out << "protected: ";
+							break;
+						case AccessSpecifier::Private:
+							out << "private: ";
+							break;
+						default:
+							break;
+					}
+
+					out << "inline auto " << funcname << "(";
+					printParamDeclClause(ctx->paramDeclClause());
+					out << ") -> ";
+					printTypeId(ctx->returnType()->theTypeId());
+					if (ctx->returnType()->Ref())
+						out << "&";
+					out << " ";
+					if (auto body = ctx->functionBody()) {
+						functionProlog = true;
+						printFunctionBody(body);
+					} else if (auto body = ctx->shortFunctionBody()) {
+						functionProlog = true;
+						printShortFunctionBody(body);
+					}
+					out << "\n" << std::string(depth, '\t');
+				}
 				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << "\"";
 				out << "\n" << std::string(depth, '\t');
 
@@ -15513,7 +15670,7 @@ namespace AstrumLang {
 
 				out << "inline auto " << funcname << "(";
 				printParamDeclClause(ctx->paramDeclClause());
-				out << ") -> ";
+				out << ") const -> const ";
 				printTypeId(ctx->returnType()->theTypeId());
 				if (ctx->returnType()->Ref())
 					out << "&";
@@ -15527,599 +15684,628 @@ namespace AstrumLang {
 				}
 				out << "\n" << std::string(depth, '\t');
 			}
-			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << "\"";
-			out << "\n" << std::string(depth, '\t');
-
-			switch (*currentAccessSpecifier) {
-				case AccessSpecifier::Public:
-				case AccessSpecifier::Internal:
-					out << "public: ";
-					break;
-				case AccessSpecifier::Protected:
-				case AccessSpecifier::ProtectedInternal:
-					out << "protected: ";
-					break;
-				case AccessSpecifier::Private:
-					out << "private: ";
-					break;
-				default:
-					break;
-			}
-
-			out << "inline auto " << funcname << "(";
-			printParamDeclClause(ctx->paramDeclClause());
-			out << ") const -> const ";
-			printTypeId(ctx->returnType()->theTypeId());
-			if (ctx->returnType()->Ref())
-				out << "&";
-			out << " ";
-			if (auto body = ctx->functionBody()) {
-				functionProlog = true;
-				printFunctionBody(body);
-			} else if (auto body = ctx->shortFunctionBody()) {
-				functionProlog = true;
-				printShortFunctionBody(body);
-			}
-			out << "\n" << std::string(depth, '\t');
+			isUnsafe     = prevUnsafe;
+			functionBody = prevFunctionBody;
+			refParameters.clear();
+			namedReturns.clear();
+			sema.symbolContexts.pop();
 		}
-		isUnsafe     = prevUnsafe;
-		functionBody = prevFunctionBody;
-		refParameters.clear();
-		namedReturns.clear();
-		sema.symbolContexts.pop();
-	}
 
-	void AstrumCodegen::printProperty(AstrumParser::PropertyContext* ctx) {
-		sema.symbolContexts.push(sema.symbolContexts.top());
-		bool prevUnsafe    = isUnsafe;
-		bool isInline      = false;
-		bool isConstexpr   = false;
-		isVoidReturn       = false;
-		SourcePosition pos = {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()};
-		if (sema.properties.contains(pos)) {
-			const PropertyDefinition& prop = sema.properties[pos];
-			currentPropertyField           = "p_" + prop.id;
-			if (prop.access != AccessSpecifier::Private &&
-			    (prop.isInline || prop.isConstexpr || prop.parentTemplateParams ||
-			     prop.parentTemplateSpecializationArgs)) {
-				out.switchTo(true);
-				emptyLine = true;
-			}
-
-			isUnsafe = prop.isUnsafe;
-			if (!prop.compilationCondition.empty()) {
-				out << "#if " << prop.compilationCondition << std::endl;
-			}
-			if (prop.isProtectedType) {
-				out << "namespace __" << filename << "_Protected"
-				    << (prop.isUnsafeType ? "__Unsafe" : "") << " {\n"
-				    << std::string(++depth, '\t');
-			} else if (prop.isUnsafeType) {
-				out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
-				    << std::string(++depth, '\t');
-			}
-
-			if (prop.setter) {
-				if (auto body = prop.setter->functionBody()) {
-					if (body->Equal())
-						isConstexpr = true;
-					else if (body->Assign())
-						isInline = true;
-				} else if (auto body = prop.setter->shortFunctionBody()) {
-					if (body->EqualArrow())
-						isConstexpr = true;
-					else if (body->AssignArrow())
-						isInline = true;
-				} else {
-					isInline = true;
-				}
-
+		void AstrumCodegen::printProperty(AstrumParser::PropertyContext * ctx) {
+			sema.symbolContexts.push(sema.symbolContexts.top());
+			bool prevUnsafe    = isUnsafe;
+			bool isInline      = false;
+			bool isConstexpr   = false;
+			isVoidReturn       = false;
+			SourcePosition pos = {ctx->getStart()->getLine(),
+			                      ctx->getStart()->getCharPositionInLine()};
+			if (sema.properties.contains(pos)) {
+				const PropertyDefinition& prop = sema.properties[pos];
+				currentPropertyField           = "p_" + prop.id;
 				if (prop.access != AccessSpecifier::Private &&
-				    (isInline || isConstexpr || prop.parentTemplateParams ||
+				    (prop.isInline || prop.isConstexpr || prop.parentTemplateParams ||
 				     prop.parentTemplateSpecializationArgs)) {
 					out.switchTo(true);
 					emptyLine = true;
 				}
 
-				out << "#line " << prop.setter->getStart()->getLine() << " \"" << fullFilename
-				    << ".ast\"\n"
-				    << std::string(depth, '\t');
-				if (prop.parentTemplateParams) {
-					printTemplateParams(prop.parentTemplateParams);
-					out << " ";
-					if (prop.parentConstraints) {
-						printConstraintClause(prop.parentConstraints);
-						out << " ";
-					}
-				} else if (prop.parentTemplateSpecializationArgs) {
-					out << "template<> ";
+				isUnsafe = prop.isUnsafe;
+				if (!prop.compilationCondition.empty()) {
+					out << "#if " << prop.compilationCondition << std::endl;
+				}
+				if (prop.isProtectedType) {
+					out << "namespace __" << filename << "_Protected"
+					    << (prop.isUnsafeType ? "__Unsafe" : "") << " {\n"
+					    << std::string(++depth, '\t');
+				} else if (prop.isUnsafeType) {
+					out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
+					    << std::string(++depth, '\t');
 				}
 
-				if (isConstexpr) {
-					out << "inline constexpr ";
-				} else if (isInline) {
-					out << "inline ";
-				}
-
-				out << "auto ";
-				auto parent = prop.parentType;
-				StringReplace(parent, ".", "::");
-				StringReplace(parent, "::::::", "...");
-				auto pos = parent.find("<{{specialization}}>");
-				if (pos != parent.npos) {
-					out << parent.substr(0, pos);
-					out << "<";
-					printTemplateArgumentList(prop.parentTemplateSpecializationArgs);
-					out << ">";
-					out << parent.substr(pos + 20);
-				} else {
-					out << parent;
-				}
-				currentShortType        = prop.shortType;
-				currentTypeWithTemplate = parent;
-				out << "::set" << prop.id << "(const ";
-				printTypeId(prop.type);
-				out << "& value) ";
-				if (!prop.isStatic) {
-					isPropertySetter = true;
-					out << "-> __self";
-					auto shortParent = StringSplit(parent, "::").back();
-					if (shortParent.starts_with("__Class_"))
-						out << "Class";
-					out << "& ";
-				} else {
-					out << "-> void ";
-					isVoidReturn = true;
-				}
-
-				currentShortType.clear();
-				currentTypeWithTemplate.clear();
-
-				if (auto body = prop.setter->functionBody()) {
-					functionProlog = true;
-					printFunctionBody(body);
-				} else if (auto body = prop.setter->shortFunctionBody()) {
-					printShortFunctionBody(prop.setter->shortFunctionBody());
-				} else {
-					out << "{ p_" << prop.id << " = value; ";
-					if (!prop.isStatic)
-						out << "return *this;";
-					out << "}";
-				}
-
-				isPropertySetter = false;
-				out << std::endl << std::string(depth, '\t');
-			}
-			if (prop.getter) {
-				if (auto body = prop.getter->functionBody()) {
-					if (body->Equal())
-						isConstexpr = true;
-					else if (body->Assign())
+				if (prop.setter) {
+					if (auto body = prop.setter->functionBody()) {
+						if (body->Equal())
+							isConstexpr = true;
+						else if (body->Assign())
+							isInline = true;
+					} else if (auto body = prop.setter->shortFunctionBody()) {
+						if (body->EqualArrow())
+							isConstexpr = true;
+						else if (body->AssignArrow())
+							isInline = true;
+					} else {
 						isInline = true;
-				} else if (auto body = prop.getter->shortFunctionBody()) {
-					if (body->EqualArrow())
-						isConstexpr = true;
-					else if (body->AssignArrow())
+					}
+
+					if (prop.access != AccessSpecifier::Private &&
+					    (isInline || isConstexpr || prop.parentTemplateParams ||
+					     prop.parentTemplateSpecializationArgs)) {
+						out.switchTo(true);
+						emptyLine = true;
+					}
+
+					out << "#line " << prop.setter->getStart()->getLine() << " \"" << fullFilename
+					    << ".ast\"\n"
+					    << std::string(depth, '\t');
+					if (prop.parentTemplateParams) {
+						printTemplateParams(prop.parentTemplateParams);
+						out << " ";
+						if (prop.parentConstraints) {
+							printConstraintClause(prop.parentConstraints);
+							out << " ";
+						}
+					} else if (prop.parentTemplateSpecializationArgs) {
+						out << "template<> ";
+					}
+
+					if (isConstexpr) {
+						out << "inline constexpr ";
+					} else if (isInline) {
+						out << "inline ";
+					}
+
+					out << "auto ";
+					auto parent = prop.parentType;
+					StringReplace(parent, ".", "::");
+					StringReplace(parent, "::::::", "...");
+					auto pos = parent.find("<{{specialization}}>");
+					if (pos != parent.npos) {
+						out << parent.substr(0, pos);
+						out << "<";
+						printTemplateArgumentList(prop.parentTemplateSpecializationArgs);
+						out << ">";
+						out << parent.substr(pos + 20);
+					} else {
+						out << parent;
+					}
+					currentShortType        = prop.shortType;
+					currentTypeWithTemplate = parent;
+					out << "::set" << prop.id << "(const ";
+					printTypeId(prop.type);
+					out << "& value) ";
+					if (!prop.isStatic) {
+						isPropertySetter = true;
+						out << "-> __self";
+						auto shortParent = StringSplit(parent, "::").back();
+						if (shortParent.starts_with("__Class_"))
+							out << "Class";
+						out << "& ";
+					} else {
+						out << "-> void ";
+						isVoidReturn = true;
+					}
+
+					currentShortType.clear();
+					currentTypeWithTemplate.clear();
+
+					if (auto body = prop.setter->functionBody()) {
+						functionProlog = true;
+						printFunctionBody(body);
+					} else if (auto body = prop.setter->shortFunctionBody()) {
+						printShortFunctionBody(prop.setter->shortFunctionBody());
+					} else {
+						out << "{ p_" << prop.id << " = value; ";
+						if (!prop.isStatic)
+							out << "return *this;";
+						out << "}";
+					}
+
+					isPropertySetter = false;
+					out << std::endl << std::string(depth, '\t');
+				}
+				if (prop.getter) {
+					if (auto body = prop.getter->functionBody()) {
+						if (body->Equal())
+							isConstexpr = true;
+						else if (body->Assign())
+							isInline = true;
+					} else if (auto body = prop.getter->shortFunctionBody()) {
+						if (body->EqualArrow())
+							isConstexpr = true;
+						else if (body->AssignArrow())
+							isInline = true;
+					} else {
 						isInline = true;
-				} else {
-					isInline = true;
-				}
-
-				if (prop.access != AccessSpecifier::Private &&
-				    (isInline || isConstexpr || prop.parentTemplateParams ||
-				     prop.parentTemplateSpecializationArgs)) {
-					out.switchTo(true);
-					emptyLine = true;
-				}
-
-				out << "#line " << prop.getter->getStart()->getLine() << " \"" << fullFilename
-				    << ".ast\"\n"
-				    << std::string(depth, '\t');
-				if (prop.parentTemplateParams) {
-					printTemplateParams(prop.parentTemplateParams);
-					out << " ";
-					if (prop.parentConstraints) {
-						printConstraintClause(prop.parentConstraints);
-						out << " ";
 					}
-				} else if (prop.parentTemplateSpecializationArgs) {
-					out << "template<> ";
-				}
 
-				if (isConstexpr) {
-					out << "inline constexpr ";
-				} else if (isInline) {
-					out << "inline ";
-				}
-
-				out << "auto ";
-				auto parent = prop.parentType;
-				StringReplace(parent, ".", "::");
-				StringReplace(parent, "::::::", "...");
-				auto pos = parent.find("<{{specialization}}>");
-				if (pos != parent.npos) {
-					out << parent.substr(0, pos);
-					out << "<";
-					printTemplateArgumentList(prop.parentTemplateSpecializationArgs);
-					out << ">";
-					out << parent.substr(pos + 20);
-				} else {
-					out << parent;
-				}
-				currentShortType        = prop.shortType;
-				currentTypeWithTemplate = parent;
-				out << "::get" << prop.id << "() ";
-				if (!prop.isStatic) {
-					out << "const ";
-				}
-
-				out << " -> ";
-				if (prop.isConst)
-					out << "const ";
-				printTypeId(prop.type);
-				if (prop.isRef)
-					out << "&";
-				out << " ";
-
-				currentShortType.clear();
-				currentTypeWithTemplate.clear();
-
-				if (auto body = prop.getter->functionBody()) {
-					functionProlog = true;
-					printFunctionBody(body);
-				} else if (auto body = prop.getter->shortFunctionBody()) {
-					printShortFunctionBody(prop.getter->shortFunctionBody());
-				} else {
-					out << "{ return p_" << prop.id << "; }";
-				}
-
-				out << std::endl << std::string(depth, '\t');
-			} else if (!prop.setter) {
-				out << "#line " << prop.pos.line << " \"" << fullFilename << ".ast\"\n"
-				    << std::string(depth, '\t');
-				if (prop.parentTemplateParams) {
-					printTemplateParams(prop.parentTemplateParams);
-					out << " ";
-					if (prop.parentConstraints) {
-						printConstraintClause(prop.parentConstraints);
-						out << " ";
+					if (prop.access != AccessSpecifier::Private &&
+					    (isInline || isConstexpr || prop.parentTemplateParams ||
+					     prop.parentTemplateSpecializationArgs)) {
+						out.switchTo(true);
+						emptyLine = true;
 					}
-				} else if (prop.parentTemplateSpecializationArgs) {
-					out << "template<> ";
+
+					out << "#line " << prop.getter->getStart()->getLine() << " \"" << fullFilename
+					    << ".ast\"\n"
+					    << std::string(depth, '\t');
+					if (prop.parentTemplateParams) {
+						printTemplateParams(prop.parentTemplateParams);
+						out << " ";
+						if (prop.parentConstraints) {
+							printConstraintClause(prop.parentConstraints);
+							out << " ";
+						}
+					} else if (prop.parentTemplateSpecializationArgs) {
+						out << "template<> ";
+					}
+
+					if (isConstexpr) {
+						out << "inline constexpr ";
+					} else if (isInline) {
+						out << "inline ";
+					}
+
+					out << "auto ";
+					auto parent = prop.parentType;
+					StringReplace(parent, ".", "::");
+					StringReplace(parent, "::::::", "...");
+					auto pos = parent.find("<{{specialization}}>");
+					if (pos != parent.npos) {
+						out << parent.substr(0, pos);
+						out << "<";
+						printTemplateArgumentList(prop.parentTemplateSpecializationArgs);
+						out << ">";
+						out << parent.substr(pos + 20);
+					} else {
+						out << parent;
+					}
+					currentShortType        = prop.shortType;
+					currentTypeWithTemplate = parent;
+					out << "::get" << prop.id << "() ";
+					if (!prop.isStatic) {
+						out << "const ";
+					}
+
+					out << " -> ";
+					if (prop.isConst)
+						out << "const ";
+					printTypeId(prop.type);
+					if (prop.isRef)
+						out << "&";
+					out << " ";
+
+					currentShortType.clear();
+					currentTypeWithTemplate.clear();
+
+					if (auto body = prop.getter->functionBody()) {
+						functionProlog = true;
+						printFunctionBody(body);
+					} else if (auto body = prop.getter->shortFunctionBody()) {
+						printShortFunctionBody(prop.getter->shortFunctionBody());
+					} else {
+						out << "{ return p_" << prop.id << "; }";
+					}
+
+					out << std::endl << std::string(depth, '\t');
+				} else if (!prop.setter) {
+					out << "#line " << prop.pos.line << " \"" << fullFilename << ".ast\"\n"
+					    << std::string(depth, '\t');
+					if (prop.parentTemplateParams) {
+						printTemplateParams(prop.parentTemplateParams);
+						out << " ";
+						if (prop.parentConstraints) {
+							printConstraintClause(prop.parentConstraints);
+							out << " ";
+						}
+					} else if (prop.parentTemplateSpecializationArgs) {
+						out << "template<> ";
+					}
+
+					if (prop.isConstexpr) {
+						out << "inline constexpr ";
+					} else if (prop.isInline) {
+						out << "inline ";
+					}
+
+					out << "auto ";
+					auto parent = prop.parentType;
+					StringReplace(parent, ".", "::");
+					StringReplace(parent, "::::::", "...");
+					auto pos = parent.find("<{{specialization}}>");
+					if (pos != parent.npos) {
+						out << parent.substr(0, pos);
+						out << "<";
+						printTemplateArgumentList(prop.parentTemplateSpecializationArgs);
+						out << ">";
+						out << parent.substr(pos + 20);
+					} else {
+						out << parent;
+					}
+					currentShortType        = prop.shortType;
+					currentTypeWithTemplate = parent;
+					out << "::get" << prop.id << "() ";
+					if (!prop.isStatic) {
+						out << "const ";
+					}
+
+					out << " -> ";
+					if (prop.isConst)
+						out << "const ";
+					printTypeId(prop.type);
+					if (prop.isRef)
+						out << "&";
+					out << " ";
+
+					currentShortType.clear();
+					currentTypeWithTemplate.clear();
+
+					if (auto body = ctx->functionBody()) {
+						functionProlog = true;
+						printFunctionBody(body);
+					} else if (auto body = ctx->shortFunctionBody()) {
+						printShortFunctionBody(body);
+					}
+
+					out << std::endl << std::string(depth, '\t');
 				}
 
-				if (prop.isConstexpr) {
-					out << "inline constexpr ";
-				} else if (prop.isInline) {
-					out << "inline ";
+				if (prop.isProtectedType || prop.isUnsafeType)
+					out << "\n" << std::string(--depth, '\t') << "}";
+				out << std::endl;
+				if (!prop.compilationCondition.empty()) {
+					out << "#endif " << std::endl;
+				}
+				out.switchTo(false);
+			} else {
+				auto id              = ctx->Identifier()->getText();
+				currentPropertyField = "p_" + id;
+				isUnsafe             = ctx->Unsafe();
+
+				AstrumParser::PropertyGetterContext* getter = nullptr;
+				AstrumParser::PropertySetterContext* setter = nullptr;
+				if (auto body = ctx->propertyBody()) {
+					getter = body->propertyGetter();
+					setter = body->propertySetter();
 				}
 
-				out << "auto ";
-				auto parent = prop.parentType;
-				StringReplace(parent, ".", "::");
-				StringReplace(parent, "::::::", "...");
-				auto pos = parent.find("<{{specialization}}>");
-				if (pos != parent.npos) {
-					out << parent.substr(0, pos);
-					out << "<";
-					printTemplateArgumentList(prop.parentTemplateSpecializationArgs);
-					out << ">";
-					out << parent.substr(pos + 20);
-				} else {
-					out << parent;
-				}
-				currentShortType        = prop.shortType;
-				currentTypeWithTemplate = parent;
-				out << "::get" << prop.id << "() ";
-				if (!prop.isStatic) {
-					out << "const ";
+				if (setter && (setter->Semi() || sema.propertiesNeedField.contains(setter))) {
+					out << "private: ";
+					if (ctx->Const())
+						out << "const ";
+					printTypeId(ctx->theTypeId());
+					if (ctx->Ref())
+						out << "&";
+					out << " " << currentPropertyField;
+					if (ctx->initializerClause()) {
+						out << " = ";
+						printInitializerClause(ctx->initializerClause());
+					}
+					out << ";" << std::endl << std::string(depth, '\t');
 				}
 
-				out << " -> ";
-				if (prop.isConst)
-					out << "const ";
-				printTypeId(prop.type);
-				if (prop.isRef)
-					out << "&";
-				out << " ";
-
-				currentShortType.clear();
-				currentTypeWithTemplate.clear();
-
-				if (auto body = ctx->functionBody()) {
-					functionProlog = true;
-					printFunctionBody(body);
-				} else if (auto body = ctx->shortFunctionBody()) {
-					printShortFunctionBody(body);
-				}
-
-				out << std::endl << std::string(depth, '\t');
-			}
-
-			if (prop.isProtectedType || prop.isUnsafeType)
-				out << "\n" << std::string(--depth, '\t') << "}";
-			out << std::endl;
-			if (!prop.compilationCondition.empty()) {
-				out << "#endif " << std::endl;
-			}
-			out.switchTo(false);
-		} else {
-			auto id              = ctx->Identifier()->getText();
-			currentPropertyField = "p_" + id;
-			isUnsafe             = ctx->Unsafe();
-
-			AstrumParser::PropertyGetterContext* getter = nullptr;
-			AstrumParser::PropertySetterContext* setter = nullptr;
-			if (auto body = ctx->propertyBody()) {
-				getter = body->propertyGetter();
-				setter = body->propertySetter();
-			}
-
-			if (setter && (setter->Semi() || sema.propertiesNeedField.contains(setter))) {
-				out << "private: ";
-				if (ctx->Const())
-					out << "const ";
-				printTypeId(ctx->theTypeId());
-				if (ctx->Ref())
-					out << "&";
-				out << " " << currentPropertyField;
-				if (ctx->initializerClause()) {
-					out << " = ";
-					printInitializerClause(ctx->initializerClause());
-				}
-				out << ";" << std::endl << std::string(depth, '\t');
-			}
-
-			if (!currentAccessSpecifier) {
-				if (auto acc = ctx->accessSpecifier()) {
-					if (acc->Public())
-						currentAccessSpecifier = AccessSpecifier::Public;
-					else if (acc->Internal())
-						currentAccessSpecifier = AccessSpecifier::Internal;
-					else if (acc->Protected())
-						currentAccessSpecifier = AccessSpecifier::Protected;
-					else if (acc->Private())
+				if (!currentAccessSpecifier) {
+					if (auto acc = ctx->accessSpecifier()) {
+						if (acc->Public())
+							currentAccessSpecifier = AccessSpecifier::Public;
+						else if (acc->Internal())
+							currentAccessSpecifier = AccessSpecifier::Internal;
+						else if (acc->Protected())
+							currentAccessSpecifier = AccessSpecifier::Protected;
+						else if (acc->Private())
+							currentAccessSpecifier = AccessSpecifier::Private;
+					} else {
 						currentAccessSpecifier = AccessSpecifier::Private;
-				} else {
-					currentAccessSpecifier = AccessSpecifier::Private;
+					}
 				}
-			}
-			AccessSpecifier getAccess;
-			AccessSpecifier setAccess;
-			if (setter) {
-				if (auto body = setter->functionBody()) {
-					if (body->Equal())
-						isConstexpr = true;
-					else if (body->Assign())
+				AccessSpecifier getAccess;
+				AccessSpecifier setAccess;
+				if (setter) {
+					if (auto body = setter->functionBody()) {
+						if (body->Equal())
+							isConstexpr = true;
+						else if (body->Assign())
+							isInline = true;
+					} else if (auto body = setter->shortFunctionBody()) {
+						if (body->EqualArrow())
+							isConstexpr = true;
+						else if (body->AssignArrow())
+							isInline = true;
+					} else {
 						isInline = true;
-				} else if (auto body = setter->shortFunctionBody()) {
-					if (body->EqualArrow())
-						isConstexpr = true;
-					else if (body->AssignArrow())
-						isInline = true;
-				} else {
-					isInline = true;
-				}
+					}
 
-				out << "#line " << setter->getStart()->getLine() << " \"" << fullFilename
-				    << ".ast\"\n"
-				    << std::string(depth, '\t');
+					out << "#line " << setter->getStart()->getLine() << " \"" << fullFilename
+					    << ".ast\"\n"
+					    << std::string(depth, '\t');
 
-				setAccess = *currentAccessSpecifier;
-				if (setter->protectedInternal())
-					setAccess = AccessSpecifier::ProtectedInternal;
-				if (auto acc = setter->accessSpecifier()) {
-					if (acc->Public())
-						setAccess = AccessSpecifier::Public;
-					else if (acc->Internal())
-						setAccess = AccessSpecifier::Internal;
-					else if (acc->Protected())
-						setAccess = AccessSpecifier::Protected;
-					else if (acc->Private())
-						setAccess = AccessSpecifier::Private;
-				}
-				switch (setAccess) {
-					case AccessSpecifier::Public:
-					case AccessSpecifier::Internal:
-						out << "public: ";
-						break;
-					case AccessSpecifier::Protected:
-					case AccessSpecifier::ProtectedInternal:
-						out << "protected: ";
-						break;
-					case AccessSpecifier::Private:
-						out << "private: ";
-						break;
-				}
-
-				if (isConstexpr) {
-					out << "inline constexpr ";
-				} else if (isInline) {
-					out << "inline ";
-				}
-
-				out << "auto ";
-				out << "set" << id << "(const ";
-				printTypeId(ctx->theTypeId());
-				out << "& value) ";
-				isPropertySetter = true;
-				out << "-> __self";
-				if (currentShortType.starts_with("__Class_"))
-					out << "Class";
-				out << "& ";
-				/*if (ctx->Override()) out << "override ";
-				if (ctx->Final()) out << "final ";*/
-
-				if (auto body = setter->functionBody()) {
-					functionProlog = true;
-					printFunctionBody(body);
-				} else if (auto body = setter->shortFunctionBody()) {
-					printShortFunctionBody(setter->shortFunctionBody());
-				} else {
-					out << "{ p_" << id << " = value; return *this; }";
-				}
-
-				isPropertySetter = false;
-				out << std::endl << std::string(depth, '\t');
-			}
-			if (getter) {
-				isInline    = false;
-				isConstexpr = false;
-				if (auto body = getter->functionBody()) {
-					if (body->Equal())
-						isConstexpr = true;
-					else if (body->Assign())
-						isInline = true;
-				} else if (auto body = getter->shortFunctionBody()) {
-					if (body->EqualArrow())
-						isConstexpr = true;
-					else if (body->AssignArrow())
-						isInline = true;
-				} else {
-					isInline = true;
-				}
-
-				out << "#line " << getter->getStart()->getLine() << " \"" << fullFilename
-				    << ".ast\"\n"
-				    << std::string(depth, '\t');
-				getAccess = *currentAccessSpecifier;
-				if (getter->protectedInternal())
-					getAccess = AccessSpecifier::ProtectedInternal;
-				if (auto acc = getter->accessSpecifier()) {
-					if (acc->Public())
-						getAccess = AccessSpecifier::Public;
-					else if (acc->Internal())
-						getAccess = AccessSpecifier::Internal;
-					else if (acc->Protected())
-						getAccess = AccessSpecifier::Protected;
-					else if (acc->Private())
-						getAccess = AccessSpecifier::Private;
-				}
-				switch (getAccess) {
-					case AccessSpecifier::Public:
-					case AccessSpecifier::Internal:
-						out << "public: ";
-						break;
-					case AccessSpecifier::Protected:
-					case AccessSpecifier::ProtectedInternal:
-						out << "protected: ";
-						break;
-					case AccessSpecifier::Private:
-						out << "private: ";
-						break;
-				}
-
-				if (isConstexpr) {
-					out << "inline constexpr ";
-				} else if (isInline) {
-					out << "inline ";
-				}
-
-				out << "auto ";
-				out << "get" << id << "() const ";
-
-				out << " -> ";
-				if (ctx->Const())
-					out << "const ";
-				printTypeId(ctx->theTypeId());
-				if (ctx->Ref())
-					out << "&";
-				out << " ";
-				/*if (ctx->Override()) out << "override ";
-				if (ctx->Final()) out << "final ";*/
-
-				if (auto body = getter->functionBody()) {
-					functionProlog = true;
-					printFunctionBody(body);
-				} else if (auto body = getter->shortFunctionBody()) {
-					printShortFunctionBody(getter->shortFunctionBody());
-				} else {
-					out << "{ return p_" << id << "; }";
-				}
-
-				out << std::endl << std::string(depth, '\t');
-			} else if (!setter) {
-				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-				    << std::string(depth, '\t');
-
-				getAccess = *currentAccessSpecifier;
-				switch (*currentAccessSpecifier) {
-					case AccessSpecifier::Public:
-					case AccessSpecifier::Internal:
-						out << "public: ";
-						break;
-					case AccessSpecifier::Protected:
-					case AccessSpecifier::ProtectedInternal:
-						out << "protected: ";
-						break;
-					case AccessSpecifier::Private:
-						out << "private: ";
-						break;
-				}
-
-				isInline    = false;
-				isConstexpr = false;
-				if (auto body = ctx->functionBody()) {
-					if (body->Equal())
-						isConstexpr = true;
-					else if (body->Assign())
-						isInline = true;
-				} else if (auto body = ctx->shortFunctionBody()) {
-					if (body->EqualArrow())
-						isConstexpr = true;
-					else if (body->AssignArrow())
-						isInline = true;
-				}
-
-				if (isConstexpr) {
-					out << "inline constexpr ";
-				} else if (isInline) {
-					out << "inline ";
-				}
-
-				out << "auto ";
-				out << "get" << id << "() const ";
-
-				out << " -> ";
-				if (ctx->Const())
-					out << "const ";
-				printTypeId(ctx->theTypeId());
-				if (ctx->Ref())
-					out << "&";
-				out << " ";
-				/*if (ctx->Override()) out << "override ";
-				if (ctx->Final()) out << "final ";*/
-
-				if (auto body = ctx->functionBody()) {
-					functionProlog = true;
-					printFunctionBody(body);
-				} else if (auto body = ctx->shortFunctionBody()) {
-					printShortFunctionBody(body);
-				}
-
-				out << std::endl << std::string(depth, '\t');
-			}
-
-			out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
-			if (setter) {
-				if (getter) {
-					out << "ADV_PROPERTY_GETTER_SETTER";
-					out << "(";
-					switch (*currentAccessSpecifier) {
+					setAccess = *currentAccessSpecifier;
+					if (setter->protectedInternal())
+						setAccess = AccessSpecifier::ProtectedInternal;
+					if (auto acc = setter->accessSpecifier()) {
+						if (acc->Public())
+							setAccess = AccessSpecifier::Public;
+						else if (acc->Internal())
+							setAccess = AccessSpecifier::Internal;
+						else if (acc->Protected())
+							setAccess = AccessSpecifier::Protected;
+						else if (acc->Private())
+							setAccess = AccessSpecifier::Private;
+					}
+					switch (setAccess) {
 						case AccessSpecifier::Public:
 						case AccessSpecifier::Internal:
-							out << "public";
+							out << "public: ";
 							break;
 						case AccessSpecifier::Protected:
 						case AccessSpecifier::ProtectedInternal:
-							out << "protected";
+							out << "protected: ";
 							break;
 						case AccessSpecifier::Private:
-							out << "private";
+							out << "private: ";
 							break;
 					}
 
-					out << ", " << id << ", ";
+					if (isConstexpr) {
+						out << "inline constexpr ";
+					} else if (isInline) {
+						out << "inline ";
+					}
+
+					out << "auto ";
+					out << "set" << id << "(const ";
+					printTypeId(ctx->theTypeId());
+					out << "& value) ";
+					isPropertySetter = true;
+					out << "-> __self";
+					if (currentShortType.starts_with("__Class_"))
+						out << "Class";
+					out << "& ";
+					/*if (ctx->Override()) out << "override ";
+					if (ctx->Final()) out << "final ";*/
+
+					if (auto body = setter->functionBody()) {
+						functionProlog = true;
+						printFunctionBody(body);
+					} else if (auto body = setter->shortFunctionBody()) {
+						printShortFunctionBody(setter->shortFunctionBody());
+					} else {
+						out << "{ p_" << id << " = value; return *this; }";
+					}
+
+					isPropertySetter = false;
+					out << std::endl << std::string(depth, '\t');
+				}
+				if (getter) {
+					isInline    = false;
+					isConstexpr = false;
+					if (auto body = getter->functionBody()) {
+						if (body->Equal())
+							isConstexpr = true;
+						else if (body->Assign())
+							isInline = true;
+					} else if (auto body = getter->shortFunctionBody()) {
+						if (body->EqualArrow())
+							isConstexpr = true;
+						else if (body->AssignArrow())
+							isInline = true;
+					} else {
+						isInline = true;
+					}
+
+					out << "#line " << getter->getStart()->getLine() << " \"" << fullFilename
+					    << ".ast\"\n"
+					    << std::string(depth, '\t');
+					getAccess = *currentAccessSpecifier;
+					if (getter->protectedInternal())
+						getAccess = AccessSpecifier::ProtectedInternal;
+					if (auto acc = getter->accessSpecifier()) {
+						if (acc->Public())
+							getAccess = AccessSpecifier::Public;
+						else if (acc->Internal())
+							getAccess = AccessSpecifier::Internal;
+						else if (acc->Protected())
+							getAccess = AccessSpecifier::Protected;
+						else if (acc->Private())
+							getAccess = AccessSpecifier::Private;
+					}
+					switch (getAccess) {
+						case AccessSpecifier::Public:
+						case AccessSpecifier::Internal:
+							out << "public: ";
+							break;
+						case AccessSpecifier::Protected:
+						case AccessSpecifier::ProtectedInternal:
+							out << "protected: ";
+							break;
+						case AccessSpecifier::Private:
+							out << "private: ";
+							break;
+					}
+
+					if (isConstexpr) {
+						out << "inline constexpr ";
+					} else if (isInline) {
+						out << "inline ";
+					}
+
+					out << "auto ";
+					out << "get" << id << "() const ";
+
+					out << " -> ";
+					if (ctx->Const())
+						out << "const ";
+					printTypeId(ctx->theTypeId());
+					if (ctx->Ref())
+						out << "&";
+					out << " ";
+					/*if (ctx->Override()) out << "override ";
+					if (ctx->Final()) out << "final ";*/
+
+					if (auto body = getter->functionBody()) {
+						functionProlog = true;
+						printFunctionBody(body);
+					} else if (auto body = getter->shortFunctionBody()) {
+						printShortFunctionBody(getter->shortFunctionBody());
+					} else {
+						out << "{ return p_" << id << "; }";
+					}
+
+					out << std::endl << std::string(depth, '\t');
+				} else if (!setter) {
+					out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename
+					    << ".ast\"\n"
+					    << std::string(depth, '\t');
+
+					getAccess = *currentAccessSpecifier;
+					switch (*currentAccessSpecifier) {
+						case AccessSpecifier::Public:
+						case AccessSpecifier::Internal:
+							out << "public: ";
+							break;
+						case AccessSpecifier::Protected:
+						case AccessSpecifier::ProtectedInternal:
+							out << "protected: ";
+							break;
+						case AccessSpecifier::Private:
+							out << "private: ";
+							break;
+					}
+
+					isInline    = false;
+					isConstexpr = false;
+					if (auto body = ctx->functionBody()) {
+						if (body->Equal())
+							isConstexpr = true;
+						else if (body->Assign())
+							isInline = true;
+					} else if (auto body = ctx->shortFunctionBody()) {
+						if (body->EqualArrow())
+							isConstexpr = true;
+						else if (body->AssignArrow())
+							isInline = true;
+					}
+
+					if (isConstexpr) {
+						out << "inline constexpr ";
+					} else if (isInline) {
+						out << "inline ";
+					}
+
+					out << "auto ";
+					out << "get" << id << "() const ";
+
+					out << " -> ";
+					if (ctx->Const())
+						out << "const ";
+					printTypeId(ctx->theTypeId());
+					if (ctx->Ref())
+						out << "&";
+					out << " ";
+					/*if (ctx->Override()) out << "override ";
+					if (ctx->Final()) out << "final ";*/
+
+					if (auto body = ctx->functionBody()) {
+						functionProlog = true;
+						printFunctionBody(body);
+					} else if (auto body = ctx->shortFunctionBody()) {
+						printShortFunctionBody(body);
+					}
+
+					out << std::endl << std::string(depth, '\t');
+				}
+
+				out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
+				if (setter) {
+					if (getter) {
+						out << "ADV_PROPERTY_GETTER_SETTER";
+						out << "(";
+						switch (*currentAccessSpecifier) {
+							case AccessSpecifier::Public:
+							case AccessSpecifier::Internal:
+								out << "public";
+								break;
+							case AccessSpecifier::Protected:
+							case AccessSpecifier::ProtectedInternal:
+								out << "protected";
+								break;
+							case AccessSpecifier::Private:
+								out << "private";
+								break;
+						}
+
+						out << ", " << id << ", ";
+						switch (getAccess) {
+							case AccessSpecifier::Public:
+							case AccessSpecifier::Internal:
+								out << "public";
+								break;
+							case AccessSpecifier::Protected:
+							case AccessSpecifier::ProtectedInternal:
+								out << "protected";
+								break;
+							case AccessSpecifier::Private:
+								out << "private";
+								break;
+						}
+						out << ", get" << id << ", ";
+						switch (setAccess) {
+							case AccessSpecifier::Public:
+							case AccessSpecifier::Internal:
+								out << "public";
+								break;
+							case AccessSpecifier::Protected:
+							case AccessSpecifier::ProtectedInternal:
+								out << "protected";
+								break;
+							case AccessSpecifier::Private:
+								out << "private";
+								break;
+						}
+						out << ", set" << id << ", ";
+						if (ctx->Const())
+							out << "const ";
+						printTypeId(ctx->theTypeId());
+						if (ctx->Ref())
+							out << "&";
+						out << ")";
+					} else {
+						out << "ADV_PROPERTY_SETTER";
+						out << "(";
+						switch (setAccess) {
+							case AccessSpecifier::Public:
+							case AccessSpecifier::Internal:
+								out << "public";
+								break;
+							case AccessSpecifier::Protected:
+							case AccessSpecifier::ProtectedInternal:
+								out << "protected";
+								break;
+							case AccessSpecifier::Private:
+								out << "private";
+								break;
+						}
+
+						out << ", " << id << ", set" << id << ", ";
+						if (ctx->Const())
+							out << "const ";
+						printTypeId(ctx->theTypeId());
+						if (ctx->Ref())
+							out << "&";
+						out << ")";
+					}
+				} else {
+					out << "ADV_PROPERTY_GETTER";
+					out << "(";
 					switch (getAccess) {
 						case AccessSpecifier::Public:
 						case AccessSpecifier::Internal:
@@ -16133,45 +16319,8 @@ namespace AstrumLang {
 							out << "private";
 							break;
 					}
-					out << ", get" << id << ", ";
-					switch (setAccess) {
-						case AccessSpecifier::Public:
-						case AccessSpecifier::Internal:
-							out << "public";
-							break;
-						case AccessSpecifier::Protected:
-						case AccessSpecifier::ProtectedInternal:
-							out << "protected";
-							break;
-						case AccessSpecifier::Private:
-							out << "private";
-							break;
-					}
-					out << ", set" << id << ", ";
-					if (ctx->Const())
-						out << "const ";
-					printTypeId(ctx->theTypeId());
-					if (ctx->Ref())
-						out << "&";
-					out << ")";
-				} else {
-					out << "ADV_PROPERTY_SETTER";
-					out << "(";
-					switch (setAccess) {
-						case AccessSpecifier::Public:
-						case AccessSpecifier::Internal:
-							out << "public";
-							break;
-						case AccessSpecifier::Protected:
-						case AccessSpecifier::ProtectedInternal:
-							out << "protected";
-							break;
-						case AccessSpecifier::Private:
-							out << "private";
-							break;
-					}
 
-					out << ", " << id << ", set" << id << ", ";
+					out << ", " << id << ", get" << id << ", ";
 					if (ctx->Const())
 						out << "const ";
 					printTypeId(ctx->theTypeId());
@@ -16179,292 +16328,95 @@ namespace AstrumLang {
 						out << "&";
 					out << ")";
 				}
-			} else {
-				out << "ADV_PROPERTY_GETTER";
-				out << "(";
-				switch (getAccess) {
-					case AccessSpecifier::Public:
-					case AccessSpecifier::Internal:
-						out << "public";
-						break;
-					case AccessSpecifier::Protected:
-					case AccessSpecifier::ProtectedInternal:
-						out << "protected";
-						break;
-					case AccessSpecifier::Private:
-						out << "private";
-						break;
-				}
+				out << ";";
+			}
+			isUnsafe = prevUnsafe;
+			currentPropertyField.clear();
+			sema.symbolContexts.pop();
+		}
 
-				out << ", " << id << ", get" << id << ", ";
-				if (ctx->Const())
+		void AstrumCodegen::printFunctionTemplateDeclaration(
+		    AstrumParser::FunctionTemplateDeclarationContext * ctx) {
+			if (!currentAccessSpecifier)
+				currentAccessSpecifier = AccessSpecifier::Private;
+			switch (*currentAccessSpecifier) {
+				case AccessSpecifier::Public:
+				case AccessSpecifier::Internal:
+					out << "public: ";
+					break;
+				case AccessSpecifier::Protected:
+				case AccessSpecifier::ProtectedInternal:
+					out << "protected: ";
+					break;
+				case AccessSpecifier::Private:
+					out << "private: ";
+					break;
+			}
+
+			printTemplateParams(ctx->templateParams());
+			out << " auto ";
+			printIdentifier(ctx->Identifier());
+			printFunctionParameters(ctx->functionParams());
+			if (auto spec = ctx->exceptionSpecification()) {
+				out << " ";
+				printExceptionSpecification(spec);
+			}
+			out << " -> ";
+			if (auto ret = ctx->returnType()) {
+				if (ret->Const() || !ret->Ref())
 					out << "const ";
-				printTypeId(ctx->theTypeId());
-				if (ctx->Ref())
+				if (ret->theTypeId())
+					printTypeId(ret->theTypeId());
+				else if (ret->Forward())
+					out << "decltype(auto)";
+				if (ret->Ref())
 					out << "&";
-				out << ")";
 			}
 			out << ";";
 		}
-		isUnsafe = prevUnsafe;
-		currentPropertyField.clear();
-		sema.symbolContexts.pop();
-	}
 
-	void AstrumCodegen::printFunctionTemplateDeclaration(
-	    AstrumParser::FunctionTemplateDeclarationContext* ctx) {
-		if (!currentAccessSpecifier)
-			currentAccessSpecifier = AccessSpecifier::Private;
-		switch (*currentAccessSpecifier) {
-			case AccessSpecifier::Public:
-			case AccessSpecifier::Internal:
-				out << "public: ";
-				break;
-			case AccessSpecifier::Protected:
-			case AccessSpecifier::ProtectedInternal:
-				out << "protected: ";
-				break;
-			case AccessSpecifier::Private:
-				out << "private: ";
-				break;
-		}
-
-		printTemplateParams(ctx->templateParams());
-		out << " auto ";
-		printIdentifier(ctx->Identifier());
-		printFunctionParameters(ctx->functionParams());
-		if (auto spec = ctx->exceptionSpecification()) {
-			out << " ";
-			printExceptionSpecification(spec);
-		}
-		out << " -> ";
-		if (auto ret = ctx->returnType()) {
-			if (ret->Const() || !ret->Ref())
-				out << "const ";
-			if (ret->theTypeId())
-				printTypeId(ret->theTypeId());
-			else if (ret->Forward())
-				out << "decltype(auto)";
-			if (ret->Ref())
-				out << "&";
-		}
-		out << ";";
-	}
-
-	void AstrumCodegen::printFunctionDefinition(AstrumParser::FunctionDefinitionContext* ctx) {
-		isFunctionDeclaration = false;
-		isVoidReturn          = false;
-		sema.symbolContexts.push(sema.symbolContexts.top());
-		auto pfunc =
-		    std::find_if(sema.globalFunctions.begin(), sema.globalFunctions.end(), [&](auto f) {
-			    return f.pos.line == ctx->getStart()->getLine() &&
-			           f.pos.column == ctx->getStart()->getCharPositionInLine();
-		    });
-		bool prevUnsafe = isUnsafe;
-		if (pfunc != sema.globalFunctions.end()) {
-			const FunctionDefinition& func = *pfunc;
-			isMainFunction                 = func.id == "__Astrum_Main";
-			if (func.isInline && func.access != AccessSpecifier::Private) {
-				out.switchTo(true);
-				emptyLine = true;
-			}
-			if (!func.compilationCondition.empty()) {
-				out << "#if " << func.compilationCondition << std::endl;
-			}
-			isUnsafe       = func.isUnsafe;
-			bool _isUnsafe = isUnsafe;
-			if (func.access == AccessSpecifier::Protected) {
-				out << "namespace __" << filename << "_Protected" << (isUnsafe ? "__Unsafe" : "")
-				    << " {\n"
-				    << std::string(++depth, '\t');
-			} else if (isUnsafe) {
-				out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
-				    << std::string(++depth, '\t');
-			}
-
-			if (isMainFunction) {
-				out << "ADV_ENTRY_POINT(";
-				if (!sema.packageName.empty()) {
-					out << sema.packageName;
-				}
-				out << ")\n" << std::string(depth, '\t');
-			}
-			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			if (isMainFunction) {
-				out << "extern \"C\" ";
-			}
-			if (func.templateParams) {
-				printTemplateParams(func.templateParams);
-				out << " ";
-				if (func.constraints) {
-					printConstraintClause(func.constraints);
-					out << " ";
-				}
-			} else if (func.templateSpecializationArgs) {
-				out << "template<> ";
-			}
-			if (func.isConsteval) {
-				out << "inline consteval ";
-			} else if (func.isConstexpr) {
-				out << "inline constexpr ";
-			} else if (func.isInline) {
-				out << "inline ";
-			}
-
-			out << "auto " << func.id;
-			if (func.id.ends_with(" new") || func.id.ends_with(" delete"))
-				isNewDeleteOperator = true;
-			if (func.templateSpecializationArgs) {
-				out << "<";
-				printTemplateArgumentList(func.templateSpecializationArgs);
-				out << ">";
-			}
-			printFunctionParameters(func.params);
-			isVariadicTemplate = false;
-			out << " ";
-			if (func.exceptionSpecification)
-				printExceptionSpecification(func.exceptionSpecification);
-			out << " -> ";
-			if (func.returnType) {
-				if (func.isConstReturn || !func.isRefReturn)
-					out << "const ";
-				auto ret = func.returnType;
-				printTypeId(ret);
-				if (auto idc = ctx->returnType()->Identifier()) {
-					auto id = idc->getText();
-					namedReturns.emplace_back(id, ret);
-					symbolTable[id] = ret->getText();
-				} else if (ret->VertLine().empty() && ret->singleTypeId(0)->typeSpecifierSeq() &&
-				           ret->singleTypeId(0)->typeSpecifierSeq()->simpleTypeSpecifier()) {
-					auto tup = ret->singleTypeId(0)
-					               ->typeSpecifierSeq()
-					               ->simpleTypeSpecifier()
-					               ->namedTupleField();
-					for (auto element : tup) {
-						auto id = element->Identifier()->getText();
-						namedReturns.emplace_back(id, element->theTypeId());
-						symbolTable[id] = element->theTypeId()->getText();
-					}
-				}
-			} else if (func.isForwardReturn) {
-				out << "decltype(auto)";
-			} else if (ctx->returnType() && ctx->returnType()->Ref()) {
-				out << "auto";
-			} else if (ctx->shortFunctionBody() && func.id != "operator delete") {
-				out << "decltype(auto)";
-			} else if (isMainFunction) {
-				out << "Builtin::i32";
-			} else {
-				out << "void";
-				isVoidReturn = true;
-			}
-			if (func.isRefReturn)
-				out << "&";
-			isNewDeleteOperator = false;
-			if (auto body = ctx->functionBody()) {
-				functionProlog = true;
-				printFunctionBody(body);
-			} else {
-				printShortFunctionBody(ctx->shortFunctionBody());
-			}
-
-			if (func.isCommutative) {
-				out << std::endl << std::string(depth, '\t');
-				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-				    << std::string(depth, '\t');
-				if (func.templateParams) {
-					printTemplateParams(func.templateParams);
-					out << " ";
-				} else if (func.templateSpecializationArgs) {
-					out << "template<> ";
-				}
-				if (func.isConsteval) {
-					out << "inline consteval ";
-				} else if (func.isConstexpr) {
-					out << "inline constexpr ";
-				} else if (func.isInline) {
-					out << "inline ";
-				}
-
-				out << "auto " << func.id;
-				if (func.id.ends_with(" new") || func.id.ends_with(" delete"))
-					isNewDeleteOperator = true;
-				auto params = func.params->paramDeclClause()->paramDeclList()->paramDeclaration() |
-				              std::views::reverse;
-				if (params.size() == 1 && func.id.starts_with("_operator_"))
-					out << "_postfix";
-				out << "(";
-				bool first = true;
-				for (auto param : params) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printParamDeclaration(param);
-				}
-				out << ")";
-				isVariadicTemplate = false;
-				out << " ";
-				if (func.exceptionSpecification)
-					printExceptionSpecification(func.exceptionSpecification);
-				out << " -> decltype(auto) ";
-				if (!func.params->paramDeclClause()) {
-					out << " { auto copy = ";
-					out << params[0]->Identifier()->getText();
-					out << "; ADV_UFCS(" << func.id << ")(";
-					out << params[0]->Identifier()->getText();
-					out << "); return copy; }";
-				} else {
-					out << " { return ADV_UFCS(" << func.id << ")(";
-					out << params[1]->Identifier()->getText();
-					out << ", ";
-					out << params[0]->Identifier()->getText();
-					out << "); }";
-				}
-			}
-
-			if (func.access == AccessSpecifier::Protected || _isUnsafe)
-				out << "\n" << std::string(--depth, '\t') << "}";
-			out << std::endl;
-			if (!func.compilationCondition.empty()) {
-				out << "#endif " << std::endl;
-			}
-			out.switchTo(false);
-			isMainFunction = false;
-		} else {
-			SourcePosition pos = {ctx->getStart()->getLine(),
-			                      ctx->getStart()->getCharPositionInLine()};
-			if (sema.methods.contains(pos)) {
-				const MethodDefinition& func = sema.methods[pos];
-				if (func.access != AccessSpecifier::Private &&
-				    (func.isInline || func.templateParams || func.templateSpecializationArgs ||
-				     func.parentTemplateParams || func.parentTemplateSpecializationArgs)) {
+		void AstrumCodegen::printFunctionDefinition(AstrumParser::FunctionDefinitionContext * ctx) {
+			isFunctionDeclaration = false;
+			isVoidReturn          = false;
+			sema.symbolContexts.push(sema.symbolContexts.top());
+			auto pfunc =
+			    std::find_if(sema.globalFunctions.begin(), sema.globalFunctions.end(), [&](auto f) {
+				    return f.pos.line == ctx->getStart()->getLine() &&
+				           f.pos.column == ctx->getStart()->getCharPositionInLine();
+			    });
+			bool prevUnsafe = isUnsafe;
+			if (pfunc != sema.globalFunctions.end()) {
+				const FunctionDefinition& func = *pfunc;
+				isMainFunction                 = func.id == "__Astrum_Main";
+				if (func.isInline && func.access != AccessSpecifier::Private) {
 					out.switchTo(true);
 					emptyLine = true;
 				}
 				if (!func.compilationCondition.empty()) {
 					out << "#if " << func.compilationCondition << std::endl;
 				}
-				if (func.isProtectedType) {
+				isUnsafe       = func.isUnsafe;
+				bool _isUnsafe = isUnsafe;
+				if (func.access == AccessSpecifier::Protected) {
 					out << "namespace __" << filename << "_Protected"
-					    << (func.isUnsafeType ? "__Unsafe" : "") << " {\n"
+					    << (isUnsafe ? "__Unsafe" : "") << " {\n"
 					    << std::string(++depth, '\t');
-				} else if (func.isUnsafeType) {
+				} else if (isUnsafe) {
 					out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
 					    << std::string(++depth, '\t');
 				}
 
+				if (isMainFunction) {
+					out << "ADV_ENTRY_POINT(";
+					if (!sema.packageName.empty()) {
+						out << sema.packageName;
+					}
+					out << ")\n" << std::string(depth, '\t');
+				}
 				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
-				if (func.parentTemplateParams) {
-					printTemplateParams(func.parentTemplateParams);
-					out << " ";
-					if (func.parentConstraints) {
-						printConstraintClause(func.parentConstraints);
-						out << " ";
-					}
-				} else if (func.parentTemplateSpecializationArgs) {
-					out << "template<> ";
+				if (isMainFunction) {
+					out << "extern \"C\" ";
 				}
 				if (func.templateParams) {
 					printTemplateParams(func.templateParams);
@@ -16484,23 +16436,7 @@ namespace AstrumLang {
 					out << "inline ";
 				}
 
-				out << "auto ";
-				auto parent = func.parentType;
-				StringReplace(parent, ".", "::");
-				StringReplace(parent, "::::::", "...");
-				auto pos = parent.find("<{{specialization}}>");
-				if (pos != parent.npos) {
-					out << parent.substr(0, pos);
-					out << "<";
-					printTemplateArgumentList(func.parentTemplateSpecializationArgs);
-					out << ">";
-					out << parent.substr(pos + 20);
-				} else {
-					out << parent;
-				}
-				currentShortType        = func.shortType;
-				currentTypeWithTemplate = parent;
-				out << "::" << func.id;
+				out << "auto " << func.id;
 				if (func.id.ends_with(" new") || func.id.ends_with(" delete"))
 					isNewDeleteOperator = true;
 				if (func.templateSpecializationArgs) {
@@ -16508,14 +16444,9 @@ namespace AstrumLang {
 					printTemplateArgumentList(func.templateSpecializationArgs);
 					out << ">";
 				}
-				isUnsafe = func.isUnsafe;
 				printFunctionParameters(func.params);
 				isVariadicTemplate = false;
 				out << " ";
-				if (!func.isStatic) {
-					if (!func.isMutating)
-						out << "const ";
-				}
 				if (func.exceptionSpecification)
 					printExceptionSpecification(func.exceptionSpecification);
 				out << " -> ";
@@ -16523,14 +16454,7 @@ namespace AstrumLang {
 					if (func.isConstReturn || !func.isRefReturn)
 						out << "const ";
 					auto ret = func.returnType;
-
-					auto shortParent = StringSplit(parent, "::").back();
-					if (shortParent.starts_with("__Class_") && ret->getText() == "self" &&
-					    func.isRefReturn) {
-						out << "__selfClass";
-					} else {
-						printTypeId(ret);
-					}
+					printTypeId(ret);
 					if (auto idc = ctx->returnType()->Identifier()) {
 						auto id = idc->getText();
 						namedReturns.emplace_back(id, ret);
@@ -16554,17 +16478,14 @@ namespace AstrumLang {
 					out << "auto";
 				} else if (ctx->shortFunctionBody() && func.id != "operator delete") {
 					out << "decltype(auto)";
+				} else if (isMainFunction) {
+					out << "Builtin::i32";
 				} else {
 					out << "void";
 					isVoidReturn = true;
 				}
 				if (func.isRefReturn)
 					out << "&";
-				/*if (func.isOverride) out << " override ";
-				if (func.isFinal) out << " final ";*/
-				currentShortType.clear();
-				currentTypeWithTemplate.clear();
-
 				isNewDeleteOperator = false;
 				if (auto body = ctx->functionBody()) {
 					functionProlog = true;
@@ -16572,10 +16493,96 @@ namespace AstrumLang {
 				} else {
 					printShortFunctionBody(ctx->shortFunctionBody());
 				}
-				if (func.id == "operator++" || func.id == "operator--") {
-					out << std::endl
-					    << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine()
-					    << " \"" << fullFilename << ".ast\"\n"
+
+				if (func.isCommutative) {
+					out << std::endl << std::string(depth, '\t');
+					out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename
+					    << ".ast\"\n"
+					    << std::string(depth, '\t');
+					if (func.templateParams) {
+						printTemplateParams(func.templateParams);
+						out << " ";
+					} else if (func.templateSpecializationArgs) {
+						out << "template<> ";
+					}
+					if (func.isConsteval) {
+						out << "inline consteval ";
+					} else if (func.isConstexpr) {
+						out << "inline constexpr ";
+					} else if (func.isInline) {
+						out << "inline ";
+					}
+
+					out << "auto " << func.id;
+					if (func.id.ends_with(" new") || func.id.ends_with(" delete"))
+						isNewDeleteOperator = true;
+					auto params =
+					    func.params->paramDeclClause()->paramDeclList()->paramDeclaration() |
+					    std::views::reverse;
+					if (params.size() == 1 && func.id.starts_with("_operator_"))
+						out << "_postfix";
+					out << "(";
+					bool first = true;
+					for (auto param : params) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printParamDeclaration(param);
+					}
+					out << ")";
+					isVariadicTemplate = false;
+					out << " ";
+					if (func.exceptionSpecification)
+						printExceptionSpecification(func.exceptionSpecification);
+					out << " -> decltype(auto) ";
+					if (!func.params->paramDeclClause()) {
+						out << " { auto copy = ";
+						out << params[0]->Identifier()->getText();
+						out << "; ADV_UFCS(" << func.id << ")(";
+						out << params[0]->Identifier()->getText();
+						out << "); return copy; }";
+					} else {
+						out << " { return ADV_UFCS(" << func.id << ")(";
+						out << params[1]->Identifier()->getText();
+						out << ", ";
+						out << params[0]->Identifier()->getText();
+						out << "); }";
+					}
+				}
+
+				if (func.access == AccessSpecifier::Protected || _isUnsafe)
+					out << "\n" << std::string(--depth, '\t') << "}";
+				out << std::endl;
+				if (!func.compilationCondition.empty()) {
+					out << "#endif " << std::endl;
+				}
+				out.switchTo(false);
+				isMainFunction = false;
+			} else {
+				SourcePosition pos = {ctx->getStart()->getLine(),
+				                      ctx->getStart()->getCharPositionInLine()};
+				if (sema.methods.contains(pos)) {
+					const MethodDefinition& func = sema.methods[pos];
+					if (func.access != AccessSpecifier::Private &&
+					    (func.isInline || func.templateParams || func.templateSpecializationArgs ||
+					     func.parentTemplateParams || func.parentTemplateSpecializationArgs)) {
+						out.switchTo(true);
+						emptyLine = true;
+					}
+					if (!func.compilationCondition.empty()) {
+						out << "#if " << func.compilationCondition << std::endl;
+					}
+					if (func.isProtectedType) {
+						out << "namespace __" << filename << "_Protected"
+						    << (func.isUnsafeType ? "__Unsafe" : "") << " {\n"
+						    << std::string(++depth, '\t');
+					} else if (func.isUnsafeType) {
+						out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] \n"
+						    << std::string(++depth, '\t');
+					}
+
+					out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename
+					    << ".ast\"\n"
 					    << std::string(depth, '\t');
 					if (func.parentTemplateParams) {
 						printTemplateParams(func.parentTemplateParams);
@@ -16587,11 +16594,21 @@ namespace AstrumLang {
 					} else if (func.parentTemplateSpecializationArgs) {
 						out << "template<> ";
 					}
+					if (func.templateParams) {
+						printTemplateParams(func.templateParams);
+						out << " ";
+						if (func.constraints) {
+							printConstraintClause(func.constraints);
+							out << " ";
+						}
+					} else if (func.templateSpecializationArgs) {
+						out << "template<> ";
+					}
 					if (func.isConsteval) {
 						out << "inline consteval ";
 					} else if (func.isConstexpr) {
 						out << "inline constexpr ";
-					} else {
+					} else if (func.isInline) {
 						out << "inline ";
 					}
 
@@ -16599,96 +16616,653 @@ namespace AstrumLang {
 					auto parent = func.parentType;
 					StringReplace(parent, ".", "::");
 					StringReplace(parent, "::::::", "...");
-					out << parent;
+					auto pos = parent.find("<{{specialization}}>");
+					if (pos != parent.npos) {
+						out << parent.substr(0, pos);
+						out << "<";
+						printTemplateArgumentList(func.parentTemplateSpecializationArgs);
+						out << ">";
+						out << parent.substr(pos + 20);
+					} else {
+						out << parent;
+					}
 					currentShortType        = func.shortType;
 					currentTypeWithTemplate = parent;
-					out << "::" << func.id << "(int) ";
+					out << "::" << func.id;
+					if (func.id.ends_with(" new") || func.id.ends_with(" delete"))
+						isNewDeleteOperator = true;
+					if (func.templateSpecializationArgs) {
+						out << "<";
+						printTemplateArgumentList(func.templateSpecializationArgs);
+						out << ">";
+					}
+					isUnsafe = func.isUnsafe;
+					printFunctionParameters(func.params);
 					isVariadicTemplate = false;
+					out << " ";
+					if (!func.isStatic) {
+						if (!func.isMutating)
+							out << "const ";
+					}
 					if (func.exceptionSpecification)
 						printExceptionSpecification(func.exceptionSpecification);
-					out << " -> __self { auto copy = Builtin::New<__self>(__self(*this)); "
-					       "++(*this); return copy; }";
+					out << " -> ";
+					if (func.returnType) {
+						if (func.isConstReturn || !func.isRefReturn)
+							out << "const ";
+						auto ret = func.returnType;
+
+						auto shortParent = StringSplit(parent, "::").back();
+						if (shortParent.starts_with("__Class_") && ret->getText() == "self" &&
+						    func.isRefReturn) {
+							out << "__selfClass";
+						} else {
+							printTypeId(ret);
+						}
+						if (auto idc = ctx->returnType()->Identifier()) {
+							auto id = idc->getText();
+							namedReturns.emplace_back(id, ret);
+							symbolTable[id] = ret->getText();
+						} else if (ret->VertLine().empty() &&
+						           ret->singleTypeId(0)->typeSpecifierSeq() &&
+						           ret->singleTypeId(0)
+						               ->typeSpecifierSeq()
+						               ->simpleTypeSpecifier()) {
+							auto tup = ret->singleTypeId(0)
+							               ->typeSpecifierSeq()
+							               ->simpleTypeSpecifier()
+							               ->namedTupleField();
+							for (auto element : tup) {
+								auto id = element->Identifier()->getText();
+								namedReturns.emplace_back(id, element->theTypeId());
+								symbolTable[id] = element->theTypeId()->getText();
+							}
+						}
+					} else if (func.isForwardReturn) {
+						out << "decltype(auto)";
+					} else if (ctx->returnType() && ctx->returnType()->Ref()) {
+						out << "auto";
+					} else if (ctx->shortFunctionBody() && func.id != "operator delete") {
+						out << "decltype(auto)";
+					} else {
+						out << "void";
+						isVoidReturn = true;
+					}
+					if (func.isRefReturn)
+						out << "&";
+					/*if (func.isOverride) out << " override ";
+					if (func.isFinal) out << " final ";*/
 					currentShortType.clear();
 					currentTypeWithTemplate.clear();
-				} else if (func.isCommutative) {
-					out << std::endl
-					    << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine()
-					    << " \"" << fullFilename << ".ast\"\n"
-					    << std::string(depth, '\t');
-					if (func.parentTemplateParams) {
-						printTemplateParams(func.parentTemplateParams);
-						out << " ";
-						if (func.parentConstraints) {
-							printConstraintClause(func.parentConstraints);
-							out << " ";
-						}
-					} else if (func.parentTemplateSpecializationArgs) {
-						out << "template<> ";
-					}
 
-					if (func.isConsteval) {
-						out << "inline consteval ";
-					} else if (func.isConstexpr) {
-						out << "inline constexpr ";
+					isNewDeleteOperator = false;
+					if (auto body = ctx->functionBody()) {
+						functionProlog = true;
+						printFunctionBody(body);
 					} else {
-						out << "inline ";
+						printShortFunctionBody(ctx->shortFunctionBody());
 					}
+					if (func.id == "operator++" || func.id == "operator--") {
+						out << std::endl
+						    << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine()
+						    << " \"" << fullFilename << ".ast\"\n"
+						    << std::string(depth, '\t');
+						if (func.parentTemplateParams) {
+							printTemplateParams(func.parentTemplateParams);
+							out << " ";
+							if (func.parentConstraints) {
+								printConstraintClause(func.parentConstraints);
+								out << " ";
+							}
+						} else if (func.parentTemplateSpecializationArgs) {
+							out << "template<> ";
+						}
+						if (func.isConsteval) {
+							out << "inline consteval ";
+						} else if (func.isConstexpr) {
+							out << "inline constexpr ";
+						} else {
+							out << "inline ";
+						}
 
-					out << "auto ";
-					if (!func.params->paramDeclClause()) {
+						out << "auto ";
 						auto parent = func.parentType;
 						StringReplace(parent, ".", "::");
 						StringReplace(parent, "::::::", "...");
 						out << parent;
 						currentShortType        = func.shortType;
 						currentTypeWithTemplate = parent;
-						out << "::";
+						out << "::" << func.id << "(int) ";
+						isVariadicTemplate = false;
+						if (func.exceptionSpecification)
+							printExceptionSpecification(func.exceptionSpecification);
+						out << " -> __self { auto copy = Builtin::New<__self>(__self(*this)); "
+						       "++(*this); return copy; }";
+						currentShortType.clear();
+						currentTypeWithTemplate.clear();
+					} else if (func.isCommutative) {
+						out << std::endl
+						    << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine()
+						    << " \"" << fullFilename << ".ast\"\n"
+						    << std::string(depth, '\t');
+						if (func.parentTemplateParams) {
+							printTemplateParams(func.parentTemplateParams);
+							out << " ";
+							if (func.parentConstraints) {
+								printConstraintClause(func.parentConstraints);
+								out << " ";
+							}
+						} else if (func.parentTemplateSpecializationArgs) {
+							out << "template<> ";
+						}
+
+						if (func.isConsteval) {
+							out << "inline consteval ";
+						} else if (func.isConstexpr) {
+							out << "inline constexpr ";
+						} else {
+							out << "inline ";
+						}
+
+						out << "auto ";
+						if (!func.params->paramDeclClause()) {
+							auto parent = func.parentType;
+							StringReplace(parent, ".", "::");
+							StringReplace(parent, "::::::", "...");
+							out << parent;
+							currentShortType        = func.shortType;
+							currentTypeWithTemplate = parent;
+							out << "::";
+						}
+
+						out << func.id;
+						if (!func.params->paramDeclClause()) {
+							if (func.id.starts_with("_operator_"))
+								out << "_postfix() ";
+						} else {
+							out << "(";
+							printParamDeclClause(func.params->paramDeclClause());
+							auto parent = func.parentType;
+							StringReplace(parent, ".", "::");
+							StringReplace(parent, "::::::", "...");
+							currentShortType        = func.shortType;
+							currentTypeWithTemplate = parent;
+							out << ", const typename " << parent << "::__self& __this) ";
+						}
+						isVariadicTemplate = false;
+						if (func.exceptionSpecification)
+							printExceptionSpecification(func.exceptionSpecification);
+						out << " -> decltype(auto) ";
+						if (!func.params->paramDeclClause()) {
+							out << " { auto copy = __ref(); ADV_UFCS(" << func.id
+							    << ")(__ref()); return copy; }";
+						} else {
+							out << " { return ADV_UFCS(" << func.id << ")(__this, ";
+							out << func.params->paramDeclClause()
+							           ->paramDeclList()
+							           ->paramDeclaration(0)
+							           ->Identifier()
+							           ->getText();
+							out << "); }";
+						}
+						currentShortType.clear();
+						currentTypeWithTemplate.clear();
+					}
+					if (func.isProtectedType || func.isUnsafeType)
+						out << "\n" << std::string(--depth, '\t') << "}";
+					out << std::endl;
+					if (!func.compilationCondition.empty()) {
+						out << "#endif " << std::endl;
 					}
 
-					out << func.id;
-					if (!func.params->paramDeclClause()) {
-						if (func.id.starts_with("_operator_"))
-							out << "_postfix() ";
-					} else {
-						out << "(";
-						printParamDeclClause(func.params->paramDeclClause());
-						auto parent = func.parentType;
-						StringReplace(parent, ".", "::");
-						StringReplace(parent, "::::::", "...");
-						currentShortType        = func.shortType;
-						currentTypeWithTemplate = parent;
-						out << ", const typename " << parent << "::__self& __this) ";
+					out.switchTo(false);
+				} else {
+					if (!currentAccessSpecifier)
+						currentAccessSpecifier = AccessSpecifier::Private;
+					switch (*currentAccessSpecifier) {
+						case AccessSpecifier::Public:
+						case AccessSpecifier::Internal:
+							out << "public: ";
+							break;
+						case AccessSpecifier::Protected:
+						case AccessSpecifier::ProtectedInternal:
+							out << "protected: ";
+							break;
+						case AccessSpecifier::Private:
+							out << "private: ";
+							break;
 					}
+
+					if (auto tparams = ctx->templateParams()) {
+						printTemplateParams(tparams);
+						out << " ";
+						if (ctx->constraintClause()) {
+							printConstraintClause(ctx->constraintClause());
+							out << " ";
+						}
+					}
+
+					bool isInline    = false;
+					bool isConstexpr = false;
+					bool isConsteval = false;
+					bool isMut       = false;
+					bool isVirtual   = false;
+					bool isOverride  = false;
+					bool isFinal     = false;
+					for (auto spec : ctx->functionSpecifier()) {
+						if (spec->Inline())
+							isInline = true;
+						if (spec->Consteval())
+							isConsteval = true;
+						if (spec->Mutable())
+							isMut = true;
+						if (spec->Virtual())
+							isVirtual = true;
+						if (spec->Override())
+							isOverride = true;
+						if (spec->Final())
+							isFinal = true;
+						if (spec->Unsafe())
+							isUnsafe = true;
+					}
+
+					if (auto body = ctx->functionBody()) {
+						if (body->Equal())
+							isConstexpr = true;
+						else if (body->Assign())
+							isInline = true;
+					} else if (auto body = ctx->shortFunctionBody()) {
+						if (body->EqualArrow())
+							isConstexpr = true;
+						else if (body->AssignArrow())
+							isInline = true;
+					}
+
+					if (isConsteval) {
+						out << "inline consteval ";
+					} else if (isConstexpr) {
+						out << "inline constexpr ";
+					} else if (isInline) {
+						out << "inline ";
+					}
+
+					if (isVirtual)
+						out << "virtual ";
+
+					out << "auto ";
+					if (auto id = ctx->Identifier()) {
+						printIdentifier(id);
+					} else if (auto op = ctx->operatorFunctionId()) {
+						auto id = op->getText();
+						printOperatorFunctionId(op);
+						if (id.ends_with(" new") || id.ends_with(" delete"))
+							isNewDeleteOperator = true;
+					}
+
+					printFunctionParameters(ctx->functionParams());
 					isVariadicTemplate = false;
-					if (func.exceptionSpecification)
-						printExceptionSpecification(func.exceptionSpecification);
-					out << " -> decltype(auto) ";
-					if (!func.params->paramDeclClause()) {
-						out << " { auto copy = __ref(); ADV_UFCS(" << func.id
-						    << ")(__ref()); return copy; }";
-					} else {
-						out << " { return ADV_UFCS(" << func.id << ")(__this, ";
-						out << func.params->paramDeclClause()
-						           ->paramDeclList()
-						           ->paramDeclaration(0)
-						           ->Identifier()
-						           ->getText();
-						out << "); }";
-					}
-					currentShortType.clear();
-					currentTypeWithTemplate.clear();
-				}
-				if (func.isProtectedType || func.isUnsafeType)
-					out << "\n" << std::string(--depth, '\t') << "}";
-				out << std::endl;
-				if (!func.compilationCondition.empty()) {
-					out << "#endif " << std::endl;
-				}
+					out << " ";
+					if (!isMut)
+						out << "const ";
+					if (ctx->exceptionSpecification())
+						printExceptionSpecification(ctx->exceptionSpecification());
+					out << " -> ";
+					if (auto ret = ctx->returnType()) {
+						if (ret->Const() || !ret->Ref())
+							out << "const ";
+						if (ret->theTypeId()) {
+							if (currentShortType.starts_with("__Class_") &&
+							    ret->theTypeId()->getText() == "self" && ctx->returnType()->Ref()) {
+								out << "__selfClass";
+							} else {
+								printTypeId(ret->theTypeId());
+							}
+						}
+						if (auto idc = ctx->returnType()->Identifier()) {
+							auto id = idc->getText();
+							namedReturns.emplace_back(id, ret->theTypeId());
+							symbolTable[id] = ret->getText();
+						} else if (ret->theTypeId() && ret->theTypeId()->VertLine().empty() &&
+						           ret->theTypeId()->singleTypeId(0)->typeSpecifierSeq() &&
+						           ret->theTypeId()
+						               ->singleTypeId(0)
+						               ->typeSpecifierSeq()
+						               ->simpleTypeSpecifier()) {
+							auto tup = ret->theTypeId()
+							               ->singleTypeId(0)
+							               ->typeSpecifierSeq()
+							               ->simpleTypeSpecifier()
+							               ->namedTupleField();
+							for (auto element : tup) {
+								auto id = element->Identifier()->getText();
+								namedReturns.emplace_back(id, element->theTypeId());
+								symbolTable[id] = element->theTypeId()->getText();
+							}
+						} else if (ret->Forward()) {
+							out << "decltype(auto)";
+						} else if (ret->Ref()) {
+							out << "auto";
+						}
 
-				out.switchTo(false);
+						if (ret->Ref()) {
+							out << "&";
+						}
+					} else if (ctx->shortFunctionBody() && !isNewDeleteOperator) {
+						out << "decltype(auto)";
+					} else {
+						out << "void";
+						isVoidReturn = true;
+					}
+					/*if (isOverride) out << " override ";
+					if (isFinal) out << " final ";*/
+					isNewDeleteOperator = false;
+					if (auto body = ctx->functionBody()) {
+						functionProlog = true;
+						printFunctionBody(body);
+					} else {
+						printShortFunctionBody(ctx->shortFunctionBody());
+					}
+					out << std::endl;
+				}
+			}
+			isUnsafe = prevUnsafe;
+			refParameters.clear();
+			namedReturns.clear();
+			sema.symbolContexts.pop();
+		}
+
+		void AstrumCodegen::printLocalFunction(AstrumParser::FunctionDefinitionContext * ctx) {
+			bool isStatic = false;
+			isVoidReturn  = false;
+			for (auto spec : ctx->functionSpecifier()) {
+				if (spec->Static())
+					isStatic = true;
+			}
+			if (isStatic) {
+				out << "static ";
+			}
+			out << "Builtin::LocalFunction<";
+			if (auto ret = ctx->returnType()) {
+				if (ret->Const() || !ret->Ref()) {
+					out << "const ";
+				}
+				if (ret->theTypeId()) {
+					printTypeId(ret->theTypeId());
+				}
+				if (ret->Ref()) {
+					out << "&";
+				}
 			} else {
-				if (!currentAccessSpecifier)
-					currentAccessSpecifier = AccessSpecifier::Private;
+				out << "void";
+			}
+			out << "(";
+			if (auto params = ctx->functionParams()->paramDeclClause()) {
+				bool first = true;
+				for (auto param : params->paramDeclList()->paramDeclaration()) {
+					if (!first)
+						out << ", ";
+					first = false;
+					if (param->theTypeId()) {
+						printTypeId(param->theTypeId());
+					}
+				}
+			}
+			out << ")> ";
+			printIdentifier(ctx->Identifier());
+			out << "; ";
+			printIdentifier(ctx->Identifier());
+			out << " = [&] ";
+			if (ctx->templateParams()) {
+				printTemplateParams(ctx->templateParams());
+				out << " ";
+				if (ctx->constraintClause()) {
+					printConstraintClause(ctx->constraintClause());
+					out << " ";
+				}
+			}
+			printFunctionParameters(ctx->functionParams());
+			if (auto ret = ctx->returnType()) {
+				out << " -> ";
+				if (ret->Const() || !ret->Ref()) {
+					out << "const ";
+				}
+				if (ret->theTypeId()) {
+					printTypeId(ret->theTypeId());
+				}
+				if (ret->Ref()) {
+					out << "&";
+				}
+				out << " ";
+			} else {
+				isVoidReturn = true;
+			}
+			if (ctx->functionBody()) {
+				functionProlog = true;
+				printFunctionBody(ctx->functionBody());
+			} else if (ctx->shortFunctionBody()) {
+				printShortFunctionBody(ctx->shortFunctionBody());
+			}
+			out << ";";
+		}
+
+		void AstrumCodegen::printFunctionParameters(AstrumParser::FunctionParamsContext * ctx) {
+			out << "(";
+			if (auto clause = ctx->paramDeclClause()) {
+				printParamDeclClause(clause);
+			} else if (isMainFunction) {
+				// out << "Builtin::Array<Builtin::Str>";
+			}
+			out << ")";
+		}
+
+		void AstrumCodegen::printParamDeclClause(AstrumParser::ParamDeclClauseContext * ctx) {
+			auto decls = ctx->paramDeclList();
+			bool first = true;
+			for (auto param : decls->paramDeclaration()) {
+				if (!first)
+					out << ", ";
+				if (param == decls->paramDeclaration().back() && ctx->Ellipsis())
+					isVarargs = true;
+				printParamDeclaration(param);
+				first     = false;
+				isVarargs = false;
+			}
+		}
+
+		void AstrumCodegen::printParamDeclaration(AstrumParser::ParamDeclarationContext * ctx) {
+			auto id          = ctx->Identifier()->getText();
+			bool isConst     = false;
+			bool isRef       = false;
+			bool isInRef     = false;
+			bool isRvalueRef = false;
+
+			enum { Value = 0, In, InRef, Inout, Ref, Out, Move, Forward } type {};
+
+			if (auto spec = ctx->paramSpecification()) {
+				if (spec->Move())
+					type = Move;
+				else if (spec->Forward())
+					type = Forward;
+				else if (spec->In()) {
+					if (spec->Ref())
+						type = InRef;
+					else
+						type = In;
+				} else if (spec->Inout())
+					type = Inout;
+				else if (spec->Ref())
+					type = Ref;
+				else if (spec->Out())
+					type = Out;
+				else
+					type = Value;
+			}
+
+			if (auto t = ctx->theTypeId()) {
+				if (type == InRef)
+					out << "const ";
+				else if (type == In)
+					out << "Builtin::In<";
+				else if (type == Ref || type == Inout)
+					out << "Builtin::MutableRef<std::remove_cvref_t<";
+				else if (type == Out) {
+					out << "Builtin::Out<std::remove_cvref_t<";
+					symbolTable[id] = "#Out";
+				}
+				if (isVarargs && !isVariadicTemplate)
+					out << "std::initializer_list<";
+				printTypeId(t);
+				if (isVarargs && !isVariadicTemplate)
+					out << ">";
+				if (type == In)
+					out << ">";
+				else if (type == Ref || type == Inout || type == Out)
+					out << ">>";
+				else if (type == InRef)
+					out << "&";
+				else if (type == Move || type == Forward)
+					out << "&&";
+
+				if (!isFunctionDeclaration && (type == Ref || type == Inout)) {
+					refParameters[id] = t;
+					id                = "__" + id + "__";
+				}
+			} else {
+				if (type == In || type == InRef)
+					out << "const auto&";
+				else if (type == Ref || type == Inout)
+					out << "Builtin::MutableRef<auto>";
+				else if (type == Move || type == Forward)
+					out << "auto&&";
+				else if (type == Value)
+					out << "auto";
+			}
+
+			if (isVariadicTemplate && isVarargs)
+				out << "...";
+			out << " " << id;
+
+			if (ctx->LifetimeAnnotation())
+				out << " LIFETIMEBOUND";
+
+			if (isFunctionDeclaration) {
+				if (auto init = ctx->initializerClause()) {
+					out << " = ";
+					currentDeclarationName = id;
+					printInitializerClause(init);
+					currentDeclarationName.clear();
+				}
+			}
+		}
+
+		void AstrumCodegen::printExceptionSpecification(
+		    AstrumParser::ExceptionSpecificationContext * ctx) {
+			out << "noexcept";
+			if (auto expr = ctx->constantExpression()) {
+				out << "(";
+				printConstantExpression(expr);
+				out << ")";
+			}
+		}
+
+		void AstrumCodegen::printImplicitSpecification(AstrumParser::ImplicitSpecificationContext *
+		                                               ctx) {
+			if (auto expr = ctx->constantExpression()) {
+				out << "explicit(";
+				printConstantExpression(expr);
+				out << ")";
+			}
+		}
+
+		void AstrumCodegen::printConstraintClause(AstrumParser::ConstraintClauseContext * ctx) {
+			out << "requires(";
+			printConstantExpression(ctx->constantExpression());
+			out << ")";
+		}
+
+		void AstrumCodegen::printFunctionBody(AstrumParser::FunctionBodyContext * ctx) {
+			bool prev    = functionBody;
+			functionBody = true;
+			if (auto stat = ctx->compoundStatement()) {
+				out << "\n" << std::string(depth, '\t');
+				printCompoundStatement(stat);
+			}
+			functionBody = prev;
+		}
+
+		void AstrumCodegen::printShortFunctionBody(AstrumParser::ShortFunctionBodyContext * ctx) {
+			bool prev    = functionBody;
+			functionBody = true;
+			if (auto stat = ctx->expressionStatement()) {
+				out << "\n" << std::string(depth, '\t');
+				out << "{";
+				++depth;
+				if (isUnsafe)
+					out << "\tusing namespace Builtin::Unsafe;\tusing namespace __Unsafe;\tusing "
+					       "namespace __"
+					    << filename << "_Protected__Unsafe;";
+				for (const auto& [id, type] : refParameters) {
+					out << "\n" << std::string(depth, '\t');
+					printTypeId(type);
+					out << "& " << id << " = __" << id << "__;";
+				}
+				out << "\n"
+				    << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine() << " \""
+				    << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				if (!isDestructor)
+					out << "ADV_EXPRESSION_BODY(";
+				printExpression(stat->expression());
+				if (!isDestructor)
+					out << ")";
+				out << "; ";
+				if (isPropertySetter)
+					out << "return *this;";
+				if (isMainFunction)
+					out << "return 0;";
+				out << "\n" << std::string(--depth, '\t') << "}";
+			}
+			functionBody = prev;
+		}
+
+		void AstrumCodegen::printFriendDeclaration(AstrumParser::FriendDeclarationContext * ctx) {
+			if (isStructDeclaration)
+				out << "private: friend ";
+			if (auto def = ctx->functionDefinition()) {
+				printFunctionDefinition(def);
+			} else if (isStructDeclaration) {
+				if (ctx->functionParams()) {
+					if (auto t = ctx->returnType()) {
+						if (t->Const() || !t->Ref())
+							out << "const ";
+						printTypeId(t->theTypeId());
+						if (t->Ref())
+							out << "&";
+					} else {
+						out << "void";
+					}
+
+					out << " ";
+					printIdentifier(ctx->Identifier());
+					printFunctionParameters(ctx->functionParams());
+					out << ";";
+				} else {
+					if (auto tparams = ctx->templateParams()) {
+						printTemplateParams(tparams);
+						out << " ";
+					}
+					out << "friend class ";
+					printIdentifier(ctx->Identifier());
+					out << ";";
+				}
+			}
+		}
+
+		void AstrumCodegen::printMemberBlockDeclaration(
+		    AstrumParser::MemberBlockDeclarationContext * ctx) {
+			if (!currentAccessSpecifier)
+				currentAccessSpecifier = AccessSpecifier::Private;
+			if (isStructDeclaration)
 				switch (*currentAccessSpecifier) {
 					case AccessSpecifier::Public:
 					case AccessSpecifier::Internal:
@@ -16703,925 +17277,134 @@ namespace AstrumLang {
 						break;
 				}
 
-				if (auto tparams = ctx->templateParams()) {
-					printTemplateParams(tparams);
+			if (auto decl = ctx->simpleDeclaration()) {
+				printSimpleDeclaration(decl);
+			} else if (auto decl = ctx->simpleMultiDeclaration()) {
+				printSimpleMultiDeclaration(decl);
+			} else if (auto decl = ctx->memberRefDeclaration()) {
+				printMemberRefDeclaration(decl);
+			} else if (auto decl = ctx->constantDeclaration()) {
+				printConstantDeclaration(decl);
+			} else if (auto decl = ctx->aliasDeclaration()) {
+				printAliasDeclaration(decl);
+			} else if (auto decl = ctx->assertDeclaration()) {
+				printAssertDeclaration(decl);
+			} else if (auto decl = ctx->assumeDeclaration()) {
+				printAssumeDeclaration(decl);
+			}
+			isVolatile = false;
+			isUnowned  = false;
+			isWeak     = false;
+		}
+
+		void AstrumCodegen::printSimpleDeclaration(AstrumParser::SimpleDeclarationContext * ctx) {
+			SourcePosition pos = {ctx->getStart()->getLine(),
+			                      ctx->getStart()->getCharPositionInLine()};
+			if (sema.properties.contains(pos)) {
+				auto prop = sema.properties[pos];
+				if (prop.parentTemplateParams)
+					out.switchTo(true);
+				else
+					out.switchTo(false);
+				out << "#line " << pos.line << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				if (prop.parentTemplateParams) {
+					printTemplateParams(prop.parentTemplateParams);
 					out << " ";
-					if (ctx->constraintClause()) {
-						printConstraintClause(ctx->constraintClause());
+					if (prop.parentConstraints) {
+						printConstraintClause(prop.parentConstraints);
 						out << " ";
 					}
+				} else if (prop.parentTemplateSpecializationArgs) {
+					out << "template<> ";
 				}
-
-				bool isInline    = false;
-				bool isConstexpr = false;
-				bool isConsteval = false;
-				bool isMut       = false;
-				bool isVirtual   = false;
-				bool isOverride  = false;
-				bool isFinal     = false;
-				for (auto spec : ctx->functionSpecifier()) {
-					if (spec->Inline())
-						isInline = true;
-					if (spec->Consteval())
-						isConsteval = true;
-					if (spec->Mutable())
-						isMut = true;
-					if (spec->Virtual())
-						isVirtual = true;
-					if (spec->Override())
-						isOverride = true;
-					if (spec->Final())
-						isFinal = true;
-					if (spec->Unsafe())
-						isUnsafe = true;
-				}
-
-				if (auto body = ctx->functionBody()) {
-					if (body->Equal())
-						isConstexpr = true;
-					else if (body->Assign())
-						isInline = true;
-				} else if (auto body = ctx->shortFunctionBody()) {
-					if (body->EqualArrow())
-						isConstexpr = true;
-					else if (body->AssignArrow())
-						isInline = true;
-				}
-
-				if (isConsteval) {
-					out << "inline consteval ";
-				} else if (isConstexpr) {
-					out << "inline constexpr ";
-				} else if (isInline) {
-					out << "inline ";
-				}
-
-				if (isVirtual)
-					out << "virtual ";
 
 				out << "auto ";
-				if (auto id = ctx->Identifier()) {
-					printIdentifier(id);
-				} else if (auto op = ctx->operatorFunctionId()) {
-					auto id = op->getText();
-					printOperatorFunctionId(op);
-					if (id.ends_with(" new") || id.ends_with(" delete"))
-						isNewDeleteOperator = true;
+				auto parent = prop.parentType;
+				StringReplace(parent, ".", "::");
+				StringReplace(parent, "::::::", "...");
+				auto pos = parent.find("<{{specialization}}>");
+				if (pos != parent.npos) {
+					out << parent.substr(0, pos);
+					out << "<";
+					printTemplateArgumentList(prop.parentTemplateSpecializationArgs);
+					out << ">";
+					out << parent.substr(pos + 20);
+				} else {
+					out << parent;
 				}
-
-				printFunctionParameters(ctx->functionParams());
-				isVariadicTemplate = false;
-				out << " ";
-				if (!isMut)
+				currentShortType        = prop.shortType;
+				currentTypeWithTemplate = parent;
+				out << "::__lazy_init_" << prop.id << "() ";
+				if (!prop.isStatic) {
 					out << "const ";
-				if (ctx->exceptionSpecification())
-					printExceptionSpecification(ctx->exceptionSpecification());
+				}
+
 				out << " -> ";
-				if (auto ret = ctx->returnType()) {
-					if (ret->Const() || !ret->Ref())
-						out << "const ";
-					if (ret->theTypeId()) {
-						if (currentShortType.starts_with("__Class_") &&
-						    ret->theTypeId()->getText() == "self" && ctx->returnType()->Ref()) {
-							out << "__selfClass";
-						} else {
-							printTypeId(ret->theTypeId());
-						}
-					}
-					if (auto idc = ctx->returnType()->Identifier()) {
-						auto id = idc->getText();
-						namedReturns.emplace_back(id, ret->theTypeId());
-						symbolTable[id] = ret->getText();
-					} else if (ret->theTypeId() && ret->theTypeId()->VertLine().empty() &&
-					           ret->theTypeId()->singleTypeId(0)->typeSpecifierSeq() &&
-					           ret->theTypeId()
-					               ->singleTypeId(0)
-					               ->typeSpecifierSeq()
-					               ->simpleTypeSpecifier()) {
-						auto tup = ret->theTypeId()
-						               ->singleTypeId(0)
-						               ->typeSpecifierSeq()
-						               ->simpleTypeSpecifier()
-						               ->namedTupleField();
-						for (auto element : tup) {
-							auto id = element->Identifier()->getText();
-							namedReturns.emplace_back(id, element->theTypeId());
-							symbolTable[id] = element->theTypeId()->getText();
-						}
-					} else if (ret->Forward()) {
-						out << "decltype(auto)";
-					} else if (ret->Ref()) {
-						out << "auto";
-					}
-
-					if (ret->Ref()) {
-						out << "&";
-					}
-				} else if (ctx->shortFunctionBody() && !isNewDeleteOperator) {
-					out << "decltype(auto)";
-				} else {
-					out << "void";
-					isVoidReturn = true;
-				}
-				/*if (isOverride) out << " override ";
-				if (isFinal) out << " final ";*/
-				isNewDeleteOperator = false;
-				if (auto body = ctx->functionBody()) {
-					functionProlog = true;
-					printFunctionBody(body);
-				} else {
-					printShortFunctionBody(ctx->shortFunctionBody());
-				}
-				out << std::endl;
-			}
-		}
-		isUnsafe = prevUnsafe;
-		refParameters.clear();
-		namedReturns.clear();
-		sema.symbolContexts.pop();
-	}
-
-	void AstrumCodegen::printLocalFunction(AstrumParser::FunctionDefinitionContext* ctx) {
-		bool isStatic = false;
-		isVoidReturn  = false;
-		for (auto spec : ctx->functionSpecifier()) {
-			if (spec->Static())
-				isStatic = true;
-		}
-		if (isStatic) {
-			out << "static ";
-		}
-		out << "Builtin::LocalFunction<";
-		if (auto ret = ctx->returnType()) {
-			if (ret->Const() || !ret->Ref()) {
-				out << "const ";
-			}
-			if (ret->theTypeId()) {
-				printTypeId(ret->theTypeId());
-			}
-			if (ret->Ref()) {
-				out << "&";
-			}
-		} else {
-			out << "void";
-		}
-		out << "(";
-		if (auto params = ctx->functionParams()->paramDeclClause()) {
-			bool first = true;
-			for (auto param : params->paramDeclList()->paramDeclaration()) {
-				if (!first)
-					out << ", ";
-				first = false;
-				if (param->theTypeId()) {
-					printTypeId(param->theTypeId());
-				}
-			}
-		}
-		out << ")> ";
-		printIdentifier(ctx->Identifier());
-		out << "; ";
-		printIdentifier(ctx->Identifier());
-		out << " = [&] ";
-		if (ctx->templateParams()) {
-			printTemplateParams(ctx->templateParams());
-			out << " ";
-			if (ctx->constraintClause()) {
-				printConstraintClause(ctx->constraintClause());
+				if (prop.isConst)
+					out << "const ";
+				printTypeId(prop.type);
 				out << " ";
-			}
-		}
-		printFunctionParameters(ctx->functionParams());
-		if (auto ret = ctx->returnType()) {
-			out << " -> ";
-			if (ret->Const() || !ret->Ref()) {
-				out << "const ";
-			}
-			if (ret->theTypeId()) {
-				printTypeId(ret->theTypeId());
-			}
-			if (ret->Ref()) {
-				out << "&";
-			}
-			out << " ";
-		} else {
-			isVoidReturn = true;
-		}
-		if (ctx->functionBody()) {
-			functionProlog = true;
-			printFunctionBody(ctx->functionBody());
-		} else if (ctx->shortFunctionBody()) {
-			printShortFunctionBody(ctx->shortFunctionBody());
-		}
-		out << ";";
-	}
 
-	void AstrumCodegen::printFunctionParameters(AstrumParser::FunctionParamsContext* ctx) {
-		out << "(";
-		if (auto clause = ctx->paramDeclClause()) {
-			printParamDeclClause(clause);
-		} else if (isMainFunction) {
-			// out << "Builtin::Array<Builtin::Str>";
-		}
-		out << ")";
-	}
+				currentShortType.clear();
+				currentTypeWithTemplate.clear();
 
-	void AstrumCodegen::printParamDeclClause(AstrumParser::ParamDeclClauseContext* ctx) {
-		auto decls = ctx->paramDeclList();
-		bool first = true;
-		for (auto param : decls->paramDeclaration()) {
-			if (!first)
-				out << ", ";
-			if (param == decls->paramDeclaration().back() && ctx->Ellipsis())
-				isVarargs = true;
-			printParamDeclaration(param);
-			first     = false;
-			isVarargs = false;
-		}
-	}
-
-	void AstrumCodegen::printParamDeclaration(AstrumParser::ParamDeclarationContext* ctx) {
-		auto id          = ctx->Identifier()->getText();
-		bool isConst     = false;
-		bool isRef       = false;
-		bool isInRef     = false;
-		bool isRvalueRef = false;
-
-		enum { Value = 0, In, InRef, Inout, Ref, Out, Move, Forward } type {};
-
-		if (auto spec = ctx->paramSpecification()) {
-			if (spec->Move())
-				type = Move;
-			else if (spec->Forward())
-				type = Forward;
-			else if (spec->In()) {
-				if (spec->Ref())
-					type = InRef;
+				out << " { return ";
+				if (prop.initializer)
+					printInitializerClause(prop.initializer);
 				else
-					type = In;
-			} else if (spec->Inout())
-				type = Inout;
-			else if (spec->Ref())
-				type = Ref;
-			else if (spec->Out())
-				type = Out;
-			else
-				type = Value;
-		}
+					out << "{}";
+				out << "; }";
 
-		if (auto t = ctx->theTypeId()) {
-			if (type == InRef)
-				out << "const ";
-			else if (type == In)
-				out << "Builtin::In<";
-			else if (type == Ref || type == Inout)
-				out << "Builtin::MutableRef<std::remove_cvref_t<";
-			else if (type == Out) {
-				out << "Builtin::Out<std::remove_cvref_t<";
-				symbolTable[id] = "#Out";
+				out << std::endl << std::string(depth, '\t');
+				return;
 			}
-			if (isVarargs && !isVariadicTemplate)
-				out << "std::initializer_list<";
-			printTypeId(t);
-			if (isVarargs && !isVariadicTemplate)
-				out << ">";
-			if (type == In)
-				out << ">";
-			else if (type == Ref || type == Inout || type == Out)
-				out << ">>";
-			else if (type == InRef)
-				out << "&";
-			else if (type == Move || type == Forward)
-				out << "&&";
-
-			if (!isFunctionDeclaration && (type == Ref || type == Inout)) {
-				refParameters[id] = t;
-				id                = "__" + id + "__";
+			if (!functionBody) {
+				emptyLine = true;
+				return;
 			}
-		} else {
-			if (type == In || type == InRef)
-				out << "const auto&";
-			else if (type == Ref || type == Inout)
-				out << "Builtin::MutableRef<auto>";
-			else if (type == Move || type == Forward)
-				out << "auto&&";
-			else if (type == Value)
-				out << "auto";
-		}
+			bool prevUnsafe = isUnsafe;
 
-		if (isVariadicTemplate && isVarargs)
-			out << "...";
-		out << " " << id;
-
-		if (ctx->LifetimeAnnotation())
-			out << " LIFETIMEBOUND";
-
-		if (isFunctionDeclaration) {
-			if (auto init = ctx->initializerClause()) {
-				out << " = ";
-				currentDeclarationName = id;
-				printInitializerClause(init);
-				currentDeclarationName.clear();
-			}
-		}
-	}
-
-	void AstrumCodegen::printExceptionSpecification(
-	    AstrumParser::ExceptionSpecificationContext* ctx) {
-		out << "noexcept";
-		if (auto expr = ctx->constantExpression()) {
-			out << "(";
-			printConstantExpression(expr);
-			out << ")";
-		}
-	}
-
-	void AstrumCodegen::printImplicitSpecification(
-	    AstrumParser::ImplicitSpecificationContext* ctx) {
-		if (auto expr = ctx->constantExpression()) {
-			out << "explicit(";
-			printConstantExpression(expr);
-			out << ")";
-		}
-	}
-
-	void AstrumCodegen::printConstraintClause(AstrumParser::ConstraintClauseContext* ctx) {
-		out << "requires(";
-		printConstantExpression(ctx->constantExpression());
-		out << ")";
-	}
-
-	void AstrumCodegen::printFunctionBody(AstrumParser::FunctionBodyContext* ctx) {
-		bool prev    = functionBody;
-		functionBody = true;
-		if (auto stat = ctx->compoundStatement()) {
-			out << "\n" << std::string(depth, '\t');
-			printCompoundStatement(stat);
-		}
-		functionBody = prev;
-	}
-
-	void AstrumCodegen::printShortFunctionBody(AstrumParser::ShortFunctionBodyContext* ctx) {
-		bool prev    = functionBody;
-		functionBody = true;
-		if (auto stat = ctx->expressionStatement()) {
-			out << "\n" << std::string(depth, '\t');
-			out << "{";
-			++depth;
-			if (isUnsafe)
-				out << "\tusing namespace Builtin::Unsafe;\tusing namespace __Unsafe;\tusing "
-				       "namespace __"
-				    << filename << "_Protected__Unsafe;";
-			for (const auto& [id, type] : refParameters) {
-				out << "\n" << std::string(depth, '\t');
-				printTypeId(type);
-				out << "& " << id << " = __" << id << "__;";
-			}
-			out << "\n"
-			    << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine() << " \""
-			    << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			if (!isDestructor)
-				out << "ADV_EXPRESSION_BODY(";
-			printExpression(stat->expression());
-			if (!isDestructor)
-				out << ")";
-			out << "; ";
-			if (isPropertySetter)
-				out << "return *this;";
-			if (isMainFunction)
-				out << "return 0;";
-			out << "\n" << std::string(--depth, '\t') << "}";
-		}
-		functionBody = prev;
-	}
-
-	void AstrumCodegen::printFriendDeclaration(AstrumParser::FriendDeclarationContext* ctx) {
-		if (isStructDeclaration)
-			out << "private: friend ";
-		if (auto def = ctx->functionDefinition()) {
-			printFunctionDefinition(def);
-		} else if (isStructDeclaration) {
-			if (ctx->functionParams()) {
-				if (auto t = ctx->returnType()) {
-					if (t->Const() || !t->Ref())
-						out << "const ";
-					printTypeId(t->theTypeId());
-					if (t->Ref())
-						out << "&";
-				} else {
-					out << "void";
-				}
-
-				out << " ";
-				printIdentifier(ctx->Identifier());
-				printFunctionParameters(ctx->functionParams());
-				out << ";";
-			} else {
-				if (auto tparams = ctx->templateParams()) {
-					printTemplateParams(tparams);
-					out << " ";
-				}
-				out << "friend class ";
-				printIdentifier(ctx->Identifier());
-				out << ";";
-			}
-		}
-	}
-
-	void AstrumCodegen::printMemberBlockDeclaration(
-	    AstrumParser::MemberBlockDeclarationContext* ctx) {
-		if (!currentAccessSpecifier)
-			currentAccessSpecifier = AccessSpecifier::Private;
-		if (isStructDeclaration)
-			switch (*currentAccessSpecifier) {
-				case AccessSpecifier::Public:
-				case AccessSpecifier::Internal:
-					out << "public: ";
-					break;
-				case AccessSpecifier::Protected:
-				case AccessSpecifier::ProtectedInternal:
-					out << "protected: ";
-					break;
-				case AccessSpecifier::Private:
-					out << "private: ";
-					break;
-			}
-
-		if (auto decl = ctx->simpleDeclaration()) {
-			printSimpleDeclaration(decl);
-		} else if (auto decl = ctx->simpleMultiDeclaration()) {
-			printSimpleMultiDeclaration(decl);
-		} else if (auto decl = ctx->memberRefDeclaration()) {
-			printMemberRefDeclaration(decl);
-		} else if (auto decl = ctx->constantDeclaration()) {
-			printConstantDeclaration(decl);
-		} else if (auto decl = ctx->aliasDeclaration()) {
-			printAliasDeclaration(decl);
-		} else if (auto decl = ctx->assertDeclaration()) {
-			printAssertDeclaration(decl);
-		} else if (auto decl = ctx->assumeDeclaration()) {
-			printAssumeDeclaration(decl);
-		}
-		isVolatile = false;
-		isUnowned  = false;
-		isWeak     = false;
-	}
-
-	void AstrumCodegen::printSimpleDeclaration(AstrumParser::SimpleDeclarationContext* ctx) {
-		SourcePosition pos = {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()};
-		if (sema.properties.contains(pos)) {
-			auto prop = sema.properties[pos];
-			if (prop.parentTemplateParams)
-				out.switchTo(true);
-			else
-				out.switchTo(false);
-			out << "#line " << pos.line << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			if (prop.parentTemplateParams) {
-				printTemplateParams(prop.parentTemplateParams);
-				out << " ";
-				if (prop.parentConstraints) {
-					printConstraintClause(prop.parentConstraints);
-					out << " ";
-				}
-			} else if (prop.parentTemplateSpecializationArgs) {
-				out << "template<> ";
-			}
-
-			out << "auto ";
-			auto parent = prop.parentType;
-			StringReplace(parent, ".", "::");
-			StringReplace(parent, "::::::", "...");
-			auto pos = parent.find("<{{specialization}}>");
-			if (pos != parent.npos) {
-				out << parent.substr(0, pos);
-				out << "<";
-				printTemplateArgumentList(prop.parentTemplateSpecializationArgs);
-				out << ">";
-				out << parent.substr(pos + 20);
-			} else {
-				out << parent;
-			}
-			currentShortType        = prop.shortType;
-			currentTypeWithTemplate = parent;
-			out << "::__lazy_init_" << prop.id << "() ";
-			if (!prop.isStatic) {
-				out << "const ";
-			}
-
-			out << " -> ";
-			if (prop.isConst)
-				out << "const ";
-			printTypeId(prop.type);
-			out << " ";
-
-			currentShortType.clear();
-			currentTypeWithTemplate.clear();
-
-			out << " { return ";
-			if (prop.initializer)
-				printInitializerClause(prop.initializer);
-			else
-				out << "{}";
-			out << "; }";
-
-			out << std::endl << std::string(depth, '\t');
-			return;
-		}
-		if (!functionBody) {
-			emptyLine = true;
-			return;
-		}
-		bool prevUnsafe = isUnsafe;
-
-		bool first             = true;
-		bool isArray           = false;
-		auto id                = ctx->Identifier()->getText();
-		currentDeclarationName = id;
-		currentDeclaration     = ctx;
-		if (auto spec = ctx->declSpecifierSeq()) {
-			printDeclSpecifierSeq(spec);
-		}
-		if (auto t = ctx->theTypeId()) {
-			if (ctx->Void()) {
-				out << "Builtin::DeferredInit<";
-				symbolTable[id] = "#DeferredInit";
-			} else {
-				symbolTable[id] = t->getText();
-			}
-			isDeclaration = true;
-			printTypeId(t);
-			isDeclaration = false;
-			if (isUnowned)
-				out << "::__unowned_ref";
-			else if (isWeak)
-				out << "::__weak_ref";
-			// isArray = t->arrayDeclarator();
-			if (ctx->Void())
-				out << ">";
-			out << " ";
-		} else {
-			symbolTable[id] = "";
-			if (ctx->Star()) {
-				if (ctx->Const()) {
-					out << (isUnsafe ? "Builtin::Unsafe::" : "")
-					    << (isVolatile ? "__VolatileRawPtr" : "__RawPtr")
-					    << "<const std::remove_pointer_t<decltype(";
-					printInitializerClause(ctx->initializerClause());
-					out << ")>> ";
-				} else {
-					out << (isUnsafe ? "Builtin::Unsafe::" : "")
-					    << (isVolatile ? "__VolatileRawPtr" : "__RawPtr");
-				}
-			} else if (isUnowned) {
-				out << "decltype(";
-				printInitializerClause(ctx->initializerClause());
-				out << ")::__unowned_ref ";
-			} else if (isWeak) {
-				out << "decltype(";
-				printInitializerClause(ctx->initializerClause());
-				out << ")::__weak_ref ";
-			} else {
-				out << "auto ";
-			}
-		}
-		currentType = symbolTable[id];
-		printIdentifier(ctx->Identifier());
-		// if (isArray) printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
-		if (!ctx->Void()) {
-			if (auto expr = ctx->initializerClause()) {
-				out << " = ";
-				if (first) {
-					printInitializerClause(ctx->initializerClause());
-				} else {
-					printIdentifier(ctx->Identifier());
-				}
-			} else if (auto init = ctx->initializerList()) {
-				if (first) {
-					out << "{ ";
-					printInitializerList(init);
-					out << " }";
-				} else {
-					out << " = ";
-					printIdentifier(ctx->Identifier());
-				}
-			} else if (checkForRefStruct) {
-				out << ";";
-				printRefStructCheck(ctx->theTypeId());
-			} else {
-				out << "{}";
-			}
-		}
-
-		out << "; ";
-		first    = false;
-		isUnsafe = prevUnsafe;
-		currentDeclarationName.clear();
-		currentDeclaration = nullptr;
-	}
-
-	void AstrumCodegen::printSimpleMultiDeclaration(
-	    AstrumParser::SimpleMultiDeclarationContext* ctx) {
-		if (!functionBody) {
-			emptyLine = true;
-			return;
-		}
-		bool prevUnsafe = isUnsafe;
-
-		bool first   = true;
-		bool isArray = false;
-		auto ids     = ctx->Identifier();
-		if (auto spec = ctx->declSpecifierSeq()) {
-			printDeclSpecifierSeq(spec);
-		}
-		isDeclaration = true;
-		printTypeId(ctx->theTypeId());
-		if (isUnowned)
-			out << "::__unowned_ref";
-		else if (isWeak)
-			out << "::__weak_ref";
-		isDeclaration = false;
-		// isArray = ctx->theTypeId()->arrayDeclarator();
-		out << " ";
-		for (auto id : ids) {
-			auto txt               = id->getText();
-			currentDeclarationName = txt;
-			symbolTable[txt]       = ctx->theTypeId()->getText();
-			currentType            = symbolTable[txt];
-
-			if (!first)
-				out << ", ";
-			first = false;
-			printIdentifier(id);
-			// if (isArray) printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
-
-			if (functionBody && !checkForRefStruct) {
-				out << "{}";
-			}
-		}
-		out << "; ";
-		if (checkForRefStruct) {
-			printRefStructCheck(ctx->theTypeId());
-			out << ";";
-		}
-		isUnsafe = prevUnsafe;
-		currentDeclarationName.clear();
-	}
-
-	void AstrumCodegen::printDeconstructionDeclaration(
-	    AstrumParser::DeconstructionDeclarationContext* ctx) {
-		out << "const auto& [";
-		bool first = true;
-		for (auto seq = ctx->identifierSeq(); auto id : seq->Identifier()) {
-			if (!first)
-				out << ", ";
-			printIdentifier(id);
-			first = false;
-		}
-		out << "]";
-		if (auto expr = ctx->initializerClause()) {
-			out << " = ";
-			printInitializerClause(ctx->initializerClause());
-		}
-		out << ";";
-	}
-
-	void AstrumCodegen::printSimpleTypeSpecifier(AstrumParser::SimpleTypeSpecifierContext* ctx) {
-		if (isNewDeleteOperator) {
-			if (ctx->Usize())
-				out << "size_t";
-			else if (ctx->getText() == "Pointer")
-				out << "void*";
-			return;
-		}
-		if ((isVolatile && !isPtr) || isTemplateParamDeclaration) {
-			if (ctx->I8()) {
-				out << "int8_t";
-			} else if (ctx->U8()) {
-				out << "uint8_t";
-			} else if (ctx->I16()) {
-				out << "int16_t";
-			} else if (ctx->U16()) {
-				out << "uint16_t";
-			} else if (ctx->I32()) {
-				out << "int32_t";
-			} else if (ctx->U32()) {
-				out << "uint32_t";
-			} else if (ctx->I64()) {
-				out << "int64_t";
-			} else if (ctx->U64()) {
-				out << "uint64_t";
-			} else if (ctx->Isize()) {
-				out << "ptrdiff_t";
-			} else if (ctx->Usize()) {
-				out << "size_t";
-			} else if (ctx->F32()) {
-				out << "float";
-			} else if (ctx->F64()) {
-				out << "double";
-			} else if (ctx->Fext()) {
-				out << "long double";
-			} else if (ctx->Bool()) {
-				out << "bool";
-			}
-		} else if (ctx->I8()) {
-			out << "Builtin::i8";
-		} else if (ctx->U8()) {
-			out << "Builtin::u8";
-		} else if (ctx->I16()) {
-			out << "Builtin::i16";
-		} else if (ctx->U16()) {
-			out << "Builtin::u16";
-		} else if (ctx->I32()) {
-			out << "Builtin::i32";
-		} else if (ctx->U32()) {
-			out << "Builtin::u32";
-		} else if (ctx->I64()) {
-			out << "Builtin::i64";
-		} else if (ctx->U64()) {
-			out << "Builtin::u64";
-		} else if (ctx->I128()) {
-			out << "Builtin::i128";
-		} else if (ctx->U128()) {
-			out << "Builtin::u128";
-		} else if (ctx->Isize()) {
-			out << "Builtin::isize";
-		} else if (ctx->Usize()) {
-			out << "Builtin::usize";
-		} else if (ctx->F32()) {
-			out << "Builtin::f32";
-		} else if (ctx->F64()) {
-			out << "Builtin::f64";
-		} else if (ctx->Fext()) {
-			out << "Builtin::fext";
-		} else if (ctx->Byte()) {
-			out << "Builtin::char8";
-		} else if (ctx->Char()) {
-			out << "Builtin::char16";
-		} else if (ctx->Rune()) {
-			out << "Builtin::char32";
-		} else if (ctx->Bool()) {
-			out << "bool";
-		} else if (ctx->Str()) {
-			out << "Builtin::Str";
-		} else if (ctx->Object()) {
-			out << "Builtin::ObjectRef";
-		} else if (ctx->Self()) {
-			if (isExtension) {
-				out << currentExtensionName;
-			} else if (isInterfaceConcept) {
-				out << "typename __AnyType::__self";
-			} else if (isInterface) {
-				out << "Builtin::OptionalStrongRef<Builtin::ObjectRef>";
-			} else {
-				out << "__self";
-			}
-		} else if (auto decl = ctx->decltypeSpecifier()) {
-			out << "decltype(";
-			printExpression(decl->expression());
-			out << ")";
-		} else if (auto decl = ctx->decaySpecifier()) {
-			out << "std::remove_cvref_t<";
-			printTypeId(decl->theTypeId());
-			out << ">";
-		} else if (auto f = ctx->functionTypeId()) {
-			out << "Builtin::FunctionRef<";
-			if (f->Void()) {
-				out << "void";
-			} else {
-				if (f->theTypeId()) {
-					printTypeId(f->theTypeId());
-					out << " ";
-				}
-				if (f->Const())
-					out << "const";
-				if (f->Ref())
-					out << "&";
-			}
-			out << "(";
-			bool first = true;
-			for (auto param : f->typeIdWithSpecification()) {
-				if (!first)
-					out << ", ";
-				first = false;
-				printTypeIdWithSpecification(param);
-			}
-			if (f->Ellipsis()) {
-				out << "...";
-			}
-			out << ")>";
-		} else if (ctx->LeftParen()) {
-			if (!ctx->namedTupleField().empty()) {
-				auto id = sema.getNamedTupleId(ctx->getText());
-				StringReplace(id, ".", "::");
-				out << id;
-			} else {
-				out << "std::tuple<";
-				bool first = true;
-				for (auto type : ctx->theTypeId()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printTypeId(type);
-				}
-				if (ctx->Ellipsis()) {
-					out << "...";
-				}
-				out << ">";
-			}
-		} else {
-			auto txt = ctx->getText();
-			auto pos = txt.find('<');
-			if (pos != txt.npos)
-				txt = txt.substr(0, pos);
-			if (sema.typeset.contains(currentShortType + "." + txt)) {
-				out << "typename " << currentTypeWithTemplate << "::";
-			}
-			if (auto nested = ctx->nestedNameSpecifier()) {
-				out << "typename ";
-				printNestedNameSpecifier(nested);
-			} else if (sema.protectedSymbols.contains(ctx->getText())) {
-				out << "__" << filename << "_Protected::";
-			}
-			auto type = ctx->typename_();
-			if (auto tid = type->simpleTemplateId()) {
-				printSimpleTemplateId(tid);
-			} else if (auto cid = type->className()) {
-				if (auto tid = cid->simpleTemplateId()) {
-					printSimpleTemplateId(tid);
-				} else {
-					out << ctx->typename_()->getText();
-				}
-			} else {
-				out << ctx->typename_()->getText();
-			}
-		}
-	}
-
-	void AstrumCodegen::printRefDeclaration(AstrumParser::RefDeclarationContext* ctx) {
-		auto ids     = ctx->identifierSeq()->Identifier();
-		auto id      = ids[0]->getText();
-		bool isConst = ctx->Const() || ctx->Let();
-		if (isConst)
-			out << "const ";
-
-		if (auto t = ctx->typeSpecifierSeq()) {
-			symbolTable[id] = (isConst ? "const " : "") + t->getText() + "&";
-			printTypeSpecifierSeq(t);
-		} else {
-			symbolTable[id] = std::string(isConst ? "const " : "") + "&";
-			out << "auto";
-		}
-		out << "& ";
-		currentType = symbolTable[id];
-		if (ids.size() == 1) {
+			bool first             = true;
+			bool isArray           = false;
+			auto id                = ctx->Identifier()->getText();
 			currentDeclarationName = id;
-			printIdentifier(ids[0]);
-		} else {
-			out << "[";
-			bool first = true;
-			for (auto idctx : ids) {
-				if (!first)
-					out << ", ";
-				printIdentifier(idctx);
-				first = false;
-			}
-			out << "]";
-		}
-		if (auto expr = ctx->initializerClause()) {
-			out << " = ";
-			printInitializerClause(ctx->initializerClause());
-		}
-
-		out << ";";
-		currentDeclarationName.clear();
-	}
-
-	void AstrumCodegen::printMemberRefDeclaration(AstrumParser::MemberRefDeclarationContext* ctx) {
-		auto id      = ctx->Identifier()->getText();
-		bool isConst = ctx->Const() || ctx->Let();
-		if (isConst)
-			out << "const ";
-
-		symbolTable[id] = (isConst ? "const " : "") + ctx->theTypeId()->getText() + "&";
-		printTypeId(ctx->theTypeId());
-		out << "& ";
-		printIdentifier(ctx->Identifier());
-		out << ";";
-	}
-
-	void AstrumCodegen::printMultiDeclaration(AstrumParser::MultiDeclarationContext* ctx) {
-		const auto& ids        = ctx->Identifier();
-		bool first             = true;
-		currentDeclarationName = ids[0]->getText();
-		for (auto idctx : ids) {
-			auto id         = idctx->getText();
-			symbolTable[id] = "";
+			currentDeclaration     = ctx;
 			if (auto spec = ctx->declSpecifierSeq()) {
 				printDeclSpecifierSeq(spec);
 			}
-			if (first) {
-				if (isUnowned) {
+			if (auto t = ctx->theTypeId()) {
+				if (ctx->Void()) {
+					out << "Builtin::DeferredInit<";
+					symbolTable[id] = "#DeferredInit";
+				} else {
+					symbolTable[id] = t->getText();
+				}
+				isDeclaration = true;
+				printTypeId(t);
+				isDeclaration = false;
+				if (isUnowned)
+					out << "::__unowned_ref";
+				else if (isWeak)
+					out << "::__weak_ref";
+				// isArray = t->arrayDeclarator();
+				if (ctx->Void())
+					out << ">";
+				out << " ";
+			} else {
+				symbolTable[id] = "";
+				if (ctx->Star()) {
+					if (ctx->Const()) {
+						out << (isUnsafe ? "Builtin::Unsafe::" : "")
+						    << (isVolatile ? "__VolatileRawPtr" : "__RawPtr")
+						    << "<const std::remove_pointer_t<decltype(";
+						printInitializerClause(ctx->initializerClause());
+						out << ")>> ";
+					} else {
+						out << (isUnsafe ? "Builtin::Unsafe::" : "")
+						    << (isVolatile ? "__VolatileRawPtr" : "__RawPtr");
+					}
+				} else if (isUnowned) {
 					out << "decltype(";
 					printInitializerClause(ctx->initializerClause());
 					out << ")::__unowned_ref ";
@@ -17632,862 +17415,1196 @@ namespace AstrumLang {
 				} else {
 					out << "auto ";
 				}
-			} else {
-				out << "auto ";
 			}
-
-			out << id << " = ";
 			currentType = symbolTable[id];
-			if (first) {
-				printInitializerClause(ctx->initializerClause());
-			} else {
-				printIdentifier(ids[0]);
-			}
-			out << "; ";
-			first = false;
-		}
-		currentDeclarationName.clear();
-	}
-
-	void AstrumCodegen::printConstantDeclaration(AstrumParser::ConstantDeclarationContext* ctx) {
-		if (functionBody) {
-			out << "constexpr ";
-			bool isArray = false;
-			if (auto t = ctx->theTypeId()) {
-				isDeclaration = true;
-				printTypeId(t);
-				isDeclaration = false;
-				// isArray = t->arrayDeclarator();
-				currentType = t->getText();
-			} else {
-				out << "auto";
-			}
-
-			out << " ";
 			printIdentifier(ctx->Identifier());
 			// if (isArray) printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
-			out << " = ";
-			currentDeclarationName = ctx->Identifier()->getText();
-			printInitializerClause(ctx->initializerClause());
-			out << ";";
-			currentDeclarationName.clear();
-		}
-	}
-
-	void AstrumCodegen::printForwardVarDeclaration(
-	    AstrumParser::ForwardVarDeclarationContext* ctx) {
-		if (functionBody) {
-			out << "decltype(auto) ";
-			printIdentifier(ctx->Identifier());
-			out << " = ";
-			currentDeclarationName = ctx->Identifier()->getText();
-			printInitializerClause(ctx->initializerClause());
-			out << ";";
-			currentDeclarationName.clear();
-		}
-	}
-
-	void AstrumCodegen::printAliasDeclaration(AstrumParser::AliasDeclarationContext* ctx) {
-		if (functionBody) {
-			if (auto tpl = ctx->templateParams()) {
-				isFunctionDeclaration = true;
-				printTemplateParams(tpl);
-				isFunctionDeclaration = false;
-				out << " ";
+			if (!ctx->Void()) {
+				if (auto expr = ctx->initializerClause()) {
+					out << " = ";
+					if (first) {
+						printInitializerClause(ctx->initializerClause());
+					} else {
+						printIdentifier(ctx->Identifier());
+					}
+				} else if (auto init = ctx->initializerList()) {
+					if (first) {
+						out << "{ ";
+						printInitializerList(init);
+						out << " }";
+					} else {
+						out << " = ";
+						printIdentifier(ctx->Identifier());
+					}
+				} else if (checkForRefStruct) {
+					out << ";";
+					printRefStructCheck(ctx->theTypeId());
+				} else {
+					out << "{}";
+				}
 			}
-			auto name = ctx->Identifier()->getText();
-			sema.typeset.insert(name);
-			out << "using ";
-			printIdentifier(ctx->Identifier());
-			out << " = ";
+
+			out << "; ";
+			first    = false;
+			isUnsafe = prevUnsafe;
+			currentDeclarationName.clear();
+			currentDeclaration = nullptr;
+		}
+
+		void AstrumCodegen::printSimpleMultiDeclaration(
+		    AstrumParser::SimpleMultiDeclarationContext * ctx) {
+			if (!functionBody) {
+				emptyLine = true;
+				return;
+			}
+			bool prevUnsafe = isUnsafe;
+
+			bool first   = true;
+			bool isArray = false;
+			auto ids     = ctx->Identifier();
+			if (auto spec = ctx->declSpecifierSeq()) {
+				printDeclSpecifierSeq(spec);
+			}
+			isDeclaration = true;
 			printTypeId(ctx->theTypeId());
+			if (isUnowned)
+				out << "::__unowned_ref";
+			else if (isWeak)
+				out << "::__weak_ref";
+			isDeclaration = false;
+			// isArray = ctx->theTypeId()->arrayDeclarator();
+			out << " ";
+			for (auto id : ids) {
+				auto txt               = id->getText();
+				currentDeclarationName = txt;
+				symbolTable[txt]       = ctx->theTypeId()->getText();
+				currentType            = symbolTable[txt];
+
+				if (!first)
+					out << ", ";
+				first = false;
+				printIdentifier(id);
+				// if (isArray) printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
+
+				if (functionBody && !checkForRefStruct) {
+					out << "{}";
+				}
+			}
+			out << "; ";
+			if (checkForRefStruct) {
+				printRefStructCheck(ctx->theTypeId());
+				out << ";";
+			}
+			isUnsafe = prevUnsafe;
+			currentDeclarationName.clear();
+		}
+
+		void AstrumCodegen::printDeconstructionDeclaration(
+		    AstrumParser::DeconstructionDeclarationContext * ctx) {
+			out << "const auto& [";
+			bool first = true;
+			for (auto seq = ctx->identifierSeq(); auto id : seq->Identifier()) {
+				if (!first)
+					out << ", ";
+				printIdentifier(id);
+				first = false;
+			}
+			out << "]";
+			if (auto expr = ctx->initializerClause()) {
+				out << " = ";
+				printInitializerClause(ctx->initializerClause());
+			}
 			out << ";";
 		}
-	}
 
-	void AstrumCodegen::printAssertDeclaration(AstrumParser::AssertDeclarationContext* ctx) {
-		if (ctx->Static()) {
-			out << "static_assert(";
-			printConstantExpression(ctx->constantExpression());
-			out << ", " << ctx->StringLiteral()->getText() << ");";
-		} else {
-			out << "ADV_ASSERT((";
-			printConditionalExpression(ctx->conditionalExpression(0));
-			out << "), ";
-			if (ctx->conditionalExpression().size() > 1) {
-				printConditionalExpression(ctx->conditionalExpression(1));
-			} else {
-				auto txt = ctx->conditionalExpression(0)->getText();
-				StringReplace(txt, "\\", "\\\\");
-				out << 'u' << '"' << txt << '"';
+		void AstrumCodegen::printSimpleTypeSpecifier(AstrumParser::SimpleTypeSpecifierContext *
+		                                             ctx) {
+			if (isNewDeleteOperator) {
+				if (ctx->Usize())
+					out << "size_t";
+				else if (ctx->getText() == "Pointer")
+					out << "void*";
+				return;
 			}
+			if ((isVolatile && !isPtr) || isTemplateParamDeclaration) {
+				if (ctx->I8()) {
+					out << "int8_t";
+				} else if (ctx->U8()) {
+					out << "uint8_t";
+				} else if (ctx->I16()) {
+					out << "int16_t";
+				} else if (ctx->U16()) {
+					out << "uint16_t";
+				} else if (ctx->I32()) {
+					out << "int32_t";
+				} else if (ctx->U32()) {
+					out << "uint32_t";
+				} else if (ctx->I64()) {
+					out << "int64_t";
+				} else if (ctx->U64()) {
+					out << "uint64_t";
+				} else if (ctx->Isize()) {
+					out << "ptrdiff_t";
+				} else if (ctx->Usize()) {
+					out << "size_t";
+				} else if (ctx->F32()) {
+					out << "float";
+				} else if (ctx->F64()) {
+					out << "double";
+				} else if (ctx->Fext()) {
+					out << "long double";
+				} else if (ctx->Bool()) {
+					out << "bool";
+				}
+			} else if (ctx->I8()) {
+				out << "Builtin::i8";
+			} else if (ctx->U8()) {
+				out << "Builtin::u8";
+			} else if (ctx->I16()) {
+				out << "Builtin::i16";
+			} else if (ctx->U16()) {
+				out << "Builtin::u16";
+			} else if (ctx->I32()) {
+				out << "Builtin::i32";
+			} else if (ctx->U32()) {
+				out << "Builtin::u32";
+			} else if (ctx->I64()) {
+				out << "Builtin::i64";
+			} else if (ctx->U64()) {
+				out << "Builtin::u64";
+			} else if (ctx->I128()) {
+				out << "Builtin::i128";
+			} else if (ctx->U128()) {
+				out << "Builtin::u128";
+			} else if (ctx->Isize()) {
+				out << "Builtin::isize";
+			} else if (ctx->Usize()) {
+				out << "Builtin::usize";
+			} else if (ctx->F32()) {
+				out << "Builtin::f32";
+			} else if (ctx->F64()) {
+				out << "Builtin::f64";
+			} else if (ctx->Fext()) {
+				out << "Builtin::fext";
+			} else if (ctx->Byte()) {
+				out << "Builtin::char8";
+			} else if (ctx->Char()) {
+				out << "Builtin::char16";
+			} else if (ctx->Rune()) {
+				out << "Builtin::char32";
+			} else if (ctx->Bool()) {
+				out << "bool";
+			} else if (ctx->Str()) {
+				out << "Builtin::Str";
+			} else if (ctx->Object()) {
+				out << "Builtin::ObjectRef";
+			} else if (ctx->Self()) {
+				if (isExtension) {
+					out << currentExtensionName;
+				} else if (isInterfaceConcept) {
+					out << "typename __AnyType::__self";
+				} else if (isInterface) {
+					out << "Builtin::OptionalStrongRef<Builtin::ObjectRef>";
+				} else {
+					out << "__self";
+				}
+			} else if (auto decl = ctx->decltypeSpecifier()) {
+				out << "decltype(";
+				printExpression(decl->expression());
+				out << ")";
+			} else if (auto decl = ctx->decaySpecifier()) {
+				out << "std::remove_cvref_t<";
+				printTypeId(decl->theTypeId());
+				out << ">";
+			} else if (auto f = ctx->functionTypeId()) {
+				out << "Builtin::FunctionRef<";
+				if (f->Void()) {
+					out << "void";
+				} else {
+					if (f->theTypeId()) {
+						printTypeId(f->theTypeId());
+						out << " ";
+					}
+					if (f->Const())
+						out << "const";
+					if (f->Ref())
+						out << "&";
+				}
+				out << "(";
+				bool first = true;
+				for (auto param : f->typeIdWithSpecification()) {
+					if (!first)
+						out << ", ";
+					first = false;
+					printTypeIdWithSpecification(param);
+				}
+				if (f->Ellipsis()) {
+					out << "...";
+				}
+				out << ")>";
+			} else if (ctx->LeftParen()) {
+				if (!ctx->namedTupleField().empty()) {
+					auto id = sema.getNamedTupleId(ctx->getText());
+					StringReplace(id, ".", "::");
+					out << id;
+				} else {
+					out << "std::tuple<";
+					bool first = true;
+					for (auto type : ctx->theTypeId()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printTypeId(type);
+					}
+					if (ctx->Ellipsis()) {
+						out << "...";
+					}
+					out << ">";
+				}
+			} else {
+				auto txt = ctx->getText();
+				auto pos = txt.find('<');
+				if (pos != txt.npos)
+					txt = txt.substr(0, pos);
+				if (sema.typeset.contains(currentShortType + "." + txt)) {
+					out << "typename " << currentTypeWithTemplate << "::";
+				}
+				if (auto nested = ctx->nestedNameSpecifier()) {
+					out << "typename ";
+					printNestedNameSpecifier(nested);
+				} else if (sema.protectedSymbols.contains(ctx->getText())) {
+					out << "__" << filename << "_Protected::";
+				}
+				auto type = ctx->typename_();
+				if (auto tid = type->simpleTemplateId()) {
+					printSimpleTemplateId(tid);
+				} else if (auto cid = type->className()) {
+					if (auto tid = cid->simpleTemplateId()) {
+						printSimpleTemplateId(tid);
+					} else {
+						out << ctx->typename_()->getText();
+					}
+				} else {
+					out << ctx->typename_()->getText();
+				}
+			}
+		}
+
+		void AstrumCodegen::printRefDeclaration(AstrumParser::RefDeclarationContext * ctx) {
+			auto ids     = ctx->identifierSeq()->Identifier();
+			auto id      = ids[0]->getText();
+			bool isConst = ctx->Const() || ctx->Let();
+			if (isConst)
+				out << "const ";
+
+			if (auto t = ctx->typeSpecifierSeq()) {
+				symbolTable[id] = (isConst ? "const " : "") + t->getText() + "&";
+				printTypeSpecifierSeq(t);
+			} else {
+				symbolTable[id] = std::string(isConst ? "const " : "") + "&";
+				out << "auto";
+			}
+			out << "& ";
+			currentType = symbolTable[id];
+			if (ids.size() == 1) {
+				currentDeclarationName = id;
+				printIdentifier(ids[0]);
+			} else {
+				out << "[";
+				bool first = true;
+				for (auto idctx : ids) {
+					if (!first)
+						out << ", ";
+					printIdentifier(idctx);
+					first = false;
+				}
+				out << "]";
+			}
+			if (auto expr = ctx->initializerClause()) {
+				out << " = ";
+				printInitializerClause(ctx->initializerClause());
+			}
+
+			out << ";";
+			currentDeclarationName.clear();
+		}
+
+		void AstrumCodegen::printMemberRefDeclaration(AstrumParser::MemberRefDeclarationContext *
+		                                              ctx) {
+			auto id      = ctx->Identifier()->getText();
+			bool isConst = ctx->Const() || ctx->Let();
+			if (isConst)
+				out << "const ";
+
+			symbolTable[id] = (isConst ? "const " : "") + ctx->theTypeId()->getText() + "&";
+			printTypeId(ctx->theTypeId());
+			out << "& ";
+			printIdentifier(ctx->Identifier());
+			out << ";";
+		}
+
+		void AstrumCodegen::printMultiDeclaration(AstrumParser::MultiDeclarationContext * ctx) {
+			const auto& ids        = ctx->Identifier();
+			bool first             = true;
+			currentDeclarationName = ids[0]->getText();
+			for (auto idctx : ids) {
+				auto id         = idctx->getText();
+				symbolTable[id] = "";
+				if (auto spec = ctx->declSpecifierSeq()) {
+					printDeclSpecifierSeq(spec);
+				}
+				if (first) {
+					if (isUnowned) {
+						out << "decltype(";
+						printInitializerClause(ctx->initializerClause());
+						out << ")::__unowned_ref ";
+					} else if (isWeak) {
+						out << "decltype(";
+						printInitializerClause(ctx->initializerClause());
+						out << ")::__weak_ref ";
+					} else {
+						out << "auto ";
+					}
+				} else {
+					out << "auto ";
+				}
+
+				out << id << " = ";
+				currentType = symbolTable[id];
+				if (first) {
+					printInitializerClause(ctx->initializerClause());
+				} else {
+					printIdentifier(ids[0]);
+				}
+				out << "; ";
+				first = false;
+			}
+			currentDeclarationName.clear();
+		}
+
+		void AstrumCodegen::printConstantDeclaration(AstrumParser::ConstantDeclarationContext *
+		                                             ctx) {
+			if (functionBody) {
+				out << "constexpr ";
+				bool isArray = false;
+				if (auto t = ctx->theTypeId()) {
+					isDeclaration = true;
+					printTypeId(t);
+					isDeclaration = false;
+					// isArray = t->arrayDeclarator();
+					currentType = t->getText();
+				} else {
+					out << "auto";
+				}
+
+				out << " ";
+				printIdentifier(ctx->Identifier());
+				// if (isArray) printArrayDeclarator(ctx->theTypeId()->arrayDeclarator());
+				out << " = ";
+				currentDeclarationName = ctx->Identifier()->getText();
+				printInitializerClause(ctx->initializerClause());
+				out << ";";
+				currentDeclarationName.clear();
+			}
+		}
+
+		void AstrumCodegen::printForwardVarDeclaration(AstrumParser::ForwardVarDeclarationContext *
+		                                               ctx) {
+			if (functionBody) {
+				out << "decltype(auto) ";
+				printIdentifier(ctx->Identifier());
+				out << " = ";
+				currentDeclarationName = ctx->Identifier()->getText();
+				printInitializerClause(ctx->initializerClause());
+				out << ";";
+				currentDeclarationName.clear();
+			}
+		}
+
+		void AstrumCodegen::printAliasDeclaration(AstrumParser::AliasDeclarationContext * ctx) {
+			if (functionBody) {
+				if (auto tpl = ctx->templateParams()) {
+					isFunctionDeclaration = true;
+					printTemplateParams(tpl);
+					isFunctionDeclaration = false;
+					out << " ";
+				}
+				auto name = ctx->Identifier()->getText();
+				sema.typeset.insert(name);
+				out << "using ";
+				printIdentifier(ctx->Identifier());
+				out << " = ";
+				printTypeId(ctx->theTypeId());
+				out << ";";
+			}
+		}
+
+		void AstrumCodegen::printAssertDeclaration(AstrumParser::AssertDeclarationContext * ctx) {
+			if (ctx->Static()) {
+				out << "static_assert(";
+				printConstantExpression(ctx->constantExpression());
+				out << ", " << ctx->StringLiteral()->getText() << ");";
+			} else {
+				out << "ADV_ASSERT((";
+				printConditionalExpression(ctx->conditionalExpression(0));
+				out << "), ";
+				if (ctx->conditionalExpression().size() > 1) {
+					printConditionalExpression(ctx->conditionalExpression(1));
+				} else {
+					auto txt = ctx->conditionalExpression(0)->getText();
+					StringReplace(txt, "\\", "\\\\");
+					out << 'u' << '"' << txt << '"';
+				}
+				out << ");";
+			}
+		}
+
+		void AstrumCodegen::printAssumeDeclaration(AstrumParser::AssumeDeclarationContext * ctx) {
+			out << "ASSUME(";
+			printConditionalExpression(ctx->conditionalExpression());
 			out << ");";
 		}
-	}
 
-	void AstrumCodegen::printAssumeDeclaration(AstrumParser::AssumeDeclarationContext* ctx) {
-		out << "ASSUME(";
-		printConditionalExpression(ctx->conditionalExpression());
-		out << ");";
-	}
-
-	void AstrumCodegen::printUnitTestDeclaration(AstrumParser::UnitTestDeclarationContext* ctx) {
-		if (!CompilerSettings::get().unitTestMode)
-			return;
-		isUnitTestBody = true;
-		functionBody   = true;
-		isVoidReturn   = true;
-		out.switchTo(false);
-		out << "#ifdef ADV_UNITTEST\n" << std::string(depth, '\t');
-		out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-		    << std::string(depth, '\t');
-		out << "static bool " << sema.getUnitTestId(ctx) << " = []()";
-		functionProlog = true;
-		printCompoundStatement(ctx->compoundStatement());
-		out << "();\n" << std::string(depth, '\t');
-		out << "#endif" << std::string(depth, '\t');
-		functionBody   = false;
-		isUnitTestBody = false;
-	}
-
-	void AstrumCodegen::printExpression(AstrumParser::ExpressionContext* ctx) {
-		bool first = true;
-		/*for (auto expr : ctx->assignmentExpression())
-		{
-		    if (!first) out << ", ";
-		    first = false;
-		    printAssignmentExpression(expr);
-		}*/
-		printAssignmentExpression(ctx->assignmentExpression());
-	}
-
-	void AstrumCodegen::printAssignmentExpression(AstrumParser::AssignmentExpressionContext* ctx) {
-		if (ctx->assignmentOperator()) {
-			currentAssignment = ctx;
+		void AstrumCodegen::printUnitTestDeclaration(AstrumParser::UnitTestDeclarationContext *
+		                                             ctx) {
+			if (!CompilerSettings::get().unitTestMode)
+				return;
+			isUnitTestBody = true;
+			functionBody   = true;
+			isVoidReturn   = true;
+			out.switchTo(false);
+			out << "#ifdef ADV_UNITTEST\n" << std::string(depth, '\t');
+			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
+			    << std::string(depth, '\t');
+			out << "static bool " << sema.getUnitTestId(ctx) << " = []()";
+			functionProlog = true;
+			printCompoundStatement(ctx->compoundStatement());
+			out << "();\n" << std::string(depth, '\t');
+			out << "#endif" << std::string(depth, '\t');
+			functionBody   = false;
+			isUnitTestBody = false;
 		}
-		if (auto cond = ctx->conditionalExpression()) {
-			printConditionalExpression(cond);
-		} else if (auto expr = ctx->throwExpression()) {
-			printThrowExpression(expr);
-		} else {
-			lvalue = true;
-			if (ctx->assignmentOperator()->Assign())
-				isAssignment = true;
-			auto left  = ctx->logicalOrExpression()->getText();
-			bool paren = false;
-			if (isAssignment && sema.uninitConstructs.contains(ctx) &&
-			    (symbolTable[left] == "#DeferredInit" || symbolTable[left] == "#Out")) {
-				out << left << ".construct(";
-				paren = true;
-			} else if (ctx->assignmentOperator()->DoubleStarAssign()) {
-				std::string ufcs = "ADV_UFCS";
-				if (!functionBody)
-					ufcs += "_NONLOCAL";
-				out << ufcs << "(_operator_mul_mul_eq)(";
-				printLogicalOrExpression(ctx->logicalOrExpression());
-				out << ", ";
-				paren = true;
-			} else if (ctx->assignmentOperator()->SignedRightShiftAssign()) {
-				std::string ufcs = "ADV_UFCS";
-				if (!functionBody)
-					ufcs += "_NONLOCAL";
-				out << ufcs << "(_operator_gt_gt_gt_eq)(";
-				printLogicalOrExpression(ctx->logicalOrExpression());
-				out << ", ";
-				paren = true;
-			} else if (ctx->assignmentOperator()->TildeAssign()) {
-				std::string ufcs = "ADV_UFCS";
-				if (!functionBody)
-					ufcs += "_NONLOCAL";
-				out << ufcs << "(_operator_not_eq)(";
-				printLogicalOrExpression(ctx->logicalOrExpression());
-				out << ", ";
-				paren = true;
-			} else if (ctx->assignmentOperator()->Op1()) {
-				std::string ufcs = "ADV_UFCS";
-				if (!functionBody)
-					ufcs += "_NONLOCAL";
-				out << ufcs << "("
-				    << sema.getCustomOperatorName(ctx->assignmentOperator()->Op1()->getText())
-				    << ")(";
-				printLogicalOrExpression(ctx->logicalOrExpression());
-				out << ", ";
-				paren = true;
+
+		void AstrumCodegen::printExpression(AstrumParser::ExpressionContext * ctx) {
+			bool first = true;
+			/*for (auto expr : ctx->assignmentExpression())
+			{
+			    if (!first) out << ", ";
+			    first = false;
+			    printAssignmentExpression(expr);
+			}*/
+			printAssignmentExpression(ctx->assignmentExpression());
+		}
+
+		void AstrumCodegen::printAssignmentExpression(AstrumParser::AssignmentExpressionContext *
+		                                              ctx) {
+			if (ctx->assignmentOperator()) {
+				currentAssignment = ctx;
+			}
+			if (auto cond = ctx->conditionalExpression()) {
+				printConditionalExpression(cond);
+			} else if (auto expr = ctx->throwExpression()) {
+				printThrowExpression(expr);
 			} else {
-				printLogicalOrExpression(ctx->logicalOrExpression());
-				printAssignmentOperator(ctx->assignmentOperator());
-			}
-			lvalue = false;
-			printInitializerClause(ctx->initializerClause());
-			if (paren)
-				out << ")";
-			if (ctx->assignmentOperator()->DoubleQuestionAssign())
-				out << "; })";
-			isAssignment = false;
-		}
-		currentAssignment = nullptr;
-	}
-
-	void AstrumCodegen::printAssignmentOperator(AstrumParser::AssignmentOperatorContext* ctx) {
-		if (ctx->Assign()) {
-			out << " = ";
-		} else if (ctx->PlusAssign()) {
-			out << " += ";
-		} else if (ctx->MinusAssign()) {
-			out << " -= ";
-		} else if (ctx->StarAssign()) {
-			out << " *= ";
-		} else if (ctx->DivAssign()) {
-			out << " /= ";
-		} else if (ctx->ModAssign()) {
-			out << " %= ";
-		} else if (ctx->AndAssign()) {
-			out << " &= ";
-		} else if (ctx->OrAssign()) {
-			out << " |= ";
-		} else if (ctx->XorAssign()) {
-			out << " ^= ";
-		} else if (ctx->LeftShiftAssign()) {
-			out << " <<= ";
-		} else if (ctx->RightShiftAssign()) {
-			out << " >>= ";
-		} else if (ctx->DoubleQuestionAssign()) {
-			out << ".AssignIfNull([&]() FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { return ";
-		}
-	}
-
-	void AstrumCodegen::printInitializerClause(AstrumParser::InitializerClauseContext* ctx) {
-		if (auto expr = ctx->assignmentExpression()) {
-			printAssignmentExpression(expr);
-		} else if (auto init = ctx->bracedInitList()) {
-			printBracedInitList(init);
-		} else if (auto coll = ctx->collectionExpression()) {
-			printCollectionExpression(coll);
-		}
-		if (ctx->Ellipsis()) {
-			out << "...";
-		}
-	}
-
-	void AstrumCodegen::printBracedInitList(AstrumParser::BracedInitListContext* ctx) {
-		out << "{ ";
-		if (auto lst = ctx->initializerList()) {
-			printInitializerList(lst);
-		}
-		out << " }";
-	}
-
-	void AstrumCodegen::printInitializerList(AstrumParser::InitializerListContext* ctx) {
-		bool first = true;
-		int i      = 0;
-		for (auto part : ctx->initializerPart()) {
-			if (!first)
-				out << ", ";
-			first = false;
-			if (varargDepth == i++)
-				out << "std::initializer_list{";
-			printInitializerPart(part);
-		}
-		if (varargDepth >= 0)
-			out << "}";
-	}
-
-	void AstrumCodegen::printInitializerPart(AstrumParser::InitializerPartContext* ctx) {
-		printInitializerClause(ctx->initializerClause());
-		if (ctx->Ellipsis())
-			out << "...";
-	}
-
-	void AstrumCodegen::printCollectionExpression(AstrumParser::CollectionExpressionContext* ctx) {
-		bool first = true;
-		int i      = 0;
-		out << "std::initializer_list{";
-		for (auto part : ctx->expression()) {
-			if (!first)
-				out << ", ";
-			first = false;
-			printExpression(part);
-		}
-		for (auto part : ctx->keyValuePairExpression()) {
-			if (!first)
-				out << ", ";
-			first = false;
-			printKeyValuePairExpression(part);
-		}
-		out << "}";
-	}
-
-	void AstrumCodegen::printKeyValuePairExpression(
-	    AstrumParser::KeyValuePairExpressionContext* ctx) {
-		out << "std::make_pair(";
-		printExpression(ctx->expression(0));
-		out << ", ";
-		printExpression(ctx->expression(1));
-		out << ")";
-	}
-
-	void AstrumCodegen::printThrowExpression(AstrumParser::ThrowExpressionContext* ctx) {
-		if (auto expr = ctx->assignmentExpression()) {
-			out << "Builtin::Throw(";
-			printAssignmentExpression(expr);
-			out << ")";
-		} else {
-			out << "throw";
-		}
-	}
-
-	void AstrumCodegen::printExpressionList(AstrumParser::ExpressionListContext* ctx) {
-		bool first = true;
-		int i      = 0;
-		for (auto part : ctx->expressionListPart()) {
-			if (!first)
-				out << ", ";
-			if (varargDepth == i++)
-				out << "std::initializer_list{";
-			printExpressionListPart(part);
-			first = false;
-		}
-		if (varargDepth >= 0)
-			out << "}";
-	}
-
-	void AstrumCodegen::printExpressionListPart(AstrumParser::ExpressionListPartContext* ctx) {
-		if (auto expr = ctx->conditionalExpression()) {
-			printConditionalExpression(expr);
-		} else if (auto init = ctx->bracedInitList()) {
-			printBracedInitList(init);
-		} else if (auto coll = ctx->collectionExpression()) {
-			printCollectionExpression(coll);
-		} else if (ctx->Out()) {
-			auto id = ctx->Identifier()->getText();
-			out << "Builtin::Out(&";
-			printIdentifier(ctx->Identifier());
-			out << ")";
-			symbolTable[id] = "#DeferredInit";
-		}
-		if (ctx->Ellipsis()) {
-			out << "...";
-		}
-	}
-
-	void AstrumCodegen::printExpressionSeq(AstrumParser::ExpressionSeqContext* ctx) {
-		bool first = true;
-		for (auto expr : ctx->expression()) {
-			if (!first)
-				out << ", ";
-			printExpression(expr);
-			first = false;
-		}
-	}
-
-	void AstrumCodegen::printConstantExpression(AstrumParser::ConstantExpressionContext* ctx) {
-		printConditionalExpression(ctx->conditionalExpression());
-	}
-
-	void AstrumCodegen::printConditionalExpression(
-	    AstrumParser::ConditionalExpressionContext* ctx) {
-		lvalue = false;
-		if (ctx->assignmentExpression()) {
-			if (!ctx->expression()) {
-				out << "Builtin::ElvisOperator(";
-				printNullCoalescingExpression(ctx->nullCoalescingExpression());
-				out << ", [&]() FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { return ";
-				printAssignmentExpression(ctx->assignmentExpression());
-				out << "; })";
-			} else {
-				printNullCoalescingExpression(ctx->nullCoalescingExpression());
-				out << " ? ";
-				printExpression(ctx->expression());
-				out << " : ";
-				printAssignmentExpression(ctx->assignmentExpression());
-			}
-		} else {
-			printNullCoalescingExpression(ctx->nullCoalescingExpression());
-		}
-	}
-
-	void AstrumCodegen::printNullCoalescingExpression(
-	    AstrumParser::NullCoalescingExpressionContext* ctx) {
-		lvalue = false;
-		printLogicalOrExpression(ctx->logicalOrExpression());
-		auto expressions = ctx->nullCoalescingBranch();
-		for (auto orExpr : expressions) {
-			out << ".ValueOr([&]() FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ";
-			if (auto expr = orExpr->logicalOrExpression()) {
-				out << "return ";
-				printLogicalOrExpression(expr);
-			} else {
-				printThrowExpression(orExpr->throwExpression());
-				out << "; return *(";
-				printLogicalOrExpression(ctx->logicalOrExpression());
-				out << ")";
-			}
-		}
-		for (int i = 0; i < expressions.size(); ++i) { out << "; })"; }
-	}
-
-	void AstrumCodegen::printLogicalOrExpression(AstrumParser::LogicalOrExpressionContext* ctx) {
-		bool first = true;
-		for (auto andExpr : ctx->logicalAndExpression()) {
-			if (!first)
-				out << " || ";
-			first = false;
-			printLogicalAndExpression(andExpr);
-		}
-	}
-
-	void AstrumCodegen::printLogicalAndExpression(AstrumParser::LogicalAndExpressionContext* ctx) {
-		bool first = true;
-		for (auto expr : ctx->inclusiveOrExpression()) {
-			if (!first)
-				out << " && ";
-			first = false;
-			printInclusiveOrExpression(expr);
-		}
-	}
-
-	void AstrumCodegen::printInclusiveOrExpression(
-	    AstrumParser::InclusiveOrExpressionContext* ctx) {
-		if (ctx->exclusiveOrExpression()) {
-			printExclusiveOrExpression(ctx->exclusiveOrExpression());
-		} else if (ctx->VertLine()) {
-			printInclusiveOrExpression(ctx->inclusiveOrExpression(0));
-			out << " | ";
-			printInclusiveOrExpression(ctx->inclusiveOrExpression(1));
-		} else {
-			std::string ufcs = "ADV_UFCS";
-			if (!functionBody)
-				ufcs += "_NONLOCAL";
-			out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op2()->getText()) << ")(";
-			printInclusiveOrExpression(ctx->inclusiveOrExpression(0));
-			out << ", ";
-			printInclusiveOrExpression(ctx->inclusiveOrExpression(1));
-			out << ")";
-		}
-	}
-
-	void AstrumCodegen::printExclusiveOrExpression(
-	    AstrumParser::ExclusiveOrExpressionContext* ctx) {
-		if (ctx->andExpression()) {
-			printAndExpression(ctx->andExpression());
-		} else if (ctx->Caret()) {
-			printExclusiveOrExpression(ctx->exclusiveOrExpression(0));
-			out << " ^ ";
-			printExclusiveOrExpression(ctx->exclusiveOrExpression(1));
-		} else {
-			std::string ufcs = "ADV_UFCS";
-			if (!functionBody)
-				ufcs += "_NONLOCAL";
-			out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op3()->getText()) << ")(";
-			printExclusiveOrExpression(ctx->exclusiveOrExpression(0));
-			out << ", ";
-			printExclusiveOrExpression(ctx->exclusiveOrExpression(1));
-			out << ")";
-		}
-	}
-
-	void AstrumCodegen::printAndExpression(AstrumParser::AndExpressionContext* ctx) {
-		if (ctx->equalityExpression()) {
-			printEqualityExpression(ctx->equalityExpression());
-		} else if (ctx->Amp()) {
-			printAndExpression(ctx->andExpression(0));
-			out << " & ";
-			printAndExpression(ctx->andExpression(1));
-		} else {
-			std::string ufcs = "ADV_UFCS";
-			if (!functionBody)
-				ufcs += "_NONLOCAL";
-			out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op4()->getText()) << ")(";
-			printAndExpression(ctx->andExpression(0));
-			out << ", ";
-			printAndExpression(ctx->andExpression(1));
-			out << ")";
-		}
-	}
-
-	void AstrumCodegen::printEqualityExpression(AstrumParser::EqualityExpressionContext* ctx) {
-		if (ctx->relationalExpression()) {
-			printRelationalExpression(ctx->relationalExpression());
-		} else if (!ctx->theTypeId().empty()) {
-			if (ctx->NotEqual()) {
-				out << "!";
-			}
-
-			out << "std::is_same_v<";
-			printTypeId(ctx->theTypeId(0));
-			out << ", ";
-			printTypeId(ctx->theTypeId(1));
-			out << ">";
-		} else if (ctx->Equal()) {
-			printEqualityExpression(ctx->equalityExpression(0));
-			out << " == ";
-			currentEquality = ctx;
-			printEqualityExpression(ctx->equalityExpression(1));
-		} else if (ctx->NotEqual()) {
-			printEqualityExpression(ctx->equalityExpression(0));
-			out << " != ";
-			currentEquality = ctx;
-			printEqualityExpression(ctx->equalityExpression(1));
-		} else if (ctx->IdentityEqual()) {
-			out << "Builtin::IdentityEquals(";
-			printEqualityExpression(ctx->equalityExpression(0));
-			out << ", ";
-			currentEquality = ctx;
-			printEqualityExpression(ctx->equalityExpression(1));
-			out << ")";
-		} else if (ctx->NotIdentityEqual()) {
-			out << "!Builtin::IdentityEquals(";
-			printEqualityExpression(ctx->equalityExpression(0));
-			out << ", ";
-			currentEquality = ctx;
-			printEqualityExpression(ctx->equalityExpression(1));
-			out << ")";
-		} else {
-			std::string ufcs = "ADV_UFCS";
-			if (!functionBody)
-				ufcs += "_NONLOCAL";
-			out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op5()->getText()) << ")(";
-			printEqualityExpression(ctx->equalityExpression(0));
-			out << ", ";
-			currentEquality = ctx;
-			printEqualityExpression(ctx->equalityExpression(1));
-			out << ")";
-		}
-		currentEquality = nullptr;
-	}
-
-	void AstrumCodegen::printRelationalExpression(AstrumParser::RelationalExpressionContext* ctx) {
-		if (!ctx->threeWayComparisonExpression().empty()) {
-			if (ctx->In()) {
-				if (ctx->not_())
-					out << "!";
-				std::string ufcs = "ADV_UFCS";
-				if (!functionBody)
-					ufcs += "_NONLOCAL";
-				out << ufcs << "(_operator_in)(";
-				printThreeWayComparisonExpression(ctx->threeWayComparisonExpression(1));
-				out << ", ";
-				printThreeWayComparisonExpression(ctx->threeWayComparisonExpression(0));
-				out << ")";
-			} else if (ctx->As()) {
-				out << "Builtin::Cast<";
-				if (ctx->Question()) {
-					out << "false";
+				lvalue = true;
+				if (ctx->assignmentOperator()->Assign())
+					isAssignment = true;
+				auto left  = ctx->logicalOrExpression()->getText();
+				bool paren = false;
+				if (isAssignment && sema.uninitConstructs.contains(ctx) &&
+				    (symbolTable[left] == "#DeferredInit" || symbolTable[left] == "#Out")) {
+					out << left << ".construct(";
+					paren = true;
+				} else if (ctx->assignmentOperator()->DoubleStarAssign()) {
+					std::string ufcs = "ADV_UFCS";
+					if (!functionBody)
+						ufcs += "_NONLOCAL";
+					out << ufcs << "(_operator_mul_mul_eq)(";
+					printLogicalOrExpression(ctx->logicalOrExpression());
+					out << ", ";
+					paren = true;
+				} else if (ctx->assignmentOperator()->SignedRightShiftAssign()) {
+					std::string ufcs = "ADV_UFCS";
+					if (!functionBody)
+						ufcs += "_NONLOCAL";
+					out << ufcs << "(_operator_gt_gt_gt_eq)(";
+					printLogicalOrExpression(ctx->logicalOrExpression());
+					out << ", ";
+					paren = true;
+				} else if (ctx->assignmentOperator()->TildeAssign()) {
+					std::string ufcs = "ADV_UFCS";
+					if (!functionBody)
+						ufcs += "_NONLOCAL";
+					out << ufcs << "(_operator_not_eq)(";
+					printLogicalOrExpression(ctx->logicalOrExpression());
+					out << ", ";
+					paren = true;
+				} else if (ctx->assignmentOperator()->Op1()) {
+					std::string ufcs = "ADV_UFCS";
+					if (!functionBody)
+						ufcs += "_NONLOCAL";
+					out << ufcs << "("
+					    << sema.getCustomOperatorName(ctx->assignmentOperator()->Op1()->getText())
+					    << ")(";
+					printLogicalOrExpression(ctx->logicalOrExpression());
+					out << ", ";
+					paren = true;
 				} else {
-					out << "true";
+					printLogicalOrExpression(ctx->logicalOrExpression());
+					printAssignmentOperator(ctx->assignmentOperator());
 				}
-				out << ", ";
-				printTypeId(ctx->theTypeId());
-				out << ">(";
-				printThreeWayComparisonExpression(ctx->threeWayComparisonExpression(0));
+				lvalue = false;
+				printInitializerClause(ctx->initializerClause());
+				if (paren)
+					out << ")";
+				if (ctx->assignmentOperator()->DoubleQuestionAssign())
+					out << "; })";
+				isAssignment = false;
+			}
+			currentAssignment = nullptr;
+		}
+
+		void AstrumCodegen::printAssignmentOperator(AstrumParser::AssignmentOperatorContext * ctx) {
+			if (ctx->Assign()) {
+				out << " = ";
+			} else if (ctx->PlusAssign()) {
+				out << " += ";
+			} else if (ctx->MinusAssign()) {
+				out << " -= ";
+			} else if (ctx->StarAssign()) {
+				out << " *= ";
+			} else if (ctx->DivAssign()) {
+				out << " /= ";
+			} else if (ctx->ModAssign()) {
+				out << " %= ";
+			} else if (ctx->AndAssign()) {
+				out << " &= ";
+			} else if (ctx->OrAssign()) {
+				out << " |= ";
+			} else if (ctx->XorAssign()) {
+				out << " ^= ";
+			} else if (ctx->LeftShiftAssign()) {
+				out << " <<= ";
+			} else if (ctx->RightShiftAssign()) {
+				out << " >>= ";
+			} else if (ctx->DoubleQuestionAssign()) {
+				out << ".AssignIfNull([&]() FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { "
+				       "return ";
+			}
+		}
+
+		void AstrumCodegen::printInitializerClause(AstrumParser::InitializerClauseContext * ctx) {
+			if (auto expr = ctx->assignmentExpression()) {
+				printAssignmentExpression(expr);
+			} else if (auto init = ctx->bracedInitList()) {
+				printBracedInitList(init);
+			} else if (auto coll = ctx->collectionExpression()) {
+				printCollectionExpression(coll);
+			}
+			if (ctx->Ellipsis()) {
+				out << "...";
+			}
+		}
+
+		void AstrumCodegen::printBracedInitList(AstrumParser::BracedInitListContext * ctx) {
+			out << "{ ";
+			if (auto lst = ctx->initializerList()) {
+				printInitializerList(lst);
+			}
+			out << " }";
+		}
+
+		void AstrumCodegen::printInitializerList(AstrumParser::InitializerListContext * ctx) {
+			bool first = true;
+			int i      = 0;
+			for (auto part : ctx->initializerPart()) {
+				if (!first)
+					out << ", ";
+				first = false;
+				if (varargDepth == i++)
+					out << "std::initializer_list{";
+				printInitializerPart(part);
+			}
+			if (varargDepth >= 0)
+				out << "}";
+		}
+
+		void AstrumCodegen::printInitializerPart(AstrumParser::InitializerPartContext * ctx) {
+			printInitializerClause(ctx->initializerClause());
+			if (ctx->Ellipsis())
+				out << "...";
+		}
+
+		void AstrumCodegen::printCollectionExpression(AstrumParser::CollectionExpressionContext *
+		                                              ctx) {
+			bool first = true;
+			int i      = 0;
+			out << "std::initializer_list{";
+			for (auto part : ctx->expression()) {
+				if (!first)
+					out << ", ";
+				first = false;
+				printExpression(part);
+			}
+			for (auto part : ctx->keyValuePairExpression()) {
+				if (!first)
+					out << ", ";
+				first = false;
+				printKeyValuePairExpression(part);
+			}
+			out << "}";
+		}
+
+		void AstrumCodegen::printKeyValuePairExpression(
+		    AstrumParser::KeyValuePairExpressionContext * ctx) {
+			out << "std::make_pair(";
+			printExpression(ctx->expression(0));
+			out << ", ";
+			printExpression(ctx->expression(1));
+			out << ")";
+		}
+
+		void AstrumCodegen::printThrowExpression(AstrumParser::ThrowExpressionContext * ctx) {
+			if (auto expr = ctx->assignmentExpression()) {
+				out << "Builtin::Throw(";
+				printAssignmentExpression(expr);
 				out << ")";
-			} else if (ctx->Is()) {
-				bool skipFirst = false;
-				currentIs      = ctx;
-				std::string tmpName;
-				out << "(";
-				if (isCondition && currentIf && sema.ifPrerequisites.contains(currentIf)) {
-					auto patterns = sema.ifPrerequisites[currentIf];
-					auto it       = std::find(patterns.begin(), patterns.end(), ctx);
-					if (it != patterns.end()) {
-						auto pattern = (*it)->patternList()->pattern(0);
-						if (!(pattern->shiftExpression() &&
-						      pattern->shiftExpression()->getText() == "null")) {
-							if (pattern->not_())
-								out << "!";
-							tmpName = "__tmp" + std::to_string(it - patterns.begin());
-							out << tmpName << ".IsValid()";
-							if (!(pattern->Let() && !pattern->shiftExpression()) &&
-							    (!pattern->theTypeId() || !pattern->propertyPattern().empty())) {
-								if (pattern->not_()) {
-									out << " || ";
+			} else {
+				out << "throw";
+			}
+		}
+
+		void AstrumCodegen::printExpressionList(AstrumParser::ExpressionListContext * ctx) {
+			bool first = true;
+			int i      = 0;
+			for (auto part : ctx->expressionListPart()) {
+				if (!first)
+					out << ", ";
+				if (varargDepth == i++)
+					out << "std::initializer_list{";
+				printExpressionListPart(part);
+				first = false;
+			}
+			if (varargDepth >= 0)
+				out << "}";
+		}
+
+		void AstrumCodegen::printExpressionListPart(AstrumParser::ExpressionListPartContext * ctx) {
+			if (auto expr = ctx->conditionalExpression()) {
+				printConditionalExpression(expr);
+			} else if (auto init = ctx->bracedInitList()) {
+				printBracedInitList(init);
+			} else if (auto coll = ctx->collectionExpression()) {
+				printCollectionExpression(coll);
+			} else if (ctx->Out()) {
+				auto id = ctx->Identifier()->getText();
+				out << "Builtin::Out(&";
+				printIdentifier(ctx->Identifier());
+				out << ")";
+				symbolTable[id] = "#DeferredInit";
+			}
+			if (ctx->Ellipsis()) {
+				out << "...";
+			}
+		}
+
+		void AstrumCodegen::printExpressionSeq(AstrumParser::ExpressionSeqContext * ctx) {
+			bool first = true;
+			for (auto expr : ctx->expression()) {
+				if (!first)
+					out << ", ";
+				printExpression(expr);
+				first = false;
+			}
+		}
+
+		void AstrumCodegen::printConstantExpression(AstrumParser::ConstantExpressionContext * ctx) {
+			printConditionalExpression(ctx->conditionalExpression());
+		}
+
+		void AstrumCodegen::printConditionalExpression(AstrumParser::ConditionalExpressionContext *
+		                                               ctx) {
+			lvalue = false;
+			if (ctx->assignmentExpression()) {
+				if (!ctx->expression()) {
+					out << "Builtin::ElvisOperator(";
+					printNullCoalescingExpression(ctx->nullCoalescingExpression());
+					out << ", [&]() FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { return ";
+					printAssignmentExpression(ctx->assignmentExpression());
+					out << "; })";
+				} else {
+					printNullCoalescingExpression(ctx->nullCoalescingExpression());
+					out << " ? ";
+					printExpression(ctx->expression());
+					out << " : ";
+					printAssignmentExpression(ctx->assignmentExpression());
+				}
+			} else {
+				printNullCoalescingExpression(ctx->nullCoalescingExpression());
+			}
+		}
+
+		void AstrumCodegen::printNullCoalescingExpression(
+		    AstrumParser::NullCoalescingExpressionContext * ctx) {
+			lvalue = false;
+			printLogicalOrExpression(ctx->logicalOrExpression());
+			auto expressions = ctx->nullCoalescingBranch();
+			for (auto orExpr : expressions) {
+				out << ".ValueOr([&]() FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ";
+				if (auto expr = orExpr->logicalOrExpression()) {
+					out << "return ";
+					printLogicalOrExpression(expr);
+				} else {
+					printThrowExpression(orExpr->throwExpression());
+					out << "; return *(";
+					printLogicalOrExpression(ctx->logicalOrExpression());
+					out << ")";
+				}
+			}
+			for (int i = 0; i < expressions.size(); ++i) { out << "; })"; }
+		}
+
+		void AstrumCodegen::printLogicalOrExpression(AstrumParser::LogicalOrExpressionContext *
+		                                             ctx) {
+			bool first = true;
+			for (auto andExpr : ctx->logicalAndExpression()) {
+				if (!first)
+					out << " || ";
+				first = false;
+				printLogicalAndExpression(andExpr);
+			}
+		}
+
+		void AstrumCodegen::printLogicalAndExpression(AstrumParser::LogicalAndExpressionContext *
+		                                              ctx) {
+			bool first = true;
+			for (auto expr : ctx->inclusiveOrExpression()) {
+				if (!first)
+					out << " && ";
+				first = false;
+				printInclusiveOrExpression(expr);
+			}
+		}
+
+		void AstrumCodegen::printInclusiveOrExpression(AstrumParser::InclusiveOrExpressionContext *
+		                                               ctx) {
+			if (ctx->exclusiveOrExpression()) {
+				printExclusiveOrExpression(ctx->exclusiveOrExpression());
+			} else if (ctx->VertLine()) {
+				printInclusiveOrExpression(ctx->inclusiveOrExpression(0));
+				out << " | ";
+				printInclusiveOrExpression(ctx->inclusiveOrExpression(1));
+			} else {
+				std::string ufcs = "ADV_UFCS";
+				if (!functionBody)
+					ufcs += "_NONLOCAL";
+				out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op2()->getText()) << ")(";
+				printInclusiveOrExpression(ctx->inclusiveOrExpression(0));
+				out << ", ";
+				printInclusiveOrExpression(ctx->inclusiveOrExpression(1));
+				out << ")";
+			}
+		}
+
+		void AstrumCodegen::printExclusiveOrExpression(AstrumParser::ExclusiveOrExpressionContext *
+		                                               ctx) {
+			if (ctx->andExpression()) {
+				printAndExpression(ctx->andExpression());
+			} else if (ctx->Caret()) {
+				printExclusiveOrExpression(ctx->exclusiveOrExpression(0));
+				out << " ^ ";
+				printExclusiveOrExpression(ctx->exclusiveOrExpression(1));
+			} else {
+				std::string ufcs = "ADV_UFCS";
+				if (!functionBody)
+					ufcs += "_NONLOCAL";
+				out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op3()->getText()) << ")(";
+				printExclusiveOrExpression(ctx->exclusiveOrExpression(0));
+				out << ", ";
+				printExclusiveOrExpression(ctx->exclusiveOrExpression(1));
+				out << ")";
+			}
+		}
+
+		void AstrumCodegen::printAndExpression(AstrumParser::AndExpressionContext * ctx) {
+			if (ctx->equalityExpression()) {
+				printEqualityExpression(ctx->equalityExpression());
+			} else if (ctx->Amp()) {
+				printAndExpression(ctx->andExpression(0));
+				out << " & ";
+				printAndExpression(ctx->andExpression(1));
+			} else {
+				std::string ufcs = "ADV_UFCS";
+				if (!functionBody)
+					ufcs += "_NONLOCAL";
+				out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op4()->getText()) << ")(";
+				printAndExpression(ctx->andExpression(0));
+				out << ", ";
+				printAndExpression(ctx->andExpression(1));
+				out << ")";
+			}
+		}
+
+		void AstrumCodegen::printEqualityExpression(AstrumParser::EqualityExpressionContext * ctx) {
+			if (ctx->relationalExpression()) {
+				printRelationalExpression(ctx->relationalExpression());
+			} else if (!ctx->theTypeId().empty()) {
+				if (ctx->NotEqual()) {
+					out << "!";
+				}
+
+				out << "std::is_same_v<";
+				printTypeId(ctx->theTypeId(0));
+				out << ", ";
+				printTypeId(ctx->theTypeId(1));
+				out << ">";
+			} else if (ctx->Equal()) {
+				printEqualityExpression(ctx->equalityExpression(0));
+				out << " == ";
+				currentEquality = ctx;
+				printEqualityExpression(ctx->equalityExpression(1));
+			} else if (ctx->NotEqual()) {
+				printEqualityExpression(ctx->equalityExpression(0));
+				out << " != ";
+				currentEquality = ctx;
+				printEqualityExpression(ctx->equalityExpression(1));
+			} else if (ctx->IdentityEqual()) {
+				out << "Builtin::IdentityEquals(";
+				printEqualityExpression(ctx->equalityExpression(0));
+				out << ", ";
+				currentEquality = ctx;
+				printEqualityExpression(ctx->equalityExpression(1));
+				out << ")";
+			} else if (ctx->NotIdentityEqual()) {
+				out << "!Builtin::IdentityEquals(";
+				printEqualityExpression(ctx->equalityExpression(0));
+				out << ", ";
+				currentEquality = ctx;
+				printEqualityExpression(ctx->equalityExpression(1));
+				out << ")";
+			} else {
+				std::string ufcs = "ADV_UFCS";
+				if (!functionBody)
+					ufcs += "_NONLOCAL";
+				out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op5()->getText()) << ")(";
+				printEqualityExpression(ctx->equalityExpression(0));
+				out << ", ";
+				currentEquality = ctx;
+				printEqualityExpression(ctx->equalityExpression(1));
+				out << ")";
+			}
+			currentEquality = nullptr;
+		}
+
+		void AstrumCodegen::printRelationalExpression(AstrumParser::RelationalExpressionContext *
+		                                              ctx) {
+			if (!ctx->threeWayComparisonExpression().empty()) {
+				if (ctx->In()) {
+					if (ctx->not_())
+						out << "!";
+					std::string ufcs = "ADV_UFCS";
+					if (!functionBody)
+						ufcs += "_NONLOCAL";
+					out << ufcs << "(_operator_in)(";
+					printThreeWayComparisonExpression(ctx->threeWayComparisonExpression(1));
+					out << ", ";
+					printThreeWayComparisonExpression(ctx->threeWayComparisonExpression(0));
+					out << ")";
+				} else if (ctx->As()) {
+					out << "Builtin::Cast<";
+					if (ctx->Question()) {
+						out << "false";
+					} else {
+						out << "true";
+					}
+					out << ", ";
+					printTypeId(ctx->theTypeId());
+					out << ">(";
+					printThreeWayComparisonExpression(ctx->threeWayComparisonExpression(0));
+					out << ")";
+				} else if (ctx->Is()) {
+					bool skipFirst = false;
+					currentIs      = ctx;
+					std::string tmpName;
+					out << "(";
+					if (isCondition && currentIf && sema.ifPrerequisites.contains(currentIf)) {
+						auto patterns = sema.ifPrerequisites[currentIf];
+						auto it       = std::find(patterns.begin(), patterns.end(), ctx);
+						if (it != patterns.end()) {
+							auto pattern = (*it)->patternList()->pattern(0);
+							if (!(pattern->shiftExpression() &&
+							      pattern->shiftExpression()->getText() == "null")) {
+								if (pattern->not_())
+									out << "!";
+								tmpName = "__tmp" + std::to_string(it - patterns.begin());
+								out << tmpName << ".IsValid()";
+								if (!(pattern->Let() && !pattern->shiftExpression()) &&
+								    (!pattern->theTypeId() ||
+								     !pattern->propertyPattern().empty())) {
+									if (pattern->not_()) {
+										out << " || ";
+									} else {
+										out << " && ";
+									}
 								} else {
-									out << " && ";
+									skipFirst = true;
 								}
-							} else {
-								skipFirst = true;
 							}
 						}
 					}
-				}
-				printPatternList(ctx->patternList(), ctx->threeWayComparisonExpression(0), tmpName,
-				                 "", false, false, skipFirst);
+					printPatternList(ctx->patternList(), ctx->threeWayComparisonExpression(0),
+					                 tmpName, "", false, false, skipFirst);
 
-				out << ")";
-				currentIs = nullptr;
-			} else {
-				printThreeWayComparisonExpression(ctx->threeWayComparisonExpression(0));
-			}
-		} else if (ctx->Greater()) {
-			out << "(";
-			printRelationalExpression(ctx->relationalExpression(0));
-			out << " <=> ";
-			printRelationalExpression(ctx->relationalExpression(1));
-			out << ") > 0";
-		} else if (ctx->Less()) {
-			out << "(";
-			printRelationalExpression(ctx->relationalExpression(0));
-			out << " <=> ";
-			printRelationalExpression(ctx->relationalExpression(1));
-			out << ") < 0";
-		} else if (ctx->GreaterEqual()) {
-			out << "(";
-			printRelationalExpression(ctx->relationalExpression(0));
-			out << " <=> ";
-			printRelationalExpression(ctx->relationalExpression(1));
-			out << ") >= 0";
-		} else if (ctx->LessEqual()) {
-			out << "(";
-			printRelationalExpression(ctx->relationalExpression(0));
-			out << " <=> ";
-			printRelationalExpression(ctx->relationalExpression(1));
-			out << ") <= 0";
-		} else if (auto trait = ctx->typeTrait()) {
-			bool typeIs = false;
-			if (trait->not_())
-				out << "!";
-			if (trait->Void()) {
-				out << "std::is_void_v<";
-			} else if (trait->Null()) {
-				out << "std::is_null_pointer_v<";
-			} else if (trait->Struct()) {
-				if (trait->Ref()) {
-					out << "std::is_base_of_v<Builtin::RefStruct, ";
+					out << ")";
+					currentIs = nullptr;
+				} else {
+					printThreeWayComparisonExpression(ctx->threeWayComparisonExpression(0));
+				}
+			} else if (ctx->Greater()) {
+				out << "(";
+				printRelationalExpression(ctx->relationalExpression(0));
+				out << " <=> ";
+				printRelationalExpression(ctx->relationalExpression(1));
+				out << ") > 0";
+			} else if (ctx->Less()) {
+				out << "(";
+				printRelationalExpression(ctx->relationalExpression(0));
+				out << " <=> ";
+				printRelationalExpression(ctx->relationalExpression(1));
+				out << ") < 0";
+			} else if (ctx->GreaterEqual()) {
+				out << "(";
+				printRelationalExpression(ctx->relationalExpression(0));
+				out << " <=> ";
+				printRelationalExpression(ctx->relationalExpression(1));
+				out << ") >= 0";
+			} else if (ctx->LessEqual()) {
+				out << "(";
+				printRelationalExpression(ctx->relationalExpression(0));
+				out << " <=> ";
+				printRelationalExpression(ctx->relationalExpression(1));
+				out << ") <= 0";
+			} else if (auto trait = ctx->typeTrait()) {
+				bool typeIs = false;
+				if (trait->not_())
+					out << "!";
+				if (trait->Void()) {
+					out << "std::is_void_v<";
+				} else if (trait->Null()) {
+					out << "std::is_null_pointer_v<";
+				} else if (trait->Struct()) {
+					if (trait->Ref()) {
+						out << "std::is_base_of_v<Builtin::RefStruct, ";
+					} else if (trait->Union()) {
+						out << "std::is_union_v<";
+					} else {
+						out << "std::is_base_of_v<Builtin::Struct, ";
+					}
+				} else if (trait->Enum()) {
+					if (trait->Class()) {
+						out << "std::is_base_of_v<Builtin::EnumClassRef, ";
+					} else {
+						out << "std::is_base_of_v<Builtin::Enum, ";
+					}
 				} else if (trait->Union()) {
-					out << "std::is_union_v<";
-				} else {
-					out << "std::is_base_of_v<Builtin::Struct, ";
-				}
-			} else if (trait->Enum()) {
-				if (trait->Class()) {
-					out << "std::is_base_of_v<Builtin::EnumClassRef, ";
-				} else {
-					out << "std::is_base_of_v<Builtin::Enum, ";
-				}
-			} else if (trait->Union()) {
-				out << "std::is_base_of_v<Builtin::Union, ";
-			} else if (trait->Class()) {
-				out << "std::is_base_of_v<Builtin::ObjectRef, ";
-			} else if (trait->Interface()) {
-				out << "std::is_base_of_v<Builtin::InterfaceRef, ";
-			} else if (trait->Unowned()) {
-				out << "std::is_base_of_v<Builtin::ObjectRef__Unowned, ";
-			} else if (trait->Weak()) {
-				out << "std::is_base_of_v<Builtin::ObjectRef__Weak, ";
-			} else if (trait->Arrow()) {
-				out << "std::is_base_of_v<Builtin::FuncBase, ";
-			} else if (trait->Star()) {
-				out << "Builtin::is_instance_of_v<";
-			} else if (trait->Question()) {
-				out << "Builtin::IsNullable<";
-			} else if (!trait->Amp().empty()) {
-				if (trait->Amp().size() > 1) {
-					out << "std::is_rvalue_reference_v<";
-				} else {
-					out << "std::is_lvalue_reference_v<";
-				}
-			} else if (trait->Ref()) {
-				out << "std::is_reference_v<";
-			} else if (trait->Const()) {
-				out << "std::is_const_v<";
-			} else if (trait->Volatile()) {
-				out << "std::is_volatile_v<";
-			} else if (trait->Abstract()) {
-				out << "std::is_abstract_v<";
-			} else if (trait->Final()) {
-				out << "std::is_final_v<";
-			} else if (trait->Less()) {
-				out << "Builtin::is_instance_of_v<";
-			} else if (trait->New()) {
-				if (trait->theTypeId().empty()) {
-					if (trait->Default()) {
-						out << "std::is_trivially_default_constructible_v<";
-					} else if (trait->Noexcept()) {
-						out << "std::is_nothrow_default_constructible_v<";
+					out << "std::is_base_of_v<Builtin::Union, ";
+				} else if (trait->Class()) {
+					out << "std::is_base_of_v<Builtin::ObjectRef, ";
+				} else if (trait->Interface()) {
+					out << "std::is_base_of_v<Builtin::InterfaceRef, ";
+				} else if (trait->Unowned()) {
+					out << "std::is_base_of_v<Builtin::ObjectRef__Unowned, ";
+				} else if (trait->Weak()) {
+					out << "std::is_base_of_v<Builtin::ObjectRef__Weak, ";
+				} else if (trait->Arrow()) {
+					out << "std::is_base_of_v<Builtin::FuncBase, ";
+				} else if (trait->Star()) {
+					out << "Builtin::is_instance_of_v<";
+				} else if (trait->Question()) {
+					out << "Builtin::IsNullable<";
+				} else if (!trait->Amp().empty()) {
+					if (trait->Amp().size() > 1) {
+						out << "std::is_rvalue_reference_v<";
 					} else {
-						out << "std::is_default_constructible_v<";
+						out << "std::is_lvalue_reference_v<";
 					}
-				} else if (trait->Move()) {
-					if (trait->Default()) {
-						out << "std::is_trivially_move_constructible_v<";
+				} else if (trait->Ref()) {
+					out << "std::is_reference_v<";
+				} else if (trait->Const()) {
+					out << "std::is_const_v<";
+				} else if (trait->Volatile()) {
+					out << "std::is_volatile_v<";
+				} else if (trait->Abstract()) {
+					out << "std::is_abstract_v<";
+				} else if (trait->Final()) {
+					out << "std::is_final_v<";
+				} else if (trait->Less()) {
+					out << "Builtin::is_instance_of_v<";
+				} else if (trait->New()) {
+					if (trait->theTypeId().empty()) {
+						if (trait->Default()) {
+							out << "std::is_trivially_default_constructible_v<";
+						} else if (trait->Noexcept()) {
+							out << "std::is_nothrow_default_constructible_v<";
+						} else {
+							out << "std::is_default_constructible_v<";
+						}
+					} else if (trait->Move()) {
+						if (trait->Default()) {
+							out << "std::is_trivially_move_constructible_v<";
+						} else if (trait->Noexcept()) {
+							out << "std::is_nothrow_move_constructible_v<";
+						} else {
+							out << "std::is_move_constructible_v<";
+						}
+					} else if (trait->Default()) {
+						out << "std::is_trivially_constructible_v<";
 					} else if (trait->Noexcept()) {
-						out << "std::is_nothrow_move_constructible_v<";
+						out << "std::is_nothrow_constructible_v<";
 					} else {
-						out << "std::is_move_constructible_v<";
+						out << "std::is_constructible_v<";
 					}
-				} else if (trait->Default()) {
-					out << "std::is_trivially_constructible_v<";
-				} else if (trait->Noexcept()) {
-					out << "std::is_nothrow_constructible_v<";
+				} else if (trait->Tilde()) {
+					if (trait->Default()) {
+						out << "std::is_trivially_destructible_v<";
+					} else if (trait->Noexcept()) {
+						out << "std::is_nothrow_destructible_v<";
+					} else {
+						out << "std::is_destructible_v<";
+					}
+				} else if (trait->Operator_()) {
+					out << "std::convertible_to<";
+				} else if (!trait->Or().empty()) {
+					out << "Builtin::IsAnyOf<";
 				} else {
-					out << "std::is_constructible_v<";
+					out << "Builtin::TypeIs<";
+					typeIs = true;
 				}
-			} else if (trait->Tilde()) {
-				if (trait->Default()) {
-					out << "std::is_trivially_destructible_v<";
-				} else if (trait->Noexcept()) {
-					out << "std::is_nothrow_destructible_v<";
-				} else {
-					out << "std::is_destructible_v<";
-				}
-			} else if (trait->Operator_()) {
-				out << "std::convertible_to<";
-			} else if (!trait->Or().empty()) {
-				out << "Builtin::IsAnyOf<";
-			} else {
-				out << "Builtin::TypeIs<";
-				typeIs = true;
-			}
 
-			printTypeId(ctx->theTypeId());
+				printTypeId(ctx->theTypeId());
 
-			if (trait->Star()) {
-				out << ", Builtin::RawPtr";
-			} else if (trait->Less()) {
-				out << ", ";
-				printTypeId(trait->theTypeId(0));
-			} else if (!trait->Or().empty()) {
-				for (auto type : trait->theTypeId()) {
+				if (trait->Star()) {
+					out << ", Builtin::RawPtr";
+				} else if (trait->Less()) {
 					out << ", ";
-					printTypeId(type);
-				}
-			} else if (trait->New()) {
-				if (!trait->theTypeId().empty() && !trait->Move()) {
+					printTypeId(trait->theTypeId(0));
+				} else if (!trait->Or().empty()) {
 					for (auto type : trait->theTypeId()) {
 						out << ", ";
 						printTypeId(type);
 					}
-				}
-			} else if (trait->Operator_()) {
-				out << ", ";
-				printTypeId(trait->theTypeId(0));
-			} else if (!trait->theTypeId().empty()) {
-				out << ", ";
-				printTypeId(trait->theTypeId(0));
-			}
-			out << ">";
-			if (typeIs) {
-				out << "()";
-			}
-		} else {
-			std::string ufcs = "ADV_UFCS";
-			if (!functionBody)
-				ufcs += "_NONLOCAL";
-			out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op6()->getText()) << ")(";
-			printRelationalExpression(ctx->relationalExpression(0));
-			out << ", ";
-			printRelationalExpression(ctx->relationalExpression(1));
-			out << ")";
-		}
-	}
-
-	void AstrumCodegen::printThreeWayComparisonExpression(
-	    AstrumParser::ThreeWayComparisonExpressionContext* ctx) {
-		printShiftExpression(ctx->shiftExpression(0));
-		if (ctx->Spaceship()) {
-			out << " <=> ";
-			printShiftExpression(ctx->shiftExpression(1));
-		}
-	}
-
-	void AstrumCodegen::printPatternList(
-	    AstrumParser::PatternListContext* ctx,
-	    AstrumParser::ThreeWayComparisonExpressionContext* leftExpr, std::string_view tmpName,
-	    std::string_view propertyName, bool isDeconstruction, bool isIndex, bool skipFirst) {
-		static int contextIndex = 0;
-		int i                   = 0;
-		for (auto pattern : ctx->pattern()) {
-			if (i == 0 && skipFirst) {
-				if (!switchProcessedVariants.empty()) {
-					switchProcessedVariants.top().second++;
-				}
-				++i;
-				continue;
-			}
-			if (pattern->theTypeId() && pattern->theTypeId()->getText() == "_") {
-				out << "true";
-				++i;
-				continue;
-			}
-			if (i > 0) {
-				auto op = ctx->patternCombinationOperator(i - 1);
-				if (op->And()) {
-					out << " && ";
-				} else if (op->Or()) {
-					out << " || ";
-				}
-			}
-			if (pattern->not_()) {
-				out << "!";
-			}
-			if (pattern->LeftBrace() || pattern->LeftBracket()) {
-				out << "(";
-				bool first   = true;
-				contextIndex = 0;
-				for (auto subpatterns : pattern->patternList()) {
-					if (!first) {
-						out << "\n"
-						    << std::string(depth + 1, '\t') << "#line "
-						    << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"";
-						out << "\n" << std::string(depth + 1, '\t') << " && ";
+				} else if (trait->New()) {
+					if (!trait->theTypeId().empty() && !trait->Move()) {
+						for (auto type : trait->theTypeId()) {
+							out << ", ";
+							printTypeId(type);
+						}
 					}
-					first = false;
-					out << "(";
-					if (pattern->LeftBrace()) {
-						printPatternList(subpatterns, leftExpr, tmpName, "", true);
-					} else {
-						printPatternList(subpatterns, leftExpr, tmpName, "", false, true);
-					}
-					contextIndex++;
-
-					out << ")";
+				} else if (trait->Operator_()) {
+					out << ", ";
+					printTypeId(trait->theTypeId(0));
+				} else if (!trait->theTypeId().empty()) {
+					out << ", ";
+					printTypeId(trait->theTypeId(0));
 				}
-				contextIndex = 0;
-				first        = true;
-				for (auto subpatterns : pattern->propertyPattern()) {
-					if (!first) {
-						out << "\n"
-						    << std::string(depth + 1, '\t') << "#line "
-						    << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"";
-						out << "\n" << std::string(depth + 1, '\t') << " && ";
-					}
-					first = false;
-					out << "(";
-					printPatternList(subpatterns->patternList(), leftExpr, tmpName,
-					                 subpatterns->Identifier()->getText());
-					out << ")";
+				out << ">";
+				if (typeIs) {
+					out << "()";
 				}
-				out << ")";
 			} else {
-				out << "Builtin::Is";
-				if (auto type = pattern->theTypeId()) {
-					out << "<typename ";
-					printTypeId(type);
-					out << ">(";
-					if (isDeconstruction) {
-						out << "get<" << contextIndex << ">";
-					} else if (!propertyName.empty()) {
-						out << "ADV_UPCS(" << propertyName << ")";
-					}
-					if (isDeconstruction || isIndex || !propertyName.empty()) {
-						out << "(";
-					}
-					printThreeWayComparisonExpression(leftExpr);
-					if (isDeconstruction || isIndex) {
-						out << ")";
-					} else if (!switchProcessedVariants.empty()) {
+				std::string ufcs = "ADV_UFCS";
+				if (!functionBody)
+					ufcs += "_NONLOCAL";
+				out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op6()->getText()) << ")(";
+				printRelationalExpression(ctx->relationalExpression(0));
+				out << ", ";
+				printRelationalExpression(ctx->relationalExpression(1));
+				out << ")";
+			}
+		}
+
+		void AstrumCodegen::printThreeWayComparisonExpression(
+		    AstrumParser::ThreeWayComparisonExpressionContext * ctx) {
+			printShiftExpression(ctx->shiftExpression(0));
+			if (ctx->Spaceship()) {
+				out << " <=> ";
+				printShiftExpression(ctx->shiftExpression(1));
+			}
+		}
+
+		void AstrumCodegen::printPatternList(
+		    AstrumParser::PatternListContext * ctx,
+		    AstrumParser::ThreeWayComparisonExpressionContext * leftExpr, std::string_view tmpName,
+		    std::string_view propertyName, bool isDeconstruction, bool isIndex, bool skipFirst) {
+			static int contextIndex = 0;
+			int i                   = 0;
+			for (auto pattern : ctx->pattern()) {
+				if (i == 0 && skipFirst) {
+					if (!switchProcessedVariants.empty()) {
 						switchProcessedVariants.top().second++;
 					}
-					if (isIndex) {
-						out << "[" << contextIndex << "]";
-					} else if (!propertyName.empty()) {
-						out << ").__ref()";
+					++i;
+					continue;
+				}
+				if (pattern->theTypeId() && pattern->theTypeId()->getText() == "_") {
+					out << "true";
+					++i;
+					continue;
+				}
+				if (i > 0) {
+					auto op = ctx->patternCombinationOperator(i - 1);
+					if (op->And()) {
+						out << " && ";
+					} else if (op->Or()) {
+						out << " || ";
+					}
+				}
+				if (pattern->not_()) {
+					out << "!";
+				}
+				if (pattern->LeftBrace() || pattern->LeftBracket()) {
+					out << "(";
+					bool first   = true;
+					contextIndex = 0;
+					for (auto subpatterns : pattern->patternList()) {
+						if (!first) {
+							out << "\n"
+							    << std::string(depth + 1, '\t') << "#line "
+							    << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"";
+							out << "\n" << std::string(depth + 1, '\t') << " && ";
+						}
+						first = false;
+						out << "(";
+						if (pattern->LeftBrace()) {
+							printPatternList(subpatterns, leftExpr, tmpName, "", true);
+						} else {
+							printPatternList(subpatterns, leftExpr, tmpName, "", false, true);
+						}
+						contextIndex++;
+
+						out << ")";
+					}
+					contextIndex = 0;
+					first        = true;
+					for (auto subpatterns : pattern->propertyPattern()) {
+						if (!first) {
+							out << "\n"
+							    << std::string(depth + 1, '\t') << "#line "
+							    << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"";
+							out << "\n" << std::string(depth + 1, '\t') << " && ";
+						}
+						first = false;
+						out << "(";
+						printPatternList(subpatterns->patternList(), leftExpr, tmpName,
+						                 subpatterns->Identifier()->getText());
+						out << ")";
 					}
 					out << ")";
-				} else if (auto expr = pattern->shiftExpression()) {
-					if (pattern->Let()) {
+				} else {
+					out << "Builtin::Is";
+					if (auto type = pattern->theTypeId()) {
 						out << "<typename ";
-						printShiftExpression(expr);
+						printTypeId(type);
 						out << ">(";
 						if (isDeconstruction) {
 							out << "get<" << contextIndex << ">";
@@ -18500,6 +18617,8 @@ namespace AstrumLang {
 						printThreeWayComparisonExpression(leftExpr);
 						if (isDeconstruction || isIndex) {
 							out << ")";
+						} else if (!switchProcessedVariants.empty()) {
+							switchProcessedVariants.top().second++;
 						}
 						if (isIndex) {
 							out << "[" << contextIndex << "]";
@@ -18507,2113 +18626,2168 @@ namespace AstrumLang {
 							out << ").__ref()";
 						}
 						out << ")";
-					} else {
-						if (pattern->Greater()) {
-							out << "Greater";
-						} else if (pattern->GreaterEqual()) {
-							out << "GreaterOrEqual";
-						} else if (pattern->Less()) {
-							out << "Less";
-						} else if (pattern->LessEqual()) {
-							out << "LessOrEqual";
-						}
-						out << "(";
-
-						if (isDeconstruction) {
-							out << "get<" << contextIndex << ">";
-						} else if (!propertyName.empty()) {
-							out << "ADV_UPCS(" << propertyName << ")";
-						}
-						if (isDeconstruction || isIndex || !propertyName.empty()) {
-							out << "(";
-						}
-						if (!tmpName.empty()) {
-							out << "*" << tmpName;
-						} else {
-							printThreeWayComparisonExpression(leftExpr);
-						}
-						if (isDeconstruction || isIndex) {
-							out << ")";
-						}
-						if (isIndex) {
-							out << "[" << contextIndex << "]";
-						} else if (!propertyName.empty()) {
-							out << ")";
-							if (tmpName.empty()) {
-								out << ".__ref()";
+					} else if (auto expr = pattern->shiftExpression()) {
+						if (pattern->Let()) {
+							out << "<typename ";
+							printShiftExpression(expr);
+							out << ">(";
+							if (isDeconstruction) {
+								out << "get<" << contextIndex << ">";
+							} else if (!propertyName.empty()) {
+								out << "ADV_UPCS(" << propertyName << ")";
 							}
+							if (isDeconstruction || isIndex || !propertyName.empty()) {
+								out << "(";
+							}
+							printThreeWayComparisonExpression(leftExpr);
+							if (isDeconstruction || isIndex) {
+								out << ")";
+							}
+							if (isIndex) {
+								out << "[" << contextIndex << "]";
+							} else if (!propertyName.empty()) {
+								out << ").__ref()";
+							}
+							out << ")";
+						} else {
+							if (pattern->Greater()) {
+								out << "Greater";
+							} else if (pattern->GreaterEqual()) {
+								out << "GreaterOrEqual";
+							} else if (pattern->Less()) {
+								out << "Less";
+							} else if (pattern->LessEqual()) {
+								out << "LessOrEqual";
+							}
+							out << "(";
+
+							if (isDeconstruction) {
+								out << "get<" << contextIndex << ">";
+							} else if (!propertyName.empty()) {
+								out << "ADV_UPCS(" << propertyName << ")";
+							}
+							if (isDeconstruction || isIndex || !propertyName.empty()) {
+								out << "(";
+							}
+							if (!tmpName.empty()) {
+								out << "*" << tmpName;
+							} else {
+								printThreeWayComparisonExpression(leftExpr);
+							}
+							if (isDeconstruction || isIndex) {
+								out << ")";
+							}
+							if (isIndex) {
+								out << "[" << contextIndex << "]";
+							} else if (!propertyName.empty()) {
+								out << ")";
+								if (tmpName.empty()) {
+									out << ".__ref()";
+								}
+							}
+							out << ", ";
+							printShiftExpression(expr);
+							out << ")";
 						}
-						out << ", ";
-						printShiftExpression(expr);
-						out << ")";
 					}
 				}
+				++i;
 			}
-			++i;
 		}
-	}
 
-	void AstrumCodegen::printShiftExpression(AstrumParser::ShiftExpressionContext* ctx) {
-		if (ctx->additiveExpression()) {
-			printAdditiveExpression(ctx->additiveExpression());
-		} else if (!ctx->shiftOperator()->Greater().empty()) {
-			if (ctx->shiftOperator()->Greater().size() == 2) {
+		void AstrumCodegen::printShiftExpression(AstrumParser::ShiftExpressionContext * ctx) {
+			if (ctx->additiveExpression()) {
+				printAdditiveExpression(ctx->additiveExpression());
+			} else if (!ctx->shiftOperator()->Greater().empty()) {
+				if (ctx->shiftOperator()->Greater().size() == 2) {
+					printShiftExpression(ctx->shiftExpression(0));
+					out << " >> ";
+					printShiftExpression(ctx->shiftExpression(1));
+				} else {
+					std::string ufcs = "ADV_UFCS";
+					if (!functionBody)
+						ufcs += "_NONLOCAL";
+					out << ufcs << "(_operator_gt_gt_gt)(";
+					printShiftExpression(ctx->shiftExpression(0));
+					out << ", ";
+					printShiftExpression(ctx->shiftExpression(1));
+					out << ")";
+				}
+			} else if (!ctx->shiftOperator()->Less().empty()) {
 				printShiftExpression(ctx->shiftExpression(0));
-				out << " >> ";
+				out << " << ";
 				printShiftExpression(ctx->shiftExpression(1));
 			} else {
 				std::string ufcs = "ADV_UFCS";
 				if (!functionBody)
 					ufcs += "_NONLOCAL";
-				out << ufcs << "(_operator_gt_gt_gt)(";
+				out << ufcs << "("
+				    << sema.getCustomOperatorName(ctx->shiftOperator()->Op7()->getText()) << ")(";
 				printShiftExpression(ctx->shiftExpression(0));
 				out << ", ";
 				printShiftExpression(ctx->shiftExpression(1));
 				out << ")";
 			}
-		} else if (!ctx->shiftOperator()->Less().empty()) {
-			printShiftExpression(ctx->shiftExpression(0));
-			out << " << ";
-			printShiftExpression(ctx->shiftExpression(1));
-		} else {
-			std::string ufcs = "ADV_UFCS";
-			if (!functionBody)
-				ufcs += "_NONLOCAL";
-			out << ufcs << "(" << sema.getCustomOperatorName(ctx->shiftOperator()->Op7()->getText())
-			    << ")(";
-			printShiftExpression(ctx->shiftExpression(0));
-			out << ", ";
-			printShiftExpression(ctx->shiftExpression(1));
-			out << ")";
-		}
-	}
-
-	void AstrumCodegen::printAdditiveExpression(AstrumParser::AdditiveExpressionContext* ctx) {
-		if (ctx->multiplicativeExpression()) {
-			printMultiplicativeExpression(ctx->multiplicativeExpression());
-		} else if (ctx->Plus()) {
-			printAdditiveExpression(ctx->additiveExpression(0));
-			out << " + ";
-			printAdditiveExpression(ctx->additiveExpression(1));
-		} else if (ctx->Minus()) {
-			printAdditiveExpression(ctx->additiveExpression(0));
-			out << " - ";
-			printAdditiveExpression(ctx->additiveExpression(1));
-		} else if (ctx->Tilde()) {
-			std::string ufcs = "ADV_UFCS";
-			if (!functionBody)
-				ufcs += "_NONLOCAL";
-			out << ufcs << "(_operator_not)(";
-			printAdditiveExpression(ctx->additiveExpression(0));
-			out << ", ";
-			printAdditiveExpression(ctx->additiveExpression(1));
-			out << ")";
-		} else {
-			std::string ufcs = "ADV_UFCS";
-			if (!functionBody)
-				ufcs += "_NONLOCAL";
-			out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op8()->getText()) << ")(";
-			printAdditiveExpression(ctx->additiveExpression(0));
-			out << ", ";
-			printAdditiveExpression(ctx->additiveExpression(1));
-			out << ")";
-		}
-	}
-
-	void AstrumCodegen::printMultiplicativeExpression(
-	    AstrumParser::MultiplicativeExpressionContext* ctx) {
-		if (ctx->powerExpression()) {
-			printPowerExpression(ctx->powerExpression());
-		} else if (ctx->Star()) {
-			printMultiplicativeExpression(ctx->multiplicativeExpression(0));
-			out << " * ";
-			printMultiplicativeExpression(ctx->multiplicativeExpression(1));
-		} else if (ctx->Div()) {
-			printMultiplicativeExpression(ctx->multiplicativeExpression(0));
-			out << " / ";
-			printMultiplicativeExpression(ctx->multiplicativeExpression(1));
-		} else if (ctx->Mod()) {
-			printMultiplicativeExpression(ctx->multiplicativeExpression(0));
-			out << " % ";
-			printMultiplicativeExpression(ctx->multiplicativeExpression(1));
-		} else {
-			std::string ufcs = "ADV_UFCS";
-			if (!functionBody)
-				ufcs += "_NONLOCAL";
-			out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op9()->getText()) << ")(";
-			printMultiplicativeExpression(ctx->multiplicativeExpression(0));
-			out << ", ";
-			printMultiplicativeExpression(ctx->multiplicativeExpression(1));
-			out << ")";
-		}
-	}
-
-	void AstrumCodegen::printPowerExpression(AstrumParser::PowerExpressionContext* ctx) {
-		if (!ctx->powerExpression()) {
-			printSwitchExpression(ctx->switchExpression());
-		} else if (ctx->DoubleStar()) {
-			std::string ufcs = "ADV_UFCS";
-			if (!functionBody)
-				ufcs += "_NONLOCAL";
-			out << ufcs << "(_operator_mul_mul)(";
-			printSwitchExpression(ctx->switchExpression());
-			out << ", ";
-			printPowerExpression(ctx->powerExpression());
-			out << ")";
-		} else if (ctx->DoubleCaret()) {
-			std::string ufcs = "ADV_UFCS";
-			if (!functionBody)
-				ufcs += "_NONLOCAL";
-			out << ufcs << "(_operator_xor_xor)(";
-			printSwitchExpression(ctx->switchExpression());
-			out << ", ";
-			printPowerExpression(ctx->powerExpression());
-			out << ")";
-		} else {
-			std::string ufcs = "ADV_UFCS";
-			if (!functionBody)
-				ufcs += "_NONLOCAL";
-			out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op10()->getText()) << ")(";
-			printSwitchExpression(ctx->switchExpression());
-			out << ", ";
-			printPowerExpression(ctx->powerExpression());
-			out << ")";
-		}
-	}
-
-	void AstrumCodegen::printSwitchExpression(AstrumParser::SwitchExpressionContext* ctx) {
-		if (ctx->rangeExpression()) {
-			printRangeExpression(ctx->rangeExpression());
-		} else {
-			switchExpressions.push(ctx);
-			switchProcessedVariants.push({0, 0});
-			int i = 0;
-			out << "[";
-			if (functionBody)
-				out << "&";
-			out << "]() ";
-			if (ctx->Arrow()) {
-				out << "-> ";
-				printTypeId(ctx->theTypeId());
-				out << " ";
-			}
-			out << "\nADV_WARNING_DISABLE(4715, -Wreturn-type)\n" << std::string(depth, '\t');
-
-			for (auto branch : ctx->switchExpressionBranch()) {
-				printSwitchExpressionBranch(branch, ctx->threeWayComparisonExpression(), i++);
-			}
-			if (ctx->switchExpressionBranch().back()->patternList()->getText() != "_") {
-				out << " else { using __switchType = decltype(";
-				printThreeWayComparisonExpression(ctx->threeWayComparisonExpression());
-				out << "); static_assert((!std::derived_from<__switchType, Builtin::Enum> &&"
-				    << " !std::derived_from<__switchType, Builtin::EnumClassRef> && "
-				       "!std::derived_from<__switchType, Builtin::Union>) "
-				    << "|| Builtin::GetVariantsCount<__switchType>() <= "
-				    << switchProcessedVariants.top().first + switchProcessedVariants.top().second
-				    << ", "
-				    << "\"Switch does not handle all possible variants, add a default branch\"); }";
-			}
-			out << "\n";
-			for (auto branch : ctx->switchExpressionBranch()) {
-				out << std::string(--depth, '\t') << "}\n";
-			}
-			out << "ADV_WARNING_POP\n" << std::string(depth, '\t') << "()";
-			switchProcessedVariants.pop();
-			switchExpressions.pop();
-		}
-	}
-
-	void AstrumCodegen::printSwitchExpressionBranch(
-	    AstrumParser::SwitchExpressionBranchContext* ctx,
-	    AstrumParser::ThreeWayComparisonExpressionContext* switchExpr, int branchIndex) {
-		if (branchIndex > 0)
-			out << "else ";
-		out << "{\n" << std::string(++depth, '\t');
-		auto tmpName = "__tmp__valid_" + std::to_string(switchExpr->getStart()->getLine());
-		auto pattern = ctx->patternList()->pattern(0);
-		if (branchIndex == 0) {
-			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			out << "auto " << tmpName << " = Builtin::Cast<false, ";
-			out << "std::decay_t<decltype(";
-			printThreeWayComparisonExpression(switchExpr);
-			out << ")>::__self";
-			out << ">(";
-			printThreeWayComparisonExpression(switchExpr);
-			out << ");\n" << std::string(depth, '\t');
 		}
 
-		auto isDefault = ctx->patternList()->getText() == "_";
-		if (pattern->theTypeId() && !isDefault || pattern->shiftExpression() && pattern->Let()) {
-			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			tmpName = "__tmp" + std::to_string(branchIndex);
-			out << "auto " << tmpName << " = Builtin::Cast<false, ";
-			if (pattern->theTypeId()) {
-				printTypeId(pattern->theTypeId());
-			} else if (pattern->shiftExpression()) {
-				printShiftExpression(pattern->shiftExpression());
-			}
-			out << ">(";
-			printThreeWayComparisonExpression(switchExpr);
-			out << ");\n" << std::string(depth, '\t');
-		}
-
-		if (!isDefault) {
-			out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			out << "if(";
-			bool skipFirst = false;
-			bool isNull =
-			    pattern->shiftExpression() && pattern->shiftExpression()->getText() == "null";
-			if (!isNull) {
-				if (pattern->not_())
-					out << "!";
-				out << tmpName << ".IsValid()";
-				if (!(pattern->Let() && !pattern->shiftExpression()) &&
-				    (!pattern->theTypeId() || !pattern->propertyPattern().empty())) {
-					if (pattern->not_()) {
-						out << " || ";
-					} else {
-						out << " && ";
-					}
-				} else {
-					skipFirst = true;
-				}
-			}
-			printPatternList(ctx->patternList(), switchExpr, !isNull ? tmpName : "", "", false,
-			                 false, skipFirst);
-			out << ") {\n" << std::string(++depth, '\t');
-			if (!isNull && !pattern->not_() || isNull && pattern->not_()) {
-				if (pattern->Let()) {
-					out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename
-					    << ".ast\"\n"
-					    << std::string(depth, '\t');
-					out << "const auto& [";
-					bool first = true;
-					for (auto id : pattern->Identifier()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(id);
-					}
-					out << "] = ";
-					out << "*" << tmpName << "; \n" << std::string(depth, '\t');
-				} else if (pattern->theTypeId() && !pattern->Identifier().empty()) {
-					out << "const auto& ";
-					printIdentifier(pattern->Identifier(0));
-					out << " = *" << tmpName;
-					out << ";\n" << std::string(depth, '\t');
-				} else {
-					auto txt = switchExpr->getText();
-					if (std::all_of(txt.begin(), txt.end(),
-					                [](char c) { return std::isalnum(c) || c == '_'; })) {
-						out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename
-						    << ".ast\"\n"
-						    << std::string(depth, '\t');
-						if (isNull) {
-							out << "auto " << tmpName << " = *" << txt << "; ";
-						}
-						if (txt != "this") {
-							out << "const auto& " << txt << " = ";
-							if (!isNull)
-								out << "*";
-							out << tmpName << ";";
-						}
-						out << "\n" << std::string(depth, '\t');
-					}
-				}
-			}
-			if (!ctx->expression()->assignmentExpression()->throwExpression()) {
-				out << "return ";
-			}
-			printExpression(ctx->expression());
-			out << ";\n" << std::string(--depth, '\t') << "}";
-		} else {
-			if (!ctx->expression()->assignmentExpression()->throwExpression()) {
-				out << "return ";
-			}
-			printExpression(ctx->expression());
-			out << ";";
-		}
-		out << "\n" << std::string(depth, '\t');
-	}
-
-	void AstrumCodegen::printRangeExpression(AstrumParser::RangeExpressionContext* ctx) {
-		if (ctx->DoubleDot() || ctx->DoubleDotEqual()) {
-			out << "Range(";
-			if (ctx->rangeExpressionStart()) {
-				printUnaryExpression(ctx->rangeExpressionStart()->unaryExpression());
-			} else {
-				out << "0";
-			}
-			out << ", ";
-			if (ctx->rangeExpressionEnd()) {
-				printUnaryExpression(ctx->rangeExpressionEnd()->unaryExpression());
-			} else {
-				out << "Index(0, true)";
-			}
-			out << ", ";
-			out << (ctx->DoubleDot() ? "false" : "true");
-			out << ")";
-		} else {
-			printUnaryExpression(ctx->unaryExpression());
-		}
-	}
-
-	void AstrumCodegen::printUnaryExpression(AstrumParser::UnaryExpressionContext* ctx) {
-		unaryExpressions.push(ctx);
-		bool paren = false;
-		if (auto upo = ctx->unaryPrefixOperator()) {
-			literalMinus = upo->Minus();
-			if (upo->Plus()) {
-				out << "+";
-			} else if (upo->Tilde()) {
+		void AstrumCodegen::printAdditiveExpression(AstrumParser::AdditiveExpressionContext * ctx) {
+			if (ctx->multiplicativeExpression()) {
+				printMultiplicativeExpression(ctx->multiplicativeExpression());
+			} else if (ctx->Plus()) {
+				printAdditiveExpression(ctx->additiveExpression(0));
+				out << " + ";
+				printAdditiveExpression(ctx->additiveExpression(1));
+			} else if (ctx->Minus()) {
+				printAdditiveExpression(ctx->additiveExpression(0));
+				out << " - ";
+				printAdditiveExpression(ctx->additiveExpression(1));
+			} else if (ctx->Tilde()) {
 				std::string ufcs = "ADV_UFCS";
 				if (!functionBody)
 					ufcs += "_NONLOCAL";
 				out << ufcs << "(_operator_not)(";
-				paren = true;
-			} else if (upo->not_()) {
-				out << "!";
-			} else if (upo->Dollar()) {
-				std::string ufcs = "ADV_UPCS";
-				if (!functionBody)
-					ufcs += "_NONLOCAL";
-				out << ufcs << "(StringRepr)(";
-				paren = true;
-			} else if (upo->Caret()) {
+				printAdditiveExpression(ctx->additiveExpression(0));
+				out << ", ";
+				printAdditiveExpression(ctx->additiveExpression(1));
+				out << ")";
+			} else {
 				std::string ufcs = "ADV_UFCS";
 				if (!functionBody)
 					ufcs += "_NONLOCAL";
-				out << ufcs << "(_operator_xor)(";
-				paren = true;
-			} else if (upo->DoubleCaret()) {
+				out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op8()->getText()) << ")(";
+				printAdditiveExpression(ctx->additiveExpression(0));
+				out << ", ";
+				printAdditiveExpression(ctx->additiveExpression(1));
+				out << ")";
+			}
+		}
+
+		void AstrumCodegen::printMultiplicativeExpression(
+		    AstrumParser::MultiplicativeExpressionContext * ctx) {
+			if (ctx->powerExpression()) {
+				printPowerExpression(ctx->powerExpression());
+			} else if (ctx->Star()) {
+				printMultiplicativeExpression(ctx->multiplicativeExpression(0));
+				out << " * ";
+				printMultiplicativeExpression(ctx->multiplicativeExpression(1));
+			} else if (ctx->Div()) {
+				printMultiplicativeExpression(ctx->multiplicativeExpression(0));
+				out << " / ";
+				printMultiplicativeExpression(ctx->multiplicativeExpression(1));
+			} else if (ctx->Mod()) {
+				printMultiplicativeExpression(ctx->multiplicativeExpression(0));
+				out << " % ";
+				printMultiplicativeExpression(ctx->multiplicativeExpression(1));
+			} else {
+				std::string ufcs = "ADV_UFCS";
+				if (!functionBody)
+					ufcs += "_NONLOCAL";
+				out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op9()->getText()) << ")(";
+				printMultiplicativeExpression(ctx->multiplicativeExpression(0));
+				out << ", ";
+				printMultiplicativeExpression(ctx->multiplicativeExpression(1));
+				out << ")";
+			}
+		}
+
+		void AstrumCodegen::printPowerExpression(AstrumParser::PowerExpressionContext * ctx) {
+			if (!ctx->powerExpression()) {
+				printSwitchExpression(ctx->switchExpression());
+			} else if (ctx->DoubleStar()) {
+				std::string ufcs = "ADV_UFCS";
+				if (!functionBody)
+					ufcs += "_NONLOCAL";
+				out << ufcs << "(_operator_mul_mul)(";
+				printSwitchExpression(ctx->switchExpression());
+				out << ", ";
+				printPowerExpression(ctx->powerExpression());
+				out << ")";
+			} else if (ctx->DoubleCaret()) {
 				std::string ufcs = "ADV_UFCS";
 				if (!functionBody)
 					ufcs += "_NONLOCAL";
 				out << ufcs << "(_operator_xor_xor)(";
-				paren = true;
-			} else if (upo->Hash()) {
-				std::string ufcs = "ADV_UPCS";
+				printSwitchExpression(ctx->switchExpression());
+				out << ", ";
+				printPowerExpression(ctx->powerExpression());
+				out << ")";
+			} else {
+				std::string ufcs = "ADV_UFCS";
 				if (!functionBody)
 					ufcs += "_NONLOCAL";
-				out << ufcs << "(HashCode)(";
-				paren = true;
-			}
-		} else if (ctx->PlusPlus()) {
-			out << "++";
-		} else if (ctx->MinusMinus()) {
-			out << "--";
-		} else if (ctx->Sizeof()) {
-			out << "Builtin::usize(sizeof ";
-			paren = true;
-		} else if (ctx->Nameof()) {
-			out << "Builtin::Str(ASTRUM_NAMEOF(";
-			paren = true;
-		} else if (ctx->refCaptureOperator()) {
-			out << "Builtin::MutableRef<std::remove_cvref_t<decltype(";
-			printUnaryExpressionTail(ctx->unaryExpressionTail());
-			out << ")>>(";
-			paren = true;
-		} else if (ctx->Out()) {
-			isOutExpression = true;
-			out << "Builtin::Out(&";
-			paren = true;
-		} else if (ctx->unaryCustomOperator()) {
-			std::string ufcs = "ADV_UFCS";
-			if (!functionBody)
-				ufcs += "_NONLOCAL";
-			out << ufcs << "(" << sema.getCustomOperatorName(ctx->unaryCustomOperator()->getText())
-			    << ")(";
-			paren = true;
-		}
-		printUnaryExpressionTail(ctx->unaryExpressionTail());
-		if (!lvalue && sema.optionalChains.contains(ctx)) {
-			for (int i = 0; i < sema.optionalChains[ctx]; ++i) { out << "); })"; }
-		}
-		if (ctx->Nameof())
-			out << ")";
-		if (paren)
-			out << ")";
-		isOutExpression = false;
-
-		unaryExpressions.pop();
-		literalMinus = false;
-	}
-
-	void AstrumCodegen::printUnaryExpressionTail(AstrumParser::UnaryExpressionTailContext* ctx) {
-		if (auto postfix = ctx->fullPostfixExpression()) {
-			printFullPostfixExpression(postfix);
-		} else if (ctx->Sizeof()) {
-			out << "Builtin::usize(sizeof";
-			if (ctx->Ellipsis())
-				out << "...";
-			out << "(";
-			if (ctx->theTypeId())
-				printTypeId(ctx->theTypeId());
-			if (ctx->Identifier())
-				printIdentifier(ctx->Identifier());
-			out << "))";
-		} else if (ctx->Alignof()) {
-			if (!isAlignas) {
-				out << "Builtin::usize(";
-			}
-			out << "alignof(";
-			printTypeId(ctx->theTypeId());
-			if (!isAlignas) {
+				out << ufcs << "(" << sema.getCustomOperatorName(ctx->Op10()->getText()) << ")(";
+				printSwitchExpression(ctx->switchExpression());
+				out << ", ";
+				printPowerExpression(ctx->powerExpression());
 				out << ")";
 			}
-			out << ")";
-		} else if (ctx->Nameof()) {
-			out << "Builtin::Str(ASTRUM_NAMEOF(";
-			if (ctx->theTypeId())
-				printTypeId(ctx->theTypeId());
-			if (ctx->expression())
-				printExpression(ctx->expression());
-			out << "))";
-		} else if (ctx->Offsetof()) {
-			out << "Builtin::usize(offsetof(";
-			if (ctx->theTypeId())
-				printTypeId(ctx->theTypeId());
-			out << ", ";
-			if (ctx->Identifier())
-				printIdentifier(ctx->Identifier());
-			out << "))";
-		} else if (ctx->Await()) {
-			out << "co_await ";
-			if (auto expr = ctx->expression()) {
-				printExpression(expr);
-			} else if (auto braced = ctx->bracedInitList()) {
-				printBracedInitList(braced);
-			} else if (auto coll = ctx->collectionExpression()) {
-				printCollectionExpression(coll);
-			}
-		}
-	}
-
-	void AstrumCodegen::printNewExpression(AstrumParser::NewExpressionContext* ctx) {
-		if (auto mem = ctx->memorySpaceSetter()) {
-			out << "Builtin::NewWithExtraMemory<(unsigned)";
-			printConstantExpression(mem->constantExpression());
-			out << ", ";
-		} else {
-			out << "Builtin::New<";
 		}
 
-		printTypeId(ctx->theTypeId());
-		out << ">(";
-		if (auto init = ctx->newInitializer()) {
-			printClassInitializer(ctx->theTypeId(), init);
-		}
-		out << ")";
-	}
-
-	void AstrumCodegen::printStackallocExpression(AstrumParser::StackallocExpressionContext* ctx) {
-		out << GetStackObjectVarName(ctx->theTypeId());
-	}
-
-	void AstrumCodegen::printFullPostfixExpression(
-	    AstrumParser::FullPostfixExpressionContext* ctx) {
-		if (ctx->PlusPlus()) {
-			printPostfixExpression(ctx->postfixExpression());
-			out << "++";
-		} else if (ctx->MinusMinus()) {
-			printPostfixExpression(ctx->postfixExpression());
-			out << "--";
-		} else if (auto op = ctx->unaryPostfixOperator()) {
-			out << "(";
-			auto parens = 1;
-			if (op->Amp()) {
-				out << (isUnsafe ? "Builtin::Unsafe::" : "") << "__RawPtr(std::addressof(";
-				parens += 2;
+		void AstrumCodegen::printSwitchExpression(AstrumParser::SwitchExpressionContext * ctx) {
+			if (ctx->rangeExpression()) {
+				printRangeExpression(ctx->rangeExpression());
 			} else {
-				for (auto a : op->Star()) {
-					out << "*(";
-					++parens;
+				switchExpressions.push(ctx);
+				switchProcessedVariants.push({0, 0});
+				int i = 0;
+				out << "[";
+				if (functionBody)
+					out << "&";
+				out << "]() ";
+				if (ctx->Arrow()) {
+					out << "-> ";
+					printTypeId(ctx->theTypeId());
+					out << " ";
 				}
-				for (auto a : op->DoubleStar()) {
-					out << "*(*(";
-					parens += 2;
+				out << "\nADV_WARNING_DISABLE(4715, -Wreturn-type)\n" << std::string(depth, '\t');
+
+				for (auto branch : ctx->switchExpressionBranch()) {
+					printSwitchExpressionBranch(branch, ctx->threeWayComparisonExpression(), i++);
 				}
+				if (ctx->switchExpressionBranch().back()->patternList()->getText() != "_") {
+					out << " else { using __switchType = decltype(";
+					printThreeWayComparisonExpression(ctx->threeWayComparisonExpression());
+					out << "); static_assert((!std::derived_from<__switchType, Builtin::Enum> &&"
+					    << " !std::derived_from<__switchType, Builtin::EnumClassRef> && "
+					       "!std::derived_from<__switchType, Builtin::Union>) "
+					    << "|| Builtin::GetVariantsCount<__switchType>() <= "
+					    << switchProcessedVariants.top().first +
+					           switchProcessedVariants.top().second
+					    << ", "
+					    << "\"Switch does not handle all possible variants, add a default "
+					       "branch\"); }";
+				}
+				out << "\n";
+				for (auto branch : ctx->switchExpressionBranch()) {
+					out << std::string(--depth, '\t') << "}\n";
+				}
+				out << "ADV_WARNING_POP\n" << std::string(depth, '\t') << "()";
+				switchProcessedVariants.pop();
+				switchExpressions.pop();
 			}
-			printPostfixExpression(ctx->postfixExpression());
-			out << std::string(parens, ')');
-		} else if (ctx->unaryCustomOperator()) {
-			std::string ufcs = "ADV_UFCS";
-			if (!functionBody)
-				ufcs += "_NONLOCAL";
-			out << ufcs << "(" << sema.getCustomOperatorName(ctx->unaryCustomOperator()->getText())
-			    << "_postfix)(";
-			printPostfixExpression(ctx->postfixExpression());
-			out << ")";
-		} else {
-			printPostfixExpression(ctx->postfixExpression());
 		}
-	}
 
-	void AstrumCodegen::printPostfixExpression(AstrumParser::PostfixExpressionContext* ctx) {
-		if (ignoredExpressions.contains(ctx))
-			return;
+		void AstrumCodegen::printSwitchExpressionBranch(
+		    AstrumParser::SwitchExpressionBranchContext * ctx,
+		    AstrumParser::ThreeWayComparisonExpressionContext * switchExpr, int branchIndex) {
+			if (branchIndex > 0)
+				out << "else ";
+			out << "{\n" << std::string(++depth, '\t');
+			auto tmpName = "__tmp__valid_" + std::to_string(switchExpr->getStart()->getLine());
+			auto pattern = ctx->patternList()->pattern(0);
+			if (branchIndex == 0) {
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				out << "auto " << tmpName << " = Builtin::Cast<false, ";
+				out << "std::decay_t<decltype(";
+				printThreeWayComparisonExpression(switchExpr);
+				out << ")>::__self";
+				out << ">(";
+				printThreeWayComparisonExpression(switchExpr);
+				out << ");\n" << std::string(depth, '\t');
+			}
 
-		if (ctx->simpleTypeSpecifier() && literalMinus) {
-			out << "-";
+			auto isDefault = ctx->patternList()->getText() == "_";
+			if (pattern->theTypeId() && !isDefault ||
+			    pattern->shiftExpression() && pattern->Let()) {
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				tmpName = "__tmp" + std::to_string(branchIndex);
+				out << "auto " << tmpName << " = Builtin::Cast<false, ";
+				if (pattern->theTypeId()) {
+					printTypeId(pattern->theTypeId());
+				} else if (pattern->shiftExpression()) {
+					printShiftExpression(pattern->shiftExpression());
+				}
+				out << ">(";
+				printThreeWayComparisonExpression(switchExpr);
+				out << ");\n" << std::string(depth, '\t');
+			}
+
+			if (!isDefault) {
+				out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				out << "if(";
+				bool skipFirst = false;
+				bool isNull =
+				    pattern->shiftExpression() && pattern->shiftExpression()->getText() == "null";
+				if (!isNull) {
+					if (pattern->not_())
+						out << "!";
+					out << tmpName << ".IsValid()";
+					if (!(pattern->Let() && !pattern->shiftExpression()) &&
+					    (!pattern->theTypeId() || !pattern->propertyPattern().empty())) {
+						if (pattern->not_()) {
+							out << " || ";
+						} else {
+							out << " && ";
+						}
+					} else {
+						skipFirst = true;
+					}
+				}
+				printPatternList(ctx->patternList(), switchExpr, !isNull ? tmpName : "", "", false,
+				                 false, skipFirst);
+				out << ") {\n" << std::string(++depth, '\t');
+				if (!isNull && !pattern->not_() || isNull && pattern->not_()) {
+					if (pattern->Let()) {
+						out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename
+						    << ".ast\"\n"
+						    << std::string(depth, '\t');
+						out << "const auto& [";
+						bool first = true;
+						for (auto id : pattern->Identifier()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(id);
+						}
+						out << "] = ";
+						out << "*" << tmpName << "; \n" << std::string(depth, '\t');
+					} else if (pattern->theTypeId() && !pattern->Identifier().empty()) {
+						out << "const auto& ";
+						printIdentifier(pattern->Identifier(0));
+						out << " = *" << tmpName;
+						out << ";\n" << std::string(depth, '\t');
+					} else {
+						auto txt = switchExpr->getText();
+						if (std::all_of(txt.begin(), txt.end(),
+						                [](char c) { return std::isalnum(c) || c == '_'; })) {
+							out << "#line " << ctx->getStart()->getLine() << " \"" << fullFilename
+							    << ".ast\"\n"
+							    << std::string(depth, '\t');
+							if (isNull) {
+								out << "auto " << tmpName << " = *" << txt << "; ";
+							}
+							if (txt != "this") {
+								out << "const auto& " << txt << " = ";
+								if (!isNull)
+									out << "*";
+								out << tmpName << ";";
+							}
+							out << "\n" << std::string(depth, '\t');
+						}
+					}
+				}
+				if (!ctx->expression()->assignmentExpression()->throwExpression()) {
+					out << "return ";
+				}
+				printExpression(ctx->expression());
+				out << ";\n" << std::string(--depth, '\t') << "}";
+			} else {
+				if (!ctx->expression()->assignmentExpression()->throwExpression()) {
+					out << "return ";
+				}
+				printExpression(ctx->expression());
+				out << ";";
+			}
+			out << "\n" << std::string(depth, '\t');
+		}
+
+		void AstrumCodegen::printRangeExpression(AstrumParser::RangeExpressionContext * ctx) {
+			if (ctx->DoubleDot() || ctx->DoubleDotEqual()) {
+				out << "Range(";
+				if (ctx->rangeExpressionStart()) {
+					printUnaryExpression(ctx->rangeExpressionStart()->unaryExpression());
+				} else {
+					out << "0";
+				}
+				out << ", ";
+				if (ctx->rangeExpressionEnd()) {
+					printUnaryExpression(ctx->rangeExpressionEnd()->unaryExpression());
+				} else {
+					out << "Index(0, true)";
+				}
+				out << ", ";
+				out << (ctx->DoubleDot() ? "false" : "true");
+				out << ")";
+			} else {
+				printUnaryExpression(ctx->unaryExpression());
+			}
+		}
+
+		void AstrumCodegen::printUnaryExpression(AstrumParser::UnaryExpressionContext * ctx) {
+			unaryExpressions.push(ctx);
+			bool paren = false;
+			if (auto upo = ctx->unaryPrefixOperator()) {
+				literalMinus = upo->Minus();
+				if (upo->Plus()) {
+					out << "+";
+				} else if (upo->Tilde()) {
+					std::string ufcs = "ADV_UFCS";
+					if (!functionBody)
+						ufcs += "_NONLOCAL";
+					out << ufcs << "(_operator_not)(";
+					paren = true;
+				} else if (upo->not_()) {
+					out << "!";
+				} else if (upo->Dollar()) {
+					std::string ufcs = "ADV_UPCS";
+					if (!functionBody)
+						ufcs += "_NONLOCAL";
+					out << ufcs << "(StringRepr)(";
+					paren = true;
+				} else if (upo->Caret()) {
+					std::string ufcs = "ADV_UFCS";
+					if (!functionBody)
+						ufcs += "_NONLOCAL";
+					out << ufcs << "(_operator_xor)(";
+					paren = true;
+				} else if (upo->DoubleCaret()) {
+					std::string ufcs = "ADV_UFCS";
+					if (!functionBody)
+						ufcs += "_NONLOCAL";
+					out << ufcs << "(_operator_xor_xor)(";
+					paren = true;
+				} else if (upo->Hash()) {
+					std::string ufcs = "ADV_UPCS";
+					if (!functionBody)
+						ufcs += "_NONLOCAL";
+					out << ufcs << "(HashCode)(";
+					paren = true;
+				}
+			} else if (ctx->PlusPlus()) {
+				out << "++";
+			} else if (ctx->MinusMinus()) {
+				out << "--";
+			} else if (ctx->Sizeof()) {
+				out << "Builtin::usize(sizeof ";
+				paren = true;
+			} else if (ctx->Nameof()) {
+				out << "Builtin::Str(ASTRUM_NAMEOF(";
+				paren = true;
+			} else if (ctx->refCaptureOperator()) {
+				out << "Builtin::MutableRef<std::remove_cvref_t<decltype(";
+				printUnaryExpressionTail(ctx->unaryExpressionTail());
+				out << ")>>(";
+				paren = true;
+			} else if (ctx->Out()) {
+				isOutExpression = true;
+				out << "Builtin::Out(&";
+				paren = true;
+			} else if (ctx->unaryCustomOperator()) {
+				std::string ufcs = "ADV_UFCS";
+				if (!functionBody)
+					ufcs += "_NONLOCAL";
+				out << ufcs << "("
+				    << sema.getCustomOperatorName(ctx->unaryCustomOperator()->getText()) << ")(";
+				paren = true;
+			}
+			printUnaryExpressionTail(ctx->unaryExpressionTail());
+			if (!lvalue && sema.optionalChains.contains(ctx)) {
+				for (int i = 0; i < sema.optionalChains[ctx]; ++i) { out << "); })"; }
+			}
+			if (ctx->Nameof())
+				out << ")";
+			if (paren)
+				out << ")";
+			isOutExpression = false;
+
+			unaryExpressions.pop();
 			literalMinus = false;
 		}
 
-		if (ctx->LeftParen()) {
-			if (auto expr = ctx->postfixExpression()) {
-				auto txt    = expr->getText();
-				auto dotpos = txt.rfind('.');
-				auto tplpos = txt.rfind('<');
-				if (dotpos != txt.npos && tplpos != txt.npos && dotpos < tplpos ||
-				    dotpos == txt.npos && tplpos != txt.npos)
-					txt = txt.substr(0, tplpos);
-				auto txt2      = txt;
-				bool extension = false;
-				int currentArg = 0;
-				if (sema.typeset.contains(txt)) {
-					printPostfixExpression(expr);
-					out << "{";
-					if (auto expressions = ctx->expressionList()) {
-						printExpressionList(expressions);
-					}
-					out << "}";
+		void AstrumCodegen::printUnaryExpressionTail(AstrumParser::UnaryExpressionTailContext *
+		                                             ctx) {
+			if (auto postfix = ctx->fullPostfixExpression()) {
+				printFullPostfixExpression(postfix);
+			} else if (ctx->Sizeof()) {
+				out << "Builtin::usize(sizeof";
+				if (ctx->Ellipsis())
+					out << "...";
+				out << "(";
+				if (ctx->theTypeId())
+					printTypeId(ctx->theTypeId());
+				if (ctx->Identifier())
+					printIdentifier(ctx->Identifier());
+				out << "))";
+			} else if (ctx->Alignof()) {
+				if (!isAlignas) {
+					out << "Builtin::usize(";
+				}
+				out << "alignof(";
+				printTypeId(ctx->theTypeId());
+				if (!isAlignas) {
+					out << ")";
+				}
+				out << ")";
+			} else if (ctx->Nameof()) {
+				out << "Builtin::Str(ASTRUM_NAMEOF(";
+				if (ctx->theTypeId())
+					printTypeId(ctx->theTypeId());
+				if (ctx->expression())
+					printExpression(ctx->expression());
+				out << "))";
+			} else if (ctx->Offsetof()) {
+				out << "Builtin::usize(offsetof(";
+				if (ctx->theTypeId())
+					printTypeId(ctx->theTypeId());
+				out << ", ";
+				if (ctx->Identifier())
+					printIdentifier(ctx->Identifier());
+				out << "))";
+			} else if (ctx->Await()) {
+				out << "co_await ";
+				if (auto expr = ctx->expression()) {
+					printExpression(expr);
+				} else if (auto braced = ctx->bracedInitList()) {
+					printBracedInitList(braced);
+				} else if (auto coll = ctx->collectionExpression()) {
+					printCollectionExpression(coll);
+				}
+			}
+		}
+
+		void AstrumCodegen::printNewExpression(AstrumParser::NewExpressionContext * ctx) {
+			if (auto mem = ctx->memorySpaceSetter()) {
+				out << "Builtin::NewWithExtraMemory<(unsigned)";
+				printConstantExpression(mem->constantExpression());
+				out << ", ";
+			} else {
+				out << "Builtin::New<";
+			}
+
+			printTypeId(ctx->theTypeId());
+			out << ">(";
+			if (auto init = ctx->newInitializer()) {
+				printClassInitializer(ctx->theTypeId(), init);
+			}
+			out << ")";
+		}
+
+		void AstrumCodegen::printStackallocExpression(AstrumParser::StackallocExpressionContext *
+		                                              ctx) {
+			out << GetStackObjectVarName(ctx->theTypeId());
+		}
+
+		void AstrumCodegen::printFullPostfixExpression(AstrumParser::FullPostfixExpressionContext *
+		                                               ctx) {
+			if (ctx->PlusPlus()) {
+				printPostfixExpression(ctx->postfixExpression());
+				out << "++";
+			} else if (ctx->MinusMinus()) {
+				printPostfixExpression(ctx->postfixExpression());
+				out << "--";
+			} else if (auto op = ctx->unaryPostfixOperator()) {
+				out << "(";
+				auto parens = 1;
+				if (op->Amp()) {
+					out << (isUnsafe ? "Builtin::Unsafe::" : "") << "__RawPtr(std::addressof(";
+					parens += 2;
 				} else {
-					if (sema.cppParser.varargFunctions.contains(txt))
-						varargDepth = sema.cppParser.varargFunctions[txt];
-					else {
-						if (txt.find('.') != std::string::npos)
-							txt2 = txt.substr(txt.rfind('.') + 1);
-						if (auto expr2 = expr->postfixExpression())
-							txt2 = sema.contextTypes[expr2] + "." + txt2;
-						if (sema.cppParser.varargFunctions.contains(txt2))
-							varargDepth = sema.cppParser.varargFunctions[txt2];
-						if (sema.functionTable.contains(txt2))
-							txt = txt2;
-						else if (expr->idExpression()) {
-							extension = true;
-							txt2      = expr->idExpression()->getText();
-							if (txt2.find('<') != txt2.npos)
-								txt2 = txt2.substr(0, txt2.find('<'));
+					for (auto a : op->Star()) {
+						out << "*(";
+						++parens;
+					}
+					for (auto a : op->DoubleStar()) {
+						out << "*(*(";
+						parens += 2;
+					}
+				}
+				printPostfixExpression(ctx->postfixExpression());
+				out << std::string(parens, ')');
+			} else if (ctx->unaryCustomOperator()) {
+				std::string ufcs = "ADV_UFCS";
+				if (!functionBody)
+					ufcs += "_NONLOCAL";
+				out << ufcs << "("
+				    << sema.getCustomOperatorName(ctx->unaryCustomOperator()->getText())
+				    << "_postfix)(";
+				printPostfixExpression(ctx->postfixExpression());
+				out << ")";
+			} else {
+				printPostfixExpression(ctx->postfixExpression());
+			}
+		}
+
+		void AstrumCodegen::printPostfixExpression(AstrumParser::PostfixExpressionContext * ctx) {
+			if (ignoredExpressions.contains(ctx))
+				return;
+
+			if (ctx->simpleTypeSpecifier() && literalMinus) {
+				out << "-";
+				literalMinus = false;
+			}
+
+			if (ctx->LeftParen()) {
+				if (auto expr = ctx->postfixExpression()) {
+					auto txt    = expr->getText();
+					auto dotpos = txt.rfind('.');
+					auto tplpos = txt.rfind('<');
+					if (dotpos != txt.npos && tplpos != txt.npos && dotpos < tplpos ||
+					    dotpos == txt.npos && tplpos != txt.npos)
+						txt = txt.substr(0, tplpos);
+					auto txt2      = txt;
+					bool extension = false;
+					int currentArg = 0;
+					if (sema.typeset.contains(txt)) {
+						printPostfixExpression(expr);
+						out << "{";
+						if (auto expressions = ctx->expressionList()) {
+							printExpressionList(expressions);
+						}
+						out << "}";
+					} else {
+						if (sema.cppParser.varargFunctions.contains(txt))
+							varargDepth = sema.cppParser.varargFunctions[txt];
+						else {
+							if (txt.find('.') != std::string::npos)
+								txt2 = txt.substr(txt.rfind('.') + 1);
+							if (auto expr2 = expr->postfixExpression())
+								txt2 = sema.contextTypes[expr2] + "." + txt2;
+							if (sema.cppParser.varargFunctions.contains(txt2))
+								varargDepth = sema.cppParser.varargFunctions[txt2];
 							if (sema.functionTable.contains(txt2))
 								txt = txt2;
-							if (varargDepth < 0 && sema.cppParser.varargFunctions.contains(txt2)) {
-								varargDepth = sema.cppParser.varargFunctions[txt2];
+							else if (expr->idExpression()) {
+								extension = true;
+								txt2      = expr->idExpression()->getText();
+								if (txt2.find('<') != txt2.npos)
+									txt2 = txt2.substr(0, txt2.find('<'));
+								if (sema.functionTable.contains(txt2))
+									txt = txt2;
+								if (varargDepth < 0 &&
+								    sema.cppParser.varargFunctions.contains(txt2)) {
+									varargDepth = sema.cppParser.varargFunctions[txt2];
+								}
 							}
 						}
-					}
-					auto prev      = varargDepth;
-					varargDepth    = -1;
-					bool startDone = false;
+						auto prev      = varargDepth;
+						varargDepth    = -1;
+						bool startDone = false;
 
-					if (expr->Dot() && expr->postfixExpression()) {
-						functionCallExpressions.insert(expr->idExpression());
-						auto left   = expr->postfixExpression()->getText();
-						auto dotpos = left.rfind('.');
-						auto tplpos = left.rfind('<');
-						if (dotpos != left.npos && tplpos != left.npos && dotpos < tplpos ||
-						    dotpos == left.npos && tplpos != left.npos)
-							left = left.substr(0, tplpos);
-						auto funcname = expr->idExpression()->getText();
-						bool tpl      = false;
-						if (funcname.find('<') != funcname.npos) {
-							tpl      = true;
-							funcname = funcname.substr(0, funcname.find('<'));
-						}
+						if (expr->Dot() && expr->postfixExpression()) {
+							functionCallExpressions.insert(expr->idExpression());
+							auto left   = expr->postfixExpression()->getText();
+							auto dotpos = left.rfind('.');
+							auto tplpos = left.rfind('<');
+							if (dotpos != left.npos && tplpos != left.npos && dotpos < tplpos ||
+							    dotpos == left.npos && tplpos != left.npos)
+								left = left.substr(0, tplpos);
+							auto funcname = expr->idExpression()->getText();
+							bool tpl      = false;
+							if (funcname.find('<') != funcname.npos) {
+								tpl      = true;
+								funcname = funcname.substr(0, funcname.find('<'));
+							}
 
-						if (!sema.cppParser.namespaces.contains(left) &&
-						    funcname != currentDeclarationName && !expr->Greater() &&
-						    left != "super") {
-							std::string ufcs = "ADV_UFCS";
-							if (tpl)
-								ufcs += "_TEMPLATE";
-							if (!functionBody)
-								ufcs += "_NONLOCAL";
-							if (sema.typeset.contains(left)) {
-								StringReplace(ufcs, "UFCS", "USFCS");
-								out << ufcs << "((";
-								printPostfixExpression(expr->postfixExpression());
-								out << "), ";
-								printIdExpression(expr->idExpression());
-								out << ")(";
-							} else {
-								if (sema.optionalChains.contains(expr->postfixExpression())) {
-									if (expr->Question()) {
-										if (!ignoredExpressions.contains(
-										        expr->postfixExpression())) {
-											printPostfixExpression(expr->postfixExpression());
-											out << ".AndThen([&](const auto& value) "
-											       "FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA "
-											       "{ ADV_EXPRESSION_BODY(";
-										}
-										out << ufcs << "(";
-										printIdExpression(expr->idExpression());
-										out << ")(value.__ref()";
-									} else {
-										auto innerExpr = expr;
-										while (innerExpr && !innerExpr->Question()) {
+							if (!sema.cppParser.namespaces.contains(left) &&
+							    funcname != currentDeclarationName && !expr->Greater() &&
+							    left != "super") {
+								std::string ufcs = "ADV_UFCS";
+								if (tpl)
+									ufcs += "_TEMPLATE";
+								if (!functionBody)
+									ufcs += "_NONLOCAL";
+								if (sema.typeset.contains(left)) {
+									StringReplace(ufcs, "UFCS", "USFCS");
+									out << ufcs << "((";
+									printPostfixExpression(expr->postfixExpression());
+									out << "), ";
+									printIdExpression(expr->idExpression());
+									out << ")(";
+								} else {
+									if (sema.optionalChains.contains(expr->postfixExpression())) {
+										if (expr->Question()) {
+											if (!ignoredExpressions.contains(
+											        expr->postfixExpression())) {
+												printPostfixExpression(expr->postfixExpression());
+												out << ".AndThen([&](const auto& value) "
+												       "FORCE_INLINE_LAMBDA_CLANG "
+												       "FORCE_INLINE_LAMBDA "
+												       "{ ADV_EXPRESSION_BODY(";
+											}
+											out << ufcs << "(";
+											printIdExpression(expr->idExpression());
+											out << ")(value.__ref()";
+										} else {
+											auto innerExpr = expr;
+											while (innerExpr && !innerExpr->Question()) {
+												innerExpr = innerExpr->postfixExpression();
+											}
 											innerExpr = innerExpr->postfixExpression();
-										}
-										innerExpr = innerExpr->postfixExpression();
-										if (!ignoredExpressions.contains(innerExpr)) {
-											printPostfixExpression(innerExpr);
-											ignoredExpressions.insert(innerExpr);
-											out << ".AndThen([&](const auto& value) "
-											       "FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA "
-											       "{ ADV_EXPRESSION_BODY(";
-										}
+											if (!ignoredExpressions.contains(innerExpr)) {
+												printPostfixExpression(innerExpr);
+												ignoredExpressions.insert(innerExpr);
+												out << ".AndThen([&](const auto& value) "
+												       "FORCE_INLINE_LAMBDA_CLANG "
+												       "FORCE_INLINE_LAMBDA "
+												       "{ ADV_EXPRESSION_BODY(";
+											}
 
+											out << ufcs << "(";
+											printIdExpression(expr->idExpression());
+											out << ")(";
+											printPostfixExpression(expr->postfixExpression());
+											out << ".__ref()";
+										}
+									} else {
 										out << ufcs << "(";
 										printIdExpression(expr->idExpression());
 										out << ")(";
 										printPostfixExpression(expr->postfixExpression());
 										out << ".__ref()";
 									}
-								} else {
-									out << ufcs << "(";
-									printIdExpression(expr->idExpression());
-									out << ")(";
-									printPostfixExpression(expr->postfixExpression());
-									out << ".__ref()";
+
+									if (ctx->expressionList())
+										out << ", ";
+								}
+								varargDepth = prev;
+								startDone   = true;
+								if (extension)
+									++currentArg;
+							}
+						} else if (expr->Dot() && expr->simpleTypeSpecifier()) {
+							functionCallExpressions.insert(expr->idExpression());
+							auto funcname = expr->idExpression()->getText();
+							bool tpl      = false;
+							if (funcname.find('<') != funcname.npos) {
+								tpl      = true;
+								funcname = funcname.substr(0, funcname.find('<'));
+							}
+
+							if (funcname != currentDeclarationName) {
+								std::string ufcs = "ADV_USFCS";
+								if (tpl)
+									ufcs += "_TEMPLATE";
+								if (!functionBody)
+									ufcs += "_NONLOCAL";
+								out << ufcs << "((";
+								printSimpleTypeSpecifier(expr->simpleTypeSpecifier());
+								out << "), ";
+								printIdExpression(expr->idExpression());
+								out << ")(";
+
+								varargDepth = prev;
+								startDone   = true;
+								if (extension)
+									++currentArg;
+							}
+						}
+
+						if (!startDone) {
+							printPostfixExpression(expr);
+							out << "(";
+						}
+						if (auto expressions = ctx->expressionList()) {
+							int paramCount = expressions->expressionListPart().size();
+							std::set<std::string> namedArgs;
+							for (auto param : expressions->expressionListPart()) {
+								if (auto id = param->Identifier()) {
+									if (!param->Out())
+										namedArgs.insert(id->getText());
+								}
+							}
+
+							bool params1 = sema.cppParser.parametersTable.contains(txt);
+							bool params2 = sema.cppParser.parametersTable.contains(txt2);
+							bool printed = false;
+							if (!namedArgs.empty() && (params1 || params2)) {
+								std::string signature;
+								if (params1) {
+									for (const auto& signatures :
+									     sema.cppParser.parametersTable[txt]) {
+										auto args = StringSplit(signatures, ",,");
+										if (args.size() >= paramCount) {
+											int i = 0;
+											for (const auto& arg : args) {
+												if (namedArgs.contains(
+												        arg.substr(0, arg.find('='))))
+													++i;
+												if (namedArgs.size() == i) {
+													signature = signatures;
+													break;
+												}
+											}
+										}
+										if (!signature.empty())
+											break;
+									}
+								}
+								if (signature.empty() && params2) {
+									for (const auto& signatures :
+									     sema.cppParser.parametersTable[txt2]) {
+										auto args = StringSplit(signatures, ",,");
+										if (args.size() >= paramCount) {
+											int i = 0;
+											for (const auto& arg : args) {
+												if (namedArgs.contains(
+												        arg.substr(0, arg.find('='))))
+													++i;
+												if (namedArgs.size() == i) {
+													signature = signatures;
+													break;
+												}
+											}
+										}
+										if (!signature.empty())
+											break;
+									}
 								}
 
-								if (ctx->expressionList())
-									out << ", ";
+								if (signature.empty())
+									out << "Signature not found!";
+								else {
+									printed    = true;
+									auto args  = StringSplit(signature, ",,");
+									paramCount = args.size();
+									std::unordered_map<int, std::string> argOrder;
+									std::unordered_map<std::string, std::string> defaultValues;
+									int i = 0;
+									for (const auto& arg : args) {
+										auto pos      = arg.find('=');
+										argOrder[i++] = arg.substr(0, pos);
+										if (pos != arg.npos)
+											defaultValues[arg.substr(0, pos)] = arg.substr(pos + 1);
+									}
+
+									if (extension)
+										--currentArg;
+									while (auto param =
+									           expressions->expressionListPart(currentArg)) {
+										if (param->Identifier())
+											break;
+										if (currentArg > 0)
+											out << ", ";
+										printExpressionListPart(param);
+										++currentArg;
+									}
+
+									std::unordered_map<std::string,
+									                   AstrumParser::ExpressionListPartContext*>
+									    namedArgValues;
+									for (i = currentArg;
+									     i < expressions->expressionListPart().size(); ++i) {
+										auto param = expressions->expressionListPart(i);
+										if (param->Identifier()) {
+											namedArgValues[param->Identifier()->getText()] = param;
+										}
+									}
+
+									if (extension)
+										++currentArg;
+									while (currentArg < paramCount) {
+										if (currentArg > (int) extension)
+											out << ", ";
+										auto arg = argOrder[currentArg];
+										if (namedArgValues.contains(arg)) {
+											printExpressionListPart(namedArgValues[arg]);
+										} else if (defaultValues.contains(arg)) {
+											out << defaultValues[arg];
+										} else if (sema.activeDefaultParams.contains(txt) &&
+										           sema.activeDefaultParams[txt].contains(arg)) {
+											printInitializerClause(
+											    sema.activeDefaultParams[txt][arg]);
+										} else if (sema.activeDefaultParams.contains(txt2) &&
+										           sema.activeDefaultParams[txt2].contains(arg)) {
+											printInitializerClause(
+											    sema.activeDefaultParams[txt2][arg]);
+										}
+										++currentArg;
+									}
+								}
 							}
-							varargDepth = prev;
-							startDone   = true;
-							if (extension)
-								++currentArg;
+							if (!printed)
+								printExpressionList(expressions);
 						}
-					} else if (expr->Dot() && expr->simpleTypeSpecifier()) {
-						functionCallExpressions.insert(expr->idExpression());
-						auto funcname = expr->idExpression()->getText();
-						bool tpl      = false;
-						if (funcname.find('<') != funcname.npos) {
-							tpl      = true;
-							funcname = funcname.substr(0, funcname.find('<'));
-						}
-
-						if (funcname != currentDeclarationName) {
-							std::string ufcs = "ADV_USFCS";
-							if (tpl)
-								ufcs += "_TEMPLATE";
-							if (!functionBody)
-								ufcs += "_NONLOCAL";
-							out << ufcs << "((";
-							printSimpleTypeSpecifier(expr->simpleTypeSpecifier());
-							out << "), ";
-							printIdExpression(expr->idExpression());
-							out << ")(";
-
-							varargDepth = prev;
-							startDone   = true;
-							if (extension)
-								++currentArg;
-						}
+						out << ")";
+						varargDepth = -1;
 					}
-
-					if (!startDone) {
-						printPostfixExpression(expr);
-						out << "(";
-					}
+				} else if (auto t = ctx->simpleTypeSpecifier()) {
+					printSimpleTypeSpecifier(t);
+					out << "{";
 					if (auto expressions = ctx->expressionList()) {
-						int paramCount = expressions->expressionListPart().size();
-						std::set<std::string> namedArgs;
-						for (auto param : expressions->expressionListPart()) {
-							if (auto id = param->Identifier()) {
-								if (!param->Out())
-									namedArgs.insert(id->getText());
-							}
-						}
-
-						bool params1 = sema.cppParser.parametersTable.contains(txt);
-						bool params2 = sema.cppParser.parametersTable.contains(txt2);
-						bool printed = false;
-						if (!namedArgs.empty() && (params1 || params2)) {
-							std::string signature;
-							if (params1) {
-								for (const auto& signatures : sema.cppParser.parametersTable[txt]) {
-									auto args = StringSplit(signatures, ",,");
-									if (args.size() >= paramCount) {
-										int i = 0;
-										for (const auto& arg : args) {
-											if (namedArgs.contains(arg.substr(0, arg.find('='))))
-												++i;
-											if (namedArgs.size() == i) {
-												signature = signatures;
-												break;
-											}
-										}
-									}
-									if (!signature.empty())
-										break;
-								}
-							}
-							if (signature.empty() && params2) {
-								for (const auto& signatures :
-								     sema.cppParser.parametersTable[txt2]) {
-									auto args = StringSplit(signatures, ",,");
-									if (args.size() >= paramCount) {
-										int i = 0;
-										for (const auto& arg : args) {
-											if (namedArgs.contains(arg.substr(0, arg.find('='))))
-												++i;
-											if (namedArgs.size() == i) {
-												signature = signatures;
-												break;
-											}
-										}
-									}
-									if (!signature.empty())
-										break;
-								}
-							}
-
-							if (signature.empty())
-								out << "Signature not found!";
-							else {
-								printed    = true;
-								auto args  = StringSplit(signature, ",,");
-								paramCount = args.size();
-								std::unordered_map<int, std::string> argOrder;
-								std::unordered_map<std::string, std::string> defaultValues;
-								int i = 0;
-								for (const auto& arg : args) {
-									auto pos      = arg.find('=');
-									argOrder[i++] = arg.substr(0, pos);
-									if (pos != arg.npos)
-										defaultValues[arg.substr(0, pos)] = arg.substr(pos + 1);
-								}
-
-								if (extension)
-									--currentArg;
-								while (auto param = expressions->expressionListPart(currentArg)) {
-									if (param->Identifier())
-										break;
-									if (currentArg > 0)
-										out << ", ";
-									printExpressionListPart(param);
-									++currentArg;
-								}
-
-								std::unordered_map<std::string,
-								                   AstrumParser::ExpressionListPartContext*>
-								    namedArgValues;
-								for (i = currentArg; i < expressions->expressionListPart().size();
-								     ++i) {
-									auto param = expressions->expressionListPart(i);
-									if (param->Identifier()) {
-										namedArgValues[param->Identifier()->getText()] = param;
-									}
-								}
-
-								if (extension)
-									++currentArg;
-								while (currentArg < paramCount) {
-									if (currentArg > (int) extension)
-										out << ", ";
-									auto arg = argOrder[currentArg];
-									if (namedArgValues.contains(arg)) {
-										printExpressionListPart(namedArgValues[arg]);
-									} else if (defaultValues.contains(arg)) {
-										out << defaultValues[arg];
-									} else if (sema.activeDefaultParams.contains(txt) &&
-									           sema.activeDefaultParams[txt].contains(arg)) {
-										printInitializerClause(sema.activeDefaultParams[txt][arg]);
-									} else if (sema.activeDefaultParams.contains(txt2) &&
-									           sema.activeDefaultParams[txt2].contains(arg)) {
-										printInitializerClause(sema.activeDefaultParams[txt2][arg]);
-									}
-									++currentArg;
-								}
-							}
-						}
-						if (!printed)
-							printExpressionList(expressions);
+						printExpressionList(expressions);
 					}
-					out << ")";
-					varargDepth = -1;
+					out << "}";
 				}
-			} else if (auto t = ctx->simpleTypeSpecifier()) {
-				printSimpleTypeSpecifier(t);
-				out << "{";
-				if (auto expressions = ctx->expressionList()) {
-					printExpressionList(expressions);
-				}
-				out << "}";
-			}
-		} else if (ctx->LeftBracket()) {
-			const std::string funcname = "_operator_subscript";
-			std::string ufcs           = "ADV_UFCS";
-			if (!functionBody)
-				ufcs += "_NONLOCAL";
+			} else if (ctx->LeftBracket()) {
+				const std::string funcname = "_operator_subscript";
+				std::string ufcs           = "ADV_UFCS";
+				if (!functionBody)
+					ufcs += "_NONLOCAL";
 
-			if (sema.optionalChains.contains(ctx->postfixExpression())) {
-				if (ctx->Question()) {
-					if (!ignoredExpressions.contains(ctx->postfixExpression())) {
-						printPostfixExpression(ctx->postfixExpression());
-						out << ".AndThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG "
-						       "FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
-					}
-					out << ufcs << "(" << funcname << ")(value.__ref(), ";
-				} else {
-					auto innerExpr = ctx->postfixExpression();
-					while (innerExpr && !innerExpr->Question()) {
+				if (sema.optionalChains.contains(ctx->postfixExpression())) {
+					if (ctx->Question()) {
+						if (!ignoredExpressions.contains(ctx->postfixExpression())) {
+							printPostfixExpression(ctx->postfixExpression());
+							out << ".AndThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG "
+							       "FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
+						}
+						out << ufcs << "(" << funcname << ")(value.__ref(), ";
+					} else {
+						auto innerExpr = ctx->postfixExpression();
+						while (innerExpr && !innerExpr->Question()) {
+							innerExpr = innerExpr->postfixExpression();
+						}
 						innerExpr = innerExpr->postfixExpression();
-					}
-					innerExpr = innerExpr->postfixExpression();
-					if (!ignoredExpressions.contains(innerExpr)) {
-						printPostfixExpression(innerExpr);
-						ignoredExpressions.insert(innerExpr);
-						out << ".AndThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG "
-						       "FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
-					}
+						if (!ignoredExpressions.contains(innerExpr)) {
+							printPostfixExpression(innerExpr);
+							ignoredExpressions.insert(innerExpr);
+							out << ".AndThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG "
+							       "FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
+						}
 
+						out << ufcs << "(" << funcname << ")(";
+						printPostfixExpression(ctx->postfixExpression());
+						out << ".__ref(), ";
+					}
+				} else {
 					out << ufcs << "(" << funcname << ")(";
 					printPostfixExpression(ctx->postfixExpression());
 					out << ".__ref(), ";
 				}
-			} else {
-				out << ufcs << "(" << funcname << ")(";
-				printPostfixExpression(ctx->postfixExpression());
-				out << ".__ref(), ";
-			}
 
-			if (ctx->attributeSpecifierSeq()) {
-				auto attr =
-				    ctx->attributeSpecifierSeq()->attributeSpecifier(0)->Identifier()->getText();
-				if (attr == "Unchecked") {
-					out << "Builtin::UncheckedTag{}, ";
+				if (ctx->attributeSpecifierSeq()) {
+					auto attr = ctx->attributeSpecifierSeq()
+					                ->attributeSpecifier(0)
+					                ->Identifier()
+					                ->getText();
+					if (attr == "Unchecked") {
+						out << "Builtin::UncheckedTag{}, ";
+					}
 				}
-			}
-			printExpressionList(ctx->expressionList());
-			out << ")";
-		} else if (ctx->Dot()) {
-			if (auto literal = ctx->IntegerLiteral()) {
-				out << "std::get<" << literal->getText() << ">(";
-				printPostfixExpression(ctx->postfixExpression());
+				printExpressionList(ctx->expressionList());
 				out << ")";
-			} else if (ctx->Type()) {
-				printSimpleTypeSpecifier(ctx->simpleTypeSpecifier());
-				out << "::__static_getType()";
-			} else if (ctx->simpleTypeSpecifier() && ctx->idExpression()) {
-				if (!functionCallExpressions.contains(ctx->idExpression())) {
-					out << "ADV_USPCS(";
-					printIdExpression(ctx->idExpression());
-					out << ", ";
+			} else if (ctx->Dot()) {
+				if (auto literal = ctx->IntegerLiteral()) {
+					out << "std::get<" << literal->getText() << ">(";
+					printPostfixExpression(ctx->postfixExpression());
+					out << ")";
+				} else if (ctx->Type()) {
 					printSimpleTypeSpecifier(ctx->simpleTypeSpecifier());
-					out << ")()";
-				}
-			} else {
-				auto txt         = ctx->getText();
-				auto dotpos      = txt.rfind('.');
-				auto tplpos      = txt.rfind('<');
-				std::string upcs = "ADV_UPCS";
-				if (!functionBody)
-					upcs += "_NONLOCAL";
-				auto expr = ctx->postfixExpression();
-				if (dotpos != txt.npos && tplpos != txt.npos && dotpos < tplpos ||
-				    dotpos == txt.npos && tplpos != txt.npos)
-					txt = txt.substr(0, tplpos);
-				if (sema.typeset.contains(txt)) {
-					StringReplace(txt, ".", "::");
-					if (sema.protectedSymbols.contains(txt))
-						txt = "__" + filename + "_Protected::" + txt;
-					out << txt;
-				} else if (sema.optionalChains.contains(expr)) {
-					if (ctx->Question()) {
-						if (lvalue) {
-							if (!ctx->Greater() &&
-							    !functionCallExpressions.contains(ctx->idExpression())) {
+					out << "::__static_getType()";
+				} else if (ctx->simpleTypeSpecifier() && ctx->idExpression()) {
+					if (!functionCallExpressions.contains(ctx->idExpression())) {
+						out << "ADV_USPCS(";
+						printIdExpression(ctx->idExpression());
+						out << ", ";
+						printSimpleTypeSpecifier(ctx->simpleTypeSpecifier());
+						out << ")()";
+					}
+				} else {
+					auto txt         = ctx->getText();
+					auto dotpos      = txt.rfind('.');
+					auto tplpos      = txt.rfind('<');
+					std::string upcs = "ADV_UPCS";
+					if (!functionBody)
+						upcs += "_NONLOCAL";
+					auto expr = ctx->postfixExpression();
+					if (dotpos != txt.npos && tplpos != txt.npos && dotpos < tplpos ||
+					    dotpos == txt.npos && tplpos != txt.npos)
+						txt = txt.substr(0, tplpos);
+					if (sema.typeset.contains(txt)) {
+						StringReplace(txt, ".", "::");
+						if (sema.protectedSymbols.contains(txt))
+							txt = "__" + filename + "_Protected::" + txt;
+						out << txt;
+					} else if (sema.optionalChains.contains(expr)) {
+						if (ctx->Question()) {
+							if (lvalue) {
+								if (!ctx->Greater() &&
+								    !functionCallExpressions.contains(ctx->idExpression())) {
+									out << upcs << "(";
+									printIdExpression(ctx->idExpression());
+									out << ")(";
+									printPostfixExpression(ctx->postfixExpression());
+									out << ".operator*().__ref())";
+								} else {
+									printPostfixExpression(ctx->postfixExpression());
+									out << ".operator*().__ref().";
+									printIdExpression(ctx->idExpression());
+								}
+							} else if (!functionCallExpressions.contains(ctx->idExpression())) {
+								if (!ignoredExpressions.contains(expr)) {
+									printPostfixExpression(expr);
+									out << ".AndThen([&](const auto& value) "
+									       "FORCE_INLINE_LAMBDA_CLANG "
+									       "FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
+								}
+								if (!ctx->Greater()) {
+									out << upcs << "(";
+									printIdExpression(ctx->idExpression());
+									out << ")(value.__ref())";
+								} else {
+									out << "value.__ref().";
+									printIdExpression(ctx->idExpression());
+								}
+							} else {
+								if (!ignoredExpressions.contains(expr)) {
+									printPostfixExpression(expr);
+									out << ".AndThen([&](const auto& value) "
+									       "FORCE_INLINE_LAMBDA_CLANG "
+									       "FORCE_INLINE_LAMBDA { "
+									       "ADV_EXPRESSION_BODY(value.__ref().";
+								} else {
+									out << "value.__ref().";
+								}
+							}
+						} else if (!functionCallExpressions.contains(ctx->idExpression())) {
+							if (!ctx->Greater()) {
+								auto innerExpr = expr;
+								while (innerExpr && !innerExpr->Question()) {
+									innerExpr = innerExpr->postfixExpression();
+								}
+								innerExpr = innerExpr->postfixExpression();
+								if (!ignoredExpressions.contains(innerExpr)) {
+									printPostfixExpression(innerExpr);
+									ignoredExpressions.insert(innerExpr);
+									out << ".AndThen([&](const auto& value) "
+									       "FORCE_INLINE_LAMBDA_CLANG "
+									       "FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
+								}
+
 								out << upcs << "(";
 								printIdExpression(ctx->idExpression());
 								out << ")(";
-								printPostfixExpression(ctx->postfixExpression());
-								out << ".operator*().__ref())";
-							} else {
-								printPostfixExpression(ctx->postfixExpression());
-								out << ".operator*().__ref().";
-								printIdExpression(ctx->idExpression());
-							}
-						} else if (!functionCallExpressions.contains(ctx->idExpression())) {
-							if (!ignoredExpressions.contains(expr)) {
 								printPostfixExpression(expr);
-								out << ".AndThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG "
-								       "FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
-							}
-							if (!ctx->Greater()) {
-								out << upcs << "(";
-								printIdExpression(ctx->idExpression());
-								out << ")(value.__ref())";
+								out << ".__ref())";
 							} else {
-								out << "value.__ref().";
-								printIdExpression(ctx->idExpression());
-							}
-						} else {
-							if (!ignoredExpressions.contains(expr)) {
 								printPostfixExpression(expr);
-								out << ".AndThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG "
-								       "FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(value.__ref().";
-							} else {
-								out << "value.__ref().";
+								out << ".__ref().";
+								printIdExpression(ctx->idExpression());
 							}
 						}
-					} else if (!functionCallExpressions.contains(ctx->idExpression())) {
-						if (!ctx->Greater()) {
-							auto innerExpr = expr;
-							while (innerExpr && !innerExpr->Question()) {
-								innerExpr = innerExpr->postfixExpression();
-							}
-							innerExpr = innerExpr->postfixExpression();
-							if (!ignoredExpressions.contains(innerExpr)) {
-								printPostfixExpression(innerExpr);
-								ignoredExpressions.insert(innerExpr);
-								out << ".AndThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG "
-								       "FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
-							}
+					} else {
+						txt          = txt.substr(0, dotpos);
+						dotpos       = txt.rfind('.');
+						tplpos       = txt.rfind('<');
+						auto txtName = txt;
+						if (dotpos != txt.npos && tplpos != txt.npos && dotpos < tplpos ||
+						    dotpos == txt.npos && tplpos != txt.npos) {
+							txtName = txt.substr(0, tplpos);
+						}
 
+						if (sema.typeset.contains(txtName)) {
+							if (ctx->Greater() || txtName == "super") {
+								printPostfixExpression(expr);
+								out << "::";
+								printIdExpression(ctx->idExpression());
+							} else if (!functionCallExpressions.contains(ctx->idExpression())) {
+								out << "ADV_USPCS(";
+								printIdExpression(ctx->idExpression());
+								out << ", ";
+								printPostfixExpression(expr);
+								out << ")()";
+							}
+						} else if (sema.cppParser.namespaces.contains(txtName)) {
+							printPostfixExpression(expr);
+							out << "::";
+							printIdExpression(ctx->idExpression());
+						} else if (ctx->Greater()) {
+							printPostfixExpression(expr);
+							out << ".__ref().";
+							printIdExpression(ctx->idExpression());
+						} else {
 							out << upcs << "(";
 							printIdExpression(ctx->idExpression());
 							out << ")(";
 							printPostfixExpression(expr);
 							out << ".__ref())";
-						} else {
-							printPostfixExpression(expr);
-							out << ".__ref().";
-							printIdExpression(ctx->idExpression());
 						}
-					}
-				} else {
-					txt          = txt.substr(0, dotpos);
-					dotpos       = txt.rfind('.');
-					tplpos       = txt.rfind('<');
-					auto txtName = txt;
-					if (dotpos != txt.npos && tplpos != txt.npos && dotpos < tplpos ||
-					    dotpos == txt.npos && tplpos != txt.npos) {
-						txtName = txt.substr(0, tplpos);
-					}
-
-					if (sema.typeset.contains(txtName)) {
-						if (ctx->Greater() || txtName == "super") {
-							printPostfixExpression(expr);
-							out << "::";
-							printIdExpression(ctx->idExpression());
-						} else if (!functionCallExpressions.contains(ctx->idExpression())) {
-							out << "ADV_USPCS(";
-							printIdExpression(ctx->idExpression());
-							out << ", ";
-							printPostfixExpression(expr);
-							out << ")()";
-						}
-					} else if (sema.cppParser.namespaces.contains(txtName)) {
-						printPostfixExpression(expr);
-						out << "::";
-						printIdExpression(ctx->idExpression());
-					} else if (ctx->Greater()) {
-						printPostfixExpression(expr);
-						out << ".__ref().";
-						printIdExpression(ctx->idExpression());
-					} else {
-						out << upcs << "(";
-						printIdExpression(ctx->idExpression());
-						out << ")(";
-						printPostfixExpression(expr);
-						out << ".__ref())";
 					}
 				}
-			}
 
-		} else if (ctx->Exclamation()) {
-			out << "(*(";
-			printPostfixExpression(ctx->postfixExpression());
-			out << "))";
-		} else if (auto primary = ctx->primaryExpression()) {
-			printPrimaryExpression(primary);
-		} else if (ctx->Move()) {
-			out << "std::move(";
-			printPostfixExpression(ctx->postfixExpression());
-			out << ")";
-		} else if (ctx->Forward()) {
-			out << "std::forward<decltype(";
-			printPostfixExpression(ctx->postfixExpression());
-			out << ")>(";
-			printPostfixExpression(ctx->postfixExpression());
-			out << ")";
-		} else if (ctx->newExpression()) {
-			printNewExpression(ctx->newExpression());
-		} else if (ctx->stackallocExpression()) {
-			printStackallocExpression(ctx->stackallocExpression());
+			} else if (ctx->Exclamation()) {
+				out << "(*(";
+				printPostfixExpression(ctx->postfixExpression());
+				out << "))";
+			} else if (auto primary = ctx->primaryExpression()) {
+				printPrimaryExpression(primary);
+			} else if (ctx->Move()) {
+				out << "std::move(";
+				printPostfixExpression(ctx->postfixExpression());
+				out << ")";
+			} else if (ctx->Forward()) {
+				out << "std::forward<decltype(";
+				printPostfixExpression(ctx->postfixExpression());
+				out << ")>(";
+				printPostfixExpression(ctx->postfixExpression());
+				out << ")";
+			} else if (ctx->newExpression()) {
+				printNewExpression(ctx->newExpression());
+			} else if (ctx->stackallocExpression()) {
+				printStackallocExpression(ctx->stackallocExpression());
+			}
 		}
-	}
 
-	void AstrumCodegen::printPrimaryExpression(AstrumParser::PrimaryExpressionContext* ctx) {
-		if (auto id = ctx->idExpression()) {
-			if (ctx->Doublecolon()) {
-				if (currentIs) {
-					out << "decltype(";
-					printThreeWayComparisonExpression(currentIs->threeWayComparisonExpression(0));
-					out << ")";
-				} else if (currentEquality && !currentEquality->equalityExpression().empty()) {
-					out << "decltype(";
-					printEqualityExpression(currentEquality->equalityExpression(0));
-					out << ")";
-				} else if (!switchStatements.empty()) {
-					switchProcessedVariants.top().first++;
-					out << "decltype(";
-					printThreeWayComparisonExpression(
-					    switchStatements.top()->threeWayComparisonExpression());
-					out << ")";
-				} else if (!switchExpressions.empty()) {
-					switchProcessedVariants.top().first++;
-					out << "decltype(";
-					printThreeWayComparisonExpression(
-					    switchExpressions.top()->threeWayComparisonExpression());
-					out << ")";
-				} else if (currentDeclaration) {
-					printTypeId(currentDeclaration->theTypeId());
-				} else if (currentAssignment) {
-					out << "decltype(";
-					printLogicalOrExpression(currentAssignment->logicalOrExpression());
-					out << ")";
+		void AstrumCodegen::printPrimaryExpression(AstrumParser::PrimaryExpressionContext * ctx) {
+			if (auto id = ctx->idExpression()) {
+				if (ctx->Doublecolon()) {
+					if (currentIs) {
+						out << "decltype(";
+						printThreeWayComparisonExpression(
+						    currentIs->threeWayComparisonExpression(0));
+						out << ")";
+					} else if (currentEquality && !currentEquality->equalityExpression().empty()) {
+						out << "decltype(";
+						printEqualityExpression(currentEquality->equalityExpression(0));
+						out << ")";
+					} else if (!switchStatements.empty()) {
+						switchProcessedVariants.top().first++;
+						out << "decltype(";
+						printThreeWayComparisonExpression(
+						    switchStatements.top()->threeWayComparisonExpression());
+						out << ")";
+					} else if (!switchExpressions.empty()) {
+						switchProcessedVariants.top().first++;
+						out << "decltype(";
+						printThreeWayComparisonExpression(
+						    switchExpressions.top()->threeWayComparisonExpression());
+						out << ")";
+					} else if (currentDeclaration) {
+						printTypeId(currentDeclaration->theTypeId());
+					} else if (currentAssignment) {
+						out << "decltype(";
+						printLogicalOrExpression(currentAssignment->logicalOrExpression());
+						out << ")";
+					}
+					out << "::";
 				}
+				if (literalMinus) {
+					out << "-";
+					literalMinus = false;
+				}
+				auto txt = id->getText();
+				if (lvalue) {
+					currentType = symbolTable[txt];
+				}
+				if (sema.protectedSymbols.contains(txt))
+					out << "__" << filename << "_Protected::";
+				printIdExpression(id);
+				if (!isOutExpression &&
+				    (symbolTable[txt] == "#DeferredInit" || symbolTable[txt] == "#Out"))
+					out << ".value()";
+			} else if (auto t = ctx->theTypeId()) {
+				if (literalMinus) {
+					out << "-";
+					literalMinus = false;
+				}
+				printTypeId(t);
 				out << "::";
+				if (ctx->Identifier()) {
+					printIdentifier(ctx->Identifier());
+				} else {
+					out << "__static_getType()";
+				}
+			} else if (auto expr = ctx->expression()) {
+				if (literalMinus) {
+					out << "-";
+					literalMinus = false;
+				}
+				out << "(";
+				printExpression(expr);
+				out << ")";
+			} else if (auto literal = ctx->literal()) {
+				printLiteral(literal);
+			} else if (auto tup = ctx->tupleExpression()) {
+				printTupleExpression(tup);
+			} else if (ctx->This()) {
+				if (literalMinus) {
+					out << "-";
+					literalMinus = false;
+				}
+				if (isExtension || isLambda) {
+					out << "__this";
+				} else {
+					out << "(*this)";
+				}
+			} else if (ctx->Super()) {
+				out << "___super";
+			} else if (ctx->Field()) {
+				if (literalMinus) {
+					out << "-";
+					literalMinus = false;
+				}
+				if (!currentPropertyField.empty()) {
+					out << currentPropertyField;
+				} else {
+					out << "field";
+				}
+			} else if (ctx->foldExpression()) {
+				printFoldExpression(ctx->foldExpression());
+			} else if (ctx->lambdaExpression()) {
+				printLambdaExpression(ctx->lambdaExpression());
+			} else if (ctx->methodBindingExpression()) {
+				printMethodBindingExpression(ctx->methodBindingExpression());
+			} else if (ctx->declvalExpression()) {
+				printDeclvalExpression(ctx->declvalExpression());
 			}
-			if (literalMinus) {
-				out << "-";
-				literalMinus = false;
+		}
+
+		void AstrumCodegen::printTupleExpression(AstrumParser::TupleExpressionContext * ctx) {
+			if (!ctx->conditionalExpression().empty()) {
+				out << "std::make_tuple(";
+				bool first = true;
+				for (auto expr : ctx->conditionalExpression()) {
+					if (!first)
+						out << ", ";
+					first = false;
+					printConditionalExpression(expr);
+				}
+				out << ")";
 			}
-			auto txt = id->getText();
-			if (lvalue) {
-				currentType = symbolTable[txt];
+		}
+
+		void AstrumCodegen::printFoldExpression(AstrumParser::FoldExpressionContext * ctx) {
+			out << "(";
+			if (ctx->foldLeftExpression()) {
+				printUnaryExpression(ctx->foldLeftExpression()->unaryExpression());
+				if (!ctx->operator_().empty()) {
+					out << " " << ctx->operator_(0)->getText();
+				} else if (!ctx->And().empty()) {
+					out << " &&";
+				} else if (!ctx->Or().empty()) {
+					out << " ||";
+				}
 			}
-			if (sema.protectedSymbols.contains(txt))
-				out << "__" << filename << "_Protected::";
-			printIdExpression(id);
-			if (!isOutExpression &&
-			    (symbolTable[txt] == "#DeferredInit" || symbolTable[txt] == "#Out"))
-				out << ".value()";
-		} else if (auto t = ctx->theTypeId()) {
-			if (literalMinus) {
-				out << "-";
-				literalMinus = false;
+			out << " ... ";
+			if (ctx->foldRightExpression()) {
+				if (!ctx->operator_().empty()) {
+					out << ctx->operator_(0)->getText() << " ";
+				} else if (!ctx->And().empty()) {
+					out << "&& ";
+				} else if (!ctx->Or().empty()) {
+					out << "|| ";
+				}
+				printUnaryExpression(ctx->foldRightExpression()->unaryExpression());
 			}
-			printTypeId(t);
-			out << "::";
-			if (ctx->Identifier()) {
-				printIdentifier(ctx->Identifier());
+			out << ")";
+		}
+
+		void AstrumCodegen::printLambdaExpression(AstrumParser::LambdaExpressionContext * ctx) {
+			bool isMutable = false;
+			isVoidReturn   = false;
+			out << '[';
+			if (auto list = ctx->lambdaCaptureList()) {
+				auto clause = list->lambdaCaptureClause();
+				if (clause->Assign()) {
+					out << '=';
+				}
+				bool first = !clause->Assign();
+				for (auto capture : clause->capture()) {
+					if (!first)
+						out << ", ";
+					first = false;
+					if (capture->This()) {
+						if (capture->Weak()) {
+							out << "__this = __self::__weak_ref(*this)";
+						} else if (capture->Unowned()) {
+							out << "__this = __self::__unowned_ref(*this)";
+						} else {
+							out << "__this = __self(*this)";
+						}
+					} else if (capture->initializerClause()) {
+						printIdentifier(capture->Identifier());
+						out << " = ";
+						printInitializerClause(capture->initializerClause());
+					} else if (capture->Weak()) {
+						printIdentifier(capture->Identifier());
+						out << " = decltype(";
+						printIdentifier(capture->Identifier());
+						out << ")::__weak_ref(";
+						printIdentifier(capture->Identifier());
+						out << ")";
+					} else if (capture->Unowned()) {
+						printIdentifier(capture->Identifier());
+						out << " = decltype(";
+						printIdentifier(capture->Identifier());
+						out << ")::__unowned_ref(";
+						printIdentifier(capture->Identifier());
+						out << ")";
+					} else {
+						printIdentifier(capture->Identifier());
+					}
+				}
+				isMutable = list->Mutable();
+			}
+			out << "] ";
+			if (ctx->templateParams()) {
+				printTemplateParams(ctx->templateParams(), false);
+				out << " ";
+			}
+
+			auto declarator = ctx->lambdaDeclarator();
+			if (declarator->functionParams()) {
+				isFunctionDeclaration = true;
+				printFunctionParameters(declarator->functionParams());
+				isFunctionDeclaration = false;
+				out << " ";
+			} else if (declarator->Identifier()) {
+				out << "(const auto ";
+				printIdentifier(declarator->Identifier());
+				out << ") ";
+			}
+
+			if (isMutable) {
+				out << "mutable ";
+			}
+
+			if (auto ret = declarator->returnType()) {
+				out << "-> ";
+				if (ret->Forward()) {
+					out << "decltype(auto)";
+				} else {
+					if (ret->Const() || !ret->Ref()) {
+						out << "const ";
+					}
+					if (ret->theTypeId()) {
+						printTypeId(ret->theTypeId());
+					}
+					if (ret->Ref()) {
+						out << "&";
+					}
+				}
+				out << " ";
 			} else {
-				out << "__static_getType()";
+				isVoidReturn = true;
 			}
-		} else if (auto expr = ctx->expression()) {
-			if (literalMinus) {
-				out << "-";
-				literalMinus = false;
+			if (ctx->constraintClause()) {
+				printConstraintClause(ctx->constraintClause());
+				out << " ";
+			}
+
+			auto prev       = functionBody;
+			auto prevLambda = isLambda;
+			functionBody    = true;
+			isLambda        = true;
+			if (auto body = ctx->lambdaBody()->functionBody()) {
+				functionProlog = true;
+				printFunctionBody(body);
+			} else {
+				out << "{ ADV_EXPRESSION_BODY(";
+				printExpression(ctx->lambdaBody()->expression());
+				out << "); }";
+			}
+			functionBody = prev;
+			isLambda     = prevLambda;
+		}
+
+		void AstrumCodegen::printMethodBindingExpression(
+		    AstrumParser::MethodBindingExpressionContext * ctx) {
+			out << "ADV_METHOD_BINDING";
+			if (ctx->Weak()) {
+				out << "_WEAK";
+			} else if (ctx->Unowned()) {
+				out << "_UNOWNED";
+			} else {
+				out << "_STRONG";
 			}
 			out << "(";
-			printExpression(expr);
-			out << ")";
-		} else if (auto literal = ctx->literal()) {
-			printLiteral(literal);
-		} else if (auto tup = ctx->tupleExpression()) {
-			printTupleExpression(tup);
-		} else if (ctx->This()) {
-			if (literalMinus) {
-				out << "-";
-				literalMinus = false;
-			}
-			if (isExtension || isLambda) {
+			printIdentifier(ctx->methodName()->Identifier());
+			out << ", ";
+			if (ctx->methodOwnerExpression()) {
+				out << "(";
+				printUnaryExpression(ctx->methodOwnerExpression()->unaryExpression());
+				out << ")";
+			} else if (isExtension || isLambda) {
 				out << "__this";
 			} else {
 				out << "(*this)";
 			}
-		} else if (ctx->Super()) {
-			out << "___super";
-		} else if (ctx->Field()) {
-			if (literalMinus) {
-				out << "-";
-				literalMinus = false;
-			}
-			if (!currentPropertyField.empty()) {
-				out << currentPropertyField;
-			} else {
-				out << "field";
-			}
-		} else if (ctx->foldExpression()) {
-			printFoldExpression(ctx->foldExpression());
-		} else if (ctx->lambdaExpression()) {
-			printLambdaExpression(ctx->lambdaExpression());
-		} else if (ctx->methodBindingExpression()) {
-			printMethodBindingExpression(ctx->methodBindingExpression());
-		} else if (ctx->declvalExpression()) {
-			printDeclvalExpression(ctx->declvalExpression());
-		}
-	}
-
-	void AstrumCodegen::printTupleExpression(AstrumParser::TupleExpressionContext* ctx) {
-		if (!ctx->conditionalExpression().empty()) {
-			out << "std::make_tuple(";
-			bool first = true;
-			for (auto expr : ctx->conditionalExpression()) {
-				if (!first)
-					out << ", ";
-				first = false;
-				printConditionalExpression(expr);
-			}
 			out << ")";
 		}
-	}
 
-	void AstrumCodegen::printFoldExpression(AstrumParser::FoldExpressionContext* ctx) {
-		out << "(";
-		if (ctx->foldLeftExpression()) {
-			printUnaryExpression(ctx->foldLeftExpression()->unaryExpression());
-			if (!ctx->operator_().empty()) {
-				out << " " << ctx->operator_(0)->getText();
-			} else if (!ctx->And().empty()) {
-				out << " &&";
-			} else if (!ctx->Or().empty()) {
-				out << " ||";
-			}
-		}
-		out << " ... ";
-		if (ctx->foldRightExpression()) {
-			if (!ctx->operator_().empty()) {
-				out << ctx->operator_(0)->getText() << " ";
-			} else if (!ctx->And().empty()) {
-				out << "&& ";
-			} else if (!ctx->Or().empty()) {
-				out << "|| ";
-			}
-			printUnaryExpression(ctx->foldRightExpression()->unaryExpression());
-		}
-		out << ")";
-	}
-
-	void AstrumCodegen::printLambdaExpression(AstrumParser::LambdaExpressionContext* ctx) {
-		bool isMutable = false;
-		isVoidReturn   = false;
-		out << '[';
-		if (auto list = ctx->lambdaCaptureList()) {
-			auto clause = list->lambdaCaptureClause();
-			if (clause->Assign()) {
-				out << '=';
-			}
-			bool first = !clause->Assign();
-			for (auto capture : clause->capture()) {
-				if (!first)
-					out << ", ";
-				first = false;
-				if (capture->This()) {
-					if (capture->Weak()) {
-						out << "__this = __self::__weak_ref(*this)";
-					} else if (capture->Unowned()) {
-						out << "__this = __self::__unowned_ref(*this)";
-					} else {
-						out << "__this = __self(*this)";
-					}
-				} else if (capture->initializerClause()) {
-					printIdentifier(capture->Identifier());
-					out << " = ";
-					printInitializerClause(capture->initializerClause());
-				} else if (capture->Weak()) {
-					printIdentifier(capture->Identifier());
-					out << " = decltype(";
-					printIdentifier(capture->Identifier());
-					out << ")::__weak_ref(";
-					printIdentifier(capture->Identifier());
-					out << ")";
-				} else if (capture->Unowned()) {
-					printIdentifier(capture->Identifier());
-					out << " = decltype(";
-					printIdentifier(capture->Identifier());
-					out << ")::__unowned_ref(";
-					printIdentifier(capture->Identifier());
-					out << ")";
-				} else {
-					printIdentifier(capture->Identifier());
-				}
-			}
-			isMutable = list->Mutable();
-		}
-		out << "] ";
-		if (ctx->templateParams()) {
-			printTemplateParams(ctx->templateParams(), false);
-			out << " ";
-		}
-
-		auto declarator = ctx->lambdaDeclarator();
-		if (declarator->functionParams()) {
-			isFunctionDeclaration = true;
-			printFunctionParameters(declarator->functionParams());
-			isFunctionDeclaration = false;
-			out << " ";
-		} else if (declarator->Identifier()) {
-			out << "(const auto ";
-			printIdentifier(declarator->Identifier());
-			out << ") ";
-		}
-
-		if (isMutable) {
-			out << "mutable ";
-		}
-
-		if (auto ret = declarator->returnType()) {
-			out << "-> ";
-			if (ret->Forward()) {
-				out << "decltype(auto)";
-			} else {
-				if (ret->Const() || !ret->Ref()) {
-					out << "const ";
-				}
-				if (ret->theTypeId()) {
-					printTypeId(ret->theTypeId());
-				}
-				if (ret->Ref()) {
-					out << "&";
-				}
-			}
-			out << " ";
-		} else {
-			isVoidReturn = true;
-		}
-		if (ctx->constraintClause()) {
-			printConstraintClause(ctx->constraintClause());
-			out << " ";
-		}
-
-		auto prev       = functionBody;
-		auto prevLambda = isLambda;
-		functionBody    = true;
-		isLambda        = true;
-		if (auto body = ctx->lambdaBody()->functionBody()) {
-			functionProlog = true;
-			printFunctionBody(body);
-		} else {
-			out << "{ ADV_EXPRESSION_BODY(";
-			printExpression(ctx->lambdaBody()->expression());
-			out << "); }";
-		}
-		functionBody = prev;
-		isLambda     = prevLambda;
-	}
-
-	void AstrumCodegen::printMethodBindingExpression(
-	    AstrumParser::MethodBindingExpressionContext* ctx) {
-		out << "ADV_METHOD_BINDING";
-		if (ctx->Weak()) {
-			out << "_WEAK";
-		} else if (ctx->Unowned()) {
-			out << "_UNOWNED";
-		} else {
-			out << "_STRONG";
-		}
-		out << "(";
-		printIdentifier(ctx->methodName()->Identifier());
-		out << ", ";
-		if (ctx->methodOwnerExpression()) {
-			out << "(";
-			printUnaryExpression(ctx->methodOwnerExpression()->unaryExpression());
-			out << ")";
-		} else if (isExtension || isLambda) {
-			out << "__this";
-		} else {
-			out << "(*this)";
-		}
-		out << ")";
-	}
-
-	void AstrumCodegen::printTypeSpecifierSeq(AstrumParser::TypeSpecifierSeqContext* ctx) {
-		/*auto txt = ctx->getText();
-		if (txt.find('.') != txt.npos)
-		{
-		    out << "typename ";
-		}*/
-		auto pointerDepth = 0;
-		for (auto p : ctx->pointerOperator()) {
-			if (p->DoubleStar())
-				pointerDepth += 2;
-			else
-				++pointerDepth;
-		}
-		if (pointerDepth)
-			isPtr = true;
-		if (auto f = ctx->functionTypeId()) {
-			if (f->Void()) {
-				out << "void";
-			} else {
-				if (f->theTypeId()) {
-					printTypeId(f->theTypeId());
-					out << " ";
-				}
-				if (f->Const())
-					out << "const";
-				if (f->Ref())
-					out << "&";
-			}
-			out << "(*)(";
-			bool first = true;
-			for (auto param : f->typeIdWithSpecification()) {
-				if (!first)
-					out << ", ";
-				first = false;
-				printTypeIdWithSpecification(param);
-			}
-			if (f->Ellipsis()) {
-				out << "...";
-			}
-			out << ")";
-		} else {
-			for (auto i = 0; i < pointerDepth; i++)
-				out << (isUnsafe ? "Builtin::Unsafe::" : "")
-				    << (isVolatile ? "__VolatileRawPtr<" : "__RawPtr<");
-			if (auto cv = ctx->cvQualifier()) {
-				if (cv->Const())
-					out << "const ";
-				else if (cv->Volatile())
-					out << "volatile ";
-			}
-			if (ctx->Void()) {
-				out << "void";
-			} else if (ctx->simpleTypeSpecifier()) {
-				printSimpleTypeSpecifier(ctx->simpleTypeSpecifier());
-			}
-
-			for (auto i = 0; i < pointerDepth; i++) out << ">";
-		}
-		isPtr = false;
-	}
-
-	void AstrumCodegen::printTypeId(AstrumParser::TheTypeIdContext* ctx) {
-		if (ctx->Static()) {
-			out << "__ImplementsInterface_";
-			if (ctx->simpleTemplateId()) {
-				printSimpleTemplateId(ctx->simpleTemplateId());
-			} else {
-				printIdentifier(ctx->Identifier());
-			}
-			out << " auto";
-		} else if (!ctx->VertLine().empty()) {
-			out << "Union" << (ctx->VertLine().size() + 1) << "<";
-			bool first = true;
-			for (auto type : ctx->singleTypeId()) {
-				if (!first)
-					out << ", ";
-				first = false;
-				printSingleTypeId(type);
-			}
-			out << ">";
-		} else if (ctx->constantExpression()) {
-			out << "std::conditional_t<";
-			printConstantExpression(ctx->constantExpression());
-			out << ", ";
-			printTypeId(ctx->theTypeId(0));
-			out << ", ";
-			printTypeId(ctx->theTypeId(1));
-			out << ">";
-		} else {
-			printSingleTypeId(ctx->singleTypeId(0));
-		}
-	}
-
-	void AstrumCodegen::printTypeIdWithSpecification(
-	    AstrumParser::TypeIdWithSpecificationContext* ctx) {
-		bool isConst     = false;
-		bool isRef       = false;
-		bool isInRef     = false;
-		bool isRvalueRef = false;
-
-		enum { Value = 0, In, InRef, Inout, Ref, Out, Move, Forward } type {};
-
-		if (auto spec = ctx->paramSpecification()) {
-			if (spec->Move())
-				type = Move;
-			else if (spec->Forward())
-				type = Forward;
-			else if (spec->In()) {
-				if (spec->Ref())
-					type = InRef;
+		void AstrumCodegen::printTypeSpecifierSeq(AstrumParser::TypeSpecifierSeqContext * ctx) {
+			/*auto txt = ctx->getText();
+			if (txt.find('.') != txt.npos)
+			{
+			    out << "typename ";
+			}*/
+			auto pointerDepth = 0;
+			for (auto p : ctx->pointerOperator()) {
+				if (p->DoubleStar())
+					pointerDepth += 2;
 				else
-					type = In;
-			} else if (spec->Inout())
-				type = Inout;
-			else if (spec->Ref())
-				type = Ref;
-			else if (spec->Out())
-				type = Out;
-			else
-				type = Value;
-		}
-
-		if (type == InRef)
-			out << "const ";
-		else if (type == In)
-			out << "Builtin::In<";
-		else if (type == Ref || type == Inout)
-			out << "Builtin::MutableRef<std::remove_cvref_t<";
-		else if (type == Out) {
-			out << "Builtin::Out<std::remove_cvref_t<";
-		}
-		if (isVarargs && !isVariadicTemplate)
-			out << "std::initializer_list<";
-		printTypeId(ctx->theTypeId());
-		if (isVarargs && !isVariadicTemplate)
-			out << ">";
-		if (type == In)
-			out << ">";
-		else if (type == Ref || type == Inout || type == Out)
-			out << ">>";
-		else if (type == InRef)
-			out << "&";
-		else if (type == Move || type == Forward)
-			out << "&&";
-	}
-
-	void AstrumCodegen::printSingleTypeId(AstrumParser::SingleTypeIdContext* ctx) {
-		int brackets = 0;
-		if (isInterface && !isInterfaceConcept && ctx->getText().starts_with("self.")) {
-			out << "Builtin::OptionalStrongRef<Builtin::ObjectRef>";
-			return;
-		}
-		if (auto post = ctx->typePostfix()) {
-			for (auto decl : post->arrayDeclarator()) {
-				if (decl->Question())
-					out << "Builtin::Nullable<";
-				printArrayDeclarator(decl);
-				brackets += 1 + bool(decl->Question());
+					++pointerDepth;
 			}
-		}
-
-		if (ctx->Question())
-			out << "Builtin::Nullable<";
-		if (ctx->typeSpecifierSeq()) {
-			printTypeSpecifierSeq(ctx->typeSpecifierSeq());
-		} else if (ctx->theTypeId()) {
-			printTypeId(ctx->theTypeId());
-		}
-
-		if (ctx->Question())
-			out << ">";
-
-		out << std::string(brackets, '>');
-	}
-
-	void AstrumCodegen::printTypePostfix(AstrumParser::TypePostfixContext* ctx) {
-		for (auto decl : ctx->arrayDeclarator()) { printArrayDeclarator(decl); }
-	}
-
-	void AstrumCodegen::printArrayDeclarator(AstrumParser::ArrayDeclaratorContext* ctx) {
-		if (ctx->constantExpression()) {
-			out << "Builtin::InlineArray<";
-			printConstantExpression(ctx->constantExpression());
-			out << ", ";
-		} else {
-			out << "Builtin::Array<";
-		}
-	}
-
-	void AstrumCodegen::printIdExpression(AstrumParser::IdExpressionContext* ctx) {
-		/*if (auto q = ctx->qualifiedId())
-		{
-		    printQualifiedId(q);
-		}
-		else */
-		if (auto u = ctx->unqualifiedId()) {
-			printUnqualifiedId(u);
-		}
-	}
-
-	void AstrumCodegen::printQualifiedId(AstrumParser::QualifiedIdContext* ctx) {
-		printNestedNameSpecifier(ctx->nestedNameSpecifier());
-		printUnqualifiedId(ctx->unqualifiedId());
-	}
-
-	void AstrumCodegen::printUnqualifiedId(AstrumParser::UnqualifiedIdContext* ctx) {
-		if (isVersionCondition) {
-			auto id = ctx->Identifier()->getText();
-			out << "ADV_VERSION_";
-			if (sema.protectedVersions.contains(id))
-				out << "__" << StringUpper(filename) << "_PROTECTED_";
-			printIdentifier(ctx->Identifier());
-		} else {
-			if (auto tid = ctx->templateId()) {
-				printTemplateIdentifier(tid);
-			} else if (auto id = ctx->operatorFunctionId()) {
-				printOperatorFunctionId(id);
-			} else if (auto id = ctx->conversionFunctionId()) {
-				printConversionFunctionId(id);
-			} else if (ctx->Tilde()) {
-				out << "~";
-				if (auto cls = ctx->className()) {
-					printClassName(cls);
+			if (pointerDepth)
+				isPtr = true;
+			if (auto f = ctx->functionTypeId()) {
+				if (f->Void()) {
+					out << "void";
 				} else {
-					out << "decltype(";
-					printExpression(ctx->decltypeSpecifier()->expression());
-					out << ")";
+					if (f->theTypeId()) {
+						printTypeId(f->theTypeId());
+						out << " ";
+					}
+					if (f->Const())
+						out << "const";
+					if (f->Ref())
+						out << "&";
 				}
+				out << "(*)(";
+				bool first = true;
+				for (auto param : f->typeIdWithSpecification()) {
+					if (!first)
+						out << ", ";
+					first = false;
+					printTypeIdWithSpecification(param);
+				}
+				if (f->Ellipsis()) {
+					out << "...";
+				}
+				out << ")";
 			} else {
-				printIdentifier(ctx->Identifier());
+				for (auto i = 0; i < pointerDepth; i++)
+					out << (isUnsafe ? "Builtin::Unsafe::" : "")
+					    << (isVolatile ? "__VolatileRawPtr<" : "__RawPtr<");
+				if (auto cv = ctx->cvQualifier()) {
+					if (cv->Const())
+						out << "const ";
+					else if (cv->Volatile())
+						out << "volatile ";
+				}
+				if (ctx->Void()) {
+					out << "void";
+				} else if (ctx->simpleTypeSpecifier()) {
+					printSimpleTypeSpecifier(ctx->simpleTypeSpecifier());
+				}
+
+				for (auto i = 0; i < pointerDepth; i++) out << ">";
+			}
+			isPtr = false;
+		}
+
+		void AstrumCodegen::printTypeId(AstrumParser::TheTypeIdContext * ctx) {
+			if (ctx->Static()) {
+				out << "__ImplementsInterface_";
+				if (ctx->simpleTemplateId()) {
+					printSimpleTemplateId(ctx->simpleTemplateId());
+				} else {
+					printIdentifier(ctx->Identifier());
+				}
+				out << " auto";
+			} else if (!ctx->VertLine().empty()) {
+				out << "Union" << (ctx->VertLine().size() + 1) << "<";
+				bool first = true;
+				for (auto type : ctx->singleTypeId()) {
+					if (!first)
+						out << ", ";
+					first = false;
+					printSingleTypeId(type);
+				}
+				out << ">";
+			} else if (ctx->constantExpression()) {
+				out << "std::conditional_t<";
+				printConstantExpression(ctx->constantExpression());
+				out << ", ";
+				printTypeId(ctx->theTypeId(0));
+				out << ", ";
+				printTypeId(ctx->theTypeId(1));
+				out << ">";
+			} else {
+				printSingleTypeId(ctx->singleTypeId(0));
 			}
 		}
-	}
 
-	void AstrumCodegen::printNestedNameSpecifier(AstrumParser::NestedNameSpecifierContext* ctx) {
-		if (auto nested = ctx->nestedNameSpecifier()) {
-			printNestedNameSpecifier(nested);
-			if (auto tid = ctx->simpleTemplateId()) {
-				printSimpleTemplateId(tid);
-			} else {
-				printIdentifier(ctx->Identifier());
+		void AstrumCodegen::printTypeIdWithSpecification(
+		    AstrumParser::TypeIdWithSpecificationContext * ctx) {
+			bool isConst     = false;
+			bool isRef       = false;
+			bool isInRef     = false;
+			bool isRvalueRef = false;
+
+			enum { Value = 0, In, InRef, Inout, Ref, Out, Move, Forward } type {};
+
+			if (auto spec = ctx->paramSpecification()) {
+				if (spec->Move())
+					type = Move;
+				else if (spec->Forward())
+					type = Forward;
+				else if (spec->In()) {
+					if (spec->Ref())
+						type = InRef;
+					else
+						type = In;
+				} else if (spec->Inout())
+					type = Inout;
+				else if (spec->Ref())
+					type = Ref;
+				else if (spec->Out())
+					type = Out;
+				else
+					type = Value;
 			}
-			out << "::";
-		} else {
-			if (auto name = ctx->typename_()) {
-				if (auto tid = name->simpleTemplateId()) {
+
+			if (type == InRef)
+				out << "const ";
+			else if (type == In)
+				out << "Builtin::In<";
+			else if (type == Ref || type == Inout)
+				out << "Builtin::MutableRef<std::remove_cvref_t<";
+			else if (type == Out) {
+				out << "Builtin::Out<std::remove_cvref_t<";
+			}
+			if (isVarargs && !isVariadicTemplate)
+				out << "std::initializer_list<";
+			printTypeId(ctx->theTypeId());
+			if (isVarargs && !isVariadicTemplate)
+				out << ">";
+			if (type == In)
+				out << ">";
+			else if (type == Ref || type == Inout || type == Out)
+				out << ">>";
+			else if (type == InRef)
+				out << "&";
+			else if (type == Move || type == Forward)
+				out << "&&";
+		}
+
+		void AstrumCodegen::printSingleTypeId(AstrumParser::SingleTypeIdContext * ctx) {
+			int brackets = 0;
+			if (isInterface && !isInterfaceConcept && ctx->getText().starts_with("self.")) {
+				out << "Builtin::OptionalStrongRef<Builtin::ObjectRef>";
+				return;
+			}
+			if (auto post = ctx->typePostfix()) {
+				for (auto decl : post->arrayDeclarator()) {
+					if (decl->Question())
+						out << "Builtin::Nullable<";
+					printArrayDeclarator(decl);
+					brackets += 1 + bool(decl->Question());
+				}
+			}
+
+			if (ctx->Question())
+				out << "Builtin::Nullable<";
+			if (ctx->typeSpecifierSeq()) {
+				printTypeSpecifierSeq(ctx->typeSpecifierSeq());
+			} else if (ctx->theTypeId()) {
+				printTypeId(ctx->theTypeId());
+			}
+
+			if (ctx->Question())
+				out << ">";
+
+			out << std::string(brackets, '>');
+		}
+
+		void AstrumCodegen::printTypePostfix(AstrumParser::TypePostfixContext * ctx) {
+			for (auto decl : ctx->arrayDeclarator()) { printArrayDeclarator(decl); }
+		}
+
+		void AstrumCodegen::printArrayDeclarator(AstrumParser::ArrayDeclaratorContext * ctx) {
+			if (ctx->constantExpression()) {
+				out << "Builtin::InlineArray<";
+				printConstantExpression(ctx->constantExpression());
+				out << ", ";
+			} else {
+				out << "Builtin::Array<";
+			}
+		}
+
+		void AstrumCodegen::printIdExpression(AstrumParser::IdExpressionContext * ctx) {
+			/*if (auto q = ctx->qualifiedId())
+			{
+			    printQualifiedId(q);
+			}
+			else */
+			if (auto u = ctx->unqualifiedId()) {
+				printUnqualifiedId(u);
+			}
+		}
+
+		void AstrumCodegen::printQualifiedId(AstrumParser::QualifiedIdContext * ctx) {
+			printNestedNameSpecifier(ctx->nestedNameSpecifier());
+			printUnqualifiedId(ctx->unqualifiedId());
+		}
+
+		void AstrumCodegen::printUnqualifiedId(AstrumParser::UnqualifiedIdContext * ctx) {
+			if (isVersionCondition) {
+				auto id = ctx->Identifier()->getText();
+				out << "ADV_VERSION_";
+				if (sema.protectedVersions.contains(id))
+					out << "__" << StringUpper(filename) << "_PROTECTED_";
+				printIdentifier(ctx->Identifier());
+			} else {
+				if (auto tid = ctx->templateId()) {
+					printTemplateIdentifier(tid);
+				} else if (auto id = ctx->operatorFunctionId()) {
+					printOperatorFunctionId(id);
+				} else if (auto id = ctx->conversionFunctionId()) {
+					printConversionFunctionId(id);
+				} else if (ctx->Tilde()) {
+					out << "~";
+					if (auto cls = ctx->className()) {
+						printClassName(cls);
+					} else {
+						out << "decltype(";
+						printExpression(ctx->decltypeSpecifier()->expression());
+						out << ")";
+					}
+				} else {
+					printIdentifier(ctx->Identifier());
+				}
+			}
+		}
+
+		void AstrumCodegen::printNestedNameSpecifier(AstrumParser::NestedNameSpecifierContext *
+		                                             ctx) {
+			if (auto nested = ctx->nestedNameSpecifier()) {
+				printNestedNameSpecifier(nested);
+				if (auto tid = ctx->simpleTemplateId()) {
 					printSimpleTemplateId(tid);
 				} else {
+					printIdentifier(ctx->Identifier());
+				}
+				out << "::";
+			} else {
+				if (auto name = ctx->typename_()) {
+					if (auto tid = name->simpleTemplateId()) {
+						printSimpleTemplateId(tid);
+					} else {
+						out << name->getText();
+					}
+				}
+				if (auto name = ctx->namespaceName()) {
 					out << name->getText();
 				}
-			}
-			if (auto name = ctx->namespaceName()) {
-				out << name->getText();
-			}
-			if (auto decl = ctx->decltypeSpecifier()) {
-				out << "decltype(";
-				printExpression(decl->expression());
-				out << ")";
-			}
-			if (ctx->Self()) {
-				if (isExtension) {
-					out << currentExtensionName;
-				} else if (isInterfaceConcept) {
-					out << "__AnyType::__self";
-				} else if (isInterface) {
-					out << "Builtin::OptionalStrongRef<Builtin::ObjectRef>";
-				} else {
-					out << "__self";
+				if (auto decl = ctx->decltypeSpecifier()) {
+					out << "decltype(";
+					printExpression(decl->expression());
+					out << ")";
 				}
-			}
-			out << "::";
-		}
-	}
-
-	constexpr std::uint32_t StringHash(const char* s, std::uint32_t hash = 2166136261U) {
-		return (s[0] == '\0')
-		           ? hash
-		           : StringHash(s + 1, (hash ^ static_cast<std::uint32_t>(s[0])) * 16777619U);
-	}
-
-	void AstrumCodegen::printIdentifier(antlr4::tree::TerminalNode* node) {
-		static constexpr auto anonymousVar      = StringHash("_");
-		static constexpr auto and_eq_           = StringHash("and_eq");
-		static constexpr auto asm_              = StringHash("asm");
-		static constexpr auto auto_             = StringHash("auto");
-		static constexpr auto bitand_           = StringHash("bitand");
-		static constexpr auto bitor_            = StringHash("bitor");
-		static constexpr auto char8t            = StringHash("char8_t");
-		static constexpr auto char16t           = StringHash("char16_t");
-		static constexpr auto char32t           = StringHash("char32_t");
-		static constexpr auto compl_            = StringHash("compl");
-		static constexpr auto constexpr_        = StringHash("constexpr");
-		static constexpr auto constinit_        = StringHash("constinit");
-		static constexpr auto const_cast_       = StringHash("const_cast");
-		static constexpr auto co_await_         = StringHash("co_await");
-		static constexpr auto co_return_        = StringHash("co_return");
-		static constexpr auto co_yield_         = StringHash("co_yield");
-		static constexpr auto delete_           = StringHash("delete");
-		static constexpr auto double_           = StringHash("double");
-		static constexpr auto dynamic_cast_     = StringHash("dynamic_cast");
-		static constexpr auto explicit_         = StringHash("explicit");
-		static constexpr auto export_           = StringHash("export");
-		static constexpr auto float_            = StringHash("float");
-		static constexpr auto goto_             = StringHash("goto");
-		static constexpr auto int_              = StringHash("int");
-		static constexpr auto long_             = StringHash("long");
-		static constexpr auto mutable_          = StringHash("mutable");
-		static constexpr auto namespace_        = StringHash("namespace");
-		static constexpr auto not_eq_           = StringHash("not_eq");
-		static constexpr auto nullptr_          = StringHash("nullptr");
-		static constexpr auto or_eq_            = StringHash("or_eq");
-		static constexpr auto register_         = StringHash("register");
-		static constexpr auto reinterpret_cast_ = StringHash("reinterpret_cast");
-		static constexpr auto short_            = StringHash("short");
-		static constexpr auto signed_           = StringHash("signed");
-		static constexpr auto static_cast_      = StringHash("static_cast");
-		static constexpr auto static_assert_    = StringHash("static_assert");
-		static constexpr auto template_         = StringHash("template");
-		static constexpr auto thread_local_     = StringHash("thread_local");
-		static constexpr auto typedef_          = StringHash("typedef");
-		static constexpr auto typeid_           = StringHash("typeid");
-		static constexpr auto typename_         = StringHash("typename");
-		static constexpr auto unsigned_         = StringHash("unsigned");
-		static constexpr auto wchar_t_          = StringHash("wchar_t");
-		static constexpr auto xor_eq_           = StringHash("xor_eq");
-		static constexpr auto module_           = StringHash("module");
-		auto txt                                = node->getText();
-		auto id                                 = StringHash(txt.c_str());
-		switch (id) {
-			case anonymousVar:
-				out << GetAnonymousVarName(
-				    {node->getSymbol()->getLine(), node->getSymbol()->getCharPositionInLine()});
-				break;
-			case and_eq_:
-			case asm_:
-			case auto_:
-			case bitand_:
-			case bitor_:
-			case char8t:
-			case char16t:
-			case char32t:
-			case compl_:
-			case constexpr_:
-			case constinit_:
-			case const_cast_:
-			case co_await_:
-			case co_return_:
-			case co_yield_:
-			case delete_:
-			case double_:
-			case dynamic_cast_:
-			case export_:
-			case explicit_:
-			case float_:
-			case goto_:
-			case int_:
-			case long_:
-			case mutable_:
-			case namespace_:
-			case not_eq_:
-			case nullptr_:
-			case or_eq_:
-			case register_:
-			case reinterpret_cast_:
-			case short_:
-			case signed_:
-			case static_assert_:
-			case static_cast_:
-			case template_:
-			case thread_local_:
-			case typedef_:
-			case typeid_:
-			case typename_:
-			case unsigned_:
-			case wchar_t_:
-			case xor_eq_:
-			case module_:
-				out << txt << "_";
-				break;
-			default:
-				out << txt;
-				break;
-		}
-	}
-
-	void AstrumCodegen::printLiteral(AstrumParser::LiteralContext* ctx) {
-		if (auto literal = ctx->IntegerLiteral()) {
-			auto txt = literal->getText();
-			printIntegerLiteral(std::move(txt), literalMinus);
-		} else if (auto literal = ctx->FloatingLiteral()) {
-			auto txt = literal->getText();
-			printFloatLiteral(std::move(txt), literalMinus);
-		} else if (auto literal = ctx->DecimalTypeLiteral()) {
-			auto txt = literal->getText();
-			printDecimalLiteral(std::move(txt), literalMinus);
-		} else if (auto literal = ctx->BooleanLiteral()) {
-			out << literal->getText();
-		} else if (auto literal = ctx->Null()) {
-			out << "nullptr";
-		} else if (auto literal = ctx->CharacterLiteral()) {
-			auto txt = literal->getText();
-			printCharacterLiteral(std::move(txt));
-		} else if (auto literal = ctx->StringLiteral()) {
-			auto txt = literal->getText();
-			printStringLiteral(std::move(txt));
-		} else if (auto literal = ctx->MultilineStringLiteral()) {
-			auto txt = literal->getText();
-			printMultilineStringLiteral(std::move(txt));
-		} else if (ctx->interpolatedStringLiteral()) {
-			printInterpolatedStringLiteral(ctx->interpolatedStringLiteral());
-		}
-	}
-
-	void AstrumCodegen::printIntegerLiteral(std::string txt, bool minus) {
-		StringReplace(txt, "_", "");
-		StringReplace(txt, "0o", "0");
-		if (txt.ends_with("i8")) {
-			out << "Builtin::i8(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 2) << ")";
-		} else if (txt.ends_with("i16")) {
-			out << "Builtin::i16(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3) << ")";
-		} else if (txt.ends_with("i32")) {
-			out << "Builtin::i32(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3) << ")";
-		} else if (txt.ends_with("i64")) {
-			out << "Builtin::i64(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3)
-			    << "LL)";
-		} else if (txt.ends_with("u8")) {
-			out << "Builtin::u8(" << txt.substr(0, txt.length() - 2) << "U)";
-		} else if (txt.ends_with("u16")) {
-			out << "Builtin::u16(" << txt.substr(0, txt.length() - 3) << "U)";
-		} else if (txt.ends_with("u32")) {
-			out << "Builtin::u32(" << txt.substr(0, txt.length() - 3) << "U)";
-		} else if (txt.ends_with("u64")) {
-			out << "Builtin::u64(" << txt.substr(0, txt.length() - 3) << "ULL)";
-		} else if (txt.ends_with("iz")) {
-			out << "Builtin::isize(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 2)
-			    << ")";
-		} else if (txt.ends_with("uz")) {
-			out << "Builtin::usize(" << txt.substr(0, txt.length() - 2) << "U)";
-		} else if (txt.ends_with("i128")) {
-			auto base   = 10;
-			auto offset = 0;
-			if (txt.length() >= 6 && txt[0] == '0') {
-				if (txt[1] == 'b') {
-					base   = 2;
-					offset = 2;
-				} else if (txt[1] == 'x') {
-					base   = 16;
-					offset = 2;
-				} else {
-					base   = 8;
-					offset = 1;
+				if (ctx->Self()) {
+					if (isExtension) {
+						out << currentExtensionName;
+					} else if (isInterfaceConcept) {
+						out << "__AnyType::__self";
+					} else if (isInterface) {
+						out << "Builtin::OptionalStrongRef<Builtin::ObjectRef>";
+					} else {
+						out << "__self";
+					}
 				}
+				out << "::";
 			}
-			auto value = 0ull;
-			auto result =
-			    std::from_chars(txt.c_str() + offset, txt.c_str() + txt.length(), value, base);
-			if ((int) result.ec || value > (uint64_t(INT64_MAX) + 1) ||
-			    (!minus && value == (uint64_t(INT64_MAX) + 1))) {
-				out << "Builtin::i128::Parse(\"" << (minus ? "-" : "")
-				    << txt.substr(0, txt.length() - 4) << "\")";
-			} else {
-				out << "Builtin::i128(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 4)
+		}
+
+		constexpr std::uint32_t StringHash(const char* s, std::uint32_t hash = 2166136261U) {
+			return (s[0] == '\0')
+			           ? hash
+			           : StringHash(s + 1, (hash ^ static_cast<std::uint32_t>(s[0])) * 16777619U);
+		}
+
+		void AstrumCodegen::printIdentifier(antlr4::tree::TerminalNode * node) {
+			static constexpr auto anonymousVar      = StringHash("_");
+			static constexpr auto and_eq_           = StringHash("and_eq");
+			static constexpr auto asm_              = StringHash("asm");
+			static constexpr auto auto_             = StringHash("auto");
+			static constexpr auto bitand_           = StringHash("bitand");
+			static constexpr auto bitor_            = StringHash("bitor");
+			static constexpr auto char8t            = StringHash("char8_t");
+			static constexpr auto char16t           = StringHash("char16_t");
+			static constexpr auto char32t           = StringHash("char32_t");
+			static constexpr auto compl_            = StringHash("compl");
+			static constexpr auto constexpr_        = StringHash("constexpr");
+			static constexpr auto constinit_        = StringHash("constinit");
+			static constexpr auto const_cast_       = StringHash("const_cast");
+			static constexpr auto co_await_         = StringHash("co_await");
+			static constexpr auto co_return_        = StringHash("co_return");
+			static constexpr auto co_yield_         = StringHash("co_yield");
+			static constexpr auto delete_           = StringHash("delete");
+			static constexpr auto double_           = StringHash("double");
+			static constexpr auto dynamic_cast_     = StringHash("dynamic_cast");
+			static constexpr auto explicit_         = StringHash("explicit");
+			static constexpr auto export_           = StringHash("export");
+			static constexpr auto float_            = StringHash("float");
+			static constexpr auto goto_             = StringHash("goto");
+			static constexpr auto int_              = StringHash("int");
+			static constexpr auto long_             = StringHash("long");
+			static constexpr auto mutable_          = StringHash("mutable");
+			static constexpr auto namespace_        = StringHash("namespace");
+			static constexpr auto not_eq_           = StringHash("not_eq");
+			static constexpr auto nullptr_          = StringHash("nullptr");
+			static constexpr auto or_eq_            = StringHash("or_eq");
+			static constexpr auto register_         = StringHash("register");
+			static constexpr auto reinterpret_cast_ = StringHash("reinterpret_cast");
+			static constexpr auto short_            = StringHash("short");
+			static constexpr auto signed_           = StringHash("signed");
+			static constexpr auto static_cast_      = StringHash("static_cast");
+			static constexpr auto static_assert_    = StringHash("static_assert");
+			static constexpr auto template_         = StringHash("template");
+			static constexpr auto thread_local_     = StringHash("thread_local");
+			static constexpr auto typedef_          = StringHash("typedef");
+			static constexpr auto typeid_           = StringHash("typeid");
+			static constexpr auto typename_         = StringHash("typename");
+			static constexpr auto unsigned_         = StringHash("unsigned");
+			static constexpr auto wchar_t_          = StringHash("wchar_t");
+			static constexpr auto xor_eq_           = StringHash("xor_eq");
+			static constexpr auto module_           = StringHash("module");
+			auto txt                                = node->getText();
+			auto id                                 = StringHash(txt.c_str());
+			switch (id) {
+				case anonymousVar:
+					out << GetAnonymousVarName(
+					    {node->getSymbol()->getLine(), node->getSymbol()->getCharPositionInLine()});
+					break;
+				case and_eq_:
+				case asm_:
+				case auto_:
+				case bitand_:
+				case bitor_:
+				case char8t:
+				case char16t:
+				case char32t:
+				case compl_:
+				case constexpr_:
+				case constinit_:
+				case const_cast_:
+				case co_await_:
+				case co_return_:
+				case co_yield_:
+				case delete_:
+				case double_:
+				case dynamic_cast_:
+				case export_:
+				case explicit_:
+				case float_:
+				case goto_:
+				case int_:
+				case long_:
+				case mutable_:
+				case namespace_:
+				case not_eq_:
+				case nullptr_:
+				case or_eq_:
+				case register_:
+				case reinterpret_cast_:
+				case short_:
+				case signed_:
+				case static_assert_:
+				case static_cast_:
+				case template_:
+				case thread_local_:
+				case typedef_:
+				case typeid_:
+				case typename_:
+				case unsigned_:
+				case wchar_t_:
+				case xor_eq_:
+				case module_:
+					out << txt << "_";
+					break;
+				default:
+					out << txt;
+					break;
+			}
+		}
+
+		void AstrumCodegen::printLiteral(AstrumParser::LiteralContext * ctx) {
+			if (auto literal = ctx->IntegerLiteral()) {
+				auto txt = literal->getText();
+				printIntegerLiteral(std::move(txt), literalMinus);
+			} else if (auto literal = ctx->FloatingLiteral()) {
+				auto txt = literal->getText();
+				printFloatLiteral(std::move(txt), literalMinus);
+			} else if (auto literal = ctx->DecimalTypeLiteral()) {
+				auto txt = literal->getText();
+				printDecimalLiteral(std::move(txt), literalMinus);
+			} else if (auto literal = ctx->BooleanLiteral()) {
+				out << literal->getText();
+			} else if (auto literal = ctx->Null()) {
+				out << "nullptr";
+			} else if (auto literal = ctx->CharacterLiteral()) {
+				auto txt = literal->getText();
+				printCharacterLiteral(std::move(txt));
+			} else if (auto literal = ctx->StringLiteral()) {
+				auto txt = literal->getText();
+				printStringLiteral(std::move(txt));
+			} else if (auto literal = ctx->MultilineStringLiteral()) {
+				auto txt = literal->getText();
+				printMultilineStringLiteral(std::move(txt));
+			} else if (ctx->interpolatedStringLiteral()) {
+				printInterpolatedStringLiteral(ctx->interpolatedStringLiteral());
+			}
+		}
+
+		void AstrumCodegen::printIntegerLiteral(std::string txt, bool minus) {
+			StringReplace(txt, "_", "");
+			StringReplace(txt, "0o", "0");
+			if (txt.ends_with("i8")) {
+				out << "Builtin::i8(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 2)
+				    << ")";
+			} else if (txt.ends_with("i16")) {
+				out << "Builtin::i16(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3)
+				    << ")";
+			} else if (txt.ends_with("i32")) {
+				out << "Builtin::i32(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3)
+				    << ")";
+			} else if (txt.ends_with("i64")) {
+				out << "Builtin::i64(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3)
 				    << "LL)";
-			}
-		} else if (txt.ends_with("u128")) {
-			auto base   = 10;
-			auto offset = 0;
-			if (txt.length() >= 6 && txt[0] == '0') {
-				if (txt[1] == 'b') {
-					base   = 2;
-					offset = 2;
-				} else if (txt[1] == 'x') {
-					base   = 16;
-					offset = 2;
-				} else {
-					base   = 8;
-					offset = 1;
+			} else if (txt.ends_with("u8")) {
+				out << "Builtin::u8(" << txt.substr(0, txt.length() - 2) << "U)";
+			} else if (txt.ends_with("u16")) {
+				out << "Builtin::u16(" << txt.substr(0, txt.length() - 3) << "U)";
+			} else if (txt.ends_with("u32")) {
+				out << "Builtin::u32(" << txt.substr(0, txt.length() - 3) << "U)";
+			} else if (txt.ends_with("u64")) {
+				out << "Builtin::u64(" << txt.substr(0, txt.length() - 3) << "ULL)";
+			} else if (txt.ends_with("iz")) {
+				out << "Builtin::isize(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 2)
+				    << ")";
+			} else if (txt.ends_with("uz")) {
+				out << "Builtin::usize(" << txt.substr(0, txt.length() - 2) << "U)";
+			} else if (txt.ends_with("i128")) {
+				auto base   = 10;
+				auto offset = 0;
+				if (txt.length() >= 6 && txt[0] == '0') {
+					if (txt[1] == 'b') {
+						base   = 2;
+						offset = 2;
+					} else if (txt[1] == 'x') {
+						base   = 16;
+						offset = 2;
+					} else {
+						base   = 8;
+						offset = 1;
+					}
 				}
-			}
-			auto value = 0ull;
-			auto result =
-			    std::from_chars(txt.c_str() + offset, txt.c_str() + txt.length(), value, base);
-			if ((int) result.ec) {
-				out << "Builtin::u128::Parse(\"" << txt.substr(0, txt.length() - 4) << "\")";
-			} else {
-				out << "Builtin::u128(" << txt.substr(0, txt.length() - 4) << "ULL)";
-			}
-		} else if (txt.ends_with("big")) {
-			auto base   = 10;
-			auto offset = 0;
-			if (txt.length() >= 6 && txt[0] == '0') {
-				if (txt[1] == 'b') {
-					base   = 2;
-					offset = 2;
-				} else if (txt[1] == 'x') {
-					base   = 16;
-					offset = 2;
+				auto value = 0ull;
+				auto result =
+				    std::from_chars(txt.c_str() + offset, txt.c_str() + txt.length(), value, base);
+				if ((int) result.ec || value > (uint64_t(INT64_MAX) + 1) ||
+				    (!minus && value == (uint64_t(INT64_MAX) + 1))) {
+					out << "Builtin::i128::Parse(\"" << (minus ? "-" : "")
+					    << txt.substr(0, txt.length() - 4) << "\")";
 				} else {
-					base   = 8;
-					offset = 1;
+					out << "Builtin::i128(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 4)
+					    << "LL)";
 				}
-			}
-			auto value = 0ull;
-			auto result =
-			    std::from_chars(txt.c_str() + offset, txt.c_str() + txt.length(), value, base);
-			if ((int) result.ec || value > (uint64_t(INT64_MAX) + 1) ||
-			    (!minus && value == (uint64_t(INT64_MAX) + 1))) {
-				out << "BigInt(Builtin::BigIntLiteral{\"" << (minus ? "-" : "")
-				    << txt.substr(0, txt.length() - 3) << "\"})";
-			} else {
-				out << "BigInt(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3) << "LL)";
-			}
-		} else if (txt.ends_with("u")) {
-			auto base   = 10;
-			auto offset = 0;
-			if (txt.length() >= 2 && txt[0] == '0') {
-				if (txt[1] == 'b') {
-					base   = 2;
-					offset = 2;
-				} else if (txt[1] == 'x') {
-					base   = 16;
-					offset = 2;
-				} else {
-					base   = 8;
-					offset = 1;
+			} else if (txt.ends_with("u128")) {
+				auto base   = 10;
+				auto offset = 0;
+				if (txt.length() >= 6 && txt[0] == '0') {
+					if (txt[1] == 'b') {
+						base   = 2;
+						offset = 2;
+					} else if (txt[1] == 'x') {
+						base   = 16;
+						offset = 2;
+					} else {
+						base   = 8;
+						offset = 1;
+					}
 				}
-			}
-			if (txt == "0u") {
-				out << "Builtin::u32(0U)";
-			} else {
 				auto value = 0ull;
 				auto result =
 				    std::from_chars(txt.c_str() + offset, txt.c_str() + txt.length(), value, base);
 				if ((int) result.ec) {
-					if (txt[0] != '0' && (txt.length() < 40 ||
-					                      (txt.length() == 40 &&
-					                       (txt < "340282366920938463463374607431768211455")))) {
-						out << "Builtin::u128::Parse(\"" << txt.substr(0, txt.length() - 1)
-						    << "\")";
+					out << "Builtin::u128::Parse(\"" << txt.substr(0, txt.length() - 4) << "\")";
+				} else {
+					out << "Builtin::u128(" << txt.substr(0, txt.length() - 4) << "ULL)";
+				}
+			} else if (txt.ends_with("big")) {
+				auto base   = 10;
+				auto offset = 0;
+				if (txt.length() >= 6 && txt[0] == '0') {
+					if (txt[1] == 'b') {
+						base   = 2;
+						offset = 2;
+					} else if (txt[1] == 'x') {
+						base   = 16;
+						offset = 2;
 					} else {
-						out << "Builtin::BigIntLiteral{\"" << txt.substr(0, txt.length() - 1)
-						    << "\"}";
+						base   = 8;
+						offset = 1;
 					}
-				} else if (value > UINT32_MAX) {
-					out << "Builtin::u64(" << txt.substr(0, txt.length() - 1) << "ULL)";
-				} else {
-					out << "Builtin::u32(" << txt.substr(0, txt.length() - 1) << "U)";
 				}
-			}
-		} else {
-			auto base   = 10;
-			auto offset = 0;
-			if (txt.length() >= 2 && txt[0] == '0') {
-				if (txt[1] == 'b') {
-					base   = 2;
-					offset = 2;
-				} else if (txt[1] == 'x') {
-					base   = 16;
-					offset = 2;
+				auto value = 0ull;
+				auto result =
+				    std::from_chars(txt.c_str() + offset, txt.c_str() + txt.length(), value, base);
+				if ((int) result.ec || value > (uint64_t(INT64_MAX) + 1) ||
+				    (!minus && value == (uint64_t(INT64_MAX) + 1))) {
+					out << "BigInt(Builtin::BigIntLiteral{\"" << (minus ? "-" : "")
+					    << txt.substr(0, txt.length() - 3) << "\"})";
 				} else {
-					base   = 8;
-					offset = 1;
+					out << "BigInt(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3)
+					    << "LL)";
 				}
-			}
-			auto value = 0ull;
-			auto result =
-			    std::from_chars(txt.c_str() + offset, txt.c_str() + txt.length(), value, base);
-			if ((int) result.ec) {
-				if (txt[0] != '0' &&
-				    (txt.length() < 39 ||
-				     (txt.length() == 39 &&
-				      (txt < "170141183460469231731687303715884105728" ||
-				       (txt == "170141183460469231731687303715884105728" && minus))))) {
+			} else if (txt.ends_with("u")) {
+				auto base   = 10;
+				auto offset = 0;
+				if (txt.length() >= 2 && txt[0] == '0') {
+					if (txt[1] == 'b') {
+						base   = 2;
+						offset = 2;
+					} else if (txt[1] == 'x') {
+						base   = 16;
+						offset = 2;
+					} else {
+						base   = 8;
+						offset = 1;
+					}
+				}
+				if (txt == "0u") {
+					out << "Builtin::u32(0U)";
+				} else {
+					auto value  = 0ull;
+					auto result = std::from_chars(txt.c_str() + offset, txt.c_str() + txt.length(),
+					                              value, base);
+					if ((int) result.ec) {
+						if (txt[0] != '0' &&
+						    (txt.length() < 40 ||
+						     (txt.length() == 40 &&
+						      (txt < "340282366920938463463374607431768211455")))) {
+							out << "Builtin::u128::Parse(\"" << txt.substr(0, txt.length() - 1)
+							    << "\")";
+						} else {
+							out << "Builtin::BigIntLiteral{\"" << txt.substr(0, txt.length() - 1)
+							    << "\"}";
+						}
+					} else if (value > UINT32_MAX) {
+						out << "Builtin::u64(" << txt.substr(0, txt.length() - 1) << "ULL)";
+					} else {
+						out << "Builtin::u32(" << txt.substr(0, txt.length() - 1) << "U)";
+					}
+				}
+			} else {
+				auto base   = 10;
+				auto offset = 0;
+				if (txt.length() >= 2 && txt[0] == '0') {
+					if (txt[1] == 'b') {
+						base   = 2;
+						offset = 2;
+					} else if (txt[1] == 'x') {
+						base   = 16;
+						offset = 2;
+					} else {
+						base   = 8;
+						offset = 1;
+					}
+				}
+				auto value = 0ull;
+				auto result =
+				    std::from_chars(txt.c_str() + offset, txt.c_str() + txt.length(), value, base);
+				if ((int) result.ec) {
+					if (txt[0] != '0' &&
+					    (txt.length() < 39 ||
+					     (txt.length() == 39 &&
+					      (txt < "170141183460469231731687303715884105728" ||
+					       (txt == "170141183460469231731687303715884105728" && minus))))) {
+						out << "Builtin::i128::Parse(\"" << (minus ? "-" : "") << txt << "\")";
+					} else {
+						out << "Builtin::BigIntLiteral{\"" << (minus ? "-" : "") << txt << "\"}";
+					}
+				} else if (value > 9223372036854775808 ||
+				           (value == 9223372036854775808 && !minus)) {
 					out << "Builtin::i128::Parse(\"" << (minus ? "-" : "") << txt << "\")";
-				} else {
-					out << "Builtin::BigIntLiteral{\"" << (minus ? "-" : "") << txt << "\"}";
-				}
-			} else if (value > 9223372036854775808 || (value == 9223372036854775808 && !minus)) {
-				out << "Builtin::i128::Parse(\"" << (minus ? "-" : "") << txt << "\")";
-			} else if (value > 2147483648 || (value == 2147483648 && !minus)) {
-				out << "Builtin::i64(" << (minus ? "-" : "") << txt << "LL)";
-			} else if (!currentType.empty()) {
-				if (currentType == "i8" && value < 128) {
-					out << "Builtin::i8((signed char)" << (minus ? "-" : "") << txt << ")";
-				} else if (currentType == "i16" && value < 32768) {
-					out << "Builtin::i16((short)" << (minus ? "-" : "") << txt << ")";
-				} else if (!minus) {
-					if (currentType == "u8" && value < 256) {
-						out << "Builtin::u8((unsigned char)" << txt << ")";
-					} else if (currentType == "u16" && value < 65536) {
-						out << "Builtin::u16((unsigned short)" << txt << ")";
-					} else if (currentType == "u32") {
-						out << "Builtin::u32(" << txt << "U)";
-					} else if (currentType == "u64") {
-						out << "Builtin::u64(" << txt << "ULL)";
-					} else if (currentType == "u128") {
-						out << "Builtin::u128(" << txt << "ULL)";
-					} else if (currentType == "usize") {
-						out << "Builtin::usize(" << txt << "U)";
+				} else if (value > 2147483648 || (value == 2147483648 && !minus)) {
+					out << "Builtin::i64(" << (minus ? "-" : "") << txt << "LL)";
+				} else if (!currentType.empty()) {
+					if (currentType == "i8" && value < 128) {
+						out << "Builtin::i8((signed char)" << (minus ? "-" : "") << txt << ")";
+					} else if (currentType == "i16" && value < 32768) {
+						out << "Builtin::i16((short)" << (minus ? "-" : "") << txt << ")";
+					} else if (!minus) {
+						if (currentType == "u8" && value < 256) {
+							out << "Builtin::u8((unsigned char)" << txt << ")";
+						} else if (currentType == "u16" && value < 65536) {
+							out << "Builtin::u16((unsigned short)" << txt << ")";
+						} else if (currentType == "u32") {
+							out << "Builtin::u32(" << txt << "U)";
+						} else if (currentType == "u64") {
+							out << "Builtin::u64(" << txt << "ULL)";
+						} else if (currentType == "u128") {
+							out << "Builtin::u128(" << txt << "ULL)";
+						} else if (currentType == "usize") {
+							out << "Builtin::usize(" << txt << "U)";
+						} else {
+							out << "Builtin::i32(" << txt << ")";
+						}
 					} else {
-						out << "Builtin::i32(" << txt << ")";
+						out << "Builtin::i32(" << (minus ? "-" : "") << txt << ")";
 					}
+
 				} else {
 					out << "Builtin::i32(" << (minus ? "-" : "") << txt << ")";
 				}
-
-			} else {
-				out << "Builtin::i32(" << (minus ? "-" : "") << txt << ")";
 			}
 		}
-	}
-	void AstrumCodegen::printFloatLiteral(std::string txt, bool minus) {
-		StringReplace(txt, "_", "");
-		if (txt.ends_with("fext")) {
-			out << "Builtin::fext(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 4)
-			    << "L)";
-		} else if (txt.ends_with("f")) {
-			out << "Builtin::f32(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 1) << "f)";
-		} else if (txt.ends_with("f32")) {
-			out << "Builtin::f32(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3) << "f)";
-		} else if (txt.ends_with("f64")) {
-			out << "Builtin::f64(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3) << ")";
-		} else {
-			out << "Builtin::f64(" << (minus ? "-" : "") << txt << ")";
+		void AstrumCodegen::printFloatLiteral(std::string txt, bool minus) {
+			StringReplace(txt, "_", "");
+			if (txt.ends_with("fext")) {
+				out << "Builtin::fext(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 4)
+				    << "L)";
+			} else if (txt.ends_with("f")) {
+				out << "Builtin::f32(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 1)
+				    << "f)";
+			} else if (txt.ends_with("f32")) {
+				out << "Builtin::f32(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3)
+				    << "f)";
+			} else if (txt.ends_with("f64")) {
+				out << "Builtin::f64(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3)
+				    << ")";
+			} else {
+				out << "Builtin::f64(" << (minus ? "-" : "") << txt << ")";
+			}
 		}
-	}
 
-	void AstrumCodegen::printDecimalLiteral(std::string txt, bool minus) {
-		StringReplace(txt, "_", "");
-		txt            = txt.substr(0, txt.length() - 1);
-		auto parts     = StringSplit(txt, '.');
-		int64_t ipart  = 0;
-		uint64_t fpart = 0;
-		try {
-			ipart = (int64_t) stoull(parts[0]);
-			fpart = stoull(parts[1]);
-		} catch (...) {}
-		if (minus)
-			ipart = -ipart;
-		int radix = parts[1].length();
-		out << "Decimal<" << radix << ">(Builtin::DecimalLiteral{" << ipart << ", " << fpart
-		    << "u})";
-	}
+		void AstrumCodegen::printDecimalLiteral(std::string txt, bool minus) {
+			StringReplace(txt, "_", "");
+			txt            = txt.substr(0, txt.length() - 1);
+			auto parts     = StringSplit(txt, '.');
+			int64_t ipart  = 0;
+			uint64_t fpart = 0;
+			try {
+				ipart = (int64_t) stoull(parts[0]);
+				fpart = stoull(parts[1]);
+			} catch (...) {}
+			if (minus)
+				ipart = -ipart;
+			int radix = parts[1].length();
+			out << "Decimal<" << radix << ">(Builtin::DecimalLiteral{" << ipart << ", " << fpart
+			    << "u})";
+		}
 
-	void AstrumCodegen::printCharacterLiteral(std::string txt) {
-		if (txt.starts_with('b')) {
-			out << "Builtin::char8(" << txt.substr(1) << ")";
-		} else if (txt.starts_with('U')) {
-			out << "Builtin::char32(" << txt << ")";
-		} else {
-			txt = txt.substr(1, txt.length() - 2);
-			if (txt.starts_with('\\')) {
-				if (txt[1] == 'x' && txt.length() > 6) {
-					out << "Builtin::char32(U'" << txt << "')";
-				} else if (txt[1] == 'U') {
+		void AstrumCodegen::printCharacterLiteral(std::string txt) {
+			if (txt.starts_with('b')) {
+				out << "Builtin::char8(" << txt.substr(1) << ")";
+			} else if (txt.starts_with('U')) {
+				out << "Builtin::char32(" << txt << ")";
+			} else {
+				txt = txt.substr(1, txt.length() - 2);
+				if (txt.starts_with('\\')) {
+					if (txt[1] == 'x' && txt.length() > 6) {
+						out << "Builtin::char32(U'" << txt << "')";
+					} else if (txt[1] == 'U') {
+						out << "Builtin::char32(U'" << txt << "')";
+					} else {
+						out << "Builtin::char16(u'" << txt << "')";
+					}
+				} else if (txt.length() > 3) {
 					out << "Builtin::char32(U'" << txt << "')";
 				} else {
 					out << "Builtin::char16(u'" << txt << "')";
 				}
-			} else if (txt.length() > 3) {
-				out << "Builtin::char32(U'" << txt << "')";
-			} else {
-				out << "Builtin::char16(u'" << txt << "')";
 			}
 		}
-	}
 
-	void AstrumCodegen::printStringLiteral(std::string txt) {
-		auto prefix = "u";
-		auto str    = "Str";
-		if (txt.starts_with("u8")) {
-			prefix = "u8";
-			str    = "Utf8Str";
-			txt    = txt.substr(2);
-		} else if (txt.starts_with('U')) {
-			prefix = "U";
-			str    = "Utf32Str";
-			txt    = txt.substr(1);
+		void AstrumCodegen::printStringLiteral(std::string txt) {
+			auto prefix = "u";
+			auto str    = "Str";
+			if (txt.starts_with("u8")) {
+				prefix = "u8";
+				str    = "Utf8Str";
+				txt    = txt.substr(2);
+			} else if (txt.starts_with('U')) {
+				prefix = "U";
+				str    = "Utf32Str";
+				txt    = txt.substr(1);
+			}
+			if (txt.starts_with('"') || txt.starts_with('R')) {
+				out << "Builtin::" << str << "{" << prefix << txt << "}";
+			} else if (txt.starts_with('`')) {
+				auto contents = txt.substr(1, txt.length() - 2);
+				StringReplace(contents, "``", "`");
+				out << "Builtin::" << str << "{" << prefix << "R\"_grave_(" << contents
+				    << ")_grave_\"}";
+			}
 		}
-		if (txt.starts_with('"') || txt.starts_with('R')) {
-			out << "Builtin::" << str << "{" << prefix << txt << "}";
-		} else if (txt.starts_with('`')) {
-			auto contents = txt.substr(1, txt.length() - 2);
-			StringReplace(contents, "``", "`");
-			out << "Builtin::" << str << "{" << prefix << "R\"_grave_(" << contents
-			    << ")_grave_\"}";
-		}
-	}
 
-	void AstrumCodegen::printMultilineStringLiteral(std::string txt) {
-		auto contents = txt.substr(3, txt.length() - 6);
-		auto lines    = StringSplit(contents, '\n');
-		out << "Builtin::Str{uR\"_multi_(";
-		int i      = -1;
-		bool first = true;
-		for (auto& line : lines) {
-			++i;
-			if (line.empty() && (i == 0 || i == lines.size() - 1))
-				continue;
-			int margin = 0;
-			while (line[margin] == ' ' || line[margin] == '\t') ++margin;
-			if (line[margin] == '|')
-				++margin;
-			else {
-				if (line[margin] == 0 && i == (lines.size() - 1))
+		void AstrumCodegen::printMultilineStringLiteral(std::string txt) {
+			auto contents = txt.substr(3, txt.length() - 6);
+			auto lines    = StringSplit(contents, '\n');
+			out << "Builtin::Str{uR\"_multi_(";
+			int i      = -1;
+			bool first = true;
+			for (auto& line : lines) {
+				++i;
+				if (line.empty() && (i == 0 || i == lines.size() - 1))
 					continue;
-				margin = 0;
-			}
-			if (!first)
-				out << "\n";
-			first = false;
-			out << line.substr(margin);
-		}
-		out << ")_multi_\"}";
-	}
-
-	void AstrumCodegen::printInterpolatedStringLiteral(
-	    AstrumParser::InterpolatedStringLiteralContext* ctx) {
-		if (currentDeclaration && !currentDeclaration->theTypeId()) {
-			out << "String(";
-		}
-		out << "Builtin::StringInterpolation(u";
-		std::vector<AstrumParser::NullCoalescingExpressionContext*> expressions;
-		auto processExpression = [&](auto expr) {
-			out << "{";
-			if (expr->Colon()) {
-				out << ":";
-				for (auto options : expr->FORMAT_STRING()) { out << options->getText(); }
-			}
-			out << "}";
-			expressions.push_back(expr->nullCoalescingExpression());
-		};
-
-		if (auto literal = ctx->interpolatedRegularStringLiteral()) {
-			out << '"';
-			for (auto part : literal->interpolatedRegularStringPart()) {
-				if (auto expr = part->interpolatedExpression()) {
-					processExpression(expr);
-				} else if (part->DOUBLE_CURLY_INSIDE()) {
-					out << "{{";
-				} else if (part->REGULAR_CHAR_INSIDE()) {
-					out << part->REGULAR_CHAR_INSIDE()->getText();
-				} else if (part->REGULAR_STRING_INSIDE()) {
-					out << part->REGULAR_STRING_INSIDE()->getText();
+				int margin = 0;
+				while (line[margin] == ' ' || line[margin] == '\t') ++margin;
+				if (line[margin] == '|')
+					++margin;
+				else {
+					if (line[margin] == 0 && i == (lines.size() - 1))
+						continue;
+					margin = 0;
 				}
+				if (!first)
+					out << "\n";
+				first = false;
+				out << line.substr(margin);
 			}
-			out << '"';
-		} else if (auto literal = ctx->interpolatedVerbatiumStringLiteral()) {
-			out << "R\"_grave_(";
-			for (auto part : literal->interpolatedVerbatiumStringPart()) {
-				if (auto expr = part->interpolatedExpression()) {
-					processExpression(expr);
-				} else if (part->DOUBLE_CURLY_INSIDE()) {
-					out << "{{";
-				} else if (part->VERBATIUM_DOUBLE_GRAVE_INSIDE()) {
-					out << '`';
-				} else if (part->GRAVE_STRING_INSIDE()) {
-					out << part->GRAVE_STRING_INSIDE()->getText();
-				}
-			}
-			out << ")_grave_\"";
-		} else if (auto literal = ctx->interpolatedMultilineStringLiteral()) {
-			out << "R\"_multi_(";
-			for (auto part : literal->interpolatedMultilineStringPart()) {
-				if (auto expr = part->interpolatedExpression()) {
-					processExpression(expr);
-				} else if (part->DOUBLE_CURLY_INSIDE()) {
-					out << "{{";
-				} else if (part->MULTILINE_QUOTES_INSIDE()) {
-					out << part->MULTILINE_QUOTES_INSIDE()->getText();
-				} else if (part->MULTILINE_STRING_INSIDE()) {
-					out << part->MULTILINE_STRING_INSIDE()->getText();
-				}
-			}
-			out << ")_multi_\"";
+			out << ")_multi_\"}";
 		}
 
-		for (auto expr : expressions) {
-			out << ", ";
-			printNullCoalescingExpression(expr);
-		}
-		out << ")";
-		if (currentDeclaration && !currentDeclaration->theTypeId()) {
+		void AstrumCodegen::printInterpolatedStringLiteral(
+		    AstrumParser::InterpolatedStringLiteralContext * ctx) {
+			if (currentDeclaration && !currentDeclaration->theTypeId()) {
+				out << "String(";
+			}
+			out << "Builtin::StringInterpolation(u";
+			std::vector<AstrumParser::NullCoalescingExpressionContext*> expressions;
+			auto processExpression = [&](auto expr) {
+				out << "{";
+				if (expr->Colon()) {
+					out << ":";
+					for (auto options : expr->FORMAT_STRING()) { out << options->getText(); }
+				}
+				out << "}";
+				expressions.push_back(expr->nullCoalescingExpression());
+			};
+
+			if (auto literal = ctx->interpolatedRegularStringLiteral()) {
+				out << '"';
+				for (auto part : literal->interpolatedRegularStringPart()) {
+					if (auto expr = part->interpolatedExpression()) {
+						processExpression(expr);
+					} else if (part->DOUBLE_CURLY_INSIDE()) {
+						out << "{{";
+					} else if (part->REGULAR_CHAR_INSIDE()) {
+						out << part->REGULAR_CHAR_INSIDE()->getText();
+					} else if (part->REGULAR_STRING_INSIDE()) {
+						out << part->REGULAR_STRING_INSIDE()->getText();
+					}
+				}
+				out << '"';
+			} else if (auto literal = ctx->interpolatedVerbatiumStringLiteral()) {
+				out << "R\"_grave_(";
+				for (auto part : literal->interpolatedVerbatiumStringPart()) {
+					if (auto expr = part->interpolatedExpression()) {
+						processExpression(expr);
+					} else if (part->DOUBLE_CURLY_INSIDE()) {
+						out << "{{";
+					} else if (part->VERBATIUM_DOUBLE_GRAVE_INSIDE()) {
+						out << '`';
+					} else if (part->GRAVE_STRING_INSIDE()) {
+						out << part->GRAVE_STRING_INSIDE()->getText();
+					}
+				}
+				out << ")_grave_\"";
+			} else if (auto literal = ctx->interpolatedMultilineStringLiteral()) {
+				out << "R\"_multi_(";
+				for (auto part : literal->interpolatedMultilineStringPart()) {
+					if (auto expr = part->interpolatedExpression()) {
+						processExpression(expr);
+					} else if (part->DOUBLE_CURLY_INSIDE()) {
+						out << "{{";
+					} else if (part->MULTILINE_QUOTES_INSIDE()) {
+						out << part->MULTILINE_QUOTES_INSIDE()->getText();
+					} else if (part->MULTILINE_STRING_INSIDE()) {
+						out << part->MULTILINE_STRING_INSIDE()->getText();
+					}
+				}
+				out << ")_multi_\"";
+			}
+
+			for (auto expr : expressions) {
+				out << ", ";
+				printNullCoalescingExpression(expr);
+			}
 			out << ")";
+			if (currentDeclaration && !currentDeclaration->theTypeId()) {
+				out << ")";
+			}
 		}
-	}
 
-	void AstrumCodegen::printDeclvalExpression(AstrumParser::DeclvalExpressionContext* ctx) {
-		out << "std::declval<";
-		printTypeId(ctx->theTypeId());
-		out << ">()";
-	}
-}  // namespace AstrumLang
+		void AstrumCodegen::printDeclvalExpression(AstrumParser::DeclvalExpressionContext * ctx) {
+			out << "std::declval<";
+			printTypeId(ctx->theTypeId());
+			out << ">()";
+		}
+	}  // namespace AstrumLang

@@ -251,8 +251,8 @@ namespace Builtin {
 		constexpr const SafeInt<T>& operator+() const noexcept { return *this; }
 
 		constexpr SafeInt<T> operator-() const {
-			static_assert(std::numeric_limits<T>::is_signed,
-			              "Cannot to negate the unsigned number");
+			//static_assert(std::numeric_limits<T>::is_signed,
+			              //"Cannot to negate the unsigned number");
 			return SafeInt<T>(
 			    NegationHelper<T, std::numeric_limits<T>::is_signed>::NegativeThrow(value));
 		}

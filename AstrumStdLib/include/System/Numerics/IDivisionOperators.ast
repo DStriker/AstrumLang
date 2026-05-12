@@ -13,7 +13,7 @@ public interface IDivisibleArithmetic {
     operator/%: (rhs: self) -> (self, self);
     // division with rounding to nearest integer
     operator/~: (rhs: self) -> self;
-    // rounding division and assign
+   // rounding division and assign
     operator/~=: (rhs: self) -> self;
     // division with rounding down (floor division)
     operator/<: (rhs: self) -> self;

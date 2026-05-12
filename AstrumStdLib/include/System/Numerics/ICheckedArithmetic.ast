@@ -175,7 +175,7 @@ public interface ICheckedArithmetic
     operator^^|=: (exp: u32) -> self;
     // overflowing ipow
     operator^^%?: (exp: u32) -> (self, bool);
-    // checked abs
+   // checked abs
     CheckedAbs: self? { get; }
     // strict abs
     StrictAbs: self { get; }
