@@ -3237,6 +3237,12 @@ namespace AstrumLang {
 				out << "template<> ";
 			}
 
+			if (func.constraints)
+			{
+				printConstraintClause(func.constraints);
+				out << " ";
+			}
+
 			if (func.isConsteval) {
 				out << "inline consteval ";
 			} else if (func.isConstexpr) {
@@ -12847,7 +12853,7 @@ namespace AstrumLang {
 						out << ";";
 					} else if (isMainFunction) {
 						out << "\n" << std::string(depth, '\t') << "return 0;";
-					} else if (!isVoidReturn) {
+					} else if (!isVoidReturn && !isPropertySetter) {
 						out << "\n" << std::string(depth, '\t') << "return {};";
 					}
 				}
@@ -17168,7 +17174,11 @@ namespace AstrumLang {
 
 			if (isVariadicTemplate && isVarargs)
 				out << "...";
-			out << " " << id;
+			out << " ";
+		    if (type == Ref || type == Inout)
+			    out << id;
+		    else
+			    printIdentifier(ctx->Identifier());
 
 			if (ctx->LifetimeAnnotation())
 				out << " LIFETIMEBOUND";
@@ -20443,8 +20453,13 @@ namespace AstrumLang {
 				out << "Builtin::i32(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3)
 				    << ")";
 			} else if (txt.ends_with("i64")) {
-				out << "Builtin::i64(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3)
-				    << "LL)";
+			    if (minus && txt.starts_with("9223372036854775808"))
+				{
+				    out << "Builtin::i64(-9223372036854775807LL - 1)";
+				} else {
+				    out << "Builtin::i64(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3)
+				        << "LL)";
+			    }
 			} else if (txt.ends_with("u8")) {
 				out << "Builtin::u8(" << txt.substr(0, txt.length() - 2) << "U)";
 			} else if (txt.ends_with("u16")) {
@@ -20602,7 +20617,11 @@ namespace AstrumLang {
 				} else if (value > 9223372036854775808 ||
 				           (value == 9223372036854775808 && !minus)) {
 					out << "Builtin::i128::Parse(\"" << (minus ? "-" : "") << txt << "\")";
-				} else if (value > 2147483648 || (value == 2147483648 && !minus)) {
+			    } else if (value == 9223372036854775808 && minus)
+				{
+				    out << "Builtin::i64(-9223372036854775807LL - 1)";
+				}
+				 else if (value > 2147483648 || (value == 2147483648 && !minus)) {
 					out << "Builtin::i64(" << (minus ? "-" : "") << txt << "LL)";
 				} else if (!currentType.empty()) {
 					if (currentType == "i8" && value < 128) {

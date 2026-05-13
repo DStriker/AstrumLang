@@ -1137,15 +1137,15 @@ public extension u32: IFixedWidthInteger {
     LeadingOneCount: u32 ==> Builtin.LeadingZeroCount(~this);
     PopCount: u32 ==> Builtin.PopCount(this);
     ZeroCount: u32 ==> Builtin.PopCount(~this);
-    ByteSwapped: self => Builtin.ByteSwap32(this);
-    BigEndian: self =
+    ByteSwapped: self ==> Builtin.ByteSwap32(this);
+    BigEndian: self ==
     {
         static if Builtin.IsLittleEndian() {
             return this.ByteSwapped;
         }
         return this;
     }
-    LittleEndian: self =
+    LittleEndian: self ==
     {
         static if Builtin.IsBigEndian() {
             return this.ByteSwapped;

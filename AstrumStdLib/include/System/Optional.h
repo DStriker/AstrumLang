@@ -42,7 +42,7 @@ template<class T> class __Class_Optional;
 		#line 22 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		public: inline constexpr Optional()  = default;
 		#line 24 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		public: inline constexpr  Optional(T value) ;
+		public: template<class U> requires(std::convertible_to<U, T>) inline constexpr  Optional(U value) ;
 		#line 29 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		public: inline constexpr  Optional(decltype(nullptr) __var_29_25) ;
 		#line 33 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
@@ -122,7 +122,7 @@ template<class T> class __Class_Optional;
 	template<class T> inline auto Optional<T>::getHasValue() const  -> bool { return p_HasValue; }
 	
 #line 24 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-	template<class T> inline constexpr Optional<T>::Optional(T value) 
+	template<class T> template<class U> requires(std::convertible_to<U, T>) inline constexpr Optional<T>::Optional(U value) 
 	{
 		#line 25 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		Value = value;
@@ -183,6 +183,7 @@ template<class T> class __Class_Optional;
 				return nullptr;
 			}
 		}
+		return {};
 	}
 #line 53 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 	template<class T> template<class F> inline auto Optional<T>::ValueOr(F&& func) const  -> const std::remove_cvref_t<T>

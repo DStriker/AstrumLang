@@ -28,7 +28,7 @@
 #endif
 
 #if USE_INTRINSICS && defined(MSVC)
-#define CONSTEXPR_MULTIPLY
+#define CONSTEXPR_MULTIPLY constexpr
 #else
 #define CONSTEXPR_MULTIPLY constexpr
 #endif
@@ -1127,8 +1127,9 @@ namespace Builtin {
 		NODISCARD CONSTEXPR_MULTIPLY static bool RegMultiply(const uint64_t& a, const uint64_t& b,
 		                                                     uint64_t* ret) noexcept {
 #if USE_INTRINSICS
-			return MultiplyUint64(a, b, ret);
-#else
+			if (!std::is_constant_evaluated())
+				return MultiplyUint64(a, b, ret);
+#endif
 			std::uint32_t aHigh = 0, aLow = 0, bHigh = 0, bLow = 0;
 
 			aHigh = (std::uint32_t) (a >> 32);
@@ -1167,16 +1168,17 @@ namespace Builtin {
 
 			*ret = (std::uint64_t) aLow * (std::uint64_t) bLow;
 			return true;
-#endif
 		}
 
 		NODISCARD CONSTEXPR_MULTIPLY static SaturatingStatus RegMultiplySat(
 		    const uint64_t& a, const uint64_t& b, uint64_t* ret) noexcept {
 #if USE_INTRINSICS
-			if (MultiplyUint64(a, b, ret))
-				return Saturating_NoOverflow;
-			return Saturating_Overflow;
-#else
+			if (!std::is_constant_evaluated()) {
+				if (MultiplyUint64(a, b, ret))
+					return Saturating_NoOverflow;
+				return Saturating_Overflow;
+			}
+#endif
 			std::uint32_t aHigh = 0, aLow = 0, bHigh = 0, bLow = 0;
 
 			aHigh = (std::uint32_t) (a >> 32);
@@ -1215,15 +1217,16 @@ namespace Builtin {
 
 			*ret = (std::uint64_t) aLow * (std::uint64_t) bLow;
 			return Saturating_NoOverflow;
-#endif
 		}
 
 		CONSTEXPR_MULTIPLY static void RegMultiplyThrow(const uint64_t& a, const uint64_t& b,
 		                                                uint64_t* ret) {
 #if USE_INTRINSICS
-			if (!MultiplyUint64(a, b, ret))
-				throw IntegerOverflowException();
-#else
+			if (!std::is_constant_evaluated()) {
+				if (!MultiplyUint64(a, b, ret))
+					throw IntegerOverflowException();
+			}
+#endif
 			std::uint32_t aHigh = 0, aLow = 0, bHigh = 0, bLow = 0;
 
 			aHigh = (std::uint32_t) (a >> 32);
@@ -1261,7 +1264,6 @@ namespace Builtin {
 			}
 
 			*ret                = (std::uint64_t) aLow * (std::uint64_t) bLow;
-#endif
 		}
 	};
 
@@ -1271,8 +1273,9 @@ namespace Builtin {
 		NODISCARD CONSTEXPR_MULTIPLY static bool RegMultiply(const uint64_t& a, uint32_t b,
 		                                                     uint64_t* ret) noexcept {
 #if USE_INTRINSICS
-			return MultiplyUint64(a, (uint64_t) b, ret);
-#else
+			if(!std::is_constant_evaluated())
+				return MultiplyUint64(a, (uint64_t) b, ret);
+#endif
 			std::uint32_t aHigh = 0, aLow = 0;
 
 			aHigh = (std::uint32_t) (a >> 32);
@@ -1298,16 +1301,17 @@ namespace Builtin {
 
 			*ret = (std::uint64_t) aLow * (std::uint64_t) b;
 			return true;
-#endif
 		}
 
 		NODISCARD CONSTEXPR_MULTIPLY static SaturatingStatus RegMultiplySat(
 		    const uint64_t& a, uint32_t b, uint64_t* ret) noexcept {
 #if USE_INTRINSICS
-			if (MultiplyUint64(a, (uint64_t) b, ret))
-				return Saturating_NoOverflow;
-			return Saturating_Overflow;
-#else
+			if (!std::is_constant_evaluated()) {
+				if (MultiplyUint64(a, (uint64_t) b, ret))
+					return Saturating_NoOverflow;
+				return Saturating_Overflow;
+			}
+#endif
 			std::uint32_t aHigh = 0, aLow = 0;
 
 			aHigh = (std::uint32_t) (a >> 32);
@@ -1333,15 +1337,16 @@ namespace Builtin {
 
 			*ret = (std::uint64_t) aLow * (std::uint64_t) b;
 			return Saturating_NoOverflow;
-#endif
 		}
 
 		CONSTEXPR_MULTIPLY static void RegMultiplyThrow(const uint64_t& a, uint32_t b,
 		                                                uint64_t* ret) {
 #if USE_INTRINSICS
-			if (!MultiplyUint64(a, (uint64_t) b, ret))
-				throw IntegerOverflowException();
-#else
+			if (!std::is_constant_evaluated()) {
+				if (!MultiplyUint64(a, (uint64_t) b, ret))
+					throw IntegerOverflowException();
+			}
+#endif
 			std::uint32_t aHigh = 0, aLow = 0;
 
 			aHigh = (std::uint32_t) (a >> 32);
@@ -1366,7 +1371,6 @@ namespace Builtin {
 			}
 
 			*ret = (std::uint64_t) aLow * (std::uint64_t) b;
-#endif
 		}
 	};
 
@@ -1381,10 +1385,10 @@ namespace Builtin {
 			}
 
 #if USE_INTRINSICS
-			return MultiplyUint64(a, (uint64_t) b, ret);
-#else
-			return LargeIntRegMultiply<uint64_t, uint32_t>::RegMultiply(a, (uint32_t) b, ret);
+			if (!std::is_constant_evaluated())
+				return MultiplyUint64(a, (uint64_t) b, ret);
 #endif
+			return LargeIntRegMultiply<uint64_t, uint32_t>::RegMultiply(a, (uint32_t) b, ret);
 		}
 
 		NODISCARD CONSTEXPR_MULTIPLY static SaturatingStatus RegMultiplySat(
@@ -1393,12 +1397,13 @@ namespace Builtin {
 				return Saturating_Underflow;
 
 #if USE_INTRINSICS
-			if (MultiplyUint64(a, (uint64_t) b, ret))
-				return Saturating_NoOverflow;
-			return Saturating_Overflow;
-#else
-			return LargeIntRegMultiply<uint64_t, uint32_t>::RegMultiplySat(a, (uint32_t) b, ret);
+			if (!std::is_constant_evaluated()) {
+				if (MultiplyUint64(a, (uint64_t) b, ret))
+					return Saturating_NoOverflow;
+				return Saturating_Overflow;
+			}
 #endif
+			return LargeIntRegMultiply<uint64_t, uint32_t>::RegMultiplySat(a, (uint32_t) b, ret);
 		}
 
 		CONSTEXPR_MULTIPLY static void RegMultiplyThrow(const uint64_t& a, int32_t b,
@@ -1407,11 +1412,12 @@ namespace Builtin {
 				throw IntegerOverflowException();
 
 #if USE_INTRINSICS
-			if (!MultiplyUint64(a, (uint64_t) b, ret))
-				throw IntegerOverflowException();
-#else
-			LargeIntRegMultiply<uint64_t, uint32_t>::RegMultiplyThrow(a, (uint32_t) b, ret);
+			if (!std::is_constant_evaluated()) {
+				if (!MultiplyUint64(a, (uint64_t) b, ret))
+					throw IntegerOverflowException();
+			}
 #endif
+			LargeIntRegMultiply<uint64_t, uint32_t>::RegMultiplyThrow(a, (uint32_t) b, ret);
 		}
 	};
 
@@ -1426,10 +1432,11 @@ namespace Builtin {
 			}
 
 #if USE_INTRINSICS
-			return MultiplyUint64(a, (uint64_t) b, ret);
-#else
-			return LargeIntRegMultiply<uint64_t, uint32_t>::RegMultiply(a, (uint64_t) b, ret);
+			if (!std::is_constant_evaluated()) {
+				return MultiplyUint64(a, (uint64_t) b, ret);
+			}
 #endif
+			return LargeIntRegMultiply<uint64_t, uint32_t>::RegMultiply(a, (uint64_t) b, ret);
 		}
 
 		NODISCARD CONSTEXPR_MULTIPLY static SaturatingStatus RegMultiplySat(
@@ -1438,12 +1445,13 @@ namespace Builtin {
 				return Saturating_Underflow;
 
 #if USE_INTRINSICS
-			if (MultiplyUint64(a, (uint64_t) b, ret))
-				return Saturating_NoOverflow;
-			return Saturating_Overflow;
-#else
-			return LargeIntRegMultiply<uint64_t, uint32_t>::RegMultiplySat(a, (uint64_t) b, ret);
+			if (!std::is_constant_evaluated()) {
+				if (MultiplyUint64(a, (uint64_t) b, ret))
+					return Saturating_NoOverflow;
+				return Saturating_Overflow;
+			}
 #endif
+			return LargeIntRegMultiply<uint64_t, uint32_t>::RegMultiplySat(a, (uint64_t) b, ret);
 		}
 
 		CONSTEXPR_MULTIPLY static void RegMultiplyThrow(const uint64_t& a, int64_t b,
@@ -1452,11 +1460,12 @@ namespace Builtin {
 				throw IntegerOverflowException();
 
 #if USE_INTRINSICS
-			if (!MultiplyUint64(a, (uint64_t) b, ret))
-				throw IntegerOverflowException();
-#else
-			LargeIntRegMultiply<uint64_t, uint32_t>::RegMultiplyThrow(a, (uint64_t) b, ret);
+			if (!std::is_constant_evaluated()) {
+				if (!MultiplyUint64(a, (uint64_t) b, ret))
+					throw IntegerOverflowException();
+			}
 #endif
+			LargeIntRegMultiply<uint64_t, uint32_t>::RegMultiplyThrow(a, (uint64_t) b, ret);
 		}
 	};
 
@@ -1652,8 +1661,9 @@ namespace Builtin {
 		NODISCARD CONSTEXPR_MULTIPLY static bool RegMultiply(const int64_t& a, const int64_t& b,
 		                                                     int64_t* ret) noexcept {
 #if USE_INTRINSICS
-			return MultiplyInt64(a, b, ret);
-#else
+			if (!std::is_constant_evaluated())
+				return MultiplyInt64(a, b, ret);
+#endif
 			bool aNegative    = false;
 			bool bNegative    = false;
 			std::uint64_t tmp = 0;
@@ -1688,15 +1698,15 @@ namespace Builtin {
 			}
 
 			return false;
-#endif
 		}
 
 		NODISCARD CONSTEXPR_MULTIPLY static SaturatingStatus RegMultiplySat(const int64_t& a,
 		                                                                    const int64_t& b,
 		                                                                    int64_t* ret) noexcept {
 #if USE_INTRINSICS
-			return MultiplyInt64Sat(a, b, ret);
-#else
+			if (!std::is_constant_evaluated())
+				return MultiplyInt64Sat(a, b, ret);
+#endif
 			bool aNegative    = false;
 			bool bNegative    = false;
 			std::uint64_t tmp = 0;
@@ -1733,16 +1743,17 @@ namespace Builtin {
 				}
 			}
 
-			return (aNegative ^ bNegative) : Saturating_Underflow : Saturating_Overflow;
-#endif
+			return (aNegative ^ bNegative) ? Saturating_Underflow : Saturating_Overflow;
 		}
 
 		CONSTEXPR_MULTIPLY static void RegMultiplyThrow(const int64_t& a, const int64_t& b,
 		                                                int64_t* ret) {
 #if USE_INTRINSICS
-			if (!MultiplyInt64(a, b, ret))
-				throw IntegerOverflowException();
-#else
+			if (!std::is_constant_evaluated()) {
+				if (!MultiplyInt64(a, b, ret))
+					throw IntegerOverflowException();
+			}
+#endif
 			bool aNegative    = false;
 			bool bNegative    = false;
 			std::uint64_t tmp = 0;
@@ -1761,23 +1772,21 @@ namespace Builtin {
 				    AbsValueHelper<std::int64_t, AbsMethodHelper<std::int64_t>::method>::Abs(b1);
 			}
 
-			if (LargeIntRegMultiply<std::uint64_t, std::uint64_t>::RegMultiply(
-			        (std::uint64_t) a1, (std::uint64_t) b1, &tmp)) {
-				if (aNegative ^ bNegative) {
-					if (tmp <= (std::uint64_t) std::numeric_limits<std::int64_t>::min()) {
-						*ret = SignedNegation<std::int64_t>::Value(tmp);
-						return;
-					}
-				} else {
-					if (tmp <= (std::uint64_t) std::numeric_limits<std::int64_t>::max()) {
-						*ret = (std::int64_t) tmp;
-						return;
-					}
+			LargeIntRegMultiply<std::uint64_t, std::uint64_t>::RegMultiplyThrow(
+			    (std::uint64_t) a1, (std::uint64_t) b1, &tmp);
+			if (aNegative ^ bNegative) {
+				if (tmp <= (std::uint64_t) std::numeric_limits<std::int64_t>::min()) {
+					*ret = SignedNegation<std::int64_t>::Value(tmp);
+					return;
+				}
+			} else {
+				if (tmp <= (std::uint64_t) std::numeric_limits<std::int64_t>::max()) {
+					*ret = (std::int64_t) tmp;
+					return;
 				}
 			}
 
 			throw IntegerOverflowException();
-#endif
 		}
 	};
 
@@ -1787,8 +1796,9 @@ namespace Builtin {
 		NODISCARD CONSTEXPR_MULTIPLY static bool RegMultiply(const int64_t& a, uint32_t b,
 		                                                     int64_t* ret) noexcept {
 #if USE_INTRINSICS
-			return MultiplyInt64(a, (int64_t) b, ret);
-#else
+			if (!std::is_constant_evaluated())
+				return MultiplyInt64(a, (int64_t) b, ret);
+#endif
 			bool aNegative    = false;
 			std::uint64_t tmp = 0;
 			std::int64_t a1   = a;
@@ -1818,15 +1828,15 @@ namespace Builtin {
 			}
 
 			return false;
-#endif
 		}
 
 		NODISCARD CONSTEXPR_MULTIPLY static SaturatingStatus RegMultiplySat(const int64_t& a,
 		                                                                    uint32_t b,
 		                                                                    int64_t* ret) noexcept {
 #if USE_INTRINSICS
-			return MultiplyInt64Sat(a, (int64_t) b, ret);
-#else
+			if (!std::is_constant_evaluated())
+				return MultiplyInt64Sat(a, (int64_t) b, ret);
+#endif
 			bool aNegative    = false;
 			std::uint64_t tmp = 0;
 			std::int64_t a1   = a;
@@ -1855,16 +1865,17 @@ namespace Builtin {
 				}
 			}
 
-			return a < 0 : Saturating_Underflow : Saturating_Overflow;
-#endif
+			return a < 0 ? Saturating_Underflow : Saturating_Overflow;
 		}
 
 		CONSTEXPR_MULTIPLY static void RegMultiplyThrow(const int64_t& a, uint32_t b,
 		                                                int64_t* ret) {
 #if USE_INTRINSICS
-			if (!MultiplyInt64(a, (int64_t) b, ret))
-				throw IntegerOverflowException();
-#else
+			if (!std::is_constant_evaluated()) {
+				if (!MultiplyInt64(a, (int64_t) b, ret))
+					throw IntegerOverflowException();
+			}
+#endif
 			bool aNegative    = false;
 			std::uint64_t tmp = 0;
 			std::int64_t a1   = a;
@@ -1891,7 +1902,6 @@ namespace Builtin {
 			}
 
 			throw IntegerOverflowException();
-#endif
 		}
 	};
 
@@ -1901,8 +1911,9 @@ namespace Builtin {
 		NODISCARD CONSTEXPR_MULTIPLY static bool RegMultiply(const int64_t& a, int32_t b,
 		                                                     int64_t* ret) noexcept {
 #if USE_INTRINSICS
-			return MultiplyInt64(a, (int64_t) b, ret);
-#else
+			if (!std::is_constant_evaluated())
+				return MultiplyInt64(a, (int64_t) b, ret);
+#endif
 			bool aNegative    = false;
 			bool bNegative    = false;
 			std::uint64_t tmp = 0;
@@ -1939,15 +1950,15 @@ namespace Builtin {
 			}
 
 			return false;
-#endif
 		}
 
 		NODISCARD CONSTEXPR_MULTIPLY static SaturatingStatus RegMultiplySat(const int64_t& a,
 		                                                                    int32_t b,
 		                                                                    int64_t* ret) noexcept {
 #if USE_INTRINSICS
-			return MultiplyInt64Sat(a, (int64_t) b, ret);
-#else
+			if (!std::is_constant_evaluated())
+				return MultiplyInt64Sat(a, (int64_t) b, ret);
+#endif
 			bool aNegative    = false;
 			bool bNegative    = false;
 			std::uint64_t tmp = 0;
@@ -1985,14 +1996,15 @@ namespace Builtin {
 			}
 
 			return (aNegative ^ bNegative) ? Saturating_Underflow : Saturating_Overflow;
-#endif
 		}
 
 		CONSTEXPR_MULTIPLY static void RegMultiplyThrow(const int64_t& a, int32_t b, int64_t* ret) {
 #if USE_INTRINSICS
-			if (!MultiplyInt64(a, (int64_t) b, ret))
-				throw IntegerOverflowException();
-#else
+			if (!std::is_constant_evaluated()) {
+				if (!MultiplyInt64(a, (int64_t) b, ret))
+					throw IntegerOverflowException();
+			}
+#endif
 			bool aNegative    = false;
 			bool bNegative    = false;
 			std::uint64_t tmp = 0;
@@ -2027,7 +2039,6 @@ namespace Builtin {
 			}
 
 			throw IntegerOverflowException();
-#endif
 		}
 	};
 
@@ -2037,20 +2048,22 @@ namespace Builtin {
 		NODISCARD CONSTEXPR_MULTIPLY static bool RegMultiply(int32_t a, const int64_t& b,
 		                                                     int32_t* ret) noexcept {
 #if USE_INTRINSICS
-			int64_t tmp = 0;
-			auto result = MultiplyInt64(a, b, &tmp);
-			*ret        = (std::int32_t) tmp;
+			if (!std::is_constant_evaluated()) {
+				int64_t tmp = 0;
+				auto result = MultiplyInt64(a, b, &tmp);
+				*ret        = (std::int32_t) tmp;
 
-			if (result) {
-				if (tmp > std::numeric_limits<std::int32_t>::max() ||
-				    tmp < std::numeric_limits<std::int32_t>::min()) {
-					return false;
+				if (result) {
+					if (tmp > std::numeric_limits<std::int32_t>::max() ||
+					    tmp < std::numeric_limits<std::int32_t>::min()) {
+						return false;
+					}
+
+					return true;
 				}
-
-				return true;
+				return false;
 			}
-			return false;
-#else
+#endif
 			bool aNegative    = false;
 			bool bNegative    = false;
 			std::uint32_t tmp = 0;
@@ -2087,29 +2100,30 @@ namespace Builtin {
 			}
 
 			return false;
-#endif
 		}
 
 		NODISCARD CONSTEXPR_MULTIPLY static SaturatingStatus RegMultiplySat(int32_t a,
 		                                                                    const int64_t& b,
 		                                                                    int32_t* ret) noexcept {
 #if USE_INTRINSICS
-			int64_t tmp = 0;
+			if (!std::is_constant_evaluated()) {
+				int64_t tmp = 0;
 
-			auto status = MultiplyInt64Sat(a, b, &tmp);
-			if (status == Saturating_NoOverflow) {
-				if (tmp > std::numeric_limits<std::int32_t>::max()) {
-					return Saturating_Overflow;
-				}
-				if (tmp < std::numeric_limits<std::int32_t>::min()) {
-					return Saturating_Underflow;
-				}
+				auto status = MultiplyInt64Sat(a, b, &tmp);
+				if (status == Saturating_NoOverflow) {
+					if (tmp > std::numeric_limits<std::int32_t>::max()) {
+						return Saturating_Overflow;
+					}
+					if (tmp < std::numeric_limits<std::int32_t>::min()) {
+						return Saturating_Underflow;
+					}
 
-				*ret = (std::int32_t) tmp;
-				return Saturating_NoOverflow;
+					*ret = (std::int32_t) tmp;
+					return Saturating_NoOverflow;
+				}
+				return ((int64_t) a ^ b) < 0 ? Saturating_Underflow : Saturating_Overflow;
 			}
-			return ((int64_t) a ^ b) < 0 ? Saturating_Underflow : Saturating_Overflow;
-#else
+#endif
 			bool aNegative    = false;
 			bool bNegative    = false;
 			std::uint32_t tmp = 0;
@@ -2146,24 +2160,25 @@ namespace Builtin {
 			}
 
 			return (aNegative ^ bNegative) ? Saturating_Underflow : Saturating_Overflow;
-#endif
 		}
 
 		CONSTEXPR_MULTIPLY static void RegMultiplyThrow(int32_t a, const int64_t& b, int32_t* ret) {
 #if USE_INTRINSICS
-			int64_t tmp = 0;
+			if (!std::is_constant_evaluated()) {
+				int64_t tmp = 0;
 
-			if (MultiplyInt64(a, b, &tmp)) {
-				if (tmp > std::numeric_limits<std::int32_t>::max() ||
-				    tmp < std::numeric_limits<std::int32_t>::min()) {
-					throw IntegerOverflowException();
+				if (MultiplyInt64(a, b, &tmp)) {
+					if (tmp > std::numeric_limits<std::int32_t>::max() ||
+					    tmp < std::numeric_limits<std::int32_t>::min()) {
+						throw IntegerOverflowException();
+					}
+
+					*ret = (std::int32_t) tmp;
+					return;
 				}
-
-				*ret = (std::int32_t) tmp;
-				return;
+				throw IntegerOverflowException();
 			}
-			throw IntegerOverflowException();
-#else
+#endif
 			bool aNegative    = false;
 			bool bNegative    = false;
 			std::uint32_t tmp = 0;
@@ -2197,7 +2212,6 @@ namespace Builtin {
 			}
 
 			throw IntegerOverflowException();
-#endif
 		}
 	};
 
@@ -3580,7 +3594,7 @@ namespace Builtin {
 		}
 
 		constexpr static void AdditionThrow(const T& t, const U& u, T& result) {
-			static_assert(__details::IntTraits<T>::isInt64 && __details::IntTraits<T>::isUint64,
+			static_assert(__details::IntTraits<T>::isInt64 && __details::IntTraits<U>::isUint64,
 			              "T must be Int64, U Uint64");
 			uint64_t tmp = (uint64_t) t + u;
 			if ((int64_t) tmp >= t) {
@@ -5769,14 +5783,17 @@ namespace Builtin {
 	    const int64_t& lhs, const int64_t& rhs) noexcept {
 #if USE_INTRINSICS
 #ifdef MSVC
-		int64_t high;
-		int64_t low = _mul128(lhs, rhs, &high);
-		return std::make_tuple(low, high);
+		if (!std::is_constant_evaluated()) {
+			int64_t high;
+			int64_t low = _mul128(lhs, rhs, &high);
+			return std::make_tuple(low, high);
+		}
 #else
-		unsigned __int128 result = (unsigned __int128) lhs * rhs;
+		unsigned __int128 product = (unsigned __int128) lhs * rhs;
 		return std::make_tuple(uint64_t(product & 0xFFFFFFFFFFFFFFFF), int64_t(product >> 64));
 #endif
-#else
+#endif
+#if defined(MSVC) || !USE_INTRINSICS
 		uint64_t a_low = (uint32_t) lhs;
 		uint64_t a_high = lhs >> 32;
 		uint64_t b_low = (uint32_t) rhs;
@@ -5799,14 +5816,17 @@ namespace Builtin {
 	    const uint64_t& lhs, const uint64_t& rhs) noexcept {
 #if USE_INTRINSICS
 #ifdef MSVC
-		uint64_t high;
-		uint64_t low = _umul128(lhs, rhs, &high);
-		return std::make_tuple(low, high);
+		if (!std::is_constant_evaluated()) {
+			uint64_t high;
+			uint64_t low = _umul128(lhs, rhs, &high);
+			return std::make_tuple(low, high);
+		}
 #else
-		unsigned __int128 result = (unsigned __int128) lhs * rhs;
+		unsigned __int128 product = (unsigned __int128) lhs * rhs;
 		return std::make_tuple(uint64_t(product & 0xFFFFFFFFFFFFFFFF), uint64_t(product >> 64));
 #endif
-#else
+#endif
+#if defined(MSVC) || !USE_INTRINSICS
 		uint64_t a_low = (uint32_t) lhs;
 		uint64_t a_high = lhs >> 32;
 		uint64_t b_low = (uint32_t) rhs;
@@ -5876,21 +5896,24 @@ namespace Builtin {
 	    const int64_t& lhs, const int64_t& rhs, const int64_t& carry) noexcept {
 #if USE_INTRINSICS
 #ifdef MSVC
-		uint64_t high;
-		uint64_t low = _mul128(lhs, rhs, (int64_t*) &high);
-		auto cached  = low;
-		low += carry;
-		if (carry > 0 && low < cached)
-			high++;
-		if (carry < 0 && low > cached)
-			high--;
-		return std::make_tuple(int64_t(low), int64_t(high));
+		if (!std::is_constant_evaluated()) {
+			uint64_t high;
+			uint64_t low = _mul128(lhs, rhs, (int64_t*) &high);
+			auto cached  = low;
+			low += carry;
+			if (carry > 0 && low < cached)
+				high++;
+			if (carry < 0 && low > cached)
+				high--;
+			return std::make_tuple(int64_t(low), int64_t(high));
+		}
 #else
-		unsigned __int128 result = (unsigned __int128) lhs * rhs;
-		result += carry;
+		unsigned __int128 product = (unsigned __int128) lhs * rhs;
+		product += carry;
 		return std::make_tuple(uint64_t(product & 0xFFFFFFFFFFFFFFFF), int64_t(product >> 64));
 #endif
-#else
+#endif
+#if defined(MSVC) || !USE_INTRINSICS
 		uint64_t a_low = (uint32_t) lhs;
 		uint64_t a_high = lhs >> 32;
 		uint64_t b_low = (uint32_t) rhs;
@@ -5918,19 +5941,22 @@ namespace Builtin {
 	    const uint64_t& lhs, const uint64_t& rhs, const uint64_t& carry) noexcept {
 #if USE_INTRINSICS
 #ifdef MSVC
-		uint64_t high;
-		uint64_t low = _umul128(lhs, rhs, &high);
-		auto cached  = low;
-		low += carry;
-		if (carry > 0 && low < cached)
-			high++;
-		return std::make_tuple(low, high);
+		if (!std::is_constant_evaluated()) {
+			uint64_t high;
+			uint64_t low = _umul128(lhs, rhs, &high);
+			auto cached  = low;
+			low += carry;
+			if (carry > 0 && low < cached)
+				high++;
+			return std::make_tuple(low, high);
+		}
 #else
-		unsigned __int128 result = (unsigned __int128) lhs * rhs;
-		result += carry;
+		unsigned __int128 product = (unsigned __int128) lhs * rhs;
+		product += carry;
 		return std::make_tuple(uint64_t(product & 0xFFFFFFFFFFFFFFFF), uint64_t(product >> 64));
 #endif
-#else
+#endif
+#if defined(MSVC) || !USE_INTRINSICS
 		uint64_t a_low = (uint32_t) lhs;
 		uint64_t a_high = lhs >> 32;
 		uint64_t b_low = (uint32_t) rhs;
@@ -6044,10 +6070,12 @@ namespace Builtin {
 	inline constexpr int64_t ReverseBits64(int64_t n) { return (int64_t) ReverseBits64u(n); }
 
 	template<class T>
-	inline T ByteSwap16(T src) noexcept
+	inline constexpr T ByteSwap16(T src) noexcept
 	{
 #if USE_INTRINSICS
 #ifdef MSVC
+		if (std::is_constant_evaluated())
+			return (typename T::__underlying) ((src << 8) | (src >> 8));
 		return (typename T::__underlying)_byteswap_ushort(src);
 #else
 		return (typename T::__underlying) __builtin_bswap16(src);
@@ -6058,9 +6086,13 @@ namespace Builtin {
 	}
 
 	template <class T>
-	inline T ByteSwap32(T src) noexcept {
+	inline constexpr T ByteSwap32(T src) noexcept {
 #if USE_INTRINSICS
 #ifdef MSVC
+		if (std::is_constant_evaluated())
+			return (typename T::__underlying) (((src << 24) | (src >> 24)) |
+			                                   ((src << 8) & 0x00FF0000) |
+			                                   ((src >> 8) & 0x0000FF00));
 		return (typename T::__underlying) _byteswap_ulong(src);
 #else
 		return (typename T::__underlying) __builtin_bswap32(src);
@@ -6072,21 +6104,24 @@ namespace Builtin {
 	}
 
 	template <class T>
-	inline T ByteSwap64(T src) noexcept {
+	inline constexpr T ByteSwap64(T src) noexcept {
 #if USE_INTRINSICS
 #ifdef MSVC
+		if (std::is_constant_evaluated()) {
+			src = (src & 0x00000000FFFFFFFFULL) << 32 | (src & 0xFFFFFFFF00000000ULL) >> 32;
+			src = (src & 0x0000FFFF0000FFFFULL) << 16 | (src & 0xFFFF0000FFFF0000ULL) >> 16;
+			src = (src & 0x00FF00FF00FF00FFULL) << 8 | (src & 0xFF00FF00FF00FF00ULL) >> 8;
+			return (typename T::__underlying) src;
+		}
 		return (typename T::__underlying) _byteswap_uint64(src);
 #else
 		return (typename T::__underlying) __builtin_bswap64(src);
 #endif
 #else
-		return (typename T::__underlying) (((src << 56) | (src >> 56)) 
-			| ((src << 40) & 0x00FF000000000000) 
-			| ((src >> 40) & 0x000000FF00000000) 
-			| ((src << 24) & 0x0000FF0000000000) 
-			| ((src >> 24) & 0x00000000FF000000) 
-			| ((src << 8) & 0x00000000FF000000) 
-			| ((src >> 8) & 0x0000000000FF0000));
+		src = (src & 0x00000000FFFFFFFFULL) << 32 | (src & 0xFFFFFFFF00000000ULL) >> 32;
+		src = (src & 0x0000FFFF0000FFFFULL) << 16 | (src & 0xFFFF0000FFFF0000ULL) >> 16;
+		src = (src & 0x00FF00FF00FF00FFULL) << 8 | (src & 0xFF00FF00FF00FF00ULL) >> 8;
+		return src;
 #endif
 	}
 

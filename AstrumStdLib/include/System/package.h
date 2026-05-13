@@ -3,6 +3,7 @@
 #include "IEquatable.h"
 #include "Int16.h"
 #include "Int32.h"
+#include "Int64.h"
 #include "Int8.h"
 #include "Math.h"
 #include "Optional.h"

@@ -771,11 +771,11 @@ using __extensions::getWrappingNextPow2;
 	#line 1302 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 	inline constexpr auto getZeroCount(__extension_Int16_1296_i16 const& __this ) -> const Builtin::u32;
 	#line 1303 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-	inline auto getByteSwapped(__extension_Int16_1296_i16 const& __this ) -> const __extension_Int16_1296_i16;
+	inline constexpr auto getByteSwapped(__extension_Int16_1296_i16 const& __this ) -> const __extension_Int16_1296_i16;
 	#line 1304 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-	inline auto getBigEndian(__extension_Int16_1296_i16 const& __this ) -> const __extension_Int16_1296_i16;
+	inline constexpr auto getBigEndian(__extension_Int16_1296_i16 const& __this ) -> const __extension_Int16_1296_i16;
 	#line 1311 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-	inline auto getLittleEndian(__extension_Int16_1296_i16 const& __this ) -> const __extension_Int16_1296_i16;
+	inline constexpr auto getLittleEndian(__extension_Int16_1296_i16 const& __this ) -> const __extension_Int16_1296_i16;
 	#line 1318 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 	inline constexpr auto getReverseBits(__extension_Int16_1296_i16 const& __this ) -> const __extension_Int16_1296_i16;
 	#line 1320 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
@@ -3360,7 +3360,7 @@ using __extensions::getMultiplyBy16;
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 1303 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-	inline auto getByteSwapped(__extension_Int16_1296_i16 const& __this ) -> const __extension_Int16_1334_i16
+	inline constexpr auto getByteSwapped(__extension_Int16_1296_i16 const& __this ) -> const __extension_Int16_1334_i16
 	{
 		#line 1303 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::i16>(Builtin::ByteSwap16(ADV_UFCS(NarrowToUInt16)(__this.__ref())))); 
@@ -3368,7 +3368,7 @@ using __extensions::getMultiplyBy16;
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 1304 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-	inline auto getBigEndian(__extension_Int16_1296_i16 const& __this ) -> const __extension_Int16_1334_i16
+	inline constexpr auto getBigEndian(__extension_Int16_1296_i16 const& __this ) -> const __extension_Int16_1334_i16
 	{
 		#line 1306 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		if constexpr (Builtin::IsLittleEndian()) {
@@ -3381,7 +3381,7 @@ using __extensions::getMultiplyBy16;
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 1311 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-	inline auto getLittleEndian(__extension_Int16_1296_i16 const& __this ) -> const __extension_Int16_1334_i16
+	inline constexpr auto getLittleEndian(__extension_Int16_1296_i16 const& __this ) -> const __extension_Int16_1334_i16
 	{
 		#line 1313 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		if constexpr (Builtin::IsBigEndian()) {

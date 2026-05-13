@@ -21,7 +21,7 @@ public struct <T> Optional
 
     public this() == default;
 
-    public implicit this(value: T) == {
+    public implicit this<U>(value: U) where type U is operator T == {
         Value = value;
         HasValue = true;
     }
