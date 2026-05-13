@@ -10,4 +10,5 @@
 #include "Ordering.h"
 #include "UInt16.h"
 #include "UInt32.h"
+#include "UInt64.h"
 #include "UInt8.h"
