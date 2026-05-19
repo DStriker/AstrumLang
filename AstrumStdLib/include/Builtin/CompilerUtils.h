@@ -130,3 +130,9 @@ _Pragma("GCC diagnostic ignored \"" #TextCode "\")
 #elif defined(GCC) || defined(CLANG)
 #define ADV_WARNING_POP _Pragma("GCC diagnostic pop")
 #endif
+
+#ifdef _DEBUG
+#define RELEASE_NOEXCEPT 
+#else
+#define RELEASE_NOEXCEPT noexcept
+#endif

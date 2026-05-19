@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 #include "Floating.h"
-#include "Int128.h"
+#include "BuiltinInt128.h"
 #include "Integer.h"
 #include "RefCounts.h"
 #include "Str.h"
@@ -2043,6 +2043,26 @@ namespace Builtin {
 		__self _operator_not() const noexcept { return ~__value; }
 	};
 #endif
+
+	class __Class_Int128 final : public ValueType {
+	   public:
+		using __underlying = i128;
+		using __self       = __underlying;
+		__self __value;
+		__Class_Int128(const __underlying& value) noexcept : __value {value} {}
+		operator __underlying() const noexcept { return __value; }
+		__self _operator_not() const noexcept { return ~__value; }
+	};
+
+	class __Class_UInt128 final : public ValueType {
+	   public:
+		using __underlying = u128;
+		using __self       = __underlying;
+		__self __value;
+		__Class_UInt128(const __underlying& value) noexcept : __value {value} {}
+		operator __underlying() const noexcept { return __value; }
+		__self _operator_not() const noexcept { return ~__value; }
+	};
 }  // namespace Builtin
 
 inline bool _operator_ne_eq_mul(auto lhs, auto rhs) { return !_operator_eq_eq_mul(__extensions::__proxy{lhs}, rhs);

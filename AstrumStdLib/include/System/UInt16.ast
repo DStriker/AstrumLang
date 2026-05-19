@@ -294,7 +294,7 @@ public extension u16: INumber {
     MaxNumber: (rhs: self) -> self noexcept ==> this.Max(rhs);
     Min: (rhs: self) -> self noexcept ==> INumber.DefaultMin(this, rhs);//Math.Min
     MinNumber: (rhs: self) -> self noexcept ==> this.Min(rhs);
-    Clamp: (min: self, max: self) -> self => INumber.DefaultClamp(this, min, max);//Math.Clamp
+    Clamp: (min: self, max: self) -> self ==> INumber.DefaultClamp(this, min, max);//Math.Clamp
 }
 
 public extension u16: IBinaryNumber {
@@ -1135,8 +1135,8 @@ public extension u16: IFixedWidthInteger {
 
     ShortestBitLength: u32 ==> self.BitWidth - this.LeadingZeroCount;
 
-    RotateLeft: (shiftAmount: i32) -> self noexcept ==> Builtin.RotateLeft(this, shiftAmount);
-    RotateRight: (shiftAmount: i32) -> self noexcept ==> Builtin.RotateRight(this, shiftAmount);
+    RotateLeft: (shiftAmount: i32) -> self noexcept ==> Builtin.BitsRotateLeft(this, shiftAmount);
+    RotateRight: (shiftAmount: i32) -> self noexcept ==> Builtin.BitsRotateRight(this, shiftAmount);
 
 }
 

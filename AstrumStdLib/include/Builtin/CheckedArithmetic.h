@@ -17,7 +17,7 @@
 #define USE_INTRINSICS 0
 #endif
 #else
-#if defined(GCC) || defined(CLANG)
+#if (defined(GCC) || defined(CLANG)) && defined __SIZEOF_INT128__ && __SIZEOF_INT128__ == 16
 #define USE_INTRINSICS 1
 #if defined(__x86_64__) || defined(__i386__) || defined(_M_X64) || defined(_M_IX86)
 #include "immintrin.h"
@@ -44,6 +44,88 @@
 #endif
 
 static_assert(-1 == static_cast<int>(0xffffffff), "Two's complement signed numbers are required");
+
+namespace Builtin
+{
+	struct Int128;
+	struct UInt128;
+}
+
+template <>
+class std::numeric_limits<Builtin::UInt128> {
+   public:
+	static constexpr bool is_specialized    = true;
+	static constexpr bool is_signed         = false;
+	static constexpr bool is_integer        = true;
+	static constexpr bool is_exact          = true;
+	static constexpr bool has_infinity      = false;
+	static constexpr bool has_quiet_NaN     = false;
+	static constexpr bool has_signaling_NaN = false;
+	/*static constexpr std::float_denorm_style has_denorm = std::denorm_absent;
+	static constexpr bool has_denorm_loss = false;*/
+	static constexpr std::float_round_style round_style = std::round_toward_zero;
+	static constexpr bool is_iec559                     = false;
+	static constexpr bool is_bounded                    = true;
+	static constexpr bool is_modulo                     = true;
+	static constexpr int digits                         = 128;
+	static constexpr int digits10                       = 39;
+	static constexpr int max_digits10                   = 0;
+	static constexpr int radix                          = 2;
+	static constexpr int min_exponent                   = 0;
+	static constexpr int min_exponent10                 = 0;
+	static constexpr int max_exponent                   = 0;
+	static constexpr int max_exponent10                 = 0;
+	static constexpr bool traps                         = std::numeric_limits<uint64_t>::traps;
+	static constexpr bool tinyness_before               = false;
+
+	static constexpr Builtin::UInt128(min)();
+	static constexpr Builtin::UInt128 lowest();
+	static constexpr Builtin::UInt128(max)();
+	static constexpr Builtin::UInt128 epsilon();
+	static constexpr Builtin::UInt128 round_error();
+	static constexpr Builtin::UInt128 infinity();
+	static constexpr Builtin::UInt128 quiet_NaN();
+	static constexpr Builtin::UInt128 signaling_NaN();
+	static constexpr Builtin::UInt128 denorm_min();
+};
+
+template <>
+class std::numeric_limits<Builtin::Int128> {
+   public:
+	static constexpr bool is_specialized    = true;
+	static constexpr bool is_signed         = true;
+	static constexpr bool is_integer        = true;
+	static constexpr bool is_exact          = true;
+	static constexpr bool has_infinity      = false;
+	static constexpr bool has_quiet_NaN     = false;
+	static constexpr bool has_signaling_NaN = false;
+	/*static constexpr std::float_denorm_style has_denorm = std::denorm_absent;
+	static constexpr bool has_denorm_loss = false;*/
+	static constexpr std::float_round_style round_style = std::round_toward_zero;
+	static constexpr bool is_iec559                     = false;
+	static constexpr bool is_bounded                    = true;
+	static constexpr bool is_modulo                     = true;
+	static constexpr int digits                         = 127;
+	static constexpr int digits10                       = 39;
+	static constexpr int max_digits10                   = 0;
+	static constexpr int radix                          = 2;
+	static constexpr int min_exponent                   = 0;
+	static constexpr int min_exponent10                 = 0;
+	static constexpr int max_exponent                   = 0;
+	static constexpr int max_exponent10                 = 0;
+	static constexpr bool traps                         = std::numeric_limits<uint64_t>::traps;
+	static constexpr bool tinyness_before               = false;
+
+	static constexpr Builtin::Int128(min)();
+	static constexpr Builtin::Int128 lowest();
+	static constexpr Builtin::Int128(max)();
+	static constexpr Builtin::Int128 epsilon();
+	static constexpr Builtin::Int128 round_error();
+	static constexpr Builtin::Int128 infinity();
+	static constexpr Builtin::Int128 quiet_NaN();
+	static constexpr Builtin::Int128 signaling_NaN();
+	static constexpr Builtin::Int128 denorm_min();
+};
 
 namespace Builtin {
 	enum SafeIntErrorCode { SafeInt_NoError = 0, SafeInt_Overflow, SafeInt_DivisionByZero };
@@ -74,22 +156,26 @@ namespace Builtin {
 			static_assert(NumericType<T>::isInt, "Integer type required");
 
 			enum {
-				is64Bit   = (sizeof(T) == 8),
-				is32Bit   = (sizeof(T) == 4),
-				is16Bit   = (sizeof(T) == 2),
-				is8Bit    = (sizeof(T) == 1),
-				isLT32Bit = (sizeof(T) < 4),
-				isLT64Bit = (sizeof(T) < 8),
-				isInt8    = (sizeof(T) == 1 && std::numeric_limits<T>::is_signed),
-				isUint8   = (sizeof(T) == 1 && !std::numeric_limits<T>::is_signed),
-				isInt16   = (sizeof(T) == 2 && std::numeric_limits<T>::is_signed),
-				isUint16  = (sizeof(T) == 2 && !std::numeric_limits<T>::is_signed),
-				isInt32   = (sizeof(T) == 4 && std::numeric_limits<T>::is_signed),
-				isUint32  = (sizeof(T) == 4 && !std::numeric_limits<T>::is_signed),
-				isInt64   = (sizeof(T) == 8 && std::numeric_limits<T>::is_signed),
-				isUint64  = (sizeof(T) == 8 && !std::numeric_limits<T>::is_signed),
-				bitCount  = (sizeof(T) * 8),
-				isBool    = ((T) 2 == (T) 1)
+				is128Bit   = (sizeof(T) == 16),
+				is64Bit    = (sizeof(T) == 8),
+				is32Bit    = (sizeof(T) == 4),
+				is16Bit    = (sizeof(T) == 2),
+				is8Bit     = (sizeof(T) == 1),
+				isLT32Bit  = (sizeof(T) < 4),
+				isLT64Bit  = (sizeof(T) < 8),
+				isLT128Bit = (sizeof(T) < 16),
+				isInt8     = (sizeof(T) == 1 && std::numeric_limits<T>::is_signed),
+				isUint8    = (sizeof(T) == 1 && !std::numeric_limits<T>::is_signed),
+				isInt16    = (sizeof(T) == 2 && std::numeric_limits<T>::is_signed),
+				isUint16   = (sizeof(T) == 2 && !std::numeric_limits<T>::is_signed),
+				isInt32    = (sizeof(T) == 4 && std::numeric_limits<T>::is_signed),
+				isUint32   = (sizeof(T) == 4 && !std::numeric_limits<T>::is_signed),
+				isInt64    = (sizeof(T) == 8 && std::numeric_limits<T>::is_signed),
+				isUint64   = (sizeof(T) == 8 && !std::numeric_limits<T>::is_signed),
+				isInt128   = (sizeof(T) == 16 && std::numeric_limits<T>::is_signed),
+				isUint128  = (sizeof(T) == 16 && !std::numeric_limits<T>::is_signed),
+				bitCount   = (sizeof(T) * 8),
+				isBool     = ((T) 2 == (T) 1)
 			};
 		};
 
@@ -101,12 +187,13 @@ namespace Builtin {
 				    (std::numeric_limits<T>::is_signed && std::numeric_limits<U>::is_signed),
 				isBothUnsigned =
 				    (!std::numeric_limits<T>::is_signed && !std::numeric_limits<U>::is_signed),
-				isLikeSigned  = ((bool) (std::numeric_limits<T>::is_signed) ==
+				isLikeSigned   = ((bool) (std::numeric_limits<T>::is_signed) ==
                                 (bool) (std::numeric_limits<U>::is_signed)),
-				isCastOK      = ((isLikeSigned && sizeof(T) >= sizeof(U)) ||
+				isCastOK       = ((isLikeSigned && sizeof(T) >= sizeof(U)) ||
                             (std::numeric_limits<T>::is_signed && sizeof(T) > sizeof(U))),
-				isBothLT32Bit = (IntTraits<T>::isLT32Bit && IntTraits<U>::isLT32Bit),
-				isBothLT64Bit = (IntTraits<T>::isLT64Bit && IntTraits<U>::isLT64Bit)
+				isBothLT32Bit  = (IntTraits<T>::isLT32Bit && IntTraits<U>::isLT32Bit),
+				isBothLT64Bit  = (IntTraits<T>::isLT64Bit && IntTraits<U>::isLT64Bit),
+				isBothLT128Bit = (IntTraits<T>::isLT128Bit && IntTraits<U>::isLT128Bit)
 			};
 		};
 	}  // namespace __details
@@ -124,11 +211,17 @@ namespace Builtin {
 			IntZone_UintLT32_Uint32 = __details::TypeCompare<T, U>::isBothUnsigned &&
 			                          __details::IntTraits<T>::isLT32Bit &&
 			                          __details::IntTraits<U>::is32Bit,
-			IntZone_Uint64_Uint =
-			    __details::TypeCompare<T, U>::isBothUnsigned && __details::IntTraits<T>::is64Bit,
+			IntZone_Uint64_Uint = __details::TypeCompare<T, U>::isBothUnsigned &&
+			                      __details::IntTraits<T>::is64Bit &&
+			                      __details::IntTraits<U>::isLT128Bit,
+			IntZone_Uint128_Uint =
+			    __details::TypeCompare<T, U>::isBothUnsigned && __details::IntTraits<T>::is128Bit,
 			IntZone_UintLT64_Uint64 = __details::TypeCompare<T, U>::isBothUnsigned &&
 			                          __details::IntTraits<T>::isLT64Bit &&
 			                          __details::IntTraits<U>::is64Bit,
+			IntZone_UintLT128_Uint128 = __details::TypeCompare<T, U>::isBothUnsigned &&
+			                            __details::IntTraits<T>::isLT128Bit &&
+			                            __details::IntTraits<U>::is128Bit,
 			// unsigned-signed
 			IntZone_UintLT32_IntLT32 = !std::numeric_limits<T>::is_signed &&
 			                           std::numeric_limits<U>::is_signed &&
@@ -142,11 +235,19 @@ namespace Builtin {
 			IntZone_Uint64_Int = __details::IntTraits<T>::isUint64 &&
 			                     std::numeric_limits<U>::is_signed &&
 			                     __details::IntTraits<U>::isLT64Bit,
+			IntZone_Uint128_Int = __details::IntTraits<T>::isUint128 &&
+			                      std::numeric_limits<U>::is_signed &&
+			                      __details::IntTraits<U>::isLT128Bit,
 			IntZone_UintLT64_Int64 = !std::numeric_limits<T>::is_signed &&
 			                         __details::IntTraits<T>::isLT64Bit &&
 			                         __details::IntTraits<U>::isInt64,
+			IntZone_UintLT128_Int128 = !std::numeric_limits<T>::is_signed &&
+			                           __details::IntTraits<T>::isLT128Bit &&
+			                           __details::IntTraits<U>::isInt128,
 			IntZone_Uint64_Int64 =
 			    __details::IntTraits<T>::isUint64 && __details::IntTraits<U>::isInt64,
+			IntZone_Uint128_Int128 =
+			    __details::IntTraits<T>::isUint128 && __details::IntTraits<U>::isInt128,
 			// signed-signed
 			IntZone_IntLT32_IntLT32 = __details::TypeCompare<T, U>::isBothSigned &&
 			                          __details::TypeCompare<T, U>::isBothLT32Bit,
@@ -159,12 +260,21 @@ namespace Builtin {
 			IntZone_Int64_Int64 = __details::TypeCompare<T, U>::isBothSigned &&
 			                      __details::IntTraits<T>::isInt64 &&
 			                      __details::IntTraits<U>::isInt64,
+			IntZone_Int128_Int128 = __details::TypeCompare<T, U>::isBothSigned &&
+			                        __details::IntTraits<T>::isInt128 &&
+			                        __details::IntTraits<U>::isInt128,
 			IntZone_Int64_Int = __details::TypeCompare<T, U>::isBothSigned &&
 			                    __details::IntTraits<T>::is64Bit &&
 			                    __details::IntTraits<U>::isLT64Bit,
+			IntZone_Int128_Int = __details::TypeCompare<T, U>::isBothSigned &&
+			                     __details::IntTraits<T>::is128Bit &&
+			                     __details::IntTraits<U>::isLT128Bit,
 			IntZone_IntLT64_Int64 = __details::TypeCompare<T, U>::isBothSigned &&
 			                        __details::IntTraits<T>::isLT64Bit &&
 			                        __details::IntTraits<U>::is64Bit,
+			IntZone_IntLT128_Int128 = __details::TypeCompare<T, U>::isBothSigned &&
+			                          __details::IntTraits<T>::isLT128Bit &&
+			                          __details::IntTraits<U>::is128Bit,
 			// signed-unsigned
 			IntZone_IntLT32_UintLT32 = std::numeric_limits<T>::is_signed &&
 			                           !std::numeric_limits<U>::is_signed &&
@@ -178,15 +288,23 @@ namespace Builtin {
 			IntZone_Int64_UintLT64 = __details::IntTraits<T>::isInt64 &&
 			                         !std::numeric_limits<U>::is_signed &&
 			                         __details::IntTraits<U>::isLT64Bit,
+			IntZone_Int128_UintLT128 = __details::IntTraits<T>::isInt128 &&
+			                           !std::numeric_limits<U>::is_signed &&
+			                           __details::IntTraits<U>::isLT128Bit,
 			IntZone_Int_Uint64 = std::numeric_limits<T>::is_signed &&
 			                     __details::IntTraits<U>::isUint64 &&
 			                     __details::IntTraits<T>::isLT64Bit,
+			IntZone_Int_Uint128 = std::numeric_limits<T>::is_signed &&
+			                      __details::IntTraits<U>::isUint128 &&
+			                      __details::IntTraits<T>::isLT128Bit,
 			IntZone_Int64_Uint64 =
-			    __details::IntTraits<T>::isInt64 && __details::IntTraits<U>::isUint64
+			    __details::IntTraits<T>::isInt64 && __details::IntTraits<U>::isUint64,
+			IntZone_Int128_Uint128 =
+			    __details::IntTraits<T>::isInt128 && __details::IntTraits<U>::isUint128
 		};
 	};
 
-	enum AbsMethod { AbsMethodInt, AbsMethodLong, AbsMethodNoop };
+	enum AbsMethod { AbsMethodInt, AbsMethodLong, AbsMethodI128, AbsMethodNoop };
 
 	template <class T>
 	class AbsMethodHelper {
@@ -194,8 +312,9 @@ namespace Builtin {
 		enum {
 			method = __details::IntTraits<T>::isLT64Bit && std::numeric_limits<T>::is_signed
 			             ? AbsMethodInt
-			         : __details::IntTraits<T>::isInt64 ? AbsMethodLong
-			                                            : AbsMethodNoop
+			         : __details::IntTraits<T>::isInt64  ? AbsMethodLong
+			         : __details::IntTraits<T>::isInt128 ? AbsMethodI128
+			                                             : AbsMethodNoop
 		};
 	};
 
@@ -572,6 +691,7 @@ namespace Builtin {
 		ComparisonMethod_Ok = 0,
 		ComparisonMethod_CastInt,
 		ComparisonMethod_CastInt64,
+		ComparisonMethod_CastInt128,
 		ComparisonMethod_UnsignedT,
 		ComparisonMethod_UnsignedU
 	};
@@ -584,9 +704,12 @@ namespace Builtin {
 			          : ((std::numeric_limits<T>::is_signed && sizeof(T) < 8 && sizeof(U) < 4) ||
 			             (std::numeric_limits<U>::is_signed && sizeof(T) < 4 && sizeof(U) < 8))
 			              ? ComparisonMethod_CastInt
-			          : ((std::numeric_limits<T>::is_signed && sizeof(U) < 8) ||
-			             (std::numeric_limits<U>::is_signed && sizeof(T) < 8))
+			          : ((std::numeric_limits<T>::is_signed && sizeof(T) < 16 && sizeof(U) < 8) ||
+			             (std::numeric_limits<U>::is_signed && sizeof(T) < 8 && sizeof(U) < 16))
 			              ? ComparisonMethod_CastInt64
+			          : ((std::numeric_limits<T>::is_signed && sizeof(T) == 16 && sizeof(U) < 16) ||
+			             (std::numeric_limits<U>::is_signed && sizeof(T) < 16 && sizeof(U) == 16))
+			              ? ComparisonMethod_CastInt128
 			          : (!std::numeric_limits<T>::is_signed) ? ComparisonMethod_UnsignedT
 			                                                 : ComparisonMethod_UnsignedU)
 		};
@@ -705,13 +828,12 @@ namespace Builtin {
 	template <class T, class U>
 	class ModulusHelper<T, U, ComparisonMethod_Ok> {
 	   public:
-		constexpr static SafeIntErrorCode Modulus(const T& t, const U& u,
-		                                                    T& result) noexcept {
+		constexpr static SafeIntErrorCode Modulus(const T& t, const U& u, T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
 
 			if (ModCornerCase<U, std::numeric_limits<U>::is_signed>::isUndefined(u)) {
-				result = 0;
+				result = T {};
 				return SafeInt_NoError;
 			}
 
@@ -724,7 +846,7 @@ namespace Builtin {
 				throw DivisionByZeroException();
 
 			if (ModCornerCase<U, std::numeric_limits<U>::is_signed>::isUndefined(u)) {
-				result = 0;
+				result = T {};
 				return;
 			}
 
@@ -735,8 +857,7 @@ namespace Builtin {
 	template <class T, class U>
 	class ModulusHelper<T, U, ComparisonMethod_CastInt> {
 	   public:
-		constexpr static SafeIntErrorCode Modulus(const T& t, const U& u,
-		                                                    T& result) noexcept {
+		constexpr static SafeIntErrorCode Modulus(const T& t, const U& u, T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
 
@@ -765,8 +886,7 @@ namespace Builtin {
 	template <class T, class U>
 	class ModulusHelper<T, U, ComparisonMethod_CastInt64> {
 	   public:
-		constexpr static SafeIntErrorCode Modulus(const T& t, const U& u,
-		                                                    T& result) noexcept {
+		constexpr static SafeIntErrorCode Modulus(const T& t, const U& u, T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
 
@@ -795,8 +915,7 @@ namespace Builtin {
 	template <class T, class U>
 	class ModulusHelper<T, U, ComparisonMethod_UnsignedT> {
 	   public:
-		constexpr static SafeIntErrorCode Modulus(const T& t, const U& u,
-		                                                    T& result) noexcept {
+		constexpr static SafeIntErrorCode Modulus(const T& t, const U& u, T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
 
@@ -824,8 +943,7 @@ namespace Builtin {
 	template <class T, class U>
 	class ModulusHelper<T, U, ComparisonMethod_UnsignedU> {
 	   public:
-		constexpr static SafeIntErrorCode Modulus(const T& t, const U& u,
-		                                                    T& result) noexcept {
+		constexpr static SafeIntErrorCode Modulus(const T& t, const U& u, T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
 
@@ -859,14 +977,26 @@ namespace Builtin {
 		MultiplicationState_Uint64Uint64,  // Both are unsigned int64
 		MultiplicationState_Uint64Int,     // lhs is unsigned int64, rhs int32
 		MultiplicationState_Uint64Int64,   // lhs is unsigned int64, rhs signed int64
-		MultiplicationState_UintUint64,    // Both are unsigned, lhs 32-bit or smaller, rhs 64-bit
-		MultiplicationState_UintInt64,     // lhs unsigned 32-bit or less, rhs int64
-		MultiplicationState_Int64Uint,     // lhs int64, rhs unsigned int32
-		MultiplicationState_Int64Int64,    // lhs int64, rhs int64
-		MultiplicationState_Int64Int,      // lhs int64, rhs int32
-		MultiplicationState_IntUint64,     // lhs int, rhs unsigned int64
-		MultiplicationState_IntInt64,      // lhs int, rhs int64
-		MultiplicationState_Int64Uint64,   // lhs int64, rhs uint64
+		MultiplicationState_Uint128Uint,   // Both are unsigned, lhs 128-bit, rhs 64-bit or smaller
+		MultiplicationState_Uint128Uint128,  // Both are unsigned int128
+		MultiplicationState_Uint128Int,      // lhs is unsigned int128, rhs int64
+		MultiplicationState_Uint128Int128,   // lhs is unsigned int128, rhs signed int128
+		MultiplicationState_UintUint64,      // Both are unsigned, lhs 32-bit or smaller, rhs 64-bit
+		MultiplicationState_UintInt64,       // lhs unsigned 32-bit or less, rhs int64
+		MultiplicationState_UintUint128,    // Both are unsigned, lhs 64-bit or smaller, rhs 128-bit
+		MultiplicationState_UintInt128,     // lhs unsigned 64-bit or less, rhs int128
+		MultiplicationState_Int64Uint,      // lhs int64, rhs unsigned int32
+		MultiplicationState_Int64Int64,     // lhs int64, rhs int64
+		MultiplicationState_Int64Int,       // lhs int64, rhs int32
+		MultiplicationState_Int128Uint,     // lhs int128, rhs unsigned int64
+		MultiplicationState_Int128Int128,   // lhs int128, rhs int128
+		MultiplicationState_Int128Int,      // lhs int128, rhs int64
+		MultiplicationState_IntUint64,      // lhs int, rhs unsigned int64
+		MultiplicationState_IntInt64,       // lhs int, rhs int64
+		MultiplicationState_Int64Uint64,    // lhs int64, rhs uint64
+		MultiplicationState_IntUint128,     // lhs int, rhs unsigned int128
+		MultiplicationState_IntInt128,      // lhs int, rhs int128
+		MultiplicationState_Int128Uint128,  // lhs int128, rhs uint128
 		MultiplicationState_Error
 	};
 
@@ -875,44 +1005,59 @@ namespace Builtin {
 	   public:
 		enum {
 			// unsigned-unsigned
-			method = (IntRegion<T, U>::IntZone_UintLT32_UintLT32 ? MultiplicationState_CastUint
-			          : (IntRegion<T, U>::IntZone_Uint32_UintLT64 ||
-			             IntRegion<T, U>::IntZone_UintLT32_Uint32)
-			              ? MultiplicationState_CastUint64
-			          : __details::TypeCompare<T, U>::isBothUnsigned &&
-			                  __details::IntTraits<T>::isUint64 && __details::IntTraits<U>::isUint64
-			              ? MultiplicationState_Uint64Uint64
-			          : (IntRegion<T, U>::IntZone_Uint64_Uint)     ? MultiplicationState_Uint64Uint
-			          : (IntRegion<T, U>::IntZone_UintLT64_Uint64) ? MultiplicationState_UintUint64
-			                                                       :
-			                                                       // unsigned-signed
-			              (IntRegion<T, U>::IntZone_UintLT32_IntLT32) ? MultiplicationState_CastInt
-			          : (IntRegion<T, U>::IntZone_Uint32_IntLT64 ||
-			             IntRegion<T, U>::IntZone_UintLT32_Int32)
-			              ? MultiplicationState_CastInt64
-			          : (IntRegion<T, U>::IntZone_Uint64_Int)     ? MultiplicationState_Uint64Int
-			          : (IntRegion<T, U>::IntZone_UintLT64_Int64) ? MultiplicationState_UintInt64
-			          : (IntRegion<T, U>::IntZone_Uint64_Int64)   ? MultiplicationState_Uint64Int64
-			                                                      :
-			                                                    // signed-signed
-			              (IntRegion<T, U>::IntZone_IntLT32_IntLT32) ? MultiplicationState_CastInt
-			          : (IntRegion<T, U>::IntZone_Int32_IntLT64 ||
-			             IntRegion<T, U>::IntZone_IntLT32_Int32)
-			              ? MultiplicationState_CastInt64
-			          : (IntRegion<T, U>::IntZone_Int64_Int64)   ? MultiplicationState_Int64Int64
-			          : (IntRegion<T, U>::IntZone_Int64_Int)     ? MultiplicationState_Int64Int
-			          : (IntRegion<T, U>::IntZone_IntLT64_Int64) ? MultiplicationState_IntInt64
-			                                                     :
-			                                                     // signed-unsigned
-			              (IntRegion<T, U>::IntZone_IntLT32_UintLT32) ? MultiplicationState_CastInt
-			          : (IntRegion<T, U>::IntZone_Int32_UintLT32 ||
-			             IntRegion<T, U>::IntZone_IntLT64_Uint32)
-			              ? MultiplicationState_CastInt64
-			          : (IntRegion<T, U>::IntZone_Int64_UintLT64) ? MultiplicationState_Int64Uint
-			          : (IntRegion<T, U>::IntZone_Int_Uint64)
-			              ? MultiplicationState_IntUint64
-			              : (IntRegion<T, U>::IntZone_Int64_Uint64 ? MultiplicationState_Int64Uint64
-			                                                       : MultiplicationState_Error))
+			method =
+			    (IntRegion<T, U>::IntZone_UintLT32_UintLT32 ? MultiplicationState_CastUint
+			     : (IntRegion<T, U>::IntZone_Uint32_UintLT64 ||
+			        IntRegion<T, U>::IntZone_UintLT32_Uint32)
+			         ? MultiplicationState_CastUint64
+			     : __details::TypeCompare<T, U>::isBothUnsigned &&
+			             __details::IntTraits<T>::isUint64 && __details::IntTraits<U>::isUint64
+			         ? MultiplicationState_Uint64Uint64
+			     : __details::TypeCompare<T, U>::isBothUnsigned &&
+			             __details::IntTraits<T>::isUint128 && __details::IntTraits<U>::isUint128
+			         ? MultiplicationState_Uint128Uint128
+			     : (IntRegion<T, U>::IntZone_Uint64_Uint)       ? MultiplicationState_Uint64Uint
+			     : (IntRegion<T, U>::IntZone_Uint128_Uint)      ? MultiplicationState_Uint128Uint
+			     : (IntRegion<T, U>::IntZone_UintLT64_Uint64)   ? MultiplicationState_UintUint64
+			     : (IntRegion<T, U>::IntZone_UintLT128_Uint128) ? MultiplicationState_UintUint128
+			                                                    :
+			                                                    // unsigned-signed
+			         (IntRegion<T, U>::IntZone_UintLT32_IntLT32) ? MultiplicationState_CastInt
+			     : (IntRegion<T, U>::IntZone_Uint32_IntLT64 ||
+			        IntRegion<T, U>::IntZone_UintLT32_Int32)
+			         ? MultiplicationState_CastInt64
+			     : (IntRegion<T, U>::IntZone_Uint64_Int)       ? MultiplicationState_Uint64Int
+			     : (IntRegion<T, U>::IntZone_UintLT64_Int64)   ? MultiplicationState_UintInt64
+			     : (IntRegion<T, U>::IntZone_Uint64_Int64)     ? MultiplicationState_Uint64Int64
+			     : (IntRegion<T, U>::IntZone_Uint128_Int)      ? MultiplicationState_Uint128Int
+			     : (IntRegion<T, U>::IntZone_UintLT128_Int128) ? MultiplicationState_UintInt128
+			     : (IntRegion<T, U>::IntZone_Uint128_Int128)   ? MultiplicationState_Uint128Int128
+			                                                   :
+			                                                 // signed-signed
+			         (IntRegion<T, U>::IntZone_IntLT32_IntLT32) ? MultiplicationState_CastInt
+			     : (IntRegion<T, U>::IntZone_Int32_IntLT64 ||
+			        IntRegion<T, U>::IntZone_IntLT32_Int32)
+			         ? MultiplicationState_CastInt64
+			     : (IntRegion<T, U>::IntZone_Int64_Int64)     ? MultiplicationState_Int64Int64
+			     : (IntRegion<T, U>::IntZone_Int64_Int)       ? MultiplicationState_Int64Int
+			     : (IntRegion<T, U>::IntZone_IntLT64_Int64)   ? MultiplicationState_IntInt64
+			     : (IntRegion<T, U>::IntZone_Int128_Int128)   ? MultiplicationState_Int128Int128
+			     : (IntRegion<T, U>::IntZone_Int128_Int)      ? MultiplicationState_Int128Int
+			     : (IntRegion<T, U>::IntZone_IntLT128_Int128) ? MultiplicationState_IntInt128
+			                                                  :
+			                                                  // signed-unsigned
+			         (IntRegion<T, U>::IntZone_IntLT32_UintLT32) ? MultiplicationState_CastInt
+			     : (IntRegion<T, U>::IntZone_Int32_UintLT32 ||
+			        IntRegion<T, U>::IntZone_IntLT64_Uint32)
+			         ? MultiplicationState_CastInt64
+			     : (IntRegion<T, U>::IntZone_Int64_UintLT64)   ? MultiplicationState_Int64Uint
+			     : (IntRegion<T, U>::IntZone_Int_Uint64)       ? MultiplicationState_IntUint64
+			     : (IntRegion<T, U>::IntZone_Int128_UintLT128) ? MultiplicationState_Int128Uint
+			     : (IntRegion<T, U>::IntZone_Int_Uint128)      ? MultiplicationState_IntUint128
+			     : IntRegion<T, U>::IntZone_Int128_Uint128
+			         ? MultiplicationState_Int128Uint128
+			         : (IntRegion<T, U>::IntZone_Int64_Uint64 ? MultiplicationState_Int64Uint64
+			                                                  : MultiplicationState_Error))
 		};
 	};
 
@@ -1105,7 +1250,7 @@ namespace Builtin {
 	inline SaturatingStatus MultiplyInt64Sat(int64_t a, int64_t b, int64_t* ret) noexcept {
 		unsigned __int128 product = (unsigned __int128) a * b;
 		uint64_t llhigh           = product >> 64;
-		*ret                      = (int64_t)product;
+		*ret                      = (int64_t) product;
 		if ((a ^ b) < 0) {
 			if (llhigh == -1 && *ret < 0 || llhigh == 0 && *ret == 0) {
 				return Saturating_NoOverflow;
@@ -1263,7 +1408,7 @@ namespace Builtin {
 				return;
 			}
 
-			*ret                = (std::uint64_t) aLow * (std::uint64_t) bLow;
+			*ret = (std::uint64_t) aLow * (std::uint64_t) bLow;
 		}
 	};
 
@@ -1273,7 +1418,7 @@ namespace Builtin {
 		NODISCARD CONSTEXPR_MULTIPLY static bool RegMultiply(const uint64_t& a, uint32_t b,
 		                                                     uint64_t* ret) noexcept {
 #if USE_INTRINSICS
-			if(!std::is_constant_evaluated())
+			if (!std::is_constant_evaluated())
 				return MultiplyUint64(a, (uint64_t) b, ret);
 #endif
 			std::uint32_t aHigh = 0, aLow = 0;
@@ -1822,8 +1967,7 @@ namespace Builtin {
 						return true;
 					}
 				}
-			}
-			else {
+			} else {
 				*ret = a * b;
 			}
 
@@ -2094,8 +2238,7 @@ namespace Builtin {
 						return true;
 					}
 				}
-			}
-			else {
+			} else {
 				*ret = a * b;
 			}
 
@@ -2671,7 +2814,7 @@ namespace Builtin {
 	class MultiplicationHelper<T, U, MultiplicationState_Int64Uint64> {
 	   public:
 		NODISCARD CONSTEXPR_MULTIPLY static bool Multiply(const T& t, const U& u, T& ret) noexcept {
-			static_assert(__details::IntTraits<T>::isUint64 && __details::IntTraits<U>::isUint64,
+			static_assert(__details::IntTraits<T>::isInt64 && __details::IntTraits<U>::isUint64,
 			              "T, U must be Int64, Uint64");
 			int64_t t1  = t;
 			uint64_t u1 = u;
@@ -2683,7 +2826,7 @@ namespace Builtin {
 
 		NODISCARD CONSTEXPR_MULTIPLY static SaturatingStatus MultiplySat(const T& t, const U& u,
 		                                                                 T& ret) noexcept {
-			static_assert(__details::IntTraits<T>::isUint64 && __details::IntTraits<U>::isUint64,
+			static_assert(__details::IntTraits<T>::isInt64 && __details::IntTraits<U>::isUint64,
 			              "T, U must be Int64, Uint64");
 			int64_t t1  = t;
 			uint64_t u1 = u;
@@ -2694,7 +2837,7 @@ namespace Builtin {
 		}
 
 		CONSTEXPR_MULTIPLY static void MultiplyThrow(const int64_t& t, const uint64_t& u, T& ret) {
-			static_assert(__details::IntTraits<T>::isUint64 && __details::IntTraits<U>::isUint64,
+			static_assert(__details::IntTraits<T>::isInt64 && __details::IntTraits<U>::isUint64,
 			              "T, U must be Int64, Uint64");
 			int64_t t1  = t;
 			uint64_t u1 = u;
@@ -2711,9 +2854,7 @@ namespace Builtin {
 			static_assert(__details::IntTraits<U>::isInt64, "U must be Int64");
 			int64_t u1  = u;
 			int32_t tmp = 0;
-			auto status = LargeIntRegMultiply<int32_t, int64_t>::RegMultiply(
-			    (int32_t) t, u1,
-			    &tmp);
+			auto status = LargeIntRegMultiply<int32_t, int64_t>::RegMultiply((int32_t) t, u1, &tmp);
 			ret         = tmp;
 			if (status &&
 			    SafeCastHelper<T, int32_t, CastMethodHelper<T, int32_t>::method>::Cast(tmp, ret))
@@ -2751,14 +2892,18 @@ namespace Builtin {
 		DivisionState_SignedUnsigned32,
 		DivisionState_SignedUnsigned64,
 		DivisionState_SignedUnsigned,
-		DivisionState_SignedSigned
+		DivisionState_SignedSigned,
+		DivisionState_Uint128,
+		DivisionState_Int128
 	};
 
 	template <typename T, typename U>
 	class DivisionMethod {
 	   public:
 		enum {
-			method = (__details::TypeCompare<T, U>::isBothUnsigned ? DivisionState_OK
+			method = (__details::IntTraits<T>::isUint128             ? DivisionState_Uint128
+			          : __details::IntTraits<T>::isInt128            ? DivisionState_Int128
+			          : __details::TypeCompare<T, U>::isBothUnsigned ? DivisionState_OK
 			          : (!std::numeric_limits<T>::is_signed && std::numeric_limits<U>::is_signed)
 			              ? DivisionState_UnsignedSigned
 			          : (std::numeric_limits<T>::is_signed && __details::IntTraits<U>::isUint32 &&
@@ -2778,8 +2923,7 @@ namespace Builtin {
 	template <class T, class U>
 	class DivisionHelper<T, U, DivisionState_OK> {
 	   public:
-		constexpr static SafeIntErrorCode Divide(const T& t, const U& u,
-		                                                   T& result) noexcept {
+		constexpr static SafeIntErrorCode Divide(const T& t, const U& u, T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
 
@@ -2808,8 +2952,7 @@ namespace Builtin {
 	template <class T, class U>
 	class DivisionHelper<T, U, DivisionState_UnsignedSigned> {
 	   public:
-		constexpr static SafeIntErrorCode Divide(const T& t, const U& u,
-		                                                   T& result) noexcept {
+		constexpr static SafeIntErrorCode Divide(const T& t, const U& u, T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
 
@@ -2857,8 +3000,7 @@ namespace Builtin {
 	template <class T, class U>
 	class DivisionHelper<T, U, DivisionState_SignedUnsigned32> {
 	   public:
-		constexpr static SafeIntErrorCode Divide(const T& t, const U& u,
-		                                                   T& result) noexcept {
+		constexpr static SafeIntErrorCode Divide(const T& t, const U& u, T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
 
@@ -2911,8 +3053,7 @@ namespace Builtin {
 	template <class T, class U>
 	class DivisionHelper<T, U, DivisionState_SignedUnsigned64> {
 	   public:
-		constexpr static SafeIntErrorCode Divide(const T& t, const U& u,
-		                                                   T& result) noexcept {
+		constexpr static SafeIntErrorCode Divide(const T& t, const U& u, T& result) noexcept {
 			static_assert(__details::IntTraits<U>::isUint64, "U must be Uint64");
 			if (u == 0)
 				return SafeInt_DivisionByZero;
@@ -2958,8 +3099,7 @@ namespace Builtin {
 	template <class T, class U>
 	class DivisionHelper<T, U, DivisionState_SignedUnsigned> {
 	   public:
-		constexpr static SafeIntErrorCode Divide(const T& t, const U& u,
-		                                                   T& result) noexcept {
+		constexpr static SafeIntErrorCode Divide(const T& t, const U& u, T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
 
@@ -2988,8 +3128,7 @@ namespace Builtin {
 	template <class T, class U>
 	class DivisionHelper<T, U, DivisionState_SignedSigned> {
 	   public:
-		constexpr static SafeIntErrorCode Divide(const T& t, const U& u,
-		                                                   T& result) noexcept {
+		constexpr static SafeIntErrorCode Divide(const T& t, const U& u, T& result) noexcept {
 			if (u == 0)
 				return SafeInt_DivisionByZero;
 
@@ -3027,6 +3166,8 @@ namespace Builtin {
 		AdditionState_CastUintCheckOverflowMax,
 		AdditionState_CastUint64CheckOverflow,
 		AdditionState_CastUint64CheckOverflowMax,
+		AdditionState_CastUint128CheckOverflow,
+		AdditionState_CastUint128CheckOverflowMax,
 		AdditionState_CastIntCheckSafeIntMinMax,
 		AdditionState_CastInt64CheckSafeIntMinMax,
 		AdditionState_CastInt64CheckMax,
@@ -3035,8 +3176,17 @@ namespace Builtin {
 		AdditionState_CastInt64CheckOverflow,
 		AdditionState_CastInt64CheckOverflowSafeIntMinMax,
 		AdditionState_CastInt64CheckOverflowMax,
+		AdditionState_CastInt128CheckSafeIntMinMax,
+		AdditionState_CastInt128CheckMax,
+		AdditionState_CastUint128CheckSafeIntMinMax,
+		AdditionState_CastUint128CheckSafeIntMinMax2,
+		AdditionState_CastInt128CheckOverflow,
+		AdditionState_CastInt128CheckOverflowSafeIntMinMax,
+		AdditionState_CastInt128CheckOverflowMax,
 		AdditionState_ManualCheckInt64Uint64,
 		AdditionState_ManualCheck,
+		AdditionState_Int128Uint128,
+		AdditionState_IntUint128,
 		AdditionState_Error
 	};
 
@@ -3050,9 +3200,12 @@ namespace Builtin {
 			     : (IntRegion<T, U>::IntZone_Uint32_UintLT64) ? AdditionState_CastUintCheckOverflow
 			     : (IntRegion<T, U>::IntZone_UintLT32_Uint32)
 			         ? AdditionState_CastUintCheckOverflowMax
-			     : (IntRegion<T, U>::IntZone_Uint64_Uint) ? AdditionState_CastUint64CheckOverflow
+			     : (IntRegion<T, U>::IntZone_Uint64_Uint)  ? AdditionState_CastUint64CheckOverflow
+			     : (IntRegion<T, U>::IntZone_Uint128_Uint) ? AdditionState_CastUint128CheckOverflow
 			     : (IntRegion<T, U>::IntZone_UintLT64_Uint64)
 			         ? AdditionState_CastUint64CheckOverflowMax
+			     : (IntRegion<T, U>::IntZone_UintLT128_Uint128)
+			         ? AdditionState_CastUint128CheckOverflowMax
 			         :
 			         // unsigned-signed
 			         (IntRegion<T, U>::IntZone_UintLT32_IntLT32)
@@ -3062,8 +3215,12 @@ namespace Builtin {
 			         ? AdditionState_CastInt64CheckSafeIntMinMax
 			     : (IntRegion<T, U>::IntZone_Uint64_Int || IntRegion<T, U>::IntZone_Uint64_Int64)
 			         ? AdditionState_CastUint64CheckSafeIntMinMax
+			     : (IntRegion<T, U>::IntZone_Uint128_Int || IntRegion<T, U>::IntZone_Uint128_Int128)
+			         ? AdditionState_CastUint128CheckSafeIntMinMax
 			     : (IntRegion<T, U>::IntZone_UintLT64_Int64)
 			         ? AdditionState_CastUint64CheckSafeIntMinMax2
+			     : (IntRegion<T, U>::IntZone_UintLT128_Int128)
+			         ? AdditionState_CastUint128CheckSafeIntMinMax2
 			         :
 			         // signed-signed
 			         (IntRegion<T, U>::IntZone_IntLT32_IntLT32)
@@ -3073,8 +3230,12 @@ namespace Builtin {
 			         ? AdditionState_CastInt64CheckSafeIntMinMax
 			     : (IntRegion<T, U>::IntZone_Int64_Int || IntRegion<T, U>::IntZone_Int64_Int64)
 			         ? AdditionState_CastInt64CheckOverflow
+			     : (IntRegion<T, U>::IntZone_Int128_Int || IntRegion<T, U>::IntZone_Int128_Int128)
+			         ? AdditionState_CastInt128CheckOverflow
 			     : (IntRegion<T, U>::IntZone_IntLT64_Int64)
 			         ? AdditionState_CastInt64CheckOverflowSafeIntMinMax
+			     : (IntRegion<T, U>::IntZone_IntLT128_Int128)
+			         ? AdditionState_CastInt128CheckOverflowSafeIntMinMax
 			         :
 			         // signed-unsigned
 			         (IntRegion<T, U>::IntZone_IntLT32_UintLT32) ? AdditionState_CastIntCheckMax
@@ -3083,9 +3244,13 @@ namespace Builtin {
 			         ? AdditionState_CastInt64CheckMax
 			     : (IntRegion<T, U>::IntZone_Int64_UintLT64)
 			         ? AdditionState_CastInt64CheckOverflowMax
-			     : (IntRegion<T, U>::IntZone_Int64_Uint64) ? AdditionState_ManualCheckInt64Uint64
-			     : (IntRegion<T, U>::IntZone_Int_Uint64)   ? AdditionState_ManualCheck
-			                                               : AdditionState_Error)
+			     : (IntRegion<T, U>::IntZone_Int128_UintLT128)
+			         ? AdditionState_CastInt128CheckOverflowMax
+			     : (IntRegion<T, U>::IntZone_Int64_Uint64)   ? AdditionState_ManualCheckInt64Uint64
+			     : (IntRegion<T, U>::IntZone_Int128_Uint128) ? AdditionState_Int128Uint128
+			     : (IntRegion<T, U>::IntZone_Int_Uint128)    ? AdditionState_IntUint128
+			     : (IntRegion<T, U>::IntZone_Int_Uint64)     ? AdditionState_ManualCheck
+			                                                 : AdditionState_Error)
 		};
 	};
 
@@ -3129,7 +3294,7 @@ namespace Builtin {
 	   public:
 		NODISCARD constexpr static bool Addition(const T& t, const U& u, T& result) noexcept {
 			uint32_t tmp = (uint32_t) t + (uint32_t) u;
-			result = (T) tmp;
+			result       = (T) tmp;
 			return tmp >= t;
 		}
 
@@ -3158,7 +3323,7 @@ namespace Builtin {
 	   public:
 		NODISCARD constexpr static bool Addition(const T& t, const U& u, T& result) noexcept {
 			uint32_t tmp = (uint32_t) t + (uint32_t) u;
-			result = (T) tmp;
+			result       = (T) tmp;
 			return tmp >= t && tmp <= std::numeric_limits<T>::max();
 		}
 
@@ -3215,7 +3380,7 @@ namespace Builtin {
 	   public:
 		NODISCARD constexpr static bool Addition(const T& t, const U& u, T& result) noexcept {
 			uint64_t tmp = (uint64_t) t + (uint64_t) u;
-			result = (T) tmp;
+			result       = (T) tmp;
 			return tmp >= t && tmp <= std::numeric_limits<T>::max();
 		}
 
@@ -3491,8 +3656,8 @@ namespace Builtin {
 			    AdditionHelper<int64_t, int64_t, AdditionState_CastInt64CheckOverflow>::Addition(
 			        (int64_t) t, (int64_t) u, tmp);
 			result = (T) tmp;
-			if (safe &&
-			    tmp <= std::numeric_limits<T>::max() && tmp >= std::numeric_limits<T>::min()) {
+			if (safe && tmp <= std::numeric_limits<T>::max() &&
+			    tmp >= std::numeric_limits<T>::min()) {
 				return true;
 			}
 
@@ -3575,12 +3740,12 @@ namespace Builtin {
 				return true;
 			}
 
-			//result = 0;
+			// result = 0;
 			return false;
 		}
 
 		NODISCARD constexpr static SaturatingStatus AdditionSat(const T& t, const U& u,
-		                                                     T& result) noexcept {
+		                                                        T& result) noexcept {
 			static_assert(__details::IntTraits<T>::isInt64 && __details::IntTraits<T>::isUint64,
 			              "T must be Int64, U Uint64");
 			uint64_t tmp = (uint64_t) t + u;
@@ -3661,6 +3826,17 @@ namespace Builtin {
 		SubtractionState_Int64Uint,
 		SubtractionState_IntUint64,
 		SubtractionState_Int64Uint64,
+		SubtractionState_CastInt128CheckSafeIntMinMax,
+		SubtractionState_CastInt128CheckMin,
+		SubtractionState_Uint128Int,
+		SubtractionState_UintInt128,
+		SubtractionState_Int128Int,
+		SubtractionState_IntInt128,
+		SubtractionState_Int128Uint,
+		SubtractionState_IntUint128,
+		SubtractionState_Int128Uint128,
+		SubtractionState_Uint128Uint,
+		SubtractionState_UintUint128,
 		// states for SubtractionMethod2
 		SubtractionState_BothUnsigned2,
 		SubtractionState_CastIntCheckSafeIntMinMax2,
@@ -3687,8 +3863,10 @@ namespace Builtin {
 			      (IntRegion<T, U>::IntZone_Uint64_Uint) ||
 			      (IntRegion<T, U>::IntZone_UintLT64_Uint64))
 			         ? SubtractionState_BothUnsigned
-			         :
-			         // unsigned-signed
+			     : (IntRegion<T, U>::IntZone_Uint128_Uint)      ? SubtractionState_Uint128Uint
+			     : (IntRegion<T, U>::IntZone_UintLT128_Uint128) ? SubtractionState_UintUint128
+			                                                    :
+			                                                    // unsigned-signed
 			         (IntRegion<T, U>::IntZone_UintLT32_IntLT32)
 			         ? SubtractionState_CastIntCheckSafeIntMinMax
 			     : (IntRegion<T, U>::IntZone_Uint32_IntLT64 ||
@@ -3696,9 +3874,12 @@ namespace Builtin {
 			         ? SubtractionState_CastInt64CheckSafeIntMinMax
 			     : (IntRegion<T, U>::IntZone_Uint64_Int || IntRegion<T, U>::IntZone_Uint64_Int64)
 			         ? SubtractionState_Uint64Int
-			     : (IntRegion<T, U>::IntZone_UintLT64_Int64) ? SubtractionState_UintInt64
-			                                                 :
-			                                                 // signed-signed
+			     : (IntRegion<T, U>::IntZone_Uint128_Int || IntRegion<T, U>::IntZone_Uint128_Int128)
+			         ? SubtractionState_Uint128Int
+			     : (IntRegion<T, U>::IntZone_UintLT64_Int64)   ? SubtractionState_UintInt64
+			     : (IntRegion<T, U>::IntZone_UintLT128_Int128) ? SubtractionState_UintInt128
+			                                                   :
+			                                                   // signed-signed
 			         (IntRegion<T, U>::IntZone_IntLT32_IntLT32)
 			         ? SubtractionState_CastIntCheckSafeIntMinMax
 			     : (IntRegion<T, U>::IntZone_Int32_IntLT64 ||
@@ -3706,18 +3887,23 @@ namespace Builtin {
 			         ? SubtractionState_CastInt64CheckSafeIntMinMax
 			     : (IntRegion<T, U>::IntZone_Int64_Int || IntRegion<T, U>::IntZone_Int64_Int64)
 			         ? SubtractionState_Int64Int
-			     : (IntRegion<T, U>::IntZone_IntLT64_Int64) ? SubtractionState_IntInt64
-			     : (IntRegion<T, U>::IntZone_IntLT64_Int64) ? SubtractionState_IntInt64
-			                                                :
-			                                                // signed-unsigned
+			     : (IntRegion<T, U>::IntZone_Int128_Int || IntRegion<T, U>::IntZone_Int128_Int128)
+			         ? SubtractionState_Int128Int
+			     : (IntRegion<T, U>::IntZone_IntLT64_Int64)   ? SubtractionState_IntInt64
+			     : (IntRegion<T, U>::IntZone_IntLT128_Int128) ? SubtractionState_IntInt128
+			                                                  :
+			                                                  // signed-unsigned
 			         (IntRegion<T, U>::IntZone_IntLT32_UintLT32) ? SubtractionState_CastIntCheckMin
 			     : (IntRegion<T, U>::IntZone_Int32_UintLT32 ||
 			        IntRegion<T, U>::IntZone_IntLT64_Uint32)
 			         ? SubtractionState_CastInt64CheckMin
-			     : (IntRegion<T, U>::IntZone_Int64_UintLT64) ? SubtractionState_Int64Uint
-			     : (IntRegion<T, U>::IntZone_Int_Uint64)     ? SubtractionState_IntUint64
-			     : (IntRegion<T, U>::IntZone_Int64_Uint64)   ? SubtractionState_Int64Uint64
-			                                                 : SubtractionState_Error)
+			     : (IntRegion<T, U>::IntZone_Int64_UintLT64)   ? SubtractionState_Int64Uint
+			     : (IntRegion<T, U>::IntZone_Int128_UintLT128) ? SubtractionState_Int128Uint
+			     : (IntRegion<T, U>::IntZone_Int_Uint64)       ? SubtractionState_IntUint64
+			     : (IntRegion<T, U>::IntZone_Int_Uint128)      ? SubtractionState_IntUint128
+			     : (IntRegion<T, U>::IntZone_Int64_Uint64)     ? SubtractionState_Int64Uint64
+			     : (IntRegion<T, U>::IntZone_Int128_Uint128)   ? SubtractionState_Int128Uint128
+			                                                   : SubtractionState_Error)
 		};
 	};
 
@@ -4887,6 +5073,7 @@ namespace Builtin {
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
+
 		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
 		using TRightInt = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
 
@@ -4929,7 +5116,12 @@ namespace Builtin {
 		using TLeftUnsigned  = std::make_unsigned_t<TLeftInt>;
 		using TRightUnsigned = std::make_unsigned_t<TRightInt>;
 
-		result = TLeftInt(TLeftUnsigned((TLeftInt) t) * TRightUnsigned((TRightInt) u));
+		if constexpr (sizeof(T) == 16 || sizeof(U) == 16)
+		{
+			(void)SafeMultiply(t, u, result);
+		} else {
+			result = TLeftInt(TLeftUnsigned((TLeftInt) t) * TRightUnsigned((TRightInt) u));
+		}
 	}
 
 	template <class T, class U>
@@ -5078,7 +5270,16 @@ namespace Builtin {
 
 	template <class T, class U>
 	NODISCARD constexpr inline bool DivExact(T t, U u, T& result) {
-		result = t.Div(u);
+		if constexpr (std::numeric_limits<U>::max() > std::numeric_limits<uint64_t>::max()) {
+			if (u > std::numeric_limits<T>::max() || u < std::numeric_limits<T>::min()) {
+				result = T{};
+			} else {
+				result = t.Div((T) u);
+			}
+		} else {
+			result = t.Div(u);
+		}
+
 		return t % u == 0;
 	}
 
@@ -5210,7 +5411,11 @@ namespace Builtin {
 		using TLeftUnsigned  = std::make_unsigned_t<TLeftInt>;
 		using TRightUnsigned = std::make_unsigned_t<TRightInt>;
 
-		result = TLeftInt(TLeftUnsigned((TLeftInt) t) + TRightUnsigned((TRightInt) u));
+		if constexpr (sizeof(T) == 16 || sizeof(U) == 16) {
+			(void)SafeAdd(t, u, result);
+		} else {
+			result = TLeftInt(TLeftUnsigned((TLeftInt) t) + TRightUnsigned((TRightInt) u));
+		}
 	}
 
 	template <class T, class U>
@@ -5295,7 +5500,11 @@ namespace Builtin {
 		using TLeftUnsigned  = std::make_unsigned_t<TLeftInt>;
 		using TRightUnsigned = std::make_unsigned_t<TRightInt>;
 
-		result = TLeftInt(TLeftUnsigned((TLeftInt) t) - TRightUnsigned((TRightInt) u));
+		if constexpr (sizeof(T) == 16 || sizeof(U) == 16) {
+			(void)SafeSubtract(t, u, result);
+		} else {
+			result = TLeftInt(TLeftUnsigned((TLeftInt) t) - TRightUnsigned((TRightInt) u));
+		}
 	}
 
 	template <class T, class U>
@@ -5357,7 +5566,15 @@ namespace Builtin {
 		constexpr bool isStd = requires { typename std::decay_t<T>::__underlying; };
 		using TInt =
 		    std::conditional_t<isStd, typename std::decay_t<T>::__underlying, std::decay_t<T>>;
-		using TSigned = std::make_signed_t<TInt>;
+		using TSigned          = std::make_signed_t<TInt>;
+		if constexpr (sizeof(T) == 16 && std::numeric_limits<T>::is_signed)
+		{
+			if (t == std::numeric_limits<T>::min())
+			{
+				result = t;
+				return;
+			}
+		}
 		result.__builtin_ref() = TInt(-TSigned(t));
 	}
 
@@ -5387,14 +5604,14 @@ namespace Builtin {
 		return false;
 	}
 
-	template<class T>
+	template <class T>
 	inline constexpr T UncheckedShiftLeft(T t, int amount) noexcept {
 		using TDecayed            = std::decay_t<T>;
 		constexpr bool isStd      = requires { typename TDecayed::__underlying; };
 		constexpr bool isIntegral = std::is_integral_v<TDecayed>;
 		static_assert(isStd || isIntegral);
 		using TInt = std::conditional_t<isStd, typename TDecayed::__underlying, TDecayed>;
-        return T((TInt)t << amount);
+		return T((TInt) t << amount);
 	}
 
 	template <class T>
@@ -5578,61 +5795,84 @@ namespace Builtin {
 		NODISCARD constexpr static bool DivisionCornerCase2(U, T, T&) { return false; }
 	};
 
-
 	template <class T>
 	inline constexpr bool CarryingAdd(T left, T right, bool carry, T& res) noexcept {
-		using TInt              = typename T::__underlying;
-		using TUnsigned         = std::make_unsigned_t<TInt>;
+		using TInt      = typename T::__underlying;
+		using TUnsigned = std::make_unsigned_t<TInt>;
 		TInt leftValue  = (TInt) left;
 		TInt rightValue = (TInt) right;
-		if constexpr (std::numeric_limits<TInt>::is_signed) {
+		if constexpr (sizeof(T) == 16)
+		{
+			bool overflowed1 = !SafeAdd(left, right, res);
+			bool overflowed2 = !SafeAdd(res, T(carry), res);
+			return overflowed1 || overflowed2;
+		}
+
+		else if constexpr (std::numeric_limits<TInt>::is_signed) {
 			auto sum = leftValue + rightValue;
-			bool overflowed1 = rightValue < 0 && sum > leftValue || rightValue > 0 && sum < leftValue;
-			res = TInt(sum + carry);
+			bool overflowed1 =
+			    rightValue < 0 && sum > leftValue || rightValue > 0 && sum < leftValue;
+			res              = TInt(sum + carry);
 			bool overflowed2 = res < sum;
 			return overflowed1 || overflowed2;
 		} else
 #if USE_INTRINSICS
 		    if constexpr (sizeof(T) == 1) {
 #ifdef MSVC
-			TUnsigned sum;
-			bool overflowed = _addcarry_u8(carry, leftValue, rightValue, &sum);
-			res             = (TInt) sum;
-			return overflowed;
+			if (!std::is_constant_evaluated()) {
+				TUnsigned sum;
+				bool overflowed = _addcarry_u8(carry, leftValue, rightValue, &sum);
+				res             = (TInt) sum;
+				return overflowed;
+			}
+			TUnsigned sum         = carry + leftValue + rightValue;
+			TUnsigned carryVector = (leftValue & rightValue) ^ ((leftValue ^ rightValue) & ~sum);
+			res                   = (TInt) sum;
+			return carryVector >> 7;
 #elif defined(CLANG)
 			TUnsigned overflowed;
 			res = (TInt) __builtin_addcb(leftValue, rightValue, carry, &overflowed);
 			return overflowed != 0;
 #else
-			TUnsigned sum = carry + leftValue + rightValue;
-			TUnsigned carryVector =
-			    (leftValue & rightValue) ^ ((leftValue ^ rightValue) & ~sum);
-			res = (TInt) sum;
+			TUnsigned sum         = carry + leftValue + rightValue;
+			TUnsigned carryVector = (leftValue & rightValue) ^ ((leftValue ^ rightValue) & ~sum);
+			res                   = (TInt) sum;
 			return carryVector >> 7;
 #endif  // CLANG
 		} else if constexpr (sizeof(T) == 2) {
 #ifdef MSVC
-			TUnsigned sum;
-			bool overflowed = _addcarry_u16(carry, leftValue, rightValue, &sum);
-			res             = (TInt) sum;
-			return overflowed;
+			if (!std::is_constant_evaluated()) {
+				TUnsigned sum;
+				bool overflowed = _addcarry_u16(carry, leftValue, rightValue, &sum);
+				res             = (TInt) sum;
+				return overflowed;
+			}
+			TUnsigned sum         = carry + leftValue + rightValue;
+			TUnsigned carryVector = (leftValue & rightValue) ^ ((leftValue ^ rightValue) & ~sum);
+			res                   = (TInt) sum;
+			return carryVector >> 15;
 #elif defined(CLANG)
 			TUnsigned overflowed;
 			res = (TInt) __builtin_addcs(leftValue, rightValue, carry, &overflowed);
 			return overflowed != 0;
 #else
-			TUnsigned sum = carry + leftValue + rightValue;
-			TUnsigned carryVector =
-			    (leftValue & rightValue) ^ ((leftValue ^ rightValue) & ~sum);
-			res = (TInt) sum;
+			TUnsigned sum         = carry + leftValue + rightValue;
+			TUnsigned carryVector = (leftValue & rightValue) ^ ((leftValue ^ rightValue) & ~sum);
+			res                   = (TInt) sum;
 			return carryVector >> 15;
 #endif  // CLANG
 		} else if constexpr (sizeof(T) == 4) {
 #ifdef MSVC
-			TUnsigned sum;
-			bool overflowed = _addcarry_u32(carry, leftValue, rightValue, &sum);
-			res             = (TInt) sum;
-			return overflowed;
+			if (!std::is_constant_evaluated()) {
+				TUnsigned sum;
+				bool overflowed = _addcarry_u32(carry, leftValue, rightValue, &sum);
+				res             = (TInt) sum;
+				return overflowed;
+			}
+			TUnsigned sum         = carry + leftValue + rightValue;
+			TUnsigned carryVector = (leftValue & rightValue) ^ ((leftValue ^ rightValue) & ~sum);
+			res                   = (TInt) sum;
+			return carryVector >> 31;
 #else
 			TUnsigned overflowed;
 			res = (TInt) __builtin_addc(leftValue, rightValue, carry, &overflowed);
@@ -5640,10 +5880,16 @@ namespace Builtin {
 #endif
 		} else {
 #ifdef MSVC
-			TUnsigned sum;
-			bool overflowed = _addcarry_u64(carry, leftValue, rightValue, &sum);
-			res             = (TInt) sum;
-			return overflowed;
+			if (!std::is_constant_evaluated()) {
+				TUnsigned sum;
+				bool overflowed = _addcarry_u64(carry, leftValue, rightValue, &sum);
+				res             = (TInt) sum;
+				return overflowed;
+			}
+			TUnsigned sum         = carry + leftValue + rightValue;
+			TUnsigned carryVector = (leftValue & rightValue) ^ ((leftValue ^ rightValue) & ~sum);
+			res                   = (TInt) sum;
+			return (carryVector >> 63) != 0;
 #else
 			TUnsigned overflowed;
 			res = (TInt) __builtin_addcll(leftValue, rightValue, carry, &overflowed);
@@ -5652,22 +5898,27 @@ namespace Builtin {
 		}
 #else
 		{
-			TUnsigned sum = carry + leftValue + rightValue;
-			TUnsigned carryVector =
-			    (leftValue & rightValue) ^ ((leftValue ^ rightValue) & ~sum);
-			res = (TInt) sum;
-			return carryVector >> ((sizeof(T) * 8) - 1);
+			TUnsigned sum         = carry + leftValue + rightValue;
+			TUnsigned carryVector = (leftValue & rightValue) ^ ((leftValue ^ rightValue) & ~sum);
+			res                   = (TInt) sum;
+			return (carryVector >> ((sizeof(T) * 8) - 1)) != 0;
 		}
 #endif
 	}
 
 	template <class T>
 	inline constexpr bool BorrowingSub(T left, T right, bool borrow, T& res) noexcept {
-		using TInt              = typename T::__underlying;
-		using TUnsigned         = std::make_unsigned_t<TInt>;
+		using TInt      = typename T::__underlying;
+		using TUnsigned = std::make_unsigned_t<TInt>;
 		auto leftValue  = (TInt) left;
 		auto rightValue = (TInt) right;
-		if constexpr (std::numeric_limits<TInt>::is_signed) {
+		if constexpr (sizeof(T) == 16) {
+			bool overflowed1 = !SafeSubtract(left, right, res);
+			bool overflowed2 = !SafeSubtract(res, T(borrow), res);
+			return overflowed1 || overflowed2;
+		}
+
+		else if constexpr (std::numeric_limits<TInt>::is_signed) {
 			auto diff = leftValue - rightValue;
 			bool overflowed1 =
 			    rightValue < 0 && diff < leftValue || rightValue > 0 && diff > leftValue;
@@ -5678,44 +5929,60 @@ namespace Builtin {
 #if USE_INTRINSICS
 		    if constexpr (sizeof(T) == 1) {
 #ifdef MSVC
-			TUnsigned diff;
-			bool overflowed = _subborrow_u8(borrow, leftValue, rightValue, &diff);
-			res             = (TInt) diff;
-			return overflowed;
+			if (!std::is_constant_evaluated()) {
+				TUnsigned diff;
+				bool overflowed = _subborrow_u8(borrow, leftValue, rightValue, &diff);
+				res             = (TInt) diff;
+				return overflowed;
+			}
+			TUnsigned diff        = leftValue - rightValue - borrow;
+			TUnsigned carryVector = (diff & rightValue) ^ ((diff ^ rightValue) & ~leftValue);
+			res                   = (TInt) diff;
+			return carryVector >> 7;
 #elif defined(CLANG)
 			TUnsigned overflowed;
 			res = (TInt) __builtin_subcb(leftValue, rightValue, borrow, &overflowed);
 			return overflowed != 0;
 #else
-			TUnsigned diff = leftValue - rightValue - borrow;
-			TUnsigned carryVector =
-			    (diff & rightValue) ^ ((diff ^ rightValue) & ~leftValue);
-			res = (TInt) diff;
+			TUnsigned diff        = leftValue - rightValue - borrow;
+			TUnsigned carryVector = (diff & rightValue) ^ ((diff ^ rightValue) & ~leftValue);
+			res                   = (TInt) diff;
 			return carryVector >> 7;
 #endif  // CLANG
 		} else if constexpr (sizeof(T) == 2) {
 #ifdef MSVC
-			TUnsigned diff;
-			bool overflowed = _subborrow_u16(borrow, leftValue, rightValue, &diff);
-			res             = (TInt) diff;
-			return overflowed;
+			if (!std::is_constant_evaluated()) {
+				TUnsigned diff;
+				bool overflowed = _subborrow_u16(borrow, leftValue, rightValue, &diff);
+				res             = (TInt) diff;
+				return overflowed;
+			}
+			TUnsigned diff        = leftValue - rightValue - borrow;
+			TUnsigned carryVector = (diff & rightValue) ^ ((diff ^ rightValue) & ~leftValue);
+			res                   = (TInt) diff;
+			return carryVector >> 15;
 #elif defined(CLANG)
 			TUnsigned overflowed;
 			res = (TInt) __builtin_subcs(leftValue, rightValue, borrow, &overflowed);
 			return overflowed != 0;
 #else
-			TUnsigned diff = leftValue - rightValue - borrow;
-			TUnsigned carryVector =
-			    (diff & rightValue) ^ ((diff ^ rightValue) & ~leftValue);
-			res = (TInt) diff;
+			TUnsigned diff        = leftValue - rightValue - borrow;
+			TUnsigned carryVector = (diff & rightValue) ^ ((diff ^ rightValue) & ~leftValue);
+			res                   = (TInt) diff;
 			return carryVector >> 15;
 #endif  // CLANG
 		} else if constexpr (sizeof(T) == 4) {
 #ifdef MSVC
-			TUnsigned diff;
-			bool overflowed = _subborrow_u32(borrow, leftValue, rightValue, &diff);
-			res             = (TInt) diff;
-			return overflowed;
+			if (!std::is_constant_evaluated()) {
+				TUnsigned diff;
+				bool overflowed = _subborrow_u32(borrow, leftValue, rightValue, &diff);
+				res             = (TInt) diff;
+				return overflowed;
+			}
+			TUnsigned diff        = leftValue - rightValue - borrow;
+			TUnsigned carryVector = (diff & rightValue) ^ ((diff ^ rightValue) & ~leftValue);
+			res                   = (TInt) diff;
+			return carryVector >> 31;
 #else
 			TUnsigned overflowed;
 			res = (TInt) __builtin_subc(leftValue, rightValue, borrow, &overflowed);
@@ -5723,10 +5990,16 @@ namespace Builtin {
 #endif
 		} else {
 #ifdef MSVC
-			TUnsigned diff;
-			bool overflowed = _subborrow_u64(borrow, leftValue, rightValue, &diff);
-			res             = (TInt) diff;
-			return overflowed;
+			if (!std::is_constant_evaluated()) {
+				TUnsigned diff;
+				bool overflowed = _subborrow_u64(borrow, leftValue, rightValue, &diff);
+				res             = (TInt) diff;
+				return overflowed;
+			}
+			TUnsigned diff        = leftValue - rightValue - borrow;
+			TUnsigned carryVector = (diff & rightValue) ^ ((diff ^ rightValue) & ~leftValue);
+			res                   = (TInt) diff;
+			return carryVector >> 63;
 #else
 			TUnsigned overflowed;
 			res = (TInt) __builtin_subcll(leftValue, rightValue, borrow, &overflowed);
@@ -5735,9 +6008,9 @@ namespace Builtin {
 		}
 #else
 		{
-			TUnsigned diff = leftValue - rightValue - borrow;
+			TUnsigned diff        = leftValue - rightValue - borrow;
 			TUnsigned carryVector = (diff & rightValue) ^ ((diff ^ rightValue) & ~leftValue);
-			res = (TInt) diff;
+			res                   = (TInt) diff;
 			return carryVector >> ((sizeof(T) * 8) - 1);
 		}
 #endif
@@ -5789,26 +6062,26 @@ namespace Builtin {
 			return std::make_tuple(low, high);
 		}
 #else
-		unsigned __int128 product = (unsigned __int128) lhs * rhs;
+		__int128 product = (__int128) lhs * rhs;
 		return std::make_tuple(uint64_t(product & 0xFFFFFFFFFFFFFFFF), int64_t(product >> 64));
 #endif
 #endif
 #if defined(MSVC) || !USE_INTRINSICS
-		uint64_t a_low = (uint32_t) lhs;
-		uint64_t a_high = lhs >> 32;
-		uint64_t b_low = (uint32_t) rhs;
-		uint64_t b_high = rhs >> 32;
+		uint64_t a_low  = (uint32_t) lhs;
+		int64_t a_high = lhs >> 32;
+		uint64_t b_low  = (uint32_t) rhs;
+		int64_t b_high = rhs >> 32;
 
-		uint64_t res_low = a_low * b_low;
-		uint64_t res_mid1 = a_low * b_high;
-		uint64_t res_mid2 = a_high * b_low;
-		uint64_t res_high = a_high * b_high;
+		uint64_t res_low  = a_low * b_low;
+		int64_t res_mid1 = a_low * b_high;
+		int64_t res_mid2 = a_high * b_low;
+		int64_t res_high = a_high * b_high;
 
-		uint64_t carry = ((res_low >> 32) + (uint32_t) res_mid1 + (uint32_t) res_mid2) >> 32;
+		uint64_t mid = res_mid2 + (res_low >> 32) + (uint32_t) res_mid1;
 
-		uint64_t low = (res_mid1 << 32) + (res_mid2 << 32) + res_low;
-		uint64_t high = res_high + (res_mid1 >> 32) + (res_mid2 >> 32) + carry;
-		return std::make_tuple(low, (int64_t) high);
+		uint64_t low = (mid << 32) | (uint32_t) res_low;
+		int64_t high = res_high + (mid >> 32) + (res_mid1 >> 32);
+		return std::make_tuple(low, high);
 #endif
 	}
 
@@ -5827,19 +6100,19 @@ namespace Builtin {
 #endif
 #endif
 #if defined(MSVC) || !USE_INTRINSICS
-		uint64_t a_low = (uint32_t) lhs;
+		uint64_t a_low  = (uint32_t) lhs;
 		uint64_t a_high = lhs >> 32;
-		uint64_t b_low = (uint32_t) rhs;
+		uint64_t b_low  = (uint32_t) rhs;
 		uint64_t b_high = rhs >> 32;
 
-		uint64_t res_low = a_low * b_low;
+		uint64_t res_low  = a_low * b_low;
 		uint64_t res_mid1 = a_low * b_high;
 		uint64_t res_mid2 = a_high * b_low;
 		uint64_t res_high = a_high * b_high;
 
 		uint64_t carry = ((res_low >> 32) + (uint32_t) res_mid1 + (uint32_t) res_mid2) >> 32;
 
-		uint64_t low = (res_mid1 << 32) + (res_mid2 << 32) + res_low;
+		uint64_t low  = (res_mid1 << 32) + (res_mid2 << 32) + res_low;
 		uint64_t high = res_high + (res_mid1 >> 32) + (res_mid2 >> 32) + carry;
 		return std::make_tuple(low, high);
 #endif
@@ -5908,32 +6181,32 @@ namespace Builtin {
 			return std::make_tuple(int64_t(low), int64_t(high));
 		}
 #else
-		unsigned __int128 product = (unsigned __int128) lhs * rhs;
+		__int128 product = (__int128) lhs * rhs;
 		product += carry;
 		return std::make_tuple(uint64_t(product & 0xFFFFFFFFFFFFFFFF), int64_t(product >> 64));
 #endif
 #endif
 #if defined(MSVC) || !USE_INTRINSICS
 		uint64_t a_low = (uint32_t) lhs;
-		uint64_t a_high = lhs >> 32;
+		int64_t a_high = lhs >> 32;
 		uint64_t b_low = (uint32_t) rhs;
-		uint64_t b_high = rhs >> 32;
+		int64_t b_high = rhs >> 32;
 
 		uint64_t res_low = a_low * b_low;
-		uint64_t res_mid1 = a_low * b_high;
-		uint64_t res_mid2 = a_high * b_low;
-		uint64_t res_high = a_high * b_high;
+		int64_t res_mid1 = a_low * b_high;
+		int64_t res_mid2 = a_high * b_low;
+		int64_t res_high = a_high * b_high;
 
-		uint64_t res_carry = ((res_low >> 32) + (uint32_t) res_mid1 + (uint32_t) res_mid2) >> 32;
+		uint64_t mid = res_mid2 + (res_low >> 32) + (uint32_t) res_mid1;
 
-		uint64_t low = (res_mid1 << 32) + (res_mid2 << 32) + res_low;
-		uint64_t high = res_high + (res_mid1 >> 32) + (res_mid2 >> 32) + res_carry;
-		auto sum = low + carry;
+		uint64_t low = (mid << 32) | (uint32_t) res_low;
+		int64_t high = res_high + (mid >> 32) + (res_mid1 >> 32);
+		auto sum      = low + carry;
 		if (carry > 0 && sum < low)
 			high++;
 		if (carry < 0 && sum > low)
 			high--;
-		return std::make_tuple(low, (int64_t) high);
+		return std::make_tuple(sum, high);
 #endif
 	}
 
@@ -5957,36 +6230,36 @@ namespace Builtin {
 #endif
 #endif
 #if defined(MSVC) || !USE_INTRINSICS
-		uint64_t a_low = (uint32_t) lhs;
+		uint64_t a_low  = (uint32_t) lhs;
 		uint64_t a_high = lhs >> 32;
-		uint64_t b_low = (uint32_t) rhs;
+		uint64_t b_low  = (uint32_t) rhs;
 		uint64_t b_high = rhs >> 32;
 
-		uint64_t res_low = a_low * b_low;
+		uint64_t res_low  = a_low * b_low;
 		uint64_t res_mid1 = a_low * b_high;
 		uint64_t res_mid2 = a_high * b_low;
 		uint64_t res_high = a_high * b_high;
 
 		uint64_t res_carry = ((res_low >> 32) + (uint32_t) res_mid1 + (uint32_t) res_mid2) >> 32;
 
-		uint64_t low = (res_mid1 << 32) + (res_mid2 << 32) + res_low;
+		uint64_t low  = (res_mid1 << 32) + (res_mid2 << 32) + res_low;
 		uint64_t high = res_high + (res_mid1 >> 32) + (res_mid2 >> 32) + res_carry;
-		auto sum = low + carry;
+		auto sum      = low + carry;
 		if (carry > 0 && sum < low)
 			high++;
-		return std::make_tuple(low, high);
+		return std::make_tuple(sum, high);
 #endif
 	}
 
 	template <class T>
-	inline constexpr T RotateLeft(T input, int shift) noexcept {
+	inline constexpr T BitsRotateLeft(T input, int shift) noexcept {
 		using TInt      = typename T::__underlying;
 		using TUnsigned = std::make_unsigned_t<TInt>;
 		return (TInt) std::rotl(TUnsigned((TInt) input), shift);
 	}
 
 	template <class T>
-	inline constexpr T RotateRight(T input, int shift) noexcept {
+	inline constexpr T BitsRotateRight(T input, int shift) noexcept {
 		using TInt      = typename T::__underlying;
 		using TUnsigned = std::make_unsigned_t<TInt>;
 		return (TInt) std::rotr(TUnsigned((TInt) input), shift);
@@ -6069,14 +6342,13 @@ namespace Builtin {
 
 	inline constexpr int64_t ReverseBits64(int64_t n) { return (int64_t) ReverseBits64u(n); }
 
-	template<class T>
-	inline constexpr T ByteSwap16(T src) noexcept
-	{
+	template <class T>
+	inline constexpr T ByteSwap16(T src) noexcept {
 #if USE_INTRINSICS
 #ifdef MSVC
 		if (std::is_constant_evaluated())
 			return (typename T::__underlying) ((src << 8) | (src >> 8));
-		return (typename T::__underlying)_byteswap_ushort(src);
+		return (typename T::__underlying) _byteswap_ushort(src);
 #else
 		return (typename T::__underlying) __builtin_bswap16(src);
 #endif
@@ -6099,7 +6371,7 @@ namespace Builtin {
 #endif
 #else
 		return (typename T::__underlying) (((src << 24) | (src >> 24)) | ((src << 8) & 0x00FF0000) |
-		       ((src >> 8) & 0x0000FF00));
+		                                   ((src >> 8) & 0x0000FF00));
 #endif
 	}
 
@@ -6129,9 +6401,7 @@ namespace Builtin {
 		return std::endian::native == std::endian::little;
 	}
 
-	inline constexpr bool IsBigEndian() noexcept {
-		return std::endian::native == std::endian::big;
-	}
+	inline constexpr bool IsBigEndian() noexcept { return std::endian::native == std::endian::big; }
 
 	struct Struct {};
 }  // namespace Builtin

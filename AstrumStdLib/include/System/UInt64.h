@@ -51,13 +51,13 @@ using __extensions::__static_getMaxValue;
 	#line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
 	inline constexpr auto _operator_gt_gt_gt_eq(__extension_UInt64_20_u64 & __this , Builtin::i32 amount)  -> typename __extension_UInt64_20_u64&;
 	#line 46 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
-	inline constexpr auto _operator_lt_lt_bsl(__extension_UInt64_20_u64 const& __this LIFETIMEBOUND, Builtin::u64 amount) noexcept -> const typename __extension_UInt64_20_u64;
+	inline constexpr auto _operator_lt_lt_bsl(__extension_UInt64_20_u64 const& __this LIFETIMEBOUND, Builtin::u32 amount) noexcept -> const typename __extension_UInt64_20_u64;
 	#line 54 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
-	inline constexpr auto _operator_lt_lt_bsl_eq(__extension_UInt64_20_u64 & __this , Builtin::u64 amount) noexcept -> typename __extension_UInt64_20_u64&;
+	inline constexpr auto _operator_lt_lt_bsl_eq(__extension_UInt64_20_u64 & __this , Builtin::u32 amount) noexcept -> typename __extension_UInt64_20_u64&;
 	#line 56 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
-	inline constexpr auto _operator_gt_gt_bsl(__extension_UInt64_20_u64 const& __this LIFETIMEBOUND, Builtin::u64 amount) noexcept -> const typename __extension_UInt64_20_u64;
+	inline constexpr auto _operator_gt_gt_bsl(__extension_UInt64_20_u64 const& __this LIFETIMEBOUND, Builtin::u32 amount) noexcept -> const typename __extension_UInt64_20_u64;
 	#line 64 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
-	inline constexpr auto _operator_gt_gt_bsl_eq(__extension_UInt64_20_u64 & __this , Builtin::u64 amount) noexcept -> typename __extension_UInt64_20_u64&;
+	inline constexpr auto _operator_gt_gt_bsl_eq(__extension_UInt64_20_u64 & __this , Builtin::u32 amount) noexcept -> typename __extension_UInt64_20_u64&;
 	#line 66 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
 	inline constexpr auto getHashCode(__extension_UInt64_20_u64 const& __this ) -> const Builtin::u64;
 	} namespace System{
@@ -357,7 +357,7 @@ using __extensions::getIsZero;
 	#line 336 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
 	inline constexpr auto MinNumber(__extension_UInt64_328_u64 const& __this LIFETIMEBOUND, __extension_UInt64_328_u64 rhs) noexcept -> const typename __extension_UInt64_328_u64;
 	#line 337 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
-	inline auto Clamp(__extension_UInt64_328_u64 const& __this LIFETIMEBOUND, __extension_UInt64_328_u64 min, __extension_UInt64_328_u64 max)  -> const typename __extension_UInt64_328_u64;
+	inline constexpr auto Clamp(__extension_UInt64_328_u64 const& __this LIFETIMEBOUND, __extension_UInt64_328_u64 min, __extension_UInt64_328_u64 max)  -> const typename __extension_UInt64_328_u64;
 	#line 329 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
 	inline constexpr auto getSign(__extension_UInt64_328_u64 const& __this ) -> const Builtin::i32;
 	#line 328 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
@@ -882,7 +882,7 @@ using __extensions::getMultiplyBy16;
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 46 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
-	inline constexpr auto _operator_lt_lt_bsl(__extension_UInt64_20_u64 const& __this LIFETIMEBOUND, Builtin::u64 amount) noexcept -> const typename __extension_UInt64_20_u64
+	inline constexpr auto _operator_lt_lt_bsl(__extension_UInt64_20_u64 const& __this LIFETIMEBOUND, Builtin::u32 amount) noexcept -> const typename __extension_UInt64_20_u64
 	{
 		#line 48 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
 		if ((amount <=> ADV_USPCS(BitWidth, __extension_UInt64_1193_u64)()) >= 0) {
@@ -896,7 +896,7 @@ using __extensions::getMultiplyBy16;
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 54 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
-	inline constexpr auto _operator_lt_lt_bsl_eq(__extension_UInt64_20_u64 & __this , Builtin::u64 amount) noexcept -> typename __extension_UInt64_20_u64&
+	inline constexpr auto _operator_lt_lt_bsl_eq(__extension_UInt64_20_u64 & __this , Builtin::u32 amount) noexcept -> typename __extension_UInt64_20_u64&
 	{
 		#line 54 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
 		ADV_EXPRESSION_BODY(__this = ADV_UFCS(_operator_lt_lt_bsl)(__this, amount)); 
@@ -905,7 +905,7 @@ using __extensions::getMultiplyBy16;
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 56 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
-	inline constexpr auto _operator_gt_gt_bsl(__extension_UInt64_20_u64 const& __this LIFETIMEBOUND, Builtin::u64 amount) noexcept -> const typename __extension_UInt64_20_u64
+	inline constexpr auto _operator_gt_gt_bsl(__extension_UInt64_20_u64 const& __this LIFETIMEBOUND, Builtin::u32 amount) noexcept -> const typename __extension_UInt64_20_u64
 	{
 		#line 58 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
 		if ((amount <=> ADV_USPCS(BitWidth, __extension_UInt64_1193_u64)()) >= 0) {
@@ -919,7 +919,7 @@ using __extensions::getMultiplyBy16;
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 64 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
-	inline constexpr auto _operator_gt_gt_bsl_eq(__extension_UInt64_20_u64 & __this , Builtin::u64 amount) noexcept -> typename __extension_UInt64_20_u64&
+	inline constexpr auto _operator_gt_gt_bsl_eq(__extension_UInt64_20_u64 & __this , Builtin::u32 amount) noexcept -> typename __extension_UInt64_20_u64&
 	{
 		#line 64 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
 		ADV_EXPRESSION_BODY(__this = ADV_UFCS(_operator_gt_gt_bsl)(__this, amount)); 
@@ -1720,7 +1720,7 @@ using __extensions::getMultiplyBy16;
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 337 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
-	inline auto Clamp(__extension_UInt64_328_u64 const& __this LIFETIMEBOUND, __extension_UInt64_1193_u64 min, __extension_UInt64_1193_u64 max)  -> const typename __extension_UInt64_328_u64
+	inline constexpr auto Clamp(__extension_UInt64_328_u64 const& __this LIFETIMEBOUND, __extension_UInt64_1193_u64 min, __extension_UInt64_1193_u64 max)  -> const typename __extension_UInt64_328_u64
 	{
 		#line 337 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
 		ADV_EXPRESSION_BODY(ADV_USFCS((INumber), DefaultClamp)(__this, min, max)); 
@@ -3281,7 +3281,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto RotateLeft(__extension_UInt64_1162_u64 const& __this LIFETIMEBOUND, Builtin::i32 shiftAmount) noexcept -> const typename __extension_UInt64_1162_u64
 	{
 		#line 1188 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
-		ADV_EXPRESSION_BODY(Builtin::RotateLeft(__this, shiftAmount)); 
+		ADV_EXPRESSION_BODY(Builtin::BitsRotateLeft(__this, shiftAmount)); 
 	}
 	
 } namespace System{
@@ -3290,7 +3290,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto RotateRight(__extension_UInt64_1162_u64 const& __this LIFETIMEBOUND, Builtin::i32 shiftAmount) noexcept -> const typename __extension_UInt64_1162_u64
 	{
 		#line 1189 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt64.ast"
-		ADV_EXPRESSION_BODY(Builtin::RotateRight(__this, shiftAmount)); 
+		ADV_EXPRESSION_BODY(Builtin::BitsRotateRight(__this, shiftAmount)); 
 	}
 	
 } namespace System{

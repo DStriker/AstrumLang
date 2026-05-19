@@ -1,4 +1,4 @@
-#include "Builtin/Int128.h"
+#include "Builtin/BuiltinInt128.h"
 
 #include <bit>
 #include <iomanip>
@@ -9,10 +9,10 @@
 
 namespace Builtin {
 	inline int Fls128(UInt128 n) {
-		if (uint64_t hi = n.high64()) {
+		if (uint64_t hi = n.High64()) {
 			return 127 - std::countl_zero(hi);
 		}
-		const uint64_t low = n.low64();
+		const uint64_t low = n.Low64();
 		return 63 - std::countl_zero(low);
 	}
 
@@ -55,52 +55,52 @@ namespace Builtin {
 		*remainder_ret = dividend;
 	}
 
-	UInt128 UInt128::Div(UInt128 rhs) const {
-		UInt128 quotient  = 0u;
-		UInt128 remainder = 0u;
-		DivModImpl(*this, rhs, &quotient, &remainder);
-		return quotient;
+	/*UInt128 UInt128::Div(UInt128 rhs) const {
+	    UInt128 quotient  = 0u;
+	    UInt128 remainder = 0u;
+	    DivModImpl(*this, rhs, &quotient, &remainder);
+	    return quotient;
 	}
 
 	UInt128 UInt128::operator%(UInt128 rhs) const {
-		UInt128 quotient  = 0u;
-		UInt128 remainder = 0u;
-		DivModImpl(*this, rhs, &quotient, &remainder);
-		return remainder;
-	}
+	    UInt128 quotient  = 0u;
+	    UInt128 remainder = 0u;
+	    DivModImpl(*this, rhs, &quotient, &remainder);
+	    return remainder;
+	}*/
 
 	static constexpr u128 InverseUint128(u128 value) {
-		return u128(~value.high64() + static_cast<unsigned long>(value.low64() == 0),
-		            ~value.low64() + 1);
+		return u128(uint64_t(~value.High64()) + static_cast<unsigned long>(value.Low64() == 0),
+		            uint64_t(~value.Low64()) + 1);
 	}
 
 	static u128 UnsignedAbsolute(i128 v) {
-		return v.high64() < 0 ? InverseUint128(std::bit_cast<u128>(v)) : std::bit_cast<u128>(v);
+		return v.High64() < 0 ? InverseUint128(std::bit_cast<u128>(v)) : std::bit_cast<u128>(v);
 	}
 
-	Int128 Int128::Div(Int128 rhs) const {
-		if (*this == INT128_MIN && rhs == -1)
-			throw IntegerOverflowException();
-		u128 quotient;
-		u128 remainder;
-		DivModImpl(UnsignedAbsolute(*this), UnsignedAbsolute(rhs), &quotient, &remainder);
-		if ((high64() < 0) != (rhs.high64() < 0))
-			quotient = InverseUint128(quotient);
-		return i128(__Details::BitCastToSigned(quotient.high64()), quotient.low64());
+	/*Int128 Int128::Div(Int128 rhs) const {
+	    if (*this == INT128_MIN && rhs == -1)
+	        throw IntegerOverflowException();
+	    u128 quotient;
+	    u128 remainder;
+	    DivModImpl(UnsignedAbsolute(*this), UnsignedAbsolute(rhs), &quotient, &remainder);
+	    if ((High64() < 0) != (rhs.High64() < 0))
+	        quotient = InverseUint128(quotient);
+	    return i128(__Details::BitCastToSigned(quotient.High64()), quotient.Low64());
 	}
 
 	Int128 Int128::operator%(Int128 rhs) const {
-		if (*this == INT128_MIN && rhs == -1)
-			throw IntegerOverflowException();
-		u128 quotient;
-		u128 remainder;
-		DivModImpl(UnsignedAbsolute(*this), UnsignedAbsolute(rhs), &quotient, &remainder);
-		if (high64() < 0)
-			remainder = InverseUint128(remainder);
-		return i128(__Details::BitCastToSigned(remainder.high64()), remainder.low64());
-	}
+	    if (*this == INT128_MIN && rhs == -1)
+	        throw IntegerOverflowException();
+	    u128 quotient;
+	    u128 remainder;
+	    DivModImpl(UnsignedAbsolute(*this), UnsignedAbsolute(rhs), &quotient, &remainder);
+	    if (High64() < 0)
+	        remainder = InverseUint128(remainder);
+	    return i128(__Details::BitCastToSigned(remainder.High64()), remainder.Low64());
+	}*/
 
-	ASTRUMSTD_API std::string UInt128::ToFormattedString(UInt128 v,
+	ASTRUMSTD_API std::string U128ToFormattedString(UInt128 v,
 	                                                            std::ios_base::fmtflags flags) {
 		// Select a divisor which is the largest power of the base < 2^64.
 		UInt128 div;
@@ -132,24 +132,24 @@ namespace Builtin {
 		DivModImpl(high, div, &high, &low);
 		UInt128 mid;
 		DivModImpl(high, div, &high, &mid);
-		if (high.low64() != 0) {
-			os << (uint64_t) high.low64();
+		if (high.Low64() != 0) {
+			os << (uint64_t) high.Low64();
 			os << std::noshowbase << std::setfill('0') << std::setw(div_base_log);
-			os << (uint64_t) mid.low64();
+			os << (uint64_t) mid.Low64();
 			os << std::setw(div_base_log);
-		} else if (mid.low64() != 0) {
-			os << (uint64_t) mid.low64();
+		} else if (mid.Low64() != 0) {
+			os << (uint64_t) mid.Low64();
 			os << std::noshowbase << std::setfill('0') << std::setw(div_base_log);
 		}
-		os << (uint64_t) low.low64();
+		os << (uint64_t) low.Low64();
 		return os.str();
 	}
 
-	ASTRUMSTD_API std::string Int128::toString() const {
+	ASTRUMSTD_API std::string DebugPrintInt128(i128 v) {
 		std::string result;
-		if (_high < 0)
+		if (v.High64() < 0)
 			result = "-";
-		result += UInt128::ToFormattedString(UnsignedAbsolute(*this), std::ios_base::dec);
+		result += U128ToFormattedString(UnsignedAbsolute(v), std::ios_base::dec);
 		return result;
 	}
 

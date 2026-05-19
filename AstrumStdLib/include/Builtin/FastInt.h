@@ -627,7 +627,7 @@ namespace Builtin {
 		if (rhs == 0)
 			throw DivisionByZeroException();
 		T result = 0;
-		ModulusHelper<U, T, ValidComparison<U, T>::method>::Modulus(value, (T) rhs, result);
+		ModulusHelper<U, T, ValidComparison<U, T>::method>::Modulus(lhs, (T) rhs, result);
 		return FastInt<T>(result);
 	}
 
@@ -641,7 +641,7 @@ namespace Builtin {
 		if (rhs == 0)
 			throw DivisionByZeroException();
 		T result = 0;
-		DivisionHelper<U, T, DivisionMethod<U, T>::method>::Divide(value, (T) rhs, result);
+		DivisionHelper<U, T, DivisionMethod<U, T>::method>::Divide(lhs, (T) rhs, result);
 		return result;
 	}
 
@@ -747,8 +747,3 @@ namespace Builtin {
 
 }  // namespace Builtin
 
-
-template <class T, class U>
-inline constexpr auto UnsafeCast(Builtin::FastInt<U> value) noexcept {
-	return static_cast<T>((U)value);
-}

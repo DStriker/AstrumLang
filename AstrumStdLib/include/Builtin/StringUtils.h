@@ -86,12 +86,12 @@ namespace Builtin {
 	                                                                     T& Raw_value,
 	                                                                     int Base = 0) {
 		// assert(Base >= 2 && Base <= 36);
-
+		constexpr bool isSignedType = std::numeric_limits<T>::is_signed;
 		bool Minus_sign = false;
 
 		const auto* Next = First;
 
-		if constexpr (std::is_signed_v<T>) {
+		if constexpr (isSignedType) {
 			if (Next != Last && *Next == '-') {
 				Minus_sign = true;
 				++Next;
@@ -123,7 +123,7 @@ namespace Builtin {
 		Unsigned Risky_val;
 		Unsigned Max_digit;
 
-		if constexpr (std::is_signed_v<T>) {
+		if constexpr (isSignedType) {
 			if (Minus_sign) {
 				Risky_val = static_cast<Unsigned>(Div(Abs_int_min, Base));
 				Max_digit = static_cast<Unsigned>(Abs_int_min % Base);
@@ -164,8 +164,8 @@ namespace Builtin {
 			return {Next, std::errc::result_out_of_range};
 		}
 
-		if constexpr (std::is_signed_v<T>) {
-			if (Minus_sign) {
+		if constexpr (isSignedType) {
+			if (Minus_sign && Value < (Unsigned)std::numeric_limits<T>::max()) {
 				Raw_value = -std::bit_cast<T>(Value);
 			} else {
 				Raw_value = std::bit_cast<T>(Value);

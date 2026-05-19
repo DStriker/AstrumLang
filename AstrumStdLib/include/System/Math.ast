@@ -2,6 +2,12 @@ package System;
 
 public import Int8;
 public import UInt8;
+public import Int16;
+public import UInt16;
+public import Int32;
+public import UInt32;
+public import Int64;
+public import UInt64;
 
 public static class Math {
     /*private _generateIsqrtLookupTable: () -> (u8, u8)[256] ==
@@ -24,4 +30,11 @@ public static class Math {
     private _isqrtLookupTable: (u8, u8)[256] == _generateIsqrtLookupTable();*/
 
     public Isqrt8: (num: u8) -> u8 ==> /*_isqrtLookupTable[num].0*/0u8;
+
+}
+
+test "Math" {
+    assert i32.MaxValue == 2147483647;
+    assert 120.IsMultipleOf(12i16);
+    assert 120.Max(115) == 120;
 }

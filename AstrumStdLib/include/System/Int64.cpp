@@ -223,11 +223,11 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 		#line 1486 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		b = Builtin::i32(-6);
 		#line 1487 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		ADV_ASSERT((ADV_UPCS(HashCode)(b) == Builtin::i128::Parse("18446744073709551610")), u"#b==18446744073709551610");
+		ADV_ASSERT((ADV_UPCS(HashCode)(b) == Builtin::u64(18446744073709551610ULL)), u"#b==18446744073709551610u");
 		#line 1489 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		ADV_ASSERT((ADV_UFCS(ToInt32)(b.__ref()) == Builtin::i32(-6)), u"b.ToInt32()==-6");
 		#line 1490 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		ADV_ASSERT((ADV_UFCS(NarrowToUInt64)(b.__ref()) == Builtin::i128::Parse("18446744073709551610")), u"b.NarrowToUInt64()==18446744073709551610");
+		ADV_ASSERT((ADV_UFCS(NarrowToUInt64)(b.__ref()) == Builtin::u64(18446744073709551610ULL)), u"b.NarrowToUInt64()==18446744073709551610u");
 		#line 1493 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		ADV_ASSERT((ADV_UPCS(Abs)(b.__ref()) == Builtin::i32(6)), u"b.Abs==6");
 		#line 1494 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
@@ -590,7 +590,7 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			#line 1694 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 			const auto& [low, high] = ADV_UFCS(CarryingMul)(a.__ref(), Builtin::i64(-2LL), Builtin::i64(-12LL));
 			#line 1695 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-			ADV_ASSERT((low == Builtin::i128::Parse("18446744073709551606") && high == Builtin::i32(-2)), u"low==18446744073709551606&&high==-2");
+			ADV_ASSERT((low == Builtin::ParseInt128("18446744073709551606") && high == Builtin::i32(-2)), u"low==18446744073709551606&&high==-2");
 		}
 		#line 1698 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		a = Builtin::i64(100000000000LL);

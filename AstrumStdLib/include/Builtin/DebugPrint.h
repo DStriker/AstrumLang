@@ -2,7 +2,7 @@
 #include <iostream>
 
 #include "Floating.h"
-#include "Int128.h"
+#include "BuiltinInt128.h"
 #include "Str.h"
 
 inline void print(Builtin::i8 v) { std::cout << int(v) << std::endl; }
@@ -13,7 +13,7 @@ inline void print(Builtin::i32 v) { std::cout << int(v) << std::endl; }
 
 inline void print(Builtin::i64 v) { std::cout << int64_t(v) << std::endl; }
 
-inline void print(Builtin::i128 v) { std::cout << v.toString() << std::endl; }
+inline void print(Builtin::i128 v) { std::cout << Builtin::DebugPrintInt128(v) << std::endl; }
 
 inline void print(Builtin::u8 v) { std::cout << unsigned(v) << std::endl; }
 
@@ -23,7 +23,7 @@ inline void print(Builtin::u32 v) { std::cout << unsigned(v) << std::endl; }
 
 inline void print(Builtin::u64 v) { std::cout << uint64_t(v) << std::endl; }
 
-inline void print(Builtin::u128 v) { std::cout << v.toString() << std::endl; }
+inline void print(Builtin::u128 v) { std::cout << Builtin::DebugPrintUInt128(v) << std::endl; }
 
 inline void print(Builtin::f32 v) { std::cout << float(v) << std::endl; }
 

@@ -9,6 +9,8 @@
 #include "windows.h"
 #endif
 
+#include <execution>
+
 #include "AstrumLang/StringUtils.h"
 #include "CompilerErrorListener.h"
 
@@ -163,12 +165,30 @@ namespace AstrumLang {
 
 			return order;
 		}
+
+		void insertDependents(const char* dependency,
+		                      std::unordered_set<std::string>& result) const {
+			for (auto dependent : adjacents.at(dependency)) {
+				result.insert(dependent);
+				insertDependents(dependent, result);
+			}
+		}
+
+		std::unordered_set<std::string> getAllDependencies(const char* dependency) const {
+			std::unordered_set<std::string> result;
+			insertDependents(dependency, result);
+
+			return result;
+		}
 	};
 
 	std::string Compiler::currentFilename;
 	std::unordered_map<std::string, std::vector<std::string>> Compiler::sourceCode;
+	std::vector<std::string> Compiler::sourceFiles;
+	std::vector<std::string> Compiler::modifiedFiles;
+	std::atomic_bool Compiler::exitRequested = false;
 
-	bool Compiler::build(const std::vector<std::string>& sources, const std::string& exePath) {
+	bool Compiler::build(const std::string& exePath) {
 		std::string cmd;
 		auto backend                   = CompilerSettings::get().backend;
 		auto dllName                   = CompilerSettings::get().dllName;
@@ -187,7 +207,7 @@ namespace AstrumLang {
 		auto vsPath = ExecCmd(L"vswhere -latest -property installationPath");
 		StringTrim(vsPath);
 		/////////////
-		//vsPath = "C:\\Program Files\\Microsoft Visual Studio\\18\\Insiders";
+		// vsPath = "C:\\Program Files\\Microsoft Visual Studio\\18\\Insiders";
 		/////////////
 		std::ofstream bat("astrum_build.bat");
 		bat << "@echo off\ncall \"";
@@ -195,9 +215,14 @@ namespace AstrumLang {
 		bat << R"(\VC\Auxiliary\Build\vcvars64.bat")";
 		bat << "\n";
 #endif
-		constexpr const char* stdBuiltinSources[] = {"Builtin/Builtin.cpp", "Builtin/Int128.cpp",
-		                                             "Builtin/RefCounts.cpp"};
-		constexpr auto testMainFile               = "test_main.cpp";
+		constexpr const char* stdBuiltinObj[] = {
+#ifdef _WIN32
+		    "Builtin.obj", "BuiltinInt128.obj", "RefCounts.obj"
+#else
+		    "Builtin.o", "BuiltinInt128.o", "RefCounts.o"
+#endif
+		};
+		constexpr auto testMainFile = "test_main.cpp";
 
 		if (backend == CompilerBackend::Clang || backend == CompilerBackend::Gnu) {
 			if (backend == CompilerBackend::Clang) {
@@ -224,19 +249,25 @@ namespace AstrumLang {
 				cmd += rootPath.string();
 				cmd += quotes;
 			}
-			for (const auto& src : sources) {
+			for (const auto& src : sourceFiles) {
 				std::filesystem::path srcPath = src;
 				srcPath.replace_extension("cpp");
 				if (!std::filesystem::exists(srcPath))
 					continue;
 				cmd += " ";
 				cmd += quotes;
-				cmd += srcPath.string();
+				if (CompilerSettings::get().buildAllMode ||
+				    std::find(modifiedFiles.begin(), modifiedFiles.end(), src) !=
+				    modifiedFiles.end()) {
+					cmd += srcPath.string();
+				} else {
+					srcPath.replace_extension("o");
+					cmd += srcPath.filename().string();
+				}
 				cmd += quotes;
 			}
 			if (!rootPath.empty()) {
-				if (!dllName.empty() && unitTestBuild)
-				{
+				if (!dllName.empty() && unitTestBuild) {
 					cmd += " ";
 					cmd += quotes;
 					cmd += rootPath.string();
@@ -246,11 +277,9 @@ namespace AstrumLang {
 				}
 				if (stdBuild) {
 					rootPath.replace_filename("src");
-					for (auto src : stdBuiltinSources) {
+					for (auto src : stdBuiltinObj) {
 						cmd += " ";
 						cmd += quotes;
-						cmd += rootPath.string();
-						cmd += "/";
 						cmd += src;
 						cmd += quotes;
 					}
@@ -348,14 +377,22 @@ namespace AstrumLang {
 				cmd += rootPath.string();
 				cmd += quotes;
 			}
-			for (const auto& src : sources) {
+			for (const auto& src : sourceFiles) {
 				std::filesystem::path srcPath = src;
 				srcPath.replace_extension("cpp");
 				if (!std::filesystem::exists(srcPath))
 					continue;
 				cmd += " ";
 				cmd += quotes;
-				cmd += srcPath.string();
+				if (CompilerSettings::get().buildAllMode || std::find(modifiedFiles.begin(), modifiedFiles.end(), src) != modifiedFiles.end())
+				{
+					cmd += srcPath.string();
+				} else {
+					srcPath.replace_extension("obj");
+					cmd +=
+					    CompilerSettings::get().debugBuild ? R"(obj\\Debug\\)" : R"(obj\\Release\\)";
+                    cmd += srcPath.filename().string();
+				}
 				cmd += quotes;
 			}
 			if (!rootPath.empty()) {
@@ -369,11 +406,11 @@ namespace AstrumLang {
 				}
 				if (stdBuild) {
 					rootPath.replace_filename("src");
-					for (auto src : stdBuiltinSources) {
+					for (auto src : stdBuiltinObj) {
 						cmd += " ";
 						cmd += quotes;
-						cmd += rootPath.string();
-						cmd += "/";
+						cmd += CompilerSettings::get().debugBuild ? R"(obj\\Debug\\)"
+						                                          : R"(obj\\Release\\)";
 						cmd += src;
 						cmd += quotes;
 					}
@@ -503,6 +540,11 @@ namespace AstrumLang {
 
 			cmd +=
 			    R"( /GS /Zc:wchar_t /Gm- /MP /Zi /Zc:inline /fp:precise /D ""_CONSOLE"" /D ""_UNICODE"" /D ""UNICODE"" /errorReport:prompt /WX- /Zc:forScope /Gd /std:c++latest /wd4005 /wd4584 /wd4190 /we4297 /we4715 /we26447 /we26815 /we26816 /external:W0)";
+			if (CompilerSettings::get().debugBuild) {
+				cmd += R"( /Fo"obj\\Debug\\")";
+			} else {
+				cmd += R"( /Fo"obj\\Release\\")";
+			}
 			if (!stdBuild) {
 				cmd += " \"libastrumstd.lib\"";
 			}
@@ -545,16 +587,16 @@ namespace AstrumLang {
 		preprocessDLL();
 
 		// setup main function for DLL tests
-		if (CompilerSettings::get().unitTestMode && (!CompilerSettings::get().dllName.empty() || CompilerSettings::get().stdMode))
-		{
+		if (CompilerSettings::get().unitTestMode &&
+		    (!CompilerSettings::get().dllName.empty() || CompilerSettings::get().stdMode)) {
 			preprocessTests();
 		}
 
 		// fills symbol table with system symbols
 		CppSymbolParser::initializeSystemSymbolTable();
 
-		const auto& sourceFiles   = CompilerSettings::get().sourceFiles;
-		const auto& modifiedFiles = CompilerSettings::get().modifiedFiles;
+		sourceFiles   = CompilerSettings::get().sourceFiles;
+		modifiedFiles = CompilerSettings::get().modifiedFiles;
 		if (!modifiedFiles.empty())
 			std::cout << "The following modules will be compiled:\n";
 		for (const auto& file : modifiedFiles) { std::cout << file << std::endl; }
@@ -563,7 +605,7 @@ namespace AstrumLang {
 		preparePackages(modifiedFiles);
 
 		// codegen
-		if (!generateCpp(modifiedFiles))
+		if (!generateCpp())
 			return false;
 
 		std::string exePath = CompilerSettings::get().exePath;
@@ -577,7 +619,7 @@ namespace AstrumLang {
 
 		// cpp build
 		if (!modifiedFiles.empty() && CompilerSettings::get().buildMode) {
-			if (!build(sourceFiles, exePath))
+			if (!build(exePath))
 				return false;
 		}
 
@@ -595,29 +637,32 @@ namespace AstrumLang {
 		return true;
 	}
 
-	bool Compiler::generateCpp(const std::vector<std::string>& sourceFiles) {
+	void Compiler::requestExit() { exitRequested.store(true); }
+
+	bool Compiler::generateCpp() {
 		std::cout << "Stage 0: Building AST and dependency graphs\n";
 		std::unordered_map<std::string, AstrumParser*> parsers;
 		std::unordered_map<std::string, AstrumParser::ModuleContext*> ast;
 		DependencyGraph dependencies;
-		for (const auto& src : sourceFiles) {
-			currentFilename = src;
+		std::mutex astDumpMutex;
 
-			// read source file
-			std::ifstream srcStream(src);
-
+		// AST generation
+		auto generateAst = [&](const auto& src) {
 			// creates a token stream
-			auto antlrStream = new antlr4::ANTLRInputStream(srcStream);
-			auto lexer       = new AstrumLexer(antlrStream);
+			auto antlrStream = new antlr4::ANTLRFileStream();
+			antlrStream->loadFromFile(src);
+			auto lexer = new AstrumLexer(antlrStream);
 			setupErrorListeners(lexer);
 			// make a lexical analysis
 			auto tokenStream = new antlr4::CommonTokenStream(lexer);
-			if (lexer->getNumberOfSyntaxErrors())
-				return false;
+			if (lexer->getNumberOfSyntaxErrors()) {
+				Compiler::requestExit();
+				return;
+			}
 
 			// caches a source code for diagnostic info
-			srcStream.clear();
-			srcStream.seekg(0, std::ios::beg);
+			// read source file
+			std::ifstream srcStream(src);
 			std::string line;
 			auto& srcCode = sourceCode[src];
 			while (std::getline(srcStream, line)) { srcCode.emplace_back(line); }
@@ -629,15 +674,36 @@ namespace AstrumLang {
 
 			// building AST
 			AstrumParser::ModuleContext* astRoot = parser->module();
-			ast[src]                             = astRoot;
+			{
+				std::lock_guard g {astDumpMutex};
+				ast[src] = astRoot;
+			}
 
-			// dependencies
+			if (parser->getNumberOfSyntaxErrors()) {
+				Compiler::requestExit();
+			}
+		};
+
+		if (modifiedFiles.size() == 1) {
+			generateAst(modifiedFiles[0]);
+		} else {
+			std::for_each(std::execution::par_unseq, modifiedFiles.begin(), modifiedFiles.end(),
+			              generateAst);
+		}
+
+		if (exitRequested.load(std::memory_order::relaxed))
+			std::exit(-1);
+
+		// dependencies
+		std::unordered_map<const char*, std::vector<const char*>> privateDependencies;
+		for (const auto& src : modifiedFiles) {
 			std::filesystem::path srcPath = src;
-			auto imports                  = astRoot->importDeclaration();
+			auto imports                  = ast[src]->importDeclaration();
 			bool hasDependencies          = false;
 			for (auto dependency : imports) {
-				if (!dependency->Public() || !dependency->moduleName())
+				if (!dependency->Public() || !dependency->moduleName()) {
 					continue;
+				}
 
 				auto name = dependency->moduleName()->getText();
 				StringReplace(name, ".", "/");
@@ -645,8 +711,8 @@ namespace AstrumLang {
 				if (auto searchInIncludes = CompilerSettings::findFileInIncludePaths(
 				        name + ".ast", srcPath.parent_path())) {
 					auto activeDependency =
-					    std::find(sourceFiles.begin(), sourceFiles.end(), *searchInIncludes);
-					if (activeDependency != sourceFiles.end()) {
+					    std::find(modifiedFiles.begin(), modifiedFiles.end(), *searchInIncludes);
+					if (activeDependency != modifiedFiles.end()) {
 						dependencies.addDependency(src.c_str(), activeDependency->c_str());
 						hasDependencies = true;
 					}
@@ -660,7 +726,7 @@ namespace AstrumLang {
 					StringReplace(dir, "/", "\\");
 #endif
 					auto activeDependencies =
-					    sourceFiles |
+					    modifiedFiles |
 					    std::views::filter([&](const auto& file) { return file.starts_with(dir); });
 					for (const auto& dep : activeDependencies) {
 						dependencies.addDependency(src.c_str(), dep.c_str());
@@ -672,9 +738,6 @@ namespace AstrumLang {
 
 			if (!hasDependencies)
 				dependencies.addNode(src.c_str());
-
-			if (parser->getNumberOfSyntaxErrors())
-				return false;
 		}
 
 		// topological sort
@@ -785,8 +848,8 @@ namespace AstrumLang {
 
 	void Compiler::preprocessTests() {
 		std::ofstream mainFile;
-		std::string path     = "test_main.cpp";
-		auto rootPath = CompilerSettings::get().rootPath;
+		std::string path = "test_main.cpp";
+		auto rootPath    = CompilerSettings::get().rootPath;
 		if (!rootPath.empty()) {
 			path = rootPath + "/" + path;
 		}

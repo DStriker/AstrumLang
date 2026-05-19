@@ -20493,8 +20493,12 @@ namespace AstrumLang {
 				    std::from_chars(txt.c_str() + offset, txt.c_str() + txt.length(), value, base);
 				if ((int) result.ec || value > (uint64_t(INT64_MAX) + 1) ||
 				    (!minus && value == (uint64_t(INT64_MAX) + 1))) {
-					out << "Builtin::i128::Parse(\"" << (minus ? "-" : "")
-					    << txt.substr(0, txt.length() - 4) << "\")";
+					if (minus && txt == "170141183460469231731687303715884105728i128") {
+					    out << "INT128_MIN";
+					} else {
+					    out << "Builtin::ParseInt128(\"" << (minus ? "-" : "")
+					        << txt.substr(0, txt.length() - 4) << "\")";
+				    }
 				} else {
 					out << "Builtin::i128(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 4)
 					    << "LL)";
@@ -20518,7 +20522,7 @@ namespace AstrumLang {
 				auto result =
 				    std::from_chars(txt.c_str() + offset, txt.c_str() + txt.length(), value, base);
 				if ((int) result.ec) {
-					out << "Builtin::u128::Parse(\"" << txt.substr(0, txt.length() - 4) << "\")";
+					out << "Builtin::ParseUInt128(\"" << txt.substr(0, txt.length() - 4) << "\")";
 				} else {
 					out << "Builtin::u128(" << txt.substr(0, txt.length() - 4) << "ULL)";
 				}
@@ -20574,7 +20578,7 @@ namespace AstrumLang {
 						    (txt.length() < 40 ||
 						     (txt.length() == 40 &&
 						      (txt < "340282366920938463463374607431768211455")))) {
-							out << "Builtin::u128::Parse(\"" << txt.substr(0, txt.length() - 1)
+							out << "Builtin::ParseUInt128(\"" << txt.substr(0, txt.length() - 1)
 							    << "\")";
 						} else {
 							out << "Builtin::BigIntLiteral{\"" << txt.substr(0, txt.length() - 1)
@@ -20605,18 +20609,21 @@ namespace AstrumLang {
 				auto result =
 				    std::from_chars(txt.c_str() + offset, txt.c_str() + txt.length(), value, base);
 				if ((int) result.ec) {
+				    if (minus && txt == "170141183460469231731687303715884105728")
+					{
+					    out << "INT128_MIN";
+					} else
 					if (txt[0] != '0' &&
 					    (txt.length() < 39 ||
 					     (txt.length() == 39 &&
-					      (txt < "170141183460469231731687303715884105728" ||
-					       (txt == "170141183460469231731687303715884105728" && minus))))) {
-						out << "Builtin::i128::Parse(\"" << (minus ? "-" : "") << txt << "\")";
+					      (txt < "170141183460469231731687303715884105728")))) {
+						out << "Builtin::ParseInt128(\"" << (minus ? "-" : "") << txt << "\")";
 					} else {
 						out << "Builtin::BigIntLiteral{\"" << (minus ? "-" : "") << txt << "\"}";
 					}
 				} else if (value > 9223372036854775808 ||
 				           (value == 9223372036854775808 && !minus)) {
-					out << "Builtin::i128::Parse(\"" << (minus ? "-" : "") << txt << "\")";
+					out << "Builtin::ParseInt128(\"" << (minus ? "-" : "") << txt << "\")";
 			    } else if (value == 9223372036854775808 && minus)
 				{
 				    out << "Builtin::i64(-9223372036854775807LL - 1)";

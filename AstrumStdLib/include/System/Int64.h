@@ -252,7 +252,7 @@ using __extensions::_operator_xor_xor_eq;
 	#line 276 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 	template<class __TT> struct __static_getZero; template<> struct __static_getZero<__extension_Int64_274_i64> { static inline constexpr auto get() -> const __extension_Int64_274_i64; };
 	#line 277 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	template<class __TT> struct __static_getRadix; template<> struct __static_getRadix<__extension_Int64_274_i64> { static inline constexpr auto get() -> const Builtin::i64; };
+	template<class __TT> struct __static_getRadix; template<> struct __static_getRadix<__extension_Int64_274_i64> { static inline constexpr auto get() -> const Builtin::i32; };
 	#line 279 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 	inline constexpr auto getAbs(__extension_Int64_274_i64 const& __this ) -> const __extension_Int64_274_i64;
 	#line 280 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
@@ -360,7 +360,7 @@ using __extensions::__static_getMinusOne;
 	#line 414 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 	inline constexpr auto MinNumber(__extension_Int64_390_i64 const& __this LIFETIMEBOUND, __extension_Int64_390_i64 rhs) noexcept -> const typename __extension_Int64_390_i64;
 	#line 415 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	inline auto Clamp(__extension_Int64_390_i64 const& __this LIFETIMEBOUND, __extension_Int64_390_i64 min, __extension_Int64_390_i64 max)  -> const typename __extension_Int64_390_i64;
+	inline constexpr auto Clamp(__extension_Int64_390_i64 const& __this LIFETIMEBOUND, __extension_Int64_390_i64 min, __extension_Int64_390_i64 max)  -> const typename __extension_Int64_390_i64;
 	#line 391 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 	inline constexpr auto getSign(__extension_Int64_390_i64 const& __this ) -> const Builtin::i32;
 	#line 390 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
@@ -988,7 +988,7 @@ using __extensions::getMultiplyBy16;
 			Builtin::Throw(Builtin::IntegerOverflowException{});
 		}
 		#line 106 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		return Builtin::Cast<true, Builtin::i8>(__this);
+		return Builtin::Cast<true, Builtin::i16>(__this);
 	}
 	
 } namespace System{
@@ -1016,7 +1016,7 @@ using __extensions::getMultiplyBy16;
 			Builtin::Throw(Builtin::IntegerOverflowException{});
 		}
 		#line 118 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		return Builtin::Cast<true, Builtin::i8>(__this);
+		return Builtin::Cast<true, Builtin::i32>(__this);
 	}
 	
 } namespace System{
@@ -1101,7 +1101,7 @@ using __extensions::getMultiplyBy16;
 		#line 145 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		if constexpr ((Builtin::usize(sizeof(Builtin::usize)) <=> Builtin::i32(64)) < 0) {
 			#line 146 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-			if ((__this <=> Builtin::i32(0x7FFFFFFF)) > 0) {
+			if ((__this <=> Builtin::i64(0xFFFFFFFFLL)) > 0) {
 				#line 147 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 				Builtin::Throw(Builtin::IntegerOverflowException{});
 			}
@@ -1473,7 +1473,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto NarrowToUInt128(__extension_Int64_274_i64 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u128
 	{
 		#line 381 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		ADV_EXPRESSION_BODY(Builtin::u128{__this}); 
+		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::u128>(__this)); 
 	}
 	
 } namespace System{
@@ -1513,7 +1513,7 @@ using __extensions::getMultiplyBy16;
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 277 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	inline constexpr auto __static_getRadix<__extension_Int64_274_i64>::get() -> const Builtin::i64
+	inline constexpr auto __static_getRadix<__extension_Int64_274_i64>::get() -> const Builtin::i32
 	{
 		#line 277 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		ADV_EXPRESSION_BODY(Builtin::i32(2)); 
@@ -1713,7 +1713,7 @@ using __extensions::getMultiplyBy16;
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 415 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	inline auto Clamp(__extension_Int64_390_i64 const& __this LIFETIMEBOUND, __extension_Int64_1364_i64 min, __extension_Int64_1364_i64 max)  -> const typename __extension_Int64_390_i64
+	inline constexpr auto Clamp(__extension_Int64_390_i64 const& __this LIFETIMEBOUND, __extension_Int64_1364_i64 min, __extension_Int64_1364_i64 max)  -> const typename __extension_Int64_390_i64
 	{
 		#line 415 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		ADV_EXPRESSION_BODY(ADV_USFCS((INumber), DefaultClamp)(__this, min, max)); 
@@ -3346,7 +3346,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto RotateLeft(__extension_Int64_1326_i64 const& __this LIFETIMEBOUND, Builtin::i32 shiftAmount) noexcept -> const typename __extension_Int64_1326_i64
 	{
 		#line 1359 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		ADV_EXPRESSION_BODY(Builtin::RotateLeft(__this, shiftAmount)); 
+		ADV_EXPRESSION_BODY(Builtin::BitsRotateLeft(__this, shiftAmount)); 
 	}
 	
 } namespace System{
@@ -3355,7 +3355,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto RotateRight(__extension_Int64_1326_i64 const& __this LIFETIMEBOUND, Builtin::i32 shiftAmount) noexcept -> const typename __extension_Int64_1326_i64
 	{
 		#line 1360 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		ADV_EXPRESSION_BODY(Builtin::RotateRight(__this, shiftAmount)); 
+		ADV_EXPRESSION_BODY(Builtin::BitsRotateRight(__this, shiftAmount)); 
 	}
 	
 } namespace System{

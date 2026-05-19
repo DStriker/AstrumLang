@@ -357,7 +357,7 @@ using __extensions::getIsZero;
 	#line 281 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
 	inline constexpr auto MinNumber(__extension_UInt8_273_u8 const& __this LIFETIMEBOUND, __extension_UInt8_273_u8 rhs) noexcept -> const typename __extension_UInt8_273_u8;
 	#line 282 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-	inline auto Clamp(__extension_UInt8_273_u8 const& __this LIFETIMEBOUND, __extension_UInt8_273_u8 min, __extension_UInt8_273_u8 max)  -> const typename __extension_UInt8_273_u8;
+	inline constexpr auto Clamp(__extension_UInt8_273_u8 const& __this LIFETIMEBOUND, __extension_UInt8_273_u8 min, __extension_UInt8_273_u8 max)  -> const typename __extension_UInt8_273_u8;
 	#line 274 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
 	inline constexpr auto getSign(__extension_UInt8_273_u8 const& __this ) -> const Builtin::i32;
 	#line 273 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
@@ -1660,7 +1660,7 @@ using __extensions::getMultiplyBy16;
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 282 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-	inline auto Clamp(__extension_UInt8_273_u8 const& __this LIFETIMEBOUND, __extension_UInt8_1114_u8 min, __extension_UInt8_1114_u8 max)  -> const typename __extension_UInt8_273_u8
+	inline constexpr auto Clamp(__extension_UInt8_273_u8 const& __this LIFETIMEBOUND, __extension_UInt8_1114_u8 min, __extension_UInt8_1114_u8 max)  -> const typename __extension_UInt8_273_u8
 	{
 		#line 282 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
 		ADV_EXPRESSION_BODY(ADV_USFCS((INumber), DefaultClamp)(__this, min, max)); 
@@ -3199,7 +3199,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto RotateLeft(__extension_UInt8_1095_u8 const& __this LIFETIMEBOUND, Builtin::i32 shiftAmount) noexcept -> const typename __extension_UInt8_1095_u8
 	{
 		#line 1109 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-		ADV_EXPRESSION_BODY(Builtin::RotateLeft(__this, shiftAmount)); 
+		ADV_EXPRESSION_BODY(Builtin::BitsRotateLeft(__this, shiftAmount)); 
 	}
 	
 } namespace System{
@@ -3208,7 +3208,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto RotateRight(__extension_UInt8_1095_u8 const& __this LIFETIMEBOUND, Builtin::i32 shiftAmount) noexcept -> const typename __extension_UInt8_1095_u8
 	{
 		#line 1110 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt8.ast"
-		ADV_EXPRESSION_BODY(Builtin::RotateRight(__this, shiftAmount)); 
+		ADV_EXPRESSION_BODY(Builtin::BitsRotateRight(__this, shiftAmount)); 
 	}
 	
 } namespace System{

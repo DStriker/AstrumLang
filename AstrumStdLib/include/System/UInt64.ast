@@ -43,7 +43,7 @@ public extension u64 {
     mut operator>>>=: (amount: i32) -> ref self ==> this >>= amount;
 
     // unbounded shl
-    operator<<\: (amount: u64) -> self noexcept ==
+    operator<<\: (amount: u32) -> self noexcept ==
     {
         if amount >= self.BitWidth {
             return 0u64;
@@ -51,9 +51,9 @@ public extension u64 {
         return Builtin.UncheckedShiftLeft(this, amount as i32);
     }
     // unbounded shl and assign
-    mut operator<<\=: (amount: u64) -> ref self noexcept ==> this = this <<\ amount;
+    mut operator<<\=: (amount: u32) -> ref self noexcept ==> this = this <<\ amount;
     // unbounded shr
-    operator>>\: (amount: u64) -> self noexcept ==
+    operator>>\: (amount: u32) -> self noexcept ==
     {
         if amount >= self.BitWidth {
             return 0u64;
@@ -61,7 +61,7 @@ public extension u64 {
         return Builtin.UncheckedShiftRight(this, amount as i32);
     }
     // unbounded shr and assign
-    mut operator>>\=: (amount: u64) -> ref self noexcept ==> this = this >>\ amount;
+    mut operator>>\=: (amount: u32) -> ref self noexcept ==> this = this >>\ amount;
 
     HashCode: u64 ==> this;
 
@@ -334,7 +334,7 @@ public extension u64: INumber {
     MaxNumber: (rhs: self) -> self noexcept ==> this.Max(rhs);
     Min: (rhs: self) -> self noexcept ==> INumber.DefaultMin(this, rhs);//Math.Min
     MinNumber: (rhs: self) -> self noexcept ==> this.Min(rhs);
-    Clamp: (min: self, max: self) -> self => INumber.DefaultClamp(this, min, max);//Math.Clamp
+    Clamp: (min: self, max: self) -> self ==> INumber.DefaultClamp(this, min, max);//Math.Clamp
 }
 
 public extension u64: IBinaryNumber {
@@ -1185,8 +1185,8 @@ public extension u64: IFixedWidthInteger {
 
     ShortestBitLength: u32 ==> self.BitWidth - this.LeadingZeroCount;
 
-    RotateLeft: (shiftAmount: i32) -> self noexcept ==> Builtin.RotateLeft(this, shiftAmount);
-    RotateRight: (shiftAmount: i32) -> self noexcept ==> Builtin.RotateRight(this, shiftAmount);
+    RotateLeft: (shiftAmount: i32) -> self noexcept ==> Builtin.BitsRotateLeft(this, shiftAmount);
+    RotateRight: (shiftAmount: i32) -> self noexcept ==> Builtin.BitsRotateRight(this, shiftAmount);
 
 }
 
@@ -1458,7 +1458,7 @@ test "UInt64"
     assert a == u64.MinValue;
     {
         result, overflowed := a -%? 2u64;
-        assert result == 18446744073709551614 && overflowed;
+        assert result == 18446744073709551614u && overflowed;
     }
 
     a = u64.MinValue + 1;
@@ -1480,7 +1480,7 @@ test "UInt64"
     }
     {
         result, overflowed := a.BorrowingSub(10u64, true);
-        assert result == 18446744073709551605 && overflowed;
+        assert result == 18446744073709551605u && overflowed;
     }
 
     assert a *? 1u64 == u64.MinValue;
@@ -1488,8 +1488,8 @@ test "UInt64"
     assert a *? 200000000u64 == null;
     a *?= 200000000u64;
     assert a == 150000000000u;
-    assert a *! 3000u64 == 450000000000000;
-    assert a *% 3000u64 == 450000000000000;
+    assert a *! 3000u64 == 450000000000000u;
+    assert a *% 3000u64 == 450000000000000u;
     assert a *% 300000000u64 == 8106511852580896768u;
     a *%= 300000000u64;
     assert a == 8106511852580896768u;
@@ -1499,12 +1499,12 @@ test "UInt64"
     assert a *| 2u64 == u64.MaxValue;
     {
         result, overflowed := a *%? 2u64;
-        assert result == 18446744073709551614 && overflowed;
+        assert result == 18446744073709551614u && overflowed;
     }
     a = 500000000000u64;
     {
         low, high := a *> 50000000u64;
-        assert low == 6553255926290448384 && high == 1;
+        assert low == 6553255926290448384u && high == 1;
     }
     a = u64.MaxValue;
     {
@@ -1567,20 +1567,20 @@ test "UInt64"
 
     // integer exponentiation
     a = 1500000u64;
-    assert a ^^ 3u == 3375000000000000000;
+    assert a ^^ 3u == 3375000000000000000u;
     a ^^= 3u;
-    assert a == 3375000000000000000;
-    assert 1500000u64 ^^ 3u == 3375000000000000000;
+    assert a == 3375000000000000000u;
+    assert 1500000u64 ^^ 3u == 3375000000000000000u;
     assert 1500000u64 ^^? 3u == 3375000000000000000u;
     assert 1500000u64 ^^? 4u == null;
     a ^^?= 4u;
-    assert a == 3375000000000000000;
+    assert a == 3375000000000000000u;
     a = 1500000u64;
-    assert 1500000u64 ^^! 3u == 3375000000000000000;
-    assert 1500000u64 ^^% 4u == 12449899298073608192;
+    assert 1500000u64 ^^! 3u == 3375000000000000000u;
+    assert 1500000u64 ^^% 4u == 12449899298073608192u;
     a ^^%= 4u;
-    assert a == 12449899298073608192;
-    assert 1500000u64 ^^| 3u == 3375000000000000000;
+    assert a == 12449899298073608192u;
+    assert 1500000u64 ^^| 3u == 3375000000000000000u;
     assert 1500000u64 ^^| 4u == u64.MaxValue;
     {
         result, overflowed := 1500000u64 ^^%? 4u;

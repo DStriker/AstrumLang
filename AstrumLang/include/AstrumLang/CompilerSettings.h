@@ -55,6 +55,7 @@ namespace AstrumLang {
 		int optimizationLevel         = -1;
 		bool unitTestMode             = false;
 		bool buildMode                = false;
+		bool buildAllMode             = false;
 		bool runMode                  = false;
 		bool debugBuild               = false;
 		bool versionMode              = false;

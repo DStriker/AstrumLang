@@ -1,5 +1,5 @@
 #pragma once
-#include "Int128.h"
+#include "BuiltinInt128.h"
 
 namespace Builtin {
 	template <class T>
@@ -109,20 +109,135 @@ namespace Builtin {
 			return *this;
 		}
 
-		constexpr explicit(sizeof(T) > sizeof(float)) operator float() const noexcept { return value; }
+		constexpr explicit(sizeof(T) > sizeof(float)) operator float() const noexcept {
+			return value;
+		}
 
-		constexpr explicit(sizeof(T) > sizeof(double)) operator double() const noexcept { return value; }
+		constexpr explicit(sizeof(T) > sizeof(double)) operator double() const noexcept {
+			return value;
+		}
 
 		constexpr operator long double() const noexcept { return value; }
-		
-		constexpr explicit operator i8() const { return static_cast<int8_t>(value); }
-		constexpr explicit operator i16() const { return static_cast<int16_t>(value); }
-		constexpr explicit operator i32() const { return static_cast<int32_t>(value); }
-		constexpr explicit operator i64() const { return static_cast<int64_t>(value); }
-		constexpr explicit operator u8() const { return static_cast<uint8_t>(value); }
-		constexpr explicit operator u16() const { return static_cast<uint16_t>(value); }
-		constexpr explicit operator u32() const { return static_cast<uint32_t>(value); }
-		constexpr explicit operator u64() const { return static_cast<uint64_t>(value); }
+
+		constexpr explicit operator i8() const {
+#ifdef Builtin_OVERFLOW_CHECKS
+			if (value < INT8_MIN || value > INT8_MAX || std::isnan(value))
+				throw IntegerOverflowException();
+#endif
+			return static_cast<int8_t>(value);
+		}
+		constexpr explicit operator i16() const {
+#ifdef Builtin_OVERFLOW_CHECKS
+			if (value < INT16_MIN || value > INT16_MAX || std::isnan(value))
+				throw IntegerOverflowException();
+#endif
+			return static_cast<int16_t>(value);
+		}
+		constexpr explicit operator i32() const {
+#ifdef Builtin_OVERFLOW_CHECKS
+			if (value < INT32_MIN || value > INT32_MAX || std::isnan(value))
+				throw IntegerOverflowException();
+#endif
+			return static_cast<int32_t>(value);
+		}
+		constexpr explicit operator i64() const {
+#ifdef Builtin_OVERFLOW_CHECKS
+			if (value < INT64_MIN || value > INT64_MAX || std::isnan(value))
+				throw IntegerOverflowException();
+#endif
+			return static_cast<int64_t>(value);
+		}
+		constexpr explicit operator u8() const {
+#ifdef Builtin_OVERFLOW_CHECKS
+			if (value < 0 || value > UINT8_MAX || std::isnan(value))
+				throw IntegerOverflowException();
+#endif
+			return static_cast<uint8_t>(value);
+		}
+		constexpr explicit operator u16() const {
+#ifdef Builtin_OVERFLOW_CHECKS
+			if (value < 0 || value > UINT16_MAX || std::isnan(value))
+				throw IntegerOverflowException();
+#endif
+			return static_cast<uint16_t>(value);
+		}
+		constexpr explicit operator u32() const {
+#ifdef Builtin_OVERFLOW_CHECKS
+			if (value < 0 || value > UINT32_MAX || std::isnan(value))
+				throw IntegerOverflowException();
+#endif
+			return static_cast<uint32_t>(value);
+		}
+		constexpr explicit operator u64() const {
+#ifdef Builtin_OVERFLOW_CHECKS
+			if (value < 0 || value > UINT64_MAX || std::isnan(value))
+				throw IntegerOverflowException();
+#endif
+			return static_cast<uint64_t>(value);
+		}
+		constexpr explicit operator u128() const {
+#ifdef Builtin_OVERFLOW_CHECKS
+			if (value < 0 || value > 340282366920938463463374607431768211455.0 || std::isnan(value))
+				throw IntegerOverflowException();
+#endif
+			constexpr T two_32 {static_cast<T>(1ull << 32)};
+			constexpr T two_64 {two_32 * two_32};
+
+			if (!(value >= T {0})) {
+				return 0u;
+			}
+
+			const T scaled = value / two_64;
+			if (scaled >= two_64)
+			{
+				return UINT128_MAX;
+			}
+
+			std::uint64_t h {static_cast<std::uint64_t>(scaled)};
+			const T remainder {value - static_cast<T>(h) * two_64};
+			std::uint64_t l {static_cast<std::uint64_t>(remainder)};
+
+			return u128(h, l);
+		}
+		constexpr explicit operator i128() const {
+#ifdef Builtin_OVERFLOW_CHECKS
+			if (value < -170141183460469231731687303715884105728.0 ||
+			    value > 170141183460469231731687303715884105727.0 || std::isnan(value))
+				throw IntegerOverflowException();
+#endif
+			constexpr T two_32 {static_cast<T>(1ull << 32)};
+			constexpr T two_64 {two_32 * two_32};
+			constexpr T two_127 { two_64* static_cast<T>(1ull << 63) };
+
+			if (!(value >= T {0}) && !(value <= T {0})) {
+				return 0;
+			}
+
+			if (value >= two_127) {
+				return INT128_MAX;
+			}
+
+			if (value <= -two_127) {
+				return INT128_MIN;
+			}
+
+			const bool negative {value < T {0}};
+			const T abs_f {negative ? -value : value};
+
+			std::uint64_t h {static_cast<std::uint64_t>(abs_f / two_64)};
+			const T remainder {abs_f - static_cast<T>(h) * two_64};
+			std::uint64_t l {static_cast<std::uint64_t>(remainder)};
+
+			if (negative) {
+				// Two's complement negation of (h, l): new_l = -l (with wraparound),
+				// new_h = ~h if a borrow occurred (l != 0), else ~h + 1.
+				const bool low_was_zero {l == 0};
+				l = 0ull - l;
+				h = ~h + (low_was_zero ? 1ull : 0ull);
+			}
+
+			return i128(static_cast<std::int64_t>(h), l);
+		}
 
 		template <class U>
 		constexpr auto operator+(Float<U> rhs) const noexcept {
@@ -958,12 +1073,12 @@ namespace Builtin {
 	using f64  = Float<double>;
 	using fext = Float<long double>;
 
-	template<class T, class U>
-	inline constexpr f64 operator/(T lhs, U rhs) noexcept 
-		requires(std::convertible_to<T, f64>&& std::convertible_to<U, f64> &&
+	template <class T, class U>
+	inline constexpr f64 operator/(T lhs, U rhs) noexcept
+	    requires(std::convertible_to<T, f64>&& std::convertible_to<U, f64> &&
 	             !std::is_same_v<T, f32> && !std::is_same_v<T, f64> && !std::is_same_v<U, f32> &&
 	             !std::is_same_v<U, f64>) {
-        return static_cast<f64>(lhs) / static_cast<f64>(rhs);
+		return static_cast<f64>(lhs) / static_cast<f64>(rhs);
 	}
 
 }  // namespace Builtin

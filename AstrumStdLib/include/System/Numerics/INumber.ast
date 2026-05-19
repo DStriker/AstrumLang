@@ -40,7 +40,7 @@ public interface INumber:
         return result;
     }
 
-    static final DefaultClamp: <T: is INumber> (num: T, min: T, max: T) -> T
+    static final DefaultClamp: <T: is INumber> (num: T, min: T, max: T) -> T ==
     {
         if min > max {
             throw Builtin.InvalidOperationException();

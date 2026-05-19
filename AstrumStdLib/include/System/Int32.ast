@@ -102,7 +102,7 @@ public extension i32: IConvertible {
         if this > 0x7FFF or this < (-0x8000) {
             throw Builtin.IntegerOverflowException();
         }
-        return this as i8;
+        return this as i16;
     }
     ToUInt16: () -> u16 == {
         if this < 0 or this > 0xFFFF {
@@ -361,7 +361,7 @@ public extension i32: INumberBase {
     NarrowToInt64: () -> i64 noexcept ==> this;
     NarrowToUInt64: () -> u64 noexcept ==> UnsafeCast<u64>(this);
     NarrowToInt128: () -> i128 noexcept ==> this;
-    NarrowToUInt128: () -> u128 noexcept ==> u128(this);
+    NarrowToUInt128: () -> u128 noexcept ==> UnsafeCast<u128>(this);
     NarrowToIsize: () -> isize noexcept ==> this;
     NarrowToUsize: () -> usize noexcept ==> UnsafeCast<usize>(this);
 }
@@ -395,7 +395,7 @@ public extension i32: INumber {
     MaxNumber: (rhs: self) -> self noexcept ==> this.Max(rhs);
     Min: (rhs: self) -> self noexcept ==> INumber.DefaultMin(this, rhs);//Math.Min
     MinNumber: (rhs: self) -> self noexcept ==> this.Min(rhs);
-    Clamp: (min: self, max: self) -> self => INumber.DefaultClamp(this, min, max);//Math.Clamp
+    Clamp: (min: self, max: self) -> self ==> INumber.DefaultClamp(this, min, max);//Math.Clamp
 }
 
 public extension i32: IBinaryNumber {
@@ -1334,8 +1334,8 @@ public extension i32: IFixedWidthInteger {
         return self.BitWidth + 1u - this.LeadingOneCount;
     }
 
-    RotateLeft: (shiftAmount: i32) -> self noexcept ==> Builtin.RotateLeft(this, shiftAmount);
-    RotateRight: (shiftAmount: i32) -> self noexcept ==> Builtin.RotateRight(this, shiftAmount);
+    RotateLeft: (shiftAmount: i32) -> self noexcept ==> Builtin.BitsRotateLeft(this, shiftAmount);
+    RotateRight: (shiftAmount: i32) -> self noexcept ==> Builtin.BitsRotateRight(this, shiftAmount);
 
 }
 
@@ -1461,10 +1461,10 @@ test "Int32"
     assert a.HashCode == 10;
     assert #a == 10;
     b = -6;
-    assert #b == 18446744073709551610;
+    assert #b == 18446744073709551610u;
 
     assert b.ToInt64() == -6;
-    assert b.NarrowToUInt64() == 18446744073709551610;
+    assert b.NarrowToUInt64() == 18446744073709551610u;
 
     // INumberBase
     assert b.Abs == 6;

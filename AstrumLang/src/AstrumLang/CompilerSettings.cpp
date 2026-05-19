@@ -56,6 +56,9 @@ namespace AstrumLang {
 				get().optimizationLevel = 2;
 			} else if (str == "-O3") {
 				get().optimizationLevel = 3;
+			} else if (str == "buildall") {
+				get().buildMode = true;
+				get().buildAllMode = true;
 			} else if (str == "build") {
 				get().buildMode = true;
 			} else if (str == "run") {

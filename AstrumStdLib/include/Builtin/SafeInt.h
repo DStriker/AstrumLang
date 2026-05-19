@@ -8,7 +8,7 @@ namespace Builtin {
 	
 	template <class T>
 	struct SafeInt : public Struct {
-		static_assert(__details::NumericType<T>::isInt, "T must be integer");
+		static_assert(std::is_integral_v<T>, "T must be integer");
 		template <class U>
 		friend struct SafeInt;
 		constexpr SafeInt() noexcept = default;
@@ -876,8 +876,3 @@ namespace Builtin {
 }  // namespace Builtin
 
 inline constexpr bool operator!=(auto lhs, auto rhs) { return !(lhs == rhs); }
-
-template<class T, class U>
-inline constexpr auto UnsafeCast(Builtin::SafeInt<U> value) noexcept {
-	return value.__builtin_UnsafeNarrow<T>();
-}

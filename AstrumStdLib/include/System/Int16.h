@@ -360,7 +360,7 @@ using __extensions::__static_getMinusOne;
 	#line 393 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 	inline constexpr auto MinNumber(__extension_Int16_369_i16 const& __this LIFETIMEBOUND, __extension_Int16_369_i16 rhs) noexcept -> const typename __extension_Int16_369_i16;
 	#line 394 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-	inline auto Clamp(__extension_Int16_369_i16 const& __this LIFETIMEBOUND, __extension_Int16_369_i16 min, __extension_Int16_369_i16 max)  -> const typename __extension_Int16_369_i16;
+	inline constexpr auto Clamp(__extension_Int16_369_i16 const& __this LIFETIMEBOUND, __extension_Int16_369_i16 min, __extension_Int16_369_i16 max)  -> const typename __extension_Int16_369_i16;
 	#line 370 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 	inline constexpr auto getSign(__extension_Int16_369_i16 const& __this ) -> const Builtin::i32;
 	#line 369 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
@@ -1450,7 +1450,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto NarrowToUInt128(__extension_Int16_253_i16 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u128
 	{
 		#line 360 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_EXPRESSION_BODY(Builtin::u128{__this}); 
+		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::u128>(__this)); 
 	}
 	
 } namespace System{
@@ -1690,7 +1690,7 @@ using __extensions::getMultiplyBy16;
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 394 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-	inline auto Clamp(__extension_Int16_369_i16 const& __this LIFETIMEBOUND, __extension_Int16_1334_i16 min, __extension_Int16_1334_i16 max)  -> const typename __extension_Int16_369_i16
+	inline constexpr auto Clamp(__extension_Int16_369_i16 const& __this LIFETIMEBOUND, __extension_Int16_1334_i16 min, __extension_Int16_1334_i16 max)  -> const typename __extension_Int16_369_i16
 	{
 		#line 394 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ADV_EXPRESSION_BODY(ADV_USFCS((INumber), DefaultClamp)(__this, min, max)); 
@@ -3305,7 +3305,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto RotateLeft(__extension_Int16_1296_i16 const& __this LIFETIMEBOUND, Builtin::i32 shiftAmount) noexcept -> const typename __extension_Int16_1296_i16
 	{
 		#line 1329 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_EXPRESSION_BODY(Builtin::RotateLeft(__this, shiftAmount)); 
+		ADV_EXPRESSION_BODY(Builtin::BitsRotateLeft(__this, shiftAmount)); 
 	}
 	
 } namespace System{
@@ -3314,7 +3314,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto RotateRight(__extension_Int16_1296_i16 const& __this LIFETIMEBOUND, Builtin::i32 shiftAmount) noexcept -> const typename __extension_Int16_1296_i16
 	{
 		#line 1330 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		ADV_EXPRESSION_BODY(Builtin::RotateRight(__this, shiftAmount)); 
+		ADV_EXPRESSION_BODY(Builtin::BitsRotateRight(__this, shiftAmount)); 
 	}
 	
 } namespace System{
