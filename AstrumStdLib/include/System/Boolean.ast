@@ -1,0 +1,87 @@
+package System;
+
+public import IComparable;
+public import IEquatable;
+public import IConvertible;
+public import Optional;
+
+public type Boolean = Builtin.Boolean;
+
+public extension Boolean {
+    // Equals to dynamic object
+    operator==*: (in obj: object?) -> bool
+    {
+        if obj is self {
+            return this == obj;
+        }
+        
+        return false;
+    }
+
+    // Compare to optional type
+    operator<=>: (rhs: self?) -> i32 noexcept ==
+    {
+        if rhs is not null {
+            if (this == rhs) return 0;
+            if (rhs) return -1;
+        }
+
+        return 1;
+    }
+
+    HashCode: u64 ==> this ? 1 : 0;
+    
+    //TrueString, FalseString
+}
+
+// Compare to dynamic object
+public extension Boolean: IAbstractComparable {
+    operator<=>*: (in obj: object?) -> i32
+    {
+        if obj is self {
+            if (this == obj) return 0;
+            if (obj) return -1;
+        }
+        if obj is not null {
+            //InvalidArgumentException
+            throw Builtin.InvalidOperationException();
+        }
+        return 1;
+    }
+}
+
+public extension Boolean: IConvertible
+{
+    ToBoolean: () -> bool noexcept ==> this;
+    ToInt8: () -> i8 noexcept ==> this ? 1i8 : 0i8;
+    ToUInt8: () -> u8 noexcept ==> this ? 1u8 : 0u8;
+    ToInt16: () -> i16 noexcept ==> this ? 1i16 : 0i16;
+    ToUInt16: () -> u16 noexcept ==> this ? 1u16 : 0u16;
+    ToInt32: () -> i32 noexcept ==> this ? 1 : 0;
+    ToUInt32: () -> u32 noexcept ==> this ? 1u : 0u;
+    ToInt64: () -> i64 noexcept ==> this ? 1i64 : 0i64;
+    ToUInt64: () -> u64 noexcept ==> this ? 1u64 : 0u64;
+    ToInt128: () -> i128 noexcept ==> this ? 1i128 : 0i128;
+    ToUInt128: () -> u128 noexcept ==> this ? 1u128 : 0u128;
+    ToIsize: () -> isize noexcept ==> this ? 1iz : 0iz;
+    ToUsize: () -> usize noexcept ==> this ? 1uz : 0uz;
+    ToFloat32: () -> f32 noexcept ==> this ? 1.0f32 : 0.0f32;
+    ToFloat64: () -> f64 noexcept ==> this ? 1.0 : 0.0;
+    ToByte: () -> byte noexcept ==> this ? 1u8 : 0u8;
+    ToChar: () -> char noexcept ==> this ? 1u16 : 0u16;
+    //ToString: () -> string;
+    //ToDateTime: () -> DateTime;
+}
+
+static assert(sizeof(Boolean) == 1, "bool should be 1 byte");
+static assert(type Boolean is IComparable<Boolean>, "bool should implement IComparable<bool>");
+static assert(type Boolean is IEquatable<Boolean>, "bool should implement IEquatable<bool>");
+static assert(type Boolean is ISelfComparable, "bool should implement ISelfComparable");
+static assert(type Boolean is ISelfEquatable, "bool should implement ISelfEquatable");
+
+test "Boolean" {
+    assert true.HashCode == 1;
+    assert false.HashCode == 0;
+    o: object? = true;
+    
+}

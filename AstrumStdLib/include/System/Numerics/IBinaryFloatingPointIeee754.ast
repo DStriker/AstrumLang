@@ -1,0 +1,9 @@
+package System.Numerics;
+
+public import IFloatingPointIeee754;
+public import IBinaryNumber;
+
+public interface IBinaryFloatingPointIeee754:
+    IBinaryNumber,
+    IFloatingPointIeee754
+{}

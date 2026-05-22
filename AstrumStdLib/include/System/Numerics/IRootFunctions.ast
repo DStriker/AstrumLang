@@ -1,0 +1,13 @@
+package System.Numerics;
+
+public import IFloatingPointConstants;
+
+public interface IRootFunctions: IFloatingPointConstants
+{
+    Sqrt: self { get; }
+    Cbrt: self { get; }
+
+    Root: (n: i32) -> self;
+
+    Hypot: (y: self) -> self;
+}

@@ -1570,6 +1570,8 @@ namespace AstrumLang {
 				out << "Builtin::i32";
 			}
 			out << ")\n" << std::string(depth, '\t');
+			out << "public: constexpr " << type->id << "() noexcept = default;\n"
+			    << std::string(depth, '\t');
 		}
 
 		if ((type->kind == TypeKind::Struct || type->kind == TypeKind::EnumClass) &&
@@ -5776,7 +5778,7 @@ namespace AstrumLang {
 					}
 				}
 				if (method.isStatic)
-					");}() } -> ";
+					out << ");}() } -> ";
 				else
 					out << ")} -> ";
 				if (method.returnType) {
@@ -17248,10 +17250,17 @@ namespace AstrumLang {
 				    << std::string(depth, '\t') << "#line " << ctx->getStart()->getLine() << " \""
 				    << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
-				if (!isDestructor)
-					out << "ADV_EXPRESSION_BODY(";
+			    auto isSwitch = stat->expression()->getStart()->getType() == AstrumParser::Switch;
+			    if (!isDestructor) {
+					if (isSwitch)
+					{
+					    out << "return ";
+				    } else {
+					    out << "ADV_EXPRESSION_BODY(";
+				    }
+			    }
 				printExpression(stat->expression());
-				if (!isDestructor)
+			    if (!isDestructor && !isSwitch)
 					out << ")";
 				out << "; ";
 				if (isPropertySetter)
@@ -18424,6 +18433,7 @@ namespace AstrumLang {
 				out << ") <= 0";
 			} else if (auto trait = ctx->typeTrait()) {
 				bool typeIs = false;
+			    bool isStruct = false;
 				if (trait->not_())
 					out << "!";
 				if (trait->Void()) {
@@ -18436,7 +18446,8 @@ namespace AstrumLang {
 					} else if (trait->Union()) {
 						out << "std::is_union_v<";
 					} else {
-						out << "std::is_base_of_v<Builtin::Struct, ";
+					    isStruct = true;
+						out << "Builtin::IsStructType<";
 					}
 				} else if (trait->Enum()) {
 					if (trait->Class()) {
@@ -20423,7 +20434,7 @@ namespace AstrumLang {
 				auto txt = literal->getText();
 				printDecimalLiteral(std::move(txt), literalMinus);
 			} else if (auto literal = ctx->BooleanLiteral()) {
-				out << literal->getText();
+			    out << "Builtin::Boolean(" << literal->getText() << ")";
 			} else if (auto literal = ctx->Null()) {
 				out << "nullptr";
 			} else if (auto literal = ctx->CharacterLiteral()) {

@@ -287,30 +287,30 @@ template<> inline constexpr bool Builtin::__details::cheapCopy<System::Numerics:
 
 namespace System::Numerics {
 	#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IPowerOperators.ast"
-	template<class __AnyType> concept __HasMethodImplementation_9d006312779e41e9 = requires(typename __AnyType::__class t) { {t._operator_mul_mul(std::declval<Builtin::f64>())} -> std::convertible_to<Builtin::f64>; }  || requires(typename __AnyType::__self t) { {_operator_mul_mul(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::f64>())} -> std::convertible_to<Builtin::f64>; } || requires { { [] { using namespace __extensions; return _operator_mul_mul(std::declval<typename __AnyType::__self>(), std::declval<Builtin::f64>()); }() } -> std::convertible_to<Builtin::f64>; };
+	template<class __AnyType> concept __HasMethodImplementation_638bccfe056d33e1 = requires(typename __AnyType::__class t) { {t._operator_mul_mul(std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {_operator_mul_mul(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return _operator_mul_mul(std::declval<typename __AnyType::__self>(), std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
 	#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IPowerOperators.ast"
-	template<class __AnyType> concept __HasMethodImplementation_31ed0fad59bbeaf2 = requires(typename __AnyType::__class t) { {t._operator_mul_mul_eq(std::declval<Builtin::f64>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {_operator_mul_mul_eq(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::f64>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return _operator_mul_mul_eq(std::declval<typename __AnyType::__self>(), std::declval<Builtin::f64>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
+	template<class __AnyType> concept __HasMethodImplementation_06cb723517cf4b80 = requires(typename __AnyType::__class t) { {t._operator_mul_mul_eq(std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {_operator_mul_mul_eq(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return _operator_mul_mul_eq(std::declval<typename __AnyType::__self>(), std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
 	namespace __vtables {
 		#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IPowerOperators.ast"
 		struct __vtable_IPowerArithmetic
 		{
-			using fn_9d006312779e41e9 = const Builtin::f64(Builtin::Object*, Builtin::f64 rhs);
-			fn_9d006312779e41e9* fnptr_9d006312779e41e9;
+			using fn_638bccfe056d33e1 = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs);
+			fn_638bccfe056d33e1* fnptr_638bccfe056d33e1;
 			#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IPowerOperators.ast"
-			template<class __AnyType> static const Builtin::f64 impl_9d006312779e41e9(Builtin::Object* obj, Builtin::f64 rhs) { ADV_EXPRESSION_BODY(ADV_UFCS(_operator_mul_mul)(*static_cast<typename __AnyType::__class*>(obj), rhs)); }
-			using fn_31ed0fad59bbeaf2 = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::f64 rhs);
-			fn_31ed0fad59bbeaf2* fnptr_31ed0fad59bbeaf2;
+			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_638bccfe056d33e1(Builtin::Object* obj, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) { ADV_EXPRESSION_BODY(ADV_UFCS(_operator_mul_mul)(*static_cast<typename __AnyType::__class*>(obj), rhs)); }
+			using fn_06cb723517cf4b80 = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs);
+			fn_06cb723517cf4b80* fnptr_06cb723517cf4b80;
 			#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IPowerOperators.ast"
-			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_31ed0fad59bbeaf2(Builtin::Object* obj, Builtin::f64 rhs) { ADV_EXPRESSION_BODY(ADV_UFCS(_operator_mul_mul_eq)(*static_cast<typename __AnyType::__class*>(obj), rhs)); }
+			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_06cb723517cf4b80(Builtin::Object* obj, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) { ADV_EXPRESSION_BODY(ADV_UFCS(_operator_mul_mul_eq)(*static_cast<typename __AnyType::__class*>(obj), rhs)); }
 			
 		};
 	}
 	#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IPowerOperators.ast"
-	template<class __AnyType> inline constexpr __vtables::__vtable_IPowerArithmetic __vtable_IPowerArithmetic_for = {&__vtables::__vtable_IPowerArithmetic::template impl_9d006312779e41e9<__AnyType>
-		, &__vtables::__vtable_IPowerArithmetic::template impl_31ed0fad59bbeaf2<__AnyType>
+	template<class __AnyType> inline constexpr __vtables::__vtable_IPowerArithmetic __vtable_IPowerArithmetic_for = {&__vtables::__vtable_IPowerArithmetic::template impl_638bccfe056d33e1<__AnyType>
+		, &__vtables::__vtable_IPowerArithmetic::template impl_06cb723517cf4b80<__AnyType>
 		};
 	#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IPowerOperators.ast"
-	template<class __AnyType> concept __ImplementsInterface_IPowerArithmetic = __HasMethodImplementation_9d006312779e41e9<__AnyType> && __HasMethodImplementation_31ed0fad59bbeaf2<__AnyType>;
+	template<class __AnyType> concept __ImplementsInterface_IPowerArithmetic = __HasMethodImplementation_638bccfe056d33e1<__AnyType> && __HasMethodImplementation_06cb723517cf4b80<__AnyType>;
 	#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IPowerOperators.ast"
 	class IPowerArithmetic final : public Builtin::InterfaceRef {
 		public: using __self = IPowerArithmetic;
@@ -413,9 +413,9 @@ namespace System::Numerics {
  		if (_obj) Builtin::Release(_obj); _obj = (Builtin::Object*)&value; Builtin::Retain(_obj); 
 		_vtable = &__vtable_IPowerArithmetic_for<__FixedType>; return *this; }
 		#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IPowerOperators.ast"
-		public: FORCE_INLINE const Builtin::f64 _operator_mul_mul(Builtin::f64 rhs) const { ADV_EXPRESSION_BODY(_vtable->fnptr_9d006312779e41e9(_obj, rhs)); }
+		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_mul_mul(Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) const { ADV_EXPRESSION_BODY(_vtable->fnptr_638bccfe056d33e1(_obj, rhs)); }
 		#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IPowerOperators.ast"
-		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_mul_mul_eq(Builtin::f64 rhs) const { ADV_EXPRESSION_BODY(_vtable->fnptr_31ed0fad59bbeaf2(_obj, rhs)); }
+		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_mul_mul_eq(Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) const { ADV_EXPRESSION_BODY(_vtable->fnptr_06cb723517cf4b80(_obj, rhs)); }
 		
 	};
 	class IPowerArithmetic__Unowned final : public Builtin::InterfaceRef__Unowned {
@@ -530,8 +530,8 @@ namespace System::Numerics {
 		}
 		
 	};
-	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IPowerArithmetic::__vtable> FORCE_INLINE const Builtin::f64 _operator_mul_mul(const __AnyInterface& iface, Builtin::f64 rhs)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_9d006312779e41e9(Builtin::GetObjectReferenceFromInterface(&iface), rhs)); }
-	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IPowerArithmetic::__vtable> FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_mul_mul_eq(const __AnyInterface& iface, Builtin::f64 rhs)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_31ed0fad59bbeaf2(Builtin::GetObjectReferenceFromInterface(&iface), rhs)); }
+	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IPowerArithmetic::__vtable> FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_mul_mul(const __AnyInterface& iface, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_638bccfe056d33e1(Builtin::GetObjectReferenceFromInterface(&iface), rhs)); }
+	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IPowerArithmetic::__vtable> FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_mul_mul_eq(const __AnyInterface& iface, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_06cb723517cf4b80(Builtin::GetObjectReferenceFromInterface(&iface), rhs)); }
 	
 	//###############################################################################
 //# Function definitions

@@ -1,0 +1,34 @@
+package System.Numerics;
+
+public import IBinaryFloatingPointIeee754;
+public import IMinMaxValue;
+
+interface IBinaryFloatFormatInfo:
+    IBinaryFloatingPointIeee754,
+    IMinMaxValue
+{
+    static NumberBufferLength: i32;
+    static ZeroBits: u128;
+    static InfinityBits: u128;
+    static NormalMantissaMask: u128;
+    static DenormalMantissaMask: u128;
+    static MinBinaryExponent: i32;
+    static MaxBinaryExponent: i32;
+    static MinDecimalExponent: i32;
+    static MaxDecimalExponent: i32;
+    static ExponentBias: i32;
+    static ExponentBits: u128;
+    static OverflowDecimalExponent: i32;
+    static InfinityExponent: i32;
+    static NormalMantissaBits: u16;
+    static DenormalMantissaBits: u16;
+    static MinFastFloatDecimalExponent: i32;
+    static MaxFastFloatDecimalExponent: i32;
+    static MinExponentRoundToEven: i32;
+    static MaxExponentRoundToEven: i32;
+    static MaxExponentFastPath: i32;
+    static MaxMantissaFastPath: u128;
+
+    Bits: self.BitsType { get; }
+    static FromBits: (bits: self.BitsType) -> self;
+}

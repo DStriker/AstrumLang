@@ -2,6 +2,7 @@
 #include <map>
 #include <vector>
 
+#include "Boolean.h"
 #include "Char.h"
 #include "DebugPrint.h"
 #include "Decimal.h"
@@ -40,6 +41,9 @@ using Builtin::u64;
 using Builtin::u128;
 using Builtin::isize;
 using Builtin::usize;
+using Builtin::f32;
+using Builtin::f64;
+using Builtin::fext;
 
 #ifdef ADV_UNITTEST
 #define ADV_ENTRY_POINT(Namespace)                                                                 \
@@ -273,11 +277,11 @@ struct ___dependent_false : std::false_type {};
 
 #define ADV_USFCS_(CAPTURE, REQUIRES, TYPE, TEMPKW, ...)                                           \
 	[CAPTURE]<class... Args ADV_USFCS_IS_NOTHROW_PARAM(TYPE, TEMPKW, __VA_ARGS__)                  \
-	              ADV_USFCS_CONSTRAINT_PARAM(TYPE, TEMPKW, __VA_ARGS__)>                           \
+	              /* ADV_USFCS_CONSTRAINT_PARAM(TYPE, TEMPKW, __VA_ARGS__)*/>                           \
 	LAMBDA_NO_DISCARD(Args&&... params)                                                            \
 	    FORCE_INLINE_LAMBDA_CLANG noexcept(ADV_USFCS_IS_NOTHROW_ARG(TYPE, TEMPKW, __VA_ARGS__))    \
 	        FORCE_INLINE_LAMBDA->decltype(auto)                                                    \
-	        REQUIRES(requires ADV_USFCS_CONSTRAINT_ARG(TYPE, TEMPKW, __VA_ARGS__)) {               \
+	        /*REQUIRES(requires ADV_USFCS_CONSTRAINT_ARG(TYPE, TEMPKW, __VA_ARGS__))*/ {               \
 		if constexpr (requires {                                                                   \
 			              ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);    \
 		              }) {                                                                         \
@@ -403,11 +407,11 @@ struct ___dependent_false : std::false_type {};
 	requires {                                                                                     \
 		requires requires { __VA_ARGS__ ::get##PROPERTY(); };                                      \
 		requires noexcept(__VA_ARGS__ ::get##PROPERTY());                                          \
-	}                                                                                              \
-	|| requires {                                                                                  \
+	}                                                                                              
+	/* || requires {                                                                                  \
 		requires requires { []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>::get(); }(); };                              \
 		requires noexcept([]() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>::get(); }());                                  \
-	}
+	}*/
 
 #if defined(__GNUC__) && !defined(__clang__)
 #undef ADV_USPCS_IS_NOTHROW_PARAM
@@ -423,16 +427,18 @@ struct ___dependent_false : std::false_type {};
 
 #define ADV_USPCS_CONSTRAINT_PARAM(PROPERTY, ...) /*empty*/
 #define ADV_USPCS_CONSTRAINT_ARG(PROPERTY, ...)                                                    \
-	requires { __VA_ARGS__ ::##PROPERTY; }   ||                                                      \
-	requires { []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>::get(); }(); }
+	requires { __VA_ARGS__ ::##PROPERTY; }                                                         
+	//requires { []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>::get(); }(); }
 #if defined(_MSC_VER)
 #undef ADV_USPCS_CONSTRAINT_PARAM
 #undef ADV_USPCS_CONSTRAINT_ARG
-#define ADV_USPCS_CONSTRAINT_PARAM(PROPERTY, ...)                                                  \
+#define ADV_USPCS_CONSTRAINT_PARAM(...)
+#define ADV_USPCS_CONSTRAINT_ARG(...)
+#define ADV_USPCS_CONSTRAINT_PARAM2(PROPERTY, ...)                                                  \
 	, bool IsViable = (                                                                            \
-	      requires { __VA_ARGS__ ::##PROPERTY; } ||                                                \
-	      requires { []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>::get(); }(); })
-#define ADV_USPCS_CONSTRAINT_ARG(PROPERTY, ...) IsViable
+	      requires { __VA_ARGS__ ::##PROPERTY; }                                                
+	      //requires { []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>::get(); }(); })
+#define ADV_USPCS_CONSTRAINT_ARG2(PROPERTY, ...) IsViable
 #endif
 
 #define ADV_USPCS_(PROPERTY, ...)                                                                  \
@@ -440,7 +446,8 @@ struct ___dependent_false : std::false_type {};
 	       ADV_USPCS_CONSTRAINT_PARAM(PROPERTY, __VA_ARGS__)>                                      \
 	LAMBDA_NO_DISCARD()                                                                            \
 	    FORCE_INLINE_LAMBDA_CLANG noexcept(ADV_USPCS_IS_NOTHROW(PROPERTY, __VA_ARGS__))            \
-	        FORCE_INLINE_LAMBDA->decltype(auto) requires ADV_USPCS_CONSTRAINT_ARG(PROPERTY,        \
+	        FORCE_INLINE_LAMBDA->decltype(auto) /*requires*/ ADV_USPCS_CONSTRAINT_ARG(            \
+	            PROPERTY,        \
 	                                                                              __VA_ARGS__) {   \
 		if constexpr (requires { __VA_ARGS__ ::##PROPERTY; }) {                                    \
 			return std::add_lvalue_reference_t<decltype(__VA_ARGS__ ::##PROPERTY)>(                \

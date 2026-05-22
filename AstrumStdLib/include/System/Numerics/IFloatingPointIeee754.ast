@@ -1,0 +1,47 @@
+package System.Numerics;
+
+public import IFloatingPoint;
+public import IExponentialFunctions;
+public import IHyperbolicFunctions;
+public import ILogarithmicFunctions;
+public import ITrigonometricFunctions;
+public import IRootFunctions;
+public import IPowerOperators;
+public import System.FloatingPointCategory;
+
+public interface IFloatingPointIeee754:
+    IFloatingPoint,
+    IExponentialFunctions,
+    IHyperbolicFunctions,
+    ILogarithmicFunctions,
+    ITrigonometricFunctions,
+    IRootFunctions,
+    IPowerArithmetic
+{
+    static Epsilon: self;
+    static NegativeInfinity: self;
+    static PositiveInfinity: self;
+    static NaN: self;
+    static NegativeZero: self;
+
+    Atan2: (y: self) -> self;
+    Atan2Pi: (y: self) -> self;
+
+    BitIncrement: self { get; }
+    BitDecrement: self { get; }
+    ILogB: i32 { get; }
+    ReciprocalEstimate: self { get; }
+    ReciprocalSqrtEstimate: self { get; }
+    Category: FloatingPointCategory { get; }
+
+    FusedMultiplyAdd: (rhs: self, addend: self) -> self;
+    Ieee754Remainder: (rhs: self) -> self;
+
+    Lerp: (rhs: self, amount: self) -> self;
+    ScaleB: (n: i32) -> self;
+
+    Gamma: self { get; }
+    LnGamma: self { get; }
+    Erf: self { get; }
+    Erfc: self { get; }
+}

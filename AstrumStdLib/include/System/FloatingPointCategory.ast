@@ -1,0 +1,9 @@
+package System;
+
+public enum FloatingPointCategory: u8 {
+    NaN,
+    Infinity,
+    Zero,
+    Subnormal,
+    Normal
+}

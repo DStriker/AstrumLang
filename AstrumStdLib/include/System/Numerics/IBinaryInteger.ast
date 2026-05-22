@@ -1,12 +1,14 @@
 package System.Numerics;
 
 public import IBinaryNumber;
+public import IBitwiseOperators;
 public import IShiftOperators;
 public import IIntDivOperators;
 public import IIntPowerOperators;
 
 public interface IBinaryInteger: 
     IBinaryNumber, 
+    IBitwiseArithmetic,
     IShiftArithmetic,
     IIntegerDivisibleArithmetic,
     IIntegerPowerArithmetic

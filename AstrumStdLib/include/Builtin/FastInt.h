@@ -7,7 +7,7 @@ namespace Builtin {
 	class __Class_FastInt;
 
 	template <class T>
-	struct FastInt : public Struct {
+	struct alignas(T) FastInt : public Struct {
 		static_assert(std::is_integral_v<T> || std::is_enum_v<T>, "T must be integer");
 		template <class U>
 		friend struct FastInt;

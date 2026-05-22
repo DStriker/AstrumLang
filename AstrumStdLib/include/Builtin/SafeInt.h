@@ -7,7 +7,7 @@ namespace Builtin {
 	class __Class_SafeInt;
 	
 	template <class T>
-	struct SafeInt : public Struct {
+	struct alignas(T) SafeInt : public Struct {
 		static_assert(std::is_integral_v<T>, "T must be integer");
 		template <class U>
 		friend struct SafeInt;

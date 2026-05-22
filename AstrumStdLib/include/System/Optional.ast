@@ -3,7 +3,6 @@ package System;
 public import IComparable;
 public import IEquatable;
 
-//@OptionalType
 public struct <T> Optional
 {
     static assert(type T is struct or type T is enum, "T must be a struct or an enum");
@@ -35,7 +34,7 @@ public struct <T> Optional
     public operator!: () -> T ==> Value;
     public operator bool noexcept ==> HasValue;
 
-    public operator T ==> Value;
+    //public operator T ==> Value;
 
     public AndThen: <F> (forward func: F) -> forward = 
     {

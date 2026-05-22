@@ -1,11 +1,11 @@
 package System.Numerics;
 
 public import INumber;
-public import IBitwiseOperators;
+//public import IBitwiseOperators;
 
 public interface IBinaryNumber:
-    INumber,
-    IBitwiseArithmetic
+    INumber
+    //IBitwiseArithmetic
 {
     static AllBitsSet: self;
 

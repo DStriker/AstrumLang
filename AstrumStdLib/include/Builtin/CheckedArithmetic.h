@@ -6403,5 +6403,7 @@ namespace Builtin {
 
 	inline constexpr bool IsBigEndian() noexcept { return std::endian::native == std::endian::big; }
 
+	inline constexpr bool Is64BitTarget() noexcept { return sizeof(void*) == 8; }
+
 	struct Struct {};
 }  // namespace Builtin

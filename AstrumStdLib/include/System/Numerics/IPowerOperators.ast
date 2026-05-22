@@ -5,6 +5,6 @@ public interface IPowerOperators<TRight, TResult> {
 }
 
 public interface IPowerArithmetic {
-    operator**: (rhs: f64) -> f64;
-    operator**=: (rhs: f64) -> self;
+    operator**: (rhs: self) -> self;
+    operator**=: (rhs: self) -> self;
 }

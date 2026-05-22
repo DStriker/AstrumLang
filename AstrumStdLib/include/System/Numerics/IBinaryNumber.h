@@ -4,7 +4,6 @@
 #endif
 #include "ASTRUMSTD_export.h"
 #include "INumber.h"
-#include "IBitwiseOperators.h"
 
 namespace System::Numerics {
 namespace __Unsafe {} namespace __IBinaryNumber_Protected__Unsafe {}
@@ -39,11 +38,9 @@ namespace System::Numerics {
 	template<class __AnyType> concept __HasMethodImplementation_geta5b1afc5970b38e4 = requires(typename __AnyType::__class t) { {t.getLog10()} -> std::convertible_to<typename __AnyType::__self>; } || requires(typename __AnyType::__self t) { {getLog10(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::__self>; };
 	#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryNumber.ast"
 	ADV_CHECK_INTERFACE(INumber, INumber);
-	#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryNumber.ast"
-	ADV_CHECK_INTERFACE(IBitwiseArithmetic, IBitwiseArithmetic);
 	namespace __vtables {
 		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryNumber.ast"
-		struct __vtable_IBinaryNumber : public INumber::__vtable, public IBitwiseArithmetic::__vtable
+		struct __vtable_IBinaryNumber : public INumber::__vtable
 		{
 			using fn_5df6ca19989fe45d = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::OptionalStrongRef<Builtin::ObjectRef> base);
 			fn_5df6ca19989fe45d* fnptr_5df6ca19989fe45d;
@@ -74,7 +71,6 @@ namespace System::Numerics {
 	}
 	#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryNumber.ast"
 	template<class __AnyType> inline constexpr __vtables::__vtable_IBinaryNumber __vtable_IBinaryNumber_for = {__vtable_INumber_for<__AnyType>
-		, __vtable_IBitwiseArithmetic_for<__AnyType>
 		, &__vtables::__vtable_IBinaryNumber::template impl_5df6ca19989fe45d<__AnyType>
 		, &__vtables::__vtable_IBinaryNumber::template impl_44158841115778af<__AnyType>
 		, &__vtables::__vtable_IBinaryNumber::template impl_e230ca60eaf73b5e<__AnyType>
@@ -83,7 +79,7 @@ namespace System::Numerics {
 		, &__vtables::__vtable_IBinaryNumber::template impl_getLog10<__AnyType>
 		};
 	#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryNumber.ast"
-	template<class __AnyType> concept __ImplementsInterface_IBinaryNumber = __ImplementsInterface_INumber<__AnyType> && __ImplementsInterface_IBitwiseArithmetic<__AnyType> && __HasMethodImplementation_5df6ca19989fe45d<__AnyType> && __HasMethodImplementation_44158841115778af<__AnyType> && __HasMethodImplementation_e230ca60eaf73b5e<__AnyType> && __HasMethodImplementation_gete29f7f5bc87b10e8<__AnyType> && __HasMethodImplementation_get704f2861d4b675a9<__AnyType> && __HasMethodImplementation_geta5fcde01a1990ed5<__AnyType> && __HasMethodImplementation_geta5b1afc5970b38e4<__AnyType>;
+	template<class __AnyType> concept __ImplementsInterface_IBinaryNumber = __ImplementsInterface_INumber<__AnyType> && __HasMethodImplementation_5df6ca19989fe45d<__AnyType> && __HasMethodImplementation_44158841115778af<__AnyType> && __HasMethodImplementation_e230ca60eaf73b5e<__AnyType> && __HasMethodImplementation_gete29f7f5bc87b10e8<__AnyType> && __HasMethodImplementation_get704f2861d4b675a9<__AnyType> && __HasMethodImplementation_geta5fcde01a1990ed5<__AnyType> && __HasMethodImplementation_geta5b1afc5970b38e4<__AnyType>;
 	#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryNumber.ast"
 	class IBinaryNumber final : public Builtin::InterfaceRef {
 		public: using __self = IBinaryNumber;

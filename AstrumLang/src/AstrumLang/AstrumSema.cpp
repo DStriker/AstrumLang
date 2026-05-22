@@ -1975,6 +1975,10 @@ namespace AstrumLang {
 		if (!firstPass) {
 			if (ctx->If()) {
 				IfContext ictx;
+				if (initStates.empty())
+				{
+					initStates.push(InitState {});
+				}
 				ictx.before  = initStates.top();
 				ictx.hasElse = ctx->Else();
 				initStates.push(ictx.before);

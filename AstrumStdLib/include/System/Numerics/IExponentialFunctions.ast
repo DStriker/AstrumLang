@@ -1,0 +1,13 @@
+package System.Numerics;
+
+public import IFloatingPointConstants;
+
+public interface IExponentialFunctions: IFloatingPointConstants
+{
+    Exp: self { get; }
+    Exp2: self { get; }
+    Exp10: self { get; }
+    ExpM1: self { get; }
+    Exp2M1: self { get; }
+    Exp10M1: self { get; }
+}

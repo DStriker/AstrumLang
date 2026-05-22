@@ -1,0 +1,10 @@
+package System.Numerics;
+
+public import INumberBase;
+
+public interface IFloatingPointConstants: INumberBase
+{
+    static E: self;
+    static Pi: self;
+    static Tau: self;
+}

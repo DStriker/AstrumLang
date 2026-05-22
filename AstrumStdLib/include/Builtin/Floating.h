@@ -3,11 +3,18 @@
 
 namespace Builtin {
 	template <class T>
-	struct Float {
+	struct alignas(T) Float : public Struct {
 		static_assert(std::is_floating_point<T>::value, "T must be a floating point type");
 		template <class U>
 		friend struct Float;
-		constexpr decltype(auto) __ref() const noexcept { return *this; }
+		using __self       = Float<T>;
+		using __class      = __Class_Basic<Float<T>>;
+		using __underlying = T;
+		using BitsType =
+		    std::conditional_t<sizeof(T) == 4, u32, std::conditional_t<sizeof(T) == 8, u64, u128>>;
+
+		constexpr __self& __ref() noexcept { return *this; }
+		constexpr const __self& __ref() const noexcept { return *this; }
 
 		constexpr Float() noexcept = default;
 		constexpr Float(float f) noexcept : value(f) {}
@@ -188,8 +195,7 @@ namespace Builtin {
 			}
 
 			const T scaled = value / two_64;
-			if (scaled >= two_64)
-			{
+			if (scaled >= two_64) {
 				return UINT128_MAX;
 			}
 
@@ -207,7 +213,7 @@ namespace Builtin {
 #endif
 			constexpr T two_32 {static_cast<T>(1ull << 32)};
 			constexpr T two_64 {two_32 * two_32};
-			constexpr T two_127 { two_64* static_cast<T>(1ull << 63) };
+			constexpr T two_127 {two_64 * static_cast<T>(1ull << 63)};
 
 			if (!(value >= T {0}) && !(value <= T {0})) {
 				return 0;
@@ -985,84 +991,98 @@ namespace Builtin {
 		}
 
 		template <class U>
-		constexpr auto operator<=>(Float<U> rhs) const noexcept {
-			return value <=> rhs.value;
+		constexpr int operator<=>(Float<U> rhs) const noexcept {
+			if (value < rhs.value) {
+				return -1;
+			}
+			if (value > rhs.value) {
+				return 1;
+			}
+			return 0;
 		}
 
 		template <class U>
-		constexpr auto operator<=>(U rhs) const noexcept
+		constexpr int operator<=>(U rhs) const noexcept
 		    requires(std::is_integral_v<U> || std::is_floating_point_v<U>) {
-			return value <=> rhs;
+			if (value < rhs) {
+				return -1;
+			}
+			if (value > rhs) {
+				return 1;
+			}
+			return 0;
 		}
 
 		template <class U>
-		friend constexpr auto operator<=>(U lhs, Float<T> rhs) noexcept
+		friend constexpr int operator<=>(U lhs, Float<T> rhs) noexcept
 		    requires(std::is_integral_v<U> || std::is_floating_point_v<U>) {
-			return lhs <=> rhs.value;
+			if (lhs < rhs.value) {
+				return -1;
+			}
+			if (lhs > rhs.value) {
+				return 1;
+			}
+			return 0;
 		}
 
-		constexpr auto operator<=>(i8 rhs) const noexcept { return value <=> static_cast<T>(rhs); }
+		constexpr int operator<=>(i8 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
 
-		friend constexpr auto operator<=>(i8 lhs, Float<T> rhs) noexcept {
-			return static_cast<T>(lhs) <=> rhs.value;
+		friend constexpr int operator<=>(i8 lhs, Float<T> rhs) noexcept {
+			return static_cast<__self>(lhs) <=> rhs.value;
 		}
 
-		constexpr auto operator<=>(i16 rhs) const noexcept { return value <=> static_cast<T>(rhs); }
+		constexpr int operator<=>(i16 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
 
-		friend constexpr auto operator<=>(i16 lhs, Float<T> rhs) noexcept {
-			return static_cast<T>(lhs) <=> rhs.value;
+		friend constexpr int operator<=>(i16 lhs, Float<T> rhs) noexcept {
+			return static_cast<__self>(lhs) <=> rhs.value;
 		}
 
-		constexpr auto operator<=>(i32 rhs) const noexcept { return value <=> static_cast<T>(rhs); }
+		constexpr int operator<=>(i32 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
 
-		friend constexpr auto operator<=>(i32 lhs, Float<T> rhs) noexcept {
-			return static_cast<T>(lhs) <=> rhs.value;
+		friend constexpr int operator<=>(i32 lhs, Float<T> rhs) noexcept {
+			return static_cast<__self>(lhs) <=> rhs.value;
 		}
 
-		constexpr auto operator<=>(i64 rhs) const noexcept { return value <=> static_cast<T>(rhs); }
+		constexpr int operator<=>(i64 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
 
-		friend constexpr auto operator<=>(i64 lhs, Float<T> rhs) noexcept {
-			return static_cast<T>(lhs) <=> rhs.value;
+		friend constexpr int operator<=>(i64 lhs, Float<T> rhs) noexcept {
+			return static_cast<__self>(lhs) <=> rhs.value;
 		}
 
-		constexpr auto operator<=>(i128 rhs) const noexcept {
-			return value <=> static_cast<T>(rhs);
+		constexpr int operator<=>(i128 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
+
+		friend constexpr int operator<=>(i128 lhs, Float<T> rhs) noexcept {
+			return static_cast<__self>(lhs) <=> rhs.value;
 		}
 
-		friend constexpr auto operator<=>(i128 lhs, Float<T> rhs) noexcept {
-			return static_cast<T>(lhs) <=> rhs.value;
+		constexpr int operator<=>(u8 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
+
+		friend constexpr int operator<=>(u8 lhs, Float<T> rhs) noexcept {
+			return static_cast<__self>(lhs) <=> rhs.value;
 		}
 
-		constexpr auto operator<=>(u8 rhs) const noexcept { return value <=> static_cast<T>(rhs); }
+		constexpr int operator<=>(u16 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
 
-		friend constexpr auto operator<=>(u8 lhs, Float<T> rhs) noexcept {
-			return static_cast<T>(lhs) <=> rhs.value;
+		friend constexpr int operator<=>(u16 lhs, Float<T> rhs) noexcept {
+			return static_cast<__self>(lhs) <=> rhs.value;
 		}
 
-		constexpr auto operator<=>(u16 rhs) const noexcept { return value <=> static_cast<T>(rhs); }
+		constexpr int operator<=>(u32 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
 
-		friend constexpr auto operator<=>(u16 lhs, Float<T> rhs) noexcept {
-			return static_cast<T>(lhs) <=> rhs.value;
+		friend constexpr int operator<=>(u32 lhs, Float<T> rhs) noexcept {
+			return static_cast<__self>(lhs) <=> rhs.value;
 		}
 
-		constexpr auto operator<=>(u32 rhs) const noexcept { return value <=> static_cast<T>(rhs); }
+		constexpr int operator<=>(u64 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
 
-		friend constexpr auto operator<=>(u32 lhs, Float<T> rhs) noexcept {
-			return static_cast<T>(lhs) <=> rhs.value;
+		friend constexpr int operator<=>(u64 lhs, Float<T> rhs) noexcept {
+			return static_cast<__self>(lhs) <=> rhs.value;
 		}
 
-		constexpr auto operator<=>(u64 rhs) const noexcept { return value <=> static_cast<T>(rhs); }
+		constexpr int operator<=>(u128 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
 
-		friend constexpr auto operator<=>(u64 lhs, Float<T> rhs) noexcept {
-			return static_cast<T>(lhs) <=> rhs.value;
-		}
-
-		constexpr auto operator<=>(u128 rhs) const noexcept {
-			return value <=> static_cast<T>(rhs);
-		}
-
-		friend constexpr auto operator<=>(u128 lhs, Float<T> rhs) noexcept {
-			return static_cast<T>(lhs) <=> rhs.value;
+		friend constexpr int operator<=>(u128 lhs, Float<T> rhs) noexcept {
+			return static_cast<__self>(lhs) <=> rhs.value;
 		}
 
 	   private:
@@ -1081,4 +1101,15 @@ namespace Builtin {
 		return static_cast<f64>(lhs) / static_cast<f64>(rhs);
 	}
 
+	inline constexpr float NanValue() noexcept { return NAN; }
+
 }  // namespace Builtin
+
+template <class T, class U>
+inline constexpr T UnsafeCast(Builtin::Float<U> value) noexcept {
+	if constexpr (std::is_same_v<T, Builtin::i128> || std::is_same_v<T, Builtin::u128>) {
+		return T::NarrowFromFloat((U) value);
+	}
+
+	return static_cast<typename T::__underlying>((U) value);
+}

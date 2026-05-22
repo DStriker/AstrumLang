@@ -1,0 +1,15 @@
+package System.Numerics;
+
+public import IFloatingPointConstants;
+
+public interface ILogarithmicFunctions: IFloatingPointConstants
+{
+    Ln: self { get; }
+    LnP1: self { get; }
+    Log2: self { get; }
+    Log2P1: self { get; }
+    Log10: self { get; }
+    Log10P1: self { get; }
+    
+    Log: (base: self) -> self;
+}

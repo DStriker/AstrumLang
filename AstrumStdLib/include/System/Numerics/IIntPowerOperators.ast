@@ -8,3 +8,8 @@ public interface IIntegerPowerArithmetic {
     operator^^: (rhs: u32) -> self;
     operator^^=: (rhs: u32) -> self;
 }
+
+public interface ISignedIntegerPowerArithmetic {
+    operator^^: (rhs: i32) -> self;
+    operator^^=: (rhs: i32) -> self;
+}

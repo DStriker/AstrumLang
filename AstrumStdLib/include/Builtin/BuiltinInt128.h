@@ -259,6 +259,33 @@ namespace Builtin {
 			_low  = l;
 		}
 
+		template <std::floating_point F>
+		static constexpr UInt128 NarrowFromFloat(F value) {
+			constexpr F two_32 {static_cast<F>(1ull << 32)};
+			constexpr F two_64 {two_32 * two_32};
+			uint64_t _high;
+			uint64_t _low;
+
+			if (!(value >= F {0})) {
+				_high = 0u;
+				_low  = 0u;
+			}
+
+			const F scaled = value / two_64;
+			if (scaled >= two_64) {
+				_high = UINT64_MAX;
+				_low  = UINT64_MAX;
+			}
+
+			std::uint64_t h {static_cast<std::uint64_t>(scaled)};
+			const F remainder {value - static_cast<F>(h) * two_64};
+			std::uint64_t l {static_cast<std::uint64_t>(remainder)};
+
+			_high = h;
+			_low  = l;
+			return UInt128(_high, _low);
+		}
+
 		// constexpr UInt128& operator=(Int128 value) ;
 
 		constexpr u64 Low64() const noexcept { return _low; }
@@ -2329,6 +2356,49 @@ namespace Builtin {
 
 			_high = static_cast<std::int64_t>(h);
 			_low  = l;
+		}
+
+		template <std::floating_point F>
+		static constexpr Int128 NarrowFromFloat(F value) {
+			constexpr F two_32 {static_cast<F>(1ull << 32)};
+			constexpr F two_64 {two_32 * two_32};
+			constexpr F two_127 {two_64 * static_cast<F>(1ull << 63)};
+			int64_t _high;
+			uint64_t _low;
+
+			if (!(value >= F {0}) && !(value <= F {0})) {
+				_high = 0;
+				_low  = 0;
+			}
+
+			if (value >= two_127) {
+				_high = INT64_MAX;
+				_low  = UINT64_MAX;
+			}
+
+			if (value <= -two_127) {
+				_high = INT64_MIN;
+				_low  = 0;
+			}
+
+			const bool negative {value < F {0}};
+			const F abs_f {negative ? -value : value};
+
+			std::uint64_t h {static_cast<std::uint64_t>(abs_f / two_64)};
+			const F remainder {abs_f - static_cast<F>(h) * two_64};
+			std::uint64_t l {static_cast<std::uint64_t>(remainder)};
+
+			if (negative) {
+				// Two's complement negation of (h, l): new_l = -l (with wraparound),
+				// new_h = ~h if a borrow occurred (l != 0), else ~h + 1.
+				const bool low_was_zero {l == 0};
+				l = 0ull - l;
+				h = ~h + (low_was_zero ? 1ull : 0ull);
+			}
+
+			_high = static_cast<std::int64_t>(h);
+			_low  = l;
+			return Int128(_high, _low);
 		}
 
 		constexpr u64 Low64() const noexcept { return _low; }

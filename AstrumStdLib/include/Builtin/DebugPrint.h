@@ -1,8 +1,9 @@
 #pragma once
 #include <iostream>
+#include <iomanip>
 
-#include "Floating.h"
 #include "BuiltinInt128.h"
+#include "Floating.h"
 #include "Str.h"
 
 inline void print(Builtin::i8 v) { std::cout << int(v) << std::endl; }
@@ -25,11 +26,13 @@ inline void print(Builtin::u64 v) { std::cout << uint64_t(v) << std::endl; }
 
 inline void print(Builtin::u128 v) { std::cout << Builtin::DebugPrintUInt128(v) << std::endl; }
 
-inline void print(Builtin::f32 v) { std::cout << float(v) << std::endl; }
+inline void print(Builtin::f32 v) { std::cout << std::setprecision(30) << float(v) << std::endl; }
 
-inline void print(Builtin::f64 v) { std::cout << double(v) << std::endl; }
+inline void print(Builtin::f64 v) { std::cout << std::setprecision(30) << double(v) << std::endl; }
 
-inline void print(Builtin::fext v) { std::cout << long double(v) << std::endl; }
+inline void print(Builtin::fext v) {
+	std::cout << std::setprecision(30) << long double(v) << std::endl;
+}
 
 inline void print(Builtin::char8 v) { std::cout << char(v) << std::endl; }
 

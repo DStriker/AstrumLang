@@ -1,0 +1,19 @@
+package System.Numerics;
+
+public import IFloatingPointConstants;
+
+public interface IHyperbolicFunctions: IFloatingPointConstants
+{
+    Acosh: self { get; }
+    Acoth: self { get; }
+    Acsch: self { get; }
+    Asech: self { get; }
+    Asinh: self { get; }
+    Atanh: self { get; }
+    Cosh: self { get; }
+    Coth: self { get; }
+    Csch: self { get; }
+    Sech: self { get; }
+    Sinh: self { get; }
+    Tanh: self { get; }
+}

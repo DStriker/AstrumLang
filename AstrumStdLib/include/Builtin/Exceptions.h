@@ -25,6 +25,10 @@ namespace Builtin {
 		SafetyException() : std::runtime_error("Context safety violation") {}
 	};
 
+	struct InvalidArgumentException : public std::runtime_error {
+		InvalidArgumentException() : std::runtime_error("Invalid operation") {}
+	};
+
 	struct InvalidOperationException : public std::runtime_error {
 		InvalidOperationException() : std::runtime_error("Invalid operation") {}
 	};

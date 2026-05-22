@@ -1471,12 +1471,16 @@ namespace Builtin {
 		T __value;
 
 	   public:
+		using __self = T;
 		using __underlying = T;
 		__Class_Basic(const __underlying& value) noexcept(
 		    std::is_nothrow_copy_constructible_v<__underlying>)
 		    : __value {value} {}
 		operator __underlying() const noexcept { return __value; }
 	};
+
+	template<class T>
+	constexpr bool IsStructType = std::is_base_of_v<Struct, T> || std::is_same_v<T, bool>;
 	/*
 	template <class T>
 	inline ObjectRef::ObjectRef(T value) requires(IsPrimitiveType<std::remove_cv_t<T>>) {
@@ -2016,6 +2020,12 @@ namespace Builtin {
 		if (lhs)
 			return std::forward<LeftOperand>(lhs);
 		return std::invoke(std::forward<RightLambda>(rhs));
+	}
+
+	template <class To, class From>
+	constexpr To BitCast(const From& from) noexcept {
+		static_assert(sizeof(To) == sizeof(From), "Bit cast requires types with the same size.");
+		return std::bit_cast<To>(from);
 	}
 
 	struct UncheckedTag {};

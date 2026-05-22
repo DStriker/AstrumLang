@@ -1,0 +1,32 @@
+package System.Numerics;
+
+public import System.MidpointRounding;
+public import IFloatingPointConstants;
+public import INumber;
+public import ISignedNumber;
+public import IIntDivOperators;
+
+public interface IFloatingPoint:
+    IFloatingPointConstants,
+    ISignedIntegerPowerArithmetic,
+    INumber,
+    ISignedNumber
+{
+    FractionalPart: self { get; }
+    Ceil: self { get; }
+    Floor: self { get; }
+    Truncate: self { get; }
+    Round: self { get; }
+    RoundTiesEven: self { get; }
+
+    Round: (digits: u32) -> self;
+    Round: (rounding: MidpointRounding) -> self;
+    Round: (digits: u32, rounding: MidpointRounding) -> self;
+
+    ExponentByteCount: u32 { get; }
+    ExponentShortestBitLength: u32 { get; }
+    SignificandBitLength: u32 { get; }
+    SignificandByteCount: u32 { get; }
+
+    // read-write exponent, significand
+}

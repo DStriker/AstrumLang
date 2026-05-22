@@ -1,0 +1,36 @@
+package System.Numerics;
+
+public import IFloatingPointConstants;
+
+public interface ITrigonometricFunctions: IFloatingPointConstants
+{
+    Acos: self { get; }
+    Acot: self { get; }
+    Asin: self { get; }
+    Atan: self { get; }
+    Asec: self { get; }
+    Acsc: self { get; }
+    Cos: self { get; }
+    Cot: self { get; }
+    Sin: self { get; }
+    Tan: self { get; }
+    Sec: self { get; }
+    Csc: self { get; }
+    SinCos: (self, self) { get; }
+    AcosPi: self { get; }
+    AcotPi: self { get; }
+    AsinPi: self { get; }
+    AtanPi: self { get; }
+    AsecPi: self { get; }
+    AcscPi: self { get; }
+    CosPi: self { get; }
+    CotPi: self { get; }
+    SinPi: self { get; }
+    TanPi: self { get; }
+    SecPi: self { get; }
+    CscPi: self { get; }
+    SinCosPi: (self, self) { get; }
+
+    ToRadians: () -> self;
+    ToDegrees: () -> self;
+}
