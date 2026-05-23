@@ -1,0 +1,1571 @@
+package System;
+
+public import Int128;
+public import UInt128;
+public import Boolean;
+public import MidpointRounding;
+public import FloatingPointCategory;
+public import System.Numerics.IBinaryFloatFormatInfo;
+
+import Math;
+
+public type Float64 = f64;
+public type Double = f64;
+
+public extension f64: IMinMaxValue {
+    static MinValue: self ==> -1.7976931348623157e+308_f64;     
+    static MaxValue: self ==> +1.7976931348623157e+308_f64;
+}
+
+public extension f64 {
+    // Equals to dynamic object
+    operator==*: (in obj: object?) -> bool
+    {
+        if obj is self {
+            if this == obj {
+                return true;
+            }
+            //return this.IsNaN && obj.IsNaN;
+        }
+        
+        return false;
+    }
+
+    // Compare to optional type
+    operator<=>: (rhs: self?) -> i32 noexcept ==
+    {
+        if rhs is not null {
+            return this <=> rhs;
+        }
+
+        return 1;
+    }
+
+    Bits: u64 ==> Builtin.BitCast<u64>(this);
+    static FromBits: (bits: u64) -> self ==> Builtin.BitCast<self>(bits);
+
+    static BitWidth: u32 ==> 64u;
+    static MinPositiveValue: self ==> 2.2250738585072014e-308_f64;
+
+    HashCode: u64 ==
+    {
+        bits := this.Bits;
+        if ((bits - 1u) & 0x7FFFFFFFFFFFFFFFu) >= 0x7FF0000000000000u {
+            bits &= 0x7FF0000000000000u;
+        }
+
+        return bits;
+    }
+}
+
+// Compare to dynamic object
+public extension f64: IAbstractComparable {
+    operator<=>*: (in obj: object?) -> i32
+    {
+        if obj is self {
+            return this <=> obj;
+        }
+        if obj is not null {
+            //InvalidArgumentException
+            throw Builtin.InvalidOperationException();
+        }
+        return 1;
+    }
+}
+
+// Conversions
+public extension f64: IConvertible {
+    ToBoolean: () -> bool noexcept ==> this != 0;
+    ToInt8: () -> i8 ==> this as i8;
+    ToUInt8: () -> u8 ==> this as u8;
+    ToInt16: () -> i16 ==> this as i16;
+    ToUInt16: () -> u16 ==> this as u16;
+    ToInt32: () -> i32 ==> this as i32;
+    ToUInt32: () -> u32 ==> this as u32;
+    ToInt64: () -> i64 ==> this as i64;
+    ToUInt64: () -> u64 ==> this as u64;
+    ToInt128: () -> i128 ==> this as i128;
+    ToUInt128: () -> u128 ==> this as u128;
+    ToIsize: () -> isize ==> this as isize;
+    ToUsize: () -> usize ==> this as usize;
+    ToFloat32: () -> f32 ==> this as f32;
+    ToFloat64: () -> f64 noexcept ==> this;
+    ToByte: () -> byte ==> this as u8;
+    ToChar: () -> char ==> this as u16;
+    //ToString: () -> string;
+    //ToDateTime: () -> DateTime;
+}
+
+public extension f64: IDivisibleArithmetic {
+    // integer division with remainder
+    operator/%: <T> (rhs: T) -> (self, self) ==
+    {
+        //static assert(type T is IBinaryInteger, "Operator /% implemented only for integer types");
+        return (this / f64(rhs), this % f64(rhs));
+    }
+    // division with rounding to nearest integer
+    operator/~: <T> (rhs: T) -> self ==> (this / rhs).Round;
+    // rounding division and assign
+    mut operator/~=: (rhs) -> ref self ==> this = this /~ rhs;
+    // division with rounding down (floor division)
+    operator/<: <T> (rhs: T) -> self ==> (this / rhs).Floor;
+    // floor division and assign
+    mut operator/<=: (rhs) -> ref self ==> this = this /< rhs;
+    // division with rounding up (ceil division)
+    operator/>: <T> (rhs: T) -> self ==> (this / rhs).Ceil;
+    // ceil division and assign
+    mut operator/>=: (rhs) -> ref self ==> this = this /> rhs;
+}
+
+// integer exponentiation
+public extension f64: ISignedIntegerPowerArithmetic {
+    // Raises this to the power of integer exp, using exponentiation by squaring
+    operator^^: (exp: i32) -> self ==
+    {
+        @Unlikely
+        if exp == 0 {
+            return 1.0;
+        }
+
+        if exp < 0 {
+            return 1.0 / this ^^ (-exp);
+        }
+
+        base := this;
+        result := 1.0;
+
+        if consteval {
+            while exp > 1 {
+                if (exp & 1) == 1 {
+                    result *= base;
+                }
+                exp \= 2;
+                base *= base;
+            }
+            return result * base;
+        } else {
+            for {
+                if (exp & 1) == 1 {
+                    result *= base;
+                    if (exp == 1) 
+                        return result;
+                }
+                exp \= 2;
+                base *= base;
+            }
+        }
+    }
+
+    mut operator^^=: (exp: i32) -> ref self ==> this = this ^^ exp;
+}
+
+public extension f64: INumberBase {
+    static One: self ==> 1.0;
+    static Zero: self ==> 0.0;
+    static Radix: i32 ==> 2;
+
+    Abs: self ==
+    {
+        const mask :== 0x7FFFFFFFFFFFFFFFu;
+        raw: u64 = this.Bits;
+        return f64.FromBits(raw & mask);
+    }
+    IsCanonical: bool ==> true;
+    IsComplexNumber: bool ==> false;
+    IsEvenInteger: bool ==> this.IsInteger && ((this % 2).Abs == 0);
+    IsFinite: bool ==> (this.Bits & 0x7FFFFFFFFFFFFFFFu) < 0x7FF0000000000000u;
+    IsImaginaryNumber: bool ==> false;
+    IsInfinity: bool ==> (this.Bits & 0x7FFFFFFFFFFFFFFFu) == 0x7FF0000000000000u;
+    IsInteger: bool ==> this.IsFinite && (this == this.Truncate);
+    IsNaN: bool ==> this != this;
+    IsNegative: bool ==> Builtin.BitCast<i64>(this) < 0;
+    IsNegativeInfinity: bool ==> this == self.NegativeInfinity;
+    IsNormal: bool ==
+    {
+        bits := this.Bits & 0x7FFFFFFFFFFFFFFFu;
+        return (bits < 0x7FF0000000000000u) && (bits != 0) && ((bits & 0x7FF0000000000000u) != 0);
+    }
+    IsOddInteger: bool ==> this.IsInteger && ((this % 2).Abs == 1);
+    IsPositive: bool ==> Builtin.BitCast<i64>(this) >= 0;
+    IsPositiveInfinity: bool ==> this == self.PositiveInfinity;
+    IsRealNumber: bool ==> this == this;
+    IsSubnormal: bool ==
+    {
+        bits := this.Bits & 0x7FFFFFFFFFFFFFFFu;
+        return (bits < 0x7FF0000000000000u) && (bits != 0) && ((bits & 0x7FF0000000000000u) == 0);
+    }
+    IsZero: bool ==> this == self.Zero;
+
+    MaxMagnitude: (rhs: self) -> self noexcept ==
+    {
+        ax := this.Abs;
+        ay := rhs.Abs;
+
+        if ax > ay or ax.IsNaN
+        {
+            return this;
+        }
+
+        if ax == ay
+        {
+            return this.IsNegative ? rhs : this;
+        }
+
+        return rhs;
+    }
+
+    MaxMagnitudeNumber: (rhs: self) -> self noexcept ==
+    {
+        ax := this.Abs;
+        ay := rhs.Abs;
+
+        if ax > ay or ay.IsNaN
+        {
+            return this;
+        }
+
+        if ax == ay
+        {
+            return this.IsNegative ? rhs : this;
+        }
+
+        return rhs;
+    }
+
+    MinMagnitude: (rhs: self) -> self noexcept ==
+    {
+        ax := this.Abs;
+        ay := rhs.Abs;
+
+        if ax < ay or ax.IsNaN
+        {
+            return this;
+        }
+
+        if ax == ay
+        {
+            return this.IsNegative ? this : rhs;
+        }
+
+        return rhs;
+    }
+
+    MinMagnitudeNumber: (rhs: self) -> self noexcept ==
+    {
+        ax := this.Abs;
+        ay := rhs.Abs;
+
+        if ax < ay or ay.IsNaN
+        {
+            return this;
+        }
+
+        if ax == ay
+        {
+            return this.IsNegative ? this : rhs;
+        }
+
+        return rhs;
+    }
+
+    Parse: (input: str) -> self
+    {
+        return 0;//TODO
+    }
+
+    TryParse: (input: str) -> self? noexcept
+    {
+        return 0.0f;
+    }
+
+    
+    // Narrow conversions
+    NarrowToInt8: () -> i8 noexcept ==> UnsafeCast<i8>(this);
+    NarrowToUInt8: () -> u8 noexcept ==> UnsafeCast<u8>(this);
+    NarrowToInt16: () -> i16 noexcept ==> UnsafeCast<i16>(this);
+    NarrowToUInt16: () -> u16 noexcept ==> UnsafeCast<u16>(this);
+    NarrowToInt32: () -> i32 noexcept ==> UnsafeCast<i32>(this);
+    NarrowToUInt32: () -> u32 noexcept ==> UnsafeCast<u32>(this);
+    NarrowToInt64: () -> i64 noexcept ==> UnsafeCast<i64>(this);
+    NarrowToUInt64: () -> u64 noexcept ==> UnsafeCast<u64>(this);
+    NarrowToInt128: () -> i128 noexcept ==> UnsafeCast<i128>(this);
+    NarrowToUInt128: () -> u128 noexcept ==> UnsafeCast<u128>(this);
+    NarrowToIsize: () -> isize noexcept ==> UnsafeCast<isize>(this);
+    NarrowToUsize: () -> usize noexcept ==> UnsafeCast<usize>(this);
+}
+
+public extension f64: ISignedNumber {
+    static MinusOne: self ==> -1.0;
+}
+
+public extension f64: INumber {
+    Sign: i32 ==> switch this {
+        0 => 0,
+        <0 => -1,
+        >0 => 1,
+        _ => throw Builtin.InvalidOperationException()
+    };
+
+    CopySign: (sign: self) -> self noexcept ==
+    {
+        if consteval {
+            if sign < 0 or (sign == 0 and 1.0/sign < 0) {
+                return this < 0 ? this : -this;
+            }
+            return this < 0 ? -this : this;
+        } else {
+            return std.copysign(this as CDouble, sign);
+        }
+    }
+
+    Max: (rhs: self) -> self noexcept ==
+    {
+        if this != rhs {
+            if !this.IsNaN {
+                return rhs < this ? this : rhs;
+            }
+            return this;
+        }
+        return rhs.IsNegative ? this : rhs;
+    }
+    MaxNumber: (rhs: self) -> self noexcept ==
+    {
+        if this != rhs {
+            if !rhs.IsNaN {
+                return rhs < this ? this : rhs;
+            }
+            return this;
+        }
+        return rhs.IsNegative ? this : rhs;
+    }
+    Min: (rhs: self) -> self noexcept ==
+    {
+        if this != rhs {
+            if !this.IsNaN {
+                return this < rhs ? this : rhs;
+            }
+            return this;
+        }
+        return this.IsNegative ? this : rhs;
+    }
+    MinNumber: (rhs: self) -> self noexcept ==
+    {
+        if this != rhs {
+            if !rhs.IsNaN {
+                return this < rhs ? this : rhs;
+            }
+            return this;
+        }
+        return this.IsNegative ? this : rhs;
+    }
+    Clamp: (min: self, max: self) -> self ==
+    {
+        if min > max {
+            throw Builtin.InvalidOperationException();
+        }
+
+        return this < min ? min : this > max ? max : this;
+    }
+}
+
+protected {
+    const SignMask :== 0x8000_0000_0000_0000u;
+    const SignShift :== 63;
+    const ShiftedSignMask: u8 == u8(SignMask >> SignShift);
+
+    const BiasedExponentMask :== 0x7FF0_0000_0000_0000u;
+    const BiasedExponentShift :== 52i32;
+    const ShiftedBiasedExponentMask: u16 == u16(BiasedExponentMask >> BiasedExponentShift);
+
+    const TrailingSignificandMask :== 0x000F_FFFF_FFFF_FFFFu;
+
+    const MinSign :== 0u8;
+    const MaxSign :== 1u8;
+    const MinBiasedExponent :== u16.MinValue;
+    const MaxBiasedExponent :== 0x7FFu16;
+    const ExpBias :== 1023u16;
+    const MinExponent :== -1022i16;
+    const MaxExponent :== 1023i16;
+    const MinTrailingSignificand :== u64.MinValue;
+    const MaxTrailingSignificand :== 0x000F_FFFF_FFFF_FFFFu;
+
+    const TrailingSignificandLength :== 52;
+    const SignificandLength :== TrailingSignificandLength + 1;
+
+    BiasedExponent: (value: f64) -> u16 noexcept ==> ExtractBiasedExponentFromBits(value.Bits);
+    Exponent: (value: f64) -> i16 noexcept ==> i16(BiasedExponent(value) - ExpBias);
+    Significand: (value: f64) -> u64 noexcept ==> TrailingSignificand(value) | (BiasedExponent(value) != 0 ? (1u64 << BiasedExponentShift) : 0u64);
+    TrailingSignificand: (value: f64) -> u64 noexcept ==> ExtractTrailingSignificandFromBits(value.Bits);
+
+    ExtractBiasedExponentFromBits: (bits: u64) -> u16 noexcept ==> u16((bits >> BiasedExponentShift) & ShiftedBiasedExponentMask);
+    ExtractTrailingSignificandFromBits: (bits: u64) -> u64 noexcept ==> bits & TrailingSignificandMask;
+}
+
+public extension f64: IBinaryNumber {
+    // 0xFFFFFFFFFFFFFFFF bit representation
+    static AllBitsSet: self ==> f64.FromBits(0xFFFFFFFFFFFFFFFFu);
+
+    // Returns true if this is a power of 2
+    IsPow2: bool ==
+    {
+        bits := this.Bits;
+        // zero and negative values is not power of 2
+        if bits.NarrowToInt64() <= 0 {
+            return false;
+        }
+
+        biasedExponent := ExtractBiasedExponentFromBits(bits);
+        trailingSignificand := ExtractTrailingSignificandFromBits(bits);
+
+        // subnormal values (one bit is set if pow2)
+        if biasedExponent == MinBiasedExponent {
+            return trailingSignificand.PopCount == 1;
+        }
+        // infinity and nan is not pow2
+        if biasedExponent == MaxBiasedExponent {
+            return false;
+        }
+
+        // normal values (no bits set if pow2)
+        return trailingSignificand == MinTrailingSignificand;
+    }
+
+    // Binary logarithm (rounded down)
+    // Returns NaN for negative values and -Inf for 0
+    Log2: self => std.log2(this as CDouble);
+
+    // Common logarithm (base 10, rounded down)
+    // Returns NaN for negative values and -Inf for 0
+    Log10: self => std.log10(this as CDouble);
+
+    // Logarithm of the number with respect to an arbitrary base
+    // Returns NaN for negative values and -Inf for 0
+    // Use Log2 and Log10 for more accurate results with base 2 and 10
+    Log: (base: self) -> self noexcept =
+    {
+        if this.IsNaN {
+            return this;
+        }
+        if base.IsNaN {
+            return base;
+        }
+
+        if base == 1 {
+            return f64.NaN;
+        }
+        if this != 1 and (base == 0 or base.IsPositiveInfinity) {
+            return f64.NaN;
+        }
+
+        return this.Ln / base.Ln;
+    }
+
+    // Average between two numbers
+    // Returns NaN if any argument is NaN or combination of +Inf / -Inf
+    Midpoint: (rhs: self) -> self noexcept ==
+    {
+        static if Builtin.Is64BitTarget() {
+            return (this + rhs) / 2.0;
+        } else {
+            const riskValue :== self.MaxValue / 2.0;
+            
+            if this.Abs <= riskValue and rhs.Abs <= riskValue {
+                return (this + rhs) / 2.0;
+            } else {
+                return (this / 2.0) + (rhs / 2.0);
+            }
+        }
+    }
+
+    // Returns true if this is a multiple of rhs
+    IsMultipleOf: (rhs: self) -> bool noexcept ==
+    {
+        if rhs == 0 {
+            return this == 0;
+        }
+
+        if rhs == -1 {
+            return true;
+        }
+
+        return this % rhs == 0;
+    }
+}
+
+public extension f64: IFloatingPointConstants
+{
+    static Pi: self ==> 3.14159265358979323846;
+    static E: self ==> 2.7182818284590452354;
+    static Tau: self ==> 6.283185307179586476925;
+}
+
+public extension f64: IFloatingPoint {
+    // Extracts the fractional part of number 
+    // (e.g., 0.35 from 15.35; -0.35 from -15.35)
+    FractionalPart: self ==> this - this.Truncate;
+
+    // Returns the smallest integer greater than or equal to this
+    // 3.1.Ceil == 4;    3.5.Ceil == 4;   3.9.Ceil == 4;
+    // -3.1.Ceil == -3; -3.5.Ceil == -3; -3.9.Ceil == -3;
+    Ceil: self ==
+    {
+        if consteval {
+            let i := this as i128;
+            return (this > i) ? (i + 1) : i;
+        } else {
+            return std.ceil(this as CDouble);
+        }
+    }
+
+    CeilToInt32: () -> i32 ==> this.Ceil as i32;
+    CeilToInt64: () -> i64 ==> this.Ceil as i64;
+    CeilToInt128: () -> i128 ==> this.Ceil as i128;
+
+    // Returns the largest integer less than or equal to this
+    // 3.1.Floor == 3;    3.5.Floor == 3;   3.9.Floor == 3;
+    // -3.1.Floor == -4; -3.5.Floor == -4; -3.9.Floor == -4;
+    Floor: self ==
+    {
+        if consteval {
+            let i := this as i128;
+            return (this < i) ? (i - 1) : i;
+        } else {
+            return std.floor(this as CDouble);
+        }
+    }
+    
+    FloorToInt32: () -> i32 ==> this.Floor as i32;
+    FloorToInt64: () -> i64 ==> this.Floor as i64;
+    FloorToInt128: () -> i128 ==> this.Floor as i128;
+
+    // Returns the integer part of this
+    // 3.1.Trunc == 3;    3.5.Trunc == 3;   3.9.Trunc == 3;
+    // -3.1.Trunc == -3; -3.5.Trunc == -3; -3.9.Trunc == -3;
+    Truncate: self ==
+    {
+        if consteval {
+            return this as i128;
+        } else {
+            return std.trunc(this as CDouble);
+        }
+    }
+
+    TruncateToInt32: () -> i32 ==> this.Truncate as i32;
+    TruncateToInt64: () -> i64 ==> this.Truncate as i64;
+    TruncateToInt128: () -> i128 ==> this.Truncate as i128;
+
+    // Returns the nearest integer to this (AwayFromZero rounding mode)
+    // 3.1.Rounded == 3;    3.5.Rounded == 4;   3.9.Rounded == 4;
+    // -3.1.Rounded == -3; -3.5.Rounded == -4; -3.9.Rounded == -4;
+    Round: self ==
+    {
+        if consteval {
+            return (this + 0.49999999999999994.CopySign(this)) as i128;
+        } else {
+            return std.round(this as CDouble);
+        }
+    }
+
+    RoundToInt32: () -> i32 ==> this.Round as i32;
+    RoundToInt64: () -> i64 ==> this.Round as i64;
+    RoundToInt128: () -> i128 ==> this.Round as i128;
+
+    // Returns the nearest integer to this (rounds half-way cases to the number with an even least significant digit)
+    // 3.1.Rounded == 3;    3.5.Rounded == 4;   2.5.Rounded == 2;
+    // -3.1.Rounded == -3; -3.5.Rounded == -4; -2.5.Rounded == -2;
+    RoundTiesEven: self ==
+    {
+        bits := this.Bits;
+        biasedExponent := ExtractBiasedExponentFromBits(bits);
+        if biasedExponent <= 0x03FEu {
+            // +/- 0 is 0 always
+            if (bits << 1) == 0 {
+                return this;
+            }
+
+            // (0..0.5] -> 0
+            // (0.5..1] -> 1
+            result := (biasedExponent == 0x03FEu and ExtractTrailingSignificandFromBits(bits) != 0)
+                        ? 1.0 : 0.0;
+            return result.CopySign(this);
+        }
+
+        // numbers >= 2^52 don't have a fractional part
+        if biasedExponent >= 0x0433u {
+            return this;
+        }
+
+        assert biasedExponent >= 0x03FEu and biasedExponent <= 0x0432u;
+
+        // last integral bit
+        lastBitMask := 1u64 << (0x0433u64 - biasedExponent);
+        // fractional bits
+        roundBitsMask := lastBitMask - 1u;
+
+        // increment first fractional bit
+        bits += lastBitMask >> 1;
+
+        if (bits & roundBitsMask) == 0 {
+            // fractional part .5, rounding to the nearest even
+            bits &= ~lastBitMask;
+        } else {
+            // truncating to the current integer
+            bits &= ~roundBitsMask;
+        }
+
+        return f64.FromBits(bits);
+    }
+
+    RoundTiesEvenToInt32: () -> i32 ==> this.RoundTiesEven as i32;
+    RoundTiesEvenToInt64: () -> i64 ==> this.RoundTiesEven as i64;
+    RoundTiesEvenToInt128: () -> i128 ==> this.RoundTiesEven as i128;
+    
+    Round: (digits: u32) -> self ==> this.Round(digits, MidpointRounding.AwayFromZero);
+    Round: (rounding: MidpointRounding) -> self ==
+    {
+        if consteval {
+            if rounding == MidpointRounding.AwayFromZero {
+                return this.Round;
+            }
+            if rounding == MidpointRounding.ToEven {
+                return this.RoundTiesEven;
+            }
+        }
+        return this.Round(0u, rounding);
+    }
+    Round: (digits: u32, rounding: MidpointRounding) -> self ==
+    {
+        const maxRoundingDigits :== 15u;
+        const roundLimit :== 1e16;
+        //const pow10table: f64[6] == [1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8,
+        //  1e9, 1e10, 1e11, 1e12, 1e13, 1e14, 1e15];
+
+        if digits > maxRoundingDigits {
+            throw Builtin.InvalidArgumentException(); //ArgumentOutOfRange
+        }
+
+        result := this;
+        if this.Abs < roundLimit {
+            //pow10 := pow10table[digits];
+            let pow10 := 10.0 ^^ i32(digits);
+            result *= pow10;
+
+            result = switch rounding
+            {
+                ::ToEven => result.RoundTiesEven,
+                ::AwayFromZero => result.Round,
+                ::ToZero => result.Truncate,
+                ::ToNegativeInfinity => result.Floor,
+                ::ToPositiveInfinity => result.Ceil,
+                _ => throw Builtin.InvalidArgumentException() //ArgumentOutOfRange
+            };
+
+            result /= pow10;
+        }
+
+        return result;
+    }
+
+    ExponentByteCount: u32 ==> sizeof(i16) as u32;
+    ExponentShortestBitLength: u32 ==
+    {
+        exponent := Exponent(this);
+        if exponent >= 0 {
+            return i16.BitWidth - exponent.LeadingZeroCount;
+        } else {
+            return i16.BitWidth + 1 - exponent.LeadingZeroCount;
+        }
+    }
+    SignificandBitLength: u32 ==> 53u;
+    SignificandByteCount: u32 ==> sizeof(u64) as u32;
+}
+
+// real exponentiation
+public extension f64: IPowerArithmetic {
+    operator**: (exp: self) -> self noexcept => std.pow(this as CDouble, exp as CDouble);
+    mut operator**=: (exp: self) -> ref self noexcept => this = std.pow(this as CDouble, exp as CDouble);
+}
+
+public extension f64: IExponentialFunctions {
+    // e ^ x
+    Exp: self => std.exp(this as CDouble);
+    // 2 ^ x
+    Exp2: self => std.exp2(this as CDouble);
+    // 10 ^ x
+    Exp10: self => 10.0 ** this;
+    // (e ^ x) - 1
+    ExpM1: self => std.expm1(this as CDouble);
+    // (2 ^ x) - 1
+    Exp2M1: self => std.exp2(this as CDouble) - 1.0;
+    // (10 ^ x) - 1
+    Exp10M1: self => this.Exp10 - 1.0;
+}
+
+public extension f64: ILogarithmicFunctions {
+    // natural logarithm (with base e)
+    Ln: self => std.log(this as CDouble);
+    // ln (1 + x)
+    LnP1: self => std.log1p(this as CDouble);
+    // log2 (1 + x)
+    Log2P1: self => std.log2((this + 1.0) as CDouble);
+    // lg (1 + x)
+    Log10P1: self => std.log10((this + 1.0) as CDouble);
+}
+
+public extension f64: IRootFunctions {
+    // square root
+    Sqrt: self => std.sqrt(this as CDouble);
+    // cube root
+    Cbrt: self => std.cbrt(this as CDouble);
+    // n-th root with arbitrary integer base
+    Root: (n: i32) -> self
+    {
+        PositiveN := (x: self, n: i32)
+        {
+            result: self;
+            if x.IsFinite {
+                if x != 0 {
+                    if x > 0 or n.IsOddInteger {
+                        result = x.Abs ** (1.0 / n);
+                        result = result.CopySign(x);
+                    } else {
+                        result = f64.NaN;
+                    }
+                } else if n.IsEvenInteger {
+                    result = 0.0;
+                } else {
+                    result = 0.0.CopySign(x);
+                }
+            } else if x.IsNaN {
+                result = f64.NaN;
+            } else if x > 0 {
+                assert x.IsPositiveInfinity;
+                result = f64.PositiveInfinity;
+            } else {
+                assert x.IsNegativeInfinity;
+                result = n.IsOddInteger ? f64.NegativeInfinity : f64.NaN;
+            }
+
+            return result;
+        };
+
+        NegativeN := (x: self, n: i32)
+        {
+            result: self;
+            if x.IsFinite {
+                if x != 0 {
+                    if x > 0 or n.IsOddInteger {
+                        result = x.Abs ** (1.0 / n);
+                        result = result.CopySign(x);
+                    } else {
+                        result = f64.NaN;
+                    }
+                } else if n.IsEvenInteger {
+                    result = f64.PositiveInfinity;
+                } else {
+                    result = f64.PositiveInfinity.CopySign(x);
+                }
+            } else if x.IsNaN {
+                result = f64.NaN;
+            } else if x > 0 {
+                assert x.IsPositiveInfinity;
+                result = 0.0;
+            } else {
+                assert x.IsNegativeInfinity;
+                result = n.IsOddInteger ? -0.0 : f64.NaN;
+            }
+
+            return result;
+        };
+
+        return switch n {
+            >0 => switch n
+            {
+                2 => this != 0.0 ? this.Sqrt : 0.0,
+                3 => this.Cbrt,
+                _ => PositiveN(this, n)
+            },
+            <0 => NegativeN(this, n),
+            _ => f64.NaN
+        };
+    }
+
+    // hypotenuse (distance between the origin and a point (x, y) on the Euclidean plane)
+    Hypot: (y: self) -> self
+    {
+        result: self;
+        if this.IsFinite and y.IsFinite {
+            let ax := this.Abs;
+            let ay := y.Abs;
+
+            if ax == 0.0 {
+                result = ay;
+            } else if ay == 0.0 {
+                result = ax;
+            } else {
+                xx: f64 = ax;
+                xx *= xx;
+                yy: f64 = ay;
+                yy *= yy;
+                result = (xx + yy).Sqrt;
+            }
+        } else if this.IsInfinity or y.IsInfinity {
+            result = f64.PositiveInfinity;
+        } else {
+            assert this.IsNaN or y.IsNaN;
+            result = f64.NaN;
+        }
+
+        return result;
+    }
+}
+
+public extension f64: ITrigonometricFunctions {
+    // sine
+    Sin: self => std.sin(this as CDouble);
+    // cosine
+    Cos: self => std.cos(this as CDouble);
+    // tangent
+    Tan: self => std.tan(this as CDouble);
+    // cotangent
+    Cot: self => 1.0 / this.Tan;
+    // secant
+    Sec: self => 1.0 / this.Cos;
+    // cosecant
+    Csc: self => 1.0 / this.Sin;
+    // arc sine
+    Asin: self => std.asin(this as CDouble);
+    // arc cosine
+    Acos: self => std.acos(this as CDouble);
+    // arc tangent
+    Atan: self => std.atan(this as CDouble);
+    // arc cotangent
+    Acot: self => std.atan((1.0 / this) as CDouble);
+    // arc secant
+    Asec: self => std.acos((1.0 / this) as CDouble);
+    // arc cosecant
+    Acsc: self => std.asin((1.0 / this) as CDouble);
+    // sine and cosine pair
+    SinCos: (self, self) => (this.Sin, this.Cos);
+    // sin(pi * x)
+    SinPi: self
+    {
+        result: self;
+        if this.IsFinite {
+            let ax := this.Abs;
+
+            // |x| < 2^52
+            if ax < 4_503_599_627_370_496.0 {
+                switch ax {
+                    >0.25 => {
+                        let integral := ax as i64;
+                        let fractional := ax - integral;
+                        let sign := (this > 0.0 ? +1.0 : -1.0) * (integral.IsOddInteger ? -1.0 : +1.0);
+
+                        result = switch fractional {
+                            <=0.25 => fractional != 0.0 ? sign * SinPiBy4(fractional * f64.Pi, 0.0) : this * 0.0,
+                            <=0.5  => fractional != 0.5 ? sign * CosPiBy4((0.5 - fractional) * f64.Pi, 0.0) : sign,
+                            <=0.75 => sign * CosPiBy4((fractional - 0.5) * f64.Pi, 0.0),
+                            _       => sign * SinPiBy4((1.0 - fractional) * f64.Pi, 0.0)
+                        };
+                    }
+                    >=1.220703125e-4 => result = SinPiBy4(this * f64.Pi, 0.0);
+                    >=7.450580596923828e-09 => {
+                        let value:= this * f64.Pi;
+                        result = value - (value * value * value * (1.0 / 6.0));
+                    }
+                    _ => result = this * f64.Pi;
+                }
+            } else {
+                result = this * 0.0;
+            }
+        } else {
+            result = f64.NaN;
+        }
+
+        return result;
+    }
+    // cos(pi * x)
+    CosPi: self
+    {
+        result: self;
+        if this.IsFinite {
+            let ax := this.Abs;
+
+            // |x| < 2^52
+            if ax < 4_503_599_627_370_496.0 {
+                switch ax {
+                    >0.25 => {
+                        let integral := ax as i64;
+                        let fractional := ax - integral;
+                        let sign := integral.IsOddInteger ? -1.0 : +1.0;
+
+                        result = switch fractional {
+                            <=0.25 => fractional != 0.0 ? sign * CosPiBy4(fractional * f64.Pi, 0.0) : sign,
+                            <=0.5  => fractional != 0.5 ? sign * SinPiBy4((0.5 - fractional) * f64.Pi, 0.0) : 0.0,
+                            <=0.75 => -sign * SinPiBy4((fractional - 0.5) * f64.Pi, 0.0),
+                            _      => -sign * CosPiBy4((1.0 - fractional) * f64.Pi, 0.0)
+                        };
+                    }
+                    >=6.103515625e-05 => result = CosPiBy4(this * f64.Pi, 0.0);
+                    >=7.450580596923828e-09 => {
+                        let value:= this * f64.Pi;
+                        result = 1.0 - (value * value * 0.5);
+                    }
+                    _ => result = 1.0;
+                }
+            } else if ax < 9_007_199_254_740_992.0 {
+                result = ax.Bits.IsOddInteger ? -1.0 : +1.0;
+            } else {
+                result = 1.0;
+            }
+        } else {
+            result = f64.NaN;
+        }
+
+        return result;
+    }
+    // sin(pi * x) and cos(pi * x)
+    SinCosPi: (self, self)
+    {
+        sin: self;
+        cos: self;
+
+        if this.IsFinite {
+            let ax := this.Abs;
+
+            // |x| < 2^52
+            if ax < 4_503_599_627_370_496.0 {
+                if ax > 0.25 {
+                    let integral := ax as i64;
+                    let fractional := ax - integral;
+                    let sign := integral.IsOddInteger ? -1.0 : +1.0;
+                    let sinSign := (this > 0.0 ? +1.0 : -1.0) * sign;
+                    let cosSign := sign;
+
+                    if fractional <= 0.25 {
+                        if fractional != 0.0 {
+                            let value := fractional * f64.Pi;
+                            sin = sinSign * SinPiBy4(value, 0.0);
+                            cos = cosSign * CosPiBy4(value, 0.0);
+                        } else {
+                            sin = this * 0.0;
+                            cos = cosSign;
+                        }
+                    } else if fractional <= 0.5 {
+                        if fractional != 0.5 {
+                            let value := (0.5 - fractional) * f64.Pi;
+                            sin = sinSign * CosPiBy4(value, 0.0);
+                            cos = cosSign * SinPiBy4(value, 0.0);
+                        } else {
+                            sin = sinSign;
+                            cos = 0.0;
+                        }
+                    } else if fractional <= 0.75 {
+                        let value := (fractional - 0.5) * f64.Pi;
+                        sin = +sinSign * CosPiBy4(value, 0.0);
+                        cos = -cosSign * SinPiBy4(value, 0.0);
+                    } else {
+                        let value := (1.0 - fractional) * f64.Pi;
+                        sin = +sinSign * SinPiBy4(value, 0.0);
+                        cos = -cosSign * CosPiBy4(value, 0.0);
+                    }
+                } else if ax >= 1.220703125e-4 {
+                    let value := this * f64.Pi;
+                    sin = SinPiBy4(value, 0.0);
+                    cos = CosPiBy4(value, 0.0);
+                } else if ax >= 7.450580596923828e-09 {
+                    let value := this * f64.Pi;
+                    let valueSq := value * value;
+
+                    sin = value - (value * valueSq * (1.0 / 6.0));
+                    cos = 1.0 - (valueSq * 0.5);
+                } else {
+                    sin = this * f64.Pi;
+                    cos = 1.0;
+                }
+            } else if ax < 9_007_199_254_740_992.0 {
+                sin = this * 0.0;
+                cos = ax.Bits.IsOddInteger ? -1.0 : +1.0;
+            } else {
+                sin = this * 0.0;
+                cos = 1.0;
+            }
+        } else {
+            sin = f64.NaN;
+            cos = f64.NaN;
+        }
+
+        return (sin, cos);
+    }
+    // tan(pi * x)
+    TanPi: self
+    {
+        result: self;
+
+        if this.IsFinite {
+            let ax := this.Abs;
+            let sign := this > 0.0 ? +1.0 : -1.0;
+
+            // |x| < 2^53
+            switch ax {
+                < 4_503_599_627_370_496.0 => {
+                    switch ax {
+                        >0.25 => {
+                            let integral := ax as i64;
+                            let fractional := ax - integral;
+                            
+                            result = switch fractional {
+                                <=0.25 => fractional != 0.0 ? sign * TanPiBy4(fractional * f64.Pi, 0.0, false) 
+                                                            : sign * (integral.IsOddInteger ? -0.0 : +0.0),
+                                <=0.5  => fractional != 0.5 ? -sign * TanPiBy4((0.5 - fractional) * f64.Pi, 0.0, true)
+                                                            : +sign * (integral.IsOddInteger ? f64.NegativeInfinity : f64.PositiveInfinity),
+                                <=0.75 => +sign * TanPiBy4((fractional - 0.5) * f64.Pi, 0.0, true),
+                                _      => -sign * TanPiBy4((1.0 - fractional) * f64.Pi, 0.0, false)
+                            };
+                        }
+                        >= 6.103515625e-05 => result = TanPiBy4(this * f64.Pi, 0.0, false);
+                        >= 7.450580596923828e-09 => {
+                            let value := this * f64.Pi;
+                            result = value + (value * value * value * (1.0 / 3.0));
+                        }
+                        _ => result = this * f64.Pi;
+                    }
+                }
+                < 9_007_199_254_740_992.0 => result = sign * (ax.Bits.IsOddInteger ? -0.0 : +0.0);
+                _ => result = sign * 0.0;
+            }
+        } else {
+            result = f64.NaN;
+        }
+
+        return result;
+    }
+    // cot(pi * x)
+    CotPi: self => 1.0 / this.TanPi;
+    // sec(pi * x)
+    SecPi: self => 1.0 / this.CosPi;
+    // csc(pi * x)
+    CscPi: self => 1.0 / this.SinPi;
+    // asin(pi * x)
+    AsinPi: self => this.Asin / f64.Pi;
+    // acos(pi * x)
+    AcosPi: self => this.Acos / f64.Pi;
+    // atan(pi * x)
+    AtanPi: self => this.Atan / f64.Pi;
+    // acot(pi * x)
+    AcotPi: self => this.Acot / f64.Pi;
+    // asec(pi * x)
+    AsecPi: self => this.Asec / f64.Pi;
+    // acsc(pi * x)
+    AcscPi: self => this.Acsc / f64.Pi;
+
+    // convert degrees to radians
+    ToRadians: () -> self noexcept ==> (this * f64.Pi) / 180.0;
+    // convert radians to degrees
+    ToDegrees: () -> self noexcept ==> (this * 180.0) / f64.Pi;
+}
+
+public extension f64: IHyperbolicFunctions {
+    // hyperbolic arc cosine
+    Acosh: self => std.acosh(this as CDouble);
+    // hyperbolic arc cotangent
+    Acoth: self => (1.0 / this).Atanh;
+    // hyperbolic arc cosecant
+    Acsch: self => (1.0 / this).Asinh;
+    // hyperbolic arc secant
+    Asech: self => (1.0 / this).Acosh;
+    // hyperbolic arc sine
+    Asinh: self => std.asinh(this as CDouble);
+    // hyperbolic arc tangent
+    Atanh: self => std.atanh(this as CDouble);
+    // hyperbolic cosine
+    Cosh: self => std.cosh(this as CDouble);
+    // hyperbolic cotangent
+    Coth: self => 1.0 / this.Tanh;
+    // hyperbolic cosecant
+    Csch: self => 1.0 / this.Sinh;
+    // hyperbolic secant
+    Sech: self => 1.0 / this.Cosh;
+    // hyperbolic sine
+    Sinh: self => std.sinh(this as CDouble);
+    // hyperbolic tangent
+    Tanh: self => std.tanh(this as CDouble);
+}
+
+public extension f64: IBinaryFloatingPointIeee754 {
+    static Epsilon: self ==> 4.9406564584124654e-324;
+    static NegativeInfinity: self ==> f64.FromBits(0xFFF0000000000000u64);
+    static PositiveInfinity: self ==> f64.FromBits(0x7FF0000000000000u64);
+    static NaN: self ==> Builtin.NanValue();
+    static NegativeZero: self ==> -0.0;
+
+    // arctan(y / x)
+    Atan2: (y: self) -> self => std.atan2(this as CDouble, y as CDouble);
+    Atan2Pi: (y: self) -> self => this.Atan2(y) / f64.Pi;
+
+    // Returns the least number greater than this (IEEE754: nextUp)
+    // Increments bit representation of number
+    // Returns NaN if this is NaN
+    // Returns MinValue if this is -Inf
+    // Returns +Inf if this is +Inf
+    // Returns Epsilon if this is -0.0
+    BitIncrement: self ==
+    {
+        bits := this.Bits;
+        if ((bits >> 32) & 0x7FF00000u) >= 0x7FF00000u {
+            // nan -> nan
+            // -inf -> minvalue
+            // +inf -> +inf
+            return bits == 0xFFF00000_00000000u ? f64.MinValue : this;
+        }
+
+        // -0.0 -> epsilon
+        if bits == 0x80000000_00000000u {
+            return f64.Epsilon;
+        }
+
+        bits += bits > i64.MaxValue ? -1 : +1;
+        return f64.FromBits(bits);
+    }
+    // Returns the greatest number less than this (IEEE754: nextDown)
+    // Decrements bit representation of number
+    // Returns NaN if this is NaN
+    // Returns MaxValue if this is +Inf
+    // Returns -Inf if this is -Inf
+    // Returns -Epsilon if this is +0.0
+    BitDecrement: self ==
+    {
+        bits := this.Bits;
+        if ((bits >> 32) & 0x7FF00000u) >= 0x7FF00000u {
+            // nan -> nan
+            // -inf -> -inf
+            // +inf -> maxvalue
+            return bits == 0x7FF00000_00000000u ? f64.MaxValue : this;
+        }
+
+        // +0.0 -> -epsilon
+        if bits == 0u {
+            return -f64.Epsilon;
+        }
+
+        bits += bits > i64.MaxValue ? +1 : -1;
+        return f64.FromBits(bits);
+    }
+    // integral part of binary logarithm
+    ILogB: i32 => std.ilogb(this as CDouble);
+    // hardware 1 / x
+    ReciprocalEstimate: self ==
+    {
+        if consteval {
+            return 1.0 / this;
+        } else {
+            //TODO: add SIMD support
+            return 1.0 / this;
+        }
+    }
+    ReciprocalSqrtEstimate: self ==
+    {
+        if consteval {
+            return 1.0 / this.Sqrt;
+        } else {
+            //TODO: add SIMD support
+            return 1.0 / this.Sqrt;
+        }
+    }
+
+    // classify floating point value
+    Category: FloatingPointCategory ==
+    {
+        if this.IsNaN {
+            return FloatingPointCategory.NaN;
+        } else if this.IsInfinity {
+            return FloatingPointCategory.Infinity;
+        } else if this.IsZero {
+            return FloatingPointCategory.Zero;
+        } else if this.IsSubnormal {
+            return FloatingPointCategory.Subnormal;
+        } else {
+            return FloatingPointCategory.Normal;
+        }
+    }
+
+    // (this * rhs) + addend (optimized for hardware)
+    FusedMultiplyAdd: (rhs: self, addend: self) -> self => std.fma(this as CDouble, rhs as CDouble, addend as CDouble);
+    // remainder of division (rounding to nearest integer)
+    Ieee754Remainder: (rhs: self) -> self => std.remainder(this as CDouble, rhs as CDouble);
+
+    // linear interpolation
+    Lerp: (end: self, amount: self) -> self noexcept ==> this * (1.0 - amount) + (end * amount);
+    // this * (2 ^ n)
+    ScaleB: (n: i32) -> self => std.scalbn(this as CDouble, n);
+
+    // gamma function
+    Gamma: self => std.tgamma(this as CDouble);
+    // ln(gamma(x))
+    LnGamma: self => std.lgamma(this as CDouble);
+    // error function
+    Erf: self => std.erf(this as CDouble);
+    // complementary error function
+    Erfc: self => std.erfc(this as CDouble);
+}
+
+public extension f64: IBinaryFloatFormatInfo {
+    static NumberBufferLength: i32 ==> 767 + 1 + 1;
+    static ZeroBits: u128 ==> 0u;
+    static InfinityBits: u128 ==> 0x7FF00000_00000000u;
+    static NormalMantissaMask: u128 ==> (1u128 << SignificandLength) - 1u;
+    static DenormalMantissaMask: u128 ==> TrailingSignificandMask;
+    static MinBinaryExponent: i32 ==> 1 - MaxExponent;
+    static MaxBinaryExponent: i32 ==> MaxExponent;
+    static MinDecimalExponent: i32 ==> -324;
+    static MaxDecimalExponent: i32 ==> 309;
+    static ExponentBias: i32 ==> ExpBias;
+    static ExponentBits: u128 ==> 11u;
+    static OverflowDecimalExponent: i32 ==> (MaxExponent + 2 * SignificandLength) \ 3;
+    static InfinityExponent: i32 ==> 0x7FF;
+    static NormalMantissaBits: u16 ==> SignificandLength;
+    static DenormalMantissaBits: u16 ==> TrailingSignificandLength;
+    static MinFastFloatDecimalExponent: i32 ==> -342;
+    static MaxFastFloatDecimalExponent: i32 ==> 308;
+    static MinExponentRoundToEven: i32 ==> -4;
+    static MaxExponentRoundToEven: i32 ==> 23;
+    static MaxExponentFastPath: i32 ==> 22;
+    static MaxMantissaFastPath: u128 ==> 2u128 << TrailingSignificandLength;
+}
+
+private inline SinPiBy4: (x: f64, xTail: f64) -> f64 noexcept
+{
+    const C1 :== -0.166666666666666646259241729;
+    const C2 :== +0.833333333333095043065222816e-2;
+    const C3 :== -0.19841269836761125688538679e-3;
+    const C4 :== +0.275573161037288022676895908448e-5;
+    const C5 :== -0.25051132068021699772257377197e-7;
+    const C6 :== +0.159181443044859136852668200e-9;
+
+    let xx := x * x;
+    let xxx := xx * x;
+    result := C6;
+
+    result = (result * xx) + C5;
+    result = (result * xx) + C4;
+    result = (result * xx) + C3;
+    result = (result * xx) + C2;
+    
+    if xTail == 0.0 {
+        result = (result * xx) + C1;
+        result = (result * xxx) + x;
+    } else {
+        result = x - ((xx * ((0.5 * xTail) - (xxx * result))) - xTail - (xxx * C1));
+    }
+
+    return result;
+}
+
+private inline CosPiBy4: (x: f64, xTail: f64) -> f64 noexcept
+{
+    const C1 :== +0.41666666666666665390037e-1;
+    const C2 :== -0.13888888888887398280412e-2;
+    const C3 :== +0.248015872987670414957399e-4;
+    const C4 :== -0.275573172723441909470836e-6;
+    const C5 :== +0.208761463822329611076335e-8;
+    const C6 :== -0.113826398067944859590880e-10;
+
+    let xx := x * x;
+    let tmp1 := 0.5 * xx;
+    let tmp2 := 1.0 - tmp1;
+    result := C6;
+
+    result = (result * xx) + C5;
+    result = (result * xx) + C4;
+    result = (result * xx) + C3;
+    result = (result * xx) + C2;
+    result = (result * xx) + C1;
+    result *= xx * xx;
+    result += 1.0 - tmp2 - tmp1 - x * xTail;
+    result += tmp2;
+    return result;
+}
+
+private inline TanPiBy4: (x: f64, xTail: f64, isReciprocal: bool) -> f64 noexcept
+{
+    const pi4head :== 7.85398163397448278999e-01;
+    const pi4tail :== 3.06161699786838240164e-17;
+
+    transform := 0;
+    if x > +0.68 {
+        transform = 1;
+        x = pi4head - x + (pi4tail - xTail);
+        xTail = 0.0;
+    } else if x < -0.68 {
+        transform = -1;
+        x = pi4head + x + pi4tail + xTail;
+        xTail = 0.0;
+    }
+
+    let tmp1 := x * x + 2.0 * x * xTail;
+    denominator := -0.232371494088563558304549252913e-3;
+    denominator = +0.260656620398645407524064091208e-1 + (denominator * tmp1);
+    denominator = -0.515658515729031149329237816945e+0 + (denominator * tmp1);
+    denominator = +0.111713747927937668539901657944e+1 + (denominator * tmp1);
+    numerator := +0.224044448537022097264602535574e-3;
+    numerator = -0.229345080057565662883358588111e-1 + (numerator * tmp1);
+    numerator = +0.372379159759792203640806338901e+0 + (numerator * tmp1);
+
+    tmp2 := x * tmp1;
+    tmp2 *= numerator / denominator;
+    tmp2 += xTail;
+
+    result := x + tmp2;
+
+    if transform != 0 {
+        result = isReciprocal ? ((2.0 * result / (result - 1)) * transform) - 1.0
+                              : (1.0 - (2.0 * result / (result + 1))) * transform;
+    }
+    else if isReciprocal {
+        bits := result.Bits;
+        bits &= 0xFFFFFFFF00000000u;
+
+        let z1 := f64.FromBits(bits);
+        let z2 := tmp2 - (z1 - x);
+        let reciprocal := -1.0 / result;
+
+        bits = reciprocal.Bits;
+        bits &= 0xFFFFFFFF00000000u;
+
+        let reciprocalHead := f64.FromBits(bits);
+        result = reciprocalHead + (reciprocal * (1.0 + reciprocalHead * z1 + reciprocalHead * z2));
+    }
+
+    return result;
+}
+
+static assert(sizeof(f64) == 8, "f64 should be 8 bytes");
+static assert(f64.Pi == 3.14159265358979323846, "f64.Pi should be 3.14159265358979323846");
+static assert(type f64 is IComparable<f64>, "f64 should implement IComparable<f64>");
+static assert(type f64 is IEquatable<f64>, "f64 should implement IEquatable<f64>");
+static assert(type f64 is ISelfComparable, "f64 should implement ISelfComparable");
+static assert(type f64 is ISelfEquatable, "f64 should implement ISelfEquatable");
+static assert(type f64 is IAdditionOperators<f64, f64>, "f64 should implement IAdditionOperators<f64, f64>");
+static assert(type f64 is ISubtractionOperators<f64, f64>, "f64 should implement ISubtractionOperators<f64, f64>");
+static assert(type f64 is IMultiplyOperators<f64, f64>, "f64 should implement IMultiplyOperators<f64, f64>");
+static assert(type f64 is IDivisionOperators<f64, f64>, "f64 should implement IDivisionOperators<f64, f64>");
+static assert(type f64 is IModulusOperators<f64, f64>, "f64 should implement IModulusOperators<f64, f64>");
+static assert(type f64 is IUnaryPlusOperators<f64>, "f64 should implement IUnaryPlusOperators<f64>");
+static assert(type f64 is IUnaryNegationOperators<f64>, "f64 should implement IUnaryNegationOperators<f64>");
+static assert(type f64 is IIncrementOperators<f64>, "f64 should implement IIncrementOperators<f64>");
+static assert(type f64 is IDecrementOperators<f64>, "f64 should implement IDecrementOperators<f64>");
+
+test "Float64" {
+    f: f64 = 1234.1234;
+    
+    assert f64.Pi == 3.14159265358979323846;
+    assert f != f64.Pi;
+    assert f > 1234.1;
+    assert f < 1234.5;
+
+    assert f + 1.0 == 1235.1234;
+    assert f - 1.0 == 1233.1234;
+    assert f * 2.0 == 2468.2468;
+    assert f / 2.0 == 617.0617;
+    assert f % 2.0 == 0.12339999999994688551;
+
+    f += 1.0;
+    assert f == 1235.1234;
+    f -= 1.0;
+    assert f == 1234.1234;
+    f *= 2.0;
+    assert f == 2468.2468;
+    f /= 2.0;
+    assert f == 1234.1234;
+    f %= 2.0;
+    assert f == 0.12339999999994688551;
+
+    f = 1234.1234;
+    assert f++ == 1234.1234;
+    assert ++f == 1236.1234;
+    assert f-- == 1236.1234;
+    assert --f == 1234.1234;
+
+    assert +f == 1234.1234;
+    assert -f == -1234.1234;
+
+    n: f64? = null;
+    assert n == null;
+    assert f != n;
+    n = 3.1234;
+    assert n != null;
+    assert f != n;
+
+    // dynamic polymorphism
+    o: object? = f;
+    //assert f ==* o;
+    icomp: IComparable<f64> = f;
+    assert icomp > n!;
+
+    assert f.HashCode == 4653142547559993678u;
+    assert #f == 4653142547559993678u;
+
+    assert f.ToBoolean();
+    assert !0.0.ToBoolean();
+    assert f.ToInt16() == 1234;
+    assert f.ToInt32() == 1234;
+    assert f.ToInt64() == 1234;
+    assert f.ToInt128() == 1234;
+    assert f.ToUsize() == 1234;
+
+    {
+        div, rem := f /% 2.0;
+        assert div == 617.0617 && rem == 0.12339999999994688551;
+    }
+
+    assert f ^^ 2 == 1523060.56642755982466042042;
+    assert f ^^ (-2) == 6.56572707640620423020551017085e-07;
+    assert f ** 2 == 1523060.56642755982466042042;
+    assert f ** (-2) == 6.56572707640620423020551017085e-07;
+    assert f ** 1.234 == 6527.34392651676535024307668209;
+
+    assert f.Abs == f;
+    assert -1234.1234.Abs == 1234.1234;
+    assert f.IsCanonical;
+    assert !f.IsComplexNumber;
+    assert !f.IsImaginaryNumber;
+    assert f.IsRealNumber;
+    assert f.IsFinite;
+    assert !f.IsInfinity;
+    assert !f.IsNaN;
+    assert !f.IsNegative;
+    assert -1234.1234.IsNegative;
+    assert !f.IsNegativeInfinity;
+    assert f.IsPositive;
+    assert !f.IsPositiveInfinity;
+    assert !f.IsSubnormal;
+    assert !f.IsZero;
+    assert 0.0.IsZero;
+    assert !f.IsInteger;
+    assert !f.IsEvenInteger;
+    assert !f.IsOddInteger;
+    assert 1.0.IsInteger;
+    assert 1.0.IsOddInteger;
+    assert 2.0.IsEvenInteger;
+    assert f.MaxMagnitude(-1235.0) == -1235.0;
+    assert f.MinMagnitude(-1235.0) == 1234.1234;
+
+    assert f.NarrowToInt32() == 1234;
+    assert f.NarrowToInt8() == -46;
+    
+    assert f.Sign == 1;
+    assert -1234.1234.Sign == -1;
+    assert 0.0.Sign == 0;
+
+    assert f.CopySign(-1.0) == -1234.1234;
+    assert f.Max(123) == f;
+    assert f.Min(123) == 123.0;
+    assert f.Clamp(1,1000) == 1000.0;
+
+    assert !f.IsPow2;
+    assert 4096.0.IsPow2;
+    assert 4096.0.Log2 == 12.0;
+    //assert f64.Zero.Log2.IsNegativeInfinity;
+    assert -123.0.Log2.IsNaN;
+    assert 10000.0.Log10 == 4.0;
+    //assert f64.Zero.Log10.IsNegativeInfinity;
+    assert -123.0.Log10.IsNaN;
+    assert f.Midpoint(2431.15) == 1832.6367;
+    assert 10000.0.IsMultipleOf(10);
+    assert !10000.0.IsMultipleOf(7.5);
+    assert 22.5.IsMultipleOf(7.5);
+
+    assert 2.5.Ceil == 3.0;
+    assert 2.5.Floor == 2.0;
+    assert 2.5.Truncate == 2.0;
+    assert 2.5.Round == 3.0;
+    assert 2.5.RoundToInt32() == 3;
+    assert 2.5.RoundTiesEven == 2.0;
+    assert 2.5.RoundTiesEvenToInt32() == 2;
+    assert 3.5.RoundTiesEven == 4.0;
+    assert 2.665.Round(2u) == 2.67;
+    assert 2.665.Round(2u, MidpointRounding.ToEven) == 2.66;
+    assert (-2.5).Ceil == -2.0;
+    assert (-2.5).Floor == -3.0;
+    assert (-2.5).Truncate == -2.0;
+    assert (-2.5).Round == -3.0;
+    assert (-2.5).RoundToInt32() == -3;
+    assert (-2.5).RoundTiesEven == -2.0;
+    assert (-2.5).RoundTiesEvenToInt32() == -2;
+    assert (-3.5).RoundTiesEven == -4.0;
+    assert (-2.665).Round(2u) == -2.67;
+    assert (-2.665).Round(2u, MidpointRounding.ToEven) == -2.66;
+    
+    f = 12.34;
+    assert f.Exp == 228661.952056809794157743453979;
+    assert f.ExpM1 == 228660.952056809794157743453979;
+    assert f.Exp2 == 5184.53900890226577757857739925;
+    assert f.Exp2M1 == 5183.53900890226577757857739925;
+    assert f.Exp10 == 2187761623949.5517578125;
+    assert f.Exp10M1 == 2187761623948.5517578125;
+    assert f.Ln == 2.51284601847724164969122284674;
+    assert f.LnP1 == 2.5907670404874778569137561135;
+    assert f.Log(1.25) == 11.2611186999479464532214478822;
+
+    assert f.Sqrt == 3.51283361405005933875145274214;
+    assert f.Cbrt == 2.31084980883124302408759831451;
+    assert 1234.1234.Root(5) == 4.15213740868436520514705989626;
+    assert f.Root(-5) == 0.604974358983159765656978379411;
+    assert f.Hypot(9.12) == 15.344380078712857695677485026;
+
+    assert f.Sin == -0.224442218951855371189552101896;
+    assert f.Cos == 0.974487398765098156161457154667;
+    assert f.Tan == -0.230318236270962345413337857281;
+    assert f.Cot == -4.34181859061967934110271016834;
+    assert f.Sec == 1.02618053477883064417142122693;
+    assert f.Csc == -4.45548972323477077139841640019;
+    f = 0.34;
+    assert f.Asin == 0.346916897527161760539371471168;
+    assert f.Acos == 1.22387942926773485297076149436;
+    assert f.Atan == 0.327738506780555494124484994245;
+    assert f.Acot == 1.24305782001434117489679920254;
+    f = 12.34;
+    assert f.Asec == 1.48967009066312705556356377201;
+    assert f.Acsc == 0.0811262361317696550910838482196;
+    assert f.ToRadians() == 0.215373629696100243879897107036;
+    assert 0.34.ToDegrees() == 19.4805650344479914792827912606;
+    assert f.SinPi == 0.8763066800438634;
+    assert 1.0.SinPi == 0.0;
+    assert 0.5.SinPi == 1.0;
+    assert f.CosPi == 0.4817536741017157;
+    assert 1.0.CosPi == -1.0;
+    assert 0.5.CosPi == 0.0;
+    assert f.TanPi == 1.8189932472810644;
+    assert 1.0.TanPi == -0.0;
+    assert 0.0.TanPi == 0.0;
+
+    assert f.Sinh == 114330.97602621826808899641037;
+    assert f.Cosh == 114330.97603059152606874704361;
+    assert f.Tanh == 0.99999999996174904204337963165;
+    assert f.Coth == 1.00000000003825095795662036835;
+    assert f.Sech == 8.74653601953358790890066115642e-06;
+    assert f.Csch == 8.74653601986815067647305921295e-06;
+    assert f.Asinh == 3.20763093073212290917695099779;
+    assert f.Acosh == 3.20434738108670913447895145509;
+    assert f.Atanh.IsNaN;
+    f = 0.34;
+    assert f.Sinh == 0.346588633900492049111363712655;
+    assert f.Cosh == 1.05835895666310175755597811076;
+    assert f.Tanh == 0.327477394808705357664990742705;
+    assert f.Coth == 3.05364588778454804085527030111;
+    assert f.Sech == 0.944859013763060473500843272632;
+    assert f.Csch == 2.88526484191373322474305496144;
+    assert f.Asinh == 0.333768351645882199729697958901;
+    assert f.Acosh.IsNaN;
+    assert f.Atanh == 0.354092528962242969470253228792;
+
+    assert f.ReciprocalEstimate == 2.94117647058823505901159478526;
+    assert f.FusedMultiplyAdd(5.0, 2.12) == 3.82000000000000028421709430404;
+    assert 1.0.Lerp(2.0, 0.75) == 1.75;
+
+    assert f.Gamma == 2.62416325649848314327527987189;
+    assert f.LnGamma == 0.964762085799852231460249640804;
+    assert f.Erf == 0.369364529344658687470825952914;
+    assert f.Erfc == 0.630635470655341312529174047086;
+}

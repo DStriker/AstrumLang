@@ -374,7 +374,7 @@ protected {
     const ShiftedSignMask: u8 == u8(SignMask >> SignShift);
 
     const BiasedExponentMask :== 0x7F80_0000u;
-    const BiasedExponentShift :== 23;
+    const BiasedExponentShift :== 23i32;
     const ShiftedBiasedExponentMask: u8 == u8(BiasedExponentMask >> BiasedExponentShift);
 
     const TrailingSignificandMask :== 0x007F_FFFFu;
@@ -851,15 +851,15 @@ public extension f32: ITrigonometricFunctions {
     {
         result: self;
         if this.IsFinite {
-            ax := this.Abs;
+            let ax := this.Abs;
 
             // |x| < 2^23
             if ax < 8_388_608.0f {
                 switch ax {
                     >0.25f => {
-                        integral := ax as i32;
-                        fractional := ax - integral;
-                        sign := (this > 0.0f ? +1.0f : -1.0f) * (integral.IsOddInteger ? -1.0f : +1.0f);
+                        let integral := ax as i32;
+                        let fractional := ax - integral;
+                        let sign := (this > 0.0f ? +1.0f : -1.0f) * (integral.IsOddInteger ? -1.0f : +1.0f);
 
                         result = switch fractional {
                             <=0.25f => fractional != 0.0f ? sign * SinPiBy4(fractional * f32.Pi) : this * 0.0f,
@@ -870,7 +870,7 @@ public extension f32: ITrigonometricFunctions {
                     }
                     >=7.8125e-3f => result = SinPiBy4(this * f32.Pi);
                     >=1.22070313e-4f => {
-                        value:= this * f32.Pi;
+                        let value:= this * f32.Pi;
                         result = value - (value * value * value * (1.0f / 6.0f));
                     }
                     _ => result = this * f32.Pi;
@@ -889,15 +889,15 @@ public extension f32: ITrigonometricFunctions {
     {
         result: self;
         if this.IsFinite {
-            ax := this.Abs;
+            let ax := this.Abs;
 
             // |x| < 2^23
             if ax < 8_388_608.0f {
                 switch ax {
                     >0.25f => {
-                        integral := ax as i32;
-                        fractional := ax - integral;
-                        sign := integral.IsOddInteger ? -1.0f : +1.0f;
+                        let integral := ax as i32;
+                        let fractional := ax - integral;
+                        let sign := integral.IsOddInteger ? -1.0f : +1.0f;
 
                         result = switch fractional {
                             <=0.25f => fractional != 0.0f ? sign * CosPiBy4(fractional * f32.Pi) : sign,
@@ -908,7 +908,7 @@ public extension f32: ITrigonometricFunctions {
                     }
                     >=7.8125e-3f => result = CosPiBy4(this * f32.Pi);
                     >=1.22070313e-4f => {
-                        value:= this * f32.Pi;
+                        let value:= this * f32.Pi;
                         result = 1.0f - (value * value * 0.5f);
                     }
                     _ => result = 1.0f;
@@ -931,20 +931,20 @@ public extension f32: ITrigonometricFunctions {
         cos: self;
 
         if this.IsFinite {
-            ax := this.Abs;
+            let ax := this.Abs;
 
             // |x| < 2^23
             if ax < 8_388_608.0f {
                 if ax > 0.25f {
-                    integral := ax as i32;
-                    fractional := ax - integral;
-                    sign := integral.IsOddInteger ? -1.0f : +1.0f;
-                    sinSign := (this > 0.0f ? +1.0f : -1.0f) * sign;
-                    cosSign := sign;
+                    let integral := ax as i32;
+                    let fractional := ax - integral;
+                    let sign := integral.IsOddInteger ? -1.0f : +1.0f;
+                    let sinSign := (this > 0.0f ? +1.0f : -1.0f) * sign;
+                    let cosSign := sign;
 
                     if fractional <= 0.25f {
                         if fractional != 0.0f {
-                            value := fractional * f32.Pi;
+                            let value := fractional * f32.Pi;
                             sin = sinSign * SinPiBy4(value);
                             cos = cosSign * CosPiBy4(value);
                         } else {
@@ -953,7 +953,7 @@ public extension f32: ITrigonometricFunctions {
                         }
                     } else if fractional <= 0.5f {
                         if fractional != 0.5f {
-                            value := (0.5f - fractional) * f32.Pi;
+                            let value := (0.5f - fractional) * f32.Pi;
                             sin = sinSign * CosPiBy4(value);
                             cos = cosSign * SinPiBy4(value);
                         } else {
@@ -961,21 +961,21 @@ public extension f32: ITrigonometricFunctions {
                             cos = 0.0f;
                         }
                     } else if fractional <= 0.75f {
-                        value := (fractional - 0.5f) * f32.Pi;
+                        let value := (fractional - 0.5f) * f32.Pi;
                         sin = +sinSign * CosPiBy4(value);
                         cos = -cosSign * SinPiBy4(value);
                     } else {
-                        value := (1.0f - fractional) * f32.Pi;
+                        let value := (1.0f - fractional) * f32.Pi;
                         sin = +sinSign * SinPiBy4(value);
                         cos = -cosSign * CosPiBy4(value);
                     }
                 } else if ax >= 7.8125e-3f {
-                    value := this * f32.Pi;
+                    let value := this * f32.Pi;
                     sin = SinPiBy4(value);
                     cos = CosPiBy4(value);
                 } else if ax >= 1.22070313e-4f {
-                    value := this * f32.Pi;
-                    valueSq := value * value;
+                    let value := this * f32.Pi;
+                    let valueSq := value * value;
 
                     sin = value - (value * valueSq * (1.0f / 6.0f));
                     cos = 1.0f - (valueSq * 0.5f);
@@ -1003,16 +1003,16 @@ public extension f32: ITrigonometricFunctions {
         result: self;
 
         if this.IsFinite {
-            ax := this.Abs;
-            sign := this > 0.0f ? +1.0f : -1.0f;
+            let ax := this.Abs;
+            let sign := this > 0.0f ? +1.0f : -1.0f;
 
             // |x| < 2^23
             switch ax {
                 < 8_388_608.0f => {
                     switch ax {
                         >0.25f => {
-                            integral := ax as i32;
-                            fractional := ax - integral;
+                            let integral := ax as i32;
+                            let fractional := ax - integral;
                             
                             result = switch fractional {
                                 <=0.25f => fractional != 0.0f ? sign * TanPiBy4(fractional * f32.Pi, false) 
@@ -1025,7 +1025,7 @@ public extension f32: ITrigonometricFunctions {
                         }
                         >= 7.8125e-3f => result = TanPiBy4(this * f32.Pi, false);
                         >= 1.22070313e-4f => {
-                            value := this * f32.Pi;
+                            let value := this * f32.Pi;
                             result = value + (value * value * value * (1.0f / 3.0f));
                         }
                         _ => result = this * f32.Pi;
@@ -1240,7 +1240,7 @@ private inline SinPiBy4: (x: f32) -> f32 noexcept
     const C3 :== -0.19841269836761125688538679e-3;
     const C4 :== +0.275573161037288022676895908448e-5;
 
-    xx: f64 = x * x;
+    let xx: f64 = x * x;
     result := C4;
 
     result = (result * xx) + C3;
@@ -1258,7 +1258,7 @@ private inline CosPiBy4: (x: f32) -> f32 noexcept
     const C3 :== +0.248015872987670414957399e-4;
     const C4 :== -0.275573172723441909470836e-6;
 
-    xx: f64 = x * x;
+    let xx: f64 = x * x;
     result := C4;
 
     result = (result * xx) + C3;
@@ -1271,7 +1271,7 @@ private inline CosPiBy4: (x: f32) -> f32 noexcept
 
 private inline TanPiBy4: (x: f32, isReciprocal: bool) -> f32 noexcept
 {
-    xx: f64 = x * x;
+    let xx: f64 = x * x;
     denominator := +0.1844239256901656082986661e-1;
     denominator = -0.51396505478854532132342e+0 + (denominator * xx);
     denominator = +0.115588821434688393452299e+1 + (denominator * xx);

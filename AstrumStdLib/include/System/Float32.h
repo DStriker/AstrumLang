@@ -883,7 +883,7 @@ namespace __Float32_Protected { inline constexpr Builtin::u8 ShiftedSignMask = B
 #line 376 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr auto BiasedExponentMask = Builtin::u32(0x7F800000U); }
 #line 377 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-namespace __Float32_Protected { inline constexpr auto BiasedExponentShift = Builtin::u8((unsigned char)23); }
+namespace __Float32_Protected { inline constexpr auto BiasedExponentShift = Builtin::i32(23); }
 #line 378 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr Builtin::u8 ShiftedBiasedExponentMask = Builtin::u8{__Float32_Protected::BiasedExponentMask >> __Float32_Protected::BiasedExponentShift}; }
 #line 380 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"

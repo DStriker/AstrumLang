@@ -818,7 +818,7 @@ namespace Builtin {
 			return *this;
 		}
 
-		constexpr Float& operator+() noexcept { return *this; }
+		constexpr Float<T> operator+() const noexcept { return *this; }
 
 		constexpr Float<T> operator-() const noexcept { return -value; }
 

@@ -1,5 +1,6 @@
 #include "Boolean.h"
 #include "Float32.h"
+#include "Float64.h"
 #include "FloatingPointCategory.h"
 #include "IComparable.h"
 #include "IConvertible.h"
