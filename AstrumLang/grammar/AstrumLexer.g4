@@ -143,9 +143,13 @@ False_: 'false';
 
 Final: 'final';
 
+F16: 'f16';
+
 F32: 'f32';
 
 F64: 'f64';
+
+F128: 'f128';
 
 Fext: 'fext';
 
@@ -580,7 +584,7 @@ fragment Integersuffix:
     )
 ;
 
-fragment Floatingsuffix: '_'? ('f' | 'f32' | 'f64' | 'fext');
+fragment Floatingsuffix: '_'? ('f' | 'f16' | 'f32' | 'f64' | 'f128' | 'fext');
 
 fragment Stringsuffix: [s];
 

@@ -16,45 +16,45 @@ namespace __Unsafe {} namespace __Float32_Protected__Unsafe {}
 //###############################################################################
 //# Global type aliases
 //###############################################################################
-#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 using Float32 = Builtin::f32;
-#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 11 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 using Single = Builtin::f32;
 //###############################################################################
 //# Type definitions
 //###############################################################################
 	} namespace __extensions { using namespace System;
-#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_15_f32 = Builtin::f32;
-	#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_13_f32 = Builtin::f32;
+	#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(IMinMaxValue, IMinMaxValue);
-	#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getMinValue; template<> struct __static_getMinValue<__extension_Float32_15_f32> { static inline constexpr auto get() -> const __extension_Float32_15_f32; };
-	#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getMaxValue; template<> struct __static_getMaxValue<__extension_Float32_15_f32> { static inline constexpr auto get() -> const __extension_Float32_15_f32; };
+	#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getMinValue; template<> struct __static_getMinValue<__extension_Float32_13_f32> { static inline constexpr auto get() -> const __extension_Float32_13_f32; };
 	#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getMaxValue; template<> struct __static_getMaxValue<__extension_Float32_13_f32> { static inline constexpr auto get() -> const __extension_Float32_13_f32; };
+	#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(f32, IMinMaxValue, IMinMaxValue, f32);
 	} namespace System{
 using __extensions::__static_getMinValue;
 using __extensions::__static_getMaxValue;
 
 		} namespace __extensions { using namespace System;
-#line 20 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_20_f32 = Builtin::f32;
-	#line 22 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	ASTRUMSTD_API auto _operator_eq_eq_mul(__extension_Float32_20_f32 const& __this LIFETIMEBOUND, Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> obj)  -> const bool;
-	#line 35 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto operator<=>(__extension_Float32_20_f32 const& __this LIFETIMEBOUND, Builtin::Nullable<__extension_Float32_20_f32> rhs) noexcept -> const Builtin::i32;
+#line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_18_f32 = Builtin::f32;
+	#line 20 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	ASTRUMSTD_API auto _operator_eq_eq_mul(__extension_Float32_18_f32 const& __this LIFETIMEBOUND, Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> obj)  -> const bool;
+	#line 33 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto operator<=>(__extension_Float32_18_f32 const& __this LIFETIMEBOUND, Builtin::Nullable<__extension_Float32_18_f32> rhs) noexcept -> const Builtin::i32;
+	#line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_FromBits; template<> struct __static_FromBits<__extension_Float32_18_f32> { static inline constexpr auto get(Builtin::u32 bits)  -> const typename __extension_Float32_18_f32; };
+	#line 42 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getBits(__extension_Float32_18_f32 const& __this ) -> const Builtin::u32;
 	#line 45 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_FromBits; template<> struct __static_FromBits<__extension_Float32_20_f32> { static inline constexpr auto get(Builtin::u32 bits)  -> const typename __extension_Float32_20_f32; };
-	#line 44 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getBits(__extension_Float32_20_f32 const& __this ) -> const Builtin::u32;
-	#line 47 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getBitWidth; template<> struct __static_getBitWidth<__extension_Float32_20_f32> { static inline constexpr auto get() -> const Builtin::u32; };
+	template<class __TT> struct __static_getBitWidth; template<> struct __static_getBitWidth<__extension_Float32_18_f32> { static inline constexpr auto get() -> const Builtin::u32; };
+	#line 46 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getMinPositiveValue; template<> struct __static_getMinPositiveValue<__extension_Float32_18_f32> { static inline constexpr auto get() -> const __extension_Float32_18_f32; };
 	#line 48 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getMinPositiveValue; template<> struct __static_getMinPositiveValue<__extension_Float32_20_f32> { static inline constexpr auto get() -> const __extension_Float32_20_f32; };
-	#line 50 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getHashCode(__extension_Float32_20_f32 const& __this ) -> const Builtin::u64;
+	inline constexpr auto getHashCode(__extension_Float32_18_f32 const& __this ) -> const Builtin::u64;
 	} namespace System{
 using __extensions::_operator_eq_eq_mul;
 using __extensions::operator<=>;
@@ -65,57 +65,57 @@ using __extensions::__static_getMinPositiveValue;
 using __extensions::getHashCode;
 
 		} namespace __extensions { using namespace System;
-#line 62 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_62_f32 = Builtin::f32;
-	#line 62 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 60 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_60_f32 = Builtin::f32;
+	#line 60 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(IAbstractComparable, IAbstractComparable);
-	#line 63 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	ASTRUMSTD_API auto _operator_lt_eq_gt_mul(__extension_Float32_62_f32 const& __this LIFETIMEBOUND, Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> obj)  -> const Builtin::i32;
-	#line 62 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	#line 61 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	ASTRUMSTD_API auto _operator_lt_eq_gt_mul(__extension_Float32_60_f32 const& __this LIFETIMEBOUND, Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> obj)  -> const Builtin::i32;
+	#line 60 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(f32, IAbstractComparable, IAbstractComparable, f32);
 	} namespace System{
 using __extensions::_operator_lt_eq_gt_mul;
 
 		} namespace __extensions { using namespace System;
-#line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_77_f32 = Builtin::f32;
-	#line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 75 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_75_f32 = Builtin::f32;
+	#line 75 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(IConvertible, IConvertible);
-	#line 78 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToBoolean(__extension_Float32_77_f32 const& __this LIFETIMEBOUND) noexcept -> const bool;
-	#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToInt8(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i8;
-	#line 80 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToUInt8(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u8;
-	#line 81 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToInt16(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i16;
-	#line 82 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToUInt16(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u16;
-	#line 83 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToInt32(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32;
-	#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToUInt32(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u32;
-	#line 85 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToInt64(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64;
-	#line 86 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToUInt64(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u64;
-	#line 87 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToInt128(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128;
-	#line 88 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToUInt128(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u128;
-	#line 89 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToIsize(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::isize;
-	#line 90 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToUsize(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::usize;
-	#line 91 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToFloat32(__extension_Float32_77_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::f32;
-	#line 92 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToFloat64(__extension_Float32_77_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::f64;
-	#line 93 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToByte(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::char8;
-	#line 94 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToChar(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::char16;
+	#line 76 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToBoolean(__extension_Float32_75_f32 const& __this LIFETIMEBOUND) noexcept -> const bool;
 	#line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToInt8(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i8;
+	#line 78 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToUInt8(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u8;
+	#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToInt16(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i16;
+	#line 80 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToUInt16(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u16;
+	#line 81 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToInt32(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32;
+	#line 82 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToUInt32(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u32;
+	#line 83 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToInt64(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64;
+	#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToUInt64(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u64;
+	#line 85 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToInt128(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128;
+	#line 86 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToUInt128(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u128;
+	#line 87 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToIsize(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::isize;
+	#line 88 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToUsize(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::usize;
+	#line 89 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToFloat32(__extension_Float32_75_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::f32;
+	#line 90 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToFloat64(__extension_Float32_75_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::f64;
+	#line 91 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToByte(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::char8;
+	#line 92 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToChar(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::char16;
+	#line 75 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(f32, IConvertible, IConvertible, f32);
 	} namespace System{
 using __extensions::ToBoolean;
@@ -137,25 +137,25 @@ using __extensions::ToByte;
 using __extensions::ToChar;
 
 		} namespace __extensions { using namespace System;
-#line 99 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_99_f32 = Builtin::f32;
-	#line 99 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 97 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_97_f32 = Builtin::f32;
+	#line 97 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(IDivisibleArithmetic, IDivisibleArithmetic);
-	#line 101 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class T> inline constexpr auto _operator_div_mod(__extension_Float32_99_f32 const& __this LIFETIMEBOUND, T rhs)  -> const std::tuple<__extension_Float32_99_f32, __extension_Float32_99_f32>;
-	#line 107 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class T> inline constexpr auto _operator_div_not(__extension_Float32_99_f32 const& __this LIFETIMEBOUND, T rhs)  -> const typename __extension_Float32_99_f32;
-	#line 109 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto _operator_div_not_eq(__extension_Float32_99_f32 & __this , auto rhs)  -> typename __extension_Float32_99_f32&;
-	#line 111 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class T> inline constexpr auto _operator_div_lt(__extension_Float32_99_f32 const& __this LIFETIMEBOUND, T rhs)  -> const typename __extension_Float32_99_f32;
-	#line 113 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto _operator_div_lt_eq(__extension_Float32_99_f32 & __this , auto rhs)  -> typename __extension_Float32_99_f32&;
-	#line 115 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class T> inline constexpr auto _operator_div_gt(__extension_Float32_99_f32 const& __this LIFETIMEBOUND, T rhs)  -> const typename __extension_Float32_99_f32;
-	#line 117 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto _operator_div_gt_eq(__extension_Float32_99_f32 & __this , auto rhs)  -> typename __extension_Float32_99_f32&;
 	#line 99 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class T> inline constexpr auto _operator_div_mod(__extension_Float32_97_f32 const& __this LIFETIMEBOUND, T rhs)  -> const std::tuple<__extension_Float32_97_f32, __extension_Float32_97_f32>;
+	#line 105 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class T> inline constexpr auto _operator_div_not(__extension_Float32_97_f32 const& __this LIFETIMEBOUND, T rhs)  -> const typename __extension_Float32_97_f32;
+	#line 107 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto _operator_div_not_eq(__extension_Float32_97_f32 & __this , auto rhs)  -> typename __extension_Float32_97_f32&;
+	#line 109 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class T> inline constexpr auto _operator_div_lt(__extension_Float32_97_f32 const& __this LIFETIMEBOUND, T rhs)  -> const typename __extension_Float32_97_f32;
+	#line 111 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto _operator_div_lt_eq(__extension_Float32_97_f32 & __this , auto rhs)  -> typename __extension_Float32_97_f32&;
+	#line 113 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class T> inline constexpr auto _operator_div_gt(__extension_Float32_97_f32 const& __this LIFETIMEBOUND, T rhs)  -> const typename __extension_Float32_97_f32;
+	#line 115 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto _operator_div_gt_eq(__extension_Float32_97_f32 & __this , auto rhs)  -> typename __extension_Float32_97_f32&;
+	#line 97 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(f32, IDivisibleArithmetic, IDivisibleArithmetic, f32);
 	} namespace System{
 using __extensions::_operator_div_mod;
@@ -167,104 +167,104 @@ using __extensions::_operator_div_gt;
 using __extensions::_operator_div_gt_eq;
 
 		} namespace __extensions { using namespace System;
-#line 121 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_121_f32 = Builtin::f32;
-	#line 121 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 119 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_119_f32 = Builtin::f32;
+	#line 119 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(ISignedIntegerPowerArithmetic, ISignedIntegerPowerArithmetic);
-	#line 123 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto _operator_xor_xor(__extension_Float32_121_f32 const& __this LIFETIMEBOUND, Builtin::i32 exp)  -> const typename __extension_Float32_121_f32;
-	#line 159 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto _operator_xor_xor_eq(__extension_Float32_121_f32 & __this , Builtin::i32 exp)  -> typename __extension_Float32_121_f32&;
 	#line 121 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto _operator_xor_xor(__extension_Float32_119_f32 const& __this LIFETIMEBOUND, Builtin::i32 exp)  -> const typename __extension_Float32_119_f32;
+	#line 157 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto _operator_xor_xor_eq(__extension_Float32_119_f32 & __this , Builtin::i32 exp)  -> typename __extension_Float32_119_f32&;
+	#line 119 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(f32, ISignedIntegerPowerArithmetic, ISignedIntegerPowerArithmetic, f32);
 	} namespace System{
 using __extensions::_operator_xor_xor;
 using __extensions::_operator_xor_xor_eq;
 
 		} namespace __extensions { using namespace System;
-#line 162 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_162_f32 = Builtin::f32;
-	#line 162 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 160 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_160_f32 = Builtin::f32;
+	#line 160 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(INumberBase, INumberBase);
-	#line 199 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto MaxMagnitude(__extension_Float32_162_f32 const& __this LIFETIMEBOUND, __extension_Float32_162_f32 rhs) noexcept -> const typename __extension_Float32_162_f32;
-	#line 217 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto MaxMagnitudeNumber(__extension_Float32_162_f32 const& __this LIFETIMEBOUND, __extension_Float32_162_f32 rhs) noexcept -> const typename __extension_Float32_162_f32;
-	#line 235 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto MinMagnitude(__extension_Float32_162_f32 const& __this LIFETIMEBOUND, __extension_Float32_162_f32 rhs) noexcept -> const typename __extension_Float32_162_f32;
-	#line 253 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto MinMagnitudeNumber(__extension_Float32_162_f32 const& __this LIFETIMEBOUND, __extension_Float32_162_f32 rhs) noexcept -> const typename __extension_Float32_162_f32;
-	#line 271 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	ASTRUMSTD_API auto Parse(__extension_Float32_162_f32 const& __this LIFETIMEBOUND, Builtin::Str input)  -> const typename __extension_Float32_162_f32;
-	#line 276 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	ASTRUMSTD_API auto TryParse(__extension_Float32_162_f32 const& __this LIFETIMEBOUND, Builtin::Str input) noexcept -> const Builtin::Nullable<__extension_Float32_162_f32>;
-	#line 283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToInt8(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i8;
-	#line 284 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToUInt8(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u8;
-	#line 285 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToInt16(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i16;
-	#line 286 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToUInt16(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u16;
-	#line 287 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToInt32(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i32;
-	#line 288 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToUInt32(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u32;
-	#line 289 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToInt64(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i64;
-	#line 290 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToUInt64(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u64;
-	#line 291 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToInt128(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i128;
-	#line 292 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToUInt128(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u128;
-	#line 293 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToIsize(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::isize;
-	#line 294 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToUsize(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::usize;
-	#line 163 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getOne; template<> struct __static_getOne<__extension_Float32_162_f32> { static inline constexpr auto get() -> const __extension_Float32_162_f32; };
-	#line 164 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getZero; template<> struct __static_getZero<__extension_Float32_162_f32> { static inline constexpr auto get() -> const __extension_Float32_162_f32; };
-	#line 165 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getRadix; template<> struct __static_getRadix<__extension_Float32_162_f32> { static inline constexpr auto get() -> const Builtin::i32; };
-	#line 167 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getAbs(__extension_Float32_162_f32 const& __this ) -> const __extension_Float32_162_f32;
-	#line 173 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsCanonical(__extension_Float32_162_f32 const& __this ) -> const bool;
-	#line 174 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsComplexNumber(__extension_Float32_162_f32 const& __this ) -> const bool;
-	#line 175 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsEvenInteger(__extension_Float32_162_f32 const& __this ) -> const bool;
-	#line 176 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsFinite(__extension_Float32_162_f32 const& __this ) -> const bool;
-	#line 177 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsImaginaryNumber(__extension_Float32_162_f32 const& __this ) -> const bool;
-	#line 178 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsInfinity(__extension_Float32_162_f32 const& __this ) -> const bool;
-	#line 179 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsInteger(__extension_Float32_162_f32 const& __this ) -> const bool;
-	#line 180 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsNaN(__extension_Float32_162_f32 const& __this ) -> const bool;
-	#line 181 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsNegative(__extension_Float32_162_f32 const& __this ) -> const bool;
-	#line 182 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsNegativeInfinity(__extension_Float32_162_f32 const& __this ) -> const bool;
-	#line 183 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsNormal(__extension_Float32_162_f32 const& __this ) -> const bool;
-	#line 188 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsOddInteger(__extension_Float32_162_f32 const& __this ) -> const bool;
-	#line 189 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsPositive(__extension_Float32_162_f32 const& __this ) -> const bool;
-	#line 190 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsPositiveInfinity(__extension_Float32_162_f32 const& __this ) -> const bool;
-	#line 191 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsRealNumber(__extension_Float32_162_f32 const& __this ) -> const bool;
-	#line 192 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsSubnormal(__extension_Float32_162_f32 const& __this ) -> const bool;
 	#line 197 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsZero(__extension_Float32_162_f32 const& __this ) -> const bool;
+	inline constexpr auto MaxMagnitude(__extension_Float32_160_f32 const& __this LIFETIMEBOUND, __extension_Float32_160_f32 rhs) noexcept -> const typename __extension_Float32_160_f32;
+	#line 215 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto MaxMagnitudeNumber(__extension_Float32_160_f32 const& __this LIFETIMEBOUND, __extension_Float32_160_f32 rhs) noexcept -> const typename __extension_Float32_160_f32;
+	#line 233 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto MinMagnitude(__extension_Float32_160_f32 const& __this LIFETIMEBOUND, __extension_Float32_160_f32 rhs) noexcept -> const typename __extension_Float32_160_f32;
+	#line 251 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto MinMagnitudeNumber(__extension_Float32_160_f32 const& __this LIFETIMEBOUND, __extension_Float32_160_f32 rhs) noexcept -> const typename __extension_Float32_160_f32;
+	#line 269 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	ASTRUMSTD_API auto Parse(__extension_Float32_160_f32 const& __this LIFETIMEBOUND, Builtin::Str input)  -> const typename __extension_Float32_160_f32;
+	#line 274 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	ASTRUMSTD_API auto TryParse(__extension_Float32_160_f32 const& __this LIFETIMEBOUND, Builtin::Str input) noexcept -> const Builtin::Nullable<__extension_Float32_160_f32>;
+	#line 281 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToInt8(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i8;
+	#line 282 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToUInt8(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u8;
+	#line 283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToInt16(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i16;
+	#line 284 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToUInt16(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u16;
+	#line 285 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToInt32(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i32;
+	#line 286 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToUInt32(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u32;
+	#line 287 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToInt64(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i64;
+	#line 288 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToUInt64(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u64;
+	#line 289 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToInt128(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i128;
+	#line 290 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToUInt128(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u128;
+	#line 291 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToIsize(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::isize;
+	#line 292 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToUsize(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::usize;
+	#line 161 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getOne; template<> struct __static_getOne<__extension_Float32_160_f32> { static inline constexpr auto get() -> const __extension_Float32_160_f32; };
 	#line 162 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getZero; template<> struct __static_getZero<__extension_Float32_160_f32> { static inline constexpr auto get() -> const __extension_Float32_160_f32; };
+	#line 163 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getRadix; template<> struct __static_getRadix<__extension_Float32_160_f32> { static inline constexpr auto get() -> const Builtin::i32; };
+	#line 165 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getAbs(__extension_Float32_160_f32 const& __this ) -> const __extension_Float32_160_f32;
+	#line 171 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsCanonical(__extension_Float32_160_f32 const& __this ) -> const bool;
+	#line 172 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsComplexNumber(__extension_Float32_160_f32 const& __this ) -> const bool;
+	#line 173 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsEvenInteger(__extension_Float32_160_f32 const& __this ) -> const bool;
+	#line 174 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsFinite(__extension_Float32_160_f32 const& __this ) -> const bool;
+	#line 175 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsImaginaryNumber(__extension_Float32_160_f32 const& __this ) -> const bool;
+	#line 176 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsInfinity(__extension_Float32_160_f32 const& __this ) -> const bool;
+	#line 177 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsInteger(__extension_Float32_160_f32 const& __this ) -> const bool;
+	#line 178 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsNaN(__extension_Float32_160_f32 const& __this ) -> const bool;
+	#line 179 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsNegative(__extension_Float32_160_f32 const& __this ) -> const bool;
+	#line 180 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsNegativeInfinity(__extension_Float32_160_f32 const& __this ) -> const bool;
+	#line 181 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsNormal(__extension_Float32_160_f32 const& __this ) -> const bool;
+	#line 186 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsOddInteger(__extension_Float32_160_f32 const& __this ) -> const bool;
+	#line 187 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsPositive(__extension_Float32_160_f32 const& __this ) -> const bool;
+	#line 188 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsPositiveInfinity(__extension_Float32_160_f32 const& __this ) -> const bool;
+	#line 189 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsRealNumber(__extension_Float32_160_f32 const& __this ) -> const bool;
+	#line 190 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsSubnormal(__extension_Float32_160_f32 const& __this ) -> const bool;
+	#line 195 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsZero(__extension_Float32_160_f32 const& __this ) -> const bool;
+	#line 160 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(f32, INumberBase, INumberBase, f32);
 	} namespace System{
 using __extensions::MaxMagnitude;
@@ -308,37 +308,37 @@ using __extensions::getIsSubnormal;
 using __extensions::getIsZero;
 
 		} namespace __extensions { using namespace System;
-#line 297 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_297_f32 = Builtin::f32;
-	#line 297 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 295 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_295_f32 = Builtin::f32;
+	#line 295 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(ISignedNumber, ISignedNumber);
-	#line 298 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getMinusOne; template<> struct __static_getMinusOne<__extension_Float32_297_f32> { static inline constexpr auto get() -> const __extension_Float32_297_f32; };
-	#line 297 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	#line 296 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getMinusOne; template<> struct __static_getMinusOne<__extension_Float32_295_f32> { static inline constexpr auto get() -> const __extension_Float32_295_f32; };
+	#line 295 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(f32, ISignedNumber, ISignedNumber, f32);
 	} namespace System{
 using __extensions::__static_getMinusOne;
 
 		} namespace __extensions { using namespace System;
-#line 301 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_301_f32 = Builtin::f32;
-	#line 301 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 299 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_299_f32 = Builtin::f32;
+	#line 299 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(INumber, INumber);
-	#line 309 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto CopySign(__extension_Float32_301_f32 const& __this LIFETIMEBOUND, __extension_Float32_301_f32 sign) noexcept -> const typename __extension_Float32_301_f32;
-	#line 321 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto Max(__extension_Float32_301_f32 const& __this LIFETIMEBOUND, __extension_Float32_301_f32 rhs) noexcept -> const typename __extension_Float32_301_f32;
-	#line 331 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto MaxNumber(__extension_Float32_301_f32 const& __this LIFETIMEBOUND, __extension_Float32_301_f32 rhs) noexcept -> const typename __extension_Float32_301_f32;
-	#line 341 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto Min(__extension_Float32_301_f32 const& __this LIFETIMEBOUND, __extension_Float32_301_f32 rhs) noexcept -> const typename __extension_Float32_301_f32;
-	#line 351 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto MinNumber(__extension_Float32_301_f32 const& __this LIFETIMEBOUND, __extension_Float32_301_f32 rhs) noexcept -> const typename __extension_Float32_301_f32;
-	#line 361 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto Clamp(__extension_Float32_301_f32 const& __this LIFETIMEBOUND, __extension_Float32_301_f32 min, __extension_Float32_301_f32 max)  -> const typename __extension_Float32_301_f32;
-	#line 302 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getSign(__extension_Float32_301_f32 const& __this ) -> const Builtin::i32;
-	#line 301 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	#line 307 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto CopySign(__extension_Float32_299_f32 const& __this LIFETIMEBOUND, __extension_Float32_299_f32 sign) noexcept -> const typename __extension_Float32_299_f32;
+	#line 319 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto Max(__extension_Float32_299_f32 const& __this LIFETIMEBOUND, __extension_Float32_299_f32 rhs) noexcept -> const typename __extension_Float32_299_f32;
+	#line 329 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto MaxNumber(__extension_Float32_299_f32 const& __this LIFETIMEBOUND, __extension_Float32_299_f32 rhs) noexcept -> const typename __extension_Float32_299_f32;
+	#line 339 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto Min(__extension_Float32_299_f32 const& __this LIFETIMEBOUND, __extension_Float32_299_f32 rhs) noexcept -> const typename __extension_Float32_299_f32;
+	#line 349 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto MinNumber(__extension_Float32_299_f32 const& __this LIFETIMEBOUND, __extension_Float32_299_f32 rhs) noexcept -> const typename __extension_Float32_299_f32;
+	#line 359 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto Clamp(__extension_Float32_299_f32 const& __this LIFETIMEBOUND, __extension_Float32_299_f32 min, __extension_Float32_299_f32 max)  -> const typename __extension_Float32_299_f32;
+	#line 300 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getSign(__extension_Float32_299_f32 const& __this ) -> const Builtin::i32;
+	#line 299 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(f32, INumber, INumber, f32);
 	} namespace System{
 using __extensions::CopySign;
@@ -350,25 +350,25 @@ using __extensions::Clamp;
 using __extensions::getSign;
 
 		} namespace __extensions { using namespace System;
-#line 404 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_404_f32 = Builtin::f32;
-	#line 404 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 402 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_402_f32 = Builtin::f32;
+	#line 402 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(IBinaryNumber, IBinaryNumber);
-	#line 444 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto Log(__extension_Float32_404_f32 const& __this LIFETIMEBOUND, __extension_Float32_404_f32 base) noexcept -> const typename __extension_Float32_404_f32;
-	#line 465 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto Midpoint(__extension_Float32_404_f32 const& __this LIFETIMEBOUND, __extension_Float32_404_f32 rhs) noexcept -> const typename __extension_Float32_404_f32;
-	#line 481 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto IsMultipleOf(__extension_Float32_404_f32 const& __this LIFETIMEBOUND, __extension_Float32_404_f32 rhs) noexcept -> const bool;
-	#line 406 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getAllBitsSet; template<> struct __static_getAllBitsSet<__extension_Float32_404_f32> { static inline constexpr auto get() -> const __extension_Float32_404_f32; };
-	#line 409 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsPow2(__extension_Float32_404_f32 const& __this ) -> const bool;
-	#line 435 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLog2(__extension_Float32_404_f32 const& __this ) -> const __extension_Float32_404_f32;
-	#line 439 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLog10(__extension_Float32_404_f32 const& __this ) -> const __extension_Float32_404_f32;
+	#line 442 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto Log(__extension_Float32_402_f32 const& __this LIFETIMEBOUND, __extension_Float32_402_f32 base) noexcept -> const typename __extension_Float32_402_f32;
+	#line 463 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto Midpoint(__extension_Float32_402_f32 const& __this LIFETIMEBOUND, __extension_Float32_402_f32 rhs) noexcept -> const typename __extension_Float32_402_f32;
+	#line 479 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto IsMultipleOf(__extension_Float32_402_f32 const& __this LIFETIMEBOUND, __extension_Float32_402_f32 rhs) noexcept -> const bool;
 	#line 404 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getAllBitsSet; template<> struct __static_getAllBitsSet<__extension_Float32_402_f32> { static inline constexpr auto get() -> const __extension_Float32_402_f32; };
+	#line 407 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsPow2(__extension_Float32_402_f32 const& __this ) -> const bool;
+	#line 433 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getLog2(__extension_Float32_402_f32 const& __this ) -> const __extension_Float32_402_f32;
+	#line 437 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getLog10(__extension_Float32_402_f32 const& __this ) -> const __extension_Float32_402_f32;
+	#line 402 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(f32, IBinaryNumber, IBinaryNumber, f32);
 	} namespace System{
 using __extensions::Log;
@@ -380,17 +380,17 @@ using __extensions::getLog2;
 using __extensions::getLog10;
 
 		} namespace __extensions { using namespace System;
-#line 495 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_495_f32 = Builtin::f32;
-	#line 495 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 493 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_493_f32 = Builtin::f32;
+	#line 493 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(IFloatingPointConstants, IFloatingPointConstants);
-	#line 497 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getPi; template<> struct __static_getPi<__extension_Float32_495_f32> { static inline constexpr auto get() -> const __extension_Float32_495_f32; };
-	#line 498 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getE; template<> struct __static_getE<__extension_Float32_495_f32> { static inline constexpr auto get() -> const __extension_Float32_495_f32; };
-	#line 499 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getTau; template<> struct __static_getTau<__extension_Float32_495_f32> { static inline constexpr auto get() -> const __extension_Float32_495_f32; };
 	#line 495 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getPi; template<> struct __static_getPi<__extension_Float32_493_f32> { static inline constexpr auto get() -> const __extension_Float32_493_f32; };
+	#line 496 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getE; template<> struct __static_getE<__extension_Float32_493_f32> { static inline constexpr auto get() -> const __extension_Float32_493_f32; };
+	#line 497 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getTau; template<> struct __static_getTau<__extension_Float32_493_f32> { static inline constexpr auto get() -> const __extension_Float32_493_f32; };
+	#line 493 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(f32, IFloatingPointConstants, IFloatingPointConstants, f32);
 	} namespace System{
 using __extensions::__static_getPi;
@@ -398,67 +398,67 @@ using __extensions::__static_getE;
 using __extensions::__static_getTau;
 
 		} namespace __extensions { using namespace System;
-#line 502 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_502_f32 = Builtin::f32;
-	#line 502 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 500 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_500_f32 = Builtin::f32;
+	#line 500 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(IFloatingPoint, IFloatingPoint);
+	#line 518 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto CeilToInt32(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32;
+	#line 519 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto CeilToInt64(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64;
 	#line 520 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto CeilToInt32(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32;
-	#line 521 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto CeilToInt64(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64;
-	#line 522 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto CeilToInt128(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128;
+	inline constexpr auto CeilToInt128(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128;
+	#line 535 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto FloorToInt32(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32;
+	#line 536 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto FloorToInt64(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64;
 	#line 537 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto FloorToInt32(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32;
-	#line 538 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto FloorToInt64(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64;
-	#line 539 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto FloorToInt128(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128;
+	inline constexpr auto FloorToInt128(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128;
+	#line 551 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto TruncateToInt32(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32;
+	#line 552 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto TruncateToInt64(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64;
 	#line 553 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto TruncateToInt32(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32;
-	#line 554 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto TruncateToInt64(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64;
-	#line 555 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto TruncateToInt128(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128;
+	inline constexpr auto TruncateToInt128(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128;
+	#line 567 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto RoundToInt32(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32;
+	#line 568 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto RoundToInt64(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64;
 	#line 569 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto RoundToInt32(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32;
-	#line 570 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto RoundToInt64(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64;
-	#line 571 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto RoundToInt128(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128;
+	inline constexpr auto RoundToInt128(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128;
+	#line 617 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto RoundTiesEvenToInt32(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32;
+	#line 618 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto RoundTiesEvenToInt64(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64;
 	#line 619 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto RoundTiesEvenToInt32(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32;
-	#line 620 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto RoundTiesEvenToInt64(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64;
+	inline constexpr auto RoundTiesEvenToInt128(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128;
 	#line 621 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto RoundTiesEvenToInt128(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128;
-	#line 623 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto Round(__extension_Float32_502_f32 const& __this LIFETIMEBOUND, Builtin::u32 digits)  -> const typename __extension_Float32_502_f32;
-	#line 624 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto Round(__extension_Float32_502_f32 const& __this LIFETIMEBOUND, MidpointRounding rounding)  -> const typename __extension_Float32_502_f32;
-	#line 636 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto Round(__extension_Float32_502_f32 const& __this LIFETIMEBOUND, Builtin::u32 digits, MidpointRounding rounding)  -> const typename __extension_Float32_502_f32;
-	#line 505 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getFractionalPart(__extension_Float32_502_f32 const& __this ) -> const __extension_Float32_502_f32;
-	#line 510 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getCeil(__extension_Float32_502_f32 const& __this ) -> const __extension_Float32_502_f32;
-	#line 527 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getFloor(__extension_Float32_502_f32 const& __this ) -> const __extension_Float32_502_f32;
-	#line 544 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getTruncate(__extension_Float32_502_f32 const& __this ) -> const __extension_Float32_502_f32;
-	#line 560 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getRound(__extension_Float32_502_f32 const& __this ) -> const __extension_Float32_502_f32;
-	#line 576 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getRoundTiesEven(__extension_Float32_502_f32 const& __this ) -> const __extension_Float32_502_f32;
-	#line 668 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getExponentByteCount(__extension_Float32_502_f32 const& __this ) -> const Builtin::u32;
-	#line 669 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getExponentShortestBitLength(__extension_Float32_502_f32 const& __this ) -> const Builtin::u32;
-	#line 678 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getSignificandBitLength(__extension_Float32_502_f32 const& __this ) -> const Builtin::u32;
-	#line 679 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getSignificandByteCount(__extension_Float32_502_f32 const& __this ) -> const Builtin::u32;
-	#line 502 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto Round(__extension_Float32_500_f32 const& __this LIFETIMEBOUND, Builtin::u32 digits)  -> const typename __extension_Float32_500_f32;
+	#line 622 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto Round(__extension_Float32_500_f32 const& __this LIFETIMEBOUND, MidpointRounding rounding)  -> const typename __extension_Float32_500_f32;
+	#line 634 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto Round(__extension_Float32_500_f32 const& __this LIFETIMEBOUND, Builtin::u32 digits, MidpointRounding rounding)  -> const typename __extension_Float32_500_f32;
+	#line 503 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getFractionalPart(__extension_Float32_500_f32 const& __this ) -> const __extension_Float32_500_f32;
+	#line 508 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getCeil(__extension_Float32_500_f32 const& __this ) -> const __extension_Float32_500_f32;
+	#line 525 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getFloor(__extension_Float32_500_f32 const& __this ) -> const __extension_Float32_500_f32;
+	#line 542 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getTruncate(__extension_Float32_500_f32 const& __this ) -> const __extension_Float32_500_f32;
+	#line 558 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getRound(__extension_Float32_500_f32 const& __this ) -> const __extension_Float32_500_f32;
+	#line 574 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getRoundTiesEven(__extension_Float32_500_f32 const& __this ) -> const __extension_Float32_500_f32;
+	#line 666 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getExponentByteCount(__extension_Float32_500_f32 const& __this ) -> const Builtin::u32;
+	#line 667 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getExponentShortestBitLength(__extension_Float32_500_f32 const& __this ) -> const Builtin::u32;
+	#line 676 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getSignificandBitLength(__extension_Float32_500_f32 const& __this ) -> const Builtin::u32;
+	#line 677 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getSignificandByteCount(__extension_Float32_500_f32 const& __this ) -> const Builtin::u32;
+	#line 500 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(f32, IFloatingPoint, IFloatingPoint, f32);
 	} namespace System{
 using __extensions::CeilToInt32;
@@ -491,38 +491,38 @@ using __extensions::getSignificandBitLength;
 using __extensions::getSignificandByteCount;
 
 		} namespace __extensions { using namespace System;
-#line 683 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_683_f32 = Builtin::f32;
-	#line 683 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 681 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_681_f32 = Builtin::f32;
+	#line 681 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(IPowerArithmetic, IPowerArithmetic);
-	#line 684 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto _operator_mul_mul(__extension_Float32_683_f32 const& __this LIFETIMEBOUND, __extension_Float32_683_f32 exp) noexcept -> const typename __extension_Float32_683_f32;
-	#line 685 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto _operator_mul_mul_eq(__extension_Float32_683_f32 & __this , __extension_Float32_683_f32 exp) noexcept -> typename __extension_Float32_683_f32&;
+	#line 682 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto _operator_mul_mul(__extension_Float32_681_f32 const& __this LIFETIMEBOUND, __extension_Float32_681_f32 exp) noexcept -> const typename __extension_Float32_681_f32;
 	#line 683 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto _operator_mul_mul_eq(__extension_Float32_681_f32 & __this , __extension_Float32_681_f32 exp) noexcept -> typename __extension_Float32_681_f32&;
+	#line 681 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(f32, IPowerArithmetic, IPowerArithmetic, f32);
 	} namespace System{
 using __extensions::_operator_mul_mul;
 using __extensions::_operator_mul_mul_eq;
 
 		} namespace __extensions { using namespace System;
-#line 688 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_688_f32 = Builtin::f32;
-	#line 688 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 686 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_686_f32 = Builtin::f32;
+	#line 686 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(IExponentialFunctions, IExponentialFunctions);
-	#line 690 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getExp(__extension_Float32_688_f32 const& __this ) -> const __extension_Float32_688_f32;
-	#line 692 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getExp2(__extension_Float32_688_f32 const& __this ) -> const __extension_Float32_688_f32;
-	#line 694 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getExp10(__extension_Float32_688_f32 const& __this ) -> const __extension_Float32_688_f32;
-	#line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getExpM1(__extension_Float32_688_f32 const& __this ) -> const __extension_Float32_688_f32;
-	#line 698 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getExp2M1(__extension_Float32_688_f32 const& __this ) -> const __extension_Float32_688_f32;
-	#line 700 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getExp10M1(__extension_Float32_688_f32 const& __this ) -> const __extension_Float32_688_f32;
 	#line 688 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getExp(__extension_Float32_686_f32 const& __this ) -> const __extension_Float32_686_f32;
+	#line 690 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getExp2(__extension_Float32_686_f32 const& __this ) -> const __extension_Float32_686_f32;
+	#line 692 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getExp10(__extension_Float32_686_f32 const& __this ) -> const __extension_Float32_686_f32;
+	#line 694 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getExpM1(__extension_Float32_686_f32 const& __this ) -> const __extension_Float32_686_f32;
+	#line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getExp2M1(__extension_Float32_686_f32 const& __this ) -> const __extension_Float32_686_f32;
+	#line 698 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getExp10M1(__extension_Float32_686_f32 const& __this ) -> const __extension_Float32_686_f32;
+	#line 686 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(f32, IExponentialFunctions, IExponentialFunctions, f32);
 	} namespace System{
 using __extensions::getExp;
@@ -533,19 +533,19 @@ using __extensions::getExp2M1;
 using __extensions::getExp10M1;
 
 		} namespace __extensions { using namespace System;
-#line 703 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_703_f32 = Builtin::f32;
-	#line 703 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 701 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_701_f32 = Builtin::f32;
+	#line 701 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(ILogarithmicFunctions, ILogarithmicFunctions);
-	#line 705 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLn(__extension_Float32_703_f32 const& __this ) -> const __extension_Float32_703_f32;
-	#line 707 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLnP1(__extension_Float32_703_f32 const& __this ) -> const __extension_Float32_703_f32;
-	#line 709 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLog2P1(__extension_Float32_703_f32 const& __this ) -> const __extension_Float32_703_f32;
-	#line 711 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLog10P1(__extension_Float32_703_f32 const& __this ) -> const __extension_Float32_703_f32;
 	#line 703 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getLn(__extension_Float32_701_f32 const& __this ) -> const __extension_Float32_701_f32;
+	#line 705 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getLnP1(__extension_Float32_701_f32 const& __this ) -> const __extension_Float32_701_f32;
+	#line 707 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getLog2P1(__extension_Float32_701_f32 const& __this ) -> const __extension_Float32_701_f32;
+	#line 709 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getLog10P1(__extension_Float32_701_f32 const& __this ) -> const __extension_Float32_701_f32;
+	#line 701 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(f32, ILogarithmicFunctions, ILogarithmicFunctions, f32);
 	} namespace System{
 using __extensions::getLn;
@@ -554,19 +554,19 @@ using __extensions::getLog2P1;
 using __extensions::getLog10P1;
 
 		} namespace __extensions { using namespace System;
-#line 714 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_714_f32 = Builtin::f32;
-	#line 714 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 712 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_712_f32 = Builtin::f32;
+	#line 712 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(IRootFunctions, IRootFunctions);
-	#line 720 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	ASTRUMSTD_API auto Root(__extension_Float32_714_f32 const& __this LIFETIMEBOUND, Builtin::i32 n)  -> const typename __extension_Float32_714_f32;
-	#line 793 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	ASTRUMSTD_API auto Hypot(__extension_Float32_714_f32 const& __this LIFETIMEBOUND, __extension_Float32_714_f32 y)  -> const typename __extension_Float32_714_f32;
-	#line 716 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSqrt(__extension_Float32_714_f32 const& __this ) -> const __extension_Float32_714_f32;
 	#line 718 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCbrt(__extension_Float32_714_f32 const& __this ) -> const __extension_Float32_714_f32;
+	ASTRUMSTD_API auto Root(__extension_Float32_712_f32 const& __this LIFETIMEBOUND, Builtin::i32 n)  -> const typename __extension_Float32_712_f32;
+	#line 791 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	ASTRUMSTD_API auto Hypot(__extension_Float32_712_f32 const& __this LIFETIMEBOUND, __extension_Float32_712_f32 y)  -> const typename __extension_Float32_712_f32;
 	#line 714 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getSqrt(__extension_Float32_712_f32 const& __this ) -> const __extension_Float32_712_f32;
+	#line 716 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getCbrt(__extension_Float32_712_f32 const& __this ) -> const __extension_Float32_712_f32;
+	#line 712 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(f32, IRootFunctions, IRootFunctions, f32);
 	} namespace System{
 using __extensions::Root;
@@ -575,67 +575,67 @@ using __extensions::getSqrt;
 using __extensions::getCbrt;
 
 		} namespace __extensions { using namespace System;
-#line 822 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_822_f32 = Builtin::f32;
-	#line 822 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 820 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_820_f32 = Builtin::f32;
+	#line 820 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(ITrigonometricFunctions, ITrigonometricFunctions);
+	#line 1061 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToRadians(__extension_Float32_820_f32 const& __this LIFETIMEBOUND) noexcept -> const typename __extension_Float32_820_f32;
 	#line 1063 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToRadians(__extension_Float32_822_f32 const& __this LIFETIMEBOUND) noexcept -> const typename __extension_Float32_822_f32;
-	#line 1065 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToDegrees(__extension_Float32_822_f32 const& __this LIFETIMEBOUND) noexcept -> const typename __extension_Float32_822_f32;
-	#line 824 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSin(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 826 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCos(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 828 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getTan(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 830 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCot(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 832 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSec(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 834 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCsc(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 836 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAsin(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 838 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcos(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 840 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAtan(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 842 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcot(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 844 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAsec(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 846 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcsc(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 848 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSinCos(__extension_Float32_822_f32 const& __this ) -> const std::tuple<__extension_Float32_822_f32, __extension_Float32_822_f32>;
-	#line 850 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	ASTRUMSTD_API auto getSinPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 888 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	ASTRUMSTD_API auto getCosPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 928 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	ASTRUMSTD_API auto getSinCosPi(__extension_Float32_822_f32 const& __this ) -> const std::tuple<__extension_Float32_822_f32, __extension_Float32_822_f32>;
-	#line 1001 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	ASTRUMSTD_API auto getTanPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 1044 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCotPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 1046 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSecPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 1048 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCscPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 1050 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAsinPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 1052 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcosPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 1054 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAtanPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 1056 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcotPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 1058 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAsecPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
-	#line 1060 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcscPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_822_f32;
+	inline constexpr auto ToDegrees(__extension_Float32_820_f32 const& __this LIFETIMEBOUND) noexcept -> const typename __extension_Float32_820_f32;
 	#line 822 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getSin(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 824 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getCos(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 826 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getTan(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 828 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getCot(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 830 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getSec(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 832 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getCsc(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 834 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAsin(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 836 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAcos(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 838 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAtan(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 840 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAcot(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 842 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAsec(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 844 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAcsc(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 846 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getSinCos(__extension_Float32_820_f32 const& __this ) -> const std::tuple<__extension_Float32_820_f32, __extension_Float32_820_f32>;
+	#line 848 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	ASTRUMSTD_API auto getSinPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 886 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	ASTRUMSTD_API auto getCosPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 926 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	ASTRUMSTD_API auto getSinCosPi(__extension_Float32_820_f32 const& __this ) -> const std::tuple<__extension_Float32_820_f32, __extension_Float32_820_f32>;
+	#line 999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	ASTRUMSTD_API auto getTanPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 1042 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getCotPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 1044 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getSecPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 1046 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getCscPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 1048 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAsinPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 1050 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAcosPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 1052 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAtanPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 1054 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAcotPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 1056 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAsecPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 1058 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAcscPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_820_f32;
+	#line 820 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(f32, ITrigonometricFunctions, ITrigonometricFunctions, f32);
 	} namespace System{
 using __extensions::ToRadians;
@@ -668,35 +668,35 @@ using __extensions::getAsecPi;
 using __extensions::getAcscPi;
 
 		} namespace __extensions { using namespace System;
-#line 1068 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_1068_f32 = Builtin::f32;
-	#line 1068 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 1066 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_1066_f32 = Builtin::f32;
+	#line 1066 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(IHyperbolicFunctions, IHyperbolicFunctions);
-	#line 1070 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcosh(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1068_f32;
-	#line 1072 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcoth(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1068_f32;
-	#line 1074 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcsch(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1068_f32;
-	#line 1076 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAsech(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1068_f32;
-	#line 1078 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAsinh(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1068_f32;
-	#line 1080 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAtanh(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1068_f32;
-	#line 1082 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCosh(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1068_f32;
-	#line 1084 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCoth(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1068_f32;
-	#line 1086 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCsch(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1068_f32;
-	#line 1088 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSech(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1068_f32;
-	#line 1090 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSinh(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1068_f32;
-	#line 1092 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getTanh(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1068_f32;
 	#line 1068 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAcosh(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1066_f32;
+	#line 1070 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAcoth(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1066_f32;
+	#line 1072 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAcsch(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1066_f32;
+	#line 1074 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAsech(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1066_f32;
+	#line 1076 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAsinh(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1066_f32;
+	#line 1078 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAtanh(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1066_f32;
+	#line 1080 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getCosh(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1066_f32;
+	#line 1082 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getCoth(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1066_f32;
+	#line 1084 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getCsch(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1066_f32;
+	#line 1086 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getSech(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1066_f32;
+	#line 1088 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getSinh(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1066_f32;
+	#line 1090 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getTanh(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1066_f32;
+	#line 1066 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(f32, IHyperbolicFunctions, IHyperbolicFunctions, f32);
 	} namespace System{
 using __extensions::getAcosh;
@@ -713,53 +713,53 @@ using __extensions::getSinh;
 using __extensions::getTanh;
 
 		} namespace __extensions { using namespace System;
-#line 1095 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_1095_f32 = Builtin::f32;
-	#line 1095 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 1093 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_1093_f32 = Builtin::f32;
+	#line 1093 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(IBinaryFloatingPointIeee754, IBinaryFloatingPointIeee754);
-	#line 1103 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto Atan2(__extension_Float32_1095_f32 const& __this LIFETIMEBOUND, __extension_Float32_1095_f32 y)  -> const typename __extension_Float32_1095_f32;
-	#line 1104 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto Atan2Pi(__extension_Float32_1095_f32 const& __this LIFETIMEBOUND, __extension_Float32_1095_f32 y)  -> const typename __extension_Float32_1095_f32;
+	#line 1101 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto Atan2(__extension_Float32_1093_f32 const& __this LIFETIMEBOUND, __extension_Float32_1093_f32 y)  -> const typename __extension_Float32_1093_f32;
+	#line 1102 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto Atan2Pi(__extension_Float32_1093_f32 const& __this LIFETIMEBOUND, __extension_Float32_1093_f32 y)  -> const typename __extension_Float32_1093_f32;
+	#line 1191 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto FusedMultiplyAdd(__extension_Float32_1093_f32 const& __this LIFETIMEBOUND, __extension_Float32_1093_f32 rhs, __extension_Float32_1093_f32 addend)  -> const typename __extension_Float32_1093_f32;
 	#line 1193 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto FusedMultiplyAdd(__extension_Float32_1095_f32 const& __this LIFETIMEBOUND, __extension_Float32_1095_f32 rhs, __extension_Float32_1095_f32 addend)  -> const typename __extension_Float32_1095_f32;
-	#line 1195 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto Ieee754Remainder(__extension_Float32_1095_f32 const& __this LIFETIMEBOUND, __extension_Float32_1095_f32 rhs)  -> const typename __extension_Float32_1095_f32;
+	inline auto Ieee754Remainder(__extension_Float32_1093_f32 const& __this LIFETIMEBOUND, __extension_Float32_1093_f32 rhs)  -> const typename __extension_Float32_1093_f32;
+	#line 1196 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto Lerp(__extension_Float32_1093_f32 const& __this LIFETIMEBOUND, __extension_Float32_1093_f32 end, __extension_Float32_1093_f32 amount) noexcept -> const typename __extension_Float32_1093_f32;
 	#line 1198 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto Lerp(__extension_Float32_1095_f32 const& __this LIFETIMEBOUND, __extension_Float32_1095_f32 end, __extension_Float32_1095_f32 amount) noexcept -> const typename __extension_Float32_1095_f32;
-	#line 1200 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto ScaleB(__extension_Float32_1095_f32 const& __this LIFETIMEBOUND, Builtin::i32 n)  -> const typename __extension_Float32_1095_f32;
-	#line 1096 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getEpsilon; template<> struct __static_getEpsilon<__extension_Float32_1095_f32> { static inline constexpr auto get() -> const __extension_Float32_1095_f32; };
-	#line 1097 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getNegativeInfinity; template<> struct __static_getNegativeInfinity<__extension_Float32_1095_f32> { static inline constexpr auto get() -> const __extension_Float32_1095_f32; };
-	#line 1098 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getPositiveInfinity; template<> struct __static_getPositiveInfinity<__extension_Float32_1095_f32> { static inline constexpr auto get() -> const __extension_Float32_1095_f32; };
-	#line 1099 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getNaN; template<> struct __static_getNaN<__extension_Float32_1095_f32> { static inline constexpr auto get() -> const __extension_Float32_1095_f32; };
-	#line 1100 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getNegativeZero; template<> struct __static_getNegativeZero<__extension_Float32_1095_f32> { static inline constexpr auto get() -> const __extension_Float32_1095_f32; };
-	#line 1112 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getBitIncrement(__extension_Float32_1095_f32 const& __this ) -> const __extension_Float32_1095_f32;
-	#line 1136 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getBitDecrement(__extension_Float32_1095_f32 const& __this ) -> const __extension_Float32_1095_f32;
-	#line 1155 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getILogB(__extension_Float32_1095_f32 const& __this ) -> const Builtin::i32;
-	#line 1157 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getReciprocalEstimate(__extension_Float32_1095_f32 const& __this ) -> const __extension_Float32_1095_f32;
-	#line 1166 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getReciprocalSqrtEstimate(__extension_Float32_1095_f32 const& __this ) -> const __extension_Float32_1095_f32;
-	#line 1177 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getCategory(__extension_Float32_1095_f32 const& __this ) -> const FloatingPointCategory;
-	#line 1203 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getGamma(__extension_Float32_1095_f32 const& __this ) -> const __extension_Float32_1095_f32;
-	#line 1205 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLnGamma(__extension_Float32_1095_f32 const& __this ) -> const __extension_Float32_1095_f32;
-	#line 1207 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getErf(__extension_Float32_1095_f32 const& __this ) -> const __extension_Float32_1095_f32;
-	#line 1209 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getErfc(__extension_Float32_1095_f32 const& __this ) -> const __extension_Float32_1095_f32;
+	inline auto ScaleB(__extension_Float32_1093_f32 const& __this LIFETIMEBOUND, Builtin::i32 n)  -> const typename __extension_Float32_1093_f32;
+	#line 1094 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getEpsilon; template<> struct __static_getEpsilon<__extension_Float32_1093_f32> { static inline constexpr auto get() -> const __extension_Float32_1093_f32; };
 	#line 1095 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getNegativeInfinity; template<> struct __static_getNegativeInfinity<__extension_Float32_1093_f32> { static inline constexpr auto get() -> const __extension_Float32_1093_f32; };
+	#line 1096 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getPositiveInfinity; template<> struct __static_getPositiveInfinity<__extension_Float32_1093_f32> { static inline constexpr auto get() -> const __extension_Float32_1093_f32; };
+	#line 1097 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getNaN; template<> struct __static_getNaN<__extension_Float32_1093_f32> { static inline constexpr auto get() -> const __extension_Float32_1093_f32; };
+	#line 1098 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getNegativeZero; template<> struct __static_getNegativeZero<__extension_Float32_1093_f32> { static inline constexpr auto get() -> const __extension_Float32_1093_f32; };
+	#line 1110 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getBitIncrement(__extension_Float32_1093_f32 const& __this ) -> const __extension_Float32_1093_f32;
+	#line 1134 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getBitDecrement(__extension_Float32_1093_f32 const& __this ) -> const __extension_Float32_1093_f32;
+	#line 1153 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getILogB(__extension_Float32_1093_f32 const& __this ) -> const Builtin::i32;
+	#line 1155 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getReciprocalEstimate(__extension_Float32_1093_f32 const& __this ) -> const __extension_Float32_1093_f32;
+	#line 1164 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getReciprocalSqrtEstimate(__extension_Float32_1093_f32 const& __this ) -> const __extension_Float32_1093_f32;
+	#line 1175 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getCategory(__extension_Float32_1093_f32 const& __this ) -> const FloatingPointCategory;
+	#line 1201 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getGamma(__extension_Float32_1093_f32 const& __this ) -> const __extension_Float32_1093_f32;
+	#line 1203 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getLnGamma(__extension_Float32_1093_f32 const& __this ) -> const __extension_Float32_1093_f32;
+	#line 1205 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getErf(__extension_Float32_1093_f32 const& __this ) -> const __extension_Float32_1093_f32;
+	#line 1207 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getErfc(__extension_Float32_1093_f32 const& __this ) -> const __extension_Float32_1093_f32;
+	#line 1093 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(f32, IBinaryFloatingPointIeee754, IBinaryFloatingPointIeee754, f32);
 	} namespace System{
 using __extensions::Atan2;
@@ -785,53 +785,53 @@ using __extensions::getErf;
 using __extensions::getErfc;
 
 		} namespace __extensions { using namespace System;
-#line 1212 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	using __extension_Float32_1212_f32 = Builtin::f32;
-	#line 1212 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 1210 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	using __extension_Float32_1210_f32 = Builtin::f32;
+	#line 1210 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(IBinaryFloatFormatInfo, IBinaryFloatFormatInfo);
-	#line 1213 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getNumberBufferLength; template<> struct __static_getNumberBufferLength<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::i32; };
-	#line 1214 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getZeroBits; template<> struct __static_getZeroBits<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::u128; };
-	#line 1215 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getInfinityBits; template<> struct __static_getInfinityBits<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::u128; };
-	#line 1216 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getNormalMantissaMask; template<> struct __static_getNormalMantissaMask<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::u128; };
-	#line 1217 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getDenormalMantissaMask; template<> struct __static_getDenormalMantissaMask<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::u128; };
-	#line 1218 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getMinBinaryExponent; template<> struct __static_getMinBinaryExponent<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::i32; };
-	#line 1219 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getMaxBinaryExponent; template<> struct __static_getMaxBinaryExponent<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::i32; };
-	#line 1220 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getMinDecimalExponent; template<> struct __static_getMinDecimalExponent<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::i32; };
-	#line 1221 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getMaxDecimalExponent; template<> struct __static_getMaxDecimalExponent<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::i32; };
-	#line 1222 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getExponentBias; template<> struct __static_getExponentBias<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::i32; };
-	#line 1223 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getExponentBits; template<> struct __static_getExponentBits<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::u128; };
-	#line 1224 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getOverflowDecimalExponent; template<> struct __static_getOverflowDecimalExponent<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::i32; };
-	#line 1225 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getInfinityExponent; template<> struct __static_getInfinityExponent<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::i32; };
-	#line 1226 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getNormalMantissaBits; template<> struct __static_getNormalMantissaBits<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::u16; };
-	#line 1227 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getDenormalMantissaBits; template<> struct __static_getDenormalMantissaBits<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::u16; };
-	#line 1228 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getMinFastFloatDecimalExponent; template<> struct __static_getMinFastFloatDecimalExponent<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::i32; };
-	#line 1229 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getMaxFastFloatDecimalExponent; template<> struct __static_getMaxFastFloatDecimalExponent<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::i32; };
-	#line 1230 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getMinExponentRoundToEven; template<> struct __static_getMinExponentRoundToEven<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::i32; };
-	#line 1231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getMaxExponentRoundToEven; template<> struct __static_getMaxExponentRoundToEven<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::i32; };
-	#line 1232 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getMaxExponentFastPath; template<> struct __static_getMaxExponentFastPath<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::i32; };
-	#line 1233 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class __TT> struct __static_getMaxMantissaFastPath; template<> struct __static_getMaxMantissaFastPath<__extension_Float32_1212_f32> { static inline constexpr auto get() -> const Builtin::u128; };
+	#line 1211 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getNumberBufferLength; template<> struct __static_getNumberBufferLength<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::i32; };
 	#line 1212 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getZeroBits; template<> struct __static_getZeroBits<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::u128; };
+	#line 1213 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getInfinityBits; template<> struct __static_getInfinityBits<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::u128; };
+	#line 1214 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getNormalMantissaMask; template<> struct __static_getNormalMantissaMask<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::u128; };
+	#line 1215 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getDenormalMantissaMask; template<> struct __static_getDenormalMantissaMask<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::u128; };
+	#line 1216 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getMinBinaryExponent; template<> struct __static_getMinBinaryExponent<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::i32; };
+	#line 1217 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getMaxBinaryExponent; template<> struct __static_getMaxBinaryExponent<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::i32; };
+	#line 1218 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getMinDecimalExponent; template<> struct __static_getMinDecimalExponent<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::i32; };
+	#line 1219 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getMaxDecimalExponent; template<> struct __static_getMaxDecimalExponent<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::i32; };
+	#line 1220 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getExponentBias; template<> struct __static_getExponentBias<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::i32; };
+	#line 1221 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getExponentBits; template<> struct __static_getExponentBits<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::u128; };
+	#line 1222 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getOverflowDecimalExponent; template<> struct __static_getOverflowDecimalExponent<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::i32; };
+	#line 1223 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getInfinityExponent; template<> struct __static_getInfinityExponent<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::i32; };
+	#line 1224 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getNormalMantissaBits; template<> struct __static_getNormalMantissaBits<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::u16; };
+	#line 1225 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getDenormalMantissaBits; template<> struct __static_getDenormalMantissaBits<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::u16; };
+	#line 1226 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getMinFastFloatDecimalExponent; template<> struct __static_getMinFastFloatDecimalExponent<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::i32; };
+	#line 1227 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getMaxFastFloatDecimalExponent; template<> struct __static_getMaxFastFloatDecimalExponent<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::i32; };
+	#line 1228 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getMinExponentRoundToEven; template<> struct __static_getMinExponentRoundToEven<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::i32; };
+	#line 1229 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getMaxExponentRoundToEven; template<> struct __static_getMaxExponentRoundToEven<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::i32; };
+	#line 1230 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getMaxExponentFastPath; template<> struct __static_getMaxExponentFastPath<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::i32; };
+	#line 1231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class __TT> struct __static_getMaxMantissaFastPath; template<> struct __static_getMaxMantissaFastPath<__extension_Float32_1210_f32> { static inline constexpr auto get() -> const Builtin::u128; };
+	#line 1210 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(f32, IBinaryFloatFormatInfo, IBinaryFloatFormatInfo, f32);
 	} namespace System{
 using __extensions::__static_getNumberBufferLength;
@@ -859,192 +859,192 @@ using __extensions::__static_getMaxMantissaFastPath;
 	//###############################################################################
 //# Free function declarations
 //###############################################################################
-#line 395 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 393 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	namespace __Float32_Protected { inline constexpr auto BiasedExponent(Builtin::f32 value) noexcept -> const Builtin::u8; }
-#line 396 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 394 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	namespace __Float32_Protected { inline constexpr auto Exponent(Builtin::f32 value) noexcept -> const Builtin::i8; }
-#line 397 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 395 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	namespace __Float32_Protected { inline constexpr auto Significand(Builtin::f32 value) noexcept -> const Builtin::u32; }
-#line 398 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 396 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	namespace __Float32_Protected { inline constexpr auto TrailingSignificand(Builtin::f32 value) noexcept -> const Builtin::u32; }
-#line 400 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 398 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	namespace __Float32_Protected { inline constexpr auto ExtractBiasedExponentFromBits(Builtin::u32 bits) noexcept -> const Builtin::u8; }
-#line 401 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 399 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	namespace __Float32_Protected { inline constexpr auto ExtractTrailingSignificandFromBits(Builtin::u32 bits) noexcept -> const Builtin::u32; }
 //###############################################################################
 //# Global compile-time constants
 //###############################################################################
-#line 372 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 370 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr auto SignMask = Builtin::u32(0x80000000U); }
-#line 373 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 371 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr auto SignShift = Builtin::u32(31U); }
-#line 374 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 372 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr Builtin::u8 ShiftedSignMask = Builtin::u8{__Float32_Protected::SignMask >> __Float32_Protected::SignShift}; }
-#line 376 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 374 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr auto BiasedExponentMask = Builtin::u32(0x7F800000U); }
-#line 377 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 375 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr auto BiasedExponentShift = Builtin::i32(23); }
-#line 378 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 376 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr Builtin::u8 ShiftedBiasedExponentMask = Builtin::u8{__Float32_Protected::BiasedExponentMask >> __Float32_Protected::BiasedExponentShift}; }
-#line 380 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 378 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr auto TrailingSignificandMask = Builtin::u32(0x007FFFFFU); }
-#line 382 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 380 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr auto MinSign = Builtin::u8(0U); }
-#line 383 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 381 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr auto MaxSign = Builtin::u8(1U); }
-#line 384 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 382 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr auto MinBiasedExponent = ADV_USPCS(MinValue, Builtin::u8)(); }
-#line 385 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 383 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr auto MaxBiasedExponent = ADV_USPCS(MaxValue, Builtin::u8)(); }
-#line 386 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 384 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr auto ExpBias = Builtin::u8(127U); }
-#line 387 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 385 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr auto MinExponent = Builtin::i8(-126); }
-#line 388 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 386 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr auto MaxExponent = Builtin::i8(127); }
-#line 389 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 387 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr auto MinTrailingSignificand = ADV_USPCS(MinValue, Builtin::u32)(); }
-#line 390 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 388 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr auto MaxTrailingSignificand = Builtin::u32(0x007FFFFFU); }
-#line 392 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 390 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr auto TrailingSignificandLength = Builtin::u8((unsigned char)23); }
-#line 393 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+#line 391 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32_Protected { inline constexpr auto SignificandLength = __Float32_Protected::TrailingSignificandLength + Builtin::u8((unsigned char)1); }
 //###############################################################################
 //# Function definitions
 //###############################################################################
 
 namespace __Float32_Protected {
-		#line 395 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 393 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		inline constexpr auto BiasedExponent(Builtin::f32 value) noexcept -> const Builtin::u8
 		{
-			#line 395 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 393 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			ADV_EXPRESSION_BODY(__Float32_Protected::ExtractBiasedExponentFromBits(ADV_UPCS(Bits)(value.__ref()))); 
 		}
 	}
 namespace __Float32_Protected {
-		#line 396 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 394 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		inline constexpr auto Exponent(Builtin::f32 value) noexcept -> const Builtin::i8
 		{
-			#line 396 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 394 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			ADV_EXPRESSION_BODY(Builtin::i8{__Float32_Protected::BiasedExponent(value) - __Float32_Protected::ExpBias}); 
 		}
 	}
 namespace __Float32_Protected {
-		#line 397 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 395 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		inline constexpr auto Significand(Builtin::f32 value) noexcept -> const Builtin::u32
 		{
-			#line 397 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 395 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			ADV_EXPRESSION_BODY(__Float32_Protected::TrailingSignificand(value) | (__Float32_Protected::BiasedExponent(value) != Builtin::i32(0) ? (Builtin::u32(1U) << __Float32_Protected::BiasedExponentShift) : Builtin::u32(0U))); 
 		}
 	}
 namespace __Float32_Protected {
-		#line 398 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 396 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		inline constexpr auto TrailingSignificand(Builtin::f32 value) noexcept -> const Builtin::u32
 		{
-			#line 398 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 396 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			ADV_EXPRESSION_BODY(__Float32_Protected::ExtractTrailingSignificandFromBits(ADV_UPCS(Bits)(value.__ref()))); 
 		}
 	}
 namespace __Float32_Protected {
-		#line 400 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 398 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		inline constexpr auto ExtractBiasedExponentFromBits(Builtin::u32 bits) noexcept -> const Builtin::u8
 		{
-			#line 400 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 398 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			ADV_EXPRESSION_BODY(Builtin::u8{(bits >> __Float32_Protected::BiasedExponentShift) & __Float32_Protected::ShiftedBiasedExponentMask}); 
 		}
 	}
 namespace __Float32_Protected {
-		#line 401 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 399 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		inline constexpr auto ExtractTrailingSignificandFromBits(Builtin::u32 bits) noexcept -> const Builtin::u32
 		{
-			#line 401 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 399 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			ADV_EXPRESSION_BODY(bits & __Float32_Protected::TrailingSignificandMask); 
 		}
 	}
 } namespace __extensions { using namespace System;
-#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getMinValue<__extension_Float32_15_f32>::get() -> const __extension_Float32_1212_f32
+#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getMinValue<__extension_Float32_13_f32>::get() -> const __extension_Float32_1210_f32
 	{
-		#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(-3.402823466e+38f)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getMaxValue<__extension_Float32_15_f32>::get() -> const __extension_Float32_1212_f32
+#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getMaxValue<__extension_Float32_13_f32>::get() -> const __extension_Float32_1210_f32
 	{
-		#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(+Builtin::f32(3.402823466e+38f)); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	
 } namespace __extensions { using namespace System;
-#line 35 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto operator<=>(__extension_Float32_20_f32 const& __this LIFETIMEBOUND, Builtin::Nullable<__extension_Float32_1212_f32> rhs) noexcept -> const Builtin::i32
+#line 33 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto operator<=>(__extension_Float32_18_f32 const& __this LIFETIMEBOUND, Builtin::Nullable<__extension_Float32_1210_f32> rhs) noexcept -> const Builtin::i32
 	{
-		#line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 35 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		{
-			#line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 35 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			if ((!Builtin::Is(rhs, nullptr))) {
-				#line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 35 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				auto __tmp0 = *rhs; const auto& rhs = __tmp0;
 				
-				#line 38 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 36 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				return __this <=> rhs;
 			}
 		}
-		#line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 39 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return Builtin::i32(1);
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 45 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_FromBits<__extension_Float32_20_f32>::get(Builtin::u32 bits)  -> const typename __extension_Float32_20_f32
+#line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_FromBits<__extension_Float32_18_f32>::get(Builtin::u32 bits)  -> const typename __extension_Float32_18_f32
 	{
-		#line 45 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		ADV_EXPRESSION_BODY(Builtin::BitCast<__extension_Float32_1212_f32>(bits)); 
+		#line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		ADV_EXPRESSION_BODY(Builtin::BitCast<__extension_Float32_1210_f32>(bits)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 44 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getBits(__extension_Float32_20_f32 const& __this ) -> const Builtin::u32
+#line 42 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getBits(__extension_Float32_18_f32 const& __this ) -> const Builtin::u32
 	{
-		#line 44 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 42 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::BitCast<Builtin::u32>(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 47 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getBitWidth<__extension_Float32_20_f32>::get() -> const Builtin::u32
+#line 45 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getBitWidth<__extension_Float32_18_f32>::get() -> const Builtin::u32
 	{
-		#line 47 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 45 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::u32(32U)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 48 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getMinPositiveValue<__extension_Float32_20_f32>::get() -> const __extension_Float32_1212_f32
+#line 46 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getMinPositiveValue<__extension_Float32_18_f32>::get() -> const __extension_Float32_1210_f32
 	{
-		#line 48 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 46 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.17549435e-38f)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 50 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getHashCode(__extension_Float32_20_f32 const& __this ) -> const Builtin::u64
+#line 48 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getHashCode(__extension_Float32_18_f32 const& __this ) -> const Builtin::u64
 	{
-		#line 52 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 50 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto bits = ADV_UPCS(Bits)(__this.__ref()); 
-		#line 53 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 51 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if ((((bits - Builtin::u32(1U)) & Builtin::u32(0x7FFFFFFFU)) <=> Builtin::u32(0x7F800000U)) >= 0) {
-			#line 54 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 52 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			bits &= Builtin::u32(0x7F800000U);
 		}
-		#line 57 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 55 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return bits;
 	}
 	} namespace System{
@@ -1053,154 +1053,154 @@ namespace __Float32_Protected {
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	
 } namespace __extensions { using namespace System;
-#line 78 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToBoolean(__extension_Float32_77_f32 const& __this LIFETIMEBOUND) noexcept -> const bool
+#line 76 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToBoolean(__extension_Float32_75_f32 const& __this LIFETIMEBOUND) noexcept -> const bool
 	{
-		#line 78 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 76 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(__this != Builtin::i32(0)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToInt8(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i8
+#line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToInt8(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i8
 	{
-		#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i8>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 80 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToUInt8(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u8
+#line 78 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToUInt8(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u8
 	{
-		#line 80 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 78 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u8>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 81 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToInt16(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i16
+#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToInt16(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i16
 	{
-		#line 81 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i16>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 82 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToUInt16(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u16
+#line 80 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToUInt16(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u16
 	{
-		#line 82 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 80 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u16>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 83 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToInt32(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32
+#line 81 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToInt32(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32
 	{
-		#line 83 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 81 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i32>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToUInt32(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u32
+#line 82 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToUInt32(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u32
 	{
-		#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 82 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u32>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 85 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToInt64(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64
+#line 83 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToInt64(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64
 	{
-		#line 85 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 83 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i64>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 86 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToUInt64(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u64
+#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToUInt64(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u64
 	{
-		#line 86 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u64>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 87 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToInt128(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128
+#line 85 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToInt128(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128
 	{
-		#line 87 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 85 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i128>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 88 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToUInt128(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u128
+#line 86 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToUInt128(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::u128
 	{
-		#line 88 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 86 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u128>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 89 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToIsize(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::isize
+#line 87 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToIsize(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::isize
 	{
-		#line 89 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 87 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::isize>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 90 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToUsize(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::usize
+#line 88 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToUsize(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::usize
 	{
-		#line 90 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 88 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::usize>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
+#line 89 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToFloat32(__extension_Float32_75_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::f32
+	{
+		#line 89 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		ADV_EXPRESSION_BODY(__this); 
+	}
+	
+} namespace System{
+} namespace __extensions { using namespace System;
+#line 90 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToFloat64(__extension_Float32_75_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::f64
+	{
+		#line 90 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		ADV_EXPRESSION_BODY(__this); 
+	}
+	
+} namespace System{
+} namespace __extensions { using namespace System;
 #line 91 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToFloat32(__extension_Float32_77_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::f32
+	inline constexpr auto ToByte(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::char8
 	{
 		#line 91 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		ADV_EXPRESSION_BODY(__this); 
-	}
-	
-} namespace System{
-} namespace __extensions { using namespace System;
-#line 92 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToFloat64(__extension_Float32_77_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::f64
-	{
-		#line 92 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		ADV_EXPRESSION_BODY(__this); 
-	}
-	
-} namespace System{
-} namespace __extensions { using namespace System;
-#line 93 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToByte(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::char8
-	{
-		#line 93 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u8>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 94 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToChar(__extension_Float32_77_f32 const& __this LIFETIMEBOUND)  -> const Builtin::char16
+#line 92 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToChar(__extension_Float32_75_f32 const& __this LIFETIMEBOUND)  -> const Builtin::char16
 	{
-		#line 94 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 92 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u16>(__this)); 
 	}
 	
@@ -1208,64 +1208,64 @@ namespace __Float32_Protected {
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	
 } namespace __extensions { using namespace System;
-#line 101 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class T> inline constexpr auto _operator_div_mod(__extension_Float32_99_f32 const& __this LIFETIMEBOUND, T rhs)  -> const std::tuple<__extension_Float32_1212_f32, __extension_Float32_1212_f32>
+#line 99 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class T> inline constexpr auto _operator_div_mod(__extension_Float32_97_f32 const& __this LIFETIMEBOUND, T rhs)  -> const std::tuple<__extension_Float32_1210_f32, __extension_Float32_1210_f32>
 	{
-		#line 104 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 102 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return std::make_tuple(__this / Builtin::f32{rhs}, __this % Builtin::f32{rhs});
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 107 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class T> inline constexpr auto _operator_div_not(__extension_Float32_99_f32 const& __this LIFETIMEBOUND, T rhs)  -> const typename __extension_Float32_99_f32
+#line 105 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class T> inline constexpr auto _operator_div_not(__extension_Float32_97_f32 const& __this LIFETIMEBOUND, T rhs)  -> const typename __extension_Float32_97_f32
 	{
-		#line 107 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 105 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Round)((__this / rhs).__ref())); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 109 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto _operator_div_not_eq(__extension_Float32_99_f32 & __this , auto rhs)  -> typename __extension_Float32_99_f32&
+#line 107 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto _operator_div_not_eq(__extension_Float32_97_f32 & __this , auto rhs)  -> typename __extension_Float32_97_f32&
 	{
-		#line 109 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 107 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(__this = ADV_UFCS(_operator_div_not)(__this, rhs)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 111 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class T> inline constexpr auto _operator_div_lt(__extension_Float32_99_f32 const& __this LIFETIMEBOUND, T rhs)  -> const typename __extension_Float32_99_f32
+#line 109 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class T> inline constexpr auto _operator_div_lt(__extension_Float32_97_f32 const& __this LIFETIMEBOUND, T rhs)  -> const typename __extension_Float32_97_f32
 	{
-		#line 111 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 109 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Floor)((__this / rhs).__ref())); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 113 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto _operator_div_lt_eq(__extension_Float32_99_f32 & __this , auto rhs)  -> typename __extension_Float32_99_f32&
+#line 111 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto _operator_div_lt_eq(__extension_Float32_97_f32 & __this , auto rhs)  -> typename __extension_Float32_97_f32&
 	{
-		#line 113 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 111 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(__this = ADV_UFCS(_operator_div_lt)(__this, rhs)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 115 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class T> inline constexpr auto _operator_div_gt(__extension_Float32_99_f32 const& __this LIFETIMEBOUND, T rhs)  -> const typename __extension_Float32_99_f32
+#line 113 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	template<class T> inline constexpr auto _operator_div_gt(__extension_Float32_97_f32 const& __this LIFETIMEBOUND, T rhs)  -> const typename __extension_Float32_97_f32
 	{
-		#line 115 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 113 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Ceil)((__this / rhs).__ref())); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 117 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto _operator_div_gt_eq(__extension_Float32_99_f32 & __this , auto rhs)  -> typename __extension_Float32_99_f32&
+#line 115 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto _operator_div_gt_eq(__extension_Float32_97_f32 & __this , auto rhs)  -> typename __extension_Float32_97_f32&
 	{
-		#line 117 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 115 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(__this = ADV_UFCS(_operator_div_gt)(__this, rhs)); 
 	}
 	
@@ -1273,59 +1273,59 @@ namespace __Float32_Protected {
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	
 } namespace __extensions { using namespace System;
-#line 123 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto _operator_xor_xor(__extension_Float32_121_f32 const& __this LIFETIMEBOUND, Builtin::i32 exp)  -> const typename __extension_Float32_121_f32
+#line 121 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto _operator_xor_xor(__extension_Float32_119_f32 const& __this LIFETIMEBOUND, Builtin::i32 exp)  -> const typename __extension_Float32_119_f32
 	{
-		#line 125 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 123 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (exp == Builtin::i32(0)) [[unlikely]] {
-			#line 127 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 125 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return Builtin::f32(1.0f);
 		}
-		#line 130 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 128 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if ((exp <=> Builtin::i32(0)) < 0) {
-			#line 131 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 129 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return Builtin::f32(1.0f) / ADV_UFCS(_operator_xor_xor)(__this, (-exp));
 		}
-		#line 134 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 132 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto base = __this; 
-		#line 135 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 133 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto result = Builtin::f32(1.0f); 
-		#line 137 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 135 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (std::is_constant_evaluated()) {
-			#line 138 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 136 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			while ((exp <=> Builtin::i32(1)) > 0) 
 			{
-				#line 139 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 137 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				if ((exp & Builtin::i32(1)) == Builtin::i32(1)) {
-					#line 140 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+					#line 138 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 					result *= base;
 				}
-				#line 142 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 140 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				ADV_UFCS(_operator_bsl_eq)(exp, Builtin::i32(2));
-				#line 143 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 141 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				base *= base;
 			}
-			#line 145 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 143 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return result * base;
 		} else {
-			#line 146 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 144 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			{
-				#line 147 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 145 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				for (;;) 
 				{
-					#line 148 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+					#line 146 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 					if ((exp & Builtin::i32(1)) == Builtin::i32(1)) {
-						#line 149 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+						#line 147 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 						result *= base;
-						#line 150 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+						#line 148 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 						if (exp == Builtin::i32(1)) {
-							#line 151 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+							#line 149 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 							return result;
 						}
 					}
-					#line 153 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+					#line 151 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 					ADV_UFCS(_operator_bsl_eq)(exp, Builtin::i32(2));
-					#line 154 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+					#line 152 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 					base *= base;
 				}
 			}
@@ -1335,10 +1335,10 @@ namespace __Float32_Protected {
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 159 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto _operator_xor_xor_eq(__extension_Float32_121_f32 & __this , Builtin::i32 exp)  -> typename __extension_Float32_121_f32&
+#line 157 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto _operator_xor_xor_eq(__extension_Float32_119_f32 & __this , Builtin::i32 exp)  -> typename __extension_Float32_119_f32&
 	{
-		#line 159 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 157 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(__this = ADV_UFCS(_operator_xor_xor)(__this, exp)); 
 	}
 	
@@ -1346,410 +1346,410 @@ namespace __Float32_Protected {
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	
 } namespace __extensions { using namespace System;
-#line 199 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto MaxMagnitude(__extension_Float32_162_f32 const& __this LIFETIMEBOUND, __extension_Float32_1212_f32 rhs) noexcept -> const typename __extension_Float32_162_f32
+#line 197 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto MaxMagnitude(__extension_Float32_160_f32 const& __this LIFETIMEBOUND, __extension_Float32_1210_f32 rhs) noexcept -> const typename __extension_Float32_160_f32
 	{
-		#line 201 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 199 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto ax = ADV_UPCS(Abs)(__this.__ref()); 
+		#line 200 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		auto ay = ADV_UPCS(Abs)(rhs.__ref()); 
 		#line 202 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		auto ay = ADV_UPCS(Abs)(rhs.__ref()); 
-		#line 204 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if ((ax <=> ay) > 0 || ADV_UPCS(IsNaN)(ax.__ref())) {
-			#line 206 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 204 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return __this;
 		}
-		#line 209 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 207 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (ax == ay) {
-			#line 211 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 209 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return ADV_UPCS(IsNegative)(__this.__ref()) ? rhs : __this;
 		}
-		#line 214 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 212 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return rhs;
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 217 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto MaxMagnitudeNumber(__extension_Float32_162_f32 const& __this LIFETIMEBOUND, __extension_Float32_1212_f32 rhs) noexcept -> const typename __extension_Float32_162_f32
+#line 215 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto MaxMagnitudeNumber(__extension_Float32_160_f32 const& __this LIFETIMEBOUND, __extension_Float32_1210_f32 rhs) noexcept -> const typename __extension_Float32_160_f32
 	{
-		#line 219 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 217 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto ax = ADV_UPCS(Abs)(__this.__ref()); 
+		#line 218 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		auto ay = ADV_UPCS(Abs)(rhs.__ref()); 
 		#line 220 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		auto ay = ADV_UPCS(Abs)(rhs.__ref()); 
-		#line 222 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if ((ax <=> ay) > 0 || ADV_UPCS(IsNaN)(ay.__ref())) {
-			#line 224 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 222 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return __this;
 		}
-		#line 227 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 225 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (ax == ay) {
-			#line 229 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 227 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return ADV_UPCS(IsNegative)(__this.__ref()) ? rhs : __this;
 		}
-		#line 232 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 230 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return rhs;
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 235 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto MinMagnitude(__extension_Float32_162_f32 const& __this LIFETIMEBOUND, __extension_Float32_1212_f32 rhs) noexcept -> const typename __extension_Float32_162_f32
+#line 233 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto MinMagnitude(__extension_Float32_160_f32 const& __this LIFETIMEBOUND, __extension_Float32_1210_f32 rhs) noexcept -> const typename __extension_Float32_160_f32
 	{
-		#line 237 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 235 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto ax = ADV_UPCS(Abs)(__this.__ref()); 
+		#line 236 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		auto ay = ADV_UPCS(Abs)(rhs.__ref()); 
 		#line 238 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		auto ay = ADV_UPCS(Abs)(rhs.__ref()); 
-		#line 240 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if ((ax <=> ay) < 0 || ADV_UPCS(IsNaN)(ax.__ref())) {
-			#line 242 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 240 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return __this;
 		}
-		#line 245 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 243 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (ax == ay) {
-			#line 247 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 245 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return ADV_UPCS(IsNegative)(__this.__ref()) ? __this : rhs;
 		}
-		#line 250 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 248 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return rhs;
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 253 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto MinMagnitudeNumber(__extension_Float32_162_f32 const& __this LIFETIMEBOUND, __extension_Float32_1212_f32 rhs) noexcept -> const typename __extension_Float32_162_f32
+#line 251 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto MinMagnitudeNumber(__extension_Float32_160_f32 const& __this LIFETIMEBOUND, __extension_Float32_1210_f32 rhs) noexcept -> const typename __extension_Float32_160_f32
 	{
-		#line 255 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 253 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto ax = ADV_UPCS(Abs)(__this.__ref()); 
-		#line 256 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 254 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto ay = ADV_UPCS(Abs)(rhs.__ref()); 
-		#line 258 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 256 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if ((ax <=> ay) < 0 || ADV_UPCS(IsNaN)(ay.__ref())) {
-			#line 260 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 258 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return __this;
 		}
-		#line 263 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 261 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (ax == ay) {
-			#line 265 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 263 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return ADV_UPCS(IsNegative)(__this.__ref()) ? __this : rhs;
 		}
-		#line 268 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 266 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return rhs;
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToInt8(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i8
+#line 281 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToInt8(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i8
 	{
-		#line 283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 281 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::i8>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 284 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToUInt8(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u8
+#line 282 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToUInt8(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u8
 	{
-		#line 284 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 282 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::u8>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 285 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToInt16(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i16
+#line 283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToInt16(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i16
 	{
-		#line 285 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::i16>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 286 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToUInt16(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u16
+#line 284 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToUInt16(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u16
 	{
-		#line 286 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 284 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::u16>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 287 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToInt32(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i32
+#line 285 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToInt32(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i32
 	{
-		#line 287 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 285 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::i32>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 288 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToUInt32(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u32
+#line 286 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToUInt32(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u32
 	{
-		#line 288 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 286 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::u32>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 289 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToInt64(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i64
+#line 287 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToInt64(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i64
 	{
-		#line 289 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 287 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::i64>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 290 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToUInt64(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u64
+#line 288 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToUInt64(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u64
 	{
-		#line 290 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 288 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::u64>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 291 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToInt128(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i128
+#line 289 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToInt128(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::i128
 	{
-		#line 291 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 289 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::i128>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 292 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToUInt128(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u128
+#line 290 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToUInt128(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::u128
 	{
-		#line 292 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 290 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::u128>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 293 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToIsize(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::isize
+#line 291 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToIsize(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::isize
 	{
-		#line 293 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 291 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::isize>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 294 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto NarrowToUsize(__extension_Float32_162_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::usize
+#line 292 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto NarrowToUsize(__extension_Float32_160_f32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::usize
 	{
-		#line 294 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 292 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::usize>(__this)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 163 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getOne<__extension_Float32_162_f32>::get() -> const __extension_Float32_1212_f32
+#line 161 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getOne<__extension_Float32_160_f32>::get() -> const __extension_Float32_1210_f32
 	{
-		#line 163 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 161 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.0f)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 164 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getZero<__extension_Float32_162_f32>::get() -> const __extension_Float32_1212_f32
+#line 162 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getZero<__extension_Float32_160_f32>::get() -> const __extension_Float32_1210_f32
 	{
-		#line 164 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 162 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(0.0f)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 165 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getRadix<__extension_Float32_162_f32>::get() -> const Builtin::i32
+#line 163 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getRadix<__extension_Float32_160_f32>::get() -> const Builtin::i32
 	{
-		#line 165 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 163 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::i32(2)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 167 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getAbs(__extension_Float32_162_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 165 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getAbs(__extension_Float32_160_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 169 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 167 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		constexpr auto mask = Builtin::u32(0x7FFFFFFFU);
-		#line 170 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 168 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		Builtin::u32 raw = ADV_UPCS(Bits)(__this.__ref()); 
-		#line 171 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 169 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return ADV_USFCS((Builtin::f32), FromBits)(raw & mask);
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 173 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsCanonical(__extension_Float32_162_f32 const& __this ) -> const bool
+#line 171 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsCanonical(__extension_Float32_160_f32 const& __this ) -> const bool
 	{
-		#line 173 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 171 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 174 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsComplexNumber(__extension_Float32_162_f32 const& __this ) -> const bool
+#line 172 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsComplexNumber(__extension_Float32_160_f32 const& __this ) -> const bool
 	{
-		#line 174 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 172 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 175 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsEvenInteger(__extension_Float32_162_f32 const& __this ) -> const bool
+#line 173 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsEvenInteger(__extension_Float32_160_f32 const& __this ) -> const bool
 	{
-		#line 175 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 173 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsInteger)(__this.__ref()) && (ADV_UPCS(Abs)((__this % Builtin::i32(2)).__ref()) == Builtin::i32(0))); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 176 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsFinite(__extension_Float32_162_f32 const& __this ) -> const bool
+#line 174 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsFinite(__extension_Float32_160_f32 const& __this ) -> const bool
 	{
-		#line 176 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 174 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(((ADV_UPCS(Bits)(__this.__ref()) & Builtin::u32(0x7FFFFFFFU)) <=> Builtin::u32(0x7F800000U)) < 0); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 177 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsImaginaryNumber(__extension_Float32_162_f32 const& __this ) -> const bool
+#line 175 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsImaginaryNumber(__extension_Float32_160_f32 const& __this ) -> const bool
 	{
-		#line 177 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 175 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 178 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsInfinity(__extension_Float32_162_f32 const& __this ) -> const bool
+#line 176 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsInfinity(__extension_Float32_160_f32 const& __this ) -> const bool
 	{
-		#line 178 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 176 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY((ADV_UPCS(Bits)(__this.__ref()) & Builtin::u32(0x7FFFFFFFU)) == Builtin::u32(0x7F800000U)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 179 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsInteger(__extension_Float32_162_f32 const& __this ) -> const bool
+#line 177 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsInteger(__extension_Float32_160_f32 const& __this ) -> const bool
 	{
-		#line 179 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 177 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsFinite)(__this.__ref()) && (__this == ADV_UPCS(Truncate)(__this.__ref()))); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 180 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsNaN(__extension_Float32_162_f32 const& __this ) -> const bool
+#line 178 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsNaN(__extension_Float32_160_f32 const& __this ) -> const bool
 	{
-		#line 180 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 178 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(__this != __this); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 181 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsNegative(__extension_Float32_162_f32 const& __this ) -> const bool
+#line 179 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsNegative(__extension_Float32_160_f32 const& __this ) -> const bool
 	{
-		#line 181 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 179 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY((Builtin::BitCast<Builtin::i32>(__this) <=> Builtin::i32(0)) < 0); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 182 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsNegativeInfinity(__extension_Float32_162_f32 const& __this ) -> const bool
+#line 180 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsNegativeInfinity(__extension_Float32_160_f32 const& __this ) -> const bool
 	{
-		#line 182 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		ADV_EXPRESSION_BODY(__this == ADV_USPCS(NegativeInfinity, __extension_Float32_1212_f32)()); 
+		#line 180 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		ADV_EXPRESSION_BODY(__this == ADV_USPCS(NegativeInfinity, __extension_Float32_1210_f32)()); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 183 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsNormal(__extension_Float32_162_f32 const& __this ) -> const bool
+#line 181 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsNormal(__extension_Float32_160_f32 const& __this ) -> const bool
 	{
-		#line 185 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 183 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto bits = Builtin::BitCast<Builtin::u32>(__this) & Builtin::u32(0x7FFFFFFFU); 
-		#line 186 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 184 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return ((bits <=> Builtin::u32(0x7F800000U)) < 0) && (bits != Builtin::i32(0)) && ((bits & Builtin::i32(0x7F800000)) != Builtin::i32(0));
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 188 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsOddInteger(__extension_Float32_162_f32 const& __this ) -> const bool
+#line 186 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsOddInteger(__extension_Float32_160_f32 const& __this ) -> const bool
 	{
-		#line 188 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 186 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsInteger)(__this.__ref()) && (ADV_UPCS(Abs)((__this % Builtin::i32(2)).__ref()) == Builtin::i32(1))); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 189 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsPositive(__extension_Float32_162_f32 const& __this ) -> const bool
+#line 187 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsPositive(__extension_Float32_160_f32 const& __this ) -> const bool
 	{
-		#line 189 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 187 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY((Builtin::BitCast<Builtin::i32>(__this) <=> Builtin::i32(0)) >= 0); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 190 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsPositiveInfinity(__extension_Float32_162_f32 const& __this ) -> const bool
+#line 188 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsPositiveInfinity(__extension_Float32_160_f32 const& __this ) -> const bool
 	{
-		#line 190 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		ADV_EXPRESSION_BODY(__this == ADV_USPCS(PositiveInfinity, __extension_Float32_1212_f32)()); 
+		#line 188 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		ADV_EXPRESSION_BODY(__this == ADV_USPCS(PositiveInfinity, __extension_Float32_1210_f32)()); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 191 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsRealNumber(__extension_Float32_162_f32 const& __this ) -> const bool
+#line 189 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsRealNumber(__extension_Float32_160_f32 const& __this ) -> const bool
 	{
-		#line 191 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 189 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(__this == __this); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 192 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsSubnormal(__extension_Float32_162_f32 const& __this ) -> const bool
+#line 190 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsSubnormal(__extension_Float32_160_f32 const& __this ) -> const bool
 	{
-		#line 194 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 192 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto bits = ADV_UPCS(Bits)(__this.__ref()) & Builtin::u32(0x7FFFFFFFU); 
-		#line 195 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 193 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return ((bits <=> Builtin::u32(0x7F800000U)) < 0) && (bits != Builtin::i32(0)) && ((bits & Builtin::i32(0x7F800000)) == Builtin::i32(0));
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 197 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsZero(__extension_Float32_162_f32 const& __this ) -> const bool
+#line 195 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsZero(__extension_Float32_160_f32 const& __this ) -> const bool
 	{
-		#line 197 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		ADV_EXPRESSION_BODY(__this == ADV_USPCS(Zero, __extension_Float32_1212_f32)()); 
+		#line 195 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		ADV_EXPRESSION_BODY(__this == ADV_USPCS(Zero, __extension_Float32_1210_f32)()); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	
 } namespace __extensions { using namespace System;
-#line 298 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getMinusOne<__extension_Float32_297_f32>::get() -> const __extension_Float32_1212_f32
+#line 296 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getMinusOne<__extension_Float32_295_f32>::get() -> const __extension_Float32_1210_f32
 	{
-		#line 298 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 296 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(-1.0f)); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	
 } namespace __extensions { using namespace System;
-#line 309 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto CopySign(__extension_Float32_301_f32 const& __this LIFETIMEBOUND, __extension_Float32_1212_f32 sign) noexcept -> const typename __extension_Float32_301_f32
+#line 307 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto CopySign(__extension_Float32_299_f32 const& __this LIFETIMEBOUND, __extension_Float32_1210_f32 sign) noexcept -> const typename __extension_Float32_299_f32
 	{
-		#line 311 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 309 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (std::is_constant_evaluated()) {
-			#line 312 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 310 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			if ((sign <=> Builtin::i32(0)) < 0 || (sign == Builtin::i32(0) && (Builtin::f32(1.0f) / sign <=> Builtin::i32(0)) < 0)) {
-				#line 313 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 311 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				return (__this <=> Builtin::i32(0)) < 0 ? __this : -__this;
 			}
-			#line 315 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 313 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return (__this <=> Builtin::i32(0)) < 0 ? -__this : __this;
 		} else {
-			#line 316 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 314 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			{
-				#line 317 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 315 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				return std::copysignf(__this, sign);
 			}
 		}
@@ -1758,122 +1758,122 @@ namespace __Float32_Protected {
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 321 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto Max(__extension_Float32_301_f32 const& __this LIFETIMEBOUND, __extension_Float32_1212_f32 rhs) noexcept -> const typename __extension_Float32_301_f32
+#line 319 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto Max(__extension_Float32_299_f32 const& __this LIFETIMEBOUND, __extension_Float32_1210_f32 rhs) noexcept -> const typename __extension_Float32_299_f32
 	{
-		#line 323 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 321 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (__this != rhs) {
-			#line 324 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 322 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			if (!ADV_UPCS(IsNaN)(__this.__ref())) {
-				#line 325 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 323 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				return (rhs <=> __this) < 0 ? __this : rhs;
 			}
-			#line 327 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 325 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return __this;
 		}
-		#line 329 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 327 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return ADV_UPCS(IsNegative)(rhs.__ref()) ? __this : rhs;
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 331 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto MaxNumber(__extension_Float32_301_f32 const& __this LIFETIMEBOUND, __extension_Float32_1212_f32 rhs) noexcept -> const typename __extension_Float32_301_f32
+#line 329 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto MaxNumber(__extension_Float32_299_f32 const& __this LIFETIMEBOUND, __extension_Float32_1210_f32 rhs) noexcept -> const typename __extension_Float32_299_f32
 	{
-		#line 333 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 331 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (__this != rhs) {
-			#line 334 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 332 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			if (!ADV_UPCS(IsNaN)(rhs.__ref())) {
-				#line 335 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 333 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				return (rhs <=> __this) < 0 ? __this : rhs;
 			}
-			#line 337 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 335 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return __this;
 		}
-		#line 339 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 337 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return ADV_UPCS(IsNegative)(rhs.__ref()) ? __this : rhs;
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 341 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto Min(__extension_Float32_301_f32 const& __this LIFETIMEBOUND, __extension_Float32_1212_f32 rhs) noexcept -> const typename __extension_Float32_301_f32
+#line 339 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto Min(__extension_Float32_299_f32 const& __this LIFETIMEBOUND, __extension_Float32_1210_f32 rhs) noexcept -> const typename __extension_Float32_299_f32
 	{
-		#line 343 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 341 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (__this != rhs) {
-			#line 344 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 342 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			if (!ADV_UPCS(IsNaN)(__this.__ref())) {
-				#line 345 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 343 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				return (__this <=> rhs) < 0 ? __this : rhs;
 			}
-			#line 347 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 345 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return __this;
 		}
-		#line 349 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 347 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return ADV_UPCS(IsNegative)(__this.__ref()) ? __this : rhs;
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 351 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto MinNumber(__extension_Float32_301_f32 const& __this LIFETIMEBOUND, __extension_Float32_1212_f32 rhs) noexcept -> const typename __extension_Float32_301_f32
+#line 349 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto MinNumber(__extension_Float32_299_f32 const& __this LIFETIMEBOUND, __extension_Float32_1210_f32 rhs) noexcept -> const typename __extension_Float32_299_f32
 	{
-		#line 353 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 351 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (__this != rhs) {
-			#line 354 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 352 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			if (!ADV_UPCS(IsNaN)(rhs.__ref())) {
-				#line 355 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 353 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				return (__this <=> rhs) < 0 ? __this : rhs;
 			}
-			#line 357 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 355 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return __this;
 		}
-		#line 359 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 357 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return ADV_UPCS(IsNegative)(__this.__ref()) ? __this : rhs;
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 361 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto Clamp(__extension_Float32_301_f32 const& __this LIFETIMEBOUND, __extension_Float32_1212_f32 min, __extension_Float32_1212_f32 max)  -> const typename __extension_Float32_301_f32
+#line 359 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto Clamp(__extension_Float32_299_f32 const& __this LIFETIMEBOUND, __extension_Float32_1210_f32 min, __extension_Float32_1210_f32 max)  -> const typename __extension_Float32_299_f32
 	{
-		#line 363 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 361 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if ((min <=> max) > 0) {
-			#line 364 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 362 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			Builtin::Throw(Builtin::InvalidOperationException{});
 		}
-		#line 367 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 365 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return (__this <=> min) < 0 ? min : (__this <=> max) > 0 ? max : __this;
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 302 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getSign(__extension_Float32_301_f32 const& __this ) -> const Builtin::i32
+#line 300 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getSign(__extension_Float32_299_f32 const& __this ) -> const Builtin::i32
 	{
-		#line 302 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 300 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return [&]() 
 ADV_WARNING_DISABLE(4715, -Wreturn-type)
 		{
-			#line 303 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-			auto __tmp__valid_302 = Builtin::Cast<false, std::decay_t<decltype(__this)>::__self>(__this);
-			#line 303 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-			if(__tmp__valid_302.IsValid() && Builtin::Is(*__tmp__valid_302, Builtin::i32(0))) {
-				#line 303 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 301 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			auto __tmp__valid_300 = Builtin::Cast<false, std::decay_t<decltype(__this)>::__self>(__this);
+			#line 301 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			if(__tmp__valid_300.IsValid() && Builtin::Is(*__tmp__valid_300, Builtin::i32(0))) {
+				#line 301 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				
 				return Builtin::i32(0);
 			}
 			else {
-				#line 304 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-				if(__tmp__valid_302.IsValid() && Builtin::IsLess(*__tmp__valid_302, Builtin::i32(0))) {
-					#line 304 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 302 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				if(__tmp__valid_300.IsValid() && Builtin::IsLess(*__tmp__valid_300, Builtin::i32(0))) {
+					#line 302 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 					
 					return Builtin::i32(-1);
 				}
 				else {
-					#line 305 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-					if(__tmp__valid_302.IsValid() && Builtin::IsGreater(*__tmp__valid_302, Builtin::i32(0))) {
-						#line 305 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+					#line 303 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+					if(__tmp__valid_300.IsValid() && Builtin::IsGreater(*__tmp__valid_300, Builtin::i32(0))) {
+						#line 303 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 						
 						return Builtin::i32(1);
 					}
@@ -1891,55 +1891,55 @@ ADV_WARNING_POP
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	
 } namespace __extensions { using namespace System;
-#line 444 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto Log(__extension_Float32_404_f32 const& __this LIFETIMEBOUND, __extension_Float32_1212_f32 base) noexcept -> const typename __extension_Float32_404_f32
+#line 442 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto Log(__extension_Float32_402_f32 const& __this LIFETIMEBOUND, __extension_Float32_1210_f32 base) noexcept -> const typename __extension_Float32_402_f32
 	{
-		#line 446 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 444 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (ADV_UPCS(IsNaN)(__this.__ref())) {
-			#line 447 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 445 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return __this;
 		}
-		#line 449 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 447 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (ADV_UPCS(IsNaN)(base.__ref())) {
-			#line 450 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 448 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return base;
 		}
-		#line 453 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 451 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (base == Builtin::i32(1)) {
-			#line 454 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 452 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return ADV_USPCS(NaN, Builtin::f32)();
 		}
-		#line 456 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 454 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (__this != Builtin::i32(1) && (base == Builtin::i32(0) || ADV_UPCS(IsPositiveInfinity)(base.__ref()))) {
-			#line 457 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 455 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return ADV_USPCS(NaN, Builtin::f32)();
 		}
-		#line 460 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 458 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return ADV_UPCS(Ln)(__this.__ref()) / ADV_UPCS(Ln)(base.__ref());
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 465 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto Midpoint(__extension_Float32_404_f32 const& __this LIFETIMEBOUND, __extension_Float32_1212_f32 rhs) noexcept -> const typename __extension_Float32_404_f32
+#line 463 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto Midpoint(__extension_Float32_402_f32 const& __this LIFETIMEBOUND, __extension_Float32_1210_f32 rhs) noexcept -> const typename __extension_Float32_402_f32
 	{
-		#line 467 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 465 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if constexpr (Builtin::Is64BitTarget()) {
-			#line 468 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 466 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return Builtin::f32{(Builtin::f64{__this} + Builtin::f64{rhs}) / Builtin::f64(2.0)};
 		} else {
-			#line 469 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 467 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			{
+				#line 468 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				constexpr auto riskValue = ADV_USPCS(MaxValue, __extension_Float32_1210_f32)() / Builtin::f32(2.0f);
 				#line 470 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-				constexpr auto riskValue = ADV_USPCS(MaxValue, __extension_Float32_1212_f32)() / Builtin::f32(2.0f);
-				#line 472 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				if ((ADV_UPCS(Abs)(__this.__ref()) <=> riskValue) <= 0 && (ADV_UPCS(Abs)(rhs.__ref()) <=> riskValue) <= 0) {
-					#line 473 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+					#line 471 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 					return (__this + rhs) / Builtin::f32(2.0f);
 				} else {
-					#line 474 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+					#line 472 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 					{
-						#line 475 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+						#line 473 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 						return (__this / Builtin::f32(2.0f)) + (rhs / Builtin::f32(2.0f));
 					}
 				}
@@ -1950,330 +1950,330 @@ ADV_WARNING_POP
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 481 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto IsMultipleOf(__extension_Float32_404_f32 const& __this LIFETIMEBOUND, __extension_Float32_1212_f32 rhs) noexcept -> const bool
+#line 479 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto IsMultipleOf(__extension_Float32_402_f32 const& __this LIFETIMEBOUND, __extension_Float32_1210_f32 rhs) noexcept -> const bool
 	{
-		#line 483 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 481 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (rhs == Builtin::i32(0)) {
-			#line 484 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 482 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return __this == Builtin::i32(0);
 		}
-		#line 487 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 485 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (rhs == Builtin::i32(-1)) {
-			#line 488 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 486 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return Builtin::Boolean(true);
 		}
-		#line 491 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 489 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return __this % rhs == Builtin::i32(0);
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 406 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getAllBitsSet<__extension_Float32_404_f32>::get() -> const __extension_Float32_1212_f32
+#line 404 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getAllBitsSet<__extension_Float32_402_f32>::get() -> const __extension_Float32_1210_f32
 	{
-		#line 406 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 404 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_USFCS((Builtin::f32), FromBits)(Builtin::u32(0xFFFFFFFFU))); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 409 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsPow2(__extension_Float32_404_f32 const& __this ) -> const bool
+#line 407 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getIsPow2(__extension_Float32_402_f32 const& __this ) -> const bool
 	{
-		#line 411 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 409 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto bits = ADV_UPCS(Bits)(__this.__ref()); 
-		#line 413 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 411 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if ((ADV_UFCS(NarrowToInt32)(bits.__ref()) <=> Builtin::i32(0)) <= 0) {
-			#line 414 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 412 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return Builtin::Boolean(false);
 		}
-		#line 417 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 415 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto biasedExponent = __Float32_Protected::ExtractBiasedExponentFromBits(bits); 
-		#line 418 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 416 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto trailingSignificand = __Float32_Protected::ExtractTrailingSignificandFromBits(bits); 
-		#line 421 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 419 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (biasedExponent == __Float32_Protected::MinBiasedExponent) {
-			#line 422 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 420 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return ADV_UPCS(PopCount)(trailingSignificand.__ref()) == Builtin::i32(1);
 		}
-		#line 425 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 423 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (biasedExponent == __Float32_Protected::MaxBiasedExponent) {
-			#line 426 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 424 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return Builtin::Boolean(false);
 		}
-		#line 430 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 428 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return trailingSignificand == __Float32_Protected::MinTrailingSignificand;
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 435 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLog2(__extension_Float32_404_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 433 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getLog2(__extension_Float32_402_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 435 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 433 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::log2f(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 439 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLog10(__extension_Float32_404_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 437 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getLog10(__extension_Float32_402_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 439 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 437 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::log10f(__this)); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	
 } namespace __extensions { using namespace System;
-#line 497 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getPi<__extension_Float32_495_f32>::get() -> const __extension_Float32_1212_f32
+#line 495 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getPi<__extension_Float32_493_f32>::get() -> const __extension_Float32_1210_f32
 	{
-		#line 497 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 495 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(3.14159265f)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 498 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getE<__extension_Float32_495_f32>::get() -> const __extension_Float32_1212_f32
+#line 496 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getE<__extension_Float32_493_f32>::get() -> const __extension_Float32_1210_f32
 	{
-		#line 498 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 496 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(2.71828183f)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 499 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getTau<__extension_Float32_495_f32>::get() -> const __extension_Float32_1212_f32
+#line 497 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getTau<__extension_Float32_493_f32>::get() -> const __extension_Float32_1210_f32
 	{
-		#line 499 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 497 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(6.283185307f)); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	
 } namespace __extensions { using namespace System;
-#line 520 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto CeilToInt32(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32
+#line 518 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto CeilToInt32(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32
 	{
-		#line 520 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 518 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i32>(ADV_UPCS(Ceil)(__this.__ref()))); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 521 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto CeilToInt64(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64
+#line 519 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto CeilToInt64(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64
 	{
-		#line 521 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 519 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i64>(ADV_UPCS(Ceil)(__this.__ref()))); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 522 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto CeilToInt128(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128
+#line 520 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto CeilToInt128(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128
 	{
-		#line 522 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 520 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i128>(ADV_UPCS(Ceil)(__this.__ref()))); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 537 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto FloorToInt32(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32
+#line 535 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto FloorToInt32(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32
 	{
-		#line 537 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 535 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i32>(ADV_UPCS(Floor)(__this.__ref()))); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 538 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto FloorToInt64(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64
+#line 536 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto FloorToInt64(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64
 	{
-		#line 538 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 536 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i64>(ADV_UPCS(Floor)(__this.__ref()))); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 539 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto FloorToInt128(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128
+#line 537 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto FloorToInt128(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128
 	{
-		#line 539 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 537 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i128>(ADV_UPCS(Floor)(__this.__ref()))); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 553 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto TruncateToInt32(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32
+#line 551 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto TruncateToInt32(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32
 	{
-		#line 553 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 551 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i32>(ADV_UPCS(Truncate)(__this.__ref()))); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 554 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto TruncateToInt64(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64
+#line 552 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto TruncateToInt64(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64
 	{
-		#line 554 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 552 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i64>(ADV_UPCS(Truncate)(__this.__ref()))); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 555 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto TruncateToInt128(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128
+#line 553 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto TruncateToInt128(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128
 	{
-		#line 555 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 553 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i128>(ADV_UPCS(Truncate)(__this.__ref()))); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 569 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto RoundToInt32(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32
+#line 567 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto RoundToInt32(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32
 	{
-		#line 569 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 567 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i32>(ADV_UPCS(Round)(__this.__ref()))); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 570 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto RoundToInt64(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64
+#line 568 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto RoundToInt64(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64
 	{
-		#line 570 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 568 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i64>(ADV_UPCS(Round)(__this.__ref()))); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 571 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto RoundToInt128(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128
+#line 569 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto RoundToInt128(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128
 	{
-		#line 571 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 569 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i128>(ADV_UPCS(Round)(__this.__ref()))); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 619 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto RoundTiesEvenToInt32(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32
+#line 617 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto RoundTiesEvenToInt32(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i32
 	{
-		#line 619 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 617 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i32>(ADV_UPCS(RoundTiesEven)(__this.__ref()))); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 620 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto RoundTiesEvenToInt64(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64
+#line 618 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto RoundTiesEvenToInt64(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i64
 	{
-		#line 620 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 618 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i64>(ADV_UPCS(RoundTiesEven)(__this.__ref()))); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 621 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto RoundTiesEvenToInt128(__extension_Float32_502_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128
+#line 619 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto RoundTiesEvenToInt128(__extension_Float32_500_f32 const& __this LIFETIMEBOUND)  -> const Builtin::i128
 	{
-		#line 621 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 619 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::i128>(ADV_UPCS(RoundTiesEven)(__this.__ref()))); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 623 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto Round(__extension_Float32_502_f32 const& __this LIFETIMEBOUND, Builtin::u32 digits)  -> const typename __extension_Float32_502_f32
+#line 621 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto Round(__extension_Float32_500_f32 const& __this LIFETIMEBOUND, Builtin::u32 digits)  -> const typename __extension_Float32_500_f32
 	{
-		#line 623 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 621 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(Round)(__this.__ref(), digits, ADV_USPCS(AwayFromZero, MidpointRounding)())); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 624 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto Round(__extension_Float32_502_f32 const& __this LIFETIMEBOUND, MidpointRounding rounding)  -> const typename __extension_Float32_502_f32
+#line 622 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto Round(__extension_Float32_500_f32 const& __this LIFETIMEBOUND, MidpointRounding rounding)  -> const typename __extension_Float32_500_f32
 	{
-		#line 626 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 624 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (std::is_constant_evaluated()) {
-			#line 627 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 625 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			if (rounding == ADV_USPCS(AwayFromZero, MidpointRounding)()) {
-				#line 628 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 626 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				return ADV_UPCS(Round)(__this.__ref());
 			}
-			#line 630 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 628 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			if (rounding == ADV_USPCS(ToEven, MidpointRounding)()) {
-				#line 631 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 629 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				return ADV_UPCS(RoundTiesEven)(__this.__ref());
 			}
 		}
-		#line 634 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 632 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return ADV_UFCS(Round)(__this.__ref(), Builtin::u32(0U), rounding);
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 636 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto Round(__extension_Float32_502_f32 const& __this LIFETIMEBOUND, Builtin::u32 digits, MidpointRounding rounding)  -> const typename __extension_Float32_502_f32
+#line 634 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto Round(__extension_Float32_500_f32 const& __this LIFETIMEBOUND, Builtin::u32 digits, MidpointRounding rounding)  -> const typename __extension_Float32_500_f32
 	{
-		#line 638 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 636 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		constexpr auto maxRoundingDigits = Builtin::u32(6U);
-		#line 639 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 637 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		constexpr auto singleRoundLimit = Builtin::f32(1e8f);
-		#line 642 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 640 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if ((digits <=> maxRoundingDigits) > 0) {
-			#line 643 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 641 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			Builtin::Throw(Builtin::InvalidArgumentException{});
 		}
-		#line 646 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 644 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto result = __this; 
-		#line 647 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 645 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if ((ADV_UPCS(Abs)(__this.__ref()) <=> singleRoundLimit) < 0) {
-			#line 649 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 647 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			const auto pow10 = ADV_UFCS(_operator_xor_xor)(Builtin::f32(10.0f), Builtin::i32{digits}); 
-			#line 650 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 648 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			result *= pow10;
-			#line 652 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 650 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			result = [&]() 
 ADV_WARNING_DISABLE(4715, -Wreturn-type)
 			{
-				#line 654 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-				auto __tmp__valid_652 = Builtin::Cast<false, std::decay_t<decltype(rounding)>::__self>(rounding);
-				#line 654 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-				if(__tmp__valid_652.IsValid() && Builtin::Is(*__tmp__valid_652, decltype(rounding)::ToEven)) {
-					#line 654 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-					const auto& rounding = *__tmp__valid_652;
+				#line 652 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				auto __tmp__valid_650 = Builtin::Cast<false, std::decay_t<decltype(rounding)>::__self>(rounding);
+				#line 652 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				if(__tmp__valid_650.IsValid() && Builtin::Is(*__tmp__valid_650, decltype(rounding)::ToEven)) {
+					#line 652 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+					const auto& rounding = *__tmp__valid_650;
 					return ADV_UPCS(RoundTiesEven)(result.__ref());
 				}
 				else {
-					#line 655 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-					if(__tmp__valid_652.IsValid() && Builtin::Is(*__tmp__valid_652, decltype(rounding)::AwayFromZero)) {
-						#line 655 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-						const auto& rounding = *__tmp__valid_652;
+					#line 653 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+					if(__tmp__valid_650.IsValid() && Builtin::Is(*__tmp__valid_650, decltype(rounding)::AwayFromZero)) {
+						#line 653 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+						const auto& rounding = *__tmp__valid_650;
 						return ADV_UPCS(Round)(result.__ref());
 					}
 					else {
-						#line 656 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-						if(__tmp__valid_652.IsValid() && Builtin::Is(*__tmp__valid_652, decltype(rounding)::ToZero)) {
-							#line 656 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-							const auto& rounding = *__tmp__valid_652;
+						#line 654 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+						if(__tmp__valid_650.IsValid() && Builtin::Is(*__tmp__valid_650, decltype(rounding)::ToZero)) {
+							#line 654 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+							const auto& rounding = *__tmp__valid_650;
 							return ADV_UPCS(Truncate)(result.__ref());
 						}
 						else {
-							#line 657 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-							if(__tmp__valid_652.IsValid() && Builtin::Is(*__tmp__valid_652, decltype(rounding)::ToNegativeInfinity)) {
-								#line 657 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-								const auto& rounding = *__tmp__valid_652;
+							#line 655 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+							if(__tmp__valid_650.IsValid() && Builtin::Is(*__tmp__valid_650, decltype(rounding)::ToNegativeInfinity)) {
+								#line 655 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+								const auto& rounding = *__tmp__valid_650;
 								return ADV_UPCS(Floor)(result.__ref());
 							}
 							else {
-								#line 658 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-								if(__tmp__valid_652.IsValid() && Builtin::Is(*__tmp__valid_652, decltype(rounding)::ToPositiveInfinity)) {
-									#line 658 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-									const auto& rounding = *__tmp__valid_652;
+								#line 656 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+								if(__tmp__valid_650.IsValid() && Builtin::Is(*__tmp__valid_650, decltype(rounding)::ToPositiveInfinity)) {
+									#line 656 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+									const auto& rounding = *__tmp__valid_650;
 									return ADV_UPCS(Ceil)(result.__ref());
 								}
 								else {
@@ -2287,36 +2287,36 @@ ADV_WARNING_DISABLE(4715, -Wreturn-type)
 			}
 ADV_WARNING_POP
 			();
-			#line 662 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 660 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			result /= pow10;
 		}
-		#line 665 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 663 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return result;
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 505 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getFractionalPart(__extension_Float32_502_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 503 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getFractionalPart(__extension_Float32_500_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 505 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 503 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(__this - ADV_UPCS(Truncate)(__this.__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 510 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getCeil(__extension_Float32_502_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 508 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getCeil(__extension_Float32_500_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 512 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 510 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (std::is_constant_evaluated()) {
-			#line 513 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 511 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			const auto i = Builtin::Cast<true, Builtin::i64>(__this); 
-			#line 514 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 512 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return ((__this <=> i) > 0) ? (i + Builtin::i32(1)) : i;
 		} else {
-			#line 515 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 513 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			{
-				#line 516 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 514 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				return std::ceilf(__this);
 			}
 		}
@@ -2324,19 +2324,19 @@ ADV_WARNING_POP
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 527 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getFloor(__extension_Float32_502_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 525 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getFloor(__extension_Float32_500_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 529 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 527 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (std::is_constant_evaluated()) {
-			#line 530 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 528 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			const auto i = Builtin::Cast<true, Builtin::i64>(__this); 
-			#line 531 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 529 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return ((__this <=> i) < 0) ? (i - Builtin::i32(1)) : i;
 		} else {
-			#line 532 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 530 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			{
-				#line 533 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 531 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				return std::floorf(__this);
 			}
 		}
@@ -2344,17 +2344,17 @@ ADV_WARNING_POP
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 544 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getTruncate(__extension_Float32_502_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 542 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getTruncate(__extension_Float32_500_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 546 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 544 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (std::is_constant_evaluated()) {
-			#line 547 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 545 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return Builtin::Cast<true, Builtin::i64>(__this);
 		} else {
-			#line 548 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 546 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			{
-				#line 549 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 547 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				return std::truncf(__this);
 			}
 		}
@@ -2362,17 +2362,17 @@ ADV_WARNING_POP
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 560 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getRound(__extension_Float32_502_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 558 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getRound(__extension_Float32_500_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 562 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 560 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (std::is_constant_evaluated()) {
-			#line 563 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 561 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return Builtin::Cast<true, Builtin::i64>((__this + ADV_UFCS(CopySign)(Builtin::f32(0.49999997f).__ref(), __this)));
 		} else {
-			#line 564 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 562 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			{
-				#line 565 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 563 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				return std::roundf(__this);
 			}
 		}
@@ -2380,75 +2380,75 @@ ADV_WARNING_POP
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 576 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getRoundTiesEven(__extension_Float32_502_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 574 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getRoundTiesEven(__extension_Float32_500_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 578 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 576 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto bits = ADV_UPCS(Bits)(__this.__ref()); 
-		#line 579 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 577 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto biasedExponent = __Float32_Protected::ExtractBiasedExponentFromBits(bits); 
-		#line 580 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 578 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if ((biasedExponent <=> Builtin::u32(0x7EU)) <= 0) {
-			#line 582 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 580 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			if ((bits << Builtin::i32(1)) == Builtin::i32(0)) {
-				#line 583 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 581 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				return __this;
 			}
-			#line 588 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 586 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			auto result = (biasedExponent == Builtin::u32(0x7EU) && __Float32_Protected::ExtractTrailingSignificandFromBits(bits) != Builtin::i32(0)) ? Builtin::f32(1.0f) : Builtin::f32(0.0f); 
-			#line 590 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 588 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return ADV_UFCS(CopySign)(result.__ref(), __this);
 		}
-		#line 594 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 592 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if ((biasedExponent <=> Builtin::u32(0x96U)) >= 0) {
-			#line 595 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 593 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return __this;
 		}
-		#line 598 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 596 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_ASSERT(((biasedExponent <=> Builtin::u32(0x7FU)) >= 0 && (biasedExponent <=> Builtin::u32(0x95U)) <= 0), u"biasedExponent>=0x7FuandbiasedExponent<=0x95u");
-		#line 601 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 599 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto lastBitMask = Builtin::u32(1U) << (Builtin::i32(0x96) - biasedExponent); 
-		#line 603 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 601 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto roundBitsMask = lastBitMask - Builtin::u32(1U); 
-		#line 606 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 604 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		bits += lastBitMask >> Builtin::i32(1);
-		#line 608 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 606 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if ((bits & roundBitsMask) == Builtin::i32(0)) {
-			#line 610 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 608 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			bits &= ADV_UFCS(_operator_not)(lastBitMask);
 		} else {
-			#line 611 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 609 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			{
-				#line 613 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 611 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				bits &= ADV_UFCS(_operator_not)(roundBitsMask);
 			}
 		}
-		#line 616 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 614 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return ADV_USFCS((Builtin::f32), FromBits)(bits);
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 668 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getExponentByteCount(__extension_Float32_502_f32 const& __this ) -> const Builtin::u32
+#line 666 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getExponentByteCount(__extension_Float32_500_f32 const& __this ) -> const Builtin::u32
 	{
-		#line 668 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 666 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u32>(Builtin::usize(sizeof(Builtin::i8)))); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 669 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getExponentShortestBitLength(__extension_Float32_502_f32 const& __this ) -> const Builtin::u32
+#line 667 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getExponentShortestBitLength(__extension_Float32_500_f32 const& __this ) -> const Builtin::u32
 	{
-		#line 671 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 669 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto exponent = __Float32_Protected::Exponent(__this); 
-		#line 672 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 670 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if ((exponent <=> Builtin::i32(0)) >= 0) {
-			#line 673 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 671 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return ADV_USPCS(BitWidth, Builtin::i8)() - ADV_UPCS(LeadingZeroCount)(exponent.__ref());
 		} else {
-			#line 674 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 672 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			{
-				#line 675 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 673 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				return ADV_USPCS(BitWidth, Builtin::i8)() + Builtin::i32(1) - ADV_UPCS(LeadingZeroCount)(exponent.__ref());
 			}
 		}
@@ -2456,37 +2456,37 @@ ADV_WARNING_POP
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 678 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getSignificandBitLength(__extension_Float32_502_f32 const& __this ) -> const Builtin::u32
+#line 676 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getSignificandBitLength(__extension_Float32_500_f32 const& __this ) -> const Builtin::u32
 	{
-		#line 678 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 676 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::u32(24U)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 679 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getSignificandByteCount(__extension_Float32_502_f32 const& __this ) -> const Builtin::u32
+#line 677 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getSignificandByteCount(__extension_Float32_500_f32 const& __this ) -> const Builtin::u32
 	{
-		#line 679 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 677 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u32>(Builtin::usize(sizeof(Builtin::u32)))); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	
 } namespace __extensions { using namespace System;
-#line 684 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto _operator_mul_mul(__extension_Float32_683_f32 const& __this LIFETIMEBOUND, __extension_Float32_1212_f32 exp) noexcept -> const typename __extension_Float32_683_f32
+#line 682 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto _operator_mul_mul(__extension_Float32_681_f32 const& __this LIFETIMEBOUND, __extension_Float32_1210_f32 exp) noexcept -> const typename __extension_Float32_681_f32
 	{
-		#line 684 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 682 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::powf(__this, exp)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 685 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto _operator_mul_mul_eq(__extension_Float32_683_f32 & __this , __extension_Float32_1212_f32 exp) noexcept -> typename __extension_Float32_683_f32&
+#line 683 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto _operator_mul_mul_eq(__extension_Float32_681_f32 & __this , __extension_Float32_1210_f32 exp) noexcept -> typename __extension_Float32_681_f32&
 	{
-		#line 685 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 683 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(__this = std::powf(__this, exp)); 
 	}
 	
@@ -2494,559 +2494,559 @@ ADV_WARNING_POP
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	
 } namespace __extensions { using namespace System;
-#line 690 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getExp(__extension_Float32_688_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 688 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getExp(__extension_Float32_686_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 690 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 688 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::expf(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 692 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getExp2(__extension_Float32_688_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 690 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getExp2(__extension_Float32_686_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 692 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 690 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::exp2f(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 694 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getExp10(__extension_Float32_688_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 692 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getExp10(__extension_Float32_686_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 694 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 692 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_mul_mul)(Builtin::f32(10.0f), __this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getExpM1(__extension_Float32_688_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 694 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getExpM1(__extension_Float32_686_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 694 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::expm1f(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 698 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getExp2M1(__extension_Float32_688_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getExp2M1(__extension_Float32_686_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 698 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::exp2f(__this) - Builtin::f32(1.0f)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 700 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getExp10M1(__extension_Float32_688_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 698 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getExp10M1(__extension_Float32_686_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 700 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 698 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Exp10)(__this.__ref()) - Builtin::f32(1.0f)); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	
 } namespace __extensions { using namespace System;
-#line 705 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLn(__extension_Float32_703_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 703 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getLn(__extension_Float32_701_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 705 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 703 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::logf(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 707 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLnP1(__extension_Float32_703_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 705 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getLnP1(__extension_Float32_701_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 707 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 705 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::log1pf(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 709 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLog2P1(__extension_Float32_703_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 707 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getLog2P1(__extension_Float32_701_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 709 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 707 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::log2f(__this + Builtin::f32(1.0f))); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 711 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLog10P1(__extension_Float32_703_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 709 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getLog10P1(__extension_Float32_701_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 711 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 709 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::log10f(__this + Builtin::f32(1.0f))); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	
 } namespace __extensions { using namespace System;
-#line 716 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSqrt(__extension_Float32_714_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 714 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getSqrt(__extension_Float32_712_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 716 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 714 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::sqrtf(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 718 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCbrt(__extension_Float32_714_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 716 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getCbrt(__extension_Float32_712_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 718 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 716 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::cbrtf(__this)); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	
 } namespace __extensions { using namespace System;
-#line 1063 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToRadians(__extension_Float32_822_f32 const& __this LIFETIMEBOUND) noexcept -> const typename __extension_Float32_822_f32
+#line 1061 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToRadians(__extension_Float32_820_f32 const& __this LIFETIMEBOUND) noexcept -> const typename __extension_Float32_820_f32
 	{
-		#line 1063 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1061 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY((__this * ADV_USPCS(Pi, Builtin::f32)()) / Builtin::f32(180.0f)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 1065 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto ToDegrees(__extension_Float32_822_f32 const& __this LIFETIMEBOUND) noexcept -> const typename __extension_Float32_822_f32
+#line 1063 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto ToDegrees(__extension_Float32_820_f32 const& __this LIFETIMEBOUND) noexcept -> const typename __extension_Float32_820_f32
 	{
-		#line 1065 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1063 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY((__this * Builtin::f32(180.0f)) / ADV_USPCS(Pi, Builtin::f32)()); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 824 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSin(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 822 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getSin(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 824 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 822 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::sinf(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 826 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCos(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 824 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getCos(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 826 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 824 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::cosf(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 828 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getTan(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 826 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getTan(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 828 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 826 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::tanf(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 830 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCot(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 828 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getCot(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 830 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 828 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.0f) / ADV_UPCS(Tan)(__this.__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 832 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSec(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 830 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getSec(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 832 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 830 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.0f) / ADV_UPCS(Cos)(__this.__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 834 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCsc(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 832 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getCsc(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 834 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 832 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.0f) / ADV_UPCS(Sin)(__this.__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 836 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAsin(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 834 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAsin(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 836 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 834 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::asinf(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 838 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcos(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 836 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAcos(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 838 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 836 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::acosf(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 840 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAtan(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 838 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAtan(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 840 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 838 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::atanf(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 842 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcot(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 840 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAcot(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 842 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 840 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::atanf(Builtin::f32(1.0f) / __this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 844 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAsec(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 842 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAsec(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 844 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 842 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::acosf(Builtin::f32(1.0f) / __this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 846 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcsc(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 844 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAcsc(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 846 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 844 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::asinf(Builtin::f32(1.0f) / __this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 848 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSinCos(__extension_Float32_822_f32 const& __this ) -> const std::tuple<__extension_Float32_1212_f32, __extension_Float32_1212_f32>
+#line 846 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getSinCos(__extension_Float32_820_f32 const& __this ) -> const std::tuple<__extension_Float32_1210_f32, __extension_Float32_1210_f32>
 	{
-		#line 848 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 846 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::make_tuple(ADV_UPCS(Sin)(__this.__ref()), ADV_UPCS(Cos)(__this.__ref()))); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1044 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCotPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1042 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getCotPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1044 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1042 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.0f) / ADV_UPCS(TanPi)(__this.__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1046 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSecPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1044 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getSecPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1046 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1044 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.0f) / ADV_UPCS(CosPi)(__this.__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1048 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCscPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1046 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getCscPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1048 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1046 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.0f) / ADV_UPCS(SinPi)(__this.__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1050 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAsinPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1048 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAsinPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1050 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1048 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Asin)(__this.__ref()) / ADV_USPCS(Pi, Builtin::f32)()); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1052 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcosPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1050 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAcosPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1052 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1050 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Acos)(__this.__ref()) / ADV_USPCS(Pi, Builtin::f32)()); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1054 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAtanPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1052 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAtanPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1054 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1052 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Atan)(__this.__ref()) / ADV_USPCS(Pi, Builtin::f32)()); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1056 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcotPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1054 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAcotPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1056 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1054 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Acot)(__this.__ref()) / ADV_USPCS(Pi, Builtin::f32)()); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1058 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAsecPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1056 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAsecPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1058 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1056 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Asec)(__this.__ref()) / ADV_USPCS(Pi, Builtin::f32)()); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1060 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcscPi(__extension_Float32_822_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1058 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAcscPi(__extension_Float32_820_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1060 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1058 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Acsc)(__this.__ref()) / ADV_USPCS(Pi, Builtin::f32)()); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	
 } namespace __extensions { using namespace System;
-#line 1070 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcosh(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1068 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAcosh(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1070 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1068 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::acoshf(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1072 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcoth(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1070 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAcoth(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1072 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1070 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::atanhf(Builtin::f32(1.0f) / __this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1074 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcsch(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1072 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAcsch(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1074 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1072 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::asinhf(Builtin::f32(1.0f) / __this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1076 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAsech(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1074 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAsech(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1076 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1074 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::acoshf(Builtin::f32(1.0f) / __this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1078 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAsinh(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1076 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAsinh(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1078 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1076 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::asinhf(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1080 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAtanh(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1078 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getAtanh(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1080 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1078 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::atanhf(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1082 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCosh(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1080 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getCosh(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1082 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1080 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::coshf(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1084 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCoth(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1082 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getCoth(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1084 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1082 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.0f) / ADV_UPCS(Tanh)(__this.__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1086 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCsch(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1084 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getCsch(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1086 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1084 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.0f) / ADV_UPCS(Sinh)(__this.__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1088 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSech(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1086 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getSech(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1088 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1086 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.0f) / ADV_UPCS(Cosh)(__this.__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1090 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSinh(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1088 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getSinh(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1090 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1088 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::sinhf(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1092 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getTanh(__extension_Float32_1068_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1090 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getTanh(__extension_Float32_1066_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1092 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1090 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::tanhf(__this)); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	
 } namespace __extensions { using namespace System;
-#line 1103 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto Atan2(__extension_Float32_1095_f32 const& __this LIFETIMEBOUND, __extension_Float32_1212_f32 y)  -> const typename __extension_Float32_1095_f32
+#line 1101 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto Atan2(__extension_Float32_1093_f32 const& __this LIFETIMEBOUND, __extension_Float32_1210_f32 y)  -> const typename __extension_Float32_1093_f32
 	{
-		#line 1103 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1101 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::atan2f(__this, y)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 1104 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto Atan2Pi(__extension_Float32_1095_f32 const& __this LIFETIMEBOUND, __extension_Float32_1212_f32 y)  -> const typename __extension_Float32_1095_f32
+#line 1102 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto Atan2Pi(__extension_Float32_1093_f32 const& __this LIFETIMEBOUND, __extension_Float32_1210_f32 y)  -> const typename __extension_Float32_1093_f32
 	{
-		#line 1104 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1102 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(Atan2)(__this.__ref(), y) / ADV_USPCS(Pi, Builtin::f32)()); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 1193 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto FusedMultiplyAdd(__extension_Float32_1095_f32 const& __this LIFETIMEBOUND, __extension_Float32_1212_f32 rhs, __extension_Float32_1212_f32 addend)  -> const typename __extension_Float32_1095_f32
+#line 1191 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto FusedMultiplyAdd(__extension_Float32_1093_f32 const& __this LIFETIMEBOUND, __extension_Float32_1210_f32 rhs, __extension_Float32_1210_f32 addend)  -> const typename __extension_Float32_1093_f32
 	{
-		#line 1193 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1191 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::fmaf(__this, rhs, addend)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 1195 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto Ieee754Remainder(__extension_Float32_1095_f32 const& __this LIFETIMEBOUND, __extension_Float32_1212_f32 rhs)  -> const typename __extension_Float32_1095_f32
+#line 1193 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto Ieee754Remainder(__extension_Float32_1093_f32 const& __this LIFETIMEBOUND, __extension_Float32_1210_f32 rhs)  -> const typename __extension_Float32_1093_f32
 	{
-		#line 1195 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1193 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::remainderf(__this, rhs)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 1198 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto Lerp(__extension_Float32_1095_f32 const& __this LIFETIMEBOUND, __extension_Float32_1212_f32 end, __extension_Float32_1212_f32 amount) noexcept -> const typename __extension_Float32_1095_f32
+#line 1196 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto Lerp(__extension_Float32_1093_f32 const& __this LIFETIMEBOUND, __extension_Float32_1210_f32 end, __extension_Float32_1210_f32 amount) noexcept -> const typename __extension_Float32_1093_f32
 	{
-		#line 1198 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1196 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(__this * (Builtin::f32(1.0f) - amount) + (end * amount)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 1200 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto ScaleB(__extension_Float32_1095_f32 const& __this LIFETIMEBOUND, Builtin::i32 n)  -> const typename __extension_Float32_1095_f32
+#line 1198 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto ScaleB(__extension_Float32_1093_f32 const& __this LIFETIMEBOUND, Builtin::i32 n)  -> const typename __extension_Float32_1093_f32
 	{
-		#line 1200 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1198 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::scalbnf(__this, n)); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 1096 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getEpsilon<__extension_Float32_1095_f32>::get() -> const __extension_Float32_1212_f32
+#line 1094 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getEpsilon<__extension_Float32_1093_f32>::get() -> const __extension_Float32_1210_f32
 	{
-		#line 1096 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1094 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32{Builtin::f64(1.4e-45)}); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1097 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getNegativeInfinity<__extension_Float32_1095_f32>::get() -> const __extension_Float32_1212_f32
+#line 1095 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getNegativeInfinity<__extension_Float32_1093_f32>::get() -> const __extension_Float32_1210_f32
 	{
-		#line 1097 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1095 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32{Builtin::f64(-1e+300)}); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1098 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getPositiveInfinity<__extension_Float32_1095_f32>::get() -> const __extension_Float32_1212_f32
+#line 1096 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getPositiveInfinity<__extension_Float32_1093_f32>::get() -> const __extension_Float32_1210_f32
 	{
-		#line 1098 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1096 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32{+Builtin::f64(1e+300)}); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1099 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getNaN<__extension_Float32_1095_f32>::get() -> const __extension_Float32_1212_f32
+#line 1097 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getNaN<__extension_Float32_1093_f32>::get() -> const __extension_Float32_1210_f32
 	{
-		#line 1099 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1097 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::NanValue()); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1100 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getNegativeZero<__extension_Float32_1095_f32>::get() -> const __extension_Float32_1212_f32
+#line 1098 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getNegativeZero<__extension_Float32_1093_f32>::get() -> const __extension_Float32_1210_f32
 	{
-		#line 1100 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1098 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(-0.0f)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1112 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getBitIncrement(__extension_Float32_1095_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1110 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getBitIncrement(__extension_Float32_1093_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1114 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1112 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto bits = ADV_UPCS(Bits)(__this.__ref()); 
-		#line 1115 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1113 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (((bits & Builtin::u32(0x7F800000U)) <=> Builtin::u32(0x7F800000U)) >= 0) {
-			#line 1119 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 1117 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return bits == Builtin::u32(0xFF800000U) ? ADV_USPCS(MinValue, Builtin::f32)() : __this;
 		}
-		#line 1123 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1121 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (bits == Builtin::u32(0x80000000U)) {
-			#line 1124 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 1122 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return ADV_USPCS(Epsilon, Builtin::f32)();
 		}
-		#line 1127 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1125 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		bits += (bits <=> ADV_USPCS(MaxValue, Builtin::i32)()) > 0 ? Builtin::i32(-1) : +Builtin::i32(1);
-		#line 1128 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1126 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return ADV_USFCS((Builtin::f32), FromBits)(bits);
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1136 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getBitDecrement(__extension_Float32_1095_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1134 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getBitDecrement(__extension_Float32_1093_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1138 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1136 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		auto bits = ADV_UPCS(Bits)(__this.__ref()); 
-		#line 1139 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1137 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (((bits & Builtin::u32(0x7F800000U)) <=> Builtin::u32(0x7F800000U)) >= 0) {
-			#line 1143 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 1141 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return bits == Builtin::u32(0x7F800000U) ? ADV_USPCS(MaxValue, Builtin::f32)() : __this;
 		}
-		#line 1147 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1145 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (bits == Builtin::u32(0U)) {
-			#line 1148 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 1146 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return -ADV_USPCS(Epsilon, Builtin::f32)();
 		}
-		#line 1151 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1149 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		bits += (bits <=> ADV_USPCS(MaxValue, Builtin::i32)()) > 0 ? +Builtin::i32(1) : Builtin::i32(-1);
-		#line 1152 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1150 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return ADV_USFCS((Builtin::f32), FromBits)(bits);
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1155 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getILogB(__extension_Float32_1095_f32 const& __this ) -> const Builtin::i32
+#line 1153 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getILogB(__extension_Float32_1093_f32 const& __this ) -> const Builtin::i32
 	{
-		#line 1155 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1153 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::ilogbf(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1157 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getReciprocalEstimate(__extension_Float32_1095_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1155 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getReciprocalEstimate(__extension_Float32_1093_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1159 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1157 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (std::is_constant_evaluated()) {
-			#line 1160 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 1158 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return Builtin::f32(1.0f) / __this;
 		} else {
-			#line 1161 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 1159 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			{
-				#line 1163 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 1161 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				return Builtin::f32(1.0f) / __this;
 			}
 		}
@@ -3054,17 +3054,17 @@ ADV_WARNING_POP
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1166 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getReciprocalSqrtEstimate(__extension_Float32_1095_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1164 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getReciprocalSqrtEstimate(__extension_Float32_1093_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1168 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1166 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (std::is_constant_evaluated()) {
-			#line 1169 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 1167 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return Builtin::f32(1.0f) / ADV_UPCS(Sqrt)(__this.__ref());
 		} else {
-			#line 1170 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 1168 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			{
-				#line 1172 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 1170 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				return Builtin::f32(1.0f) / ADV_UPCS(Sqrt)(__this.__ref());
 			}
 		}
@@ -3072,32 +3072,32 @@ ADV_WARNING_POP
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1177 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getCategory(__extension_Float32_1095_f32 const& __this ) -> const FloatingPointCategory
+#line 1175 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto getCategory(__extension_Float32_1093_f32 const& __this ) -> const FloatingPointCategory
 	{
-		#line 1179 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1177 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (ADV_UPCS(IsNaN)(__this.__ref())) {
-			#line 1180 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 1178 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			return ADV_USPCS(NaN, FloatingPointCategory)();
 		} else {
-			#line 1181 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+			#line 1179 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 			if (ADV_UPCS(IsInfinity)(__this.__ref())) {
-				#line 1182 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 1180 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				return ADV_USPCS(Infinity, FloatingPointCategory)();
 			} else {
-				#line 1183 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+				#line 1181 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				if (ADV_UPCS(IsZero)(__this.__ref())) {
-					#line 1184 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+					#line 1182 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 					return ADV_USPCS(Zero, FloatingPointCategory)();
 				} else {
-					#line 1185 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+					#line 1183 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 					if (ADV_UPCS(IsSubnormal)(__this.__ref())) {
-						#line 1186 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+						#line 1184 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 						return ADV_USPCS(Subnormal, FloatingPointCategory)();
 					} else {
-						#line 1187 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+						#line 1185 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 						{
-							#line 1188 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+							#line 1186 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 							return ADV_USPCS(Normal, FloatingPointCategory)();
 						}
 					}
@@ -3108,204 +3108,204 @@ ADV_WARNING_POP
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1203 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getGamma(__extension_Float32_1095_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1201 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getGamma(__extension_Float32_1093_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1203 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1201 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::tgammaf(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1205 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLnGamma(__extension_Float32_1095_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1203 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getLnGamma(__extension_Float32_1093_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1205 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1203 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::lgammaf(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1207 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getErf(__extension_Float32_1095_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1205 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getErf(__extension_Float32_1093_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1207 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1205 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::erff(__this)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1209 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getErfc(__extension_Float32_1095_f32 const& __this ) -> const __extension_Float32_1212_f32
+#line 1207 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline auto getErfc(__extension_Float32_1093_f32 const& __this ) -> const __extension_Float32_1210_f32
 	{
-		#line 1209 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1207 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::erfcf(__this)); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	
 } namespace __extensions { using namespace System;
-#line 1213 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getNumberBufferLength<__extension_Float32_1212_f32>::get() -> const Builtin::i32
+#line 1211 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getNumberBufferLength<__extension_Float32_1210_f32>::get() -> const Builtin::i32
 	{
-		#line 1213 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1211 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::i32(112) + Builtin::i32(1) + Builtin::i32(1)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1214 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getZeroBits<__extension_Float32_1212_f32>::get() -> const Builtin::u128
+#line 1212 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getZeroBits<__extension_Float32_1210_f32>::get() -> const Builtin::u128
 	{
-		#line 1214 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1212 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::u32(0U)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1215 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getInfinityBits<__extension_Float32_1212_f32>::get() -> const Builtin::u128
+#line 1213 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getInfinityBits<__extension_Float32_1210_f32>::get() -> const Builtin::u128
 	{
-		#line 1215 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1213 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::u32(0x7F800000U)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1216 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getNormalMantissaMask<__extension_Float32_1212_f32>::get() -> const Builtin::u128
+#line 1214 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getNormalMantissaMask<__extension_Float32_1210_f32>::get() -> const Builtin::u128
 	{
-		#line 1216 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1214 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY((Builtin::u128(1ULL) << __Float32_Protected::SignificandLength) - Builtin::u32(1U)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1217 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getDenormalMantissaMask<__extension_Float32_1212_f32>::get() -> const Builtin::u128
+#line 1215 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getDenormalMantissaMask<__extension_Float32_1210_f32>::get() -> const Builtin::u128
 	{
-		#line 1217 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1215 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(__Float32_Protected::TrailingSignificandMask); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1218 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getMinBinaryExponent<__extension_Float32_1212_f32>::get() -> const Builtin::i32
+#line 1216 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getMinBinaryExponent<__extension_Float32_1210_f32>::get() -> const Builtin::i32
 	{
-		#line 1218 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1216 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::i32(1) - __Float32_Protected::MaxExponent); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1219 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getMaxBinaryExponent<__extension_Float32_1212_f32>::get() -> const Builtin::i32
+#line 1217 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getMaxBinaryExponent<__extension_Float32_1210_f32>::get() -> const Builtin::i32
 	{
-		#line 1219 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1217 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(__Float32_Protected::MaxExponent); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1220 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getMinDecimalExponent<__extension_Float32_1212_f32>::get() -> const Builtin::i32
+#line 1218 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getMinDecimalExponent<__extension_Float32_1210_f32>::get() -> const Builtin::i32
 	{
-		#line 1220 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1218 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::i32(-45)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1221 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getMaxDecimalExponent<__extension_Float32_1212_f32>::get() -> const Builtin::i32
+#line 1219 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getMaxDecimalExponent<__extension_Float32_1210_f32>::get() -> const Builtin::i32
 	{
-		#line 1221 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1219 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::i32(39)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1222 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getExponentBias<__extension_Float32_1212_f32>::get() -> const Builtin::i32
+#line 1220 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getExponentBias<__extension_Float32_1210_f32>::get() -> const Builtin::i32
 	{
-		#line 1222 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1220 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(__Float32_Protected::ExpBias); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1223 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getExponentBits<__extension_Float32_1212_f32>::get() -> const Builtin::u128
+#line 1221 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getExponentBits<__extension_Float32_1210_f32>::get() -> const Builtin::u128
 	{
-		#line 1223 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1221 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::u32(8U)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1224 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getOverflowDecimalExponent<__extension_Float32_1212_f32>::get() -> const Builtin::i32
+#line 1222 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getOverflowDecimalExponent<__extension_Float32_1210_f32>::get() -> const Builtin::i32
 	{
-		#line 1224 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1222 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_bsl)((__Float32_Protected::MaxExponent + Builtin::i32(2) * __Float32_Protected::SignificandLength), Builtin::i32(3))); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1225 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getInfinityExponent<__extension_Float32_1212_f32>::get() -> const Builtin::i32
+#line 1223 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getInfinityExponent<__extension_Float32_1210_f32>::get() -> const Builtin::i32
 	{
-		#line 1225 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1223 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::i32(0xFF)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1226 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getNormalMantissaBits<__extension_Float32_1212_f32>::get() -> const Builtin::u16
+#line 1224 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getNormalMantissaBits<__extension_Float32_1210_f32>::get() -> const Builtin::u16
 	{
-		#line 1226 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1224 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(__Float32_Protected::SignificandLength); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1227 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getDenormalMantissaBits<__extension_Float32_1212_f32>::get() -> const Builtin::u16
+#line 1225 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getDenormalMantissaBits<__extension_Float32_1210_f32>::get() -> const Builtin::u16
 	{
-		#line 1227 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1225 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(__Float32_Protected::TrailingSignificandLength); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1228 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getMinFastFloatDecimalExponent<__extension_Float32_1212_f32>::get() -> const Builtin::i32
+#line 1226 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getMinFastFloatDecimalExponent<__extension_Float32_1210_f32>::get() -> const Builtin::i32
 	{
-		#line 1228 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1226 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::i32(-65)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1229 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getMaxFastFloatDecimalExponent<__extension_Float32_1212_f32>::get() -> const Builtin::i32
+#line 1227 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getMaxFastFloatDecimalExponent<__extension_Float32_1210_f32>::get() -> const Builtin::i32
 	{
-		#line 1229 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1227 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::i32(38)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 1230 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getMinExponentRoundToEven<__extension_Float32_1212_f32>::get() -> const Builtin::i32
+#line 1228 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getMinExponentRoundToEven<__extension_Float32_1210_f32>::get() -> const Builtin::i32
 	{
-		#line 1230 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		#line 1228 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::i32(-17)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
+#line 1229 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getMaxExponentRoundToEven<__extension_Float32_1210_f32>::get() -> const Builtin::i32
+	{
+		#line 1229 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		ADV_EXPRESSION_BODY(Builtin::i32(10)); 
+	}
+	} namespace System{
+} namespace __extensions { using namespace System;
+#line 1230 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+	inline constexpr auto __static_getMaxExponentFastPath<__extension_Float32_1210_f32>::get() -> const Builtin::i32
+	{
+		#line 1230 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
+		ADV_EXPRESSION_BODY(Builtin::i32(10)); 
+	}
+	} namespace System{
+} namespace __extensions { using namespace System;
 #line 1231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getMaxExponentRoundToEven<__extension_Float32_1212_f32>::get() -> const Builtin::i32
+	inline constexpr auto __static_getMaxMantissaFastPath<__extension_Float32_1210_f32>::get() -> const Builtin::u128
 	{
 		#line 1231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		ADV_EXPRESSION_BODY(Builtin::i32(10)); 
-	}
-	} namespace System{
-} namespace __extensions { using namespace System;
-#line 1232 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getMaxExponentFastPath<__extension_Float32_1212_f32>::get() -> const Builtin::i32
-	{
-		#line 1232 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		ADV_EXPRESSION_BODY(Builtin::i32(10)); 
-	}
-	} namespace System{
-} namespace __extensions { using namespace System;
-#line 1233 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto __static_getMaxMantissaFastPath<__extension_Float32_1212_f32>::get() -> const Builtin::u128
-	{
-		#line 1233 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::u128(2ULL) << __Float32_Protected::TrailingSignificandLength); 
 	}
 	} namespace System{

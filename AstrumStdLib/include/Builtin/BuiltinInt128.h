@@ -144,7 +144,8 @@ namespace Builtin {
 		using __self       = UInt128;
 		using __underlying = UInt128;
 		using __class      = __Class_UInt128;
-		using Unsigned     = UInt128;
+		using Unsigned                = UInt128;
+		using DivisibleArithmeticType = double;
 
 		constexpr decltype(auto) __ref() noexcept { return *this; }
 		constexpr decltype(auto) __ref() const noexcept { return *this; }
@@ -259,7 +260,7 @@ namespace Builtin {
 			_low  = l;
 		}
 
-		template <std::floating_point F>
+		template <class F>
 		static constexpr UInt128 NarrowFromFloat(F value) {
 			constexpr F two_32 {static_cast<F>(1ull << 32)};
 			constexpr F two_64 {two_32 * two_32};
@@ -435,21 +436,33 @@ namespace Builtin {
 #endif
 			return _low;
 		}
-		constexpr explicit operator float() const noexcept {
+#ifdef __FLT16_MAX__
+		constexpr explicit operator _Float16() const noexcept {
+			return static_cast<float>(*this);
+		}
+#endif
+		constexpr operator float() const noexcept {
 			constexpr float pow_2_64 = 18446744073709551616.0f;
 			return static_cast<float>((uint64_t) _low) +
 			       static_cast<float>((uint64_t) _high) * pow_2_64;
 		}
-		constexpr explicit operator double() const noexcept {
+		constexpr operator double() const noexcept {
 			constexpr double pow_2_64 = 18446744073709551616.0;
 			return static_cast<double>((uint64_t) _low) +
 			       static_cast<double>((uint64_t) _high) * pow_2_64;
 		}
-		constexpr explicit operator long double() const noexcept {
+		constexpr operator long double() const noexcept {
 			constexpr long double pow_2_64 = 18446744073709551616.0L;
 			return static_cast<long double>((uint64_t) _low) +
 			       static_cast<long double>((uint64_t) _high) * pow_2_64;
 		}
+#ifdef __SIZEOF_FLOAT128__
+		constexpr operator __float128() const noexcept {
+			constexpr __float128 pow_2_64 = 18446744073709551616.0L;
+			return static_cast<__float128>((uint64_t) _low) +
+			       static_cast<__float128>((uint64_t) _high) * pow_2_64;
+		}
+#endif
 		constexpr UInt128& __builtin_ref() noexcept { return *this; }
 		constexpr const UInt128& __builtin_ref() const noexcept { return *this; }
 
@@ -2227,7 +2240,8 @@ namespace Builtin {
 		using __self       = Int128;
 		using __underlying = Int128;
 		using __class      = __Class_Int128;
-		using Unsigned     = UInt128;
+		using Unsigned                = UInt128;
+		using DivisibleArithmeticType = double;
 
 		constexpr decltype(auto) __ref() noexcept { return *this; }
 		constexpr decltype(auto) __ref() const noexcept { return *this; }
@@ -2358,7 +2372,7 @@ namespace Builtin {
 			_low  = l;
 		}
 
-		template <std::floating_point F>
+		template <class F>
 		static constexpr Int128 NarrowFromFloat(F value) {
 			constexpr F two_32 {static_cast<F>(1ull << 32)};
 			constexpr F two_64 {two_32 * two_32};
@@ -2514,27 +2528,38 @@ namespace Builtin {
 			return _low;
 		}
 
-		constexpr explicit operator float() const noexcept {
+#ifdef __FLT16_MAX__
+		constexpr explicit operator _Float16() const noexcept { return static_cast<float>(*this); }
+#endif
+		constexpr operator float() const noexcept {
 			constexpr float pow_2_64 = 18446744073709551616.0f;
 			return _high < 0 && *this != minValue()
 			           ? -static_cast<float>(-*this)
 			           : static_cast<float>((uint64_t) _low) +
 			                 static_cast<float>((int64_t) _high) * pow_2_64;
 		}
-		constexpr explicit operator double() const noexcept {
+		constexpr operator double() const noexcept {
 			constexpr double pow_2_64 = 18446744073709551616.0;
 			return _high < 0 && *this != minValue()
 			           ? -static_cast<double>(-*this)
 			           : static_cast<double>((uint64_t) _low) +
 			                 static_cast<double>((int64_t) _high) * pow_2_64;
 		}
-		constexpr explicit operator long double() const noexcept {
+		constexpr operator long double() const noexcept {
 			constexpr long double pow_2_64 = 18446744073709551616.0L;
 			return _high < 0 && *this != minValue()
 			           ? -static_cast<long double>(-*this)
 			           : static_cast<long double>((uint64_t) _low) +
 			                 static_cast<long double>((int64_t) _high) * pow_2_64;
 		}
+
+#ifdef __SIZEOF_FLOAT128__
+		constexpr operator __float128() const noexcept {
+			constexpr __float128 pow_2_64 = 18446744073709551616.0L;
+			return static_cast<__float128>((uint64_t) _low) +
+			       static_cast<__float128>((uint64_t) _high) * pow_2_64;
+		}
+#endif
 		constexpr Int128& __builtin_ref() noexcept { return *this; }
 		constexpr const Int128& __builtin_ref() const noexcept { return *this; }
 

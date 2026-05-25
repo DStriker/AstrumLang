@@ -17627,11 +17627,15 @@ namespace AstrumLang {
 				out << "Builtin::isize";
 			} else if (ctx->Usize()) {
 				out << "Builtin::usize";
-			} else if (ctx->F32()) {
+		    } else if (ctx->F16()) {
+			    out << "Builtin::f16";
+		    } else if (ctx->F32()) {
 				out << "Builtin::f32";
 			} else if (ctx->F64()) {
 				out << "Builtin::f64";
-			} else if (ctx->Fext()) {
+		    } else if (ctx->F128()) {
+			    out << "Builtin::f128";
+		    } else if (ctx->Fext()) {
 				out << "Builtin::fext";
 			} else if (ctx->Byte()) {
 				out << "Builtin::char8";
@@ -20679,13 +20683,19 @@ namespace AstrumLang {
 			} else if (txt.ends_with("f")) {
 				out << "Builtin::f32(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 1)
 				    << "f)";
-			} else if (txt.ends_with("f32")) {
+		    } else if (txt.ends_with("f16")) {
+			    out << "Builtin::f16(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 2)
+			        << ")";
+		    } else if (txt.ends_with("f32")) {
 				out << "Builtin::f32(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3)
 				    << "f)";
 			} else if (txt.ends_with("f64")) {
 				out << "Builtin::f64(" << (minus ? "-" : "") << txt.substr(0, txt.length() - 3)
 				    << ")";
-			} else {
+		    } else if (txt.ends_with("f128")) {
+			    out << "Builtin::ParseFloat128(\"" << (minus ? "-" : "")
+			        << txt.substr(0, txt.length() - 1) << "\")";
+		    } else {
 				out << "Builtin::f64(" << (minus ? "-" : "") << txt << ")";
 			}
 		}

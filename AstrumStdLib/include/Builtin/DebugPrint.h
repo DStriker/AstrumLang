@@ -26,6 +26,7 @@ inline void print(Builtin::u64 v) { std::cout << uint64_t(v) << std::endl; }
 
 inline void print(Builtin::u128 v) { std::cout << Builtin::DebugPrintUInt128(v) << std::endl; }
 
+inline void print(Builtin::f16 v) { std::cout << std::setprecision(30) << float(v) << std::endl; }
 inline void print(Builtin::f32 v) { std::cout << std::setprecision(30) << float(v) << std::endl; }
 
 inline void print(Builtin::f64 v) { std::cout << std::setprecision(30) << double(v) << std::endl; }

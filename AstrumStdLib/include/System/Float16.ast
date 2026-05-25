@@ -1,0 +1,1109 @@
+package System;
+
+public import Float32;
+
+public type Float16 = f16;
+public type Half = f16;
+
+public extension f16: IMinMaxValue {
+    static MinValue: self ==> -65504.0_f16;     
+    static MaxValue: self ==> +65504.0_f16;
+}
+
+public extension f16 {
+    // Equals to dynamic object
+    operator==*: (in obj: object?) -> bool
+    {
+        if obj is self {
+            if this == obj {
+                return true;
+            }
+            //return this.IsNaN && obj.IsNaN;
+        }
+        
+        return false;
+    }
+
+    // Compare to optional type
+    operator<=>: (rhs: self?) -> i32 noexcept ==
+    {
+        if rhs is not null {
+            return this <=> rhs;
+        }
+
+        return 1;
+    }
+
+    Bits: u16 ==> Builtin.BitCast<u16>(this);
+    static FromBits: (bits: u16) -> self ==> Builtin.BitCast<self>(bits);
+
+    static BitWidth: u32 ==> 16u;
+    static MinPositiveValue: self ==> 6.1035e-5_f16;
+
+    HashCode: u64 ==
+    {
+        bits := this.Bits;
+        if ((bits - 1) & (~0x8000u)) >= 0x7C00u {
+            return bits & 0x7C00u;
+        }
+
+        return bits;
+    }
+}
+
+// Compare to dynamic object
+public extension f16: IAbstractComparable {
+    operator<=>*: (in obj: object?) -> i32
+    {
+        if obj is self {
+            return this <=> obj;
+        }
+        if obj is not null {
+            //InvalidArgumentException
+            throw Builtin.InvalidOperationException();
+        }
+        return 1;
+    }
+}
+
+// Conversions
+public extension f16: IConvertible {
+    ToBoolean: () -> bool noexcept ==> this != 0;
+    ToInt8: () -> i8 ==> this as i8;
+    ToUInt8: () -> u8 ==> this as u8;
+    ToInt16: () -> i16 ==> this as i16;
+    ToUInt16: () -> u16 ==> this as u16;
+    ToInt32: () -> i32 ==> this as i32;
+    ToUInt32: () -> u32 ==> this as u32;
+    ToInt64: () -> i64 ==> this as i64;
+    ToUInt64: () -> u64 ==> this as u64;
+    ToInt128: () -> i128 ==> this as i128;
+    ToUInt128: () -> u128 ==> this as u128;
+    ToIsize: () -> isize ==> this as isize;
+    ToUsize: () -> usize ==> this as usize;
+    ToFloat32: () -> f32 noexcept ==> this;
+    ToFloat64: () -> f64 noexcept ==> this;
+    ToByte: () -> byte ==> this as u8;
+    ToChar: () -> char ==> this as u16;
+    //ToString: () -> string;
+    //ToDateTime: () -> DateTime;
+}
+
+public extension f16: IDivisibleArithmetic {
+    // integer division with remainder
+    operator/%: <T> (rhs: T) -> (self, self) ==
+    {
+        //static assert(type T is IBinaryInteger, "Operator /% implemented only for integer types");
+        return (this / f32(rhs), this % f32(rhs));
+    }
+    // division with rounding to nearest integer
+    operator/~: <T> (rhs: T) -> self ==> (this / rhs).Round;
+    // rounding division and assign
+    mut operator/~=: (rhs) -> ref self ==> this = this /~ rhs;
+    // division with rounding down (floor division)
+    operator/<: <T> (rhs: T) -> self ==> (this / rhs).Floor;
+    // floor division and assign
+    mut operator/<=: (rhs) -> ref self ==> this = this /< rhs;
+    // division with rounding up (ceil division)
+    operator/>: <T> (rhs: T) -> self ==> (this / rhs).Ceil;
+    // ceil division and assign
+    mut operator/>=: (rhs) -> ref self ==> this = this /> rhs;
+}
+
+// integer exponentiation
+public extension f16: ISignedIntegerPowerArithmetic {
+    // Raises this to the power of integer exp, using exponentiation by squaring
+    operator^^: (exp: i32) -> self ==
+    {
+        @Unlikely
+        if exp == 0 {
+            return 1.0f16;
+        }
+
+        if exp < 0 {
+            return 1.0f16 / this ^^ (-exp);
+        }
+
+        base := this;
+        result := 1.0f16;
+
+        if consteval {
+            while exp > 1 {
+                if (exp & 1) == 1 {
+                    result *= base;
+                }
+                exp \= 2;
+                base *= base;
+            }
+            return result * base;
+        } else {
+            for {
+                if (exp & 1) == 1 {
+                    result *= base;
+                    if (exp == 1) 
+                        return result;
+                }
+                exp \= 2;
+                base *= base;
+            }
+        }
+    }
+
+    mut operator^^=: (exp: i32) -> ref self ==> this = this ^^ exp;
+}
+
+public extension f16: INumberBase {
+    static One: self ==> 1.0f16;
+    static Zero: self ==> 0.0f16;
+    static Radix: i32 ==> 2;
+
+    Abs: self ==
+    {
+        const mask :== 0x7FFFu16;
+        raw: u16 = this.Bits;
+        return f16.FromBits(raw & mask);
+    }
+    IsCanonical: bool ==> true;
+    IsComplexNumber: bool ==> false;
+    IsEvenInteger: bool ==> this.IsInteger && ((this % 2).Abs == 0);
+    IsFinite: bool ==> (this.Bits & 0x7FFFu) < 0x7C00u;
+    IsImaginaryNumber: bool ==> false;
+    IsInfinity: bool ==> (this.Bits & 0x7FFFu) == 0x7C00u;
+    IsInteger: bool ==> this.IsFinite && (this == this.Truncate);
+    IsNaN: bool ==> this != this;
+    IsNegative: bool ==> Builtin.BitCast<i16>(this) < 0;
+    IsNegativeInfinity: bool ==> this == self.NegativeInfinity;
+    IsNormal: bool ==
+    {
+        bits := Builtin.BitCast<u16>(this) & 0x7FFFu;
+        return (bits < 0x7C00u) && (bits != 0) && ((bits & 0x7C00) != 0);
+    }
+    IsOddInteger: bool ==> this.IsInteger && ((this % 2).Abs == 1);
+    IsPositive: bool ==> Builtin.BitCast<i16>(this) >= 0;
+    IsPositiveInfinity: bool ==> this == self.PositiveInfinity;
+    IsRealNumber: bool ==> this == this;
+    IsSubnormal: bool ==
+    {
+        bits := this.Bits & 0x7FFFu;
+        return (bits < 0x7C00u) && (bits != 0) && ((bits & 0x7C00u) == 0);
+    }
+    IsZero: bool ==> this == self.Zero;
+
+    MaxMagnitude: (rhs: self) -> self noexcept ==
+    {
+        ax := this.Abs;
+        ay := rhs.Abs;
+
+        if ax > ay or ax.IsNaN
+        {
+            return this;
+        }
+
+        if ax == ay
+        {
+            return this.IsNegative ? rhs : this;
+        }
+
+        return rhs;
+    }
+
+    MaxMagnitudeNumber: (rhs: self) -> self noexcept ==
+    {
+        ax := this.Abs;
+        ay := rhs.Abs;
+
+        if ax > ay or ay.IsNaN
+        {
+            return this;
+        }
+
+        if ax == ay
+        {
+            return this.IsNegative ? rhs : this;
+        }
+
+        return rhs;
+    }
+
+    MinMagnitude: (rhs: self) -> self noexcept ==
+    {
+        ax := this.Abs;
+        ay := rhs.Abs;
+
+        if ax < ay or ax.IsNaN
+        {
+            return this;
+        }
+
+        if ax == ay
+        {
+            return this.IsNegative ? this : rhs;
+        }
+
+        return rhs;
+    }
+
+    MinMagnitudeNumber: (rhs: self) -> self noexcept ==
+    {
+        ax := this.Abs;
+        ay := rhs.Abs;
+
+        if ax < ay or ay.IsNaN
+        {
+            return this;
+        }
+
+        if ax == ay
+        {
+            return this.IsNegative ? this : rhs;
+        }
+
+        return rhs;
+    }
+
+    Parse: (input: str) -> self
+    {
+        return 0i16;//TODO
+    }
+
+    TryParse: (input: str) -> self? noexcept
+    {
+        return 0.0f16;
+    }
+
+    
+    // Narrow conversions
+    NarrowToInt8: () -> i8 noexcept ==> UnsafeCast<i8>(this);
+    NarrowToUInt8: () -> u8 noexcept ==> UnsafeCast<u8>(this);
+    NarrowToInt16: () -> i16 noexcept ==> UnsafeCast<i16>(this);
+    NarrowToUInt16: () -> u16 noexcept ==> UnsafeCast<u16>(this);
+    NarrowToInt32: () -> i32 noexcept ==> UnsafeCast<i32>(this);
+    NarrowToUInt32: () -> u32 noexcept ==> UnsafeCast<u32>(this);
+    NarrowToInt64: () -> i64 noexcept ==> UnsafeCast<i64>(this);
+    NarrowToUInt64: () -> u64 noexcept ==> UnsafeCast<u64>(this);
+    NarrowToInt128: () -> i128 noexcept ==> UnsafeCast<i128>(this);
+    NarrowToUInt128: () -> u128 noexcept ==> UnsafeCast<u128>(this);
+    NarrowToIsize: () -> isize noexcept ==> UnsafeCast<isize>(this);
+    NarrowToUsize: () -> usize noexcept ==> UnsafeCast<usize>(this);
+}
+
+public extension f16: ISignedNumber {
+    static MinusOne: self ==> -1.0f16;
+}
+
+public extension f16: INumber {
+    Sign: i32 ==> switch this {
+        0 => 0,
+        <0 => -1,
+        >0 => 1,
+        _ => throw Builtin.InvalidOperationException()
+    };
+
+    CopySign: (sign: self) -> self noexcept ==
+    {
+        if consteval {
+            if sign < 0 or (sign == 0 and 1.0f/sign < 0) {
+                return this < 0 ? this : -this;
+            }
+            return this < 0 ? -this : this;
+        } else {
+            return std.copysignf(this as f32, sign as f32) as f16;
+        }
+    }
+
+    Max: (rhs: self) -> self noexcept ==
+    {
+        if this != rhs {
+            if !this.IsNaN {
+                return rhs < this ? this : rhs;
+            }
+            return this;
+        }
+        return rhs.IsNegative ? this : rhs;
+    }
+    MaxNumber: (rhs: self) -> self noexcept ==
+    {
+        if this != rhs {
+            if !rhs.IsNaN {
+                return rhs < this ? this : rhs;
+            }
+            return this;
+        }
+        return rhs.IsNegative ? this : rhs;
+    }
+    Min: (rhs: self) -> self noexcept ==
+    {
+        if this != rhs {
+            if !this.IsNaN {
+                return this < rhs ? this : rhs;
+            }
+            return this;
+        }
+        return this.IsNegative ? this : rhs;
+    }
+    MinNumber: (rhs: self) -> self noexcept ==
+    {
+        if this != rhs {
+            if !rhs.IsNaN {
+                return this < rhs ? this : rhs;
+            }
+            return this;
+        }
+        return this.IsNegative ? this : rhs;
+    }
+    Clamp: (min: self, max: self) -> self ==
+    {
+        if min > max {
+            throw Builtin.InvalidOperationException();
+        }
+
+        return this < min ? min : this > max ? max : this;
+    }
+}
+
+protected {
+    const SignMask :== 0x8000u16;
+    const SignShift :== 15;
+    const ShiftedSignMask: u8 == u8(SignMask >> SignShift);
+
+    const BiasedExponentMask :== 0x7C00u16;
+    const BiasedExponentShift :== 10i32;
+    const ShiftedBiasedExponentMask: u8 == u8(BiasedExponentMask >> BiasedExponentShift);
+
+    const TrailingSignificandMask :== 0x03FFu16;
+
+    const MinSign :== 0u8;
+    const MaxSign :== 1u8;
+    const MinBiasedExponent :== u8.MinValue;
+    const MaxBiasedExponent :== 0x1Fu8;
+    const ExpBias :== 15u8;
+    const MinExponent :== -14i8;
+    const MaxExponent :==  15i8;
+    const MinTrailingSignificand :== u16.MinValue;
+    const MaxTrailingSignificand :== 0x03FFu16;
+
+    const TrailingSignificandLength :== 10;
+    const SignificandLength :== TrailingSignificandLength + 1;
+
+    BiasedExponent: (value: f16) -> u8 noexcept ==> ExtractBiasedExponentFromBits(value.Bits);
+    Exponent: (value: f16) -> i8 noexcept ==> i8(BiasedExponent(value) - ExpBias);
+    Significand: (value: f16) -> u16 noexcept ==> TrailingSignificand(value) | (BiasedExponent(value) != 0 ? (1u << BiasedExponentShift) : 0u);
+    TrailingSignificand: (value: f16) -> u16 noexcept ==> ExtractTrailingSignificandFromBits(value.Bits);
+
+    ExtractBiasedExponentFromBits: (bits: u16) -> u8 noexcept ==> u8((bits >> BiasedExponentShift) & ShiftedBiasedExponentMask);
+    ExtractTrailingSignificandFromBits: (bits: u16) -> u16 noexcept ==> bits & TrailingSignificandMask;
+}
+
+public extension f16: IBinaryNumber {
+    // 0xFFFF bit representation
+    static AllBitsSet: self ==> f16.FromBits(u16.MaxValue);
+
+    // Returns true if this is a power of 2
+    IsPow2: bool ==
+    {
+        bits := this.Bits;
+        // zero and negative values is not power of 2
+        if bits.NarrowToInt16() <= 0 {
+            return false;
+        }
+
+        biasedExponent := ExtractBiasedExponentFromBits(bits);
+        trailingSignificand := ExtractTrailingSignificandFromBits(bits);
+
+        // subnormal values (one bit is set if pow2)
+        if biasedExponent == MinBiasedExponent {
+            return trailingSignificand.PopCount == 1;
+        }
+        // infinity and nan is not pow2
+        if biasedExponent == MaxBiasedExponent {
+            return false;
+        }
+
+        // normal values (no bits set if pow2)
+        return trailingSignificand == MinTrailingSignificand;
+    }
+
+    // Binary logarithm (rounded down)
+    // Returns NaN for negative values and -Inf for 0
+    Log2: self => std.log2f(this as f32) as f16;
+
+    // Common logarithm (base 10, rounded down)
+    // Returns NaN for negative values and -Inf for 0
+    Log10: self => std.log10f(this as f32) as f16;
+
+    // Logarithm of the number with respect to an arbitrary base
+    // Returns NaN for negative values and -Inf for 0
+    // Use Log2 and Log10 for more accurate results with base 2 and 10
+    Log: (base: self) -> self noexcept =
+    {
+        if this.IsNaN {
+            return this;
+        }
+        if base.IsNaN {
+            return base;
+        }
+
+        if base == 1 {
+            return f16.NaN;
+        }
+        if this != 1 and (base == 0 or base.IsPositiveInfinity) {
+            return f16.NaN;
+        }
+
+        return this.Ln / base.Ln;
+    }
+
+    // Average between two numbers
+    // Returns NaN if any argument is NaN or combination of +Inf / -Inf
+    Midpoint: (rhs: self) -> self noexcept ==
+    {
+        const riskValue :== self.MaxValue / 2.0f;
+        
+        if this.Abs <= riskValue and rhs.Abs <= riskValue {
+            return (this + rhs) / 2.0f;
+        } else {
+            return (this / 2.0f) + (rhs / 2.0f);
+        }
+    }
+
+    // Returns true if this is a multiple of rhs
+    IsMultipleOf: (rhs: self) -> bool noexcept ==
+    {
+        if rhs == 0 {
+            return this == 0;
+        }
+
+        if rhs == -1 {
+            return true;
+        }
+
+        return this % rhs == 0;
+    }
+}
+
+public extension f16: IFloatingPointConstants
+{
+    static Pi: self ==> 3.14_f16;
+    static E: self ==> 2.718_f16;
+    static Tau: self ==> 6.28_f16;
+}
+
+public extension f16: IFloatingPoint {
+    // Extracts the fractional part of number 
+    // (e.g., 0.35 from 15.35; -0.35 from -15.35)
+    FractionalPart: self ==> this - this.Truncate;
+
+    // Returns the smallest integer greater than or equal to this
+    // 3.1.Ceil == 4;    3.5.Ceil == 4;   3.9.Ceil == 4;
+    // -3.1.Ceil == -3; -3.5.Ceil == -3; -3.9.Ceil == -3;
+    Ceil: self ==
+    {
+        if consteval {
+            let i := f16(this as i32);
+            return (this > i) ? (i + 1) : i;
+        } else {
+            return std.ceilf(this as f32) as f16;
+        }
+    }
+
+    CeilToInt32: () -> i32 ==> this.Ceil as i32;
+    CeilToInt64: () -> i64 ==> this.Ceil as i64;
+    CeilToInt128: () -> i128 ==> this.Ceil as i128;
+
+    // Returns the largest integer less than or equal to this
+    // 3.1.Floor == 3;    3.5.Floor == 3;   3.9.Floor == 3;
+    // -3.1.Floor == -4; -3.5.Floor == -4; -3.9.Floor == -4;
+    Floor: self ==
+    {
+        if consteval {
+            let i := f16(this as i32);
+            return (this < i) ? (i - 1) : i;
+        } else {
+            return std.floorf(this as f32) as f16;
+        }
+    }
+    
+    FloorToInt32: () -> i32 ==> this.Floor as i32;
+    FloorToInt64: () -> i64 ==> this.Floor as i64;
+    FloorToInt128: () -> i128 ==> this.Floor as i128;
+
+    // Returns the integer part of this
+    // 3.1.Trunc == 3;    3.5.Trunc == 3;   3.9.Trunc == 3;
+    // -3.1.Trunc == -3; -3.5.Trunc == -3; -3.9.Trunc == -3;
+    Truncate: self ==
+    {
+        if consteval {
+            return f16(this as i32);
+        } else {
+            return std.truncf(this as f32) as f16;
+        }
+    }
+
+    TruncateToInt32: () -> i32 ==> this.Truncate as i32;
+    TruncateToInt64: () -> i64 ==> this.Truncate as i64;
+    TruncateToInt128: () -> i128 ==> this.Truncate as i128;
+
+    // Returns the nearest integer to this (AwayFromZero rounding mode)
+    // 3.1.Rounded == 3;    3.5.Rounded == 4;   3.9.Rounded == 4;
+    // -3.1.Rounded == -3; -3.5.Rounded == -4; -3.9.Rounded == -4;
+    Round: self ==
+    {
+        if consteval {
+            return f16((this + 0.5f.CopySign(this)) as i32);
+        } else {
+            return std.roundf(this as f32) as f16;
+        }
+    }
+
+    RoundToInt32: () -> i32 ==> this.Round as i32;
+    RoundToInt64: () -> i64 ==> this.Round as i64;
+    RoundToInt128: () -> i128 ==> this.Round as i128;
+
+    // Returns the nearest integer to this (rounds half-way cases to the number with an even least significant digit)
+    // 3.1.Rounded == 3;    3.5.Rounded == 4;   2.5.Rounded == 2;
+    // -3.1.Rounded == -3; -3.5.Rounded == -4; -2.5.Rounded == -2;
+    RoundTiesEven: self ==
+    {
+        return (this as f32).RoundTiesEven as f16;
+    }
+
+    RoundTiesEvenToInt32: () -> i32 ==> this.RoundTiesEven as i32;
+    RoundTiesEvenToInt64: () -> i64 ==> this.RoundTiesEven as i64;
+    RoundTiesEvenToInt128: () -> i128 ==> this.RoundTiesEven as i128;
+    
+    Round: (digits: u32) -> self ==> this.Round(digits, MidpointRounding.AwayFromZero);
+    Round: (rounding: MidpointRounding) -> self ==
+    {
+        if consteval {
+            if rounding == MidpointRounding.AwayFromZero {
+                return this.Round;
+            }
+            if rounding == MidpointRounding.ToEven {
+                return this.RoundTiesEven;
+            }
+        }
+        return this.Round(0u, rounding);
+    }
+    Round: (digits: u32, rounding: MidpointRounding) -> self ==
+    {
+        return (this as f32).Round(digits, rounding) as f16;
+    }
+
+    ExponentByteCount: u32 ==> sizeof(i8) as u32;
+    ExponentShortestBitLength: u32 ==
+    {
+        exponent := Exponent(this);
+        if exponent >= 0 {
+            return i8.BitWidth - exponent.LeadingZeroCount;
+        } else {
+            return i8.BitWidth + 1 - exponent.LeadingZeroCount;
+        }
+    }
+    SignificandBitLength: u32 ==> 11u;
+    SignificandByteCount: u32 ==> sizeof(u16) as u32;
+}
+
+// real exponentiation
+public extension f16: IPowerArithmetic {
+    operator**: (exp: self) -> self noexcept => std.powf(this as f32, exp as f32) as f16;
+    mut operator**=: (exp: self) -> ref self noexcept => this = std.powf(this as f32, exp as f32) as f16;
+}
+
+public extension f16: IExponentialFunctions {
+    // e ^ x
+    Exp: self => std.expf(this as f32) as f16;
+    // 2 ^ x
+    Exp2: self => std.exp2f(this as f32) as f16;
+    // 10 ^ x
+    Exp10: self => 10.0f16 ** this;
+    // (e ^ x) - 1
+    ExpM1: self => std.expm1f(this as f32) as f16;
+    // (2 ^ x) - 1
+    Exp2M1: self => this.Exp2 - 1.0f16;
+    // (10 ^ x) - 1
+    Exp10M1: self => this.Exp10 - 1.0f16;
+}
+
+public extension f16: ILogarithmicFunctions {
+    // natural logarithm (with base e)
+    Ln: self => std.logf(this as f32) as f16;
+    // ln (1 + x)
+    LnP1: self => std.log1pf(this as f32) as f16;
+    // log2 (1 + x)
+    Log2P1: self => std.log2f(f32(this) + 1.0f) as f16;
+    // lg (1 + x)
+    Log10P1: self => std.log10f(f32(this) + 1.0f) as f16;
+}
+
+public extension f16: IRootFunctions {
+    // square root
+    Sqrt: self => std.sqrtf(this as f32) as f16;
+    // cube root
+    Cbrt: self => std.cbrtf(this as f32) as f16;
+    // n-th root with arbitrary integer base
+    Root: (n: i32) -> self
+    {
+        return (this as f32).Root(n) as f16;
+    }
+
+    // hypotenuse (distance between the origin and a point (x, y) on the Euclidean plane)
+    Hypot: (y: self) -> self
+    {
+        return (this as f32).Hypot(y) as f16;
+    }
+}
+
+public extension f16: ITrigonometricFunctions {
+    // sine
+    Sin: self => std.sinf(this as f32) as f16;
+    // cosine
+    Cos: self => std.cosf(this as f32) as f16;
+    // tangent
+    Tan: self => std.tanf(this as f32) as f16;
+    // cotangent
+    Cot: self => 1.0f16 / this.Tan;
+    // secant
+    Sec: self => 1.0f16 / this.Cos;
+    // cosecant
+    Csc: self => 1.0f16 / this.Sin;
+    // arc sine
+    Asin: self => std.asinf(this as f32) as f16;
+    // arc cosine
+    Acos: self => std.acosf(this as f32) as f16;
+    // arc tangent
+    Atan: self => std.atanf(this as f32) as f16;
+    // arc cotangent
+    Acot: self => std.atanf(1.0f / this) as f16;
+    // arc secant
+    Asec: self => std.acosf(1.0f / this) as f16;
+    // arc cosecant
+    Acsc: self => std.asinf(1.0f / this) as f16;
+    // sine and cosine pair
+    SinCos: (self, self) => (this.Sin, this.Cos);
+    // sin(pi * x)
+    SinPi: self
+    {
+        return (this as f32).SinPi as f16;
+    }
+    // cos(pi * x)
+    CosPi: self
+    {
+        return (this as f32).CosPi as f16;
+    }
+    // sin(pi * x) and cos(pi * x)
+    SinCosPi: (self, self)
+    {
+        sin, cos := (this as f32).SinCosPi;
+        return (sin as f16, cos as f16);
+    }
+    // tan(pi * x)
+    TanPi: self
+    {
+        return (this as f32).TanPi as f16;
+    }
+    // cot(pi * x)
+    CotPi: self => 1.0f16 / this.TanPi;
+    // sec(pi * x)
+    SecPi: self => 1.0f16 / this.CosPi;
+    // csc(pi * x)
+    CscPi: self => 1.0f16 / this.SinPi;
+    // asin(pi * x)
+    AsinPi: self => this.Asin / f16.Pi;
+    // acos(pi * x)
+    AcosPi: self => this.Acos / f16.Pi;
+    // atan(pi * x)
+    AtanPi: self => this.Atan / f16.Pi;
+    // acot(pi * x)
+    AcotPi: self => this.Acot / f16.Pi;
+    // asec(pi * x)
+    AsecPi: self => this.Asec / f16.Pi;
+    // acsc(pi * x)
+    AcscPi: self => this.Acsc / f16.Pi;
+
+    // convert degrees to radians
+    ToRadians: () -> self noexcept ==> (this * f16.Pi) / 180.0f;
+    // convert radians to degrees
+    ToDegrees: () -> self noexcept ==> (this * 180.0f) / f16.Pi;
+}
+
+public extension f16: IHyperbolicFunctions {
+    // hyperbolic arc cosine
+    Acosh: self => std.acoshf(this as f32) as f16;
+    // hyperbolic arc cotangent
+    Acoth: self => std.atanhf(1.0f / this) as f16;
+    // hyperbolic arc cosecant
+    Acsch: self => std.asinhf(1.0f / this) as f16;
+    // hyperbolic arc secant
+    Asech: self => std.acoshf(1.0f / this) as f16;
+    // hyperbolic arc sine
+    Asinh: self => std.asinhf(this as f32) as f16;
+    // hyperbolic arc tangent
+    Atanh: self => std.atanhf(this as f32) as f16;
+    // hyperbolic cosine
+    Cosh: self => std.coshf(this as f32) as f16;
+    // hyperbolic cotangent
+    Coth: self => 1.0f16 / this.Tanh;
+    // hyperbolic cosecant
+    Csch: self => 1.0f16 / this.Sinh;
+    // hyperbolic secant
+    Sech: self => 1.0f16 / this.Cosh;
+    // hyperbolic sine
+    Sinh: self => std.sinhf(this as f32) as f16;
+    // hyperbolic tangent
+    Tanh: self => std.tanhf(this as f32) as f16;
+}
+
+public extension f16: IBinaryFloatingPointIeee754 {
+    static Epsilon: self ==> f16.FromBits(1u16);
+    static NegativeInfinity: self ==> f16.FromBits(0xFC00u16);
+    static PositiveInfinity: self ==> f16.FromBits(0x7C00u16);
+    static NaN: self ==> f16.FromBits(0xFE00u16);
+    static NegativeZero: self ==> f16.FromBits(0x8000u16);
+
+    // arctan(y / x)
+    Atan2: (y: self) -> self => std.atan2f(this as f32, y as f32) as f16;
+    Atan2Pi: (y: self) -> self => this.Atan2(y) / f16.Pi;
+
+    // Returns the least number greater than this (IEEE754: nextUp)
+    // Increments bit representation of number
+    // Returns NaN if this is NaN
+    // Returns MinValue if this is -Inf
+    // Returns +Inf if this is +Inf
+    // Returns Epsilon if this is -0.0
+    BitIncrement: self ==
+    {
+        bits := this.Bits;
+        if (bits & 0x7C00u16) >= 0x7C00u16 {
+            // nan -> nan
+            // -inf -> minvalue
+            // +inf -> +inf
+            return bits == 0xFC00u16 ? f16.MinValue : this;
+        }
+
+        // -0.0 -> epsilon
+        if bits == 0x8000u16 {
+            return f16.Epsilon;
+        }
+
+        bits += bits > i16.MaxValue ? -1 : +1;
+        return f16.FromBits(bits);
+    }
+    // Returns the greatest number less than this (IEEE754: nextDown)
+    // Decrements bit representation of number
+    // Returns NaN if this is NaN
+    // Returns MaxValue if this is +Inf
+    // Returns -Inf if this is -Inf
+    // Returns -Epsilon if this is +0.0
+    BitDecrement: self ==
+    {
+        bits := this.Bits;
+        if (bits & 0x7C00u16) >= 0x7C00u16 {
+            // nan -> nan
+            // -inf -> -inf
+            // +inf -> maxvalue
+            return bits == 0x7C00u16 ? f16.MaxValue : this;
+        }
+
+        // +0.0 -> -epsilon
+        if bits == 0u {
+            return -f16.Epsilon;
+        }
+
+        bits += bits > i16.MaxValue ? +1 : -1;
+        return f16.FromBits(bits);
+    }
+    // integral part of binary logarithm
+    ILogB: i32 => std.ilogbf(this as f32);
+    // hardware 1 / x
+    ReciprocalEstimate: self ==
+    {
+        if consteval {
+            return 1.0f16 / this;
+        } else {
+            //TODO: add SIMD support
+            return 1.0f16 / this;
+        }
+    }
+    ReciprocalSqrtEstimate: self ==
+    {
+        if consteval {
+            return 1.0f16 / this.Sqrt;
+        } else {
+            //TODO: add SIMD support
+            return 1.0f16 / this.Sqrt;
+        }
+    }
+
+    // classify floating point value
+    Category: FloatingPointCategory ==
+    {
+        if this.IsNaN {
+            return FloatingPointCategory.NaN;
+        } else if this.IsInfinity {
+            return FloatingPointCategory.Infinity;
+        } else if this.IsZero {
+            return FloatingPointCategory.Zero;
+        } else if this.IsSubnormal {
+            return FloatingPointCategory.Subnormal;
+        } else {
+            return FloatingPointCategory.Normal;
+        }
+    }
+
+    // (this * rhs) + addend (optimized for hardware)
+    FusedMultiplyAdd: (rhs: self, addend: self) -> self => std.fmaf(this as f32, rhs as f32, addend as f32) as f16;
+    // remainder of division (rounding to nearest integer)
+    Ieee754Remainder: (rhs: self) -> self => std.remainderf(this as f32, rhs as f32) as f16;
+
+    // linear interpolation
+    Lerp: (end: self, amount: self) -> self noexcept ==> this * (1.0f - amount) + (end * amount);
+    // this * (2 ^ n)
+    ScaleB: (n: i32) -> self => std.scalbnf(this as f32, n) as f16;
+
+    // gamma function
+    Gamma: self => std.tgammaf(this as f32) as f16;
+    // ln(gamma(x))
+    LnGamma: self => std.lgammaf(this as f32) as f16;
+    // error function
+    Erf: self => std.erff(this as f32) as f16;
+    // complementary error function
+    Erfc: self => std.erfcf(this as f32) as f16;
+}
+
+public extension f16: IBinaryFloatFormatInfo {
+    static NumberBufferLength: i32 ==> 21 + 1 + 1;
+    static ZeroBits: u128 ==> 0u;
+    static InfinityBits: u128 ==> 0x7C00u;
+    static NormalMantissaMask: u128 ==> (1u128 << SignificandLength) - 1u;
+    static DenormalMantissaMask: u128 ==> TrailingSignificandMask;
+    static MinBinaryExponent: i32 ==> 1 - MaxExponent;
+    static MaxBinaryExponent: i32 ==> MaxExponent;
+    static MinDecimalExponent: i32 ==> -8;
+    static MaxDecimalExponent: i32 ==> 5;
+    static ExponentBias: i32 ==> ExpBias;
+    static ExponentBits: u128 ==> 5u;
+    static OverflowDecimalExponent: i32 ==> (MaxExponent + 2 * SignificandLength) \ 3;
+    static InfinityExponent: i32 ==> 0x1F;
+    static NormalMantissaBits: u16 ==> SignificandLength;
+    static DenormalMantissaBits: u16 ==> TrailingSignificandLength;
+    static MinFastFloatDecimalExponent: i32 ==> -8;
+    static MaxFastFloatDecimalExponent: i32 ==> 4;
+    static MinExponentRoundToEven: i32 ==> -21;
+    static MaxExponentRoundToEven: i32 ==> 5;
+    static MaxExponentFastPath: i32 ==> 4;
+    static MaxMantissaFastPath: u128 ==> 2u128 << TrailingSignificandLength;
+}
+
+static assert(sizeof(f16) == 2, "f16 should be 2 bytes");
+static assert(f16.Pi == 3.14f16, "f16.Pi should be 3.14");
+static assert(type f16 is IComparable<f16>, "f16 should implement IComparable<f16>");
+static assert(type f16 is IEquatable<f16>, "f16 should implement IEquatable<f16>");
+static assert(type f16 is ISelfComparable, "f16 should implement ISelfComparable");
+static assert(type f16 is ISelfEquatable, "f16 should implement ISelfEquatable");
+static assert(type f16 is IAdditionOperators<f16, f16>, "f16 should implement IAdditionOperators<f16, f16>");
+static assert(type f16 is ISubtractionOperators<f16, f16>, "f16 should implement ISubtractionOperators<f16, f16>");
+static assert(type f16 is IMultiplyOperators<f16, f16>, "f16 should implement IMultiplyOperators<f16, f16>");
+static assert(type f16 is IDivisionOperators<f16, f16>, "f16 should implement IDivisionOperators<f16, f64>");
+static assert(type f16 is IModulusOperators<f16, f16>, "f16 should implement IModulusOperators<f16, f16>");
+static assert(type f16 is IUnaryPlusOperators<f16>, "f16 should implement IUnaryPlusOperators<f16>");
+static assert(type f16 is IUnaryNegationOperators<f16>, "f16 should implement IUnaryNegationOperators<f16>");
+static assert(type f16 is IIncrementOperators<f16>, "f16 should implement IIncrementOperators<f16>");
+static assert(type f16 is IDecrementOperators<f16>, "f16 should implement IDecrementOperators<f16>");
+
+test "Float16" {
+    f: f16 = 12.125f16;
+    
+    assert f16.Pi == 3.14f16;
+    assert f != f16.Pi;
+    assert f > 11.1f16;
+    assert f < 134.5f16;
+
+    assert f + 1.0f16 == 13.125f16;
+    assert f - 1.0f16 == 11.125f16;
+    assert f * 2.0f16 == 24.25f16;
+    assert f / 2.0f16 == 6.0625f16;
+    assert f % 2.0f16 == 0.125f16;
+
+    f += 1.0f16;
+    assert f == 13.125f16;
+    f -= 1.0f16;
+    assert f == 12.125f16;
+    f *= 2.0f16;
+    assert f == 24.25f16;
+    f /= 2.0f16;
+    assert f == 12.125f16;
+    f %= 2.0f16;
+    assert f == 0.125f16;
+
+    f = 12.34f16;
+    assert f++ == 12.34f16;
+    assert ++f == 14.34f16;
+    assert f-- == 14.34f16;
+    assert --f == 12.34f16;
+
+    assert +f == 12.34f16;
+    assert -f == -12.34f16;
+
+    n: f16? = null;
+    assert n == null;
+    assert f != n;
+    n = 3.12f16;
+    assert n != null;
+    assert f != n;
+
+    // dynamic polymorphism
+    o: object? = f;
+    //assert f ==* o;
+    icomp: IComparable<f16> = f;
+    assert icomp > n!;
+
+    assert f.HashCode == f.Bits;
+    assert #f == f.Bits;
+
+    assert f.ToBoolean();
+    assert !0.0f16.ToBoolean();
+    assert f.ToInt16() == 12;
+    assert f.ToInt32() == 12;
+    assert f.ToInt64() == 12;
+    assert f.ToInt128() == 12;
+    assert f.ToUsize() == 12;
+
+    {
+        div, rem := f /% 2.0f16;
+        assert div == 6.171875f16 && rem == 0.34375f16;
+    }
+
+    assert f ^^ 2 == 152.375f16;
+    assert f ^^ (-2) == 0.006561279296875f16;
+    assert f ** 2.0f16 == 152.375f16;
+    assert f ** (-2.0f16) == 0.006561279296875f16;
+    assert f ** 1.234f16 == 22.25f16;
+
+    assert f.Abs == f;
+    assert -12.34f16.Abs == 12.34f16;
+    assert f.IsCanonical;
+    assert !f.IsComplexNumber;
+    assert !f.IsImaginaryNumber;
+    assert f.IsRealNumber;
+    assert f.IsFinite;
+    assert !f.IsInfinity;
+    assert !f.IsNaN;
+    assert !f.IsNegative;
+    assert -12.34f16.IsNegative;
+    assert !f.IsNegativeInfinity;
+    assert f.IsPositive;
+    assert !f.IsPositiveInfinity;
+    assert !f.IsSubnormal;
+    assert !f.IsZero;
+    assert 0.0f16.IsZero;
+    assert !f.IsInteger;
+    assert !f.IsEvenInteger;
+    assert !f.IsOddInteger;
+    assert 1.0f16.IsInteger;
+    assert 1.0f16.IsOddInteger;
+    assert 2.0f16.IsEvenInteger;
+    assert f.MaxMagnitude(-1235.0f16) == -1235.0f16;
+    assert f.MinMagnitude(-1235.0f16) == 12.34f16;
+
+    assert f.NarrowToInt32() == 12;
+    assert f.NarrowToInt8() == 12;
+    
+    assert f.Sign == 1;
+    assert -12.34f16.Sign == -1;
+    assert 0.0f16.Sign == 0;
+
+    assert f.CopySign(-1.0f16) == -12.34f16;
+    assert f.Max(123) == 123.0f16;
+    assert f.Min(123) == 12.34f16;
+    assert f.Clamp(1,1000) == 12.34f16;
+
+    assert !f.IsPow2;
+    assert 4096.0f16.IsPow2;
+    assert 4096.0f16.Log2 == 12.0f16;
+    assert f16.Zero.Log2.IsNegativeInfinity;
+    assert -123.0f16.Log2.IsNaN;
+    assert 10000.0f16.Log10 == 4.0f16;
+    assert f16.Zero.Log10.IsNegativeInfinity;
+    assert -123.0f16.Log10.IsNaN;
+    assert f.Midpoint(24.15f16) == 18.245f16;
+    assert 10000.0f16.IsMultipleOf(10);
+    assert !10000.0f16.IsMultipleOf(7.5f16);
+    assert 22.5f16.IsMultipleOf(7.5f16);
+
+    assert 2.5f16.Ceil == 3.0f16;
+    assert 2.5f16.Floor == 2.0f16;
+    assert 2.5f16.Truncate == 2.0f16;
+    assert 2.5f16.Round == 3.0f16;
+    assert 2.5f16.RoundToInt32() == 3;
+    assert 2.5f16.RoundTiesEven == 2.0f16;
+    assert 2.5f16.RoundTiesEvenToInt32() == 2;
+    assert 3.5f16.RoundTiesEven == 4.0f16;
+    assert 2.5f16.Round(0u) == 3.0f16;
+    assert 2.5f16.Round(MidpointRounding.ToEven) == 2.0f16;
+    assert (-2.5f16).Ceil == -2.0f16;
+    assert (-2.5f16).Floor == -3.0f16;
+    assert (-2.5f16).Truncate == -2.0f16;
+    assert (-2.5f16).Round == -3.0f16;
+    assert (-2.5f16).RoundToInt32() == -3;
+    assert (-2.5f16).RoundTiesEven == -2.0f16;
+    assert (-2.5f16).RoundTiesEvenToInt32() == -2;
+    assert (-3.5f16).RoundTiesEven == -4.0f16;
+    assert (-2.5f16).Round(0u) == -3.0f16;
+    assert (-2.5f16).Round(MidpointRounding.ToEven) == -2.0f16;
+    
+    f = 12.34f16;
+    assert f.Exp == 228661.98f16;
+    assert f.ExpM1 == 228660.98f16;
+    assert f.Exp2 == 5200.0f16;
+    assert f.Exp2M1 == 5200.0f16;
+    assert f.Exp10.IsPositiveInfinity;
+    assert f.Exp10M1.IsPositiveInfinity;
+    assert f.Ln == 2.513671875f16;
+    assert f.LnP1 == 2.591796875f16;
+    assert f.Log(1.25f16) == 11.265625f16;
+
+    assert f.Sqrt == 3.5128336f16;
+    assert f.Cbrt == 2.310849666595458984375f16;
+    assert 1234.0f16.Root(5) == 4.15234375f16;
+    assert f.Root(-5) == 0.60498046875f16;
+    assert f.Hypot(9.12f16) == 15.34375f16;
+
+    assert f.Sin == -0.2208251953125f16;
+    assert f.Cos == 0.97509765625f16;
+    assert f.Tan == -0.226318359375f16;
+    f = 0.34f16;
+    assert f.Asin == 0.346923828125f16;
+    assert f.Acos == 1.2236328125f16;
+    assert f.Atan == 0.327880859375f16;
+    f = 12.34f16;
+    assert f.ToRadians() == 0.2154541015625f16;
+    assert 0.34f16.ToDegrees() == 19.5f16;
+    assert 1.0f16.SinPi == 0.0f16;
+    assert 0.5f16.SinPi == 1.0f16;
+    assert 1.0f16.CosPi == -1.0f16;
+    assert 0.5f16.CosPi == 0.0f16;
+    assert 1.0f16.TanPi == -0.0f16;
+    assert 0.0f16.TanPi == 0.0f16;
+
+    assert f.Sinh.IsPositiveInfinity;
+    assert f.Cosh.IsPositiveInfinity;
+    assert f.Tanh == 1.0f16;
+    assert f.Asinh == 3.20703125f16;
+    assert f.Acosh == 3.205078125f16;
+    assert f.Atanh.IsNaN;
+    f = 0.34f16;
+    assert f.Sinh == 0.3466796875f16;
+    assert f.Cosh == 1.05859375f16;
+    assert f.Tanh == 0.32763671875f16;
+    assert f.Asinh == 0.333740234375f16;
+    assert f.Acosh.IsNaN;
+    assert f.Atanh == 0.354248046875f16;
+
+    assert f.ReciprocalEstimate == 2.939453125f16;
+    assert f.FusedMultiplyAdd(5.0f16, 2.12f16) == 3.8203125f16;
+    assert 1.0f16.Lerp(2.0f16, 0.75f16) == 1.75f16;
+
+    assert f.Gamma == 2.623046875f16;
+    assert f.Erf == 0.369384765625f16;
+    assert f.Erfc == 0.63037109375f16;
+}

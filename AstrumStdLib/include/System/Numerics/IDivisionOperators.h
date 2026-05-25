@@ -286,63 +286,65 @@ namespace System::Numerics {
 template<> inline constexpr bool Builtin::__details::cheapCopy<System::Numerics::IDivisibleArithmetic> = false;
 
 namespace System::Numerics {
-	#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
-	template<class __AnyType> concept __HasMethodImplementation_620dbf4702d52a23 = requires(typename __AnyType::__class t) { {t.operator/(std::declval<typename __AnyType::__self>())} -> std::convertible_to<Builtin::f64>; }  || requires(typename __AnyType::__self t) { {operator/(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<Builtin::f64>; } || requires { { [] { using namespace __extensions; return std::declval<typename __AnyType::__self>() /std::declval<typename __AnyType::__self>();}() } -> std::convertible_to<Builtin::f64>; };
-	#line 11 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+	#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+	template<class __AnyType> concept __HasMethodImplementation_620dbf4702d52a23 = requires(typename __AnyType::__class t) { {t.operator/(std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::DivisibleArithmeticType>; }  || requires(typename __AnyType::__self t) { {operator/(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::DivisibleArithmeticType>; } || requires { { [] { using namespace __extensions; return std::declval<typename __AnyType::__self>() /std::declval<typename __AnyType::__self>();}() } -> std::convertible_to<typename __AnyType::__self::DivisibleArithmeticType>; };
+	#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 	template<class __AnyType> concept __HasMethodImplementation_0bc1b4f499f801ca = requires(typename __AnyType::__class t) { {t.operator/=(std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {operator/=(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return std::declval<typename __AnyType::__self>() /=std::declval<typename __AnyType::__self>();}() } -> std::convertible_to<typename __AnyType::__self>; };
-	#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+	#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 	template<class __AnyType> concept __HasMethodImplementation_ce27b589e25c5d94 = requires(typename __AnyType::__class t) { {t._operator_div_mod(std::declval<typename __AnyType::__self>())} -> std::convertible_to<std::tuple<typename __AnyType::__self, typename __AnyType::__self>>; }  || requires(typename __AnyType::__self t) { {_operator_div_mod(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<std::tuple<typename __AnyType::__self, typename __AnyType::__self>>; } || requires { { [] { using namespace __extensions; return _operator_div_mod(std::declval<typename __AnyType::__self>(), std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<std::tuple<typename __AnyType::__self, typename __AnyType::__self>>; };
-	#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+	#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 	template<class __AnyType> concept __HasMethodImplementation_a00f7d3124e1f9f1 = requires(typename __AnyType::__class t) { {t._operator_div_not(std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {_operator_div_not(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return _operator_div_not(std::declval<typename __AnyType::__self>(), std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
-	#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+	#line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 	template<class __AnyType> concept __HasMethodImplementation_03cb0ff43d40d3f0 = requires(typename __AnyType::__class t) { {t._operator_div_not_eq(std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {_operator_div_not_eq(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return _operator_div_not_eq(std::declval<typename __AnyType::__self>(), std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
-	#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+	#line 20 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 	template<class __AnyType> concept __HasMethodImplementation_01f570478e7cacb8 = requires(typename __AnyType::__class t) { {t._operator_div_lt(std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {_operator_div_lt(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return _operator_div_lt(std::declval<typename __AnyType::__self>(), std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
-	#line 21 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+	#line 22 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 	template<class __AnyType> concept __HasMethodImplementation_002258324aa1b053 = requires(typename __AnyType::__class t) { {t._operator_div_lt_eq(std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {_operator_div_lt_eq(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return _operator_div_lt_eq(std::declval<typename __AnyType::__self>(), std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
-	#line 23 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+	#line 24 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 	template<class __AnyType> concept __HasMethodImplementation_e59dc5f0eabfdf1f = requires(typename __AnyType::__class t) { {t._operator_div_gt(std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {_operator_div_gt(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return _operator_div_gt(std::declval<typename __AnyType::__self>(), std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
-	#line 25 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+	#line 26 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 	template<class __AnyType> concept __HasMethodImplementation_80bb00e7c4340a9e = requires(typename __AnyType::__class t) { {t._operator_div_gt_eq(std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {_operator_div_gt_eq(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return _operator_div_gt_eq(std::declval<typename __AnyType::__self>(), std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
+	#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+	template<class __AnyType> concept __HasAssociatedType_a13d86faf261cdeb = requires { typename __AnyType::DivisibleArithmeticType; };
 	namespace __vtables {
 		#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 		struct __vtable_IDivisibleArithmetic
 		{
-			using fn_620dbf4702d52a23 = const Builtin::f64(Builtin::Object*, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs);
+			using fn_620dbf4702d52a23 = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs);
 			fn_620dbf4702d52a23* fnptr_620dbf4702d52a23;
-			#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
-			template<class __AnyType> static const Builtin::f64 impl_620dbf4702d52a23(Builtin::Object* obj, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) { ADV_EXPRESSION_BODY(ADV_UFCS(operator/)(*static_cast<typename __AnyType::__class*>(obj), rhs)); }
+			#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_620dbf4702d52a23(Builtin::Object* obj, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) { ADV_EXPRESSION_BODY(ADV_UFCS(operator/)(*static_cast<typename __AnyType::__class*>(obj), rhs)); }
 			using fn_0bc1b4f499f801ca = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs);
 			fn_0bc1b4f499f801ca* fnptr_0bc1b4f499f801ca;
-			#line 11 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+			#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_0bc1b4f499f801ca(Builtin::Object* obj, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) { ADV_EXPRESSION_BODY(ADV_UFCS(operator/=)(*static_cast<typename __AnyType::__class*>(obj), rhs)); }
 			using fn_ce27b589e25c5d94 = const std::tuple<Builtin::OptionalStrongRef<Builtin::ObjectRef>, Builtin::OptionalStrongRef<Builtin::ObjectRef>>(Builtin::Object*, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs);
 			fn_ce27b589e25c5d94* fnptr_ce27b589e25c5d94;
-			#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+			#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 			template<class __AnyType> static const std::tuple<Builtin::OptionalStrongRef<Builtin::ObjectRef>, Builtin::OptionalStrongRef<Builtin::ObjectRef>> impl_ce27b589e25c5d94(Builtin::Object* obj, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) { ADV_EXPRESSION_BODY(ADV_UFCS(_operator_div_mod)(*static_cast<typename __AnyType::__class*>(obj), rhs)); }
 			using fn_a00f7d3124e1f9f1 = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs);
 			fn_a00f7d3124e1f9f1* fnptr_a00f7d3124e1f9f1;
-			#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+			#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_a00f7d3124e1f9f1(Builtin::Object* obj, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) { ADV_EXPRESSION_BODY(ADV_UFCS(_operator_div_not)(*static_cast<typename __AnyType::__class*>(obj), rhs)); }
 			using fn_03cb0ff43d40d3f0 = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs);
 			fn_03cb0ff43d40d3f0* fnptr_03cb0ff43d40d3f0;
-			#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+			#line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_03cb0ff43d40d3f0(Builtin::Object* obj, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) { ADV_EXPRESSION_BODY(ADV_UFCS(_operator_div_not_eq)(*static_cast<typename __AnyType::__class*>(obj), rhs)); }
 			using fn_01f570478e7cacb8 = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs);
 			fn_01f570478e7cacb8* fnptr_01f570478e7cacb8;
-			#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+			#line 20 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_01f570478e7cacb8(Builtin::Object* obj, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) { ADV_EXPRESSION_BODY(ADV_UFCS(_operator_div_lt)(*static_cast<typename __AnyType::__class*>(obj), rhs)); }
 			using fn_002258324aa1b053 = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs);
 			fn_002258324aa1b053* fnptr_002258324aa1b053;
-			#line 21 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+			#line 22 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_002258324aa1b053(Builtin::Object* obj, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) { ADV_EXPRESSION_BODY(ADV_UFCS(_operator_div_lt_eq)(*static_cast<typename __AnyType::__class*>(obj), rhs)); }
 			using fn_e59dc5f0eabfdf1f = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs);
 			fn_e59dc5f0eabfdf1f* fnptr_e59dc5f0eabfdf1f;
-			#line 23 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+			#line 24 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_e59dc5f0eabfdf1f(Builtin::Object* obj, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) { ADV_EXPRESSION_BODY(ADV_UFCS(_operator_div_gt)(*static_cast<typename __AnyType::__class*>(obj), rhs)); }
 			using fn_80bb00e7c4340a9e = const Builtin::OptionalStrongRef<Builtin::ObjectRef>(Builtin::Object*, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs);
 			fn_80bb00e7c4340a9e* fnptr_80bb00e7c4340a9e;
-			#line 25 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+			#line 26 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 			template<class __AnyType> static const Builtin::OptionalStrongRef<Builtin::ObjectRef> impl_80bb00e7c4340a9e(Builtin::Object* obj, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) { ADV_EXPRESSION_BODY(ADV_UFCS(_operator_div_gt_eq)(*static_cast<typename __AnyType::__class*>(obj), rhs)); }
 			
 		};
@@ -359,7 +361,7 @@ namespace System::Numerics {
 		, &__vtables::__vtable_IDivisibleArithmetic::template impl_80bb00e7c4340a9e<__AnyType>
 		};
 	#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
-	template<class __AnyType> concept __ImplementsInterface_IDivisibleArithmetic = __HasMethodImplementation_620dbf4702d52a23<__AnyType> && __HasMethodImplementation_0bc1b4f499f801ca<__AnyType> && __HasMethodImplementation_ce27b589e25c5d94<__AnyType> && __HasMethodImplementation_a00f7d3124e1f9f1<__AnyType> && __HasMethodImplementation_03cb0ff43d40d3f0<__AnyType> && __HasMethodImplementation_01f570478e7cacb8<__AnyType> && __HasMethodImplementation_002258324aa1b053<__AnyType> && __HasMethodImplementation_e59dc5f0eabfdf1f<__AnyType> && __HasMethodImplementation_80bb00e7c4340a9e<__AnyType>;
+	template<class __AnyType> concept __ImplementsInterface_IDivisibleArithmetic = __HasMethodImplementation_620dbf4702d52a23<__AnyType> && __HasMethodImplementation_0bc1b4f499f801ca<__AnyType> && __HasMethodImplementation_ce27b589e25c5d94<__AnyType> && __HasMethodImplementation_a00f7d3124e1f9f1<__AnyType> && __HasMethodImplementation_03cb0ff43d40d3f0<__AnyType> && __HasMethodImplementation_01f570478e7cacb8<__AnyType> && __HasMethodImplementation_002258324aa1b053<__AnyType> && __HasMethodImplementation_e59dc5f0eabfdf1f<__AnyType> && __HasMethodImplementation_80bb00e7c4340a9e<__AnyType> && __HasAssociatedType_a13d86faf261cdeb<__AnyType>;
 	#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 	class IDivisibleArithmetic final : public Builtin::InterfaceRef {
 		public: using __self = IDivisibleArithmetic;
@@ -461,23 +463,23 @@ namespace System::Numerics {
 		public: template<class __AnyType, class __FixedType = std::decay_t<__AnyType>::__self> requires std::is_base_of_v<Builtin::Object, std::decay_t<__AnyType>> IDivisibleArithmetic& operator=(__AnyType&& value) { static_assert(__ImplementsInterface_IDivisibleArithmetic<__FixedType>, "Cannot initialize interface IDivisibleArithmetic from this type"); 
  		if (_obj) Builtin::Release(_obj); _obj = (Builtin::Object*)&value; Builtin::Retain(_obj); 
 		_vtable = &__vtable_IDivisibleArithmetic_for<__FixedType>; return *this; }
-		#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
-		public: FORCE_INLINE const Builtin::f64 operator/(Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) const { ADV_EXPRESSION_BODY(_vtable->fnptr_620dbf4702d52a23(_obj, rhs)); }
-		#line 11 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+		#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> operator/(Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) const { ADV_EXPRESSION_BODY(_vtable->fnptr_620dbf4702d52a23(_obj, rhs)); }
+		#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> operator/=(Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) const { ADV_EXPRESSION_BODY(_vtable->fnptr_0bc1b4f499f801ca(_obj, rhs)); }
-		#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+		#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 		public: FORCE_INLINE const std::tuple<Builtin::OptionalStrongRef<Builtin::ObjectRef>, Builtin::OptionalStrongRef<Builtin::ObjectRef>> _operator_div_mod(Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) const { ADV_EXPRESSION_BODY(_vtable->fnptr_ce27b589e25c5d94(_obj, rhs)); }
-		#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+		#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_div_not(Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) const { ADV_EXPRESSION_BODY(_vtable->fnptr_a00f7d3124e1f9f1(_obj, rhs)); }
-		#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+		#line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_div_not_eq(Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) const { ADV_EXPRESSION_BODY(_vtable->fnptr_03cb0ff43d40d3f0(_obj, rhs)); }
-		#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+		#line 20 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_div_lt(Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) const { ADV_EXPRESSION_BODY(_vtable->fnptr_01f570478e7cacb8(_obj, rhs)); }
-		#line 21 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+		#line 22 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_div_lt_eq(Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) const { ADV_EXPRESSION_BODY(_vtable->fnptr_002258324aa1b053(_obj, rhs)); }
-		#line 23 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+		#line 24 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_div_gt(Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) const { ADV_EXPRESSION_BODY(_vtable->fnptr_e59dc5f0eabfdf1f(_obj, rhs)); }
-		#line 25 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
+		#line 26 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IDivisionOperators.ast"
 		public: FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_div_gt_eq(Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs) const { ADV_EXPRESSION_BODY(_vtable->fnptr_80bb00e7c4340a9e(_obj, rhs)); }
 		
 	};
@@ -593,7 +595,7 @@ namespace System::Numerics {
 		}
 		
 	};
-	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IDivisibleArithmetic::__vtable> FORCE_INLINE const Builtin::f64 operator/(const __AnyInterface& iface, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_620dbf4702d52a23(Builtin::GetObjectReferenceFromInterface(&iface), rhs)); }
+	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IDivisibleArithmetic::__vtable> FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> operator/(const __AnyInterface& iface, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_620dbf4702d52a23(Builtin::GetObjectReferenceFromInterface(&iface), rhs)); }
 	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IDivisibleArithmetic::__vtable> FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> operator/=(const __AnyInterface& iface, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_0bc1b4f499f801ca(Builtin::GetObjectReferenceFromInterface(&iface), rhs)); }
 	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IDivisibleArithmetic::__vtable> FORCE_INLINE const std::tuple<Builtin::OptionalStrongRef<Builtin::ObjectRef>, Builtin::OptionalStrongRef<Builtin::ObjectRef>> _operator_div_mod(const __AnyInterface& iface, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_ce27b589e25c5d94(Builtin::GetObjectReferenceFromInterface(&iface), rhs)); }
 	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IDivisibleArithmetic::__vtable> FORCE_INLINE const Builtin::OptionalStrongRef<Builtin::ObjectRef> _operator_div_not(const __AnyInterface& iface, Builtin::OptionalStrongRef<Builtin::ObjectRef> rhs)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_a00f7d3124e1f9f1(Builtin::GetObjectReferenceFromInterface(&iface), rhs)); }

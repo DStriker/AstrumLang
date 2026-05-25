@@ -7,8 +7,6 @@ public import MidpointRounding;
 public import FloatingPointCategory;
 public import System.Numerics.IBinaryFloatFormatInfo;
 
-import Math;
-
 public type Float32 = f32;
 public type Single = f32;
 

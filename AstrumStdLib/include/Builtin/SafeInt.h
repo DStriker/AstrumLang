@@ -17,6 +17,7 @@ namespace Builtin {
 		using __class = __Class_SafeInt<T>;
 		using __underlying = T;
 		using Unsigned = SafeInt<std::make_unsigned_t<T>>;
+		using DivisibleArithmeticType = double;
 
 		constexpr __self& __ref() noexcept { return *this; }
 		constexpr const __self& __ref() const noexcept { return *this; }

@@ -14,7 +14,8 @@ namespace Builtin {
 		using __self  = FastInt<T>;
 		using __class      = __Class_FastInt<T>;
 		using __underlying = T;
-		using Unsigned     = FastInt<std::make_unsigned_t<T>>;
+		using Unsigned                = FastInt<std::make_unsigned_t<T>>;
+		using DivisibleArithmeticType = double;
 		constexpr __self& __ref() noexcept { return *this; }
 		constexpr const __self& __ref() const noexcept { return *this; }
 

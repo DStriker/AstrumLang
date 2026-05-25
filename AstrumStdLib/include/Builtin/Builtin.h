@@ -41,6 +41,7 @@ using Builtin::u64;
 using Builtin::u128;
 using Builtin::isize;
 using Builtin::usize;
+using Builtin::f16;
 using Builtin::f32;
 using Builtin::f64;
 using Builtin::fext;

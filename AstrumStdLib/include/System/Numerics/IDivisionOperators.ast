@@ -5,8 +5,9 @@ public interface IDivisionOperators<TRight, TResult> {
 }
 
 public interface IDivisibleArithmetic {
+    type DivisibleArithmeticType;
     // real division
-    operator/: (rhs: self) -> f64;
+    operator/: (rhs: self) -> self.DivisibleArithmeticType;
     // division and assign (division with round for integers)
     operator/=: (rhs: self) -> self;
     // division with remainder

@@ -773,8 +773,10 @@ simpleTypeSpecifier
     | U128
     | Isize
     | Usize
+    | F16
     | F32
     | F64
+    | F128
     | Fext
     | Char
     | Byte

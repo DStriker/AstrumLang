@@ -1,4 +1,5 @@
 #include "Boolean.h"
+#include "Float16.h"
 #include "Float32.h"
 #include "Float64.h"
 #include "FloatingPointCategory.h"
