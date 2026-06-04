@@ -635,8 +635,8 @@ public extension f64: IFloatingPoint {
     {
         const maxRoundingDigits :== 15u;
         const roundLimit :== 1e16;
-        //const pow10table: f64[6] == [1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8,
-        //  1e9, 1e10, 1e11, 1e12, 1e13, 1e14, 1e15];
+        const pow10table: f64[_] == [1e0, 1e1, 1e2, 1e3, 1e4, 1e5, 1e6, 1e7, 1e8,
+            1e9, 1e10, 1e11, 1e12, 1e13, 1e14, 1e15];
 
         if digits > maxRoundingDigits {
             throw Builtin.InvalidArgumentException(); //ArgumentOutOfRange
@@ -644,8 +644,7 @@ public extension f64: IFloatingPoint {
 
         result := this;
         if this.Abs < roundLimit {
-            //pow10 := pow10table[digits];
-            let pow10 := 10.0 ^^ i32(digits);
+            let pow10 := pow10table[digits];
             result *= pow10;
 
             result = switch rounding

@@ -1,0 +1,403 @@
+package System;
+
+import Float128;
+
+internal PowImpl: (x: f128, exp: f128) -> f128
+{
+    /* origin: FreeBSD /usr/src/lib/msun/ld128/e_powl.c */
+
+    const Two113 :== f128.FromBits(0x4070_0000_0000_0000_0000_0000_0000_0000_u128);
+    const Huge :== f128.FromBits(0x66EC_B8E4_99A8_8823_5EA6_6F64_97E3_640C_u128);
+    const Tiny :== f128.FromBits(0x1911_2949_9E40_33AF_742A_E235_CC08_1BCC_u128);
+
+    o, p, q: QuadShape;
+    p.Value = x;
+    let hx := p.Shape32.HighHi.NarrowToInt32();
+    ix := (hx & 0x7fffffff).NarrowToUInt32();
+
+    q.Value = exp;
+    let hy := q.Shape32.HighHi.NarrowToInt32();
+    iy := (hy & 0x7fffffff).NarrowToUInt32();
+
+    // x ** 0 = 1
+    if (iy | q.Shape32.HighLo | q.Shape32.LowHi | q.Shape32.LowLo) == 0 {
+        return f128.One;
+    }
+
+    // 1 ** y = 1
+    if x == f128.One {
+        return x;
+    }
+
+    // -1 ** inf = 1
+    if x == f128.MinusOne and iy == 0x7fff0000u and (q.Shape32.HighLo | q.Shape32.LowHi | q.Shape32.LowLo) == 0 {
+        return f128.One;
+    }
+
+    // x * NaN = NaN; NaN * x = NaN
+    if ix > 0x7fff0000 or (ix == 0x7fff0000 and (p.Shape32.HighLo | p.Shape32.LowHi | p.Shape32.LowLo) != 0)
+    or iy > 0x7fff0000 or (iy == 0x7fff0000 and (q.Shape32.HighLo | q.Shape32.LowHi | q.Shape32.LowLo) != 0)
+    {
+        return f128.NaN;
+    }
+
+    // x < 0
+    // yOdd = 0 -> y isn't integer
+    // yOdd = 1 -> y is odd int
+    // yOdd = 2 -> y is even int
+    yOdd := 0;
+    z: f128;
+    if hx < 0 {
+        // y > 2^113 -> even
+        if iy >= 0x4070_0000u {
+            yOdd = 2;
+        // y > 1
+        } else if iy >= 0x3fff0000u {
+            if exp.IsInteger {
+                z = f128.HalfOne * exp;
+                if z.IsInteger {
+                    yOdd = 2;
+                } else {
+                    yOdd = 1;
+                }
+            }
+        }
+    }
+
+    // special values of exp
+    if (q.Shape32.HighLo | q.Shape32.LowHi | q.Shape32.LowLo) == 0 {
+        // exp is infinity
+        if iy == 0x7fff0000u {
+            // 1 ** inf = NaN
+            if ((ix - 0x3FFF_0000u) | p.Shape32.HighLo | p.Shape32.LowHi | p.Shape32.LowLo) == 0 {
+                return f128.NaN;
+            }
+            // |x| > 1 -> x ** +inf = +inf
+            // |x| > 1 -> x ** -inf = 0
+            else if ix >= 0x3fff0000u {
+                return hy >= 0 ? exp : f128.Zero;
+            }
+            // |x| < 1 -> x ** +inf = 0
+            // |x| < 1 -> x ** -inf = +inf
+            else {
+                return hy < 0 ? -exp : f128.Zero;
+            }
+        }
+
+        // exp is +-1
+        if iy == 0x3fff0000 {
+            // x ** -1 = 1 / x
+            if hy < 0 {
+                return x.ReciprocalEstimate;
+            }
+            // x ** 1 = x
+            else {
+                return x;
+            }
+        }
+
+        // x ** 2 = x * x
+        if hy == 0x40000000 {
+            return x * x;
+        }
+
+        // exp is 0.5
+        if hy == 0x3ffe0000 {
+            // x >= 0 -> x ** 0.5 = sqrt(x)
+            if hx >= 0 {
+                return x.Sqrt;
+            }
+        }
+    }
+
+    ax := x.Abs;
+
+    // special values of x
+    if (p.Shape32.HighLo | p.Shape32.LowHi | p.Shape32.LowLo) == 0
+    {
+        if ix == 0x7fff0000 or ix == 0 or ix == 0x3fff0000 {
+            z = ax;
+            if hy < 0 {
+                z = z.ReciprocalEstimate;
+            }
+            if hx < 0 {
+                if ((ix - 0x3fff_0000) | u32(yOdd)) == 0 {
+                    z = f128.NaN;
+                } else if yOdd == 1 {
+                    z = -z;
+                }
+            }
+
+            return z;
+        }
+    }
+
+    // x < 0 -> x ** non-int = NaN
+    if (((hx >>> 31) - 1) | u32(yOdd)) == 0 {
+        return f128.NaN;
+    }
+
+    // |y| is huge
+    // 2 ** -16496 = 1/2 of Epsilon
+    // (1 - 1/131072) ** y underflows (y > 1.4986e9)
+    if iy > 0x401d654bu {
+        if iy > 0x407d654bu {
+            if ix <= 0x3ffeffffu {
+                return hy < 0 ? Huge * Huge : Tiny * Tiny;
+            }
+            if ix >= 0x3fff0000u {
+                return hy > 0 ? Huge * Huge : Tiny * Tiny;
+            }
+        }
+
+        if ix < 0x3ffeffffu {
+            return hy < 0 ? Huge * Huge : Tiny * Tiny;
+        }
+        if ix > 0x3fff0000u {
+            return hy > 0 ? Huge * Huge : Tiny * Tiny;
+        }
+    }
+
+    n := 0;
+    // x is subnormal
+    if ix < 0x00010000u {
+        ax *= Two113;
+        n -= 113;
+        o.Value = ax;
+        ix = o.Shape32.HighHi;
+    }
+
+    n += (ix >> 16).NarrowToInt32() - 0x3FFF;
+    j := (ix & 0x0000ffffu).NarrowToInt32();
+
+    // interval determination
+    ix = (j | 0x3fff0000).NarrowToUInt32();
+
+    k: i32;
+    if j <= 0x3988 {
+        k = 0;
+    } else if j < 0xbb67 {
+        k = 1;
+    } else {
+        k = 0;
+        n++;
+        ix -= 0x00010000;
+    }
+
+    o.Value = ax;
+    o.Shape32.HighHi = ix;
+    ax = o.Value;
+
+    u := ax - PowBP[k];
+    v := f128.One / (ax + PowBP[k]);
+    s := u * v;
+    sh := s;
+
+    o.Value = sh;
+    o.Shape32.LowLo = 0u;
+    o.Shape32.LowHi &= 0xf8000000u;
+    sh = o.Value;
+
+    th := ax + PowBP[k];
+    o.Value = th;
+    o.Shape32.LowLo = 0u;
+    o.Shape32.LowHi &= 0xf8000000u;
+    th = o.Value;
+    tl := ax - (th - PowBP[k]);
+    sl := v * ((u - sh * th) - sh * tl);
+
+    // ln(ax)
+    s2 := s * s;
+    u = PowLN[0] + s2 * (PowLN[1] + s2 * (PowLN[2] + s2 * (PowLN[3] + s2 * PowLN[4])));
+    v = PowLD[0] + s2 * (PowLD[1] + s2 * (PowLD[2] + s2 * (PowLD[3] + s2 * (PowLD[4] + s2))));
+    r := s2 * s2 * u / v;
+    r += sl * (sh + s);
+    s2 = sh * sh;
+    th = f128.FromBits(0x4000_8000_0000_0000_0000_0000_0000_0000_u128) + s2 + r;
+    o.Value = th;
+    o.Shape32.LowLo = 0u;
+    o.Shape32.LowHi &= 0xf8000000u;
+    th = o.Value;
+    tl = r - ((th - f128.FromBits(0x4000_8000_0000_0000_0000_0000_0000_0000_u128)) - s2);
+    u = sh * th;
+    v = sl * th + tl * s;
+    ph := u + v;
+    o.Value = ph;
+    o.Shape32.LowLo = 0u;
+    o.Shape32.LowHi &= 0xf8000000u;
+    ph = o.Value;
+    pl := v - (ph - u);
+    zh := PowCPH * ph;
+    zl := PowCPL * ph + pl * PowCP + PowDPL[k];
+    t: f128 = n;
+    t1 := (((zh + zl) + PowDPH[k]) + t);
+    o.Value = t1;
+    o.Shape32.LowLo = 0u;
+    o.Shape32.LowHi &= 0xf8000000u;
+    t1 = o.Value;
+    t2 := zl - (((t1 - t) - PowDPH[k]) - zh);
+
+    // sign
+    s = f128.One;
+    if (((hx >>> 31) - 1) | (yOdd - 1).NarrowToUInt32()) == 0 {
+        s = f128.MinusOne;
+    }
+
+    // split exp into yy1 + y2
+    yy1 := exp;
+    o.Value = yy1;
+    o.Shape32.LowLo = 0u;
+    o.Shape32.LowHi &= 0xf8000000u;
+    yy1 = o.Value;
+    pl = (exp - yy1) * t1 + exp * t2;
+    ph = yy1 * t1;
+    z = pl + ph;
+    o.Value = z;
+    j = o.Shape32.HighHi.NarrowToInt32();
+
+    // z >= 16384
+    if j >= 0x400d0000 {
+        if ((j -% 0x400d0000).NarrowToUInt32() | o.Shape32.HighLo | o.Shape32.LowHi | o.Shape32.LowLo) != 0 {
+            return s * Huge * Huge;
+        } else if pl + PowOVT > z - ph {
+            return s * Huge * Huge;
+        }
+    }
+    // z <= -16495
+    else if (j & 0x7fffffff) >= 0x400d01b9 {
+        if ((j -% 0xc00d01bc).NarrowToUInt32() | o.Shape32.HighLo | o.Shape32.LowHi | o.Shape32.LowLo) != 0 {
+            return s * Tiny * Tiny;
+        } else if pl <= z - ph {
+            return s * Tiny * Tiny;
+        }
+    }
+
+    i := j & 0x7fffffff;
+    k = (i >> 16) - 0x3fff;
+    n = 0;
+    if i > 0x3ffe0000 {
+        n = (z + f128.HalfOne).FloorToInt32();
+        t = n;
+        ph -= t;
+    }
+
+    t = pl + ph;
+    o.Value = t;
+    o.Shape32.LowLo = 0u;
+    o.Shape32.LowHi &= 0xf8000000u;
+    t = o.Value;
+    u = t * PowLG2H;
+    v = (pl - (t - ph)) * PowLG2 + t * PowLG2L;
+    z = u + v;
+    w := v - (z - u);
+
+    // exp(z)
+    t = z * z;
+    u = PowPN[0] + t * (PowPN[1] + t * (PowPN[2] + t * (PowPN[3] + t * PowPN[4])));
+    v = PowPD[0] + t * (PowPD[1] + t * (PowPD[2] + t * (PowPD[3] + t)));
+    t1 = z - t * u / v;
+    r = (z * t1) / (t1 - f128(2)) - (w + z * w);
+    z = f128.One - (r - z);
+    o.Value = z;
+    j = o.Shape32.HighHi.NarrowToInt32();
+    j += (n << 16);
+    if (j >> 16) <= 0 {
+        z = z.ScaleB(n);
+    } else {
+        o.Shape32.HighHi = j.NarrowToUInt32();
+        z = o.Value;
+    }
+
+    return s * z;
+}
+
+private {
+    const SignMask :== 0x8000_0000_0000_0000_0000_0000_0000_0000_u128;
+    const SignShift :== 127i32;
+    const ShiftedSignMask: u8 == u8(SignMask >> SignShift);
+
+    const BiasedExponentMask :== 0x7FFF_0000_0000_0000_0000_0000_0000_0000_u128;
+    const BiasedExponentShift :== 112i32;
+    const ShiftedBiasedExponentMask: u16 == u16(BiasedExponentMask >> BiasedExponentShift);
+
+    const TrailingSignificandMask :== 0x0000_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_u128;
+
+    const MinSign :== 0u8;
+    const MaxSign :== 1u8;
+    const MinBiasedExponent :== u16.MinValue;
+    const MaxBiasedExponent :== 0x7FFFu16;
+    const ExpBias :== 16383u16;
+    const MinExponent :== -16382i16;
+    const MaxExponent :== +16383i16;
+    const MinTrailingSignificand :== u128.MinValue;
+    const MaxTrailingSignificand :== 0x0000_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_u128;
+
+    const TrailingSignificandLength :== 112;
+    const SignificandLength :== TrailingSignificandLength + 1;
+
+    const RoundingEpsilon :== Builtin.BitCast<f128>(0x406F_0000_0000_0000_0000_0000_0000_0000_u128);
+
+    BiasedExponent: (value: f128) -> u16 noexcept ==> ExtractBiasedExponentFromBits(value.Bits);
+    Exponent: (value: f128) -> i16 noexcept ==> i16(BiasedExponent(value) - ExpBias);
+    Significand: (value: f128) -> u128 noexcept ==> TrailingSignificand(value) | (BiasedExponent(value) != 0 ? (1u128 << BiasedExponentShift) : 0u128);
+    TrailingSignificand: (value: f128) -> u128 noexcept ==> ExtractTrailingSignificandFromBits(value.Bits);
+
+    ExtractBiasedExponentFromBits: (bits: u128) -> u16 noexcept ==> u16((bits >> BiasedExponentShift) & ShiftedBiasedExponentMask);
+    ExtractTrailingSignificandFromBits: (bits: u128) -> u128 noexcept ==> bits & TrailingSignificandMask;
+}
+
+// Power helper constants
+
+if version(BIG_ENDIAN) {
+    private type QuadShape64 = const(High: u64, Low: u64);
+    private type QuadShape32 = const(HighHi: u32, HighLo: u32, LowHi: u32, LowLo: u32);
+} else {
+    private type QuadShape64 = const(Low: u64, High: u64);
+    private type QuadShape32 = const(LowLo: u32, LowHi: u32, HighLo: u32, HighHi: u32);
+}
+
+private union struct QuadShape {
+    public Value: f128;
+    public Shape64: QuadShape64;
+    public Shape32: QuadShape32;
+}
+static assert(sizeof(QuadShape) == sizeof(f128), "QuadShape should be same as f128");
+
+private const PowBP: f128[_] == [ f128.One, f128.FromBits(0x3FFF_8000_0000_0000_0000_0000_0000_0000_u128) ];
+private const PowDPH: f128[_] == [ f128.Zero, f128.FromBits(0x3FFE_2B80_3473_F7AD_0000_0000_0000_0000_u128) ];
+private const PowDPL: f128[_] == [ f128.Zero, f128.FromBits(0x3FC9_E7E8_02C4_8281_A2EB_7449_3CF9_A8E9_u128) ];
+private const PowLN: f128[_] == [ 
+    f128.FromBits(0xC003_EC77_8283_108D_D351_763D_521C_F8D2_u128),
+    f128.FromBits(0x4005_048B_0968_DA68_634C_653D_9344_2FEA_u128),
+    f128.FromBits(0xC004_7280_DD26_AB32_BBA2_2AE6_2447_44E8_u128),
+    f128.FromBits(0x4002_9053_A023_4C25_1CD1_C99C_785B_5FD7_u128),
+    f128.FromBits(0xBFFE_FC3F_1F7D_5799_D1FB_8916_3835_3084_u128)
+];
+private const PowLD: f128[_] == [ 
+    f128.FromBits(0xC004_9A63_976D_3876_3019_37DD_C470_295E_u128),
+    f128.FromBits(0x4006_2267_2C06_4F53_B6C4_2A88_A788_8557_u128),
+    f128.FromBits(0xC006_30CF_0405_7312_CE1C_70B9_C662_0DC8_u128),
+    f128.FromBits(0x4005_2171_4A56_547D_4169_123F_BEA8_F6A3_u128),
+    f128.FromBits(0xC002_DE24_C65F_C66A_9601_94F8_F1D9_F146_u128)
+];
+private const PowPN: f128[_] == [ 
+    f128.FromBits(0x401B_E4A3_6C93_1089_E86D_ACEC_7D0C_4054_u128),
+    f128.FromBits(0x4016_1DAB_FE99_88E2_E3E6_18A4_38A1_5AF6_u128),
+    f128.FromBits(0x400E_4932_0690_B3D2_BAA8_F4FD_B268_3287_u128),
+    f128.FromBits(0x4004_A014_9D04_634B_152F_8666_0A12_0EFC_u128),
+    f128.FromBits(0x3FF8_29CE_C291_D944_9CC0_10B8_DCC7_94E7_u128)
+];
+private const PowPD: f128[_] == [ 
+    f128.FromBits(0x401E_6B7A_916E_4C67_6E52_41B1_5DC9_3056_u128),
+    f128.FromBits(0x4019_981B_F72D_FA14_87E5_3E0C_F616_1D0C_u128),
+    f128.FromBits(0x4012_9348_B8B2_7A6A_2C43_03B1_2D43_967F_u128),
+    f128.FromBits(0x4009_D425_5D86_476D_8725_A341_C32C_275E_u128)
+];
+
+private const PowLG2: f128 = f128.FromBits(0x3FFE_62E4_2FEF_A39E_F357_93C7_6730_07E6_u128);
+private const PowLG2H: f128 = f128.FromBits(0x3FFE_62E4_2FEF_A39E_F000_0000_0000_0000_u128);
+private const PowLG2L: f128 = f128.FromBits(0x3FC7_ABC9_E3B3_9803_F2F6_AF40_F343_2673_u128);
+private const PowOVT: f128 = f128.FromBits(0x3FC9_7154_7652_B82F_E459_FDE3_A492_DA6D_u128);
+private const PowCP: f128 = f128.FromBits(0x3FFE_EC70_9DC3_A03F_D749_FC15_522B_C2F9_u128);
+private const PowCPH: f128 = f128.FromBits(0x3FFE_EC70_9DC3_A03F_D000_0000_0000_0000_u128);
+private const PowCPL: f128 = f128.FromBits(0x3FC8_D27F_0554_8AF0_BE29_B09C_E4FC_7094_u128);

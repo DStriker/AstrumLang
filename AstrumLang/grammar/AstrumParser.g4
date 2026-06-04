@@ -499,8 +499,12 @@ initializerPart
     ;
 
 collectionExpression
-    : LeftBracket expression (Comma expression)* RightBracket
+    : LeftBracket collectionExpressionPart (Comma collectionExpressionPart)* RightBracket
     | LeftBracket keyValuePairExpression (Comma keyValuePairExpression)* RightBracket
+    ;
+
+collectionExpressionPart
+    : conditionalExpression | bracedInitList | collectionExpression
     ;
 
 keyValuePairExpression
@@ -790,7 +794,7 @@ simpleTypeSpecifier
     | functionTypeId
     | LeftParen theTypeId (Comma theTypeId)+ Ellipsis? RightParen
     | LeftParen theTypeId Ellipsis RightParen
-    | LeftParen namedTupleField (Comma namedTupleField)+ RightParen
+    | Const? LeftParen namedTupleField (Comma namedTupleField)+ RightParen
     ;
 
 functionTypeId

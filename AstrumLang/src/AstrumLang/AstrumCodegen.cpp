@@ -347,6 +347,7 @@ namespace AstrumLang {
 			}
 		}
 
+		currentType.clear();
 		if (firstPass)
 			return;
 
@@ -583,6 +584,7 @@ namespace AstrumLang {
 			}
 		}
 		currentDeclarationName.clear();
+		currentType.clear();
 	}
 
 	void AstrumCodegen::printGlobalTypeAliases() {
@@ -5810,9 +5812,9 @@ namespace AstrumLang {
 						builtinOperator = method.id.substr(8);
 						auto params     = method.params->paramDeclClause();
 						if (!params) {
-							out << builtinOperator << "std::declval<typename __AnyType::__self>()";
+							out << builtinOperator << "std::declval<typename __AnyType::__self&>()";
 						} else {
-							out << "std::declval<typename __AnyType::__self>() " << builtinOperator
+							out << "std::declval<typename __AnyType::__self&>() " << builtinOperator
 							    << "std::declval<";
 							auto t   = params->paramDeclList()->paramDeclaration(0)->theTypeId();
 							auto txt = t->getText();
@@ -9947,14 +9949,22 @@ namespace AstrumLang {
 				out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
 				out << "struct " << tuple.id << " final : public Builtin::Struct { \n"
 				    << std::string(++depth, '\t');
-				out << "using __class = Builtin::__Class_Basic<" << tuple.id << ">;";
+			    out << "using __self = " << tuple.id << ";\n"
+			        << std::string(depth, '\t');
+			    out << "using __class = Builtin::__Class_Basic<" << tuple.id << ">;";
 				for (const auto& [field, type] : tuple.fields) {
 					out << "\n" << std::string(depth, '\t');
 					printTypeId(type);
 					out << " " << field << ";";
 				}
-				out << "\n" << std::string(depth, '\t') << tuple.id << "() = default;";
-				out << "\n" << std::string(depth, '\t') << tuple.id << "(";
+				out << "\n" << std::string(depth, '\t');
+			    if (tuple.isConstexpr)
+				    out << "constexpr ";
+				out << tuple.id << "() = default;";
+			    out << "\n" << std::string(depth, '\t');
+			    if (tuple.isConstexpr)
+				    out << "constexpr ";
+				out << tuple.id << "(";
 				bool first = true;
 				for (const auto& [field, type] : tuple.fields) {
 					if (!first)
@@ -9973,12 +9983,14 @@ namespace AstrumLang {
 					out << field << "{_" << field << "}";
 				}
 				out << " {}";
-				out << "\n"
-				    << std::string(depth, '\t')
-				    << "FORCE_INLINE decltype(auto) __ref() noexcept { return *this; }";
-				out << "\n"
-				    << std::string(depth, '\t')
-				    << "FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }";
+			    out << "\n" << std::string(depth, '\t');
+			    if (tuple.isConstexpr)
+				    out << "constexpr ";
+				out << "FORCE_INLINE decltype(auto) __ref() noexcept { return *this; }";
+			    out << "\n" << std::string(depth, '\t');
+			    if (tuple.isConstexpr)
+				    out << "constexpr ";
+				out<< "FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }";
 				auto fullName = id;
 				StringReplace(fullName, ".", "::");
 				out << "\n" << std::string(depth, '\t');
@@ -9989,10 +10001,16 @@ namespace AstrumLang {
 				out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
 				int i = 0;
 				for (const auto& [field, type] : tuple.fields) {
-					out << "template <> inline auto& get<" << i << ">(" << fullName
+				    out << "template <> inline ";
+				    if (tuple.isConstexpr)
+					    out << "constexpr ";
+				    out << "auto& get<" << i << ">(" << fullName
 					    << "& t) { return t." << field << "; }\n"
 					    << std::string(depth, '\t');
-					out << "template <> inline const auto& get<" << i++ << ">(const " << fullName
+				    out << "template <> inline ";
+				    if (tuple.isConstexpr)
+					    out << "constexpr ";
+				    out << "const auto& get<" << i++ << ">(const " << fullName
 					    << "& t) { return t." << field << "; }\n"
 					    << std::string(depth, '\t');
 				}
@@ -12707,6 +12725,7 @@ namespace AstrumLang {
 
 		void AstrumCodegen::printDeclarationStatement(AstrumParser::DeclarationStatementContext *
 		                                              ctx) {
+		    currentType = "";
 			if (auto block = ctx->blockDeclaration()) {
 				printBlockDeclaration(block);
 			} else if (auto ext = ctx->externVariableDeclaration()) {
@@ -12716,6 +12735,7 @@ namespace AstrumLang {
 			} else if (auto def = ctx->structDefinition()) {
 				printStructDefinition(def);
 			}
+		    currentType.clear();
 		}
 
 		void AstrumCodegen::printDeclarationCompoundStatement(
@@ -12832,6 +12852,7 @@ namespace AstrumLang {
 			isUnsafe = false;
 			for (auto stat : ctx->statement()) {
 				out << "\n" << std::string(depth, '\t');
+			    currentType = "";
 				printStatement(stat);
 			}
 
@@ -12886,6 +12907,7 @@ namespace AstrumLang {
 
 		void AstrumCodegen::printExpressionStatement(AstrumParser::ExpressionStatementContext *
 		                                             ctx) {
+		    currentType = "";
 			if (auto expr = ctx->expression()) {
 				printExpression(expr);
 			}
@@ -12893,6 +12915,7 @@ namespace AstrumLang {
 		}
 
 		void AstrumCodegen::printSelectionStatement(AstrumParser::SelectionStatementContext * ctx) {
+		    currentType = "";
 			currentIf = ctx;
 			if (ctx->If()) {
 				std::vector<AstrumParser::RelationalExpressionContext*> prerequisites;
@@ -13538,6 +13561,7 @@ namespace AstrumLang {
 				}
 				first = false;
 			}
+		    currentType.clear();
 		}
 
 		void AstrumCodegen::printTemplateParams(AstrumParser::TemplateParamsContext * ctx,
@@ -17220,7 +17244,8 @@ namespace AstrumLang {
 			out << ")";
 		}
 
-		void AstrumCodegen::printFunctionBody(AstrumParser::FunctionBodyContext * ctx) {
+		void AstrumCodegen::printFunctionBody(AstrumParser::FunctionBodyContext* ctx) {
+		    currentType.clear();
 			bool prev    = functionBody;
 			functionBody = true;
 			if (auto stat = ctx->compoundStatement()) {
@@ -17495,7 +17520,8 @@ namespace AstrumLang {
 			first    = false;
 			isUnsafe = prevUnsafe;
 			currentDeclarationName.clear();
-			currentDeclaration = nullptr;
+		    currentDeclaration = nullptr;
+		    currentType.clear();
 		}
 
 		void AstrumCodegen::printSimpleMultiDeclaration(
@@ -17777,7 +17803,8 @@ namespace AstrumLang {
 			}
 
 			out << ";";
-			currentDeclarationName.clear();
+		    currentDeclarationName.clear();
+		    currentType.clear();
 		}
 
 		void AstrumCodegen::printMemberRefDeclaration(AstrumParser::MemberRefDeclarationContext *
@@ -17830,7 +17857,8 @@ namespace AstrumLang {
 				out << "; ";
 				first = false;
 			}
-			currentDeclarationName.clear();
+		    currentDeclarationName.clear();
+		    currentType.clear();
 		}
 
 		void AstrumCodegen::printConstantDeclaration(AstrumParser::ConstantDeclarationContext *
@@ -17856,7 +17884,8 @@ namespace AstrumLang {
 				printInitializerClause(ctx->initializerClause());
 				out << ";";
 				currentDeclarationName.clear();
-			}
+		    }
+		    currentType.clear();
 		}
 
 		void AstrumCodegen::printForwardVarDeclaration(AstrumParser::ForwardVarDeclarationContext *
@@ -17949,6 +17978,7 @@ namespace AstrumLang {
 
 		void AstrumCodegen::printAssignmentExpression(AstrumParser::AssignmentExpressionContext *
 		                                              ctx) {
+		    currentType = "";
 			if (ctx->assignmentOperator()) {
 				currentAssignment = ctx;
 			}
@@ -18090,12 +18120,27 @@ namespace AstrumLang {
 		                                              ctx) {
 			bool first = true;
 			int i      = 0;
-			out << "std::initializer_list{";
-			for (auto part : ctx->expression()) {
+			if (isAutoSizeArrayDeclaration)
+			{
+			    out << "Builtin::ToInlineArray<";
+			    printTypeSpecifierSeq(autoSizeArrayType);
+			    out << ">(";
+			}
+			out << "{";
+		    for (auto part : ctx->collectionExpressionPart()) {
 				if (!first)
 					out << ", ";
 				first = false;
-				printExpression(part);
+				if (part->conditionalExpression())
+				{
+				    printConditionalExpression(part->conditionalExpression());
+				}
+			    if (part->collectionExpression()) {
+				    printCollectionExpression(part->collectionExpression());
+			    }
+			    if (part->bracedInitList()) {
+				    printBracedInitList(part->bracedInitList());
+			    }
 			}
 			for (auto part : ctx->keyValuePairExpression()) {
 				if (!first)
@@ -18103,7 +18148,11 @@ namespace AstrumLang {
 				first = false;
 				printKeyValuePairExpression(part);
 			}
-			out << "}";
+		    out << "}";
+		    if (isAutoSizeArrayDeclaration) {
+			    out << ")";
+			    isAutoSizeArrayDeclaration = false;
+		    }
 		}
 
 		void AstrumCodegen::printKeyValuePairExpression(
@@ -18749,6 +18798,7 @@ namespace AstrumLang {
 		}
 
 		void AstrumCodegen::printShiftExpression(AstrumParser::ShiftExpressionContext * ctx) {
+		    currentType = "";
 			if (ctx->additiveExpression()) {
 				printAdditiveExpression(ctx->additiveExpression());
 			} else if (!ctx->shiftOperator()->Greater().empty()) {
@@ -20193,8 +20243,15 @@ namespace AstrumLang {
 				out << "Builtin::OptionalStrongRef<Builtin::ObjectRef>";
 				return;
 			}
+
 			if (auto post = ctx->typePostfix()) {
-				for (auto decl : post->arrayDeclarator()) {
+			    for (auto decl : post->arrayDeclarator()) {
+				    if (decl->constantExpression()->getText() == "_") {
+					    out << "auto";
+						isAutoSizeArrayDeclaration = true;
+					    autoSizeArrayType          = ctx->typeSpecifierSeq();
+					    return;
+				    }
 					if (decl->Question())
 						out << "Builtin::Nullable<";
 					printArrayDeclarator(decl);
@@ -20221,10 +20278,10 @@ namespace AstrumLang {
 		}
 
 		void AstrumCodegen::printArrayDeclarator(AstrumParser::ArrayDeclaratorContext * ctx) {
-			if (ctx->constantExpression()) {
+		    if (ctx->constantExpression()) {
 				out << "Builtin::InlineArray<";
 				printConstantExpression(ctx->constantExpression());
-				out << ", ";
+			    out << ", ";
 			} else {
 				out << "Builtin::Array<";
 			}
@@ -20694,7 +20751,7 @@ namespace AstrumLang {
 				    << ")";
 		    } else if (txt.ends_with("f128")) {
 			    out << "Builtin::ParseFloat128(\"" << (minus ? "-" : "")
-			        << txt.substr(0, txt.length() - 1) << "\")";
+			        << txt.substr(0, txt.length() - 4) << "\")";
 		    } else {
 				out << "Builtin::f64(" << (minus ? "-" : "") << txt << ")";
 			}

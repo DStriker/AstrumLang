@@ -1147,9 +1147,9 @@ namespace AstrumLang {
 				if (currentTypeKind.top() != TypeKind::Extension)
 					properties.insert_or_assign(pos, property);
 			} else {
-				if (currentTypeKind.top() == TypeKind::UnionStruct &&
+				/*if (currentTypeKind.top() == TypeKind::UnionStruct &&
 				    *access != AccessSpecifier::Private)
-					notifyErrorListeners("Raw union field must be private", ctx->getStart());
+					notifyErrorListeners("Raw union field must be private", ctx->getStart());*/
 
 				if (unsafeDepth > 0)
 					cppParser.unsafeVariables.insert(currentType + "." + id->getText());
@@ -1632,9 +1632,9 @@ namespace AstrumLang {
 					    isUnowned,
 					    isWeak});
 				} else {
-					if (currentTypeKind.top() == TypeKind::UnionStruct &&
+					/*if (currentTypeKind.top() == TypeKind::UnionStruct &&
 					    *access != AccessSpecifier::Private)
-						notifyErrorListeners("Raw union field must be private", ctx->getStart());
+						notifyErrorListeners("Raw union field must be private", ctx->getStart());*/
 					if (unsafeDepth > 0)
 						cppParser.unsafeVariables.insert(currentType + "." + id->getText());
 					structStack.top()->fields.emplace_back(VariableDefinition {
@@ -3380,7 +3380,7 @@ namespace AstrumLang {
 					symbolTable.globalSymbolTable[tuple + "." + std::to_string(i++)] =
 					    contextTypes[fieldTypeId];
 				}
-				namedTuples[tuple] = NamedTuple {std::move(id), std::move(fields), access};
+				namedTuples[tuple] = NamedTuple {std::move(id), std::move(fields), access, ctx->Const() != nullptr};
 			}
 		} else if (ctx->functionTypeId()) {
 			typeStack.push("CppAdvance.FunctionRef");

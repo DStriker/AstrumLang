@@ -1,0 +1,521 @@
+package System;
+
+import Float128;
+
+internal Log2Impl: (x: f128) -> f128 
+{
+    const InvLn2Hi: f128 == 1.4426950402557850e0;
+    const InvLn2LoPHi :== f128.FromBits(0x3FFF_7154_7652_B82F_E24D_68D5_7C9B_F07B_u128);
+    const InvLn2Lo :== f128.FromBits(0x3FE0_5C17_F0BB_BE87_FED0_691D_3E88_EB57_u128);
+
+    r := LogInternal(x);
+    if r.LowSet == 0 {
+        return r.High;
+    }
+
+    let w := r.High + r.Low;
+    r.Low = r.High - w + r.Low;
+    r.High = w;
+
+    let high: f128 = r.High as f32;
+    let low: f128 = r.Low + (r.High - high);
+    return InvLn2Hi * high + (InvLn2LoPHi * low + InvLn2Lo * high);
+}
+
+internal Log10Impl: (x: f128) -> f128
+{
+    const InvLn10Hi: f128 == 4.3429448176175356e-1;
+    const InvLn10LoPHi :== f128.FromBits(0x3FFD_BCB7_B152_6E50_E36B_E631_DFF2_801F_u128);
+    const InvLn10Lo :== f128.FromBits(0x3FDE_3728_7195_355B_AAAF_AD33_DC32_3EE3_u128);
+
+    r := LogInternal(x);
+    if r.LowSet == 0 {
+        return r.High;
+    }
+
+    let w := r.High + r.Low;
+    r.Low = r.High - w + r.Low;
+    r.High = w;
+
+    let high: f128 = r.High as f32;
+    let low: f128 = r.Low + (r.High - high);
+    return InvLn10Hi * high + (InvLn10LoPHi * low + InvLn10Lo * high);
+}
+
+internal LnImpl: (x: f128) -> f128
+{
+    let r := LogInternal(x);
+    return r.LowSet == 0 ? r.High : r.High + r.Low;
+}
+
+internal LnP1Impl: (x: f128) -> f128
+{
+    /* origin: FreeBSD /usr/src/lib/msun/ld128/s_logl.c */
+
+    hx := (BiasedExponent(x) | (x.IsNegative ? 1u16 << 15 : 0u16)).NarrowToInt16();
+
+    fHi, fLo: f128;
+    // x < 1
+    if hx < 0x3FFF {
+        let ax := hx & 0x7FFF;
+        // x <= -1
+        if ax >= 0x3FFF {
+            // -inf
+            if ax == 0x3FFF and TrailingSignificand(x) == 0 {
+                return f128.NegativeInfinity;
+            }
+
+            // negative or -nan
+            return f128.NaN;
+        }
+
+        // |x| < 2^(-113)
+        if ax <= 0x3F8D and x.ToInt64() == 0 {
+            return x;
+        }
+
+        fHi = 1;
+        fLo = x;
+    } else if hx >= 0x7FFF {
+        // inf or nan
+        return x;
+    } else if hx < 0x40E1 {
+        // 1 <= x < 2^226
+        fHi = x;
+        fLo = 1;
+    } else {
+        // x >= 2^226
+        fHi = x;
+        fLo = 0;
+    }
+
+    x = fHi + fLo;
+    fLo = fHi - x + fLo;
+    hx = BiasedExponent(x).NarrowToInt16();
+
+    let lx := TrailingSignificand(x).High64();
+    let k := -16383 + (hx | (x.IsNegative ? 1u16 << 15 : 0u16));
+    let dk: f64 = k;
+
+    x = f128.FromBits(PackBits(false, 0x3fffu16, TrailingSignificand(x)));
+    let twopmk := f128.FromBits(u128(u64(0x7ffe - hx) << 48, 0u));
+    fLo *= twopmk;
+
+    const l2i := 49 - 7;
+    let i := ((lx +% (1u64 << (l2i - 2))) >> (l2i - 1)).NarrowToInt32();
+    
+    dHi := (x - LogConstantH(i)) * LogConstantG(i) + LogConstantE(i);
+    dLo := (fLo * LogConstantG(i)) as f64;
+
+    let d := dHi + dLo;
+    let dd := d as f64;
+    dLo = (dHi - d + dLo) as f64;
+    dHi = d;
+
+    resultLo: f128 = d * d * d * (P3 +
+        d * (P4 + d * (P5 + d * (P6 + d * (P7 + d * (P8 +
+        dd * (P9 + dd * (P10 + dd * (P11 + dd * (P12 + dd * (P13 +
+        dd * P14))))))))))) + (LogConstantFLo(i) + dk * LN2LO + dLo) + d * d * P2;
+    resultHi: f128 = dHi;
+
+    Sum3(&resultHi, &resultLo, LogConstantFHi(i) + dk * LN2HI);
+    return resultHi + resultLo;
+}
+
+private {
+    const SignMask :== 0x8000_0000_0000_0000_0000_0000_0000_0000_u128;
+    const SignShift :== 127i32;
+    const ShiftedSignMask: u8 == u8(SignMask >> SignShift);
+
+    const BiasedExponentMask :== 0x7FFF_0000_0000_0000_0000_0000_0000_0000_u128;
+    const BiasedExponentShift :== 112i32;
+    const ShiftedBiasedExponentMask: u16 == u16(BiasedExponentMask >> BiasedExponentShift);
+
+    const TrailingSignificandMask :== 0x0000_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_u128;
+
+    const MinSign :== 0u8;
+    const MaxSign :== 1u8;
+    const MinBiasedExponent :== u16.MinValue;
+    const MaxBiasedExponent :== 0x7FFFu16;
+    const ExpBias :== 16383u16;
+    const MinExponent :== -16382i16;
+    const MaxExponent :== +16383i16;
+    const MinTrailingSignificand :== u128.MinValue;
+    const MaxTrailingSignificand :== 0x0000_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_u128;
+
+    const TrailingSignificandLength :== 112;
+    const SignificandLength :== TrailingSignificandLength + 1;
+
+    const RoundingEpsilon :== Builtin.BitCast<f128>(0x406F_0000_0000_0000_0000_0000_0000_0000_u128);
+
+    BiasedExponent: (value: f128) -> u16 noexcept ==> ExtractBiasedExponentFromBits(value.Bits);
+    Exponent: (value: f128) -> i16 noexcept ==> i16(BiasedExponent(value) - ExpBias);
+    Significand: (value: f128) -> u128 noexcept ==> TrailingSignificand(value) | (BiasedExponent(value) != 0 ? (1u128 << BiasedExponentShift) : 0u128);
+    TrailingSignificand: (value: f128) -> u128 noexcept ==> ExtractTrailingSignificandFromBits(value.Bits);
+
+    ExtractBiasedExponentFromBits: (bits: u128) -> u16 noexcept ==> u16((bits >> BiasedExponentShift) & ShiftedBiasedExponentMask);
+    ExtractTrailingSignificandFromBits: (bits: u128) -> u128 noexcept ==> bits & TrailingSignificandMask;
+}
+
+// Logarithmic helper constants
+
+private type TConstant = const(g: f32, fhi: f32, flo: f128);
+private type UConstant = const(h: f32, e: f32);
+private type LD = const(High: f128, Low: f128, LowSet: i32);
+
+private const LN2HI :== 0.693147182464599609375f;
+private const LN2LO :== f128.FromBits(0xBFE2_05C6_10CA_86C3_898C_FF81_A12A_17E2_u128);
+
+private const T: TConstant[_] == [
+    {1.0f,0.0f, f128.FromBits(0x0000_0000_0000_0000_0000_0000_0000_0000_u128)},
+    {0.9921875f, 0.007843178f, f128.FromBits(0xBFDF_4EE4_31DA_E667_4AFA_0C4B_FE16_E8FD_u128)},
+    {0.984375f, 0.015748357f, f128.FromBits(0xBFDF_DB29_EE2D_8371_7BE9_18E1_1196_42AB_u128)},
+    {0.9765625f, 0.023716526f, f128.FromBits(0x3FE0_1919_57D1_7369_7CF3_02CC_9476_F561_u128)},
+    {0.96875f, 0.031748697f, f128.FromBits(0x3FE1_3CE8_888E_02E7_8EBA_9B11_13BC_1C18_u128)},
+    {0.9609375f, 0.03984591f, f128.FromBits(0xBFE1_7A43_82CE_6EB7_BFA5_09BE_C8DA_5F22_u128)},
+    {0.9550781f, 0.045962136f, f128.FromBits(0xBFE0_72A2_1161_A107_6749_86DC_DCA6_709C_u128)},
+    {0.94921875f, 0.052116003f, f128.FromBits(0xBFE1_E09D_E07C_B958_897A_3EA4_6E84_ABB3_u128)},
+    {0.94140625f, 0.06038051f, f128.FromBits(0x3FD8_AE1E_EC1B_036C_4849_93C5_49C4_BF40_u128)},
+    {0.93359375f, 0.068713896f, f128.FromBits(0xBFE2_D735_5325_D560_D9E9_AB3D_6EBA_B580_u128)},
+    {0.9277344f, 0.07500982f, f128.FromBits(0xBFE1_F9F0_2D25_6D50_3710_8F4E_C21E_48CD_u128)},
+    {0.921875f, 0.08134564f, f128.FromBits(0xBFE0_6FC0_A9D1_2C17_A70F_7A68_4C59_6B12_u128)},
+    {0.9140625f, 0.08985633f, f128.FromBits(0x3FE2_5D58_1C1E_8DA9_9DED_322F_B08B_8462_u128)},
+    {0.90625f, 0.09844007f, f128.FromBits(0xBFE0_535B_3BA8_F150_AE09_996D_7BB4_653E_u128)},
+    {0.90234375f, 0.102759734f, f128.FromBits(0x3FDE_6378_6F52_51AE_FE0D_ED34_C831_8F52_u128)},
+    {0.89453125f, 0.11145544f, f128.FromBits(0x3FDF_BC4B_2368_E32D_5669_9C17_99A2_44D4_u128)},
+    {0.8886719f, 0.1180272f, f128.FromBits(0x3FE2_C609_0F68_4E67_66AB_CECC_AB1D_7174_u128)},
+    {0.8828125f, 0.12464245f, f128.FromBits(0xBFE1_890A_A69A_C9F4_215F_9393_6B70_9EFB_u128)},
+    {0.8769531f, 0.13130173f, f128.FromBits(0x3FE3_B998_5194_B6AF_FD51_1B53_4B72_A28E_u128)},
+    {0.87109375f, 0.13800567f, f128.FromBits(0xBFE0_DC08_D61C_6EF1_D9B2_EF7E_6868_0598_u128)},
+    {0.8652344f, 0.14475486f, f128.FromBits(0xBFE1_F72A_2DAC_729B_3F46_6622_38A9_425A_u128)},
+    {0.859375f, 0.1515499f, f128.FromBits(0xBFE3_FD4D_FD3A_0AFB_9691_AED4_D5E3_DF94_u128)},
+    {0.8535156f, 0.15839143f, f128.FromBits(0xBFE1_1B26_1216_29C4_6C18_6384_993E_1C93_u128)},
+    {0.84765625f, 0.16528009f, f128.FromBits(0x3FE2_286D_633E_8E56_97DC_6A40_2A56_FCE1_u128)},
+    {0.8417969f, 0.17221653f, f128.FromBits(0x3FDF_6128_EBA9_3677_07EB_FA54_0E45_350C_u128)},
+    {0.8359375f, 0.17920142f, f128.FromBits(0x3FE3_6EAD_5773_90D3_1EF0_F4C9_D43F_79B2_u128)},
+    {0.83203125f, 0.18388528f, f128.FromBits(0x3FE2_5113_1CCF_7C7B_75E7_D900_B521_C48D_u128)},
+    {0.8261719f, 0.19095245f, f128.FromBits(0xBFE3_15E2_CD71_4BD0_6508_AEB0_0D2A_E3E9_u128)},
+    {0.8203125f, 0.19806992f, f128.FromBits(0xBFE1_847F_406E_BD3A_F804_85C2_F409_633C_u128)},
+    {0.81640625f, 0.20284319f, f128.FromBits(0x3FE2_C225_9904_D686_5817_99FB_CE0B_5F19_u128)},
+    {0.8105469f, 0.2100461f, f128.FromBits(0x3FE3_ECE5_7A8D_5AE5_4F55_0444_ECF8_B995_u128)},
+    {0.8046875f, 0.21730128f, f128.FromBits(0xBFE2_F109_D4BC_4595_412B_5D25_17AA_AC13_u128)},
+    {0.80078125f, 0.22216746f, f128.FromBits(0x3FE2_BC03_DC27_1A74_D3A8_5B5B_43C0_E727_u128)},
+    {0.7949219f, 0.22951144f, f128.FromBits(0xBFDE_BF2B_ADC0_DF84_1A71_B79D_D564_5B46_u128)},
+    {0.7890625f, 0.23690975f, f128.FromBits(0xBFDC_8EFE_DEDD_89FB_E0BC_FBE6_D6DB_9F66_u128)},
+    {0.78515625f, 0.24187253f, f128.FromBits(0x3FE2_373F_F977_BAA6_911C_7BAF_CB4D_84FB_u128)},
+    {0.78125f, 0.24686007f, f128.FromBits(0x3FE3_9676_6F2F_B328_337C_C050_C6D8_3B22_u128)},
+    {0.7753906f, 0.25438833f, f128.FromBits(0x3FE4_9BD0_76F7_C434_E5FC_F1A2_12E2_A91E_u128)},
+    {0.7714844f, 0.25943887f, f128.FromBits(0xBFE4_A327_257A_F0F4_65E5_ECAB_5F2A_6F81_u128)},
+    {0.765625f, 0.26706278f, f128.FromBits(0x3FE2_13F2_3DEF_19C5_A0FE_396F_40F1_DDA9_u128)},
+    {0.76171875f, 0.27217788f, f128.FromBits(0x3FE4_759F_6E6B_37DE_945A_049A_962E_66C6_u128)},
+    {0.7578125f, 0.27731928f, f128.FromBits(0x3FE2_AD35_CA6E_D514_7BDB_6DDC_AF59_C425_u128)},
+    {0.75390625f, 0.28248724f, f128.FromBits(0x3FE4_A1D7_1A87_DEBA_46BA_E982_7221_DC98_u128)},
+    {0.7480469f, 0.29028964f, f128.FromBits(0xBFE3_39E5_210C_2B73_0E28_ABA0_01A9_B5E0_u128)},
+    {0.7441406f, 0.29552525f, f128.FromBits(0xBFE2_8F6E_BCFF_3ED7_2E23_E134_31AD_C4A5_u128)},
+    {0.7402344f, 0.30078843f, f128.FromBits(0xBFE4_AA26_8BE3_9AAB_7148_E8D8_0CAA_10B7_u128)},
+    {0.7363281f, 0.30607945f, f128.FromBits(0xBFE4_4C88_1583_9C56_6366_3D15_FAED_7771_u128)},
+    {0.73046875f, 0.31406882f, f128.FromBits(0x3FE2_EAF4_6390_DBB2_4382_7391_8DB7_DF5C_u128)},
+    {0.7265625f, 0.31943077f, f128.FromBits(0x3FE2_38E2_0D83_1F69_8298_ADDD_D7F3_2686_u128)},
+    {0.72265625f, 0.32482162f, f128.FromBits(0xBFE1_E8D3_C411_2361_5B14_7A5D_47BC_208F_u128)},
+    {0.71875f, 0.33024168f, f128.FromBits(0x3FE3_CE28_F5F3_840B_263A_CB43_5110_4631_u128)},
+    {0.71484375f, 0.3356913f, f128.FromBits(0xBFE4_86E5_C0A4_2423_457E_22D8_C650_B355_u128)},
+    {0.7109375f, 0.34117076f, f128.FromBits(0xBFE0_4D41_A0B2_A08A_465D_C513_B13F_567D_u128)},
+    {0.70703125f, 0.3466804f, f128.FromBits(0x3FE4_6755_8927_7063_3947_FFE6_51E7_352F_u128)},
+    {0.703125f, 0.3522206f, f128.FromBits(0xBFE1_6395_EBE5_9B15_228B_FE87_98D1_0FF0_u128)},
+    {0.69921875f, 0.35779163f, f128.FromBits(0x3FE3_ABC6_5C85_95F0_88B6_1A33_5F5B_688C_u128)},
+    {0.6953125f, 0.3633939f, f128.FromBits(0xBFE4_2730_89D3_DAD8_8E7D_353E_9967_D548_u128)},
+    {0.69140625f, 0.3690277f, f128.FromBits(0x3FE4_0F9F_67B1_F4BB_F45D_E06E_CEBF_AF6D_u128)},
+    {0.6875f, 0.37469345f, f128.FromBits(0xBFE3_09FA_B904_8640_92B3_4EDD_A19A_831E_u128)},
+    {0.68359375f, 0.38039148f, f128.FromBits(0xBFE4_1246_80AA_4333_3221_D8A9_B475_A6BA_u128)},
+    {0.6816406f, 0.3832527f, f128.FromBits(0xBFE3_F360_CC47_10FB_FE24_B633_F4E8_D84D_u128)},
+    {0.6777344f, 0.38899985f, f128.FromBits(0xBFE3_32D9_1F21_D89C_89C4_5003_FC5D_7807_u128)},
+    {0.6738281f, 0.39478022f, f128.FromBits(0xBFE4_6BF9_B4D1_F8DA_8002_F244_9E17_4504_u128)},
+    {0.6699219f, 0.40059417f, f128.FromBits(0x3FE2_9DEB_5CE6_A6A8_717D_5626_E16A_CC7D_u128)},
+    {0.6660156f, 0.40644214f, f128.FromBits(0x3FE4_A29F_B48F_7D3C_A87D_ABF3_51AA_41F4_u128)},
+    {0.6640625f, 0.409379f, f128.FromBits(0x3FE2_127D_3C64_57F9_D79F_51DC_C730_14C9_u128)},
+    {0.66015625f, 0.41527873f, f128.FromBits(0xBFE2_BA93_0E48_6A0A_C42D_1BF9_1991_88E7_u128)},
+    {0.65625f, 0.42121348f, f128.FromBits(0xBFE4_B6E6_45F3_1549_DD11_60BC_C45C_7E2C_u128)},
+    {0.65234375f, 0.42718363f, f128.FromBits(0x3FE3_118A_4254_94B6_1066_5377_F156_25B6_u128)},
+    {0.6503906f, 0.43018213f, f128.FromBits(0x3FE3_966F_24D2_9D3A_2D1B_2176_0104_78BE_u128)},
+    {0.6464844f, 0.43620625f, f128.FromBits(0xBFE1_D8E5_2EB2_248F_0C95_DD83_626D_7333_u128)},
+    {0.6425781f, 0.44226688f, f128.FromBits(0xBFE3_EE37_0F96_E6B6_7CCB_006A_5B98_90EA_u128)},
+    {0.640625f, 0.445311f, f128.FromBits(0x3FE3_D155_3249_11F5_6DB2_8DA4_D629_D00A_u128)},
+    {0.63671875f, 0.45142725f, f128.FromBits(0xBFE3_FE6E_2F2F_867D_8F4D_60C7_1334_6641_u128)},
+    {0.6328125f, 0.4575811f, f128.FromBits(0x3FE3_B7BE_9ADD_7F4D_3B3D_406B_6CBF_3CE5_u128)},
+    {0.6308594f, 0.4606723f, f128.FromBits(0x3FE4_B3CF_B3F7_511D_D736_9260_9040_CCC2_u128)},
+    {0.6269531f, 0.4668835f, f128.FromBits(0xBFE4_220D_E1F7_3019_01B8_AD85_C25A_FD09_u128)},
+    {0.625f, 0.47000363f, f128.FromBits(0xBFE3_7636_4C9A_C81C_C8A4_DFB8_04DE_6867_u128)},
+    {0.62109375f, 0.47627324f, f128.FromBits(0x3FE2_EED6_B9AA_FAC8_D42F_78D3_E65D_3727_u128)},
+    {0.6191406f, 0.47942284f, f128.FromBits(0x3FE4_D593_2186_75AF_2696_47B7_83D8_8999_u128)},
+    {0.6152344f, 0.485752f, f128.FromBits(0xBFDF_3E8E_B7DA_053E_0637_1461_5F7C_C91D_u128)},
+    {0.61328125f, 0.48893163f, f128.FromBits(0x3FE4_C063_259B_CADE_0295_1686_D537_3AEC_u128)},
+    {0.609375f, 0.49532142f, f128.FromBits(0x3FE4_EF49_1085_FA3C_1649_3496_3053_1502_u128)},
+    {0.6074219f, 0.4985317f, f128.FromBits(0x3FE4_D607_A7C2_B8C5_3206_19FB_9433_D841_u128)},
+    {0.6035156f, 0.50498337f, f128.FromBits(0xBFE5_2AD3_8170_04F3_F0BD_FF99_F932_B273_u128)},
+    {0.6015625f, 0.50822484f, f128.FromBits(0xBFE2_89FC_5311_7F9E_54E7_8103_A2BC_1767_u128)},
+    {0.59765625f, 0.5147395f, f128.FromBits(0x3FE4_4CF1_5A04_8907_B7D7_F47D_DB45_C5A3_u128)},
+    {0.5957031f, 0.5180128f, f128.FromBits(0x3FE5_CBB1_D35F_B828_73B0_4A9A_F1DD_692C_u128)},
+    {0.5917969f, 0.5245918f, f128.FromBits(0x3FE5_1286_39B8_14F9_B977_0D8C_B657_3540_u128)},
+    {0.58984375f, 0.5278976f, f128.FromBits(0x3FE4_8473_3853_300F_002E_836D_FD47_BD41_u128)},
+    {0.5878906f, 0.53121436f, f128.FromBits(0x3FE3_09D2_3AEF_77DD_5CD7_CC94_306F_B3FF_u128)},
+    {0.5839844f, 0.5378811f, f128.FromBits(0xBFE5_A81E_F367_A59D_E2B4_1EEE_BD55_0702_u128)},
+    {0.58203125f, 0.54123116f, f128.FromBits(0xBFE5_21AD_3DBB_2F45_275C_917A_30DF_4AC9_u128)},
+    {0.5800781f, 0.5445925f, f128.FromBits(0xBFE4_CFB9_8162_8AF7_1A89_DF4E_6DF2_E93B_u128)},
+    {0.5761719f, 0.5513493f, f128.FromBits(0xBFE4_D217_30EA_76CF_DEC3_6782_8734_CAE5_u128)},
+    {0.57421875f, 0.55474484f, f128.FromBits(0x3FE5_35CC_00E5_66F7_6B87_3338_91E0_DEC4_u128)},
+    {0.5722656f, 0.558152f, f128.FromBits(0xBFE3_0FCB_5DF2_57A2_63E3_BF44_6C6E_3F69_u128)},
+    {0.5683594f, 0.56500137f, f128.FromBits(0xBFE4_6E17_1B15_433D_723A_4C73_80A4_48D8_u128)},
+    {0.56640625f, 0.5684437f, f128.FromBits(0xBFE4_D050_DA07_F323_6F33_0972_DA2A_7A87_u128)},
+    {0.5644531f, 0.5718979f, f128.FromBits(0x3FE4_BE03_669A_5268_D211_48C6_002B_ECD3_u128)},
+    {0.5605469f, 0.5788424f, f128.FromBits(0x3FE4_0B28_E0E2_6C33_6AF9_0E00_5333_23BA_u128)},
+    {0.55859375f, 0.5823328f, f128.FromBits(0x3FE5_A1D8_20DA_57CF_2F10_5A89_0600_46AA_u128)},
+    {0.5566406f, 0.58583546f, f128.FromBits(0xBFE4_9EF8_F13A_E3CF_1624_09D8_EA99_D4C0_u128)},
+    {0.5546875f, 0.5893504f, f128.FromBits(0xBFE5_09E4_17A6_E507_B9DC_10DA_C743_AD7A_u128)},
+    {0.55078125f, 0.59641755f, f128.FromBits(0x3FE4_0D01_A2C5_B0E9_7C49_90B2_3D9A_C1F5_u128)},
+    {0.5488281f, 0.59997f, f128.FromBits(0xBFE5_D6A5_0D4B_61EA_7454_0BDD_2AA9_9A42_u128)},
+    {0.546875f, 0.603535f, f128.FromBits(0x3FE5_B3B1_90B8_3F95_27E6_ABA8_F2D7_83C1_u128)},
+    {0.5449219f, 0.6071128f, f128.FromBits(0x3FE5_3A69_FAD7_E7AB_E7BA_81C6_64C1_07E0_u128)},
+    {0.54296875f, 0.6107035f, f128.FromBits(0xBFE5_1CD1_2316_F576_AAD3_48AE_7986_7223_u128)},
+    {0.5410156f, 0.6143071f, f128.FromBits(0x3FE4_C95C_444B_807A_2467_26B3_04CC_AE56_u128)},
+    {0.5371094f, 0.62155354f, f128.FromBits(0xBFE4_B9C2_24EA_698C_2F9B_4746_6D61_23FE_u128)},
+    {0.53515625f, 0.6251965f, f128.FromBits(0x3FE2_25CA_9318_6CF0_F38B_4619_A248_3399_u128)},
+    {0.5332031f, 0.62885284f, f128.FromBits(0xBFE4_EE38_A7BC_228B_3597_043B_E78E_AF49_u128)},
+    {0.53125f, 0.6325226f, f128.FromBits(0xBFE5_A0DB_8766_13D2_0414_7DC6_9A07_A649_u128)},
+    {0.5292969f, 0.6362058f, f128.FromBits(0x3FE4_9322_4E85_16C0_08D3_602A_7B41_C6E8_u128)},
+    {0.52734375f, 0.63990265f, f128.FromBits(0x3FE4_FA28_B4D2_541A_CA7D_5844_606B_2421_u128)},
+    {0.5253906f, 0.6436132f, f128.FromBits(0x3FE5_C1B5_760F_B457_1ACB_CFB0_3F16_DAF4_u128)},
+    {0.5214844f, 0.65107596f, f128.FromBits(0x3FE3_FED5_D0F6_5949_C0A3_45AD_743A_E1AE_u128)},
+    {0.51953125f, 0.6548283f, f128.FromBits(0x3FE3_AD27_0C9D_7493_6238_2A76_8847_9E24_u128)},
+    {0.5175781f, 0.6585948f, f128.FromBits(0x3FE4_99FF_15CE_5326_61EA_9643_A3A2_D378_u128)},
+    {0.515625f, 0.6623755f, f128.FromBits(0x3FE4_A19E_15CC_C45D_2575_30A6_82B8_0490_u128)},
+    {0.5136719f, 0.6661706f, f128.FromBits(0xBFE3_21A1_4EC5_32B3_5BA3_E1F8_68FD_0B5E_u128)},
+    {0.51171875f, 0.6699801f, f128.FromBits(0x3FE4_AEE3_1998_0BFF_3303_DD48_1779_DF69_u128)},
+    {0.5097656f, 0.6738042f, f128.FromBits(0xBFE3_8FFD_9E39_0034_5A85_D2D8_6161_742E_u128)},
+    {0.5078125f, 0.677643f, f128.FromBits(0xBFE3_E4DB_102C_E29F_79B0_26B6_4B42_CAA1_u128)},
+    {0.5058594f, 0.68149656f, f128.FromBits(0x3FE2_7C35_C55A_04A8_2AB1_9F77_652D_977A_u128)},
+    {0.50390625f, 0.685365f, f128.FromBits(0x3FE5_4483_2404_7019_B48D_7B98_C1CF_7234_u128)},
+    {0.5019531f, 0.68924856f, f128.FromBits(0xBFE5_750E_E391_5A19_7E9C_7359_DD94_152F_u128)},
+    {0.5f, LN2HI, LN2LO}
+];
+
+private const U: UConstant[_] == [
+	{1.0f, 0.0f},
+	{1.0078125f, -6.1035156e-05f},
+	{1.015625f, -0.00024414062f},
+	{1.0234375f, -0.0005493164f},
+	{1.03125f, -0.0009765625f},
+	{1.0390625f, -0.0015258789f},
+	{1.046875f, -0.00015258789f},
+	{1.0546875f, 0.0011291504f},
+	{1.0625f, 0.00024414062f},
+	{1.0703125f, -0.00076293945f},
+	{1.078125f, 0.00021362305f},
+	{1.0859375f, 0.0010986328f},
+	{1.09375f, -0.00024414062f},
+	{1.1015625f, -0.0017089844f},
+	{1.109375f, 0.0010375977f},
+	{1.1171875f, -0.00064086914f},
+	{1.125f, -0.00024414062f},
+	{1.1328125f, 6.1035156e-05f},
+	{1.140625f, 0.0002746582f},
+	{1.1484375f, 0.00039672852f},
+	{1.15625f, 0.0004272461f},
+	{1.1640625f, 0.00036621094f},
+	{1.171875f, 0.00021362305f},
+	{1.1796875f, -3.0517578e-05f},
+	{1.1875f, -0.00036621094f},
+	{1.1953125f, -0.00079345703f},
+	{1.203125f, 0.0010375977f},
+	{1.2109375f, 0.00044250488f},
+	{1.21875f, -0.00024414062f},
+	{1.2265625f, 0.001373291f},
+	{1.234375f, 0.0005187988f},
+	{1.2421875f, -0.0004272461f},
+	{1.25f, 0.0009765625f},
+	{1.2578125f, -0.0001373291f},
+	{1.265625f, -0.0013427734f},
+	{1.2734375f, -0.00015258789f},
+	{1.28125f, 0.0009765625f},
+	{1.2890625f, -0.00047302246f},
+	{1.296875f, 0.0005187988f},
+	{1.3046875f, -0.0010986328f},
+	{1.3125f, -0.00024414062f},
+	{1.3203125f, 0.0005493164f},
+	{1.328125f, 0.0012817383f},
+	{1.3359375f, -0.00065612793f},
+	{1.34375f, -6.1035156e-5f},
+	{1.3515625f, 0.00047302246f},
+	{1.359375f, 0.0009460449f},
+	{1.3671875f, -0.0013122559f},
+	{1.375f, -0.0009765625f},
+	{1.3828125f, -0.0007019043f},
+	{1.390625f, -0.00048828125f},
+	{1.3984375f, -0.00033569336f},
+	{1.40625f, -0.00024414062f},
+	{1.4140625f, -0.00021362305f},
+	{1.421875f, -0.00024414062f},
+	{1.4296875f, -0.00033569336f},
+	{1.4375f, -0.00048828125f},
+	{1.4453125f, -0.0007019043f},
+	{1.453125f, -0.0009765625f},
+	{1.4609375f, -0.0013122559f},
+	{1.46875f, 0.001159668f},
+	{1.4765625f, 0.0007171631f},
+	{1.484375f, 0.00021362305f},
+	{1.4921875f, -0.00035095215f},
+	{1.5f, -0.0009765625f},
+	{1.5078125f, 0.0012817383f},
+	{1.515625f, 0.0005493164f},
+	{1.5234375f, -0.00024414062f},
+	{1.53125f, -0.0010986328f},
+	{1.5390625f, 0.0009918213f},
+	{1.546875f, 3.0517578e-5f},
+	{1.5546875f, -0.0009918213f},
+	{1.5625f, 0.0009765625f},
+	{1.5703125f, -0.00015258789f},
+	{1.578125f, -0.0013427734f},
+	{1.5859375f, 0.00050354004f},
+	{1.59375f, -0.00079345703f},
+	{1.6015625f, 0.0009765625f},
+	{1.609375f, -0.0004272461f},
+	{1.6171875f, 0.0012664795f},
+	{1.625f, -0.00024414062f},
+	{1.6328125f, 0.001373291f},
+	{1.640625f, -0.00024414062f},
+	{1.6484375f, 0.0012969971f},
+	{1.65625f, -0.0004272461f},
+	{1.6640625f, 0.0010375977f},
+	{1.671875f, -0.00079345703f},
+	{1.6796875f, 0.0005950928f},
+	{1.6875f, -0.0013427734f},
+	{1.6953125f, -3.0517578e-5f},
+	{1.703125f, 0.0012512207f},
+	{1.7109375f, -0.0008392334f},
+	{1.71875f, 0.00036621094f},
+	{1.7265625f, 0.0015411377f},
+	{1.734375f, -0.0007019043f},
+	{1.7421875f, 0.00039672852f},
+	{1.75f, 0.0014648438f},
+	{1.7578125f, -0.00093078613f},
+	{1.765625f, 6.1035156e-5f},
+	{1.7734375f, 0.0010223389f},
+	{1.78125f, -0.0015258789f},
+	{1.7890625f, -0.00064086914f},
+	{1.796875f, 0.00021362305f},
+	{1.8046875f, 0.0010375977f},
+	{1.8125f, -0.0017089844f},
+	{1.8203125f, -0.0009613037f},
+	{1.828125f, -0.00024414062f},
+	{1.8359375f, 0.00044250488f},
+	{1.84375f, 0.0010986328f},
+	{1.8515625f, 0.0017242432f},
+	{1.859375f, -0.0013122559f},
+	{1.8671875f, -0.00076293945f},
+	{1.875f, -0.00024414062f},
+	{1.8828125f, 0.00024414062f},
+	{1.890625f, 0.0007019043f},
+	{1.8984375f, 0.0011291504f},
+	{1.90625f, 0.0015258789f},
+	{1.9140625f, -0.0018463135f},
+	{1.921875f, -0.0015258789f},
+	{1.9296875f, -0.0012359619f},
+	{1.9375f, -0.0009765625f},
+	{1.9453125f, -0.00074768066f},
+	{1.953125f, -0.0005493164f},
+	{1.9609375f, -0.00038146973f},
+	{1.96875f, -0.00024414062f},
+	{1.9765625f, -0.0001373291f},
+	{1.984375f, -6.1035156e-5f},
+	{1.9921875f, -1.5258789e-5f},
+	{2.0f, 0.0f}
+];
+
+private LogConstantG: (index: i32) -> f32 ==> T[index].g;
+private LogConstantFHi: (index: i32) -> f32 ==> T[index].fhi;
+private LogConstantFLo: (index: i32) -> f128 ==> T[index].flo;
+private LogConstantE: (index: i32) -> f32 ==> U[index].e;
+private LogConstantH: (index: i32) -> f32 ==> U[index].h;
+
+private const P2: f128 == f128.FromBits(0xBFFE_0000_0000_0000_0000_0000_0000_0000_u128);
+private const P3: f128 == f128.FromBits(0x3FFD_5555_5555_5555_5555_5555_5555_4D42_u128);
+private const P4: f128 == f128.FromBits(0xBFFC_FFFF_FFFF_FFFF_FFFF_FFFF_FFDA_B14E_u128);
+private const P5: f128 == f128.FromBits(0x3FFC_9999_9999_9999_9999_999A_6D35_67F4_u128);
+private const P6: f128 == f128.FromBits(0xBFFC_5555_5555_5555_5555_5672_67A5_8E13_u128);
+private const P7: f128 == f128.FromBits(0x3FFC_2492_4924_9249_248E_D79A_0AE4_34DE_u128);
+private const P8: f128 == f128.FromBits(0xBFFB_FFFF_FFFF_FFFF_FA13_E917_65E4_6140_u128);
+private const P9: f128 == f128.FromBits(0x3FFB_C71C_71C7_1C7E_D54D_6D66_A8B2_C988_u128);
+private const P10: f128 == f128.FromBits(0xBFFB_9999_9999_A0A9_1EA5_57FE_E717_E405_u128);
+private const P11: f128 == f128.FromBits(0x3FFB_745D_1739_6211_107D_5489_11E4_3450_u128);
+private const P12: f128 == f128.FromBits(0xBFFB_5555_5172_2C7A_2FC3_D1C0_7002_5776_u128);
+private const P13: f128 == f128.FromBits(0x3FFB_3B19_8520_4A4A_E07C_9C4B_3F70_D6F0_u128);
+private const P14: f128 == f128.FromBits(0xBFFB_2562_276C_DC5C_FF73_89B1_89F8_903B_u128);
+
+private Sum2: (ref a: f128, ref b: f128) noexcept ==
+{
+    let w := a + b;
+    b = a - w + b;
+    a = w;
+}
+
+private Sum3: (ref a: f128, ref b: f128, c: f64) noexcept ==
+{
+    tmp: f128 = c;
+    Sum2(&tmp, &a);
+    b += a;
+    a = tmp;
+}
+
+private inline PackBits: (sign: bool, exponent: u16, mantissa: u128) -> u128
+    ==> ((sign ? 1u128 : 0u128) << SignShift) + ((u128(exponent) << BiasedExponentShift) & BiasedExponentMask) + mantissa;
+
+// Natural logarithm implementation
+private LogInternal: (x: f128) -> LD
+{
+    /* origin: FreeBSD /usr/src/lib/msun/ld128/s_logl.c */
+
+    rp: LD;
+    lx: u64;
+    hx := BiasedExponent(x);
+    k := -16383;
+    
+    if x.IsNegative or x.IsZero or x.IsNaN {
+        if (u128(hx) | TrailingSignificand(x)) == 0 {
+            rp.High = f128.NegativeInfinity;
+            return rp;
+        }
+
+        rp.High = f128.NaN;
+        return rp;
+    }
+    if x.IsInfinity {
+        rp.High = x;
+        return rp;
+    }
+    if x.IsSubnormal {
+        x *= f128.FromBits(0x4070_0000_0000_0000_0000_0000_0000_0000_u128);
+        k -= 113;
+        lx = TrailingSignificand(x).High64();
+        hx = BiasedExponent(x);
+    } else {
+        lx = TrailingSignificand(x).High64();
+    }
+
+    k += (hx | (x.IsNegative ? 1u16 << 15 : 0u16));
+    let dk: f64 = k;
+    x = f128.FromBits(PackBits(false, 0x3fffu16, TrailingSignificand(x)));
+
+    const l2i := 49 - 7;
+    let i := ((lx +% (1u64 << (l2i - 2))) >> (l2i - 1)).NarrowToInt32();
+    let d := (x - LogConstantH(i)) * LogConstantG(i) + LogConstantE(i);
+    let dd := d as f64;
+
+    resultLo: f128 = d * d * d * (P3 +
+        d * (P4 + d * (P5 + d * (P6 + d * (P7 + d * (P8 +
+        dd * (P9 + dd * (P10 + dd * (P11 + dd * (P12 + dd * (P13 +
+        dd * P14))))))))))) + (LogConstantFLo(i) + dk * LN2LO) + d * d * P2;
+    resultHi: f128 = d;
+
+    Sum3(&resultHi, &resultLo, LogConstantFHi(i) + dk * LN2HI);
+    rp = { resultHi, resultLo, 1 };
+    return rp;
+}

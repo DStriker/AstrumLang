@@ -369,7 +369,7 @@ namespace Builtin {
 
 		template <class U>
 		constexpr FastInt<T> operator+(U rhs) const noexcept {
-			return value + rhs;
+			return FastInt<T>(value + rhs);
 		}
 
 		template <class U>
@@ -391,7 +391,7 @@ namespace Builtin {
 
 		template <class U>
 		constexpr FastInt<T> operator-(U rhs) const noexcept {
-			return value - rhs;
+			return FastInt<T>(value - rhs);
 		}
 
 		template <class U>
@@ -413,7 +413,7 @@ namespace Builtin {
 
 		template <class U>
 		constexpr FastInt<T> operator<<(U bits) const noexcept {
-			return value << bits;
+			return FastInt<T>(value << bits);
 		}
 
 		template <class U>

@@ -8,6 +8,7 @@
 #include "Decimal.h"
 #include "Exceptions.h"
 #include "Floating.h"
+#include "InlineArray.h"
 #include "FuncParameterMode.h"
 #include "FunctionRef.h"
 #include "LocalFunctions.h"
@@ -44,6 +45,7 @@ using Builtin::usize;
 using Builtin::f16;
 using Builtin::f32;
 using Builtin::f64;
+using Builtin::f128;
 using Builtin::fext;
 
 #ifdef ADV_UNITTEST

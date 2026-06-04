@@ -205,6 +205,8 @@ public:
 
     virtual std::any visitCollectionExpression(AstrumParser::CollectionExpressionContext *context) = 0;
 
+    virtual std::any visitCollectionExpressionPart(AstrumParser::CollectionExpressionPartContext *context) = 0;
+
     virtual std::any visitKeyValuePairExpression(AstrumParser::KeyValuePairExpressionContext *context) = 0;
 
     virtual std::any visitExpressionList(AstrumParser::ExpressionListContext *context) = 0;

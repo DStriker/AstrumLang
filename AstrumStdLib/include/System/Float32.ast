@@ -635,7 +635,7 @@ public extension f32: IFloatingPoint {
     {
         const maxRoundingDigits :== 6u;
         const singleRoundLimit :== 1e8f;
-        //const pow10table: f32[6] == [1e0f, 1e1f, 1e2f, 1e3f, 1e4f, 1e5f, 1e6f];
+        const pow10table: f32[_] == [1e0f, 1e1f, 1e2f, 1e3f, 1e4f, 1e5f, 1e6f];
 
         if digits > maxRoundingDigits {
             throw Builtin.InvalidArgumentException(); //ArgumentOutOfRange
@@ -643,8 +643,7 @@ public extension f32: IFloatingPoint {
 
         result := this;
         if this.Abs < singleRoundLimit {
-            //pow10 := pow10table[digits];
-            let pow10 := 10.0f ^^ i32(digits);
+            let pow10 := pow10table[digits];
             result *= pow10;
 
             result = switch rounding

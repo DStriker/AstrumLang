@@ -1,0 +1,1271 @@
+package System;
+
+import Float128;
+
+internal SinImpl: (x: f128) -> f128
+{
+    let exp := BiasedExponent(x);
+
+    // sin(NaN) = NaN; sin(inf) = NaN
+    if exp == MaxBiasedExponent {
+        return f128.NaN;
+    }
+
+    if x.Abs < PI_4 {
+        if exp < 0x3fff - (113 \ 2) {
+            return x;
+        }
+
+        return SinInternal(x, 0, 0);
+    }
+
+    high, low: f128;
+    let n := RemPIO2(x, &high, &low) & 3;
+
+    return switch n {
+        0 => SinInternal(high, low, 1),
+        1 => CosInternal(high, low),
+        2 => -SinInternal(high, low, 1),
+        _ => -CosInternal(high, low)
+    };
+}
+
+internal CosImpl: (x: f128) -> f128
+{
+    let exp := BiasedExponent(x);
+
+    // cos(NaN) = NaN; cos(inf) = NaN
+    if exp == MaxBiasedExponent {
+        return f128.NaN;
+    }
+
+    if x.Abs < PI_4 {
+        if exp < 0x3fff - (113 \ 2) {
+            return x + 1;
+        }
+
+        return CosInternal(x, 0);
+    }
+
+    high, low: f128;
+    let n := RemPIO2(x, &high, &low) & 3;
+
+    return switch n {
+        0 => CosInternal(high, low),
+        1 => -SinInternal(high, low, 1),
+        2 => -CosInternal(high, low),
+        _ => SinInternal(high, low, 1)
+    };
+}
+
+internal SinCosImpl: (x: f128) -> (f128, f128)
+{
+    let exp := BiasedExponent(x);
+
+    // sin/cos(NaN) = NaN; sin/cos(inf) = NaN
+    if exp == MaxBiasedExponent {
+        return (f128.NaN, f128.NaN);
+    }
+
+    if x.Abs < PI_4 {
+        if exp < 0x3fff - (113 \ 2) {
+            return (x, x + 1);
+        }
+
+        return (SinInternal(x, 0, 0), CosInternal(x, 0));
+    }
+
+    high, low: f128;
+    let n := RemPIO2(x, &high, &low) & 3;
+    let sin := SinInternal(high, low, 1);
+    let cos := CosInternal(high, low);
+
+    return switch n {
+        0 => (sin, cos),
+        1 => (cos, -sin),
+        2 => (-sin, -cos),
+        _ => (-cos, sin)
+    };
+}
+
+internal TanImpl: (x: f128) -> f128
+{
+    ix := x.Bits.High64() & 0x7fffffffffffffffu64;
+    if ix <= 0x3ffe921fb54442d1u64 {
+        return TanInternal(x, 0, 1);
+    } else if ix >= 0x7fff000000000000u64 {
+        return f128.NaN;
+    } else {
+        high, low: f128;
+        let n := RemPIO2(x, &high, &low);
+        return TanInternal(high, low, 1 - ((n & 1) << 1));
+    }
+}
+
+internal AsinImpl: (x: f128) -> f128
+{
+    let exp := BiasedExponent(x);
+    let sign := x.IsNegative;
+
+    // |x| >= 1 or nan
+    if exp >= 0x3FFFu {
+        if x == f128.One or x == f128.MinusOne {
+            return x * PIO2_HI + f128.FromBits(0x3F87_0000_0000_0000_0000_0000_0000_0000_u128);
+        }
+
+        return f128.NaN;
+    }
+
+    // |x| < 0.5
+    if exp < 0x3FFF - 1 {
+        if exp < 0x3FFF - (114 \ 2) {
+            return x;
+        }
+
+        return x + x * R(x * x);
+    }
+
+    // 1 > |x| >= 0.5
+    let z := (f128.One - x.Abs) * f128(0.5);
+    let s := z.Sqrt;
+    let r := R(z);
+    if ((x.Bits.High64() >> 32) & 0xFFFFu) >= 0xEE00 {
+        x = PIO2_HI - (f128(2) * (s + s * r) - PIO2_LO);
+    } else {
+        let f := f128.FromBits(u128(s.Bits.High64(), 0u));
+        let c := (z - f * f) / (s + f);
+        x = f128(0.5) * PIO2_HI - (f128(2) * s * r - (PIO2_LO - c * 2) - (f128(0.5) * PIO2_HI - f * 2));
+    }
+
+    return sign ? -x : x;
+}
+
+internal AcosImpl: (x: f128) -> f128
+{
+    if x == 0 {
+        return PI_2;
+    }
+
+    if x >= f128.One {
+        if x == f128.One {
+            return 0;
+        }
+        return f128.NaN;
+    }
+
+    if x <= f128.MinusOne {
+        if x == f128.MinusOne {
+            return f128.Pi;
+        }
+        return f128.NaN;
+    }
+
+    let y := ((f128.One - (x * x)).Sqrt / x).Atan;
+    return x > 0 ? y : y + f128.Pi;
+}
+
+internal AtanImpl: (x: f128) -> f128
+{
+    let exp := BiasedExponent(x);
+    let sign := x.IsNegative;
+
+    if exp >= 0x3FFF + 114 {
+        if x.IsNaN {
+            return x;
+        }
+        return sign ? -(AtanHi[3]) : AtanHi[3];
+    }
+
+    let expman := (u32(exp) << 8) | (x.Bits.High64() >> 40).NarrowToUInt8();
+    id: i32;
+    // |x| < 0.4375
+    if expman < ((0x3FFF - 2) << 8) + 0xC0 {
+        if exp < 0x3FFF - (114 \ 2) {
+            if x.IsSubnormal {
+                x = f128.NegativeInfinity;
+            }
+            return x;
+        }
+        id = -1;
+    } else {
+        x = x.Abs;
+        if expman < (0x3fff << 8) + 0x30 {
+            // |x| < 1.1875
+            if expman < ((0x3fff - 1) << 8) + 0x60 {
+                id = 0;
+                x = (f128(2) * x - f128.One) / (f128(2) + x);
+            } else {
+                id = 1;
+                x = (x - f128.One) / (x + f128.One);
+            }
+        } else {
+            if expman < ((0x3fff + 1) << 8) + 0x38 {
+                id = 2;
+                const oneHalf :== f128.FromBits(0x3FFF_8000_0000_0000_0000_0000_0000_0000_u128);
+                x = (x - oneHalf) / (f128.One + oneHalf * x);
+            } else {
+                id = 3;
+                x = f128.MinusOne / x;
+            }
+        }
+    }
+
+    z := x * x;
+    let w := z * z;
+    let s1 := z * Even(w);
+    let s2 := w * Odd(w);
+    if id < 0 {
+        return x - x * (s1 + s2);
+    }
+    z = AtanHi[id] - ((x * (s1 + s2) - AtanLo[id]) - x);
+    return sign ? -z : z;
+}
+
+internal Atan2Impl: (y: f128, x: f128) -> f128
+{
+    if x.IsNaN or y.IsNaN {
+        return f128.NaN;
+    }
+
+    let ex: i32 = BiasedExponent(x);
+    let ey: i32 = BiasedExponent(y);
+    let m := i32(2 * (x.Bits.High64() >> 63) | (y.Bits.High64() >> 63));
+
+    if y == 0 {
+        return switch m {
+            0 or 1 => y,
+            2 => f128(2) * PIO2_HI,
+            3 => f128(-2) * PIO2_HI
+        };
+    }
+    if x == 0 {
+        return ((m & 1) != 0) ? -PIO2_HI : PIO2_HI;
+    }
+    if ex == MaxBiasedExponent {
+        if ey == MaxBiasedExponent {
+            const oneHalf :== f128.FromBits(0x3FFF_8000_0000_0000_0000_0000_0000_0000_u128);
+
+            return switch m {
+                0 => PIO2_HI / 2,
+                1 => -PIO2_HI / 2,
+                2 => oneHalf * PIO2_HI,
+                3 => -oneHalf * PIO2_HI
+            };
+        } else {
+            return switch m {
+                0 => 0.0f128,
+                1 => f128.NegativeZero,
+                2 => f128(2) * PIO2_HI,
+                3 => f128(-2) * PIO2_HI
+            };
+        }
+    }
+
+    if ex + 120 < ey or ey == MaxBiasedExponent {
+        return ((m & 1) != 0) ? -PIO2_HI : PIO2_HI;
+    }
+
+    z: f128;
+    if ((m & 2) != 0) and ey + 120 < ex {
+        z = 0;
+    } else {
+        z = ((y / x).Abs).Atan;
+    }
+
+    return switch m {
+        0 => z,
+        1 => -z,
+        2 => f128(2) * PIO2_HI - (z - f128(2) * PIO2_LO),
+        _ => (z - f128(2) * PIO2_LO) - f128(2) * PIO2_HI
+    };
+}
+
+internal SinPiImpl: (x: f128) -> f128
+{
+    const PiHi :== f128.FromBits(0x4000_921F_B544_42D1_8400_0000_0000_0000_u128);
+    const PiLo :== f128.FromBits(0x3FC6_A626_3314_5C06_E0E6_8948_1270_4453_u128);
+
+    let ax := x.Abs;
+    hi, lo, s: f128;
+
+    if ax < f128.One {
+        if ax < Quarter {
+            if ax < f128.FromBits(0x3FC3_0000_0000_0000_0000_0000_0000_0000_u128) {
+                if x == 0 {
+                    return x;
+                }
+
+                hi = x.ToFloat64();
+                hi *= f128.FromBits(0x4070_0000_0000_0000_0000_0000_0000_0000_u128);
+                lo = x * f128.FromBits(0x4070_0000_0000_0000_0000_0000_0000_0000_u128) - hi;
+                s = (PiLo + PiHi) * lo + PiLo * lo + PiHi * hi;
+                return s * f128.FromBits(0x3F8E_0000_0000_0000_0000_0000_0000_0000_u128);
+            }
+
+            s = SinPiInternal(ax);
+            return x < 0 ? -s : s;
+        }
+
+        if ax < HalfOne {
+            s = CosPiInternal(HalfOne - ax);
+        } else if ax < ThreeFourth {
+            s = CosPiInternal(ax - HalfOne);
+        } else {
+            s = SinPiInternal(f128.One - ax);
+        }
+
+        return x < 0 ? -s : s;
+    }
+
+    if ax < f128.FromBits(0x406F_0000_0000_0000_0000_0000_0000_0000_u128) {
+        let ai, ar := FastFloor(ax);
+
+        if ar == 0 {
+            s = 0;
+        } else {
+            if ar < HalfOne {
+                if ar <= Quarter {
+                    s = SinPiInternal(ar);
+                } else {
+                    s = CosPiInternal(HalfOne - ar);
+                }
+            } else {
+                if ar < ThreeFourth {
+                    s = CosPiInternal(ar - HalfOne);
+                } else {
+                    s = SinPiInternal(f128.One - ar);
+                }
+            }
+
+            s = ai.IsEvenInteger ? s : -s;
+        }
+
+        return x < 0 ? -s : s;
+    }
+
+    if x.IsNaN or x.IsInfinity {
+        return f128.NaN;
+    }
+
+    return f128.Zero.CopySign(x);
+}
+
+internal CosPiImpl: (x: f128) -> f128
+{
+    let ax := x.Abs;
+    c: f128;
+
+    if ax <= f128.One {
+        if ax < Quarter {
+            if ax < f128.FromBits(0x3FC3_0000_0000_0000_0000_0000_0000_0000_u128) {
+                if x.NarrowToInt32() == 0 {
+                    return f128.One;
+                }
+            }
+
+            return CosPiInternal(ax);
+        }
+
+        if ax < HalfOne {
+            c = SinPiInternal(HalfOne - ax);
+        } else if ax < ThreeFourth {
+            if ax == HalfOne {
+                return 0;
+            }
+            c = -SinPiInternal(ax - HalfOne);
+        } else {
+            c = -CosPiInternal(f128.One - ax);
+        }
+
+        return c;
+    }
+
+    if ax < f128.FromBits(0x406F_0000_0000_0000_0000_0000_0000_0000_u128) {
+        let ai, ar := FastFloor(ax);
+
+        if ar < HalfOne {
+            if ar < Quarter {
+                c = ar == 0 ? f128.One : CosPiInternal(ar);
+            } else {
+                c = SinPiInternal(HalfOne - ar);
+            }
+        } else {
+            if ar < ThreeFourth {
+                if ar == HalfOne {
+                    return 0;
+                }
+                c = -SinPiInternal(ar - HalfOne);
+            } else {
+                c = -CosPiInternal(f128.One - ar);
+            }
+        }
+
+        return ai.IsEvenInteger ? c : -c;
+    }
+
+    if x.IsNaN or x.IsInfinity {
+        return f128.NaN;
+    }
+
+    if ax >= f128.FromBits(0x4070_0000_0000_0000_0000_0000_0000_0000_u128) {
+        return f128.One;
+    }
+
+    return ax.IsEvenInteger ? f128.One : f128.MinusOne;
+}
+
+internal TanPiImpl: (x: f128) -> f128
+{
+    const PiHi :== f128.FromBits(0x4000_921F_B544_42D1_8400_0000_0000_0000_u128);
+    const PiLo :== f128.FromBits(0x3FC6_A626_3314_5C06_E0E6_8948_1270_4453_u128);
+
+    let ax := x.Abs;
+    hi, lo, t: f128;
+
+    if ax < f128.One {
+        if ax < HalfOne {
+            if ax < f128.FromBits(0x3FC3_0000_0000_0000_0000_0000_0000_0000_u128) {
+                if x == 0 {
+                    return x;
+                }
+
+                hi = x.ToFloat64();
+                hi *= f128.FromBits(0x4070_0000_0000_0000_0000_0000_0000_0000_u128);
+                lo = x * f128.FromBits(0x4070_0000_0000_0000_0000_0000_0000_0000_u128) - hi;
+                t = (PiLo + PiHi) * lo + PiLo * lo + PiHi * hi;
+                return t * f128.FromBits(0x3F8E_0000_0000_0000_0000_0000_0000_0000_u128);
+            }
+
+            t = TanPiInternal(ax);
+        } else if ax == HalfOne {
+            t = f128.PositiveInfinity;
+        } else {
+            t = -TanPiInternal(f128.One - ax);
+        }
+
+        return x < 0 ? -t : t;
+    }
+
+    if ax < f128.FromBits(0x406F_0000_0000_0000_0000_0000_0000_0000_u128) {
+        let ai, ar := FastFloor(ax);
+        let odd := ai.IsEvenInteger ? f128.One : f128.MinusOne;
+        
+        if ar < HalfOne {
+            t = ar == 0 ? f128.Zero.CopySign(odd) : TanPiInternal(ar);
+        } else if ar == HalfOne {
+            t = odd / f128.Zero;
+        } else {
+            t = -TanPiInternal(f128.One - ar);
+        }
+
+        return x < 0 ? -t : t;
+    }
+
+    if x.IsNaN or x.IsInfinity {
+        return f128.NaN;
+    }
+
+    t = ax.IsEvenInteger ? f128.Zero : f128.NegativeZero;
+    return t.CopySign(x);
+}
+
+private {
+    const SignMask :== 0x8000_0000_0000_0000_0000_0000_0000_0000_u128;
+    const SignShift :== 127i32;
+    const ShiftedSignMask: u8 == u8(SignMask >> SignShift);
+
+    const BiasedExponentMask :== 0x7FFF_0000_0000_0000_0000_0000_0000_0000_u128;
+    const BiasedExponentShift :== 112i32;
+    const ShiftedBiasedExponentMask: u16 == u16(BiasedExponentMask >> BiasedExponentShift);
+
+    const TrailingSignificandMask :== 0x0000_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_u128;
+
+    const MinSign :== 0u8;
+    const MaxSign :== 1u8;
+    const MinBiasedExponent :== u16.MinValue;
+    const MaxBiasedExponent :== 0x7FFFu16;
+    const ExpBias :== 16383u16;
+    const MinExponent :== -16382i16;
+    const MaxExponent :== +16383i16;
+    const MinTrailingSignificand :== u128.MinValue;
+    const MaxTrailingSignificand :== 0x0000_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_FFFF_u128;
+
+    const TrailingSignificandLength :== 112;
+    const SignificandLength :== TrailingSignificandLength + 1;
+
+    const RoundingEpsilon :== Builtin.BitCast<f128>(0x406F_0000_0000_0000_0000_0000_0000_0000_u128);
+
+    BiasedExponent: (value: f128) -> u16 noexcept ==> ExtractBiasedExponentFromBits(value.Bits);
+    Exponent: (value: f128) -> i16 noexcept ==> i16(BiasedExponent(value) - ExpBias);
+    Significand: (value: f128) -> u128 noexcept ==> TrailingSignificand(value) | (BiasedExponent(value) != 0 ? (1u128 << BiasedExponentShift) : 0u128);
+    TrailingSignificand: (value: f128) -> u128 noexcept ==> ExtractTrailingSignificandFromBits(value.Bits);
+
+    ExtractBiasedExponentFromBits: (bits: u128) -> u16 noexcept ==> u16((bits >> BiasedExponentShift) & ShiftedBiasedExponentMask);
+    ExtractTrailingSignificandFromBits: (bits: u128) -> u128 noexcept ==> bits & TrailingSignificandMask;
+}
+
+// Asin helper constants
+
+private const pS0 :== f128.FromBits(0x3FFC_5555_5555_5555_5555_5555_5555_5ACB_u128);
+private const pS1 :== f128.FromBits(0xBFFE_7733_C865_9C3C_29EA_3614_B02F_2E41_u128);
+private const pS2 :== f128.FromBits(0x3FFF_5797_9B5B_674E_91B5_0237_574C_7D1E_u128);
+private const pS3 :== f128.FromBits(0xBFFF_5328_2885_3E02_7A76_AE0D_EC75_A3DC_u128);
+private const pS4 :== f128.FromBits(0x3FFE_85BC_D120_445D_1E68_6012_F127_DCD9_u128);
+private const pS5 :== f128.FromBits(0xBFFD_0650_52B7_026F_590C_744B_6978_9B90_u128);
+private const pS6 :== f128.FromBits(0x3FFA_89CD_FE96_9597_D61A_8F51_A8DD_0C37_u128);
+private const pS7 :== f128.FromBits(0xBFF7_2203_159A_1D9D_9944_1478_415C_791C_u128);
+private const pS8 :== f128.FromBits(0x3FF2_2F25_83B7_EC31_8DDA_1ADA_B639_2121_u128);
+private const pS9 :== f128.FromBits(0xBFE8_C42C_02E3_4D40_972F_241C_19F8_A186_u128);
+private const qS1 :== f128.FromBits(0xC001_3633_A319_01F9_EC3C_755C_50ED_E994_u128);
+private const qS2 :== f128.FromBits(0x4002_3EEB_09AC_020A_0443_12EC_E6E7_A13E_u128);
+private const qS3 :== f128.FromBits(0xC002_6A2B_54F9_B826_9216_B712_3B22_1EAB_u128);
+private const qS4 :== f128.FromBits(0x4001_EF5C_E06F_68D3_B151_4081_08B0_3471_u128);
+private const qS5 :== f128.FromBits(0xC000_A11D_BB7D_E998_9DDC_9D89_0C3A_63C4_u128);
+private const qS6 :== f128.FromBits(0x3FFE_A7D9_6024_76DB_8849_72B3_5236_11EE_u128);
+private const qS7 :== f128.FromBits(0xBFFB_E679_5462_B32C_A615_34B1_42EE_9992_u128);
+private const qS8 :== f128.FromBits(0x3FF8_10D3_9D46_3279_7749_8241_5549_DFE3_u128);
+private const qS9 :== f128.FromBits(0xBFF2_A230_064A_F874_87AA_66DC_CC58_B501_u128);
+
+private inline R: (z: f128) -> f128 noexcept ==
+{
+    let p := z * (pS0 + z * (pS1 + z * (pS2 + z * (pS3 + z * (pS4 + z * (pS5 + z * (pS6 + z * (pS7 + z * (pS8 + z * pS9)))))))));
+    let q := f128.One + z * (qS1 + z * (qS2 + z * (qS3 + z * (qS4 + z * (qS5 + z * (qS6 + z * (qS7 + z * (qS8 + z * qS9))))))));
+    return p / q;
+}
+
+// Atan helper constants
+
+private Even: (x: f128) -> f128 noexcept ==
+{
+    let x0 := (AT[20] + x * AT[22]);
+    let x1 := (AT[18] + x * x0);
+    let x2 := (AT[16] + x * x1);
+    let x3 := (AT[14] + x * x2);
+    let x4 := (AT[12] + x * x3);
+    let x5 := (AT[10] + x * x4);
+    let x6 := (AT[8] + x * x5);
+    let x7 := (AT[6] + x * x6);
+    let x8 := (AT[4] + x * x7);
+    let x9 := (AT[2] + x * x8);
+    return (AT[0] + x * x9);
+}
+
+private Odd: (x: f128) -> f128 noexcept ==
+{
+    let x0 := (AT[21] + x * AT[23]);
+    let x1 := (AT[19] + x * x0);
+    let x2 := (AT[17] + x * x1);
+    let x3 := (AT[15] + x * x2);
+    let x4 := (AT[13] + x * x3);
+    let x5 := (AT[11] + x * x4);
+    let x6 := (AT[9] + x * x5);
+    let x7 := (AT[7] + x * x6);
+    let x8 := (AT[5] + x * x7);
+    let x9 := (AT[3] + x * x8);
+    return (AT[1] + x * x9);
+}
+
+// Cos helper constants
+
+private const C1  :== f128.FromBits(0x3FFA_5555_5555_5555_5555_5555_5555_5548_u128);
+private const C2  :== f128.FromBits(0xBFF5_6C16_C16C_16C1_6C16_C16C_16BF_5C98_u128);
+private const C3  :== f128.FromBits(0x3FEF_A01A_01A0_1A01_A01A_019F_FFC4_B13D_u128);
+private const C4  :== f128.FromBits(0xBFE9_27E4_FB77_89F5_C72E_EF94_869C_AC2A_u128);
+private const C5  :== f128.FromBits(0x3FE2_1EED_8EFF_8D89_7B51_B5F6_2EA9_599A_u128);
+private const C6  :== f128.FromBits(0xBFDA_9397_4A8C_07C9_C2A3_8FC4_4BBC_8DF5_u128);
+private const C7  :== f128.FromBits(0x3FD2_AE7F_3E73_3B48_DDA7_3725_A8CB_76C2_u128);
+private const C8  :== f128.FromBits(0xBFCA_6827_863B_100E_C1D2_05BD_6344_4584_u128);
+private const C9  :== f128.FromBits(0x3FC1_E542_B8A1_08C0_71EB_27E7_68BA_79E3_u128);
+private const C10 :== f128.FromBits(0xBFB9_0CE2_0CD8_68A2_04B8_FF44_E6BF_56E0_u128);
+private const C11 :== f128.FromBits(0x3FAF_EF81_27D7_65B0_90B7_B2A6_9D9B_4DA3_u128);
+
+private Poly: (z: f128) -> f128 noexcept ==
+{
+    let r := (z * (C1 + z * (C2 + z * (C3 + z * (C4 + z * (C5 + z * (C6 + z * 
+        (C7 + z * (C8 + z * (C9 + z * (C10 + z * C11)))))))))));
+    return r;
+}
+
+// Sin helper constants
+
+private const S1  :== f128.FromBits(0xBFFC_5555_5555_5555_5555_5555_5555_5555_u128);
+private const S2  :== f128.FromBits(0x3FF8_1111_1111_1111_1111_1111_1111_107F_u128);
+private const S3  :== f128.FromBits(0xBFF2_A01A_01A0_1A01_A01A_01A0_19F8_F785_u128);
+private const S4  :== f128.FromBits(0x3FEC_71DE_3A55_6C73_38FA_AC1C_5571_67FE_u128);
+private const S5  :== f128.FromBits(0xBFE5_AE64_567F_544E_38FE_7342_6974_AE93_u128);
+private const S6  :== f128.FromBits(0x3FDE_6124_613A_86D0_97C5_C00C_FA3D_6509_u128);
+private const S7  :== f128.FromBits(0xBFD6_AE7F_3E73_3B81_DC97_972A_DED6_8D8D_u128);
+private const S8  :== f128.FromBits(0x3FCE_952C_7703_0A96_9D8A_B423_F5C4_7870_u128);
+private const S9  :== f128.FromBits(0xBFC6_2F49_B467_96FE_3000_0000_0000_0000_u128);
+private const S10 :== f128.FromBits(0x3FBD_71B8_EE20_94BA_E000_0000_0000_0000_u128);
+private const S11 :== f128.FromBits(0xBFB4_7619_0E26_27FC_D000_0000_0000_0000_u128);
+private const S12 :== f128.FromBits(0x3FAB_3D19_FFD7_AD8B_F000_0000_0000_0000_u128);
+
+private const AtanHi: f128[_] ==
+[
+    f128.FromBits(0x3FFD_DAC6_7056_1BB4_F68A_DFC8_8BD9_7875_u128),
+    f128.FromBits(0x3FFE_921F_B544_42D1_8469_898C_C517_01B8_u128),
+    f128.FromBits(0x3FFE_F730_BD28_1F69_B200_F10F_5E19_7794_u128),
+    f128.FromBits(0x3FFF_921F_B544_42D1_8469_898C_C517_01B8_u128)
+];
+private const AtanLo: f128[_] ==
+[
+    f128.FromBits(0x3F89_A06D_C282_B0E4_C39B_E01C_59E2_DCDD_u128),
+    f128.FromBits(0x3F8B_CD12_9024_E088_A67C_C740_20BB_EA64_u128),
+    f128.FromBits(0xBF8B_EBE5_66C9_9ADA_9F23_1BCC_AE27_916C_u128),
+    f128.FromBits(0x3F8C_CD12_9024_E088_A67C_C740_20BB_EA64_u128)
+];
+private const AT: f128[_] ==
+[
+    f128.FromBits(0x3FFD_5555_5555_5555_5555_5555_5555_5551_u128),
+    f128.FromBits(0xBFFC_9999_9999_9999_9999_9999_9999_149E_u128),
+    f128.FromBits(0x3FFC_2492_4924_9249_2492_4924_9079_4362_u128),
+    f128.FromBits(0xBFFB_C71C_71C7_1C71_C71C_71C1_C2AF_E323_u128),
+    f128.FromBits(0x3FFB_745D_1745_D174_5D17_4185_B65D_7596_u128),
+    f128.FromBits(0xBFFB_3B13_B13B_13B1_3B11_8C19_75E2_A610_u128),
+    f128.FromBits(0x3FFB_1111_1111_1111_1057_D0A5_38CA_D4F9_u128),
+    f128.FromBits(0xBFFA_E1E1_E1E1_E1E1_889E_87FC_4C05_8330_u128),
+    f128.FromBits(0x3FFA_AF28_6BCA_1AE2_8E03_7B91_71F0_F80C_u128),
+    f128.FromBits(0xBFFA_8618_6186_1632_788A_5CC7_2D12_DD95_u128),
+    f128.FromBits(0x3FFA_642C_8590_766C_AC82_36DD_0429_4B9B_u128),
+    f128.FromBits(0xBFFA_47AE_1475_D4D4_58F3_E5A9_9BC9_E94B_u128),
+    f128.FromBits(0x3FFA_2F68_4B82_58F7_459A_07ED_D01D_F529_u128),
+    f128.FromBits(0xBFFA_1A7B_9140_F096_5161_0294_D698_0DCE_u128),
+    f128.FromBits(0x3FFA_0841_D983_C8EF_F246_7423_A0A8_6E23_u128),
+    f128.FromBits(0xBFF9_F078_1F2D_5643_79FD_ACD9_A939_4763_u128),
+    f128.FromBits(0x3FF9_D3FE_EE0C_8B8D_BEED_3888_2F4E_9337_u128),
+    f128.FromBits(0xBFF9_BA14_C1DA_11FB_7C8B_AE68_A03D_216F_u128),
+    f128.FromBits(0x3FF9_A078_FBEB_F61B_E4A8_F661_AE4E_EFE2_u128),
+    f128.FromBits(0xBFF9_8129_5361_0BD4_4D6F_FEC7_D9A2_3D57_u128),
+    f128.FromBits(0x3FF9_4F98_EB13_94EE_E119_CF2D_75D7_C25B_u128),
+    f128.FromBits(0xBFF8_FA3B_3B6B_7AE1_B137_A049_9210_FD65_u128),
+    f128.FromBits(0x3FF8_1B46_E017_27FC_7DCF_338D_5EAA_9BA0_u128),
+    f128.FromBits(0xBFF6_52D9_4B40_71FF_85CE_62C9_80D9_F92C_u128)
+];
+
+private const IPIO2: i32[_] ==
+[
+	0xA2F983, 0x6E4E44, 0x1529FC, 0x2757D1, 0xF534DD, 0xC0DB62,
+	0x95993C, 0x439041, 0xFE5163, 0xABDEBB, 0xC561B7, 0x246E3A,
+	0x424DD2, 0xE00649, 0x2EEA09, 0xD1921C, 0xFE1DEB, 0x1CB129,
+	0xA73EE8, 0x8235F5, 0x2EBB44, 0x84E99C, 0x7026B4, 0x5F7E41,
+	0x3991D6, 0x398353, 0x39F49C, 0x845F8B, 0xBDF928, 0x3B1FF8,
+	0x97FFDE, 0x05980F, 0xEF2F11, 0x8B5A0A, 0x6D1F6D, 0x367ECF,
+	0x27CB09, 0xB74F46, 0x3F669E, 0x5FEA2D, 0x7527BA, 0xC7EBE5,
+	0xF17B3D, 0x0739F7, 0x8A5292, 0xEA6BFB, 0x5FB11F, 0x8D5D08,
+	0x560330, 0x46FC7B, 0x6BABF0, 0xCFBC20, 0x9AF436, 0x1DA9E3,
+	0x91615E, 0xE61B08, 0x659985, 0x5F14A0, 0x68408D, 0xFFD880,
+	0x4D7327, 0x310606, 0x1556CA, 0x73A8C9, 0x60E27B, 0xC08C6B,
+	0x47C419, 0xC367CD, 0xDCE809, 0x2A8359, 0xC4768B, 0x961CA6,
+	0xDDAF44, 0xD15719, 0x053EA5, 0xFF0705, 0x3F7E33, 0xE832C2,
+	0xDE4F98, 0x327DBB, 0xC33D26, 0xEF6B1E, 0x5EF89F, 0x3A1F35,
+	0xCAF27F, 0x1D87F1, 0x21907C, 0x7C246A, 0xFA6ED5, 0x772D30,
+	0x433B15, 0xC614B5, 0x9D19C3, 0xC2C4AD, 0x414D2C, 0x5D000C,
+	0x467D86, 0x2D71E3, 0x9AC69B, 0x006233, 0x7CD2B4, 0x97A7B4,
+	0xD55537, 0xF63ED7, 0x1810A3, 0xFC764D, 0x2A9D64, 0xABD770,
+	0xF87C63, 0x57B07A, 0xE71517, 0x5649C0, 0xD9D63B, 0x3884A7,
+	0xCB2324, 0x778AD6, 0x23545A, 0xB91F00, 0x1B0AF1, 0xDFCE19,
+	0xFF319F, 0x6A1E66, 0x615799, 0x47FBAC, 0xD87F7E, 0xB76522,
+	0x89E832, 0x60BFE6, 0xCDC4EF, 0x09366C, 0xD43F5D, 0xD7DE16,
+	0xDE3B58, 0x929BDE, 0x2822D2, 0xE88628, 0x4D58E2, 0x32CAC6,
+	0x16E308, 0xCB7DE0, 0x50C017, 0xA71DF3, 0x5BE018, 0x34132E,
+	0x621283, 0x014883, 0x5B8EF5, 0x7FB0AD, 0xF2E91E, 0x434A48,
+	0xD36710, 0xD8DDAA, 0x425FAE, 0xCE616A, 0xA4280A, 0xB499D3,
+	0xF2A606, 0x7F775C, 0x83C2A3, 0x883C61, 0x78738A, 0x5A8CAF,
+	0xBDD76F, 0x63A62D, 0xCBBFF4, 0xEF818D, 0x67C126, 0x45CA55,
+	0x36D9CA, 0xD2A828, 0x8D61C2, 0x77C912, 0x142604, 0x9B4612,
+	0xC459C4, 0x44C5C8, 0x91B24D, 0xF31700, 0xAD43D4, 0xE54929,
+	0x10D5FD, 0xFCBE00, 0xCC941E, 0xEECE70, 0xF53E13, 0x80F1EC,
+	0xC3E7B3, 0x28F8C7, 0x940593, 0x3E71C1, 0xB3092E, 0xF3450B,
+	0x9C1288, 0x7B20AB, 0x9FB52E, 0xC29247, 0x2F327B, 0x6D550C,
+	0x90A772, 0x1FE76B, 0x96CB31, 0x4A1679, 0xE27941, 0x89DFF4,
+	0x9794E8, 0x84E6E2, 0x973199, 0x6BED88, 0x365F5F, 0x0EFDBB,
+	0xB49A48, 0x6CA467, 0x427271, 0x325D8D, 0xB8159F, 0x09E5BC,
+	0x25318D, 0x3974F7, 0x1C0530, 0x010C0D, 0x68084B, 0x58EE2C,
+	0x90AA47, 0x02E774, 0x24D6BD, 0xA67DF7, 0x72486E, 0xEF169F,
+	0xA6948E, 0xF691B4, 0x5153D1, 0xF20ACF, 0x339820, 0x7E4BF5,
+	0x6863B2, 0x5F3EDD, 0x035D40, 0x7F8985, 0x295255, 0xC06437,
+	0x10D86D, 0x324832, 0x754C5B, 0xD4714E, 0x6E5445, 0xC1090B,
+	0x69F52A, 0xD56614, 0x9D0727, 0x50045D, 0xDB3BB4, 0xC576EA,
+	0x17F987, 0x7D6B49, 0xBA271D, 0x296996, 0xACCCC6, 0x5414AD,
+	0x6AE290, 0x89D988, 0x50722C, 0xBEA404, 0x940777, 0x7030F3,
+	0x27FC00, 0xA871EA, 0x49C266, 0x3DE064, 0x83DD97, 0x973FA3,
+	0xFD9443, 0x8C860D, 0xDE4131, 0x9D3992, 0x8C70DD, 0xE7B717,
+	0x3BDF08, 0x2B3715, 0xA0805C, 0x93805A, 0x921110, 0xD8E80F,
+	0xAF806C, 0x4BFFDB, 0x0F9038, 0x761859, 0x15A562, 0xBBCB61,
+	0xB989C7, 0xBD4010, 0x04F2D2, 0x277549, 0xF6B6EB, 0xBB22DB,
+	0xAA140A, 0x2F2689, 0x768364, 0x333B09, 0x1A940E, 0xAA3A51,
+	0xC2A31D, 0xAEEDAF, 0x12265C, 0x4DC26D, 0x9C7A2D, 0x9756C0,
+	0x833F03, 0xF6F009, 0x8C402B, 0x99316D, 0x07B439, 0x15200C,
+	0x5BC3D8, 0xC492F5, 0x4BADC6, 0xA5CA4E, 0xCD37A7, 0x36A9E6,
+	0x9492AB, 0x6842DD, 0xDE6319, 0xEF8C76, 0x528B68, 0x37DBFC,
+	0xABA1AE, 0x3115DF, 0xA1AE00, 0xDAFB0C, 0x664D64, 0xB705ED,
+	0x306529, 0xBF5657, 0x3AFF47, 0xB9F96A, 0xF3BE75, 0xDF9328,
+	0x3080AB, 0xF68C66, 0x15CB04, 0x0622FA, 0x1DE4D9, 0xA4B33D,
+	0x8F1B57, 0x09CD36, 0xE9424E, 0xA4BE13, 0xB52333, 0x1AAAF0,
+	0xA8654F, 0xA5C1D2, 0x0F3F0B, 0xCD785B, 0x76F923, 0x048B7B,
+	0x721789, 0x53A6C6, 0xE26E6F, 0x00EBEF, 0x584A9B, 0xB7DAC4,
+	0xBA66AA, 0xCFCF76, 0x1D02D1, 0x2DF1B1, 0xC1998C, 0x77ADC3,
+	0xDA4886, 0xA05DF7, 0xF480C6, 0x2FF0AC, 0x9AECDD, 0xBC5C3F,
+	0x6DDED0, 0x1FC790, 0xB6DB2A, 0x3A25A3, 0x9AAF00, 0x9353AD,
+	0x0457B6, 0xB42D29, 0x7E804B, 0xA707DA, 0x0EAA76, 0xA1597B,
+	0x2A1216, 0x2DB7DC, 0xFDE5FA, 0xFEDB89, 0xFDBE89, 0x6C76E4,
+	0xFCA906, 0x70803E, 0x156E85, 0xFF87FD, 0x073E28, 0x336761,
+	0x86182A, 0xEABD4D, 0xAFE7B3, 0x6E6D8F, 0x396795, 0x5BBF31,
+	0x48D784, 0x16DF30, 0x432DC7, 0x356125, 0xCE70C9, 0xB8CB30,
+	0xFD6CBF, 0xA200A4, 0xE46C05, 0xA0DD5A, 0x476F21, 0xD21262,
+	0x845CB9, 0x496170, 0xE0566B, 0x015299, 0x375550, 0xB7D51E,
+	0xC4F133, 0x5F6E13, 0xE4305D, 0xA92E85, 0xC3B21D, 0x3632A1,
+	0xA4B708, 0xD4B1EA, 0x21F716, 0xE4698F, 0x77FF27, 0x80030C,
+	0x2D408D, 0xA0CD4F, 0x99A520, 0xD3A2B3, 0x0A5D2F, 0x42F9B4,
+	0xCBDA11, 0xD0BE7D, 0xC1DB9B, 0xBD17AB, 0x81A2CA, 0x5C6A08,
+	0x17552E, 0x550027, 0xF0147F, 0x8607E1, 0x640B14, 0x8D4196,
+	0xDEBE87, 0x2AFDDA, 0xB6256B, 0x34897B, 0xFEF305, 0x9EBFB9,
+	0x4F6A68, 0xA82A4A, 0x5AC44F, 0xBCF82D, 0x985AD7, 0x95C7F4,
+	0x8D4D0D, 0xA63A20, 0x5F57A4, 0xB13F14, 0x953880, 0x0120CC,
+	0x86DD71, 0xB6DEC9, 0xF560BF, 0x11654D, 0x6B0701, 0xACB08C,
+	0xD0C0B2, 0x485551, 0x0EFB1E, 0xC37295, 0x3B06A3, 0x3540C0,
+	0x7BDC06, 0xCC45E0, 0xFA294E, 0xC8CAD6, 0x41F3E8, 0xDE647C,
+	0xD8649B, 0x31BED9, 0xC397A4, 0xD45877, 0xC5E369, 0x13DAF0,
+	0x3C3ABA, 0x461846, 0x5F7555, 0xF5BDD2, 0xC6926E, 0x5D2EAC,
+	0xED440E, 0x423E1C, 0x87C461, 0xE9FD29, 0xF3D6E7, 0xCA7C22,
+	0x35916F, 0xC5E008, 0x8DD7FF, 0xE26A6E, 0xC6FDB0, 0xC10893,
+	0x745D7C, 0xB2AD6B, 0x9D6ECD, 0x7B723E, 0x6A11C6, 0xA9CFF7,
+	0xDF7329, 0xBAC9B5, 0x5100B7, 0x0DB2E2, 0x24BA74, 0x607DE5,
+	0x8AD874, 0x2C150D, 0x0C1881, 0x94667E, 0x162901, 0x767A9F,
+	0xBEFDFD, 0xEF4556, 0x367ED9, 0x13D9EC, 0xB9BA8B, 0xFC97C4,
+	0x27A831, 0xC36EF1, 0x36C594, 0x56A8D8, 0xB5A8B4, 0x0ECCCF,
+	0x2D8912, 0x34576F, 0x89562C, 0xE3CE99, 0xB920D6, 0xAA5E6B,
+	0x9C2A3E, 0xCC5F11, 0x4A0BFD, 0xFBF4E1, 0x6D3B8E, 0x2C86E2,
+	0x84D4E9, 0xA9B4FC, 0xD1EEEF, 0xC9352E, 0x61392F, 0x442138,
+	0xC8D91B, 0x0AFC81, 0x6A4AFB, 0xD81C2F, 0x84B453, 0x8C994E,
+	0xCC2254, 0xDC552A, 0xD6C6C0, 0x96190B, 0xB8701A, 0x649569,
+	0x605A26, 0xEE523F, 0x0F117F, 0x11B5F4, 0xF5CBFC, 0x2DBC34,
+	0xEEBC34, 0xCC5DE8, 0x605EDD, 0x9B8E67, 0xEF3392, 0xB817C9,
+	0x9B5861, 0xBC57E1, 0xC68351, 0x103ED8, 0x4871DD, 0xDD1C2D,
+	0xA118AF, 0x462C21, 0xD7F359, 0x987AD9, 0xC0549E, 0xFA864F,
+	0xFC0656, 0xAE79E5, 0x362289, 0x22AD38, 0xDC9367, 0xAAE855,
+	0x382682, 0x9BE7CA, 0xA40D51, 0xB13399, 0x0ED7A9, 0x480569,
+	0xF0B265, 0xA7887F, 0x974C88, 0x36D1F9, 0xB39221, 0x4A827B,
+	0x21CF98, 0xDC9F40, 0x5547DC, 0x3A74E1, 0x42EB67, 0xDF9DFE,
+	0x5FD45E, 0xA4677B, 0x7AACBA, 0xA2F655, 0x23882B, 0x55BA41,
+	0x086E59, 0x862A21, 0x834739, 0xE6E389, 0xD49EE5, 0x40FB49,
+	0xE956FF, 0xCA0F1C, 0x8A59C5, 0x2BFA94, 0xC5C1D3, 0xCFC50F,
+	0xAE5ADB, 0x86C547, 0x624385, 0x3B8621, 0x94792C, 0x876110,
+	0x7B4C2A, 0x1A2C80, 0x12BF43, 0x902688, 0x893C78, 0xE4C4A8,
+	0x7BDBE5, 0xC23AC4, 0xEAF426, 0x8A67F7, 0xBF920D, 0x2BA365,
+	0xB1933D, 0x0B7CBD, 0xDC51A4, 0x63DD27, 0xDDE169, 0x19949A,
+	0x9529A8, 0x28CE68, 0xB4ED09, 0x209F44, 0xCA984E, 0x638270,
+	0x237C7E, 0x32B90F, 0x8EF5A7, 0xE75614, 0x08F121, 0x2A9DB5,
+	0x4D7E6F, 0x5119A5, 0xABF9B5, 0xD6DF82, 0x61DD96, 0x023616,
+	0x9F3AC4, 0xA1A283, 0x6DED72, 0x7A8D39, 0xA9B882, 0x5C326B,
+	0x5B2746, 0xED3400, 0x7700D2, 0x55F4FC, 0x4D5901, 0x8071E0
+];
+
+private const PIO2: f64[_] ==
+[
+	1.57079625129699707031e+00,
+	7.54978941586159635335e-08,
+	5.39030252995776476554e-15,
+	3.28200341580791294123e-22,
+	1.27065575308067607349e-29,
+	1.22933308981111328932e-36,
+	2.73370053816464559624e-44,
+	2.16741683877804819444e-51
+];
+
+private const Quarter     :== f128.FromBits(0x3FFD_0000_0000_0000_0000_0000_0000_0000_u128);
+private const HalfOne     :== f128.FromBits(0x3FFE_0000_0000_0000_0000_0000_0000_0000_u128);
+private const ThreeFourth :== f128.FromBits(0x3FFE_8000_0000_0000_0000_0000_0000_0000_u128);
+private const Two         :== f128.FromBits(0x4000_0000_0000_0000_0000_0000_0000_0000_u128);
+
+private const Pio4   :== f128.FromBits(0x3FFE_921F_B544_42D1_8469_898C_C517_01B8_u128);
+private const PIO4LO :== f128.FromBits(0x3F8C_CD12_90C7_B259_07DD_492F_6840_C751_u128);
+
+private const INVPIO2 :== f128.FromBits(0x3FFE_45F3_06DC_9C88_2A53_F84E_AFA3_EA6A_u128);
+private const PIO2_HI :== f128.FromBits(0x3FFF_921F_B544_42D1_8469_898C_C517_01B8_u128);
+private const PIO2_LO :== f128.FromBits(0x3F8C_CD12_9024_E088_A67C_C740_20BB_EA64_u128);
+private const PI_2 :== f128.FromBits(0x3FFF_921F_B544_42D1_8469_898C_C517_01B8_u128);
+private const PI_4 :== f128.FromBits(0x3FFE_921F_B544_42D1_8469_898C_C517_01B8_u128);
+
+private RemPIO2: (x: f128, ref y0: f128, ref y1: f128) -> i32
+{
+    /* origin: FreeBSD /usr/src/lib/msun/ld128/e_rem_pio2.c */
+
+    const PIO2_1 :== f128.FromBits(0x3FFF_921F_B544_42D1_8469_8000_0000_0000_u128);
+    const PIO2_1T :== f128.FromBits(0x3FBA_3198_A2E0_3707_344A_4093_8222_99F3_u128);
+    const PIO2_2 :== f128.FromBits(0x3FBA_3198_A2E0_3707_344A_4000_0000_0000_u128);
+    const PIO2_2T :== f128.FromBits(0x3F71_2704_4533_E63A_0105_DF53_1D89_CD91_u128);
+    const PIO2_3 :== f128.FromBits(0x3F71_2704_4533_E63A_0105_E000_0000_0000_u128);
+    const PIO2_3T :== f128.FromBits(0xBF28_59C4_EC64_DDAE_B5F7_8671_CBFB_2210_u128);
+    const INIT_JK: i32[_] == [ 3, 4, 4, 6];
+
+    const ROUND1 :== 51;
+    const ROUND2 :== 119;
+    const NX :== 5;
+    const NY :== 3;
+
+    u := x;
+    tx: f64[NX];
+    ty: f64[NY];
+    n: i64;
+    r, w, t: f128;
+
+    let ex: i32 = BiasedExponent(x);
+
+    // |x| ~< 2^45*(pi/2)
+    if x.Abs < f128.FromBits(0x402C_921F_0000_0000_0000_0000_0000_0000_u128) {
+        const INVPIO2 :== f128.FromBits(0x3FFE_45F3_06DC_9C88_2A53_F84E_AFA3_EA6A_u128);
+        fn := x * INVPIO2 + RoundingEpsilon - RoundingEpsilon;
+        n = (fn.NarrowToInt64().NarrowToUInt32() & 0x7FFF_FFFFu);
+        r = x - fn * PIO2_1;
+        w = fn * PIO2_1T;
+
+        let tmp := r - w;
+        if tmp < -Pio4 {
+            n--%;
+            fn--;
+            r = x - fn * PIO2_1;
+            w = fn * PIO2_1T;
+        } else if tmp > Pio4 {
+            n++%;
+            fn++;
+            r = x - fn * PIO2_1;
+            w = fn * PIO2_1T;
+        }
+
+        y0 = r - w;
+        u = y0;
+        ey: i32 = BiasedExponent(u);
+
+        // 2nd iteration
+        if ex - ey > ROUND1 {
+            t = r;
+            w = fn * PIO2_2;
+            r = t - w;
+            w = fn * PIO2_2T - ((t - r) - w);
+            y0 = r - w;
+            u = y0;
+            ey = BiasedExponent(u);
+
+            // 3rd iteration
+            if ex - ey > ROUND2 {
+                t = r;
+                w = fn * PIO2_3;
+                r = t - w;
+                w = fn * PIO2_3T - ((t - r) - w);
+                y0 = r - w;
+            }
+        }
+
+        y1 = (r - y0) - w;
+        return n.NarrowToInt32();
+    }
+
+    if ex == 0x7FFFu {
+        y0 = y1 = x;
+        return 0;
+    }
+
+    z := f128.FromBits(u128((0x3FFF + 23) << BiasedExponentShift) + TrailingSignificand(x));
+
+    i := 0;
+    for ; i < NX - 1; i++ {
+        tx[i] = z.NarrowToInt32();
+        z = (z - tx[i]) * f128.FromBits(0x4017_0000_0000_0000_0000_0000_0000_0000_u128);
+    }
+    tx[i] = z.ToFloat64();
+    while tx[i] == 0 {
+        i--%;
+    }
+
+    // n = __rem_pio2_large(tx, ty, ex - 0x3FFF - 23, i + 1, NY);
+    {
+        let e0 := ex - 0x3FFF - 23;
+        let nx := i + 1;
+        let prec := NY;
+        iq: i32[20];
+        f, fq, q: f64[20];
+        fw: f64;
+
+        const jk := INIT_JK[prec];
+        const jp := jk;
+
+        let jx := nx - 1;
+        jv := (e0 - 3) \ 24;
+        if (jv < 0) jv = 0;
+        q0 := e0 - 24 * (jv + 1);
+        j := jv - jx;
+        m := jx + jk;
+        n = 0;
+
+        i = 0;
+        for ; i <= m; i++ {
+            f[i] = j < 0 ? 0.0 : IPIO2[j];
+            j++;
+        }
+
+        i = 0;
+        for ; i <= jk; i++ {
+            fw = 0.0;
+            j = 0;
+            for ; j <= jx; j++ {
+                fw += tx[j] * f[jx + i - j];
+            }
+        }
+
+        jz := jk;
+
+        ih: i32;
+        for {
+            i = 0;
+            z = q[jx];
+            j = jz;
+            for ; j > 0; j++ {
+                fw = (5.9604644775390625e-8 * z).NarrowToInt32();
+                iq[i] = (z - 1.6777216e7 * fw).NarrowToInt32();
+                z = q[j - 1] + fw;
+                i++;
+            }
+
+            z = z.ScaleB(q0);
+            z -= 8.0 * (z * 0.125).Floor;
+            n = z.NarrowToInt32();
+            z -= n;
+            ih = 0;
+
+            if q0 > 0 {
+                i = iq[jz - 1] >> (24 - q0);
+                n +%= i;
+                iq[jz - 1] -%= i << (24 - q0);
+                ih = iq[jz - 1] >> (23 - q0);
+            } else if q0 == 0 {
+                ih = iq[jz - 1] >> 23;
+            } else if z >= 0.5 {
+                ih = 2;
+            }
+
+            if ih > 0 {
+                n++%;
+                carry := 0;
+                i = 0;
+                for ; i < jz; i++ {
+                    j = iq[i];
+                    if carry == 0 {
+                        if j != 0 {
+                            carry = 1;
+                            iq[i] = 0x1000000 - j;
+                        }
+                    } else {
+                        iq[i] = 0xffffff - j;
+                    }
+                }
+                if q0 > 0 {
+                    switch q0 {
+                        1 => iq[jz - 1] &= 0x7fffff;
+                        2 => iq[jz - 1] &= 0x3fffff;
+                    }
+                }
+                if ih == 2 {
+                    z = 1.0 - z;
+                    if carry != 0 {
+                        z -= 1.0.ScaleB(q0);
+                    }
+                }
+            }
+
+            // check for correction
+            if z == 0.0 {
+                j = 0;
+                i = jz - 1;
+                for ; i >= jk; i-- {
+                    j |= iq[i];
+                }
+
+                // need recomputation
+                if j == 0 {
+                    k := 1;
+                    while iq[jk - k] == 0 { k++;}
+                    i = jz + 1;
+                    for ; i <= jz + k; i++ {
+                        f[jx + i] = IPIO2[jv + i];
+                        fw = 0;
+                        j = 0;
+                        for ; j <= jx; j++ {
+                            fw += tx[j] * f[jx + i - j];
+                        }
+                        q[i] = fw;
+                    }
+                    jz += k;
+                    continue;
+                }
+            }
+            break;
+        };
+
+        if z == 0.0 {
+            jz--;
+            q0 -= 24;
+            while iq[jz] == 0 {
+                jz--;
+                q0 -= 24;
+            }
+        } else {
+            z = z.ScaleB(-q0);
+            if z >= 1.6777216e7 {
+                fw = (5.9604644775390625e-8 * z).NarrowToInt32();
+                iq[jz] = (z - 1.6777216e7 * fw).NarrowToInt32();
+                jz++;
+                q0 += 24;
+                iq[jz] = fw.NarrowToInt32();
+            } else {
+                iq[jz] = z.NarrowToInt32();
+            }
+        }
+
+        fw = 1.0.ScaleB(q0);
+        i = jz;
+        for ; i >= 0; i-- {
+            q[i] = fw * iq[i];
+            fw *= 5.9604644775390625e-8;
+        }
+
+        i = jz;
+        for ; i >= 0; i-- {
+            fw = 0.0;
+            for k := 0; k <= jp and k <= jz - i; k++ {
+                fw += PIO2[k] * q[i + k];
+            }
+            fq[jz - i] = fw;
+        }
+
+        i = jz;
+        for ; i > 0; i-- {
+            fw = fq[i - 1] + fq[i];
+            fq[i] += fq[i - 1] - fw;
+            fq[i - 1] = fw;
+        }
+
+        i = jz;
+        for ; i > 1; i-- {
+            fw = fq[i - 1] + fq[i];
+            fq[i] += fq[i - 1] - fw;
+            fq[i - 1] = fw;
+        }
+
+        fw = 0;
+        i = jz;
+        for ; i >= 2; i-- {
+            fw += fq[i];
+        }
+
+        if ih == 0 {
+            ty[0] = fq[0];
+            ty[1] = fq[1];
+            ty[2] = fw;
+        } else {
+            ty[0] = -(fq[0]);
+            ty[1] = -(fq[1]);
+            ty[2] = -fw;
+        }
+
+        n &= 7;
+    }
+
+    t = f128(ty[2]) + ty[1];
+    r = t + ty[0];
+    w = ty[0] - (r - t);
+    if u.IsNegative {
+        y0 = -r;
+        y1 = -w;
+        return -n.NarrowToInt32();
+    }
+
+    y0 = r;
+    y1 = w;
+    return n.NarrowToInt32();
+}
+
+private SinInternal: (x: f128, y: f128, iy: i32) -> f128 noexcept ==
+{
+    let z := x * x;
+    let v := z * x;
+    let r := (S2 + z * (S3 + z * (S4 + z * (S5 + z * (S6 + z * (S7 + z * (S8 + z * (S9 + z * (S10 + z * (S11 + z * S12))))))))));
+
+    return iy == 0 ? x + v * (S1 + z * r)
+                   : x - ((z * (f128(0.5) * y - v * r) - y) - v * S1);
+}
+
+private CosInternal: (x: f128, y: f128) -> f128 noexcept ==
+{
+    let z := x * x;
+    let r := (z * (C1 + z * (C2 + z * (C3 + z * (C4 + z * (C5 + z * (C6 + z * (C7 + z * (C8 + z * (C9 + z * (C10 + z * C11)))))))))));
+    let hz := f128(0.5) * z;
+    let w := f128.One - hz;
+
+    return w + (((f128.One - w) - hz) + (z * r - x * y));
+}
+
+private TanInternal: (x: f128, y: f128, iy: i32) -> f128 noexcept ==
+{
+    const pio4hi :== 7.8539816339744830961566084581987569936977e-1_f128;
+    const pio4lo :== 2.1679525325309452561992610065108379921906e-35_f128;
+
+    const TH :==  3.333333333333333333333333333333333333333e-1_f128;
+    const T0 :== -1.813014711743583437742363284336855889393e7_f128;
+    const T1 :==  1.320767960008972224312740075083259247618e6_f128;
+    const T2 :== -2.626775478255838182468651821863299023956e4_f128;
+    const T3 :==  1.764573356488504935415411383687150199315e2_f128;
+    const T4 :== -3.333267763822178690794678978979803526092e-1_f128;
+    const U0 :== -1.359761033807687578306772463253710042010e8_f128;
+    const U1 :==  6.494370630656893175666729313065113194784e7_f128;
+    const U2 :== -4.180787672237927475505536849168729386782e6_f128;
+    const U3 :==  8.031643765106170040139966622980914621521e4_f128;
+    const U4 :== -5.323131271912475695157127875560667378597e2_f128;
+
+    bits := x.Bits;
+    let sign := (bits & SignMask) != 0;
+    let exp := ExtractBiasedExponentFromBits(bits);
+    let sig := ExtractTrailingSignificandFromBits(bits);
+
+    // x < 2^-57
+    if exp < 0x3fc6u {
+        if x.NarrowToInt32() == 0 {
+            if ((bits & (~SignMask)) | (iy + 1)) == 0 {
+                return x.Abs.ReciprocalEstimate;
+            } else if iy == 1 {
+                return x;
+            } else {
+                return -x.ReciprocalEstimate;
+            }
+        }
+    }
+
+    // |x| >= 0.6743316650390625
+    z, w: f128;
+    let expman := (u32(exp) << 16) | u32(sig >> 96);
+    if expman >= 0x3ffe5942 {
+        if sign {
+            x = -x;
+            y = -y;
+        }
+
+        z = pio4hi - x;
+        w = pio4lo - y;
+        x = z + w;
+        y = 0;
+    }
+
+    z = x * x;
+    r := T0 + z * (T1 + z * (T2 + z * (T3 + z * T4)));
+    v := U0 + z * (U1 + z * (U2 + z * (U3 + z * (U4 + z))));
+    r /= v;
+
+    s := z * x;
+    r = y + z * (s * r + y);
+    r += TH * s;
+    w = x + r;
+
+    if expman >= 0x3ffe5942 {
+        v = iy;
+        w = (v - f128(2) * (x - (w * w / (w + v) - r)));
+
+        if (sign)
+            w = -w;
+
+        return w;
+    }
+
+    if iy == 1 {
+        return w;
+    }
+
+    let u := f128.FromBits(u128(w.Bits.High64(), 0u));
+    v = r - (u - x);
+    z = -w.ReciprocalEstimate;
+    let u1 := f128.FromBits(u128(z.Bits.High64(), 0u));
+    s = f128.One + u1 * u;
+    return u1 + z * (s + u1 * v);
+}
+
+private FastFloor: (x: f128) -> (f128, f128) noexcept
+{
+    ai, ar: f128;
+    let e := Exponent(x);
+    if e < 48 {
+        man := TrailingSignificand(x);
+        let m := ((1u64 << 49) - 1) >> (e + 1);
+        man &= (u128(~m) << 64);
+        ai = f128.FromBits((u128(BiasedExponent(x)) << BiasedExponentShift) + man);
+    } else {
+        let m := u64.MaxValue >> (e - 48);
+        ai = f128.FromBits(u128(x.Bits.High64(), x.Bits.Low64() & (~m)));
+    }
+    ar = x - ai;
+    return (ai, ar);
+}
+
+private Sum2: (ref a: f128, ref b: f128) noexcept ==
+{
+    let w := a + b;
+    b = a - w + b;
+    a = w;
+}
+
+private SinPiInternal: (x: f128) -> f128 noexcept
+{
+    const PiHi :== f128.FromBits(0x4000_921F_B544_42D1_8400_0000_0000_0000_u128);
+    const PiLo :== f128.FromBits(0x3FC6_A626_3314_5C06_E0E6_8948_1270_4453_u128);
+
+    hi, lo: f128;
+    hi = x.ToFloat64();
+    lo = x - hi;
+    lo = lo * (PiLo + PiHi) + hi * PiLo;
+    hi *= PiHi;
+    Sum2(&hi, &lo);
+
+    return SinInternal(hi, lo, 1);
+}
+
+private CosPiInternal: (x: f128) -> f128 noexcept
+{
+    const PiHi :== f128.FromBits(0x4000_921F_B544_42D1_8400_0000_0000_0000_u128);
+    const PiLo :== f128.FromBits(0x3FC6_A626_3314_5C06_E0E6_8948_1270_4453_u128);
+
+    hi, lo: f128;
+    hi = x.ToFloat64();
+    lo = x - hi;
+    lo = lo * (PiLo + PiHi) + hi * PiLo;
+    hi *= PiHi;
+    Sum2(&hi, &lo);
+
+    return CosInternal(hi, lo);
+}
+
+private TanPiInternal: (x: f128) -> f128 noexcept
+{
+    const PiHi :== f128.FromBits(0x4000_921F_B544_42D1_8400_0000_0000_0000_u128);
+    const PiLo :== f128.FromBits(0x3FC6_A626_3314_5C06_E0E6_8948_1270_4453_u128);
+
+    hi, lo, t: f128;
+    if x < Quarter {
+        hi = x.ToFloat64();
+        lo = x - hi;
+        lo = lo * (PiLo + PiHi) + hi * PiLo;
+        hi *= PiHi;
+        Sum2(&hi, &lo);
+        t = TanInternal(hi, lo, 1);
+    } else if x > Quarter {
+        x = HalfOne - x;
+        hi = x.ToFloat64();
+        lo = x - hi;
+        lo = lo * (PiLo + PiHi) + hi * PiLo;
+        hi *= PiHi;
+        Sum2(&hi, &lo);
+        t = -TanInternal(hi, lo, -1);
+    } else {
+        t = f128.One;
+    }
+    
+    return t;
+}

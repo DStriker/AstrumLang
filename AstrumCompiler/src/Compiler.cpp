@@ -539,7 +539,7 @@ namespace AstrumLang {
 			}
 
 			cmd +=
-			    R"( /GS /Zc:wchar_t /Gm- /MP /Zi /Zc:inline /fp:precise /D ""_CONSOLE"" /D ""_UNICODE"" /D ""UNICODE"" /errorReport:prompt /WX- /Zc:forScope /Gd /std:c++latest /wd4005 /wd4584 /wd4190 /we4297 /we4715 /we26447 /we26815 /we26816 /external:W0)";
+			    R"( /GS /Zc:wchar_t /Gm- /MP /Zi /Zc:inline /fp:precise /D ""_CONSOLE"" /D ""_UNICODE"" /D ""UNICODE"" /errorReport:prompt /WX- /Zc:forScope /Gd /std:c++latest /constexpr:steps 100000000 /wd4005 /wd4584 /we4172 /wd4190 /we4297 /we4715 /we26447 /we26815 /we26816 /external:W0)";
 			if (CompilerSettings::get().debugBuild) {
 				cmd += R"( /Fo"obj\\Debug\\")";
 			} else {
@@ -761,6 +761,8 @@ namespace AstrumLang {
 			codegens[src] = codegen;
 			codegen->printFirstPass();
 		}
+		if (exitRequested.load(std::memory_order::relaxed))
+			std::exit(-1);
 
 		// second codegen pass
 		std::cout << "Stage 2: Codegen second pass\n";
@@ -780,6 +782,8 @@ namespace AstrumLang {
 			semas[src]    = nullptr;
 			codegens[src] = nullptr;
 		}
+		if (exitRequested.load(std::memory_order::relaxed))
+			std::exit(-1);
 
 		std::cout << "Codegen completed\n";
 		return true;

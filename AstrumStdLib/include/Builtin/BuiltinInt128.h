@@ -28,6 +28,12 @@ template <class T, class U>
 inline constexpr T UnsafeCast(Builtin::FastInt<U> value) noexcept;
 #endif
 
+#if defined(_WIN32) || defined(__BYTE_ORDER__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
+#define ADV_VERSION_BIG_ENDIAN 0
+#else
+#define ADV_VERSION_BIG_ENDIAN 1
+#endif
+
 namespace Builtin {
 	class Int128;
 	class __Class_Int128;
@@ -213,8 +219,8 @@ namespace Builtin {
 		//	return *this = UInt128(value);
 		//}
 
-		constexpr UInt128(const UInt128& value) noexcept = default;
-		constexpr UInt128& operator=(const UInt128& value) noexcept = default;
+		//constexpr UInt128(const UInt128& value) noexcept = default;
+		//constexpr UInt128& operator=(const UInt128& value) noexcept = default;
 
 		constexpr UInt128& operator=(unsigned value) noexcept { return *this = UInt128(value); }
 
@@ -2294,8 +2300,8 @@ namespace Builtin {
 		// explicit Int128(Float32 value) : Int128((float)value) {}
 		// explicit Int128(Float64 value) : Int128((double)value) {}
 
-		constexpr Int128(const Int128& value) noexcept = default;
-		constexpr Int128& operator=(const Int128& value) noexcept = default;
+		//constexpr Int128(const Int128& value) noexcept = default;
+		//constexpr Int128& operator=(const Int128& value) noexcept = default;
 
 		constexpr Int128& operator=(int value) noexcept { return *this = Int128(value); }
 

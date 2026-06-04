@@ -24,7 +24,7 @@ template<class T> inline constexpr bool Builtin::__details::cheapCopy<System::IE
 
 namespace System {
 	#line 4 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IEquatable.ast"
-	template<class __AnyType, class T> concept __HasMethodImplementation_02ee27026625e37a = requires(typename __AnyType::__class t) { {t.operator==(std::declval<Builtin::Nullable<T>>())} -> std::convertible_to<bool>; }  || requires(typename __AnyType::__self t) { {operator==(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::Nullable<T>>())} -> std::convertible_to<bool>; } || requires { { [] { using namespace __extensions; return std::declval<typename __AnyType::__self>() ==std::declval<Builtin::Nullable<T>>();}() } -> std::convertible_to<bool>; };
+	template<class __AnyType, class T> concept __HasMethodImplementation_02ee27026625e37a = requires(typename __AnyType::__class t) { {t.operator==(std::declval<Builtin::Nullable<T>>())} -> std::convertible_to<bool>; }  || requires(typename __AnyType::__self t) { {operator==(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::Nullable<T>>())} -> std::convertible_to<bool>; } || requires { { [] { using namespace __extensions; return std::declval<typename __AnyType::__self&>() ==std::declval<Builtin::Nullable<T>>();}() } -> std::convertible_to<bool>; };
 	namespace __vtables {
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IEquatable.ast"
 		template<class T> struct __vtable_IEquatable
@@ -287,7 +287,7 @@ template<> inline constexpr bool Builtin::__details::cheapCopy<System::ISelfEqua
 
 namespace System {
 	#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IEquatable.ast"
-	template<class __AnyType> concept __HasMethodImplementation_11c3fd746814643f = requires(typename __AnyType::__class t) { {t.operator==(std::declval<typename __AnyType::__self>())} -> std::convertible_to<bool>; }  || requires(typename __AnyType::__self t) { {operator==(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<bool>; } || requires { { [] { using namespace __extensions; return std::declval<typename __AnyType::__self>() ==std::declval<typename __AnyType::__self>();}() } -> std::convertible_to<bool>; };
+	template<class __AnyType> concept __HasMethodImplementation_11c3fd746814643f = requires(typename __AnyType::__class t) { {t.operator==(std::declval<typename __AnyType::__self>())} -> std::convertible_to<bool>; }  || requires(typename __AnyType::__self t) { {operator==(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<bool>; } || requires { { [] { using namespace __extensions; return std::declval<typename __AnyType::__self&>() ==std::declval<typename __AnyType::__self>();}() } -> std::convertible_to<bool>; };
 	namespace __vtables {
 		#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IEquatable.ast"
 		struct __vtable_ISelfEquatable

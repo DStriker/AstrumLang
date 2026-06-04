@@ -166,6 +166,7 @@ namespace AstrumLang {
 		std::string id;
 		std::vector<std::pair<std::string, AstrumParser::TheTypeIdContext*>> fields;
 		AccessSpecifier access = AccessSpecifier::Private;
+		bool isConstexpr       = false;
 	};
 
 	struct ForwardDeclaration {
