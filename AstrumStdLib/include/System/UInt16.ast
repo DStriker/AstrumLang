@@ -333,10 +333,10 @@ public extension u16: IBinaryNumber {
         }
 
         let val := this as u32;
-        const C1: u32 == 0b011_00000000000000000 - 10;
-        const C2: u32 == 0b100_00000000000000000 - 100;
-        const C3: u32 == 0b111_00000000000000000 - 1000;
-        const C4: u32 == 0b100_00000000000000000 - 10_000;
+        const C1: u32 == 0b011_00000000000000000u - 10;
+        const C2: u32 == 0b100_00000000000000000u - 100;
+        const C3: u32 == 0b111_00000000000000000u - 1000;
+        const C4: u32 == 0b100_00000000000000000u - 10_000;
         return ((((val + C1) & (val + C2)) ^ ((val + C3) & (val + C4))) >> 17) as self;
     }
     // Common logarithm (base 10, rounded down)
@@ -463,7 +463,7 @@ public extension u16: ICheckedArithmetic {
 
     // Overflowing add
     // Returns tuple of (result of wrapping add, overflowed)
-    operator+%?: <T> (rhs: T) -> (self, bool) noexcept {
+    operator+%?: <T> (rhs: T) -> (self, bool) noexcept == {
         static assert(type T is IBinaryInteger, "Operator +%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeAdd(this, rhs, result);
@@ -555,7 +555,7 @@ public extension u16: ICheckedArithmetic {
 
     // Overflowing sub
     // Returns tuple of (result of wrapping sub, overflowed)
-    operator-%?: <T> (rhs: T) -> (self, bool) noexcept {
+    operator-%?: <T> (rhs: T) -> (self, bool) noexcept == {
         static assert(type T is IBinaryInteger, "Operator -%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeSubtract(this, rhs, result);
@@ -629,7 +629,7 @@ public extension u16: ICheckedArithmetic {
 
     // Overflowing mul
     // Returns tuple of (result of wrapping mul, overflowed)
-    operator*%?: <T> (rhs: T) -> (self, bool) noexcept {
+    operator*%?: <T> (rhs: T) -> (self, bool) noexcept == {
         static assert(type T is IBinaryInteger, "Operator *%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeMultiply(this, rhs, result);
@@ -691,7 +691,7 @@ public extension u16: ICheckedArithmetic {
     // Overflowing div
     // Returns tuple of (result of wrapping div, overflowed)
     // Throws DivisionByZeroException during rhs == 0
-    operator\%?: <T> (rhs: T) -> (self, bool) {
+    operator\%?: <T> (rhs: T) -> (self, bool) == {
         static assert(type T is IBinaryInteger, "Operator \\%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeDivide(this, rhs, result);
@@ -752,7 +752,7 @@ public extension u16: ICheckedArithmetic {
     // Overflowing mod
     // Returns tuple of (result of wrapping mod, overflowed)
     // Throws DivisionByZeroException during rhs == 0
-    operator%%?: <T> (rhs: T) -> (self, bool) {
+    operator%%?: <T> (rhs: T) -> (self, bool) == {
         static assert(type T is IBinaryInteger, "Operator %%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeModulus(this, rhs, result);
@@ -1014,10 +1014,10 @@ public extension u16: IBinaryInteger {
 
     // checked integer square root
     CheckedIsqrt: self? {
-        /*const MAX_RESULT :== Math.Isqrt8(self.MaxValue);
-        let result := Math.Isqrt8(this);
+        const MAX_RESULT :== Math.Isqrt16(self.MaxValue);
+        let result := Math.Isqrt16(this);
         assume result <= MAX_RESULT;
-        return result;*/return 0u16;
+        return result;
     }
     // Integer square root (rounding down)
     Isqrt: self = {
@@ -1203,14 +1203,14 @@ test "UInt16"
     assert (a ^ 1) == 4;
     assert a << 1 == 10;
     assert a >> 1 == 2;
-    a = 0b1111_1011; // 1111 1011
+    a = 0b1111_1011u16; // 1111 1011
     a >>>= 2; // 0011 1110
     assert a == 0b0011_1110;
     assert a >>> 2 == 0b0000_1111;
     assert a >>> 7 == 0;
 
     // comparisons
-    a = 5;
+    a = 5u16;
     assert a == 5;
     assert a != 6;
     assert a < 6;
@@ -1435,11 +1435,11 @@ test "UInt16"
     }
 
     assert a *? 1u16 == u16.MinValue;
-    a = 1500;
+    a = 1500u16;
     assert a *? 200u16 == null;
     a *?= 50u16;
     assert a == 1500;
-    a = 15;
+    a = 15u16;
     assert a == 15;
     assert a *! 3u16 == 45;
     assert a *% 6u16 == 90;
@@ -1465,11 +1465,11 @@ test "UInt16"
         assert low == 10 && high == 2;
     }
 
-    a = 10000;
+    a = 10000u16;
     assert a \ 6000 == 1;
     a /= 6000;
     assert a == 2;
-    a = 10000;
+    a = 10000u16;
     {
         div, rem := a /% 6000u16;
         assert div == 1 && rem == 4000;
@@ -1480,10 +1480,10 @@ test "UInt16"
     assert a \! 5000u16 == 2;
     a \%= 5000u16;
     assert a == 2;
-    a = 10;
+    a = 10u16;
     a \|= 5u16;
     assert a == 2;
-    a = 10;
+    a = 10u16;
 
     assert a \\ 5u16 == 2u16;
     assert a \\ 6u16 == null;
@@ -1499,7 +1499,7 @@ test "UInt16"
     assert a %! 6u16 == 4;
     a %%= 6u16;
     assert a == 4;
-    a = 10;
+    a = 10u16;
 
     assert u16.MaxValue >>\ 4u == 0b0000_1111_1111_1111;
     assert u16.MaxValue >>\ 20u == 0;

@@ -504,10 +504,10 @@ public extension i128: IBinaryNumber {
             return null;
         }
 
-        const C1: u32 == 0b011_00000000000000000 - 10;
-        const C2: u32 == 0b100_00000000000000000 - 100;
-        const C3: u32 == 0b111_00000000000000000 - 1000;
-        const C4: u32 == 0b100_00000000000000000 - 10_000;
+        const C1: u32 == 0b011_00000000000000000u - 10;
+        const C2: u32 == 0b100_00000000000000000u - 100;
+        const C3: u32 == 0b111_00000000000000000u - 1000;
+        const C4: u32 == 0b100_00000000000000000u - 10_000;
         log := 0;
         val1 := this as u128;
         if val1 >= 100_000_000_000_000_000_000_000_000_000_000 {
@@ -669,7 +669,7 @@ public extension i128: ICheckedArithmetic {
 
     // Overflowing add
     // Returns tuple of (result of wrapping add, overflowed)
-    operator+%?: <T> (rhs: T) -> (self, bool) noexcept {
+    operator+%?: <T> (rhs: T) -> (self, bool) noexcept == {
         static assert(type T is IBinaryInteger, "Operator +%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeAdd(this, rhs, result);
@@ -761,7 +761,7 @@ public extension i128: ICheckedArithmetic {
 
     // Overflowing sub
     // Returns tuple of (result of wrapping sub, overflowed)
-    operator-%?: <T> (rhs: T) -> (self, bool) noexcept {
+    operator-%?: <T> (rhs: T) -> (self, bool) noexcept == {
         static assert(type T is IBinaryInteger, "Operator -%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeSubtract(this, rhs, result);
@@ -835,7 +835,7 @@ public extension i128: ICheckedArithmetic {
 
     // Overflowing mul
     // Returns tuple of (result of wrapping mul, overflowed)
-    operator*%?: <T> (rhs: T) -> (self, bool) noexcept {
+    operator*%?: <T> (rhs: T) -> (self, bool) noexcept == {
         static assert(type T is IBinaryInteger, "Operator *%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeMultiply(this, rhs, result);
@@ -918,7 +918,7 @@ public extension i128: ICheckedArithmetic {
     // Overflowing div
     // Returns tuple of (result of wrapping div, overflowed)
     // Throws DivisionByZeroException during rhs == 0
-    operator\%?: <T> (rhs: T) -> (self, bool) {
+    operator\%?: <T> (rhs: T) -> (self, bool) == {
         static assert(type T is IBinaryInteger, "Operator \\%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeDivide(this, rhs, result);
@@ -993,7 +993,7 @@ public extension i128: ICheckedArithmetic {
     // Overflowing mod
     // Returns tuple of (result of wrapping mod, overflowed)
     // Throws DivisionByZeroException during rhs == 0
-    operator%%?: <T> (rhs: T) -> (self, bool) {
+    operator%%?: <T> (rhs: T) -> (self, bool) == {
         static assert(type T is IBinaryInteger, "Operator %%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeModulus(this, rhs, result);
@@ -1261,7 +1261,13 @@ public extension i128: ICheckedArithmetic {
     SaturatingAbs: self ==> this.IsNegative ? -|this : this;
     // overflowing absolute
     // Returns tuple of (result of wrapping absolute, overflowed)
-    OverflowingAbs: (self, bool) ==> this.IsNegative ? -%?this : (this, false);
+    OverflowingAbs: (self, bool) ==
+    {
+        if this.IsNegative {
+            return -%?this;
+        }
+        return (this, false);
+    }
 }
 
 public extension i128: IBinaryInteger {
@@ -1284,11 +1290,11 @@ public extension i128: IBinaryInteger {
         if this.IsNegative {
             return null;
         }
-        /*const MAX_RESULT :== Math.Isqrt8(self.MaxValue as u8) as self;
-        let result := Math.Isqrt8(this as u8) as self;
+        const MAX_RESULT :== Math.Isqrt128(self.MaxValue as u128) as self;
+        let result := Math.Isqrt128(this as u128) as self;
         assume result >= 0; 
         assume result <= MAX_RESULT;
-        return result;*/return 0i128;
+        return result;
     }
     // Integer square root (rounding down)
     // Throws InvalidOperationException during this < 0

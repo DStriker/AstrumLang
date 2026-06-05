@@ -8,13 +8,16 @@ public import Int32;
 public import UInt32;
 public import Int64;
 public import UInt64;
+public import Int128;
+public import UInt128;
 
 public static class Math {
-    /*private _generateIsqrtLookupTable: () -> (u8, u8)[256] ==
-    {
-        result: (u8, u8)[256];
-        n: usize = 0;
-        rootN: usize = 0;
+    private type IsqrtData = (u8, u8);
+
+    private const _isqrtLookupTable: IsqrtData[256] == () {
+        result: IsqrtData[256];
+        n: usize = 0u;
+        rootN: usize = 0u;
 
         while n < 256 {
             result[n] = (rootN as u8, (n - rootN ^^ 2u) as u8);
@@ -25,16 +28,151 @@ public static class Math {
         }
 
         return result;
+    }();
+
+    private const EVEN_MAKING_BITMASK :== ~1u;
+    private _isqrtFirstStage: <T: is IFixedWidthInteger> (num: T) -> (u8, u8) ==
+    {
+        assert num != 0;
+
+        const SHIFT :== T.BitWidth - 8;
+        num >>= SHIFT as i32;
+
+        return _isqrtLookupTable[num as usize];
+    }
+    private _isqrtMiddleStage: <T: is IFixedWidthInteger, U: is IFixedWidthInteger> (num: T, root, rem) -> (U, U) ==
+    {
+        assert root != 0;
+
+        const SHIFT :== T.BitWidth - U.BitWidth;
+        const HALF_BITS :== U.BitWidth >> 1;
+        const QUARTER_BITS :== U.BitWidth >> 2;
+        const LOWER_HALF_BITS :== U((1u64 << HALF_BITS) - 1);
+        const LOWER_QUARTER_BITS :== U((1u64 << QUARTER_BITS) - 1);
+        let n := U(num >> (SHIFT as i32));
+
+        let low := n & LOWER_HALF_BITS;
+        let numerator := (U(rem) << QUARTER_BITS) | (low >> QUARTER_BITS);
+        let denominator := U(root) << 1;
+        let q, u := numerator /% denominator;
+
+        r: U;
+        s := U(root << QUARTER_BITS) + q;
+        let sub, overflow := ((u << QUARTER_BITS) | (low & LOWER_QUARTER_BITS)) -%? (q * q);
+        r = sub;
+        if overflow {
+            r +%= (s * 2 - 1);
+            s--;
+        }
+
+        return (s, r);
+    }
+    private _isqrtLastStage: <T: is IFixedWidthInteger> (num: T, root, rem) -> T ==
+    {
+        assert root != 0;
+
+        const HALF_BITS :== T.BitWidth >> 1;
+        const QUARTER_BITS :== T.BitWidth >> 2;
+        const LOWER_HALF_BITS :== T((1u128 << HALF_BITS) - 1);
+        let low := num & LOWER_HALF_BITS;
+        let numerator := (T(rem) << QUARTER_BITS) | (low >> QUARTER_BITS);
+        let denominator := T(root) << 1;
+        let q := numerator \ denominator;
+        result := T(root << QUARTER_BITS) + q;
+        let squared, overflow := result *%? result;
+        if overflow or squared > num {
+            --result;
+        }
+
+        return result;
     }
 
-    private _isqrtLookupTable: (u8, u8)[256] == _generateIsqrtLookupTable();*/
+    public Isqrt8: (num: u8) -> u8 noexcept ==> _isqrtLookupTable[num as usize].0;
 
-    public Isqrt8: (num: u8) -> u8 ==> /*_isqrtLookupTable[num].0*/0u8;
+    public Isqrt16: (num: u16) -> u16 ==
+    {
+        if num <= u8.MaxValue {
+            return Isqrt8(num as u8);
+        }
 
+        let normShift := num.LeadingZeroCount & EVEN_MAKING_BITMASK;
+        num <<= normShift;
+
+        let s, r := _isqrtFirstStage(num);
+        let result := _isqrtLastStage(num, s, r);
+
+        let denormShift := normShift >> 1;
+        return result >> denormShift;
+    }
+
+    public Isqrt32: (num: u32) -> u32 ==
+    {
+        if num <= u16.MaxValue {
+            return Isqrt16(num as u16);
+        }
+
+        let normShift := num.LeadingZeroCount & EVEN_MAKING_BITMASK;
+        num <<= normShift;
+
+        let s1, r1 := _isqrtFirstStage(num);
+        let s2, r2 := _isqrtMiddleStage<u32, u16>(num, s1, r1);
+        let result := _isqrtLastStage(num, s2, r2);
+
+        let denormShift := normShift >> 1;
+        return result >> denormShift;
+    }
+
+    public Isqrt64: (num: u64) -> u64 ==
+    {
+        if num <= u32.MaxValue {
+            return Isqrt32(num as u32);
+        }
+
+        let normShift := num.LeadingZeroCount & EVEN_MAKING_BITMASK;
+        num <<= normShift;
+
+        let s1, r1 := _isqrtFirstStage(num);
+        let s2, r2 := _isqrtMiddleStage<u64, u16>(num, s1, r1);
+        let s3, r3 := _isqrtMiddleStage<u64, u32>(num, s2, r2);
+        let result := _isqrtLastStage(num, s3, r3);
+
+        let denormShift := normShift >> 1;
+        return result >> denormShift;
+    }
+
+    public Isqrt128: (num: u128) -> u128 ==
+    {
+        if num <= u64.MaxValue {
+            return Isqrt64(num as u64);
+        }
+
+        let normShift := num.LeadingZeroCount & EVEN_MAKING_BITMASK;
+        num <<= normShift as i32;
+
+        let s1, r1 := _isqrtFirstStage(num);
+        let s2, r2 := _isqrtMiddleStage<u128, u16>(num, s1, r1);
+        let s3, r3 := _isqrtMiddleStage<u128, u32>(num, s2, r2);
+        let s4, r4 := _isqrtMiddleStage<u128, u64>(num, s3, r3);
+        let result := _isqrtLastStage(num, s4, r4);
+
+        let denormShift := normShift >> 1;
+        return result >> (denormShift as i32);
+    }
 }
 
 test "Math" {
     assert i32.MaxValue == 2147483647;
     assert 120.IsMultipleOf(12i16);
     assert 120.Max(115) == 120;
+
+    f := Math.Isqrt8(250u8);
+    assert f == 15;
+    f1 := Math.Isqrt16(50000u16);
+    assert f1 == 223;
+    f2 := Math.Isqrt32(3_000_000_000u);
+    assert f2 == 54772;
+    f3 := Math.Isqrt64(10_000_000_000_000_000_000u);
+    assert f3 == 3_162_277_660;
+    f4 := Math.Isqrt128(100_000_000_000_000_000_000_000_000_000_000_000u);
+    assert f4 == 316227766016837933;
 }

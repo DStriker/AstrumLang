@@ -372,10 +372,10 @@ public extension u64: IBinaryNumber {
             return null;
         }
 
-        const C1: u32 == 0b011_00000000000000000 - 10;
-        const C2: u32 == 0b100_00000000000000000 - 100;
-        const C3: u32 == 0b111_00000000000000000 - 1000;
-        const C4: u32 == 0b100_00000000000000000 - 10_000;
+        const C1: u32 == 0b011_00000000000000000u - 10;
+        const C2: u32 == 0b100_00000000000000000u - 100;
+        const C3: u32 == 0b111_00000000000000000u - 1000;
+        const C4: u32 == 0b100_00000000000000000u - 10_000;
         log := 0u;
         val1 := this;
         if val1 >= 10_000_000_000 {
@@ -513,7 +513,7 @@ public extension u64: ICheckedArithmetic {
 
     // Overflowing add
     // Returns tuple of (result of wrapping add, overflowed)
-    operator+%?: <T> (rhs: T) -> (self, bool) noexcept {
+    operator+%?: <T> (rhs: T) -> (self, bool) noexcept == {
         static assert(type T is IBinaryInteger, "Operator +%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeAdd(this, rhs, result);
@@ -605,7 +605,7 @@ public extension u64: ICheckedArithmetic {
 
     // Overflowing sub
     // Returns tuple of (result of wrapping sub, overflowed)
-    operator-%?: <T> (rhs: T) -> (self, bool) noexcept {
+    operator-%?: <T> (rhs: T) -> (self, bool) noexcept == {
         static assert(type T is IBinaryInteger, "Operator -%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeSubtract(this, rhs, result);
@@ -679,7 +679,7 @@ public extension u64: ICheckedArithmetic {
 
     // Overflowing mul
     // Returns tuple of (result of wrapping mul, overflowed)
-    operator*%?: <T> (rhs: T) -> (self, bool) noexcept {
+    operator*%?: <T> (rhs: T) -> (self, bool) noexcept == {
         static assert(type T is IBinaryInteger, "Operator *%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeMultiply(this, rhs, result);
@@ -741,7 +741,7 @@ public extension u64: ICheckedArithmetic {
     // Overflowing div
     // Returns tuple of (result of wrapping div, overflowed)
     // Throws DivisionByZeroException during rhs == 0
-    operator\%?: <T> (rhs: T) -> (self, bool) {
+    operator\%?: <T> (rhs: T) -> (self, bool) == {
         static assert(type T is IBinaryInteger, "Operator \\%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeDivide(this, rhs, result);
@@ -802,7 +802,7 @@ public extension u64: ICheckedArithmetic {
     // Overflowing mod
     // Returns tuple of (result of wrapping mod, overflowed)
     // Throws DivisionByZeroException during rhs == 0
-    operator%%?: <T> (rhs: T) -> (self, bool) {
+    operator%%?: <T> (rhs: T) -> (self, bool) == {
         static assert(type T is IBinaryInteger, "Operator %%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeModulus(this, rhs, result);
@@ -1064,10 +1064,10 @@ public extension u64: IBinaryInteger {
 
     // checked integer square root
     CheckedIsqrt: self? {
-        /*const MAX_RESULT :== Math.Isqrt8(self.MaxValue);
-        let result := Math.Isqrt8(this);
+        const MAX_RESULT :== Math.Isqrt64(self.MaxValue);
+        let result := Math.Isqrt64(this);
         assume result <= MAX_RESULT;
-        return result;*/return 0u64;
+        return result;
     }
     // Integer square root (rounding down)
     Isqrt: self = {
@@ -1252,14 +1252,14 @@ test "UInt64"
     assert (a ^ 1) == 4;
     assert a << 1 == 10;
     assert a >> 1 == 2;
-    a = 0b1111_1011; // 1111 1011
+    a = 0b1111_1011u; // 1111 1011
     a >>>= 2i32; // 0011 1110
     assert a == 0b0011_1110;
     assert a >>> 2 == 0b0000_1111;
     assert a >>> 7 == 0;
 
     // comparisons
-    a = 5;
+    a = 5u;
     assert a == 5;
     assert a != 6;
     assert a < 6;
@@ -1527,10 +1527,10 @@ test "UInt64"
     assert a \! 600000u64 == 166666;
     a \%= 600000u64;
     assert a == 166666;
-    a = 10;
+    a = 10u;
     a \|= 5u64;
     assert a == 2;
-    a = 10;
+    a = 10u;
 
     assert a \\ 5u64 == 2u64;
     assert a \\ 6u64 == null;
@@ -1546,7 +1546,7 @@ test "UInt64"
     assert a %! 6u64 == 4;
     a %%= 6;
     assert a == 4;
-    a = 10;
+    a = 10u;
 
     assert u64.MaxValue >>\ 4u == 0b0000_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111_1111;
     assert u64.MaxValue >>\ 68u == 0;

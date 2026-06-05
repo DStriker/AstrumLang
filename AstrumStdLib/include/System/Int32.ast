@@ -434,10 +434,10 @@ public extension i32: IBinaryNumber {
         }
 
         val := this as u32;
-        const C1: u32 == 0b011_00000000000000000 - 10;
-        const C2: u32 == 0b100_00000000000000000 - 100;
-        const C3: u32 == 0b111_00000000000000000 - 1000;
-        const C4: u32 == 0b100_00000000000000000 - 10_000;
+        const C1: u32 == 0b011_00000000000000000u - 10;
+        const C2: u32 == 0b100_00000000000000000u - 100;
+        const C3: u32 == 0b111_00000000000000000u - 1000;
+        const C4: u32 == 0b100_00000000000000000u - 10_000;
         log := 0;
         if val >= 100000 {
             val.DivAssign(100000u);
@@ -578,7 +578,7 @@ public extension i32: ICheckedArithmetic {
 
     // Overflowing add
     // Returns tuple of (result of wrapping add, overflowed)
-    operator+%?: <T> (rhs: T) -> (self, bool) noexcept {
+    operator+%?: <T> (rhs: T) -> (self, bool) noexcept == {
         static assert(type T is IBinaryInteger, "Operator +%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeAdd(this, rhs, result);
@@ -670,7 +670,7 @@ public extension i32: ICheckedArithmetic {
 
     // Overflowing sub
     // Returns tuple of (result of wrapping sub, overflowed)
-    operator-%?: <T> (rhs: T) -> (self, bool) noexcept {
+    operator-%?: <T> (rhs: T) -> (self, bool) noexcept == {
         static assert(type T is IBinaryInteger, "Operator -%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeSubtract(this, rhs, result);
@@ -744,7 +744,7 @@ public extension i32: ICheckedArithmetic {
 
     // Overflowing mul
     // Returns tuple of (result of wrapping mul, overflowed)
-    operator*%?: <T> (rhs: T) -> (self, bool) noexcept {
+    operator*%?: <T> (rhs: T) -> (self, bool) noexcept == {
         static assert(type T is IBinaryInteger, "Operator *%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeMultiply(this, rhs, result);
@@ -827,7 +827,7 @@ public extension i32: ICheckedArithmetic {
     // Overflowing div
     // Returns tuple of (result of wrapping div, overflowed)
     // Throws DivisionByZeroException during rhs == 0
-    operator\%?: <T> (rhs: T) -> (self, bool) {
+    operator\%?: <T> (rhs: T) -> (self, bool) == {
         static assert(type T is IBinaryInteger, "Operator \\%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeDivide(this, rhs, result);
@@ -902,7 +902,7 @@ public extension i32: ICheckedArithmetic {
     // Overflowing mod
     // Returns tuple of (result of wrapping mod, overflowed)
     // Throws DivisionByZeroException during rhs == 0
-    operator%%?: <T> (rhs: T) -> (self, bool) {
+    operator%%?: <T> (rhs: T) -> (self, bool) == {
         static assert(type T is IBinaryInteger, "Operator %%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeModulus(this, rhs, result);
@@ -1170,7 +1170,13 @@ public extension i32: ICheckedArithmetic {
     SaturatingAbs: self ==> this.IsNegative ? -|this : this;
     // overflowing absolute
     // Returns tuple of (result of wrapping absolute, overflowed)
-    OverflowingAbs: (self, bool) ==> this.IsNegative ? -%?this : (this, false);
+    OverflowingAbs: (self, bool) ==
+    {
+        if this.IsNegative {
+            return -%?this;
+        }
+        return (this, false);
+    }
 }
 
 public extension i32: IBinaryInteger {
@@ -1187,11 +1193,11 @@ public extension i32: IBinaryInteger {
         if this.IsNegative {
             return null;
         }
-        /*const MAX_RESULT :== Math.Isqrt8(self.MaxValue as u8) as self;
-        let result := Math.Isqrt8(this as u8) as self;
+        const MAX_RESULT :== Math.Isqrt32(self.MaxValue as u32) as self;
+        let result := Math.Isqrt32(this as u32) as self;
         assume result >= 0; 
         assume result <= MAX_RESULT;
-        return result;*/return 0i32;
+        return result;
     }
     // Integer square root (rounding down)
     // Throws InvalidOperationException during this < 0

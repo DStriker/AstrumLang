@@ -269,7 +269,7 @@ template<class T> inline constexpr bool Builtin::__details::cheapCopy<System::IC
 
 namespace System {
 	#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-	template<class __AnyType, class T> concept __HasMethodImplementation_ff4bfa67cd0092cc = requires(typename __AnyType::__class t) { {t.operator<=>(std::declval<Builtin::Nullable<T>>())} -> std::convertible_to<Builtin::i32>; }  || requires(typename __AnyType::__self t) { {operator<=>(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::Nullable<T>>())} -> std::convertible_to<Builtin::i32>; } || requires { { [] { using namespace __extensions; return std::declval<typename __AnyType::__self>() <=>std::declval<Builtin::Nullable<T>>();}() } -> std::convertible_to<Builtin::i32>; };
+	template<class __AnyType, class T> concept __HasMethodImplementation_ff4bfa67cd0092cc = requires(typename __AnyType::__class t) { {t.operator<=>(std::declval<Builtin::Nullable<T>>())} -> std::convertible_to<Builtin::i32>; }  || requires(typename __AnyType::__self t) { {operator<=>(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::Nullable<T>>())} -> std::convertible_to<Builtin::i32>; } || requires { { [] { using namespace __extensions; return std::declval<typename __AnyType::__self&>() <=>std::declval<Builtin::Nullable<T>>();}() } -> std::convertible_to<Builtin::i32>; };
 	namespace __vtables {
 		#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
 		template<class T> struct __vtable_IComparable
@@ -532,7 +532,7 @@ template<> inline constexpr bool Builtin::__details::cheapCopy<System::ISelfComp
 
 namespace System {
 	#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-	template<class __AnyType> concept __HasMethodImplementation_199d3b21e4765375 = requires(typename __AnyType::__class t) { {t.operator<=>(std::declval<typename __AnyType::__self>())} -> std::convertible_to<Builtin::i32>; }  || requires(typename __AnyType::__self t) { {operator<=>(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<Builtin::i32>; } || requires { { [] { using namespace __extensions; return std::declval<typename __AnyType::__self>() <=>std::declval<typename __AnyType::__self>();}() } -> std::convertible_to<Builtin::i32>; };
+	template<class __AnyType> concept __HasMethodImplementation_199d3b21e4765375 = requires(typename __AnyType::__class t) { {t.operator<=>(std::declval<typename __AnyType::__self>())} -> std::convertible_to<Builtin::i32>; }  || requires(typename __AnyType::__self t) { {operator<=>(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<Builtin::i32>; } || requires { { [] { using namespace __extensions; return std::declval<typename __AnyType::__self&>() <=>std::declval<typename __AnyType::__self>();}() } -> std::convertible_to<Builtin::i32>; };
 	namespace __vtables {
 		#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
 		struct __vtable_ISelfComparable

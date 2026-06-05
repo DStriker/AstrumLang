@@ -572,7 +572,7 @@ public extension i8: ICheckedArithmetic {
 
     // Overflowing add
     // Returns tuple of (result of wrapping add, overflowed)
-    operator+%?: <T> (rhs: T) -> (self, bool) noexcept {
+    operator+%?: <T> (rhs: T) -> (self, bool) noexcept == {
         static assert(type T is IBinaryInteger, "Operator +%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeAdd(this, rhs, result);
@@ -664,7 +664,7 @@ public extension i8: ICheckedArithmetic {
 
     // Overflowing sub
     // Returns tuple of (result of wrapping sub, overflowed)
-    operator-%?: <T> (rhs: T) -> (self, bool) noexcept {
+    operator-%?: <T> (rhs: T) -> (self, bool) noexcept == {
         static assert(type T is IBinaryInteger, "Operator -%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeSubtract(this, rhs, result);
@@ -738,7 +738,7 @@ public extension i8: ICheckedArithmetic {
 
     // Overflowing mul
     // Returns tuple of (result of wrapping mul, overflowed)
-    operator*%?: <T> (rhs: T) -> (self, bool) noexcept {
+    operator*%?: <T> (rhs: T) -> (self, bool) noexcept == {
         static assert(type T is IBinaryInteger, "Operator *%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeMultiply(this, rhs, result);
@@ -821,7 +821,7 @@ public extension i8: ICheckedArithmetic {
     // Overflowing div
     // Returns tuple of (result of wrapping div, overflowed)
     // Throws DivisionByZeroException during rhs == 0
-    operator\%?: <T> (rhs: T) -> (self, bool) {
+    operator\%?: <T> (rhs: T) -> (self, bool) == {
         static assert(type T is IBinaryInteger, "Operator \\%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeDivide(this, rhs, result);
@@ -896,7 +896,7 @@ public extension i8: ICheckedArithmetic {
     // Overflowing mod
     // Returns tuple of (result of wrapping mod, overflowed)
     // Throws DivisionByZeroException during rhs == 0
-    operator%%?: <T> (rhs: T) -> (self, bool) {
+    operator%%?: <T> (rhs: T) -> (self, bool) == {
         static assert(type T is IBinaryInteger, "Operator %%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeModulus(this, rhs, result);
@@ -1165,7 +1165,13 @@ public extension i8: ICheckedArithmetic {
     SaturatingAbs: self ==> this.IsNegative ? -|this : this;
     // overflowing absolute
     // Returns tuple of (result of wrapping absolute, overflowed)
-    OverflowingAbs: (self, bool) ==> this.IsNegative ? -%?this : (this, false);
+    OverflowingAbs: (self, bool) == 
+    {
+        if this.IsNegative {
+            return -%?this;
+        }
+        return (this, false);
+    }
 }
 
 public extension i8: IBinaryInteger {
@@ -1385,14 +1391,14 @@ test "Int8"
     assert (a ^ 1) == 4;
     assert a << 1 == 10;
     assert a >> 1 == 2;
-    a = -5; // 1111 1011
+    a = -5i8; // 1111 1011
     a >>>= 2; // 0011 1110
     assert a == 0b0011_1110;
     assert a >>> 2 == 0b0000_1111;
     assert a >>> 7 == 0;
 
     // comparisons
-    a = 5;
+    a = 5i8;
     assert a == 5;
     assert a != 6;
     assert a < 6;
@@ -1620,7 +1626,7 @@ test "Int8"
     assert a *? 2i8 == null;
     a *?= 5i8;
     assert a == i8.MinValue;
-    a = 15;
+    a = 15i8;
     assert a == 15;
     assert a *! 3i8 == 45;
     assert a *% 6i8 == 90;
@@ -1635,7 +1641,7 @@ test "Int8"
         result, overflowed := a *%? 2i8;
         assert result == -2 && overflowed;
     }
-    a = 5;
+    a = 5i8;
     {
         low, high := a *> (120i8);
         assert low == 88 && high == 2;
@@ -1654,11 +1660,11 @@ test "Int8"
         assert low == 246 && high == -2;
     }
 
-    a = 10;
+    a = 10i8;
     assert a \ 6 == 1;
     a /= 6;
     assert a == 2;
-    a = 10;
+    a = 10i8;
     {
         div, rem := a /% 6i8;
         assert div == 1 && rem == 4;
@@ -1670,11 +1676,11 @@ test "Int8"
     assert a \! 5i8 == 2;
     a \%= 5i8;
     assert a == 2;
-    a = 10;
+    a = 10i8;
     assert i8.MinValue \% (-1i8) == i8.MinValue;
     a \|= 5i8;
     assert a == 2;
-    a = 10;
+    a = 10i8;
     assert i8.MinValue \| (-1i8) == i8.MaxValue;
     {
         result, overflowed := i8.MinValue \%? (-1i8);
@@ -1699,7 +1705,7 @@ test "Int8"
     assert a %! 6i8 == 4;
     a %%= 6i8;
     assert a == 4;
-    a = 10;
+    a = 10i8;
     assert i8.MinValue %% (-1i8) == 0;
     {
         result, overflowed := i8.MinValue %%? (-1i8);

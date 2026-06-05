@@ -1273,17 +1273,20 @@ namespace Builtin {
 			return *this;
 		}
 
-		constexpr UInt128& operator+=(UInt128 other) RELEASE_NOEXCEPT {
+		template<class U>
+		constexpr UInt128& operator+=(U other) RELEASE_NOEXCEPT {
 			*this = *this + other;
 			return *this;
 		}
 
-		constexpr UInt128& operator-=(UInt128 other) RELEASE_NOEXCEPT {
+		template <class U>
+		constexpr UInt128& operator-=(U other) RELEASE_NOEXCEPT {
 			*this = *this - other;
 			return *this;
 		}
 
-		constexpr UInt128& operator*=(UInt128 other) RELEASE_NOEXCEPT {
+		template <class U>
+		constexpr UInt128& operator*=(U other) RELEASE_NOEXCEPT {
 			*this = *this * other;
 			return *this;
 		}
@@ -1688,17 +1691,20 @@ namespace Builtin {
 			return *this;
 		}
 
-		constexpr UInt128& operator&=(UInt128 other) RELEASE_NOEXCEPT {
+		template <class U>
+		constexpr UInt128& operator&=(U other) RELEASE_NOEXCEPT {
 			*this = *this & other;
 			return *this;
 		}
 
-		constexpr UInt128& operator|=(UInt128 other) RELEASE_NOEXCEPT {
+		template <class U>
+		constexpr UInt128& operator|=(U other) RELEASE_NOEXCEPT {
 			*this = *this | other;
 			return *this;
 		}
 
-		constexpr UInt128& operator^=(UInt128 other) RELEASE_NOEXCEPT {
+		template <class U>
+		constexpr UInt128& operator^=(U other) RELEASE_NOEXCEPT {
 			*this = *this ^ other;
 			return *this;
 		}
@@ -3415,17 +3421,20 @@ namespace Builtin {
 			return *this;
 		}
 
-		constexpr Int128& operator+=(Int128 other) RELEASE_NOEXCEPT {
+		template <class U>
+		constexpr Int128& operator+=(U other) RELEASE_NOEXCEPT {
 			*this = *this + other;
 			return *this;
 		}
 
-		constexpr Int128& operator-=(Int128 other) RELEASE_NOEXCEPT {
+		template <class U>
+		constexpr Int128& operator-=(U other) RELEASE_NOEXCEPT {
 			*this = *this - other;
 			return *this;
 		}
 
-		constexpr Int128& operator*=(Int128 other) RELEASE_NOEXCEPT {
+		template <class U>
+		constexpr Int128& operator*=(U other) RELEASE_NOEXCEPT {
 			*this = *this * other;
 			return *this;
 		}
@@ -3633,17 +3642,20 @@ namespace Builtin {
 			return *this;
 		}
 
-		constexpr Int128& operator&=(Int128 other) RELEASE_NOEXCEPT {
+		template <class U>
+		constexpr Int128& operator&=(U other) RELEASE_NOEXCEPT {
 			*this = *this & other;
 			return *this;
 		}
 
-		constexpr Int128& operator|=(Int128 other) RELEASE_NOEXCEPT {
+		template <class U>
+		constexpr Int128& operator|=(U other) RELEASE_NOEXCEPT {
 			*this = *this | other;
 			return *this;
 		}
 
-		constexpr Int128& operator^=(Int128 other) RELEASE_NOEXCEPT {
+		template <class U>
+		constexpr Int128& operator^=(U other) RELEASE_NOEXCEPT {
 			*this = *this ^ other;
 			return *this;
 		}

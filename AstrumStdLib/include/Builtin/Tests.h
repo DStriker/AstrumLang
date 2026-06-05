@@ -22,21 +22,29 @@ namespace Builtin {
 
 	AssertInfo& GetAssertInfo();
 
-	inline void Assert(bool condition, Str message = u"") {
-#ifdef ADV_ENABLE_ASSERT_CHECKS
-		if (!condition) {
-			print(message);
-			throw AssertException {};
-			// breakpoint
-			__debugbreak();
-		}
-#elif defined(ADV_UNITTEST)
-		if (condition) {
-			GetAssertInfo().PassedAsserts++;
+	inline constexpr void Assert(bool condition, Str message = u"") {
+		if (std::is_constant_evaluated())
+		{
+			if (!condition)
+			{
+				throw false;
+			}
 		} else {
-			GetAssertInfo().FailedAsserts++;
-			__debugbreak();
-		}
+#ifdef ADV_ENABLE_ASSERT_CHECKS
+			if (!condition) {
+				print(message);
+				throw AssertException {};
+				// breakpoint
+				__debugbreak();
+			}
+#elif defined(ADV_UNITTEST)
+			if (condition) {
+				GetAssertInfo().PassedAsserts++;
+			} else {
+				GetAssertInfo().FailedAsserts++;
+				__debugbreak();
+			}
 #endif
+		}
 	}
 }  // namespace Builtin

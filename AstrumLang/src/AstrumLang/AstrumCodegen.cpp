@@ -1271,6 +1271,41 @@ namespace AstrumLang {
 				out << "\n" << std::string(depth, '\t');
 			}
 		}
+
+		for (const auto& alias : type->typeAliases) {
+			isUnsafe = alias.isUnsafe;
+			if (!alias.compilationCondition.empty()) {
+				out << "#if " << alias.compilationCondition << std::endl
+				    << std::string(depth, '\t');
+			}
+			out << "#line " << alias.pos.line << " \"" << fullFilename << ".ast\"\n"
+			    << std::string(depth, '\t');
+			switch (alias.access) {
+				case AccessSpecifier::Public:
+					out << "public: ";
+					break;
+				case AccessSpecifier::Protected:
+					out << "protected: ";
+					break;
+				case AccessSpecifier::Private:
+					out << "private: ";
+					break;
+			}
+			if (alias.templateParams) {
+				isFunctionDeclaration = true;
+				printTemplateParams(alias.templateParams);
+				isFunctionDeclaration = false;
+				out << " ";
+			}
+			out << "using " << alias.id << (isUnsafe ? " [[clang::annotate(\"unsafe\")]]" : "")
+			    << " = ";
+			printTypeId(alias.type);
+			out << ";";
+			out << std::endl << std::string(depth, '\t');
+			if (!alias.compilationCondition.empty()) {
+				out << "#endif " << std::endl << std::string(depth, '\t');
+			}
+		}
 		for (const auto& friendType : type->friendTypes) {
 			if (!friendType.compilationCondition.empty()) {
 				out << "#if " << friendType.compilationCondition << std::endl
@@ -1382,146 +1417,6 @@ namespace AstrumLang {
 				out << "#endif " << std::endl << std::string(depth, '\t');
 			}
 		}
-		for (const auto& field : type->fields) {
-			bool prevUnsafe        = isUnsafe;
-			bool first             = true;
-			bool isArray           = false;
-			auto id                = field.id;
-			currentDeclarationName = id;
-			if (!field.compilationCondition.empty()) {
-				out << "#if " << field.compilationCondition << std::endl
-				    << std::string(depth, '\t');
-			}
-			out << "#line " << field.pos.line << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			bool hasVisibility =
-			    !isPrivateStruct && field.isStatic && !CompilerSettings::get().dllName.empty();
-			switch (field.access) {
-				case AccessSpecifier::Public:
-					out << "public: ";
-					if (hasVisibility)
-						out << CompilerSettings::get().dllName << "_API ";
-					break;
-				case AccessSpecifier::Internal:
-					out << "public: ";
-					if (hasVisibility)
-						out << CompilerSettings::get().dllName << "_HIDDEN ";
-					break;
-				case AccessSpecifier::Protected:
-					out << "protected: ";
-					if (hasVisibility)
-						out << CompilerSettings::get().dllName << "_API ";
-					break;
-				case AccessSpecifier::ProtectedInternal:
-					out << "protected: ";
-					if (hasVisibility)
-						out << CompilerSettings::get().dllName << "_HIDDEN ";
-					break;
-				case AccessSpecifier::Private:
-					out << "private: ";
-					if (hasVisibility)
-						out << CompilerSettings::get().dllName << "_API ";
-					break;
-			}
-			if (field.isUnsafe) {
-				isUnsafe = true;
-				out << "[[clang::annotate(\"unsafe\")]] ";
-			}
-			if (field.attributes) {
-				for (auto attr : field.attributes->attributeSpecifier()) {
-					auto attrName = attr->Identifier()->getText();
-					if (attrName == "Deprecated") {
-						out << "[[deprecated";
-						if (attr->attributeArgumentClause())
-							out << "("
-							    << attr->attributeArgumentClause()->expressionList()->getText()
-							    << ")";
-						out << "]] ";
-					} else if (attrName == "NoUniqueAddress" || attrName == "EmptyField") {
-						if (!field.isStatic)
-							out << "ADV_VIRTUAL_FIELD ";
-					} else if (attrName == "Unused") {
-						out << "[[maybe_unused]] ";
-					} else if (attrName == "Align") {
-						isAlignas = true;
-						out << "alignas(";
-						bool aof = attr->attributeArgumentClause()
-						               ->expressionList()
-						               ->getText()
-						               .starts_with("alignof");
-						if (!aof) {
-							out << "size_t(";
-						}
-						printAttributeArgumentClause(attr->attributeArgumentClause());
-						if (!aof) {
-							out << ")";
-						}
-						out << ") ";
-						isAlignas = false;
-					} else {
-						printAttributeSpecifier(attr);
-						out << " ";
-					}
-				}
-			}
-			if (field.isStatic || field.isThreadLocal) {
-				out << "static ";
-			}
-			if (field.isThreadLocal) {
-				out << "thread_local ";
-			}
-			if (field.isConst) {
-				out << "const ";
-			} else if (type->kind == TypeKind::Class && !field.isStatic && !field.isThreadLocal) {
-				out << "mutable ";
-			}
-			if (field.isVolatile) {
-				out << "volatile ";
-			}
-			if (auto t = field.type) {
-				symbolTable[id] = t->getText();
-				isDeclaration   = true;
-				printTypeId(t);
-				isDeclaration = false;
-				// isArray = t->arrayDeclarator();
-				if (field.isUnowned)
-					out << "::__unowned_ref";
-				else if (field.isWeak)
-					out << "::__weak_ref";
-				out << " ";
-			}
-			currentType = symbolTable[id];
-			out << id;
-			// if (isArray) printArrayDeclarator(field.type->arrayDeclarator());
-			if (!field.isStatic && !field.isThreadLocal) {
-				if (auto expr = field.initializer) {
-					out << " = ";
-					printInitializerClause(expr);
-				} else if (auto init = field.initializerList) {
-					out << "{ ";
-					printInitializerList(init);
-					out << " }";
-				}
-			}
-			if (field.bitWidth > 0) {
-				out << " : " << (int) field.bitWidth;
-			}
-			out << ";";
-			if (type->kind != TypeKind::RefStruct || field.isStatic || field.isThreadLocal) {
-				if (!sema.contextTypes.contains(field.type) ||
-				    !sema.contextTypes[field.type].ends_with(type->id)) {
-					printRefStructCheck(field.type);
-					out << ";";
-				}
-			}
-			out << "\n" << std::string(depth, '\t');
-			first    = false;
-			isUnsafe = prevUnsafe;
-			currentDeclarationName.clear();
-			if (!field.compilationCondition.empty()) {
-				out << "#endif " << std::endl << std::string(depth, '\t');
-			}
-		}
 		if (type->staticConstructor.has_value() || type->staticDestructor.has_value()) {
 			out << "private: class __sctor {\n" << std::string(++depth, '\t');
 			out << "static __sctor instance;\n" << std::string(depth, '\t');
@@ -1625,208 +1520,6 @@ namespace AstrumLang {
 			out << "private: " << type->id << "() = default;\n" << std::string(depth, '\t');
 		}
 
-		for (const auto& constant : type->constants) {
-			if (type->kind == TypeKind::EnumClass && !constant.type) {
-				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
-				    << std::string(depth, '\t');
-				out << "public: ";
-				if (constant.attributes) {
-					for (auto attr : constant.attributes->attributeSpecifier()) {
-						auto attrName = attr->Identifier()->getText();
-						if (attrName == "Deprecated") {
-							out << "[[deprecated";
-							if (attr->attributeArgumentClause())
-								out << "("
-								    << attr->attributeArgumentClause()->expressionList()->getText()
-								    << ")";
-							out << "]] ";
-						} else if (attrName == "Unused") {
-							out << "[[maybe_unused]] ";
-						} else {
-							printAttributeSpecifier(attr);
-							out << " ";
-						}
-					}
-				}
-				out << "static ";
-				if (!CompilerSettings::get().dllName.empty()) {
-					out << CompilerSettings::get().dllName << "_API";
-				}
-				out << " const __self " << constant.id << ";\n" << std::string(depth, '\t');
-			} else if (type->kind == TypeKind::Union) {
-				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
-				    << std::string(depth, '\t');
-				if (auto clause = constant.unionEnumerator) {
-					if (!clause->Identifier().empty()) {
-						// named union members
-						out << "public: struct ";
-						if (type->attributes) {
-							for (auto attr : type->attributes->attributeSpecifier()) {
-								auto attrName = attr->Identifier()->getText();
-								if (attrName == "Deprecated") {
-									out << "[[deprecated";
-									if (attr->attributeArgumentClause())
-										out << "("
-										    << attr->attributeArgumentClause()
-										           ->expressionList()
-										           ->getText()
-										    << ")";
-									out << "]] ";
-								} else if (attrName == "Unused") {
-									out << "[[maybe_unused]] ";
-								} else {
-									printAttributeSpecifier(attr);
-									out << " ";
-								}
-							}
-						}
-						out << constant.id
-						    << " { decltype(auto) __ref() const noexcept { return *this; }\n"
-						    << std::string(++depth, '\t');
-						auto types = clause->theTypeId();
-						auto ids   = clause->Identifier();
-						for (size_t i = 0, size = types.size(); i < size; ++i) {
-							printTypeId(types[i]);
-							out << " " << ids[i]->getText() << "; ";
-							out << "ADV_CHECK_REF_STRUCT(";
-							auto t = types[i]->getText();
-							StringReplace(t, "\"", "\\\"");
-							out << "\"" << t << "\", ";
-							printTypeId(types[i]);
-							out << ");\n" << std::string(depth, '\t');
-						}
-						out << "bool operator==(const " << constant.id
-						    << "& that) const noexcept { return ";
-						for (size_t i = 0, size = types.size(); i < size; ++i) {
-							if (i > 0)
-								out << " && ";
-							out << ids[i]->getText() << " == that." << ids[i]->getText();
-						}
-						out << "; }";
-						out << "\n"
-						    << std::string(--depth, '\t') << "};\n"
-						    << std::string(depth, '\t');
-					} else {
-						// anonymous union members
-						out << "public: using " << constant.id << " = ";
-						auto types = clause->theTypeId();
-						if (types.size() == 1) {
-							printTypeId(types[0]);
-							out << "; ADV_CHECK_REF_STRUCT(";
-							auto t = types[0]->getText();
-							StringReplace(t, "\"", "\\\"");
-							out << "\"" << t << "\", ";
-							printTypeId(types[0]);
-							out << ")";
-						} else {
-							out << "std::tuple<";
-							bool first = true;
-							for (auto t : types) {
-								if (!first)
-									out << ", ";
-								first = false;
-								printTypeId(t);
-							}
-							out << ">";
-						}
-
-						out << ";\n" << std::string(depth, '\t');
-					}
-				} else {
-					// empty union members
-					out << "private: struct __UnionType_" << constant.id
-					    << "{ constexpr bool operator==(const __UnionType_" << constant.id
-					    << " &) const noexcept { return true; } ";
-					out << "}; public: static constexpr __UnionType_" << constant.id << " "
-					    << constant.id << "{};\n"
-					    << std::string(depth, '\t');
-				}
-			} else {
-				if (!constant.compilationCondition.empty()) {
-					out << "#if " << constant.compilationCondition << std::endl
-					    << std::string(depth, '\t');
-				}
-				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
-				    << std::string(depth, '\t');
-				switch (constant.access) {
-					case AccessSpecifier::Public:
-						out << "public: ";
-						break;
-					case AccessSpecifier::Protected:
-						out << "protected: ";
-						break;
-					case AccessSpecifier::Private:
-						out << "private: ";
-						break;
-				}
-				if (constant.attributes) {
-					for (auto attr : constant.attributes->attributeSpecifier()) {
-						auto attrName = attr->Identifier()->getText();
-						if (attrName == "Deprecated") {
-							out << "[[deprecated";
-							if (attr->attributeArgumentClause())
-								out << "("
-								    << attr->attributeArgumentClause()->expressionList()->getText()
-								    << ")";
-							out << "]] ";
-						} else if (attrName == "Unused") {
-							out << "[[maybe_unused]] ";
-						} else {
-							printAttributeSpecifier(attr);
-							out << " ";
-						}
-					}
-				}
-				bool isSelfType = sema.contextTypes.contains(constant.type) &&
-				                      sema.contextTypes[constant.type].ends_with(type->id) ||
-				                  sema.contextTypes.contains(constant.initializer) &&
-				                      sema.contextTypes[constant.initializer].ends_with(type->id) ||
-				                  type->kind == TypeKind::Enum;
-				if (isSelfType)
-					selfConstants.push_back(constant);
-				if (constant.templateParams) {
-					isFunctionDeclaration = true;
-					printTemplateParams(constant.templateParams);
-					isFunctionDeclaration = false;
-					out << " ";
-				}
-				out << "static ";
-				if (isSelfType) {
-					if (!isPrivateStruct && !CompilerSettings::get().dllName.empty())
-						out << CompilerSettings::get().dllName << "_HIDDEN ";
-					out << "const ";
-				} else
-					out << "constexpr ";
-				bool isArray = false;
-				if (constant.type) {
-					isDeclaration = true;
-					printTypeId(constant.type);
-					isDeclaration = false;
-					// isArray = constant.type->arrayDeclarator();
-					currentType = constant.type->getText();
-				} else if (isSelfType) {
-					out << type->id;
-				} else {
-					out << "auto";
-				}
-				out << " " << constant.id;
-				if (type->kind == TypeKind::Enum) {
-					enumValues[constant.parentType].push_back(constant.id);
-				}
-				// if (isArray) printArrayDeclarator(constant.type->arrayDeclarator());
-				if (!isSelfType) {
-					out << " = ";
-					currentDeclarationName = constant.id;
-					printInitializerClause(constant.initializer);
-				}
-				out << ";";
-				out << std::endl << std::string(depth, '\t');
-				if (!constant.compilationCondition.empty()) {
-					out << "#endif " << std::endl << std::string(depth, '\t');
-				}
-			}
-			currentDeclarationName.clear();
-		}
 		if (type->kind == TypeKind::Enum) {
 			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
@@ -2167,40 +1860,6 @@ namespace AstrumLang {
 			out << "return false;\n"
 			    << std::string(--depth, '\t') << "}\n"
 			    << std::string(depth, '\t');
-		}
-		for (const auto& alias : type->typeAliases) {
-			isUnsafe = alias.isUnsafe;
-			if (!alias.compilationCondition.empty()) {
-				out << "#if " << alias.compilationCondition << std::endl
-				    << std::string(depth, '\t');
-			}
-			out << "#line " << alias.pos.line << " \"" << fullFilename << ".ast\"\n"
-			    << std::string(depth, '\t');
-			switch (alias.access) {
-				case AccessSpecifier::Public:
-					out << "public: ";
-					break;
-				case AccessSpecifier::Protected:
-					out << "protected: ";
-					break;
-				case AccessSpecifier::Private:
-					out << "private: ";
-					break;
-			}
-			if (alias.templateParams) {
-				isFunctionDeclaration = true;
-				printTemplateParams(alias.templateParams);
-				isFunctionDeclaration = false;
-				out << " ";
-			}
-			out << "using " << alias.id << (isUnsafe ? " [[clang::annotate(\"unsafe\")]]" : "")
-			    << " = ";
-			printTypeId(alias.type);
-			out << ";";
-			out << std::endl << std::string(depth, '\t');
-			if (!alias.compilationCondition.empty()) {
-				out << "#endif " << std::endl << std::string(depth, '\t');
-			}
 		}
 		for (const auto& prop : type->properties) {
 			isUnsafe = prop.isUnsafe;
@@ -3594,6 +3253,350 @@ namespace AstrumLang {
 			}
 			isNewDeleteOperator = false;
 		}
+
+		for (const auto& field : type->fields) {
+			bool prevUnsafe        = isUnsafe;
+			bool first             = true;
+			bool isArray           = false;
+			auto id                = field.id;
+			currentDeclarationName = id;
+			if (!field.compilationCondition.empty()) {
+				out << "#if " << field.compilationCondition << std::endl
+				    << std::string(depth, '\t');
+			}
+			out << "#line " << field.pos.line << " \"" << fullFilename << ".ast\"\n"
+			    << std::string(depth, '\t');
+			bool hasVisibility =
+			    !isPrivateStruct && field.isStatic && !CompilerSettings::get().dllName.empty();
+			switch (field.access) {
+				case AccessSpecifier::Public:
+					out << "public: ";
+					if (hasVisibility)
+						out << CompilerSettings::get().dllName << "_API ";
+					break;
+				case AccessSpecifier::Internal:
+					out << "public: ";
+					if (hasVisibility)
+						out << CompilerSettings::get().dllName << "_HIDDEN ";
+					break;
+				case AccessSpecifier::Protected:
+					out << "protected: ";
+					if (hasVisibility)
+						out << CompilerSettings::get().dllName << "_API ";
+					break;
+				case AccessSpecifier::ProtectedInternal:
+					out << "protected: ";
+					if (hasVisibility)
+						out << CompilerSettings::get().dllName << "_HIDDEN ";
+					break;
+				case AccessSpecifier::Private:
+					out << "private: ";
+					if (hasVisibility)
+						out << CompilerSettings::get().dllName << "_API ";
+					break;
+			}
+			if (field.isUnsafe) {
+				isUnsafe = true;
+				out << "[[clang::annotate(\"unsafe\")]] ";
+			}
+			if (field.attributes) {
+				for (auto attr : field.attributes->attributeSpecifier()) {
+					auto attrName = attr->Identifier()->getText();
+					if (attrName == "Deprecated") {
+						out << "[[deprecated";
+						if (attr->attributeArgumentClause())
+							out << "("
+							    << attr->attributeArgumentClause()->expressionList()->getText()
+							    << ")";
+						out << "]] ";
+					} else if (attrName == "NoUniqueAddress" || attrName == "EmptyField") {
+						if (!field.isStatic)
+							out << "ADV_VIRTUAL_FIELD ";
+					} else if (attrName == "Unused") {
+						out << "[[maybe_unused]] ";
+					} else if (attrName == "Align") {
+						isAlignas = true;
+						out << "alignas(";
+						bool aof = attr->attributeArgumentClause()
+						               ->expressionList()
+						               ->getText()
+						               .starts_with("alignof");
+						if (!aof) {
+							out << "size_t(";
+						}
+						printAttributeArgumentClause(attr->attributeArgumentClause());
+						if (!aof) {
+							out << ")";
+						}
+						out << ") ";
+						isAlignas = false;
+					} else {
+						printAttributeSpecifier(attr);
+						out << " ";
+					}
+				}
+			}
+			if (field.isStatic || field.isThreadLocal) {
+				out << "static ";
+			}
+			if (field.isThreadLocal) {
+				out << "thread_local ";
+			}
+			if (field.isConst) {
+				out << "const ";
+			} else if (type->kind == TypeKind::Class && !field.isStatic && !field.isThreadLocal) {
+				out << "mutable ";
+			}
+			if (field.isVolatile) {
+				out << "volatile ";
+			}
+			if (auto t = field.type) {
+				symbolTable[id] = t->getText();
+				isDeclaration   = true;
+				printTypeId(t);
+				isDeclaration = false;
+				// isArray = t->arrayDeclarator();
+				if (field.isUnowned)
+					out << "::__unowned_ref";
+				else if (field.isWeak)
+					out << "::__weak_ref";
+				out << " ";
+			}
+			currentType = symbolTable[id];
+			out << id;
+			// if (isArray) printArrayDeclarator(field.type->arrayDeclarator());
+			if (!field.isStatic && !field.isThreadLocal) {
+				if (auto expr = field.initializer) {
+					out << " = ";
+					printInitializerClause(expr);
+				} else if (auto init = field.initializerList) {
+					out << "{ ";
+					printInitializerList(init);
+					out << " }";
+				}
+			}
+			if (field.bitWidth > 0) {
+				out << " : " << (int) field.bitWidth;
+			}
+			out << ";";
+			if (type->kind != TypeKind::RefStruct || field.isStatic || field.isThreadLocal) {
+				if (!sema.contextTypes.contains(field.type) ||
+				    !sema.contextTypes[field.type].ends_with(type->id)) {
+					printRefStructCheck(field.type);
+					out << ";";
+				}
+			}
+			out << "\n" << std::string(depth, '\t');
+			first    = false;
+			isUnsafe = prevUnsafe;
+			currentDeclarationName.clear();
+			if (!field.compilationCondition.empty()) {
+				out << "#endif " << std::endl << std::string(depth, '\t');
+			}
+		}
+
+		for (const auto& constant : type->constants) {
+			if (type->kind == TypeKind::EnumClass && !constant.type) {
+				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				out << "public: ";
+				if (constant.attributes) {
+					for (auto attr : constant.attributes->attributeSpecifier()) {
+						auto attrName = attr->Identifier()->getText();
+						if (attrName == "Deprecated") {
+							out << "[[deprecated";
+							if (attr->attributeArgumentClause())
+								out << "("
+								    << attr->attributeArgumentClause()->expressionList()->getText()
+								    << ")";
+							out << "]] ";
+						} else if (attrName == "Unused") {
+							out << "[[maybe_unused]] ";
+						} else {
+							printAttributeSpecifier(attr);
+							out << " ";
+						}
+					}
+				}
+				out << "static ";
+				if (!CompilerSettings::get().dllName.empty()) {
+					out << CompilerSettings::get().dllName << "_API";
+				}
+				out << " const __self " << constant.id << ";\n" << std::string(depth, '\t');
+			} else if (type->kind == TypeKind::Union) {
+				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				if (auto clause = constant.unionEnumerator) {
+					if (!clause->Identifier().empty()) {
+						// named union members
+						out << "public: struct ";
+						if (type->attributes) {
+							for (auto attr : type->attributes->attributeSpecifier()) {
+								auto attrName = attr->Identifier()->getText();
+								if (attrName == "Deprecated") {
+									out << "[[deprecated";
+									if (attr->attributeArgumentClause())
+										out << "("
+										    << attr->attributeArgumentClause()
+										           ->expressionList()
+										           ->getText()
+										    << ")";
+									out << "]] ";
+								} else if (attrName == "Unused") {
+									out << "[[maybe_unused]] ";
+								} else {
+									printAttributeSpecifier(attr);
+									out << " ";
+								}
+							}
+						}
+						out << constant.id
+						    << " { decltype(auto) __ref() const noexcept { return *this; }\n"
+						    << std::string(++depth, '\t');
+						auto types = clause->theTypeId();
+						auto ids   = clause->Identifier();
+						for (size_t i = 0, size = types.size(); i < size; ++i) {
+							printTypeId(types[i]);
+							out << " " << ids[i]->getText() << "; ";
+							out << "ADV_CHECK_REF_STRUCT(";
+							auto t = types[i]->getText();
+							StringReplace(t, "\"", "\\\"");
+							out << "\"" << t << "\", ";
+							printTypeId(types[i]);
+							out << ");\n" << std::string(depth, '\t');
+						}
+						out << "bool operator==(const " << constant.id
+						    << "& that) const noexcept { return ";
+						for (size_t i = 0, size = types.size(); i < size; ++i) {
+							if (i > 0)
+								out << " && ";
+							out << ids[i]->getText() << " == that." << ids[i]->getText();
+						}
+						out << "; }";
+						out << "\n"
+						    << std::string(--depth, '\t') << "};\n"
+						    << std::string(depth, '\t');
+					} else {
+						// anonymous union members
+						out << "public: using " << constant.id << " = ";
+						auto types = clause->theTypeId();
+						if (types.size() == 1) {
+							printTypeId(types[0]);
+							out << "; ADV_CHECK_REF_STRUCT(";
+							auto t = types[0]->getText();
+							StringReplace(t, "\"", "\\\"");
+							out << "\"" << t << "\", ";
+							printTypeId(types[0]);
+							out << ")";
+						} else {
+							out << "std::tuple<";
+							bool first = true;
+							for (auto t : types) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printTypeId(t);
+							}
+							out << ">";
+						}
+
+						out << ";\n" << std::string(depth, '\t');
+					}
+				} else {
+					// empty union members
+					out << "private: struct __UnionType_" << constant.id
+					    << "{ constexpr bool operator==(const __UnionType_" << constant.id
+					    << " &) const noexcept { return true; } ";
+					out << "}; public: static constexpr __UnionType_" << constant.id << " "
+					    << constant.id << "{};\n"
+					    << std::string(depth, '\t');
+				}
+			} else {
+				if (!constant.compilationCondition.empty()) {
+					out << "#if " << constant.compilationCondition << std::endl
+					    << std::string(depth, '\t');
+				}
+				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				switch (constant.access) {
+					case AccessSpecifier::Public:
+						out << "public: ";
+						break;
+					case AccessSpecifier::Protected:
+						out << "protected: ";
+						break;
+					case AccessSpecifier::Private:
+						out << "private: ";
+						break;
+				}
+				if (constant.attributes) {
+					for (auto attr : constant.attributes->attributeSpecifier()) {
+						auto attrName = attr->Identifier()->getText();
+						if (attrName == "Deprecated") {
+							out << "[[deprecated";
+							if (attr->attributeArgumentClause())
+								out << "("
+								    << attr->attributeArgumentClause()->expressionList()->getText()
+								    << ")";
+							out << "]] ";
+						} else if (attrName == "Unused") {
+							out << "[[maybe_unused]] ";
+						} else {
+							printAttributeSpecifier(attr);
+							out << " ";
+						}
+					}
+				}
+				bool isSelfType = sema.contextTypes.contains(constant.type) &&
+				                      sema.contextTypes[constant.type].ends_with(type->id) ||
+				                  sema.contextTypes.contains(constant.initializer) &&
+				                      sema.contextTypes[constant.initializer].ends_with(type->id) ||
+				                  type->kind == TypeKind::Enum;
+				if (isSelfType)
+					selfConstants.push_back(constant);
+				if (constant.templateParams) {
+					isFunctionDeclaration = true;
+					printTemplateParams(constant.templateParams);
+					isFunctionDeclaration = false;
+					out << " ";
+				}
+				out << "static ";
+				if (isSelfType) {
+					if (!isPrivateStruct && !CompilerSettings::get().dllName.empty())
+						out << CompilerSettings::get().dllName << "_HIDDEN ";
+					out << "const ";
+				} else
+					out << "constexpr ";
+				bool isArray = false;
+				if (constant.type) {
+					isDeclaration = true;
+					printTypeId(constant.type);
+					isDeclaration = false;
+					// isArray = constant.type->arrayDeclarator();
+					currentType = constant.type->getText();
+				} else if (isSelfType) {
+					out << type->id;
+				} else {
+					out << "auto";
+				}
+				out << " " << constant.id;
+				if (type->kind == TypeKind::Enum) {
+					enumValues[constant.parentType].push_back(constant.id);
+				}
+				// if (isArray) printArrayDeclarator(constant.type->arrayDeclarator());
+				if (!isSelfType) {
+					out << " = ";
+					currentDeclarationName = constant.id;
+					printInitializerClause(constant.initializer);
+				}
+				out << ";";
+				out << std::endl << std::string(depth, '\t');
+				if (!constant.compilationCondition.empty()) {
+					out << "#endif " << std::endl << std::string(depth, '\t');
+				}
+			}
+			currentDeclarationName.clear();
+		}
 		for (const auto& assert_ : type->staticAsserts) {
 			if (!assert_.compilationCondition.empty()) {
 				out << "#if " << assert_.compilationCondition << std::endl
@@ -4432,6 +4435,49 @@ namespace AstrumLang {
 		}
 		out << "ADV_CLASS_STRONG_COMMON_CTORS(" << type->id << ")\n" << std::string(depth, '\t');
 		isNested = true;
+
+		for (const auto& alias : type->typeAliases) {
+			if (!alias.compilationCondition.empty()) {
+				out << "#if " << alias.compilationCondition << std::endl
+				    << std::string(depth, '\t');
+			}
+			switch (alias.access) {
+				case AccessSpecifier::Public:
+				case AccessSpecifier::Internal:
+					out << "public: ";
+					break;
+				case AccessSpecifier::Protected:
+				case AccessSpecifier::ProtectedInternal:
+					out << "protected: ";
+					break;
+				case AccessSpecifier::Private:
+					out << "private: ";
+					break;
+			}
+			if (alias.templateParams) {
+				printTemplateParams(alias.templateParams);
+				out << " ";
+			}
+			out << "using " << alias.id << " = ";
+			printTypeId(alias.type);
+			if (alias.templateParams) {
+				out << "<";
+				bool first = true;
+				for (auto tparam : alias.templateParams->templateParamDeclaration()) {
+					if (!first)
+						out << ", ";
+					first = false;
+					printIdentifier(tparam->Identifier());
+					if (tparam->Ellipsis())
+						out << "...";
+				}
+				out << ">";
+			}
+			out << ";\n" << std::string(depth, '\t');
+			if (!alias.compilationCondition.empty()) {
+				out << "#endif " << std::endl << std::string(depth, '\t');
+			}
+		}
 		for (const auto& nested : type->nestedStructs) {
 			if (nested->access == AccessSpecifier::Private) {
 				out << "private: ";
@@ -4486,151 +4532,6 @@ namespace AstrumLang {
 				printType(nested.get());
 			}
 			out << "\n" << std::string(depth, '\t');
-		}
-		for (const auto& field : type->fields) {
-			if (!field.isStatic && !field.isThreadLocal)
-				continue;
-
-			if (!field.compilationCondition.empty()) {
-				out << "#if " << field.compilationCondition << std::endl
-				    << std::string(depth, '\t');
-			}
-			switch (field.access) {
-				case AccessSpecifier::Public:
-				case AccessSpecifier::Internal:
-					out << "public: ";
-					break;
-				case AccessSpecifier::Protected:
-				case AccessSpecifier::ProtectedInternal:
-					out << "protected: ";
-					break;
-				case AccessSpecifier::Private:
-					out << "private: ";
-					break;
-			}
-			out << "static decltype(auto) get" << field.id << "();\n" << std::string(depth, '\t');
-			if (!field.isConst) {
-				out << "static void set" << field.id << "(const ";
-				printTypeId(field.type);
-				out << "& value);\n" << std::string(depth, '\t');
-				out << "ADV_PROPERTY_GETTER_SETTER_STATIC(";
-				switch (field.access) {
-					case AccessSpecifier::Public:
-					case AccessSpecifier::Internal:
-						out << "public";
-						break;
-					case AccessSpecifier::Protected:
-					case AccessSpecifier::ProtectedInternal:
-						out << "protected";
-						break;
-					case AccessSpecifier::Private:
-						out << "private";
-						break;
-				}
-				out << ", ";
-				if (!field.isThreadLocal && !CompilerSettings::get().dllName.empty()) {
-					out << CompilerSettings::get().dllName;
-					if (field.access == AccessSpecifier::Internal ||
-					    field.access == AccessSpecifier::ProtectedInternal) {
-						out << "_HIDDEN";
-					} else {
-						out << "_API";
-					}
-				}
-				out << ", " << field.id << ", ";
-				switch (field.access) {
-					case AccessSpecifier::Public:
-					case AccessSpecifier::Internal:
-						out << "public";
-						break;
-					case AccessSpecifier::Protected:
-					case AccessSpecifier::ProtectedInternal:
-						out << "protected";
-						break;
-					case AccessSpecifier::Private:
-						out << "private";
-						break;
-				}
-				out << ", get" << field.id << ", ";
-				switch (field.access) {
-					case AccessSpecifier::Public:
-					case AccessSpecifier::Internal:
-						out << "public";
-						break;
-					case AccessSpecifier::Protected:
-					case AccessSpecifier::ProtectedInternal:
-						out << "protected";
-						break;
-					case AccessSpecifier::Private:
-						out << "private";
-						break;
-				}
-				out << ", set" << field.id << ", ";
-				printTypeId(field.type);
-				out << ")";
-			} else {
-				out << "ADV_PROPERTY_GETTER_STATIC(";
-				switch (field.access) {
-					case AccessSpecifier::Public:
-					case AccessSpecifier::Internal:
-						out << "public";
-						break;
-					case AccessSpecifier::Protected:
-					case AccessSpecifier::ProtectedInternal:
-						out << "protected";
-						break;
-					case AccessSpecifier::Private:
-						out << "private";
-						break;
-				}
-				out << ", ";
-				if (!CompilerSettings::get().dllName.empty()) {
-					out << CompilerSettings::get().dllName;
-					if (field.access == AccessSpecifier::Internal ||
-					    field.access == AccessSpecifier::ProtectedInternal) {
-						out << "_HIDDEN";
-					} else {
-						out << "_API";
-					}
-				}
-
-				out << ", " << field.id << ", get" << field.id << ", ";
-				printTypeId(field.type);
-				out << ")";
-			}
-			out << ";\n" << std::string(depth, '\t');
-			if (!field.compilationCondition.empty()) {
-				out << "#endif " << std::endl << std::string(depth, '\t');
-			}
-			sema.properties.insert_or_assign(
-			    field.pos, PropertyDefinition {field.id,
-			                                   field.type,
-			                                   field.pos,
-			                                   nullptr,
-			                                   nullptr,
-			                                   nullptr,
-			                                   nullptr,
-			                                   nullptr,
-			                                   field.access,
-			                                   field.compilationCondition,
-			                                   "",
-			                                   field.parentType + "::__self",
-			                                   type->templateParams,
-			                                   type->templateSpecializationArgs,
-			                                   type->constraints,
-			                                   true,
-			                                   field.isConst,
-			                                   false,
-			                                   isUnsafe,
-			                                   type->access == AccessSpecifier::Private,
-			                                   type->access == AccessSpecifier::Protected,
-			                                   type->isUnsafe,
-			                                   false,
-			                                   false,
-			                                   false,
-			                                   false,
-			                                   false,
-			                                   false});
 		}
 		out << "#define ADV_PROPERTY_SELF __class\n" << std::string(depth, '\t');
 		for (const auto& prop : type->properties) {
@@ -5025,6 +4926,152 @@ namespace AstrumLang {
 			}
 			isNewDeleteOperator = false;
 		}
+
+		for (const auto& field : type->fields) {
+			if (!field.isStatic && !field.isThreadLocal)
+				continue;
+
+			if (!field.compilationCondition.empty()) {
+				out << "#if " << field.compilationCondition << std::endl
+				    << std::string(depth, '\t');
+			}
+			switch (field.access) {
+				case AccessSpecifier::Public:
+				case AccessSpecifier::Internal:
+					out << "public: ";
+					break;
+				case AccessSpecifier::Protected:
+				case AccessSpecifier::ProtectedInternal:
+					out << "protected: ";
+					break;
+				case AccessSpecifier::Private:
+					out << "private: ";
+					break;
+			}
+			out << "static decltype(auto) get" << field.id << "();\n" << std::string(depth, '\t');
+			if (!field.isConst) {
+				out << "static void set" << field.id << "(const ";
+				printTypeId(field.type);
+				out << "& value);\n" << std::string(depth, '\t');
+				out << "ADV_PROPERTY_GETTER_SETTER_STATIC(";
+				switch (field.access) {
+					case AccessSpecifier::Public:
+					case AccessSpecifier::Internal:
+						out << "public";
+						break;
+					case AccessSpecifier::Protected:
+					case AccessSpecifier::ProtectedInternal:
+						out << "protected";
+						break;
+					case AccessSpecifier::Private:
+						out << "private";
+						break;
+				}
+				out << ", ";
+				if (!field.isThreadLocal && !CompilerSettings::get().dllName.empty()) {
+					out << CompilerSettings::get().dllName;
+					if (field.access == AccessSpecifier::Internal ||
+					    field.access == AccessSpecifier::ProtectedInternal) {
+						out << "_HIDDEN";
+					} else {
+						out << "_API";
+					}
+				}
+				out << ", " << field.id << ", ";
+				switch (field.access) {
+					case AccessSpecifier::Public:
+					case AccessSpecifier::Internal:
+						out << "public";
+						break;
+					case AccessSpecifier::Protected:
+					case AccessSpecifier::ProtectedInternal:
+						out << "protected";
+						break;
+					case AccessSpecifier::Private:
+						out << "private";
+						break;
+				}
+				out << ", get" << field.id << ", ";
+				switch (field.access) {
+					case AccessSpecifier::Public:
+					case AccessSpecifier::Internal:
+						out << "public";
+						break;
+					case AccessSpecifier::Protected:
+					case AccessSpecifier::ProtectedInternal:
+						out << "protected";
+						break;
+					case AccessSpecifier::Private:
+						out << "private";
+						break;
+				}
+				out << ", set" << field.id << ", ";
+				printTypeId(field.type);
+				out << ")";
+			} else {
+				out << "ADV_PROPERTY_GETTER_STATIC(";
+				switch (field.access) {
+					case AccessSpecifier::Public:
+					case AccessSpecifier::Internal:
+						out << "public";
+						break;
+					case AccessSpecifier::Protected:
+					case AccessSpecifier::ProtectedInternal:
+						out << "protected";
+						break;
+					case AccessSpecifier::Private:
+						out << "private";
+						break;
+				}
+				out << ", ";
+				if (!CompilerSettings::get().dllName.empty()) {
+					out << CompilerSettings::get().dllName;
+					if (field.access == AccessSpecifier::Internal ||
+					    field.access == AccessSpecifier::ProtectedInternal) {
+						out << "_HIDDEN";
+					} else {
+						out << "_API";
+					}
+				}
+
+				out << ", " << field.id << ", get" << field.id << ", ";
+				printTypeId(field.type);
+				out << ")";
+			}
+			out << ";\n" << std::string(depth, '\t');
+			if (!field.compilationCondition.empty()) {
+				out << "#endif " << std::endl << std::string(depth, '\t');
+			}
+			sema.properties.insert_or_assign(
+			    field.pos, PropertyDefinition {field.id,
+			                                   field.type,
+			                                   field.pos,
+			                                   nullptr,
+			                                   nullptr,
+			                                   nullptr,
+			                                   nullptr,
+			                                   nullptr,
+			                                   field.access,
+			                                   field.compilationCondition,
+			                                   "",
+			                                   field.parentType + "::__self",
+			                                   type->templateParams,
+			                                   type->templateSpecializationArgs,
+			                                   type->constraints,
+			                                   true,
+			                                   field.isConst,
+			                                   false,
+			                                   isUnsafe,
+			                                   type->access == AccessSpecifier::Private,
+			                                   type->access == AccessSpecifier::Protected,
+			                                   type->isUnsafe,
+			                                   false,
+			                                   false,
+			                                   false,
+			                                   false,
+			                                   false,
+			                                   false});
+		}
 		for (const auto& constant : type->constants) {
 			if (type->kind == TypeKind::EnumClass && !constant.type) {
 				out << "public: FORCE_INLINE static decltype(auto) get" << constant.id
@@ -5080,48 +5127,6 @@ namespace AstrumLang {
 			    << std::string(depth, '\t');
 			out << "public: FORCE_INLINE static decltype(auto) GetValues() noexcept;\n"
 			    << std::string(depth, '\t');
-		}
-		for (const auto& alias : type->typeAliases) {
-			if (!alias.compilationCondition.empty()) {
-				out << "#if " << alias.compilationCondition << std::endl
-				    << std::string(depth, '\t');
-			}
-			switch (alias.access) {
-				case AccessSpecifier::Public:
-				case AccessSpecifier::Internal:
-					out << "public: ";
-					break;
-				case AccessSpecifier::Protected:
-				case AccessSpecifier::ProtectedInternal:
-					out << "protected: ";
-					break;
-				case AccessSpecifier::Private:
-					out << "private: ";
-					break;
-			}
-			if (alias.templateParams) {
-				printTemplateParams(alias.templateParams);
-				out << " ";
-			}
-			out << "using " << alias.id << " = ";
-			printTypeId(alias.type);
-			if (alias.templateParams) {
-				out << "<";
-				bool first = true;
-				for (auto tparam : alias.templateParams->templateParamDeclaration()) {
-					if (!first)
-						out << ", ";
-					first = false;
-					printIdentifier(tparam->Identifier());
-					if (tparam->Ellipsis())
-						out << "...";
-				}
-				out << ">";
-			}
-			out << ";\n" << std::string(depth, '\t');
-			if (!alias.compilationCondition.empty()) {
-				out << "#endif " << std::endl << std::string(depth, '\t');
-			}
 		}
 		for (const auto& friendType : type->friendTypes) {
 			if (!friendType.compilationCondition.empty()) {
@@ -19616,7 +19621,11 @@ namespace AstrumLang {
 							printPostfixExpression(ctx->postfixExpression());
 							out << ".AndThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG "
 							       "FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
-						}
+					    }
+					    if (literalMinus) {
+						    out << "-";
+						    literalMinus = false;
+					    }
 						out << ufcs << "(" << funcname << ")(value.__ref(), ";
 					} else {
 						auto innerExpr = ctx->postfixExpression();
@@ -19631,11 +19640,20 @@ namespace AstrumLang {
 							       "FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(";
 						}
 
+					    if (literalMinus) {
+						    out << "-";
+						    literalMinus = false;
+					    }
 						out << ufcs << "(" << funcname << ")(";
 						printPostfixExpression(ctx->postfixExpression());
 						out << ".__ref(), ";
 					}
 				} else {
+					if (literalMinus)
+					{
+					    out << "-";
+					    literalMinus = false;
+					}
 					out << ufcs << "(" << funcname << ")(";
 					printPostfixExpression(ctx->postfixExpression());
 					out << ".__ref(), ";

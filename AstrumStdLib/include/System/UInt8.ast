@@ -446,7 +446,7 @@ public extension u8: ICheckedArithmetic {
 
     // Overflowing add
     // Returns tuple of (result of wrapping add, overflowed)
-    operator+%?: <T> (rhs: T) -> (self, bool) noexcept {
+    operator+%?: <T> (rhs: T) -> (self, bool) noexcept == {
         static assert(type T is IBinaryInteger, "Operator +%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeAdd(this, rhs, result);
@@ -538,7 +538,7 @@ public extension u8: ICheckedArithmetic {
 
     // Overflowing sub
     // Returns tuple of (result of wrapping sub, overflowed)
-    operator-%?: <T> (rhs: T) -> (self, bool) noexcept {
+    operator-%?: <T> (rhs: T) -> (self, bool) noexcept == {
         static assert(type T is IBinaryInteger, "Operator -%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeSubtract(this, rhs, result);
@@ -612,7 +612,7 @@ public extension u8: ICheckedArithmetic {
 
     // Overflowing mul
     // Returns tuple of (result of wrapping mul, overflowed)
-    operator*%?: <T> (rhs: T) -> (self, bool) noexcept {
+    operator*%?: <T> (rhs: T) -> (self, bool) noexcept == {
         static assert(type T is IBinaryInteger, "Operator *%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeMultiply(this, rhs, result);
@@ -674,7 +674,7 @@ public extension u8: ICheckedArithmetic {
     // Overflowing div
     // Returns tuple of (result of wrapping div, overflowed)
     // Throws DivisionByZeroException during rhs == 0
-    operator\%?: <T> (rhs: T) -> (self, bool) {
+    operator\%?: <T> (rhs: T) -> (self, bool) == {
         static assert(type T is IBinaryInteger, "Operator \\%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeDivide(this, rhs, result);
@@ -735,7 +735,7 @@ public extension u8: ICheckedArithmetic {
     // Overflowing mod
     // Returns tuple of (result of wrapping mod, overflowed)
     // Throws DivisionByZeroException during rhs == 0
-    operator%%?: <T> (rhs: T) -> (self, bool) {
+    operator%%?: <T> (rhs: T) -> (self, bool) == {
         static assert(type T is IBinaryInteger, "Operator %%? implemented only for integer types");
         result: self;
         overflowed:= !Builtin.SafeModulus(this, rhs, result);
@@ -1174,14 +1174,14 @@ test "UInt8"
     assert (a ^ 1) == 4;
     assert a << 1 == 10;
     assert a >> 1 == 2;
-    a = 0b1111_1011; // 1111 1011
+    a = 0b1111_1011u8; // 1111 1011
     a >>>= 2; // 0011 1110
     assert a == 0b0011_1110;
     assert a >>> 2 == 0b0000_1111;
     assert a >>> 7 == 0;
 
     // comparisons
-    a = 5;
+    a = 5u8;
     assert a == 5;
     assert a != 6;
     assert a < 6;
@@ -1406,11 +1406,11 @@ test "UInt8"
     }
 
     assert a *? 1u8 == u8.MinValue;
-    a = 15;
+    a = 15u8;
     assert a *? 20u8 == null;
     a *?= 5u8;
     assert a == 75;
-    a = 15;
+    a = 15u8;
     assert a == 15;
     assert a *! 3u8 == 45;
     assert a *% 6u8 == 90;
@@ -1425,7 +1425,7 @@ test "UInt8"
         result, overflowed := a *%? 2u8;
         assert result == 254 && overflowed;
     }
-    a = 5;
+    a = 5u8;
     {
         low, high := a *> (120u8);
         assert low == 88 && high == 2;
@@ -1436,11 +1436,11 @@ test "UInt8"
         assert low == 10 && high == 2;
     }
 
-    a = 10;
+    a = 10u8;
     assert a \ 6 == 1;
     a /= 6;
     assert a == 2;
-    a = 10;
+    a = 10u8;
     {
         div, rem := a /% 6u8;
         assert div == 1 && rem == 4;
@@ -1451,10 +1451,10 @@ test "UInt8"
     assert a \! 5u8 == 2;
     a \%= 5u8;
     assert a == 2;
-    a = 10;
+    a = 10u8;
     a \|= 5u8;
     assert a == 2;
-    a = 10;
+    a = 10u8;
 
     assert a \\ 5u8 == 2u8;
     assert a \\ 6u8 == null;
@@ -1470,7 +1470,7 @@ test "UInt8"
     assert a %! 6u8 == 4;
     a %%= 6u8;
     assert a == 4;
-    a = 10;
+    a = 10u8;
 
     assert u8.MaxValue >>\ 4u == 0b0000_1111;
     assert u8.MaxValue >>\ 10u == 0;

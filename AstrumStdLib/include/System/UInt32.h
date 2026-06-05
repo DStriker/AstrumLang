@@ -430,7 +430,7 @@ using __extensions::getLog10;
 	#line 483 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 	template<class T> inline constexpr auto _operator_add_or_eq(__extension_UInt32_431_u32 & __this , T rhs) noexcept -> typename __extension_UInt32_431_u32&;
 	#line 487 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-	template<class T> auto _operator_add_mod_qst(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<__extension_UInt32_431_u32, bool>;
+	template<class T> inline constexpr auto _operator_add_mod_qst(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<__extension_UInt32_431_u32, bool>;
 	#line 495 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_qst(__extension_UInt32_431_u32 & __this )  -> typename __extension_UInt32_431_u32&;
 	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_qst_postfix(__extension_UInt32_431_u32 & __this)  -> decltype(auto);
@@ -464,7 +464,7 @@ using __extensions::getLog10;
 	#line 575 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 	template<class T> inline constexpr auto _operator_sub_or_eq(__extension_UInt32_431_u32 & __this , T rhs) noexcept -> typename __extension_UInt32_431_u32&;
 	#line 579 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-	template<class T> auto _operator_sub_mod_qst(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<__extension_UInt32_431_u32, bool>;
+	template<class T> inline constexpr auto _operator_sub_mod_qst(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<__extension_UInt32_431_u32, bool>;
 	#line 587 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_qst(__extension_UInt32_431_u32 & __this )  -> typename __extension_UInt32_431_u32&;
 	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_qst_postfix(__extension_UInt32_431_u32 & __this)  -> decltype(auto);
@@ -494,7 +494,7 @@ using __extensions::getLog10;
 	#line 649 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 	template<class T> inline constexpr auto _operator_mul_or_eq(__extension_UInt32_431_u32 & __this , T rhs) noexcept -> typename __extension_UInt32_431_u32&;
 	#line 653 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-	template<class T> auto _operator_mul_mod_qst(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<__extension_UInt32_431_u32, bool>;
+	template<class T> inline constexpr auto _operator_mul_mod_qst(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<__extension_UInt32_431_u32, bool>;
 	#line 662 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 	inline constexpr auto _operator_mul_gt(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND, __extension_UInt32_431_u32 rhs) noexcept -> const std::tuple<Builtin::u32, Builtin::u32>;
 	#line 671 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
@@ -516,7 +516,7 @@ using __extensions::getLog10;
 	#line 710 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 	template<class T> inline constexpr auto _operator_bsl_or_eq(__extension_UInt32_431_u32 & __this , T rhs)  -> typename __extension_UInt32_431_u32&;
 	#line 715 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-	template<class T> auto _operator_bsl_mod_qst(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND, T rhs)  -> const std::tuple<__extension_UInt32_431_u32, bool>;
+	template<class T> inline constexpr auto _operator_bsl_mod_qst(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND, T rhs)  -> const std::tuple<__extension_UInt32_431_u32, bool>;
 	#line 724 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 	template<class T> inline constexpr auto _operator_bsl_bsl_qst(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<__extension_UInt32_431_u32>;
 	#line 734 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
@@ -534,7 +534,7 @@ using __extensions::getLog10;
 	#line 771 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 	template<class T> inline constexpr auto _operator_mod_mod_eq(__extension_UInt32_431_u32 & __this , T rhs)  -> typename __extension_UInt32_431_u32&;
 	#line 776 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-	template<class T> auto _operator_mod_mod_qst(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND, T rhs)  -> const std::tuple<__extension_UInt32_431_u32, bool>;
+	template<class T> inline constexpr auto _operator_mod_mod_qst(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND, T rhs)  -> const std::tuple<__extension_UInt32_431_u32, bool>;
 	#line 785 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 	inline constexpr auto _operator_sub_qst(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::Nullable<__extension_UInt32_431_u32>;
 	#line 788 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
@@ -950,7 +950,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto ToInt8(__extension_UInt32_87_u32 const& __this LIFETIMEBOUND)  -> const Builtin::i8
 	{
 		#line 90 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		if ((__this <=> Builtin::i8((signed char)0x7F)) > 0) {
+		if ((__this <=> Builtin::i32(0x7F)) > 0) {
 			#line 91 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 			Builtin::Throw(Builtin::IntegerOverflowException{});
 		}
@@ -964,7 +964,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto ToUInt8(__extension_UInt32_87_u32 const& __this LIFETIMEBOUND)  -> const Builtin::u8
 	{
 		#line 96 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		if ((__this <=> Builtin::u8((unsigned char)0xFF)) > 0) {
+		if ((__this <=> Builtin::i32(0xFF)) > 0) {
 			#line 97 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 			Builtin::Throw(Builtin::IntegerOverflowException{});
 		}
@@ -978,7 +978,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto ToInt16(__extension_UInt32_87_u32 const& __this LIFETIMEBOUND)  -> const Builtin::i16
 	{
 		#line 102 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		if ((__this <=> Builtin::i16((short)0x7FFF)) > 0) {
+		if ((__this <=> Builtin::i32(0x7FFF)) > 0) {
 			#line 103 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 			Builtin::Throw(Builtin::IntegerOverflowException{});
 		}
@@ -992,7 +992,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto ToUInt16(__extension_UInt32_87_u32 const& __this LIFETIMEBOUND)  -> const Builtin::u16
 	{
 		#line 108 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		if ((__this <=> Builtin::u16((unsigned short)0xFFFF)) > 0) {
+		if ((__this <=> Builtin::i32(0xFFFF)) > 0) {
 			#line 109 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 			Builtin::Throw(Builtin::IntegerOverflowException{});
 		}
@@ -1511,7 +1511,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsCanonical(__extension_UInt32_245_u32 const& __this ) -> const bool
 	{
 		#line 251 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		ADV_EXPRESSION_BODY(true); 
+		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1519,7 +1519,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsComplexNumber(__extension_UInt32_245_u32 const& __this ) -> const bool
 	{
 		#line 252 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		ADV_EXPRESSION_BODY(false); 
+		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1535,7 +1535,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsFinite(__extension_UInt32_245_u32 const& __this ) -> const bool
 	{
 		#line 254 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		ADV_EXPRESSION_BODY(true); 
+		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1543,7 +1543,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsImaginaryNumber(__extension_UInt32_245_u32 const& __this ) -> const bool
 	{
 		#line 255 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		ADV_EXPRESSION_BODY(false); 
+		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1551,7 +1551,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsInfinity(__extension_UInt32_245_u32 const& __this ) -> const bool
 	{
 		#line 256 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		ADV_EXPRESSION_BODY(false); 
+		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1559,7 +1559,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsInteger(__extension_UInt32_245_u32 const& __this ) -> const bool
 	{
 		#line 257 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		ADV_EXPRESSION_BODY(true); 
+		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1567,7 +1567,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsNaN(__extension_UInt32_245_u32 const& __this ) -> const bool
 	{
 		#line 258 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		ADV_EXPRESSION_BODY(false); 
+		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1575,7 +1575,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsNegative(__extension_UInt32_245_u32 const& __this ) -> const bool
 	{
 		#line 259 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		ADV_EXPRESSION_BODY(false); 
+		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1583,7 +1583,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsNegativeInfinity(__extension_UInt32_245_u32 const& __this ) -> const bool
 	{
 		#line 260 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		ADV_EXPRESSION_BODY(false); 
+		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1607,7 +1607,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsPositive(__extension_UInt32_245_u32 const& __this ) -> const bool
 	{
 		#line 263 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		ADV_EXPRESSION_BODY(true); 
+		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1615,7 +1615,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsPositiveInfinity(__extension_UInt32_245_u32 const& __this ) -> const bool
 	{
 		#line 264 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		ADV_EXPRESSION_BODY(false); 
+		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1623,7 +1623,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsRealNumber(__extension_UInt32_245_u32 const& __this ) -> const bool
 	{
 		#line 265 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		ADV_EXPRESSION_BODY(true); 
+		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1631,7 +1631,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsSubnormal(__extension_UInt32_245_u32 const& __this ) -> const bool
 	{
 		#line 266 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		ADV_EXPRESSION_BODY(false); 
+		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1839,13 +1839,13 @@ using __extensions::getMultiplyBy16;
 		#line 351 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 		auto val = __this; 
 		#line 352 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		constexpr Builtin::u32 C1 = Builtin::u32(0b01100000000000000000U) - Builtin::u32(10U);
+		constexpr Builtin::u32 C1 = Builtin::u32(0b01100000000000000000U) - Builtin::i32(10);
 		#line 353 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		constexpr Builtin::u32 C2 = Builtin::u32(0b10000000000000000000U) - Builtin::u32(100U);
+		constexpr Builtin::u32 C2 = Builtin::u32(0b10000000000000000000U) - Builtin::i32(100);
 		#line 354 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		constexpr Builtin::u32 C3 = Builtin::u32(0b11100000000000000000U) - Builtin::u32(1000U);
+		constexpr Builtin::u32 C3 = Builtin::u32(0b11100000000000000000U) - Builtin::i32(1000);
 		#line 355 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		constexpr Builtin::u32 C4 = Builtin::u32(0b10000000000000000000U) - Builtin::u32(10000U);
+		constexpr Builtin::u32 C4 = Builtin::u32(0b10000000000000000000U) - Builtin::i32(10000);
 		#line 356 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 		auto log = Builtin::u32(0U); 
 		#line 357 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
@@ -1988,6 +1988,21 @@ using __extensions::getMultiplyBy16;
 	{
 		#line 483 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 		ADV_EXPRESSION_BODY(__this = ADV_UFCS(_operator_add_or)(__this, rhs)); 
+	}
+	
+} namespace System{
+} namespace __extensions { using namespace System;
+#line 487 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+	template<class T> inline constexpr auto _operator_add_mod_qst(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<__extension_UInt32_1164_u32, bool>
+	{
+		#line 488 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator +%? implemented only for integer types");
+		#line 489 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		__extension_UInt32_1164_u32 result{}; 
+		#line 490 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		auto overflowed = !Builtin::SafeAdd(__this, rhs, result); 
+		#line 491 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		return std::make_tuple(result, overflowed);
 	}
 	
 } namespace System{
@@ -2169,6 +2184,21 @@ using __extensions::getMultiplyBy16;
 	
 } namespace System{
 } namespace __extensions { using namespace System;
+#line 579 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+	template<class T> inline constexpr auto _operator_sub_mod_qst(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<__extension_UInt32_1164_u32, bool>
+	{
+		#line 580 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator -%? implemented only for integer types");
+		#line 581 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		__extension_UInt32_1164_u32 result{}; 
+		#line 582 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		auto overflowed = !Builtin::SafeSubtract(__this, rhs, result); 
+		#line 583 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		return std::make_tuple(result, overflowed);
+	}
+	
+} namespace System{
+} namespace __extensions { using namespace System;
 #line 587 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 	inline constexpr auto _operator_sub_sub_qst(__extension_UInt32_431_u32 & __this )  -> typename __extension_UInt32_431_u32&
 	{
@@ -2320,6 +2350,21 @@ using __extensions::getMultiplyBy16;
 	
 } namespace System{
 } namespace __extensions { using namespace System;
+#line 653 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+	template<class T> inline constexpr auto _operator_mul_mod_qst(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<__extension_UInt32_1164_u32, bool>
+	{
+		#line 654 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator *%? implemented only for integer types");
+		#line 655 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		__extension_UInt32_1164_u32 result{}; 
+		#line 656 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		auto overflowed = !Builtin::SafeMultiply(__this, rhs, result); 
+		#line 657 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		return std::make_tuple(result, overflowed);
+	}
+	
+} namespace System{
+} namespace __extensions { using namespace System;
 #line 662 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 	inline constexpr auto _operator_mul_gt(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND, __extension_UInt32_1164_u32 rhs) noexcept -> const std::tuple<Builtin::u32, Builtin::u32>
 	{
@@ -2431,6 +2476,21 @@ using __extensions::getMultiplyBy16;
 	{
 		#line 710 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_bsl_eq)(__this, rhs)); 
+	}
+	
+} namespace System{
+} namespace __extensions { using namespace System;
+#line 715 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+	template<class T> inline constexpr auto _operator_bsl_mod_qst(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND, T rhs)  -> const std::tuple<__extension_UInt32_1164_u32, bool>
+	{
+		#line 716 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator \\%? implemented only for integer types");
+		#line 717 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		__extension_UInt32_1164_u32 result{}; 
+		#line 718 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		auto overflowed = !Builtin::SafeDivide(__this, rhs, result); 
+		#line 719 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		return std::make_tuple(result, overflowed);
 	}
 	
 } namespace System{
@@ -2549,6 +2609,21 @@ using __extensions::getMultiplyBy16;
 	
 } namespace System{
 } namespace __extensions { using namespace System;
+#line 776 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+	template<class T> inline constexpr auto _operator_mod_mod_qst(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND, T rhs)  -> const std::tuple<__extension_UInt32_1164_u32, bool>
+	{
+		#line 777 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator %%? implemented only for integer types");
+		#line 778 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		__extension_UInt32_1164_u32 result{}; 
+		#line 779 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		auto overflowed = !Builtin::SafeModulus(__this, rhs, result); 
+		#line 780 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
+		return std::make_tuple(result, overflowed);
+	}
+	
+} namespace System{
+} namespace __extensions { using namespace System;
 #line 785 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 	inline constexpr auto _operator_sub_qst(__extension_UInt32_431_u32 const& __this LIFETIMEBOUND) noexcept -> const Builtin::Nullable<__extension_UInt32_1164_u32>
 	{
@@ -2598,7 +2673,7 @@ using __extensions::getMultiplyBy16;
 		#line 807 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 		auto __var_807_8 = Builtin::SafeNegate(__this, result); 
 		#line 808 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		return std::make_tuple(result, true);
+		return std::make_tuple(result, Builtin::Boolean(true));
 	}
 	
 } namespace System{
@@ -2987,16 +3062,16 @@ using __extensions::getMultiplyBy16;
 		#line 989 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 		if (exp == Builtin::i32(0)) [[unlikely]] {
 			#line 991 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-			return std::make_tuple(Builtin::u32(1U), false);
+			return std::make_tuple(Builtin::u32(1U), Builtin::Boolean(false));
 		}
 		#line 994 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 		auto base = __this; 
 		#line 995 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 		auto result = Builtin::u32(1U); 
 		#line 996 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		auto overflowed = false; 
+		auto overflowed = Builtin::Boolean(false); 
 		#line 997 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		auto tmp = std::make_tuple(Builtin::u32(0U), false); 
+		auto tmp = std::make_tuple(Builtin::u32(0U), Builtin::Boolean(false)); 
 		#line 999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
 		for (;;) 
 		{
@@ -3066,7 +3141,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getOverflowingAbs(__extension_UInt32_431_u32 const& __this ) -> const std::tuple<__extension_UInt32_1164_u32, bool>
 	{
 		#line 1025 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		ADV_EXPRESSION_BODY(std::make_tuple(__this, false)); 
+		ADV_EXPRESSION_BODY(std::make_tuple(__this, Builtin::Boolean(false))); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
@@ -3111,7 +3186,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto __static_getIsSigned<__extension_UInt32_1028_u32>::get() -> const bool
 	{
 		#line 1029 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt32.ast"
-		ADV_EXPRESSION_BODY(false); 
+		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;

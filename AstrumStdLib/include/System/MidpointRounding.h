@@ -25,16 +25,6 @@ class __Class_MidpointRounding;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
 		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, Builtin::u8)
 		public: constexpr MidpointRounding() noexcept = default;
-		#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
-		public: static ASTRUMSTD_HIDDEN const MidpointRounding ToEven;
-		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
-		public: static ASTRUMSTD_HIDDEN const MidpointRounding AwayFromZero;
-		#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
-		public: static ASTRUMSTD_HIDDEN const MidpointRounding ToZero;
-		#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
-		public: static ASTRUMSTD_HIDDEN const MidpointRounding ToNegativeInfinity;
-		#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
-		public: static ASTRUMSTD_HIDDEN const MidpointRounding ToPositiveInfinity;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
 		private: static constexpr Builtin::Str __names[] = {u"ToEven", u"AwayFromZero", u"ToZero", u"ToNegativeInfinity", u"ToPositiveInfinity"};
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
@@ -49,6 +39,16 @@ class __Class_MidpointRounding;
 		public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
 		public: constexpr bool operator ==(const __self& that) const noexcept { return __value == that.__value; } 
+		#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
+		public: static ASTRUMSTD_HIDDEN const MidpointRounding ToEven;
+		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
+		public: static ASTRUMSTD_HIDDEN const MidpointRounding AwayFromZero;
+		#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
+		public: static ASTRUMSTD_HIDDEN const MidpointRounding ToZero;
+		#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
+		public: static ASTRUMSTD_HIDDEN const MidpointRounding ToNegativeInfinity;
+		#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
+		public: static ASTRUMSTD_HIDDEN const MidpointRounding ToPositiveInfinity;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
 		public: constexpr operator Builtin::u8() const noexcept { return __value; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
