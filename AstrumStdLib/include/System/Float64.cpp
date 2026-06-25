@@ -103,23 +103,23 @@ namespace System {
 	inline auto SinPiBy4(Builtin::f64 x, Builtin::f64 xTail) noexcept -> const Builtin::f64
 	{
 		#line 1236 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		constexpr auto C1 = Builtin::f64(-0.166666666666666646259241729);
+		constexpr Builtin::Auto<decltype(Builtin::f64(-0.166666666666666646259241729))> C1 = Builtin::f64(-0.166666666666666646259241729);
 		#line 1237 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		constexpr auto C2 = +Builtin::f64(0.833333333333095043065222816e-2);
+		constexpr Builtin::Auto<decltype(+Builtin::f64(0.833333333333095043065222816e-2))> C2 = +Builtin::f64(0.833333333333095043065222816e-2);
 		#line 1238 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		constexpr auto C3 = Builtin::f64(-0.19841269836761125688538679e-3);
+		constexpr Builtin::Auto<decltype(Builtin::f64(-0.19841269836761125688538679e-3))> C3 = Builtin::f64(-0.19841269836761125688538679e-3);
 		#line 1239 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		constexpr auto C4 = +Builtin::f64(0.275573161037288022676895908448e-5);
+		constexpr Builtin::Auto<decltype(+Builtin::f64(0.275573161037288022676895908448e-5))> C4 = +Builtin::f64(0.275573161037288022676895908448e-5);
 		#line 1240 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		constexpr auto C5 = Builtin::f64(-0.25051132068021699772257377197e-7);
+		constexpr Builtin::Auto<decltype(Builtin::f64(-0.25051132068021699772257377197e-7))> C5 = Builtin::f64(-0.25051132068021699772257377197e-7);
 		#line 1241 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		constexpr auto C6 = +Builtin::f64(0.159181443044859136852668200e-9);
+		constexpr Builtin::Auto<decltype(+Builtin::f64(0.159181443044859136852668200e-9))> C6 = +Builtin::f64(0.159181443044859136852668200e-9);
 		#line 1243 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		const auto xx = x * x; 
+		const Builtin::Auto<decltype(x * x)> xx = x * x; 
 		#line 1244 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		const auto xxx = xx * x; 
+		const Builtin::Auto<decltype(xx * x)> xxx = xx * x; 
 		#line 1245 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		auto result = C6; 
+		Builtin::Auto<decltype(C6)> result = C6; 
 		#line 1247 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		result = (result * xx) + C5;
 		#line 1248 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
@@ -149,25 +149,25 @@ namespace System {
 	inline auto CosPiBy4(Builtin::f64 x, Builtin::f64 xTail) noexcept -> const Builtin::f64
 	{
 		#line 1264 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		constexpr auto C1 = +Builtin::f64(0.41666666666666665390037e-1);
+		constexpr Builtin::Auto<decltype(+Builtin::f64(0.41666666666666665390037e-1))> C1 = +Builtin::f64(0.41666666666666665390037e-1);
 		#line 1265 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		constexpr auto C2 = Builtin::f64(-0.13888888888887398280412e-2);
+		constexpr Builtin::Auto<decltype(Builtin::f64(-0.13888888888887398280412e-2))> C2 = Builtin::f64(-0.13888888888887398280412e-2);
 		#line 1266 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		constexpr auto C3 = +Builtin::f64(0.248015872987670414957399e-4);
+		constexpr Builtin::Auto<decltype(+Builtin::f64(0.248015872987670414957399e-4))> C3 = +Builtin::f64(0.248015872987670414957399e-4);
 		#line 1267 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		constexpr auto C4 = Builtin::f64(-0.275573172723441909470836e-6);
+		constexpr Builtin::Auto<decltype(Builtin::f64(-0.275573172723441909470836e-6))> C4 = Builtin::f64(-0.275573172723441909470836e-6);
 		#line 1268 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		constexpr auto C5 = +Builtin::f64(0.208761463822329611076335e-8);
+		constexpr Builtin::Auto<decltype(+Builtin::f64(0.208761463822329611076335e-8))> C5 = +Builtin::f64(0.208761463822329611076335e-8);
 		#line 1269 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		constexpr auto C6 = Builtin::f64(-0.113826398067944859590880e-10);
+		constexpr Builtin::Auto<decltype(Builtin::f64(-0.113826398067944859590880e-10))> C6 = Builtin::f64(-0.113826398067944859590880e-10);
 		#line 1271 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		const auto xx = x * x; 
+		const Builtin::Auto<decltype(x * x)> xx = x * x; 
 		#line 1272 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		const auto tmp1 = Builtin::f64(0.5) * xx; 
+		const Builtin::Auto<decltype(Builtin::f64(0.5) * xx)> tmp1 = Builtin::f64(0.5) * xx; 
 		#line 1273 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		const auto tmp2 = Builtin::f64(1.0) - tmp1; 
+		const Builtin::Auto<decltype(Builtin::f64(1.0) - tmp1)> tmp2 = Builtin::f64(1.0) - tmp1; 
 		#line 1274 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		auto result = C6; 
+		Builtin::Auto<decltype(C6)> result = C6; 
 		#line 1276 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		result = (result * xx) + C5;
 		#line 1277 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
@@ -192,11 +192,11 @@ namespace System {
 	inline auto TanPiBy4(Builtin::f64 x, Builtin::f64 xTail, bool isReciprocal) noexcept -> const Builtin::f64
 	{
 		#line 1289 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		constexpr auto pi4head = Builtin::f64(7.85398163397448278999e-01);
+		constexpr Builtin::Auto<decltype(Builtin::f64(7.85398163397448278999e-01))> pi4head = Builtin::f64(7.85398163397448278999e-01);
 		#line 1290 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		constexpr auto pi4tail = Builtin::f64(3.06161699786838240164e-17);
+		constexpr Builtin::Auto<decltype(Builtin::f64(3.06161699786838240164e-17))> pi4tail = Builtin::f64(3.06161699786838240164e-17);
 		#line 1292 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		auto transform = Builtin::i32(0); 
+		Builtin::Auto<decltype(Builtin::i32(0))> transform = Builtin::i32(0); 
 		#line 1293 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		if ((x <=> +Builtin::f64(0.68)) > 0) {
 			#line 1294 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
@@ -217,9 +217,9 @@ namespace System {
 			}
 		}
 		#line 1303 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		const auto tmp1 = x * x + Builtin::f64(2.0) * x * xTail; 
+		const Builtin::Auto<decltype(x * x + Builtin::f64(2.0) * x * xTail)> tmp1 = x * x + Builtin::f64(2.0) * x * xTail; 
 		#line 1304 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		auto denominator = Builtin::f64(-0.232371494088563558304549252913e-3); 
+		Builtin::Auto<decltype(Builtin::f64(-0.232371494088563558304549252913e-3))> denominator = Builtin::f64(-0.232371494088563558304549252913e-3); 
 		#line 1305 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		denominator = +Builtin::f64(0.260656620398645407524064091208e-1) + (denominator * tmp1);
 		#line 1306 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
@@ -227,19 +227,19 @@ namespace System {
 		#line 1307 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		denominator = +Builtin::f64(0.111713747927937668539901657944e+1) + (denominator * tmp1);
 		#line 1308 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		auto numerator = +Builtin::f64(0.224044448537022097264602535574e-3); 
+		Builtin::Auto<decltype(+Builtin::f64(0.224044448537022097264602535574e-3))> numerator = +Builtin::f64(0.224044448537022097264602535574e-3); 
 		#line 1309 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		numerator = Builtin::f64(-0.229345080057565662883358588111e-1) + (numerator * tmp1);
 		#line 1310 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		numerator = +Builtin::f64(0.372379159759792203640806338901e+0) + (numerator * tmp1);
 		#line 1312 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		auto tmp2 = x * tmp1; 
+		Builtin::Auto<decltype(x * tmp1)> tmp2 = x * tmp1; 
 		#line 1313 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		tmp2 *= numerator / denominator;
 		#line 1314 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		tmp2 += xTail;
 		#line 1316 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		auto result = x + tmp2; 
+		Builtin::Auto<decltype(x + tmp2)> result = x + tmp2; 
 		#line 1318 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		if (transform != Builtin::i32(0)) {
 			#line 1319 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
@@ -248,21 +248,21 @@ namespace System {
 			#line 1322 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 			if (isReciprocal) {
 				#line 1323 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-				auto bits = ADV_UPCS(Bits)(result.__ref()); 
+				Builtin::Auto<decltype(ADV_UPCS(Bits)(result.__ref()))> bits = ADV_UPCS(Bits)(result.__ref()); 
 				#line 1324 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 				bits &= Builtin::u64(0xFFFFFFFF00000000ULL);
 				#line 1326 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-				const auto z1 = ADV_USFCS((Builtin::f64), FromBits)(bits); 
+				const Builtin::Auto<decltype(ADV_USFCS((Builtin::f64), FromBits)(bits))> z1 = ADV_USFCS((Builtin::f64), FromBits)(bits); 
 				#line 1327 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-				const auto z2 = tmp2 - (z1 - x); 
+				const Builtin::Auto<decltype(tmp2 - (z1 - x))> z2 = tmp2 - (z1 - x); 
 				#line 1328 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-				const auto reciprocal = Builtin::f64(-1.0) / result; 
+				const Builtin::Auto<decltype(Builtin::f64(-1.0) / result)> reciprocal = Builtin::f64(-1.0) / result; 
 				#line 1330 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 				bits = ADV_UPCS(Bits)(reciprocal.__ref());
 				#line 1331 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 				bits &= Builtin::u64(0xFFFFFFFF00000000ULL);
 				#line 1333 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-				const auto reciprocalHead = ADV_USFCS((Builtin::f64), FromBits)(bits); 
+				const Builtin::Auto<decltype(ADV_USFCS((Builtin::f64), FromBits)(bits))> reciprocalHead = ADV_USFCS((Builtin::f64), FromBits)(bits); 
 				#line 1334 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 				result = reciprocalHead + (reciprocal * (Builtin::f64(1.0) + reciprocalHead * z1 + reciprocalHead * z2));
 			}
@@ -470,10 +470,14 @@ static_assert(Builtin::TypeIs<Builtin::f64, IDecrementOperators<Builtin::f64>>()
 		ADV_ASSERT((ADV_UPCS(IsPow2)(Builtin::f64(4096.0).__ref())), u"4096.0.IsPow2");
 		#line 1465 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		ADV_ASSERT((ADV_UPCS(Log2)(Builtin::f64(4096.0).__ref()) == Builtin::f64(12.0)), u"4096.0.Log2==12.0");
+		#line 1466 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
+		ADV_ASSERT((ADV_UPCS(IsNegativeInfinity)(ADV_UPCS(Log2)(ADV_USPCS(Zero, Builtin::f64)().__ref()).__ref())), u"f64.Zero.Log2.IsNegativeInfinity");
 		#line 1467 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		ADV_ASSERT((ADV_UPCS(IsNaN)(ADV_UPCS(Log2)(Builtin::f64(-123.0).__ref()).__ref())), u"-123.0.Log2.IsNaN");
 		#line 1468 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		ADV_ASSERT((ADV_UPCS(Log10)(Builtin::f64(10000.0).__ref()) == Builtin::f64(4.0)), u"10000.0.Log10==4.0");
+		#line 1469 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
+		ADV_ASSERT((ADV_UPCS(IsNegativeInfinity)(ADV_UPCS(Log10)(ADV_USPCS(Zero, Builtin::f64)().__ref()).__ref())), u"f64.Zero.Log10.IsNegativeInfinity");
 		#line 1470 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		ADV_ASSERT((ADV_UPCS(IsNaN)(ADV_UPCS(Log10)(Builtin::f64(-123.0).__ref()).__ref())), u"-123.0.Log10.IsNaN");
 		#line 1471 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
@@ -530,10 +534,6 @@ static_assert(Builtin::TypeIs<Builtin::f64, IDecrementOperators<Builtin::f64>>()
 		ADV_ASSERT((ADV_UPCS(Exp)(f.__ref()) == Builtin::f64(228661.952056809794157743453979)), u"f.Exp==228661.952056809794157743453979");
 		#line 1499 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		ADV_ASSERT((ADV_UPCS(ExpM1)(f.__ref()) == Builtin::f64(228660.952056809794157743453979)), u"f.ExpM1==228660.952056809794157743453979");
-		#line 1500 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		ADV_ASSERT((ADV_UPCS(Exp2)(f.__ref()) == Builtin::f64(5184.53900890226577757857739925)), u"f.Exp2==5184.53900890226577757857739925");
-		#line 1501 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		ADV_ASSERT((ADV_UPCS(Exp2M1)(f.__ref()) == Builtin::f64(5183.53900890226577757857739925)), u"f.Exp2M1==5183.53900890226577757857739925");
 		#line 1502 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		ADV_ASSERT((ADV_UPCS(Exp10)(f.__ref()) == Builtin::f64(2187761623949.5517578125)), u"f.Exp10==2187761623949.5517578125");
 		#line 1503 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
@@ -740,7 +740,7 @@ static_assert(Builtin::TypeIs<Builtin::f64, IDecrementOperators<Builtin::f64>>()
 	auto Root(__extension_Float64_712_f64 const& __this LIFETIMEBOUND, Builtin::i32 n)  -> const typename __extension_Float64_712_f64
 	{
 		#line 720 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		auto PositiveN = [] (__extension_Float64_1210_f64 x, Builtin::i32 n) 
+		auto PositiveN = [&] (__extension_Float64_1210_f64 x, Builtin::i32 n) 
 		{
 			#line 722 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 			__extension_Float64_1210_f64 result{}; 
@@ -801,7 +801,7 @@ static_assert(Builtin::TypeIs<Builtin::f64, IDecrementOperators<Builtin::f64>>()
 			return result;
 		}; 
 		#line 749 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		auto NegativeN = [] (__extension_Float64_1210_f64 x, Builtin::i32 n) 
+		auto NegativeN = [&] (__extension_Float64_1210_f64 x, Builtin::i32 n) 
 		{
 			#line 751 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 			__extension_Float64_1210_f64 result{}; 
@@ -925,9 +925,9 @@ ADV_WARNING_POP
 		#line 794 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		if (ADV_UPCS(IsFinite)(__this.__ref()) && ADV_UPCS(IsFinite)(y.__ref())) {
 			#line 795 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-			const auto ax = ADV_UPCS(Abs)(__this.__ref()); 
+			const Builtin::Auto<decltype(ADV_UPCS(Abs)(__this.__ref()))> ax = ADV_UPCS(Abs)(__this.__ref()); 
 			#line 796 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-			const auto ay = ADV_UPCS(Abs)(y.__ref()); 
+			const Builtin::Auto<decltype(ADV_UPCS(Abs)(y.__ref()))> ay = ADV_UPCS(Abs)(y.__ref()); 
 			#line 798 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 			if (ax == Builtin::f64(0.0)) {
 				#line 799 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
@@ -982,7 +982,7 @@ ADV_WARNING_POP
 		#line 851 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		if (ADV_UPCS(IsFinite)(__this.__ref())) {
 			#line 852 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-			const auto ax = ADV_UPCS(Abs)(__this.__ref()); 
+			const Builtin::Auto<decltype(ADV_UPCS(Abs)(__this.__ref()))> ax = ADV_UPCS(Abs)(__this.__ref()); 
 			#line 855 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 			if ((ax <=> Builtin::f64(4503599627370496.0)) < 0) {
 				#line 856 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
@@ -996,11 +996,11 @@ ADV_WARNING_POP
 						#line 857 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 						{
 							#line 858 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-							const auto integral = Builtin::Cast<true, Builtin::i64>(ax); 
+							const Builtin::Auto<decltype(Builtin::Cast<true, Builtin::i64>(ax))> integral = Builtin::Cast<true, Builtin::i64>(ax); 
 							#line 859 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-							const auto fractional = ax - integral; 
+							const Builtin::Auto<decltype(ax - integral)> fractional = ax - integral; 
 							#line 860 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-							const auto sign = ((__this <=> Builtin::f64(0.0)) > 0 ? +Builtin::f64(1.0) : Builtin::f64(-1.0)) * (ADV_UPCS(IsOddInteger)(integral.__ref()) ? Builtin::f64(-1.0) : +Builtin::f64(1.0)); 
+							const Builtin::Auto<decltype(((__this <=> Builtin::f64(0.0)) > 0 ? +Builtin::f64(1.0) : Builtin::f64(-1.0)) * (ADV_UPCS(IsOddInteger)(integral.__ref()) ? Builtin::f64(-1.0) : +Builtin::f64(1.0)))> sign = ((__this <=> Builtin::f64(0.0)) > 0 ? +Builtin::f64(1.0) : Builtin::f64(-1.0)) * (ADV_UPCS(IsOddInteger)(integral.__ref()) ? Builtin::f64(-1.0) : +Builtin::f64(1.0)); 
 							#line 862 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 							result = [&]() 
 ADV_WARNING_DISABLE(4715, -Wreturn-type)
@@ -1054,7 +1054,7 @@ ADV_WARNING_POP
 								#line 870 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 								{
 									#line 871 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-									const auto value = __this * ADV_USPCS(Pi, Builtin::f64)(); 
+									const Builtin::Auto<decltype(__this * ADV_USPCS(Pi, Builtin::f64)())> value = __this * ADV_USPCS(Pi, Builtin::f64)(); 
 									#line 872 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 									result = value - (value * value * value * (Builtin::f64(1.0) / Builtin::f64(6.0)));
 								}
@@ -1095,7 +1095,7 @@ ADV_WARNING_POP
 		#line 889 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		if (ADV_UPCS(IsFinite)(__this.__ref())) {
 			#line 890 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-			const auto ax = ADV_UPCS(Abs)(__this.__ref()); 
+			const Builtin::Auto<decltype(ADV_UPCS(Abs)(__this.__ref()))> ax = ADV_UPCS(Abs)(__this.__ref()); 
 			#line 893 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 			if ((ax <=> Builtin::f64(4503599627370496.0)) < 0) {
 				#line 894 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
@@ -1109,11 +1109,11 @@ ADV_WARNING_POP
 						#line 895 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 						{
 							#line 896 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-							const auto integral = Builtin::Cast<true, Builtin::i64>(ax); 
+							const Builtin::Auto<decltype(Builtin::Cast<true, Builtin::i64>(ax))> integral = Builtin::Cast<true, Builtin::i64>(ax); 
 							#line 897 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-							const auto fractional = ax - integral; 
+							const Builtin::Auto<decltype(ax - integral)> fractional = ax - integral; 
 							#line 898 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-							const auto sign = ADV_UPCS(IsOddInteger)(integral.__ref()) ? Builtin::f64(-1.0) : +Builtin::f64(1.0); 
+							const Builtin::Auto<decltype(ADV_UPCS(IsOddInteger)(integral.__ref()) ? Builtin::f64(-1.0) : +Builtin::f64(1.0))> sign = ADV_UPCS(IsOddInteger)(integral.__ref()) ? Builtin::f64(-1.0) : +Builtin::f64(1.0); 
 							#line 900 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 							result = [&]() 
 ADV_WARNING_DISABLE(4715, -Wreturn-type)
@@ -1167,7 +1167,7 @@ ADV_WARNING_POP
 								#line 908 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 								{
 									#line 909 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-									const auto value = __this * ADV_USPCS(Pi, Builtin::f64)(); 
+									const Builtin::Auto<decltype(__this * ADV_USPCS(Pi, Builtin::f64)())> value = __this * ADV_USPCS(Pi, Builtin::f64)(); 
 									#line 910 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 									result = Builtin::f64(1.0) - (value * value * Builtin::f64(0.5));
 								}
@@ -1216,27 +1216,27 @@ ADV_WARNING_POP
 		#line 931 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		if (ADV_UPCS(IsFinite)(__this.__ref())) {
 			#line 932 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-			const auto ax = ADV_UPCS(Abs)(__this.__ref()); 
+			const Builtin::Auto<decltype(ADV_UPCS(Abs)(__this.__ref()))> ax = ADV_UPCS(Abs)(__this.__ref()); 
 			#line 935 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 			if ((ax <=> Builtin::f64(4503599627370496.0)) < 0) {
 				#line 936 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 				if ((ax <=> Builtin::f64(0.25)) > 0) {
 					#line 937 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-					const auto integral = Builtin::Cast<true, Builtin::i64>(ax); 
+					const Builtin::Auto<decltype(Builtin::Cast<true, Builtin::i64>(ax))> integral = Builtin::Cast<true, Builtin::i64>(ax); 
 					#line 938 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-					const auto fractional = ax - integral; 
+					const Builtin::Auto<decltype(ax - integral)> fractional = ax - integral; 
 					#line 939 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-					const auto sign = ADV_UPCS(IsOddInteger)(integral.__ref()) ? Builtin::f64(-1.0) : +Builtin::f64(1.0); 
+					const Builtin::Auto<decltype(ADV_UPCS(IsOddInteger)(integral.__ref()) ? Builtin::f64(-1.0) : +Builtin::f64(1.0))> sign = ADV_UPCS(IsOddInteger)(integral.__ref()) ? Builtin::f64(-1.0) : +Builtin::f64(1.0); 
 					#line 940 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-					const auto sinSign = ((__this <=> Builtin::f64(0.0)) > 0 ? +Builtin::f64(1.0) : Builtin::f64(-1.0)) * sign; 
+					const Builtin::Auto<decltype(((__this <=> Builtin::f64(0.0)) > 0 ? +Builtin::f64(1.0) : Builtin::f64(-1.0)) * sign)> sinSign = ((__this <=> Builtin::f64(0.0)) > 0 ? +Builtin::f64(1.0) : Builtin::f64(-1.0)) * sign; 
 					#line 941 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-					const auto cosSign = sign; 
+					const Builtin::Auto<decltype(sign)> cosSign = sign; 
 					#line 943 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 					if ((fractional <=> Builtin::f64(0.25)) <= 0) {
 						#line 944 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 						if (fractional != Builtin::f64(0.0)) {
 							#line 945 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-							const auto value = fractional * ADV_USPCS(Pi, Builtin::f64)(); 
+							const Builtin::Auto<decltype(fractional * ADV_USPCS(Pi, Builtin::f64)())> value = fractional * ADV_USPCS(Pi, Builtin::f64)(); 
 							#line 946 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 							sin = sinSign * SinPiBy4(value, Builtin::f64(0.0));
 							#line 947 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
@@ -1256,7 +1256,7 @@ ADV_WARNING_POP
 							#line 953 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 							if (fractional != Builtin::f64(0.5)) {
 								#line 954 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-								const auto value = (Builtin::f64(0.5) - fractional) * ADV_USPCS(Pi, Builtin::f64)(); 
+								const Builtin::Auto<decltype((Builtin::f64(0.5) - fractional) * ADV_USPCS(Pi, Builtin::f64)())> value = (Builtin::f64(0.5) - fractional) * ADV_USPCS(Pi, Builtin::f64)(); 
 								#line 955 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 								sin = sinSign * CosPiBy4(value, Builtin::f64(0.0));
 								#line 956 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
@@ -1274,7 +1274,7 @@ ADV_WARNING_POP
 							#line 961 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 							if ((fractional <=> Builtin::f64(0.75)) <= 0) {
 								#line 962 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-								const auto value = (fractional - Builtin::f64(0.5)) * ADV_USPCS(Pi, Builtin::f64)(); 
+								const Builtin::Auto<decltype((fractional - Builtin::f64(0.5)) * ADV_USPCS(Pi, Builtin::f64)())> value = (fractional - Builtin::f64(0.5)) * ADV_USPCS(Pi, Builtin::f64)(); 
 								#line 963 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 								sin = +sinSign * CosPiBy4(value, Builtin::f64(0.0));
 								#line 964 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
@@ -1283,7 +1283,7 @@ ADV_WARNING_POP
 								#line 965 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 								{
 									#line 966 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-									const auto value = (Builtin::f64(1.0) - fractional) * ADV_USPCS(Pi, Builtin::f64)(); 
+									const Builtin::Auto<decltype((Builtin::f64(1.0) - fractional) * ADV_USPCS(Pi, Builtin::f64)())> value = (Builtin::f64(1.0) - fractional) * ADV_USPCS(Pi, Builtin::f64)(); 
 									#line 967 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 									sin = +sinSign * SinPiBy4(value, Builtin::f64(0.0));
 									#line 968 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
@@ -1296,7 +1296,7 @@ ADV_WARNING_POP
 					#line 970 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 					if ((ax <=> Builtin::f64(1.220703125e-4)) >= 0) {
 						#line 971 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-						const auto value = __this * ADV_USPCS(Pi, Builtin::f64)(); 
+						const Builtin::Auto<decltype(__this * ADV_USPCS(Pi, Builtin::f64)())> value = __this * ADV_USPCS(Pi, Builtin::f64)(); 
 						#line 972 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 						sin = SinPiBy4(value, Builtin::f64(0.0));
 						#line 973 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
@@ -1305,9 +1305,9 @@ ADV_WARNING_POP
 						#line 974 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 						if ((ax <=> Builtin::f64(7.450580596923828e-09)) >= 0) {
 							#line 975 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-							const auto value = __this * ADV_USPCS(Pi, Builtin::f64)(); 
+							const Builtin::Auto<decltype(__this * ADV_USPCS(Pi, Builtin::f64)())> value = __this * ADV_USPCS(Pi, Builtin::f64)(); 
 							#line 976 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-							const auto valueSq = value * value; 
+							const Builtin::Auto<decltype(value * value)> valueSq = value * value; 
 							#line 978 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 							sin = value - (value * valueSq * (Builtin::f64(1.0) / Builtin::f64(6.0)));
 							#line 979 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
@@ -1362,9 +1362,9 @@ ADV_WARNING_POP
 		#line 1003 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		if (ADV_UPCS(IsFinite)(__this.__ref())) {
 			#line 1004 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-			const auto ax = ADV_UPCS(Abs)(__this.__ref()); 
+			const Builtin::Auto<decltype(ADV_UPCS(Abs)(__this.__ref()))> ax = ADV_UPCS(Abs)(__this.__ref()); 
 			#line 1005 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-			const auto sign = (__this <=> Builtin::f64(0.0)) > 0 ? +Builtin::f64(1.0) : Builtin::f64(-1.0); 
+			const Builtin::Auto<decltype((__this <=> Builtin::f64(0.0)) > 0 ? +Builtin::f64(1.0) : Builtin::f64(-1.0))> sign = (__this <=> Builtin::f64(0.0)) > 0 ? +Builtin::f64(1.0) : Builtin::f64(-1.0); 
 			#line 1008 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 			{
 				#line 1009 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
@@ -1386,9 +1386,9 @@ ADV_WARNING_POP
 								#line 1011 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 								{
 									#line 1012 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-									const auto integral = Builtin::Cast<true, Builtin::i64>(ax); 
+									const Builtin::Auto<decltype(Builtin::Cast<true, Builtin::i64>(ax))> integral = Builtin::Cast<true, Builtin::i64>(ax); 
 									#line 1013 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-									const auto fractional = ax - integral; 
+									const Builtin::Auto<decltype(ax - integral)> fractional = ax - integral; 
 									#line 1015 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 									result = [&]() 
 ADV_WARNING_DISABLE(4715, -Wreturn-type)
@@ -1442,7 +1442,7 @@ ADV_WARNING_POP
 										#line 1025 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 										{
 											#line 1026 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-											const auto value = __this * ADV_USPCS(Pi, Builtin::f64)(); 
+											const Builtin::Auto<decltype(__this * ADV_USPCS(Pi, Builtin::f64)())> value = __this * ADV_USPCS(Pi, Builtin::f64)(); 
 											#line 1027 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 											result = value + (value * value * value * (Builtin::f64(1.0) / Builtin::f64(3.0)));
 										}

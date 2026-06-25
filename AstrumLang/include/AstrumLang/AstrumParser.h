@@ -34,33 +34,33 @@ public:
     Lock = 80, Move = 81, Mutable = 82, Nameof = 83, New = 84, Noexcept = 85, 
     Null = 86, Object = 87, Offsetof = 88, Operator_ = 89, Out = 90, Override = 91, 
     Package = 92, Private = 93, Protected = 94, Public = 95, Ref = 96, Return = 97, 
-    Rune = 98, Self = 99, Set = 100, Sizeof = 101, Stackalloc = 102, Static = 103, 
-    Str = 104, Struct = 105, Super = 106, Switch = 107, Test = 108, This = 109, 
-    Thread_local = 110, Throw = 111, True_ = 112, Try = 113, Type = 114, 
-    Union = 115, Unowned = 116, Using = 117, U8 = 118, U16 = 119, U32 = 120, 
-    U64 = 121, U128 = 122, Unsafe = 123, Usize = 124, Version = 125, Virtual = 126, 
-    Void = 127, Volatile = 128, Weak = 129, Where = 130, While = 131, Yield = 132, 
-    Not = 133, And = 134, Or = 135, Identifier = 136, LeftParen = 137, RightParen = 138, 
-    LeftBracket = 139, RightBracket = 140, LeftBrace = 141, RightBrace = 142, 
-    Plus = 143, Minus = 144, Star = 145, DoubleStar = 146, Div = 147, Mod = 148, 
-    LifetimeAnnotation = 149, Caret = 150, DoubleCaret = 151, Amp = 152, 
-    VertLine = 153, Tilde = 154, Colon = 155, Assign = 156, Less = 157, 
-    Greater = 158, PlusAssign = 159, MinusAssign = 160, TildeAssign = 161, 
-    StarAssign = 162, DoubleStarAssign = 163, DivAssign = 164, ModAssign = 165, 
-    XorAssign = 166, AndAssign = 167, OrAssign = 168, LeftShiftAssign = 169, 
-    RightShiftAssign = 170, SignedRightShiftAssign = 171, Equal = 172, NotEqual = 173, 
-    IdentityEqual = 174, NotIdentityEqual = 175, Spaceship = 176, LessEqual = 177, 
-    GreaterEqual = 178, PlusPlus = 179, MinusMinus = 180, Comma = 181, Arrow = 182, 
-    AssignArrow = 183, EqualArrow = 184, Exclamation = 185, Question = 186, 
-    DoubleQuestion = 187, DoubleQuestionAssign = 188, Doublecolon = 189, 
-    Semi = 190, Dot = 191, DoubleDot = 192, DoubleDotEqual = 193, Dollar = 194, 
-    Hash = 195, Ellipsis = 196, Apostroph = 197, AtSign = 198, Op1 = 199, 
-    Op2 = 200, Op10 = 201, Op3 = 202, Op4 = 203, Op5 = 204, Op7 = 205, Op6 = 206, 
-    Op8 = 207, Op9 = 208, DOUBLE_CURLY_INSIDE = 209, OPEN_BRACE_INSIDE = 210, 
-    REGULAR_CHAR_INSIDE = 211, VERBATIUM_DOUBLE_GRAVE_INSIDE = 212, MULTILINE_QUOTES_INSIDE = 213, 
-    DOUBLE_QUOTE_INSIDE = 214, GRAVE_INSIDE = 215, TRIPLE_QUOTE_INSIDE = 216, 
-    REGULAR_STRING_INSIDE = 217, GRAVE_STRING_INSIDE = 218, MULTILINE_STRING_INSIDE = 219, 
-    CLOSE_BRACE_INSIDE = 220, FORMAT_STRING = 221, DOUBLE_CURLY_CLOSE_INSIDE = 222
+    Self = 98, Set = 99, Sizeof = 100, Stackalloc = 101, Static = 102, Str = 103, 
+    Struct = 104, Super = 105, Switch = 106, Test = 107, This = 108, Thread_local = 109, 
+    Throw = 110, True_ = 111, Try = 112, Type = 113, Union = 114, Unowned = 115, 
+    Using = 116, U8 = 117, U16 = 118, U32 = 119, U64 = 120, U128 = 121, 
+    Unsafe = 122, Usize = 123, Version = 124, Virtual = 125, Void = 126, 
+    Volatile = 127, Weak = 128, Where = 129, While = 130, Yield = 131, Not = 132, 
+    And = 133, Or = 134, Identifier = 135, LeftParen = 136, RightParen = 137, 
+    LeftBracket = 138, RightBracket = 139, LeftBrace = 140, RightBrace = 141, 
+    Plus = 142, Minus = 143, Star = 144, DoubleStar = 145, Div = 146, Mod = 147, 
+    LifetimeAnnotation = 148, Caret = 149, DoubleCaret = 150, Amp = 151, 
+    VertLine = 152, Tilde = 153, Colon = 154, Assign = 155, Less = 156, 
+    Greater = 157, PlusAssign = 158, MinusAssign = 159, TildeAssign = 160, 
+    StarAssign = 161, DoubleStarAssign = 162, DivAssign = 163, ModAssign = 164, 
+    XorAssign = 165, AndAssign = 166, OrAssign = 167, LeftShiftAssign = 168, 
+    RightShiftAssign = 169, SignedRightShiftAssign = 170, Equal = 171, NotEqual = 172, 
+    IdentityEqual = 173, NotIdentityEqual = 174, Spaceship = 175, LessEqual = 176, 
+    GreaterEqual = 177, PlusPlus = 178, MinusMinus = 179, Comma = 180, Arrow = 181, 
+    AssignArrow = 182, EqualArrow = 183, Exclamation = 184, Question = 185, 
+    DoubleQuestion = 186, DoubleQuestionAssign = 187, Doublecolon = 188, 
+    Semi = 189, Dot = 190, DoubleDot = 191, DoubleDotEqual = 192, Dollar = 193, 
+    Hash = 194, Ellipsis = 195, Apostroph = 196, AtSign = 197, Op1 = 198, 
+    Op2 = 199, Op10 = 200, Op3 = 201, Op4 = 202, Op5 = 203, Op7 = 204, Op6 = 205, 
+    Op8 = 206, Op9 = 207, DOUBLE_CURLY_INSIDE = 208, OPEN_BRACE_INSIDE = 209, 
+    REGULAR_CHAR_INSIDE = 210, VERBATIUM_DOUBLE_GRAVE_INSIDE = 211, MULTILINE_QUOTES_INSIDE = 212, 
+    DOUBLE_QUOTE_INSIDE = 213, GRAVE_INSIDE = 214, TRIPLE_QUOTE_INSIDE = 215, 
+    REGULAR_STRING_INSIDE = 216, GRAVE_STRING_INSIDE = 217, MULTILINE_STRING_INSIDE = 218, 
+    CLOSE_BRACE_INSIDE = 219, FORMAT_STRING = 220, DOUBLE_CURLY_CLOSE_INSIDE = 221
   };
 
   enum {
@@ -1758,8 +1758,6 @@ public:
     TypeTraitContext *typeTrait();
     antlr4::tree::TerminalNode *In();
     NotContext *not_();
-    std::vector<RelationalExpressionContext *> relationalExpression();
-    RelationalExpressionContext* relationalExpression(size_t i);
     antlr4::tree::TerminalNode *Less();
     antlr4::tree::TerminalNode *Greater();
     antlr4::tree::TerminalNode *LessEqual();
@@ -1772,7 +1770,7 @@ public:
   };
 
   RelationalExpressionContext* relationalExpression();
-  RelationalExpressionContext* relationalExpression(int precedence);
+
   class ASTRUMLANG_API EqualityExpressionContext : public antlr4::ParserRuleContext {
   public:
     EqualityExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -2873,7 +2871,7 @@ public:
     antlr4::tree::TerminalNode *Fext();
     antlr4::tree::TerminalNode *Char();
     antlr4::tree::TerminalNode *Byte();
-    antlr4::tree::TerminalNode *Rune();
+    antlr4::tree::TerminalNode *Decimal();
     antlr4::tree::TerminalNode *Bool();
     antlr4::tree::TerminalNode *Str();
     antlr4::tree::TerminalNode *Self();
@@ -4215,9 +4213,12 @@ public:
   public:
     ShortFunctionBodyContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    ExpressionStatementContext *expressionStatement();
     antlr4::tree::TerminalNode *AssignArrow();
     antlr4::tree::TerminalNode *EqualArrow();
+    ExpressionStatementContext *expressionStatement();
+    BracedInitListContext *bracedInitList();
+    antlr4::tree::TerminalNode *Semi();
+    CollectionExpressionContext *collectionExpression();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -5181,7 +5182,6 @@ public:
   bool multiplicativeExpressionSempred(MultiplicativeExpressionContext *_localctx, size_t predicateIndex);
   bool additiveExpressionSempred(AdditiveExpressionContext *_localctx, size_t predicateIndex);
   bool shiftExpressionSempred(ShiftExpressionContext *_localctx, size_t predicateIndex);
-  bool relationalExpressionSempred(RelationalExpressionContext *_localctx, size_t predicateIndex);
   bool equalityExpressionSempred(EqualityExpressionContext *_localctx, size_t predicateIndex);
   bool andExpressionSempred(AndExpressionContext *_localctx, size_t predicateIndex);
   bool exclusiveOrExpressionSempred(ExclusiveOrExpressionContext *_localctx, size_t predicateIndex);

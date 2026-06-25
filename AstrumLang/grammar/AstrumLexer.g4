@@ -233,8 +233,6 @@ Ref: 'ref';
 
 Return: 'return';
 
-Rune: 'rune';
-
 Self: 'self';
 
 Set: 'set';

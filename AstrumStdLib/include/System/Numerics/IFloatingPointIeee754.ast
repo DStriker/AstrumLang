@@ -1,22 +1,9 @@
 package System.Numerics;
 
-public import IFloatingPoint;
-public import IExponentialFunctions;
-public import IHyperbolicFunctions;
-public import ILogarithmicFunctions;
-public import ITrigonometricFunctions;
-public import IRootFunctions;
-public import IPowerOperators;
+public import IFloatingPointMath;
 public import System.FloatingPointCategory;
 
-public interface IFloatingPointIeee754:
-    IFloatingPoint,
-    IExponentialFunctions,
-    IHyperbolicFunctions,
-    ILogarithmicFunctions,
-    ITrigonometricFunctions,
-    IRootFunctions,
-    IPowerArithmetic
+public interface IFloatingPointIeee754: IFloatingPointMath
 {
     static Epsilon: self;
     static NegativeInfinity: self;

@@ -876,4 +876,5 @@ namespace Builtin {
 
 }  // namespace Builtin
 
-inline constexpr bool operator!=(auto lhs, auto rhs) { return !(lhs == rhs); }
+template<class T, class U> requires requires(T t, U u) { t == u; } && (!requires(T t, U u) { t.operator!=(u); })
+inline constexpr bool operator!=(T lhs, U rhs) { return !(lhs == rhs); }

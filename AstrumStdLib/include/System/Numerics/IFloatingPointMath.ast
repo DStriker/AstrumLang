@@ -1,0 +1,19 @@
+package System.Numerics;
+
+public import IFloatingPoint;
+public import IExponentialFunctions;
+public import IHyperbolicFunctions;
+public import ILogarithmicFunctions;
+public import ITrigonometricFunctions;
+public import IRootFunctions;
+public import IPowerOperators;
+
+public interface IFloatingPointMath:
+    IFloatingPoint,
+    IExponentialFunctions,
+    IHyperbolicFunctions,
+    ILogarithmicFunctions,
+    ITrigonometricFunctions,
+    IRootFunctions,
+    IPowerArithmetic
+{}

@@ -1,0 +1,3223 @@
+package System;
+
+import Float128;
+
+public struct Decimal {
+    private _flags: i32;
+    private _hi: u32;
+    private _lo: u64;
+
+    private const SignMask :== i32.MinValue;
+    private const ScaleMask :== 0x00FF0000;
+    private const ScaleShift :== 16;
+    private const MaxScaleInt32 :== 9;
+    private const MaxScaleInt64 :== 19;
+
+    public Scale: u32 ==> u32((_flags & ScaleMask) >> ScaleShift);
+
+    private const SCALE_MAX :== 28;
+    private const TenToPowerNine :== 1000000000u;
+    private const TenToPowerEighteen :== 1000000000000000000u;
+
+    public type DivisibleArithmeticType = self;
+
+    public this() noexcept == default;
+
+    public this(low: u32, mid: u32, high: u32, isNegative: bool, scale: u8) ==
+    {
+        _flags = i32(scale) << ScaleShift;
+        _hi = high;
+        _lo = (u64(mid) << 32) | low;
+
+        if scale > SCALE_MAX {
+            throw Builtin.DecimalOverflowException(); // ArgumentOutOfRangeException
+        }
+
+        if isNegative {
+            _flags |= SignMask;
+        }
+    }
+
+    private this(low: u64, high: u32, flags: i32) ==
+    {
+        _flags = flags;
+        _hi = high;
+        _lo = low;
+    }
+
+    public this(mantissa: u128, isNegative: bool, scale: u8) ==
+    {
+        this(mantissa.Low64().NarrowToUInt32(), u32(mantissa.Low64() >> 32), mantissa.High64().ToUInt32(), isNegative, scale);
+    }
+
+    internal this(other: self, flags: i32) ==
+    {
+        _flags = flags;
+        _hi = other._hi;
+        _lo = other._lo;
+    }
+
+    public implicit this(value: i8) noexcept ==
+    {
+        ivalue: i32 = value;
+        _hi = 0u;
+        if value >= 0 {
+            _flags = 0;
+        } else {
+            _flags = SignMask;
+            ivalue = -ivalue;
+        }
+        _lo = ivalue as u32;
+    }
+
+    public implicit this(value: u8) noexcept ==
+    {
+        _flags = 0;
+        _hi = 0u;
+        _lo = value;
+    }
+
+    public implicit this(value: i16) noexcept ==
+    {
+        ivalue: i32 = value;
+        _hi = 0u;
+        if value >= 0 {
+            _flags = 0;
+        } else {
+            _flags = SignMask;
+            ivalue = -ivalue;
+        }
+        _lo = ivalue as u32;
+    }
+
+    public implicit this(value: u16) noexcept ==
+    {
+        _flags = 0;
+        _hi = 0u;
+        _lo = value;
+    }
+
+    public implicit this(value: i32) noexcept ==
+    {
+        ivalue: i64 = value;
+        _hi = 0u;
+        if value >= 0 {
+            _flags = 0;
+        } else {
+            _flags = SignMask;
+            ivalue = -ivalue;
+        }
+        _lo = ivalue as u64;
+    }
+
+    public implicit this(value: u32) noexcept ==
+    {
+        _flags = 0;
+        _hi = 0u;
+        _lo = value;
+    }
+
+    public implicit this(value: i64) noexcept ==
+    {
+        ivalue: i128 = value;
+        _hi = 0u;
+        if value >= 0 {
+            _flags = 0;
+        } else {
+            _flags = SignMask;
+            ivalue = -ivalue;
+        }
+        _lo = ivalue as u64;
+    }
+
+    public implicit this(value: u64) noexcept ==
+    {
+        _flags = 0;
+        _hi = 0u;
+        _lo = value;
+    }
+
+    public this(value: i128) ==
+    {
+        _hi = 0u;
+        _lo = value.Low64();
+        if value >= 0 {
+            _flags = 0;
+        } else {
+            _flags = SignMask;
+            value = -value;
+        }
+
+        let high := value.High64() as u64;
+        if high > u32.MaxValue {
+            throw Builtin.DecimalOverflowException();
+        }
+        _hi = high as u32;
+    }
+
+    public this(value: u128) ==
+    {
+        _flags = 0;
+        _hi = 0u;
+        _lo = value.Low64();
+
+        let high := value.High64();
+        if high > u32.MaxValue {
+            throw Builtin.DecimalOverflowException();
+        }
+        _hi = high as u32;
+    }
+
+    public this(value: f32)
+    {
+        let exp := i32((value.Bits >> 23).NarrowToUInt8()) - 126;
+
+        // underflow, rounding to zero
+        if (exp < -94)
+            return;
+
+        // overflow, infinity or nan will throw exception
+        if (exp > 96)
+            throw Builtin.DecimalOverflowException();
+
+        flags := 0;
+        if value < 0 {
+            value = -value;
+            flags = SignMask;
+        }
+
+        // Calculate max power of 10 input value could have by multiplying
+        // the exponent by log10(2)
+        d: f64 = value;
+        power := 6 - ((exp * 19728) >> 16); // -22...+35
+
+        if power >= 0 {
+            if power > SCALE_MAX {
+                power = SCALE_MAX;
+            }
+
+            d *= FloatPowers10[power];
+        } else {
+            if power != -1 or d >= 1.0e7 {
+                d /= FloatPowers10[-power];
+            } else {
+                power = 0;
+            }
+        }
+
+        assert d < 1.0e7;
+        if d < 1.0e6 and power < SCALE_MAX {
+            d *= 10;
+            power++;
+            assert d >= 1.0e6;
+        }
+
+        // round to integer
+        mantissa := u32(d.RoundTiesEvenToInt32());
+        if (mantissa == 0)
+            return;
+
+        if power < 0 {
+            power = -power;
+            if power < 10 {
+                _lo = u64(mantissa) * Int32Powers10[power];
+            } else {
+                if power > 18 {
+                    let low := u64(mantissa) * Int32Powers10[power - 18];
+                    let result := u128(low) * TenToPowerEighteen;
+                    _lo = result.Low64();
+                    let high := result.High64();
+                    if high > u32.MaxValue {
+                        throw Builtin.DecimalOverflowException();
+                    }
+                    _hi = high as u32;
+                } else {
+                    low := u64(mantissa) * Int32Powers10[power - 9];
+                    high := u64(TenToPowerNine) * (low >> 32);
+                    low = u64(TenToPowerNine) * low.NarrowToUInt32();
+                    high += low >> 32;
+                    _lo = (u64(high.NarrowToUInt32()) << 32) | low.NarrowToUInt32();
+                    high >>= 32;
+                    _hi = high as u32;
+                }
+            }
+        } else {
+            lmax := power;
+            if lmax > 6 {
+                lmax = 6;
+            }
+
+            if (mantissa & 0xF) == 0 and lmax >= 4 {
+                let div := mantissa \ 10000;
+                if mantissa == div * 10000 {
+                    mantissa = div;
+                    power -= 4;
+                    lmax -= 4;
+                }
+            }
+
+            if (mantissa & 3) == 0 and lmax >= 2 {
+                let div := mantissa \ 100;
+                if mantissa == div * 100 {
+                    mantissa = div;
+                    power -= 2;
+                    lmax -= 2;
+                }
+            }
+
+            if (mantissa & 1) == 0 and lmax >= 1 {
+                let div := mantissa \ 10;
+                if mantissa == div * 10 {
+                    mantissa = div;
+                    power--;
+                }
+            }
+
+            _lo = mantissa;
+            flags |= u32(power) << ScaleShift;
+        }
+
+        _flags = flags;
+    }
+
+    public this(value: f64)
+    {
+        let exp := i32((value.Bits >> 52).NarrowToUInt32() & 0x7FFu) - 1022;
+
+        // underflow, rounding to zero
+        if (exp < -94)
+            return;
+
+        // overflow, infinity or nan will throw exception
+        if (exp > 96)
+            throw Builtin.DecimalOverflowException();
+
+        flags := 0;
+        if value < 0 {
+            value = -value;
+            flags = SignMask;
+        }
+
+        // Calculate max power of 10 input value could have by multiplying
+        // the exponent by log10(2)
+        d: f64 = value;
+        power := 14 - ((exp * 19728) >> 16); // -14...+43
+
+        if power >= 0 {
+            if power > SCALE_MAX {
+                power = SCALE_MAX;
+            }
+
+            d *= FloatPowers10[power];
+        } else {
+            if power != -1 or d >= 1.0e15 {
+                d /= FloatPowers10[-power];
+            } else {
+                power = 0;
+            }
+        }
+
+        assert d < 1.0e15;
+        if d < 1.0e14 and power < SCALE_MAX {
+            d *= 10;
+            power++;
+            assert d >= 1.0e14;
+        }
+
+        // round to integer
+        mantissa := u64(d.RoundTiesEvenToInt64());
+        if (mantissa == 0)
+            return;
+
+        if power < 0 {
+            power = -power;
+            if power < 10 {
+                let pow10 := Int32Powers10[power];
+                let low := u64(mantissa.NarrowToUInt32()) * pow10;
+                high := (mantissa >> 32) * pow10;
+                high += low >> 32;
+                _lo = (u64(high.NarrowToUInt32()) << 32) | low.NarrowToUInt32();
+                high >>= 32;
+                _hi = high as u32;
+            } else {
+                assert power <= 14;
+                let result := u128(mantissa) * Int64Powers10[power - 1];
+                _lo = result.Low64();
+                let high := result.High64();
+                if high > u32.MaxValue {
+                    throw Builtin.DecimalOverflowException();
+                }
+                _hi = high as u32;
+            }
+        } else {
+            lmax := power;
+            if lmax > 14 {
+                lmax = 14;
+            }
+
+            if mantissa.NarrowToUInt8() == 0 and lmax >= 8 {
+                let div := mantissa \ 100000000;
+                if mantissa.NarrowToUInt32() == (div * 100000000).NarrowToUInt32() {
+                    mantissa = div;
+                    power -= 8;
+                    lmax -= 8;
+                }
+            }
+
+            if (mantissa & 0xF) == 0 and lmax >= 4 {
+                let div := mantissa \ 10000;
+                if mantissa.NarrowToUInt32() == (div * 10000).NarrowToUInt32() {
+                    mantissa = div;
+                    power -= 4;
+                    lmax -= 4;
+                }
+            }
+
+            if (mantissa & 3) == 0 and lmax >= 2 {
+                let div := mantissa \ 100;
+                if mantissa.NarrowToUInt32() == (div * 100).NarrowToUInt32() {
+                    mantissa = div;
+                    power -= 2;
+                    lmax -= 2;
+                }
+            }
+
+            if (mantissa & 1) == 0 and lmax >= 1 {
+                let div := mantissa \ 10;
+                if mantissa.NarrowToUInt32() == (div * 10).NarrowToUInt32() {
+                    mantissa = div;
+                    power--;
+                }
+            }
+
+            _lo = mantissa;
+            flags |= u32(power) << ScaleShift;
+        }
+
+        _flags = flags;
+    }
+
+    public this(value: f128)
+    {
+        this(value as f64);
+    }
+
+    public this(value: f16)
+    {
+        this(value as f32);
+    }
+
+    // public this(bits: i32[])
+
+    public operator i8 = {
+        let i := this as i32;
+        if i != i.NarrowToInt8() {
+            throw Builtin.IntegerOverflowException();
+        }
+        return i as i8;
+    }
+
+    public operator u8 = {
+        let i := this as u32;
+        if i > u8.MaxValue {
+            throw Builtin.IntegerOverflowException();
+        }
+        return i as u8;
+    }
+
+    public operator i16 = {
+        let i := this as i32;
+        if i != i.NarrowToInt16() {
+            throw Builtin.IntegerOverflowException();
+        }
+        return i as i16;
+    }
+
+    public operator u16 = {
+        let i := this as u32;
+        if i > u16.MaxValue {
+            throw Builtin.IntegerOverflowException();
+        }
+        return i as u16;
+    }
+
+    public operator i32 = {
+        let trunc := this.Truncate;
+        if (trunc._hi | u32(trunc._lo >> 32)) == 0 {
+            i := trunc._lo.NarrowToInt32();
+            if trunc._flags >= 0 {
+                if (i >= 0)
+                    return i;
+            } else {
+                i = -i;
+                if (i <= 0)
+                    return i;
+            }
+        }
+        throw Builtin.IntegerOverflowException();
+    }
+
+    public operator u32 = {
+        let trunc := this.Truncate;
+        if (trunc._hi | u32(trunc._lo >> 32)) == 0 {
+            let i := trunc._lo as u32;
+            if trunc._flags >= 0 or i == 0 {
+                return i;
+            }
+        }
+        throw Builtin.IntegerOverflowException();
+    }
+
+    public operator i64 = {
+        let trunc := this.Truncate;
+        if trunc._hi == 0 {
+            i := trunc._lo.NarrowToInt64();
+            if trunc._flags >= 0 {
+                if (i >= 0)
+                    return i;
+            } else {
+                i = -i;
+                if (i <= 0)
+                    return i;
+            }
+        }
+        throw Builtin.IntegerOverflowException();
+    }
+
+    public operator u64 = {
+        let trunc := this.Truncate;
+        if trunc._hi == 0 {
+            let i := trunc._lo;
+            if trunc._flags >= 0 or i == 0 {
+                return i;
+            }
+        }
+        throw Builtin.IntegerOverflowException();
+    }
+
+    public operator i128 noexcept = {
+        let trunc := this.Truncate;
+        let high := i64(trunc._hi);
+        return i128(trunc._flags >= 0 ? high : -high, trunc._lo);
+    }
+
+    public operator u128 = {
+        let trunc := this.Truncate;
+        if trunc._flags >= 0 or trunc == 0 {
+            return u128(trunc._hi, trunc._lo);
+        }
+        throw Builtin.IntegerOverflowException();
+    }
+
+    public operator f16 noexcept => (this as f64) as f16;
+    public operator f32 noexcept => (this as f64) as f32;
+
+    public operator f64 noexcept
+    {
+        // 2^64
+        const multiplier64 :== 1.8446744073709552e+19;
+        let f := (f64(this._lo) + f64(this._hi) * multiplier64) / FloatPowers10[this.Scale as u32];
+        return _flags >= 0 ? f : -f;
+    }
+
+    public operator f128 noexcept
+    {
+        // 2^64
+        const multiplier64 :== f128(u64.MaxValue) + 1;
+        let f := (f128(this._lo) + f128(this._hi) * multiplier64) / FloatPowers10[this.Scale as u32];
+        return _flags >= 0 ? f : -f;
+    }
+    
+    public IsNegative: bool ==> _flags < 0;
+
+    public operator+: () -> self noexcept ==> this;
+    public operator-: () -> self noexcept ==> self(this._lo, this._hi, this._flags ^ SignMask);
+
+    public operator+: (other: self) -> self => AddSub(other, false);
+
+    public mut operator+=: (other: self) -> ref self => this = this + other;
+    
+    @Commutative
+    public mut operator++: () -> ref self => this = this + 1;
+
+    public operator-: (other: self) -> self => AddSub(other, true);
+
+    public mut operator-=: (other: self) -> ref self => this = this - other;
+    
+    @Commutative
+    public mut operator--: () -> ref self => this = this - 1;
+
+    public operator*: (other: self) -> self => Mul(other);
+
+    public mut operator*=: (other: self) -> ref self => this = this * other;
+
+    public operator/: (other: self) -> self => Div(other);
+
+    public mut operator/=: (other: self) -> ref self => this = this / other;
+
+    public operator%: (other: self) -> self => Mod(other);
+
+    public mut operator%=: (other: self) -> ref self => this = this % other;
+
+    public operator==: (other: self) -> bool noexcept 
+        => (this <=> other) == 0;
+
+    public operator<=>: (other: self) -> i32 noexcept
+    {
+        if (other._lo | other._hi) == 0u {
+            if (_lo | _hi) == 0u {
+                return 0;
+            }
+            return (_flags >> 31) | 1;
+        }
+        if (_lo | _hi) == 0u {
+            return -((other._flags >> 31) | 1);
+        }
+        let sign := (_flags >> 31) -% (other._flags >> 31);
+        if sign != 0 {
+            return sign;
+        }
+        return CmpSub(other);
+    }
+
+    private AddSub: (other: self, sign: bool) -> self
+    {
+        low := _lo;
+        high := _hi;
+        flags := _flags.NarrowToUInt32();
+        otherFlags := other._flags.NarrowToUInt32();
+
+        let xorflags := otherFlags ^ flags;
+        sign ^= (xorflags & SignMask) != 0;
+
+        // process negative result
+        flipSign := () {
+            flags ^= SignMask;
+            high = ~high;
+            low = (-low.NarrowToInt64()).NarrowToUInt64();
+            if low == 0 {
+                high++%;
+            }
+
+            return self(low, high, flags.NarrowToInt32());
+        };
+
+        // process addition carried above 96 bits
+        alignedScale := () {
+            if (flags & ScaleMask) == 0 {
+                throw Builtin.DecimalOverflowException();
+            }
+
+            flags -%= 1 << ScaleShift;
+
+            const divisor :== 10u;
+            num := u64(high) +% (1u64 << 32);
+            high = (num \ divisor).NarrowToUInt32();
+            num = ((num -% high *% divisor) << 32) +% (low >> 32);
+            div := (num \ divisor).NarrowToUInt32();
+            num = ((num -% high *% divisor) << 32) +% low.NarrowToUInt32();
+            low = div;
+            low <<= 32;
+            div = (num \ divisor).NarrowToUInt32();
+            low +%= div;
+            div = num.NarrowToUInt32() -% div *% divisor;
+
+            if div >= 5 and (div > 5 or (low & 1u) != 0) {
+                if ++%low == 0 {
+                    high++%;
+                }
+            }
+
+            return self(low, high, flags.NarrowToInt32());
+        };
+
+        alignedAdd := () {
+            let low1 := low;
+            let high1 := high;
+            if sign {
+                low = low1 -% other._lo;
+                high = high1 -% other._hi;
+                if low > low1 {
+                    high--%;
+                    if high >= high1 {
+                        return flipSign();
+                    }
+                } else if high > high1 {
+                    return flipSign();
+                }
+            } else {
+                low = low1 +% other._lo;
+                high = high1 +% other._hi;
+                if low < low1 {
+                    high++%;
+                    if high <= high1 {
+                        return alignedScale();
+                    }
+                } else if high < high1 {
+                    return alignedScale();
+                }
+            }
+            return self(low, high, flags.NarrowToInt32());
+        };
+
+        // scale factors are equal
+        if (xorflags & ScaleMask) == 0 {
+            return alignedAdd();
+        }
+
+        let flags1 := flags;
+        flags = (otherFlags & ScaleMask) | (flags & SignMask);
+        scale := (flags -% flags1).NarrowToInt32() >> ScaleShift;
+
+        if scale < 0 {
+            // need swap operands
+            scale = -scale;
+            flags = flags1;
+            if sign {
+                flags ^= SignMask;
+            }
+            low = other._lo;
+            high = other._hi;
+            other = this;
+            otherFlags = other._flags.NarrowToUInt32();
+        }
+
+        power: u32;
+        tmp64, tmpLow: u64;
+
+        if high == 0 {
+            if low <= u32.MaxValue {
+                // 0 + y = y
+                if u32(low) == 0 {
+                    signFlags := flags & SignMask;
+                    if sign {
+                        signFlags ^= SignMask;
+                    }
+
+                    result := other;
+                    result._flags = ((otherFlags & ScaleMask) | signFlags).NarrowToInt32();
+                    return result;
+                }
+
+                do {
+                    if scale <= MaxScaleInt32 {
+                        low = u64(low.NarrowToUInt32()) *% Int32Powers10[scale];
+                        return alignedAdd();
+                    }
+                    scale -= MaxScaleInt32;
+                    low = u64(low.NarrowToUInt32()) *% TenToPowerNine;
+                } while low <= u32.MaxValue;
+            }
+
+            do {
+                power = TenToPowerNine;
+                if scale < MaxScaleInt32 {
+                    power = Int32Powers10[scale];
+                }
+                tmpLow = u64(low.NarrowToUInt32()) *% power;
+                tmp64 = (low >> 32) *% power +% (tmpLow >> 32);
+                low = u64(tmpLow.NarrowToUInt32()) +% (tmp64 << 32);
+                high = u32(tmp64 >> 32);
+                if (scale -= MaxScaleInt32) <= 0 {
+                    return alignedAdd();
+                }
+            } while high == 0;
+        }
+
+        for {
+            power = TenToPowerNine;
+            if scale < MaxScaleInt32 {
+                power = Int32Powers10[scale];
+            }
+            tmpLow = u64(low.NarrowToUInt32()) *% power;
+            tmp64 = (low >> 32) *% power +% (tmpLow >> 32);
+            low = u64(tmpLow.NarrowToUInt32()) +% (tmp64 << 32);
+            tmp64 >>= 32;
+            tmp64 +%= u64(high) *% power;
+            
+            scale -= MaxScaleInt32;
+            if (tmp64 > u32.MaxValue)
+                break;
+
+            high = tmp64.NarrowToUInt32();
+            if scale <= 0 {
+                return alignedAdd();
+            }
+        }
+
+        buf: Buf24;
+        buf.Low64 = low;
+        buf.Mid64 = tmp64;
+        hiProd := 3u;
+
+        while scale > 0 {
+            power = TenToPowerNine;
+            if scale < MaxScaleInt32 {
+                power = Int32Powers10[scale];
+            }
+            tmp64 = 0u;
+            unsafe {
+                numMemory := UnsafePointerCast<u32>(buf&);
+                cur := 0u;
+                for {
+                    assert cur < Buf24.LENGTH;
+                    tmp64 +%= u64(numMemory[cur]) *% power;
+                    numMemory[cur] = tmp64.NarrowToUInt32();
+                    cur++%;
+                    tmp64 >>= 32;
+
+                    if (cur > hiProd)
+                        break;
+                }
+
+                if tmp64.NarrowToUInt32() != 0 {
+                    assert hiProd + 1 < Buf24.LENGTH;
+                    numMemory[++%hiProd] = tmp64 as u32;
+                }
+            }
+
+            scale -= MaxScaleInt32;
+        }
+
+        tmp64 = buf.Low64;
+        low = other._lo;
+        tmpHi := buf.DWords.u2;
+        high = other._hi;
+
+        noCarry := () {
+            buf.Low64 = low;
+            buf.DWords.u2 = high;
+            unsafe {
+                scale = ScaleResult(buf&, hiProd, (flags >> ScaleShift).NarrowToUInt8());
+                flags = (flags & (~ScaleMask)) | (u32(scale) << ScaleShift);
+            }
+            low = buf.Low64;
+            high = buf.DWords.u2;
+            return self(low, high, flags.NarrowToInt32());
+        };
+
+        if sign {
+            // subtraction
+
+            low = tmp64 -% low;
+            high = tmpHi -% high;
+
+            if low > tmp64 {
+                high--%;
+                if high < tmpHi {
+                    return noCarry();
+                }
+            } else if high <= tmpHi {
+                return noCarry();
+            }
+
+            unsafe {
+                number := UnsafePointerCast<u32>(buf&);
+                cur := 3u;
+                do {
+                    assert cur < Buf24.LENGTH;
+                } while number[cur++]--% == 0u;
+                assert hiProd < Buf24.LENGTH;
+                if number[hiProd] == 0u and --hiProd <= 2u {
+                    return self(low, high, flags.NarrowToInt32());
+                }
+            }
+        } else {
+            // add
+            low +%= tmp64;
+            high +%= tmpHi;
+
+            if low < tmp64 {
+                high++%;
+                if high > tmpHi {
+                    return noCarry();
+                }
+            } else if high >= tmpHi {
+                return noCarry();
+            }
+
+            unsafe {
+                number := UnsafePointerCast<u32>(buf&);
+                cur := 3u;
+                while ++number[cur++] == 0u {
+                    assert cur < Buf24.LENGTH;
+                    if hiProd < cur {
+                        number[cur] = 1u;
+                        hiProd = cur;
+                        break;
+                    }
+                }
+            }
+        }
+
+        return noCarry();
+    }
+
+    private Mul: (other: self) -> self
+    {
+        flags := _flags.NarrowToUInt32();
+        otherFlags := other._flags.NarrowToUInt32();
+
+        scale: i32 = (flags +% otherFlags >> ScaleShift).NarrowToUInt8();
+        tmp: u64;
+        hiProd: u32;
+        buf: Buf24;
+
+        skipScan := () {
+            unsafe {
+                if hiProd > 2u or scale > SCALE_MAX {
+                    scale = ScaleResult(buf&, hiProd, scale);
+                }
+
+                return self(buf.Low64, buf.DWords.u2, 
+                    (((otherFlags ^ flags) & SignMask) | (u32(scale) << ScaleShift)).NarrowToInt32());
+            }
+        };
+
+        if (_hi | (_lo >> 32)) == 0u {
+            // upper 64 bits are zero
+            if (other._hi | (other._lo >> 32)) == 0u {
+                low64 := u64(_lo.NarrowToUInt32()) *% other._lo.NarrowToUInt32();
+                // huge scale
+                if scale > SCALE_MAX {
+                    // scale is too large, return 0
+                    if scale > SCALE_MAX + MaxScaleInt64 {
+                        return self();
+                    }
+
+                    scale -= SCALE_MAX + 1;
+                    power := Int64Powers10[scale as usize];
+                    tmp = low64 \ power;
+
+                    let remainder := low64 -% tmp *% power;
+                    low64 = tmp;
+                    power >>= 1;
+                    if remainder >= power and (remainder > power or (low64.NarrowToUInt32() & 1u) > 0) {
+                        low64++%;
+                    }
+                    scale = SCALE_MAX;
+                }
+
+                return self(low64, 0u, (((otherFlags ^ flags) & SignMask) | (u32(scale) << ScaleShift)).NarrowToInt32());
+            } else {
+                // lhs is 32 bits
+                tmp = u64(_lo.NarrowToUInt32()) *% other._lo.NarrowToUInt32();
+                buf.DWords.u0 = tmp.NarrowToUInt32();
+                tmp = u64(_lo.NarrowToUInt32()) *% (other._lo >> 32) +% (tmp >> 32);
+                buf.DWords.u1 = tmp.NarrowToUInt32();
+                tmp >>= 32;
+
+                if other._hi != 0u {
+                    tmp +%= u64(_lo.NarrowToUInt32()) *% other._hi;
+                    if tmp > u32.MaxValue {
+                        buf.Mid64 = tmp;
+                        hiProd = 3u;
+                        return skipScan();
+                    }
+                }
+                buf.DWords.u2 = tmp.NarrowToUInt32();
+                hiProd = 2u;
+            }
+        } else if (other._hi | (other._lo >> 32)) == 0u {
+            // rhs is 32 bits
+            tmp = u64(other._lo.NarrowToUInt32()) *% _lo.NarrowToUInt32();
+            buf.DWords.u0 = tmp.NarrowToUInt32();
+            tmp = u64(other._lo.NarrowToUInt32()) *% (_lo >> 32) +% (tmp >> 32);
+            buf.DWords.u1 = tmp.NarrowToUInt32();
+            tmp >>= 32;
+
+            if _hi != 0u {
+                tmp +%= u64(other._lo.NarrowToUInt32()) *% _hi;
+                if tmp > u32.MaxValue {
+                    buf.Mid64 = tmp;
+                    hiProd = 3u;
+                    return skipScan();
+                }
+            }
+            buf.DWords.u2 = tmp.NarrowToUInt32();
+            hiProd = 2u;
+        } else {   
+            // both operands are wide
+            tmp = u64(_lo.NarrowToUInt32()) *% other._lo.NarrowToUInt32();
+            buf.DWords.u0 = tmp.NarrowToUInt32();
+            tmp2 := u64(_lo.NarrowToUInt32()) *% (other._lo >> 32) +% (tmp >> 32);
+            tmp = u64(_lo >> 32) *% other._lo.NarrowToUInt32();
+            tmp +%= tmp2;
+            buf.DWords.u1 = tmp.NarrowToUInt32();
+            if tmp < tmp2 {
+                tmp2 = (tmp >> 32) | (1u64 << 32);
+            } else {
+                tmp2 = tmp >> 32;
+            }
+
+            tmp = u64(_lo >> 32) *% (other._lo >> 32) +% tmp2;
+            if (_hi | other._hi) > 0u {
+                tmp2 = u64(_lo.NarrowToUInt32()) *% other._hi;
+                tmp +%= tmp2;
+                tmp3 := 0u;
+                if tmp < tmp2 {
+                    tmp3 = 1u;
+                }
+
+                tmp2 = u64(_hi) *% other._lo.NarrowToUInt32();
+                tmp +%= tmp2;
+                buf.DWords.u2 = tmp.NarrowToUInt32();
+                if tmp < tmp2 {
+                    tmp3++;
+                }
+                tmp2 = (u64(tmp3) << 32) | (tmp >> 32);
+                tmp = u64(_lo >> 32) *% other._hi;
+                tmp +%= tmp2;
+                tmp3 = 0u;
+                if tmp < tmp2 {
+                    tmp3 = 1u;
+                }
+
+                tmp2 = u64(_hi) *% (other._lo >> 32);
+                tmp +%= tmp2;
+                buf.DWords.u3 = tmp.NarrowToUInt32();
+                if tmp < tmp2 {
+                    tmp3++;
+                }
+                tmp = (u64(tmp3) << 32) | (tmp >> 32);
+
+                buf.High64 = u64(_hi) *% other._hi +% tmp;
+                hiProd = 5u;
+            } else {
+                buf.Mid64 = tmp;
+                hiProd = 3u;
+            }
+        }
+
+        unsafe {
+            product := UnsafePointerCast<u32>(buf&);
+            while product[hiProd.NarrowToInt32()] == 0u {
+                if hiProd == 0u {
+                    return self();
+                }
+                hiProd--;
+            }
+            return skipScan();
+        }
+    }
+
+    private Div: (other: self) -> self
+    {
+        flags := _flags.NarrowToUInt32();
+        otherFlags := other._flags.NarrowToUInt32();
+        buf: Buf12;
+        power: u32;
+        currentScale: i32;
+        scale: i32 = (flags -% otherFlags >> ScaleShift).NarrowToInt8();
+        unscale := false;
+        tmp: u32;
+
+        unsafe {
+            add32to96 := (val: u32) -> bool {
+                buf.Low64 = buf.Low64 +% val;
+                if buf.Low64 < val {
+                    return ++%buf.DWords.u2 != 0u;
+                }
+                return true;
+            };
+
+            doUnscale := () {
+                if unscale {
+                    low := buf.DWords.u0;
+                    high: u64 = buf.High64;
+                    Unscale(&low, &high, &scale);
+                    return self(u64(low) | (u64(high.NarrowToUInt32()) << 32), (high >> 32).NarrowToUInt32(),
+                        (((flags ^ otherFlags) & SignMask) | (scale.NarrowToUInt32() << ScaleShift)).NarrowToInt32());
+                } else {
+                    return self(buf.Low64, buf.DWords.u2,
+                        (((flags ^ otherFlags) & SignMask) | (scale.NarrowToUInt32() << ScaleShift)).NarrowToInt32());
+                }
+            };
+
+            overflowUnscale := (sticky: bool) {
+                if --scale < 0 {
+                    throw Builtin.DecimalOverflowException();
+                }
+
+                assert buf.DWords.u2 == 0u;
+
+                const HIGH_BIT :== 1u64 << 32;
+                buf.DWords.u2 = u32(HIGH_BIT \ 10u);
+                tmp2 := ((HIGH_BIT % 10u) << 32) +% buf.DWords.u1;
+                div := (tmp2 \ 10u).NarrowToUInt32();
+                buf.DWords.u1 = div;
+                tmp2 = ((tmp2 -% div *% 10u) << 32) +% buf.DWords.u0;
+                div = (tmp2 \ 10u).NarrowToUInt32();
+                buf.DWords.u0 = div;
+                let remainder := (tmp2 -% div *% 10u).NarrowToUInt32();
+                if remainder > 5u or remainder == 5u and (sticky or (buf.DWords.u0 & 1u) != 0u) {
+                    add32to96(1u);
+                }
+
+                return scale;
+            };
+
+            increaseScale := (ref buf: Buf12) {
+                tmp2 := u64(buf.DWords.u0) *% power;
+                buf.DWords.u0 = tmp2.NarrowToUInt32();
+                tmp2 >>= 32;
+                tmp2 +%= u64(buf.DWords.u1) *% power;
+                buf.DWords.u1 = tmp2.NarrowToUInt32();
+                tmp2 >>= 32;
+                tmp2 +%= u64(buf.DWords.u2) *% power;
+                buf.DWords.u2 = tmp2.NarrowToUInt32();
+                return u32(tmp2 >> 32);
+            };
+
+            increaseScale64 := (ref buf: Buf12) {
+                tmp2 := u64(buf.DWords.u0) *% power;
+                buf.DWords.u0 = tmp2.NarrowToUInt32();
+                tmp2 >>= 32;
+                tmp2 +%= u64(buf.DWords.u1) *% power;
+                buf.High64 = tmp2;
+            };
+
+            roundUp := () {
+                buf.Low64 = buf.Low64 +% 1u;
+                if buf.Low64 == 0u and ++%buf.DWords.u2 == 0u {
+                    scale = overflowUnscale(true);
+                }
+                return doUnscale();
+            };
+
+            if (other._hi | (other._lo >> 32)) == 0u {
+                // divisor is 32 bits
+                let den := other._lo.NarrowToUInt32();
+                if den == 0u {
+                    throw Builtin.DivisionByZeroException();
+                }
+
+                buf.Low64 = _lo;
+                buf.DWords.u2 = _hi;
+                remainder := () {
+                    tmp2, div: u64;
+                    if buf.DWords.u2 != 0u {
+                        tmp2 = buf.High64;
+                        div = tmp2 \ den;
+                        buf.High64 = div;
+                        tmp2 = ((tmp2 -% div.NarrowToUInt32() *% den) << 32) | buf.DWords.u0;
+                        if tmp2 == 0u {
+                            return 0u;
+                        }
+
+                        let div32 := (tmp2 \ den).NarrowToUInt32();
+                        buf.DWords.u0 = div32;
+                        return tmp2.NarrowToUInt32() -% div32 *% den;
+                    }
+
+                    tmp2 = buf.Low64;
+                    if tmp2 == 0u {
+                        return 0u;
+                    }
+                    div = tmp2 \ den;
+                    buf.Low64 = div;
+                    return (tmp2 -% div *% den).NarrowToUInt32();
+                }();
+
+                for {
+                    haveScale := false;
+                    if remainder == 0u {
+                        if scale < 0 {
+                            currentScale = 9.Min(-scale);
+                            haveScale = true;
+                        } else
+                            break;
+                    }
+
+                    if not haveScale {
+                        unscale = true;
+                        if (scale != SCALE_MAX)
+                            currentScale = SearchScale(&buf, scale);
+                        if scale == SCALE_MAX or currentScale == 0 {
+                            tmp = remainder << 1;
+                            if tmp < remainder or tmp >= den and (tmp > den or (buf.DWords.u0 & 1u) != 0u) {
+                                return roundUp();
+                            }
+                            break;
+                        }
+                    }
+
+                    power = Int32Powers10[currentScale as usize];
+                    scale += currentScale;
+
+                    if increaseScale(&buf) != 0 {
+                        throw Builtin.DecimalOverflowException();
+                    }
+
+                    let num := u64(remainder) *% power;
+                    let div := (num \ den).NarrowToUInt32();
+                    remainder = num.NarrowToUInt32() -% div *% den;
+
+                    if not add32to96(div) {
+                        scale = overflowUnscale(remainder != 0u);
+                        break;
+                    }
+                }
+            } else {
+                // divisor > 32 bits
+                tmp = other._hi;
+                if tmp == 0u {
+                    tmp = u32(other._lo >> 32);
+                }
+
+                currentScale = i32(tmp.LeadingZeroCount);
+                bufRem: Buf16;
+                bufRem.Low64 = _lo << currentScale;
+                bufRem.High64 = ((_lo >> 32) + (u64(_hi) << 32)) >> (32 - currentScale);
+
+                let divisor := other._lo << currentScale;
+                if other._hi == 0u {
+                    // divisor is 64 bits
+                    buf.DWords.u2 = 0u;
+                    buf.DWords.u1 = Div96By64(&(UnsafePointerCast<Buf12>(bufRem.DWords.u1&)*), divisor);
+                    buf.DWords.u0 = Div96By64(&(UnsafePointerCast<Buf12>(bufRem&)*), divisor);
+                    haveScale := false;
+
+                    for {
+                        if bufRem.Low64 == 0u {
+                            if scale < 0 {
+                                currentScale = 9.Min(-scale);
+                                haveScale = true;
+                            } else
+                                break;
+                        }
+
+                        if not haveScale {
+                            unscale = true;
+                            if (scale != SCALE_MAX)
+                                currentScale = SearchScale(&buf, scale);
+                            if scale == SCALE_MAX or currentScale == 0 {
+                                tmp64 := bufRem.Low64;
+                                if tmp64.NarrowToInt64() < 0 or (tmp64 <<= 1) > divisor
+                                or (tmp64 == divisor and (buf.DWords.u0 & 1u) != 0u) {
+                                    return roundUp();
+                                }
+                                break;
+                            }
+                        }
+
+                        power = Int32Powers10[currentScale as usize];
+                        scale += currentScale;
+                        if increaseScale(&buf) != 0 {
+                            throw Builtin.DecimalOverflowException();
+                        }
+
+                        increaseScale64(&(UnsafePointerCast<Buf12>(bufRem&)*));
+                        tmp = Div96By64(&(UnsafePointerCast<Buf12>(bufRem&)*), divisor);
+                        if not add32to96(tmp) {
+                            scale = overflowUnscale(bufRem.Low64 != 0u);
+                            break;
+                        }
+                    }
+                } else {
+                    // divisor is 96 bits
+                    bufDivisor: Buf12;
+                    bufDivisor.Low64 = divisor;
+                    bufDivisor.DWords.u2 = (((other._lo >> 32) +% (u64(other._hi) << 32)) >> (32 - currentScale)).NarrowToUInt32();
+                    buf.Low64 = Div128By96(&bufRem, &bufDivisor);
+                    buf.DWords.u2 = 0u;
+                    haveScale := false;
+
+                    for {
+                        if (bufRem.Low64 | bufRem.DWords.u2) == 0u {
+                            if scale < 0 {
+                                currentScale = 9.Min(-scale);
+                                haveScale = true;
+                            } else
+                                break;
+                        }
+
+                        if not haveScale {
+                            unscale = true;
+                            if (scale != SCALE_MAX)
+                                currentScale = SearchScale(&buf, scale);
+                            if scale == SCALE_MAX or currentScale == 0 {
+                                if bufRem.DWords.u2.NarrowToInt32() < 0 {
+                                    return roundUp();
+                                }
+
+                                tmp = bufRem.DWords.u1 >> 31;
+                                bufRem.Low64 <<= 1;
+                                bufRem.DWords.u2 = (bufRem.DWords.u2 << 1) +% tmp;
+
+                                if bufRem.DWords.u2 > bufDivisor.DWords.u2 or bufRem.DWords.u2 == bufDivisor.DWords.u2
+                                and (bufRem.Low64 > bufDivisor.Low64 or bufRem.Low64 == bufDivisor.Low64
+                                and (buf.DWords.u0 & 1u) != 0u) {
+                                    return roundUp();
+                                }
+                                break;
+                            }
+                        }
+
+                        power = Int32Powers10[currentScale as usize];
+                        scale += currentScale;
+                        if increaseScale(&buf) != 0 {
+                            throw Builtin.DecimalOverflowException();
+                        }
+
+                        bufRem.DWords.u3 = increaseScale(&(UnsafePointerCast<Buf12>(bufRem&)*));
+                        tmp = Div128By96(&bufRem, &bufDivisor);
+                        if not add32to96(tmp) {
+                            scale = overflowUnscale((bufRem.Low64 | bufRem.High64) != 0u);
+                            break;
+                        }
+                    }
+                }
+            }
+            return doUnscale();
+        }
+    }
+
+    private Mod: (other: self) -> self
+    {
+        if (other._lo | other._hi) == 0u {
+            throw Builtin.DivisionByZeroException();
+        }
+        if (_lo | _hi) == 0u {
+            return this;
+        }
+
+        flags := _flags.NarrowToUInt32();
+        otherFlags := (other._flags.NarrowToUInt32() & (~SignMask)) | (flags & SignMask);
+        other._flags = otherFlags.NarrowToInt32();
+
+        let cmp := CmpSub(other);
+        // abs(divisor) = abs(dividend)
+        if cmp == 0 {
+            if otherFlags > flags {
+                flags = otherFlags;
+            }
+            return self(0u, 0u, flags.NarrowToInt32());
+        }
+
+        // divisor > dividend
+        if (cmp ^ (flags & SignMask).NarrowToInt32()) < 0 {
+            return this;
+        }
+
+        // divisor < dividend
+        scale: i32 = (flags -% otherFlags >> ScaleShift).NarrowToInt8();
+        if scale > 0 {
+            do {
+                let power := scale >= MaxScaleInt32 ? TenToPowerNine : Int32Powers10[scale as usize];
+                tmp := u64(other._lo.NarrowToUInt32()) *% power;
+                let low := tmp.NarrowToUInt32();
+                tmp >>= 32;
+                tmp +%= ((other._lo >> 32) +% (u64(other._hi) << 32)) *% power;
+                other._lo = (u64(tmp.NarrowToUInt32()) << 32) | low;
+                other._hi = (tmp >> 32).NarrowToUInt32();
+            } while (scale -= MaxScaleInt32) > 0;
+            scale = 0;
+        }
+
+        low := _lo;
+        high := _hi;
+        unsafe {
+            do {
+                if scale < 0 {
+                    flags = otherFlags;
+                    buf: Buf12;
+                    buf.Low64 = low;
+                    buf.DWords.u2 = high;
+
+                    do {
+                        let currentScale := SearchScale(&buf, SCALE_MAX + scale);
+                        if (currentScale == 0)
+                            break;
+
+                        let power := currentScale >= MaxScaleInt32 ? TenToPowerNine : Int32Powers10[currentScale as usize];
+                        scale += currentScale;
+                        tmp := u64(buf.DWords.u0) *% power;
+                        buf.DWords.u0 = tmp.NarrowToUInt32();
+                        tmp >>= 32;
+                        buf.High64 = tmp +% buf.High64 *% power;
+                        if (power != TenToPowerNine)
+                            break;
+                    } while scale < 0;
+
+                    low = buf.Low64;
+                    high = buf.DWords.u2;
+                }
+
+                if high == 0u {
+                    assert other._hi == 0u;
+                    assert scale == 0;
+
+                    low %%= other._lo;
+                    return self(low, 0u, flags.NarrowToInt32());
+                } else if (other._hi | (other._lo >> 32)) == 0u {
+                    let den := other._lo.NarrowToUInt32();
+                    tmp := (u64(high) << 32) | (low >> 32);
+                    tmp = ((tmp %% den) << 32) | low.NarrowToUInt32();
+                    low = tmp %% den;
+                    high = 0u;
+                } else {
+                    tmp := other._hi;
+                    if tmp == 0u {
+                        tmp = u32(other._lo >> 32);
+                    }
+                    let shift := tmp.LeadingZeroCount as i32;
+                    buf: Buf28;
+                    buf.buf24.Low64 = low << shift;
+                    buf.buf24.Mid64 = ((low >> 32) +% (u64(high) << 32)) >> (32 - shift);
+
+                    h := 3u;
+                    while scale < 0 {
+                        let power := scale <= (-MaxScaleInt32) ? TenToPowerNine : Int32Powers10[(-scale) as usize];
+                        ibuf := UnsafePointerCast<u32>(buf&);
+                        tmp64 := u64(buf.buf24.DWords.u0) *% power;
+                        buf.buf24.DWords.u0 = tmp64.NarrowToUInt32();
+                        for i := 1u; i <= h; i++ {
+                            tmp64 >>= 32;
+                            tmp64 +%= u64(ibuf[i]) *% power;
+                            ibuf[i] = tmp64.NarrowToUInt32();
+                        }
+                        if tmp64 > i32.MaxValue {
+                            assert (h + 1) < Buf28.LENGTH;
+
+                            ibuf[++h] = u32(tmp64 >> 32);
+                        }
+                        scale += MaxScaleInt32;
+                    }
+
+                    if other._hi == 0u {
+                        let divisor := other._lo << shift;
+                        if h > 5u {
+                            Div96By64(&(UnsafePointerCast<Buf12>(buf.buf24.DWords.u4&)*), divisor);
+                        }
+                        if h > 4u {
+                            Div96By64(&(UnsafePointerCast<Buf12>(buf.buf24.DWords.u3&)*), divisor);
+                        }
+                        if h > 3u {
+                            Div96By64(&(UnsafePointerCast<Buf12>(buf.buf24.DWords.u2&)*), divisor);
+                        }
+                        Div96By64(&(UnsafePointerCast<Buf12>(buf.buf24.DWords.u1&)*), divisor);
+                        Div96By64(&(UnsafePointerCast<Buf12>(buf&)*), divisor);
+                        low = buf.buf24.Low64 >> shift;
+                        high = 0u;
+                    } else {
+                        bufDivisor: Buf12;
+                        bufDivisor.Low64 = other._lo << shift;
+                        bufDivisor.DWords.u2 = (((other._lo >> 32) +% (u64(other._hi) << 32)) >> (32 - shift)).NarrowToUInt32();
+                        if h > 5u {
+                            Div128By96(&(UnsafePointerCast<Buf16>(buf.buf24.DWords.u3&)*), &bufDivisor);
+                        }
+                        if h > 4u {
+                            Div128By96(&(UnsafePointerCast<Buf16>(buf.buf24.DWords.u2&)*), &bufDivisor);
+                        }
+                        if h > 3u {
+                            Div128By96(&(UnsafePointerCast<Buf16>(buf.buf24.DWords.u1&)*), &bufDivisor);
+                        }
+                        Div128By96(&(UnsafePointerCast<Buf16>(buf&)*), &bufDivisor);
+                        low = (buf.buf24.Low64 >> shift) +% (u64(buf.buf24.DWords.u2) << (32 - shift) << 32);
+                        high = buf.buf24.DWords.u2 >> shift;
+                    }
+
+                    return self(low, high, flags.NarrowToInt32());
+                }
+            } while scale < 0;
+        }
+
+        return self(low, high, flags.NarrowToInt32());
+    }
+
+    private CmpSub: (other: self) -> i32
+    {
+        let flags := other._flags;
+        sign := (flags >> 31) | 1;
+        scale := flags - _flags;
+        low := _lo;
+        high := _hi;
+        low2 := other._lo;
+        high2 := other._hi;
+
+        if scale {
+            scale >>= ScaleShift;
+            if scale < 0 {
+                // swap operands
+                scale = -scale;
+                sign = -sign;
+                
+                let tmp64 := low;
+                low = low2;
+                low2 = tmp64;
+
+                let tmp := high;
+                high = high2;
+                high2 = tmp;
+            }
+
+            do {
+                let power := scale >= MaxScaleInt32 ? TenToPowerNine : Int32Powers10[scale as usize];
+                let tmpLow := u64(low.NarrowToUInt32()) *% power;
+                tmp := ((low >> 32) *% power) +% (tmpLow >> 32);
+                low = u64(tmpLow.NarrowToUInt32()) +% (tmp << 32);
+                tmp >>= 32;
+                tmp +%= u64(high) *% power;
+                if tmp > u32.MaxValue {
+                    return sign;
+                }
+                high = tmp.NarrowToUInt32();
+            } while (scale -= MaxScaleInt32) > 0;
+        }
+
+        let cmpHigh := high -% high2;
+        if cmpHigh {
+            if cmpHigh > high {
+                sign = -sign;
+            }
+            return sign;
+        }
+
+        let cmpLow := low -% low2;
+        if cmpLow == 0u {
+            sign = 0;
+        } else if cmpLow > low {
+            sign = -sign;
+        }
+
+        return sign;
+    }
+
+    internal RoundInternal: (scale: u32, mode: MidpointRounding) -> self noexcept
+    {
+        let copy := this;
+        copy._flags -= i32(scale) << ScaleShift;
+
+        remainder, sticky, power: u32;
+        rounding: {
+            while scale >= MaxScaleInt32 {
+                scale -= MaxScaleInt32;
+
+                const divisor :== TenToPowerNine;
+                n := copy._hi;
+                if n == 0 {
+                    let tmp := copy._lo;
+                    let div := tmp \ divisor;
+                    copy._lo = div;
+                    remainder = (tmp - div * divisor).NarrowToUInt32();
+                } else {
+                    q: u32;
+                    copy._hi = q = n \ divisor;
+                    remainder = n - q * divisor;
+                    n = u32(copy._lo >> 32);
+                    mid, low: u32;
+                    if (n | remainder) != 0 {
+                        mid = q = (((u64(remainder) << 32) | n) \ divisor).NarrowToUInt32();
+                        remainder = n - q * divisor;
+                    }
+                    n = copy._lo.NarrowToUInt32();
+                    if (n | remainder) != 0 {
+                        low = q = (((u64(remainder) << 32) | n) \ divisor).NarrowToUInt32();
+                        remainder = n - q * divisor;
+                    }
+                    copy._lo = (u64(mid) << 32) | low;
+                }
+
+                power = divisor;
+                if scale == 0 {
+                    break rounding;
+                }
+
+                sticky |= remainder;
+            }
+
+            {
+                power = Int32Powers10[scale];
+                n := copy._hi;
+                if n == 0 {
+                    let tmp := copy._lo;
+                    if tmp == 0 {
+                        if (mode <= MidpointRounding.ToZero)
+                            return copy;
+
+                        remainder = 0u;
+                        break rounding;
+                    }
+                    let div := tmp \ power;
+                    copy._lo = div;
+                    remainder = (tmp - div * power).NarrowToUInt32();
+                } else {
+                    q: u32;
+                    copy._hi = q = n \ power;
+                    remainder = n - q * power;
+                    n = u32(copy._lo >> 32);
+                    mid, low: u32;
+                    if (n | remainder) != 0 {
+                        mid = q = (((u64(remainder) << 32) | n) \ power).NarrowToUInt32();
+                        remainder = n - q * power;
+                    }
+                    n = copy._lo.NarrowToUInt32();
+                    if (n | remainder) != 0 {
+                        low = q = (((u64(remainder) << 32) | n) \ power).NarrowToUInt32();
+                        remainder = n - q * power;
+                    }
+                    copy._lo = (u64(mid) << 32) | low;
+                }
+            }
+        }
+
+        switch mode {
+            ::ToZero => return copy;
+            ::ToEven => {
+                remainder <<= 1;
+                if (sticky | copy._lo & 1u) != 0 {
+                    remainder++;
+                }
+                if (power >= remainder)
+                    return copy;
+            }
+            ::AwayFromZero => {
+                remainder <<= 1;
+                if (power > remainder)
+                    return copy;
+            }
+            ::ToNegativeInfinity => {
+                if (not copy.IsNegative or (remainder | sticky) == 0)
+                    return copy;
+            }
+            _ => {
+                assert mode == MidpointRounding.ToPositiveInfinity;
+                if (copy.IsNegative or (remainder | sticky) == 0)
+                    return copy;
+            }
+        }
+
+        if ++copy._lo == 0 {
+            copy._hi++;
+        }
+
+        return copy;
+    }
+
+    public GetBits: () -> u32[4] ==> [this._lo.NarrowToUInt32(), u32(this._lo >> 32), this._hi, this._flags.NarrowToUInt32()];
+}
+
+public extension decimal: IMinMaxValue {
+    static MinValue: self ==> decimal(-79228162514264337593543950335);     
+    static MaxValue: self ==> decimal(+79228162514264337593543950335);
+}
+
+protected {
+    const ScaleMask :== 0x00FF0000;
+    const ScaleShift :== 16;
+    const SignMask :== i32.MinValue;
+}
+
+public extension decimal {
+    // Equals to dynamic object
+    operator==*: (in obj: object?) -> bool
+    {
+        if obj is self {
+            if this == obj {
+                return true;
+            }
+            //return this.IsNaN && obj.IsNaN;
+        }
+        
+        return false;
+    }
+
+    Bits: u32[4] ==> this.GetBits();
+
+    HashCode: u64
+    {
+        let bits := this.Bits;
+        if (bits[0u] | bits[1u] | bits[2u]) == 0u {
+            return 0u;
+        }
+
+        flags := bits[3u];
+        if (flags & ScaleMask) == 0u or (bits[0u] & 1u) != 0u {
+            return ((u64(bits[1u]) << 32) | bits[0u]) ^ ((u64(flags) << 32) | u64(bits[2u]));
+        }
+
+        scale: i32 = (flags >> ScaleShift).NarrowToInt8();
+        low := bits[0u];
+        high := (u64(bits[2u]) << 32) | bits[1u];
+        Unscale(&low, &high, &scale);
+        flags = (flags & (~ScaleMask)) | (scale.NarrowToUInt32() << ScaleShift);
+
+        return ((u64(high.NarrowToUInt32()) << 32) | low) ^ ((u64(flags) << 32) | (high >> 32));
+    }
+
+    // Average between two numbers
+    // Returns NaN if any argument is NaN or combination of +Inf / -Inf
+    Midpoint: (rhs: self) -> self noexcept =
+    {
+        const riskValue :== decimal(39614081257132168796771975167);
+            
+        if this.Abs <= riskValue and rhs.Abs <= riskValue {
+            return (this + rhs) / 2;
+        } else {
+            return (this / 2) + (rhs / 2);
+        }
+    }
+
+    // Returns true if this is a multiple of rhs
+    IsMultipleOf: (rhs: self) -> bool noexcept =
+    {
+        if rhs == 0 {
+            return this == 0;
+        }
+
+        if rhs == -1 {
+            return true;
+        }
+
+        return this % rhs == 0;
+    }
+}
+
+// Compare to dynamic object
+public extension decimal: IAbstractComparable {
+    operator<=>*: (in obj: object?) -> i32
+    {
+        if obj is self {
+            return this <=> obj;
+        }
+        if obj is not null {
+            //InvalidArgumentException
+            throw Builtin.InvalidOperationException();
+        }
+        return 1;
+    }
+}
+
+// Conversions
+public extension decimal: IConvertible {
+    ToBoolean: () -> bool noexcept => this != 0;
+    ToInt8: () -> i8 => this as i8;
+    ToUInt8: () -> u8 => this as u8;
+    ToInt16: () -> i16 => this as i16;
+    ToUInt16: () -> u16 => this as u16;
+    ToInt32: () -> i32 => this as i32;
+    ToUInt32: () -> u32 => this as u32;
+    ToInt64: () -> i64 => this as i64;
+    ToUInt64: () -> u64 => this as u64;
+    ToInt128: () -> i128 => this as i128;
+    ToUInt128: () -> u128 => this as u128;
+    ToIsize: () -> isize => this as isize;
+    ToUsize: () -> usize => this as usize;
+    ToFloat32: () -> f32 => this as f32;
+    ToFloat64: () -> f64 => this as f64;
+    ToByte: () -> byte => this as u8;
+    ToChar: () -> char => this as u16;
+    //ToString: () -> string;
+    //ToDateTime: () -> DateTime;
+}
+
+public extension decimal: IDivisibleArithmetic {
+    // integer division with remainder
+    operator/%: <T> (rhs: T) -> (self, self) ==
+    {
+        return (this / decimal(rhs), this % decimal(rhs));
+    }
+    // division with rounding to nearest integer
+    operator/~: <T> (rhs: T) -> self ==> (this / rhs).Round;
+    // rounding division and assign
+    mut operator/~=: (rhs) -> ref self ==> this = this /~ rhs;
+    // division with rounding down (floor division)
+    operator/<: <T> (rhs: T) -> self ==> (this / rhs).Floor;
+    // floor division and assign
+    mut operator/<=: (rhs) -> ref self ==> this = this /< rhs;
+    // division with rounding up (ceil division)
+    operator/>: <T> (rhs: T) -> self ==> (this / rhs).Ceil;
+    // ceil division and assign
+    mut operator/>=: (rhs) -> ref self ==> this = this /> rhs;
+}
+
+// integer exponentiation
+public extension decimal: ISignedIntegerPowerArithmetic {
+    // Raises this to the power of integer exp, using exponentiation by squaring
+    operator^^: (exp: i32) -> self ==
+    {
+        @Unlikely
+        if exp == 0 {
+            return self.One;
+        }
+
+        if exp < 0 {
+            return self.One / this ^^ (-exp);
+        }
+
+        base := this;
+        result := self.One;
+
+        if consteval {
+            while exp > 1 {
+                if (exp & 1) == 1 {
+                    result *= base;
+                }
+                exp \= 2;
+                base *= base;
+            }
+            return result * base;
+        } else {
+            for {
+                if (exp & 1) == 1 {
+                    result *= base;
+                    if (exp == 1) 
+                        return result;
+                }
+                exp \= 2;
+                base *= base;
+            }
+        }
+    }
+
+    mut operator^^=: (exp: i32) -> ref self ==> this = this ^^ exp;
+}
+
+public extension decimal: INumberBase {
+    static One: self ==> decimal(1);
+    static Zero: self ==> decimal();
+    static Radix: i32 ==> 10;
+
+    Abs: self =
+    {
+        val := this;
+        if val < 0 {
+            val = -val;
+        }
+        return val;
+    }
+    IsCanonical: bool =
+    {
+        let scale := this.Scale;
+        if scale == 0 {
+            return true;
+        }
+
+        let bits := this.Bits;
+        let high := bits[2u];
+        let low64 := (u64(bits[1u]) << 32) | bits[0u];
+        if high == 0u {
+            return not low64.IsMultipleOf(10u);
+        }
+
+        return not u128(high, low64).IsMultipleOf(10u);
+    }
+    IsComplexNumber: bool ==> false;
+    IsEvenInteger: bool =
+    {
+        let truncated := this.Truncate;
+        return this == truncated and this.Bits[0u].IsEvenInteger;
+    }
+    IsFinite: bool ==> true;
+    IsImaginaryNumber: bool ==> false;
+    IsInfinity: bool ==> false;
+    IsInteger: bool => this == this.Truncate;
+    IsNaN: bool ==> false;
+    IsNegative: bool ==> this.Bits[3u].NarrowToInt32() < 0;
+    IsNegativeInfinity: bool ==> false;
+    IsNormal: bool ==> this != 0;
+    IsOddInteger: bool =
+    {
+        let truncated := this.Truncate;
+        return this == truncated and this.Bits[0u].IsOddInteger;
+    }
+    IsPositive: bool => this.Bits[3u].NarrowToInt32() >= 0;
+    IsPositiveInfinity: bool ==> false;
+    IsRealNumber: bool ==> true;
+    IsSubnormal: bool ==> false;
+    IsZero: bool => this == 0;
+
+    MaxMagnitude: (rhs: self) -> self noexcept =
+    {
+        ax := this.Abs;
+        ay := rhs.Abs;
+
+        if ax > ay
+        {
+            return this;
+        }
+
+        if ax == ay
+        {
+            return this.IsNegative ? rhs : this;
+        }
+
+        return rhs;
+    }
+
+    MaxMagnitudeNumber: (rhs: self) -> self noexcept => this.MaxMagnitude(rhs);
+
+    MinMagnitude: (rhs: self) -> self noexcept =
+    {
+        ax := this.Abs;
+        ay := rhs.Abs;
+
+        if ax < ay
+        {
+            return this;
+        }
+
+        if ax == ay
+        {
+            return this.IsNegative ? this : rhs;
+        }
+
+        return rhs;
+    }
+
+    MinMagnitudeNumber: (rhs: self) -> self noexcept => this.MinMagnitude(rhs);
+
+    Parse: (input: str) -> self
+    {
+        return 0;//TODO
+    }
+
+    TryParse: (input: str) -> self? noexcept
+    {
+        return 0.0m;
+    }
+
+    // Narrow conversions
+    NarrowToInt8: () -> i8 noexcept ==> UnsafeCast<i8>(this as f64);
+    NarrowToUInt8: () -> u8 noexcept ==> UnsafeCast<u8>(this as f64);
+    NarrowToInt16: () -> i16 noexcept ==> UnsafeCast<i16>(this as f64);
+    NarrowToUInt16: () -> u16 noexcept ==> UnsafeCast<u16>(this as f64);
+    NarrowToInt32: () -> i32 noexcept ==> UnsafeCast<i32>(this as f64);
+    NarrowToUInt32: () -> u32 noexcept ==> UnsafeCast<u32>(this as f64);
+    NarrowToInt64: () -> i64 noexcept ==> UnsafeCast<i64>(this as f64);
+    NarrowToUInt64: () -> u64 noexcept ==> UnsafeCast<u64>(this as f64);
+    NarrowToInt128: () -> i128 noexcept ==> UnsafeCast<i128>(this as f64);
+    NarrowToUInt128: () -> u128 noexcept ==> UnsafeCast<u128>(this as f64);
+    NarrowToIsize: () -> isize noexcept ==> UnsafeCast<isize>(this as f64);
+    NarrowToUsize: () -> usize noexcept ==> UnsafeCast<usize>(this as f64);
+}
+
+public extension decimal: ISignedNumber {
+    static MinusOne: self ==> decimal(-1);
+}
+
+public extension decimal: INumber {
+    Sign: i32 =
+    {
+        let bits := this.Bits;
+        return (bits[0u] | bits[1u] | bits[2u]) == 0u ? 0 : (bits[3u].NarrowToInt32() >> 31) | 1;
+    }
+
+    CopySign: (sign: self) -> self noexcept 
+        => self(this, ((this.Bits[3u] &~ SignMask) | (sign.Bits[3u] & SignMask)).NarrowToInt32());
+
+    Max: (rhs: self) -> self noexcept => this >= rhs ? this : rhs;
+    MaxNumber: (rhs: self) -> self noexcept => this.Max(rhs);
+    Min: (rhs: self) -> self noexcept => this < rhs ? this : rhs;
+    MinNumber: (rhs: self) -> self noexcept => this.Min(rhs);
+    Clamp: (min: self, max: self) -> self =
+    {
+        if min > max {
+            throw Builtin.InvalidOperationException();
+        }
+
+        return this < min ? min : this > max ? max : this;
+    }
+}
+
+public extension decimal: IFloatingPointConstants
+{
+    static Pi: self ==> 3.1415926535897932384626433833m;
+    static E: self ==> 2.7182818284590452353602874714m;
+    static Tau: self ==> 6.2831853071795864769252867666m;
+}
+
+public extension decimal: IFloatingPoint {
+    // Extracts the fractional part of number 
+    // (e.g., 0.35 from 15.35; -0.35 from -15.35)
+    FractionalPart: self ==> this - this.Truncate;
+
+    Truncate: self {
+        let scale := this.Scale;
+        if scale != 0 {
+            return this.RoundInternal(scale, MidpointRounding.ToZero);
+        }
+        return this;
+    }
+
+    TruncateToInt32: () -> i32 => this.Truncate as i32;
+    TruncateToInt64: () -> i64 => this.Truncate as i64;
+    TruncateToInt128: () -> i128 => this.Truncate as i128;
+
+    Floor: self {
+        let scale := this.Scale;
+        if scale != 0 {
+            return this.RoundInternal(scale, MidpointRounding.ToNegativeInfinity);
+        }
+        return this;
+    }
+
+    FloorToInt32: () -> i32 => this.Floor as i32;
+    FloorToInt64: () -> i64 => this.Floor as i64;
+    FloorToInt128: () -> i128 => this.Floor as i128;
+
+    Ceil: self {
+        let scale := this.Scale;
+        if scale != 0 {
+            return this.RoundInternal(scale, MidpointRounding.ToPositiveInfinity);
+        }
+        return this;
+    }
+
+    CeilToInt32: () -> i32 => this.Ceil as i32;
+    CeilToInt64: () -> i64 => this.Ceil as i64;
+    CeilToInt128: () -> i128 => this.Ceil as i128;
+
+    Round: self {
+        let scale := this.Scale;
+        if scale != 0 {
+            return this.RoundInternal(scale, MidpointRounding.AwayFromZero);
+        }
+        return this;
+    }
+
+    RoundToInt32: () -> i32 => this.Round as i32;
+    RoundToInt64: () -> i64 => this.Round as i64;
+    RoundToInt128: () -> i128 => this.Round as i128;
+    
+    RoundTiesEven: self {
+        let scale := this.Scale;
+        if scale != 0 {
+            return this.RoundInternal(scale, MidpointRounding.ToEven);
+        }
+        return this;
+    }
+
+    RoundTiesEvenToInt32: () -> i32 => this.RoundTiesEven as i32;
+    RoundTiesEvenToInt64: () -> i64 => this.RoundTiesEven as i64;
+    RoundTiesEvenToInt128: () -> i128 => this.RoundTiesEven as i128;
+
+    Round: (decimals: u32) -> self => this.Round(decimals, MidpointRounding.AwayFromZero);
+    RoundTiesEven: (decimals: u32) -> self => this.Round(decimals, MidpointRounding.ToEven);
+    Round: (mode: MidpointRounding) -> self => this.Round(0u, mode);
+
+    Round: (decimals: u32, mode: MidpointRounding) -> self
+    {
+        const maxDecimals := 28u;
+        if decimals > maxDecimals {
+            throw Builtin.InvalidArgumentException(); //ArgumentOutOfRangeException
+        }
+        let scale := this.Scale - decimals;
+        if scale != 0 {
+            return this.RoundInternal(scale, mode);
+        }
+        return this;
+    }
+
+    ExponentByteCount: u32 ==> sizeof(i8) as u32;
+    ExponentShortestBitLength: u32 ==
+    {
+        return i8.BitWidth - (95i8 - this.Scale.NarrowToInt8()).LeadingZeroCount;
+    }
+    SignificandBitLength: u32 ==> 96u;
+    SignificandByteCount: u32 ==> 12u;
+}
+
+// real exponentiation
+public extension decimal: IPowerArithmetic {
+    operator**: (exp: self) -> self
+    {
+        if exp == 0 {
+            return self.One;
+        }
+
+        if exp == 1 {
+            return this;
+        }
+
+        if this == 1 or this == 0 and exp == 0 {
+            return self.One;
+        }
+
+        if this == 0 {
+            if exp > 0 {
+                return 0;
+            }
+            throw Builtin.InvalidOperationException();
+        }
+
+        if exp == self.MinusOne {
+            return self.One / this;
+        }
+
+        let isIntegerExp := exp.IsInteger;
+        if this.IsNegative and not isIntegerExp {
+            throw Builtin.InvalidOperationException();
+        }
+
+        if isIntegerExp and this > 0 {
+            return this ^^ (exp as i32);
+        }
+
+        if not isIntegerExp or this >= 0 {
+            return (exp * this.Ln).Exp;
+        }
+
+        if (exp as i32).IsEvenInteger {
+            return (exp * (-this).Ln).Exp;
+        }
+
+        return -(exp * (-this).Ln).Exp;
+    }
+    mut operator**=: (exp: self) -> ref self => this = this ** exp;
+}
+
+public extension decimal: IExponentialFunctions {
+    // e ^ x
+    Exp: self
+    {
+        count := 0;
+        x := this;
+        while x > self.One {
+            x--;
+            count++;
+        }
+
+        while x < 0 {
+            x++;
+            count--;
+        }
+
+        iteration := 1;
+        result := self.One;
+        factor := self.One;
+        tmp: decimal;
+        do {
+            tmp = result;
+            factor *= x / iteration++;
+            result += factor;
+        } while tmp != result;
+
+        if count {
+            result *= decimal.E ^^ count;
+        }
+
+        return result;
+    }
+    // 2 ^ x
+    Exp2: self => decimal(2) ** this;
+    // 10 ^ x
+    Exp10: self => decimal(10) ** this;
+    // (e ^ x) - 1
+    ExpM1: self => this.Exp - 1;
+    // (2 ^ x) - 1
+    Exp2M1: self => this.Exp2 - 1;
+    // (10 ^ x) - 1
+    Exp10M1: self => this.Exp10 - 1;
+}
+
+public extension decimal: ILogarithmicFunctions {
+    // natural logarithm (with base e)
+    Ln: self
+    {
+        if this <= 0 {
+            throw Builtin.InvalidOperationException();
+        }
+
+        const E_INV := 0.36787944117144232159552377m;
+
+        count := 0;
+        x := this;
+        while x >= self.One {
+            x *= E_INV;
+            count++;
+        }
+        while x <= E_INV {
+            x *= 2.718281828459045235360287471m;
+            count--;
+        }
+        x--;
+
+        if x == 0 {
+            return count;
+        }
+
+        result := self.Zero;
+        iteration := 0;
+        y := self.One;
+        tmp := result - 1;
+        while tmp != result and iteration < 100 {
+            iteration++;
+            tmp = result;
+            y *= -x;
+            div := y / iteration;
+            result += div;
+        }
+
+        return decimal(count) - result;
+    }
+    // ln (1 + x)
+    LnP1: self => (this + 1).Ln;
+    // log2 (x)
+    Log2: self => this.Ln / decimal(2).Ln;
+    // log2 (1 + x)
+    Log2P1: self => (this + 1).Log2;
+    // lg (x)
+    Log10: self => this.Ln * 0.4342944819032518276511289189m;
+    // lg (1 + x)
+    Log10P1: self => (this + 1).Log10;
+    // Logarithm of the number with respect to an arbitrary base
+    Log: (base: self) -> self noexcept =
+    {
+        if base == 1 {
+            throw Builtin.InvalidArgumentException();
+        }
+        if this != 1 and base == 0 {
+            throw Builtin.InvalidArgumentException();
+        }
+
+        return this.Ln / base.Ln;
+    }
+}
+
+public extension decimal: IRootFunctions {
+    // square root
+    Sqrt: self
+    {
+        if this < 0 {
+            throw Builtin.InvalidOperationException();
+        }
+        
+        current := (this as f64).Sqrt as decimal;
+        previous: decimal;
+        do {
+            previous = current;
+            if previous == 0 {
+                return 0;
+            }
+            current = (previous + this / previous) * 0.5m;
+        } while (previous - current).Abs > 0;
+        return current;
+    }
+    // cube root
+    Cbrt: self => this ** 0.3333333333333333333333333333m;
+    // n-th root with arbitrary integer base
+    Root: (n: i32) -> self
+    {
+        PositiveN := (x: self, n: i32)
+        {
+            result: self;
+            if x != 0 {
+                if x > 0 or n.IsOddInteger {
+                    result = x.Abs ** (self.One / n);
+                    result = result.CopySign(x);
+                } else {
+                    throw Builtin.InvalidArgumentException();
+                }
+            } else if n.IsEvenInteger {
+                result = 0;
+            } else {
+                result = 0.CopySign(x);
+            }
+
+            return result;
+        };
+
+        NegativeN := (x: self, n: i32)
+        {
+            result: self;
+            if x != 0 {
+                if x > 0 or n.IsOddInteger {
+                    result = x.Abs ** (self.One / n);
+                    result = result.CopySign(x);
+                } else {
+                    throw Builtin.InvalidArgumentException();
+                }
+            } else if n.IsEvenInteger {
+                throw Builtin.DecimalOverflowException();
+            } else {
+                throw Builtin.DecimalOverflowException();
+            }
+
+            return result;
+        };
+
+        return switch n {
+            >0 => switch n
+            {
+                2 => this != 0 ? this.Sqrt : 0,
+                3 => this.Cbrt,
+                _ => PositiveN(this, n)
+            },
+            <0 => NegativeN(this, n),
+            _ => throw Builtin.InvalidArgumentException()
+        };
+    }
+
+    // hypotenuse (distance between the origin and a point (x, y) on the Euclidean plane)
+    Hypot: (y: self) -> self
+    {
+        result: self;
+        let ax := this.Abs;
+        let ay := y.Abs;
+
+        if ax == 0 {
+            result = ay;
+        } else if ay == 0 {
+            result = ax;
+        } else {
+            xx := ax;
+            xx *= xx;
+            yy := ay;
+            yy *= yy;
+            result = (xx + yy).Sqrt;
+        }
+
+        return result;
+    }
+}
+
+public extension decimal: ITrigonometricFunctions {
+    // sine
+    Sin: self
+    {
+        let cos := this.Cos;
+        let sinModule := (self.One - cos * cos).Sqrt;
+        let isPositive := (x: decimal) {
+            while x >= decimal.Tau {
+                x -= decimal.Tau;
+            }
+            while x <= -decimal.Tau {
+                x += decimal.Tau;
+            }
+
+            if x >= -decimal.Tau and x <= -decimal.Pi {
+                return true;
+            }
+            if x >= -decimal.Pi and x <= 0 {
+                return false;
+            }
+            if x >= 0 and x <= decimal.Pi {
+                return true;
+            }
+            if x >= decimal.Pi and x <= decimal.Tau {
+                return false;
+            }
+            throw Builtin.InvalidOperationException();
+            return false;
+        } (this);
+
+        return isPositive ? sinModule : -sinModule;
+    }
+    // cosine
+    Cos: self
+    {
+        x := this;
+        while x > decimal.Tau {
+            x -= decimal.Tau;
+        }
+        while x < -decimal.Tau {
+            x += decimal.Tau;
+        }
+
+        if x >= decimal.Pi and x <= decimal.Tau {
+            return -((x - decimal.Pi).Cos);
+        }
+        if x >= -decimal.Tau and x <= -decimal.Pi {
+            return -((x + decimal.Pi).Cos);
+        }
+
+        x *= x;
+        xx := -x * 0.5m;
+        y := xx + 1;
+        tmp := xx;
+        for i := 1; tmp != y and i < 100; i++ {
+            tmp = y;
+            factor: decimal = i * (i + i + 3) + 1;
+            factor = -0.5m / factor;
+            xx *= x * factor;
+            y += xx;
+        }
+        return y;
+    }
+    // tangent
+    Tan: self
+    {
+        let cos := this.Cos;
+        if cos == 0 {
+            throw Builtin.InvalidOperationException();
+        }
+
+        return this.Sin / cos;
+    }
+    // cotangent
+    Cot: self => self.One / this.Tan;
+    // secant
+    Sec: self => self.One / this.Cos;
+    // cosecant
+    Csc: self => self.One / this.Sin;
+    // arc sine
+    Asin: self
+    {
+        if this.Abs > 1 {
+            throw Builtin.InvalidOperationException();
+        }
+
+        const HalfPi :== 1.5707963267948966192313216916m;
+
+        if this == 0 {
+            return 0;
+        }
+        if this == 1 {
+            return HalfPi;
+        }
+        if this < 0 {
+            return -(-this).Asin;
+        }
+
+        let newX := self.One - this * this * 2;
+        if this.Abs > newX.Abs {
+            return 0.5m * (HalfPi - newX.Asin);
+        }
+
+        y := self.Zero;
+        result := this;
+        tmp: decimal;
+        i := 1;
+        y += result;
+        let xx := this * this;
+        do {
+            tmp = result;
+            result *= xx * (self.One - 0.5m / i);
+            y += result / (2 * i + 1);
+            i++;
+        } while tmp != result;
+        return y;
+    }
+    // arc cosine
+    Acos: self
+    {
+        const HalfPi :== 1.5707963267948966192313216916m;
+
+        if this == 0 {
+            return HalfPi;
+        }
+        if this == 1 {
+            return 0;
+        }
+        if this < 0 {
+            return decimal.Pi - (-this).Acos;
+        }
+        return HalfPi - this.Asin;
+    }
+    // arc tangent
+    Atan: self
+    {
+        return switch this {
+            0 => self.Zero,
+            1 => 0.785398163397448309615660845819875721049292349843776455243m,
+            _ => (this / (self.One + this * this).Sqrt).Asin
+        };
+    }
+    // arc cotangent
+    Acot: self => (self.One / this).Atan;
+    // arc secant
+    Asec: self => (self.One / this).Acos;
+    // arc cosecant
+    Acsc: self => (self.One / this).Asin;
+    // sine and cosine pair
+    SinCos: (self, self) => (this.Sin, this.Cos);
+    // sin(pi * x)
+    SinPi: self => (decimal.Pi * this).Sin;
+    // cos(pi * x)
+    CosPi: self => (decimal.Pi * this).Cos;
+    // sin(pi * x) and cos(pi * x)
+    SinCosPi: (self, self) => (this.SinPi, this.CosPi);
+    // tan(pi * x)
+    TanPi: self => (decimal.Pi * this).Tan;
+    // cot(pi * x)
+    CotPi: self => self.One / this.TanPi;
+    // sec(pi * x)
+    SecPi: self => self.One / this.CosPi;
+    // csc(pi * x)
+    CscPi: self => self.One / this.SinPi;
+    // asin(pi * x)
+    AsinPi: self => this.Asin / decimal.Pi;
+    // acos(pi * x)
+    AcosPi: self => this.Acos / decimal.Pi;
+    // atan(pi * x)
+    AtanPi: self => this.Atan / decimal.Pi;
+    // acot(pi * x)
+    AcotPi: self => this.Acot / decimal.Pi;
+    // asec(pi * x)
+    AsecPi: self => this.Asec / decimal.Pi;
+    // acsc(pi * x)
+    AcscPi: self => this.Acsc / decimal.Pi;
+
+    // convert degrees to radians
+    ToRadians: () -> self => (this * decimal.Pi) / 180;
+    // convert radians to degrees
+    ToDegrees: () -> self => (this * 180) / decimal.Pi;
+}
+
+public extension decimal: IHyperbolicFunctions {
+    // hyperbolic arc cosine
+    Acosh: self
+    {
+        if this < 1 {
+            throw Builtin.InvalidOperationException();
+        }
+
+        return (this + (this * this - 1).Sqrt).Ln;
+    }
+    // hyperbolic arc cotangent
+    Acoth: self => (self.One / this).Atanh;
+    // hyperbolic arc cosecant
+    Acsch: self => (self.One / this).Asinh;
+    // hyperbolic arc secant
+    Asech: self => (self.One / this).Acosh;
+    // hyperbolic arc sine
+    Asinh: self
+    {
+        return (this + (this * this + 1).Sqrt).Ln;
+    }
+    // hyperbolic arc tangent
+    Atanh: self
+    {
+        if this.Abs >= 1 {
+            throw Builtin.InvalidOperationException();
+        }
+
+        return 0.5m * ((self.One + this) / (self.One - this)).Ln;
+    }
+    // hyperbolic cosine
+    Cosh: self
+    {
+        return (this.Exp + (-this).Exp) * 0.5m;
+    }
+    // hyperbolic cotangent
+    Coth: self => self.One / this.Tanh;
+    // hyperbolic cosecant
+    Csch: self => self.One / this.Sinh;
+    // hyperbolic secant
+    Sech: self => self.One / this.Cosh;
+    // hyperbolic sine
+    Sinh: self
+    {
+        return (this.Exp - (-this).Exp) * 0.5m;
+    }
+    // hyperbolic tangent
+    Tanh: self
+    {
+        return ((this * 2).Exp - 1) / ((this * 2).Exp + 1);
+    }
+}
+
+private const Int32Powers10: u32[_] == [
+    1u,
+    10u,
+    100u,
+    1000u,
+    10000u,
+    100000u,
+    1000000u,
+    10000000u,
+    100000000u,
+    1000000000u
+];
+
+private const Int64Powers10: u64[_] == [
+    10u64,
+    100u64,
+    1000u64,
+    10000u64,
+    100000u64,
+    1000000u64,
+    10000000u64,
+    100000000u64,
+    1000000000u64,
+    10000000000u64,
+    100000000000u64,
+    1000000000000u64,
+    10000000000000u64,
+    100000000000000u64,
+    1000000000000000u64,
+    10000000000000000u64,
+    100000000000000000u64,
+    1000000000000000000u64,
+    10000000000000000000u64
+];
+
+private const FloatPowers10: f64[_] == [
+    1.0, 1.0e1, 1.0e2, 1.0e3, 1.0e4, 1.0e5, 1.0e6, 1.0e7, 1.0e8, 1.0e9,
+    1.0e10, 1.0e11, 1.0e12, 1.0e13, 1.0e14, 1.0e15, 1.0e16, 1.0e17, 1.0e18, 1.0e19,
+    1.0e20, 1.0e21, 1.0e22, 1.0e23, 1.0e24, 1.0e25, 1.0e26, 1.0e27, 1.0e28, 1.0e29,
+    1.0e30, 1.0e31, 1.0e32, 1.0e33, 1.0e34, 1.0e35, 1.0e36, 1.0e37, 1.0e38, 1.0e39,
+    1.0e40, 1.0e41, 1.0e42, 1.0e43, 1.0e44, 1.0e45, 1.0e46, 1.0e47, 1.0e48, 1.0e49,
+    1.0e50, 1.0e51, 1.0e52, 1.0e53, 1.0e54, 1.0e55, 1.0e56, 1.0e57, 1.0e58, 1.0e59,
+    1.0e60, 1.0e61, 1.0e62, 1.0e63, 1.0e64, 1.0e65, 1.0e66, 1.0e67, 1.0e68, 1.0e69,
+    1.0e70, 1.0e71, 1.0e72, 1.0e73, 1.0e74, 1.0e75, 1.0e76, 1.0e77, 1.0e78, 1.0e79,
+    1.0e80
+];
+
+private union struct Buf12 {
+    public this() noexcept {}
+
+    private struct DWordsStruct {
+        public u0, u1, u2: u32;
+    }
+    public DWords: DWordsStruct;
+
+    private ulo64: u64;
+
+    if version(BIG_ENDIAN) {
+        public unsafe Low64: u64 {
+            get => u64(DWords.u1) << 32 | DWords.u0;
+            set = {
+                DWords.u1 = u32(value >> 32);
+                DWords.u0 = value.NarrowToUInt32();
+            }
+        }
+    } else {
+        public unsafe Low64: u64 {
+            get => ulo64;
+            set => ulo64 = value;
+        }
+    }
+    public unsafe High64: u64 {
+        get => u64(DWords.u2) << 32 | DWords.u1;
+        set = {
+            DWords.u2 = u32(value >> 32);
+            DWords.u1 = value.NarrowToUInt32();
+        }
+    }
+}
+
+private union struct Buf16 {
+    public this() noexcept {}
+
+    private struct DWordsStruct {
+        public u0, u1, u2, u3: u32;
+    }
+    public DWords: DWordsStruct;
+
+    private struct QWordsStruct {
+        public ulo, uhi: u64;
+    }
+    private QWords: QWordsStruct;
+
+    if version(BIG_ENDIAN) {
+        public unsafe Low64: u64 {
+            get => u64(DWords.u1) << 32 | DWords.u0;
+            set = {
+                DWords.u1 = u32(value >> 32);
+                DWords.u0 = value.NarrowToUInt32();
+            }
+        }
+        public unsafe High64: u64 {
+            get => u64(DWords.u3) << 32 | DWords.u2;
+            set = {
+                DWords.u3 = u32(value >> 32);
+                DWords.u2 = value.NarrowToUInt32();
+            }
+        }
+    } else {
+        public unsafe Low64: u64 {
+            get => QWords.ulo;
+            set => QWords.ulo = value;
+        }
+        public unsafe High64: u64 {
+            get => QWords.uhi;
+            set => QWords.uhi = value;
+        }
+    }
+}
+
+private union struct Buf24 {
+    public this() noexcept {}
+
+    private struct DWordsStruct {
+        public u0, u1, u2, u3, u4, u5: u32;
+    }
+    public DWords: DWordsStruct;
+
+    private struct QWordsStruct {
+        public ulo, umid, uhi: u64;
+    }
+    private QWords: QWordsStruct;
+
+    if version(BIG_ENDIAN) {
+        public unsafe Low64: u64 {
+            get => u64(DWords.u1) << 32 | DWords.u0;
+            set = {
+                DWords.u1 = u32(value >> 32);
+                DWords.u0 = value.NarrowToUInt32();
+            }
+        }
+        public unsafe Mid64: u64 {
+            get => u64(DWords.u3) << 32 | DWords.u2;
+            set = {
+                DWords.u3 = u32(value >> 32);
+                DWords.u2 = value.NarrowToUInt32();
+            }
+        }
+        public unsafe High64: u64 {
+            get => u64(DWords.u5) << 32 | DWords.u4;
+            set = {
+                DWords.u5 = u32(value >> 32);
+                DWords.u4 = value.NarrowToUInt32();
+            }
+        }
+    } else {
+        public unsafe Low64: u64 {
+            get => QWords.ulo;
+            set => QWords.ulo = value;
+        }
+        public unsafe Mid64: u64 {
+            get => QWords.umid;
+            set => QWords.umid = value;
+        }
+        public unsafe High64: u64 {
+            get => QWords.uhi;
+            set => QWords.uhi = value;
+        }
+    }
+    public const LENGTH :== 6;
+}
+
+private struct Buf28 {
+    public buf24: Buf24;
+    public u6: u32;
+
+    public const LENGTH :== 7;
+
+    public this() noexcept = default;
+}
+
+private const DEC_SCALE_MAX :== 28;
+private unsafe ScaleResult: (buf: *Buf24, hi: u32, scale: i32) -> i32 {
+    assert hi < Buf24.LENGTH;
+
+    result := UnsafePointerCast<u32>(buf);
+    newScale := 0;
+    if hi > 2u {
+        newScale = hi.NarrowToInt32() *% 32 -% 64 -% 1;
+        newScale -= result[hi].LeadingZeroCount;
+        newScale = ((newScale *% 77) >> 8) +% 1;
+
+        if newScale > scale {
+            throw Builtin.DecimalOverflowException();
+        }
+    }
+
+    if newScale < scale - DEC_SCALE_MAX {
+        newScale = scale - DEC_SCALE_MAX;
+    }
+
+    if newScale != 0 {
+        scale -= newScale;
+        sticky, quotient, remainder: u32;
+
+        divByConst := (pow: u32) -> u32 {
+            let high := result[hi];
+            quotient = high \ pow;
+            remainder = high -% quotient *% pow;
+            for i := hi -% 1; i.NarrowToInt32() >= 0; --%i {
+                static if Builtin.Is64BitTarget() {
+                    let num := u64(result[i]) +% (u64(remainder) << 32);
+                    result[i] = (num \ pow).NarrowToUInt32();
+                    remainder = num.NarrowToUInt32() -% result[i] *% pow;
+                } else {
+                    assert pow <= u16.MaxValue;
+                    if version(BIG_ENDIAN) {
+                        const low16 :== 2u;
+                        const high16 :== 0u;
+                    } else {
+                        const low16 :== 0u;
+                        const high16 :== 2u;
+                    }
+
+                    num := u32(UnsafePointerCast<u16>(UnsafePointerCast<u8>(result) + i * 4 + high16)*) +% (remainder << 16);
+                    div := num \ pow;
+                    remainder = num -% div *% pow;
+                    UnsafePointerCast<u16>(UnsafePointerCast<u8>(result) + i * 4 + high16)* = div.NarrowToUInt32();
+
+                    num = u32(UnsafePointerCast<u16>(UnsafePointerCast<u8>(result) + i * 4 + low16)*) +% (remainder << 16);
+                    div := num \ pow;
+                    remainder = num -% div *% pow;
+                    UnsafePointerCast<u16>(UnsafePointerCast<u8>(result) + i * 4 + low16)* = div.NarrowToUInt32();
+                }
+            }
+            return pow;
+        };
+
+        for {
+            sticky |= remainder;
+            power: u32;
+
+            static if Builtin.Is64BitTarget() {
+                power = switch newScale {
+                    1 => divByConst(10u),
+                    2 => divByConst(100u),
+                    3 => divByConst(1000u),
+                    4 => divByConst(10000u),
+                    5 => divByConst(100000u),
+                    6 => divByConst(1000000u),
+                    7 => divByConst(10000000u),
+                    8 => divByConst(100000000u),
+                    _ => divByConst(1000000000u)
+                };
+            } else {
+                power = switch newScale {
+                    1 => divByConst(10u),
+                    2 => divByConst(100u),
+                    3 => divByConst(1000u),
+                    _ => divByConst(10000u)
+                };
+            }
+
+            result[hi] = quotient;
+            if quotient == 0 and hi != 0 {
+                hi--%;
+            }
+
+            static if Builtin.Is64BitTarget() {
+                newScale -= 9;
+            } else {
+                newScale -= 4;
+            }
+
+            if newScale > 0 {
+                continue;
+            }
+
+            if hi > 2u {
+                if (scale == 0)
+                    throw Builtin.DecimalOverflowException();
+
+                newScale = 1;
+                scale--;
+                continue;
+            }
+
+            power >>= 1;
+            if power <= remainder and (power < remainder or ((result[0u] & 1u) | sticky) != 0) and ++%result[0u] == 0u {
+                cur := 0u;
+                do {
+                    assert cur + 1u < Buf24.LENGTH;
+                } while ++%result[++cur] == 0u;
+
+                if cur > 2u {
+                    if (scale == 0)
+                        throw Builtin.DecimalOverflowException();
+
+                    hi = cur;
+                    sticky = 0u;
+                    remainder = 0u;
+                    newScale = 1;
+                    scale--;
+                    continue;
+                }
+            }
+            break;
+        }
+    }
+
+    return scale;
+}
+
+private struct PowerOvfl {
+    public Hi: u32;
+    public MidLo: u64;
+
+    public this() noexcept == default;
+    public this(hi: u32, mid: u32, lo: u32) noexcept == {
+        this.Hi = hi;
+        this.MidLo = (u64(mid) << 32) | u64(lo);
+    }
+}
+
+private let PowerOvflValues: PowerOvfl[_] = [
+    { 429496729u, 2576980377u, 2576980377u },
+    { 42949672u,  4123168604u, 687194767u  },
+    { 4294967u,   1271310319u, 2645699854u },
+    { 429496u,    3133608139u, 694066715u  },
+    { 42949u,     2890341191u, 2216890319u },
+    { 4294u,      4154504685u, 2369172679u },
+    { 429u,       2133437386u, 4102387834u },
+    { 42u,        4078814305u, 410238783u  }
+];
+
+private unsafe SearchScale: (ref buf: Buf12, scale: i32) -> i32
+{
+    const OVFL_MAX_9_HI :== 4u;
+    const OVFL_MAX_8_HI :== 42u;
+    const OVFL_MAX_7_HI :== 429u;
+    const OVFL_MAX_6_HI :== 4294u;
+    const OVFL_MAX_5_HI :== 42949u;
+    const OVFL_MAX_4_HI :== 429496u;
+    const OVFL_MAX_3_HI :== 4294967u;
+    const OVFL_MAX_2_HI :== 42949672u;
+    const OVFL_MAX_1_HI :== 429496729u;
+    const OVFL_MAX_9_MIDLO :== 5441186219426131129u;
+
+    let hi := buf.DWords.u2;
+    let midLo := buf.Low64;
+    currentScale := 0;
+
+    haveScale := () {
+        if currentScale + scale < 0 {
+            throw Builtin.DecimalOverflowException();
+        }
+
+        return currentScale;
+    };
+
+    if hi > OVFL_MAX_1_HI {
+        return haveScale();
+    }
+
+    if scale > DEC_SCALE_MAX - 9 {
+        currentScale = DEC_SCALE_MAX - scale;
+        if hi < PowerOvflValues[usize(currentScale - 1)].Hi {
+            return haveScale();
+        }
+    } else if hi < OVFL_MAX_9_HI or hi == OVFL_MAX_9_HI and midLo <= OVFL_MAX_9_MIDLO {
+        return 9;
+    }
+
+    if hi > OVFL_MAX_5_HI {
+        if hi > OVFL_MAX_3_HI {
+            currentScale = 2;
+            if hi > OVFL_MAX_2_HI {
+                currentScale--;
+            }
+        } else {
+            currentScale = 4;
+            if hi > OVFL_MAX_4_HI {
+                currentScale--;
+            }
+        }
+    } else {
+        if hi > OVFL_MAX_7_HI {
+            currentScale = 6;
+            if hi > OVFL_MAX_6_HI {
+                currentScale--;
+            }
+        } else {
+            currentScale = 8;
+            if hi > OVFL_MAX_8_HI {
+                currentScale--;
+            }
+        }
+    }
+
+    if hi == PowerOvflValues[usize(currentScale - 1)].Hi and midLo > PowerOvflValues[usize(currentScale - 1)].MidLo {
+        currentScale--;
+    }
+
+    return haveScale();
+}
+
+private inline Unscale: (ref low: u32, ref high: u64, ref scale: i32) noexcept
+{
+    divByConst := (pow: u32) {
+        static if Builtin.Is64BitTarget() {
+            let div64 := high \ pow;
+            let div := ((((high -% div64 *% pow) << 32) +% low) \ pow).NarrowToUInt32();
+            if low == div *% pow {
+                high = div64;
+                low = div;
+                return true;
+            }
+        } else {
+            assert pow <= u16.MaxValue;
+
+            num, mid32, low16, div: u32;
+            if high <= u32.MaxValue {
+                num = high.NarrowToUInt32();
+                mid32 = num \ pow;
+                num = (num -% mid32 *% pow) << 16;
+                num +%= low >> 16;
+                low16 = num \ pow;
+                num = (num -% low16 *% pow) << 16;
+                num +%= low.NarrowToUInt16();
+                div = num \ pow;
+                if num == div *% pow {
+                    high = mid32;
+                    low = (low16 << 16) +% div;
+                    return true;
+                }
+            } else {
+                num = (high >> 32).NarrowToUInt32();
+                let high32 := num \ pow;
+                num = (num -% high32 *% pow) << 16;
+                num +%= high.NarrowToUInt32() >> 16;
+
+                mid32 = num \ pow;
+                num = (num -% mid32 *% pow) << 16;
+                num +%= high.NarrowToUInt16();
+                div = num \ pow;
+                num = (num -% div *% pow) << 16;
+                mid32 = div +% (mid32 << 16);
+
+                num +%= low >> 16;
+                low16 = num \ pow;
+                num = (num -% low16 *% pow) << 16;
+
+                num +%= low.NarrowToUInt16();
+                div = num \ pow;
+                if num == div *% pow {
+                    high = (u64(high32) << 32) | mid32;
+                    low = (low16 << 16) +% div;
+                    return true;
+                }
+            }
+        }
+        return false;
+    };
+
+    static if Builtin.Is64BitTarget() {
+        while low.NarrowToUInt8() == 0u and scale >= 8 and divByConst(100000000u) {
+            scale -= 8;
+        }
+        if (low & 0xFu) == 0u and scale >= 4 and divByConst(10000u) {
+            scale -= 4;
+        }
+    } else {
+        while (low & 0xFu) == 0u and scale >= 4 and divByConst(10000u) {
+            scale -= 4;
+        }
+    }
+
+    if (low & 3u) == 0u and scale >= 2 and divByConst(100u) {
+        scale -= 2;
+    }
+
+    if (low & 1u) == 0u and scale >= 1 and divByConst(10u) {
+        scale--;
+    }
+}
+
+private unsafe Div96By64: (ref buf: Buf12, den: u64) -> u32
+{
+    assert den > buf.High64;
+    quo: u32;
+    num: u64;
+
+    let num2 := buf.DWords.u2;
+    if num2 == 0u {
+        num = buf.Low64;
+        if num < den {
+            return 0u;
+        }
+
+        quo = (num \ den).NarrowToUInt32();
+        num -%= quo *% den;
+        buf.Low64 = num;
+        return quo;
+    }
+
+    let denHigh32 := u32(den >> 32);
+    if num2 >= denHigh32 {
+        num = buf.Low64;
+        num -%= den << 32;
+        quo = 0u;
+        do {
+            quo--%;
+            num +%= den;
+        } while num >= den;
+        buf.Low64 = num;
+        return quo;
+    }
+
+    let num64 := buf.High64;
+    if num64 < denHigh32 {
+        return 0u;
+    }
+
+    quo = (num64 \ denHigh32).NarrowToUInt32();
+    num = u64(buf.DWords.u0) | ((num64 -% quo *% denHigh32) << 32);
+
+    let prod := u64(quo) *% den.NarrowToUInt32();
+    num -%= prod;
+    if num > (~prod) {
+        do {
+            quo--%;
+            num +%= den;
+        } while num >= den;
+    }
+
+    buf.Low64 = num;
+    return quo;
+}
+
+private unsafe Div128By96: (ref buf: Buf16, ref bufDen: Buf12) -> u32
+{
+    assert bufDen.DWords.u2 > buf.DWords.u3;
+
+    let dividend := buf.High64;
+    let den := bufDen.DWords.u2;
+    if dividend < den {
+        return 0u;
+    }
+
+    quo := (dividend \ den).NarrowToUInt32();
+    remainder := dividend.NarrowToUInt32() -% quo *% den;
+    prod1 := u64(quo) *% bufDen.DWords.u0;
+    prod2 := u64(quo) *% bufDen.DWords.u1;
+    prod2 +%= prod1 >> 32;
+    prod1 = u64(prod1.NarrowToUInt32()) | (prod2 << 32);
+    prod2 >>= 32;
+
+    num := buf.Low64;
+    num -%= prod1;
+    remainder -%= prod2.NarrowToUInt32();
+
+    posRem := () {
+        buf.Low64 = num;
+        buf.DWords.u2 = remainder;
+        return quo;
+    };
+
+    if num > (~prod1) {
+        remainder--%;
+        if remainder < (~prod2.NarrowToUInt32()) {
+            return posRem();
+        }
+    } else if remainder <= (~prod2.NarrowToUInt32()) {
+        return posRem();
+    }
+
+    prod1 = bufDen.Low64;
+    for {
+        quo--%;
+        num +%= prod1;
+        remainder +%= den;
+        if num < prod1 {
+            if (remainder++% < den)
+                break;
+        }
+        if (remainder < den)
+            break;
+    }
+
+    return posRem();
+}
+
+private printd: (d: decimal)
+{
+    let sign := d.IsNegative;
+    let scale := d.Scale;
+    mantissa := Builtin.BitCast<u128>(d) & 0xffffffff_ffffffff_ffffffff_00000000_u128;
+    let high := mantissa.Low64() >> 32;
+    let low := mantissa.High64();
+    mantissa = u128(high, low);
+
+    printDecimal(mantissa, sign, scale);
+}
+
+static assert(sizeof(Decimal) == 16, "Decimal should be 16 bytes");
+
+test "Decimal" {
+    d: decimal;
+    d = -1.2345 as decimal;
+    
+    assert +d == -1.2345m;
+    assert -d == 1.2345m;
+    assert 0.1m + 0.2m == 0.3m;
+    assert 0.3m - 0.2m == 0.1m;
+    assert d + 1.23m == -0.0045m;
+    assert d - 1.2345m == -2.4690m;
+    d += 1.0m;
+    assert d == -0.2345m;
+    d -= 1.0m;
+    assert d == -1.2345m;
+    assert d++ == -1.2345m;
+    assert ++d == 0.7655m;
+    assert d-- == 0.7655m;
+    assert --d == -1.2345m;
+
+    assert 123.456m + 123456789123456789.123456789m == 123456789123456912.579456789m;
+    assert 123.456m - 123456789123456789.123456789m == -123456789123456665.667456789m;
+
+    assert d * 2 == -2.4690m;
+    assert d * 2.0m == -2.46900m;
+    assert 10.250m * 0.5m == 5.1250m;
+    assert d * (-2.0m) == 2.46900m;
+    assert 123.456m * 456.789m == 56393.342784m;
+    d *= 2.123m;
+    assert d == -2.6208435m;
+
+    d = -12.500m;
+    assert d == -12.5m;
+    assert d != -12.4m;
+    assert d < -12.4m;
+    assert d > -12.6m;
+    assert d <= -12.4m;
+    assert d >= -12.6m;
+
+    assert d / 2.5m == -5.00m;
+    assert d / 2 == -6.250m;
+    assert d / (-2.0m) == 6.25m;
+    assert 123456789123456789.123456789m / 123456.123456m == 1000005391935.5164781973695622m;
+    assert 123456789123456789.123456789m / (-123456.123456m) == -1000005391935.5164781973695622m;
+    assert (-123456789123456789.123456789m) / (-123456.123456m) == 1000005391935.5164781973695622m;
+    assert 123456789123456789.123456789m / 123456123456.123456123456m == 1000005.3919345164728054350457m;
+    assert 123.456m / 0.123456789m == 999.9936090999418428094707696m;
+    d /= 2.5m;
+    assert d == -5.00m;
+    assert d % 2 == -1.00m;
+    assert (-5.00m) % 2.123m == -0.754m;
+    assert 123456789123456789.123456789m % 123456123456.123456123456m == 48386716052.382720171720m;
+    d %= 2;
+    assert d == -1.00m;
+
+    d = -1.2345m;
+    assert d == -1.2345m;
+    assert d.Truncate == -1;
+    assert 2.678m.Truncate == 2;
+    assert d.TruncateToInt32() == -1;
+    assert d.Floor == -2;
+    assert d.FloorToInt32() == -2;
+    assert 2.678m.Floor == 2;
+    assert d.Ceil == -1;
+    assert d.CeilToInt32() == -1;
+    assert 2.678m.Ceil == 3;
+    assert d.Round == -1;
+    assert d.RoundToInt32() == -1;
+    assert d.RoundTiesEven == -1;
+    assert d.RoundTiesEvenToInt32() == -1;
+    assert 2.678m.Round == 3;
+    assert 2.5m.Round == 3;
+    assert 2.5m.RoundTiesEven == 2;
+    assert d.Round(2u) == -1.23m;
+
+    d = 123456789123456789.123456789m;
+    bits := d.Bits;
+    assert bits[0u] == 2080661269u;
+    assert bits[1u] == 4075008415u;
+    assert bits[2u] == 6692605u;
+    assert bits[3u] == 589824u;
+
+    assert 12.345m ** 3.475m == 6207.7118925179657394820798383m;
+    assert 12.345m.Exp == 229808.12486124595475041888612m;
+    assert 12.345m.Exp2 == 5202.5384244788822035143417228m;
+    assert 12.345m.Exp10 == 2213094709605.6377223339808814m;
+    assert 12.345m.Ln == 2.5132511227971428258519031703m;
+    assert 12.345m.Log2 == 3.6258549313680571627010290442m;
+    assert 12.345m.Log10 == 1.0914910942679510818489967645m;
+    assert 12.345m.Log(4) == 1.8129274656840285813505145227m;
+    assert 12.345m.Sqrt == 3.5135452181521728638212225535m;
+    assert 123.345m.Root(5) == 2.6195356295079193440029636649m;
+    assert 12.345m.Hypot(13.475m) == 18.274973324193937110010809348m;
+    assert 12.345m.Sin == -0.2195669967379331208777903957m;
+    assert 12.345m.Cos == 0.9755974241168764311137172336m;
+    assert 12.345m.Tan == -0.2250590164654114812867215792m;
+    assert 0.345m.Asin == 0.3522387850970647507525367312m;
+    assert 0.345m.Acos == 1.2185575416978318684787849604m;
+    assert 0.345m.Atan == 0.3322135507465967447407006541m;
+    assert 12.345m.Sinh == 114904.06242844724925288177915m;
+    assert 12.345m.Cosh == 114904.06243279870549753710697m;
+    assert 12.345m.Tanh == 0.9999999999621296571024173851m;
+    assert 12.345m.Asinh == 3.2080347119330812566459538762m;
+    assert 12.345m.Acosh == 3.2047538216182560379240045553m;
+    assert 0.345m.Atanh == 0.3597570282003437810352645844m;
+
+}

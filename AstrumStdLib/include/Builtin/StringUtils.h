@@ -52,7 +52,8 @@ namespace Builtin {
 	template <class CharT>
 	[[nodiscard]] inline constexpr bool hasOctPrefix(const CharT* const pFirst,
 	                                                 const CharT* const pLast) {
-		return (pFirst != pLast && (pFirst + 1) != pLast && (*pFirst == '0'));
+		return (pFirst != pLast && (pFirst + 1) != pLast &&
+		        (*pFirst == '0' && (*(pFirst + 1) == 'o')));
 	};
 
 	[[nodiscard]] inline constexpr unsigned char digitFromChar(const char Ch) noexcept {

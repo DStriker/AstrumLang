@@ -6,17 +6,17 @@
 #include "Char.h"
 #include "DebugPrint.h"
 #include "Decimal.h"
+#include "Defer.h"
 #include "Exceptions.h"
 #include "Floating.h"
-#include "InlineArray.h"
 #include "FuncParameterMode.h"
 #include "FunctionRef.h"
+#include "InlineArray.h"
 #include "LocalFunctions.h"
 #include "RawPtr.h"
 #include "Str.h"
 #include "Tests.h"
 #include "Types.h"
-#include "Defer.h"
 #include "UnsafeContext.h"
 
 #ifndef ASTRUMSTD_EXPORTS
@@ -30,35 +30,35 @@ namespace Builtin {
 	extern ASTRUMSTD_API ADV_MAIN_FUNC_SIGNATURE ApplicationMainPtr;
 }  // namespace Builtin
 
-using Builtin::i8;
-using Builtin::i16;
-using Builtin::i32;
-using Builtin::i64;
-using Builtin::i128;
-using Builtin::u8;
-using Builtin::u16;
-using Builtin::u32;
-using Builtin::u64;
-using Builtin::u128;
-using Builtin::isize;
-using Builtin::usize;
+using Builtin::f128;
 using Builtin::f16;
 using Builtin::f32;
 using Builtin::f64;
-using Builtin::f128;
 using Builtin::fext;
+using Builtin::i128;
+using Builtin::i16;
+using Builtin::i32;
+using Builtin::i64;
+using Builtin::i8;
+using Builtin::isize;
+using Builtin::u128;
+using Builtin::u16;
+using Builtin::u32;
+using Builtin::u64;
+using Builtin::u8;
+using Builtin::usize;
 
 #ifdef ADV_UNITTEST
 #define ADV_ENTRY_POINT(Namespace)                                                                 \
 	}                                                                                              \
-	int main(int argc, char** argv) { return Builtin::TestMain(argc, argv); }                   \
+	int main(int argc, char** argv) { return Builtin::TestMain(argc, argv); }                      \
 	namespace Namespace {
 #else
 #define ADV_ENTRY_POINT(Namespace)                                                                 \
 	}                                                                                              \
 	int main(int argc, char** argv) {                                                              \
-		Builtin::ApplicationMainPtr = &Namespace ::__Astrum_Main;                               \
-		return Builtin::AstrumMainStartup(argc, argv);                                          \
+		Builtin::ApplicationMainPtr = &Namespace ::__Astrum_Main;                                  \
+		return Builtin::AstrumMainStartup(argc, argv);                                             \
 	}                                                                                              \
 	namespace Namespace {
 
@@ -76,11 +76,11 @@ using Builtin::fext;
 
 #define ADV_EXPRESSION_BODY(...)                                                                   \
 	ADV_WARNING_DISABLE(4552, );                                                                   \
-	ADV_WARNING_DISABLE(4834, );                                                                  \
+	ADV_WARNING_DISABLE(4834, );                                                                   \
 	if constexpr (!std::is_void_v<decltype(__VA_ARGS__)>)                                          \
 		return __VA_ARGS__;                                                                        \
 	else                                                                                           \
-		__VA_ARGS__;																				\
+		__VA_ARGS__;                                                                               \
 	ADV_WARNING_POP;                                                                               \
 	ADV_WARNING_POP;
 
@@ -90,7 +90,7 @@ struct ___dependent_false : std::false_type {};
 #define ADV_UFCS_EMPTY(...)
 #define ADV_UFCS_IDENTITY(...) __VA_ARGS__
 #define ADV_UFCS_REMPARENS(...) __VA_ARGS__
-                                   
+
 #define ADV_UFCS_IS_NOTHROW(MVFW, QUAL, TEMPKW, ...)                                               \
 	requires {                                                                                     \
 		requires requires {                                                                        \
@@ -105,8 +105,8 @@ struct ___dependent_false : std::false_type {};
 			std::declval<Obj>().ADV_UFCS_REMPARENS QUAL TEMPKW __VA_ARGS__(                        \
 			    std::declval<Args>()...);                                                          \
 		};                                                                                         \
-		requires noexcept(MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(__extensions::__proxy{std::declval<Obj>()},           \
-		                                                            std::declval<Args>()...));     \
+		requires noexcept(MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(                               \
+		    __extensions::__proxy {std::declval<Obj>()}, std::declval<Args>()...));                \
 	}                                                                                              \
 	|| requires {                                                                                  \
 		requires !requires {                                                                       \
@@ -137,10 +137,11 @@ struct ___dependent_false : std::false_type {};
 #define ADV_UFCS_CONSTRAINT_ARG(MVFWD, QUALID, TEMPKW, ...)                                        \
 	requires {                                                                                     \
 		ADV_FORWARD(obj).ADV_UFCS_REMPARENS QUALID TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);     \
-	}                                                                                             \
+	}                                                                                              \
 	|| requires {                                                                                  \
-		MVFWD(ADV_UFCS_REMPARENS QUALID __VA_ARGS__)(__extensions::__proxy{ADV_FORWARD(obj)}, ADV_FORWARD(params)...);    \
-	}                                                                                             \
+		MVFWD(ADV_UFCS_REMPARENS QUALID __VA_ARGS__)                                               \
+		(__extensions::__proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...);                        \
+	}                                                                                              \
 	|| requires {                                                                                  \
 		MVFWD(ADV_UFCS_REMPARENS QUALID __VA_ARGS__)(ADV_FORWARD(obj), ADV_FORWARD(params)...);    \
 	}
@@ -153,7 +154,7 @@ struct ___dependent_false : std::false_type {};
 	}                                                                                              \
 	|| requires {                                                                                  \
 		MVFWD(ADV_UFCS_REMPARENS QUALID __VA_ARGS__)                                               \
-		(__extensions::__proxy{std::declval<Obj>()}, std::declval<Args>()...);                                            \
+		(__extensions::__proxy {std::declval<Obj>()}, std::declval<Args>()...);                    \
 	}                                                                                              \
 	|| requires {                                                                                  \
 		MVFWD(ADV_UFCS_REMPARENS QUALID __VA_ARGS__)                                               \
@@ -183,17 +184,17 @@ struct ___dependent_false : std::false_type {};
 			                                                 ADV_FORWARD(params)...);              \
 		} else if constexpr (requires {                                                            \
 			                     MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                         \
-			                     (__extensions::__proxy{ADV_FORWARD(obj)}, ADV_FORWARD(params)...);                       \
+			                     (__extensions::__proxy {ADV_FORWARD(obj)},                        \
+			                      ADV_FORWARD(params)...);                                         \
 		                     }) {                                                                  \
 			if constexpr (std::is_lvalue_reference_v<Obj&&> &&                                     \
-			              !std::is_const_v<std::remove_reference_t<Obj>>) {			   \
-				return MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(									\
-					__extensions::__proxy <decltype(ADV_FORWARD(obj))> {ADV_FORWARD(obj)},     \
-				    ADV_FORWARD(params)...);              \
-			} else																					\
-			return MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(                        \
-			    __extensions::__proxy{ADV_FORWARD(obj)},                     \
-			                                                 ADV_FORWARD(params)...);              \
+			              !std::is_const_v<std::remove_reference_t<Obj>>) {                        \
+				return MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(                                  \
+				    __extensions::__proxy<decltype(ADV_FORWARD(obj))> {ADV_FORWARD(obj)},          \
+				    ADV_FORWARD(params)...);                                                       \
+			} else                                                                                 \
+				return MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(                                  \
+				    __extensions::__proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...);             \
 		} else if constexpr (requires {                                                            \
 			                     obj.ADV_UFCS_REMPARENS QUAL TEMPKW __VA_ARGS__(                   \
 			                         ADV_FORWARD(params)...);                                      \
@@ -201,7 +202,8 @@ struct ___dependent_false : std::false_type {};
 			static_assert(___dependent_false<Obj>::value,                                          \
 			              "Implicit discard of an object's modified value is not allowed");        \
 			ADV_FORWARD(obj).ADV_UFCS_REMPARENS QUAL TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);   \
-			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(__extensions::__proxy{ADV_FORWARD(obj)}, ADV_FORWARD(params)...);   \
+			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                                              \
+			(__extensions::__proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...);                    \
 			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(ADV_FORWARD(obj), ADV_FORWARD(params)...);   \
 		} else if constexpr (requires {                                                            \
 			                     MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                         \
@@ -210,13 +212,15 @@ struct ___dependent_false : std::false_type {};
 			static_assert(___dependent_false<Obj>::value,                                          \
 			              "Implicit discard of an object's modified value is not allowed");        \
 			ADV_FORWARD(obj).ADV_UFCS_REMPARENS QUAL TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);   \
-			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(__extensions::__proxy{ADV_FORWARD(obj)}, ADV_FORWARD(params)...);   \
+			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                                              \
+			(__extensions::__proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...);                    \
 			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(ADV_FORWARD(obj), ADV_FORWARD(params)...);   \
 		} else {                                                                                   \
 			static_assert(___dependent_false<Obj>::value,                                          \
 			              "Method " #__VA_ARGS__ " not found by UFCS system for received object"); \
 			ADV_FORWARD(obj).ADV_UFCS_REMPARENS QUAL TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);   \
-			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(__extensions::__proxy{ADV_FORWARD(obj)}, ADV_FORWARD(params)...);   \
+			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                                              \
+			(__extensions::__proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...);                    \
 			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(ADV_FORWARD(obj), ADV_FORWARD(params)...);   \
 		}                                                                                          \
 	}
@@ -240,7 +244,7 @@ struct ___dependent_false : std::false_type {};
 			ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(std::declval<Args>()...);                 \
 		};                                                                                         \
 		requires noexcept(ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(std::declval<Args>()...));  \
-	}                                                                                             
+	}
 
 #define ADV_USFCS_IS_NOTHROW_PARAM(...)
 #define ADV_USFCS_IS_NOTHROW_ARG(TYPE, TEMPKW, ...) ADV_USFCS_IS_NOTHROW(TYPE, TEMPKW, __VA_ARGS__)
@@ -261,41 +265,56 @@ struct ___dependent_false : std::false_type {};
 #define ADV_USFCS_CONSTRAINT_PARAM(...) /*empty*/
 #define ADV_USFCS_CONSTRAINT_ARG(TYPE, TEMPKW, ...)                                                \
 	requires { ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(ADV_FORWARD(params)...); }             \
-	|| requires { __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>:: get(std::declval<Args>()...); }      \
+	|| requires { __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(std::declval<Args>()...); } \
 	|| requires {                                                                                  \
-		__extensions::template __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(                    \
+		__extensions::template __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(               \
 		    std::declval<Args>()...);                                                              \
 	}
 #if defined(_MSC_VER)
 #undef ADV_USFCS_CONSTRAINT_PARAM
 #undef ADV_USFCS_CONSTRAINT_ARG
 #define ADV_USFCS_CONSTRAINT_PARAM(TYPE, TEMPKW, ...)                                              \
-	, bool IsViable = (requires {                                                                   \
-		ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(std::declval<Args>()...);                     \
-	}                                                                                              \
-	|| requires { __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(std::declval<Args>()...); }		\
-	|| requires { __extensions::template __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(std::declval<Args>()...); })
+	, bool IsViable = (                                                                            \
+	      requires { ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(std::declval<Args>()...); } ||   \
+	      requires {                                                                               \
+		      __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(std::declval<Args>()...);       \
+	      } ||                                                                                     \
+	      requires {                                                                               \
+		      __extensions::template __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(         \
+		          std::declval<Args>()...);                                                        \
+	      })
 #define ADV_USFCS_CONSTRAINT_ARG(...) IsViable
 #endif
 
 #define ADV_USFCS_(CAPTURE, REQUIRES, TYPE, TEMPKW, ...)                                           \
-	[CAPTURE]<class... Args ADV_USFCS_IS_NOTHROW_PARAM(TYPE, TEMPKW, __VA_ARGS__)                  \
-	              /* ADV_USFCS_CONSTRAINT_PARAM(TYPE, TEMPKW, __VA_ARGS__)*/>                           \
+	[CAPTURE]<class... Args ADV_USFCS_IS_NOTHROW_PARAM(                                            \
+	    TYPE, TEMPKW, __VA_ARGS__) /* ADV_USFCS_CONSTRAINT_PARAM(TYPE, TEMPKW, __VA_ARGS__)*/>     \
 	LAMBDA_NO_DISCARD(Args&&... params)                                                            \
 	    FORCE_INLINE_LAMBDA_CLANG noexcept(ADV_USFCS_IS_NOTHROW_ARG(TYPE, TEMPKW, __VA_ARGS__))    \
-	        FORCE_INLINE_LAMBDA->decltype(auto)                                                    \
-	        /*REQUIRES(requires ADV_USFCS_CONSTRAINT_ARG(TYPE, TEMPKW, __VA_ARGS__))*/ {               \
+	        FORCE_INLINE_LAMBDA->decltype(auto) /*REQUIRES(requires ADV_USFCS_CONSTRAINT_ARG(TYPE, \
+	                                               TEMPKW, __VA_ARGS__))*/                         \
+	{                                                                                              \
 		if constexpr (requires {                                                                   \
 			              ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);    \
 		              }) {                                                                         \
 			return ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);           \
-		} else if constexpr (requires {[&]() { using namespace __extensions;  __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(ADV_FORWARD(params)...); }();}) {  \
-			return [&]() { using namespace __extensions;  ADV_EXPRESSION_BODY(__static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(ADV_FORWARD(params)...)); }();        \
+		} else if constexpr (requires {                                                            \
+			                     [&]() {                                                           \
+				                     using namespace __extensions;                                 \
+				                     __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(         \
+				                         ADV_FORWARD(params)...);                                  \
+			                     }();                                                              \
+		                     }) {                                                                  \
+			return [&]() {                                                                         \
+				using namespace __extensions;                                                      \
+				ADV_EXPRESSION_BODY(                                                               \
+				    __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(ADV_FORWARD(params)...)); \
+			}();                                                                                   \
 		} else {                                                                                   \
 			static_assert(false,                                                                   \
 			              "Method " #__VA_ARGS__ " not found by USFCS system for type " #TYPE);    \
 			ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);                  \
-			__static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(ADV_FORWARD(params)...);               \
+			__static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(ADV_FORWARD(params)...);          \
 		}                                                                                          \
 	}
 
@@ -312,8 +331,8 @@ struct ___dependent_false : std::false_type {};
 		requires noexcept(std::declval<Obj>().get##PROPERTY());                                    \
 	}                                                                                              \
 	|| requires {                                                                                  \
-		requires requires { get##PROPERTY(__extensions::__proxy{std::declval<Obj>()}); };                                 \
-		requires noexcept(get##PROPERTY(__extensions::__proxy{std::declval<Obj>()}));                                     \
+		requires requires { get##PROPERTY(__extensions::__proxy {std::declval<Obj>()}); };         \
+		requires noexcept(get##PROPERTY(__extensions::__proxy {std::declval<Obj>()}));             \
 	}                                                                                              \
 	|| requires {                                                                                  \
 		requires requires { get##PROPERTY(std::declval<Obj>()); };                                 \
@@ -334,8 +353,10 @@ struct ___dependent_false : std::false_type {};
 #define ADV_UPCS_CONSTRAINT_PARAM(...) /*empty*/
 #define ADV_UPCS_CONSTRAINT_ARG(PROPERTY)                                                          \
 	requires { ADV_FORWARD(std::declval<Obj>()).##PROPERTY; }                                      \
-	|| requires { _get_property_##PROPERTY( __extensions::__proxy{ADV_FORWARD(std::declval<Obj>())}); }                    \
-	|| requires { get##PROPERTY(__extensions::__proxy{ADV_FORWARD(std::declval<Obj>())}); }                                      \
+	|| requires {                                                                                  \
+		_get_property_##PROPERTY(__extensions::__proxy {ADV_FORWARD(std::declval<Obj>())});        \
+	}                                                                                              \
+	|| requires { get##PROPERTY(__extensions::__proxy {ADV_FORWARD(std::declval<Obj>())}); }       \
 	|| requires { _get_property_##PROPERTY(ADV_FORWARD(std::declval<Obj>())); }                    \
 	|| requires { get##PROPERTY(ADV_FORWARD(std::declval<Obj>())); }
 #if defined(_MSC_VER)
@@ -344,8 +365,10 @@ struct ___dependent_false : std::false_type {};
 #define ADV_UPCS_CONSTRAINT_PARAM(PROPERTY)                                                        \
 	, bool IsViable = (                                                                            \
 	      requires { ADV_FORWARD(std::declval<Obj>()).##PROPERTY; } ||                             \
-	      requires { _get_property_##PROPERTY(__extensions::__proxy{ADV_FORWARD(std::declval<Obj>())}); } ||              \
-	      requires { get##PROPERTY(__extensions::__proxy{ADV_FORWARD(std::declval<Obj>())}); } ||                             \
+	      requires {                                                                               \
+		      _get_property_##PROPERTY(__extensions::__proxy {ADV_FORWARD(std::declval<Obj>())});  \
+	      } ||                                                                                     \
+	      requires { get##PROPERTY(__extensions::__proxy {ADV_FORWARD(std::declval<Obj>())}); } || \
 	      requires { _get_property_##PROPERTY(ADV_FORWARD(std::declval<Obj>())); } ||              \
 	      requires { get##PROPERTY(ADV_FORWARD(std::declval<Obj>())); })
 #define ADV_UPCS_CONSTRAINT_ARG(...) IsViable
@@ -357,12 +380,15 @@ struct ___dependent_false : std::false_type {};
 	    FORCE_INLINE_LAMBDA -> decltype(auto) requires ADV_UPCS_CONSTRAINT_ARG(PROPERTY) {         \
 		if constexpr (requires { ADV_FORWARD(obj).##PROPERTY; }) {                                 \
 			return std::add_lvalue_reference_t<decltype(obj.##PROPERTY)>(obj.##PROPERTY);          \
-		} else if constexpr (requires { _get_property_##PROPERTY(__extensions::__proxy{ADV_FORWARD(obj)}); }) {           \
-			return _get_property_##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                                     \
+		} else if constexpr (requires {                                                            \
+			                     _get_property_##PROPERTY(                                         \
+			                         __extensions::__proxy {ADV_FORWARD(obj)});                    \
+		                     }) {                                                                  \
+			return _get_property_##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});             \
 		} else if constexpr (requires {                                                            \
 			                     get##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});          \
-		                     }) {                      \
-			return get##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                                                \
+		                     }) {                                                                  \
+			return get##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                        \
 		} else if constexpr (requires { _get_property_##PROPERTY(ADV_FORWARD(obj)); }) {           \
 			return _get_property_##PROPERTY(ADV_FORWARD(obj));                                     \
 		} else if constexpr (requires { get##PROPERTY(ADV_FORWARD(obj)); }) {                      \
@@ -373,32 +399,32 @@ struct ___dependent_false : std::false_type {};
 			ADV_FORWARD(obj).##PROPERTY;                                                           \
 			_get_property_##PROPERTY(ADV_FORWARD(obj));                                            \
 			get##PROPERTY(ADV_FORWARD(obj));                                                       \
-			_get_property_##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                              \
-			get##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                                                       \
+			_get_property_##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                    \
+			get##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                               \
 		} else if constexpr (requires { _get_property_##PROPERTY(obj); }) {                        \
 			static_assert(___dependent_false<Obj>::value,                                          \
 			              "Implicit discard of an object's modified value is not allowed");        \
 			ADV_FORWARD(obj).##PROPERTY;                                                           \
 			_get_property_##PROPERTY(ADV_FORWARD(obj));                                            \
 			get##PROPERTY(ADV_FORWARD(obj));                                                       \
-			_get_property_##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                              \
-			get##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                                                       \
+			_get_property_##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                    \
+			get##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                               \
 		} else if constexpr (requires { get##PROPERTY(obj); }) {                                   \
 			static_assert(___dependent_false<Obj>::value,                                          \
 			              "Implicit discard of an object's modified value is not allowed");        \
 			ADV_FORWARD(obj).##PROPERTY;                                                           \
 			_get_property_##PROPERTY(ADV_FORWARD(obj));                                            \
 			get##PROPERTY(ADV_FORWARD(obj));                                                       \
-			_get_property_##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                              \
-			get##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                                                       \
+			_get_property_##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                    \
+			get##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                               \
 		} else {                                                                                   \
 			static_assert(___dependent_false<Obj>::value,                                          \
 			              "Property " #PROPERTY " not found for received object");                 \
 			ADV_FORWARD(obj).##PROPERTY;                                                           \
 			_get_property_##PROPERTY(ADV_FORWARD(obj));                                            \
 			get##PROPERTY(ADV_FORWARD(obj));                                                       \
-			_get_property_##PROPERTY(__extensions::__proxy{ADV_FORWARD(obj)});                                            \
-			get##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                                                       \
+			_get_property_##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                    \
+			get##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                               \
 		}                                                                                          \
 	}
 
@@ -410,11 +436,13 @@ struct ___dependent_false : std::false_type {};
 	requires {                                                                                     \
 		requires requires { __VA_ARGS__ ::get##PROPERTY(); };                                      \
 		requires noexcept(__VA_ARGS__ ::get##PROPERTY());                                          \
-	}                                                                                              
-	/* || requires {                                                                                  \
-		requires requires { []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>::get(); }(); };                              \
-		requires noexcept([]() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>::get(); }());                                  \
-	}*/
+	}
+/* || requires {                                                                                  \
+    requires requires { []() { using namespace __extensions; return
+__static_get##PROPERTY<__VA_ARGS__>::get(); }(); };                              \
+    requires noexcept([]() { using namespace __extensions; return
+__static_get##PROPERTY<__VA_ARGS__>::get(); }());                                  \
+}*/
 
 #if defined(__GNUC__) && !defined(__clang__)
 #undef ADV_USPCS_IS_NOTHROW_PARAM
@@ -430,44 +458,52 @@ struct ___dependent_false : std::false_type {};
 
 #define ADV_USPCS_CONSTRAINT_PARAM(PROPERTY, ...) /*empty*/
 #define ADV_USPCS_CONSTRAINT_ARG(PROPERTY, ...)                                                    \
-	requires { __VA_ARGS__ ::##PROPERTY; }                                                         
-	//requires { []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>::get(); }(); }
+	requires { __VA_ARGS__ ::##PROPERTY; }
+// requires { []() { using namespace __extensions; return
+// __static_get##PROPERTY<__VA_ARGS__>::get(); }(); }
 #if defined(_MSC_VER)
 #undef ADV_USPCS_CONSTRAINT_PARAM
 #undef ADV_USPCS_CONSTRAINT_ARG
 #define ADV_USPCS_CONSTRAINT_PARAM(...)
 #define ADV_USPCS_CONSTRAINT_ARG(...)
-#define ADV_USPCS_CONSTRAINT_PARAM2(PROPERTY, ...)                                                  \
+#define ADV_USPCS_CONSTRAINT_PARAM2(PROPERTY, ...)                                                 \
 	, bool IsViable = (                                                                            \
-	      requires { __VA_ARGS__ ::##PROPERTY; }                                                
-	      //requires { []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>::get(); }(); })
+	      requires { __VA_ARGS__ ::##PROPERTY; }
+// requires { []() { using namespace __extensions; return
+// __static_get##PROPERTY<__VA_ARGS__>::get(); }(); })
 #define ADV_USPCS_CONSTRAINT_ARG2(PROPERTY, ...) IsViable
 #endif
 
 #define ADV_USPCS_(PROPERTY, ...)                                                                  \
-	[]<class __USPCS_T = void ADV_USPCS_IS_NOTHROW_PARAM(PROPERTY, __VA_ARGS__)                            \
+	[]<class __USPCS_T = void ADV_USPCS_IS_NOTHROW_PARAM(PROPERTY, __VA_ARGS__)                    \
 	       ADV_USPCS_CONSTRAINT_PARAM(PROPERTY, __VA_ARGS__)>                                      \
 	LAMBDA_NO_DISCARD()                                                                            \
 	    FORCE_INLINE_LAMBDA_CLANG noexcept(ADV_USPCS_IS_NOTHROW(PROPERTY, __VA_ARGS__))            \
-	        FORCE_INLINE_LAMBDA->decltype(auto) /*requires*/ ADV_USPCS_CONSTRAINT_ARG(            \
-	            PROPERTY,        \
-	                                                                              __VA_ARGS__) {   \
+	        FORCE_INLINE_LAMBDA->decltype(auto) /*requires*/                                       \
+	        ADV_USPCS_CONSTRAINT_ARG(PROPERTY, __VA_ARGS__) {                                      \
 		if constexpr (requires { __VA_ARGS__ ::##PROPERTY; }) {                                    \
 			return std::add_lvalue_reference_t<decltype(__VA_ARGS__ ::##PROPERTY)>(                \
 			    __VA_ARGS__ ::##PROPERTY);                                                         \
-		} else if constexpr (requires { []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>::get(); }(); }) {                \
-			return []() { using namespace __extensions; return __static_get##PROPERTY<__VA_ARGS__>::get(); }();                                          \
+		} else if constexpr (requires {                                                            \
+			                     []() {                                                            \
+				                     using namespace __extensions;                                 \
+				                     return __static_get##PROPERTY<__VA_ARGS__>::get();            \
+			                     }();                                                              \
+		                     }) {                                                                  \
+			return []() {                                                                          \
+				using namespace __extensions;                                                      \
+				return __static_get##PROPERTY<__VA_ARGS__>::get();                                 \
+			}();                                                                                   \
 		} else {                                                                                   \
 			static_assert(false, "Property " #PROPERTY " not found for this type " #__VA_ARGS__);  \
 			__VA_ARGS__ ::##PROPERTY;                                                              \
-			__static_get##PROPERTY<__VA_ARGS__>::get();                                                 \
+			__static_get##PROPERTY<__VA_ARGS__>::get();                                            \
 		}                                                                                          \
 	}
 
 #define ADV_USPCS(PROPERTY, ...) ADV_USPCS_(PROPERTY, __VA_ARGS__)
 
-#define ADV_METHOD_BINDING_STRONG(MethodName, ...)                                                 \
-	[&]<class Obj>(Obj&& obj) {                                                                    \
+#define ADV_METHOD_BINDING_STRONG(MethodName, ...) [&]<class Obj>(Obj&& obj) {                                                                    \
 		using T = std::decay_t<Obj>::__self;                                                       \
 		if constexpr (requires { &T::MethodName; }) {                                              \
 			return Builtin::InstanceMethod(T(std::forward<Obj>(obj)), &T::MethodName);          \
@@ -563,9 +599,7 @@ struct ___dependent_false : std::false_type {};
 			Builtin::ExtensionMethod(T(std::forward<Obj>(obj)), MethodName);                    \
 		}                                                                                          \
 	}(__VA_ARGS__)
-
-#define ADV_METHOD_BINDING_UNOWNED(MethodName, ...)                                                \
-	[&]<class Obj>(Obj&& obj) {                                                                    \
+#define ADV_METHOD_BINDING_UNOWNED(MethodName, ...) [&]<class Obj>(Obj&& obj) {                                                                    \
 		using T = std::decay_t<Obj>::__self;                                                       \
 		using U = typename T::__unowned_ref;                                                       \
 		if constexpr (requires { &T::MethodName; }) {                                              \
@@ -663,9 +697,7 @@ struct ___dependent_false : std::false_type {};
 			Builtin::ExtensionMethod(U(std::forward<Obj>(obj)), MethodName);                    \
 		}                                                                                          \
 	}(__VA_ARGS__)
-
-#define ADV_METHOD_BINDING_WEAK(MethodName, ...)                                                   \
-	[&]<class Obj>(Obj&& obj) {                                                                    \
+#define ADV_METHOD_BINDING_WEAK(MethodName, ...) [&]<class Obj>(Obj&& obj) {                                                                    \
 		using T = std::decay_t<Obj>::__self;                                                       \
 		using W = typename T::__weak_ref;                                                          \
 		if constexpr (requires { &T::MethodName; }) {                                              \
@@ -763,7 +795,6 @@ struct ___dependent_false : std::false_type {};
 			Builtin::ExtensionMethod(W(std::forward<Obj>(obj)), MethodName);                    \
 		}                                                                                          \
 	}(__VA_ARGS__)
-
 #if defined(MSVC) || (defined(CLANG) && __has_declspec_attribute(property))
 #define ADV_USE_DECLSPEC_PROPERTY 0
 #else
@@ -789,21 +820,267 @@ struct ___dependent_false : std::false_type {};
 
 #define ADV_PROPERTY_GET_PARENT_POINTER(propertyName)                                              \
 	char* thisAsBytePointer       = const_cast<char*>(reinterpret_cast<char const*>(this));        \
-	ADV_PROPERTY_SELF* nullParent = nullptr;                                                       \
+	_ParentType* nullParent = nullptr;                                                       \
 	std::ptrdiff_t selfOffset     = reinterpret_cast<std::ptrdiff_t>(&nullParent->propertyName);   \
-	ADV_PROPERTY_SELF* parent =                                                                    \
-	    reinterpret_cast<ADV_PROPERTY_SELF*>(thisAsBytePointer - selfOffset);
+	_ParentType* parent =                                                                    \
+	    reinterpret_cast<_ParentType*>(thisAsBytePointer - selfOffset);
 
 #define ADV_PROPERTY_GETTER(accessSpecifier, propertyName, getterFunc, ...)                        \
                                                                                                    \
    private:                                                                                        \
-	template <class _PropertyType = __VA_ARGS__>                                                   \
+	template <class _PropertyType = __VA_ARGS__, class _ParentType = ADV_PROPERTY_SELF>                                                   \
 	struct __Property_##propertyName {                                                             \
 		FORCE_INLINE __VA_ARGS__ get() const {                                                     \
 			ADV_PROPERTY_GET_PARENT_POINTER(propertyName);                                         \
 			return parent->getterFunc();                                                           \
 		}                                                                                          \
-		using __property_underlying_type = _PropertyType;										   \
+		using __property_underlying_type = _PropertyType;                                          \
+		using __self                     = typename Builtin::SelfProxyType<_PropertyType>;         \
+		using __class                    = typename Builtin::ClassProxyType<_PropertyType>;        \
+		FORCE_INLINE operator __VA_ARGS__() const { return get(); }                                \
+		FORCE_INLINE decltype(auto) __ref() const { return get(); }                                \
+                                                                                                   \
+		FORCE_INLINE decltype(auto) operator+() const requires requires(_PropertyType t) {         \
+			t = +t;                                                                                \
+		}                                                                                          \
+		{ return +get(); }                                                                         \
+		FORCE_INLINE decltype(auto) operator-() const requires requires(_PropertyType t) {         \
+			t = -t;                                                                                \
+		}                                                                                          \
+		{ return -get(); }                                                                         \
+		FORCE_INLINE decltype(auto) operator~() const requires requires(_PropertyType t) {         \
+			t = ~t;                                                                                \
+		}                                                                                          \
+		{ return ~get(); }                                                                         \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator+(_ElemRight&& other) const {                          \
+			if constexpr (requires {                                                               \
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+			              }) {                                                                     \
+				return (                                                                           \
+				    get() +                                                                        \
+				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
+				        std::forward<_ElemRight>(other)));                                         \
+			} else {                                                                               \
+				return (get() + other);                                                            \
+			}                                                                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator-(_ElemRight&& other) const {                          \
+			if constexpr (requires {                                                               \
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+			              }) {                                                                     \
+				return (                                                                           \
+				    get() -                                                                        \
+				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
+				        std::forward<_ElemRight>(other)));                                         \
+			} else {                                                                               \
+				return (get() - other);                                                            \
+			}                                                                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator*(_ElemRight&& other) const {                          \
+			if constexpr (requires {                                                               \
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+			              }) {                                                                     \
+				return (                                                                           \
+				    get() *                                                                        \
+				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
+				        std::forward<_ElemRight>(other)));                                         \
+			} else {                                                                               \
+				return (get() * other);                                                            \
+			}                                                                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator/(_ElemRight&& other) const {                          \
+			if constexpr (requires {                                                               \
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+			              }) {                                                                     \
+				return (                                                                           \
+				    get() /                                                                        \
+				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
+				        std::forward<_ElemRight>(other)));                                         \
+			} else {                                                                               \
+				return (get() / other);                                                            \
+			}                                                                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator%(_ElemRight&& other) const {                          \
+			if constexpr (requires {                                                               \
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+			              }) {                                                                     \
+				return (                                                                           \
+				    get() %                                                                        \
+				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
+				        std::forward<_ElemRight>(other)));                                         \
+			} else {                                                                               \
+				return (get() % other);                                                            \
+			}                                                                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator&(_ElemRight&& other) const {                          \
+			if constexpr (requires {                                                               \
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+			              }) {                                                                     \
+				return (                                                                           \
+				    get() &                                                                        \
+				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
+				        std::forward<_ElemRight>(other)));                                         \
+			} else {                                                                               \
+				return (get() & other);                                                            \
+			}                                                                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator|(_ElemRight&& other) const {                          \
+			if constexpr (requires {                                                               \
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+			              }) {                                                                     \
+				return (                                                                           \
+				    get() |                                                                        \
+				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
+				        std::forward<_ElemRight>(other)));                                         \
+			} else {                                                                               \
+				return (get() | other);                                                            \
+			}                                                                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator^(_ElemRight&& other) const {                          \
+			if constexpr (requires {                                                               \
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+			              }) {                                                                     \
+				return (                                                                           \
+				    get() ^                                                                        \
+				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
+				        std::forward<_ElemRight>(other)));                                         \
+			} else {                                                                               \
+				return (get() ^ other);                                                            \
+			}                                                                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator<<(_ElemRight&& other) const {                         \
+			if constexpr (requires {                                                               \
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+			              }) {                                                                     \
+				return (                                                                           \
+				    get()                                                                          \
+				    << static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>( \
+				           std::forward<_ElemRight>(other)));                                      \
+			} else {                                                                               \
+				return (get() << other);                                                           \
+			}                                                                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator>>(_ElemRight&& other) const {                         \
+			if constexpr (requires {                                                               \
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+			              }) {                                                                     \
+				return (                                                                           \
+				    get() >>                                                                       \
+				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
+				        std::forward<_ElemRight>(other)));                                         \
+			} else {                                                                               \
+				return (get() >> other);                                                           \
+			}                                                                                      \
+		}                                                                                          \
+		template <class... _ElemRight>                                                             \
+		FORCE_INLINE decltype(auto) _operator_subscript(_ElemRight&&... other) {                   \
+			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);          \
+		}                                                                                          \
+		template <class... _ElemRight>                                                             \
+		FORCE_INLINE decltype(auto) _operator_subscript(_ElemRight&&... other) const {             \
+			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);          \
+		}                                                                                          \
+		template <class... Args>                                                                   \
+		FORCE_INLINE decltype(auto) operator()(Args&&... other) {                                  \
+			return get()(std::forward<Args>(other)...);                                            \
+		}                                                                                          \
+		template <class... Args>                                                                   \
+		FORCE_INLINE decltype(auto) operator()(Args&&... other) const {                            \
+			return get()(std::forward<Args>(other)...);                                            \
+		}                                                                                          \
+		template <class Ch>                                                                        \
+		friend FORCE_INLINE decltype(auto) operator<<(                                             \
+		    std::basic_ostream<Ch>& stream,                                                        \
+		    const __Property_##propertyName<_PropertyType, _ParentType>& elem) {                                \
+			return stream << elem.get();                                                           \
+		}                                                                                          \
+		FORCE_INLINE decltype(auto) operator*() requires requires(_PropertyType t) { *t; }         \
+		{ return *get(); }                                                                         \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator==(_ElemRight&& other) const {                         \
+			if constexpr (requires {                                                               \
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+			              }) {                                                                     \
+				return (                                                                           \
+				    get() ==                                                                       \
+				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
+				        std::forward<_ElemRight>(other)));                                         \
+			} else {                                                                               \
+				return (get() == other);                                                           \
+			}                                                                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE decltype(auto) operator!=(_ElemRight&& other) const {                         \
+			if constexpr (requires {                                                               \
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+			              }) {                                                                     \
+				return (                                                                           \
+				    get() !=                                                                       \
+				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
+				        std::forward<_ElemRight>(other)));                                         \
+			} else {                                                                               \
+				return (get() != other);                                                           \
+			}                                                                                      \
+		}                                                                                          \
+		template <class _ElemRight>                                                                \
+		FORCE_INLINE int operator<=>(_ElemRight&& other) const {                                   \
+			if constexpr (requires {                                                               \
+				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+			              }) {                                                                     \
+				return (                                                                           \
+				    get() <=>                                                                      \
+				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
+				        std::forward<_ElemRight>(other)));                                         \
+			} else {                                                                               \
+				return (get() <=> other);                                                          \
+			}                                                                                      \
+		}                                                                                          \
+		FORCE_INLINE explicit operator bool() const                                                \
+		    requires(!std::is_same_v<_PropertyType, bool>) {                                       \
+			return static_cast<bool>(get());                                                       \
+		}                                                                                          \
+	};                                                                                             \
+	accessSpecifier:                                                                               \
+	ADV_VIRTUAL_FIELD __Property_##propertyName<> propertyName;
+
+#define ADV_PROPERTY_SETTER(accessSpecifier, propertyName, setterFunc, ...)                        \
+                                                                                                   \
+   private:                                                                                        \
+	template <class _PropertyType = __VA_ARGS__, class _ParentType = ADV_PROPERTY_SELF>                                                   \
+	struct __Property_##propertyName {                                                             \
+		using __property_underlying_type = _PropertyType;                                          \
+		FORCE_INLINE void operator       =(const __VA_ARGS__& value) {                             \
+            ADV_PROPERTY_GET_PARENT_POINTER(propertyName);                                  \
+            parent->setterFunc(value);                                                      \
+		}                                                                                          \
+	};                                                                                             \
+	accessSpecifier:                                                                               \
+	ADV_VIRTUAL_FIELD __Property_##propertyName<> propertyName;
+
+#define ADV_PROPERTY_GETTER_SETTER(accessSpecifier, propertyName, getterAccess, getterFunc,        \
+                                   setterAccess, setterFunc, ...)                                  \
+                                                                                                   \
+   private:                                                                                        \
+	template <class _PropertyType = __VA_ARGS__, class _ParentType = ADV_PROPERTY_SELF>            \
+	struct __Property_##propertyName {                                                             \
+		friend _ParentType;                                                                             \
+		getterAccess : FORCE_INLINE __VA_ARGS__ get() const {                                      \
+			ADV_PROPERTY_GET_PARENT_POINTER(propertyName);                                         \
+			return parent->getterFunc();                                                           \
+		}                                                                                          \
+		using __property_underlying_type = _PropertyType;                                          \
+		using __self                     = typename Builtin::SelfProxyType<_PropertyType>;         \
+		using __class                    = typename Builtin::ClassProxyType<_PropertyType>;        \
 		FORCE_INLINE operator __VA_ARGS__() const { return get(); }                                \
 		FORCE_INLINE decltype(auto) __ref() const { return get(); }                                \
                                                                                                    \
@@ -1011,245 +1288,7 @@ struct ___dependent_false : std::false_type {};
 			} else {                                                                               \
 				return (get() <=> other);                                                          \
 			}                                                                                      \
-		}																						   \
-		FORCE_INLINE explicit operator bool() const                                                \
-		    requires(!std::is_same_v<_PropertyType, bool>) {                                       \
-			return static_cast<bool>(get());                                                       \
 		}                                                                                          \
-	};                                                                                             \
-	accessSpecifier:                                                                               \
-	ADV_VIRTUAL_FIELD __Property_##propertyName<> propertyName;
-
-#define ADV_PROPERTY_SETTER(accessSpecifier, propertyName, setterFunc, ...)                        \
-                                                                                                   \
-   private:                                                                                        \
-	template <class _PropertyType = __VA_ARGS__>                                                   \
-	struct __Property_##propertyName {                                                             \
-		using __property_underlying_type = _PropertyType;										   \
-		FORCE_INLINE void operator=(const __VA_ARGS__& value) {                                    \
-			ADV_PROPERTY_GET_PARENT_POINTER(propertyName);                                         \
-			parent->setterFunc(value);                                                             \
-		}                                                                                          \
-	};                                                                                             \
-	accessSpecifier:                                                                               \
-	ADV_VIRTUAL_FIELD __Property_##propertyName<> propertyName;
-
-#define ADV_PROPERTY_GETTER_SETTER(accessSpecifier, propertyName, getterAccess, getterFunc,        \
-                                   setterAccess, setterFunc, ...)                                  \
-                                                                                                   \
-   private:                                                                                        \
-	template <class _PropertyType = __VA_ARGS__>                                                   \
-	struct __Property_##propertyName {                                                             \
-		friend struct __self;                                                                      \
-		getterAccess : FORCE_INLINE __VA_ARGS__ get() const {                                      \
-			ADV_PROPERTY_GET_PARENT_POINTER(propertyName);                                         \
-			return parent->getterFunc();                                                           \
-		}                                                                                          \
-		using __property_underlying_type = _PropertyType;										   \
-		FORCE_INLINE operator __VA_ARGS__() const { return get(); }                                \
-		FORCE_INLINE decltype(auto) __ref() const { return get(); }                                \
-                                                                                                   \
-		FORCE_INLINE decltype(auto) operator+() const requires requires(_PropertyType t) {         \
-			t = +t;                                                                                \
-		}                                                                                          \
-		{ return +get(); }                                                                         \
-		FORCE_INLINE decltype(auto) operator-() const requires requires(_PropertyType t) {         \
-			t = -t;                                                                                \
-		}                                                                                          \
-		{ return -get(); }                                                                         \
-		FORCE_INLINE decltype(auto) operator~() const requires requires(_PropertyType t) {         \
-			t = ~t;                                                                                \
-		}                                                                                          \
-		{ return ~get(); }                                                                         \
-		template <class _ElemRight>                                                                \
-		FORCE_INLINE decltype(auto) operator+(_ElemRight&& other) const {                          \
-			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
-			              }) {                                                                     \
-				return (                                                                           \
-				    get() +                                                                      \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
-			} else {                                                                               \
-				return (get() + other);                                                          \
-			}																					   \
-		}                                                                                          \
-		template <class _ElemRight>                                                                \
-		FORCE_INLINE decltype(auto) operator-(_ElemRight&& other) const {                          \
-			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
-			              }) {                                                                     \
-				return (                                                                           \
-				    get() -                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
-			} else {                                                                               \
-				return (get() - other);                                                            \
-			}                                                                                      \
-		}                                                                                          \
-		template <class _ElemRight>                                                                \
-		FORCE_INLINE decltype(auto) operator*(_ElemRight&& other) const {                          \
-			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
-			              }) {                                                                     \
-				return (                                                                           \
-				    get() *                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
-			} else {                                                                               \
-				return (get() * other);                                                            \
-			}																					   \
-		}                                                                                          \
-		template <class _ElemRight>                                                                \
-		FORCE_INLINE decltype(auto) operator/(_ElemRight&& other) const {                          \
-			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
-			              }) {                                                                     \
-				return (                                                                           \
-				    get() /                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
-			} else {                                                                               \
-				return (get() / other);                                                            \
-			}																					   \
-		}                                                                                          \
-		template <class _ElemRight>                                                                \
-		FORCE_INLINE decltype(auto) operator%(_ElemRight&& other) const {                          \
-			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
-			              }) {                                                                     \
-				return (                                                                           \
-				    get() %                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
-			} else {                                                                               \
-				return (get() % other);                                                            \
-			}																					   \
-		}                                                                                          \
-		template <class _ElemRight>                                                                \
-		FORCE_INLINE decltype(auto) operator&(_ElemRight&& other) const {                          \
-			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
-			              }) {                                                                     \
-				return (                                                                           \
-				    get() &                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
-			} else {                                                                               \
-				return (get() & other);                                                            \
-			}																					   \
-		}                                                                                          \
-		template <class _ElemRight>                                                                \
-		FORCE_INLINE decltype(auto) operator|(_ElemRight&& other) const {                          \
-			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
-			              }) {                                                                     \
-				return (                                                                           \
-				    get() |                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
-			} else {                                                                               \
-				return (get() | other);                                                            \
-			}																					   \
-		}                                                                                          \
-		template <class _ElemRight>                                                                \
-		FORCE_INLINE decltype(auto) operator^(_ElemRight&& other) const {                          \
-			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
-			              }) {                                                                     \
-				return (                                                                           \
-				    get() ^                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
-			} else {                                                                               \
-				return (get() ^ other);                                                            \
-			}																					   \
-		}                                                                                          \
-		template <class _ElemRight>                                                                \
-		FORCE_INLINE decltype(auto) operator<<(_ElemRight&& other) const {                         \
-			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
-			              }) {                                                                     \
-				return (                                                                           \
-				    get() <<                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
-			} else {                                                                               \
-				return (get() << other);                                                            \
-			}																					   \
-		}                                                                                          \
-		template <class _ElemRight>                                                                \
-		FORCE_INLINE decltype(auto) operator>>(_ElemRight&& other) const {                         \
-			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
-			              }) {                                                                     \
-				return (                                                                           \
-				    get() >>                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
-			} else {                                                                               \
-				return (get() >> other);                                                            \
-			}																					   \
-		}                                                                                          \
-		template <class... _ElemRight>                                                             \
-		FORCE_INLINE decltype(auto) _operator_subscript(_ElemRight&&... other) {                   \
-			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);          \
-		}                                                                                          \
-		template <class... _ElemRight>                                                             \
-		FORCE_INLINE decltype(auto) _operator_subscript(_ElemRight&&... other) const {             \
-			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);          \
-		}                                                                                          \
-		template <class... Args>                                                                   \
-		FORCE_INLINE decltype(auto) operator()(Args&&... other) {                                  \
-			return get()(std::forward<Args>(other)...);                                            \
-		}                                                                                          \
-		template <class... Args>                                                                   \
-		FORCE_INLINE decltype(auto) operator()(Args&&... other) const {                            \
-			return get()(std::forward<Args>(other)...);                                            \
-		}                                                                                          \
-		template <class Ch>                                                                        \
-		friend FORCE_INLINE decltype(auto) operator<<(                                             \
-		    std::basic_ostream<Ch>& stream,                                                        \
-		    const __Property_##propertyName<_PropertyType>& elem) {                                \
-			return stream << elem.get();                                                           \
-		}                                                                                          \
-		FORCE_INLINE decltype(auto) operator*() requires requires(_PropertyType t) { *t; }         \
-		{ return *get(); }                                                                         \
-		template <class _ElemRight>                                                                \
-		FORCE_INLINE decltype(auto) operator==(_ElemRight&& other) const {                         \
-			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
-			              }) {                                                                     \
-				return (                                                                           \
-				    get() ==                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
-			} else {                                                                               \
-				return (get() == other);                                                            \
-			}																					   \
-		}                                                                                          \
-		template <class _ElemRight>                                                                \
-		FORCE_INLINE decltype(auto) operator!=(_ElemRight&& other) const {                         \
-			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
-			              }) {                                                                     \
-				return (                                                                           \
-				    get() !=                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
-			} else {                                                                               \
-				return (get() != other);                                                            \
-			}																					   \
-		}                                                                                          \
-		template <class _ElemRight>                                                                \
-		FORCE_INLINE int operator<=>(_ElemRight&& other) const {                        \
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__property_underlying_type; }) {								   \
-				return (get() <=> static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(std::forward<_ElemRight>(other)));	   \
-			}																					   \
-			else {																				   \
-				return (get() <=> other);														   \
-			}																					   \
-		}																						   \
 		FORCE_INLINE explicit operator bool() const                                                \
 		    requires(!std::is_same_v<_PropertyType, bool>) {                                       \
 			return static_cast<bool>(get());                                                       \
@@ -1273,7 +1312,7 @@ struct ___dependent_false : std::false_type {};
 				        std::forward<_ElemRight>(other)));                                         \
 			} else {                                                                               \
 				return *this = (get() += other);                                                   \
-			}																					   \
+			}                                                                                      \
 		}                                                                                          \
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE decltype(auto) operator-=(                                                    \
@@ -1288,7 +1327,7 @@ struct ___dependent_false : std::false_type {};
 				        std::forward<_ElemRight>(other)));                                         \
 			} else {                                                                               \
 				return *this = (get() -= other);                                                   \
-			}																					   \
+			}                                                                                      \
 		}                                                                                          \
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE decltype(auto) operator*=(                                                    \
@@ -1303,7 +1342,7 @@ struct ___dependent_false : std::false_type {};
 				        std::forward<_ElemRight>(other)));                                         \
 			} else {                                                                               \
 				return *this = (get() *= other);                                                   \
-			}																					   \
+			}                                                                                      \
 		}                                                                                          \
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE decltype(auto) operator/=(                                                    \
@@ -1318,7 +1357,7 @@ struct ___dependent_false : std::false_type {};
 				        std::forward<_ElemRight>(other)));                                         \
 			} else {                                                                               \
 				return *this = (get() /= other);                                                   \
-			}																					   \
+			}                                                                                      \
 		}                                                                                          \
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE decltype(auto) operator%=(                                                    \
@@ -1333,7 +1372,7 @@ struct ___dependent_false : std::false_type {};
 				        std::forward<_ElemRight>(other)));                                         \
 			} else {                                                                               \
 				return *this = (get() %= other);                                                   \
-			}																					   \
+			}                                                                                      \
 		}                                                                                          \
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE decltype(auto) operator&=(                                                    \
@@ -1348,7 +1387,7 @@ struct ___dependent_false : std::false_type {};
 				        std::forward<_ElemRight>(other)));                                         \
 			} else {                                                                               \
 				return *this = (get() &= other);                                                   \
-			}																					   \
+			}                                                                                      \
 		}                                                                                          \
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE decltype(auto) operator|=(                                                    \
@@ -1363,7 +1402,7 @@ struct ___dependent_false : std::false_type {};
 				        std::forward<_ElemRight>(other)));                                         \
 			} else {                                                                               \
 				return *this = (get() |= other);                                                   \
-			}																					   \
+			}                                                                                      \
 		}                                                                                          \
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE decltype(auto) operator^=(                                                    \
@@ -1378,7 +1417,7 @@ struct ___dependent_false : std::false_type {};
 				        std::forward<_ElemRight>(other)));                                         \
 			} else {                                                                               \
 				return *this = (get() ^= other);                                                   \
-			}																					   \
+			}                                                                                      \
 		}                                                                                          \
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE decltype(auto) operator<<=(                                                   \
@@ -1388,12 +1427,12 @@ struct ___dependent_false : std::false_type {};
 				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
 			              }) {                                                                     \
 				return (                                                                           \
-				    *this = get() <<=                                                               \
+				    *this = get() <<=                                                              \
 				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
 				        std::forward<_ElemRight>(other)));                                         \
 			} else {                                                                               \
-				return *this = (get() <<= other);                                                   \
-			}																					   \
+				return *this = (get() <<= other);                                                  \
+			}                                                                                      \
 		}                                                                                          \
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE decltype(auto) operator>>=(                                                   \
@@ -1403,12 +1442,12 @@ struct ___dependent_false : std::false_type {};
 				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
 			              }) {                                                                     \
 				return (                                                                           \
-				    *this = get() >>=                                                               \
+				    *this = get() >>=                                                              \
 				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
 				        std::forward<_ElemRight>(other)));                                         \
 			} else {                                                                               \
-				return *this = (get() >>= other);                                                   \
-			}																					   \
+				return *this = (get() >>= other);                                                  \
+			}                                                                                      \
 		}                                                                                          \
 		FORCE_INLINE decltype(auto) operator++() requires requires(_PropertyType t) { ++t; }       \
 		{ return *this = ++get(); }                                                                \
@@ -1436,10 +1475,12 @@ struct ___dependent_false : std::false_type {};
                                    ...)                                                            \
                                                                                                    \
    private:                                                                                        \
-	template <class _PropertyType = __VA_ARGS__>                                                   \
+	template <class _PropertyType = __VA_ARGS__, class _ParentType = ADV_PROPERTY_SELF>                                                   \
 	struct __Property_##propertyName {                                                             \
-		using __property_underlying_type = _PropertyType;										   \
-		FORCE_INLINE __VA_ARGS__ get() const { return ADV_PROPERTY_SELF::getterFunc(); }           \
+		using __property_underlying_type = _PropertyType;                                          \
+		using __self                     = typename Builtin::SelfProxyType<_PropertyType>;         \
+		using __class                    = typename Builtin::ClassProxyType<_PropertyType>;        \
+		FORCE_INLINE __VA_ARGS__ get() const { return _ParentType::getterFunc(); }           \
 		FORCE_INLINE operator __VA_ARGS__() const { return get(); }                                \
 		FORCE_INLINE decltype(auto) __ref() const { return get(); }                                \
                                                                                                    \
@@ -1647,7 +1688,7 @@ struct ___dependent_false : std::false_type {};
 			} else {                                                                               \
 				return (get() <=> other);                                                          \
 			}                                                                                      \
-		}																						   \
+		}                                                                                          \
 		FORCE_INLINE explicit operator bool() const                                                \
 		    requires(!std::is_same_v<_PropertyType, bool>) {                                       \
 			return static_cast<bool>(get());                                                       \
@@ -1660,11 +1701,11 @@ struct ___dependent_false : std::false_type {};
                                    ...)                                                            \
                                                                                                    \
    private:                                                                                        \
-	template <class _PropertyType = __VA_ARGS__>                                                   \
+	template <class _PropertyType = __VA_ARGS__, class _ParentType = ADV_PROPERTY_SELF>                                                   \
 	struct __Property_##propertyName {                                                             \
-		using __property_underlying_type = _PropertyType;										   \
-		FORCE_INLINE void operator=(const __VA_ARGS__& value) {                                    \
-			ADV_PROPERTY_SELF::setterFunc(value);                                                  \
+		using __property_underlying_type = _PropertyType;                                          \
+		FORCE_INLINE void operator       =(const __VA_ARGS__& value) {                             \
+            _ParentType::setterFunc(value);                                           \
 		}                                                                                          \
 	};                                                                                             \
 	accessSpecifier:                                                                               \
@@ -1674,13 +1715,15 @@ struct ___dependent_false : std::false_type {};
                                           getterAccess, getterFunc, setterAccess, setterFunc, ...) \
                                                                                                    \
    private:                                                                                        \
-	template <class _PropertyType = __VA_ARGS__>                                                   \
+	template <class _PropertyType = __VA_ARGS__, class _ParentType = ADV_PROPERTY_SELF>                                                   \
 	struct __Property_##propertyName {                                                             \
-		friend struct ADV_PROPERTY_SELF;                                                           \
+		friend _ParentType;                                                           \
 		getterAccess : FORCE_INLINE __VA_ARGS__ get() const {                                      \
-			return ADV_PROPERTY_SELF::getterFunc();                                                \
+			return _ParentType::getterFunc();                                                \
 		}                                                                                          \
-		using __property_underlying_type = _PropertyType;										   \
+		using __property_underlying_type = _PropertyType;                                          \
+		using __self                     = typename Builtin::SelfProxyType<_PropertyType>;         \
+		using __class                    = typename Builtin::ClassProxyType<_PropertyType>;        \
 		FORCE_INLINE operator __VA_ARGS__() const { return get(); }                                \
 		FORCE_INLINE decltype(auto) __ref() const { return get(); }                                \
                                                                                                    \
@@ -1888,14 +1931,14 @@ struct ___dependent_false : std::false_type {};
 			} else {                                                                               \
 				return (get() <=> other);                                                          \
 			}                                                                                      \
-		}																						   \
+		}                                                                                          \
 		FORCE_INLINE explicit operator bool() const                                                \
 		    requires(!std::is_same_v<_PropertyType, bool>) {                                       \
 			return static_cast<bool>(get());                                                       \
 		}                                                                                          \
                                                                                                    \
 		setterAccess : FORCE_INLINE void operator=(const __VA_ARGS__& value) {                     \
-			ADV_PROPERTY_SELF::setterFunc(value);                                                  \
+			_ParentType::setterFunc(value);                                                  \
 		}                                                                                          \
                                                                                                    \
 		template <class _ElemRight>                                                                \
@@ -2073,7 +2116,9 @@ struct ___dependent_false : std::false_type {};
 		template <class _ParentType, class _PropertyType = __VA_ARGS__>                            \
 		struct __Property_##propertyName {                                                         \
 			_ParentType parent;                                                                    \
-			using __property_underlying_type = _PropertyType;										   \
+			using __property_underlying_type = _PropertyType;                                      \
+			using __self                     = typename Builtin::SelfProxyType<_PropertyType>;     \
+			using __class                    = typename Builtin::ClassProxyType<_PropertyType>;    \
 			FORCE_INLINE __VA_ARGS__ get() const { return getterFunc(parent); }                    \
 			FORCE_INLINE operator __VA_ARGS__() const { return get(); }                            \
 			FORCE_INLINE decltype(auto) __ref() const { return get(); }                            \
@@ -2243,7 +2288,7 @@ struct ___dependent_false : std::false_type {};
 			}                                                                                      \
 			FORCE_INLINE decltype(auto) operator*() requires requires(_PropertyType t) { *t; }     \
 			{ return *get(); }                                                                     \
-			template <class _ElemRight>                                                                \
+			template <class _ElemRight>                                                            \
 			FORCE_INLINE decltype(auto) operator==(_ElemRight&& other) const {                     \
 				if constexpr (requires {                                                           \
 					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
@@ -2281,7 +2326,7 @@ struct ___dependent_false : std::false_type {};
 				} else {                                                                           \
 					return (get() <=> other);                                                      \
 				}                                                                                  \
-			}																						   \
+			}                                                                                      \
 			FORCE_INLINE explicit operator bool() const                                            \
 			    requires(!std::is_same_v<_PropertyType, bool>) {                                   \
 				return static_cast<bool>(get());                                                   \
@@ -2452,17 +2497,18 @@ struct ___dependent_false : std::false_type {};
 		};                                                                                         \
 	}
 
-#define ADV_PROPERTY_GETTER_LAZY(accessSpecifier, dllAccessSpecifier, propertyName, initFunc,  \
-                                   ...)                                                            \
+#define ADV_PROPERTY_GETTER_LAZY(accessSpecifier, dllAccessSpecifier, propertyName, initFunc, ...) \
                                                                                                    \
    private:                                                                                        \
-	template <class _PropertyType = __VA_ARGS__>                                                   \
+	template <class _PropertyType = __VA_ARGS__, class _ParentType = ADV_PROPERTY_SELF>                                                   \
 	struct __Property_##propertyName {                                                             \
 		FORCE_INLINE __VA_ARGS__ get() const {                                                     \
-			static __VA_ARGS__ data = ADV_PROPERTY_SELF::initFunc();                               \
+			static __VA_ARGS__ data = _ParentType::initFunc();                               \
 			return data;                                                                           \
 		}                                                                                          \
-		using __property_underlying_type = _PropertyType;										   \
+		using __property_underlying_type = _PropertyType;                                          \
+		using __self                     = typename Builtin::SelfProxyType<_PropertyType>;         \
+		using __class                    = typename Builtin::ClassProxyType<_PropertyType>;        \
 		FORCE_INLINE operator __VA_ARGS__() const { return get(); }                                \
 		FORCE_INLINE decltype(auto) __ref() const { return get(); }                                \
                                                                                                    \
@@ -2669,7 +2715,7 @@ struct ___dependent_false : std::false_type {};
 			} else {                                                                               \
 				return (get() <=> other);                                                          \
 			}                                                                                      \
-		}																						   \
+		}                                                                                          \
 		FORCE_INLINE explicit operator bool() const                                                \
 		    requires(!std::is_same_v<_PropertyType, bool>) {                                       \
 			return static_cast<bool>(get());                                                       \
@@ -2678,12 +2724,11 @@ struct ___dependent_false : std::false_type {};
 	accessSpecifier:                                                                               \
 	static dllAccessSpecifier __Property_##propertyName<> propertyName;
 
-
 #define ADV_CHECK_REF_STRUCT(Type, ...)                                                            \
-	static_assert(!std::is_base_of_v<Builtin::RefStruct, ##__VA_ARGS__>,                        \
+	static_assert(!std::is_base_of_v<Builtin::RefStruct, ##__VA_ARGS__>,                           \
 	              "Cannot to declare field of the type " #Type " outside the ref struct");
 #define ADV_CHECK_INTERFACE(Type, ...)                                                             \
-	static_assert(Builtin::IsInterface<##__VA_ARGS__>,                                          \
+	static_assert(Builtin::IsInterface<##__VA_ARGS__>,                                             \
 	              "Type " #Type                                                                    \
 	              " cannot be inherited. A class can inherit only one superclass and multiple "    \
 	              "interfaces. Structs and interfaces can implement multiple interfaces.");
@@ -2694,10 +2739,10 @@ struct ___dependent_false : std::false_type {};
 	static_assert(std::is_abstract_v<__Class_##Type>,                                              \
 	              "Abstract type " #Type " does not have abstract members");
 #define ADV_CHECK_STATIC_CLASS(Type, ...)                                                          \
-	static_assert(std::is_base_of_v<Builtin::StaticClass, ##__VA_ARGS__>,                       \
+	static_assert(std::is_base_of_v<Builtin::StaticClass, ##__VA_ARGS__>,                          \
 	              "The type " #Type " cannot be inherited by static class");
 #define ADV_CHECK_INTERFACE_IMPLEMENTATION(Type, Interface, ...)                                   \
-	static_assert(Builtin::ImplementsInterface<##__VA_ARGS__>(),                                \
+	static_assert(Builtin::ImplementsInterface<##__VA_ARGS__>(),                                   \
 	              "The type " #Type " does not implement interface " #Interface);
 
 #define ADV_CLASS_DEFAULT_CTOR(...)                                                                \
@@ -2721,22 +2766,22 @@ struct ___dependent_false : std::false_type {};
                                                                                                    \
    public:                                                                                         \
 	##__VA_ARGS__(const __class& ref);                                                             \
-	##__VA_ARGS__(##__VA_ARGS__ const& copy) : ___super {copy._obj} { Builtin::Retain(_obj); }  \
+	##__VA_ARGS__(##__VA_ARGS__ const& copy) : ___super {copy._obj} { Builtin::Retain(_obj); }     \
 	##__VA_ARGS__(##__VA_ARGS__&& moved) noexcept : ___super {moved._obj} {                        \
 		moved._obj = nullptr;                                                                      \
 	}                                                                                              \
 	##__VA_ARGS__& operator=(__class const& ref);                                                  \
 	##__VA_ARGS__& operator=(##__VA_ARGS__ const& copy) {                                          \
 		if (copy._obj != _obj) {                                                                   \
-			Builtin::Release(_obj);                                                             \
+			Builtin::Release(_obj);                                                                \
 			_obj = copy._obj;                                                                      \
-			Builtin::Retain(_obj);                                                              \
+			Builtin::Retain(_obj);                                                                 \
 		}                                                                                          \
 		return *this;                                                                              \
 	}                                                                                              \
 	##__VA_ARGS__& operator=(##__VA_ARGS__&& moved) {                                              \
 		if (moved._obj != _obj) {                                                                  \
-			Builtin::Release(_obj);                                                             \
+			Builtin::Release(_obj);                                                                \
 			_obj = moved._obj;                                                                     \
 		}                                                                                          \
 		moved._obj = nullptr;                                                                      \
@@ -2747,12 +2792,12 @@ struct ___dependent_false : std::false_type {};
 	##__VA_ARGS__(decltype(nullptr)) noexcept : ___super {nullptr} {}                              \
 	##__VA_ARGS__& operator=(decltype(nullptr)) {                                                  \
 		if (_obj)                                                                                  \
-			Builtin::Release(_obj);                                                             \
+			Builtin::Release(_obj);                                                                \
 		_obj = nullptr;                                                                            \
 		return *this;                                                                              \
 	}                                                                                              \
 	template <class __OptionalRef>                                                                 \
-	friend class Builtin::OptionalStrongRef;                                                    \
+	friend class Builtin::OptionalStrongRef;                                                       \
 	template <class __OptionalRef>                                                                 \
 	friend class Builtin::OptionalUnownedRef;
 
@@ -2762,9 +2807,9 @@ struct ___dependent_false : std::false_type {};
 #define ADV_CLASS_STRONG_ASSIGN_REF(...)                                                           \
 	operator=(const __class& ref) {                                                                \
 		if (&ref != _obj) {                                                                        \
-			Builtin::Release(_obj);                                                             \
-			_obj = (Builtin::Object*) &ref;                                                     \
-			Builtin::Retain(_obj);                                                              \
+			Builtin::Release(_obj);                                                                \
+			_obj = (Builtin::Object*) &ref;                                                        \
+			Builtin::Retain(_obj);                                                                 \
 		}                                                                                          \
 		return *this;                                                                              \
 	}
@@ -2774,10 +2819,10 @@ struct ___dependent_false : std::false_type {};
    public:                                                                                         \
 	##__VA_ARGS__(const __class& ref);                                                             \
 	##__VA_ARGS__(##__VA_ARGS__ const& copy) : ___super {copy._obj} {                              \
-		Builtin::UnownedRetain(_obj);                                                           \
+		Builtin::UnownedRetain(_obj);                                                              \
 	}                                                                                              \
 	##__VA_ARGS__(__strong_ref const& copy) : ___super {copy._obj} {                               \
-		Builtin::UnownedRetain(_obj);                                                           \
+		Builtin::UnownedRetain(_obj);                                                              \
 	}                                                                                              \
 	##__VA_ARGS__(##__VA_ARGS__&& moved) noexcept : ___super {moved._obj} {                        \
 		moved._obj = nullptr;                                                                      \
@@ -2785,23 +2830,23 @@ struct ___dependent_false : std::false_type {};
 	##__VA_ARGS__& operator=(const __class& ref);                                                  \
 	##__VA_ARGS__& operator=(##__VA_ARGS__ const& copy) {                                          \
 		if (copy._obj != _obj) {                                                                   \
-			Builtin::UnownedRelease(_obj);                                                      \
+			Builtin::UnownedRelease(_obj);                                                         \
 			_obj = copy._obj;                                                                      \
-			Builtin::UnownedRetain(_obj);                                                       \
+			Builtin::UnownedRetain(_obj);                                                          \
 		}                                                                                          \
 		return *this;                                                                              \
 	}                                                                                              \
 	##__VA_ARGS__& operator=(__strong_ref const& copy) {                                           \
 		if (copy._obj != _obj) {                                                                   \
-			Builtin::UnownedRelease(_obj);                                                      \
+			Builtin::UnownedRelease(_obj);                                                         \
 			_obj = copy._obj;                                                                      \
-			Builtin::UnownedRetain(_obj);                                                       \
+			Builtin::UnownedRetain(_obj);                                                          \
 		}                                                                                          \
 		return *this;                                                                              \
 	}                                                                                              \
 	##__VA_ARGS__& operator=(##__VA_ARGS__&& moved) {                                              \
 		if (moved._obj != _obj) {                                                                  \
-			Builtin::UnownedRelease(_obj);                                                      \
+			Builtin::UnownedRelease(_obj);                                                         \
 			_obj = moved._obj;                                                                     \
 		}                                                                                          \
 		moved._obj = nullptr;                                                                      \
@@ -2813,12 +2858,12 @@ struct ___dependent_false : std::false_type {};
 	##__VA_ARGS__(decltype(nullptr)) noexcept : ___super {nullptr} {}                              \
 	##__VA_ARGS__& operator=(decltype(nullptr)) {                                                  \
 		if (_obj)                                                                                  \
-			Builtin::UnownedRelease(_obj);                                                      \
+			Builtin::UnownedRelease(_obj);                                                         \
 		_obj = nullptr;                                                                            \
 		return *this;                                                                              \
 	}                                                                                              \
 	template <class __OptionalRef>                                                                 \
-	friend class Builtin::OptionalStrongRef;                                                    \
+	friend class Builtin::OptionalStrongRef;                                                       \
 	template <class __OptionalRef>                                                                 \
 	friend class Builtin::OptionalUnownedRef;
 
@@ -2828,9 +2873,9 @@ struct ___dependent_false : std::false_type {};
 #define ADV_CLASS_UNOWNED_ASSIGN_REF(...)                                                          \
 	operator=(const __class& ref) {                                                                \
 		if (&ref != _obj) {                                                                        \
-			Builtin::UnownedRelease(_obj);                                                      \
-			_obj = (Builtin::Object*) &ref;                                                     \
-			Builtin::UnownedRetain(_obj);                                                       \
+			Builtin::UnownedRelease(_obj);                                                         \
+			_obj = (Builtin::Object*) &ref;                                                        \
+			Builtin::UnownedRetain(_obj);                                                          \
 		}                                                                                          \
 		return *this;                                                                              \
 	}
@@ -2877,7 +2922,7 @@ struct ___dependent_false : std::false_type {};
 		moved._obj = nullptr;                                                                      \
 		return *this;                                                                              \
 	}                                                                                              \
-	FORCE_INLINE Builtin::OptionalStrongRef<__strong_ref> pin() const {                         \
+	FORCE_INLINE Builtin::OptionalStrongRef<__strong_ref> pin() const {                            \
 		if (_obj) {                                                                                \
 			auto ptr = _obj->tryRetain();                                                          \
 			if (ptr) {                                                                             \
@@ -2912,7 +2957,7 @@ struct ___dependent_false : std::false_type {};
 			if (strong.IsValid())                                                                  \
 				std::invoke(std::forward<__OptionalFunc>(func), *strong);                          \
 		} else {                                                                                   \
-			using wrapped_type = Builtin::Nullable<return_type>;                                \
+			using wrapped_type = Builtin::Nullable<return_type>;                                   \
 			if (!strong.IsValid())                                                                 \
 				return wrapped_type(nullptr);                                                      \
 			return wrapped_type(std::invoke(std::forward<__OptionalFunc>(func), *strong));         \
@@ -2943,10 +2988,10 @@ struct ___dependent_false : std::false_type {};
 
 #define ADV_CLASS_WEAK_ASSIGN_REF(...)                                                             \
 	operator=(const __class& ref) {                                                                \
-		if (!_obj || (Builtin::Object*) &ref != _obj->unsafeGetObject()) {                      \
+		if (!_obj || (Builtin::Object*) &ref != _obj->unsafeGetObject()) {                         \
 			if (_obj)                                                                              \
 				_obj->decrementWeak();                                                             \
-			_obj = formWeakRef((Builtin::Object*) &ref);                                        \
+			_obj = formWeakRef((Builtin::Object*) &ref);                                           \
 		}                                                                                          \
 		return *this;                                                                              \
 	}
@@ -2955,10 +3000,10 @@ struct ___dependent_false : std::false_type {};
                                                                                                    \
    public:                                                                                         \
 	##__VA_ARGS__() = delete;                                                                      \
-	##__VA_ARGS__(Builtin::Object* obj, __vtable const* vtable)                                 \
+	##__VA_ARGS__(Builtin::Object* obj, __vtable const* vtable)                                    \
 	    : ___super {obj}, _vtable {vtable} {}                                                      \
 	##__VA_ARGS__(##__VA_ARGS__ const& copy) : ___super {copy._obj}, _vtable {copy._vtable} {      \
-		Builtin::Retain(_obj);                                                                  \
+		Builtin::Retain(_obj);                                                                     \
 	}                                                                                              \
 	##__VA_ARGS__(##__VA_ARGS__&& moved) noexcept                                                  \
 	    : ___super {moved._obj}, _vtable {moved._vtable} {                                         \
@@ -2967,16 +3012,16 @@ struct ___dependent_false : std::false_type {};
 	}                                                                                              \
 	##__VA_ARGS__& operator=(##__VA_ARGS__ const& copy) {                                          \
 		if (copy._obj != _obj) {                                                                   \
-			Builtin::Release(_obj);                                                             \
+			Builtin::Release(_obj);                                                                \
 			_obj    = copy._obj;                                                                   \
 			_vtable = copy._vtable;                                                                \
-			Builtin::Retain(_obj);                                                              \
+			Builtin::Retain(_obj);                                                                 \
 		}                                                                                          \
 		return *this;                                                                              \
 	}                                                                                              \
 	##__VA_ARGS__& operator=(##__VA_ARGS__&& moved) {                                              \
 		if (moved._obj != _obj) {                                                                  \
-			Builtin::Release(_obj);                                                             \
+			Builtin::Release(_obj);                                                                \
 			_obj    = moved._obj;                                                                  \
 			_vtable = moved._vtable;                                                               \
 		}                                                                                          \
@@ -2989,15 +3034,15 @@ struct ___dependent_false : std::false_type {};
 	##__VA_ARGS__(decltype(nullptr)) noexcept : ___super {nullptr}, _vtable {nullptr} {}           \
 	##__VA_ARGS__& operator=(decltype(nullptr)) {                                                  \
 		if (_obj)                                                                                  \
-			Builtin::Release(_obj);                                                             \
+			Builtin::Release(_obj);                                                                \
 		_obj    = nullptr;                                                                         \
 		_vtable = nullptr;                                                                         \
 		return *this;                                                                              \
 	}                                                                                              \
 	template <class __OptionalRef>                                                                 \
-	friend class Builtin::OptionalStrongRef;                                                    \
+	friend class Builtin::OptionalStrongRef;                                                       \
 	template <class __OptionalRef>                                                                 \
-	friend class Builtin::OptionalUnownedRef;                                                   \
+	friend class Builtin::OptionalUnownedRef;                                                      \
 	template <class __IT>                                                                          \
 	friend decltype(auto) Builtin::GetVTableFromInterface(__IT* iface);
 
@@ -3006,7 +3051,7 @@ struct ___dependent_false : std::false_type {};
    public:                                                                                         \
 	##__VA_ARGS__() = delete;                                                                      \
 	##__VA_ARGS__(##__VA_ARGS__ const& copy) : ___super {copy._obj}, _vtable {copy._vtable} {      \
-		Builtin::UnownedRetain(_obj);                                                           \
+		Builtin::UnownedRetain(_obj);                                                              \
 	}                                                                                              \
 	##__VA_ARGS__(##__VA_ARGS__&& moved) noexcept                                                  \
 	    : ___super {moved._obj}, _vtable {moved._vtable} {                                         \
@@ -3014,20 +3059,20 @@ struct ___dependent_false : std::false_type {};
 		moved._vtable = nullptr;                                                                   \
 	}                                                                                              \
 	##__VA_ARGS__(__strong_ref const& copy) : ___super {copy._obj}, _vtable {copy._vtable} {       \
-		Builtin::UnownedRetain(_obj);                                                           \
+		Builtin::UnownedRetain(_obj);                                                              \
 	}                                                                                              \
 	##__VA_ARGS__& operator=(##__VA_ARGS__ const& copy) {                                          \
 		if (copy._obj != _obj) {                                                                   \
-			Builtin::UnownedRelease(_obj);                                                      \
+			Builtin::UnownedRelease(_obj);                                                         \
 			_obj    = copy._obj;                                                                   \
 			_vtable = copy._vtable;                                                                \
-			Builtin::UnownedRetain(_obj);                                                       \
+			Builtin::UnownedRetain(_obj);                                                          \
 		}                                                                                          \
 		return *this;                                                                              \
 	}                                                                                              \
 	##__VA_ARGS__& operator=(##__VA_ARGS__&& moved) {                                              \
 		if (moved._obj != _obj) {                                                                  \
-			Builtin::UnownedRelease(_obj);                                                      \
+			Builtin::UnownedRelease(_obj);                                                         \
 			_obj    = moved._obj;                                                                  \
 			_vtable = moved._vtable;                                                               \
 		}                                                                                          \
@@ -3037,10 +3082,10 @@ struct ___dependent_false : std::false_type {};
 	}                                                                                              \
 	##__VA_ARGS__& operator=(__strong_ref const& copy) {                                           \
 		if (copy._obj != _obj) {                                                                   \
-			Builtin::UnownedRelease(_obj);                                                      \
+			Builtin::UnownedRelease(_obj);                                                         \
 			_obj    = copy._obj;                                                                   \
 			_vtable = copy._vtable;                                                                \
-			Builtin::UnownedRetain(_obj);                                                       \
+			Builtin::UnownedRetain(_obj);                                                          \
 		}                                                                                          \
 		return *this;                                                                              \
 	}                                                                                              \
@@ -3053,15 +3098,15 @@ struct ___dependent_false : std::false_type {};
 	##__VA_ARGS__(decltype(nullptr)) noexcept : ___super {nullptr}, _vtable {nullptr} {}           \
 	##__VA_ARGS__& operator=(decltype(nullptr)) {                                                  \
 		if (_obj)                                                                                  \
-			Builtin::UnownedRelease(_obj);                                                      \
+			Builtin::UnownedRelease(_obj);                                                         \
 		_obj    = nullptr;                                                                         \
 		_vtable = nullptr;                                                                         \
 		return *this;                                                                              \
 	}                                                                                              \
 	template <class __OptionalRef>                                                                 \
-	friend class Builtin::OptionalStrongRef;                                                    \
+	friend class Builtin::OptionalStrongRef;                                                       \
 	template <class __OptionalRef>                                                                 \
-	friend class Builtin::OptionalUnownedRef;                                                   \
+	friend class Builtin::OptionalUnownedRef;                                                      \
 	template <class __IT>                                                                          \
 	friend decltype(auto) Builtin::GetVTableFromInterface(__IT* iface);
 
@@ -3112,7 +3157,7 @@ struct ___dependent_false : std::false_type {};
 		moved._vtable = nullptr;                                                                   \
 		return *this;                                                                              \
 	}                                                                                              \
-	FORCE_INLINE Builtin::OptionalStrongRef<__strong_ref> pin() const {                         \
+	FORCE_INLINE Builtin::OptionalStrongRef<__strong_ref> pin() const {                            \
 		if (_obj) {                                                                                \
 			auto ptr = _obj->tryRetain();                                                          \
 			if (ptr) {                                                                             \
@@ -3148,7 +3193,7 @@ struct ___dependent_false : std::false_type {};
 			if (strong.IsValid())                                                                  \
 				std::invoke(std::forward<__OptionalFunc>(func), *strong);                          \
 		} else {                                                                                   \
-			using wrapped_type = Builtin::Nullable<return_type>;                                \
+			using wrapped_type = Builtin::Nullable<return_type>;                                   \
 			if (!strong.IsValid())                                                                 \
 				return wrapped_type(nullptr);                                                      \
 			return wrapped_type(std::invoke(std::forward<__OptionalFunc>(func), *strong));         \
@@ -3181,8 +3226,8 @@ namespace Test1::Test2 {
 
 		Class2(Builtin::i32 _x, Builtin::i32 _px) : x {_x}, px {_px} {}
 
-		[[clang::annotate("varargs:1")]] void printArgs(
-		    Builtin::i32 i, std::initializer_list<Builtin::Str> str) {
+		[[clang::annotate("varargs:1")]] void printArgs(Builtin::i32 i,
+		                                                std::initializer_list<Builtin::Str> str) {
 			print(i);
 			for (auto s : str) { print(s); }
 		}
@@ -3213,9 +3258,9 @@ namespace Test1::Test2 {
 			return TestClass {Class2 {_x, 6}, _f};
 		}
 
-		Test1::Test2::Class2 getClassExt(Builtin::i32 a, Builtin::i32 b,
-		                                 Builtin::i32 c = 3, Builtin::i32 d = 8,
-		                                 bool b1 = true, bool b2 = false, bool b3 = false) const {
+		Test1::Test2::Class2 getClassExt(Builtin::i32 a, Builtin::i32 b, Builtin::i32 c = 3,
+		                                 Builtin::i32 d = 8, bool b1 = true, bool b2 = false,
+		                                 bool b3 = false) const {
 			return {a, b};
 		}
 

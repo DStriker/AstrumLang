@@ -17,3 +17,5 @@ public interface IBitwiseArithmetic {
     operator^=: (rhs: self) -> self;
     operator~: () -> self;
 }
+
+operator&~: <T, U> (val: T, mask: U) -> T ==> val & (~mask);

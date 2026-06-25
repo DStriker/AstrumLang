@@ -2028,6 +2028,48 @@ namespace Builtin {
 		return std::bit_cast<To>(from);
 	}
 
+	template <class T>
+	struct TAuto {
+		using type = std::decay_t<T>;
+	};
+
+	template <class T>
+	requires requires { typename std::decay_t<T>::__property_underlying_type; }
+	struct TAuto<T> {
+		using type = std::decay_t<T>::__property_underlying_type;
+	};
+
+	template <class T>
+	using Auto = typename TAuto<T>::type;
+
+	template <class T>
+	struct TSelf {
+		using type = std::decay_t<T>;
+	};
+
+	template <class T>
+	requires requires { typename std::decay_t<T>::__self; }
+	struct TSelf<T> {
+		using type = std::decay_t<T>::__self;
+	};
+
+	template <class T>
+	using SelfProxyType = typename TSelf<T>::type;
+
+	template <class T>
+	struct TClass {
+		using type = std::decay_t<T>;
+	};
+
+	template <class T>
+	requires requires { typename std::decay_t<T>::__class; }
+	struct TClass<T> {
+		using type = std::decay_t<T>::__class;
+	};
+
+	template <class T>
+	using ClassProxyType = typename TClass<T>::type;
+
 	struct UncheckedTag {};
 
 #ifdef Builtin_OVERFLOW_CHECKS

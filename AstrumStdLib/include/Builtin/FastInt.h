@@ -748,3 +748,8 @@ namespace Builtin {
 
 }  // namespace Builtin
 
+template <class T, class U>
+requires requires(T t, U u) { t == u; } && (!requires(T t, U u) {
+	t.operator!=(u);
+})
+inline constexpr bool operator!=(T lhs, U rhs) { return !(lhs == rhs); }

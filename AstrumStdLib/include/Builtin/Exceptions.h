@@ -17,6 +17,10 @@ namespace Builtin {
 		IntegerOverflowException() : std::runtime_error("Integer overflow") {}
 	};
 
+	struct DecimalOverflowException : public std::runtime_error {
+		DecimalOverflowException() : std::runtime_error("Decimal overflow") {}
+	};
+
 	struct DivisionByZeroException : public std::runtime_error {
 		DivisionByZeroException() : std::runtime_error("Division by zero") {}
 	};

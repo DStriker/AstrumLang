@@ -879,7 +879,9 @@ namespace AstrumLang {
 			return 0;
 
 		currentSubtype.clear();
+		currentDeclaration = ctx;
 		visitChildren(ctx);
+		currentDeclaration = nullptr;
 
 		bool isConst       = false;
 		bool isVolatile    = false;
@@ -1149,7 +1151,7 @@ namespace AstrumLang {
 			} else {
 				/*if (currentTypeKind.top() == TypeKind::UnionStruct &&
 				    *access != AccessSpecifier::Private)
-					notifyErrorListeners("Raw union field must be private", ctx->getStart());*/
+				    notifyErrorListeners("Raw union field must be private", ctx->getStart());*/
 
 				if (unsafeDepth > 0)
 					cppParser.unsafeVariables.insert(currentType + "." + id->getText());
@@ -1634,7 +1636,7 @@ namespace AstrumLang {
 				} else {
 					/*if (currentTypeKind.top() == TypeKind::UnionStruct &&
 					    *access != AccessSpecifier::Private)
-						notifyErrorListeners("Raw union field must be private", ctx->getStart());*/
+					    notifyErrorListeners("Raw union field must be private", ctx->getStart());*/
 					if (unsafeDepth > 0)
 						cppParser.unsafeVariables.insert(currentType + "." + id->getText());
 					structStack.top()->fields.emplace_back(VariableDefinition {
@@ -1975,8 +1977,7 @@ namespace AstrumLang {
 		if (!firstPass) {
 			if (ctx->If()) {
 				IfContext ictx;
-				if (initStates.empty())
-				{
+				if (initStates.empty()) {
 					initStates.push(InitState {});
 				}
 				ictx.before  = initStates.top();
@@ -2366,7 +2367,7 @@ namespace AstrumLang {
 	std::any AstrumSema::visitRelationalExpression(AstrumParser::RelationalExpressionContext* ctx) {
 		visitChildren(ctx);
 
-		if (!ctx->relationalExpression().empty() || ctx->Is() || ctx->In()) {
+		if (!ctx->As()) {
 			typeStack.push("bool");
 			if (ctx->Is()) {
 				if (isCondition && !firstPass && ctx->patternList()) {
@@ -2390,7 +2391,7 @@ namespace AstrumLang {
 					}
 				}
 			}
-		} else if (ctx->As()) {
+		} else {
 			typeStack.push(contextTypes[ctx->theTypeId()]);
 		}
 
@@ -2493,14 +2494,14 @@ namespace AstrumLang {
 
 	std::any AstrumSema::visitAssignmentExpression(AstrumParser::AssignmentExpressionContext* ctx) {
 		if (ctx->initializerClause()) {
-			if (isCondition)
-				notifyErrorListeners(
-				    "Cannot to use assignment operators in the condition. Maybe you mean the "
-				    "equality operator?",
-				    ctx->assignmentOperator()->getStart());
 			if (ctx->assignmentOperator()->Assign()) {
 				isAssignment      = true;
 				currentAssignment = ctx;
+				if (isCondition)
+					notifyErrorListeners(
+					    "Cannot to use assignment operators in the condition. Maybe you mean the "
+					    "equality operator?",
+					    ctx->assignmentOperator()->getStart());
 			}
 			lvalue = true;
 		}
@@ -3232,6 +3233,9 @@ namespace AstrumLang {
 	}
 
 	std::any AstrumSema::visitLambdaExpression(AstrumParser::LambdaExpressionContext* ctx) {
+		if (currentDeclaration) {
+			lambdaDeclarations.insert(currentDeclaration);
+		}
 		return visitChildren(ctx);
 	}
 
@@ -3380,7 +3384,8 @@ namespace AstrumLang {
 					symbolTable.globalSymbolTable[tuple + "." + std::to_string(i++)] =
 					    contextTypes[fieldTypeId];
 				}
-				namedTuples[tuple] = NamedTuple {std::move(id), std::move(fields), access, ctx->Const() != nullptr};
+				namedTuples[tuple] =
+				    NamedTuple {std::move(id), std::move(fields), access, ctx->Const() != nullptr};
 			}
 		} else if (ctx->functionTypeId()) {
 			typeStack.push("CppAdvance.FunctionRef");
@@ -3786,6 +3791,7 @@ namespace AstrumLang {
 
 	std::any AstrumSema::visitMemberVersionElseDeclaration(
 	    AstrumParser::MemberVersionElseDeclarationContext* ctx) {
+		conditionStack.top() = "!(" + conditionStack.top() + ")";
 		return visitChildren(ctx);
 	}
 
@@ -4173,7 +4179,7 @@ namespace AstrumLang {
 			auto tbase = base->simpleTypeSpecifier();
 			if (!tbase->Bool() && !tbase->Byte() && !tbase->Char() && !tbase->F32() &&
 			    !tbase->F64() && !tbase->I16() && !tbase->I32() && !tbase->I64() && !tbase->I8() &&
-			    !tbase->Rune() && !tbase->Str() && !tbase->U16() && !tbase->U32() &&
+			    !tbase->Decimal() && !tbase->Str() && !tbase->U16() && !tbase->U32() &&
 			    !tbase->U64() && !tbase->U8() && !tbase->Usize() && !tbase->Isize())
 				notifyErrorListeners("Enum base must be one of the built-in types",
 				                     ctx->enumHead()->enumBase()->getStart());
@@ -4843,7 +4849,7 @@ namespace AstrumLang {
 				                     ctx->Final()->getSymbol());
 		}
 
-		if (ctx->shortFunctionBody()) {
+		if (ctx->shortFunctionBody() && ctx->shortFunctionBody()->expressionStatement()) {
 			expression = ctx->shortFunctionBody()->expressionStatement()->expression();
 		}
 
@@ -4856,8 +4862,7 @@ namespace AstrumLang {
 				setter = body->propertySetter();
 				if (currentTypeKind.top() == TypeKind::Enum ||
 				    currentTypeKind.top() == TypeKind::EnumClass ||
-				    currentTypeKind.top() == TypeKind::Union ||
-				    currentTypeKind.top() == TypeKind::UnionStruct)
+				    currentTypeKind.top() == TypeKind::Union)
 					notifyErrorListeners("Enums and unions can only have computed properties",
 					                     body->getStart());
 			} else if (auto body = ctx->functionBody()) {
@@ -5591,7 +5596,7 @@ namespace AstrumLang {
 				notifyErrorListeners("Local function cannot be final", ctx->getStart());
 		}
 
-		if (ctx->shortFunctionBody()) {
+		if (ctx->shortFunctionBody() && ctx->shortFunctionBody()->expressionStatement()) {
 			expression = ctx->shortFunctionBody()->expressionStatement()->expression();
 		}
 
@@ -7048,7 +7053,8 @@ namespace AstrumLang {
 			else if (body->Assign())
 				isInline = true;
 		} else if (auto body = ctx->shortFunctionBody()) {
-			expression = body->expressionStatement()->expression();
+			if (body->expressionStatement())
+				expression = body->expressionStatement()->expression();
 			if (body->EqualArrow())
 				isConstexpr = true;
 			else if (body->AssignArrow())
@@ -7184,7 +7190,7 @@ namespace AstrumLang {
 			notifyErrorListeners("Cannot to declare final method outside the class body",
 			                     ctx->getStart());
 
-		if (ctx->shortFunctionBody()) {
+		if (ctx->shortFunctionBody() && ctx->shortFunctionBody()->expressionStatement()) {
 			expression = ctx->shortFunctionBody()->expressionStatement()->expression();
 		}
 
@@ -7397,7 +7403,7 @@ namespace AstrumLang {
 			}
 		}
 
-		if (ctx->shortFunctionBody()) {
+		if (ctx->shortFunctionBody() && ctx->shortFunctionBody()->expressionStatement()) {
 			expression = ctx->shortFunctionBody()->expressionStatement()->expression();
 		}
 

@@ -3,7 +3,11 @@
 
 namespace Builtin::Unsafe {
 	template <class T>
-	struct __RawPtr {
+	struct __RawPtr : public Struct {
+		using __self  = __RawPtr<T>;
+		using __class = __Class_Basic<__self>;
+
+		constexpr decltype(auto) __ref() noexcept { return *this; }
 		constexpr decltype(auto) __ref() const noexcept { return *this; }
 		constexpr __RawPtr() noexcept = default;
 		constexpr __RawPtr(T* _value) noexcept : value(_value) {}
@@ -45,22 +49,22 @@ namespace Builtin::Unsafe {
 
 		constexpr bool operator!=(decltype(nullptr)) const noexcept { return value != nullptr; }
 
-		constexpr __RawPtr<T>& unsafeIncrement() noexcept {
+		constexpr __RawPtr<T>& UnsafeIncrement() noexcept {
 			++value;
 			return *this;
 		}
 
-		constexpr __RawPtr<T>& unsafeIncrement(size_t offset) noexcept {
+		constexpr __RawPtr<T>& UnsafeIncrement(size_t offset) noexcept {
 			value += offset;
 			return *this;
 		}
 
-		constexpr __RawPtr<T>& unsafeDecrement() noexcept {
+		constexpr __RawPtr<T>& UnsafeDecrement() noexcept {
 			--value;
 			return *this;
 		}
 
-		constexpr __RawPtr<T>& unsafeDecrement(size_t offset) noexcept {
+		constexpr __RawPtr<T>& UnsafeDecrement(size_t offset) noexcept {
 			value -= offset;
 			return *this;
 		}
@@ -70,11 +74,11 @@ namespace Builtin::Unsafe {
 			return *this;
 		}
 
-		constexpr __RawPtr<T>& operator++() noexcept { return unsafeIncrement(); }
+		constexpr __RawPtr<T>& operator++() noexcept { return UnsafeIncrement(); }
 
 		constexpr __RawPtr<T> operator++(int) noexcept {
 			auto copy = *this;
-			unsafeIncrement();
+			UnsafeIncrement();
 			return copy;
 		}
 
@@ -83,26 +87,26 @@ namespace Builtin::Unsafe {
 			return *this;
 		}
 
-		constexpr __RawPtr<T>& operator--() noexcept { return unsafeDecrement(); }
+		constexpr __RawPtr<T>& operator--() noexcept { return UnsafeDecrement(); }
 
 		constexpr __RawPtr<T> operator--(int) noexcept {
 			auto copy = *this;
-			unsafeDecrement();
+			UnsafeDecrement();
 			return copy;
 		}
 
-		constexpr __RawPtr<T> unsafeAdd(size_t offset) const noexcept {
+		constexpr __RawPtr<T> UnsafeAdd(size_t offset) const noexcept {
 			return __RawPtr<T>(value + offset);
 		}
 
-		constexpr __RawPtr<T> operator+(size_t offset) const noexcept { return unsafeAdd(offset); }
+		constexpr __RawPtr<T> operator+(size_t offset) const noexcept { return UnsafeAdd(offset); }
 
-		constexpr __RawPtr<T> unsafeDifference(__RawPtr<T> other) const noexcept {
+		constexpr __RawPtr<T> UnsafeDifference(__RawPtr<T> other) const noexcept {
 			return __RawPtr<T>(value - other.value);
 		}
 
 		constexpr __RawPtr<T> operator-(__RawPtr<T> other) const noexcept {
-			return unsafeDifference(other);
+			return UnsafeDifference(other);
 		}
 
 		constexpr auto& operator[](size_t offset) requires(!std::is_same_v<T, void>) {
@@ -113,16 +117,25 @@ namespace Builtin::Unsafe {
 			return value[offset];
 		}
 
-		constexpr usize unsafeNarrowToInteger() const noexcept {
+		constexpr auto& _operator_subscript(size_t offset) requires(!std::is_same_v<T, void>) {
+			return value[offset];
+		}
+
+		constexpr const auto& _operator_subscript(size_t offset) const
+		    requires(!std::is_same_v<T, void>) {
+			return value[offset];
+		}
+
+		constexpr usize UnsafeNarrowToInteger() const noexcept {
 			return reinterpret_cast<size_t>(value);
 		}
 
-		template <class U>
-		constexpr __RawPtr<U> unsafePointerCast() const noexcept {
+		/*template <class U>
+		constexpr __RawPtr<U> UnsafePointerCast() const noexcept {
 			return ((U*) (value));
-		}
+		}*/
 
-		static constexpr __RawPtr<T> unsafeNarrowToPointer(usize value) noexcept {
+		static constexpr __RawPtr<T> UnsafeNarrowToPointer(usize value) noexcept {
 			return reinterpret_cast<T*>((size_t) value);
 		}
 
@@ -131,7 +144,12 @@ namespace Builtin::Unsafe {
 	};
 
 	template <class T>
-	struct __VolatileRawPtr {
+	struct __VolatileRawPtr : public Struct {
+		using __self = __VolatileRawPtr<T>;
+		using __class = __Class_Basic<__self>;
+
+		constexpr decltype(auto) __ref() noexcept { return *this; }
+		constexpr decltype(auto) __ref() const noexcept { return *this; }
 		constexpr __VolatileRawPtr() noexcept = default;
 		constexpr __VolatileRawPtr(volatile T* _value) noexcept : value(_value) {}
 		constexpr __VolatileRawPtr(decltype(nullptr)) noexcept : value {nullptr} {}
@@ -202,45 +220,45 @@ namespace Builtin::Unsafe {
 			return value != nullptr;
 		}
 
-		constexpr volatile __VolatileRawPtr<T>& unsafeIncrement() volatile noexcept {
+		constexpr volatile __VolatileRawPtr<T>& UnsafeIncrement() volatile noexcept {
 			++value;
 			return *this;
 		}
 
-		constexpr volatile __VolatileRawPtr<T>& unsafeIncrement(size_t step) volatile noexcept {
+		constexpr volatile __VolatileRawPtr<T>& UnsafeIncrement(size_t step) volatile noexcept {
 			value += step;
 			return *this;
 		}
 
-		constexpr volatile __VolatileRawPtr<T>& unsafeDecrement() volatile noexcept {
+		constexpr volatile __VolatileRawPtr<T>& UnsafeDecrement() volatile noexcept {
 			--value;
 			return *this;
 		}
 
-		constexpr volatile __VolatileRawPtr<T>& unsafeDecrement(size_t step) volatile noexcept {
+		constexpr volatile __VolatileRawPtr<T>& UnsafeDecrement(size_t step) volatile noexcept {
 			value -= step;
 			return *this;
 		}
 
-		constexpr volatile __VolatileRawPtr<T> unsafeAdd(size_t step) const volatile noexcept {
+		constexpr volatile __VolatileRawPtr<T> UnsafeAdd(size_t step) const volatile noexcept {
 			return __VolatileRawPtr<T>(value + step);
 		}
 
-		constexpr volatile __VolatileRawPtr<T> unsafeDifference(__VolatileRawPtr<T> other) const
+		constexpr volatile __VolatileRawPtr<T> UnsafeDifference(__VolatileRawPtr<T> other) const
 		    volatile noexcept {
 			return __VolatileRawPtr<T>(value - other.value);
 		}
 
-		constexpr usize unsafeNarrowToInteger() const volatile noexcept {
+		constexpr usize UnsafeNarrowToInteger() const volatile noexcept {
 			return reinterpret_cast<size_t>(value);
 		}
 
-		template <class U>
-		constexpr __VolatileRawPtr<U> unsafePointerCast() const volatile noexcept {
+		/*template <class U>
+		constexpr __VolatileRawPtr<U> UnsafePointerCast() const volatile noexcept {
 			return ((U*) (value));
-		}
+		}*/
 
-		static constexpr __VolatileRawPtr<T> unsafeNarrowToPointer(usize value) noexcept {
+		static constexpr __VolatileRawPtr<T> UnsafeNarrowToPointer(usize value) noexcept {
 			return reinterpret_cast<T*>((size_t) value);
 		}
 
@@ -253,7 +271,7 @@ namespace Builtin::Unsafe {
 		return reinterpret_cast<size_t>((T*) ptr);
 	}
 
-	template <class T, class U>
+	template <class U, class T>
 	constexpr __RawPtr<U> UnsafePointerCast(__RawPtr<T> ptr) noexcept {
 		return ((U*) (T*) ptr);
 	}

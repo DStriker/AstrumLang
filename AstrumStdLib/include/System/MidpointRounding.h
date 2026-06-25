@@ -39,6 +39,7 @@ class __Class_MidpointRounding;
 		public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
 		public: constexpr bool operator ==(const __self& that) const noexcept { return __value == that.__value; } 
+		public: constexpr auto operator <=>(const __self& that) const noexcept { return __value <=> that.__value; } 
 		#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
 		public: static ASTRUMSTD_HIDDEN const MidpointRounding ToEven;
 		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"

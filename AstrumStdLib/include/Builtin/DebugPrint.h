@@ -49,3 +49,21 @@ inline void print(Builtin::Str v) {
 }
 
 inline void print(const std::string& v) { std::cout << v << "\n"; }
+
+inline void printDecimal(Builtin::u128 mantissa, bool isNegative, Builtin::u32 sc) {
+	unsigned scale = sc;
+	if (isNegative)
+	{
+		std::cout << "-";
+	}
+	auto str = Builtin::DebugPrintUInt128(mantissa);
+	if (scale >= str.length())
+	{
+		str.insert(0, scale - str.length() + 1, '0');
+	}
+	if (scale > 0)
+	{
+		str.insert(str.length() - scale, 1, '.');
+	}
+	std::cout << str << "\n";
+}

@@ -371,6 +371,7 @@ namespace AstrumLang {
 		std::stack<AstrumParser::UnaryExpressionContext*> unaryExpressions;
 		std::stack<std::pair<int, int>> currentSwitchData;
 		std::set<AstrumErrorListener*> errorListeners;
+		AstrumParser::SimpleDeclarationContext* currentDeclaration {};
 		AstrumParser::AssignmentExpressionContext* currentAssignment {};
 		AstrumParser::StatementContext* currentStatement {};
 		AstrumParser::SelectionStatementContext* currentIfStatement {};
@@ -413,6 +414,7 @@ namespace AstrumLang {
 		std::vector<std::string> currentTemplateArgs;
 		std::unordered_set<std::string> protectedSymbols;
 		std::unordered_set<std::string> protectedVersions;
+		std::unordered_set<AstrumParser::SimpleDeclarationContext*> lambdaDeclarations;
 		std::unordered_map<antlr4::tree::ParseTree*, std::string> contextTypes;
 		struct SymbolTable {
 			std::unordered_map<std::string, std::string>& globalSymbolTable;

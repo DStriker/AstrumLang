@@ -425,7 +425,7 @@ relationalExpression
     : threeWayComparisonExpression (As Question? theTypeId | Is patternList)?
     | Type theTypeId Is typeTrait
     | threeWayComparisonExpression not? In threeWayComparisonExpression
-    | relationalExpression (Less | Greater | LessEqual | GreaterEqual | Op6) relationalExpression
+    | threeWayComparisonExpression (Less | Greater | LessEqual | GreaterEqual | Op6) threeWayComparisonExpression
     ;
 
 equalityExpression
@@ -784,7 +784,7 @@ simpleTypeSpecifier
     | Fext
     | Char
     | Byte
-    | Rune
+    | Decimal
     | Bool
     | Str
     | Self
@@ -1193,7 +1193,7 @@ functionBody
     ;
 
 shortFunctionBody
-    : (AssignArrow | EqualArrow) expressionStatement
+    : (AssignArrow | EqualArrow) (expressionStatement | bracedInitList Semi | collectionExpression Semi)
     ;
 
 exceptionSpecification

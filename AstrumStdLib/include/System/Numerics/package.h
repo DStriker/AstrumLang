@@ -13,6 +13,7 @@
 #include "IFloatingPoint.h"
 #include "IFloatingPointConstants.h"
 #include "IFloatingPointIeee754.h"
+#include "IFloatingPointMath.h"
 #include "IHyperbolicFunctions.h"
 #include "IIncrementOperators.h"
 #include "IIntDivOperators.h"
