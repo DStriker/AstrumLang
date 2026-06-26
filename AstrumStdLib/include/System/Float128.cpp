@@ -99,19 +99,19 @@ namespace __Float128_Protected { extern const decltype(Builtin::u128(1ULL) << __
 	inline auto RoundPackBits(bool sign, Builtin::i32 exp, Builtin::u128 sig, Builtin::u64 extra) noexcept -> const Builtin::u128
 	{
 		#line 2065 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto doIncrement = (extra <=> Builtin::u64(0x8000000000000000ULL)) >= 0; 
+		Builtin::Auto<decltype((extra <=> Builtin::u64(0x8000000000000000ULL)) >= 0)> doIncrement = (extra <=> Builtin::u64(0x8000000000000000ULL)) >= 0; 
 		#line 2067 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		if ((ADV_UFCS(NarrowToUInt32)(exp.__ref()) <=> Builtin::u32(0x7FFDU)) >= 0) {
 			#line 2068 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			if ((exp <=> Builtin::i32(0)) < 0) {
 				#line 2069 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-				const auto isTiny = ((exp <=> Builtin::i32(-1)) < 0) | !doIncrement | (sig <=> Builtin::ParseUInt128("0x0001FFFFFFFFFFFFFFFFFFFFFFFFFFFF")) < 0; 
+				const Builtin::Auto<decltype(((exp <=> Builtin::i32(-1)) < 0) | !doIncrement | (sig <=> Builtin::ParseUInt128("0x0001FFFFFFFFFFFFFFFFFFFFFFFFFFFF")) < 0)> isTiny = ((exp <=> Builtin::i32(-1)) < 0) | !doIncrement | (sig <=> Builtin::ParseUInt128("0x0001FFFFFFFFFFFFFFFFFFFFFFFFFFFF")) < 0; 
 				#line 2070 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-				const auto dist = -exp; 
+				const Builtin::Auto<decltype(-exp)> dist = -exp; 
 				#line 2071 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-				const auto negDist = ADV_UFCS(NarrowToUInt32)(exp.__ref()); 
+				const Builtin::Auto<decltype(ADV_UFCS(NarrowToUInt32)(exp.__ref()))> negDist = ADV_UFCS(NarrowToUInt32)(exp.__ref()); 
 				#line 2073 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-				auto tmp = extra; 
+				Builtin::Auto<decltype(extra)> tmp = extra; 
 				#line 2074 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 				if ((dist <=> Builtin::i32(64)) < 0) {
 					#line 2075 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -165,9 +165,9 @@ namespace __Float128_Protected { extern const decltype(Builtin::u128(1ULL) << __
 				#line 2099 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 				if ((exp <=> Builtin::i32(0x7FFD)) > 0 || (exp == Builtin::i32(0x7FFD) && sig == Builtin::ParseUInt128("0x0001FFFFFFFFFFFFFFFFFFFFFFFFFFFF") && doIncrement)) {
 					#line 2100 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-					const auto high = (Builtin::u64{sign} << Builtin::i32(63)) | (Builtin::u64(0x7FFFULL) << Builtin::i32(48)); 
+					const Builtin::Auto<decltype((Builtin::u64{sign} << Builtin::i32(63)) | (Builtin::u64(0x7FFFULL) << Builtin::i32(48)))> high = (Builtin::u64{sign} << Builtin::i32(63)) | (Builtin::u64(0x7FFFULL) << Builtin::i32(48)); 
 					#line 2101 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-					const auto low = Builtin::u32(0U); 
+					const Builtin::Auto<decltype(Builtin::u32(0U))> low = Builtin::u32(0U); 
 					#line 2102 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 					return Builtin::u128{high, low};
 				}
@@ -176,7 +176,7 @@ namespace __Float128_Protected { extern const decltype(Builtin::u128(1ULL) << __
 		#line 2106 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		if (doIncrement) {
 			#line 2107 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-			const auto sig128 = ADV_UFCS(_operator_add_mod)(sig, Builtin::i32(1)); 
+			const Builtin::Auto<decltype(ADV_UFCS(_operator_add_mod)(sig, Builtin::i32(1)))> sig128 = ADV_UFCS(_operator_add_mod)(sig, Builtin::i32(1)); 
 			#line 2108 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			sig = sig128 & Builtin::u128{ADV_USPCS(MaxValue, Builtin::u64)(), ADV_UFCS(Low64)(sig128.__ref()) & (ADV_UFCS(_operator_not)(Builtin::u64{(extra & Builtin::u64(0x7FFFFFFFFFFFFFFFULL)) == Builtin::i32(0)}))};
 		} else {
@@ -197,7 +197,7 @@ namespace __Float128_Protected { extern const decltype(Builtin::u128(1ULL) << __
 	inline auto NormalizeRoundPackBits(bool sign, Builtin::i32 exp, Builtin::u128 sig) noexcept -> const Builtin::u128
 	{
 		#line 2120 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto shift = Builtin::i32{ADV_UPCS(LeadingZeroCount)(sig.__ref()) - Builtin::i32(15)}; 
+		Builtin::Auto<decltype(Builtin::i32{ADV_UPCS(LeadingZeroCount)(sig.__ref()) - Builtin::i32(15)})> shift = Builtin::i32{ADV_UPCS(LeadingZeroCount)(sig.__ref()) - Builtin::i32(15)}; 
 		#line 2121 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		Builtin::u64 extra{}; 
 		#line 2122 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -218,13 +218,13 @@ namespace __Float128_Protected { extern const decltype(Builtin::u128(1ULL) << __
 			#line 2131 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			{
 				#line 2132 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-				const auto negShift = shift; 
+				const Builtin::Auto<decltype(shift)> negShift = shift; 
 				#line 2133 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 				shift = -shift;
 				#line 2134 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-				const auto high = ADV_UFCS(High64)(sig.__ref()) >> shift; 
+				const Builtin::Auto<decltype(ADV_UFCS(High64)(sig.__ref()) >> shift)> high = ADV_UFCS(High64)(sig.__ref()) >> shift; 
 				#line 2135 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-				const auto low = ADV_UFCS(High64)(sig.__ref()) << (negShift & Builtin::i32(63)) | ADV_UFCS(Low64)(sig.__ref()) >> shift; 
+				const Builtin::Auto<decltype(ADV_UFCS(High64)(sig.__ref()) << (negShift & Builtin::i32(63)) | ADV_UFCS(Low64)(sig.__ref()) >> shift)> low = ADV_UFCS(High64)(sig.__ref()) << (negShift & Builtin::i32(63)) | ADV_UFCS(Low64)(sig.__ref()) >> shift; 
 				#line 2136 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 				extra = ADV_UFCS(Low64)(sig.__ref()) << (negShift & Builtin::i32(63));
 				#line 2137 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -543,12 +543,12 @@ static_assert(Builtin::TypeIs<Builtin::f128, IDecrementOperators<Builtin::f128>>
 				#line 24 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 				if (__this == obj) {
 					#line 25 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-					return Builtin::Boolean(true);
+					return true;
 				}
 			}
 		}
 		#line 30 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		return Builtin::Boolean(false);
+		return false;
 	}
 	
 } namespace System{
@@ -681,7 +681,7 @@ static_assert(Builtin::TypeIs<Builtin::f128, IDecrementOperators<Builtin::f128>>
 	auto Root(__extension_Float128_831_f128 const& __this LIFETIMEBOUND, Builtin::i32 n)  -> const typename __extension_Float128_831_f128
 	{
 		#line 1057 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto PositiveN = [] (__extension_Float128_2039_f128 x, Builtin::i32 n) 
+		auto PositiveN = [&] (__extension_Float128_2039_f128 x, Builtin::i32 n) 
 		{
 			#line 1059 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			__extension_Float128_2039_f128 result{}; 
@@ -742,7 +742,7 @@ static_assert(Builtin::TypeIs<Builtin::f128, IDecrementOperators<Builtin::f128>>
 			return result;
 		}; 
 		#line 1086 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto NegativeN = [] (__extension_Float128_2039_f128 x, Builtin::i32 n) 
+		auto NegativeN = [&] (__extension_Float128_2039_f128 x, Builtin::i32 n) 
 		{
 			#line 1088 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			__extension_Float128_2039_f128 result{}; 
@@ -862,7 +862,7 @@ ADV_WARNING_POP
 	auto Hypot(__extension_Float128_831_f128 const& __this LIFETIMEBOUND, __extension_Float128_2039_f128 y)  -> const typename __extension_Float128_831_f128
 	{
 		#line 1130 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto sq = [] (Builtin::f128 x) 
+		auto sq = [&] (Builtin::f128 x) 
 		{
 			#line 1131 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			const auto xc = x * ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x40380000000000000080000000000000")); 
@@ -874,21 +874,21 @@ ADV_WARNING_POP
 			return std::make_tuple(xh * xh - x * x + xh * xl * Builtin::i32(2) + xl * xl, x * x);
 		}; 
 		#line 1137 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto x = __this; 
+		Builtin::Auto<decltype(__this)> x = __this; 
 		#line 1138 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto ex = __Float128_Protected::BiasedExponent(x); 
+		Builtin::Auto<decltype(__Float128_Protected::BiasedExponent(x))> ex = __Float128_Protected::BiasedExponent(x); 
 		#line 1139 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto ey = __Float128_Protected::BiasedExponent(y); 
+		Builtin::Auto<decltype(__Float128_Protected::BiasedExponent(y))> ey = __Float128_Protected::BiasedExponent(y); 
 		#line 1140 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		if ((ex <=> ey) < 0) {
 			#line 1141 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-			auto tmp = ex; 
+			Builtin::Auto<decltype(ex)> tmp = ex; 
 			#line 1142 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			ex = ey;
 			#line 1143 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			ey = tmp;
 			#line 1144 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-			auto tmp2 = x; 
+			Builtin::Auto<decltype(x)> tmp2 = x; 
 			#line 1145 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			x = ADV_UPCS(Abs)(y.__ref());
 			#line 1146 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -918,11 +918,11 @@ ADV_WARNING_POP
 			return x + y;
 		}
 		#line 1162 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		constexpr auto huge = ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x670F0000000000000000000000000000"));
+		constexpr Builtin::Auto<decltype(ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x670F0000000000000000000000000000")))> huge = ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x670F0000000000000000000000000000"));
 		#line 1163 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		constexpr auto tiny = ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x18EF0000000000000000000000000000"));
+		constexpr Builtin::Auto<decltype(ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x18EF0000000000000000000000000000")))> tiny = ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x18EF0000000000000000000000000000"));
 		#line 1164 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto z = ADV_USPCS(One, __extension_Float128_2039_f128)(); 
+		Builtin::Auto<decltype(ADV_USPCS(One, __extension_Float128_2039_f128)())> z = ADV_USPCS(One, __extension_Float128_2039_f128)(); 
 		#line 1166 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		if ((ex <=> Builtin::i32(0x3FFF) + Builtin::i32(8000)) > 0) {
 			#line 1167 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -956,13 +956,13 @@ ADV_WARNING_POP
 	auto getSqrt(__extension_Float128_831_f128 const& __this ) -> const __extension_Float128_2039_f128
 	{
 		#line 837 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto bits = ADV_UPCS(Bits)(__this.__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(Bits)(__this.__ref()))> bits = ADV_UPCS(Bits)(__this.__ref()); 
 		#line 838 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto sign = ADV_UPCS(IsNegative)(__this.__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(IsNegative)(__this.__ref()))> sign = ADV_UPCS(IsNegative)(__this.__ref()); 
 		#line 839 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		Builtin::i32 exp = __Float128_Protected::ExtractBiasedExponentFromBits(bits); 
 		#line 840 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto sig = __Float128_Protected::ExtractTrailingSignificandFromBits(bits); 
+		Builtin::Auto<decltype(__Float128_Protected::ExtractTrailingSignificandFromBits(bits))> sig = __Float128_Protected::ExtractTrailingSignificandFromBits(bits); 
 		#line 844 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		if (exp == Builtin::i32(0x7FFF)) {
 			#line 846 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -996,22 +996,22 @@ ADV_WARNING_POP
 				return __this;
 			}
 			#line 878 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-			const auto shift = Builtin::i32{ADV_UPCS(LeadingZeroCount)(sig.__ref())} - Builtin::i32(15); 
+			const Builtin::Auto<decltype(Builtin::i32{ADV_UPCS(LeadingZeroCount)(sig.__ref())} - Builtin::i32(15))> shift = Builtin::i32{ADV_UPCS(LeadingZeroCount)(sig.__ref())} - Builtin::i32(15); 
 			#line 879 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			exp = Builtin::i32(1) - shift;
 			#line 880 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			sig <<= shift;
 		}
 		#line 883 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto resultExp = ((exp - Builtin::i32(0x3FFF)) >> Builtin::i32(1)) + Builtin::i32(0x3FFE); 
+		const Builtin::Auto<decltype(((exp - Builtin::i32(0x3FFF)) >> Builtin::i32(1)) + Builtin::i32(0x3FFE))> resultExp = ((exp - Builtin::i32(0x3FFF)) >> Builtin::i32(1)) + Builtin::i32(0x3FFE); 
 		#line 884 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		exp &= Builtin::i32(1);
 		#line 885 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		sig |= __Float128_Protected::HiddenBit;
 		#line 886 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto sig32 = ADV_UFCS(NarrowToUInt32)((sig >> Builtin::i32(81)).__ref()); 
+		const Builtin::Auto<decltype(ADV_UFCS(NarrowToUInt32)((sig >> Builtin::i32(81)).__ref()))> sig32 = ADV_UFCS(NarrowToUInt32)((sig >> Builtin::i32(81)).__ref()); 
 		#line 887 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto recip = [] (Builtin::u32 oddExp, Builtin::u32 a) 
+		const auto recip = [&] (Builtin::u32 oddExp, Builtin::u32 a) 
 		{
 			#line 888 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			constexpr auto Approx1k0s = Builtin::ToInlineArray<Builtin::u16>({Builtin::u16(0xB4C9U), Builtin::u16(0xFFABU), Builtin::u16(0xAA7DU), Builtin::u16(0xF11CU), Builtin::u16(0xA1C5U), Builtin::u16(0xE4C7U), Builtin::u16(0x9A43U), Builtin::u16(0xDA29U), Builtin::u16(0x93B5U), Builtin::u16(0xD0E5U), Builtin::u16(0x8DEDU), Builtin::u16(0xC8B7U), Builtin::u16(0x88C6U), Builtin::u16(0xC16DU), Builtin::u16(0x8424U), Builtin::u16(0xBAE1U)});
@@ -1047,7 +1047,7 @@ ADV_WARNING_POP
 			return r;
 		}(ADV_UFCS(NarrowToUInt32)(exp.__ref()), sig32); 
 		#line 918 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto resultSig32 = Builtin::u32{(ADV_UFCS(_operator_mul_mod)(Builtin::u64{sig32}, recip)) >> Builtin::i32(32)}; 
+		Builtin::Auto<decltype(Builtin::u32{(ADV_UFCS(_operator_mul_mod)(Builtin::u64{sig32}, recip)) >> Builtin::i32(32)})> resultSig32 = Builtin::u32{(ADV_UFCS(_operator_mul_mod)(Builtin::u64{sig32}, recip)) >> Builtin::i32(32)}; 
 		#line 919 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		Builtin::u128 rem{}; 
 		#line 920 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1068,22 +1068,22 @@ ADV_WARNING_POP
 		#line 927 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		ADV_UFCS(_operator_sub_mod_eq)(rem, Builtin::u128{Builtin::u64{resultSig32} * resultSig32, Builtin::u32(0U)});
 		#line 929 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto q = Builtin::u32{(ADV_UFCS(_operator_mul_mod)(Builtin::u64{ADV_UFCS(NarrowToUInt32)((rem >> Builtin::i32(66)).__ref())}, recip)) >> Builtin::i32(32)}; 
+		Builtin::Auto<decltype(Builtin::u32{(ADV_UFCS(_operator_mul_mod)(Builtin::u64{ADV_UFCS(NarrowToUInt32)((rem >> Builtin::i32(66)).__ref())}, recip)) >> Builtin::i32(32)})> q = Builtin::u32{(ADV_UFCS(_operator_mul_mod)(Builtin::u64{ADV_UFCS(NarrowToUInt32)((rem >> Builtin::i32(66)).__ref())}, recip)) >> Builtin::i32(32)}; 
 		#line 930 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto x64 = Builtin::u64{resultSig32} << Builtin::i32(32); 
+		const Builtin::Auto<decltype(Builtin::u64{resultSig32} << Builtin::i32(32))> x64 = Builtin::u64{resultSig32} << Builtin::i32(32); 
 		#line 931 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto resultSig64 = ADV_UFCS(_operator_add_mod)(x64, (Builtin::u64{q} << Builtin::i32(3))); 
+		Builtin::Auto<decltype(ADV_UFCS(_operator_add_mod)(x64, (Builtin::u64{q} << Builtin::i32(3))))> resultSig64 = ADV_UFCS(_operator_add_mod)(x64, (Builtin::u64{q} << Builtin::i32(3))); 
 		#line 932 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto y = rem << Builtin::i32(29); 
+		Builtin::Auto<decltype(rem << Builtin::i32(29))> y = rem << Builtin::i32(29); 
 		#line 934 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		Builtin::u128 term{}; 
 		#line 935 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto a = ADV_UFCS(_operator_add_mod)(x64, resultSig64); 
+		Builtin::Auto<decltype(ADV_UFCS(_operator_add_mod)(x64, resultSig64))> a = ADV_UFCS(_operator_add_mod)(x64, resultSig64); 
 		#line 936 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		for (;;) 
 		{
 			#line 937 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-			const auto mid = ADV_UFCS(_operator_mul_mod)(Builtin::u64{ADV_UFCS(NarrowToUInt32)(a.__ref())}, q); 
+			const Builtin::Auto<decltype(ADV_UFCS(_operator_mul_mod)(Builtin::u64{ADV_UFCS(NarrowToUInt32)(a.__ref())}, q))> mid = ADV_UFCS(_operator_mul_mod)(Builtin::u64{ADV_UFCS(NarrowToUInt32)(a.__ref())}, q); 
 			#line 938 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			term = Builtin::u128{ADV_UFCS(_operator_add_mod)(ADV_UFCS(_operator_mul_mod)(Builtin::u64{ADV_UFCS(NarrowToUInt32)((a >> Builtin::i32(32)).__ref())}, q), (mid >> Builtin::i32(32))), mid << Builtin::i32(32)};
 			#line 939 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1130,11 +1130,11 @@ ADV_WARNING_POP
 		#line 962 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		q = Builtin::u32{ADV_UFCS(_operator_add_mod)(((ADV_UFCS(_operator_mul_mod)(Builtin::u64{rem >> Builtin::i32(66)}, recip)) >> Builtin::i32(32)), Builtin::i32(2))};
 		#line 963 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto resultSigExtra = Builtin::u64{q} << Builtin::i32(59); 
+		Builtin::Auto<decltype(Builtin::u64{q} << Builtin::i32(59))> resultSigExtra = Builtin::u64{q} << Builtin::i32(59); 
 		#line 964 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		term = Builtin::u128{ADV_UFCS(_operator_subscript)(qs.__ref(), Builtin::i32(1))} << Builtin::i32(53);
 		#line 965 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto resultSig = ADV_UFCS(_operator_add_mod)(Builtin::u128{Builtin::u64{ADV_UFCS(_operator_subscript)(qs.__ref(), Builtin::i32(2))} << Builtin::i32(18), (Builtin::u64{ADV_UFCS(_operator_subscript)(qs.__ref(), Builtin::i32(0))} << Builtin::i32(24)) + (q >> Builtin::i32(5))}, term); 
+		Builtin::Auto<decltype(ADV_UFCS(_operator_add_mod)(Builtin::u128{Builtin::u64{ADV_UFCS(_operator_subscript)(qs.__ref(), Builtin::i32(2))} << Builtin::i32(18), (Builtin::u64{ADV_UFCS(_operator_subscript)(qs.__ref(), Builtin::i32(0))} << Builtin::i32(24)) + (q >> Builtin::i32(5))}, term))> resultSig = ADV_UFCS(_operator_add_mod)(Builtin::u128{Builtin::u64{ADV_UFCS(_operator_subscript)(qs.__ref(), Builtin::i32(2))} << Builtin::i32(18), (Builtin::u64{ADV_UFCS(_operator_subscript)(qs.__ref(), Builtin::i32(0))} << Builtin::i32(24)) + (q >> Builtin::i32(5))}, term); 
 		#line 967 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		if (((q & Builtin::i32(0xF)) <=> Builtin::i32(2)) <= 0) {
 			#line 968 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1150,7 +1150,7 @@ ADV_WARNING_POP
 			#line 973 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			a = ADV_UFCS(Low64)(term.__ref());
 			#line 974 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-			auto mid = ADV_UFCS(_operator_mul_mod)(Builtin::u64{ADV_UFCS(NarrowToUInt32)(a.__ref())}, q); 
+			Builtin::Auto<decltype(ADV_UFCS(_operator_mul_mod)(Builtin::u64{ADV_UFCS(NarrowToUInt32)(a.__ref())}, q))> mid = ADV_UFCS(_operator_mul_mod)(Builtin::u64{ADV_UFCS(NarrowToUInt32)(a.__ref())}, q); 
 			#line 975 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			y = Builtin::u128{ADV_UFCS(_operator_add_mod)(ADV_UFCS(_operator_mul_mod)(Builtin::u64{ADV_UFCS(NarrowToUInt32)((a >> Builtin::i32(32)).__ref())}, q), (mid >> Builtin::i32(32))), mid << Builtin::i32(32)};
 			#line 976 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1180,7 +1180,7 @@ ADV_WARNING_POP
 			}
 		}
 		#line 991 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		return ADV_USFCS((Builtin::f128), FromBits)(RoundPackBits(Builtin::Boolean(false), resultExp, resultSig, resultSigExtra));
+		return ADV_USFCS((Builtin::f128), FromBits)(RoundPackBits(false, resultExp, resultSig, resultSigExtra));
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1188,13 +1188,13 @@ ADV_WARNING_POP
 	auto getCbrt(__extension_Float128_831_f128 const& __this ) -> const __extension_Float128_2039_f128
 	{
 		#line 996 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		constexpr auto B1 = Builtin::u32(709958130U);
+		constexpr Builtin::Auto<decltype(Builtin::u32(709958130U))> B1 = Builtin::u32(709958130U);
 		#line 997 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto e = ADV_UFCS(NarrowToInt32)(__Float128_Protected::BiasedExponent(__this).__ref()); 
+		Builtin::Auto<decltype(ADV_UFCS(NarrowToInt32)(__Float128_Protected::BiasedExponent(__this).__ref()))> e = ADV_UFCS(NarrowToInt32)(__Float128_Protected::BiasedExponent(__this).__ref()); 
 		#line 998 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		const Builtin::i32 sign = ADV_UPCS(IsNegative)(__this.__ref()) ? Builtin::i32(1) << Builtin::i32(15) : Builtin::i32(0); 
 		#line 999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto u = __this; 
+		Builtin::Auto<decltype(__this)> u = __this; 
 		#line 1004 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		if (e == Builtin::i32(0x7FFF)) {
 			#line 1005 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1217,7 +1217,7 @@ ADV_WARNING_POP
 		#line 1019 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		e -= Builtin::i32(0x3FFF);
 		#line 1020 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto x = ADV_USFCS((Builtin::f128), FromBits)(__Float128_Protected::PackBits(Builtin::Boolean(false), Builtin::u16(0x3FFFU), __Float128_Protected::TrailingSignificand(u))); 
+		Builtin::Auto<decltype(ADV_USFCS((Builtin::f128), FromBits)(__Float128_Protected::PackBits(false, Builtin::u16(0x3FFFU), __Float128_Protected::TrailingSignificand(u))))> x = ADV_USFCS((Builtin::f128), FromBits)(__Float128_Protected::PackBits(false, Builtin::u16(0x3FFFU), __Float128_Protected::TrailingSignificand(u))); 
 		#line 1022 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		{
 			#line 1023 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1248,15 +1248,15 @@ ADV_WARNING_POP
 		}
 
 		#line 1033 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto v = ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{Builtin::u64{sign | (Builtin::i32(0x3FFF) + ADV_UFCS(_operator_bsl)(e, Builtin::i32(3)))} << Builtin::i32(48), Builtin::u32(0U)}); 
+		const Builtin::Auto<decltype(ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{Builtin::u64{sign | (Builtin::i32(0x3FFF) + ADV_UFCS(_operator_bsl)(e, Builtin::i32(3)))} << Builtin::i32(48), Builtin::u32(0U)}))> v = ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{Builtin::u64{sign | (Builtin::i32(0x3FFF) + ADV_UFCS(_operator_bsl)(e, Builtin::i32(3)))} << Builtin::i32(48), Builtin::u32(0U)}); 
 		#line 1034 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto ft = ADV_USFCS((Builtin::f32), FromBits)(ADV_UFCS(_operator_add_mod)(ADV_UFCS(_operator_bsl)((ADV_UPCS(Bits)(ADV_UFCS(ToFloat32)(x.__ref()).__ref()) & Builtin::u32(0x7FFFFFFFU)), Builtin::i32(3)), B1)); 
+		const Builtin::Auto<decltype(ADV_USFCS((Builtin::f32), FromBits)(ADV_UFCS(_operator_add_mod)(ADV_UFCS(_operator_bsl)((ADV_UPCS(Bits)(ADV_UFCS(ToFloat32)(x.__ref()).__ref()) & Builtin::u32(0x7FFFFFFFU)), Builtin::i32(3)), B1)))> ft = ADV_USFCS((Builtin::f32), FromBits)(ADV_UFCS(_operator_add_mod)(ADV_UFCS(_operator_bsl)((ADV_UPCS(Bits)(ADV_UFCS(ToFloat32)(x.__ref()).__ref()) & Builtin::u32(0x7FFFFFFFU)), Builtin::i32(3)), B1)); 
 		#line 1035 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto dx = ADV_UFCS(ToFloat64)(x.__ref()); 
+		const Builtin::Auto<decltype(ADV_UFCS(ToFloat64)(x.__ref()))> dx = ADV_UFCS(ToFloat64)(x.__ref()); 
 		#line 1037 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		Builtin::f64 dt = ft; 
 		#line 1038 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto dr = dt * dt * dt; 
+		Builtin::Auto<decltype(dt * dt * dt)> dr = dt * dt * dt; 
 		#line 1039 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		dt = dt * (dx + dx + dr) / (dx + dr + dr);
 		#line 1040 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1264,13 +1264,13 @@ ADV_WARNING_POP
 		#line 1041 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		dt = dt * (dx + dx + dr) / (dx + dr + dr);
 		#line 1043 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto t = Builtin::f128{dt} + ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FD20000000000000000000000000000")) + ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x403B0000000000000000000000000000")) - ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x403B0000000000000000000000000000")); 
+		Builtin::Auto<decltype(Builtin::f128{dt} + ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FD20000000000000000000000000000")) + ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x403B0000000000000000000000000000")) - ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x403B0000000000000000000000000000")))> t = Builtin::f128{dt} + ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FD20000000000000000000000000000")) + ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x403B0000000000000000000000000000")) - ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x403B0000000000000000000000000000")); 
 		#line 1047 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto s = t * t; 
+		const Builtin::Auto<decltype(t * t)> s = t * t; 
 		#line 1048 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto r = x / s; 
+		Builtin::Auto<decltype(x / s)> r = x / s; 
 		#line 1049 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto w = t + t; 
+		const Builtin::Auto<decltype(t + t)> w = t + t; 
 		#line 1050 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		r = (r - t) / (w + r);
 		#line 1051 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1396,7 +1396,7 @@ ADV_WARNING_POP
 	auto getAcosh(__extension_Float128_1271_f128 const& __this ) -> const __extension_Float128_2039_f128
 	{
 		#line 1275 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto exp = __Float128_Protected::BiasedExponent(__this); 
+		const Builtin::Auto<decltype(__Float128_Protected::BiasedExponent(__this))> exp = __Float128_Protected::BiasedExponent(__this); 
 		#line 1277 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		if ((exp <=> Builtin::i32(0x3FFF)) < 0 || (exp & Builtin::i32(0x8000)) != Builtin::i32(0)) {
 			#line 1278 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1429,7 +1429,7 @@ ADV_WARNING_POP
 						#line 1293 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 						{
 							#line 1294 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-							const auto t = __this - ADV_USPCS(One, __extension_Float128_2039_f128)(); 
+							const Builtin::Auto<decltype(__this - ADV_USPCS(One, __extension_Float128_2039_f128)())> t = __this - ADV_USPCS(One, __extension_Float128_2039_f128)(); 
 							#line 1295 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 							return ADV_UPCS(LnP1)((t + ADV_UPCS(Sqrt)((Builtin::f128{Builtin::i32(2)} * t + t * t).__ref())).__ref());
 						}
@@ -1445,11 +1445,11 @@ ADV_WARNING_POP
 	auto getAsinh(__extension_Float128_1271_f128 const& __this ) -> const __extension_Float128_2039_f128
 	{
 		#line 1307 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto exp = __Float128_Protected::BiasedExponent(__this); 
+		const Builtin::Auto<decltype(__Float128_Protected::BiasedExponent(__this))> exp = __Float128_Protected::BiasedExponent(__this); 
 		#line 1308 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto sign = ADV_UPCS(IsNegative)(__this.__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(IsNegative)(__this.__ref()))> sign = ADV_UPCS(IsNegative)(__this.__ref()); 
 		#line 1309 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto x = ADV_UPCS(Abs)(__this.__ref()); 
+		Builtin::Auto<decltype(ADV_UPCS(Abs)(__this.__ref()))> x = ADV_UPCS(Abs)(__this.__ref()); 
 		#line 1312 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		if ((exp <=> Builtin::i32(0x401F)) >= 0) {
 			#line 1313 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1476,11 +1476,11 @@ ADV_WARNING_POP
 	auto getAtanh(__extension_Float128_1271_f128 const& __this ) -> const __extension_Float128_2039_f128
 	{
 		#line 1327 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto exp = __Float128_Protected::BiasedExponent(__this); 
+		const Builtin::Auto<decltype(__Float128_Protected::BiasedExponent(__this))> exp = __Float128_Protected::BiasedExponent(__this); 
 		#line 1328 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto sign = ADV_UPCS(IsNegative)(__this.__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(IsNegative)(__this.__ref()))> sign = ADV_UPCS(IsNegative)(__this.__ref()); 
 		#line 1329 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto x = ADV_UPCS(Abs)(__this.__ref()); 
+		Builtin::Auto<decltype(ADV_UPCS(Abs)(__this.__ref()))> x = ADV_UPCS(Abs)(__this.__ref()); 
 		#line 1331 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		if ((exp <=> Builtin::i32(0x3FF) - Builtin::i32(1)) < 0) {
 			#line 1332 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1504,9 +1504,9 @@ ADV_WARNING_POP
 	auto getCosh(__extension_Float128_1271_f128 const& __this ) -> const __extension_Float128_2039_f128
 	{
 		#line 1344 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto exp = __Float128_Protected::BiasedExponent(__this); 
+		const Builtin::Auto<decltype(__Float128_Protected::BiasedExponent(__this))> exp = __Float128_Protected::BiasedExponent(__this); 
 		#line 1345 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto x = ADV_UPCS(Abs)(__this.__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(Abs)(__this.__ref()))> x = ADV_UPCS(Abs)(__this.__ref()); 
 		#line 1346 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		Builtin::f128 t{}; 
 		#line 1348 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1539,9 +1539,9 @@ ADV_WARNING_POP
 	auto getSinh(__extension_Float128_1271_f128 const& __this ) -> const __extension_Float128_2039_f128
 	{
 		#line 1374 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto exp = __Float128_Protected::BiasedExponent(__this); 
+		const Builtin::Auto<decltype(__Float128_Protected::BiasedExponent(__this))> exp = __Float128_Protected::BiasedExponent(__this); 
 		#line 1375 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto h = Builtin::f128{Builtin::f64(0.5)}; 
+		Builtin::Auto<decltype(Builtin::f128{Builtin::f64(0.5)})> h = Builtin::f128{Builtin::f64(0.5)}; 
 		#line 1376 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		Builtin::f128 t{}; 
 		#line 1378 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1550,7 +1550,7 @@ ADV_WARNING_POP
 			h = -h;
 		}
 		#line 1382 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto ax = ADV_UPCS(Abs)(__this.__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(Abs)(__this.__ref()))> ax = ADV_UPCS(Abs)(__this.__ref()); 
 		#line 1384 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		if ((ax <=> ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x400C62E42FEFA39EF35793C7673007E6"))) < 0) {
 			#line 1385 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1579,11 +1579,11 @@ ADV_WARNING_POP
 	auto getTanh(__extension_Float128_1271_f128 const& __this ) -> const __extension_Float128_2039_f128
 	{
 		#line 1401 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto exp = __Float128_Protected::BiasedExponent(__this); 
+		const Builtin::Auto<decltype(__Float128_Protected::BiasedExponent(__this))> exp = __Float128_Protected::BiasedExponent(__this); 
 		#line 1402 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto sign = ADV_UPCS(IsNegative)(__this.__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(IsNegative)(__this.__ref()))> sign = ADV_UPCS(IsNegative)(__this.__ref()); 
 		#line 1403 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto x = ADV_UPCS(Abs)(__this.__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(Abs)(__this.__ref()))> x = ADV_UPCS(Abs)(__this.__ref()); 
 		#line 1404 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		Builtin::f128 t{}; 
 		#line 1406 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1636,29 +1636,29 @@ ADV_WARNING_POP
 	auto FusedMultiplyAdd(__extension_Float128_1425_f128 const& __this LIFETIMEBOUND, __extension_Float128_2039_f128 rhs, __extension_Float128_2039_f128 addend)  -> const typename __extension_Float128_1425_f128
 	{
 		#line 1543 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto bitsA = ADV_UPCS(Bits)(__this.__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(Bits)(__this.__ref()))> bitsA = ADV_UPCS(Bits)(__this.__ref()); 
 		#line 1544 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto signA = (bitsA & __Float128_Protected::SignMask) != Builtin::i32(0); 
+		const Builtin::Auto<decltype((bitsA & __Float128_Protected::SignMask) != Builtin::i32(0))> signA = (bitsA & __Float128_Protected::SignMask) != Builtin::i32(0); 
 		#line 1545 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto expA = __Float128_Protected::ExtractBiasedExponentFromBits(bitsA); 
+		Builtin::Auto<decltype(__Float128_Protected::ExtractBiasedExponentFromBits(bitsA))> expA = __Float128_Protected::ExtractBiasedExponentFromBits(bitsA); 
 		#line 1546 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto sigA = __Float128_Protected::ExtractTrailingSignificandFromBits(bitsA); 
+		Builtin::Auto<decltype(__Float128_Protected::ExtractTrailingSignificandFromBits(bitsA))> sigA = __Float128_Protected::ExtractTrailingSignificandFromBits(bitsA); 
 		#line 1548 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto bitsB = ADV_UPCS(Bits)(rhs.__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(Bits)(rhs.__ref()))> bitsB = ADV_UPCS(Bits)(rhs.__ref()); 
 		#line 1549 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto signB = (bitsB & __Float128_Protected::SignMask) != Builtin::i32(0); 
+		const Builtin::Auto<decltype((bitsB & __Float128_Protected::SignMask) != Builtin::i32(0))> signB = (bitsB & __Float128_Protected::SignMask) != Builtin::i32(0); 
 		#line 1550 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto expB = __Float128_Protected::ExtractBiasedExponentFromBits(bitsB); 
+		Builtin::Auto<decltype(__Float128_Protected::ExtractBiasedExponentFromBits(bitsB))> expB = __Float128_Protected::ExtractBiasedExponentFromBits(bitsB); 
 		#line 1551 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto sigB = __Float128_Protected::ExtractTrailingSignificandFromBits(bitsB); 
+		Builtin::Auto<decltype(__Float128_Protected::ExtractTrailingSignificandFromBits(bitsB))> sigB = __Float128_Protected::ExtractTrailingSignificandFromBits(bitsB); 
 		#line 1553 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto bitsC = ADV_UPCS(Bits)(addend.__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(Bits)(addend.__ref()))> bitsC = ADV_UPCS(Bits)(addend.__ref()); 
 		#line 1554 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto signC = (bitsC & __Float128_Protected::SignMask) != Builtin::i32(0); 
+		const Builtin::Auto<decltype((bitsC & __Float128_Protected::SignMask) != Builtin::i32(0))> signC = (bitsC & __Float128_Protected::SignMask) != Builtin::i32(0); 
 		#line 1555 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto expC = __Float128_Protected::ExtractBiasedExponentFromBits(bitsC); 
+		Builtin::Auto<decltype(__Float128_Protected::ExtractBiasedExponentFromBits(bitsC))> expC = __Float128_Protected::ExtractBiasedExponentFromBits(bitsC); 
 		#line 1556 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto sigC = __Float128_Protected::ExtractTrailingSignificandFromBits(bitsC); 
+		Builtin::Auto<decltype(__Float128_Protected::ExtractTrailingSignificandFromBits(bitsC))> sigC = __Float128_Protected::ExtractTrailingSignificandFromBits(bitsC); 
 		#line 1559 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		Builtin::f128 bitsResult{}; 
 		#line 1560 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1739,7 +1739,7 @@ ADV_WARNING_POP
 				return addend;
 			}
 			#line 1635 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-			const auto shift = Builtin::i32{ADV_UPCS(LeadingZeroCount)(sigA.__ref())} - Builtin::i32(15); 
+			const Builtin::Auto<decltype(Builtin::i32{ADV_UPCS(LeadingZeroCount)(sigA.__ref())} - Builtin::i32(15))> shift = Builtin::i32{ADV_UPCS(LeadingZeroCount)(sigA.__ref())} - Builtin::i32(15); 
 			#line 1636 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			expA = ADV_UFCS(NarrowToUInt16)((Builtin::i32(1) - shift).__ref());
 			#line 1637 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1753,7 +1753,7 @@ ADV_WARNING_POP
 				return addend;
 			}
 			#line 1648 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-			const auto shift = Builtin::i32{ADV_UPCS(LeadingZeroCount)(sigB.__ref())} - Builtin::i32(15); 
+			const Builtin::Auto<decltype(Builtin::i32{ADV_UPCS(LeadingZeroCount)(sigB.__ref())} - Builtin::i32(15))> shift = Builtin::i32{ADV_UPCS(LeadingZeroCount)(sigB.__ref())} - Builtin::i32(15); 
 			#line 1649 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			expB = ADV_UFCS(NarrowToUInt16)((Builtin::i32(1) - shift).__ref());
 			#line 1650 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1772,9 +1772,9 @@ ADV_WARNING_POP
 		#line 1661 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		const auto& [mulLow, mulHigh] = ADV_UFCS(_operator_mul_gt)(sigA, sigB);
 		#line 1662 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto sigResult = mulHigh; 
+		Builtin::Auto<decltype(mulHigh)> sigResult = mulHigh; 
 		#line 1663 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto shiftDist = Builtin::i32(0); 
+		Builtin::Auto<decltype(Builtin::i32(0))> shiftDist = Builtin::i32(0); 
 		#line 1666 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		if ((ADV_UFCS(High64)(sigResult.__ref()) & Builtin::i64(0x0100000000000000LL)) == Builtin::i32(0)) {
 			#line 1667 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1789,14 +1789,14 @@ ADV_WARNING_POP
 				#line 1675 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 				shiftDist += Builtin::i32(8);
 				#line 1676 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-				const auto sigExtra = (ADV_UFCS(Low64)(sigResult.__ref()) << (Builtin::i32(64) - shiftDist)) | (mulLow != Builtin::i32(0) ? Builtin::u64(1ULL) : Builtin::u64(0ULL)); 
+				const Builtin::Auto<decltype((ADV_UFCS(Low64)(sigResult.__ref()) << (Builtin::i32(64) - shiftDist)) | (mulLow != Builtin::i32(0) ? Builtin::u64(1ULL) : Builtin::u64(0ULL)))> sigExtra = (ADV_UFCS(Low64)(sigResult.__ref()) << (Builtin::i32(64) - shiftDist)) | (mulLow != Builtin::i32(0) ? Builtin::u64(1ULL) : Builtin::u64(0ULL)); 
 				#line 1677 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 				sigResult >>= shiftDist;
 				#line 1678 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 				return ADV_USFCS((Builtin::f128), FromBits)(RoundPackBits(signResult, expResult - Builtin::i32(1), sigResult, sigExtra));
 			}
 			#line 1682 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-			const auto shift = Builtin::i32{ADV_UPCS(LeadingZeroCount)(sigC.__ref())} - Builtin::i32(15); 
+			const Builtin::Auto<decltype(Builtin::i32{ADV_UPCS(LeadingZeroCount)(sigC.__ref())} - Builtin::i32(15))> shift = Builtin::i32{ADV_UPCS(LeadingZeroCount)(sigC.__ref())} - Builtin::i32(15); 
 			#line 1683 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			expC = ADV_UFCS(NarrowToUInt16)((Builtin::i32(1) - shift).__ref());
 			#line 1684 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1805,11 +1805,11 @@ ADV_WARNING_POP
 		#line 1686 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		sigC = (sigC | __Float128_Protected::HiddenBit) << Builtin::i32(8);
 		#line 1688 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto expDiff = Builtin::i32{expResult} - expC; 
+		const Builtin::Auto<decltype(Builtin::i32{expResult} - expC)> expDiff = Builtin::i32{expResult} - expC; 
 		#line 1689 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto high256 = mulHigh; 
+		Builtin::Auto<decltype(mulHigh)> high256 = mulHigh; 
 		#line 1690 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto low256 = mulLow; 
+		Builtin::Auto<decltype(mulLow)> low256 = mulLow; 
 		#line 1691 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		Builtin::u128 cHigh{}, cLow{}; 
 		#line 1692 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1829,7 +1829,7 @@ ADV_WARNING_POP
 				#line 1700 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 				if (shiftDist == Builtin::i32(0)) {
 					#line 1701 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-					const auto x128 = (low256 >> Builtin::i32(1)) | (sigResult << Builtin::i32(127)); 
+					const Builtin::Auto<decltype((low256 >> Builtin::i32(1)) | (sigResult << Builtin::i32(127)))> x128 = (low256 >> Builtin::i32(1)) | (sigResult << Builtin::i32(127)); 
 					#line 1702 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 					sigResult >>= Builtin::i32(1);
 					#line 1703 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1844,7 +1844,7 @@ ADV_WARNING_POP
 				#line 1707 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 				if (shiftDist != Builtin::i32(0)) {
 					#line 1708 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-					const auto& [r, o] = ADV_UFCS(CarryingAdd)(low256.__ref(), low256, Builtin::Boolean(false));
+					const auto& [r, o] = ADV_UFCS(CarryingAdd)(low256.__ref(), low256, false);
 					#line 1709 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 					const auto& [r1, __var_1709_24] = ADV_UFCS(CarryingAdd)(high256.__ref(), high256, o);
 					#line 1710 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1866,9 +1866,9 @@ ADV_WARNING_POP
 						#line 1718 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 						if ((expDiff <=> Builtin::i32(255)) < 0) {
 							#line 1719 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-							auto tmpCLow = cLow; 
+							Builtin::Auto<decltype(cLow)> tmpCLow = cLow; 
 							#line 1720 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-							auto tmpCHigh = cHigh; 
+							Builtin::Auto<decltype(cHigh)> tmpCHigh = cHigh; 
 							#line 1721 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 							if ((expDiff <=> Builtin::i32(128)) >= 0) {
 								#line 1722 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1887,7 +1887,7 @@ ADV_WARNING_POP
 								}
 							}
 							#line 1729 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-							const auto shift = (-expDiff) & Builtin::i32(255); 
+							const Builtin::Auto<decltype((-expDiff) & Builtin::i32(255))> shift = (-expDiff) & Builtin::i32(255); 
 							#line 1730 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 							if ((shift <=> Builtin::i32(128)) > 0) {
 								#line 1731 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1940,7 +1940,7 @@ ADV_WARNING_POP
 				#line 1754 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 				{
 					#line 1755 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-					const auto& [r, o] = ADV_UFCS(CarryingAdd)(low256.__ref(), cLow, Builtin::Boolean(false));
+					const auto& [r, o] = ADV_UFCS(CarryingAdd)(low256.__ref(), cLow, false);
 					#line 1756 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 					const auto& [r1, __var_1756_24] = ADV_UFCS(CarryingAdd)(high256.__ref(), cHigh, o);
 					#line 1757 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1997,7 +1997,7 @@ ADV_WARNING_POP
 							#line 1785 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 							cLow = Builtin::u32(0U);
 							#line 1786 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-							const auto& [r, o] = ADV_UFCS(BorrowingSub)(cLow.__ref(), low256, Builtin::Boolean(false));
+							const auto& [r, o] = ADV_UFCS(BorrowingSub)(cLow.__ref(), low256, false);
 							#line 1787 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 							const auto& [r1, __var_1787_28] = ADV_UFCS(BorrowingSub)(cHigh.__ref(), high256, o);
 							#line 1788 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -2029,7 +2029,7 @@ ADV_WARNING_POP
 						#line 1802 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 						{
 							#line 1803 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-							const auto& [r, o] = ADV_UFCS(BorrowingSub)(low256.__ref(), cLow, Builtin::Boolean(false));
+							const auto& [r, o] = ADV_UFCS(BorrowingSub)(low256.__ref(), cLow, false);
 							#line 1804 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 							const auto& [r1, __var_1804_24] = ADV_UFCS(BorrowingSub)(high256.__ref(), cHigh, o);
 							#line 1805 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -2062,7 +2062,7 @@ ADV_WARNING_POP
 				#line 1821 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 				resultExtra = ADV_UFCS(High64)(low256.__ref());
 				#line 1822 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-				const auto low0 = ADV_UFCS(Low64)(low256.__ref()); 
+				const Builtin::Auto<decltype(ADV_UFCS(Low64)(low256.__ref()))> low0 = ADV_UFCS(Low64)(low256.__ref()); 
 				#line 1823 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 				if (ADV_UFCS(High64)(sigResult.__ref()) != Builtin::i32(0)) {
 					#line 1824 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -2110,9 +2110,9 @@ ADV_WARNING_POP
 					#line 1847 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 					sigResult <<= shiftDist;
 					#line 1848 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-					const auto shifted = Builtin::u128{resultExtra} << shiftDist; 
+					const Builtin::Auto<decltype(Builtin::u128{resultExtra} << shiftDist)> shifted = Builtin::u128{resultExtra} << shiftDist; 
 					#line 1849 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-					const auto x64 = ADV_UFCS(High64)(shifted.__ref()); 
+					const Builtin::Auto<decltype(ADV_UFCS(High64)(shifted.__ref()))> x64 = ADV_UFCS(High64)(shifted.__ref()); 
 					#line 1850 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 					resultExtra = ADV_UFCS(Low64)(shifted.__ref());
 					#line 1851 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -2136,19 +2136,19 @@ ADV_WARNING_POP
 	auto Ieee754Remainder(__extension_Float128_1425_f128 const& __this LIFETIMEBOUND, __extension_Float128_2039_f128 rhs)  -> const typename __extension_Float128_1425_f128
 	{
 		#line 1864 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto bitsA = ADV_UPCS(Bits)(__this.__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(Bits)(__this.__ref()))> bitsA = ADV_UPCS(Bits)(__this.__ref()); 
 		#line 1865 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto signA = (bitsA & __Float128_Protected::SignMask) != Builtin::i32(0); 
+		const Builtin::Auto<decltype((bitsA & __Float128_Protected::SignMask) != Builtin::i32(0))> signA = (bitsA & __Float128_Protected::SignMask) != Builtin::i32(0); 
 		#line 1866 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto expA = ADV_UFCS(NarrowToInt16)(__Float128_Protected::ExtractBiasedExponentFromBits(bitsA).__ref()); 
+		Builtin::Auto<decltype(ADV_UFCS(NarrowToInt16)(__Float128_Protected::ExtractBiasedExponentFromBits(bitsA).__ref()))> expA = ADV_UFCS(NarrowToInt16)(__Float128_Protected::ExtractBiasedExponentFromBits(bitsA).__ref()); 
 		#line 1867 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto sigA = __Float128_Protected::ExtractTrailingSignificandFromBits(bitsA); 
+		Builtin::Auto<decltype(__Float128_Protected::ExtractTrailingSignificandFromBits(bitsA))> sigA = __Float128_Protected::ExtractTrailingSignificandFromBits(bitsA); 
 		#line 1869 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto bitsB = ADV_UPCS(Bits)(rhs.__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(Bits)(rhs.__ref()))> bitsB = ADV_UPCS(Bits)(rhs.__ref()); 
 		#line 1870 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto expB = ADV_UFCS(NarrowToInt16)(__Float128_Protected::ExtractBiasedExponentFromBits(bitsB).__ref()); 
+		Builtin::Auto<decltype(ADV_UFCS(NarrowToInt16)(__Float128_Protected::ExtractBiasedExponentFromBits(bitsB).__ref()))> expB = ADV_UFCS(NarrowToInt16)(__Float128_Protected::ExtractBiasedExponentFromBits(bitsB).__ref()); 
 		#line 1871 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto sigB = __Float128_Protected::ExtractTrailingSignificandFromBits(bitsB); 
+		Builtin::Auto<decltype(__Float128_Protected::ExtractTrailingSignificandFromBits(bitsB))> sigB = __Float128_Protected::ExtractTrailingSignificandFromBits(bitsB); 
 		#line 1877 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		if (expA == Builtin::i32(0x7FFF)) {
 			#line 1878 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -2172,7 +2172,7 @@ ADV_WARNING_POP
 				return ADV_USPCS(NaN, __extension_Float128_2039_f128)();
 			}
 			#line 1899 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-			const auto shift = Builtin::i32{ADV_UPCS(LeadingZeroCount)(sigA.__ref())} - Builtin::i32(15); 
+			const Builtin::Auto<decltype(Builtin::i32{ADV_UPCS(LeadingZeroCount)(sigA.__ref())} - Builtin::i32(15))> shift = Builtin::i32{ADV_UPCS(LeadingZeroCount)(sigA.__ref())} - Builtin::i32(15); 
 			#line 1900 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			expA = Builtin::i16(1) - shift;
 			#line 1901 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -2183,15 +2183,15 @@ ADV_WARNING_POP
 		#line 1906 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		sigB |= __Float128_Protected::HiddenBit;
 		#line 1907 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto rem = sigA; 
+		Builtin::Auto<decltype(sigA)> rem = sigA; 
 		#line 1908 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		Builtin::u128 altRem{}; 
 		#line 1909 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto expDiff = Builtin::i32{expA} - expB; 
+		Builtin::Auto<decltype(Builtin::i32{expA} - expB)> expDiff = Builtin::i32{expA} - expB; 
 		#line 1910 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		Builtin::u32 q{}; 
 		#line 1911 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto selectRem = Builtin::Boolean(false); 
+		Builtin::Auto<decltype(false)> selectRem = false; 
 		#line 1912 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		if ((expDiff <=> Builtin::i32(1)) < 0) {
 			#line 1914 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -2223,7 +2223,7 @@ ADV_WARNING_POP
 			#line 1930 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			{
 				#line 1931 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-				const auto recip = Builtin::ReciprocalApproximate(ADV_UFCS(NarrowToUInt32)((sigB >> Builtin::i32(81)).__ref())); 
+				const Builtin::Auto<decltype(Builtin::ReciprocalApproximate(ADV_UFCS(NarrowToUInt32)((sigB >> Builtin::i32(81)).__ref())))> recip = Builtin::ReciprocalApproximate(ADV_UFCS(NarrowToUInt32)((sigB >> Builtin::i32(81)).__ref())); 
 				#line 1932 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 				expDiff -= Builtin::i32(30);
 				#line 1933 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -2271,7 +2271,7 @@ ADV_WARNING_POP
 					#line 1958 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 					altRem = ADV_UFCS(_operator_add_mod)(rem, sigB);
 					#line 1959 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-					selectRem = Builtin::Boolean(true);
+					selectRem = true;
 				}
 			}
 		}
@@ -2290,16 +2290,16 @@ ADV_WARNING_POP
 			} while ((rem & __Float128_Protected::SignMask) == Builtin::i32(0));
 		}
 		#line 1971 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto meanRem = ADV_UFCS(_operator_add_mod)(rem, altRem); 
+		const Builtin::Auto<decltype(ADV_UFCS(_operator_add_mod)(rem, altRem))> meanRem = ADV_UFCS(_operator_add_mod)(rem, altRem); 
 		#line 1972 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		const auto q1 = q & Builtin::u32(1U); 
+		const Builtin::Auto<decltype(q & Builtin::u32(1U))> q1 = q & Builtin::u32(1U); 
 		#line 1973 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		if ((meanRem & __Float128_Protected::SignMask) != Builtin::i32(0) || (meanRem == Builtin::i32(0) && q1 != Builtin::i32(0))) {
 			#line 1974 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			rem = altRem;
 		}
 		#line 1976 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto signRem = signA; 
+		Builtin::Auto<decltype(signA)> signRem = signA; 
 		#line 1977 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		if ((rem & __Float128_Protected::SignMask) != Builtin::i32(0)) {
 			#line 1978 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -2317,11 +2317,11 @@ ADV_WARNING_POP
 	auto ScaleB(__extension_Float128_1425_f128 const& __this LIFETIMEBOUND, Builtin::i32 n)  -> const typename __extension_Float128_1425_f128
 	{
 		#line 1990 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		auto x = __this; 
+		Builtin::Auto<decltype(__this)> x = __this; 
 		#line 1992 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		if ((n <=> __Float128_Protected::MaxExponent) > 0) {
 			#line 1993 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-			constexpr auto maxExp = ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x7FFE0000000000000000000000000000"));
+			constexpr Builtin::Auto<decltype(ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x7FFE0000000000000000000000000000")))> maxExp = ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x7FFE0000000000000000000000000000"));
 			#line 1995 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			x *= maxExp;
 			#line 1996 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -2342,11 +2342,11 @@ ADV_WARNING_POP
 			#line 2004 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			if ((n <=> __Float128_Protected::MinExponent) < 0) {
 				#line 2005 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-				constexpr auto minExp = ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x00010000000000000000000000000000"));
+				constexpr Builtin::Auto<decltype(ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x00010000000000000000000000000000")))> minExp = ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x00010000000000000000000000000000"));
 				#line 2006 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-				constexpr auto b113 = ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x40700000000000000000000000000000"));
+				constexpr Builtin::Auto<decltype(ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x40700000000000000000000000000000")))> b113 = ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x40700000000000000000000000000000"));
 				#line 2007 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-				constexpr auto scaleb = minExp * b113;
+				constexpr Builtin::Auto<decltype(minExp * b113)> scaleb = minExp * b113;
 				#line 2009 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 				x *= scaleb;
 				#line 2010 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -2364,7 +2364,7 @@ ADV_WARNING_POP
 					}
 				}
 				#line 2019 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-				const auto result = __this * ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{Builtin::u64{Builtin::i32(0x3FFF) + n} << Builtin::i32(48), Builtin::u32(0U)}); 
+				const Builtin::Auto<decltype(__this * ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{Builtin::u64{Builtin::i32(0x3FFF) + n} << Builtin::i32(48), Builtin::u32(0U)}))> result = __this * ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{Builtin::u64{Builtin::i32(0x3FFF) + n} << Builtin::i32(48), Builtin::u32(0U)}); 
 				#line 2020 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 				if (ADV_UPCS(IsInfinity)(result.__ref())) {
 					#line 2021 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"

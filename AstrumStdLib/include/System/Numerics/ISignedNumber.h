@@ -21,9 +21,13 @@ class ISignedNumber__Weak;
 template<> inline constexpr bool Builtin::__details::cheapCopy<System::Numerics::ISignedNumber> = false;
 
 namespace System::Numerics {
-	} namespace __extensions { template<class _TT> struct __static_getMinusOne; } namespace System::Numerics {
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_MinusOne
+} namespace __extensions { template<class _TT> struct __static_getMinusOne{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_MinusOne
+#endif
 	#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\ISignedNumber.ast"
-	template<class __AnyType> concept __HasMethodImplementation_getc03c4dc55efb22fa = requires { __AnyType::__self::MinusOne; } || requires { [] { using namespace __extensions; __static_getMinusOne<typename __AnyType::__self>::get(); }(); };
+	template<class __AnyType> concept __HasMethodImplementation_getc03c4dc55efb22fa = requires { __AnyType::__self::MinusOne; } || requires { { [] { using namespace __extensions; return __static_getMinusOne<typename __AnyType::__self>::get(); }() } -> std::convertible_to<typename __AnyType::__self>; };
 	#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\ISignedNumber.ast"
 	ADV_CHECK_INTERFACE(INumberBase, INumberBase);
 	namespace __vtables {

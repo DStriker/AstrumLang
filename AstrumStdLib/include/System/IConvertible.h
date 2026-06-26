@@ -51,9 +51,9 @@ namespace System {
 	#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IConvertible.ast"
 	template<class __AnyType> concept __HasMethodImplementation_20b4c62de89832db = requires(typename __AnyType::__class t) { {t.ToFloat64()} -> std::convertible_to<Builtin::f64>; }  || requires(typename __AnyType::__self t) { {ToFloat64(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<Builtin::f64>; } || requires { { [] { using namespace __extensions; return ToFloat64(std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<Builtin::f64>; };
 	#line 20 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IConvertible.ast"
-	template<class __AnyType> concept __HasMethodImplementation_465c3fc2b12f998b = requires(typename __AnyType::__class t) { {t.ToByte()} -> std::convertible_to<Builtin::char8>; }  || requires(typename __AnyType::__self t) { {ToByte(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<Builtin::char8>; } || requires { { [] { using namespace __extensions; return ToByte(std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<Builtin::char8>; };
+	template<class __AnyType> concept __HasMethodImplementation_465c3fc2b12f998b = requires(typename __AnyType::__class t) { {t.ToByte()} -> std::convertible_to<Builtin::u8>; }  || requires(typename __AnyType::__self t) { {ToByte(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<Builtin::u8>; } || requires { { [] { using namespace __extensions; return ToByte(std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<Builtin::u8>; };
 	#line 21 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IConvertible.ast"
-	template<class __AnyType> concept __HasMethodImplementation_5a7991b7ec07c629 = requires(typename __AnyType::__class t) { {t.ToChar()} -> std::convertible_to<Builtin::char16>; }  || requires(typename __AnyType::__self t) { {ToChar(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<Builtin::char16>; } || requires { { [] { using namespace __extensions; return ToChar(std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<Builtin::char16>; };
+	template<class __AnyType> concept __HasMethodImplementation_5a7991b7ec07c629 = requires(typename __AnyType::__class t) { {t.ToChar()} -> std::convertible_to<Builtin::char32>; }  || requires(typename __AnyType::__self t) { {ToChar(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<Builtin::char32>; } || requires { { [] { using namespace __extensions; return ToChar(std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<Builtin::char32>; };
 	namespace __vtables {
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IConvertible.ast"
 		struct __vtable_IConvertible
@@ -118,14 +118,14 @@ namespace System {
 			fn_20b4c62de89832db* fnptr_20b4c62de89832db;
 			#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IConvertible.ast"
 			template<class __AnyType> static const Builtin::f64 impl_20b4c62de89832db(Builtin::Object* obj) { ADV_EXPRESSION_BODY(ADV_UFCS(ToFloat64)(*static_cast<typename __AnyType::__class*>(obj))); }
-			using fn_465c3fc2b12f998b = const Builtin::char8(Builtin::Object*);
+			using fn_465c3fc2b12f998b = const Builtin::u8(Builtin::Object*);
 			fn_465c3fc2b12f998b* fnptr_465c3fc2b12f998b;
 			#line 20 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IConvertible.ast"
-			template<class __AnyType> static const Builtin::char8 impl_465c3fc2b12f998b(Builtin::Object* obj) { ADV_EXPRESSION_BODY(ADV_UFCS(ToByte)(*static_cast<typename __AnyType::__class*>(obj))); }
-			using fn_5a7991b7ec07c629 = const Builtin::char16(Builtin::Object*);
+			template<class __AnyType> static const Builtin::u8 impl_465c3fc2b12f998b(Builtin::Object* obj) { ADV_EXPRESSION_BODY(ADV_UFCS(ToByte)(*static_cast<typename __AnyType::__class*>(obj))); }
+			using fn_5a7991b7ec07c629 = const Builtin::char32(Builtin::Object*);
 			fn_5a7991b7ec07c629* fnptr_5a7991b7ec07c629;
 			#line 21 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IConvertible.ast"
-			template<class __AnyType> static const Builtin::char16 impl_5a7991b7ec07c629(Builtin::Object* obj) { ADV_EXPRESSION_BODY(ADV_UFCS(ToChar)(*static_cast<typename __AnyType::__class*>(obj))); }
+			template<class __AnyType> static const Builtin::char32 impl_5a7991b7ec07c629(Builtin::Object* obj) { ADV_EXPRESSION_BODY(ADV_UFCS(ToChar)(*static_cast<typename __AnyType::__class*>(obj))); }
 			
 		};
 	}
@@ -282,9 +282,9 @@ namespace System {
 		#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IConvertible.ast"
 		public: FORCE_INLINE const Builtin::f64 ToFloat64() const { ADV_EXPRESSION_BODY(_vtable->fnptr_20b4c62de89832db(_obj)); }
 		#line 20 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IConvertible.ast"
-		public: FORCE_INLINE const Builtin::char8 ToByte() const { ADV_EXPRESSION_BODY(_vtable->fnptr_465c3fc2b12f998b(_obj)); }
+		public: FORCE_INLINE const Builtin::u8 ToByte() const { ADV_EXPRESSION_BODY(_vtable->fnptr_465c3fc2b12f998b(_obj)); }
 		#line 21 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IConvertible.ast"
-		public: FORCE_INLINE const Builtin::char16 ToChar() const { ADV_EXPRESSION_BODY(_vtable->fnptr_5a7991b7ec07c629(_obj)); }
+		public: FORCE_INLINE const Builtin::char32 ToChar() const { ADV_EXPRESSION_BODY(_vtable->fnptr_5a7991b7ec07c629(_obj)); }
 		
 	};
 	class IConvertible__Unowned final : public Builtin::InterfaceRef__Unowned {
@@ -414,8 +414,8 @@ namespace System {
 	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IConvertible::__vtable> FORCE_INLINE const Builtin::usize ToUsize(const __AnyInterface& iface)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_9a0367b9d59d4625(Builtin::GetObjectReferenceFromInterface(&iface))); }
 	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IConvertible::__vtable> FORCE_INLINE const Builtin::f32 ToFloat32(const __AnyInterface& iface)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_20a3ca2de889c674(Builtin::GetObjectReferenceFromInterface(&iface))); }
 	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IConvertible::__vtable> FORCE_INLINE const Builtin::f64 ToFloat64(const __AnyInterface& iface)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_20b4c62de89832db(Builtin::GetObjectReferenceFromInterface(&iface))); }
-	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IConvertible::__vtable> FORCE_INLINE const Builtin::char8 ToByte(const __AnyInterface& iface)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_465c3fc2b12f998b(Builtin::GetObjectReferenceFromInterface(&iface))); }
-	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IConvertible::__vtable> FORCE_INLINE const Builtin::char16 ToChar(const __AnyInterface& iface)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_5a7991b7ec07c629(Builtin::GetObjectReferenceFromInterface(&iface))); }
+	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IConvertible::__vtable> FORCE_INLINE const Builtin::u8 ToByte(const __AnyInterface& iface)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_465c3fc2b12f998b(Builtin::GetObjectReferenceFromInterface(&iface))); }
+	template<class __AnyInterface> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IConvertible::__vtable> FORCE_INLINE const Builtin::char32 ToChar(const __AnyInterface& iface)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_5a7991b7ec07c629(Builtin::GetObjectReferenceFromInterface(&iface))); }
 	
 	//###############################################################################
 //# Function definitions

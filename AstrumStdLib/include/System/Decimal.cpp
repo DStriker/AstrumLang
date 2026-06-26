@@ -15,14 +15,14 @@ class __Class_Buf12;
 	union Buf12 {
 		public: using __self = Buf12;
 		public: using __class = __Class_Buf12;
-		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 		private: 
 		class __Class_DWordsStruct;
 		#line 2562 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		struct DWordsStruct final : public Builtin::Struct {
 			public: using __self = DWordsStruct;
 			public: using __class = __Class_DWordsStruct;
-			public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+			public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 			public: DWordsStruct(Builtin::u32 _u0, Builtin::u32 _u1, Builtin::u32 _u2) : u0{_u0}, u1{_u1}, u2{_u2} {}
 			#line 2563 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 			public: Builtin::u32 u0; ADV_CHECK_REF_STRUCT("u32", Builtin::u32);
@@ -86,14 +86,14 @@ class __Class_Buf12;
 	union Buf16 {
 		public: using __self = Buf16;
 		public: using __class = __Class_Buf16;
-		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 		private: 
 		class __Class_DWordsStruct;
 		#line 2595 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		struct DWordsStruct final : public Builtin::Struct {
 			public: using __self = DWordsStruct;
 			public: using __class = __Class_DWordsStruct;
-			public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+			public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 			public: DWordsStruct(Builtin::u32 _u0, Builtin::u32 _u1, Builtin::u32 _u2, Builtin::u32 _u3) : u0{_u0}, u1{_u1}, u2{_u2}, u3{_u3} {}
 			#line 2596 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 			public: Builtin::u32 u0; ADV_CHECK_REF_STRUCT("u32", Builtin::u32);
@@ -114,7 +114,7 @@ class __Class_Buf12;
 		struct QWordsStruct final : public Builtin::Struct {
 			public: using __self = QWordsStruct;
 			public: using __class = __Class_QWordsStruct;
-			public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+			public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 			public: QWordsStruct(Builtin::u64 _ulo, Builtin::u64 _uhi) : ulo{_ulo}, uhi{_uhi} {}
 			#line 2601 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 			public: Builtin::u64 ulo; ADV_CHECK_REF_STRUCT("u64", Builtin::u64);
@@ -201,14 +201,14 @@ class __Class_Buf12;
 	union Buf24 {
 		public: using __self = Buf24;
 		public: using __class = __Class_Buf24;
-		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 		private: 
 		class __Class_DWordsStruct;
 		#line 2635 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		struct DWordsStruct final : public Builtin::Struct {
 			public: using __self = DWordsStruct;
 			public: using __class = __Class_DWordsStruct;
-			public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+			public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 			public: DWordsStruct(Builtin::u32 _u0, Builtin::u32 _u1, Builtin::u32 _u2, Builtin::u32 _u3, Builtin::u32 _u4, Builtin::u32 _u5) : u0{_u0}, u1{_u1}, u2{_u2}, u3{_u3}, u4{_u4}, u5{_u5} {}
 			#line 2636 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 			public: Builtin::u32 u0; ADV_CHECK_REF_STRUCT("u32", Builtin::u32);
@@ -233,7 +233,7 @@ class __Class_Buf12;
 		struct QWordsStruct final : public Builtin::Struct {
 			public: using __self = QWordsStruct;
 			public: using __class = __Class_QWordsStruct;
-			public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+			public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 			public: QWordsStruct(Builtin::u64 _ulo, Builtin::u64 _umid, Builtin::u64 _uhi) : ulo{_ulo}, umid{_umid}, uhi{_uhi} {}
 			#line 2641 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 			public: Builtin::u64 ulo; ADV_CHECK_REF_STRUCT("u64", Builtin::u64);
@@ -340,7 +340,7 @@ class __Class_Buf12;
 	struct Buf28 final : public Builtin::Struct {
 		public: using __self = Buf28;
 		public: using __class = __Class_Buf28;
-		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 		public: Buf28(Buf24 _buf24, Builtin::u32 _u6) : buf24{_buf24}, u6{_u6} {}
 		#line 2690 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		public: inline Buf28() noexcept = default;
@@ -373,7 +373,7 @@ namespace System {class __Class_PowerOvfl;
 	struct PowerOvfl final : public Builtin::Struct {
 		public: using __self = PowerOvfl;
 		public: using __class = __Class_PowerOvfl;
-		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 		public: constexpr PowerOvfl(Builtin::u32 _Hi, Builtin::u64 _MidLo) : Hi{_Hi}, MidLo{_MidLo} {}
 		#line 2829 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		public: inline constexpr PowerOvfl() noexcept = default;
@@ -4000,7 +4000,7 @@ static_assert(Builtin::usize(sizeof (Decimal)) == Builtin::i32(16), "Decimal sho
 		#line 1616 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		{
 			#line 1616 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-			auto __tmp0 = Builtin::Cast<false, __extension_Decimal_2459_decimal>(obj);
+			auto __tmp0 = Builtin::Cast<false, __extension_Decimal_1612_decimal>(obj);
 			#line 1616 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 			if ((__tmp0.IsValid())) {
 				#line 1616 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
@@ -4057,7 +4057,7 @@ static_assert(Builtin::usize(sizeof (Decimal)) == Builtin::i32(16), "Decimal sho
 		#line 1681 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		{
 			#line 1681 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-			auto __tmp0 = Builtin::Cast<false, __extension_Decimal_2459_decimal>(obj);
+			auto __tmp0 = Builtin::Cast<false, __extension_Decimal_1678_decimal>(obj);
 			#line 1681 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 			if ((__tmp0.IsValid())) {
 				#line 1681 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
@@ -4094,7 +4094,7 @@ static_assert(Builtin::usize(sizeof (Decimal)) == Builtin::i32(16), "Decimal sho
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 1876 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto TryParse(__extension_Decimal_1777_decimal const& __this LIFETIMEBOUND, Builtin::Str input) noexcept -> const Builtin::Nullable<__extension_Decimal_2459_decimal>
+	auto TryParse(__extension_Decimal_1777_decimal const& __this LIFETIMEBOUND, Builtin::Str input) noexcept -> const Builtin::Nullable<__extension_Decimal_1777_decimal>
 	{
 		#line 1878 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		return System::Decimal(Builtin::ParseUInt128("00"), false, (uint8_t) 1);
@@ -4126,7 +4126,7 @@ static_assert(Builtin::usize(sizeof (Decimal)) == Builtin::i32(16), "Decimal sho
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 1936 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getTruncate(__extension_Decimal_1931_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	auto getTruncate(__extension_Decimal_1931_decimal const& __this ) -> const __extension_Decimal_1931_decimal
 	{
 		#line 1937 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Scale)(__this.__ref()))> scale = ADV_UPCS(Scale)(__this.__ref()); 
@@ -4141,7 +4141,7 @@ static_assert(Builtin::usize(sizeof (Decimal)) == Builtin::i32(16), "Decimal sho
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 1948 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getFloor(__extension_Decimal_1931_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	auto getFloor(__extension_Decimal_1931_decimal const& __this ) -> const __extension_Decimal_1931_decimal
 	{
 		#line 1949 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Scale)(__this.__ref()))> scale = ADV_UPCS(Scale)(__this.__ref()); 
@@ -4156,7 +4156,7 @@ static_assert(Builtin::usize(sizeof (Decimal)) == Builtin::i32(16), "Decimal sho
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 1960 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getCeil(__extension_Decimal_1931_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	auto getCeil(__extension_Decimal_1931_decimal const& __this ) -> const __extension_Decimal_1931_decimal
 	{
 		#line 1961 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Scale)(__this.__ref()))> scale = ADV_UPCS(Scale)(__this.__ref()); 
@@ -4171,7 +4171,7 @@ static_assert(Builtin::usize(sizeof (Decimal)) == Builtin::i32(16), "Decimal sho
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 1972 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getRound(__extension_Decimal_1931_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	auto getRound(__extension_Decimal_1931_decimal const& __this ) -> const __extension_Decimal_1931_decimal
 	{
 		#line 1973 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Scale)(__this.__ref()))> scale = ADV_UPCS(Scale)(__this.__ref()); 
@@ -4186,7 +4186,7 @@ static_assert(Builtin::usize(sizeof (Decimal)) == Builtin::i32(16), "Decimal sho
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 1984 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getRoundTiesEven(__extension_Decimal_1931_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	auto getRoundTiesEven(__extension_Decimal_1931_decimal const& __this ) -> const __extension_Decimal_1931_decimal
 	{
 		#line 1985 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Scale)(__this.__ref()))> scale = ADV_UPCS(Scale)(__this.__ref()); 
@@ -4201,12 +4201,12 @@ static_assert(Builtin::usize(sizeof (Decimal)) == Builtin::i32(16), "Decimal sho
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2024 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto _operator_mul_mul(__extension_Decimal_2023_decimal const& __this LIFETIMEBOUND, __extension_Decimal_2459_decimal exp)  -> const typename __extension_Decimal_2023_decimal
+	auto _operator_mul_mul(__extension_Decimal_2023_decimal const& __this LIFETIMEBOUND, __extension_Decimal_2023_decimal exp)  -> const typename __extension_Decimal_2023_decimal
 	{
 		#line 2026 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		if (exp == Builtin::i32(0)) {
 			#line 2027 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-			return ADV_USPCS(One, __extension_Decimal_2459_decimal)();
+			return ADV_USPCS(One, __extension_Decimal_2023_decimal)();
 		}
 		#line 2030 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		if (exp == Builtin::i32(1)) {
@@ -4216,7 +4216,7 @@ static_assert(Builtin::usize(sizeof (Decimal)) == Builtin::i32(16), "Decimal sho
 		#line 2034 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		if (__this == Builtin::i32(1) || __this == Builtin::i32(0) && exp == Builtin::i32(0)) {
 			#line 2035 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-			return ADV_USPCS(One, __extension_Decimal_2459_decimal)();
+			return ADV_USPCS(One, __extension_Decimal_2023_decimal)();
 		}
 		#line 2038 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		if (__this == Builtin::i32(0)) {
@@ -4229,9 +4229,9 @@ static_assert(Builtin::usize(sizeof (Decimal)) == Builtin::i32(16), "Decimal sho
 			Builtin::Throw(Builtin::InvalidOperationException{});
 		}
 		#line 2045 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		if (exp == ADV_USPCS(MinusOne, __extension_Decimal_2459_decimal)()) {
+		if (exp == ADV_USPCS(MinusOne, __extension_Decimal_2023_decimal)()) {
 			#line 2046 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-			return ADV_USPCS(One, __extension_Decimal_2459_decimal)() / __this;
+			return ADV_USPCS(One, __extension_Decimal_2023_decimal)() / __this;
 		}
 		#line 2049 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(IsInteger)(exp.__ref()))> isIntegerExp = ADV_UPCS(IsInteger)(exp.__ref()); 
@@ -4262,14 +4262,14 @@ static_assert(Builtin::usize(sizeof (Decimal)) == Builtin::i32(16), "Decimal sho
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 2073 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getExp(__extension_Decimal_2071_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	auto getExp(__extension_Decimal_2071_decimal const& __this ) -> const __extension_Decimal_2071_decimal
 	{
 		#line 2075 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		Builtin::Auto<decltype(Builtin::i32(0))> count = Builtin::i32(0); 
 		#line 2076 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		Builtin::Auto<decltype(__this)> x = __this; 
 		#line 2077 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		while ((x <=> ADV_USPCS(One, __extension_Decimal_2459_decimal)()) > 0) 
+		while ((x <=> ADV_USPCS(One, __extension_Decimal_2071_decimal)()) > 0) 
 		{
 			#line 2078 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 			x--;
@@ -4287,9 +4287,9 @@ static_assert(Builtin::usize(sizeof (Decimal)) == Builtin::i32(16), "Decimal sho
 		#line 2087 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		Builtin::Auto<decltype(Builtin::i32(1))> iteration = Builtin::i32(1); 
 		#line 2088 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		Builtin::Auto<decltype(ADV_USPCS(One, __extension_Decimal_2459_decimal)())> result = ADV_USPCS(One, __extension_Decimal_2459_decimal)(); 
+		Builtin::Auto<decltype(ADV_USPCS(One, __extension_Decimal_2071_decimal)())> result = ADV_USPCS(One, __extension_Decimal_2071_decimal)(); 
 		#line 2089 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		Builtin::Auto<decltype(ADV_USPCS(One, __extension_Decimal_2459_decimal)())> factor = ADV_USPCS(One, __extension_Decimal_2459_decimal)(); 
+		Builtin::Auto<decltype(ADV_USPCS(One, __extension_Decimal_2071_decimal)())> factor = ADV_USPCS(One, __extension_Decimal_2071_decimal)(); 
 		#line 2090 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		System::Decimal tmp{}; 
 		#line 2091 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
@@ -4314,7 +4314,7 @@ static_assert(Builtin::usize(sizeof (Decimal)) == Builtin::i32(16), "Decimal sho
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2117 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getLn(__extension_Decimal_2115_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	auto getLn(__extension_Decimal_2115_decimal const& __this ) -> const __extension_Decimal_2115_decimal
 	{
 		#line 2119 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		if ((__this <=> Builtin::i32(0)) <= 0) {
@@ -4328,7 +4328,7 @@ static_assert(Builtin::usize(sizeof (Decimal)) == Builtin::i32(16), "Decimal sho
 		#line 2126 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		Builtin::Auto<decltype(__this)> x = __this; 
 		#line 2127 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		while ((x <=> ADV_USPCS(One, __extension_Decimal_2459_decimal)()) >= 0) 
+		while ((x <=> ADV_USPCS(One, __extension_Decimal_2115_decimal)()) >= 0) 
 		{
 			#line 2128 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 			x *= E_INV;
@@ -4351,11 +4351,11 @@ static_assert(Builtin::usize(sizeof (Decimal)) == Builtin::i32(16), "Decimal sho
 			return count;
 		}
 		#line 2141 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		Builtin::Auto<decltype(ADV_USPCS(Zero, __extension_Decimal_2459_decimal)())> result = ADV_USPCS(Zero, __extension_Decimal_2459_decimal)(); 
+		Builtin::Auto<decltype(ADV_USPCS(Zero, __extension_Decimal_2115_decimal)())> result = ADV_USPCS(Zero, __extension_Decimal_2115_decimal)(); 
 		#line 2142 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		Builtin::Auto<decltype(Builtin::i32(0))> iteration = Builtin::i32(0); 
 		#line 2143 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		Builtin::Auto<decltype(ADV_USPCS(One, __extension_Decimal_2459_decimal)())> y = ADV_USPCS(One, __extension_Decimal_2459_decimal)(); 
+		Builtin::Auto<decltype(ADV_USPCS(One, __extension_Decimal_2115_decimal)())> y = ADV_USPCS(One, __extension_Decimal_2115_decimal)(); 
 		#line 2144 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		Builtin::Auto<decltype(result - Builtin::i32(1))> tmp = result - Builtin::i32(1); 
 		#line 2145 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
@@ -4381,16 +4381,16 @@ static_assert(Builtin::usize(sizeof (Decimal)) == Builtin::i32(16), "Decimal sho
 	auto Root(__extension_Decimal_2179_decimal const& __this LIFETIMEBOUND, Builtin::i32 n)  -> const typename __extension_Decimal_2179_decimal
 	{
 		#line 2203 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		auto PositiveN = [&] (__extension_Decimal_2459_decimal x, Builtin::i32 n) 
+		auto PositiveN = [&] (__extension_Decimal_2179_decimal x, Builtin::i32 n) 
 		{
 			#line 2205 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-			__extension_Decimal_2459_decimal result{}; 
+			__extension_Decimal_2179_decimal result{}; 
 			#line 2206 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 			if (x != Builtin::i32(0)) {
 				#line 2207 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 				if ((x <=> Builtin::i32(0)) > 0 || ADV_UPCS(IsOddInteger)(n.__ref())) {
 					#line 2208 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-					result = ADV_UFCS(_operator_mul_mul)(ADV_UPCS(Abs)(x.__ref()), (ADV_USPCS(One, __extension_Decimal_2459_decimal)() / n));
+					result = ADV_UFCS(_operator_mul_mul)(ADV_UPCS(Abs)(x.__ref()), (ADV_USPCS(One, __extension_Decimal_2179_decimal)() / n));
 					#line 2209 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 					result = ADV_UFCS(CopySign)(result.__ref(), x);
 				} else {
@@ -4417,16 +4417,16 @@ static_assert(Builtin::usize(sizeof (Decimal)) == Builtin::i32(16), "Decimal sho
 			return result;
 		}; 
 		#line 2222 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		auto NegativeN = [&] (__extension_Decimal_2459_decimal x, Builtin::i32 n) 
+		auto NegativeN = [&] (__extension_Decimal_2179_decimal x, Builtin::i32 n) 
 		{
 			#line 2224 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-			__extension_Decimal_2459_decimal result{}; 
+			__extension_Decimal_2179_decimal result{}; 
 			#line 2225 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 			if (x != Builtin::i32(0)) {
 				#line 2226 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 				if ((x <=> Builtin::i32(0)) > 0 || ADV_UPCS(IsOddInteger)(n.__ref())) {
 					#line 2227 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-					result = ADV_UFCS(_operator_mul_mul)(ADV_UPCS(Abs)(x.__ref()), (ADV_USPCS(One, __extension_Decimal_2459_decimal)() / n));
+					result = ADV_UFCS(_operator_mul_mul)(ADV_UPCS(Abs)(x.__ref()), (ADV_USPCS(One, __extension_Decimal_2179_decimal)() / n));
 					#line 2228 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 					result = ADV_UFCS(CopySign)(result.__ref(), x);
 				} else {
@@ -4509,10 +4509,10 @@ ADV_WARNING_POP
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 2254 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto Hypot(__extension_Decimal_2179_decimal const& __this LIFETIMEBOUND, __extension_Decimal_2459_decimal y)  -> const typename __extension_Decimal_2179_decimal
+	auto Hypot(__extension_Decimal_2179_decimal const& __this LIFETIMEBOUND, __extension_Decimal_2179_decimal y)  -> const typename __extension_Decimal_2179_decimal
 	{
 		#line 2256 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		__extension_Decimal_2459_decimal result{}; 
+		__extension_Decimal_2179_decimal result{}; 
 		#line 2257 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Abs)(__this.__ref()))> ax = ADV_UPCS(Abs)(__this.__ref()); 
 		#line 2258 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
@@ -4549,7 +4549,7 @@ ADV_WARNING_POP
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 2181 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getSqrt(__extension_Decimal_2179_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	auto getSqrt(__extension_Decimal_2179_decimal const& __this ) -> const __extension_Decimal_2179_decimal
 	{
 		#line 2183 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		if ((__this <=> Builtin::i32(0)) < 0) {
@@ -4580,12 +4580,12 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2278 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getSin(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	auto getSin(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2280 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Cos)(__this.__ref()))> cos = ADV_UPCS(Cos)(__this.__ref()); 
 		#line 2281 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		const Builtin::Auto<decltype(ADV_UPCS(Sqrt)((ADV_USPCS(One, __extension_Decimal_2459_decimal)() - cos * cos).__ref()))> sinModule = ADV_UPCS(Sqrt)((ADV_USPCS(One, __extension_Decimal_2459_decimal)() - cos * cos).__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(Sqrt)((ADV_USPCS(One, __extension_Decimal_2276_decimal)() - cos * cos).__ref()))> sinModule = ADV_UPCS(Sqrt)((ADV_USPCS(One, __extension_Decimal_2276_decimal)() - cos * cos).__ref()); 
 		#line 2282 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		const auto isPositive = [&] (System::Decimal x) 
 		{
@@ -4632,7 +4632,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2309 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getCos(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	auto getCos(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2311 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		Builtin::Auto<decltype(__this)> x = __this; 
@@ -4686,7 +4686,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2340 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getTan(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	auto getTan(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2342 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Cos)(__this.__ref()))> cos = ADV_UPCS(Cos)(__this.__ref()); 
@@ -4701,7 +4701,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2356 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getAsin(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	auto getAsin(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2358 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		if ((ADV_UPCS(Abs)(__this.__ref()) <=> Builtin::i32(1)) > 0) {
@@ -4726,14 +4726,14 @@ ADV_WARNING_POP
 			return ADV_UPCS(Asin)(-(-__this).__ref());
 		}
 		#line 2374 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		const Builtin::Auto<decltype(ADV_USPCS(One, __extension_Decimal_2459_decimal)() - __this * __this * Builtin::i32(2))> newX = ADV_USPCS(One, __extension_Decimal_2459_decimal)() - __this * __this * Builtin::i32(2); 
+		const Builtin::Auto<decltype(ADV_USPCS(One, __extension_Decimal_2276_decimal)() - __this * __this * Builtin::i32(2))> newX = ADV_USPCS(One, __extension_Decimal_2276_decimal)() - __this * __this * Builtin::i32(2); 
 		#line 2375 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		if ((ADV_UPCS(Abs)(__this.__ref()) <=> ADV_UPCS(Abs)(newX.__ref())) > 0) {
 			#line 2376 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 			return System::Decimal(Builtin::ParseUInt128("05"), false, (uint8_t) 1) * (HalfPi - ADV_UPCS(Asin)(newX.__ref()));
 		}
 		#line 2379 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		Builtin::Auto<decltype(ADV_USPCS(Zero, __extension_Decimal_2459_decimal)())> y = ADV_USPCS(Zero, __extension_Decimal_2459_decimal)(); 
+		Builtin::Auto<decltype(ADV_USPCS(Zero, __extension_Decimal_2276_decimal)())> y = ADV_USPCS(Zero, __extension_Decimal_2276_decimal)(); 
 		#line 2380 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		Builtin::Auto<decltype(__this)> result = __this; 
 		#line 2381 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
@@ -4751,7 +4751,7 @@ ADV_WARNING_POP
 			#line 2386 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 			tmp = result;
 			#line 2387 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-			result *= xx * (ADV_USPCS(One, __extension_Decimal_2459_decimal)() - System::Decimal(Builtin::ParseUInt128("05"), false, (uint8_t) 1) / i);
+			result *= xx * (ADV_USPCS(One, __extension_Decimal_2276_decimal)() - System::Decimal(Builtin::ParseUInt128("05"), false, (uint8_t) 1) / i);
 			#line 2388 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 			y += result / (Builtin::i32(2) * i + Builtin::i32(1));
 			#line 2389 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
@@ -4763,7 +4763,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2394 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getAcos(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	auto getAcos(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2396 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		constexpr Builtin::Auto<decltype(System::Decimal(Builtin::ParseUInt128("15707963267948966192313216916"), false, (uint8_t) 28))> HalfPi = System::Decimal(Builtin::ParseUInt128("15707963267948966192313216916"), false, (uint8_t) 28);
@@ -4788,7 +4788,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2410 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getAtan(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	auto getAtan(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2412 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		return [&]() 
@@ -4800,7 +4800,7 @@ ADV_WARNING_DISABLE(4715, -Wreturn-type)
 			if(__tmp__valid_2412.IsValid() && Builtin::Is(*__tmp__valid_2412, Builtin::i32(0))) {
 				#line 2413 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 				
-				return ADV_USPCS(Zero, __extension_Decimal_2459_decimal)();
+				return ADV_USPCS(Zero, __extension_Decimal_2276_decimal)();
 			}
 			else {
 				#line 2414 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
@@ -4810,7 +4810,7 @@ ADV_WARNING_DISABLE(4715, -Wreturn-type)
 					return System::Decimal(Builtin::ParseUInt128("0785398163397448309615660845819875721049292349843776455243"), false, (uint8_t) 57);
 				}
 				else {
-					return ADV_UPCS(Asin)((__this / ADV_UPCS(Sqrt)((ADV_USPCS(One, __extension_Decimal_2459_decimal)() + __this * __this).__ref())).__ref());
+					return ADV_UPCS(Asin)((__this / ADV_UPCS(Sqrt)((ADV_USPCS(One, __extension_Decimal_2276_decimal)() + __this * __this).__ref())).__ref());
 					
 				}
 			}

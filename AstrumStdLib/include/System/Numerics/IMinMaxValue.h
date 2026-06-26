@@ -20,12 +20,20 @@ class IMinMaxValue__Weak;
 template<> inline constexpr bool Builtin::__details::cheapCopy<System::Numerics::IMinMaxValue> = false;
 
 namespace System::Numerics {
-	} namespace __extensions { template<class _TT> struct __static_getMinValue; } namespace System::Numerics {
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_MinValue
+} namespace __extensions { template<class _TT> struct __static_getMinValue{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_MinValue
+#endif
 	#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IMinMaxValue.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get2f27c51c3bbc4fcd = requires { __AnyType::__self::MinValue; } || requires { [] { using namespace __extensions; __static_getMinValue<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getMaxValue; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_get2f27c51c3bbc4fcd = requires { __AnyType::__self::MinValue; } || requires { { [] { using namespace __extensions; return __static_getMinValue<typename __AnyType::__self>::get(); }() } -> std::convertible_to<typename __AnyType::__self>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_MaxValue
+} namespace __extensions { template<class _TT> struct __static_getMaxValue{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_MaxValue
+#endif
 	#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IMinMaxValue.ast"
-	template<class __AnyType> concept __HasMethodImplementation_getce381a8f20ff17b7 = requires { __AnyType::__self::MaxValue; } || requires { [] { using namespace __extensions; __static_getMaxValue<typename __AnyType::__self>::get(); }(); };
+	template<class __AnyType> concept __HasMethodImplementation_getce381a8f20ff17b7 = requires { __AnyType::__self::MaxValue; } || requires { { [] { using namespace __extensions; return __static_getMaxValue<typename __AnyType::__self>::get(); }() } -> std::convertible_to<typename __AnyType::__self>; };
 	namespace __vtables {
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IMinMaxValue.ast"
 		struct __vtable_IMinMaxValue

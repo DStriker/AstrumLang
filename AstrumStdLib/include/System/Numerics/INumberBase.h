@@ -66,15 +66,27 @@ namespace System::Numerics {
 	template<class __AnyType> concept __HasMethodImplementation_d54740f69198dc1b = requires(typename __AnyType::__class t) { {t.NarrowToIsize()} -> std::convertible_to<Builtin::isize>; }  || requires(typename __AnyType::__self t) { {NarrowToIsize(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<Builtin::isize>; } || requires { { [] { using namespace __extensions; return NarrowToIsize(std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<Builtin::isize>; };
 	#line 69 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumberBase.ast"
 	template<class __AnyType> concept __HasMethodImplementation_a634c951e7138c4f = requires(typename __AnyType::__class t) { {t.NarrowToUsize()} -> std::convertible_to<Builtin::usize>; }  || requires(typename __AnyType::__self t) { {NarrowToUsize(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<Builtin::usize>; } || requires { { [] { using namespace __extensions; return NarrowToUsize(std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<Builtin::usize>; };
-	} namespace __extensions { template<class _TT> struct __static_getOne; } namespace System::Numerics {
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_One
+} namespace __extensions { template<class _TT> struct __static_getOne{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_One
+#endif
 	#line 25 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumberBase.ast"
-	template<class __AnyType> concept __HasMethodImplementation_getd663e12ebc1938df = requires { __AnyType::__self::One; } || requires { [] { using namespace __extensions; __static_getOne<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getZero; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_getd663e12ebc1938df = requires { __AnyType::__self::One; } || requires { { [] { using namespace __extensions; return __static_getOne<typename __AnyType::__self>::get(); }() } -> std::convertible_to<typename __AnyType::__self>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_Zero
+} namespace __extensions { template<class _TT> struct __static_getZero{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_Zero
+#endif
 	#line 26 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumberBase.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get7e8f710ba2db3d53 = requires { __AnyType::__self::Zero; } || requires { [] { using namespace __extensions; __static_getZero<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getRadix; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_get7e8f710ba2db3d53 = requires { __AnyType::__self::Zero; } || requires { { [] { using namespace __extensions; return __static_getZero<typename __AnyType::__self>::get(); }() } -> std::convertible_to<typename __AnyType::__self>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_Radix
+} namespace __extensions { template<class _TT> struct __static_getRadix{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_Radix
+#endif
 	#line 27 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumberBase.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get42650a92badb6a61 = requires { __AnyType::__self::Radix; } || requires { [] { using namespace __extensions; __static_getRadix<typename __AnyType::__self>::get(); }(); };
+	template<class __AnyType> concept __HasMethodImplementation_get42650a92badb6a61 = requires { __AnyType::__self::Radix; } || requires { { [] { using namespace __extensions; return __static_getRadix<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::i32>; };
 	#line 29 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumberBase.ast"
 	template<class __AnyType> concept __HasMethodImplementation_geta0ee092e9d654ccb = requires(typename __AnyType::__class t) { {t.getAbs()} -> std::convertible_to<typename __AnyType::__self>; } || requires(typename __AnyType::__self t) { {getAbs(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::__self>; };
 	#line 30 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumberBase.ast"

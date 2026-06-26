@@ -1220,8 +1220,8 @@ public extension f32: IBinaryFloatFormatInfo {
     static ExponentBits: u128 ==> 8u;
     static OverflowDecimalExponent: i32 ==> (MaxExponent + 2 * SignificandLength) \ 3;
     static InfinityExponent: i32 ==> 0xFF;
-    static NormalMantissaBits: u16 ==> SignificandLength;
-    static DenormalMantissaBits: u16 ==> TrailingSignificandLength;
+    static NormalMantissaBits: u16 ==> SignificandLength as u16;
+    static DenormalMantissaBits: u16 ==> TrailingSignificandLength as u16;
     static MinFastFloatDecimalExponent: i32 ==> -65;
     static MaxFastFloatDecimalExponent: i32 ==> 38;
     static MinExponentRoundToEven: i32 ==> -17;

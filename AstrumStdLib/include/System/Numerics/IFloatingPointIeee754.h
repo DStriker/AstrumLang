@@ -35,21 +35,41 @@ namespace System::Numerics {
 	template<class __AnyType> concept __HasMethodImplementation_073b7c871cff8bf4 = requires(typename __AnyType::__class t) { {t.Lerp(std::declval<typename __AnyType::__self>(), std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {Lerp(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>(), std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return Lerp(std::declval<typename __AnyType::__self>(), std::declval<typename __AnyType::__self>(), std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
 	#line 28 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFloatingPointIeee754.ast"
 	template<class __AnyType> concept __HasMethodImplementation_190460f8ad97c0ea = requires(typename __AnyType::__class t) { {t.ScaleB(std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {ScaleB(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return ScaleB(std::declval<typename __AnyType::__self>(), std::declval<Builtin::i32>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
-	} namespace __extensions { template<class _TT> struct __static_getEpsilon; } namespace System::Numerics {
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_Epsilon
+} namespace __extensions { template<class _TT> struct __static_getEpsilon{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_Epsilon
+#endif
 	#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFloatingPointIeee754.ast"
-	template<class __AnyType> concept __HasMethodImplementation_getc4a5d8511d72768d = requires { __AnyType::__self::Epsilon; } || requires { [] { using namespace __extensions; __static_getEpsilon<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getNegativeInfinity; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_getc4a5d8511d72768d = requires { __AnyType::__self::Epsilon; } || requires { { [] { using namespace __extensions; return __static_getEpsilon<typename __AnyType::__self>::get(); }() } -> std::convertible_to<typename __AnyType::__self>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_NegativeInfinity
+} namespace __extensions { template<class _TT> struct __static_getNegativeInfinity{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_NegativeInfinity
+#endif
 	#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFloatingPointIeee754.ast"
-	template<class __AnyType> concept __HasMethodImplementation_gete668a0a78e8c864a = requires { __AnyType::__self::NegativeInfinity; } || requires { [] { using namespace __extensions; __static_getNegativeInfinity<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getPositiveInfinity; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_gete668a0a78e8c864a = requires { __AnyType::__self::NegativeInfinity; } || requires { { [] { using namespace __extensions; return __static_getNegativeInfinity<typename __AnyType::__self>::get(); }() } -> std::convertible_to<typename __AnyType::__self>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_PositiveInfinity
+} namespace __extensions { template<class _TT> struct __static_getPositiveInfinity{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_PositiveInfinity
+#endif
 	#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFloatingPointIeee754.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get473a091d72933e0a = requires { __AnyType::__self::PositiveInfinity; } || requires { [] { using namespace __extensions; __static_getPositiveInfinity<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getNaN; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_get473a091d72933e0a = requires { __AnyType::__self::PositiveInfinity; } || requires { { [] { using namespace __extensions; return __static_getPositiveInfinity<typename __AnyType::__self>::get(); }() } -> std::convertible_to<typename __AnyType::__self>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_NaN
+} namespace __extensions { template<class _TT> struct __static_getNaN{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_NaN
+#endif
 	#line 11 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFloatingPointIeee754.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get0ace6a81b87f44ca = requires { __AnyType::__self::NaN; } || requires { [] { using namespace __extensions; __static_getNaN<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getNegativeZero; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_get0ace6a81b87f44ca = requires { __AnyType::__self::NaN; } || requires { { [] { using namespace __extensions; return __static_getNaN<typename __AnyType::__self>::get(); }() } -> std::convertible_to<typename __AnyType::__self>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_NegativeZero
+} namespace __extensions { template<class _TT> struct __static_getNegativeZero{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_NegativeZero
+#endif
 	#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFloatingPointIeee754.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get30e49dbcbe73b118 = requires { __AnyType::__self::NegativeZero; } || requires { [] { using namespace __extensions; __static_getNegativeZero<typename __AnyType::__self>::get(); }(); };
+	template<class __AnyType> concept __HasMethodImplementation_get30e49dbcbe73b118 = requires { __AnyType::__self::NegativeZero; } || requires { { [] { using namespace __extensions; return __static_getNegativeZero<typename __AnyType::__self>::get(); }() } -> std::convertible_to<typename __AnyType::__self>; };
 	#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFloatingPointIeee754.ast"
 	template<class __AnyType> concept __HasMethodImplementation_get89c0dabf5b64e81d = requires(typename __AnyType::__class t) { {t.getBitIncrement()} -> std::convertible_to<typename __AnyType::__self>; } || requires(typename __AnyType::__self t) { {getBitIncrement(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::__self>; };
 	#line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFloatingPointIeee754.ast"

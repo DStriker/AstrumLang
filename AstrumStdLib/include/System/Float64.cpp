@@ -675,12 +675,12 @@ static_assert(Builtin::TypeIs<Builtin::f64, IDecrementOperators<Builtin::f64>>()
 				#line 23 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 				if (__this == obj) {
 					#line 24 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-					return Builtin::Boolean(true);
+					return true;
 				}
 			}
 		}
 		#line 29 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		return Builtin::Boolean(false);
+		return false;
 	}
 	
 } namespace System{
@@ -1399,24 +1399,24 @@ ADV_WARNING_DISABLE(4715, -Wreturn-type)
 										if(__tmp__valid_1015.IsValid() && Builtin::IsLessOrEqual(*__tmp__valid_1015, Builtin::f64(0.25))) {
 											#line 1016 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 											const auto& fractional = *__tmp__valid_1015;
-											return fractional != Builtin::f64(0.0) ? sign * TanPiBy4(fractional * ADV_USPCS(Pi, Builtin::f64)(), Builtin::f64(0.0), Builtin::Boolean(false)) : sign * (ADV_UPCS(IsOddInteger)(integral.__ref()) ? Builtin::f64(-0.0) : +Builtin::f64(0.0));
+											return fractional != Builtin::f64(0.0) ? sign * TanPiBy4(fractional * ADV_USPCS(Pi, Builtin::f64)(), Builtin::f64(0.0), false) : sign * (ADV_UPCS(IsOddInteger)(integral.__ref()) ? Builtin::f64(-0.0) : +Builtin::f64(0.0));
 										}
 										else {
 											#line 1018 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 											if(__tmp__valid_1015.IsValid() && Builtin::IsLessOrEqual(*__tmp__valid_1015, Builtin::f64(0.5))) {
 												#line 1018 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 												const auto& fractional = *__tmp__valid_1015;
-												return fractional != Builtin::f64(0.5) ? -sign * TanPiBy4((Builtin::f64(0.5) - fractional) * ADV_USPCS(Pi, Builtin::f64)(), Builtin::f64(0.0), Builtin::Boolean(true)) : +sign * (ADV_UPCS(IsOddInteger)(integral.__ref()) ? ADV_USPCS(NegativeInfinity, Builtin::f64)() : ADV_USPCS(PositiveInfinity, Builtin::f64)());
+												return fractional != Builtin::f64(0.5) ? -sign * TanPiBy4((Builtin::f64(0.5) - fractional) * ADV_USPCS(Pi, Builtin::f64)(), Builtin::f64(0.0), true) : +sign * (ADV_UPCS(IsOddInteger)(integral.__ref()) ? ADV_USPCS(NegativeInfinity, Builtin::f64)() : ADV_USPCS(PositiveInfinity, Builtin::f64)());
 											}
 											else {
 												#line 1020 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 												if(__tmp__valid_1015.IsValid() && Builtin::IsLessOrEqual(*__tmp__valid_1015, Builtin::f64(0.75))) {
 													#line 1020 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 													const auto& fractional = *__tmp__valid_1015;
-													return +sign * TanPiBy4((fractional - Builtin::f64(0.5)) * ADV_USPCS(Pi, Builtin::f64)(), Builtin::f64(0.0), Builtin::Boolean(true));
+													return +sign * TanPiBy4((fractional - Builtin::f64(0.5)) * ADV_USPCS(Pi, Builtin::f64)(), Builtin::f64(0.0), true);
 												}
 												else {
-													return -sign * TanPiBy4((Builtin::f64(1.0) - fractional) * ADV_USPCS(Pi, Builtin::f64)(), Builtin::f64(0.0), Builtin::Boolean(false));
+													return -sign * TanPiBy4((Builtin::f64(1.0) - fractional) * ADV_USPCS(Pi, Builtin::f64)(), Builtin::f64(0.0), false);
 													
 												}
 											}
@@ -1432,7 +1432,7 @@ ADV_WARNING_POP
 									#line 1024 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 									const auto& ax = *__tmp__valid_1010;
 									#line 1024 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-									result = TanPiBy4(__this * ADV_USPCS(Pi, Builtin::f64)(), Builtin::f64(0.0), Builtin::Boolean(false));
+									result = TanPiBy4(__this * ADV_USPCS(Pi, Builtin::f64)(), Builtin::f64(0.0), false);
 								}
 								else {
 									#line 1025 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"

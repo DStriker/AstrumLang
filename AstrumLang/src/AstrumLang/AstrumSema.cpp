@@ -5957,6 +5957,7 @@ namespace AstrumLang {
 				} else if (op->In()) {
 					id = "_operator_in";
 				} else if (op->DoubleCaret() || op->Tilde() || op->TildeAssign() ||
+				           op->Caret() && !ctx->functionParams()->paramDeclClause() ||
 				           op->DoubleStar() || op->DoubleStarAssign() || op->Greater().size() > 2 ||
 				           op->SignedRightShiftAssign() || op->Op1() || op->Op2() || op->Op3() ||
 				           op->Op4() || op->Op5() || op->Op6() || op->Op7() || op->Op8() ||
@@ -6409,7 +6410,7 @@ namespace AstrumLang {
 				isOperator = true;
 				if (op->In()) {
 					id = "_operator_in";
-				} else if (op->DoubleCaret() || op->Tilde() || op->TildeAssign() ||
+				} else if (op->DoubleCaret() || op->Tilde() || op->TildeAssign() || op->Caret() && !ctx->functionParams()->paramDeclClause() ||
 				           op->DoubleStar() || op->DoubleStarAssign() || op->Greater().size() > 2 ||
 				           op->SignedRightShiftAssign() || op->Op1() || op->Op2() || op->Op3() ||
 				           op->Op4() || op->Op5() || op->Op6() || op->Op7() || op->Op8() ||

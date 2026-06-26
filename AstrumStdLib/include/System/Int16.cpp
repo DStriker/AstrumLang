@@ -416,28 +416,28 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 		#line 1572 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		{
 			#line 1573 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			const auto& [result, overflowed] = ADV_UFCS(CarryingAdd)(a.__ref(), Builtin::i16(0), Builtin::Boolean(false));
+			const auto& [result, overflowed] = ADV_UFCS(CarryingAdd)(a.__ref(), Builtin::i16(0), false);
 			#line 1574 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			ADV_ASSERT((result == ADV_USPCS(MaxValue, Builtin::i16)() && !overflowed), u"result==i16.MaxValue&&!overflowed");
 		}
 		#line 1576 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		{
 			#line 1577 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			const auto& [result, overflowed] = ADV_UFCS(CarryingAdd)(a.__ref(), Builtin::i16(-5), Builtin::Boolean(true));
+			const auto& [result, overflowed] = ADV_UFCS(CarryingAdd)(a.__ref(), Builtin::i16(-5), true);
 			#line 1578 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			ADV_ASSERT((result == Builtin::i32(32763) && !overflowed), u"result==32763&&!overflowed");
 		}
 		#line 1580 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		{
 			#line 1581 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			const auto& [result, overflowed] = ADV_UFCS(CarryingAdd)(a.__ref(), Builtin::i16(0), Builtin::Boolean(true));
+			const auto& [result, overflowed] = ADV_UFCS(CarryingAdd)(a.__ref(), Builtin::i16(0), true);
 			#line 1582 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			ADV_ASSERT((result == ADV_USPCS(MinValue, Builtin::i16)() && overflowed), u"result==i16.MinValue&&overflowed");
 		}
 		#line 1584 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		{
 			#line 1585 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			const auto& [result, overflowed] = ADV_UFCS(CarryingAdd)(a.__ref(), Builtin::i16(10), Builtin::Boolean(true));
+			const auto& [result, overflowed] = ADV_UFCS(CarryingAdd)(a.__ref(), Builtin::i16(10), true);
 			#line 1586 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			ADV_ASSERT((result == Builtin::i32(-32758) && overflowed), u"result==-32758&&overflowed");
 		}
@@ -495,28 +495,28 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 		#line 1617 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		{
 			#line 1618 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			const auto& [result, overflowed] = ADV_UFCS(BorrowingSub)(a.__ref(), Builtin::i16(0), Builtin::Boolean(false));
+			const auto& [result, overflowed] = ADV_UFCS(BorrowingSub)(a.__ref(), Builtin::i16(0), false);
 			#line 1619 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			ADV_ASSERT((result == ADV_USPCS(MinValue, Builtin::i16)() && !overflowed), u"result==i16.MinValue&&!overflowed");
 		}
 		#line 1621 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		{
 			#line 1622 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			const auto& [result, overflowed] = ADV_UFCS(BorrowingSub)(a.__ref(), Builtin::i16(-5), Builtin::Boolean(true));
+			const auto& [result, overflowed] = ADV_UFCS(BorrowingSub)(a.__ref(), Builtin::i16(-5), true);
 			#line 1623 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			ADV_ASSERT((result == Builtin::i32(-32764) && !overflowed), u"result==-32764&&!overflowed");
 		}
 		#line 1625 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		{
 			#line 1626 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			const auto& [result, overflowed] = ADV_UFCS(BorrowingSub)(a.__ref(), Builtin::i16(0), Builtin::Boolean(true));
+			const auto& [result, overflowed] = ADV_UFCS(BorrowingSub)(a.__ref(), Builtin::i16(0), true);
 			#line 1627 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			ADV_ASSERT((result == ADV_USPCS(MaxValue, Builtin::i16)() && overflowed), u"result==i16.MaxValue&&overflowed");
 		}
 		#line 1629 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		{
 			#line 1630 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-			const auto& [result, overflowed] = ADV_UFCS(BorrowingSub)(a.__ref(), Builtin::i16(10), Builtin::Boolean(true));
+			const auto& [result, overflowed] = ADV_UFCS(BorrowingSub)(a.__ref(), Builtin::i16(10), true);
 			#line 1631 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 			ADV_ASSERT((result == Builtin::i32(32757) && overflowed), u"result==32757&&overflowed");
 		}
@@ -783,7 +783,7 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			}
 		}
 		#line 28 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		return Builtin::Boolean(false);
+		return false;
 	}
 	
 } namespace System{
@@ -825,7 +825,7 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 	auto MaxMagnitude(__extension_Int16_253_i16 const& __this LIFETIMEBOUND, __extension_Int16_1340_i16 rhs) noexcept -> const typename __extension_Int16_253_i16
 	{
 		#line 279 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		auto absX = __this; 
+		Builtin::Auto<decltype(__this)> absX = __this; 
 		#line 280 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		if ((absX <=> Builtin::i32(0)) < 0) {
 			#line 281 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
@@ -837,7 +837,7 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			}
 		}
 		#line 287 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		auto absY = rhs; 
+		Builtin::Auto<decltype(rhs)> absY = rhs; 
 		#line 288 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		if ((absY <=> Builtin::i32(0)) < 0) {
 			#line 289 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
@@ -868,7 +868,7 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 	auto MinMagnitude(__extension_Int16_253_i16 const& __this LIFETIMEBOUND, __extension_Int16_1340_i16 rhs) noexcept -> const typename __extension_Int16_253_i16
 	{
 		#line 310 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		auto absX = __this; 
+		Builtin::Auto<decltype(__this)> absX = __this; 
 		#line 311 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		if ((absX <=> Builtin::i32(0)) < 0) {
 			#line 312 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
@@ -880,7 +880,7 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			}
 		}
 		#line 318 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		auto absY = rhs; 
+		Builtin::Auto<decltype(rhs)> absY = rhs; 
 		#line 319 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		if ((absY <=> Builtin::i32(0)) < 0) {
 			#line 320 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
@@ -929,7 +929,7 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 	auto CopySign(__extension_Int16_369_i16 const& __this LIFETIMEBOUND, __extension_Int16_1340_i16 sign)  -> const typename __extension_Int16_369_i16
 	{
 		#line 374 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		auto absValue = __this; 
+		Builtin::Auto<decltype(__this)> absValue = __this; 
 		#line 375 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		if ((absValue <=> Builtin::i32(0)) < 0) {
 			#line 376 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
@@ -980,9 +980,9 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			return nullptr;
 		}
 		#line 1188 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		constexpr auto MAX_RESULT = Builtin::Cast<true, __extension_Int16_1340_i16>(ADV_USFCS((Math), Isqrt16)(Builtin::Cast<true, Builtin::u16>(ADV_USPCS(MaxValue, __extension_Int16_1340_i16)())));
+		constexpr Builtin::Auto<decltype(Builtin::Cast<true, __extension_Int16_1340_i16>(ADV_USFCS((Math), Isqrt16)(Builtin::Cast<true, Builtin::u16>(ADV_USPCS(MaxValue, __extension_Int16_1340_i16)()))))> MAX_RESULT = Builtin::Cast<true, __extension_Int16_1340_i16>(ADV_USFCS((Math), Isqrt16)(Builtin::Cast<true, Builtin::u16>(ADV_USPCS(MaxValue, __extension_Int16_1340_i16)())));
 		#line 1189 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
-		const auto result = Builtin::Cast<true, __extension_Int16_1340_i16>(ADV_USFCS((Math), Isqrt16)(Builtin::Cast<true, Builtin::u16>(__this))); 
+		const Builtin::Auto<decltype(Builtin::Cast<true, __extension_Int16_1340_i16>(ADV_USFCS((Math), Isqrt16)(Builtin::Cast<true, Builtin::u16>(__this))))> result = Builtin::Cast<true, __extension_Int16_1340_i16>(ADV_USFCS((Math), Isqrt16)(Builtin::Cast<true, Builtin::u16>(__this))); 
 		#line 1190 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"
 		ASSUME((result <=> Builtin::i32(0)) >= 0);
 		#line 1191 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int16.ast"

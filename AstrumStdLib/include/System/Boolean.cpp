@@ -26,9 +26,9 @@ static_assert(Builtin::TypeIs<Boolean, ISelfEquatable>(), "bool should implement
 	#line 82 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 	static bool __Test_8ad5e102028f9d27 = [](){
 		#line 83 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-		ADV_ASSERT((ADV_UPCS(HashCode)(Builtin::Boolean(true).__ref()) == Builtin::i32(1)), u"true.HashCode==1");
+		ADV_ASSERT((ADV_UPCS(HashCode)(Builtin::Boolean(true).__ref()) == Builtin::u32(1U)), u"true.HashCode==1u");
 		#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-		ADV_ASSERT((ADV_UPCS(HashCode)(Builtin::Boolean(false).__ref()) == Builtin::i32(0)), u"false.HashCode==0");
+		ADV_ASSERT((ADV_UPCS(HashCode)(Builtin::Boolean(false).__ref()) == Builtin::u32(0U)), u"false.HashCode==0u");
 		#line 85 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 		Builtin::Nullable<Builtin::ObjectRef> o = Builtin::Boolean(true); 
 		return true;

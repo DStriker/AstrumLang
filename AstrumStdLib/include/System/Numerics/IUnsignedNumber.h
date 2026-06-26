@@ -21,6 +21,13 @@ class IUnsignedNumber__Weak;
 template<> inline constexpr bool Builtin::__details::cheapCopy<System::Numerics::IUnsignedNumber> = false;
 
 namespace System::Numerics {
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_IsUnsigned
+} namespace __extensions { template<class _TT> struct __static_getIsUnsigned{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_IsUnsigned
+#endif
+	#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IUnsignedNumber.ast"
+	template<class __AnyType> concept __HasMethodImplementation_get442ab387fc4b9f54 = requires { __AnyType::__self::IsUnsigned; } || requires { { [] { using namespace __extensions; return __static_getIsUnsigned<typename __AnyType::__self>::get(); }() } -> std::convertible_to<bool>; };
 	#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IUnsignedNumber.ast"
 	ADV_CHECK_INTERFACE(INumberBase, INumberBase);
 	namespace __vtables {
@@ -34,7 +41,7 @@ namespace System::Numerics {
 	template<class __AnyType> inline constexpr __vtables::__vtable_IUnsignedNumber __vtable_IUnsignedNumber_for = {__vtable_INumberBase_for<__AnyType>
 		};
 	#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IUnsignedNumber.ast"
-	template<class __AnyType> concept __ImplementsInterface_IUnsignedNumber = __ImplementsInterface_INumberBase<__AnyType>;
+	template<class __AnyType> concept __ImplementsInterface_IUnsignedNumber = __ImplementsInterface_INumberBase<__AnyType> && __HasMethodImplementation_get442ab387fc4b9f54<__AnyType>;
 	#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IUnsignedNumber.ast"
 	class IUnsignedNumber final : public Builtin::InterfaceRef {
 		public: using __self = IUnsignedNumber;

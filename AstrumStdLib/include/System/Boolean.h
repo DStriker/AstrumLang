@@ -40,7 +40,7 @@ using __extensions::getHashCode;
 	#line 39 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 	ASTRUMSTD_API auto _operator_lt_eq_gt_mul(__extension_Boolean_38_Boolean const& __this LIFETIMEBOUND, Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> obj)  -> const Builtin::i32;
 	#line 38 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(Boolean, IAbstractComparable, IAbstractComparable, Boolean);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Boolean_38_Boolean, IAbstractComparable, IAbstractComparable, __extension_Boolean_38_Boolean);
 	} namespace System{
 using __extensions::_operator_lt_eq_gt_mul;
 
@@ -80,11 +80,11 @@ using __extensions::_operator_lt_eq_gt_mul;
 	#line 69 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 	inline constexpr auto ToFloat64(__extension_Boolean_53_Boolean const& __this LIFETIMEBOUND) noexcept -> const Builtin::f64;
 	#line 70 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-	inline constexpr auto ToByte(__extension_Boolean_53_Boolean const& __this LIFETIMEBOUND) noexcept -> const Builtin::char8;
+	inline constexpr auto ToByte(__extension_Boolean_53_Boolean const& __this LIFETIMEBOUND) noexcept -> const Builtin::u8;
 	#line 71 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-	inline constexpr auto ToChar(__extension_Boolean_53_Boolean const& __this LIFETIMEBOUND) noexcept -> const Builtin::char16;
+	inline constexpr auto ToChar(__extension_Boolean_53_Boolean const& __this LIFETIMEBOUND) noexcept -> const Builtin::char32;
 	#line 53 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(Boolean, IConvertible, IConvertible, Boolean);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Boolean_53_Boolean, IConvertible, IConvertible, __extension_Boolean_53_Boolean);
 	} namespace System{
 using __extensions::ToBoolean;
 using __extensions::ToInt8;
@@ -141,7 +141,7 @@ using __extensions::ToChar;
 	inline constexpr auto getHashCode(__extension_Boolean_10_Boolean const& __this ) -> const Builtin::u64
 	{
 		#line 32 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-		ADV_EXPRESSION_BODY(__this ? Builtin::u64(1ULL) : Builtin::u64(0ULL)); 
+		ADV_EXPRESSION_BODY(__this ? Builtin::u32(1U) : Builtin::u32(0U)); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
@@ -285,7 +285,7 @@ using __extensions::ToChar;
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 70 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-	inline constexpr auto ToByte(__extension_Boolean_53_Boolean const& __this LIFETIMEBOUND) noexcept -> const Builtin::char8
+	inline constexpr auto ToByte(__extension_Boolean_53_Boolean const& __this LIFETIMEBOUND) noexcept -> const Builtin::u8
 	{
 		#line 70 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 		ADV_EXPRESSION_BODY(__this ? Builtin::u8(1U) : Builtin::u8(0U)); 
@@ -294,10 +294,10 @@ using __extensions::ToChar;
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 71 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-	inline constexpr auto ToChar(__extension_Boolean_53_Boolean const& __this LIFETIMEBOUND) noexcept -> const Builtin::char16
+	inline constexpr auto ToChar(__extension_Boolean_53_Boolean const& __this LIFETIMEBOUND) noexcept -> const Builtin::char32
 	{
 		#line 71 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-		ADV_EXPRESSION_BODY(__this ? Builtin::u16(1U) : Builtin::u16(0U)); 
+		ADV_EXPRESSION_BODY(__this ? Builtin::u32(1U) : Builtin::u32(0U)); 
 	}
 	
 } namespace System{

@@ -24,7 +24,7 @@ template<class TResult> inline constexpr bool Builtin::__details::cheapCopy<Syst
 
 namespace System::Numerics {
 	#line 4 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IUnaryPlusOperators.ast"
-	template<class __AnyType, class TResult> concept __HasMethodImplementation_9696e77f58a09676 = requires(typename __AnyType::__class t) { {t.operator+()} -> std::convertible_to<TResult>; }  || requires(typename __AnyType::__self t) { {operator+(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<TResult>; } || requires { { [] { using namespace __extensions; return +std::declval<typename __AnyType::__self>();}() } -> std::convertible_to<TResult>; };
+	template<class __AnyType, class TResult> concept __HasMethodImplementation_9696e77f58a09676 = requires(typename __AnyType::__class t) { {t.operator+()} -> std::convertible_to<TResult>; }  || requires(typename __AnyType::__self t) { {operator+(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<TResult>; } || requires { +std::declval<typename __AnyType::__self&>(); };
 	namespace __vtables {
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IUnaryPlusOperators.ast"
 		template<class TResult> struct __vtable_IUnaryPlusOperators
@@ -287,7 +287,7 @@ template<> inline constexpr bool Builtin::__details::cheapCopy<System::Numerics:
 
 namespace System::Numerics {
 	#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IUnaryPlusOperators.ast"
-	template<class __AnyType> concept __HasMethodImplementation_7e73ee0471ed5591 = requires(typename __AnyType::__class t) { {t.operator+()} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {operator+(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return +std::declval<typename __AnyType::__self>();}() } -> std::convertible_to<typename __AnyType::__self>; };
+	template<class __AnyType> concept __HasMethodImplementation_7e73ee0471ed5591 = requires(typename __AnyType::__class t) { {t.operator+()} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {operator+(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::__self>; } || requires { +std::declval<typename __AnyType::__self&>(); };
 	namespace __vtables {
 		#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IUnaryPlusOperators.ast"
 		struct __vtable_IUnaryPlus

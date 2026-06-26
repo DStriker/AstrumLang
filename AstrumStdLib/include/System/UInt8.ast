@@ -267,7 +267,7 @@ public extension u8: INumberBase {
 }
 
 public extension u8: IUnsignedNumber {
-    
+    static IsUnsigned: bool ==> true;
 }
 
 public extension u8: INumber {

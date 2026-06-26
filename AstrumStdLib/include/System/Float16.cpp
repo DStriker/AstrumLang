@@ -93,7 +93,7 @@ namespace System {
 
 
 
-static_assert(Builtin::usize(sizeof(Builtin::f16)) == Builtin::u8((unsigned char)2), "f16 should be 2 bytes");
+static_assert(Builtin::usize(sizeof(Builtin::f16)) == Builtin::i32(2), "f16 should be 2 bytes");
 static_assert(ADV_USPCS(Pi, Builtin::f16)() == Builtin::f16(3.14f), "f16.Pi should be 3.14");
 static_assert(Builtin::TypeIs<Builtin::f16, IComparable<Builtin::f16>>(), "f16 should implement IComparable<f16>");
 static_assert(Builtin::TypeIs<Builtin::f16, IEquatable<Builtin::f16>>(), "f16 should implement IEquatable<f16>");
@@ -469,12 +469,12 @@ static_assert(Builtin::TypeIs<Builtin::f16, IDecrementOperators<Builtin::f16>>()
 				#line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 				if (__this == obj) {
 					#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-					return Builtin::Boolean(true);
+					return true;
 				}
 			}
 		}
 		#line 24 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		return Builtin::Boolean(false);
+		return false;
 	}
 	
 } namespace System{

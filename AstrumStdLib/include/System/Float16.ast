@@ -884,8 +884,8 @@ public extension f16: IBinaryFloatFormatInfo {
     static ExponentBits: u128 ==> 5u;
     static OverflowDecimalExponent: i32 ==> (MaxExponent + 2 * SignificandLength) \ 3;
     static InfinityExponent: i32 ==> 0x1F;
-    static NormalMantissaBits: u16 ==> SignificandLength;
-    static DenormalMantissaBits: u16 ==> TrailingSignificandLength;
+    static NormalMantissaBits: u16 ==> SignificandLength as u16;
+    static DenormalMantissaBits: u16 ==> TrailingSignificandLength as u16;
     static MinFastFloatDecimalExponent: i32 ==> -8;
     static MaxFastFloatDecimalExponent: i32 ==> 4;
     static MinExponentRoundToEven: i32 ==> -21;

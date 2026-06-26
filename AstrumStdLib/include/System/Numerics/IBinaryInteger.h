@@ -27,9 +27,13 @@ template<> inline constexpr bool Builtin::__details::cheapCopy<System::Numerics:
 namespace System::Numerics {
 	#line 28 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
 	template<class __AnyType> concept __HasMethodImplementation_3fc27e014b17f068 = requires(typename __AnyType::__class t) { {t.NextMultipleOf(std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {NextMultipleOf(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<typename __AnyType::__self>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return NextMultipleOf(std::declval<typename __AnyType::__self>(), std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
-	} namespace __extensions { template<class _TT> struct __static_getIsSigned; } namespace System::Numerics {
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_IsSigned
+} namespace __extensions { template<class _TT> struct __static_getIsSigned{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_IsSigned
+#endif
 	#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get32cc0e126f12555a = requires { __AnyType::__self::IsSigned; } || requires { [] { using namespace __extensions; __static_getIsSigned<typename __AnyType::__self>::get(); }(); };
+	template<class __AnyType> concept __HasMethodImplementation_get32cc0e126f12555a = requires { __AnyType::__self::IsSigned; } || requires { { [] { using namespace __extensions; return __static_getIsSigned<typename __AnyType::__self>::get(); }() } -> std::convertible_to<bool>; };
 	#line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
 	template<class __AnyType> concept __HasMethodImplementation_getc54655ceca57b801 = requires(typename __AnyType::__class t) { {t.getTrailingOneCount()} -> std::convertible_to<Builtin::u32>; } || requires(typename __AnyType::__self t) { {getTrailingOneCount(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<Builtin::u32>; };
 	#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
@@ -361,7 +365,7 @@ namespace System::Numerics {
 template<__ImplementsInterface_IBinaryInteger T> inline const std::tuple<T, T> IBinaryInteger::DefaultDivRem(T lhs, T rhs) 
 	{
 		#line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
-		auto quotient = lhs / rhs; 
+		Builtin::Auto<decltype(lhs / rhs)> quotient = lhs / rhs; 
 		#line 38 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryInteger.ast"
 		return std::make_tuple(quotient, (lhs - (quotient * rhs)));
 	}

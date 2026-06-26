@@ -416,28 +416,28 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 		#line 1563 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		{
 			#line 1564 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-			const auto& [result, overflowed] = ADV_UFCS(CarryingAdd)(a.__ref(), Builtin::i8(0), Builtin::Boolean(false));
+			const auto& [result, overflowed] = ADV_UFCS(CarryingAdd)(a.__ref(), Builtin::i8(0), false);
 			#line 1565 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 			ADV_ASSERT((result == ADV_USPCS(MaxValue, Builtin::i8)() && !overflowed), u"result==i8.MaxValue&&!overflowed");
 		}
 		#line 1567 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		{
 			#line 1568 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-			const auto& [result, overflowed] = ADV_UFCS(CarryingAdd)(a.__ref(), Builtin::i8(-5), Builtin::Boolean(true));
+			const auto& [result, overflowed] = ADV_UFCS(CarryingAdd)(a.__ref(), Builtin::i8(-5), true);
 			#line 1569 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 			ADV_ASSERT((result == Builtin::i32(123) && !overflowed), u"result==123&&!overflowed");
 		}
 		#line 1571 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		{
 			#line 1572 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-			const auto& [result, overflowed] = ADV_UFCS(CarryingAdd)(a.__ref(), Builtin::i8(0), Builtin::Boolean(true));
+			const auto& [result, overflowed] = ADV_UFCS(CarryingAdd)(a.__ref(), Builtin::i8(0), true);
 			#line 1573 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 			ADV_ASSERT((result == ADV_USPCS(MinValue, Builtin::i8)() && overflowed), u"result==i8.MinValue&&overflowed");
 		}
 		#line 1575 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		{
 			#line 1576 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-			const auto& [result, overflowed] = ADV_UFCS(CarryingAdd)(a.__ref(), Builtin::i8(10), Builtin::Boolean(true));
+			const auto& [result, overflowed] = ADV_UFCS(CarryingAdd)(a.__ref(), Builtin::i8(10), true);
 			#line 1577 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 			ADV_ASSERT((result == Builtin::i32(-118) && overflowed), u"result==-118&&overflowed");
 		}
@@ -495,28 +495,28 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 		#line 1608 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		{
 			#line 1609 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-			const auto& [result, overflowed] = ADV_UFCS(BorrowingSub)(a.__ref(), Builtin::i8(0), Builtin::Boolean(false));
+			const auto& [result, overflowed] = ADV_UFCS(BorrowingSub)(a.__ref(), Builtin::i8(0), false);
 			#line 1610 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 			ADV_ASSERT((result == ADV_USPCS(MinValue, Builtin::i8)() && !overflowed), u"result==i8.MinValue&&!overflowed");
 		}
 		#line 1612 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		{
 			#line 1613 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-			const auto& [result, overflowed] = ADV_UFCS(BorrowingSub)(a.__ref(), Builtin::i8(-5), Builtin::Boolean(true));
+			const auto& [result, overflowed] = ADV_UFCS(BorrowingSub)(a.__ref(), Builtin::i8(-5), true);
 			#line 1614 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 			ADV_ASSERT((result == Builtin::i32(-124) && !overflowed), u"result==-124&&!overflowed");
 		}
 		#line 1616 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		{
 			#line 1617 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-			const auto& [result, overflowed] = ADV_UFCS(BorrowingSub)(a.__ref(), Builtin::i8(0), Builtin::Boolean(true));
+			const auto& [result, overflowed] = ADV_UFCS(BorrowingSub)(a.__ref(), Builtin::i8(0), true);
 			#line 1618 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 			ADV_ASSERT((result == ADV_USPCS(MaxValue, Builtin::i8)() && overflowed), u"result==i8.MaxValue&&overflowed");
 		}
 		#line 1620 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		{
 			#line 1621 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-			const auto& [result, overflowed] = ADV_UFCS(BorrowingSub)(a.__ref(), Builtin::i8(10), Builtin::Boolean(true));
+			const auto& [result, overflowed] = ADV_UFCS(BorrowingSub)(a.__ref(), Builtin::i8(10), true);
 			#line 1622 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 			ADV_ASSERT((result == Builtin::i32(117) && overflowed), u"result==117&&overflowed");
 		}
@@ -779,7 +779,7 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			}
 		}
 		#line 28 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		return Builtin::Boolean(false);
+		return false;
 	}
 	
 } namespace System{
@@ -821,7 +821,7 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 	auto MaxMagnitude(__extension_Int8_258_i8 const& __this LIFETIMEBOUND, __extension_Int8_1331_i8 rhs) noexcept -> const typename __extension_Int8_258_i8
 	{
 		#line 284 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		auto absX = __this; 
+		Builtin::Auto<decltype(__this)> absX = __this; 
 		#line 285 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		if ((absX <=> Builtin::i32(0)) < 0) {
 			#line 286 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
@@ -833,7 +833,7 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			}
 		}
 		#line 292 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		auto absY = rhs; 
+		Builtin::Auto<decltype(rhs)> absY = rhs; 
 		#line 293 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		if ((absY <=> Builtin::i32(0)) < 0) {
 			#line 294 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
@@ -864,7 +864,7 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 	auto MinMagnitude(__extension_Int8_258_i8 const& __this LIFETIMEBOUND, __extension_Int8_1331_i8 rhs) noexcept -> const typename __extension_Int8_258_i8
 	{
 		#line 315 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		auto absX = __this; 
+		Builtin::Auto<decltype(__this)> absX = __this; 
 		#line 316 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		if ((absX <=> Builtin::i32(0)) < 0) {
 			#line 317 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
@@ -876,7 +876,7 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			}
 		}
 		#line 323 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		auto absY = rhs; 
+		Builtin::Auto<decltype(rhs)> absY = rhs; 
 		#line 324 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		if ((absY <=> Builtin::i32(0)) < 0) {
 			#line 325 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
@@ -925,7 +925,7 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 	auto CopySign(__extension_Int8_374_i8 const& __this LIFETIMEBOUND, __extension_Int8_1331_i8 sign)  -> const typename __extension_Int8_374_i8
 	{
 		#line 379 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		auto absValue = __this; 
+		Builtin::Auto<decltype(__this)> absValue = __this; 
 		#line 380 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		if ((absValue <=> Builtin::i32(0)) < 0) {
 			#line 381 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
@@ -976,9 +976,9 @@ static_assert(ADV_UFCS_NONLOCAL(_operator_add_or)(ADV_USPCS(MaxValue, Builtin::i
 			return nullptr;
 		}
 		#line 1191 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		constexpr auto MAX_RESULT = Builtin::Cast<true, __extension_Int8_1331_i8>(ADV_USFCS((Math), Isqrt8)(Builtin::Cast<true, Builtin::u8>(ADV_USPCS(MaxValue, __extension_Int8_1331_i8)())));
+		constexpr Builtin::Auto<decltype(Builtin::Cast<true, __extension_Int8_1331_i8>(ADV_USFCS((Math), Isqrt8)(Builtin::Cast<true, Builtin::u8>(ADV_USPCS(MaxValue, __extension_Int8_1331_i8)()))))> MAX_RESULT = Builtin::Cast<true, __extension_Int8_1331_i8>(ADV_USFCS((Math), Isqrt8)(Builtin::Cast<true, Builtin::u8>(ADV_USPCS(MaxValue, __extension_Int8_1331_i8)())));
 		#line 1192 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		const auto result = Builtin::Cast<true, __extension_Int8_1331_i8>(ADV_USFCS((Math), Isqrt8)(Builtin::Cast<true, Builtin::u8>(__this))); 
+		const Builtin::Auto<decltype(Builtin::Cast<true, __extension_Int8_1331_i8>(ADV_USFCS((Math), Isqrt8)(Builtin::Cast<true, Builtin::u8>(__this))))> result = Builtin::Cast<true, __extension_Int8_1331_i8>(ADV_USFCS((Math), Isqrt8)(Builtin::Cast<true, Builtin::u8>(__this))); 
 		#line 1193 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		ASSUME((result <=> Builtin::i32(0)) >= 0);
 		#line 1194 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"

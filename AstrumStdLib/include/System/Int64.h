@@ -34,7 +34,7 @@ using Long = Builtin::i64;
 	#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 	template<class __TT> struct __static_getMaxValue; template<> struct __static_getMaxValue<__extension_Int64_15_i64> { static inline constexpr auto get() -> const __extension_Int64_15_i64; };
 	#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(i64, IMinMaxValue, IMinMaxValue, i64);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Int64_15_i64, IMinMaxValue, IMinMaxValue, __extension_Int64_15_i64);
 	} namespace System{
 using __extensions::__static_getMinValue;
 using __extensions::__static_getMaxValue;
@@ -79,7 +79,7 @@ using __extensions::getHashCode;
 	#line 74 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 	ASTRUMSTD_API auto _operator_lt_eq_gt_mul(__extension_Int64_73_i64 const& __this LIFETIMEBOUND, Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> obj)  -> const Builtin::i32;
 	#line 73 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(i64, IAbstractComparable, IAbstractComparable, i64);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Int64_73_i64, IAbstractComparable, IAbstractComparable, __extension_Int64_73_i64);
 	} namespace System{
 using __extensions::_operator_lt_eq_gt_mul;
 
@@ -119,11 +119,11 @@ using __extensions::_operator_lt_eq_gt_mul;
 	#line 153 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 	inline constexpr auto ToFloat64(__extension_Int64_88_i64 const& __this LIFETIMEBOUND) noexcept -> const Builtin::f64;
 	#line 154 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	inline constexpr auto ToByte(__extension_Int64_88_i64 const& __this LIFETIMEBOUND)  -> const Builtin::char8;
+	inline constexpr auto ToByte(__extension_Int64_88_i64 const& __this LIFETIMEBOUND)  -> const Builtin::u8;
 	#line 155 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	inline constexpr auto ToChar(__extension_Int64_88_i64 const& __this LIFETIMEBOUND)  -> const Builtin::char16;
+	inline constexpr auto ToChar(__extension_Int64_88_i64 const& __this LIFETIMEBOUND)  -> const Builtin::char32;
 	#line 88 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(i64, IConvertible, IConvertible, i64);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Int64_88_i64, IConvertible, IConvertible, __extension_Int64_88_i64);
 	} namespace System{
 using __extensions::ToBoolean;
 using __extensions::ToInt8;
@@ -163,7 +163,7 @@ using __extensions::ToChar;
 	#line 213 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 	inline constexpr auto _operator_div_gt_eq(__extension_Int64_166_i64 & __this , auto rhs)  -> typename __extension_Int64_166_i64&;
 	#line 166 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(i64, IDivisibleArithmetic, IDivisibleArithmetic, i64);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Int64_166_i64, IDivisibleArithmetic, IDivisibleArithmetic, __extension_Int64_166_i64);
 	} namespace System{
 using __extensions::_operator_div_mod;
 using __extensions::_operator_div_not;
@@ -185,7 +185,7 @@ using __extensions::_operator_div_gt_eq;
 	#line 225 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 	template<class T> inline constexpr auto _operator_bsl_bsl(__extension_Int64_216_i64 const& __this LIFETIMEBOUND, T rhs)  -> const Builtin::Nullable<__extension_Int64_216_i64>;
 	#line 216 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(i64, IIntegerDivisibleArithmetic, IIntegerDivisibleArithmetic, i64);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Int64_216_i64, IIntegerDivisibleArithmetic, IIntegerDivisibleArithmetic, __extension_Int64_216_i64);
 	} namespace System{
 using __extensions::_operator_bsl;
 using __extensions::_operator_bsl_eq;
@@ -201,7 +201,7 @@ using __extensions::_operator_bsl_bsl;
 	#line 271 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 	inline constexpr auto _operator_xor_xor_eq(__extension_Int64_236_i64 & __this , Builtin::u32 exp)  -> typename __extension_Int64_236_i64&;
 	#line 236 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(i64, IIntegerPowerArithmetic, IIntegerPowerArithmetic, i64);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Int64_236_i64, IIntegerPowerArithmetic, IIntegerPowerArithmetic, __extension_Int64_236_i64);
 	} namespace System{
 using __extensions::_operator_xor_xor;
 using __extensions::_operator_xor_xor_eq;
@@ -290,7 +290,7 @@ using __extensions::_operator_xor_xor_eq;
 	#line 296 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 	inline constexpr auto getIsZero(__extension_Int64_274_i64 const& __this ) -> const bool;
 	#line 274 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(i64, INumberBase, INumberBase, i64);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Int64_274_i64, INumberBase, INumberBase, __extension_Int64_274_i64);
 	} namespace System{
 using __extensions::MaxMagnitude;
 using __extensions::MaxMagnitudeNumber;
@@ -340,7 +340,7 @@ using __extensions::getIsZero;
 	#line 387 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 	template<class __TT> struct __static_getMinusOne; template<> struct __static_getMinusOne<__extension_Int64_386_i64> { static inline constexpr auto get() -> const __extension_Int64_386_i64; };
 	#line 386 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(i64, ISignedNumber, ISignedNumber, i64);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Int64_386_i64, ISignedNumber, ISignedNumber, __extension_Int64_386_i64);
 	} namespace System{
 using __extensions::__static_getMinusOne;
 
@@ -364,7 +364,7 @@ using __extensions::__static_getMinusOne;
 	#line 391 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 	inline constexpr auto getSign(__extension_Int64_390_i64 const& __this ) -> const Builtin::i32;
 	#line 390 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(i64, INumber, INumber, i64);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Int64_390_i64, INumber, INumber, __extension_Int64_390_i64);
 	} namespace System{
 using __extensions::CopySign;
 using __extensions::Max;
@@ -400,7 +400,7 @@ using __extensions::getSign;
 	#line 472 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 	inline constexpr auto getLog10(__extension_Int64_418_i64 const& __this ) -> const __extension_Int64_418_i64;
 	#line 418 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(i64, IBinaryNumber, IBinaryNumber, i64);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Int64_418_i64, IBinaryNumber, IBinaryNumber, __extension_Int64_418_i64);
 	} namespace System{
 using __extensions::CheckedLog;
 using __extensions::Log;
@@ -607,7 +607,7 @@ using __extensions::getLog10;
 	#line 1195 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 	inline constexpr auto getOverflowingAbs(__extension_Int64_547_i64 const& __this ) -> const std::tuple<__extension_Int64_547_i64, bool>;
 	#line 547 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(i64, ICheckedArithmetic, ICheckedArithmetic, i64);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Int64_547_i64, ICheckedArithmetic, ICheckedArithmetic, __extension_Int64_547_i64);
 	} namespace System{
 using __extensions::_operator_add_qst;
 using __extensions::_operator_add_qst_eq;
@@ -734,7 +734,7 @@ using __extensions::getOverflowingAbs;
 	#line 1321 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 	inline constexpr auto getWrappingNextPow2(__extension_Int64_1204_i64 const& __this ) -> const __extension_Int64_1204_i64;
 	#line 1204 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(i64, IBinaryInteger, IBinaryInteger, i64);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Int64_1204_i64, IBinaryInteger, IBinaryInteger, __extension_Int64_1204_i64);
 	} namespace System{
 using __extensions::NextMultipleOf;
 using __extensions::CheckedNextMultipleOf;
@@ -781,7 +781,7 @@ using __extensions::getWrappingNextPow2;
 	#line 1356 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 	inline constexpr auto getShortestBitLength(__extension_Int64_1332_i64 const& __this ) -> const Builtin::u32;
 	#line 1332 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(i64, IFixedWidthInteger, IFixedWidthInteger, i64);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Int64_1332_i64, IFixedWidthInteger, IFixedWidthInteger, __extension_Int64_1332_i64);
 	} namespace System{
 using __extensions::RotateLeft;
 using __extensions::RotateRight;
@@ -814,7 +814,7 @@ using __extensions::getShortestBitLength;
 	#line 1376 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 	inline constexpr auto getMultiplyBy16(__extension_Int64_1370_i64 const& __this ) -> const __extension_Int64_1370_i64;
 	#line 1370 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(i64, IBinaryIntegerFormatInfo, IBinaryIntegerFormatInfo, i64);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Int64_1370_i64, IBinaryIntegerFormatInfo, IBinaryIntegerFormatInfo, __extension_Int64_1370_i64);
 	} namespace System{
 using __extensions::IsGreaterThanAsUnsigned;
 using __extensions::__static_getMaxDigitCount;
@@ -1131,7 +1131,7 @@ using __extensions::getMultiplyBy16;
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 154 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	inline constexpr auto ToByte(__extension_Int64_88_i64 const& __this LIFETIMEBOUND)  -> const Builtin::char8
+	inline constexpr auto ToByte(__extension_Int64_88_i64 const& __this LIFETIMEBOUND)  -> const Builtin::u8
 	{
 		#line 154 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(ToUInt8)(__this.__ref())); 
@@ -1140,7 +1140,7 @@ using __extensions::getMultiplyBy16;
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 155 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-	inline constexpr auto ToChar(__extension_Int64_88_i64 const& __this LIFETIMEBOUND)  -> const Builtin::char16
+	inline constexpr auto ToChar(__extension_Int64_88_i64 const& __this LIFETIMEBOUND)  -> const Builtin::char32
 	{
 		#line 157 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		if ((__this <=> Builtin::i32(0)) < 0 || (__this <=> Builtin::i64(0xFFFFFFFFLL)) > 0) {
@@ -1170,7 +1170,7 @@ using __extensions::getMultiplyBy16;
 	template<class T> inline constexpr auto _operator_div_not(__extension_Int64_166_i64 const& __this LIFETIMEBOUND, T rhs)  -> const typename __extension_Int64_166_i64
 	{
 		#line 176 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto result = __this; 
+		Builtin::Auto<decltype(__this)> result = __this; 
 		#line 177 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		result /= rhs;
 		#line 178 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
@@ -1201,7 +1201,7 @@ using __extensions::getMultiplyBy16;
 				return div;
 			}
 			#line 190 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-			auto correction = (__this ^ rhs) >> (ADV_USPCS(BitWidth, __extension_Int64_1370_i64)() - Builtin::i32(1)); 
+			Builtin::Auto<decltype((__this ^ rhs) >> (ADV_USPCS(BitWidth, __extension_Int64_1370_i64)() - Builtin::i32(1)))> correction = (__this ^ rhs) >> (ADV_USPCS(BitWidth, __extension_Int64_1370_i64)() - Builtin::i32(1)); 
 			#line 191 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 			return div + correction;
 		} else {
@@ -1238,7 +1238,7 @@ using __extensions::getMultiplyBy16;
 				return div;
 			}
 			#line 206 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-			auto correction = Builtin::i32(1) + ((__this ^ rhs) >> (ADV_USPCS(BitWidth, __extension_Int64_1370_i64)() - Builtin::i32(1))); 
+			Builtin::Auto<decltype(Builtin::i32(1) + ((__this ^ rhs) >> (ADV_USPCS(BitWidth, __extension_Int64_1370_i64)() - Builtin::i32(1))))> correction = Builtin::i32(1) + ((__this ^ rhs) >> (ADV_USPCS(BitWidth, __extension_Int64_1370_i64)() - Builtin::i32(1))); 
 			#line 207 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 			return div + correction;
 		} else {
@@ -1311,9 +1311,9 @@ using __extensions::getMultiplyBy16;
 			return Builtin::i64(1LL);
 		}
 		#line 246 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto base = __this; 
+		Builtin::Auto<decltype(__this)> base = __this; 
 		#line 247 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto result = Builtin::i64(1LL); 
+		Builtin::Auto<decltype(Builtin::i64(1LL))> result = Builtin::i64(1LL); 
 		#line 249 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		if (std::is_constant_evaluated()) {
 			#line 250 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
@@ -1532,7 +1532,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsCanonical(__extension_Int64_274_i64 const& __this ) -> const bool
 	{
 		#line 280 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
+		ADV_EXPRESSION_BODY(true); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1540,7 +1540,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsComplexNumber(__extension_Int64_274_i64 const& __this ) -> const bool
 	{
 		#line 281 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
+		ADV_EXPRESSION_BODY(false); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1556,7 +1556,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsFinite(__extension_Int64_274_i64 const& __this ) -> const bool
 	{
 		#line 283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
+		ADV_EXPRESSION_BODY(true); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1564,7 +1564,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsImaginaryNumber(__extension_Int64_274_i64 const& __this ) -> const bool
 	{
 		#line 284 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
+		ADV_EXPRESSION_BODY(false); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1572,7 +1572,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsInfinity(__extension_Int64_274_i64 const& __this ) -> const bool
 	{
 		#line 285 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
+		ADV_EXPRESSION_BODY(false); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1580,7 +1580,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsInteger(__extension_Int64_274_i64 const& __this ) -> const bool
 	{
 		#line 286 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
+		ADV_EXPRESSION_BODY(true); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1588,7 +1588,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsNaN(__extension_Int64_274_i64 const& __this ) -> const bool
 	{
 		#line 287 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
+		ADV_EXPRESSION_BODY(false); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1604,7 +1604,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsNegativeInfinity(__extension_Int64_274_i64 const& __this ) -> const bool
 	{
 		#line 289 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
+		ADV_EXPRESSION_BODY(false); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1636,7 +1636,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsPositiveInfinity(__extension_Int64_274_i64 const& __this ) -> const bool
 	{
 		#line 293 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
+		ADV_EXPRESSION_BODY(false); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1644,7 +1644,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsRealNumber(__extension_Int64_274_i64 const& __this ) -> const bool
 	{
 		#line 294 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
+		ADV_EXPRESSION_BODY(true); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1652,7 +1652,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getIsSubnormal(__extension_Int64_274_i64 const& __this ) -> const bool
 	{
 		#line 295 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
+		ADV_EXPRESSION_BODY(false); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1760,9 +1760,9 @@ using __extensions::getMultiplyBy16;
 		#line 501 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		__extension_Int64_1370_i64 n = Builtin::i64(1LL); 
 		#line 502 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto r = base; 
+		Builtin::Auto<decltype(base)> r = base; 
 		#line 503 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		const auto baseRatio = ADV_UFCS(_operator_bsl)(__this, base); 
+		const Builtin::Auto<decltype(ADV_UFCS(_operator_bsl)(__this, base))> baseRatio = ADV_UFCS(_operator_bsl)(__this, base); 
 		#line 504 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		while ((r <=> baseRatio) <= 0) 
 		{
@@ -1781,9 +1781,9 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto Midpoint(__extension_Int64_418_i64 const& __this LIFETIMEBOUND, __extension_Int64_1370_i64 rhs) noexcept -> const typename __extension_Int64_418_i64
 	{
 		#line 527 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		const auto result = ((__this ^ rhs) >> Builtin::i32(1)) + (__this & rhs); 
+		const Builtin::Auto<decltype(((__this ^ rhs) >> Builtin::i32(1)) + (__this & rhs))> result = ((__this ^ rhs) >> Builtin::i32(1)) + (__this & rhs); 
 		#line 528 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		const auto correction = (result <=> Builtin::i32(0)) < 0; 
+		const Builtin::Auto<decltype((result <=> Builtin::i32(0)) < 0)> correction = (result <=> Builtin::i32(0)) < 0; 
 		#line 529 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		return result + ((Builtin::Cast<true, __extension_Int64_1370_i64>(correction)) & (__this ^ rhs));
 	}
@@ -1801,7 +1801,7 @@ using __extensions::getMultiplyBy16;
 		#line 539 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		if (rhs == Builtin::i32(-1)) {
 			#line 540 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-			return Builtin::Boolean(true);
+			return true;
 		}
 		#line 543 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		return __this % rhs == Builtin::i32(0);
@@ -1874,9 +1874,9 @@ using __extensions::getMultiplyBy16;
 		#line 456 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		constexpr Builtin::u32 C4 = Builtin::u32(0b10000000000000000000U) - Builtin::i32(10000);
 		#line 457 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto log = Builtin::i32(0); 
+		Builtin::Auto<decltype(Builtin::i32(0))> log = Builtin::i32(0); 
 		#line 458 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto val1 = Builtin::Cast<true, Builtin::u64>(__this); 
+		Builtin::Auto<decltype(Builtin::Cast<true, Builtin::u64>(__this))> val1 = Builtin::Cast<true, Builtin::u64>(__this); 
 		#line 459 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		if ((val1 <=> Builtin::i64(10000000000LL)) >= 0) {
 			#line 460 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
@@ -1892,7 +1892,7 @@ using __extensions::getMultiplyBy16;
 			log += Builtin::i32(5);
 		}
 		#line 467 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		const auto val = Builtin::Cast<true, Builtin::u32>(val1); 
+		const Builtin::Auto<decltype(Builtin::Cast<true, Builtin::u32>(val1))> val = Builtin::Cast<true, Builtin::u32>(val1); 
 		#line 468 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		return log + ((((val + C1) & (val + C2)) ^ ((val + C3) & (val + C4))) >> Builtin::i32(17));
 	}
@@ -2038,7 +2038,7 @@ using __extensions::getMultiplyBy16;
 		#line 605 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		__extension_Int64_1370_i64 result{}; 
 		#line 606 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto overflowed = !Builtin::SafeAdd(__this, rhs, result); 
+		Builtin::Auto<decltype(!Builtin::SafeAdd(__this, rhs, result))> overflowed = !Builtin::SafeAdd(__this, rhs, result); 
 		#line 607 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		return std::make_tuple(result, overflowed);
 	}
@@ -2091,7 +2091,7 @@ using __extensions::getMultiplyBy16;
 		#line 626 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		__extension_Int64_1370_i64 result{}; 
 		#line 627 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto overflowed = Builtin::CarryingAdd(__this, rhs, carry, result); 
+		Builtin::Auto<decltype(Builtin::CarryingAdd(__this, rhs, carry, result))> overflowed = Builtin::CarryingAdd(__this, rhs, carry, result); 
 		#line 628 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		return std::make_tuple(result, overflowed);
 	}
@@ -2104,7 +2104,7 @@ using __extensions::getMultiplyBy16;
 		#line 635 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		__extension_Int64_1370_i64 result{}; 
 		#line 636 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto overflowed = Builtin::BorrowingSub(__this, rhs, carry, result); 
+		Builtin::Auto<decltype(Builtin::BorrowingSub(__this, rhs, carry, result))> overflowed = Builtin::BorrowingSub(__this, rhs, carry, result); 
 		#line 637 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		return std::make_tuple(result, overflowed);
 	}
@@ -2230,7 +2230,7 @@ using __extensions::getMultiplyBy16;
 		#line 697 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		__extension_Int64_1370_i64 result{}; 
 		#line 698 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto overflowed = !Builtin::SafeSubtract(__this, rhs, result); 
+		Builtin::Auto<decltype(!Builtin::SafeSubtract(__this, rhs, result))> overflowed = !Builtin::SafeSubtract(__this, rhs, result); 
 		#line 699 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		return std::make_tuple(result, overflowed);
 	}
@@ -2396,7 +2396,7 @@ using __extensions::getMultiplyBy16;
 		#line 771 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		__extension_Int64_1370_i64 result{}; 
 		#line 772 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto overflowed = !Builtin::SafeMultiply(__this, rhs, result); 
+		Builtin::Auto<decltype(!Builtin::SafeMultiply(__this, rhs, result))> overflowed = !Builtin::SafeMultiply(__this, rhs, result); 
 		#line 773 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		return std::make_tuple(result, overflowed);
 	}
@@ -2544,7 +2544,7 @@ using __extensions::getMultiplyBy16;
 		#line 854 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		__extension_Int64_1370_i64 result{}; 
 		#line 855 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto overflowed = !Builtin::SafeDivide(__this, rhs, result); 
+		Builtin::Auto<decltype(!Builtin::SafeDivide(__this, rhs, result))> overflowed = !Builtin::SafeDivide(__this, rhs, result); 
 		#line 856 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		return std::make_tuple(result, overflowed);
 	}
@@ -2685,7 +2685,7 @@ using __extensions::getMultiplyBy16;
 		#line 929 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		__extension_Int64_1370_i64 result{}; 
 		#line 930 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto overflowed = !Builtin::SafeModulus(__this, rhs, result); 
+		Builtin::Auto<decltype(!Builtin::SafeModulus(__this, rhs, result))> overflowed = !Builtin::SafeModulus(__this, rhs, result); 
 		#line 931 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		return std::make_tuple(result, overflowed);
 	}
@@ -2753,7 +2753,7 @@ using __extensions::getMultiplyBy16;
 		#line 971 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		__extension_Int64_1370_i64 result{}; 
 		#line 972 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto overflowed = !Builtin::SafeNegate(__this, result); 
+		Builtin::Auto<decltype(!Builtin::SafeNegate(__this, result))> overflowed = !Builtin::SafeNegate(__this, result); 
 		#line 973 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		return std::make_tuple(result, overflowed);
 	}
@@ -2927,9 +2927,9 @@ using __extensions::getMultiplyBy16;
 			return Builtin::i64(1LL);
 		}
 		#line 1054 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto base = __this; 
+		Builtin::Auto<decltype(__this)> base = __this; 
 		#line 1055 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto result = Builtin::i64(1LL); 
+		Builtin::Auto<decltype(Builtin::i64(1LL))> result = Builtin::i64(1LL); 
 		#line 1057 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		for (;;) 
 		{
@@ -3009,9 +3009,9 @@ using __extensions::getMultiplyBy16;
 			return Builtin::i32(1);
 		}
 		#line 1091 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto base = __this; 
+		Builtin::Auto<decltype(__this)> base = __this; 
 		#line 1092 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto result = Builtin::i64(1LL); 
+		Builtin::Auto<decltype(Builtin::i64(1LL))> result = Builtin::i64(1LL); 
 		#line 1094 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		for (;;) 
 		{
@@ -3053,9 +3053,9 @@ using __extensions::getMultiplyBy16;
 			return Builtin::i64(1LL);
 		}
 		#line 1114 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto base = __this; 
+		Builtin::Auto<decltype(__this)> base = __this; 
 		#line 1115 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto result = Builtin::i64(1LL); 
+		Builtin::Auto<decltype(Builtin::i64(1LL))> result = Builtin::i64(1LL); 
 		#line 1117 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		if (std::is_constant_evaluated()) {
 			#line 1118 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
@@ -3144,16 +3144,16 @@ using __extensions::getMultiplyBy16;
 		#line 1154 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		if (exp == Builtin::i32(0)) [[unlikely]] {
 			#line 1156 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-			return std::make_tuple(Builtin::i64(1LL), Builtin::Boolean(false));
+			return std::make_tuple(Builtin::i64(1LL), false);
 		}
 		#line 1159 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto base = __this; 
+		Builtin::Auto<decltype(__this)> base = __this; 
 		#line 1160 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto result = Builtin::i64(1LL); 
+		Builtin::Auto<decltype(Builtin::i64(1LL))> result = Builtin::i64(1LL); 
 		#line 1161 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto overflowed = Builtin::Boolean(false); 
+		Builtin::Auto<decltype(false)> overflowed = false; 
 		#line 1162 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto tmp = std::make_tuple(Builtin::i64(0LL), Builtin::Boolean(false)); 
+		Builtin::Auto<decltype(std::make_tuple(Builtin::i64(0LL), false))> tmp = std::make_tuple(Builtin::i64(0LL), false); 
 		#line 1164 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		for (;;) 
 		{
@@ -3228,7 +3228,7 @@ using __extensions::getMultiplyBy16;
 			return ADV_UFCS(_operator_sub_mod_qst)(__this);
 		}
 		#line 1200 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		return std::make_tuple(__this, Builtin::Boolean(false));
+		return std::make_tuple(__this, false);
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
@@ -3243,9 +3243,9 @@ using __extensions::getMultiplyBy16;
 			return __this;
 		}
 		#line 1255 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		const auto remainder = __this % rhs; 
+		const Builtin::Auto<decltype(__this % rhs)> remainder = __this % rhs; 
 		#line 1256 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		const auto mod = ((remainder <=> Builtin::i32(0)) > 0 && (rhs <=> Builtin::i32(0)) < 0) || ((remainder <=> Builtin::i32(0)) < 0 && (rhs <=> Builtin::i32(0)) > 0) ? remainder + rhs : remainder; 
+		const Builtin::Auto<decltype(((remainder <=> Builtin::i32(0)) > 0 && (rhs <=> Builtin::i32(0)) < 0) || ((remainder <=> Builtin::i32(0)) < 0 && (rhs <=> Builtin::i32(0)) > 0) ? remainder + rhs : remainder)> mod = ((remainder <=> Builtin::i32(0)) > 0 && (rhs <=> Builtin::i32(0)) < 0) || ((remainder <=> Builtin::i32(0)) < 0 && (rhs <=> Builtin::i32(0)) > 0) ? remainder + rhs : remainder; 
 		#line 1259 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		return mod == Builtin::i32(0) ? __this : __this + (rhs - mod);
 	}
@@ -3276,7 +3276,7 @@ using __extensions::getMultiplyBy16;
 			return nullptr;
 		}
 		#line 1276 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		const auto mod = ((remainder <=> Builtin::i32(0)) > 0 && (rhs <=> Builtin::i32(0)) < 0) || ((remainder <=> Builtin::i32(0)) < 0 && (rhs <=> Builtin::i32(0)) > 0) ? remainder + rhs : remainder; 
+		const Builtin::Auto<decltype(((remainder <=> Builtin::i32(0)) > 0 && (rhs <=> Builtin::i32(0)) < 0) || ((remainder <=> Builtin::i32(0)) < 0 && (rhs <=> Builtin::i32(0)) > 0) ? remainder + rhs : remainder)> mod = ((remainder <=> Builtin::i32(0)) > 0 && (rhs <=> Builtin::i32(0)) < 0) || ((remainder <=> Builtin::i32(0)) < 0 && (rhs <=> Builtin::i32(0)) > 0) ? remainder + rhs : remainder; 
 		#line 1279 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		if (mod == Builtin::i32(0)) {
 			#line 1280 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
@@ -3292,7 +3292,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto __static_getIsSigned<__extension_Int64_1204_i64>::get() -> const bool
 	{
 		#line 1205 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
+		ADV_EXPRESSION_BODY(true); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -3351,7 +3351,7 @@ using __extensions::getMultiplyBy16;
 	inline constexpr auto getLog2Ceiling(__extension_Int64_1204_i64 const& __this ) -> const __extension_Int64_1370_i64
 	{
 		#line 1237 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		auto result = ADV_UPCS(Log2)(__this.__ref()); 
+		Builtin::Auto<decltype(ADV_UPCS(Log2)(__this.__ref()))> result = ADV_UPCS(Log2)(__this.__ref()); 
 		#line 1238 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		if (ADV_UPCS(PopCount)(__this.__ref()) != Builtin::i32(1)) {
 			#line 1239 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
@@ -3384,7 +3384,7 @@ using __extensions::getMultiplyBy16;
 			return Builtin::i32(0);
 		}
 		#line 1303 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		const auto p = __this - Builtin::i32(1); 
+		const Builtin::Auto<decltype(__this - Builtin::i32(1))> p = __this - Builtin::i32(1); 
 		#line 1304 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		return (ADV_USPCS(AllBitsSet, __extension_Int64_1370_i64)() >> ADV_UPCS(LeadingZeroCount)(p.__ref())) + Builtin::i32(1);
 	}
@@ -3399,7 +3399,7 @@ using __extensions::getMultiplyBy16;
 			return Builtin::i64(0LL);
 		}
 		#line 1315 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		const auto p = __this - Builtin::i64(1LL); 
+		const Builtin::Auto<decltype(__this - Builtin::i64(1LL))> p = __this - Builtin::i64(1LL); 
 		#line 1316 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		return ADV_UFCS(_operator_add_qst)((ADV_USPCS(AllBitsSet, __extension_Int64_1370_i64)() >> ADV_UPCS(LeadingZeroCount)(p.__ref())), Builtin::i64(1LL));
 	}
@@ -3414,7 +3414,7 @@ using __extensions::getMultiplyBy16;
 			return Builtin::i64(0LL);
 		}
 		#line 1327 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
-		const auto p = __this - Builtin::i64(1LL); 
+		const Builtin::Auto<decltype(__this - Builtin::i64(1LL))> p = __this - Builtin::i64(1LL); 
 		#line 1328 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int64.ast"
 		return ADV_UFCS(_operator_add_mod)((ADV_USPCS(AllBitsSet, __extension_Int64_1370_i64)() >> ADV_UPCS(LeadingZeroCount)(p.__ref())), Builtin::i64(1LL));
 	}

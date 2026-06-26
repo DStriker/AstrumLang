@@ -362,7 +362,7 @@ template<__ImplementsInterface_INumber T> inline const Builtin::i32 INumber::Def
 	template<__ImplementsInterface_INumber T> inline const T INumber::DefaultCopySign(T num, T sign) 
 	{
 		#line 34 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
-		auto result = num; 
+		Builtin::Auto<decltype(num)> result = num; 
 		#line 36 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
 		if (ADV_UPCS(IsNegative)(num.__ref()) != ADV_UPCS(IsNegative)(sign.__ref())) {
 			#line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
@@ -379,7 +379,7 @@ template<__ImplementsInterface_INumber T> inline const Builtin::i32 INumber::Def
 			Builtin::Throw(Builtin::InvalidOperationException{});
 		}
 		#line 49 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
-		auto result = num; 
+		Builtin::Auto<decltype(num)> result = num; 
 		#line 50 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"
 		result = DefaultMax(result, min);
 		#line 51 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\INumber.ast"

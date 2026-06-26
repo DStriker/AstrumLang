@@ -322,7 +322,7 @@ public extension u64: INumberBase {
 }
 
 public extension u64: IUnsignedNumber {
-    
+    static IsUnsigned: bool ==> true;
 }
 
 public extension u64: INumber {

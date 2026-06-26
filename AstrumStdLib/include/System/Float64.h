@@ -112,9 +112,9 @@ using __extensions::_operator_lt_eq_gt_mul;
 	#line 90 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 	inline constexpr auto ToFloat64(__extension_Float64_75_f64 const& __this LIFETIMEBOUND) noexcept -> const Builtin::f64;
 	#line 91 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-	inline constexpr auto ToByte(__extension_Float64_75_f64 const& __this LIFETIMEBOUND)  -> const Builtin::char8;
+	inline constexpr auto ToByte(__extension_Float64_75_f64 const& __this LIFETIMEBOUND)  -> const Builtin::u8;
 	#line 92 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-	inline constexpr auto ToChar(__extension_Float64_75_f64 const& __this LIFETIMEBOUND)  -> const Builtin::char16;
+	inline constexpr auto ToChar(__extension_Float64_75_f64 const& __this LIFETIMEBOUND)  -> const Builtin::char32;
 	#line 75 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float64_75_f64, IConvertible, IConvertible, __extension_Float64_75_f64);
 	} namespace System{
@@ -1189,7 +1189,7 @@ namespace __Float64_Protected {
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 91 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-	inline constexpr auto ToByte(__extension_Float64_75_f64 const& __this LIFETIMEBOUND)  -> const Builtin::char8
+	inline constexpr auto ToByte(__extension_Float64_75_f64 const& __this LIFETIMEBOUND)  -> const Builtin::u8
 	{
 		#line 91 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u8>(__this)); 
@@ -1198,7 +1198,7 @@ namespace __Float64_Protected {
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 92 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-	inline constexpr auto ToChar(__extension_Float64_75_f64 const& __this LIFETIMEBOUND)  -> const Builtin::char16
+	inline constexpr auto ToChar(__extension_Float64_75_f64 const& __this LIFETIMEBOUND)  -> const Builtin::char32
 	{
 		#line 92 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u16>(__this)); 
@@ -1586,7 +1586,7 @@ namespace __Float64_Protected {
 	inline constexpr auto getIsCanonical(__extension_Float64_160_f64 const& __this ) -> const bool
 	{
 		#line 171 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
+		ADV_EXPRESSION_BODY(true); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1594,7 +1594,7 @@ namespace __Float64_Protected {
 	inline constexpr auto getIsComplexNumber(__extension_Float64_160_f64 const& __this ) -> const bool
 	{
 		#line 172 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
+		ADV_EXPRESSION_BODY(false); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1618,7 +1618,7 @@ namespace __Float64_Protected {
 	inline constexpr auto getIsImaginaryNumber(__extension_Float64_160_f64 const& __this ) -> const bool
 	{
 		#line 175 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
+		ADV_EXPRESSION_BODY(false); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1961,7 +1961,7 @@ ADV_WARNING_POP
 		#line 485 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		if (rhs == Builtin::i32(-1)) {
 			#line 486 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-			return Builtin::Boolean(true);
+			return true;
 		}
 		#line 489 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		return __this % rhs == Builtin::i32(0);
@@ -1985,7 +1985,7 @@ ADV_WARNING_POP
 		#line 411 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		if ((ADV_UFCS(NarrowToInt64)(bits.__ref()) <=> Builtin::i32(0)) <= 0) {
 			#line 412 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-			return Builtin::Boolean(false);
+			return false;
 		}
 		#line 415 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		Builtin::Auto<decltype(__Float64_Protected::ExtractBiasedExponentFromBits(bits))> biasedExponent = __Float64_Protected::ExtractBiasedExponentFromBits(bits); 
@@ -1999,7 +1999,7 @@ ADV_WARNING_POP
 		#line 423 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		if (biasedExponent == __Float64_Protected::MaxBiasedExponent) {
 			#line 424 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
-			return Builtin::Boolean(false);
+			return false;
 		}
 		#line 428 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float64.ast"
 		return trailingSignificand == __Float64_Protected::MinTrailingSignificand;

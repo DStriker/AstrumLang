@@ -1,4 +1,5 @@
 #include "Boolean.h"
+#include "Char.h"
 #include "Decimal.h"
 #include "Float128.h"
 #include "Float128_Exp.h"
@@ -12,6 +13,7 @@
 #include "IComparable.h"
 #include "IConvertible.h"
 #include "IEquatable.h"
+#include "Index.h"
 #include "Int128.h"
 #include "Int16.h"
 #include "Int32.h"

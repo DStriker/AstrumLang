@@ -27,7 +27,7 @@ using Half = Builtin::f16;
 	#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 	template<class __TT> struct __static_getMaxValue; template<> struct __static_getMaxValue<__extension_Float16_8_f16> { static inline constexpr auto get() -> const __extension_Float16_8_f16; };
 	#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(f16, IMinMaxValue, IMinMaxValue, f16);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float16_8_f16, IMinMaxValue, IMinMaxValue, __extension_Float16_8_f16);
 	} namespace System{
 using __extensions::__static_getMinValue;
 using __extensions::__static_getMaxValue;
@@ -66,7 +66,7 @@ using __extensions::getHashCode;
 	#line 56 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 	ASTRUMSTD_API auto _operator_lt_eq_gt_mul(__extension_Float16_55_f16 const& __this LIFETIMEBOUND, Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> obj)  -> const Builtin::i32;
 	#line 55 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(f16, IAbstractComparable, IAbstractComparable, f16);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float16_55_f16, IAbstractComparable, IAbstractComparable, __extension_Float16_55_f16);
 	} namespace System{
 using __extensions::_operator_lt_eq_gt_mul;
 
@@ -106,11 +106,11 @@ using __extensions::_operator_lt_eq_gt_mul;
 	#line 85 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 	inline constexpr auto ToFloat64(__extension_Float16_70_f16 const& __this LIFETIMEBOUND) noexcept -> const Builtin::f64;
 	#line 86 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	inline constexpr auto ToByte(__extension_Float16_70_f16 const& __this LIFETIMEBOUND)  -> const Builtin::char8;
+	inline constexpr auto ToByte(__extension_Float16_70_f16 const& __this LIFETIMEBOUND)  -> const Builtin::u8;
 	#line 87 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	inline constexpr auto ToChar(__extension_Float16_70_f16 const& __this LIFETIMEBOUND)  -> const Builtin::char16;
+	inline constexpr auto ToChar(__extension_Float16_70_f16 const& __this LIFETIMEBOUND)  -> const Builtin::char32;
 	#line 70 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(f16, IConvertible, IConvertible, f16);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float16_70_f16, IConvertible, IConvertible, __extension_Float16_70_f16);
 	} namespace System{
 using __extensions::ToBoolean;
 using __extensions::ToInt8;
@@ -150,7 +150,7 @@ using __extensions::ToChar;
 	#line 110 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 	inline constexpr auto _operator_div_gt_eq(__extension_Float16_92_f16 & __this , auto rhs)  -> typename __extension_Float16_92_f16&;
 	#line 92 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(f16, IDivisibleArithmetic, IDivisibleArithmetic, f16);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float16_92_f16, IDivisibleArithmetic, IDivisibleArithmetic, __extension_Float16_92_f16);
 	} namespace System{
 using __extensions::_operator_div_mod;
 using __extensions::_operator_div_not;
@@ -170,7 +170,7 @@ using __extensions::_operator_div_gt_eq;
 	#line 152 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 	inline constexpr auto _operator_xor_xor_eq(__extension_Float16_114_f16 & __this , Builtin::i32 exp)  -> typename __extension_Float16_114_f16&;
 	#line 114 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(f16, ISignedIntegerPowerArithmetic, ISignedIntegerPowerArithmetic, f16);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float16_114_f16, ISignedIntegerPowerArithmetic, ISignedIntegerPowerArithmetic, __extension_Float16_114_f16);
 	} namespace System{
 using __extensions::_operator_xor_xor;
 using __extensions::_operator_xor_xor_eq;
@@ -259,7 +259,7 @@ using __extensions::_operator_xor_xor_eq;
 	#line 190 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 	inline constexpr auto getIsZero(__extension_Float16_155_f16 const& __this ) -> const bool;
 	#line 155 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(f16, INumberBase, INumberBase, f16);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float16_155_f16, INumberBase, INumberBase, __extension_Float16_155_f16);
 	} namespace System{
 using __extensions::MaxMagnitude;
 using __extensions::MaxMagnitudeNumber;
@@ -309,7 +309,7 @@ using __extensions::getIsZero;
 	#line 291 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 	template<class __TT> struct __static_getMinusOne; template<> struct __static_getMinusOne<__extension_Float16_290_f16> { static inline constexpr auto get() -> const __extension_Float16_290_f16; };
 	#line 290 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(f16, ISignedNumber, ISignedNumber, f16);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float16_290_f16, ISignedNumber, ISignedNumber, __extension_Float16_290_f16);
 	} namespace System{
 using __extensions::__static_getMinusOne;
 
@@ -333,7 +333,7 @@ using __extensions::__static_getMinusOne;
 	#line 295 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 	inline constexpr auto getSign(__extension_Float16_294_f16 const& __this ) -> const Builtin::i32;
 	#line 294 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(f16, INumber, INumber, f16);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float16_294_f16, INumber, INumber, __extension_Float16_294_f16);
 	} namespace System{
 using __extensions::CopySign;
 using __extensions::Max;
@@ -363,7 +363,7 @@ using __extensions::getSign;
 	#line 432 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 	inline auto getLog10(__extension_Float16_397_f16 const& __this ) -> const __extension_Float16_397_f16;
 	#line 397 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(f16, IBinaryNumber, IBinaryNumber, f16);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float16_397_f16, IBinaryNumber, IBinaryNumber, __extension_Float16_397_f16);
 	} namespace System{
 using __extensions::Log;
 using __extensions::Midpoint;
@@ -385,7 +385,7 @@ using __extensions::getLog10;
 	#line 488 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 	template<class __TT> struct __static_getTau; template<> struct __static_getTau<__extension_Float16_484_f16> { static inline constexpr auto get() -> const __extension_Float16_484_f16; };
 	#line 484 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(f16, IFloatingPointConstants, IFloatingPointConstants, f16);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float16_484_f16, IFloatingPointConstants, IFloatingPointConstants, __extension_Float16_484_f16);
 	} namespace System{
 using __extensions::__static_getPi;
 using __extensions::__static_getE;
@@ -453,7 +453,7 @@ using __extensions::__static_getTau;
 	#line 603 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 	inline constexpr auto getSignificandByteCount(__extension_Float16_491_f16 const& __this ) -> const Builtin::u32;
 	#line 491 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(f16, IFloatingPoint, IFloatingPoint, f16);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float16_491_f16, IFloatingPoint, IFloatingPoint, __extension_Float16_491_f16);
 	} namespace System{
 using __extensions::CeilToInt32;
 using __extensions::CeilToInt64;
@@ -494,7 +494,7 @@ using __extensions::getSignificandByteCount;
 	#line 609 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 	inline auto _operator_mul_mul_eq(__extension_Float16_607_f16 & __this , __extension_Float16_607_f16 exp) noexcept -> typename __extension_Float16_607_f16&;
 	#line 607 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(f16, IPowerArithmetic, IPowerArithmetic, f16);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float16_607_f16, IPowerArithmetic, IPowerArithmetic, __extension_Float16_607_f16);
 	} namespace System{
 using __extensions::_operator_mul_mul;
 using __extensions::_operator_mul_mul_eq;
@@ -517,7 +517,7 @@ using __extensions::_operator_mul_mul_eq;
 	#line 624 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 	inline auto getExp10M1(__extension_Float16_612_f16 const& __this ) -> const __extension_Float16_612_f16;
 	#line 612 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(f16, IExponentialFunctions, IExponentialFunctions, f16);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float16_612_f16, IExponentialFunctions, IExponentialFunctions, __extension_Float16_612_f16);
 	} namespace System{
 using __extensions::getExp;
 using __extensions::getExp2;
@@ -540,7 +540,7 @@ using __extensions::getExp10M1;
 	#line 635 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 	inline auto getLog10P1(__extension_Float16_627_f16 const& __this ) -> const __extension_Float16_627_f16;
 	#line 627 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(f16, ILogarithmicFunctions, ILogarithmicFunctions, f16);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float16_627_f16, ILogarithmicFunctions, ILogarithmicFunctions, __extension_Float16_627_f16);
 	} namespace System{
 using __extensions::getLn;
 using __extensions::getLnP1;
@@ -561,7 +561,7 @@ using __extensions::getLog10P1;
 	#line 642 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 	inline auto getCbrt(__extension_Float16_638_f16 const& __this ) -> const __extension_Float16_638_f16;
 	#line 638 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(f16, IRootFunctions, IRootFunctions, f16);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float16_638_f16, IRootFunctions, IRootFunctions, __extension_Float16_638_f16);
 	} namespace System{
 using __extensions::Root;
 using __extensions::Hypot;
@@ -630,7 +630,7 @@ using __extensions::getCbrt;
 	#line 721 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 	inline auto getAcscPi(__extension_Float16_656_f16 const& __this ) -> const __extension_Float16_656_f16;
 	#line 656 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(f16, ITrigonometricFunctions, ITrigonometricFunctions, f16);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float16_656_f16, ITrigonometricFunctions, ITrigonometricFunctions, __extension_Float16_656_f16);
 	} namespace System{
 using __extensions::ToRadians;
 using __extensions::ToDegrees;
@@ -691,7 +691,7 @@ using __extensions::getAcscPi;
 	#line 753 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 	inline auto getTanh(__extension_Float16_729_f16 const& __this ) -> const __extension_Float16_729_f16;
 	#line 729 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(f16, IHyperbolicFunctions, IHyperbolicFunctions, f16);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float16_729_f16, IHyperbolicFunctions, IHyperbolicFunctions, __extension_Float16_729_f16);
 	} namespace System{
 using __extensions::getAcosh;
 using __extensions::getAcoth;
@@ -754,7 +754,7 @@ using __extensions::getTanh;
 	#line 870 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 	inline auto getErfc(__extension_Float16_756_f16 const& __this ) -> const __extension_Float16_756_f16;
 	#line 756 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(f16, IBinaryFloatingPointIeee754, IBinaryFloatingPointIeee754, f16);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float16_756_f16, IBinaryFloatingPointIeee754, IBinaryFloatingPointIeee754, __extension_Float16_756_f16);
 	} namespace System{
 using __extensions::Atan2;
 using __extensions::Atan2Pi;
@@ -826,7 +826,7 @@ using __extensions::getErfc;
 	#line 894 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 	template<class __TT> struct __static_getMaxMantissaFastPath; template<> struct __static_getMaxMantissaFastPath<__extension_Float16_873_f16> { static inline constexpr auto get() -> const Builtin::u128; };
 	#line 873 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(f16, IBinaryFloatFormatInfo, IBinaryFloatFormatInfo, f16);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Float16_873_f16, IBinaryFloatFormatInfo, IBinaryFloatFormatInfo, __extension_Float16_873_f16);
 	} namespace System{
 using __extensions::__static_getNumberBufferLength;
 using __extensions::__static_getZeroBits;
@@ -871,7 +871,7 @@ using __extensions::__static_getMaxMantissaFastPath;
 #line 365 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 namespace __Float16_Protected { inline constexpr auto SignMask = Builtin::u16(0x8000U); }
 #line 366 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-namespace __Float16_Protected { inline constexpr auto SignShift = Builtin::u16((unsigned short)15); }
+namespace __Float16_Protected { inline constexpr auto SignShift = Builtin::i32(15); }
 #line 367 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 namespace __Float16_Protected { inline constexpr Builtin::u8 ShiftedSignMask = Builtin::u8{__Float16_Protected::SignMask >> __Float16_Protected::SignShift}; }
 #line 369 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
@@ -901,9 +901,9 @@ namespace __Float16_Protected { inline constexpr auto MinTrailingSignificand = A
 #line 383 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 namespace __Float16_Protected { inline constexpr auto MaxTrailingSignificand = Builtin::u16(0x03FFU); }
 #line 385 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-namespace __Float16_Protected { inline constexpr auto TrailingSignificandLength = Builtin::u8((unsigned char)10); }
+namespace __Float16_Protected { inline constexpr auto TrailingSignificandLength = Builtin::i32(10); }
 #line 386 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-namespace __Float16_Protected { inline constexpr auto SignificandLength = __Float16_Protected::TrailingSignificandLength + Builtin::u8((unsigned char)1); }
+namespace __Float16_Protected { inline constexpr auto SignificandLength = __Float16_Protected::TrailingSignificandLength + Builtin::i32(1); }
 //###############################################################################
 //# Function definitions
 //###############################################################################
@@ -929,7 +929,7 @@ namespace __Float16_Protected {
 		inline constexpr auto Significand(Builtin::f16 value) noexcept -> const Builtin::u16
 		{
 			#line 390 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-			ADV_EXPRESSION_BODY(__Float16_Protected::TrailingSignificand(value) | (__Float16_Protected::BiasedExponent(value) != Builtin::u8((unsigned char)0) ? (Builtin::u32(1U) << __Float16_Protected::BiasedExponentShift) : Builtin::u32(0U))); 
+			ADV_EXPRESSION_BODY(__Float16_Protected::TrailingSignificand(value) | (__Float16_Protected::BiasedExponent(value) != Builtin::i32(0) ? (Builtin::u32(1U) << __Float16_Protected::BiasedExponentShift) : Builtin::u32(0U))); 
 		}
 	}
 namespace __Float16_Protected {
@@ -1032,7 +1032,7 @@ namespace __Float16_Protected {
 	inline constexpr auto getHashCode(__extension_Float16_13_f16 const& __this ) -> const Builtin::u64
 	{
 		#line 45 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		auto bits = ADV_UPCS(Bits)(__this.__ref()); 
+		Builtin::Auto<decltype(ADV_UPCS(Bits)(__this.__ref()))> bits = ADV_UPCS(Bits)(__this.__ref()); 
 		#line 46 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		if ((((bits - Builtin::i32(1)) & (ADV_UFCS(_operator_not)(Builtin::u32(0x8000U)))) <=> Builtin::u32(0x7C00U)) >= 0) {
 			#line 47 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
@@ -1183,7 +1183,7 @@ namespace __Float16_Protected {
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 86 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	inline constexpr auto ToByte(__extension_Float16_70_f16 const& __this LIFETIMEBOUND)  -> const Builtin::char8
+	inline constexpr auto ToByte(__extension_Float16_70_f16 const& __this LIFETIMEBOUND)  -> const Builtin::u8
 	{
 		#line 86 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u8>(__this)); 
@@ -1192,7 +1192,7 @@ namespace __Float16_Protected {
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 87 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	inline constexpr auto ToChar(__extension_Float16_70_f16 const& __this LIFETIMEBOUND)  -> const Builtin::char16
+	inline constexpr auto ToChar(__extension_Float16_70_f16 const& __this LIFETIMEBOUND)  -> const Builtin::char32
 	{
 		#line 87 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u16>(__this)); 
@@ -1281,9 +1281,9 @@ namespace __Float16_Protected {
 			return Builtin::f16(1.0f) / ADV_UFCS(_operator_xor_xor)(__this, (-exp));
 		}
 		#line 127 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		auto base = __this; 
+		Builtin::Auto<decltype(__this)> base = __this; 
 		#line 128 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		auto result = Builtin::f16(1.0f); 
+		Builtin::Auto<decltype(Builtin::f16(1.0f))> result = Builtin::f16(1.0f); 
 		#line 130 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		if (std::is_constant_evaluated()) {
 			#line 131 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
@@ -1344,9 +1344,9 @@ namespace __Float16_Protected {
 	inline constexpr auto MaxMagnitude(__extension_Float16_155_f16 const& __this LIFETIMEBOUND, __extension_Float16_873_f16 rhs) noexcept -> const typename __extension_Float16_155_f16
 	{
 		#line 194 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		auto ax = ADV_UPCS(Abs)(__this.__ref()); 
+		Builtin::Auto<decltype(ADV_UPCS(Abs)(__this.__ref()))> ax = ADV_UPCS(Abs)(__this.__ref()); 
 		#line 195 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		auto ay = ADV_UPCS(Abs)(rhs.__ref()); 
+		Builtin::Auto<decltype(ADV_UPCS(Abs)(rhs.__ref()))> ay = ADV_UPCS(Abs)(rhs.__ref()); 
 		#line 197 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		if ((ax <=> ay) > 0 || ADV_UPCS(IsNaN)(ax.__ref())) {
 			#line 199 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
@@ -1367,9 +1367,9 @@ namespace __Float16_Protected {
 	inline constexpr auto MaxMagnitudeNumber(__extension_Float16_155_f16 const& __this LIFETIMEBOUND, __extension_Float16_873_f16 rhs) noexcept -> const typename __extension_Float16_155_f16
 	{
 		#line 212 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		auto ax = ADV_UPCS(Abs)(__this.__ref()); 
+		Builtin::Auto<decltype(ADV_UPCS(Abs)(__this.__ref()))> ax = ADV_UPCS(Abs)(__this.__ref()); 
 		#line 213 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		auto ay = ADV_UPCS(Abs)(rhs.__ref()); 
+		Builtin::Auto<decltype(ADV_UPCS(Abs)(rhs.__ref()))> ay = ADV_UPCS(Abs)(rhs.__ref()); 
 		#line 215 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		if ((ax <=> ay) > 0 || ADV_UPCS(IsNaN)(ay.__ref())) {
 			#line 217 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
@@ -1390,9 +1390,9 @@ namespace __Float16_Protected {
 	inline constexpr auto MinMagnitude(__extension_Float16_155_f16 const& __this LIFETIMEBOUND, __extension_Float16_873_f16 rhs) noexcept -> const typename __extension_Float16_155_f16
 	{
 		#line 230 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		auto ax = ADV_UPCS(Abs)(__this.__ref()); 
+		Builtin::Auto<decltype(ADV_UPCS(Abs)(__this.__ref()))> ax = ADV_UPCS(Abs)(__this.__ref()); 
 		#line 231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		auto ay = ADV_UPCS(Abs)(rhs.__ref()); 
+		Builtin::Auto<decltype(ADV_UPCS(Abs)(rhs.__ref()))> ay = ADV_UPCS(Abs)(rhs.__ref()); 
 		#line 233 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		if ((ax <=> ay) < 0 || ADV_UPCS(IsNaN)(ax.__ref())) {
 			#line 235 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
@@ -1413,9 +1413,9 @@ namespace __Float16_Protected {
 	inline constexpr auto MinMagnitudeNumber(__extension_Float16_155_f16 const& __this LIFETIMEBOUND, __extension_Float16_873_f16 rhs) noexcept -> const typename __extension_Float16_155_f16
 	{
 		#line 248 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		auto ax = ADV_UPCS(Abs)(__this.__ref()); 
+		Builtin::Auto<decltype(ADV_UPCS(Abs)(__this.__ref()))> ax = ADV_UPCS(Abs)(__this.__ref()); 
 		#line 249 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		auto ay = ADV_UPCS(Abs)(rhs.__ref()); 
+		Builtin::Auto<decltype(ADV_UPCS(Abs)(rhs.__ref()))> ay = ADV_UPCS(Abs)(rhs.__ref()); 
 		#line 251 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		if ((ax <=> ay) < 0 || ADV_UPCS(IsNaN)(ay.__ref())) {
 			#line 253 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
@@ -1568,7 +1568,7 @@ namespace __Float16_Protected {
 	inline constexpr auto getAbs(__extension_Float16_155_f16 const& __this ) -> const __extension_Float16_873_f16
 	{
 		#line 162 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		constexpr auto mask = Builtin::u16(0x7FFFU);
+		constexpr Builtin::Auto<decltype(Builtin::u16(0x7FFFU))> mask = Builtin::u16(0x7FFFU);
 		#line 163 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		Builtin::u16 raw = ADV_UPCS(Bits)(__this.__ref()); 
 		#line 164 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
@@ -1580,7 +1580,7 @@ namespace __Float16_Protected {
 	inline constexpr auto getIsCanonical(__extension_Float16_155_f16 const& __this ) -> const bool
 	{
 		#line 166 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
+		ADV_EXPRESSION_BODY(true); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1588,7 +1588,7 @@ namespace __Float16_Protected {
 	inline constexpr auto getIsComplexNumber(__extension_Float16_155_f16 const& __this ) -> const bool
 	{
 		#line 167 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
+		ADV_EXPRESSION_BODY(false); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1612,7 +1612,7 @@ namespace __Float16_Protected {
 	inline constexpr auto getIsImaginaryNumber(__extension_Float16_155_f16 const& __this ) -> const bool
 	{
 		#line 170 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
+		ADV_EXPRESSION_BODY(false); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -1660,7 +1660,7 @@ namespace __Float16_Protected {
 	inline constexpr auto getIsNormal(__extension_Float16_155_f16 const& __this ) -> const bool
 	{
 		#line 178 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		auto bits = Builtin::BitCast<Builtin::u16>(__this) & Builtin::u32(0x7FFFU); 
+		Builtin::Auto<decltype(Builtin::BitCast<Builtin::u16>(__this) & Builtin::u32(0x7FFFU))> bits = Builtin::BitCast<Builtin::u16>(__this) & Builtin::u32(0x7FFFU); 
 		#line 179 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		return ((bits <=> Builtin::u32(0x7C00U)) < 0) && (bits != Builtin::i32(0)) && ((bits & Builtin::i32(0x7C00)) != Builtin::i32(0));
 	}
@@ -1702,7 +1702,7 @@ namespace __Float16_Protected {
 	inline constexpr auto getIsSubnormal(__extension_Float16_155_f16 const& __this ) -> const bool
 	{
 		#line 187 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		auto bits = ADV_UPCS(Bits)(__this.__ref()) & Builtin::u32(0x7FFFU); 
+		Builtin::Auto<decltype(ADV_UPCS(Bits)(__this.__ref()) & Builtin::u32(0x7FFFU))> bits = ADV_UPCS(Bits)(__this.__ref()) & Builtin::u32(0x7FFFU); 
 		#line 188 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		return ((bits <=> Builtin::u32(0x7C00U)) < 0) && (bits != Builtin::i32(0)) && ((bits & Builtin::u32(0x7C00U)) == Builtin::i32(0));
 	}
@@ -1918,7 +1918,7 @@ ADV_WARNING_POP
 	inline constexpr auto Midpoint(__extension_Float16_397_f16 const& __this LIFETIMEBOUND, __extension_Float16_873_f16 rhs) noexcept -> const typename __extension_Float16_397_f16
 	{
 		#line 460 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		constexpr auto riskValue = ADV_USPCS(MaxValue, __extension_Float16_873_f16)() / Builtin::f32(2.0f);
+		constexpr Builtin::Auto<decltype(ADV_USPCS(MaxValue, __extension_Float16_873_f16)() / Builtin::f32(2.0f))> riskValue = ADV_USPCS(MaxValue, __extension_Float16_873_f16)() / Builtin::f32(2.0f);
 		#line 462 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		if ((ADV_UPCS(Abs)(__this.__ref()) <=> riskValue) <= 0 && (ADV_UPCS(Abs)(rhs.__ref()) <=> riskValue) <= 0) {
 			#line 463 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
@@ -1946,7 +1946,7 @@ ADV_WARNING_POP
 		#line 476 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		if (rhs == Builtin::i32(-1)) {
 			#line 477 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-			return Builtin::Boolean(true);
+			return true;
 		}
 		#line 480 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		return __this % rhs == Builtin::i32(0);
@@ -1966,16 +1966,16 @@ ADV_WARNING_POP
 	inline constexpr auto getIsPow2(__extension_Float16_397_f16 const& __this ) -> const bool
 	{
 		#line 404 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		auto bits = ADV_UPCS(Bits)(__this.__ref()); 
+		Builtin::Auto<decltype(ADV_UPCS(Bits)(__this.__ref()))> bits = ADV_UPCS(Bits)(__this.__ref()); 
 		#line 406 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		if ((ADV_UFCS(NarrowToInt16)(bits.__ref()) <=> Builtin::i32(0)) <= 0) {
 			#line 407 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-			return Builtin::Boolean(false);
+			return false;
 		}
 		#line 410 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		auto biasedExponent = __Float16_Protected::ExtractBiasedExponentFromBits(bits); 
+		Builtin::Auto<decltype(__Float16_Protected::ExtractBiasedExponentFromBits(bits))> biasedExponent = __Float16_Protected::ExtractBiasedExponentFromBits(bits); 
 		#line 411 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		auto trailingSignificand = __Float16_Protected::ExtractTrailingSignificandFromBits(bits); 
+		Builtin::Auto<decltype(__Float16_Protected::ExtractTrailingSignificandFromBits(bits))> trailingSignificand = __Float16_Protected::ExtractTrailingSignificandFromBits(bits); 
 		#line 414 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		if (biasedExponent == __Float16_Protected::MinBiasedExponent) {
 			#line 415 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
@@ -1984,7 +1984,7 @@ ADV_WARNING_POP
 		#line 418 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		if (biasedExponent == __Float16_Protected::MaxBiasedExponent) {
 			#line 419 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-			return Builtin::Boolean(false);
+			return false;
 		}
 		#line 423 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		return trailingSignificand == __Float16_Protected::MinTrailingSignificand;
@@ -2224,7 +2224,7 @@ ADV_WARNING_POP
 		#line 501 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		if (std::is_constant_evaluated()) {
 			#line 502 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-			const auto i = Builtin::f16{Builtin::Cast<true, Builtin::i32>(__this)}; 
+			const Builtin::Auto<decltype(Builtin::f16{Builtin::Cast<true, Builtin::i32>(__this)})> i = Builtin::f16{Builtin::Cast<true, Builtin::i32>(__this)}; 
 			#line 503 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 			return ((__this <=> i) > 0) ? (i + Builtin::i32(1)) : i;
 		} else {
@@ -2244,7 +2244,7 @@ ADV_WARNING_POP
 		#line 518 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		if (std::is_constant_evaluated()) {
 			#line 519 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-			const auto i = Builtin::f16{Builtin::Cast<true, Builtin::i32>(__this)}; 
+			const Builtin::Auto<decltype(Builtin::f16{Builtin::Cast<true, Builtin::i32>(__this)})> i = Builtin::f16{Builtin::Cast<true, Builtin::i32>(__this)}; 
 			#line 520 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 			return ((__this <=> i) < 0) ? (i - Builtin::i32(1)) : i;
 		} else {
@@ -2314,7 +2314,7 @@ ADV_WARNING_POP
 	inline constexpr auto getExponentShortestBitLength(__extension_Float16_491_f16 const& __this ) -> const Builtin::u32
 	{
 		#line 595 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		auto exponent = __Float16_Protected::Exponent(__this); 
+		Builtin::Auto<decltype(__Float16_Protected::Exponent(__this))> exponent = __Float16_Protected::Exponent(__this); 
 		#line 596 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		if ((exponent <=> Builtin::i32(0)) >= 0) {
 			#line 597 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
@@ -2862,7 +2862,7 @@ ADV_WARNING_POP
 	inline constexpr auto getBitIncrement(__extension_Float16_756_f16 const& __this ) -> const __extension_Float16_873_f16
 	{
 		#line 775 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		auto bits = ADV_UPCS(Bits)(__this.__ref()); 
+		Builtin::Auto<decltype(ADV_UPCS(Bits)(__this.__ref()))> bits = ADV_UPCS(Bits)(__this.__ref()); 
 		#line 776 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		if (((bits & Builtin::u16(0x7C00U)) <=> Builtin::u16(0x7C00U)) >= 0) {
 			#line 780 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
@@ -2884,7 +2884,7 @@ ADV_WARNING_POP
 	inline constexpr auto getBitDecrement(__extension_Float16_756_f16 const& __this ) -> const __extension_Float16_873_f16
 	{
 		#line 799 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		auto bits = ADV_UPCS(Bits)(__this.__ref()); 
+		Builtin::Auto<decltype(ADV_UPCS(Bits)(__this.__ref()))> bits = ADV_UPCS(Bits)(__this.__ref()); 
 		#line 800 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		if (((bits & Builtin::u16(0x7C00U)) <=> Builtin::u16(0x7C00U)) >= 0) {
 			#line 804 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
@@ -3124,7 +3124,7 @@ ADV_WARNING_POP
 	inline constexpr auto __static_getNormalMantissaBits<__extension_Float16_873_f16>::get() -> const Builtin::u16
 	{
 		#line 887 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		ADV_EXPRESSION_BODY(__Float16_Protected::SignificandLength); 
+		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u16>(__Float16_Protected::SignificandLength)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
@@ -3132,7 +3132,7 @@ ADV_WARNING_POP
 	inline constexpr auto __static_getDenormalMantissaBits<__extension_Float16_873_f16>::get() -> const Builtin::u16
 	{
 		#line 888 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		ADV_EXPRESSION_BODY(__Float16_Protected::TrailingSignificandLength); 
+		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u16>(__Float16_Protected::TrailingSignificandLength)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;

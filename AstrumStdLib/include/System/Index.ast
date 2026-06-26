@@ -1,0 +1,131 @@
+package System;
+
+public import IEquatable;
+public import Int32;
+public import UInt32;
+public import Int64;
+public import UInt64;
+
+public struct Index: ISelfEquatable {
+    private _value: isize;
+
+    public this() == default;
+
+    private struct FastCtorTag {}
+    private this(val: isize, _: FastCtorTag) ==> this._value = val;
+
+    public implicit this<T>(val: T) 
+    where type T is IFixedWidthInteger and type T is IUnsignedNumber and sizeof(T) <= sizeof(usize) ==
+    {
+        this._value = val.NarrowToIsize();
+
+        static if sizeof(T) == sizeof(usize) {
+            if val > isize.MaxValue {
+                throw Builtin.InvalidArgumentException(); // ArgumentOutOfRange
+            }
+        }
+    }
+
+    public this(val: usize, fromEnd: bool) ==
+    {
+        if val > isize.MaxValue {
+            throw Builtin.InvalidArgumentException(); // ArgumentOutOfRange
+        }
+
+        this._value = fromEnd ? (~val).NarrowToIsize() : val.NarrowToIsize();
+    }
+
+    public static FromStart: (val: usize) -> self ==
+    {
+        if val > isize.MaxValue {
+            throw Builtin.InvalidArgumentException(); // ArgumentOutOfRange
+        }
+
+        return self(val.NarrowToIsize(), FastCtorTag());
+    }
+
+    public static FromEnd: (val: usize) -> self ==
+    {
+        if val > isize.MaxValue {
+            throw Builtin.InvalidArgumentException(); // ArgumentOutOfRange
+        }
+
+        return self(~val.NarrowToIsize(), FastCtorTag());
+    }
+
+    public static Start: self ==> self(0, FastCtorTag());
+    public static End: self ==> self(~0iz, FastCtorTag());
+
+    public Offset: (length: usize) -> isize ==
+    {
+        offset := _value.NarrowToIsize();
+        if _value.IsNegative {
+            offset += length + 1;
+        }
+        return offset;
+    }
+
+    public operator==: (other: self) -> bool ==> _value == other._value;
+}
+
+public extension Index {
+    Value: usize ==
+    {
+        let _value := Builtin.BitCast<isize>(this);
+        return _value.IsNegative ? usize(~_value) : usize(_value);
+    }
+    IsFromEnd: bool ==> Builtin.BitCast<isize>(this).IsNegative;
+
+    HashCode: u64 ==> Builtin.BitCast<usize>(this).HashCode;
+
+    // Equals to dynamic object
+    operator==*: (in obj: object?) -> bool
+    {
+        if obj is self {
+            return this == obj;
+        }
+        
+        return false;
+    }
+}
+
+public extension u8 {
+    operator^: () -> Index ==> Index.FromEnd(this);
+}
+
+public extension u16 {
+    operator^: () -> Index ==> Index.FromEnd(this);
+}
+
+public extension u32 {
+    operator^: () -> Index ==> Index.FromEnd(this);
+}
+
+public extension u64 {
+    operator^: () -> Index ==> Index.FromEnd(this.ToUsize());
+}
+
+static assert(sizeof(Index) == sizeof(isize), "Index should be same size as isize");
+static assert(Index.Start.Value == 0u, "Index.Start.Value should be equal to 0u");
+static assert(Index.End == Index.FromEnd(0u), "Index.End should be equal to Index.FromEnd(0u)");
+static assert(Index.End == ^0u, "Index.End should be equal to ^0u");
+
+test "Index" {
+    i: Index = 5u;
+    assert i == 5u;
+    assert i == Index.FromStart(5u);
+    assert i != Index.Start;
+    assert i.Value == 5u;
+    assert i.IsFromEnd == false;
+    assert #i == 5u;
+
+    i = ^5u;
+    assert i == ^5u;
+    assert i == Index.FromEnd(5u);
+    assert i != Index.End;
+    assert i.Value == 5u;
+    assert i.IsFromEnd == true;
+    assert #i == ~5uz;
+
+    assert Index.End == ^0u;
+}

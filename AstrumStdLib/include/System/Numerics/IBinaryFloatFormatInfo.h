@@ -22,72 +22,160 @@ class IBinaryFloatFormatInfo__Weak;
 template<> inline constexpr bool Builtin::__details::cheapCopy<System::Numerics::IBinaryFloatFormatInfo> = false;
 
 namespace System::Numerics {
-	} namespace __extensions { template<class _TT> struct __static_FromBits; } namespace System::Numerics {
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_FromBits
+} namespace __extensions { template<class _TT> struct __static_FromBits{ template<class... __Args> static Builtin::FakeTypeTag get(__Args... _) noexcept { return {}; } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_FromBits
+#endif
 	#line 33 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
 	template<class __AnyType> concept __HasMethodImplementation_66e0fae685bd8488 = requires { {__AnyType::__class::FromBits(std::declval<typename __AnyType::BitsType>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires { { [] { using namespace __extensions; return __static_FromBits<typename __AnyType::__self>::get(std::declval<typename __AnyType::__self::BitsType>());}() } -> std::convertible_to<typename __AnyType::__self>; };
-	} namespace __extensions { template<class _TT> struct __static_getNumberBufferLength; } namespace System::Numerics {
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_NumberBufferLength
+} namespace __extensions { template<class _TT> struct __static_getNumberBufferLength{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_NumberBufferLength
+#endif
 	#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get6feafaea987c3098 = requires { __AnyType::__self::NumberBufferLength; } || requires { [] { using namespace __extensions; __static_getNumberBufferLength<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getZeroBits; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_get6feafaea987c3098 = requires { __AnyType::__self::NumberBufferLength; } || requires { { [] { using namespace __extensions; return __static_getNumberBufferLength<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::i32>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_ZeroBits
+} namespace __extensions { template<class _TT> struct __static_getZeroBits{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_ZeroBits
+#endif
 	#line 11 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get3f2807d3aeb2a301 = requires { __AnyType::__self::ZeroBits; } || requires { [] { using namespace __extensions; __static_getZeroBits<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getInfinityBits; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_get3f2807d3aeb2a301 = requires { __AnyType::__self::ZeroBits; } || requires { { [] { using namespace __extensions; return __static_getZeroBits<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::u128>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_InfinityBits
+} namespace __extensions { template<class _TT> struct __static_getInfinityBits{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_InfinityBits
+#endif
 	#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get68adf1615e33a45f = requires { __AnyType::__self::InfinityBits; } || requires { [] { using namespace __extensions; __static_getInfinityBits<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getNormalMantissaMask; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_get68adf1615e33a45f = requires { __AnyType::__self::InfinityBits; } || requires { { [] { using namespace __extensions; return __static_getInfinityBits<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::u128>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_NormalMantissaMask
+} namespace __extensions { template<class _TT> struct __static_getNormalMantissaMask{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_NormalMantissaMask
+#endif
 	#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get659bb417c0feaefc = requires { __AnyType::__self::NormalMantissaMask; } || requires { [] { using namespace __extensions; __static_getNormalMantissaMask<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getDenormalMantissaMask; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_get659bb417c0feaefc = requires { __AnyType::__self::NormalMantissaMask; } || requires { { [] { using namespace __extensions; return __static_getNormalMantissaMask<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::u128>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_DenormalMantissaMask
+} namespace __extensions { template<class _TT> struct __static_getDenormalMantissaMask{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_DenormalMantissaMask
+#endif
 	#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_getb06b59a9de335d93 = requires { __AnyType::__self::DenormalMantissaMask; } || requires { [] { using namespace __extensions; __static_getDenormalMantissaMask<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getMinBinaryExponent; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_getb06b59a9de335d93 = requires { __AnyType::__self::DenormalMantissaMask; } || requires { { [] { using namespace __extensions; return __static_getDenormalMantissaMask<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::u128>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_MinBinaryExponent
+} namespace __extensions { template<class _TT> struct __static_getMinBinaryExponent{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_MinBinaryExponent
+#endif
 	#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get1700a6e5550768fb = requires { __AnyType::__self::MinBinaryExponent; } || requires { [] { using namespace __extensions; __static_getMinBinaryExponent<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getMaxBinaryExponent; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_get1700a6e5550768fb = requires { __AnyType::__self::MinBinaryExponent; } || requires { { [] { using namespace __extensions; return __static_getMinBinaryExponent<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::i32>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_MaxBinaryExponent
+} namespace __extensions { template<class _TT> struct __static_getMaxBinaryExponent{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_MaxBinaryExponent
+#endif
 	#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get7e6b543d50155d41 = requires { __AnyType::__self::MaxBinaryExponent; } || requires { [] { using namespace __extensions; __static_getMaxBinaryExponent<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getMinDecimalExponent; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_get7e6b543d50155d41 = requires { __AnyType::__self::MaxBinaryExponent; } || requires { { [] { using namespace __extensions; return __static_getMaxBinaryExponent<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::i32>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_MinDecimalExponent
+} namespace __extensions { template<class _TT> struct __static_getMinDecimalExponent{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_MinDecimalExponent
+#endif
 	#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_getd3ff6a4dfc298a7b = requires { __AnyType::__self::MinDecimalExponent; } || requires { [] { using namespace __extensions; __static_getMinDecimalExponent<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getMaxDecimalExponent; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_getd3ff6a4dfc298a7b = requires { __AnyType::__self::MinDecimalExponent; } || requires { { [] { using namespace __extensions; return __static_getMinDecimalExponent<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::i32>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_MaxDecimalExponent
+} namespace __extensions { template<class _TT> struct __static_getMaxDecimalExponent{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_MaxDecimalExponent
+#endif
 	#line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get3c0879944b2c2d2d = requires { __AnyType::__self::MaxDecimalExponent; } || requires { [] { using namespace __extensions; __static_getMaxDecimalExponent<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getExponentBias; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_get3c0879944b2c2d2d = requires { __AnyType::__self::MaxDecimalExponent; } || requires { { [] { using namespace __extensions; return __static_getMaxDecimalExponent<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::i32>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_ExponentBias
+} namespace __extensions { template<class _TT> struct __static_getExponentBias{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_ExponentBias
+#endif
 	#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_getd3ca1d3c81b170fd = requires { __AnyType::__self::ExponentBias; } || requires { [] { using namespace __extensions; __static_getExponentBias<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getExponentBits; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_getd3ca1d3c81b170fd = requires { __AnyType::__self::ExponentBias; } || requires { { [] { using namespace __extensions; return __static_getExponentBias<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::i32>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_ExponentBits
+} namespace __extensions { template<class _TT> struct __static_getExponentBits{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_ExponentBits
+#endif
 	#line 20 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_getd38a053c817b6440 = requires { __AnyType::__self::ExponentBits; } || requires { [] { using namespace __extensions; __static_getExponentBits<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getOverflowDecimalExponent; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_getd38a053c817b6440 = requires { __AnyType::__self::ExponentBits; } || requires { { [] { using namespace __extensions; return __static_getExponentBits<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::u128>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_OverflowDecimalExponent
+} namespace __extensions { template<class _TT> struct __static_getOverflowDecimalExponent{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_OverflowDecimalExponent
+#endif
 	#line 21 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_getb3e2064aa6ca3def = requires { __AnyType::__self::OverflowDecimalExponent; } || requires { [] { using namespace __extensions; __static_getOverflowDecimalExponent<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getInfinityExponent; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_getb3e2064aa6ca3def = requires { __AnyType::__self::OverflowDecimalExponent; } || requires { { [] { using namespace __extensions; return __static_getOverflowDecimalExponent<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::i32>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_InfinityExponent
+} namespace __extensions { template<class _TT> struct __static_getInfinityExponent{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_InfinityExponent
+#endif
 	#line 22 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get516b3b1883289be8 = requires { __AnyType::__self::InfinityExponent; } || requires { [] { using namespace __extensions; __static_getInfinityExponent<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getNormalMantissaBits; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_get516b3b1883289be8 = requires { __AnyType::__self::InfinityExponent; } || requires { { [] { using namespace __extensions; return __static_getInfinityExponent<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::i32>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_NormalMantissaBits
+} namespace __extensions { template<class _TT> struct __static_getNormalMantissaBits{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_NormalMantissaBits
+#endif
 	#line 23 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get299cc482cc833a0c = requires { __AnyType::__self::NormalMantissaBits; } || requires { [] { using namespace __extensions; __static_getNormalMantissaBits<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getDenormalMantissaBits; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_get299cc482cc833a0c = requires { __AnyType::__self::NormalMantissaBits; } || requires { { [] { using namespace __extensions; return __static_getNormalMantissaBits<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::u16>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_DenormalMantissaBits
+} namespace __extensions { template<class _TT> struct __static_getDenormalMantissaBits{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_DenormalMantissaBits
+#endif
 	#line 24 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get3ba4197fff907fb3 = requires { __AnyType::__self::DenormalMantissaBits; } || requires { [] { using namespace __extensions; __static_getDenormalMantissaBits<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getMinFastFloatDecimalExponent; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_get3ba4197fff907fb3 = requires { __AnyType::__self::DenormalMantissaBits; } || requires { { [] { using namespace __extensions; return __static_getDenormalMantissaBits<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::u16>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_MinFastFloatDecimalExponent
+} namespace __extensions { template<class _TT> struct __static_getMinFastFloatDecimalExponent{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_MinFastFloatDecimalExponent
+#endif
 	#line 25 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get526cad9349d532ed = requires { __AnyType::__self::MinFastFloatDecimalExponent; } || requires { [] { using namespace __extensions; __static_getMinFastFloatDecimalExponent<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getMaxFastFloatDecimalExponent; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_get526cad9349d532ed = requires { __AnyType::__self::MinFastFloatDecimalExponent; } || requires { { [] { using namespace __extensions; return __static_getMinFastFloatDecimalExponent<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::i32>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_MaxFastFloatDecimalExponent
+} namespace __extensions { template<class _TT> struct __static_getMaxFastFloatDecimalExponent{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_MaxFastFloatDecimalExponent
+#endif
 	#line 26 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_getbc09544a477163fb = requires { __AnyType::__self::MaxFastFloatDecimalExponent; } || requires { [] { using namespace __extensions; __static_getMaxFastFloatDecimalExponent<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getMinExponentRoundToEven; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_getbc09544a477163fb = requires { __AnyType::__self::MaxFastFloatDecimalExponent; } || requires { { [] { using namespace __extensions; return __static_getMaxFastFloatDecimalExponent<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::i32>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_MinExponentRoundToEven
+} namespace __extensions { template<class _TT> struct __static_getMinExponentRoundToEven{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_MinExponentRoundToEven
+#endif
 	#line 27 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get91ac5ee594020a07 = requires { __AnyType::__self::MinExponentRoundToEven; } || requires { [] { using namespace __extensions; __static_getMinExponentRoundToEven<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getMaxExponentRoundToEven; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_get91ac5ee594020a07 = requires { __AnyType::__self::MinExponentRoundToEven; } || requires { { [] { using namespace __extensions; return __static_getMinExponentRoundToEven<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::i32>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_MaxExponentRoundToEven
+} namespace __extensions { template<class _TT> struct __static_getMaxExponentRoundToEven{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_MaxExponentRoundToEven
+#endif
 	#line 28 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_getfde9703437cb671d = requires { __AnyType::__self::MaxExponentRoundToEven; } || requires { [] { using namespace __extensions; __static_getMaxExponentRoundToEven<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getMaxExponentFastPath; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_getfde9703437cb671d = requires { __AnyType::__self::MaxExponentRoundToEven; } || requires { { [] { using namespace __extensions; return __static_getMaxExponentRoundToEven<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::i32>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_MaxExponentFastPath
+} namespace __extensions { template<class _TT> struct __static_getMaxExponentFastPath{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_MaxExponentFastPath
+#endif
 	#line 29 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get180e3ef9dbecae05 = requires { __AnyType::__self::MaxExponentFastPath; } || requires { [] { using namespace __extensions; __static_getMaxExponentFastPath<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getMaxMantissaFastPath; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_get180e3ef9dbecae05 = requires { __AnyType::__self::MaxExponentFastPath; } || requires { { [] { using namespace __extensions; return __static_getMaxExponentFastPath<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::i32>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_MaxMantissaFastPath
+} namespace __extensions { template<class _TT> struct __static_getMaxMantissaFastPath{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_MaxMantissaFastPath
+#endif
 	#line 30 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get870be7109e212e12 = requires { __AnyType::__self::MaxMantissaFastPath; } || requires { [] { using namespace __extensions; __static_getMaxMantissaFastPath<typename __AnyType::__self>::get(); }(); };
+	template<class __AnyType> concept __HasMethodImplementation_get870be7109e212e12 = requires { __AnyType::__self::MaxMantissaFastPath; } || requires { { [] { using namespace __extensions; return __static_getMaxMantissaFastPath<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::u128>; };
 	#line 32 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"
 	template<class __AnyType> concept __HasMethodImplementation_getb089927548f0f9df = requires(typename __AnyType::__class t) { {t.getBits()} -> std::convertible_to<typename __AnyType::__self::BitsType>; } || requires(typename __AnyType::__self t) { {getBits(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::__self::BitsType>; };
 	#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IBinaryFloatFormatInfo.ast"

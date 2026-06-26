@@ -29,7 +29,7 @@ public extension Boolean {
         return 1;
     }
 
-    HashCode: u64 ==> this ? 1 : 0;
+    HashCode: u64 ==> this ? 1u : 0u;
     
     //TrueString, FalseString
 }
@@ -68,7 +68,7 @@ public extension Boolean: IConvertible
     ToFloat32: () -> f32 noexcept ==> this ? 1.0f32 : 0.0f32;
     ToFloat64: () -> f64 noexcept ==> this ? 1.0 : 0.0;
     ToByte: () -> byte noexcept ==> this ? 1u8 : 0u8;
-    ToChar: () -> char noexcept ==> this ? 1u16 : 0u16;
+    ToChar: () -> char noexcept ==> this ? 1u : 0u;
     //ToString: () -> string;
     //ToDateTime: () -> DateTime;
 }
@@ -80,8 +80,8 @@ static assert(type Boolean is ISelfComparable, "bool should implement ISelfCompa
 static assert(type Boolean is ISelfEquatable, "bool should implement ISelfEquatable");
 
 test "Boolean" {
-    assert true.HashCode == 1;
-    assert false.HashCode == 0;
+    assert true.HashCode == 1u;
+    assert false.HashCode == 0u;
     o: object? = true;
     
 }

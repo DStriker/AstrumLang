@@ -2,4 +2,6 @@ package System.Numerics;
 
 public import INumberBase;
 
-public interface IUnsignedNumber: INumberBase {}
+public interface IUnsignedNumber: INumberBase {
+    static IsUnsigned: bool;
+}

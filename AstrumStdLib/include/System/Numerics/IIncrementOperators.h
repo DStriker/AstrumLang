@@ -24,7 +24,7 @@ template<class TSelf> inline constexpr bool Builtin::__details::cheapCopy<System
 
 namespace System::Numerics {
 	#line 4 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IIncrementOperators.ast"
-	template<class __AnyType, class TSelf> concept __HasMethodImplementation_dc6bc7778c9ccbb1 = requires(typename __AnyType::__class t) { {t.operator++()} -> std::convertible_to<TSelf>; }  || requires(typename __AnyType::__self t) { {operator++(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<TSelf>; } || requires { { [] { using namespace __extensions; return ++std::declval<typename __AnyType::__self>();}() } -> std::convertible_to<TSelf>; };
+	template<class __AnyType, class TSelf> concept __HasMethodImplementation_dc6bc7778c9ccbb1 = requires(typename __AnyType::__class t) { {t.operator++()} -> std::convertible_to<TSelf>; }  || requires(typename __AnyType::__self t) { {operator++(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<TSelf>; } || requires { ++std::declval<typename __AnyType::__self&>(); };
 	namespace __vtables {
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IIncrementOperators.ast"
 		template<class TSelf> struct __vtable_IIncrementOperators
@@ -287,7 +287,7 @@ template<> inline constexpr bool Builtin::__details::cheapCopy<System::Numerics:
 
 namespace System::Numerics {
 	#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IIncrementOperators.ast"
-	template<class __AnyType> concept __HasMethodImplementation_9dec2849ead60f30 = requires(typename __AnyType::__class t) { {t.operator++()} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {operator++(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return ++std::declval<typename __AnyType::__self>();}() } -> std::convertible_to<typename __AnyType::__self>; };
+	template<class __AnyType> concept __HasMethodImplementation_9dec2849ead60f30 = requires(typename __AnyType::__class t) { {t.operator++()} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {operator++(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::__self>; } || requires { ++std::declval<typename __AnyType::__self&>(); };
 	namespace __vtables {
 		#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IIncrementOperators.ast"
 		struct __vtable_IIncrementable

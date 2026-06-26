@@ -21,15 +21,27 @@ class IFloatingPointConstants__Weak;
 template<> inline constexpr bool Builtin::__details::cheapCopy<System::Numerics::IFloatingPointConstants> = false;
 
 namespace System::Numerics {
-	} namespace __extensions { template<class _TT> struct __static_getE; } namespace System::Numerics {
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_E
+} namespace __extensions { template<class _TT> struct __static_getE{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_E
+#endif
 	#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFloatingPointConstants.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get7e77aade31b7d42d = requires { __AnyType::__self::E; } || requires { [] { using namespace __extensions; __static_getE<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getPi; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_get7e77aade31b7d42d = requires { __AnyType::__self::E; } || requires { { [] { using namespace __extensions; return __static_getE<typename __AnyType::__self>::get(); }() } -> std::convertible_to<typename __AnyType::__self>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_Pi
+} namespace __extensions { template<class _TT> struct __static_getPi{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_Pi
+#endif
 	#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFloatingPointConstants.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get9ce3bf8e7b203715 = requires { __AnyType::__self::Pi; } || requires { [] { using namespace __extensions; __static_getPi<typename __AnyType::__self>::get(); }(); };
-	} namespace __extensions { template<class _TT> struct __static_getTau; } namespace System::Numerics {
+	template<class __AnyType> concept __HasMethodImplementation_get9ce3bf8e7b203715 = requires { __AnyType::__self::Pi; } || requires { { [] { using namespace __extensions; return __static_getPi<typename __AnyType::__self>::get(); }() } -> std::convertible_to<typename __AnyType::__self>; };
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_Tau
+} namespace __extensions { template<class _TT> struct __static_getTau{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_Tau
+#endif
 	#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFloatingPointConstants.ast"
-	template<class __AnyType> concept __HasMethodImplementation_getdad0831b4c2e03ec = requires { __AnyType::__self::Tau; } || requires { [] { using namespace __extensions; __static_getTau<typename __AnyType::__self>::get(); }(); };
+	template<class __AnyType> concept __HasMethodImplementation_getdad0831b4c2e03ec = requires { __AnyType::__self::Tau; } || requires { { [] { using namespace __extensions; return __static_getTau<typename __AnyType::__self>::get(); }() } -> std::convertible_to<typename __AnyType::__self>; };
 	#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFloatingPointConstants.ast"
 	ADV_CHECK_INTERFACE(INumberBase, INumberBase);
 	namespace __vtables {

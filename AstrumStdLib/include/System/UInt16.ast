@@ -282,7 +282,7 @@ public extension u16: INumberBase {
 }
 
 public extension u16: IUnsignedNumber {
-    
+    static IsUnsigned: bool ==> true;
 }
 
 public extension u16: INumber {

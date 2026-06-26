@@ -2071,6 +2071,7 @@ namespace Builtin {
 	using ClassProxyType = typename TClass<T>::type;
 
 	struct UncheckedTag {};
+	struct FakeTypeTag {};
 
 #ifdef Builtin_OVERFLOW_CHECKS
 	template <class T>

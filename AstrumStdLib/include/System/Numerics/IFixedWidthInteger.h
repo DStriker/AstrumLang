@@ -27,9 +27,13 @@ namespace System::Numerics {
 	template<class __AnyType> concept __HasMethodImplementation_35b9f9e372426186 = requires(typename __AnyType::__class t) { {t.RotateLeft(std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {RotateLeft(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return RotateLeft(std::declval<typename __AnyType::__self>(), std::declval<Builtin::i32>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
 	#line 25 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFixedWidthInteger.ast"
 	template<class __AnyType> concept __HasMethodImplementation_0a0a2e23972d34e5 = requires(typename __AnyType::__class t) { {t.RotateRight(std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; }  || requires(typename __AnyType::__self t) { {RotateRight(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::i32>())} -> std::convertible_to<typename __AnyType::__self>; } || requires { { [] { using namespace __extensions; return RotateRight(std::declval<typename __AnyType::__self>(), std::declval<Builtin::i32>()); }() } -> std::convertible_to<typename __AnyType::__self>; };
-	} namespace __extensions { template<class _TT> struct __static_getBitWidth; } namespace System::Numerics {
+	
+#ifndef ADV_STATIC_EXTENSION_DEFINITION_BitWidth
+} namespace __extensions { template<class _TT> struct __static_getBitWidth{ static void get() noexcept { } }; } namespace System::Numerics {
+#define ADV_STATIC_EXTENSION_DEFINITION_BitWidth
+#endif
 	#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFixedWidthInteger.ast"
-	template<class __AnyType> concept __HasMethodImplementation_get26922ba847793738 = requires { __AnyType::__self::BitWidth; } || requires { [] { using namespace __extensions; __static_getBitWidth<typename __AnyType::__self>::get(); }(); };
+	template<class __AnyType> concept __HasMethodImplementation_get26922ba847793738 = requires { __AnyType::__self::BitWidth; } || requires { { [] { using namespace __extensions; return __static_getBitWidth<typename __AnyType::__self>::get(); }() } -> std::convertible_to<Builtin::u32>; };
 	#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFixedWidthInteger.ast"
 	template<class __AnyType> concept __HasMethodImplementation_get3f3b768bb6eb3c92 = requires(typename __AnyType::__class t) { {t.getLeadingZeroCount()} -> std::convertible_to<Builtin::u32>; } || requires(typename __AnyType::__self t) { {getLeadingZeroCount(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<Builtin::u32>; };
 	#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFixedWidthInteger.ast"
@@ -382,9 +386,9 @@ namespace System::Numerics {
 template<__ImplementsInterface_IFixedWidthInteger T> inline const T IFixedWidthInteger::DefaultLeadingZeroCount(T value) 
 	{
 		#line 29 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFixedWidthInteger.ast"
-		static_assert(std::is_base_of_v<Builtin::Struct, T>, "T must be a struct");
+		static_assert(Builtin::IsStructType<T>, "T must be a struct");
 		#line 30 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFixedWidthInteger.ast"
-		auto bitCount = T{ADV_UPCS(ByteCount)(value.__ref()) * Builtin::u64(8ULL)}; 
+		Builtin::Auto<decltype(T{ADV_UPCS(ByteCount)(value.__ref()) * Builtin::u64(8ULL)})> bitCount = T{ADV_UPCS(ByteCount)(value.__ref()) * Builtin::u64(8ULL)}; 
 		#line 31 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFixedWidthInteger.ast"
 		if (value == ADV_USPCS(Zero, T)()) {
 			#line 32 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Numerics\\IFixedWidthInteger.ast"

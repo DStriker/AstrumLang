@@ -18,7 +18,7 @@ class __Class_Decimal;
 	struct Decimal final : public Builtin::Struct {
 		public: using __self = Decimal;
 		public: using __class = __Class_Decimal;
-		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 		#line 22 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		public: using DivisibleArithmeticType = __self;
 		#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
@@ -253,9 +253,9 @@ using __extensions::_operator_lt_eq_gt_mul;
 	#line 1708 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 	inline auto ToFloat64(__extension_Decimal_1693_decimal const& __this LIFETIMEBOUND)  -> const Builtin::f64;
 	#line 1709 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto ToByte(__extension_Decimal_1693_decimal const& __this LIFETIMEBOUND)  -> const Builtin::char8;
+	inline auto ToByte(__extension_Decimal_1693_decimal const& __this LIFETIMEBOUND)  -> const Builtin::u8;
 	#line 1710 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto ToChar(__extension_Decimal_1693_decimal const& __this LIFETIMEBOUND)  -> const Builtin::char16;
+	inline auto ToChar(__extension_Decimal_1693_decimal const& __this LIFETIMEBOUND)  -> const Builtin::char32;
 	#line 1693 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Decimal_1693_decimal, IConvertible, IConvertible, __extension_Decimal_1693_decimal);
 	} namespace System{
@@ -1438,7 +1438,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	
 } namespace __extensions { using namespace System;
 #line 1602 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline constexpr auto __static_getMinValue<__extension_Decimal_1601_decimal>::get() -> const __extension_Decimal_2459_decimal
+	inline constexpr auto __static_getMinValue<__extension_Decimal_1601_decimal>::get() -> const __extension_Decimal_1601_decimal
 	{
 		#line 1602 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(System::Decimal{Builtin::ParseInt128("-79228162514264337593543950335")}); 
@@ -1446,7 +1446,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 1603 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline constexpr auto __static_getMaxValue<__extension_Decimal_1601_decimal>::get() -> const __extension_Decimal_2459_decimal
+	inline constexpr auto __static_getMaxValue<__extension_Decimal_1601_decimal>::get() -> const __extension_Decimal_1601_decimal
 	{
 		#line 1603 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(System::Decimal{+Builtin::ParseInt128("79228162514264337593543950335")}); 
@@ -1456,7 +1456,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	
 } namespace __extensions { using namespace System;
 #line 1651 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto Midpoint(__extension_Decimal_1612_decimal const& __this LIFETIMEBOUND, __extension_Decimal_2459_decimal rhs) noexcept -> const typename __extension_Decimal_1612_decimal
+	inline auto Midpoint(__extension_Decimal_1612_decimal const& __this LIFETIMEBOUND, __extension_Decimal_1612_decimal rhs) noexcept -> const typename __extension_Decimal_1612_decimal
 	{
 		#line 1653 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		constexpr Builtin::Auto<decltype(System::Decimal{Builtin::ParseInt128("39614081257132168796771975167")})> riskValue = System::Decimal{Builtin::ParseInt128("39614081257132168796771975167")};
@@ -1477,7 +1477,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 1663 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto IsMultipleOf(__extension_Decimal_1612_decimal const& __this LIFETIMEBOUND, __extension_Decimal_2459_decimal rhs) noexcept -> const bool
+	inline auto IsMultipleOf(__extension_Decimal_1612_decimal const& __this LIFETIMEBOUND, __extension_Decimal_1612_decimal rhs) noexcept -> const bool
 	{
 		#line 1665 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		if (rhs == Builtin::i32(0)) {
@@ -1643,7 +1643,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 1709 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto ToByte(__extension_Decimal_1693_decimal const& __this LIFETIMEBOUND)  -> const Builtin::char8
+	inline auto ToByte(__extension_Decimal_1693_decimal const& __this LIFETIMEBOUND)  -> const Builtin::u8
 	{
 		#line 1709 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u8>(__this)); 
@@ -1652,7 +1652,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 1710 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto ToChar(__extension_Decimal_1693_decimal const& __this LIFETIMEBOUND)  -> const Builtin::char16
+	inline auto ToChar(__extension_Decimal_1693_decimal const& __this LIFETIMEBOUND)  -> const Builtin::char32
 	{
 		#line 1710 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u16>(__this)); 
@@ -1663,7 +1663,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	
 } namespace __extensions { using namespace System;
 #line 1717 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	template<class T> inline constexpr auto _operator_div_mod(__extension_Decimal_1715_decimal const& __this LIFETIMEBOUND, T rhs)  -> const std::tuple<__extension_Decimal_2459_decimal, __extension_Decimal_2459_decimal>
+	template<class T> inline constexpr auto _operator_div_mod(__extension_Decimal_1715_decimal const& __this LIFETIMEBOUND, T rhs)  -> const std::tuple<__extension_Decimal_1715_decimal, __extension_Decimal_1715_decimal>
 	{
 		#line 1719 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		return std::make_tuple(__this / System::Decimal{rhs}, __this % System::Decimal{rhs});
@@ -1733,17 +1733,17 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 		#line 1740 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		if (exp == Builtin::i32(0)) [[unlikely]] {
 			#line 1742 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-			return ADV_USPCS(One, __extension_Decimal_2459_decimal)();
+			return ADV_USPCS(One, __extension_Decimal_1736_decimal)();
 		}
 		#line 1745 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		if ((exp <=> Builtin::i32(0)) < 0) {
 			#line 1746 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-			return ADV_USPCS(One, __extension_Decimal_2459_decimal)() / ADV_UFCS(_operator_xor_xor)(__this, (-exp));
+			return ADV_USPCS(One, __extension_Decimal_1736_decimal)() / ADV_UFCS(_operator_xor_xor)(__this, (-exp));
 		}
 		#line 1749 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		Builtin::Auto<decltype(__this)> base = __this; 
 		#line 1750 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		Builtin::Auto<decltype(ADV_USPCS(One, __extension_Decimal_2459_decimal)())> result = ADV_USPCS(One, __extension_Decimal_2459_decimal)(); 
+		Builtin::Auto<decltype(ADV_USPCS(One, __extension_Decimal_1736_decimal)())> result = ADV_USPCS(One, __extension_Decimal_1736_decimal)(); 
 		#line 1752 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		if (std::is_constant_evaluated()) {
 			#line 1753 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
@@ -1801,7 +1801,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	
 } namespace __extensions { using namespace System;
 #line 1831 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto MaxMagnitude(__extension_Decimal_1777_decimal const& __this LIFETIMEBOUND, __extension_Decimal_2459_decimal rhs) noexcept -> const typename __extension_Decimal_1777_decimal
+	inline auto MaxMagnitude(__extension_Decimal_1777_decimal const& __this LIFETIMEBOUND, __extension_Decimal_1777_decimal rhs) noexcept -> const typename __extension_Decimal_1777_decimal
 	{
 		#line 1833 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		Builtin::Auto<decltype(ADV_UPCS(Abs)(__this.__ref()))> ax = ADV_UPCS(Abs)(__this.__ref()); 
@@ -1824,7 +1824,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 1849 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto MaxMagnitudeNumber(__extension_Decimal_1777_decimal const& __this LIFETIMEBOUND, __extension_Decimal_2459_decimal rhs) noexcept -> const typename __extension_Decimal_1777_decimal
+	inline auto MaxMagnitudeNumber(__extension_Decimal_1777_decimal const& __this LIFETIMEBOUND, __extension_Decimal_1777_decimal rhs) noexcept -> const typename __extension_Decimal_1777_decimal
 	{
 		#line 1849 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(MaxMagnitude)(__this.__ref(), rhs)); 
@@ -1833,7 +1833,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 1851 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto MinMagnitude(__extension_Decimal_1777_decimal const& __this LIFETIMEBOUND, __extension_Decimal_2459_decimal rhs) noexcept -> const typename __extension_Decimal_1777_decimal
+	inline auto MinMagnitude(__extension_Decimal_1777_decimal const& __this LIFETIMEBOUND, __extension_Decimal_1777_decimal rhs) noexcept -> const typename __extension_Decimal_1777_decimal
 	{
 		#line 1853 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		Builtin::Auto<decltype(ADV_UPCS(Abs)(__this.__ref()))> ax = ADV_UPCS(Abs)(__this.__ref()); 
@@ -1856,7 +1856,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 1869 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto MinMagnitudeNumber(__extension_Decimal_1777_decimal const& __this LIFETIMEBOUND, __extension_Decimal_2459_decimal rhs) noexcept -> const typename __extension_Decimal_1777_decimal
+	inline auto MinMagnitudeNumber(__extension_Decimal_1777_decimal const& __this LIFETIMEBOUND, __extension_Decimal_1777_decimal rhs) noexcept -> const typename __extension_Decimal_1777_decimal
 	{
 		#line 1869 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(MinMagnitude)(__this.__ref(), rhs)); 
@@ -1973,7 +1973,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 1778 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline constexpr auto __static_getOne<__extension_Decimal_1777_decimal>::get() -> const __extension_Decimal_2459_decimal
+	inline constexpr auto __static_getOne<__extension_Decimal_1777_decimal>::get() -> const __extension_Decimal_1777_decimal
 	{
 		#line 1778 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(System::Decimal{Builtin::i32(1)}); 
@@ -1981,7 +1981,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 1779 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline constexpr auto __static_getZero<__extension_Decimal_1777_decimal>::get() -> const __extension_Decimal_2459_decimal
+	inline constexpr auto __static_getZero<__extension_Decimal_1777_decimal>::get() -> const __extension_Decimal_1777_decimal
 	{
 		#line 1779 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(System::Decimal{}); 
@@ -1997,7 +1997,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 1782 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getAbs(__extension_Decimal_1777_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getAbs(__extension_Decimal_1777_decimal const& __this ) -> const __extension_Decimal_1777_decimal
 	{
 		#line 1784 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		Builtin::Auto<decltype(__this)> val = __this; 
@@ -2172,7 +2172,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	
 } namespace __extensions { using namespace System;
 #line 1897 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline constexpr auto __static_getMinusOne<__extension_Decimal_1896_decimal>::get() -> const __extension_Decimal_2459_decimal
+	inline constexpr auto __static_getMinusOne<__extension_Decimal_1896_decimal>::get() -> const __extension_Decimal_1896_decimal
 	{
 		#line 1897 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(System::Decimal{Builtin::i32(-1)}); 
@@ -2182,16 +2182,16 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	
 } namespace __extensions { using namespace System;
 #line 1907 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto CopySign(__extension_Decimal_1900_decimal const& __this LIFETIMEBOUND, __extension_Decimal_2459_decimal sign) noexcept -> const typename __extension_Decimal_1900_decimal
+	inline auto CopySign(__extension_Decimal_1900_decimal const& __this LIFETIMEBOUND, __extension_Decimal_1900_decimal sign) noexcept -> const typename __extension_Decimal_1900_decimal
 	{
 		#line 1908 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		ADV_EXPRESSION_BODY(__extension_Decimal_2459_decimal{__this, ADV_UFCS(NarrowToInt32)(((ADV_UFCS(_operator_and_not)(ADV_UFCS(_operator_subscript)(ADV_UPCS(Bits)(__this.__ref()).__ref(), Builtin::u32(3U)), __Decimal_Protected::SignMask)) | (ADV_UFCS(_operator_subscript)(ADV_UPCS(Bits)(sign.__ref()).__ref(), Builtin::u32(3U)) & __Decimal_Protected::SignMask)).__ref())}); 
+		ADV_EXPRESSION_BODY(__extension_Decimal_1900_decimal{__this, ADV_UFCS(NarrowToInt32)(((ADV_UFCS(_operator_and_not)(ADV_UFCS(_operator_subscript)(ADV_UPCS(Bits)(__this.__ref()).__ref(), Builtin::u32(3U)), __Decimal_Protected::SignMask)) | (ADV_UFCS(_operator_subscript)(ADV_UPCS(Bits)(sign.__ref()).__ref(), Builtin::u32(3U)) & __Decimal_Protected::SignMask)).__ref())}); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 1910 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto Max(__extension_Decimal_1900_decimal const& __this LIFETIMEBOUND, __extension_Decimal_2459_decimal rhs) noexcept -> const typename __extension_Decimal_1900_decimal
+	inline auto Max(__extension_Decimal_1900_decimal const& __this LIFETIMEBOUND, __extension_Decimal_1900_decimal rhs) noexcept -> const typename __extension_Decimal_1900_decimal
 	{
 		#line 1910 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY((__this <=> rhs) >= 0 ? __this : rhs); 
@@ -2200,7 +2200,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 1911 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto MaxNumber(__extension_Decimal_1900_decimal const& __this LIFETIMEBOUND, __extension_Decimal_2459_decimal rhs) noexcept -> const typename __extension_Decimal_1900_decimal
+	inline auto MaxNumber(__extension_Decimal_1900_decimal const& __this LIFETIMEBOUND, __extension_Decimal_1900_decimal rhs) noexcept -> const typename __extension_Decimal_1900_decimal
 	{
 		#line 1911 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(Max)(__this.__ref(), rhs)); 
@@ -2209,7 +2209,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 1912 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto Min(__extension_Decimal_1900_decimal const& __this LIFETIMEBOUND, __extension_Decimal_2459_decimal rhs) noexcept -> const typename __extension_Decimal_1900_decimal
+	inline auto Min(__extension_Decimal_1900_decimal const& __this LIFETIMEBOUND, __extension_Decimal_1900_decimal rhs) noexcept -> const typename __extension_Decimal_1900_decimal
 	{
 		#line 1912 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY((__this <=> rhs) < 0 ? __this : rhs); 
@@ -2218,7 +2218,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 1913 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto MinNumber(__extension_Decimal_1900_decimal const& __this LIFETIMEBOUND, __extension_Decimal_2459_decimal rhs) noexcept -> const typename __extension_Decimal_1900_decimal
+	inline auto MinNumber(__extension_Decimal_1900_decimal const& __this LIFETIMEBOUND, __extension_Decimal_1900_decimal rhs) noexcept -> const typename __extension_Decimal_1900_decimal
 	{
 		#line 1913 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(Min)(__this.__ref(), rhs)); 
@@ -2227,7 +2227,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 1914 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto Clamp(__extension_Decimal_1900_decimal const& __this LIFETIMEBOUND, __extension_Decimal_2459_decimal min, __extension_Decimal_2459_decimal max)  -> const typename __extension_Decimal_1900_decimal
+	inline auto Clamp(__extension_Decimal_1900_decimal const& __this LIFETIMEBOUND, __extension_Decimal_1900_decimal min, __extension_Decimal_1900_decimal max)  -> const typename __extension_Decimal_1900_decimal
 	{
 		#line 1916 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		if ((min <=> max) > 0) {
@@ -2253,7 +2253,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	
 } namespace __extensions { using namespace System;
 #line 1926 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline constexpr auto __static_getPi<__extension_Decimal_1924_decimal>::get() -> const __extension_Decimal_2459_decimal
+	inline constexpr auto __static_getPi<__extension_Decimal_1924_decimal>::get() -> const __extension_Decimal_1924_decimal
 	{
 		#line 1926 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(System::Decimal(Builtin::ParseUInt128("31415926535897932384626433833"), false, (uint8_t) 28)); 
@@ -2261,7 +2261,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 1927 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline constexpr auto __static_getE<__extension_Decimal_1924_decimal>::get() -> const __extension_Decimal_2459_decimal
+	inline constexpr auto __static_getE<__extension_Decimal_1924_decimal>::get() -> const __extension_Decimal_1924_decimal
 	{
 		#line 1927 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(System::Decimal(Builtin::ParseUInt128("27182818284590452353602874714"), false, (uint8_t) 28)); 
@@ -2269,7 +2269,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 1928 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline constexpr auto __static_getTau<__extension_Decimal_1924_decimal>::get() -> const __extension_Decimal_2459_decimal
+	inline constexpr auto __static_getTau<__extension_Decimal_1924_decimal>::get() -> const __extension_Decimal_1924_decimal
 	{
 		#line 1928 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(System::Decimal(Builtin::ParseUInt128("62831853071795864769252867666"), false, (uint8_t) 28)); 
@@ -2441,7 +2441,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 1934 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline constexpr auto getFractionalPart(__extension_Decimal_1931_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline constexpr auto getFractionalPart(__extension_Decimal_1931_decimal const& __this ) -> const __extension_Decimal_1931_decimal
 	{
 		#line 1934 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(__this - ADV_UPCS(Truncate)(__this.__ref())); 
@@ -2483,7 +2483,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	
 } namespace __extensions { using namespace System;
 #line 2068 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto _operator_mul_mul_eq(__extension_Decimal_2023_decimal & __this , __extension_Decimal_2459_decimal exp)  -> typename __extension_Decimal_2023_decimal&
+	inline auto _operator_mul_mul_eq(__extension_Decimal_2023_decimal & __this , __extension_Decimal_2023_decimal exp)  -> typename __extension_Decimal_2023_decimal&
 	{
 		#line 2068 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(__this = ADV_UFCS(_operator_mul_mul)(__this, exp)); 
@@ -2494,7 +2494,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	
 } namespace __extensions { using namespace System;
 #line 2104 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getExp2(__extension_Decimal_2071_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getExp2(__extension_Decimal_2071_decimal const& __this ) -> const __extension_Decimal_2071_decimal
 	{
 		#line 2104 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_mul_mul)(System::Decimal{Builtin::i32(2)}, __this)); 
@@ -2502,7 +2502,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2106 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getExp10(__extension_Decimal_2071_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getExp10(__extension_Decimal_2071_decimal const& __this ) -> const __extension_Decimal_2071_decimal
 	{
 		#line 2106 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_mul_mul)(System::Decimal{Builtin::i32(10)}, __this)); 
@@ -2510,7 +2510,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2108 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getExpM1(__extension_Decimal_2071_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getExpM1(__extension_Decimal_2071_decimal const& __this ) -> const __extension_Decimal_2071_decimal
 	{
 		#line 2108 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Exp)(__this.__ref()) - Builtin::i32(1)); 
@@ -2518,7 +2518,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2110 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getExp2M1(__extension_Decimal_2071_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getExp2M1(__extension_Decimal_2071_decimal const& __this ) -> const __extension_Decimal_2071_decimal
 	{
 		#line 2110 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Exp2)(__this.__ref()) - Builtin::i32(1)); 
@@ -2526,7 +2526,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2112 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getExp10M1(__extension_Decimal_2071_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getExp10M1(__extension_Decimal_2071_decimal const& __this ) -> const __extension_Decimal_2071_decimal
 	{
 		#line 2112 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Exp10)(__this.__ref()) - Builtin::i32(1)); 
@@ -2536,7 +2536,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	
 } namespace __extensions { using namespace System;
 #line 2166 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto Log(__extension_Decimal_2115_decimal const& __this LIFETIMEBOUND, __extension_Decimal_2459_decimal base) noexcept -> const typename __extension_Decimal_2115_decimal
+	inline auto Log(__extension_Decimal_2115_decimal const& __this LIFETIMEBOUND, __extension_Decimal_2115_decimal base) noexcept -> const typename __extension_Decimal_2115_decimal
 	{
 		#line 2168 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		if (base == Builtin::i32(1)) {
@@ -2555,7 +2555,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 2156 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getLnP1(__extension_Decimal_2115_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getLnP1(__extension_Decimal_2115_decimal const& __this ) -> const __extension_Decimal_2115_decimal
 	{
 		#line 2156 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Ln)((__this + Builtin::i32(1)).__ref())); 
@@ -2563,7 +2563,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2158 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getLog2(__extension_Decimal_2115_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getLog2(__extension_Decimal_2115_decimal const& __this ) -> const __extension_Decimal_2115_decimal
 	{
 		#line 2158 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Ln)(__this.__ref()) / ADV_UPCS(Ln)(System::Decimal{Builtin::i32(2)}.__ref())); 
@@ -2571,7 +2571,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2160 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getLog2P1(__extension_Decimal_2115_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getLog2P1(__extension_Decimal_2115_decimal const& __this ) -> const __extension_Decimal_2115_decimal
 	{
 		#line 2160 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Log2)((__this + Builtin::i32(1)).__ref())); 
@@ -2579,7 +2579,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2162 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getLog10(__extension_Decimal_2115_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getLog10(__extension_Decimal_2115_decimal const& __this ) -> const __extension_Decimal_2115_decimal
 	{
 		#line 2162 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Ln)(__this.__ref()) * System::Decimal(Builtin::ParseUInt128("04342944819032518276511289189"), false, (uint8_t) 28)); 
@@ -2587,7 +2587,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2164 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getLog10P1(__extension_Decimal_2115_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getLog10P1(__extension_Decimal_2115_decimal const& __this ) -> const __extension_Decimal_2115_decimal
 	{
 		#line 2164 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Log10)((__this + Builtin::i32(1)).__ref())); 
@@ -2597,7 +2597,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	
 } namespace __extensions { using namespace System;
 #line 2199 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getCbrt(__extension_Decimal_2179_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getCbrt(__extension_Decimal_2179_decimal const& __this ) -> const __extension_Decimal_2179_decimal
 	{
 		#line 2199 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_mul_mul)(__this, System::Decimal(Builtin::ParseUInt128("03333333333333333333333333333"), false, (uint8_t) 28))); 
@@ -2625,55 +2625,55 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 } namespace System{
 } namespace __extensions { using namespace System;
 #line 2350 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getCot(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getCot(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2350 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		ADV_EXPRESSION_BODY(ADV_USPCS(One, __extension_Decimal_2459_decimal)() / ADV_UPCS(Tan)(__this.__ref())); 
+		ADV_EXPRESSION_BODY(ADV_USPCS(One, __extension_Decimal_2276_decimal)() / ADV_UPCS(Tan)(__this.__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2352 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getSec(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getSec(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2352 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		ADV_EXPRESSION_BODY(ADV_USPCS(One, __extension_Decimal_2459_decimal)() / ADV_UPCS(Cos)(__this.__ref())); 
+		ADV_EXPRESSION_BODY(ADV_USPCS(One, __extension_Decimal_2276_decimal)() / ADV_UPCS(Cos)(__this.__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2354 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getCsc(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getCsc(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2354 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		ADV_EXPRESSION_BODY(ADV_USPCS(One, __extension_Decimal_2459_decimal)() / ADV_UPCS(Sin)(__this.__ref())); 
+		ADV_EXPRESSION_BODY(ADV_USPCS(One, __extension_Decimal_2276_decimal)() / ADV_UPCS(Sin)(__this.__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2419 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getAcot(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getAcot(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2419 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		ADV_EXPRESSION_BODY(ADV_UPCS(Atan)((ADV_USPCS(One, __extension_Decimal_2459_decimal)() / __this).__ref())); 
+		ADV_EXPRESSION_BODY(ADV_UPCS(Atan)((ADV_USPCS(One, __extension_Decimal_2276_decimal)() / __this).__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2421 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getAsec(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getAsec(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2421 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		ADV_EXPRESSION_BODY(ADV_UPCS(Acos)((ADV_USPCS(One, __extension_Decimal_2459_decimal)() / __this).__ref())); 
+		ADV_EXPRESSION_BODY(ADV_UPCS(Acos)((ADV_USPCS(One, __extension_Decimal_2276_decimal)() / __this).__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2423 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getAcsc(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getAcsc(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2423 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		ADV_EXPRESSION_BODY(ADV_UPCS(Asin)((ADV_USPCS(One, __extension_Decimal_2459_decimal)() / __this).__ref())); 
+		ADV_EXPRESSION_BODY(ADV_UPCS(Asin)((ADV_USPCS(One, __extension_Decimal_2276_decimal)() / __this).__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2425 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getSinCos(__extension_Decimal_2276_decimal const& __this ) -> const std::tuple<__extension_Decimal_2459_decimal, __extension_Decimal_2459_decimal>
+	inline auto getSinCos(__extension_Decimal_2276_decimal const& __this ) -> const std::tuple<__extension_Decimal_2276_decimal, __extension_Decimal_2276_decimal>
 	{
 		#line 2425 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(std::make_tuple(ADV_UPCS(Sin)(__this.__ref()), ADV_UPCS(Cos)(__this.__ref()))); 
@@ -2681,7 +2681,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2427 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getSinPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getSinPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2427 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Sin)((ADV_USPCS(Pi, System::Decimal)() * __this).__ref())); 
@@ -2689,7 +2689,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2429 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getCosPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getCosPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2429 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Cos)((ADV_USPCS(Pi, System::Decimal)() * __this).__ref())); 
@@ -2697,7 +2697,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2431 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getSinCosPi(__extension_Decimal_2276_decimal const& __this ) -> const std::tuple<__extension_Decimal_2459_decimal, __extension_Decimal_2459_decimal>
+	inline auto getSinCosPi(__extension_Decimal_2276_decimal const& __this ) -> const std::tuple<__extension_Decimal_2276_decimal, __extension_Decimal_2276_decimal>
 	{
 		#line 2431 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(std::make_tuple(ADV_UPCS(SinPi)(__this.__ref()), ADV_UPCS(CosPi)(__this.__ref()))); 
@@ -2705,7 +2705,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2433 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getTanPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getTanPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2433 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Tan)((ADV_USPCS(Pi, System::Decimal)() * __this).__ref())); 
@@ -2713,31 +2713,31 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2435 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getCotPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getCotPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2435 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		ADV_EXPRESSION_BODY(ADV_USPCS(One, __extension_Decimal_2459_decimal)() / ADV_UPCS(TanPi)(__this.__ref())); 
+		ADV_EXPRESSION_BODY(ADV_USPCS(One, __extension_Decimal_2276_decimal)() / ADV_UPCS(TanPi)(__this.__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2437 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getSecPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getSecPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2437 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		ADV_EXPRESSION_BODY(ADV_USPCS(One, __extension_Decimal_2459_decimal)() / ADV_UPCS(CosPi)(__this.__ref())); 
+		ADV_EXPRESSION_BODY(ADV_USPCS(One, __extension_Decimal_2276_decimal)() / ADV_UPCS(CosPi)(__this.__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2439 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getCscPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getCscPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2439 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		ADV_EXPRESSION_BODY(ADV_USPCS(One, __extension_Decimal_2459_decimal)() / ADV_UPCS(SinPi)(__this.__ref())); 
+		ADV_EXPRESSION_BODY(ADV_USPCS(One, __extension_Decimal_2276_decimal)() / ADV_UPCS(SinPi)(__this.__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2441 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getAsinPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getAsinPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2441 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Asin)(__this.__ref()) / ADV_USPCS(Pi, System::Decimal)()); 
@@ -2745,7 +2745,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2443 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getAcosPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getAcosPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2443 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Acos)(__this.__ref()) / ADV_USPCS(Pi, System::Decimal)()); 
@@ -2753,7 +2753,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2445 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getAtanPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getAtanPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2445 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Atan)(__this.__ref()) / ADV_USPCS(Pi, System::Decimal)()); 
@@ -2761,7 +2761,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2447 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getAcotPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getAcotPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2447 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Acot)(__this.__ref()) / ADV_USPCS(Pi, System::Decimal)()); 
@@ -2769,7 +2769,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2449 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getAsecPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getAsecPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2449 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Asec)(__this.__ref()) / ADV_USPCS(Pi, System::Decimal)()); 
@@ -2777,7 +2777,7 @@ namespace __Decimal_Protected { inline constexpr auto SignMask = ADV_USPCS(MinVa
 	} namespace System{
 } namespace __extensions { using namespace System;
 #line 2451 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	inline auto getAcscPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2459_decimal
+	inline auto getAcscPi(__extension_Decimal_2276_decimal const& __this ) -> const __extension_Decimal_2276_decimal
 	{
 		#line 2451 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Acsc)(__this.__ref()) / ADV_USPCS(Pi, System::Decimal)()); 

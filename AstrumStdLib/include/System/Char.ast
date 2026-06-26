@@ -1,0 +1,17 @@
+package System;
+
+public extension byte {
+    IsAscii: bool ==> this <= 0x7Fu8;
+}
+
+public extension char {
+
+}
+
+test "Char" {
+    assert b'A' + 32 == b'a';
+    assert ++b'A' == b'B';
+    assert b'a'.IsAscii;
+    assert b'\n'.IsAscii;
+    assert not 200u8.IsAscii;
+}

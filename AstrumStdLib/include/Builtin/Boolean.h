@@ -47,14 +47,14 @@ namespace Builtin {
 			_value ^= other._value;
 			return *this;
 		}
-
-		constexpr Boolean operator==(Boolean other) const noexcept {
-			return (_value == other._value);
+		/*
+		friend constexpr bool operator==(Boolean lhs, Boolean rhs) noexcept {
+			return (lhs._value == rhs._value);
 		}
 
-		constexpr Boolean operator!=(Boolean other) const noexcept {
-			return (_value != other._value);
-		}
+		friend constexpr bool operator!=(Boolean lhs, Boolean rhs) noexcept {
+			return (lhs._value != rhs._value);
+		}*/
 
 		constexpr int operator<=>(Boolean other) const noexcept {
 			if (_value) {
