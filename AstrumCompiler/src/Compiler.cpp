@@ -539,7 +539,7 @@ namespace AstrumLang {
 			}
 
 			cmd +=
-			    R"( /GS /Zc:wchar_t /Gm- /MP /Zi /Zc:inline /fp:precise /D ""_CONSOLE"" /D ""_UNICODE"" /D ""UNICODE"" /errorReport:prompt /WX- /Zc:forScope /Gd /std:c++latest /constexpr:steps 100000000 /wd4005 /wd4584 /we4172 /wd4190 /we4297 /we4715 /we26447 /we26815 /we26816 /external:W0)";
+			    R"( /GS /Zc:wchar_t /Gm- /MP /Zi /Zc:inline /fp:precise /D ""_CONSOLE"" /D ""_UNICODE"" /D ""UNICODE"" /errorReport:prompt /WX- /Zc:forScope /Gd /std:c++latest /constexpr:steps 100000000 /wd4005 /wd4584 /we4172 /wd4190 /we4297 /we4715 /we26447 /we26815 /we26816 /external:W0 /utf-8)";
 			if (CompilerSettings::get().debugBuild) {
 				cmd += R"( /Fo"obj\\Debug\\")";
 			} else {
@@ -858,8 +858,8 @@ namespace AstrumLang {
 			path = rootPath + "/" + path;
 		}
 		mainFile.open(path);
-		mainFile << "#include \"Builtin/Builtin.h\"\n"
-		         << "int main(int argc, char** argv) { return Builtin::TestMain(argc, argv); }\n";
+		mainFile << "#include \"Builtin/Builtin.h\"\n#include <windows.h>\n"
+		         << "int main(int argc, char** argv) { ADV_SETLOCAL; return Builtin::TestMain(argc, argv); }\n";
 	}
 
 }  // namespace AstrumLang

@@ -186,10 +186,10 @@ public extension i128: IConvertible {
     ToByte: () -> byte ==> this.ToUInt8();
     ToChar: () -> char ==
     {
-        if this < 0 or this > 0xFFFFFFFF {
+        if this < 0 or this > 0x10FFFF {
             throw Builtin.IntegerOverflowException();
         }
-        return this as u16;
+        return char(this as u32);
     }
     //ToString: () -> string;
     //ToDateTime: () -> DateTime;

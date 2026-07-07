@@ -372,8 +372,21 @@ namespace AstrumLang {
 				out << "thread_local ";
 			bool isArray  = false;
 			isDeclaration = true;
+			if (!field.type->singleTypeId().empty()) {
+				if (auto postfix = field.type->singleTypeId(0)->typePostfix()) {
+					isArrayDeclaration = !postfix->arrayDeclarator().empty();
+					if (auto ts = field.type->singleTypeId(0)->typeSpecifierSeq())
+						currentArrayType = ts;
+					if (auto expr = field.initializer) {
+						if (auto coll = expr->collectionExpression()) {
+							currentTupleSize = coll->collectionExpressionPart().size();
+						}
+					}
+				}
+			}
 			printTypeId(field.type);
-			isDeclaration = false;
+			currentTupleSize = 0;
+			isDeclaration    = false;
 			// isArray = field.type->arrayDeclarator();
 			currentType = field.type->getText();
 			if (field.isUnowned)
@@ -403,6 +416,8 @@ namespace AstrumLang {
 				out << " : " << (int) field.bitWidth;
 			}
 			out << ";";
+			isArrayDeclaration = false;
+			currentArrayType   = nullptr;
 			out << std::endl;
 			if (!field.compilationCondition.empty()) {
 				out << "#endif " << std::endl;
@@ -567,6 +582,13 @@ namespace AstrumLang {
 				isDeclaration = false;
 				// isArray = var.type->arrayDeclarator();
 				currentType = var.type->getText();
+				if (!var.type->singleTypeId().empty()) {
+					if (auto postfix = var.type->singleTypeId(0)->typePostfix()) {
+						isArrayDeclaration = !postfix->arrayDeclarator().empty();
+						if (auto ts = var.type->singleTypeId(0)->typeSpecifierSeq())
+							currentArrayType = ts;
+					}
+				}
 			} else {
 				out << "auto";
 			}
@@ -582,6 +604,8 @@ namespace AstrumLang {
 			if (!var.compilationCondition.empty()) {
 				out << "#endif " << std::endl;
 			}
+			isArrayDeclaration = false;
+			currentArrayType   = nullptr;
 		}
 		currentDeclarationName.clear();
 		currentType.clear();
@@ -1166,8 +1190,10 @@ namespace AstrumLang {
 		}
 
 		if (type->kind != TypeKind::StaticClass)
-			out << "public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } "
-			       "FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }\n"
+			out << "public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; "
+			       "} "
+			       "FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; "
+			       "}\n"
 			    << std::string(depth, '\t');
 		if (!sema.symbolContexts.empty())
 			sema.symbolContexts.push(sema.symbolContexts.top());
@@ -1531,7 +1557,7 @@ namespace AstrumLang {
 				if (!first)
 					out << ", ";
 				first = false;
-				out << "u\"" << constant.id << "\"";
+				out << "\"" << constant.id << "\"";
 			}
 			out << "};\n" << std::string(depth, '\t');
 			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
@@ -2556,10 +2582,10 @@ namespace AstrumLang {
 					GET_ELEMENT_AT;
 					out << "; }\n" << std::string(depth, '\t');
 				}
-				out << "FORCE_INLINE constexpr decltype(auto) __ref() { return ";
+				out << "FORCE_INLINE decltype(auto) __ref() { return ";
 				GET_ELEMENT_AT;
 				out << "; }\n" << std::string(depth, '\t');
-				out << "FORCE_INLINE constexpr decltype(auto) __ref() const { return ";
+				out << "FORCE_INLINE decltype(auto) __ref() const { return ";
 				out << "const_cast<std::remove_cvref_t<decltype(_parent)> const&>(_parent).getAt(";
 				if (isUnchecked) {
 					out << "Builtin::UncheckedTag{}, ";
@@ -3361,8 +3387,20 @@ namespace AstrumLang {
 			if (auto t = field.type) {
 				symbolTable[id] = t->getText();
 				isDeclaration   = true;
+				if (!t->singleTypeId().empty()) {
+					if (auto postfix = t->singleTypeId(0)->typePostfix()) {
+						isArrayDeclaration = !postfix->arrayDeclarator().empty();
+						if (auto ts = t->singleTypeId(0)->typeSpecifierSeq())
+							currentArrayType = ts;
+						if (auto expr = field.initializer) {
+							if (auto coll = expr->collectionExpression()) {
+								currentTupleSize = coll->collectionExpressionPart().size();
+							}
+						}
+					}
+				}
 				printTypeId(t);
-				isDeclaration = false;
+				isDeclaration    = false;
 				// isArray = t->arrayDeclarator();
 				if (field.isUnowned)
 					out << "::__unowned_ref";
@@ -3387,13 +3425,16 @@ namespace AstrumLang {
 				out << " : " << (int) field.bitWidth;
 			}
 			out << ";";
-			if (type->kind != TypeKind::RefStruct || field.isStatic || field.isThreadLocal) {
+			if ((type->kind != TypeKind::RefStruct || field.isStatic || field.isThreadLocal) && currentTupleSize == 0) {
 				if (!sema.contextTypes.contains(field.type) ||
 				    !sema.contextTypes[field.type].ends_with(type->id)) {
 					printRefStructCheck(field.type);
 					out << ";";
 				}
 			}
+			currentTupleSize   = 0;
+			isArrayDeclaration = false;
+			currentArrayType   = nullptr;
 			out << "\n" << std::string(depth, '\t');
 			first    = false;
 			isUnsafe = prevUnsafe;
@@ -3639,6 +3680,13 @@ namespace AstrumLang {
 				out << "Builtin::i32";
 			}
 			out << " value) : __value(value) {}\n" << std::string(depth, '\t');
+			out << "public: static constexpr __self FromValue(";
+			if (type->enumBase) {
+				printSimpleTypeSpecifier(type->enumBase->simpleTypeSpecifier());
+			} else {
+				out << "Builtin::i32";
+			}
+			out << " rawValue) { return __self(rawValue); }\n" << std::string(depth, '\t');
 		}
 		if (type->kind == TypeKind::Class || type->kind == TypeKind::EnumClass) {
 			out << "\n#define ADV_PROPERTY_SELF __self";
@@ -4431,7 +4479,7 @@ namespace AstrumLang {
 			out << ">";
 		}
 		out << ";\n" << std::string(depth, '\t');
-		out << "public: FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return "
+		out << "public: FORCE_INLINE decltype(auto) __ref() const noexcept { return "
 		       "*reinterpret_cast<__class*>(_obj); }\n"
 		    << std::string(depth, '\t');
 		out << "ADV_CLASS_FROM_PTR(" << type->id << ")\n" << std::string(depth, '\t');
@@ -5328,7 +5376,7 @@ namespace AstrumLang {
 			out << ">";
 		}
 		out << ";\n" << std::string(depth, '\t');
-		out << "public: FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { "
+		out << "public: FORCE_INLINE decltype(auto) __ref() const noexcept { "
 		       "Builtin::UnownedCheck(_obj); return *reinterpret_cast<__class*>(_obj); }\n"
 		    << std::string(depth, '\t');
 		out << "ADV_CLASS_FROM_PTR(" << type->id << "__Unowned)\n" << std::string(depth, '\t');
@@ -5603,7 +5651,8 @@ namespace AstrumLang {
 		}
 		out << ";\n" << std::string(depth, '\t');
 		out << "static constexpr bool __IS_ADV_NULLABLE = true;\n" << std::string(depth, '\t');
-		out << "public: FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }\n"
+		out << "public: FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return "
+		       "*this; }\n"
 		    << std::string(depth, '\t');
 		out << "ADV_CLASS_WEAK_FROM_PTR(" << type->id << "__Weak)\n" << std::string(depth, '\t');
 		out << "ADV_CLASS_WEAK_COMMON_CTORS(" << type->id << "__Weak)\n"
@@ -5678,8 +5727,12 @@ namespace AstrumLang {
 			if (method.isStatic) {
 				out << "\n#ifndef ADV_STATIC_EXTENSION_DEFINITION_" << method.id << "\n"
 				    << "} namespace __extensions { template<class _TT> struct __static_"
-				    << method.id << "{ template<class... __Args> static Builtin::FakeTypeTag get(__Args... _) noexcept { return {}; } }; } namespace " << sema.packageName << " {\n"
-				    << "#define ADV_STATIC_EXTENSION_DEFINITION_" << method.id << "\n#endif\n" << std::string(depth, '\t');
+				    << method.id
+				    << "{ template<class... __Args> static Builtin::FakeTypeTag get(__Args... _) "
+				       "noexcept { return {}; } }; } namespace "
+				    << sema.packageName << " {\n"
+				    << "#define ADV_STATIC_EXTENSION_DEFINITION_" << method.id << "\n#endif\n"
+				    << std::string(depth, '\t');
 			}
 			out << "#line " << method.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
@@ -5842,56 +5895,56 @@ namespace AstrumLang {
 							out << ">()";
 						}
 						out << "; }";
-					} else {
-						out << " || requires { { [] { using namespace __extensions; ";
-						if (method.returnType)
-							out << "return ";
-						out << method.id << "(std::declval<typename __AnyType::__self>()";
-						if (method.indexerParams) {
-							if (isUnchecked) {
-								out << ", Builtin::UncheckedTag{}";
-							}
-							for (auto param :
-							     method.indexerParams->paramDeclList()->paramDeclaration()) {
-								out << ", ";
-								out << "std::declval<";
-								printTypeId(param->theTypeId());
-								out << ">()";
-							}
-						} else if (method.params && method.params->paramDeclClause()) {
-							bool first = method.isStatic;
-							for (auto param : method.params->paramDeclClause()
-							                      ->paramDeclList()
-							                      ->paramDeclaration()) {
-								if (!first)
-									out << ", ";
-								first = false;
-								out << "std::declval<";
-								if (param->theTypeId()->getText() == "self") {
-									out << "typename __AnyType::__self";
-								} else {
-									printTypeId(param->theTypeId());
-								}
-								out << ">()";
-							}
-						}
-						out << "); }() } -> ";
-						if (method.returnType) {
-							out << "std::convertible_to<";
-							if (method.returnType->getText() == "self") {
-								out << "typename __AnyType::__self";
-							} else {
-								printTypeId(method.returnType);
-							}
-							if (method.isRefReturn)
-								out << "&";
-							out << ">";
-						} else {
-							out << "std::same_as<void>";
-						}
+					} /* else {
+					    out << " || requires { { [] { using namespace __extensions; ";
+					    if (method.returnType)
+					        out << "return ";
+					    out << method.id << "(std::declval<typename __AnyType::__self>()";
+					    if (method.indexerParams) {
+					        if (isUnchecked) {
+					            out << ", Builtin::UncheckedTag{}";
+					        }
+					        for (auto param :
+					             method.indexerParams->paramDeclList()->paramDeclaration()) {
+					            out << ", ";
+					            out << "std::declval<";
+					            printTypeId(param->theTypeId());
+					            out << ">()";
+					        }
+					    } else if (method.params && method.params->paramDeclClause()) {
+					        bool first = method.isStatic;
+					        for (auto param : method.params->paramDeclClause()
+					                              ->paramDeclList()
+					                              ->paramDeclaration()) {
+					            if (!first)
+					                out << ", ";
+					            first = false;
+					            out << "std::declval<";
+					            if (param->theTypeId()->getText() == "self") {
+					                out << "typename __AnyType::__self";
+					            } else {
+					                printTypeId(param->theTypeId());
+					            }
+					            out << ">()";
+					        }
+					    }
+					    out << "); }() } -> ";
+					    if (method.returnType) {
+					        out << "std::convertible_to<";
+					        if (method.returnType->getText() == "self") {
+					            out << "typename __AnyType::__self";
+					        } else {
+					            printTypeId(method.returnType);
+					        }
+					        if (method.isRefReturn)
+					            out << "&";
+					        out << ">";
+					    } else {
+					        out << "std::same_as<void>";
+					    }
 
-						out << "; }";
-					}
+					    out << "; }";
+					}*/
 				}
 			}
 			out << ";\n" << std::string(depth, '\t');
@@ -5960,8 +6013,9 @@ namespace AstrumLang {
 			auto id            = propertyIds[&prop];
 			if (prop.isStatic) {
 				out << "\n#ifndef ADV_STATIC_EXTENSION_DEFINITION_" << prop.id << "\n"
-					<< "} namespace __extensions { template<class _TT> struct __static_get"
-				    << prop.id << "{ static void get() noexcept { } }; } namespace " << sema.packageName << " {\n"
+				    << "} namespace __extensions { template<class _TT> struct __static_get"
+				    << prop.id << "{ static void get() noexcept { } }; } namespace "
+				    << sema.packageName << " {\n"
 				    << "#define ADV_STATIC_EXTENSION_DEFINITION_" << prop.id << "\n#endif\n"
 				    << std::string(depth, '\t');
 			}
@@ -5980,10 +6034,10 @@ namespace AstrumLang {
 			if (prop.isStatic) {
 				out << " = requires { __AnyType::__self::" << prop.id
 				    << "; } || requires { { [] { using namespace __extensions; return __static_get"
-				    << prop.id << "<typename __AnyType::__self>::get(); }() } -> std::convertible_to<";
+				    << prop.id
+				    << "<typename __AnyType::__self>::get(); }() } -> std::convertible_to<";
 				printTypeId(prop.type);
-				out << ">; };\n"
-				    << std::string(depth, '\t');
+				out << ">; };\n" << std::string(depth, '\t');
 			} else {
 				out << " = requires(typename __AnyType::__class t) { {t.get" << prop.id
 				    << "()} -> std::convertible_to<";
@@ -7566,8 +7620,10 @@ namespace AstrumLang {
 			out << ">";
 		}
 		out << ";\n" << std::string(depth, '\t');
-		out << "public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { UnownedCheck(_obj); return "
-		       "*this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { UnownedCheck(_obj); "
+		out << "public: FORCE_INLINE decltype(auto) __ref() noexcept { "
+		       "UnownedCheck(_obj); return "
+		       "*this; } FORCE_INLINE decltype(auto) __ref() const noexcept { "
+		       "UnownedCheck(_obj); "
 		       "return *this; }\n"
 		    << std::string(depth, '\t');
 		out << "private: const __vtable* _vtable;\n" << std::string(depth, '\t');
@@ -8536,7 +8592,8 @@ namespace AstrumLang {
 						out << "FORCE_INLINE constexpr decltype(auto) __ref() { return ";
 						GET_ELEMENT_AT_EXTERNAL;
 						out << "; }\n" << std::string(depth, '\t');
-						out << "FORCE_INLINE constexpr decltype(auto) __ref() { return getAt(_parent, ";
+						out << "FORCE_INLINE constexpr decltype(auto) __ref() { return "
+						       "getAt(_parent, ";
 						if (isUnchecked) {
 							out << ", Builtin::UncheckedTag{}";
 						}
@@ -8761,6 +8818,7 @@ namespace AstrumLang {
 			auto parent =
 			    static_cast<AstrumParser::ExtensionHeadContext*>(type->templateParams->parent);
 			if (parent->theTypeId()) {
+				currentTemplateParams = type->templateParams;
 				out << "<";
 				bool first = true;
 				for (auto param : type->templateParams->templateParamDeclaration()) {
@@ -9515,7 +9573,8 @@ namespace AstrumLang {
 		if (!type->compilationCondition.empty()) {
 			out << "#endif " << std::endl;
 		}
-		isExtension = false;
+		currentTemplateParams = nullptr;
+		isExtension           = false;
 	}
 
 	void AstrumCodegen::printEnumClassData(StructDefinition* type) {
@@ -12171,6 +12230,7 @@ namespace AstrumLang {
 		sema.symbolContexts.push({});
 		sema.symbolContexts.push({});
 		sema.typeset.globalTypes.erase("result");
+		sema.typeset.globalTypes.erase("category");
 
 		// versions
 		printVersions();
@@ -13236,18 +13296,40 @@ namespace AstrumLang {
 				out << " ADV_LOOP_LABELS(" << prevLabel << ") }";
 			}
 		} else if (ctx->For()) {
-			out << "for (";
 			if (ctx->In()) {
+				out << "{ ";
 				if (auto init = ctx->forInitStatement()) {
 					printForInitStatement(init);
 					out << "; ";
 				}
 				auto decl = ctx->forRangeDeclaration();
-				if (decl->Amp() && !decl->Const() && !decl->Let()) {
-					out << "auto& ";
+				auto init = ctx->forRangeInitializer();
+				out << "auto __for_init_" << ctx->getStart()->getLine() << " = ";
+				if (auto expr = init->logicalOrExpression()) {
+					printLogicalOrExpression(expr);
+				} else if (auto expr = init->bracedInitList()) {
+					printBracedInitList(init->bracedInitList());
 				} else {
-					out << "const auto& ";
+					out << "Builtin::InitializerList(";
+					printCollectionExpression(init->collectionExpression());
+					out << ")";
 				}
+				out << "; auto __for_iter_" << ctx->getStart()->getLine()
+				    << " = ADV_UFCS(Iterate)(__for_init_" << ctx->getStart()->getLine()
+				    << ".__ref()); while(__for_iter_" << ctx->getStart()->getLine()
+				    << ".__ref().MoveNext()) {";
+
+				if (!prevLabel.empty())
+					out << "{";
+				out << std::endl << std::string(depth, '\t');
+				if (decl->Const() || decl->Let()) {
+					out << "const ";
+				}
+				out << "auto";
+				if (decl->Amp()) {
+					out << "&";
+				}
+				out << " ";
 				auto ids = decl->identifierSeq()->Identifier();
 				if (ids.size() == 1) {
 					printIdentifier(ids[0]);
@@ -13262,41 +13344,47 @@ namespace AstrumLang {
 					}
 					out << "]";
 				}
-				out << " : ";
-				auto coll = ctx->forRangeInitializer();
-				if (auto expr = coll->logicalOrExpression()) {
-					printLogicalOrExpression(expr);
-				} else if (auto expr = coll->bracedInitList()) {
-					printBracedInitList(coll->bracedInitList());
+				out << " = __for_iter_" << ctx->getStart()->getLine() << ".__ref().GetCurrent"
+				    << (decl->Amp() ? "Ref" : "") << "(); ";
+				if (auto compound = ctx->compoundStatement()) {
+					printCompoundStatement(ctx->compoundStatement());
 				} else {
-					printCollectionExpression(coll->collectionExpression());
+					out << "{\n" << std::string(++depth, '\t');
+					printStatement(ctx->statement());
+					out << "\n" << std::string(--depth, '\t') << "}";
 				}
-				out << ") ";
-			} else if (auto init = ctx->forInitStatement()) {
-				printForInitStatement(init);
-				if (auto condition = ctx->whileCondition()) {
-					printLoopCondition(condition);
+				if (!prevLabel.empty()) {
+					out << " ADV_LOOP_LABELS(" << prevLabel << ") }";
 				}
-				out << "; ";
-				if (auto expr = ctx->expressionSeq()) {
-					printExpressionSeq(expr);
-				}
-				out << ") ";
+				out << "}}";
 			} else {
-				out << ";;) ";
-			}
-			if (!prevLabel.empty())
-				out << "{";
-			out << std::endl << std::string(depth, '\t');
-			if (auto compound = ctx->compoundStatement()) {
-				printCompoundStatement(ctx->compoundStatement());
-			} else {
-				out << "{\n" << std::string(++depth, '\t');
-				printStatement(ctx->statement());
-				out << "\n" << std::string(--depth, '\t') << "}";
-			}
-			if (!prevLabel.empty()) {
-				out << " ADV_LOOP_LABELS(" << prevLabel << ") }";
+				out << "for (";
+				if (auto init = ctx->forInitStatement()) {
+					printForInitStatement(init);
+					if (auto condition = ctx->whileCondition()) {
+						printLoopCondition(condition);
+					}
+					out << "; ";
+					if (auto expr = ctx->expressionSeq()) {
+						printExpressionSeq(expr);
+					}
+					out << ") ";
+				} else {
+					out << ";;) ";
+				}
+				if (!prevLabel.empty())
+					out << "{";
+				out << std::endl << std::string(depth, '\t');
+				if (auto compound = ctx->compoundStatement()) {
+					printCompoundStatement(ctx->compoundStatement());
+				} else {
+					out << "{\n" << std::string(++depth, '\t');
+					printStatement(ctx->statement());
+					out << "\n" << std::string(--depth, '\t') << "}";
+				}
+				if (!prevLabel.empty()) {
+					out << " ADV_LOOP_LABELS(" << prevLabel << ") }";
+				}
 			}
 		}
 		currentLabel = prevLabel;
@@ -13673,8 +13761,10 @@ namespace AstrumLang {
 				printClassName(ctx->structHead()->className());
 				out << ";\n" << std::string(depth, '\t');
 			}
-			out << "public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } "
-			       "FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }\n"
+			out << "public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; "
+			       "} "
+			       "FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; "
+			       "}\n"
 			    << std::string(depth, '\t');
 		}
 
@@ -17472,6 +17562,13 @@ namespace AstrumLang {
 			}
 			isDeclaration = true;
 			printTypeId(t);
+			if (!t->singleTypeId().empty()) {
+				if (auto postfix = t->singleTypeId(0)->typePostfix()) {
+					isArrayDeclaration = !postfix->arrayDeclarator().empty();
+					if (auto ts = t->singleTypeId(0)->typeSpecifierSeq())
+						currentArrayType = ts;
+				}
+			}
 			isDeclaration = false;
 			if (isUnowned)
 				out << "::__unowned_ref";
@@ -17532,15 +17629,18 @@ namespace AstrumLang {
 				}
 			} else if (checkForRefStruct) {
 				out << ";";
-				printRefStructCheck(ctx->theTypeId());
+				if (currentTupleSize == 0)
+					printRefStructCheck(ctx->theTypeId());
 			} else {
 				out << "{}";
 			}
 		}
 
 		out << "; ";
-		first    = false;
-		isUnsafe = prevUnsafe;
+		first              = false;
+		isUnsafe           = prevUnsafe;
+		isArrayDeclaration = false;
+		currentArrayType   = nullptr;
 		currentDeclarationName.clear();
 		currentDeclaration = nullptr;
 		currentType.clear();
@@ -17891,6 +17991,13 @@ namespace AstrumLang {
 				isDeclaration = false;
 				// isArray = t->arrayDeclarator();
 				currentType = t->getText();
+				if (!t->singleTypeId().empty()) {
+					if (auto postfix = t->singleTypeId(0)->typePostfix()) {
+						isArrayDeclaration = !postfix->arrayDeclarator().empty();
+						if (auto ts = t->singleTypeId(0)->typeSpecifierSeq())
+							currentArrayType = ts;
+					}
+				}
 			} else if (isLambda || isUnitTestBody) {
 				out << "auto ";
 			} else {
@@ -17907,6 +18014,8 @@ namespace AstrumLang {
 			printInitializerClause(ctx->initializerClause());
 			out << ";";
 			currentDeclarationName.clear();
+			isArrayDeclaration = false;
+			currentArrayType   = nullptr;
 		}
 		currentType.clear();
 	}
@@ -17956,7 +18065,7 @@ namespace AstrumLang {
 			} else {
 				auto txt = ctx->conditionalExpression(0)->getText();
 				StringReplace(txt, "\\", "\\\\");
-				out << 'u' << '"' << txt << '"';
+				out << '"' << txt << '"';
 			}
 			out << ");";
 		}
@@ -18151,7 +18260,14 @@ namespace AstrumLang {
 				out << ", ";
 			first = false;
 			if (part->conditionalExpression()) {
+				if (currentArrayType) {
+					printTypeSpecifierSeq(currentArrayType);
+					out << "(";
+				}
 				printConditionalExpression(part->conditionalExpression());
+				if (currentArrayType) {
+					out << ")";
+				}
 			}
 			if (part->collectionExpression()) {
 				printCollectionExpression(part->collectionExpression());
@@ -19101,21 +19217,52 @@ namespace AstrumLang {
 
 	void AstrumCodegen::printRangeExpression(AstrumParser::RangeExpressionContext* ctx) {
 		if (ctx->DoubleDot() || ctx->DoubleDotEqual()) {
-			out << "System::Range(";
-			if (ctx->rangeExpressionStart()) {
-				printUnaryExpression(ctx->rangeExpressionStart()->unaryExpression());
-			} else {
-				out << "0u";
+			auto start = ctx->rangeExpressionStart();
+			auto end   = ctx->rangeExpressionEnd();
+			bool index = false;
+			if (start) {
+				if (auto prefix = start->unaryExpression()->unaryPrefixOperator()) {
+					index = prefix->Caret();
+				}
 			}
-			out << ", ";
-			if (ctx->rangeExpressionEnd()) {
-				printUnaryExpression(ctx->rangeExpressionEnd()->unaryExpression());
-			} else {
-				out << "System::Index(0u, true)";
+			if (!index && end) {
+				if (auto prefix = end->unaryExpression()->unaryPrefixOperator()) {
+					index = prefix->Caret();
+				}
 			}
-			out << ", ";
-			out << (ctx->DoubleDot() ? "false" : "true");
-			out << ")";
+			index |= !end || !start && !end;
+
+			if (index) {
+				out << "System::IndexRange(";
+				if (start) {
+					printUnaryExpression(start->unaryExpression());
+				} else {
+					out << "System::Index::Start";
+				}
+				out << ", ";
+				if (end) {
+					printUnaryExpression(end->unaryExpression());
+				} else {
+					out << "System::Index::End";
+				}
+				out << ", ";
+				out << (ctx->DoubleDot() ? "false" : "true");
+				out << ")";
+			} else {
+				out << "System::Range<Builtin::Auto<decltype(";
+				printUnaryExpression(end->unaryExpression());
+				out << ")>, ";
+				out << (ctx->DoubleDot() ? "false" : "true");
+				out << ">(";
+				if (start) {
+					printUnaryExpression(start->unaryExpression());
+				} else {
+					out << "{}";
+				}
+				out << ", ";
+				printUnaryExpression(end->unaryExpression());
+				out << ")";
+			}
 		} else {
 			printUnaryExpression(ctx->unaryExpression());
 		}
@@ -19655,9 +19802,8 @@ namespace AstrumLang {
 				out << ".__ref(), ";
 			}
 
-			if (ctx->attributeSpecifierSeq()) {
-				auto attr =
-				    ctx->attributeSpecifierSeq()->attributeSpecifier(0)->Identifier()->getText();
+			if (ctx->shortAttribute()) {
+				auto attr = ctx->shortAttribute()->Identifier()->getText();
 				if (attr == "Unchecked") {
 					out << "Builtin::UncheckedTag{}, ";
 				}
@@ -20262,7 +20408,13 @@ namespace AstrumLang {
 		if (auto post = ctx->typePostfix()) {
 			for (auto decl : post->arrayDeclarator()) {
 				if (decl->constantExpression()->getText() == "_") {
-					out << "auto";
+					if (!functionBody && currentTupleSize > 0) {
+						out << "Builtin::InlineArray<" << currentTupleSize << ", ";
+						printTypeSpecifierSeq(currentArrayType);
+						out << ">";
+					} else {
+						out << "auto";
+					}
 					isAutoSizeArrayDeclaration = true;
 					autoSizeArrayType          = ctx->typeSpecifierSeq();
 					return;
@@ -20375,6 +20527,17 @@ namespace AstrumLang {
 			if (ctx->Self()) {
 				if (isExtension) {
 					out << currentExtensionName;
+					if (currentTemplateParams) {
+						out << "<";
+						bool first = true;
+						for (auto decl : currentTemplateParams->templateParamDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(decl->Identifier());
+						}
+						out << ">";
+					}
 				} else if (isInterfaceConcept) {
 					out << "__AnyType::__self";
 				} else if (isInterface) {
@@ -20779,35 +20942,35 @@ namespace AstrumLang {
 				} else if (txt[1] == 'U') {
 					out << "Builtin::char32(U'" << txt << "')";
 				} else {
-					out << "Builtin::char32(u'" << txt << "')";
+					out << "Builtin::char32(U'" << txt << "')";
 				}
 			} else if (txt.length() > 3) {
 				out << "Builtin::char32(U'" << txt << "')";
 			} else {
-				out << "Builtin::char32(u'" << txt << "')";
+				out << "Builtin::char32(U'" << txt << "')";
 			}
 		}
 	}
 
 	void AstrumCodegen::printStringLiteral(std::string txt) {
-		auto prefix = "u";
-		auto str    = "Str";
-		if (txt.starts_with("u8")) {
-			prefix = "u8";
-			str    = "Utf8Str";
-			txt    = txt.substr(2);
+		// auto prefix = "u";
+		auto str = "Str";
+		/* if (txt.starts_with("u8")) {
+		    prefix = "u8";
+		    str    = "Utf8Str";
+		    txt    = txt.substr(2);
 		} else if (txt.starts_with('U')) {
-			prefix = "U";
-			str    = "Utf32Str";
-			txt    = txt.substr(1);
-		}
+		    prefix = "U";
+		    str    = "Utf32Str";
+		    txt    = txt.substr(1);
+		}*/
 		if (txt.starts_with('"') || txt.starts_with('R')) {
-			out << "Builtin::" << str << "{" << prefix << txt << "}";
+			out << "Builtin::" << str << "{" << txt << "}";
 		} else if (txt.starts_with('`')) {
 			auto contents = txt.substr(1, txt.length() - 2);
 			StringReplace(contents, "``", "`");
-			out << "Builtin::" << str << "{" << prefix << "R\"_grave_(" << contents
-			    << ")_grave_\"}";
+			out << "Builtin::" << str << "{"
+			    << "R\"_grave_(" << contents << ")_grave_\"}";
 		}
 	}
 
@@ -20843,7 +21006,7 @@ namespace AstrumLang {
 		if (currentDeclaration && !currentDeclaration->theTypeId()) {
 			out << "String(";
 		}
-		out << "Builtin::StringInterpolation(u";
+		out << "Builtin::StringInterpolation(";
 		std::vector<AstrumParser::NullCoalescingExpressionContext*> expressions;
 		auto processExpression = [&](auto expr) {
 			out << "{";

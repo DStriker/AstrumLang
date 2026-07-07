@@ -149,13 +149,14 @@ public:
     RuleTemplateParamDeclaration = 237, RuleTemplateTypename = 238, RuleTemplateArgumentList = 239, 
     RuleTemplateArgument = 240, RuleConstraintClause = 241, RuleTypeTrait = 242, 
     RuleTemplateDeductionGuide = 243, RuleAttributeSpecifierSeq = 244, RuleAttributeSpecifier = 245, 
-    RuleAttributeArgumentClause = 246, RuleAssignmentOperator = 247, RuleShiftOperator = 248, 
-    RuleUnaryPrefixOperator = 249, RuleUnaryCustomOperator = 250, RuleRefCaptureOperator = 251, 
-    RuleUnaryPostfixOperator = 252, RuleNot = 253, RuleOperator = 254, RuleLiteral = 255, 
-    RuleInterpolatedStringLiteral = 256, RuleInterpolatedRegularStringLiteral = 257, 
-    RuleInterpolatedRegularStringPart = 258, RuleInterpolatedVerbatiumStringLiteral = 259, 
-    RuleInterpolatedVerbatiumStringPart = 260, RuleInterpolatedMultilineStringLiteral = 261, 
-    RuleInterpolatedMultilineStringPart = 262, RuleInterpolatedExpression = 263
+    RuleAttributeArgumentClause = 246, RuleShortAttribute = 247, RuleAssignmentOperator = 248, 
+    RuleShiftOperator = 249, RuleUnaryPrefixOperator = 250, RuleUnaryCustomOperator = 251, 
+    RuleRefCaptureOperator = 252, RuleUnaryPostfixOperator = 253, RuleNot = 254, 
+    RuleOperator = 255, RuleLiteral = 256, RuleInterpolatedStringLiteral = 257, 
+    RuleInterpolatedRegularStringLiteral = 258, RuleInterpolatedRegularStringPart = 259, 
+    RuleInterpolatedVerbatiumStringLiteral = 260, RuleInterpolatedVerbatiumStringPart = 261, 
+    RuleInterpolatedMultilineStringLiteral = 262, RuleInterpolatedMultilineStringPart = 263, 
+    RuleInterpolatedExpression = 264
   };
 
   explicit AstrumParser(antlr4::TokenStream *input);
@@ -422,6 +423,7 @@ public:
   class AttributeSpecifierSeqContext;
   class AttributeSpecifierContext;
   class AttributeArgumentClauseContext;
+  class ShortAttributeContext;
   class AssignmentOperatorContext;
   class ShiftOperatorContext;
   class UnaryPrefixOperatorContext;
@@ -2312,7 +2314,7 @@ public:
     antlr4::tree::TerminalNode *LeftBracket();
     antlr4::tree::TerminalNode *RightBracket();
     antlr4::tree::TerminalNode *Question();
-    AttributeSpecifierSeqContext *attributeSpecifierSeq();
+    ShortAttributeContext *shortAttribute();
     antlr4::tree::TerminalNode *IntegerLiteral();
     antlr4::tree::TerminalNode *Greater();
     antlr4::tree::TerminalNode *Exclamation();
@@ -4833,6 +4835,20 @@ public:
   };
 
   AttributeArgumentClauseContext* attributeArgumentClause();
+
+  class ASTRUMLANG_API ShortAttributeContext : public antlr4::ParserRuleContext {
+  public:
+    ShortAttributeContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *AtSign();
+    antlr4::tree::TerminalNode *Identifier();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  ShortAttributeContext* shortAttribute();
 
   class ASTRUMLANG_API AssignmentOperatorContext : public antlr4::ParserRuleContext {
   public:

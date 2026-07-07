@@ -26,9 +26,9 @@ static_assert(Builtin::TypeIs<Boolean, ISelfEquatable>(), "bool should implement
 	#line 82 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 	static bool __Test_8ad5e102028f9d27 = [](){
 		#line 83 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-		ADV_ASSERT((ADV_UPCS(HashCode)(Builtin::Boolean(true).__ref()) == Builtin::u32(1U)), u"true.HashCode==1u");
+		ADV_ASSERT((ADV_UPCS(HashCode)(Builtin::Boolean(true).__ref()) == Builtin::u32(1U)), "true.HashCode==1u");
 		#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-		ADV_ASSERT((ADV_UPCS(HashCode)(Builtin::Boolean(false).__ref()) == Builtin::u32(0U)), u"false.HashCode==0u");
+		ADV_ASSERT((ADV_UPCS(HashCode)(Builtin::Boolean(false).__ref()) == Builtin::u32(0U)), "false.HashCode==0u");
 		#line 85 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 		Builtin::Nullable<Builtin::ObjectRef> o = Builtin::Boolean(true); 
 		return true;
@@ -41,7 +41,7 @@ static_assert(Builtin::TypeIs<Boolean, ISelfEquatable>(), "bool should implement
 		#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 		{
 			#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-			auto __tmp0 = Builtin::Cast<false, __extension_Boolean_53_Boolean>(obj);
+			auto __tmp0 = Builtin::Cast<false, __extension_Boolean_10_Boolean>(obj);
 			#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 			if ((__tmp0.IsValid())) {
 				#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
@@ -63,7 +63,7 @@ static_assert(Builtin::TypeIs<Boolean, ISelfEquatable>(), "bool should implement
 		#line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 		{
 			#line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-			auto __tmp0 = Builtin::Cast<false, __extension_Boolean_53_Boolean>(obj);
+			auto __tmp0 = Builtin::Cast<false, __extension_Boolean_38_Boolean>(obj);
 			#line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 			if ((__tmp0.IsValid())) {
 				#line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"

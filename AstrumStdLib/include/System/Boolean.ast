@@ -68,7 +68,7 @@ public extension Boolean: IConvertible
     ToFloat32: () -> f32 noexcept ==> this ? 1.0f32 : 0.0f32;
     ToFloat64: () -> f64 noexcept ==> this ? 1.0 : 0.0;
     ToByte: () -> byte noexcept ==> this ? 1u8 : 0u8;
-    ToChar: () -> char noexcept ==> this ? 1u : 0u;
+    ToChar: () -> char noexcept ==> this ? 1u8 : 0u8;
     //ToString: () -> string;
     //ToDateTime: () -> DateTime;
 }

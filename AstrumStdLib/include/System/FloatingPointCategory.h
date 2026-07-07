@@ -19,24 +19,14 @@ class __Class_FloatingPointCategory;
 	struct FloatingPointCategory final : public Builtin::Enum {
 		public: using __self = FloatingPointCategory;
 		public: using __class = __Class_FloatingPointCategory;
-		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
 		private: Builtin::u8 __value;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
 		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, Builtin::u8)
 		public: constexpr FloatingPointCategory() noexcept = default;
-		#line 4 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
-		public: static ASTRUMSTD_HIDDEN const FloatingPointCategory NaN;
-		#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
-		public: static ASTRUMSTD_HIDDEN const FloatingPointCategory Infinity;
-		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
-		public: static ASTRUMSTD_HIDDEN const FloatingPointCategory Zero;
-		#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
-		public: static ASTRUMSTD_HIDDEN const FloatingPointCategory Subnormal;
-		#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
-		public: static ASTRUMSTD_HIDDEN const FloatingPointCategory Normal;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
-		private: static constexpr Builtin::Str __names[] = {u"NaN", u"Infinity", u"Zero", u"Subnormal", u"Normal"};
+		private: static constexpr Builtin::Str __names[] = {"NaN", "Infinity", "Zero", "Subnormal", "Normal"};
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
 		public: static constexpr int __variants = 5;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
@@ -49,10 +39,22 @@ class __Class_FloatingPointCategory;
 		public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
 		public: constexpr bool operator ==(const __self& that) const noexcept { return __value == that.__value; } 
+		public: constexpr auto operator <=>(const __self& that) const noexcept { return __value <=> that.__value; } 
+		#line 4 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
+		public: static ASTRUMSTD_HIDDEN const FloatingPointCategory NaN;
+		#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
+		public: static ASTRUMSTD_HIDDEN const FloatingPointCategory Infinity;
+		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
+		public: static ASTRUMSTD_HIDDEN const FloatingPointCategory Zero;
+		#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
+		public: static ASTRUMSTD_HIDDEN const FloatingPointCategory Subnormal;
+		#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
+		public: static ASTRUMSTD_HIDDEN const FloatingPointCategory Normal;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
 		public: constexpr operator Builtin::u8() const noexcept { return __value; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
 		private: constexpr FloatingPointCategory(Builtin::u8 value) : __value(value) {}
+		public: static constexpr __self FromValue(Builtin::u8 rawValue) { return __self(rawValue); }
 		
 	};
 	

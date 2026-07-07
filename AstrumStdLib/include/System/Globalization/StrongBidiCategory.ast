@@ -1,0 +1,8 @@
+package System.Globalization;
+
+public enum StrongBidiCategory: u8
+{
+    Other = 0,
+    StrongLeftToRight = 0x20,
+    StrongRightToLeft = 0x40
+}

@@ -587,7 +587,7 @@ postfixExpression
     : primaryExpression
     | newExpression
     | stackallocExpression
-    | postfixExpression Question? LeftBracket attributeSpecifierSeq? expressionList RightBracket
+    | postfixExpression Question? LeftBracket shortAttribute? expressionList RightBracket
     | postfixExpression LeftParen expressionList? RightParen
     | (simpleTypeSpecifier) LeftParen expressionList? RightParen
     | Move postfixExpression
@@ -1383,6 +1383,10 @@ attributeSpecifier
 
 attributeArgumentClause
     : LeftParen expressionList RightParen
+    ;
+
+shortAttribute
+    : AtSign Identifier
     ;
 
 // operators

@@ -110,7 +110,7 @@ using __extensions::ToChar;
 
 } namespace __extensions { using namespace System;
 #line 22 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-	inline constexpr auto operator<=>(__extension_Boolean_10_Boolean const& __this LIFETIMEBOUND, Builtin::Nullable<__extension_Boolean_53_Boolean> rhs) noexcept -> const Builtin::i32
+	inline constexpr auto operator<=>(__extension_Boolean_10_Boolean const& __this LIFETIMEBOUND, Builtin::Nullable<__extension_Boolean_10_Boolean> rhs) noexcept -> const Builtin::i32
 	{
 		#line 24 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 		{
@@ -297,7 +297,7 @@ using __extensions::ToChar;
 	inline constexpr auto ToChar(__extension_Boolean_53_Boolean const& __this LIFETIMEBOUND) noexcept -> const Builtin::char32
 	{
 		#line 71 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-		ADV_EXPRESSION_BODY(__this ? Builtin::u32(1U) : Builtin::u32(0U)); 
+		ADV_EXPRESSION_BODY(__this ? Builtin::u8(1U) : Builtin::u8(0U)); 
 	}
 	
 } namespace System{

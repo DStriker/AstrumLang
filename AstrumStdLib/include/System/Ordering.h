@@ -19,20 +19,14 @@ class __Class_Ordering;
 	struct Ordering final : public Builtin::Enum {
 		public: using __self = Ordering;
 		public: using __class = __Class_Ordering;
-		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
 		private: Builtin::i32 __value;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
 		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, Builtin::i32)
 		public: constexpr Ordering() noexcept = default;
-		#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
-		public: static ASTRUMSTD_HIDDEN const Ordering Less;
-		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
-		public: static ASTRUMSTD_HIDDEN const Ordering Equal;
-		#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
-		public: static ASTRUMSTD_HIDDEN const Ordering Greater;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
-		private: static constexpr Builtin::Str __names[] = {u"Less", u"Equal", u"Greater"};
+		private: static constexpr Builtin::Str __names[] = {"Less", "Equal", "Greater"};
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
 		public: static constexpr int __variants = 3;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
@@ -45,10 +39,18 @@ class __Class_Ordering;
 		public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
 		public: constexpr bool operator ==(const __self& that) const noexcept { return __value == that.__value; } 
+		public: constexpr auto operator <=>(const __self& that) const noexcept { return __value <=> that.__value; } 
+		#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
+		public: static ASTRUMSTD_HIDDEN const Ordering Less;
+		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
+		public: static ASTRUMSTD_HIDDEN const Ordering Equal;
+		#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
+		public: static ASTRUMSTD_HIDDEN const Ordering Greater;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
 		public: constexpr operator Builtin::i32() const noexcept { return __value; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
 		private: constexpr Ordering(Builtin::i32 value) : __value(value) {}
+		public: static constexpr __self FromValue(Builtin::i32 rawValue) { return __self(rawValue); }
 		
 	};
 	

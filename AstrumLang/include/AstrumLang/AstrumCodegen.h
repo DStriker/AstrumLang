@@ -23,6 +23,7 @@ namespace AstrumLang {
 		AstrumParser::EqualityExpressionContext* currentEquality           = nullptr;
 		AstrumParser::RelationalExpressionContext* currentIs               = nullptr;
 		AstrumParser::SelectionStatementContext* currentIf                 = nullptr;
+		AstrumParser::TypeSpecifierSeqContext* currentArrayType            = nullptr;
 		AstrumParser::TypeSpecifierSeqContext* autoSizeArrayType           = nullptr;
 		std::string currentType;
 		std::string currentLabel;
@@ -77,6 +78,7 @@ namespace AstrumLang {
 		bool isVoidReturn               = false;
 		bool isClearModule              = false;
 		bool isAutoSizeArrayDeclaration = false;
+		bool isArrayDeclaration         = false;
 
 		class StreamSwitcher {
 			std::ofstream* file1;

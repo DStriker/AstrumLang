@@ -1,0 +1,12 @@
+package System;
+
+public import IComparable;
+public import IEquatable;
+
+public interface IRangeCustomIterator:
+    ISelfComparable,
+    ISelfEquatable
+{
+    RangeStepForward: (steps: usize) -> self;
+    RangeStepBackward: (steps: usize) -> self;
+}

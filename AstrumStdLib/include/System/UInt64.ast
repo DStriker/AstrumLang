@@ -158,10 +158,10 @@ public extension u64: IConvertible {
     }
     ToChar: () -> char ==
     {
-        if this > 0xFFFFFFFF {
+        if this > 0x10FFFFu {
             throw Builtin.IntegerOverflowException();
         }
-        return this as u16;
+        return char(this as u32);
     }
     //ToString: () -> string;
     //ToDateTime: () -> DateTime;

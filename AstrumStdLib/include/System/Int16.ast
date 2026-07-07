@@ -137,7 +137,12 @@ public extension i16: IConvertible {
     ToFloat32: () -> f32 noexcept ==> this;
     ToFloat64: () -> f64 noexcept ==> this;
     ToByte: () -> byte ==> this.ToUInt8();
-    ToChar: () -> char ==> this as char;
+    ToChar: () -> char == {
+        if this < 0 {
+            throw Builtin.IntegerOverflowException();
+        }
+        return this as char;
+    }
     //ToString: () -> string;
     //ToDateTime: () -> DateTime;
 }

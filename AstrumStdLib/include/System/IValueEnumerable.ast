@@ -1,0 +1,17 @@
+package System;
+
+public import IComparable;
+public import IEquatable;
+public import System.Numerics.IAdditionOperators;
+public import System.Numerics.ISubtractionOperators;
+public import System.Numerics.IIncrementOperators;
+public import System.Numerics.IDecrementOperators;
+
+public interface IValueEnumerable:
+    ISelfComparable,
+    ISelfEquatable,
+    IAdditiveArithmetic,
+    ISubtractableArithmetic,
+    IIncrementable,
+    IDecrementable
+{}

@@ -517,6 +517,8 @@ public:
 
     virtual std::any visitAttributeArgumentClause(AstrumParser::AttributeArgumentClauseContext *context) = 0;
 
+    virtual std::any visitShortAttribute(AstrumParser::ShortAttributeContext *context) = 0;
+
     virtual std::any visitAssignmentOperator(AstrumParser::AssignmentOperatorContext *context) = 0;
 
     virtual std::any visitShiftOperator(AstrumParser::ShiftOperatorContext *context) = 0;

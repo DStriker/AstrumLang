@@ -1008,6 +1008,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitShortAttribute(AstrumParser::ShortAttributeContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitAssignmentOperator(AstrumParser::AssignmentOperatorContext *ctx) override {
     return visitChildren(ctx);
   }

@@ -402,7 +402,7 @@ namespace Builtin {
 	};*/
 
 	struct RefStruct {
-		Str ToString() const { return u"Struct"; }
+		Str ToString() const { return "Struct"; }
 
 		usize HashCode() const { return 123456u; }
 	};
@@ -451,7 +451,7 @@ namespace Builtin {
 		Object& operator=(const Object&) = delete;
 		Object& operator=(Object&&) = delete;
 
-		virtual Str ToString() { return u"Struct"; }
+		virtual Str ToString() { return "Struct"; }
 
 		virtual usize HashCode() { return 123456u; }
 
@@ -533,7 +533,7 @@ namespace Builtin {
 	template <class T>
 	inline constexpr bool IsPrimitiveType =
 	    IsAnyOf<std::remove_cv_t<T>, i8, i16, i32, i64, u8, u16, u32, u64, isize, usize, i128, u128,
-	            f32, f64, char16, Str, bool>;
+	            f32, f64, char32, Str, bool>;
 	template <class T>
 	inline constexpr bool IsValueType =
 	    std::is_base_of_v<Struct, T> || std::is_base_of_v<RefStruct, T> ||

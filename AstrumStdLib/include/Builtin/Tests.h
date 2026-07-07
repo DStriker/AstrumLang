@@ -22,7 +22,7 @@ namespace Builtin {
 
 	AssertInfo& GetAssertInfo();
 
-	inline constexpr void Assert(bool condition, Str message = u"") {
+	inline constexpr void Assert(bool condition, Str message = "") {
 		if (std::is_constant_evaluated())
 		{
 			if (!condition)

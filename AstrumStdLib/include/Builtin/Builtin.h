@@ -48,19 +48,33 @@ using Builtin::u64;
 using Builtin::u8;
 using Builtin::usize;
 
+#ifdef _WIN32
+#define ADV_SETLOCAL                                                                               \
+	std::setlocale(LC_ALL, ".UTF8");                                                               \
+	SetConsoleCP(65001);                                                                           \
+	SetConsoleOutputCP(65001);
+
+#else
+#define ADV_SETLOCAL std::setlocale(LC_ALL, "")
+#endif
+
 #ifdef ADV_UNITTEST
 #define ADV_ENTRY_POINT(Namespace)                                                                 \
 	}                                                                                              \
-	int main(int argc, char** argv) { return Builtin::TestMain(argc, argv); }                      \
+	int main(int argc, char** argv) {                                                              \
+		ADV_SETLOCAL;                                                                              \
+		return Builtin::TestMain(argc, argv);                                                      \
+	}                                                                                              \
 	namespace Namespace {
 #else
 #define ADV_ENTRY_POINT(Namespace)                                                                 \
 	}                                                                                              \
 	int main(int argc, char** argv) {                                                              \
 		Builtin::ApplicationMainPtr = &Namespace ::__Astrum_Main;                                  \
-		return Builtin::AstrumMainStartup(argc, argv);                                             \
-	}                                                                                              \
-	namespace Namespace {
+		ADV_SETLOCAL;                                                                              \
+		return Builtin::AstrumMainStartup(argc, argv);
+}
+namespace Namespace {
 
 #endif
 

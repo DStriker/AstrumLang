@@ -6,6 +6,7 @@ public import UInt32;
 public import Int64;
 public import UInt64;
 
+// Bidirectional index for collections
 public struct Index: ISelfEquatable {
     private _value: isize;
 
@@ -35,6 +36,7 @@ public struct Index: ISelfEquatable {
         this._value = fromEnd ? (~val).NarrowToIsize() : val.NarrowToIsize();
     }
 
+    // Creates a direct index (from start)
     public static FromStart: (val: usize) -> self ==
     {
         if val > isize.MaxValue {
@@ -44,6 +46,7 @@ public struct Index: ISelfEquatable {
         return self(val.NarrowToIsize(), FastCtorTag());
     }
 
+    // Creates a reverse index (from end)
     public static FromEnd: (val: usize) -> self ==
     {
         if val > isize.MaxValue {
@@ -53,9 +56,12 @@ public struct Index: ISelfEquatable {
         return self(~val.NarrowToIsize(), FastCtorTag());
     }
 
+    // Index pointing at first element
     public static Start: self ==> self(0, FastCtorTag());
+    // Index pointing at beyond last element
     public static End: self ==> self(~0iz, FastCtorTag());
 
+    // Calculates an offset from the start using collection length
     public Offset: (length: usize) -> isize ==
     {
         offset := _value.NarrowToIsize();
@@ -69,11 +75,13 @@ public struct Index: ISelfEquatable {
 }
 
 public extension Index {
+    // Numeric value
     Value: usize ==
     {
         let _value := Builtin.BitCast<isize>(this);
         return _value.IsNegative ? usize(~_value) : usize(_value);
     }
+    // Returns true if index is from end
     IsFromEnd: bool ==> Builtin.BitCast<isize>(this).IsNegative;
 
     HashCode: u64 ==> Builtin.BitCast<usize>(this).HashCode;
@@ -89,6 +97,7 @@ public extension Index {
     }
 }
 
+// Short syntax for index from end
 public extension u8 {
     operator^: () -> Index ==> Index.FromEnd(this);
 }

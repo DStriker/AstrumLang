@@ -1,0 +1,321 @@
+package System;
+
+public import Index;
+public import IValueEnumerable;
+public import IRangeCustomIterator;
+public import System.Collections.ISequence;
+
+public struct <T: type, IsClosed: bool = false> 
+Range: ISelfEquatable, IAbstractSequence, ISequence<T>
+where type T is IValueEnumerable or type T is IRangeCustomIterator
+{
+    public type ElementType = T;
+    private _start, _end: T;
+
+    public this() == default;
+
+    public this(in start: T, in end: T) ==
+    {
+        this._start = start;
+        this._end = end;
+
+        if end < start {
+            throw Builtin.InvalidArgumentException();
+        }
+
+        static if not IsClosed {
+            if end == start {
+                throw Builtin.InvalidArgumentException();
+            }
+        }
+    }
+
+    public mut Clear: () ==> _start = _end = T();
+
+    public Iterate: () -> Iterator ==> Iterator(this);
+    public struct Iterator: IAbstractIterator, IIterator<T> {
+        public type ElementType = T;
+        private _current, _end: T;
+        private _state: i32 = 1;
+
+        public this(in ref range: Range<T, IsClosed>) == {
+            this._current = range.Start;
+            this._end = range.End;
+        }
+
+        public mut MoveNext: () -> bool ==
+        {
+            switch _state {
+                1 => {
+                    this._state = 2;
+                    return true;
+                }
+                2 => {
+                    static if IsClosed {
+                        if _current != _end {
+                            StepForward();
+                            return true;
+                        }
+                    } else {
+                        if StepForward() != _end {
+                            return true;
+                        }
+                    }
+                }
+            }
+            
+            this._state = -1;
+            return false;
+        }
+
+        public GetCurrent: () -> T ==> _current;
+
+        private mut StepForward: () -> T ==
+        {
+            static if type T is IValueEnumerable {
+                return ++_current;
+            } else {
+                return _current = _current.RangeStepForward(1u);
+            }
+        }
+    }
+
+    public struct ReverseIterator: IAbstractSequence, ISequence<T>, IAbstractIterator, IIterator<T> {
+        public type ElementType = T;
+        private _current, _end: T;
+        private _state: i32 = 1;
+
+        public this(in ref range: Range<T, IsClosed>) == {
+            this._current = range.End;
+            this._end = range.Start;
+        }
+
+        public Iterate: () -> self ==> this;
+
+        public mut MoveNext: () -> bool ==
+        {
+            switch _state {
+                1 => {
+                    static if not IsClosed {
+                        StepBackward();
+                    }
+                    this._state = 2;
+                    return true;
+                }
+                2 => {
+                    if _current != _end {
+                        StepBackward();
+                        return true;
+                    }
+                }
+            }
+            
+            this._state = -1;
+            return false;
+        }
+
+        public GetCurrent: () -> T ==> _current;
+
+        private mut StepBackward: () ==
+        {
+            static if type T is IValueEnumerable {
+                --_current;
+            } else {
+                _current = _current.RangeStepBackward(1u);
+            }
+        }
+    }
+
+    public operator==: (in ref other: self) -> bool 
+        ==> this._start == other._start and this._end == other._end;
+
+    HashCode: u64 ==
+    {
+        let startHash := this.Start.HashCode;
+        let endHash := this.End.HashCode;
+        return startHash ^ (endHash +% 0x9e3779b9u +% (startHash << 6) +% (startHash >> 2));
+    }
+
+    internal GetStart: () -> T noexcept ==> _start;
+    internal GetEnd: () -> T noexcept ==> _end;
+}
+
+public extension <T, IsClosed: bool> Range {
+    Start: T ==> this.GetStart();
+    End: T ==> this.GetEnd();
+    Reversed: self.ReverseIterator ==> self.ReverseIterator(this);
+
+    Length: T ==> this.End - this.Start;
+    IsEmpty: bool ==> this.Length == 0;
+
+    Contains: (in val: T) -> bool ==
+    {
+        static if IsClosed {
+            return this.Start <= val and val <= this.End;
+        } else {
+            return this.Start <= val and val < this.End;
+        }
+    }
+    Contains: (in range: Range<T, true>) -> bool ==
+    {
+        static if IsClosed {
+            return this.Start <= range.Start and range.End <= this.End;
+        } else {
+            static if type T is IValueEnumerable {
+                return this.Start <= range.Start and range.End <= (this.End - 1);
+            } else {
+                return this.Start <= range.Start and range.End <= this.End.RangeStepBackward(1u);
+            }
+        }
+    }
+    Contains: (in range: Range<T, false>) -> bool ==
+    {
+        static if IsClosed {
+            static if type T is IValueEnumerable {
+                return this.Start <= range.Start and (range.End - 1) <= this.End;
+            } else {
+                return this.Start <= range.Start and range.End.RangeStepBackward(1u) <= this.End;
+            }
+        } else {
+            return this.Start <= range.Start and range.End <= this.End;
+        }
+    }
+    operator in: (in val: T) -> bool ==> this.Contains(val);
+    operator in: (in range: Range<T, true>) -> bool ==> this.Contains(range);
+    operator in: (in range: Range<T, false>) -> bool ==> this.Contains(range);
+}
+
+public type ClosedRange<T> = Range<T, true>;
+
+public type IntRange8 = Range<i8>;
+public type IntRange16 = Range<i16>;
+public type IntRange32 = Range<i32>;
+public type IntRange64 = Range<i64>;
+public type IntRange128 = Range<i128>;
+public type IntRange = Range<isize>;
+public type UIntRange8 = Range<u8>;
+public type UIntRange16 = Range<u16>;
+public type UIntRange32 = Range<u32>;
+public type UIntRange64 = Range<u64>;
+public type UIntRange128 = Range<u128>;
+public type UIntRange = Range<usize>;
+public type ByteRange = Range<byte>;
+public type FloatRange32 = Range<f32>;
+public type FloatRange64 = Range<f64>;
+
+public type IntClosedRange8 = ClosedRange<i8>;
+public type IntClosedRange16 = ClosedRange<i16>;
+public type IntClosedRange32 = ClosedRange<i32>;
+public type IntClosedRange64 = ClosedRange<i64>;
+public type IntClosedRange128 = ClosedRange<i128>;
+public type IntClosedRange = ClosedRange<isize>;
+public type UIntClosedRange8 = ClosedRange<u8>;
+public type UIntClosedRange16 = ClosedRange<u16>;
+public type UIntClosedRange32 = ClosedRange<u32>;
+public type UIntClosedRange64 = ClosedRange<u64>;
+public type UIntClosedRange128 = ClosedRange<u128>;
+public type UIntClosedRange = ClosedRange<usize>;
+public type ByteClosedRange = ClosedRange<byte>;
+public type FloatClosedRange32 = ClosedRange<f32>;
+public type FloatClosedRange64 = ClosedRange<f64>;
+
+public struct IndexRange: ISelfEquatable
+{
+    private _start, _end: Index;
+    private _isClosed: bool;
+
+    public this() == default;
+    public this(start: Index, end: Index, isClosed: bool = false) == {
+        this._start = start;
+        this._end = end;
+        this._isClosed = isClosed;
+    }
+
+    public implicit this<T, IsClosed: bool>(in ref range: Range<T, IsClosed>)
+    where type T is operator Index == 
+    {
+        this(range.Start as Index, range.End as Index, IsClosed);
+    }
+
+    public operator==: (in ref other: self) -> bool 
+        ==> this._start == other._start and this._end == other._end and this._isClosed == other._isClosed;
+
+    internal GetStart: () -> Index noexcept ==> _start;
+    internal GetEnd: () -> Index noexcept ==> _end;
+    internal GetIsClosed: () -> bool noexcept ==> _isClosed;
+}
+
+public extension IndexRange {
+    Start: Index ==> this.GetStart();
+    End: Index ==> this.GetEnd();
+    IsClosed: bool ==> this.GetIsClosed();
+
+    Length: (size: usize) -> usize ==>
+        usize(this.End.Offset(size) - this.Start.Offset(size) + i32(this.IsClosed));
+
+    HashCode: u64 ==
+    {
+        let startHash := this.Start.HashCode;
+        let endHash := this.End.HashCode;
+        return startHash ^ (endHash +% 0x9e3779b9u +% (startHash << 6) +% (startHash >> 2)) *% (23u64 ^^ u32(this.IsClosed));
+    }
+
+    static StartAt: (start: Index) -> self ==> self(start, Index.End, false);
+    static EndAt: (end: Index) -> self ==> self(Index.Start, end, false);
+    static InclusiveEndAt: (end: Index) -> self ==> self(Index.Start, end, true);
+    static All: self ==> self(Index.Start, Index.End, false);
+}
+
+test "Range" {
+    irange := ..;
+    assert irange.Start == Index.Start;
+    assert irange.End == Index.End;
+    assert not irange.IsClosed;
+    assert irange == IndexRange.All;
+    assert irange.Length(10u) == 10u;
+
+    irange = ..=;
+    assert irange.IsClosed;
+    assert irange.Length(10u) == 11u;
+
+    irange = 2u..^2u;
+    assert irange.Start == Index.FromStart(2u);
+    assert irange.End == Index.FromEnd(2u);
+    assert not irange.IsClosed;
+    assert irange.Length(10u) == 6u;
+
+    irange = 2u..=^2u;
+    assert irange.Start == Index.FromStart(2u);
+    assert irange.End == Index.FromEnd(2u);
+    assert irange.IsClosed;
+    assert irange.Length(10u) == 7u;
+
+    irange = ..=^2u;
+    assert irange.Start == Index.Start;
+    assert irange.End == Index.FromEnd(2u);
+    assert irange.IsClosed;
+    assert irange.Length(10u) == 9u;
+
+    irange = 2u..;
+    assert irange.Start == Index.FromStart(2u);
+    assert irange.End == Index.End;
+    assert not irange.IsClosed;
+    assert irange.Length(10u) == 8u;
+
+    irange = 2u..6u;
+    assert irange.Start == Index.FromStart(2u);
+    assert irange.End == Index.FromStart(6u);
+    assert not irange.IsClosed;
+    assert irange.Length(10u) == 4u;
+
+    assert 0 in ..12;
+    assert 11 in ..12;
+    assert 12 not in ..12;
+    assert 12 in ..=12;
+    assert 12 in 3..=12;
+    assert 12 not in 3..12;
+    assert 11 in 3..12;
+    assert 3 in 3..12;
+    assert 2 not in 3..12;
+
+}

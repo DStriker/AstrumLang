@@ -1,0 +1,27 @@
+package System.Collections;
+
+public import System.Optional;
+
+public interface IAbstractIterator {
+    type ElementType;
+    
+    MoveNext: () -> bool;
+    GetCurrent: () -> self.ElementType;
+}
+
+public interface IIterator<out T> {
+    MoveNext: () -> bool;
+    GetCurrent: () -> T;
+}
+
+public interface IAbstractRefIterator {
+    type ElementType;
+    
+    MoveNext: () -> bool;
+    GetCurrentRef: () -> ref self.ElementType;
+}
+
+public interface IRefIterator<T> {
+    MoveNext: () -> bool;
+    GetCurrentRef: () -> ref T;
+}

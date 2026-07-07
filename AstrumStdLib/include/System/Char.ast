@@ -1,12 +1,529 @@
 package System;
 
+public import AsciiChar;
+public import UInt8;
+public import Float64;
+public import Range;
+
+public import System.Globalization.UnicodeCategory;
+public import System.Globalization.CharUnicodeInfo;
+
+public type Byte = byte;
+public type Char = char;
+public type Rune = char;
+
 public extension byte {
     IsAscii: bool ==> this <= 0x7Fu8;
+    IsAsciiDigit: bool ==> this in b'0'..=b'9';
+    IsDigit: bool ==> this.IsAsciiDigit;
+    IsBinDigit: bool ==> this in b'0'..b'2';
+    IsOctDigit: bool ==> this in b'0'..b'8';
+    IsHexDigit: bool ==
+    {
+        static if Builtin.Is64BitTarget() {
+            let i := u64(this) - b'0';
+            let shift := 18428868213665201664u << (i as i32);
+            let mask := i -% 64;
+
+            return (shift & mask).NarrowToInt64() < 0;
+        } else {
+            return HexDigitFromByte(this) != 0xFF;
+        }
+    }
+    IsHexDigitUpper: bool ==> 
+        (i32(this) - b'0').NarrowToUInt32() <= 9 or (i32(this) - b'A').NarrowToUInt32() <= (b'F' - b'A');
+    IsHexDigitLower: bool ==> 
+        (i32(this) - b'0').NarrowToUInt32() <= 9 or (i32(this) - b'a').NarrowToUInt32() <= (b'f' - b'a');
+    IsAsciiLetter: bool ==> (i32(this | 0x20u8) - b'a').NarrowToUInt32() <= b'z' - b'a';
+    IsLetter: bool ==> this.IsAsciiLetter;
+    IsAsciiLetterUpper: bool ==> this in b'A'..=b'Z';
+    IsLetterUpper: bool ==> this.IsAsciiLetterUpper;
+    IsAsciiLetterLower: bool ==> this in b'a'..=b'z';
+    IsLetterLower: bool ==> this.IsAsciiLetterLower;
+    IsAsciiLetterOrDigit: bool ==> this.IsAsciiLetter or this.IsAsciiDigit;
+    IsLetterOrDigit: bool ==> this.IsAsciiLetterOrDigit;
+    IsIdentifierChar: bool ==> this.IsAsciiLetterOrDigit or this == b'_';
+    IsAsciiControl: bool ==> this <= 0x1Fu8;
+    IsControl: bool ==> ((u32(this) + 1) &~ 0x80u) <= 0x20u;
+    IsAsciiPunctuation: bool ==> 
+        this.IsAscii and GetLatin1UnicodeCategory(this).Value in 
+            UnicodeCategory.ConnectorPunctuation.Value..=UnicodeCategory.OtherPunctuation.Value;
+    IsPunctuation: bool ==> this.IsAsciiPunctuation;
+    IsAsciiSeparator: bool ==> this == 0x20u;
+    IsSeparator: bool ==> this.IsAsciiSeparator;
+    IsAsciiSymbol: bool ==> this.IsAscii and GetLatin1UnicodeCategory(this).Value in
+            UnicodeCategory.MathSymbol.Value..=UnicodeCategory.OtherSymbol.Value;
+    IsSymbol: bool ==> this.IsAsciiSymbol;
+    IsAsciiWhiteSpace: bool ==> this.IsAscii and IsWhiteSpaceLatin1(this);
+    IsWhiteSpace: bool ==> this.IsAsciiWhiteSpace;
+    IsAsciiPrintable: bool ==> this in b'!'..=b'~';
+    ToLower: self ==> this.IsAsciiLetterUpper ? (this + 32u8) : this;
+    ToUpper: self ==> this.IsAsciiLetterLower ? (this - 32u8) : this;
+
+    static FromDigit: (num: u32, radix: u32) -> self? ==
+    {
+        if radix > 36u {
+            throw Builtin.InvalidArgumentException();
+        }
+
+        if num < radix {
+            if num < 10u {
+                return b'0' + num;
+            } else {
+                return b'a' + num - 10;
+            }
+        }
+        return null;
+    }
+
+    ToAsciiChar: AsciiChar? ==
+    {
+        if this.IsAscii {
+            return AsciiChar.FromValue(this);
+        }
+        return null;
+    }
+
+    static Ascii: ByteClosedRange ==> 0u8..=0x7Fu8;
+    static Digits: ByteClosedRange ==> b'0'..=b'9';
+    static UppercaseLetters: ByteClosedRange ==> b'A'..=b'Z';
+    static LowercaseLetters: ByteClosedRange ==> b'a'..=b'z';
 }
 
 public extension char {
+    // Equals to dynamic object
+    operator==*: (in obj: object?) -> bool
+    {
+        if obj is self {
+            return this == obj;
+        }
+        
+        return false;
+    }
 
+    // Stub for invalid Unicode data
+    static ReplacementChar: self ==> '\uFFFD';
+    static UnicodeVersion: (byte, byte, byte) ==> (16u8, 0u8, 0u8);
+
+    // Creates char from codepoint scalar value
+    // Returns null if scalar is invalid
+    static FromScalar: (scalar: u32) -> self? ==
+    {
+        if (((scalar ^ 0xD800) - 0x800) < 0x110000 - 0x80)
+            return self(scalar);
+        return null;
+    }
+    // Creates char from numeric digit with specified radix
+    static FromDigit: (num: u32, radix: u32) -> self? ==
+    {
+        if radix > 36u {
+            throw Builtin.InvalidArgumentException();
+        }
+
+        if num < radix {
+            if num < 10u {
+                return b'0' + num;
+            } else {
+                return b'a' + num - 10;
+            }
+        }
+        return null;
+    }
+
+    static MaxUtf8Length: usize ==> 4u;
+    static MaxUtf16Length: usize ==> 2u;
+    // Creates char from UTF-16 surrogate pair
+    // Throws InvalidArgumentException if surrogates are invalid
+    static FromUtf16Surrogate: (highSurrogate: u16, lowSurrogate: u16) -> self ==
+    {
+        let highOffset := u32(highSurrogate) - HighSurrogateRange.Start;
+        let lowOffset := u32(lowSurrogate) - LowSurrogateRange.Start;
+        if (highOffset | lowOffset) > 0x3FFu {
+            throw Builtin.InvalidArgumentException(); // ArgumentOutOfRange
+        }
+
+        return char.FromScalar((highOffset << 10) + lowOffset + (0x40 << 10))!;
+    }
+
+    AsAscii: AsciiChar? ==
+    {
+        if this.IsAscii {
+            return AsciiChar.FromValue(this as u8);
+        }
+        return null;
+    }
+
+    HashCode: u64 ==> this as u64;
+
+    // Returns true if char is valid ASCII character
+    IsAscii: bool ==> this <= '\u007F';
+    // Returns true if char is valid Latin-1 character
+    IsLatin1: bool ==> this <= '\u00FF';
+    // Returns true if char refers to Basic Multilingual Plane
+    IsBmp: bool ==> this <= '\uFFFF';
+    Plane: u32 ==> (this as u32) >> 16;
+    // Returns a count of UTF-16 code units required to represent a this char
+    Utf16Length: u32 ==
+    {
+        result := this as u32;
+        result -%= 0x10000u;
+        result +%= (2u << 24);
+        result >>= 24;
+        assert result <= self.MaxUtf16Length;
+        return result;
+    }
+    // Returns a count of UTF-8 code units required to represent a this char
+    Utf8Length: u32 ==
+    {
+        result := this as u32;
+        let a := (result -% 0x800u) >> 31;
+        result ^= 0xF800u;
+        result -%= 0xF880u;
+        result +%= (4u << 24);
+        result >>= 24;
+        result += a * 2;
+        assert result <= self.MaxUtf8Length;
+        return result;
+    }
+    // Returns a codepoint scalar value
+    CodepointValue: u32 ==> this as u32;
+    // Returns true if char is valid Unicode character
+    IsValid: bool ==> this.CodepointValue <= 0x10FFFFu;
+
+    // Returns an Unicode category of this char
+    CharUnicodeCategory: UnicodeCategory =
+    {
+        if this.IsLatin1 {
+            return GetLatin1UnicodeCategory(this as u32);
+        }
+        assert this.IsValid;
+        return CharUnicodeInfo.GetUnicodeCategory(this as u32);
+    }
+
+    // Returns a strong bidirectional category of this char
+    // Returns Other for undefined strong category
+    BidiCategory: StrongBidiCategory => CharUnicodeInfo.GetStrongBidiCategory(this as u32);
+
+    // Returns number that represents this char
+    // Returns null if char is not a numeric digit
+    NumericValue: f64? =
+    {
+        if this.IsAscii {
+            let baseNum := this.CodepointValue -% b'0';
+            if baseNum <= 9 {
+                return baseNum;
+            }
+            return null;
+        }
+        let num := CharUnicodeInfo.GetNumericValue(this as u32);
+        if num != f64.MinusOne {
+            return num;
+        }
+        return null;
+    }
+
+    // 00..1F
+    IsAsciiControl: bool ==> this in '\0'..='\u001F';
+    // Control characters: 00..1F, 7F..9F
+    IsControl: bool ==> ((u32(this) + 1) &~ 0x80u) <= 0x20u;
+    // 0..9
+    IsAsciiDigit: bool ==> this.IsAscii and byte(this).IsAsciiDigit;
+    // Decimal digits
+    IsDigit: bool =
+    {
+        if this.IsAscii {
+            return byte(this).IsAsciiDigit;
+        }
+        return CharUnicodeInfo.GetUnicodeCategory(this as u32) == UnicodeCategory.DecimalDigitNumber;
+    }
+    // 0..1
+    IsBinDigit: bool ==> this.IsAscii and byte(this).IsBinDigit;
+    // 0..7
+    IsOctDigit: bool ==> this.IsAscii and byte(this).IsOctDigit;
+    // 0..F
+    IsHexDigit: bool ==> this.IsAscii and byte(this).IsHexDigit;
+    IsHexDigitUpper: bool ==> this.IsAscii and byte(this).IsHexDigitUpper;
+    IsHexDigitLower: bool ==> this.IsAscii and byte(this).IsHexDigitLower;
+    IsAsciiLetter: bool ==> this.IsAscii and byte(this).IsAsciiLetter;
+    // Any letter
+    IsLetter: bool =
+    {
+        if this.IsAscii {
+            return byte(this).IsAsciiLetter;
+        }
+        return CharUnicodeInfo.GetUnicodeCategory(this as u32).Value in
+            UnicodeCategory.UppercaseLetter.Value..=UnicodeCategory.OtherLetter.Value;
+    }
+    IsAsciiLetterUpper: bool ==> this.IsAscii and byte(this).IsAsciiLetterUpper;
+    // Uppercase letter (A, Z, Δ)
+    IsLetterUpper: bool =
+    {
+        if this.IsAscii {
+            return byte(this).IsAsciiLetterUpper;
+        }
+        return CharUnicodeInfo.GetUnicodeCategory(this as u32) == UnicodeCategory.UppercaseLetter;
+    }
+    IsAsciiLetterLower: bool ==> this.IsAscii and byte(this).IsAsciiLetterLower;
+    // Lowercase letter (a, z, δ)
+    IsLetterLower: bool =
+    {
+        if this.IsAscii {
+            return byte(this).IsAsciiLetterLower;
+        }
+        return CharUnicodeInfo.GetUnicodeCategory(this as u32) == UnicodeCategory.LowercaseLetter;
+    }
+    // Titlecase letter (ǅ, ῼ)
+    IsLetterTitle: bool => CharUnicodeInfo.GetUnicodeCategory(this as u32) == UnicodeCategory.TitlecaseLetter;
+    IsAsciiLetterOrDigit: bool ==> this.IsAscii and byte(this).IsAsciiLetterOrDigit;
+    // Any letter or decimal digit
+    IsLetterOrDigit: bool =
+    {
+        if this.IsAscii {
+            return byte(this).IsAsciiLetterOrDigit;
+        }
+        let category := CharUnicodeInfo.GetUnicodeCategory(this as u32);
+        return category.Value in UnicodeCategory.UppercaseLetter.Value..=UnicodeCategory.OtherLetter.Value
+            or category == UnicodeCategory.DecimalDigitNumber;
+    }
+    // ASCII Letters, decimal digits and underscore
+    IsIdentifierChar: bool ==> this.IsAsciiLetterOrDigit or this == '_';
+    IsAsciiPunctuation: bool ==> this.IsAscii and byte(this).IsAsciiPunctuation;
+    // !, %, &, ()...
+    IsPunctuation: bool => CharUnicodeInfo.GetUnicodeCategory(this as u32).Value in
+            UnicodeCategory.ConnectorPunctuation.Value..=UnicodeCategory.OtherPunctuation.Value;
+    IsAsciiSeparator: bool ==> this.IsAscii and byte(this).IsAsciiSeparator;
+    IsSeparator: bool => CharUnicodeInfo.GetUnicodeCategory(this as u32).Value in
+            UnicodeCategory.SpaceSeparator.Value..=UnicodeCategory.ParagraphSeparator.Value;
+    IsAsciiSymbol: bool ==> this.IsAscii and byte(this).IsAsciiSymbol;
+    IsSymbol: bool => CharUnicodeInfo.GetUnicodeCategory(this as u32).Value in
+            UnicodeCategory.MathSymbol.Value..=UnicodeCategory.OtherSymbol.Value;
+    IsAsciiWhiteSpace: bool ==> this.IsAscii and byte(this).IsAsciiWhiteSpace;
+    IsWhiteSpace: bool =
+    {
+        if this.IsAscii {
+            return byte(this).IsAsciiWhiteSpace;
+        }
+        return this.IsBmp and CharUnicodeInfo.GetIsWhitespace(this as u32);
+    }
+    IsAsciiPrintable: bool ==> this in '!'..='~';
+    ToLowerAscii: self ==> this.IsAsciiLetterUpper ? self(this.CodepointValue + 32u) : this;
+    ToUpperAscii: self ==> this.IsAsciiLetterLower ? self(this.CodepointValue - 32u) : this;
+    // a -> A, δ -> Δ
+    ToUpper: self =
+    {
+        if this.IsAscii {
+            return this.ToUpperAscii;
+        }
+        // TODO: Process locale specific
+
+        // Neutral invariant
+        return Builtin.BitCast<self>(CharUnicodeInfo.ToUpperNeutral(this as u32));
+    }
+    // a -> A, δ -> Δ
+    ToUpperInvariant: self =
+    {
+        if this.IsAscii {
+            return this.ToUpperAscii;
+        }
+        return Builtin.BitCast<self>(CharUnicodeInfo.ToUpperNeutral(this as u32));
+    }
+    // A -> a, Δ -> δ
+    ToLower: self =
+    {
+        if this.IsAscii {
+            return this.ToLowerAscii;
+        }
+
+        // TODO: Process locale specific
+
+        // Neutral invariant
+        return Builtin.BitCast<self>(CharUnicodeInfo.ToLowerNeutral(this as u32));
+    }
+    // A -> a, Δ -> δ
+    ToLowerInvariant: self =
+    {
+        if this.IsAscii {
+            return this.ToLowerAscii;
+        }
+        return Builtin.BitCast<self>(CharUnicodeInfo.ToLowerNeutral(this as u32));
+    }
+    // ToUpper: (culture: CultureInfo) -> self;
+    // ToLower: (culture: CultureInfo) -> self;
+    // ToTitleCase: (culture: CultureInfo) -> self;
+    // Name: str;
+    // Block: UnicodeBlock;
+    // Script: UnicodeScript;
+    // Directionality: UnicodeDirectionality;
 }
+
+public extension char: IMinMaxValue {
+    static MinValue: self ==> '\0';     
+    static MaxValue: self ==> '\U0010FFFF';
+}
+
+public extension char: IRangeCustomIterator {
+    RangeStepForward: (steps: usize) -> self ==
+    {
+        const LowSurrogateBound :== 0xD800u;
+        let start := this as u32;
+        result := start + steps;
+        if start < LowSurrogateBound and result >= LowSurrogateBound {
+            result += 0x800u;
+        }
+
+        return self(result);
+    }
+    RangeStepBackward: (steps: usize) -> self ==
+    {
+        const HighSurrogateBound :== 0xE000u;
+        let start := this as u32;
+        result := start - steps;
+        if start < HighSurrogateBound and result >= HighSurrogateBound {
+            result -= 0x800u;
+        }
+
+        return self(result);
+    }
+    static Ascii: Range<char> ==> '\0'..'\u0080';
+}
+
+// Compare to dynamic object
+public extension char: IAbstractComparable {
+    operator<=>*: (in obj: object?) -> i32
+    {
+        if obj is self {
+            return this <=> obj;
+        }
+        if obj is not null {
+            //InvalidArgumentException
+            throw Builtin.InvalidOperationException();
+        }
+        return 1;
+    }
+}
+
+// Conversions
+public extension char: IConvertible {
+    ToBoolean: () -> bool noexcept ==> this != '\0';
+    ToInt8: () -> i8 == {
+        if this.CodepointValue > 0x7F {
+            throw Builtin.IntegerOverflowException();
+        }
+        return this.CodepointValue as i8;
+    }
+    ToUInt8: () -> u8 == {
+        if this.CodepointValue > 0xFF {
+            throw Builtin.IntegerOverflowException();
+        }
+        return this.CodepointValue as u8;
+    }
+    ToInt16: () -> i16 == {
+        if this.CodepointValue > 0x7FFF {
+            throw Builtin.IntegerOverflowException();
+        }
+        return this.CodepointValue as i16;
+    }
+    ToUInt16: () -> u16 == {
+        if this.CodepointValue > 0xFFFF {
+            throw Builtin.IntegerOverflowException();
+        }
+        return this.CodepointValue as u16;
+    }
+    ToInt32: () -> i32 == {
+        if this.CodepointValue > 0x7FFFFFFF {
+            throw Builtin.IntegerOverflowException();
+        }
+        return this.CodepointValue as i32;
+    }
+    ToUInt32: () -> u32 noexcept ==> this.CodepointValue;
+    ToInt64: () -> i64 noexcept ==> this.CodepointValue;
+    ToUInt64: () -> u64 noexcept ==> this.CodepointValue;
+    ToInt128: () -> i128 noexcept ==> this.CodepointValue;
+    ToUInt128: () -> u128 noexcept ==> this.CodepointValue;
+    ToIsize: () -> isize ==
+    {
+        static if sizeof(isize) == 32 {
+            return this.ToInt32();
+        } else {
+            return this.CodepointValue;
+        }
+    }
+    ToUsize: () -> usize noexcept ==> this.CodepointValue;
+    ToFloat32: () -> f32 noexcept ==> this.CodepointValue;
+    ToFloat64: () -> f64 noexcept ==> this.CodepointValue;
+    ToByte: () -> byte == {
+        if this.CodepointValue > 0xFF {
+            throw Builtin.IntegerOverflowException();
+        }
+        return this.CodepointValue as byte;
+    }
+    ToChar: () -> char noexcept ==> this;
+    //ToString: () -> string;
+    //ToDateTime: () -> DateTime;
+}
+
+protected const CharToHex: byte[_] == 
+[
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, // 15
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, // 31
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, // 47
+    0x0,  0x1,  0x2,  0x3,  0x4,  0x5,  0x6,  0x7,  0x8,  0x9,  0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, // 63
+    0xFF, 0xA,  0xB,  0xC,  0xD,  0xE,  0xF,  0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, // 79
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, // 95
+    0xFF, 0xa,  0xb,  0xc,  0xd,  0xe,  0xf,  0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, // 111
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, // 127
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, // 143
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, // 159
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, // 175
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, // 191
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, // 207
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, // 223
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, // 239
+    0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF  // 255
+];
+
+protected HexDigitFromByte: (c: u32) -> i32 noexcept 
+    ==> c >= CharToHex.Length ? 0xFF : CharToHex[c];
+
+protected const Latin1CharInfo: byte[_] ==
+[
+    // 0x80 - is whitespace bit
+    // 0x40 - is uppercase letter bit
+    // 0x20 - is lowercase letter bit
+    // bottom 5 bits - UnicodeCategory
+    //  0     1     2     3     4     5     6     7     8     9     A     B     C     D     E     F
+    0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x8E, 0x8E, 0x8E, 0x8E, 0x8E, 0x0E, 0x0E, // U+0000..U+000F
+    0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, // U+0001..U+001F
+    0x8B, 0x18, 0x18, 0x18, 0x1A, 0x18, 0x18, 0x18, 0x14, 0x15, 0x18, 0x19, 0x18, 0x13, 0x18, 0x18, // U+0002..U+002F
+    0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x18, 0x18, 0x19, 0x19, 0x19, 0x18, // U+0003..U+003F
+    0x18, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, // U+0004..U+004F
+    0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x14, 0x18, 0x15, 0x1B, 0x12, // U+0005..U+005F
+    0x1B, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, // U+0006..U+006F
+    0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x14, 0x19, 0x15, 0x19, 0x0E, // U+0007..U+007F
+    0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x8E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, // U+0008..U+008F
+    0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, 0x0E, // U+0009..U+009F
+    0x8B, 0x18, 0x1A, 0x1A, 0x1A, 0x1A, 0x1C, 0x18, 0x1B, 0x1C, 0x04, 0x16, 0x19, 0x0F, 0x1C, 0x1B, // U+000A..U+00AF
+    0x1C, 0x19, 0x0A, 0x0A, 0x1B, 0x21, 0x18, 0x18, 0x1B, 0x0A, 0x04, 0x17, 0x0A, 0x0A, 0x0A, 0x18, // U+000B..U+00BF
+    0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, // U+000C..U+00CF
+    0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x19, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x40, 0x21, // U+000D..U+00DF
+    0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, // U+000E..U+00EF
+    0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x19, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21, 0x21  // U+000F..U+00FF
+];
+
+protected GetLatin1UnicodeCategory: (c: u32) -> UnicodeCategory ==
+{
+    assert c <= 0xFFu;
+    return UnicodeCategory.FromValue(Latin1CharInfo[c] & 0x1Fu);
+}
+
+protected IsWhiteSpaceLatin1: (c: u32) -> bool ==
+{
+    assert c <= 0xFFu;
+    return (Latin1CharInfo[c] & 0x80u) != 0;
+}
+
+protected const HighSurrogateRange: UIntRange32 == 0xd800u..0xdc00u;
+protected const LowSurrogateRange: UIntRange32 == 0xdc00u..0xe000u;
 
 test "Char" {
     assert b'A' + 32 == b'a';
@@ -14,4 +531,163 @@ test "Char" {
     assert b'a'.IsAscii;
     assert b'\n'.IsAscii;
     assert not 200u8.IsAscii;
+    assert b'5'.IsAsciiDigit;
+    assert b'9'.IsDigit;
+    assert not b'b'.IsDigit;
+    assert b'1'.IsBinDigit;
+    assert not b'2'.IsBinDigit;
+    assert b'7'.IsOctDigit;
+    assert not b'8'.IsOctDigit;
+    assert b'9'.IsHexDigit;
+    assert b'F'.IsHexDigit;
+    assert b'F'.IsHexDigitUpper;
+    assert b'f'.IsHexDigit;
+    assert b'f'.IsHexDigitLower;
+    assert not b'f'.IsHexDigitUpper;
+    assert not b'g'.IsHexDigit;
+    assert b'f'.IsLetter;
+    assert b'Z'.IsLetter;
+    assert not b'0'.IsLetter;
+    assert b'Z'.IsLetterUpper;
+    assert not b'z'.IsLetterUpper;
+    assert b'z'.IsLetterLower;
+    assert not b'Z'.IsLetterLower;
+    assert b'Z'.IsLetterOrDigit;
+    assert b'z'.IsLetterOrDigit;
+    assert b'0'.IsLetterOrDigit;
+    assert not b'_'.IsLetterOrDigit;
+    assert b'_'.IsIdentifierChar;
+    assert not b' '.IsIdentifierChar;
+    assert b'\n'.IsControl;
+    assert not b' '.IsControl;
+    assert b'!'.IsPunctuation;
+    assert not b'b'.IsPunctuation;
+    assert b' '.IsSeparator;
+    assert b'+'.IsSymbol;
+    assert not b' '.IsSymbol;
+    assert b' '.IsWhiteSpace;
+    assert b'\t'.IsWhiteSpace;
+    assert not b'_'.IsWhiteSpace;
+    assert b'~'.IsAsciiPrintable;
+    assert not b'\n'.IsAsciiPrintable;
+    assert b'z'.ToLower == b'z';
+    assert b'Z'.ToLower == b'z';
+    assert b'z'.ToUpper == b'Z';
+    assert b'Z'.ToUpper == b'Z';
+    assert byte.FromDigit(15u,16u) == b'f';
+    assert byte.FromDigit(15u,10u) == null;
+    assert b'f'.ToAsciiChar == AsciiChar.SmallF;
+    assert b'\n'.ToAsciiChar == AsciiChar.LineFeed;
+    assert 200u8.ToAsciiChar == null;
+
+    assert '❤' > 'a';
+    assert '❤' > b'a';
+    assert '😆' > '❤';
+    assert '❤' < '😆';
+    assert u32('😆') == 0x1f606u;
+    assert u32('😆') > 0x1f600u;
+
+    assert 'Z'.CharUnicodeCategory == UnicodeCategory.UppercaseLetter;
+    assert 'z'.CharUnicodeCategory == UnicodeCategory.LowercaseLetter;
+    assert '5'.CharUnicodeCategory == UnicodeCategory.DecimalDigitNumber;
+    assert '❤'.CharUnicodeCategory == UnicodeCategory.OtherSymbol;
+    assert '😆'.CharUnicodeCategory == UnicodeCategory.OtherSymbol;
+    assert '𝟃'.CharUnicodeCategory == UnicodeCategory.MathSymbol;
+    assert '￦'.CharUnicodeCategory == UnicodeCategory.CurrencySymbol;
+    assert '｀'.CharUnicodeCategory == UnicodeCategory.ModifierSymbol;
+    assert '︽'.CharUnicodeCategory == UnicodeCategory.OpenPunctuation;
+    assert '𞥞'.CharUnicodeCategory == UnicodeCategory.OtherPunctuation;
+    assert '〰'.CharUnicodeCategory == UnicodeCategory.DashPunctuation;
+    assert '𞤵'.CharUnicodeCategory == UnicodeCategory.LowercaseLetter;
+    assert 'ꩰ'.CharUnicodeCategory == UnicodeCategory.ModifierLetter;
+    assert '澲'.CharUnicodeCategory == UnicodeCategory.OtherLetter;
+    assert '𝔜'.CharUnicodeCategory == UnicodeCategory.UppercaseLetter;
+    assert 'ǅ'.CharUnicodeCategory == UnicodeCategory.TitlecaseLetter;
+    assert '𞥕'.CharUnicodeCategory == UnicodeCategory.DecimalDigitNumber;
+    assert '𒐹'.CharUnicodeCategory == UnicodeCategory.LetterNumber;
+    assert '㊈'.CharUnicodeCategory == UnicodeCategory.OtherNumber;
+
+    assert '5'.NumericValue == 5;
+    assert '~'.NumericValue == null;
+    assert '¼'.NumericValue == 0.25;
+
+    assert '\n'.IsControl;
+    assert '\u0090'.IsControl;
+    assert not 'b'.IsControl;
+
+    assert '5'.IsAsciiDigit;
+    assert '5'.IsDigit;
+    assert '٣'.IsDigit;
+    assert '𞥕'.IsDigit;
+    assert not 'b'.IsDigit;
+    assert '1'.IsBinDigit;
+    assert not '2'.IsBinDigit;
+    assert '7'.IsOctDigit;
+    assert not '8'.IsOctDigit;
+    assert '9'.IsHexDigit;
+    assert 'F'.IsHexDigit;
+    assert 'F'.IsHexDigitUpper;
+    assert 'f'.IsHexDigit;
+    assert 'f'.IsHexDigitLower;
+    assert not 'f'.IsHexDigitUpper;
+
+    assert 'a'.IsLetter;
+    assert 'a'.IsLetterLower;
+    assert not 'a'.IsLetterUpper;
+    assert 'A'.IsLetterUpper;
+    assert not 'A'.IsLetterLower;
+    assert 'A'.IsLetterOrDigit;
+    assert '5'.IsLetterOrDigit;
+    assert not '5'.IsLetter;
+    assert not '_'.IsLetterOrDigit;
+    assert '澲'.IsLetter;
+    assert '澲'.IsLetterOrDigit;
+    assert not '❤'.IsLetter;
+    assert '𝔜'.IsLetterUpper;
+    assert '𞤵'.IsLetterLower;
+    assert 'ǅ'.IsLetterTitle;
+    assert '_'.IsIdentifierChar;
+    assert not '𝔜'.IsIdentifierChar;
+
+    assert '!'.IsPunctuation;
+    assert '‿'.IsPunctuation;
+    assert not 'a'.IsPunctuation;
+    assert '\u2029'.IsSeparator;
+    assert not 'a'.IsSeparator;
+
+    assert '+'.IsSymbol;
+    assert '￦'.IsSymbol;
+    assert not 'a'.IsSymbol;
+    assert ' '.IsWhiteSpace;
+    assert '\t'.IsWhiteSpace;
+    assert not 'a'.IsWhiteSpace;
+    assert 'a'.IsAsciiPrintable;
+    assert not '\n'.IsAsciiPrintable;
+    assert not '𞤵'.IsAsciiPrintable;
+
+    assert 'a'.ToLowerAscii == 'a';
+    assert 'A'.ToLowerAscii == 'a';
+    assert 'Б'.ToLowerAscii == 'Б';
+    assert 'a'.ToUpperAscii == 'A';
+    assert 'A'.ToUpperAscii == 'A';
+    assert 'б'.ToUpperAscii == 'б';
+
+    assert 'a'.ToLower == 'a';
+    assert 'A'.ToLower == 'a';
+    assert 'Б'.ToLower == 'б';
+    assert 'a'.ToUpper == 'A';
+    assert 'A'.ToUpper == 'A';
+    assert 'б'.ToUpper == 'Б';
+
+    assert 'a'.ToLowerInvariant == 'a';
+    assert 'A'.ToLowerInvariant == 'a';
+    assert 'Б'.ToLowerInvariant == 'б';
+    assert 'a'.ToUpperInvariant == 'A';
+    assert 'A'.ToUpperInvariant == 'A';
+    assert 'б'.ToUpperInvariant == 'Б';
+
+    assert 'a'.BidiCategory == StrongBidiCategory.StrongLeftToRight;
+    assert 'б'.BidiCategory == StrongBidiCategory.StrongLeftToRight;
+    assert '澲'.BidiCategory == StrongBidiCategory.StrongLeftToRight;
+    assert 'ڱ'.BidiCategory == StrongBidiCategory.StrongRightToLeft;
 }

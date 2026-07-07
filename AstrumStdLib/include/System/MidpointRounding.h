@@ -19,14 +19,14 @@ class __Class_MidpointRounding;
 	struct MidpointRounding final : public Builtin::Enum {
 		public: using __self = MidpointRounding;
 		public: using __class = __Class_MidpointRounding;
-		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
 		private: Builtin::u8 __value;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
 		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, Builtin::u8)
 		public: constexpr MidpointRounding() noexcept = default;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
-		private: static constexpr Builtin::Str __names[] = {u"ToEven", u"AwayFromZero", u"ToZero", u"ToNegativeInfinity", u"ToPositiveInfinity"};
+		private: static constexpr Builtin::Str __names[] = {"ToEven", "AwayFromZero", "ToZero", "ToNegativeInfinity", "ToPositiveInfinity"};
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
 		public: static constexpr int __variants = 5;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
@@ -54,6 +54,7 @@ class __Class_MidpointRounding;
 		public: constexpr operator Builtin::u8() const noexcept { return __value; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
 		private: constexpr MidpointRounding(Builtin::u8 value) : __value(value) {}
+		public: static constexpr __self FromValue(Builtin::u8 rawValue) { return __self(rawValue); }
 		
 	};
 	

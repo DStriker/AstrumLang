@@ -1,0 +1,13 @@
+package System.Collections;
+
+public import IIterator;
+
+public interface IAbstractSequence {
+    type ElementType;
+
+    Iterate: () -> IAbstractIterator;
+}
+
+public interface ISequence<out T> {
+    Iterate: () -> IIterator<T>;
+} 
