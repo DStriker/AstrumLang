@@ -37,6 +37,10 @@ namespace Builtin {
 		InvalidOperationException() : std::runtime_error("Invalid operation") {}
 	};
 
+	struct NullReferenceException : public std::runtime_error {
+		NullReferenceException() : std::runtime_error("Null reference") {}
+	};
+
 	template <class T>
 	inline void Throw(const T& e) requires(std::is_base_of_v<std::exception, T>) {
 #ifndef NDEBUG

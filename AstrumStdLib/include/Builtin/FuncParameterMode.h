@@ -23,16 +23,6 @@ namespace Builtin {
 	    std::conditional_t<__details::cheapCopy<T>, const T, const T&>;
 
 	template <class T>
-	struct MutableRef {
-		using type = std::remove_cvref_t<T>;
-		type& value;
-
-		constexpr explicit MutableRef(type& value) noexcept : value(value) {}
-
-		constexpr operator type&() noexcept { return value; }
-	};
-
-	template <class T>
 	class DeferredInit {
 		alignas(T) std::byte data[sizeof(T)];
 		bool init = false;

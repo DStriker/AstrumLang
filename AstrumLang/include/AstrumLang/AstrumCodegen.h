@@ -238,7 +238,6 @@ namespace AstrumLang {
 		void printDeconstructionDeclaration(AstrumParser::DeconstructionDeclarationContext* ctx);
 		void printSimpleTypeSpecifier(AstrumParser::SimpleTypeSpecifierContext* ctx);
 		void printRefDeclaration(AstrumParser::RefDeclarationContext* ctx);
-		void printMemberRefDeclaration(AstrumParser::MemberRefDeclarationContext* ctx);
 		void printMultiDeclaration(AstrumParser::MultiDeclarationContext* ctx);
 		void printConstantDeclaration(AstrumParser::ConstantDeclarationContext* ctx);
 		void printForwardVarDeclaration(AstrumParser::ForwardVarDeclarationContext* ctx);

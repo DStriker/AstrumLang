@@ -24,23 +24,23 @@ template<class T> inline constexpr bool Builtin::__details::cheapCopy<System::IE
 
 namespace System {
 	#line 4 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IEquatable.ast"
-	template<class __AnyType, class T> concept __HasMethodImplementation_02ee27026625e37a = requires(typename __AnyType::__class t) { {t.operator==(std::declval<Builtin::Nullable<T>>())} -> std::convertible_to<bool>; }  || requires(typename __AnyType::__self t) { {operator==(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::Nullable<T>>())} -> std::convertible_to<bool>; } || requires { std::declval<typename __AnyType::__self&>() ==std::declval<Builtin::Nullable<T>>(); };
+	template<class __AnyType, class T> concept __HasMethodImplementation_28b5a0fa1ed64da1 = requires(typename __AnyType::__class t) { {t.operator==(std::declval<T>())} -> std::convertible_to<bool>; }  || requires(typename __AnyType::__self t) { {operator==(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<T>())} -> std::convertible_to<bool>; } || requires { std::declval<typename __AnyType::__self&>() ==std::declval<T>(); };
 	namespace __vtables {
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IEquatable.ast"
 		template<class T> struct __vtable_IEquatable
 		{
-			using fn_02ee27026625e37a = const bool(Builtin::Object*, Builtin::Nullable<T> rhs);
-			fn_02ee27026625e37a* fnptr_02ee27026625e37a;
+			using fn_28b5a0fa1ed64da1 = const bool(Builtin::Object*, T rhs);
+			fn_28b5a0fa1ed64da1* fnptr_28b5a0fa1ed64da1;
 			#line 4 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IEquatable.ast"
-			template<class __AnyType> static const bool impl_02ee27026625e37a(Builtin::Object* obj, Builtin::Nullable<T> rhs) { ADV_EXPRESSION_BODY(ADV_UFCS(operator==)(*static_cast<typename __AnyType::__class*>(obj), rhs)); }
+			template<class __AnyType> static const bool impl_28b5a0fa1ed64da1(Builtin::Object* obj, T rhs) { ADV_EXPRESSION_BODY(ADV_UFCS(operator==)(*static_cast<typename __AnyType::__class*>(obj), rhs)); }
 			
 		};
 	}
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IEquatable.ast"
-	template<class __AnyType, class T> inline constexpr __vtables::__vtable_IEquatable<T> __vtable_IEquatable_for = {&__vtables::__vtable_IEquatable<T>::template impl_02ee27026625e37a<__AnyType>
+	template<class __AnyType, class T> inline constexpr __vtables::__vtable_IEquatable<T> __vtable_IEquatable_for = {&__vtables::__vtable_IEquatable<T>::template impl_28b5a0fa1ed64da1<__AnyType>
 		};
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IEquatable.ast"
-	template<class __AnyType, class T> concept __ImplementsInterface_IEquatable = __HasMethodImplementation_02ee27026625e37a<__AnyType, T>;
+	template<class __AnyType, class T> concept __ImplementsInterface_IEquatable = __HasMethodImplementation_28b5a0fa1ed64da1<__AnyType, T>;
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IEquatable.ast"
 	template<class T> class IEquatable final : public Builtin::InterfaceRef {
 		public: using __self = IEquatable<T>;
@@ -53,7 +53,7 @@ namespace System {
 		public: using __unowned_ref = IEquatable__Unowned<T>;
 		public: using __weak_ref = IEquatable__Weak<T>;
 		public: template<class __AnyType> static constexpr bool __ImplementsInterface = __ImplementsInterface_IEquatable<__AnyType, T>;
-		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 		private: const __vtable* _vtable;
 		ADV_INTERFACE_STRONG_COMMON_CTORS(IEquatable);
 		public: using ElementType = T;
@@ -153,7 +153,7 @@ namespace System {
  		if (_obj) Builtin::Release(_obj); _obj = (Builtin::Object*)&value; Builtin::Retain(_obj); 
 		_vtable = &__vtable_IEquatable_for<__FixedType, T>; return *this; }
 		#line 4 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IEquatable.ast"
-		public: FORCE_INLINE const bool operator==(Builtin::Nullable<T> rhs) const { ADV_EXPRESSION_BODY(_vtable->fnptr_02ee27026625e37a(_obj, rhs)); }
+		public: FORCE_INLINE const bool operator==(T rhs) const { ADV_EXPRESSION_BODY(_vtable->fnptr_28b5a0fa1ed64da1(_obj, rhs)); }
 		
 	};
 	template<class T> class IEquatable__Unowned final : public Builtin::InterfaceRef__Unowned {
@@ -245,7 +245,7 @@ namespace System {
 		public: using __strong_ref = IEquatable<T>;
 		public: using __unowned_ref = IEquatable__Unowned<T>;
 		public: using __weak_ref = __self;
-		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 		private: const __vtable* _vtable;
 		ADV_INTERFACE_WEAK_COMMON_CTORS(IEquatable__Weak);
 		public: template<class> friend class IEquatable;
@@ -279,7 +279,7 @@ namespace System {
 		}
 		
 	};
-	template<class __AnyInterface, class T> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IEquatable::__vtable> FORCE_INLINE const bool operator==(const __AnyInterface& iface, Builtin::Nullable<T> rhs)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_02ee27026625e37a(Builtin::GetObjectReferenceFromInterface(&iface), rhs)); }
+	template<class __AnyInterface, class T> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IEquatable::__vtable> FORCE_INLINE const bool operator==(const __AnyInterface& iface, T rhs)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_28b5a0fa1ed64da1(Builtin::GetObjectReferenceFromInterface(&iface), rhs)); }
 	
 	
 }
@@ -316,7 +316,7 @@ namespace System {
 		public: using __unowned_ref = ISelfEquatable__Unowned;
 		public: using __weak_ref = ISelfEquatable__Weak;
 		public: template<class __AnyType> static constexpr bool __ImplementsInterface = __ImplementsInterface_ISelfEquatable<__AnyType>;
-		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 		private: const __vtable* _vtable;
 		ADV_INTERFACE_STRONG_COMMON_CTORS(ISelfEquatable);
 		public: template<class __AnyType> requires std::derived_from<std::remove_cvref_t<__AnyType>, Builtin::InterfaceRef> && std::derived_from<typename std::remove_cvref_t<__AnyType>::__vtable, __vtable>
@@ -491,7 +491,7 @@ namespace System {
 		public: using __strong_ref = ISelfEquatable;
 		public: using __unowned_ref = ISelfEquatable__Unowned;
 		public: using __weak_ref = __self;
-		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 		private: const __vtable* _vtable;
 		ADV_INTERFACE_WEAK_COMMON_CTORS(ISelfEquatable__Weak);
 		public: template<class __AnyType> requires std::derived_from<std::remove_cvref_t<__AnyType>, Builtin::InterfaceRef> && std::derived_from<typename std::remove_cvref_t<__AnyType>::__vtable, __vtable>

@@ -310,91 +310,91 @@ using __extensions::getToLower;
 using __extensions::getToLowerInvariant;
 
 		} namespace __extensions { using namespace System;
-#line 354 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	using __extension_Char_354_char = Builtin::char32;
-	#line 354 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+#line 359 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	using __extension_Char_359_char = Builtin::char32;
+	#line 359 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 	ADV_CHECK_INTERFACE(IMinMaxValue, IMinMaxValue);
-	#line 355 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	template<class __TT> struct __static_getMinValue; template<> struct __static_getMinValue<__extension_Char_354_char> { static inline constexpr auto get() -> const __extension_Char_354_char; };
-	#line 356 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	template<class __TT> struct __static_getMaxValue; template<> struct __static_getMaxValue<__extension_Char_354_char> { static inline constexpr auto get() -> const __extension_Char_354_char; };
-	#line 354 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Char_354_char, IMinMaxValue, IMinMaxValue, __extension_Char_354_char);
+	#line 360 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	template<class __TT> struct __static_getMinValue; template<> struct __static_getMinValue<__extension_Char_359_char> { static inline constexpr auto get() -> const __extension_Char_359_char; };
+	#line 361 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	template<class __TT> struct __static_getMaxValue; template<> struct __static_getMaxValue<__extension_Char_359_char> { static inline constexpr auto get() -> const __extension_Char_359_char; };
+	#line 359 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Char_359_char, IMinMaxValue, IMinMaxValue, __extension_Char_359_char);
 	} namespace System{
 using __extensions::__static_getMinValue;
 using __extensions::__static_getMaxValue;
 
 		} namespace __extensions { using namespace System;
-#line 359 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	using __extension_Char_359_char = Builtin::char32;
-	#line 359 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+#line 364 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	using __extension_Char_364_char = Builtin::char32;
+	#line 364 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 	ADV_CHECK_INTERFACE(IRangeCustomIterator, IRangeCustomIterator);
-	#line 360 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto RangeStepForward(__extension_Char_359_char const& __this LIFETIMEBOUND, Builtin::usize steps)  -> const typename __extension_Char_359_char;
-	#line 371 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto RangeStepBackward(__extension_Char_359_char const& __this LIFETIMEBOUND, Builtin::usize steps)  -> const typename __extension_Char_359_char;
-	#line 382 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	template<class __TT> struct __static_getAscii; template<> struct __static_getAscii<__extension_Char_359_char> { static inline constexpr auto get() -> const Range<Builtin::char32>; };
-	#line 359 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Char_359_char, IRangeCustomIterator, IRangeCustomIterator, __extension_Char_359_char);
+	#line 365 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto RangeStepForward(__extension_Char_364_char const& __this LIFETIMEBOUND, Builtin::usize steps)  -> const typename __extension_Char_364_char;
+	#line 376 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto RangeStepBackward(__extension_Char_364_char const& __this LIFETIMEBOUND, Builtin::usize steps)  -> const typename __extension_Char_364_char;
+	#line 387 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	template<class __TT> struct __static_getAscii; template<> struct __static_getAscii<__extension_Char_364_char> { static inline constexpr auto get() -> const Range<Builtin::char32>; };
+	#line 364 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Char_364_char, IRangeCustomIterator, IRangeCustomIterator, __extension_Char_364_char);
 	} namespace System{
 using __extensions::RangeStepForward;
 using __extensions::RangeStepBackward;
 using __extensions::__static_getAscii;
 
 		} namespace __extensions { using namespace System;
-#line 386 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	using __extension_Char_386_char = Builtin::char32;
-	#line 386 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+#line 391 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	using __extension_Char_391_char = Builtin::char32;
+	#line 391 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 	ADV_CHECK_INTERFACE(IAbstractComparable, IAbstractComparable);
-	#line 387 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	ASTRUMSTD_API auto _operator_lt_eq_gt_mul(__extension_Char_386_char const& __this LIFETIMEBOUND, Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> obj)  -> const Builtin::i32;
-	#line 386 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Char_386_char, IAbstractComparable, IAbstractComparable, __extension_Char_386_char);
+	#line 392 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	ASTRUMSTD_API auto _operator_lt_eq_gt_mul(__extension_Char_391_char const& __this LIFETIMEBOUND, Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> obj)  -> const Builtin::i32;
+	#line 391 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Char_391_char, IAbstractComparable, IAbstractComparable, __extension_Char_391_char);
 	} namespace System{
 using __extensions::_operator_lt_eq_gt_mul;
 
 		} namespace __extensions { using namespace System;
-#line 401 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	using __extension_Char_401_char = Builtin::char32;
-	#line 401 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+#line 406 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	using __extension_Char_406_char = Builtin::char32;
+	#line 406 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 	ADV_CHECK_INTERFACE(IConvertible, IConvertible);
-	#line 402 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToBoolean(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const bool;
-	#line 403 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToInt8(__extension_Char_401_char const& __this LIFETIMEBOUND)  -> const Builtin::i8;
-	#line 409 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToUInt8(__extension_Char_401_char const& __this LIFETIMEBOUND)  -> const Builtin::u8;
-	#line 415 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToInt16(__extension_Char_401_char const& __this LIFETIMEBOUND)  -> const Builtin::i16;
-	#line 421 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToUInt16(__extension_Char_401_char const& __this LIFETIMEBOUND)  -> const Builtin::u16;
-	#line 427 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToInt32(__extension_Char_401_char const& __this LIFETIMEBOUND)  -> const Builtin::i32;
-	#line 433 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToUInt32(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::u32;
-	#line 434 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToInt64(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::i64;
-	#line 435 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToUInt64(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::u64;
-	#line 436 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToInt128(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::i128;
-	#line 437 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToUInt128(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::u128;
+	#line 407 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToBoolean(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const bool;
+	#line 408 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToInt8(__extension_Char_406_char const& __this LIFETIMEBOUND)  -> const Builtin::i8;
+	#line 414 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToUInt8(__extension_Char_406_char const& __this LIFETIMEBOUND)  -> const Builtin::u8;
+	#line 420 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToInt16(__extension_Char_406_char const& __this LIFETIMEBOUND)  -> const Builtin::i16;
+	#line 426 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToUInt16(__extension_Char_406_char const& __this LIFETIMEBOUND)  -> const Builtin::u16;
+	#line 432 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToInt32(__extension_Char_406_char const& __this LIFETIMEBOUND)  -> const Builtin::i32;
 	#line 438 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToIsize(__extension_Char_401_char const& __this LIFETIMEBOUND)  -> const Builtin::isize;
-	#line 446 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToUsize(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::usize;
-	#line 447 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToFloat32(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::f32;
-	#line 448 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToFloat64(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::f64;
-	#line 449 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToByte(__extension_Char_401_char const& __this LIFETIMEBOUND)  -> const Builtin::u8;
-	#line 455 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToChar(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::char32;
-	#line 401 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Char_401_char, IConvertible, IConvertible, __extension_Char_401_char);
+	inline constexpr auto ToUInt32(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::u32;
+	#line 439 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToInt64(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::i64;
+	#line 440 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToUInt64(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::u64;
+	#line 441 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToInt128(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::i128;
+	#line 442 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToUInt128(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::u128;
+	#line 443 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToIsize(__extension_Char_406_char const& __this LIFETIMEBOUND)  -> const Builtin::isize;
+	#line 451 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToUsize(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::usize;
+	#line 452 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToFloat32(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::f32;
+	#line 453 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToFloat64(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::f64;
+	#line 454 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToByte(__extension_Char_406_char const& __this LIFETIMEBOUND)  -> const Builtin::u8;
+	#line 460 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToChar(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::char32;
+	#line 406 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(__extension_Char_406_char, IConvertible, IConvertible, __extension_Char_406_char);
 	} namespace System{
 using __extensions::ToBoolean;
 using __extensions::ToInt8;
@@ -414,55 +414,69 @@ using __extensions::ToFloat64;
 using __extensions::ToByte;
 using __extensions::ToChar;
 
+		} namespace __extensions { using namespace System;
+#line 528 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	using __extension_Char_528_u16 = Builtin::u16;
+	#line 529 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto getIsHighSurrogate(__extension_Char_528_u16 const& __this ) -> const bool;
+	#line 530 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto getIsLowSurrogate(__extension_Char_528_u16 const& __this ) -> const bool;
+	#line 531 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto getIsSurrogate(__extension_Char_528_u16 const& __this ) -> const bool;
+	} namespace System{
+using __extensions::getIsHighSurrogate;
+using __extensions::getIsLowSurrogate;
+using __extensions::getIsSurrogate;
+
 	//###############################################################################
 //# Free function declarations
 //###############################################################################
-#line 480 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+#line 485 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 	namespace __Char_Protected { inline constexpr auto HexDigitFromByte(Builtin::u32 c) noexcept -> const Builtin::i32; }
-#line 508 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+#line 513 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 	namespace __Char_Protected { inline constexpr auto GetLatin1UnicodeCategory(Builtin::u32 c)  -> const UnicodeCategory; }
-#line 514 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+#line 519 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 	namespace __Char_Protected { inline constexpr auto IsWhiteSpaceLatin1(Builtin::u32 c)  -> const bool; }
 //###############################################################################
 //# Global compile-time constants
 //###############################################################################
-#line 460 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+#line 465 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 namespace __Char_Protected { inline constexpr auto CharToHex = Builtin::ToInlineArray<Builtin::u8>({Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0x0)), Builtin::u8(Builtin::i32(0x1)), Builtin::u8(Builtin::i32(0x2)), Builtin::u8(Builtin::i32(0x3)), Builtin::u8(Builtin::i32(0x4)), Builtin::u8(Builtin::i32(0x5)), Builtin::u8(Builtin::i32(0x6)), Builtin::u8(Builtin::i32(0x7)), Builtin::u8(Builtin::i32(0x8)), Builtin::u8(Builtin::i32(0x9)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xA)), Builtin::u8(Builtin::i32(0xB)), Builtin::u8(Builtin::i32(0xC)), Builtin::u8(Builtin::i32(0xD)), Builtin::u8(Builtin::i32(0xE)), Builtin::u8(Builtin::i32(0xF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xa)), Builtin::u8(Builtin::i32(0xb)), Builtin::u8(Builtin::i32(0xc)), Builtin::u8(Builtin::i32(0xd)), Builtin::u8(Builtin::i32(0xe)), Builtin::u8(Builtin::i32(0xf)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF)), Builtin::u8(Builtin::i32(0xFF))}); }
-#line 483 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+#line 488 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 namespace __Char_Protected { inline constexpr auto Latin1CharInfo = Builtin::ToInlineArray<Builtin::u8>({Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x8E)), Builtin::u8(Builtin::i32(0x8E)), Builtin::u8(Builtin::i32(0x8E)), Builtin::u8(Builtin::i32(0x8E)), Builtin::u8(Builtin::i32(0x8E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x8B)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x1A)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x14)), Builtin::u8(Builtin::i32(0x15)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x19)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x13)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x08)), Builtin::u8(Builtin::i32(0x08)), Builtin::u8(Builtin::i32(0x08)), Builtin::u8(Builtin::i32(0x08)), Builtin::u8(Builtin::i32(0x08)), Builtin::u8(Builtin::i32(0x08)), Builtin::u8(Builtin::i32(0x08)), Builtin::u8(Builtin::i32(0x08)), Builtin::u8(Builtin::i32(0x08)), Builtin::u8(Builtin::i32(0x08)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x19)), Builtin::u8(Builtin::i32(0x19)), Builtin::u8(Builtin::i32(0x19)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x14)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x15)), Builtin::u8(Builtin::i32(0x1B)), Builtin::u8(Builtin::i32(0x12)), Builtin::u8(Builtin::i32(0x1B)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x14)), Builtin::u8(Builtin::i32(0x19)), Builtin::u8(Builtin::i32(0x15)), Builtin::u8(Builtin::i32(0x19)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x8E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x0E)), Builtin::u8(Builtin::i32(0x8B)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x1A)), Builtin::u8(Builtin::i32(0x1A)), Builtin::u8(Builtin::i32(0x1A)), Builtin::u8(Builtin::i32(0x1A)), Builtin::u8(Builtin::i32(0x1C)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x1B)), Builtin::u8(Builtin::i32(0x1C)), Builtin::u8(Builtin::i32(0x04)), Builtin::u8(Builtin::i32(0x16)), Builtin::u8(Builtin::i32(0x19)), Builtin::u8(Builtin::i32(0x0F)), Builtin::u8(Builtin::i32(0x1C)), Builtin::u8(Builtin::i32(0x1B)), Builtin::u8(Builtin::i32(0x1C)), Builtin::u8(Builtin::i32(0x19)), Builtin::u8(Builtin::i32(0x0A)), Builtin::u8(Builtin::i32(0x0A)), Builtin::u8(Builtin::i32(0x1B)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x1B)), Builtin::u8(Builtin::i32(0x0A)), Builtin::u8(Builtin::i32(0x04)), Builtin::u8(Builtin::i32(0x17)), Builtin::u8(Builtin::i32(0x0A)), Builtin::u8(Builtin::i32(0x0A)), Builtin::u8(Builtin::i32(0x0A)), Builtin::u8(Builtin::i32(0x18)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x19)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x40)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x19)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21)), Builtin::u8(Builtin::i32(0x21))}); }
-#line 520 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+#line 525 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 namespace __Char_Protected { inline constexpr UIntRange32 HighSurrogateRange = System::Range<Builtin::Auto<decltype(Builtin::u32(0xdc00U))>, false>(Builtin::u32(0xd800U), Builtin::u32(0xdc00U)); }
-#line 521 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+#line 526 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 namespace __Char_Protected { inline constexpr UIntRange32 LowSurrogateRange = System::Range<Builtin::Auto<decltype(Builtin::u32(0xe000U))>, false>(Builtin::u32(0xdc00U), Builtin::u32(0xe000U)); }
 //###############################################################################
 //# Function definitions
 //###############################################################################
 
 namespace __Char_Protected {
-		#line 480 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 485 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		inline constexpr auto HexDigitFromByte(Builtin::u32 c) noexcept -> const Builtin::i32
 		{
-			#line 481 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+			#line 486 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 			ADV_EXPRESSION_BODY((c <=> ADV_UPCS(Length)(__Char_Protected::CharToHex.__ref())) >= 0 ? Builtin::i32(0xFF) : ADV_UFCS(_operator_subscript)(__Char_Protected::CharToHex.__ref(), c)); 
 		}
 	}
 namespace __Char_Protected {
-		#line 508 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 513 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		inline constexpr auto GetLatin1UnicodeCategory(Builtin::u32 c)  -> const UnicodeCategory
 		{
-			#line 510 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+			#line 515 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 			ADV_ASSERT(((c <=> Builtin::u32(0xFFU)) <= 0), "c<=0xFFu");
-			#line 511 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+			#line 516 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 			return ADV_USFCS((UnicodeCategory), FromValue)(ADV_UFCS(_operator_subscript)(__Char_Protected::Latin1CharInfo.__ref(), c) & Builtin::u32(0x1FU));
 		}
 	}
 namespace __Char_Protected {
-		#line 514 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 519 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		inline constexpr auto IsWhiteSpaceLatin1(Builtin::u32 c)  -> const bool
 		{
-			#line 516 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+			#line 521 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 			ADV_ASSERT(((c <=> Builtin::u32(0xFFU)) <= 0), "c<=0xFFu");
-			#line 517 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+			#line 522 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 			return (ADV_UFCS(_operator_subscript)(__Char_Protected::Latin1CharInfo.__ref(), c) & Builtin::u32(0x80U)) != Builtin::i32(0);
 		}
 	}
@@ -1377,68 +1391,68 @@ namespace __Char_Protected {
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 	
 } namespace __extensions { using namespace System;
-#line 355 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto __static_getMinValue<__extension_Char_354_char>::get() -> const __extension_Char_354_char
+#line 360 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto __static_getMinValue<__extension_Char_359_char>::get() -> const __extension_Char_359_char
 	{
-		#line 355 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 360 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(Builtin::char32(U'\0')); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 356 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto __static_getMaxValue<__extension_Char_354_char>::get() -> const __extension_Char_354_char
+#line 361 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto __static_getMaxValue<__extension_Char_359_char>::get() -> const __extension_Char_359_char
 	{
-		#line 356 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 361 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(Builtin::char32(U'\U0010FFFF')); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 	
 } namespace __extensions { using namespace System;
-#line 360 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto RangeStepForward(__extension_Char_359_char const& __this LIFETIMEBOUND, Builtin::usize steps)  -> const typename __extension_Char_359_char
+#line 365 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto RangeStepForward(__extension_Char_364_char const& __this LIFETIMEBOUND, Builtin::usize steps)  -> const typename __extension_Char_364_char
 	{
-		#line 362 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 367 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		constexpr Builtin::Auto<decltype(Builtin::u32(0xD800U))> LowSurrogateBound = Builtin::u32(0xD800U);
-		#line 363 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 368 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		const Builtin::Auto<decltype(Builtin::Cast<true, Builtin::u32>(__this))> start = Builtin::Cast<true, Builtin::u32>(__this); 
-		#line 364 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 369 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		Builtin::Auto<decltype(start + steps)> result = start + steps; 
-		#line 365 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 370 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if ((start <=> LowSurrogateBound) < 0 && (result <=> LowSurrogateBound) >= 0) {
-			#line 366 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+			#line 371 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 			result += Builtin::u32(0x800U);
 		}
-		#line 369 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-		return __extension_Char_359_char{result};
+		#line 374 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		return __extension_Char_364_char{result};
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 371 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto RangeStepBackward(__extension_Char_359_char const& __this LIFETIMEBOUND, Builtin::usize steps)  -> const typename __extension_Char_359_char
+#line 376 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto RangeStepBackward(__extension_Char_364_char const& __this LIFETIMEBOUND, Builtin::usize steps)  -> const typename __extension_Char_364_char
 	{
-		#line 373 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 378 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		constexpr Builtin::Auto<decltype(Builtin::u32(0xE000U))> HighSurrogateBound = Builtin::u32(0xE000U);
-		#line 374 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 379 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		const Builtin::Auto<decltype(Builtin::Cast<true, Builtin::u32>(__this))> start = Builtin::Cast<true, Builtin::u32>(__this); 
-		#line 375 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 380 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		Builtin::Auto<decltype(start - steps)> result = start - steps; 
-		#line 376 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 381 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if ((start <=> HighSurrogateBound) < 0 && (result <=> HighSurrogateBound) >= 0) {
-			#line 377 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+			#line 382 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 			result -= Builtin::u32(0x800U);
 		}
-		#line 380 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-		return __extension_Char_359_char{result};
+		#line 385 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		return __extension_Char_364_char{result};
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 382 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto __static_getAscii<__extension_Char_359_char>::get() -> const Range<Builtin::char32>
+#line 387 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto __static_getAscii<__extension_Char_364_char>::get() -> const Range<Builtin::char32>
 	{
-		#line 382 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 387 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(System::Range<Builtin::Auto<decltype(Builtin::char32(U'\u0080'))>, false>(Builtin::char32(U'\0'), Builtin::char32(U'\u0080'))); 
 	}
 	} namespace System{
@@ -1447,141 +1461,141 @@ namespace __Char_Protected {
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 	
 } namespace __extensions { using namespace System;
-#line 402 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToBoolean(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const bool
+#line 407 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToBoolean(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const bool
 	{
-		#line 402 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 407 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(__this != Builtin::char32(U'\0')); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 403 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToInt8(__extension_Char_401_char const& __this LIFETIMEBOUND)  -> const Builtin::i8
+#line 408 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToInt8(__extension_Char_406_char const& __this LIFETIMEBOUND)  -> const Builtin::i8
 	{
-		#line 404 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 409 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if ((ADV_UPCS(CodepointValue)(__this.__ref()) <=> Builtin::i32(0x7F)) > 0) {
-			#line 405 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+			#line 410 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 			Builtin::Throw(Builtin::IntegerOverflowException{});
 		}
-		#line 407 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 412 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		return Builtin::Cast<true, Builtin::i8>(ADV_UPCS(CodepointValue)(__this.__ref()));
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 409 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToUInt8(__extension_Char_401_char const& __this LIFETIMEBOUND)  -> const Builtin::u8
+#line 414 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToUInt8(__extension_Char_406_char const& __this LIFETIMEBOUND)  -> const Builtin::u8
 	{
-		#line 410 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 415 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if ((ADV_UPCS(CodepointValue)(__this.__ref()) <=> Builtin::i32(0xFF)) > 0) {
-			#line 411 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+			#line 416 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 			Builtin::Throw(Builtin::IntegerOverflowException{});
 		}
-		#line 413 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 418 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		return Builtin::Cast<true, Builtin::u8>(ADV_UPCS(CodepointValue)(__this.__ref()));
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 415 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToInt16(__extension_Char_401_char const& __this LIFETIMEBOUND)  -> const Builtin::i16
+#line 420 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToInt16(__extension_Char_406_char const& __this LIFETIMEBOUND)  -> const Builtin::i16
 	{
-		#line 416 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 421 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if ((ADV_UPCS(CodepointValue)(__this.__ref()) <=> Builtin::i32(0x7FFF)) > 0) {
-			#line 417 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+			#line 422 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 			Builtin::Throw(Builtin::IntegerOverflowException{});
 		}
-		#line 419 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 424 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		return Builtin::Cast<true, Builtin::i16>(ADV_UPCS(CodepointValue)(__this.__ref()));
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 421 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToUInt16(__extension_Char_401_char const& __this LIFETIMEBOUND)  -> const Builtin::u16
+#line 426 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToUInt16(__extension_Char_406_char const& __this LIFETIMEBOUND)  -> const Builtin::u16
 	{
-		#line 422 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 427 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if ((ADV_UPCS(CodepointValue)(__this.__ref()) <=> Builtin::i32(0xFFFF)) > 0) {
-			#line 423 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+			#line 428 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 			Builtin::Throw(Builtin::IntegerOverflowException{});
 		}
-		#line 425 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 430 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		return Builtin::Cast<true, Builtin::u16>(ADV_UPCS(CodepointValue)(__this.__ref()));
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 427 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToInt32(__extension_Char_401_char const& __this LIFETIMEBOUND)  -> const Builtin::i32
+#line 432 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToInt32(__extension_Char_406_char const& __this LIFETIMEBOUND)  -> const Builtin::i32
 	{
-		#line 428 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 433 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if ((ADV_UPCS(CodepointValue)(__this.__ref()) <=> Builtin::i32(0x7FFFFFFF)) > 0) {
-			#line 429 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+			#line 434 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 			Builtin::Throw(Builtin::IntegerOverflowException{});
 		}
-		#line 431 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 436 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		return Builtin::Cast<true, Builtin::i32>(ADV_UPCS(CodepointValue)(__this.__ref()));
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 433 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToUInt32(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::u32
-	{
-		#line 433 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-		ADV_EXPRESSION_BODY(ADV_UPCS(CodepointValue)(__this.__ref())); 
-	}
-	
-} namespace System{
-} namespace __extensions { using namespace System;
-#line 434 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToInt64(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::i64
-	{
-		#line 434 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-		ADV_EXPRESSION_BODY(ADV_UPCS(CodepointValue)(__this.__ref())); 
-	}
-	
-} namespace System{
-} namespace __extensions { using namespace System;
-#line 435 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToUInt64(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::u64
-	{
-		#line 435 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-		ADV_EXPRESSION_BODY(ADV_UPCS(CodepointValue)(__this.__ref())); 
-	}
-	
-} namespace System{
-} namespace __extensions { using namespace System;
-#line 436 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToInt128(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::i128
-	{
-		#line 436 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-		ADV_EXPRESSION_BODY(ADV_UPCS(CodepointValue)(__this.__ref())); 
-	}
-	
-} namespace System{
-} namespace __extensions { using namespace System;
-#line 437 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToUInt128(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::u128
-	{
-		#line 437 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-		ADV_EXPRESSION_BODY(ADV_UPCS(CodepointValue)(__this.__ref())); 
-	}
-	
-} namespace System{
-} namespace __extensions { using namespace System;
 #line 438 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToIsize(__extension_Char_401_char const& __this LIFETIMEBOUND)  -> const Builtin::isize
+	inline constexpr auto ToUInt32(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::u32
+	{
+		#line 438 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		ADV_EXPRESSION_BODY(ADV_UPCS(CodepointValue)(__this.__ref())); 
+	}
+	
+} namespace System{
+} namespace __extensions { using namespace System;
+#line 439 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToInt64(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::i64
+	{
+		#line 439 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		ADV_EXPRESSION_BODY(ADV_UPCS(CodepointValue)(__this.__ref())); 
+	}
+	
+} namespace System{
+} namespace __extensions { using namespace System;
+#line 440 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToUInt64(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::u64
 	{
 		#line 440 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		ADV_EXPRESSION_BODY(ADV_UPCS(CodepointValue)(__this.__ref())); 
+	}
+	
+} namespace System{
+} namespace __extensions { using namespace System;
+#line 441 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToInt128(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::i128
+	{
+		#line 441 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		ADV_EXPRESSION_BODY(ADV_UPCS(CodepointValue)(__this.__ref())); 
+	}
+	
+} namespace System{
+} namespace __extensions { using namespace System;
+#line 442 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToUInt128(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::u128
+	{
+		#line 442 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		ADV_EXPRESSION_BODY(ADV_UPCS(CodepointValue)(__this.__ref())); 
+	}
+	
+} namespace System{
+} namespace __extensions { using namespace System;
+#line 443 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToIsize(__extension_Char_406_char const& __this LIFETIMEBOUND)  -> const Builtin::isize
+	{
+		#line 445 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if constexpr (Builtin::usize(sizeof(Builtin::isize)) == Builtin::i32(32)) {
-			#line 441 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+			#line 446 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 			return ADV_UFCS(ToInt32)(__this.__ref());
 		} else {
-			#line 442 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+			#line 447 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 			{
-				#line 443 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+				#line 448 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 				return ADV_UPCS(CodepointValue)(__this.__ref());
 			}
 		}
@@ -1590,55 +1604,81 @@ namespace __Char_Protected {
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 446 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToUsize(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::usize
+#line 451 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToUsize(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::usize
 	{
-		#line 446 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 451 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(CodepointValue)(__this.__ref())); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 447 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToFloat32(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::f32
+#line 452 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToFloat32(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::f32
 	{
-		#line 447 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 452 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(CodepointValue)(__this.__ref())); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 448 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToFloat64(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::f64
+#line 453 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToFloat64(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::f64
 	{
-		#line 448 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 453 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(CodepointValue)(__this.__ref())); 
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 449 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToByte(__extension_Char_401_char const& __this LIFETIMEBOUND)  -> const Builtin::u8
+#line 454 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToByte(__extension_Char_406_char const& __this LIFETIMEBOUND)  -> const Builtin::u8
 	{
-		#line 450 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 455 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if ((ADV_UPCS(CodepointValue)(__this.__ref()) <=> Builtin::i32(0xFF)) > 0) {
-			#line 451 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+			#line 456 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 			Builtin::Throw(Builtin::IntegerOverflowException{});
 		}
-		#line 453 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 458 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		return Builtin::Cast<true, Builtin::u8>(ADV_UPCS(CodepointValue)(__this.__ref()));
 	}
 	
 } namespace System{
 } namespace __extensions { using namespace System;
-#line 455 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto ToChar(__extension_Char_401_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::char32
+#line 460 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto ToChar(__extension_Char_406_char const& __this LIFETIMEBOUND) noexcept -> const Builtin::char32
 	{
-		#line 455 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		#line 460 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(__this); 
 	}
 	
 } namespace System{
+#line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	
+} namespace __extensions { using namespace System;
+#line 529 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto getIsHighSurrogate(__extension_Char_528_u16 const& __this ) -> const bool
+	{
+		#line 529 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_in)(__Char_Protected::HighSurrogateRange, __this)); 
+	}
+	} namespace System{
+} namespace __extensions { using namespace System;
+#line 530 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto getIsLowSurrogate(__extension_Char_528_u16 const& __this ) -> const bool
+	{
+		#line 530 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_in)(__Char_Protected::LowSurrogateRange, __this)); 
+	}
+	} namespace System{
+} namespace __extensions { using namespace System;
+#line 531 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+	inline constexpr auto getIsSurrogate(__extension_Char_528_u16 const& __this ) -> const bool
+	{
+		#line 531 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
+		ADV_EXPRESSION_BODY(ADV_UPCS(IsHighSurrogate)(__this.__ref()) || ADV_UPCS(IsLowSurrogate)(__this.__ref())); 
+	}
+	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 	
 

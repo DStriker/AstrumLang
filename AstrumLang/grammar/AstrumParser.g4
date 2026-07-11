@@ -96,7 +96,6 @@ memberBlockDeclaration
     : simpleDeclaration
     | simpleMultiDeclaration
     | bitFieldDeclaration
-    | memberRefDeclaration
     | constantDeclaration
     | aliasDeclaration
     | assertDeclaration
@@ -175,11 +174,7 @@ deconstructionDeclaration
     ;
 
 refDeclaration
-    : (Const | Let)? Amp identifierSeq Colon (typeSpecifierSeq | Assign initializerClause) Semi
-    ;
-
-memberRefDeclaration
-    : (Const | Let)? Amp Identifier Colon theTypeId Semi
+    : (Const | Let)? Amp identifierSeq Colon Assign initializerClause Semi
     ;
 
 simpleMultiDeclaration
@@ -686,6 +681,7 @@ lambdaBody
 
 theTypeId
     : singleTypeId (VertLine singleTypeId)*
+    | Amp Mutable? singleTypeId
     | Static (Identifier | simpleTemplateId)
     | constantExpression Question theTypeId Colon theTypeId
     ;
@@ -915,6 +911,7 @@ structMemberDeclaration
     | abstractProperty
     | friendDeclaration
     | externMethodDeclaration
+    | defaultedEqualsOperator
     | destructor
     | staticConstructor
     | staticDestructor
@@ -1208,6 +1205,10 @@ friendDeclaration
 
 externMethodDeclaration
     : accessSpecifier? Extern Identifier Colon functionParams returnType LifetimeAnnotation? exceptionSpecification? Semi
+    ;
+
+defaultedEqualsOperator
+    : Operator_ Equal Colon Assign Default Semi
     ;
 
 operatorFunctionId

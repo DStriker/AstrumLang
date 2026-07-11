@@ -297,9 +297,14 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T> operator%(U rhs) const {
-			T result = 0;
-			ModulusHelper<T, U, ValidComparison<T, U>::method>::ModulusThrow(value, rhs, result);
-			return SafeInt<T>(result);
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return operator%(SafeInt<T>(rhs));
+			} else {
+				T result = 0;
+				ModulusHelper<T, U, ValidComparison<T, U>::method>::ModulusThrow(value, rhs,
+				                                                                 result);
+				return SafeInt<T>(result);
+			}
 		}
 
 		template <class U>
@@ -312,8 +317,12 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T>& operator%=(U rhs) {
-			ModulusHelper<T, U, ValidComparison<T, U>::method>::ModulusThrow(value, rhs, value);
-			return *this;
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return operator%=(SafeInt<T>(rhs));
+			} else {
+				ModulusHelper<T, U, ValidComparison<T, U>::method>::ModulusThrow(value, rhs, value);
+				return *this;
+			}
 		}
 
 		template <class U>
@@ -324,10 +333,14 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T> operator*(U rhs) const {
-			T result = 0;
-			MultiplicationHelper<T, U, MultiplicationMethod<T, U>::method>::MultiplyThrow(
-			    value, rhs, result);
-			return SafeInt<T>(result);
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return operator*(SafeInt<T>(rhs));
+			} else {
+				T result = 0;
+				MultiplicationHelper<T, U, MultiplicationMethod<T, U>::method>::MultiplyThrow(
+				    value, rhs, result);
+				return SafeInt<T>(result);
+			}
 		}
 
 		template <class U>
@@ -340,9 +353,13 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T>& operator*=(U rhs) {
-			MultiplicationHelper<T, U, MultiplicationMethod<T, U>::method>::MultiplyThrow(
-			    value, rhs, value);
-			return *this;
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return operator*=(SafeInt<T>(rhs));
+			} else {
+				MultiplicationHelper<T, U, MultiplicationMethod<T, U>::method>::MultiplyThrow(
+				    value, rhs, value);
+				return *this;
+			}
 		}
 
 		template <class U>
@@ -354,9 +371,13 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T> Div(U rhs) const {
-			T result = 0;
-			DivisionHelper<T, U, DivisionMethod<T, U>::method>::DivideThrow(value, rhs, result);
-			return SafeInt<T>(result);
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return Div(SafeInt<T>(rhs));
+			} else {
+				T result = 0;
+				DivisionHelper<T, U, DivisionMethod<T, U>::method>::DivideThrow(value, rhs, result);
+				return SafeInt<T>(result);
+			}
 		}
 
 		template <class U>
@@ -368,8 +389,12 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T>& DivAssign(U rhs) {
-			DivisionHelper<T, U, DivisionMethod<T, U>::method>::DivideThrow(value, rhs, value);
-			return *this;
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return DivAssign(SafeInt<T>(rhs));
+			} else {
+				DivisionHelper<T, U, DivisionMethod<T, U>::method>::DivideThrow(value, rhs, value);
+				return *this;
+			}
 		}
 
 		template <class U>
@@ -392,9 +417,13 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T> operator+(U rhs) const {
-			T result = 0;
-			AdditionHelper<T, U, AdditionMethod<T, U>::method>::AdditionThrow(value, rhs, result);
-			return SafeInt<T>(result);
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return operator+(SafeInt<T>(rhs));
+			} else {
+				T result = 0;
+				AdditionHelper<T, U, AdditionMethod<T, U>::method>::AdditionThrow(value, rhs, result);
+				return SafeInt<T>(result);
+			}
 		}
 
 		template <class U>
@@ -407,8 +436,13 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T>& operator+=(U rhs) {
-			AdditionHelper<T, U, AdditionMethod<T, U>::method>::AdditionThrow(value, rhs, value);
-			return *this;
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return operator+=(SafeInt<T>(rhs));
+			} else {
+				AdditionHelper<T, U, AdditionMethod<T, U>::method>::AdditionThrow(value, rhs,
+				                                                                  value);
+				return *this;
+			}
 		}
 
 		template <class U>
@@ -420,10 +454,14 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T> operator-(U rhs) const {
-			T result = 0;
-			SubtractionHelper<T, U, SubtractionMethod<T, U>::method>::SubtractThrow(value, rhs,
-			                                                                        result);
-			return SafeInt<T>(result);
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return operator-(SafeInt<T>(rhs));
+			} else {
+				T result = 0;
+				SubtractionHelper<T, U, SubtractionMethod<T, U>::method>::SubtractThrow(value, rhs,
+				                                                                        result);
+				return SafeInt<T>(result);
+			}
 		}
 
 		template <class U>
@@ -436,9 +474,13 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T>& operator-=(U rhs) {
-			SubtractionHelper<T, U, SubtractionMethod<T, U>::method>::SubtractThrow(value, rhs,
-			                                                                        value);
-			return *this;
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return operator-=(SafeInt<T>(rhs));
+			} else {
+				SubtractionHelper<T, U, SubtractionMethod<T, U>::method>::SubtractThrow(value, rhs,
+				                                                                        value);
+				return *this;
+			}
 		}
 
 		template <class U>
@@ -450,10 +492,14 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T> operator<<(U bits) const {
-			if (ValidBitCount<T, U>(bits)) {
-				return SafeInt<T>((T) (value << bits));
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return operator<<(SafeInt<T>(bits));
+			} else {
+				if (ValidBitCount<T, U>(bits)) {
+					return SafeInt<T>((T) (value << bits));
+				}
+				throw IntegerOverflowException();
 			}
-			throw IntegerOverflowException();
 		}
 
 		template <class U>
@@ -466,11 +512,15 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T>& operator<<=(U bits) {
-			if (ValidBitCount<T, U>(bits)) {
-				value <<= bits;
-				return *this;
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return operator<<=(SafeInt<T>(bits));
+			} else {
+				if (ValidBitCount<T, U>(bits)) {
+					value <<= bits;
+					return *this;
+				}
+				throw IntegerOverflowException();
 			}
-			throw IntegerOverflowException();
 		}
 
 		template <class U>
@@ -484,10 +534,14 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T> operator>>(U bits) const {
-			if (ValidBitCount<T, U>(bits)) {
-				return SafeInt<T>((T) (value >> bits));
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return operator>>(SafeInt<T>(bits));
+			} else {
+				if (ValidBitCount<T, U>(bits)) {
+					return SafeInt<T>((T) (value >> bits));
+				}
+				throw IntegerOverflowException();
 			}
-			throw IntegerOverflowException();
 		}
 
 		template <class U>
@@ -500,11 +554,15 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T>& operator>>=(U bits) {
-			if (ValidBitCount<T, U>(bits)) {
-				value >>= bits;
-				return *this;
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return operator>>=(SafeInt<T>(bits));
+			} else {
+				if (ValidBitCount<T, U>(bits)) {
+					value >>= bits;
+					return *this;
+				}
+				throw IntegerOverflowException();
 			}
-			throw IntegerOverflowException();
 		}
 
 		template <class U>
@@ -527,7 +585,12 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T> operator&(U rhs) const noexcept {
-			return SafeInt<T>(BinaryAndHelper<T, U, BinaryMethod<T, U>::method>::And(value, rhs));
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return operator&(SafeInt<T>(rhs));
+			} else {
+				return SafeInt<T>(
+				    BinaryAndHelper<T, U, BinaryMethod<T, U>::method>::And(value, rhs));
+			}
 		}
 
 		constexpr SafeInt<T>& operator&=(SafeInt<T> rhs) noexcept {
@@ -537,8 +600,12 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T>& operator&=(U rhs) noexcept {
-			value = BinaryAndHelper<T, U, BinaryMethod<T, U>::method>::And(value, rhs);
-			return *this;
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return operator&=(SafeInt<T>(rhs));
+			} else {
+				value = BinaryAndHelper<T, U, BinaryMethod<T, U>::method>::And(value, rhs);
+				return *this;
+			}
 		}
 
 		template <class U>
@@ -558,7 +625,11 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T> operator|(U rhs) const noexcept {
-			return SafeInt<T>(BinaryOrHelper<T, U, BinaryMethod<T, U>::method>::Or(value, rhs));
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return operator|(SafeInt<T>(rhs));
+			} else {
+				return SafeInt<T>(BinaryOrHelper<T, U, BinaryMethod<T, U>::method>::Or(value, rhs));
+			}
 		}
 
 		constexpr SafeInt<T>& operator|=(SafeInt<T> rhs) noexcept {
@@ -568,8 +639,12 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T>& operator|=(U rhs) noexcept {
-			value = BinaryOrHelper<T, U, BinaryMethod<T, U>::method>::Or(value, rhs);
-			return *this;
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return operator|=(SafeInt<T>(rhs));
+			} else {
+				value = BinaryOrHelper<T, U, BinaryMethod<T, U>::method>::Or(value, rhs);
+				return *this;
+			}
 		}
 
 		template <class U>
@@ -589,7 +664,12 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T> operator^(U rhs) const noexcept {
-			return SafeInt<T>(BinaryXorHelper<T, U, BinaryMethod<T, U>::method>::Xor(value, rhs));
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return operator^(SafeInt<T>(rhs));
+			} else {
+				return SafeInt<T>(
+				    BinaryXorHelper<T, U, BinaryMethod<T, U>::method>::Xor(value, rhs));
+			}
 		}
 
 		constexpr SafeInt<T>& operator^=(SafeInt<T> rhs) noexcept {
@@ -599,8 +679,12 @@ namespace Builtin {
 
 		template <class U>
 		constexpr SafeInt<T>& operator^=(U rhs) noexcept {
-			value = BinaryXorHelper<T, U, BinaryMethod<T, U>::method>::Xor(value, rhs);
-			return *this;
+			if constexpr (std::is_convertible_v<U, SafeInt<T>>) {
+				return operator^=(SafeInt<T>(rhs));
+			} else {
+				value = BinaryXorHelper<T, U, BinaryMethod<T, U>::method>::Xor(value, rhs);
+				return *this;
+			}
 		}
 
 		template <class U>

@@ -14,6 +14,7 @@
 #include "InlineArray.h"
 #include "LocalFunctions.h"
 #include "RawPtr.h"
+#include "Ref.h"
 #include "Str.h"
 #include "Tests.h"
 #include "Types.h"
@@ -2796,7 +2797,22 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 
 #define ADV_CHECK_REF_STRUCT(Type, ...)                                                            \
 	static_assert(!std::is_base_of_v<Builtin::RefStruct, ##__VA_ARGS__>,                           \
-	              "Cannot to declare field of the type " #Type " outside the ref struct");
+	              "Cannot to declare field of the type " #Type " outside the ref struct.");
+#define ADV_CHECK_REF_STRUCT_ASSIGNMENT(Variable)                                                  \
+	static_assert(!std::is_base_of_v<Builtin::RefStruct, std::decay_t<decltype(##Variable)>>,      \
+	              "Potentially dangerous assignment to value reference. Variable \"" #Variable     \
+	              "\" and right-hand initializer have different lifetime.");
+#define ADV_CHECK_REF_STRUCT_LOCAL_RETURN(Type, ...)                                               \
+	static_assert(!std::is_base_of_v<Builtin::RefStruct, ##__VA_ARGS__>,                           \
+	              "Cannot to return local reference of the type " #Type                            \
+	              " from function, lifetime violation.");
+#define ADV_CHECK_REF_STRUCT_PARAM_RETURN(Param, Type, ...)                                        \
+	static_assert(std::is_base_of_v<Builtin::RefStruct, ##__VA_ARGS__>                             \
+	                  ? (std::is_base_of_v<Builtin::RefStruct, std::decay_t<decltype(##Param)>> || \
+	                     std::is_lvalue_reference_v<decltype(##Param)>)                            \
+	                  : true,                                                                      \
+	              "Cannot to convert local value argument \"" #Param "\" to return type " #Type    \
+	              ", lifetime violation.");
 #define ADV_CHECK_INTERFACE(Type, ...)                                                             \
 	static_assert(Builtin::IsInterface<##__VA_ARGS__>,                                             \
 	              "Type " #Type                                                                    \

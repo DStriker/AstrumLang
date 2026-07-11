@@ -921,8 +921,8 @@ namespace AstrumLang {
 
 		if (!type->templateSpecializationArgs) {
 			if (type->kind != TypeKind::Class && type->kind != TypeKind::StaticClass &&
-			    type->kind != TypeKind::EnumClass) {
-				if (type->kind != TypeKind::RefStruct && type->templateParams) {
+			    type->kind != TypeKind::EnumClass && type->kind == TypeKind::RefStruct) {
+				if (type->templateParams) {
 					printTemplateParams(type->templateParams);
 					out << " ";
 					if (type->constraints) {
@@ -1187,6 +1187,8 @@ namespace AstrumLang {
 				printClassName(base->className());
 				out << ");\n" << std::string(depth, '\t');
 			}
+		} else if (type->kind == TypeKind::RefStruct) {
+			out << "public: using __class = __self;\n" << std::string(depth, '\t');
 		}
 
 		if (type->kind != TypeKind::StaticClass)
@@ -1473,6 +1475,18 @@ namespace AstrumLang {
 				}
 			}
 			out << "\n" << std::string(--depth, '\t') << "};\n" << std::string(depth, '\t');
+		}
+		if (type->kind == TypeKind::Struct || type->kind == TypeKind::RefStruct)
+		{
+			if (!type->isDefaultConstructible) {
+				out << "public: " << type->id << "() = default;\n" << std::string(depth, '\t');
+			}
+			if (type->isDefaultEquals) {
+				out << "public: bool operator==(const __self&) const = default;\n"
+				    << std::string(depth, '\t');
+				out << "public: bool operator!=(const __self&) const = default;\n"
+				    << std::string(depth, '\t');
+			}
 		}
 
 		if (type->kind == TypeKind::Enum) {
@@ -3400,7 +3414,7 @@ namespace AstrumLang {
 					}
 				}
 				printTypeId(t);
-				isDeclaration    = false;
+				isDeclaration = false;
 				// isArray = t->arrayDeclarator();
 				if (field.isUnowned)
 					out << "::__unowned_ref";
@@ -3425,7 +3439,8 @@ namespace AstrumLang {
 				out << " : " << (int) field.bitWidth;
 			}
 			out << ";";
-			if ((type->kind != TypeKind::RefStruct || field.isStatic || field.isThreadLocal) && currentTupleSize == 0) {
+			if ((type->kind != TypeKind::RefStruct || field.isStatic || field.isThreadLocal) &&
+			    currentTupleSize == 0) {
 				if (!sema.contextTypes.contains(field.type) ||
 				    !sema.contextTypes[field.type].ends_with(type->id)) {
 					printRefStructCheck(field.type);
@@ -3902,18 +3917,20 @@ namespace AstrumLang {
 				out << "& t) { return t." << prop.id << "; }\n" << std::string(depth, '\t');
 			}
 			currentTupleSize = i;
-		} else if (type->kind == TypeKind::Class || type->kind == TypeKind::EnumClass) {
+		} else if (type->kind == TypeKind::Class || type->kind == TypeKind::EnumClass || type->kind == TypeKind::RefStruct) {
 			out << "\n" << std::string(depth, '\t');
 			if (!type->templateSpecializationArgs && !type->templateParams) {
-				out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
-				    << std::string(depth, '\t');
-				if (type->isAbstract) {
-					out << "ADV_CHECK_FOR_ABSTRACT(" << type->id << ");";
-				} else {
-					out << "ADV_CHECK_FOR_CONCRETE(" << type->id << ");";
-				}
+				if (type->kind != TypeKind::RefStruct) {
+					out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
+					    << std::string(depth, '\t');
+					if (type->isAbstract) {
+						out << "ADV_CHECK_FOR_ABSTRACT(" << type->id << ");";
+					} else {
+						out << "ADV_CHECK_FOR_CONCRETE(" << type->id << ");";
+					}
 
-				out << "\n" << std::string(depth, '\t');
+					out << "\n" << std::string(depth, '\t');
+				}
 				if (type->interfaces) {
 					auto typeName = type->id;
 					for (auto iface : type->interfaces->baseSpecifier()) {
@@ -4839,6 +4856,7 @@ namespace AstrumLang {
 			                        prop.isLazy});
 		}
 		out << "#define ADV_PROPERTY_SELF __self\n" << std::string(depth, '\t');
+
 		for (const auto& func : type->methods) {
 			if (!func.isStatic && !func.isConverter && !func.id.starts_with("operator") &&
 			    !func.id.starts_with("_operator") &&
@@ -12971,6 +12989,11 @@ namespace AstrumLang {
 			printExpression(expr);
 		}
 		out << ";";
+		if (sema.potentiallyDangerousAssignments.contains(ctx))
+		{
+			auto lhs = ctx->expression()->assignmentExpression()->logicalOrExpression()->getText();
+			out << " ADV_CHECK_REF_STRUCT_ASSIGNMENT(" << lhs << ");";
+		}
 	}
 
 	void AstrumCodegen::printSelectionStatement(AstrumParser::SelectionStatementContext* ctx) {
@@ -13494,6 +13517,31 @@ namespace AstrumLang {
 			}
 		}
 		out << ";";
+		auto pdr = sema.localReturns.find(ctx);
+		if (pdr != sema.localReturns.end())
+		{
+			auto type = pdr->second.first;
+			auto isRef = pdr->second.second;
+			out << " ADV_CHECK_REF_STRUCT_LOCAL_RETURN(";
+			auto t = type->getText();
+			StringReplace(t, "\"", "\\\"");
+			out << "\"" << (isRef ? "&" : "") << t << "\", " << (isRef ? "Builtin::Ref<" : "");
+			printTypeId(type);
+			out << (isRef ? ">" : "") << ");";
+		} else {
+			auto pr = sema.paramReturns.find(ctx);
+			if (pr != sema.paramReturns.end()) {
+				auto type  = std::get<0>(pr->second);
+				auto isRef = std::get<1>(pr->second);
+				auto param = std::get<2>(pr->second);
+				out << " ADV_CHECK_REF_STRUCT_PARAM_RETURN(" << param << ", ";
+				auto t = type->getText();
+				StringReplace(t, "\"", "\\\"");
+				out << "\"" << (isRef ? "&" : "") << t << "\", " << (isRef ? "Builtin::Ref<" : "");
+				printTypeId(type);
+				out << (isRef ? ">" : "") << ");";
+			}
+		}
 	}
 
 	void AstrumCodegen::printLockStatement(AstrumParser::LockStatementContext* ctx) {
@@ -17462,8 +17510,6 @@ namespace AstrumLang {
 			printSimpleDeclaration(decl);
 		} else if (auto decl = ctx->simpleMultiDeclaration()) {
 			printSimpleMultiDeclaration(decl);
-		} else if (auto decl = ctx->memberRefDeclaration()) {
-			printMemberRefDeclaration(decl);
 		} else if (auto decl = ctx->constantDeclaration()) {
 			printConstantDeclaration(decl);
 		} else if (auto decl = ctx->aliasDeclaration()) {
@@ -17895,14 +17941,8 @@ namespace AstrumLang {
 		if (isConst)
 			out << "const ";
 
-		if (auto t = ctx->typeSpecifierSeq()) {
-			symbolTable[id] = (isConst ? "const " : "") + t->getText() + "&";
-			printTypeSpecifierSeq(t);
-		} else {
-			symbolTable[id] = std::string(isConst ? "const " : "") + "&";
-			out << "auto";
-		}
-		out << "& ";
+		symbolTable[id] = std::string(isConst ? "const " : "") + "&";
+		out << "auto& ";
 		currentType = symbolTable[id];
 		if (ids.size() == 1) {
 			currentDeclarationName = id;
@@ -17926,19 +17966,6 @@ namespace AstrumLang {
 		out << ";";
 		currentDeclarationName.clear();
 		currentType.clear();
-	}
-
-	void AstrumCodegen::printMemberRefDeclaration(AstrumParser::MemberRefDeclarationContext* ctx) {
-		auto id      = ctx->Identifier()->getText();
-		bool isConst = ctx->Const() || ctx->Let();
-		if (isConst)
-			out << "const ";
-
-		symbolTable[id] = (isConst ? "const " : "") + ctx->theTypeId()->getText() + "&";
-		printTypeId(ctx->theTypeId());
-		out << "& ";
-		printIdentifier(ctx->Identifier());
-		out << ";";
 	}
 
 	void AstrumCodegen::printMultiDeclaration(AstrumParser::MultiDeclarationContext* ctx) {
@@ -20322,7 +20349,17 @@ namespace AstrumLang {
 				printIdentifier(ctx->Identifier());
 			}
 			out << " auto";
-		} else if (!ctx->VertLine().empty()) {
+		} else if (ctx->Amp()) {
+			out << "Builtin::";
+			if (ctx->Mutable())
+			{
+				out << "Mutable";
+			}
+			out << "Ref<";
+			printSingleTypeId(ctx->singleTypeId(0));
+			out << ">";
+		}
+		else if (!ctx->VertLine().empty()) {
 			out << "Union" << (ctx->VertLine().size() + 1) << "<";
 			bool first = true;
 			for (auto type : ctx->singleTypeId()) {

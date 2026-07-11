@@ -27,6 +27,7 @@
 #include "Optional.h"
 #include "Ordering.h"
 #include "Range.h"
+#include "Str.h"
 #include "UInt128.h"
 #include "UInt16.h"
 #include "UInt32.h"

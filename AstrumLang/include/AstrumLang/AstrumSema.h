@@ -232,6 +232,7 @@ namespace AstrumLang {
 		bool hasAggregateInit                                  = false;
 		bool isConstexpr                                       = false;
 		bool isDefaultConstructible                            = false;
+		bool isDefaultEquals                                   = false;
 		AstrumParser::EnumBaseContext* enumBase                = nullptr;
 		AstrumParser::TheTypeIdContext* extensionType          = nullptr;
 		AstrumParser::AttributeSpecifierSeqContext* attributes = nullptr;
@@ -284,6 +285,9 @@ namespace AstrumLang {
 
 			VarSet definitelyAssigned;
 			VarSet potentiallyAssigned;
+			VarSet mutableRefs;
+			VarSet functionParams;
+			std::unordered_map<std::string, int> varDepth;
 
 			VarSet intersect(const VarSet& other) const {
 				VarSet result;
@@ -359,6 +363,7 @@ namespace AstrumLang {
 		AstrumParser* parser;
 		std::string currentType;
 		std::string currentSubtype;
+		std::string currentReturnArg;
 		std::stack<std::string> currentTypeWithTemplate;
 		std::stack<InitState> initStates;
 		std::stack<IfContext> ifContexts;
@@ -375,26 +380,34 @@ namespace AstrumLang {
 		AstrumParser::AssignmentExpressionContext* currentAssignment {};
 		AstrumParser::StatementContext* currentStatement {};
 		AstrumParser::SelectionStatementContext* currentIfStatement {};
-		int depth                      = 0;
-		int unsafeDepth                = 0;
-		int loopDepth                  = 0;
-		int functionBody               = 0;
-		bool firstPass                 = true;
-		bool literalMinus              = false;
-		bool propertyBody              = false;
-		bool isAssignment              = false;
-		bool fieldAssignment           = false;
-		bool lvalue                    = false;
-		bool isCondition               = false;
-		bool isCatch                   = false;
-		bool isOutExpression           = false;
-		bool isProtectedTypeDefinition = false;
-		bool isPrivateTypeDefinition   = false;
-		bool isUnsafeTypeDefinition    = false;
-		bool isRefProperty             = false;
-		bool isAbstractProperty        = false;
-		bool isFriendDefinition        = false;
-		bool isUnitTestBody            = false;
+		AstrumParser::TheTypeIdContext* currentReturnType {};
+		int depth                           = 0;
+		int unsafeDepth                     = 0;
+		int loopDepth                       = 0;
+		int functionBody                    = 0;
+		int assignmentDepth                 = 0;
+		bool firstPass                      = true;
+		bool literalMinus                   = false;
+		bool propertyBody                   = false;
+		bool isAssignment                   = false;
+		bool fieldAssignment                = false;
+		bool lvalue                         = false;
+		bool isCondition                    = false;
+		bool isCatch                        = false;
+		bool isOutExpression                = false;
+		bool isProtectedTypeDefinition      = false;
+		bool isPrivateTypeDefinition        = false;
+		bool isUnsafeTypeDefinition         = false;
+		bool isRefProperty                  = false;
+		bool isAbstractProperty             = false;
+		bool isFriendDefinition             = false;
+		bool isUnitTestBody                 = false;
+		bool potentiallyDangerousAssignment = false;
+		bool isParamAssignment              = false;
+		bool isReturn                       = false;
+		bool isLocalReturn                  = false;
+		bool isParamReturn                  = false;
+		bool isSimpleRefReturn              = false;
 
 	   public:
 		AstrumParser::ModuleContext* ast;
@@ -488,6 +501,14 @@ namespace AstrumLang {
 		    currentFields;
 		std::unordered_set<AstrumParser::PropertySetterContext*> propertiesNeedField;
 		std::unordered_map<antlr4::tree::ParseTree*, int> optionalChains;
+		std::unordered_set<AstrumParser::ExpressionStatementContext*>
+		    potentiallyDangerousAssignments;
+		std::unordered_map<AstrumParser::JumpStatementContext*,
+		                   std::pair<AstrumParser::TheTypeIdContext*, bool>>
+		    localReturns;
+		std::unordered_map<AstrumParser::JumpStatementContext*,
+		                   std::tuple<AstrumParser::TheTypeIdContext*, bool, std::string>>
+		    paramReturns;
 		std::map<SourcePosition, MethodDefinition> methods;
 		std::map<SourcePosition, PropertyDefinition> properties;
 
@@ -600,8 +621,6 @@ namespace AstrumLang {
 		    AstrumParser::DeconstructionDeclarationContext* ctx) override;
 
 		std::any visitRefDeclaration(AstrumParser::RefDeclarationContext* ctx) override;
-
-		std::any visitMemberRefDeclaration(AstrumParser::MemberRefDeclarationContext* ctx) override;
 
 		std::any visitSimpleMultiDeclaration(
 		    AstrumParser::SimpleMultiDeclarationContext* ctx) override;
@@ -1134,6 +1153,9 @@ namespace AstrumLang {
 		std::any visitYieldStatement(AstrumParser::YieldStatementContext* ctx) override;
 
 		std::any visitDeferStatement(AstrumParser::DeferStatementContext* ctx) override;
+
+		std::any visitDefaultedEqualsOperator(
+		    AstrumParser::DefaultedEqualsOperatorContext* ctx) override;
 	};
 
 }  // namespace AstrumLang

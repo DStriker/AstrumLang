@@ -77,8 +77,6 @@ public:
 
     virtual std::any visitRefDeclaration(AstrumParser::RefDeclarationContext *context) = 0;
 
-    virtual std::any visitMemberRefDeclaration(AstrumParser::MemberRefDeclarationContext *context) = 0;
-
     virtual std::any visitSimpleMultiDeclaration(AstrumParser::SimpleMultiDeclarationContext *context) = 0;
 
     virtual std::any visitMultiDeclaration(AstrumParser::MultiDeclarationContext *context) = 0;
@@ -458,6 +456,8 @@ public:
     virtual std::any visitFriendDeclaration(AstrumParser::FriendDeclarationContext *context) = 0;
 
     virtual std::any visitExternMethodDeclaration(AstrumParser::ExternMethodDeclarationContext *context) = 0;
+
+    virtual std::any visitDefaultedEqualsOperator(AstrumParser::DefaultedEqualsOperatorContext *context) = 0;
 
     virtual std::any visitOperatorFunctionId(AstrumParser::OperatorFunctionIdContext *context) = 0;
 

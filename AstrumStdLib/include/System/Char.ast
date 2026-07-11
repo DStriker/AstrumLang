@@ -525,6 +525,12 @@ protected IsWhiteSpaceLatin1: (c: u32) -> bool ==
 protected const HighSurrogateRange: UIntRange32 == 0xd800u..0xdc00u;
 protected const LowSurrogateRange: UIntRange32 == 0xdc00u..0xe000u;
 
+public extension u16 {
+    IsHighSurrogate: bool ==> this in HighSurrogateRange;
+    IsLowSurrogate: bool ==> this in LowSurrogateRange;
+    IsSurrogate: bool ==> this.IsHighSurrogate or this.IsLowSurrogate;
+}
+
 test "Char" {
     assert b'A' + 32 == b'a';
     assert ++b'A' == b'B';

@@ -800,9 +800,11 @@ namespace AstrumLang {
 		if (CompilerSettings::get().unitTestMode && !firstPass) {
 			isUnitTestBody = true;
 			functionBody++;
+			initStates.push(InitState {});
 
 			visitChildren(ctx);
 
+			initStates.pop();
 			functionBody--;
 			isUnitTestBody = false;
 		}
@@ -970,6 +972,9 @@ namespace AstrumLang {
 				notifyErrorListeners(
 				    "Cannot to declare the uninitialized variable in the loop body",
 				    ctx->Void()->getSymbol());
+			} else if (ctx->theTypeId()->Amp()) {
+				notifyErrorListeners("Value reference cannot be uninitialized",
+				                     ctx->Void()->getSymbol());
 			} else {
 				auto id = ctx->Identifier()->getText();
 				initStates.top().potentiallyAssigned.insert(id);
@@ -983,6 +988,14 @@ namespace AstrumLang {
 		}
 
 		if (auto t = ctx->theTypeId()) {
+			if (t->Amp()) {
+				if (!ctx->initializerClause() && !ctx->initializerList() &&
+				    (!isTypeDefinitionBody() || functionBody))
+					notifyErrorListeners("Local reference must be explicitly initialized",
+					                     t->Amp()->getSymbol());
+				if (!firstPass && t->Mutable() && !initStates.empty())
+					initStates.top().mutableRefs.insert(ctx->Identifier()->getText());
+			}
 			symbolTable[ctx->Identifier()->getText()] = contextTypes[t];
 			if (isTypeDefinitionBody() && !functionBody) {
 				symbolTable.globalSymbolTable[currentType + "." + ctx->Identifier()->getText()] =
@@ -1010,6 +1023,11 @@ namespace AstrumLang {
 				notifyErrorListeners("A field cannot have an implicit type",
 				                     ctx->Assign()->getSymbol());
 			}
+		}
+
+		// local variable tracking
+		if (functionBody) {
+			initStates.top().varDepth[ctx->Identifier()->getText()] = initStates.size();
 		}
 
 		// fields and global variables
@@ -1299,6 +1317,12 @@ namespace AstrumLang {
 	    AstrumParser::DeconstructionDeclarationContext* ctx) {
 		visitChildren(ctx);
 
+		// local variable tracking
+		if (functionBody && !firstPass) {
+			for (auto id : ctx->identifierSeq()->Identifier())
+				initStates.top().varDepth[id->getText()] = initStates.size();
+		}
+
 		currentSubtype.clear();
 		if (!typeStack.empty()) {
 			auto saveSymbolInTable = [&](auto type, auto id) {
@@ -1358,77 +1382,13 @@ namespace AstrumLang {
 
 		auto seq = ctx->identifierSeq();
 		for (auto id : seq->Identifier()) {
+			// local variable tracking
+			if (functionBody) {
+				initStates.top().varDepth[id->getText()] = initStates.size();
+			}
 			symbolTable[id->getText()] = contextTypes[ctx->initializerClause()];
 			if (!currentSubtype.empty())
 				symbolTable[id->getText()] += "<" + currentSubtype + ">";
-		}
-
-		return 0;
-	}
-
-	std::any AstrumSema::visitMemberRefDeclaration(AstrumParser::MemberRefDeclarationContext* ctx) {
-		if (!checkForCurrentPass())
-			return 0;
-
-		if (currentTypeKind.empty() || currentTypeKind.top() != TypeKind::RefStruct)
-			notifyErrorListeners("Cannot to declare reference field outside the ref struct",
-			                     ctx->Amp()->getSymbol());
-
-		visitChildren(ctx);
-
-		if (firstPass) {
-			bool isConst                                           = ctx->Const() || ctx->Let();
-			AstrumParser::AccessSpecifierContext* acc              = nullptr;
-			AstrumParser::AttributeSpecifierSeqContext* attributes = nullptr;
-			std::optional<AccessSpecifier> access                  = std::nullopt;
-			if (auto block =
-			        reinterpret_cast<AstrumParser::MemberBlockDeclarationContext*>(ctx->parent)) {
-				if (auto decl = reinterpret_cast<AstrumParser::StructMemberDeclarationContext*>(
-				        block->parent)) {
-					if (decl->protectedInternal())
-						notifyErrorListeners(
-						    "Cannot to declare protected internal reference variable",
-						    decl->protectedInternal()->getStart());
-					acc        = decl->accessSpecifier();
-					attributes = decl->attributeSpecifierSeq();
-				}
-			}
-			if (acc) {
-				if (currentAccessSpecifier.top())
-					notifyErrorListeners("Cannot to redefine access specifier", acc->getStart());
-				if (acc->Public()) {
-					access = AccessSpecifier::Public;
-				} else if (acc->Private()) {
-					access = AccessSpecifier::Private;
-				}
-			}
-
-			if (currentAccessSpecifier.top())
-				access = currentAccessSpecifier.top();
-			if (!access)
-				access = AccessSpecifier::Private;
-			auto id = ctx->Identifier();
-			if (unsafeDepth > 0)
-				cppParser.unsafeVariables.insert(currentType + "." + id->getText());
-			structStack.top()->fields.emplace_back(VariableDefinition {
-			    "& " + id->getText(),
-			    nullptr,
-			    nullptr,
-			    ctx->theTypeId(),
-			    {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
-			    nullptr,
-			    nullptr,
-			    attributes,
-			    *access,
-			    getCurrentCompilationCondition(),
-			    "",
-			    false,
-			    isConst,
-			    false,
-			    false,
-			    false,
-			    unsafeDepth > 0,
-			    false});
 		}
 
 		return 0;
@@ -1543,6 +1503,12 @@ namespace AstrumLang {
 					                     ctx->declSpecifierSeq()->getStart());
 				}
 			}
+		}
+
+		// local variable tracking
+		if (functionBody) {
+			for (auto id : ctx->Identifier())
+				initStates.top().varDepth[id->getText()] = initStates.size();
 		}
 
 		if (!functionBody && firstPass) {
@@ -1702,6 +1668,10 @@ namespace AstrumLang {
 		visitChildren(ctx);
 
 		for (auto id : ctx->Identifier()) {
+			// local variable tracking
+			if (functionBody && !firstPass) {
+				initStates.top().varDepth[id->getText()] = initStates.size();
+			}
 			symbolTable[id->getText()] = contextTypes[ctx->initializerClause()];
 			if (!currentSubtype.empty())
 				symbolTable[id->getText()] += "<" + currentSubtype + ">";
@@ -1827,6 +1797,8 @@ namespace AstrumLang {
 		visitChildren(ctx);
 
 		if (!firstPass) {
+			// local variable tracking
+			initStates.top().varDepth[ctx->Identifier()->getText()] = initStates.size();
 			symbolTable[ctx->Identifier()->getText()] = contextTypes[ctx->initializerClause()];
 			if (!currentSubtype.empty())
 				symbolTable[ctx->Identifier()->getText()] += "<" + currentSubtype + ">";
@@ -1931,14 +1903,19 @@ namespace AstrumLang {
 			if (++unsafeDepth > 1)
 				notifyErrorListeners("Unsafe context recursion", ctx->Unsafe()->getSymbol());
 		}
+		if (!firstPass && ctx->compoundStatement() && !initStates.empty())
+			initStates.push(initStates.top());
 
 		visitChildren(ctx);
 
 		if (ctx->Unsafe())
 			--unsafeDepth;
 		while (!typeStack.empty()) typeStack.pop();
+		if (!firstPass && ctx->compoundStatement() && !initStates.empty())
+			initStates.pop();
 		currentTemplateArgs.clear();
 		currentSubtype.clear();
+		assignmentDepth = 0;
 		return 0;
 	}
 
@@ -1959,7 +1936,18 @@ namespace AstrumLang {
 	}
 
 	std::any AstrumSema::visitExpressionStatement(AstrumParser::ExpressionStatementContext* ctx) {
-		return visitChildren(ctx);
+		potentiallyDangerousAssignment = false;
+
+		visitChildren(ctx);
+
+		assignmentDepth   = 0;
+		isParamAssignment = false;
+		if (potentiallyDangerousAssignment) {
+			potentiallyDangerousAssignments.insert(ctx);
+			potentiallyDangerousAssignment = false;
+		}
+
+		return 0;
 	}
 
 	std::any AstrumSema::visitCompoundStatement(AstrumParser::CompoundStatementContext* ctx) {
@@ -2131,13 +2119,17 @@ namespace AstrumLang {
 	}
 
 	std::any AstrumSema::visitIterationStatement(AstrumParser::IterationStatementContext* ctx) {
-		if (!firstPass)
+		if (!firstPass) {
 			++loopDepth;
+			initStates.push(initStates.top());
+		}
 
 		visitChildren(ctx);
 
-		if (!firstPass)
+		if (!firstPass) {
 			--loopDepth;
+			initStates.pop();
+		}
 
 		return 0;
 	}
@@ -2173,6 +2165,9 @@ namespace AstrumLang {
 	}
 
 	std::any AstrumSema::visitJumpStatement(AstrumParser::JumpStatementContext* ctx) {
+		if (ctx->Return() && !firstPass)
+			isReturn = true;
+
 		visitChildren(ctx);
 		if (!firstPass) {
 			if (isUnitTestBody) {
@@ -2185,8 +2180,17 @@ namespace AstrumLang {
 				notifyErrorListeners("Each branch of a function must initialize all out parameters",
 				                     ctx->Return()->getSymbol());
 			}
+			if (isLocalReturn) {
+				localReturns[ctx] = std::make_pair(currentReturnType, isSimpleRefReturn);
+			} else if (isParamReturn) {
+				paramReturns[ctx] = std::make_tuple(currentReturnType, isSimpleRefReturn, currentReturnArg);
+				currentReturnArg.clear();
+			}
 		}
 
+		isReturn      = false;
+		isLocalReturn = false;
+		isParamReturn = false;
 		return 0;
 	}
 
@@ -2464,6 +2468,42 @@ namespace AstrumLang {
 
 		if (!ctx->Or().empty()) {
 			typeStack.push("bool");
+		} else if (!potentiallyDangerousAssignment &&
+		           (assignmentDepth > 0 || isParamAssignment || isReturn)) {
+			auto txt       = ctx->getText();
+			auto isIdent   = [](char c) { return std::isalnum(c) || c == '_'; };
+			int i          = 0;
+			bool rhsMutRef = false;
+			while (i < txt.size() && txt[i] == '(') { ++i; }
+			if (i < txt.size() && txt[i] == '&') {
+				rhsMutRef = true;
+				++i;
+			}
+			int start = i;
+			while (i < txt.size() && isIdent(txt[i])) { ++i; }
+			auto ident = txt.substr(start, i - start);
+			while (i < txt.size() && std::isspace(txt[i])) { ++i; }
+			if (i == txt.size() || txt[i] == '.' || txt[i] == '?' || txt[i] == '[' ||
+			    txt[i] == '!') {
+				auto& varDepth = initStates.top().varDepth;
+				auto lhsDepth  = varDepth.find(ident);
+				if (lhsDepth != varDepth.end()) {
+					auto lhsMutRef = assignmentDepth ? initStates.top().mutableRefs.contains(
+					    currentAssignment->logicalOrExpression()->getText()) : false;
+					if (lhsDepth->second > assignmentDepth && (!lhsMutRef || rhsMutRef)) {
+						potentiallyDangerousAssignment = true;
+					}
+					if (isParamAssignment) {
+						potentiallyDangerousAssignment = true;
+					}
+					if (isReturn) {
+						isLocalReturn = true;
+					}
+				} else if (isReturn && initStates.top().functionParams.contains(ident)) {
+					currentReturnArg = ident;
+					isParamReturn = true;
+				}
+			}
 		}
 
 		return 0;
@@ -2502,6 +2542,20 @@ namespace AstrumLang {
 					    "Cannot to use assignment operators in the condition. Maybe you mean the "
 					    "equality operator?",
 					    ctx->assignmentOperator()->getStart());
+				if (!firstPass && functionBody) {
+					auto txt       = ctx->logicalOrExpression()->getText();
+					auto& varDepth = initStates.top().varDepth;
+					auto lhsDepth  = varDepth.find(txt);
+					if (lhsDepth != varDepth.end()) {
+						assignmentDepth = std::max(assignmentDepth, lhsDepth->second);
+					} else {
+						auto& params  = initStates.top().functionParams;
+						auto lhsParam = params.find(txt);
+						if (lhsParam != params.end()) {
+							isParamAssignment = true;
+						}
+					}
+				}
 			}
 			lvalue = true;
 		}
@@ -3233,10 +3287,24 @@ namespace AstrumLang {
 	}
 
 	std::any AstrumSema::visitLambdaExpression(AstrumParser::LambdaExpressionContext* ctx) {
+		bool prevIsRef = isSimpleRefReturn;
+		auto prevType  = currentReturnType;
+
+		if (!firstPass) {
+			if (auto ret = ctx->lambdaDeclarator()->returnType()) {
+				isSimpleRefReturn = ret->Ref();
+				currentReturnType = ret->theTypeId();
+			}
+		}
+
 		if (currentDeclaration) {
 			lambdaDeclarations.insert(currentDeclaration);
 		}
-		return visitChildren(ctx);
+		visitChildren(ctx);
+
+		isSimpleRefReturn = prevIsRef;
+		currentReturnType = prevType;
+		return 0;
 	}
 
 	std::any AstrumSema::visitLambdaCaptureList(AstrumParser::LambdaCaptureListContext* ctx) {
@@ -3257,8 +3325,12 @@ namespace AstrumLang {
 
 	std::any AstrumSema::visitLambdaBody(AstrumParser::LambdaBodyContext* ctx) {
 		functionBody++;
+		if (!firstPass && !initStates.empty())
+			initStates.push(initStates.top());
 		visitChildren(ctx);
 		functionBody--;
+		if (!firstPass && !initStates.empty())
+			initStates.pop();
 		return 0;
 	}
 
@@ -3589,10 +3661,6 @@ namespace AstrumLang {
 			currentTypeKind.push(TypeKind::Struct);
 
 		if (ctx->structHead()->baseClause()) {
-			if (ctx->structHead()->Ref())
-				notifyErrorListeners(
-				    "Ref struct cannot inherit other types or implement interfaces",
-				    ctx->structHead()->baseClause()->getStart());
 			if (ctx->structHead()->Union())
 				notifyErrorListeners("Raw union cannot inherit other types or implement interfaces",
 				                     ctx->structHead()->baseClause()->getStart());
@@ -4854,8 +4922,10 @@ namespace AstrumLang {
 		}
 
 		if (firstPass && functionBody <= 1) {
-			bool isInline    = false;
-			bool isConstexpr = false;
+			bool isInline     = false;
+			bool isConstexpr  = false;
+			isSimpleRefReturn = isRefReturn;
+			currentReturnType = propertyType;
 
 			if (auto body = ctx->propertyBody()) {
 				getter = body->propertyGetter();
@@ -4995,6 +5065,8 @@ namespace AstrumLang {
 			--unsafeDepth;
 
 		symbolContexts.pop();
+		isSimpleRefReturn = false;
+		currentReturnType = nullptr;
 
 		return 0;
 	}
@@ -5611,6 +5683,10 @@ namespace AstrumLang {
 				auto declList = decl->paramDeclList();
 				for (auto param : declList->paramDeclaration()) {
 					auto id = param->Identifier()->getText();
+
+					// local variable tracking
+					initStates.top().functionParams.insert(id);
+
 					if (auto spec = param->paramSpecification(); spec && spec->Out()) {
 						if (ctx->shortFunctionBody())
 							notifyErrorListeners("Arrow functions doesn't support out parameters",
@@ -5628,6 +5704,8 @@ namespace AstrumLang {
 			}
 
 			if (auto ret = ctx->returnType()) {
+				isSimpleRefReturn = ret->Ref();
+				currentReturnType = ret->theTypeId();
 				if (auto idc = ret->Identifier()) {
 					if (ctx->shortFunctionBody())
 						notifyErrorListeners("Arrow functions doesn't support named returns",
@@ -5635,6 +5713,7 @@ namespace AstrumLang {
 					auto id = idc->getText();
 					outParams.insert(id);
 					initStates.top().potentiallyAssigned.insert(id);
+					initStates.top().varDepth[id] = initStates.size() - 1;
 				} else if (ret->theTypeId() && ret->theTypeId()->VertLine().empty() &&
 				           ret->theTypeId()->singleTypeId(0)->typeSpecifierSeq() &&
 				           ret->theTypeId()
@@ -6152,6 +6231,8 @@ namespace AstrumLang {
 				}
 			}
 			initStates.pop();
+			isRefReturn       = false;
+			currentReturnType = nullptr;
 		}
 		outParams.clear();
 		symbolContexts.pop();
@@ -6410,7 +6491,8 @@ namespace AstrumLang {
 				isOperator = true;
 				if (op->In()) {
 					id = "_operator_in";
-				} else if (op->DoubleCaret() || op->Tilde() || op->TildeAssign() || op->Caret() && !ctx->functionParams()->paramDeclClause() ||
+				} else if (op->DoubleCaret() || op->Tilde() || op->TildeAssign() ||
+				           op->Caret() && !ctx->functionParams()->paramDeclClause() ||
 				           op->DoubleStar() || op->DoubleStarAssign() || op->Greater().size() > 2 ||
 				           op->SignedRightShiftAssign() || op->Op1() || op->Op2() || op->Op3() ||
 				           op->Op4() || op->Op5() || op->Op6() || op->Op7() || op->Op8() ||
@@ -6688,6 +6770,7 @@ namespace AstrumLang {
 				notifyErrorListeners("Only generic constructor can have constraints",
 				                     constraints->Where()->getSymbol());
 			}
+			initStates.push(InitState {});
 
 			if (isDefault)
 				isInline = true;
@@ -6701,6 +6784,9 @@ namespace AstrumLang {
 					cppParser.varargFunctions[currentType] = varargDepth;
 				}
 				for (auto param : declList->paramDeclaration()) {
+					// local variable tracking
+					initStates.top().functionParams.insert(param->Identifier()->getText());
+
 					auto spec = param->paramSpecification();
 					if (spec && spec->Out())
 						notifyErrorListeners("Cannot to use out parameters in the constructor",
@@ -6926,6 +7012,7 @@ namespace AstrumLang {
 				if (!args.empty())
 					cppParser.parametersTable[funcname].insert(args);
 			}
+			initStates.pop();
 		}
 
 		outParams.clear();
@@ -7141,8 +7228,11 @@ namespace AstrumLang {
 		             false,
 		             true});
 
+		initStates.push(InitState {});
+
 		visitChildren(ctx);
 
+		initStates.pop();
 		symbolContexts.pop();
 
 		return 0;
@@ -7201,6 +7291,8 @@ namespace AstrumLang {
 			unsafeDepth++;
 
 		if (firstPass && !functionBody) {
+			initStates.push(InitState {});
+			currentReturnType = returnType;
 			if (auto body = ctx->functionBody()) {
 				if (body->Assign())
 					isInline = true;
@@ -7335,11 +7427,16 @@ namespace AstrumLang {
 
 		visitChildren(ctx);
 
+		if (firstPass && !functionBody) {
+			initStates.pop();
+		}
+
 		auto specs = ctx->functionSpecifier();
 		if (std::any_of(specs.begin(), specs.end(),
 		                [&](auto spec) -> bool { return spec->Unsafe(); }))
 			--unsafeDepth;
 		symbolContexts.pop();
+		currentReturnType = nullptr;
 
 		return 0;
 	}
@@ -7416,9 +7513,14 @@ namespace AstrumLang {
 		if (!firstPass) {
 			if (!setter)
 				initStates.push(InitState {});
-			auto declList = params->paramDeclList();
+			isSimpleRefReturn = isRefReturn;
+			currentReturnType = returnType;
+			auto declList     = params->paramDeclList();
 			for (auto param : declList->paramDeclaration()) {
 				auto id = param->Identifier()->getText();
+				// local variable tracking
+				if (!initStates.empty())
+					initStates.top().functionParams.insert(id);
 				if (auto spec = param->paramSpecification(); spec && spec->Out()) {
 					if (ctx->shortFunctionBody())
 						notifyErrorListeners("Arrow functions doesn't support out parameters",
@@ -7702,6 +7804,8 @@ namespace AstrumLang {
 		                [&](auto spec) -> bool { return spec->Unsafe(); }))
 			--unsafeDepth;
 		symbolContexts.pop();
+		isSimpleRefReturn = false;
+		currentReturnType = nullptr;
 
 		return 0;
 	}
@@ -8068,6 +8172,7 @@ namespace AstrumLang {
 			if (structStack.top()->staticConstructor.has_value())
 				notifyErrorListeners("Type can have only one static constructor.",
 				                     ctx->Static()->getSymbol());
+			initStates.push(InitState {});
 
 			if (auto body = ctx->functionBody()) {
 				if (body->Assign())
@@ -8139,6 +8244,10 @@ namespace AstrumLang {
 
 		visitChildren(ctx);
 
+		if (firstPass && !functionBody) {
+			initStates.pop();
+		}
+
 		outParams.clear();
 		symbolContexts.pop();
 
@@ -8154,6 +8263,8 @@ namespace AstrumLang {
 			if (structStack.top()->staticDestructor.has_value())
 				notifyErrorListeners("Type can have only one static destructor.",
 				                     ctx->Static()->getSymbol());
+
+			initStates.push(InitState {});
 
 			if (auto body = ctx->functionBody()) {
 				if (body->Assign())
@@ -8226,6 +8337,10 @@ namespace AstrumLang {
 
 		visitChildren(ctx);
 
+		if (firstPass && !functionBody) {
+			initStates.pop();
+		}
+
 		outParams.clear();
 		symbolContexts.pop();
 
@@ -8271,6 +8386,14 @@ namespace AstrumLang {
 		if (!firstPass)
 			initStates.pop();
 
+		return 0;
+	}
+
+	std::any AstrumSema::visitDefaultedEqualsOperator(
+	    AstrumParser::DefaultedEqualsOperatorContext* ctx) {
+		if (firstPass) {
+			structStack.top()->isDefaultEquals = true;
+		}
 		return 0;
 	}
 

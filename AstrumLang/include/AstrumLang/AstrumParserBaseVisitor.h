@@ -128,10 +128,6 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual std::any visitMemberRefDeclaration(AstrumParser::MemberRefDeclarationContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
   virtual std::any visitSimpleMultiDeclaration(AstrumParser::SimpleMultiDeclarationContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -889,6 +885,10 @@ public:
   }
 
   virtual std::any visitExternMethodDeclaration(AstrumParser::ExternMethodDeclarationContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitDefaultedEqualsOperator(AstrumParser::DefaultedEqualsOperatorContext *ctx) override {
     return visitChildren(ctx);
   }
 
