@@ -305,9 +305,12 @@ struct ___dependent_false : std::false_type {};
 	[CAPTURE]<class... Args ADV_USFCS_IS_NOTHROW_PARAM(                                            \
 	    TYPE, TEMPKW, __VA_ARGS__) /* ADV_USFCS_CONSTRAINT_PARAM(TYPE, TEMPKW, __VA_ARGS__)*/>     \
 	LAMBDA_NO_DISCARD(Args&&... params)                                                            \
-	    FORCE_INLINE_LAMBDA_CLANG noexcept(ADV_USFCS_IS_NOTHROW_ARG(TYPE, TEMPKW, __VA_ARGS__))    \
-	        FORCE_INLINE_LAMBDA->decltype(auto) /*REQUIRES(requires ADV_USFCS_CONSTRAINT_ARG(TYPE, \
-	                                               TEMPKW, __VA_ARGS__))*/                         \
+	    FORCE_INLINE_LAMBDA_CLANG /* noexcept(ADV_USFCS_IS_NOTHROW_ARG(TYPE, TEMPKW, __VA_ARGS__)) \
+	                               */                                                              \
+	                                  FORCE_INLINE_LAMBDA                                          \
+	                                      ->decltype(auto) /*REQUIRES(requires                     \
+	                                                          ADV_USFCS_CONSTRAINT_ARG(TYPE,       \
+	                                                          TEMPKW, __VA_ARGS__))*/              \
 	{                                                                                              \
 		if constexpr (requires {                                                                   \
 			              ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);    \

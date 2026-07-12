@@ -1465,6 +1465,11 @@ namespace Builtin {
 		}
 	}
 
+	template <typename SourceType, template <typename...> class Template>
+	constexpr bool TypeIs() {
+		return is_instance_of_v<SourceType, Template>;
+	}
+
 	template <class T>
 	constexpr int GetVariantsCount() noexcept {
 		if constexpr (requires { T::__variants; }) {

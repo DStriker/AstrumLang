@@ -921,7 +921,7 @@ namespace AstrumLang {
 
 		if (!type->templateSpecializationArgs) {
 			if (type->kind != TypeKind::Class && type->kind != TypeKind::StaticClass &&
-			    type->kind != TypeKind::EnumClass && type->kind == TypeKind::RefStruct) {
+			    type->kind != TypeKind::EnumClass && type->kind != TypeKind::RefStruct) {
 				if (type->templateParams) {
 					printTemplateParams(type->templateParams);
 					out << " ";
@@ -17308,7 +17308,7 @@ namespace AstrumLang {
 			else if (type == In)
 				out << "Builtin::In<";
 			else if (type == Ref || type == Inout)
-				out << "Builtin::MutableRef<std::remove_cvref_t<";
+				out << "Builtin::MutableRef<";
 			else if (type == Out) {
 				out << "Builtin::Out<std::remove_cvref_t<";
 				symbolTable[id] = "#Out";
@@ -17318,9 +17318,9 @@ namespace AstrumLang {
 			printTypeId(t);
 			if (isVarargs && !isVariadicTemplate)
 				out << ">";
-			if (type == In)
+			if (type == In || type == Ref || type == Inout)
 				out << ">";
-			else if (type == Ref || type == Inout || type == Out)
+			else if (type == Out)
 				out << ">>";
 			else if (type == InRef)
 				out << "&";
@@ -19346,9 +19346,7 @@ namespace AstrumLang {
 			out << "Builtin::Str(ASTRUM_NAMEOF(";
 			paren = true;
 		} else if (ctx->refCaptureOperator()) {
-			out << "Builtin::MutableRef<std::remove_cvref_t<decltype(";
-			printUnaryExpressionTail(ctx->unaryExpressionTail());
-			out << ")>>(";
+			out << "Builtin::MutableRef(";
 			paren = true;
 		} else if (ctx->Out()) {
 			isOutExpression = true;
@@ -20416,7 +20414,7 @@ namespace AstrumLang {
 		else if (type == In)
 			out << "Builtin::In<";
 		else if (type == Ref || type == Inout)
-			out << "Builtin::MutableRef<std::remove_cvref_t<";
+			out << "Builtin::MutableRef<";
 		else if (type == Out) {
 			out << "Builtin::Out<std::remove_cvref_t<";
 		}
@@ -20425,9 +20423,9 @@ namespace AstrumLang {
 		printTypeId(ctx->theTypeId());
 		if (isVarargs && !isVariadicTemplate)
 			out << ">";
-		if (type == In)
+		if (type == In || type == Ref || type == Inout)
 			out << ">";
-		else if (type == Ref || type == Inout || type == Out)
+		else if (type == Out)
 			out << ">>";
 		else if (type == InRef)
 			out << "&";

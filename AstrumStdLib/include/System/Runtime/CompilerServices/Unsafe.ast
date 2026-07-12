@@ -1,0 +1,364 @@
+package System.Runtime.CompilerServices;
+
+public static class Unsafe {
+    // Returns a mutable reference to the element at the given index relative to the src.
+    // This function is unsafe because it does not perform any bounds checking.
+    // Accessing an invalid offset is UNDEFINED BEHAVIOR.
+    public Add: <T> (ref src: T, offset: usize) -> &mut T ==
+    {
+        unsafe {
+            return &(src&)[offset];
+        }
+    }
+    // Returns an immutable reference to the element at the given index relative to the src.
+    // This function is unsafe because it does not perform any bounds checking.
+    // Accessing an invalid offset is UNDEFINED BEHAVIOR.
+    public Add: <T> (forward src: T, offset: usize) -> &T
+    where type T is & ==
+    {
+        unsafe {
+            return (src&)[offset];
+        }
+    }
+
+    // Returns a mutable reference to the element with the given byte offset relative to the src.
+    // This function is unsafe because it does not perform any bounds checking.
+    // Accessing an invalid offset is UNDEFINED BEHAVIOR.
+    public AddByteOffset: <T> (ref src: T, offset: usize) -> &mut T ==
+    {
+        unsafe {
+            return &UnsafePointerCast<decay(T)>(UnsafePointerCast<byte>(src&) + offset)*;
+        }
+    }
+    // Returns an immutable reference to the element at the given byte offset relative to the src.
+    // This function is unsafe because it does not perform any bounds checking.
+    // Accessing an invalid offset is UNDEFINED BEHAVIOR.
+    public AddByteOffset: <T> (forward src: T, offset: usize) -> &T
+    where type T is & ==
+    {
+        unsafe {
+            return UnsafePointerCast<decay(T)>(UnsafePointerCast<byte>(src&) + offset)*;
+        }
+    }
+
+    // Returns a pointer to the given value.
+    public AddressOf: <T> (in ref src: T) -> usize ==
+    {
+        unsafe {
+            return UnsafeCastToUsize(src&);
+        }
+    }
+
+    // Returns true if the two references point to the same memory location.
+    public AreSame: <T> (in ref a: T, in ref b: T) -> bool ==
+    {
+        unsafe {
+            return a& == b&;
+        }
+    }
+
+    // Reinterprets a mutable reference src as mutable reference to TTo.
+    // This function is unsafe because it does not perform any bounds checking.
+    // If sizeof(TTo) > sizeof(TFrom), it is UNDEFINED BEHAVIOR.
+    public As: <TTo, TFrom> (ref src: TFrom) -> &mut TTo ==
+    {
+        unsafe {
+            return &UnsafePointerCast<TTo>(src&)*;
+        }
+    }
+
+    // Reinterprets an immutable reference src as immutable reference to TTo.
+    // This function is unsafe because it does not perform any bounds checking.
+    // If sizeof(TTo) > sizeof(TFrom), it is UNDEFINED BEHAVIOR.
+    public As: <TTo, TFrom> (forward src: TFrom) -> &TTo
+    where type TFrom is & ==
+    {
+        unsafe {
+            return &UnsafePointerCast<TTo>(src&)*;
+        }
+    }
+
+    // Reinterprets an immutable reference as mutable reference.
+    public AsMutableRef: <T> (forward src: T) -> &mut decay(T) 
+    where type T is & ==
+    {
+        unsafe {
+            return &UnsafePointerCast<decay(T)>(src&)*;
+        }
+    }
+
+    // Reinterprets a bit representation of src as value of type TTo.
+    // This function does not perform value reinterpretation of the types with different sizes.
+    public BitCast: <TTo, TFrom> (in ref src: TFrom) -> TTo ==> Builtin.BitCast<TTo>(src);
+
+    // Returns the byte offset from origin to target from the given references.
+    public ByteOffset: <T> (forward origin: T, forward target: T) -> isize
+    where type T is & ==
+    {
+        unsafe {
+            return (target& - origin&) * sizeof(decay(T));
+        }
+    }
+
+    // Constructs a value of type T with the given arguments at the given location.
+    // This function is unsafe because it does not perform any type and bounds checking.
+    // Accessing an invalid memory location is UNDEFINED BEHAVIOR.
+    public Construct: <T, Args...> (ref dest: byte, forward args: Args...) -> &mut T ==
+    {
+        unsafe {
+            cpp "auto ptr = new (std::addressof(dest)) T(std::forward<Args>(args)...);";
+            return &ptr*;
+        }
+    }
+
+    // Copies value from src to dest.
+    // This function is unsafe because it does not perform any type and bounds checking.
+    // Accessing an invalid memory location is UNDEFINED BEHAVIOR.
+    public Copy: <TTo, TFrom> (ref dest: TTo, forward src: TFrom)
+    where type TFrom is & =
+    {
+        unsafe {
+            std.memcpy(dest&, src&, sizeof(TFrom));
+        }
+    }
+
+    // Copies bytesCount bytes from src to dest.
+    // This function is unsafe because it does not perform any type and bounds checking.
+    // Accessing an invalid memory location is UNDEFINED BEHAVIOR.
+    public CopyBlock: (ref dest: byte, src: &byte, bytesCount: usize) =
+    {
+        unsafe {
+            std.memmove(dest&, src&, bytesCount);
+        }
+    }
+
+    // Manually calls a destructor for value of type T at the given location.
+    // This function is unsafe because it does not perform any type and bounds checking.
+    // Accessing an invalid memory location is UNDEFINED BEHAVIOR.
+    // Accessing an already destroyed value is UNDEFINED BEHAVIOR.
+    public Destroy: <T> (ref dest: T) ==
+    {
+        type TOrigin = decay(T);
+        unsafe cpp "dest.__ref().~TOrigin();";
+    }
+    // Manually calls a destructor for value of type T at the given location.
+    // This function is unsafe because it does not perform any type and bounds checking.
+    // Accessing an invalid memory location is UNDEFINED BEHAVIOR.
+    // Accessing an already destroyed value is UNDEFINED BEHAVIOR.
+    public Destroy: <T> (dest: &T) ==
+    {
+        type TOrigin = decay(T);
+        unsafe cpp "dest.__ref().~TOrigin();";
+    }
+    // Manually calls a destructor for value of type T at the given location.
+    // This function is unsafe because it does not perform any type and bounds checking.
+    // Accessing an invalid memory location is UNDEFINED BEHAVIOR.
+    // Accessing an already destroyed value is UNDEFINED BEHAVIOR.
+    public Destroy: <T> (forward dest: T) where type T is & ==
+    {
+        type TOrigin = decay(T);
+        unsafe cpp "dest.~TOrigin();";
+    }
+
+    // Initializes a block of memory at the given location with an initial value.
+    // This function is unsafe because it does not perform any type and bounds checking.
+    // Accessing an invalid memory location is UNDEFINED BEHAVIOR.
+    public InitBlock: (ref start: byte, initialValue: byte, bytesCount: usize) =
+    {
+        unsafe {
+            std.memset(start&, initialValue, bytesCount);
+        }
+    }
+
+    // Returns true if the address of lhs is greater than the address of rhs.
+    public IsAddressGreaterThan: <T> (in ref lhs: T, in ref rhs: T) -> bool ==
+    {
+        unsafe {
+            return UnsafeCastToUsize(lhs&) > UnsafeCastToUsize(rhs&);
+        }
+    }
+
+    // Returns true if the address of lhs is greater than or equal to the address of rhs.
+    public IsAddressGreaterThanOrEqualTo: <T> (in ref lhs: T, in ref rhs: T) -> bool ==
+    {
+        unsafe {
+            return UnsafeCastToUsize(lhs&) >= UnsafeCastToUsize(rhs&);
+        }
+    }
+
+    // Returns true if the address of lhs is less than the address of rhs.
+    public IsAddressLessThan: <T> (in ref lhs: T, in ref rhs: T) -> bool ==
+    {
+        unsafe {
+            return UnsafeCastToUsize(lhs&) < UnsafeCastToUsize(rhs&);
+        }
+    }
+
+    // Returns true if the address of lhs is less than or equal to the address of rhs.
+    public IsAddressLessThanOrEqualTo: <T> (in ref lhs: T, in ref rhs: T) -> bool ==
+    {
+        unsafe {
+            return UnsafeCastToUsize(lhs&) <= UnsafeCastToUsize(rhs&);
+        }
+    }
+
+    // Returns true if the reference is null.
+    public IsNullRef: <T> (in ref src: T) -> bool ==
+    {
+        unsafe {
+            return src& == null;
+        }
+    }
+
+    // Retuns a null reference of type T.
+    public NullRef: <T> () -> &mut T ==> BitCast<Builtin.MutableRef<T>>(0uz);
+
+    public unsafe MemCmp: (lhs: *const void, rhs: *const void, count: usize) -> i32 => std.memcmp(lhs, rhs, count);
+    public unsafe MemCpy: (dest: *void, src: *const void, count: usize) => std.memcpy(dest, src, count);
+    public unsafe MemMove: (dest: *void, src: *const void, count: usize) => std.memmove(dest, src, count);
+    public unsafe MemSet: (dest: *void, ch: i32, count: usize) => std.memset(dest, ch, count);
+
+    // Reads a value of type T from byte array at the given location.
+    // This function is unsafe because it does not perform any type and bounds checking.
+    // Accessing an invalid memory location is UNDEFINED BEHAVIOR.
+    public Read: <T> (in ref src: byte) -> T ==
+    {
+        unsafe {
+            return UnsafePointerCast<T>(src&)*;
+        }
+    }
+
+    // Returns a mutable reference to the element with the subtracted offset relative to the src.
+    // This function is unsafe because it does not perform any bounds checking.
+    // Accessing an invalid offset is UNDEFINED BEHAVIOR.
+    public Subtract: <T> (ref src: T, offset: usize) -> &mut T ==
+    {
+        unsafe {
+            return &(src& - offset)*;
+        }
+    }
+    // Returns an immutable reference to the element with the subtracted offset relative to the src.
+    // This function is unsafe because it does not perform any bounds checking.
+    // Accessing an invalid offset is UNDEFINED BEHAVIOR.
+    public Subtract: <T> (forward src: T, offset: usize) -> &T
+    where type T is & ==
+    {
+        unsafe {
+            return (src& - offset)*;
+        }
+    }
+
+    // Returns a mutable reference to the element with the subtracted byte offset relative to the src.
+    // This function is unsafe because it does not perform any bounds checking.
+    // Accessing an invalid offset is UNDEFINED BEHAVIOR.
+    public SubtractByteOffset: <T> (ref src: T, offset: usize) -> &mut T ==
+    {
+        unsafe {
+            return &UnsafePointerCast<decay(T)>(UnsafePointerCast<byte>(src&) - offset)*;
+        }
+    }
+    // Returns an immutable reference to the element with the subtracted byte offset relative to the src.
+    // This function is unsafe because it does not perform any bounds checking.
+    // Accessing an invalid offset is UNDEFINED BEHAVIOR.
+    public SubtractByteOffset: <T> (forward src: T, offset: usize) -> &T
+    where type T is & ==
+    {
+        unsafe {
+            return UnsafePointerCast<decay(T)>(UnsafePointerCast<byte>(src&) - offset)*;
+        }
+    }
+
+    //public Unbox: <T> (in obj: object) -> &mut T;
+
+    // Writes a value of type T to the byte array at the given location.
+    // This function is unsafe because it does not perform any type and bounds checking.
+    // Accessing an invalid memory location is UNDEFINED BEHAVIOR.
+    public Write: <T> (ref dest: byte, in ref val: T) ==
+    {
+        unsafe {
+            UnsafePointerCast<decay(T)>(dest&)* = val;
+        }
+    }
+}
+
+private struct TestConstruct {
+    private _i: i32;
+
+    public this(i: i32, f: f32) {
+        this._i = i;
+    }
+
+    ~this {
+        Unsafe.Write(Unsafe.As<byte>(&this), 0);
+    }
+}
+
+test "Unsafe" {
+    arr: i32[5] = [10, 20, 30, 40, 50];
+    Unsafe.Add(&arr[2], 2u) = 55;
+    assert Unsafe.Add(arr[2], 2u) == 55;
+
+    Unsafe.AddByteOffset(&arr[2], 8u) = 65;
+    assert Unsafe.AddByteOffset(arr[2], 8u) == 65;
+
+    assert not Unsafe.AreSame(arr[2], arr[3]);
+    ra: &mut i32 = &arr[2];
+    assert Unsafe.AreSame(&ra, &arr[2]);
+
+    if version(BIG_ENDIAN) {} else {
+        assert Unsafe.As<i64>(arr[2]) == 171798691870;
+    }
+    assert Unsafe.As<i16>(&arr[2]) == 30;
+
+    let arr2 := arr;
+    Unsafe.AsMutableRef(arr2[2]) = 65;
+    assert arr2[2] == 65;
+
+    assert Unsafe.BitCast<i32>(0.5f) == 1056964608;
+
+    assert Unsafe.ByteOffset(arr[2], arr[4]) == 8;
+    assert Unsafe.ByteOffset(arr[4], arr[2]) == -8;
+
+    let i := 500500u64;
+    Unsafe.Copy(&arr[2], i);
+    assert arr[2] == 500500;
+    assert arr[3] == 0;
+
+    Unsafe.CopyBlock(Unsafe.As<byte>(&arr[0]), Unsafe.As<byte>(arr[1]), 12u);
+    assert arr[0] == 20;
+    assert arr[1] == 500500;
+    assert arr[2] == 0;
+    assert arr[3] == 0;
+    assert arr[4] == 65;
+
+    Unsafe.InitBlock(Unsafe.As<byte>(&arr[2]), 1u8, 8u);
+    assert arr[0] == 20;
+    assert arr[1] == 500500;
+    assert arr[2] == 0x1010101;
+    assert arr[3] == 0x1010101;
+    assert arr[4] == 65;
+    Unsafe.InitBlock(Unsafe.As<byte>(&arr[2]), 0u8, 8u);
+
+    assert not Unsafe.IsNullRef(&arr[2]);
+    assert not Unsafe.IsNullRef(arr[2]);
+    assert Unsafe.IsNullRef(Unsafe.NullRef<i32>());
+
+    if version(BIG_ENDIAN) {} else {
+        bytes: byte[_] = [ 11, 12, 13, 14, 15 ];
+        assert Unsafe.Read<i32>(bytes[0]) == 0xE0D0C0B;
+        Unsafe.Write(&bytes[1], 15);
+        assert bytes[1] == 15;
+        assert bytes[2] == 0;
+        assert bytes[3] == 0;
+        assert bytes[4] == 0;
+
+        let testStruct: &mut TestConstruct = Unsafe.Construct<TestConstruct>(&bytes[1], 12345, 123.45f);
+        assert Unsafe.Read<i32>(bytes[1]) == 12345;
+        Unsafe.Destroy(testStruct);
+        assert Unsafe.Read<i32>(bytes[1]) == 0;
+    }
+
+    Unsafe.Subtract(&arr[2], 2u) = 5;
+    assert Unsafe.Subtract(arr[2], 2u) == 5;
+    assert Unsafe.SubtractByteOffset(arr[2], 8u) == 5;
+}

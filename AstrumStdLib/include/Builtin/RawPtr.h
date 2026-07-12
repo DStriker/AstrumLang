@@ -101,12 +101,16 @@ namespace Builtin::Unsafe {
 
 		constexpr __RawPtr<T> operator+(size_t offset) const noexcept { return UnsafeAdd(offset); }
 
-		constexpr __RawPtr<T> UnsafeDifference(__RawPtr<T> other) const noexcept {
-			return __RawPtr<T>(value - other.value);
+		constexpr isize UnsafeDifference(__RawPtr<T> other) const noexcept {
+			return value - other.value;
 		}
 
-		constexpr __RawPtr<T> operator-(__RawPtr<T> other) const noexcept {
+		constexpr isize operator-(__RawPtr<T> other) const noexcept {
 			return UnsafeDifference(other);
+		}
+
+		constexpr __RawPtr<T> operator-(size_t other) const noexcept {
+			return value - other;
 		}
 
 		constexpr auto& operator[](size_t offset) requires(!std::is_same_v<T, void>) {
@@ -244,9 +248,9 @@ namespace Builtin::Unsafe {
 			return __VolatileRawPtr<T>(value + step);
 		}
 
-		constexpr volatile __VolatileRawPtr<T> UnsafeDifference(__VolatileRawPtr<T> other) const
+		constexpr isize UnsafeDifference(__VolatileRawPtr<T> other) const
 		    volatile noexcept {
-			return __VolatileRawPtr<T>(value - other.value);
+			return value - other.value;
 		}
 
 		constexpr usize UnsafeNarrowToInteger() const volatile noexcept {

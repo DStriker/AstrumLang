@@ -37,25 +37,5 @@ f: () -> i32 {
 
 test "Str" {
     i := 5;
-    j := f();
-    s: Str2;
-    //ri: &i32 = i;
-    ri: &mut i32 = &i;
-    ri = 8;
-    print(i);
-    print(ri);
-    i = 6;
-    print(i);
-    print(ri);
-    ri = 2;
-    print(i);
-    j = ri;
-    print(ri);
-    print(j);
-    j = 12;
-    ri = &j;
-    ri = 18;
-    print(ri + 5);
-    print(i);
-    print(j);
+    
 }

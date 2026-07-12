@@ -6,14 +6,15 @@ namespace Builtin {
 
 	template <class T>
 	struct MutableRef : public RefStruct {
-		using __ref_underlying_type = std::remove_cvref_t<T>;
+		using __ref_underlying_type = Auto<T>;
+		using Type                  = __ref_underlying_type;
 
 	   private:
 		__ref_underlying_type* ptr = nullptr;
 
 		constexpr __ref_underlying_type& get() const {
-			if (ptr == nullptr)
-				UNLIKELY
+			if (ptr != nullptr)
+				LIKELY { return *ptr; }
 			throw NullReferenceException {};
 			return *ptr;
 		}
@@ -33,8 +34,8 @@ namespace Builtin {
 
 		constexpr explicit MutableRef(__ref_underlying_type& ref) noexcept
 		    : ptr {std::addressof(ref)} {}
-		explicit MutableRef(const __ref_underlying_type& ref) = delete;
-		explicit MutableRef(__ref_underlying_type&& ref)      = delete;
+		explicit MutableRef(const __ref_underlying_type& ref)  = delete;
+		explicit MutableRef(__ref_underlying_type&& ref)       = delete;
 		explicit MutableRef(const __ref_underlying_type&& ref) = delete;
 
 		constexpr __selfRef& operator=(const __selfRef&) noexcept = default;
@@ -333,17 +334,20 @@ namespace Builtin {
 		FORCE_INLINE constexpr decltype(auto) operator--(int) const requires requires(T t) { t--; }
 		{ return get()--; }
 	};
+	template <class T>
+	MutableRef(T&) -> MutableRef<Auto<T>>;
 
 	template <class T>
 	struct Ref : public RefStruct {
-		using __ref_underlying_type = std::remove_cvref_t<T>;
+		using __ref_underlying_type = Auto<T>;
+		using Type                  = __ref_underlying_type;
 
 	   private:
 		const __ref_underlying_type* ptr = nullptr;
 
 		constexpr const __ref_underlying_type& get() const {
-			if (ptr == nullptr)
-				UNLIKELY
+			if (ptr != nullptr)
+				LIKELY { return *ptr; }
 			throw NullReferenceException {};
 			return *ptr;
 		}
@@ -546,7 +550,24 @@ namespace Builtin {
 			return static_cast<bool>(get());
 		}
 	};
+
+	template <class T>
+	Ref(T&) -> Ref<Auto<T>>;
+	template <class T>
+	Ref(const T&) -> Ref<Auto<T>>;
 }  // namespace Builtin
+
+namespace std {
+	template <class T>
+	inline constexpr auto addressof(Builtin::MutableRef<T> ref) noexcept {
+		return std::bit_cast<typename Builtin::MutableRef<T>::__ref_underlying_type*>(ref);
+	}
+
+	template <class T>
+	inline constexpr auto addressof(Builtin::Ref<T> ref) noexcept {
+		return std::bit_cast<const typename Builtin::Ref<T>::__ref_underlying_type*>(ref);
+	}
+}  // namespace std
 
 namespace __extensions {
 	template <typename T>

@@ -2504,6 +2504,9 @@ namespace AstrumLang {
 					isParamReturn = true;
 				}
 			}
+			assignmentDepth = 0;
+			isParamAssignment = false;
+			isReturn          = false;
 		}
 
 		return 0;
