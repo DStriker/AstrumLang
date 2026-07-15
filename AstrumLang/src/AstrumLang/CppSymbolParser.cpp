@@ -355,6 +355,7 @@ namespace AstrumLang {
 		unsafeVariables = systemParser.unsafeVariables;
 		unsafeTypes     = systemParser.unsafeTypes;
 		unsafeFunctions = systemParser.unsafeFunctions;
+		includes        = systemParser.includes;
 		symbolTable     = systemParser.symbolTable;
 		functionTable   = systemParser.functionTable;
 		parametersTable = systemParser.parametersTable;
@@ -386,9 +387,19 @@ namespace AstrumLang {
 
 		clang_disposeTranslationUnit(Impl::unit);
 		clang_disposeIndex(index);
+
 	}
 
 	void CppSymbolParser::initializeSystemSymbolTable() {
+		static std::vector<std::string> includeArgs;
+		auto& settings = CompilerSettings::get();
+		if (!settings.rootPath.empty()) {
+			includeArgs.push_back("-I" + settings.rootPath);
+		}
+		for (const auto& include : settings.includePaths) {
+			includeArgs.push_back("-I" + include);
+		}
+		for (const auto& str : includeArgs) { args.push_back(str.c_str()); }
 		systemParser.parse(*CompilerSettings::findFileInIncludePaths("Builtin/Builtin.h"));
 	}
 }  // namespace AstrumLang

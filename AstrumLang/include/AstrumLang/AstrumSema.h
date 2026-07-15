@@ -475,6 +475,11 @@ namespace AstrumLang {
 			void insert(const std::string& id) { symbolContexts.top().types.insert(id); }
 		} typeset;
 
+		std::unordered_map<AstrumParser::InitializerClauseContext*, std::vector<std::string>>
+		    stringConstants;
+		std::unordered_map<std::string, std::string> publicStringLiterals;
+		std::unordered_map<std::string, std::string> privateStringLiterals;
+
 		std::unordered_map<std::string, std::string>& functionTable;
 		std::unordered_map<std::string,
 		                   std::unordered_map<std::string, AstrumParser::InitializerClauseContext*>>

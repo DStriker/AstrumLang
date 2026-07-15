@@ -22,6 +22,7 @@ namespace AstrumLang {
 		std::unordered_set<std::string> unsafeVariables;
 		std::unordered_set<std::string> unsafeTypes;
 		std::unordered_set<std::string> unsafeFunctions;
+		std::unordered_set<std::string> includes;
 		std::unordered_map<std::string, std::string> symbolTable;
 		std::unordered_map<std::string, std::string> functionTable;
 		std::unordered_map<std::string, std::set<std::string>> parametersTable;

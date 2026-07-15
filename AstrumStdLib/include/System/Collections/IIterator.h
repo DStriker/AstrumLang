@@ -32,9 +32,9 @@ template<> inline constexpr bool Builtin::__details::cheapCopy<System::Collectio
 
 namespace System::Collections {
 	#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Collections\\IIterator.ast"
-	template<class __AnyType> concept __HasMethodImplementation_0905dcd047f6dc75 = requires(typename __AnyType::__class t) { {t.MoveNext()} -> std::convertible_to<bool>; }  || requires(typename __AnyType::__self t) { {MoveNext(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<bool>; } || requires { { [] { using namespace __extensions; return MoveNext(std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<bool>; };
+	template<class __AnyType> concept __HasMethodImplementation_0905dcd047f6dc75 = requires(typename __AnyType::__class t) { {t.MoveNext()} -> std::convertible_to<bool>; }  || requires(typename __AnyType::__self t) { {MoveNext(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<bool>; };
 	#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Collections\\IIterator.ast"
-	template<class __AnyType> concept __HasMethodImplementation_3fe4e8d6846e4760 = requires(typename __AnyType::__class t) { {t.GetCurrent()} -> std::convertible_to<typename __AnyType::ElementType>; }  || requires(typename __AnyType::__self t) { {GetCurrent(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::ElementType>; } || requires { { [] { using namespace __extensions; return GetCurrent(std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<typename __AnyType::__self::ElementType>; };
+	template<class __AnyType> concept __HasMethodImplementation_3fe4e8d6846e4760 = requires(typename __AnyType::__class t) { {t.GetCurrent()} -> std::convertible_to<typename __AnyType::ElementType>; }  || requires(typename __AnyType::__self t) { {GetCurrent(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::ElementType>; };
 	#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Collections\\IIterator.ast"
 	template<class __AnyType> concept __HasAssociatedType_65b867e400e828a7 = requires { typename __AnyType::ElementType; };
 	namespace __vtables {
@@ -286,9 +286,9 @@ template<class T> inline constexpr bool Builtin::__details::cheapCopy<System::Co
 
 namespace System::Collections {
 	#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Collections\\IIterator.ast"
-	template<class __AnyType, class T> concept __HasMethodImplementation_88ca90a1c3ef9457 = requires(typename __AnyType::__class t) { {t.MoveNext()} -> std::convertible_to<bool>; }  || requires(typename __AnyType::__self t) { {MoveNext(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<bool>; } || requires { { [] { using namespace __extensions; return MoveNext(std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<bool>; };
+	template<class __AnyType, class T> concept __HasMethodImplementation_88ca90a1c3ef9457 = requires(typename __AnyType::__class t) { {t.MoveNext()} -> std::convertible_to<bool>; }  || requires(typename __AnyType::__self t) { {MoveNext(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<bool>; };
 	#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Collections\\IIterator.ast"
-	template<class __AnyType, class T> concept __HasMethodImplementation_c4c43bda88c5a532 = requires(typename __AnyType::__class t) { {t.GetCurrent()} -> std::convertible_to<T>; }  || requires(typename __AnyType::__self t) { {GetCurrent(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<T>; } || requires { { [] { using namespace __extensions; return GetCurrent(std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<T>; };
+	template<class __AnyType, class T> concept __HasMethodImplementation_c4c43bda88c5a532 = requires(typename __AnyType::__class t) { {t.GetCurrent()} -> std::convertible_to<T>; }  || requires(typename __AnyType::__self t) { {GetCurrent(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<T>; };
 	namespace __vtables {
 		#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Collections\\IIterator.ast"
 		template<class T> struct __vtable_IIterator
@@ -559,9 +559,9 @@ template<> inline constexpr bool Builtin::__details::cheapCopy<System::Collectio
 
 namespace System::Collections {
 	#line 20 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Collections\\IIterator.ast"
-	template<class __AnyType> concept __HasMethodImplementation_9d8a3ebb7903b37e = requires(typename __AnyType::__class t) { {t.MoveNext()} -> std::convertible_to<bool>; }  || requires(typename __AnyType::__self t) { {MoveNext(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<bool>; } || requires { { [] { using namespace __extensions; return MoveNext(std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<bool>; };
+	template<class __AnyType> concept __HasMethodImplementation_9d8a3ebb7903b37e = requires(typename __AnyType::__class t) { {t.MoveNext()} -> std::convertible_to<bool>; }  || requires(typename __AnyType::__self t) { {MoveNext(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<bool>; };
 	#line 21 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Collections\\IIterator.ast"
-	template<class __AnyType> concept __HasMethodImplementation_87f97f197d4699a8 = requires(typename __AnyType::__class t) { {t.GetCurrentRef()} -> std::convertible_to<typename __AnyType::ElementType&>; }  || requires(typename __AnyType::__self t) { {GetCurrentRef(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::ElementType&>; } || requires { { [] { using namespace __extensions; return GetCurrentRef(std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<typename __AnyType::__self::ElementType&>; };
+	template<class __AnyType> concept __HasMethodImplementation_87f97f197d4699a8 = requires(typename __AnyType::__class t) { {t.GetCurrentRef()} -> std::convertible_to<typename __AnyType::ElementType&>; }  || requires(typename __AnyType::__self t) { {GetCurrentRef(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<typename __AnyType::ElementType&>; };
 	#line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Collections\\IIterator.ast"
 	template<class __AnyType> concept __HasAssociatedType_b693cbdf2bd7ea7a = requires { typename __AnyType::ElementType; };
 	namespace __vtables {
@@ -813,9 +813,9 @@ template<class T> inline constexpr bool Builtin::__details::cheapCopy<System::Co
 
 namespace System::Collections {
 	#line 25 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Collections\\IIterator.ast"
-	template<class __AnyType, class T> concept __HasMethodImplementation_e4c8165dfd39f19c = requires(typename __AnyType::__class t) { {t.MoveNext()} -> std::convertible_to<bool>; }  || requires(typename __AnyType::__self t) { {MoveNext(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<bool>; } || requires { { [] { using namespace __extensions; return MoveNext(std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<bool>; };
+	template<class __AnyType, class T> concept __HasMethodImplementation_e4c8165dfd39f19c = requires(typename __AnyType::__class t) { {t.MoveNext()} -> std::convertible_to<bool>; }  || requires(typename __AnyType::__self t) { {MoveNext(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<bool>; };
 	#line 26 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Collections\\IIterator.ast"
-	template<class __AnyType, class T> concept __HasMethodImplementation_d47a08f24b83a5c2 = requires(typename __AnyType::__class t) { {t.GetCurrentRef()} -> std::convertible_to<T&>; }  || requires(typename __AnyType::__self t) { {GetCurrentRef(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<T&>; } || requires { { [] { using namespace __extensions; return GetCurrentRef(std::declval<typename __AnyType::__self>()); }() } -> std::convertible_to<T&>; };
+	template<class __AnyType, class T> concept __HasMethodImplementation_d47a08f24b83a5c2 = requires(typename __AnyType::__class t) { {t.GetCurrentRef()} -> std::convertible_to<T&>; }  || requires(typename __AnyType::__self t) { {GetCurrentRef(__extensions::__proxy<typename __AnyType::__self>{t})} -> std::convertible_to<T&>; };
 	namespace __vtables {
 		#line 24 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Collections\\IIterator.ast"
 		template<class T> struct __vtable_IRefIterator

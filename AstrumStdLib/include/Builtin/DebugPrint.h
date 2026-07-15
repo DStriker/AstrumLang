@@ -58,10 +58,7 @@ inline void print(Builtin::char32 ch) {
 }
 
 inline void print(Builtin::Str v) {
-	for (auto c = v.raw_data(); c != v.raw_data() + (int) v.length(); c++) {
-		std::cout << char(*c);
-	}
-	std::cout << "\n";
+	std::cout << (const char*)&v.GetDataReference() << "\n";
 }
 
 inline void print(const std::string& v) { std::cout << v << "\n"; }

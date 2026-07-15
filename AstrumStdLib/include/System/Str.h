@@ -3,63 +3,40 @@
 #include "Builtin/Builtin.h"
 #endif
 #include "ASTRUMSTD_export.h"
-#include "IEquatable.h"
+#include "UInt32.h"
+#include "UInt64.h"
 
 namespace System {
 namespace __Unsafe {} namespace __Str_Protected__Unsafe {}
 //###############################################################################
-//# Type forward declarations
-//###############################################################################
-class Str2;
-template<class T> class TestRef;
-//###############################################################################
 //# Type definitions
 //###############################################################################
-class Str2;
-	#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	struct [[clang::annotate("ref_struct")]] Str2 final : public Builtin::RefStruct {
-		public: using __self = Str2;
-		public: using __class = __self;
-		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
-		public: Str2() = default;
-		public: bool operator==(const __self&) const = default;
-		public: bool operator!=(const __self&) const = default;
-		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		private: Builtin::Ref<Builtin::u8> _data;
-		#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		private: Builtin::usize _length;
-		
-	};
-	
-	#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(Str2, IEquatable, IEquatable<Str2>, Str2);
-	
-	template<class T> class TestRef;
-	#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	template<class T> struct [[clang::annotate("ref_struct")]] TestRef final : public Builtin::RefStruct {
-		public: using __self = TestRef<T>;
-		public: using __class = __self;
-		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
-		public: TestRef() = default;
-		#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		private: T _data;
-		
-	};
-	
-	
+	} namespace __extensions { using namespace System;
+#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	using __extension_Str_7_str = Builtin::Str;
+	#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getByteLength(__extension_Str_7_str const& __this ) -> const Builtin::usize;
+	} namespace System{
+using __extensions::getByteLength;
+
 	//###############################################################################
-//# Free function declarations
+//# Global compile-time constants
 //###############################################################################
-#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	ASTRUMSTD_HIDDEN auto r(Builtin::MutableRef<std::remove_cvref_t<Builtin::i32>> __a__, Builtin::i32 b)  -> Builtin::i32&;
-#line 22 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	ASTRUMSTD_HIDDEN auto f()  -> const Builtin::i32;
+inline constexpr Builtin::Str __strconst_0x1d194bbb530_0 = "Begin ";
+inline constexpr Builtin::Str __strconst_0x1d194bbb530_1 = " Middle ";
+inline constexpr Builtin::Str __strconst_0x1d194bbb530_2 = " End";
 //###############################################################################
 //# Function definitions
 //###############################################################################
 
-#line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	
+} namespace __extensions { using namespace System;
+#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getByteLength(__extension_Str_7_str const& __this ) -> const Builtin::usize
+	{
+		#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		ADV_EXPRESSION_BODY(ADV_UFCS(GetByteLength)(__this.__ref())); 
+	}
+	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 	
 

@@ -1,41 +1,52 @@
 package System;
 
-public import IEquatable;
+public import UInt32;
+public import UInt64;
+//public import System.Runtime.CompilerServices.Unsafe;
 
-public ref struct Str2: IEquatable<Str2> {
-    private _data: &byte;
-    private _length: usize;
+public extension str {
+    // Returns the number of UTF-8 bytes in the string.
+    // For number of chars or grapheme clusters, use the appropriate methods.
+    ByteLength: usize ==> this.GetByteLength();
 
-    operator== := default;
+    // Bytes
+    // Chars
+    // GraphemeClusters
+    // Substring
+    // Equals
+    // Compare
+    // Contains
+    // HashCode
+    // IndexOf, IndexOfAny
+    // LastIndexOf, LastIndexOfAny
+    // IsNormalized
+    // IsWhiteSpace
+    // IsUpper, IsLower
+    // Normalize
+    // Split
+    // StartsWith
+    // Trim
 }
 
-public ref struct <T> TestRef {
-    private _data: T;
-}
+static assert(sizeof(str) == sizeof(usize) * 2, "str should be 2 pointers wide");
+static assert(type str is ISelfEquatable, "str should be ISelfEquatable");
+static assert(type str is IEquatable<str>, "str should be IEquatable<str>");
+static assert(type str is ISelfComparable, "str should be ISelfComparable");
+static assert(type str is IComparable<str>, "str should be IComparable<str>");
 
-r: (ref a: i32, b: i32) -> ref i32 {
-    c := 5;
-    b = c;
-    return &a;
-}
-
-f: () -> i32 { 
-    i := 5;
-    k := 10;
-    ri: &mut i32 = &i;
-    rj: &i32 = i;
-    {
-        j := 6;
-        k = 5;
-        k = j;
-        rj = &k;
-        ri = 5;
-        print(rj);
-    }
-    return 6; 
-}
+private const test1 :== "PART 1";
+private const test2 :== "PART 2";
+private const test3 :== "Begin " + test1 + " Middle " + test2 + " End";
+static assert(test3 == "Begin PART 1 Middle PART 2 End", "str concatenation failed");
 
 test "Str" {
-    i := 5;
-    
+    s: str = "Hello, world!";
+    const cs: str == "Hello, моя Лерка ❤😆";
+    assert s == "Hello, world!";
+    assert s < "Help";
+    assert s.ByteLength == 13;
+    assert cs.ByteLength == 32;
+    assert "My dog is wolf!".ByteLength == 15;
+    const s3 : str == "Begin " + test1 + " Middle " + test2 + " End";
+    assert s3.ByteLength == 30;
 }

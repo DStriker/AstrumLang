@@ -27,7 +27,7 @@ template<> inline constexpr bool Builtin::__details::cheapCopy<System::IAbstract
 
 namespace System {
 	#line 4 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-	template<class __AnyType> concept __HasMethodImplementation_cecbb84ea7c02c36 = requires(typename __AnyType::__class t) { {t._operator_lt_eq_gt_mul(std::declval<Builtin::Nullable<Builtin::ObjectRef>>())} -> std::convertible_to<Builtin::i32>; }  || requires(typename __AnyType::__self t) { {_operator_lt_eq_gt_mul(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::Nullable<Builtin::ObjectRef>>())} -> std::convertible_to<Builtin::i32>; } || requires { { [] { using namespace __extensions; return _operator_lt_eq_gt_mul(std::declval<typename __AnyType::__self>(), std::declval<Builtin::Nullable<Builtin::ObjectRef>>()); }() } -> std::convertible_to<Builtin::i32>; };
+	template<class __AnyType> concept __HasMethodImplementation_cecbb84ea7c02c36 = requires(typename __AnyType::__class t) { {t._operator_lt_eq_gt_mul(std::declval<Builtin::Nullable<Builtin::ObjectRef>>())} -> std::convertible_to<Builtin::i32>; }  || requires(typename __AnyType::__self t) { {_operator_lt_eq_gt_mul(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::Nullable<Builtin::ObjectRef>>())} -> std::convertible_to<Builtin::i32>; };
 	namespace __vtables {
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
 		struct __vtable_IAbstractComparable
@@ -56,7 +56,7 @@ namespace System {
 		public: using __unowned_ref = IAbstractComparable__Unowned;
 		public: using __weak_ref = IAbstractComparable__Weak;
 		public: template<class __AnyType> static constexpr bool __ImplementsInterface = __ImplementsInterface_IAbstractComparable<__AnyType>;
-		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 		private: const __vtable* _vtable;
 		ADV_INTERFACE_STRONG_COMMON_CTORS(IAbstractComparable);
 		public: template<class __AnyType> requires std::derived_from<std::remove_cvref_t<__AnyType>, Builtin::InterfaceRef> && std::derived_from<typename std::remove_cvref_t<__AnyType>::__vtable, __vtable>
@@ -231,7 +231,7 @@ namespace System {
 		public: using __strong_ref = IAbstractComparable;
 		public: using __unowned_ref = IAbstractComparable__Unowned;
 		public: using __weak_ref = __self;
-		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 		private: const __vtable* _vtable;
 		ADV_INTERFACE_WEAK_COMMON_CTORS(IAbstractComparable__Weak);
 		public: template<class __AnyType> requires std::derived_from<std::remove_cvref_t<__AnyType>, Builtin::InterfaceRef> && std::derived_from<typename std::remove_cvref_t<__AnyType>::__vtable, __vtable>
@@ -269,23 +269,23 @@ template<class T> inline constexpr bool Builtin::__details::cheapCopy<System::IC
 
 namespace System {
 	#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-	template<class __AnyType, class T> concept __HasMethodImplementation_ff4bfa67cd0092cc = requires(typename __AnyType::__class t) { {t.operator<=>(std::declval<Builtin::Nullable<T>>())} -> std::convertible_to<Builtin::i32>; }  || requires(typename __AnyType::__self t) { {operator<=>(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<Builtin::Nullable<T>>())} -> std::convertible_to<Builtin::i32>; } || requires { std::declval<typename __AnyType::__self&>() <=>std::declval<Builtin::Nullable<T>>(); };
+	template<class __AnyType, class T> concept __HasMethodImplementation_7bbbc06b58bf443b = requires(typename __AnyType::__class t) { {t.operator<=>(std::declval<T>())} -> std::convertible_to<Builtin::i32>; }  || requires(typename __AnyType::__self t) { {operator<=>(__extensions::__proxy<typename __AnyType::__self>{t}, std::declval<T>())} -> std::convertible_to<Builtin::i32>; } || requires { std::declval<typename __AnyType::__self&>() <=>std::declval<T>(); };
 	namespace __vtables {
 		#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
 		template<class T> struct __vtable_IComparable
 		{
-			using fn_ff4bfa67cd0092cc = const Builtin::i32(Builtin::Object*, Builtin::In<Builtin::Nullable<T>> other);
-			fn_ff4bfa67cd0092cc* fnptr_ff4bfa67cd0092cc;
+			using fn_7bbbc06b58bf443b = const Builtin::i32(Builtin::Object*, Builtin::In<T> other);
+			fn_7bbbc06b58bf443b* fnptr_7bbbc06b58bf443b;
 			#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-			template<class __AnyType> static const Builtin::i32 impl_ff4bfa67cd0092cc(Builtin::Object* obj, Builtin::In<Builtin::Nullable<T>> other) { ADV_EXPRESSION_BODY(ADV_UFCS(operator<=>)(*static_cast<typename __AnyType::__class*>(obj), other)); }
+			template<class __AnyType> static const Builtin::i32 impl_7bbbc06b58bf443b(Builtin::Object* obj, Builtin::In<T> other) { ADV_EXPRESSION_BODY(ADV_UFCS(operator<=>)(*static_cast<typename __AnyType::__class*>(obj), other)); }
 			
 		};
 	}
 	#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-	template<class __AnyType, class T> inline constexpr __vtables::__vtable_IComparable<T> __vtable_IComparable_for = {&__vtables::__vtable_IComparable<T>::template impl_ff4bfa67cd0092cc<__AnyType>
+	template<class __AnyType, class T> inline constexpr __vtables::__vtable_IComparable<T> __vtable_IComparable_for = {&__vtables::__vtable_IComparable<T>::template impl_7bbbc06b58bf443b<__AnyType>
 		};
 	#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-	template<class __AnyType, class T> concept __ImplementsInterface_IComparable = __HasMethodImplementation_ff4bfa67cd0092cc<__AnyType, T>;
+	template<class __AnyType, class T> concept __ImplementsInterface_IComparable = __HasMethodImplementation_7bbbc06b58bf443b<__AnyType, T>;
 	#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
 	template<class T> class IComparable final : public Builtin::InterfaceRef {
 		public: using __self = IComparable<T>;
@@ -298,7 +298,7 @@ namespace System {
 		public: using __unowned_ref = IComparable__Unowned<T>;
 		public: using __weak_ref = IComparable__Weak<T>;
 		public: template<class __AnyType> static constexpr bool __ImplementsInterface = __ImplementsInterface_IComparable<__AnyType, T>;
-		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 		private: const __vtable* _vtable;
 		ADV_INTERFACE_STRONG_COMMON_CTORS(IComparable);
 		public: using ElementType = T;
@@ -398,7 +398,7 @@ namespace System {
  		if (_obj) Builtin::Release(_obj); _obj = (Builtin::Object*)&value; Builtin::Retain(_obj); 
 		_vtable = &__vtable_IComparable_for<__FixedType, T>; return *this; }
 		#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\IComparable.ast"
-		public: FORCE_INLINE const Builtin::i32 operator<=>(Builtin::In<Builtin::Nullable<T>> other) const { ADV_EXPRESSION_BODY(_vtable->fnptr_ff4bfa67cd0092cc(_obj, other)); }
+		public: FORCE_INLINE const Builtin::i32 operator<=>(Builtin::In<T> other) const { ADV_EXPRESSION_BODY(_vtable->fnptr_7bbbc06b58bf443b(_obj, other)); }
 		
 	};
 	template<class T> class IComparable__Unowned final : public Builtin::InterfaceRef__Unowned {
@@ -490,7 +490,7 @@ namespace System {
 		public: using __strong_ref = IComparable<T>;
 		public: using __unowned_ref = IComparable__Unowned<T>;
 		public: using __weak_ref = __self;
-		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 		private: const __vtable* _vtable;
 		ADV_INTERFACE_WEAK_COMMON_CTORS(IComparable__Weak);
 		public: template<class> friend class IComparable;
@@ -524,7 +524,7 @@ namespace System {
 		}
 		
 	};
-	template<class __AnyInterface, class T> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IComparable::__vtable> FORCE_INLINE const Builtin::i32 operator<=>(const __AnyInterface& iface, Builtin::In<Builtin::Nullable<T>> other)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_ff4bfa67cd0092cc(Builtin::GetObjectReferenceFromInterface(&iface), other)); }
+	template<class __AnyInterface, class T> requires std::derived_from<__AnyInterface, Builtin::InterfaceRef> && std::derived_from<typename __AnyInterface::__vtable, typename IComparable::__vtable> FORCE_INLINE const Builtin::i32 operator<=>(const __AnyInterface& iface, Builtin::In<T> other)  { ADV_EXPRESSION_BODY(Builtin::GetVTableFromInterface(&iface)->fnptr_7bbbc06b58bf443b(Builtin::GetObjectReferenceFromInterface(&iface), other)); }
 	
 	
 }
@@ -561,7 +561,7 @@ namespace System {
 		public: using __unowned_ref = ISelfComparable__Unowned;
 		public: using __weak_ref = ISelfComparable__Weak;
 		public: template<class __AnyType> static constexpr bool __ImplementsInterface = __ImplementsInterface_ISelfComparable<__AnyType>;
-		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 		private: const __vtable* _vtable;
 		ADV_INTERFACE_STRONG_COMMON_CTORS(ISelfComparable);
 		public: template<class __AnyType> requires std::derived_from<std::remove_cvref_t<__AnyType>, Builtin::InterfaceRef> && std::derived_from<typename std::remove_cvref_t<__AnyType>::__vtable, __vtable>
@@ -736,7 +736,7 @@ namespace System {
 		public: using __strong_ref = ISelfComparable;
 		public: using __unowned_ref = ISelfComparable__Unowned;
 		public: using __weak_ref = __self;
-		public: FORCE_INLINE decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 		private: const __vtable* _vtable;
 		ADV_INTERFACE_WEAK_COMMON_CTORS(ISelfComparable__Weak);
 		public: template<class __AnyType> requires std::derived_from<std::remove_cvref_t<__AnyType>, Builtin::InterfaceRef> && std::derived_from<typename std::remove_cvref_t<__AnyType>::__vtable, __vtable>

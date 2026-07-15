@@ -5,6 +5,7 @@ public import UInt128;
 public import Boolean;
 public import MidpointRounding;
 public import FloatingPointCategory;
+public import InlineArray;
 public import System.Numerics.IBinaryFloatFormatInfo;
 
 public type Float32 = f32;
@@ -641,7 +642,7 @@ public extension f32: IFloatingPoint {
             throw Builtin.InvalidArgumentException(); //ArgumentOutOfRange
         }
 
-        result := this;
+       result := this;
         if this.Abs < singleRoundLimit {
             let pow10 := pow10table[digits];
             result *= pow10;

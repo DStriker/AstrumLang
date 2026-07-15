@@ -3,6 +3,7 @@ package System.Globalization;
 public import UnicodeCategory;
 public import StrongBidiCategory;
 public import System.Float64;
+public import System.InlineArray;
 
 public static class CharUnicodeInfo {
     public inline GetUnicodeCategory: (codepoint: u32) -> UnicodeCategory

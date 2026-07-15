@@ -528,8 +528,25 @@ private const qS9 :== f128.FromBits(0xBFF2_A230_064A_F874_87AA_66DC_CC58_B501_u1
 
 private inline R: (z: f128) -> f128 noexcept ==
 {
-    let p := z * (pS0 + z * (pS1 + z * (pS2 + z * (pS3 + z * (pS4 + z * (pS5 + z * (pS6 + z * (pS7 + z * (pS8 + z * pS9)))))))));
-    let q := f128.One + z * (qS1 + z * (qS2 + z * (qS3 + z * (qS4 + z * (qS5 + z * (qS6 + z * (qS7 + z * (qS8 + z * qS9))))))));
+    p0 := (pS8 + z * pS9);
+    p0 = (pS7 + z * p0);
+    p0 = (pS6 + z * p0);
+    p0 = (pS5 + z * p0);
+    p0 = (pS4 + z * p0);
+    p0 = (pS3 + z * p0);
+    p0 = (pS2 + z * p0);
+    p0 = (pS1 + z * p0);
+    p0 = (pS0 + z * p0);
+    let p := z * p0;
+    p0 = (qS8 + z * qS9);
+    p0 = (qS7 + z * p0);
+    p0 = (qS6 + z * p0);
+    p0 = (qS5 + z * p0);
+    p0 = (qS4 + z * p0);
+    p0 = (qS3 + z * p0);
+    p0 = (qS2 + z * p0);
+    p0 = (qS1 + z * p0);
+    let q := f128.One + z * p0;
     return p / q;
 }
 
@@ -581,9 +598,17 @@ private const C11 :== f128.FromBits(0x3FAF_EF81_27D7_65B0_90B7_B2A6_9D9B_4DA3_u1
 
 private Poly: (z: f128) -> f128 noexcept ==
 {
-    let r := (z * (C1 + z * (C2 + z * (C3 + z * (C4 + z * (C5 + z * (C6 + z * 
-        (C7 + z * (C8 + z * (C9 + z * (C10 + z * C11)))))))))));
-    return r;
+    x := (C10 + z * C11);
+    x = (C9 + z * x);
+    x = (C8 + z * x);
+    x = (C7 + z * x);
+    x = (C6 + z * x);
+    x = (C5 + z * x);
+    x = (C4 + z * x);
+    x = (C3 + z * x);
+    x = (C2 + z * x);
+    x = (C1 + z * x);
+    return z * x;
 }
 
 // Sin helper constants
@@ -1090,7 +1115,17 @@ private SinInternal: (x: f128, y: f128, iy: i32) -> f128 noexcept ==
 {
     let z := x * x;
     let v := z * x;
-    let r := (S2 + z * (S3 + z * (S4 + z * (S5 + z * (S6 + z * (S7 + z * (S8 + z * (S9 + z * (S10 + z * (S11 + z * S12))))))))));
+    x0 := (S11 + z * S12);
+    x0 = (S10 + z * x0);
+    x0 = (S9 + z * x0);
+    x0 = (S8 + z * x0);
+    x0 = (S7 + z * x0);
+    x0 = (S6 + z * x0);
+    x0 = (S5 + z * x0);
+    x0 = (S4 + z * x0);
+    x0 = (S3 + z * x0);
+    x0 = (S2 + z * x0);
+    let r := x0;
 
     return iy == 0 ? x + v * (S1 + z * r)
                    : x - ((z * (f128(0.5) * y - v * r) - y) - v * S1);
@@ -1099,7 +1134,17 @@ private SinInternal: (x: f128, y: f128, iy: i32) -> f128 noexcept ==
 private CosInternal: (x: f128, y: f128) -> f128 noexcept ==
 {
     let z := x * x;
-    let r := (z * (C1 + z * (C2 + z * (C3 + z * (C4 + z * (C5 + z * (C6 + z * (C7 + z * (C8 + z * (C9 + z * (C10 + z * C11)))))))))));
+    x0 := (C10 + z * C11);
+    x0 = (C9 + z * x0);
+    x0 = (C8 + z * x0);
+    x0 = (C7 + z * x0);
+    x0 = (C6 + z * x0);
+    x0 = (C5 + z * x0);
+    x0 = (C4 + z * x0);
+    x0 = (C3 + z * x0);
+    x0 = (C2 + z * x0);
+    x0 = (C1 + z * x0);
+    let r := (z * x0);
     let hz := f128(0.5) * z;
     let w := f128.One - hz;
 

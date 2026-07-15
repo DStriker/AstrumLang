@@ -1,0 +1,167 @@
+package System;
+
+public import MutableSpan;
+
+public ref struct <T> Span: ISelfEquatable, IAbstractSequence, ISequence<T> {
+    public type ElementType = T;
+
+    private _data: &T;
+    private _length: usize;
+
+    public implicit this(span: MutableSpan<T>) noexcept == {
+        this(span.GetDataReference(), span.Length);
+    }
+
+    public unsafe this(ptr: *const T, length: usize) == {
+        this._data = ptr*;
+        this._length = length;
+
+        if ptr == null {
+            throw Builtin.InvalidArgumentException();
+        }
+    }
+
+    private this(in ref data: T, length: usize) noexcept == {
+        this._data = data;
+        this._length = length;
+    }
+
+    public implicit this<S: usize>(in ref arr: T[S]) noexcept == {
+        this._data = arr.GetDataReference();
+        this._length = S;
+    }
+
+    public this[index: i32] -> const ref T == {
+        let realIndex := index as usize;
+        if realIndex >= _length {
+            throw Builtin.IndexOutOfRangeException();
+        }
+        return Unsafe.Add(_data, realIndex);
+    }
+    @Unchecked
+    public this[index: i32] -> const ref T == {
+        return Unsafe.Add(_data, index as usize);
+    }
+    public this[index: Index] -> const ref T == {
+        let realIndex := index.Offset(_length) as usize;
+
+        if realIndex >= _length {
+            throw Builtin.IndexOutOfRangeException();
+        }
+        return Unsafe.Add(_data, realIndex);
+    }
+    @Unchecked
+    public this[index: Index] -> const ref T == {
+        return Unsafe.Add(_data, index.Offset(_length) as usize);
+    }
+    public this[range: IndexRange] -> self == {
+        let start := range.Start.Offset(_length) as usize;
+        let len := range.Length(_length);
+
+        if (start + len) > _length {
+            throw Builtin.IndexOutOfRangeException();
+        }
+        return self(Unsafe.Add(_data, start), len);
+    }
+    @Unchecked
+    public this[range: IndexRange] -> self == {
+        return self(Unsafe.Add(_data, range.Start.Offset(_length) as usize), range.Length(_length));
+    }
+
+    public Slice: (start: usize) -> self == {
+        if start >= _length {
+            throw Builtin.IndexOutOfRangeException();
+        }
+        return self(Unsafe.Add(_data, start), _length - start);
+    }
+
+    public Slice: (start: usize, length: usize) -> self == {
+        if start + length >= _length {
+            throw Builtin.IndexOutOfRangeException();
+        }
+        return self(Unsafe.Add(_data, start), length);
+    }
+
+    public operator==: (other: self) -> bool noexcept == {
+        return _length == other._length and Unsafe.AreSame(_data, other._data);
+    }
+
+    public GetLength: () -> usize noexcept ==> _length;
+    public GetDataReference: () -> &T noexcept ==> _data;
+
+    public ref struct Iterator: IAbstractIterator, IIterator<T> {
+        public type ElementType = T;
+
+        private _ref: &T;
+        private _length: usize;
+        private _index: usize;
+        friend Span<T>;
+
+        private this(span: Span<T>) noexcept == {
+            this._ref = span.GetDataReference();
+            this._length = span.Length;
+            this._index = usize.MaxValue;
+        }
+
+        public mut MoveNext: () -> bool noexcept == {
+            let newIndex := _index +% 1uz;
+            if newIndex < _length {
+                _index = newIndex;
+                return true;
+            }
+            return false;
+        }
+
+        public GetCurrent: () -> T == {
+            return Unsafe.Add(_ref, _index);
+        }
+
+        public GetCurrentRef: () -> const ref T == {
+            return Unsafe.Add(_ref, _index);
+        }
+    }
+    public Iterate: () -> Iterator ==> Iterator(this);
+
+    public static UnsafeCreate: (in ref data: T, length: usize) -> self == {
+        return self(data, length);
+    }
+}
+
+public extension <T> Span {
+    Length: usize ==> this.GetLength();
+    IsEmpty: bool ==> this.GetLength() == 0u;
+
+    AsBytes: Span<byte> ==
+    {
+        unsafe {
+            return Span<byte>(UnsafePointerCast<byte>(this.GetDataReference()&), this.Length * sizeof(T));
+        }
+    }
+}
+
+static assert(sizeof(i32[&]) == sizeof(usize) * 2, "Span should be 2 pointers wide");
+static assert(type i32[&] is ISelfEquatable, "i32[&] should be ISelfEquatable");
+static assert(type i32[&] is IEquatable<i32[&]>, "i32[&] should be IEquatable<i32[&]>");
+
+test "Span" {
+    arr: i32[_] = [1, 2, 3, 4, 5];
+    sp: i32[&] = Span<i32>.UnsafeCreate(arr[1], 3u);
+    assert sp.Length == 3;
+    assert not sp.IsEmpty;
+    assert sp[0] == 2;
+    assert sp[1] == 3;
+    assert sp[2] == 4;
+    assert sp[@Unchecked 3] == 5;
+    assert sp[^1u] == 4;
+    assert sp[^2u] == 3;
+    sp2: i32[&] = Span<i32>.UnsafeCreate(arr[1], 3u);
+    assert sp == sp2;
+    assert sp[..^1u].Length == 2;
+    assert sp[..=^1u].Length == 3;
+    spm: i32[&mut] = MutableSpan<i32>.UnsafeCreate(&arr[1], 3u);
+    sp = spm;
+    assert sp[0] == 2;
+    assert sp[1] == 3;
+    assert sp[2] == 4;
+}
+

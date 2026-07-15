@@ -41,6 +41,10 @@ namespace Builtin {
 		NullReferenceException() : std::runtime_error("Null reference") {}
 	};
 
+	struct IndexOutOfRangeException : public std::runtime_error {
+		IndexOutOfRangeException() : std::runtime_error("Index out of range") {}
+	};
+
 	template <class T>
 	inline void Throw(const T& e) requires(std::is_base_of_v<std::exception, T>) {
 #ifndef NDEBUG

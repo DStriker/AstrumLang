@@ -14,6 +14,7 @@ namespace Builtin {
 	   public:
 		using __self                   = InlineArray<S, T>;
 		using __class                  = __Class_Basic<__self>;
+		using ElementType              = T;
 		static constexpr size_t Length = S;
 
 		constexpr __self& __ref() noexcept { return *this; }
@@ -25,23 +26,100 @@ namespace Builtin {
 
 		constexpr InlineArray(std::initializer_list<T> il) { std::move(il.begin(), il.end(), arr); }
 
-		constexpr T& operator[](size_t i) {
-			if (i >= S)
+		constexpr T& operator[](i32 i) {
+			const size_t index = size_t(i);
+			if (index >= S)
 				throw InvalidArgumentException();
-			return arr[i];
+			return arr[index];
 		}
-		constexpr const T& operator[](size_t i) const {
-			if (i >= S)
+		constexpr const T& operator[](i32 i) const {
+			const size_t index = size_t(i);
+			if (index >= S)
 				throw InvalidArgumentException();
-			return arr[i];
+			return arr[index];
 		}
 
-		constexpr T& _operator_subscript(UncheckedTag, size_t i) { return arr[i]; }
-		constexpr const T& _operator_subscript(UncheckedTag, size_t i) const { return arr[i]; }
+		constexpr T& _operator_subscript(UncheckedTag, i32 i) { return arr[size_t(i)]; }
+		constexpr const T& _operator_subscript(UncheckedTag, i32 i) const { return arr[size_t(i)]; }
 
-		constexpr T& _operator_subscript(size_t i) { return (*this)[i]; }
-		constexpr const T& _operator_subscript(size_t i) const { return (*this)[i]; }
+		constexpr T& _operator_subscript(i32 i) { return (*this)[i]; }
+		constexpr const T& _operator_subscript(i32 i) const { return (*this)[i]; }
+
+		constexpr T& GetDataReference() noexcept { return arr[0]; }
+		constexpr const T& GetDataReference() const noexcept { return arr[0]; }
+
+		constexpr bool operator==(const __self& other) const noexcept {
+			for (int i = 0; i < S; i++) {
+				if (arr[i] != other[i])
+					return false;
+			}
+			return true;
+		}
+
+		template <bool IsConst = true>
+		class __Class_Iterator;
+
+		template <bool IsConst = true>
+		struct Iterator : public Struct {
+			using ElementType = T;
+			using __self      = Iterator<IsConst>;
+			using __class     = __Class_Iterator<IsConst>;
+			constexpr __self& __ref() noexcept { return *this; }
+			constexpr const __self& __ref() const noexcept { return *this; }
+
+		   private:
+			using PtrType = std::conditional_t<IsConst, const T*, T*>;
+			PtrType ptr;
+			size_t index = size_t(-1);
+
+			friend InlineArray<S, T>;
+
+		   public:
+			constexpr Iterator(PtrType ref) noexcept : ptr(ref) {}
+
+			constexpr bool MoveNext() noexcept {
+				const auto newIndex = index + 1;
+				if (newIndex < S) {
+					index = newIndex;
+					return true;
+				}
+				return false;
+			}
+
+			constexpr const T GetCurrent() const { return ptr[index]; }
+			constexpr decltype(auto) GetCurrentRef() const { return ptr[index]; }
+		};
+
+		template <bool IsConst>
+		class __Class_Iterator : public ValueType {
+			Iterator<IsConst> __value;
+
+		   public:
+			using __self       = Iterator<IsConst>;
+			using __underlying = __self;
+			__Class_Iterator(const __underlying& value) noexcept(
+			    std::is_nothrow_copy_constructible_v<__underlying>)
+			    : __value {value} {}
+			operator __underlying() const noexcept { return __value; }
+
+			constexpr bool MoveNext() noexcept { return __value.MoveNext(); }
+
+			constexpr const T GetCurrent() const noexcept { return __value.GetCurrent(); }
+			constexpr decltype(auto) GetCurrentRef() const noexcept {
+				return __value.GetCurrentRef();
+			}
+		};
+
 	};
+
+	template<class T, size_t S>
+	auto Iterate(InlineArray<S, T>& arr) noexcept {
+		return typename InlineArray<S, T>::Iterator<false>(&arr.GetDataReference());
+	}
+	template <class T, size_t S>
+	auto Iterate(const InlineArray<S, T>& arr) noexcept {
+		return typename InlineArray<S, T>::Iterator<true>(&arr.GetDataReference());
+	}
 
 	template <class T, size_t S, size_t... I>
 	constexpr InlineArray<S, std::remove_cv_t<T>> _to_array_lvalue_impl(T (&arr)[S],

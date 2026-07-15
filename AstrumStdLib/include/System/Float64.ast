@@ -5,6 +5,7 @@ public import UInt128;
 public import Boolean;
 public import MidpointRounding;
 public import FloatingPointCategory;
+public import InlineArray;
 public import System.Numerics.IBinaryFloatFormatInfo;
 
 public type Float64 = f64;

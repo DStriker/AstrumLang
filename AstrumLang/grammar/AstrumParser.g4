@@ -696,7 +696,7 @@ typePostfix
     ;
 
 arrayDeclarator
-    : LeftBracket constantExpression? RightBracket Question?
+    : LeftBracket (constantExpression | Amp | Amp Mutable)? RightBracket Question?
     ;
 
 pointerOperator

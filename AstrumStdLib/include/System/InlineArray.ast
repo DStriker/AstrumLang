@@ -1,0 +1,96 @@
+package System;
+
+public import Span;
+
+public type InlineArray<T, S: usize> = T[S];
+
+public extension <T, S: usize> T[S] {
+    Length: usize ==> S;
+
+    mut this[index: Index] -> ref T == {
+        let realIndex := index.Offset(S) as usize;
+
+        if realIndex >= S {
+            throw Builtin.IndexOutOfRangeException();
+        }
+        return Unsafe.Add(&this.GetDataReference(), realIndex);
+    }
+    @Unchecked
+    mut this[index: Index] -> ref T == {
+        return Unsafe.Add(&this.GetDataReference(), index.Offset(S) as usize);
+    }
+    this[index: Index] -> const ref T == {
+        let realIndex := index.Offset(S) as usize;
+
+        if realIndex >= S {
+            throw Builtin.IndexOutOfRangeException();
+        }
+        return Unsafe.Add(this.GetDataReference(), realIndex);
+    }
+    @Unchecked
+    this[index: Index] -> const ref T == {
+        return Unsafe.Add(this.GetDataReference(), index.Offset(S) as usize);
+    }
+
+    mut this[range: IndexRange] -> T[&mut] == {
+        let start := range.Start.Offset(S) as usize;
+        let len := range.Length(S);
+
+        if (start + len) > S {
+            throw Builtin.IndexOutOfRangeException();
+        }
+        return MutableSpan<T>.UnsafeCreate(Unsafe.Add(&this.GetDataReference(), start), len);
+    }
+    @Unchecked
+    mut this[range: IndexRange] -> T[&mut] == {
+        return MutableSpan<T>.UnsafeCreate(Unsafe.Add(&this.GetDataReference(), 
+            range.Start.Offset(S) as usize), range.Length(S));
+    }
+    this[range: IndexRange] -> T[&] == {
+        let start := range.Start.Offset(S) as usize;
+        let len := range.Length(S);
+
+        if (start + len) > S {
+            throw Builtin.IndexOutOfRangeException();
+        }
+        return Span<T>.UnsafeCreate(Unsafe.Add(this.GetDataReference(), start), len);
+    }
+    @Unchecked
+    this[range: IndexRange] -> T[&] == {
+        return Span<T>.UnsafeCreate(Unsafe.Add(this.GetDataReference(), 
+            range.Start.Offset(S) as usize), range.Length(S));
+    }
+}
+
+static assert(sizeof(i32[5]) == 20, "Fixed array should be sizeof(T) * S bytes");
+static assert(type i32[5] is ISelfEquatable, "Fixed array should implement ISelfEquatable");
+static assert(type i32[5] is IAbstractSequence, "Fixed array should implement IAbstractSequence");
+static assert(type i32[5] is ISequence<i32>, "Fixed array should implement ISequence<T>");
+static assert(type InlineArray<i32, 5>.Iterator<true> is IAbstractIterator, "Fixed array iterator should implement IAbstractIterator");
+static assert(type InlineArray<i32, 5>.Iterator<true> is IIterator<i32>, "Fixed array iterator should implement IIterator<T>");
+static assert(type InlineArray<i32, 5>.Iterator<false> is IAbstractIterator, "Fixed array iterator should implement IAbstractIterator");
+static assert(type InlineArray<i32, 5>.Iterator<false> is IIterator<i32>, "Fixed array iterator should implement IIterator<T>");
+static assert(type InlineArray<i32, 5>.Iterator<false> is IAbstractRefIterator, "Fixed array iterator should implement IAbstractRefIterator");
+static assert(type InlineArray<i32, 5>.Iterator<false> is IRefIterator<i32>, "Fixed array iterator should implement IRefIterator<T>");
+
+test "InlineArray" {
+    arr: i32[_] = [1, 2, 3, 4, 5];
+    assert arr.Length == 5;
+    sp := arr[..^1u];
+    assert sp.Length == 4;
+    assert sp[0] == 1;
+    assert sp[1] == 2;
+    assert sp[2] == 3;
+    assert sp[3] == 4;
+    sp = &arr;
+    assert sp.Length == 5;
+    arr[^1u] = 6;
+    assert arr[^1u] == 6;
+    assert arr[4] == 6;
+    arr2: i32[_] = [1, 2, 3, 4, 6];
+    assert arr == arr2;
+    sp2: i32[&] = arr2;
+    assert sp2.Length == 5;
+    assert sp2[4] == 6;
+
+}

@@ -1026,7 +1026,7 @@ namespace AstrumLang {
 		}
 
 		// local variable tracking
-		if (functionBody) {
+		if (functionBody && !initStates.empty()) {
 			initStates.top().varDepth[ctx->Identifier()->getText()] = initStates.size();
 		}
 
@@ -1383,7 +1383,7 @@ namespace AstrumLang {
 		auto seq = ctx->identifierSeq();
 		for (auto id : seq->Identifier()) {
 			// local variable tracking
-			if (functionBody) {
+			if (functionBody && !initStates.empty()) {
 				initStates.top().varDepth[id->getText()] = initStates.size();
 			}
 			symbolTable[id->getText()] = contextTypes[ctx->initializerClause()];
@@ -1506,7 +1506,7 @@ namespace AstrumLang {
 		}
 
 		// local variable tracking
-		if (functionBody) {
+		if (functionBody && !initStates.empty()) {
 			for (auto id : ctx->Identifier())
 				initStates.top().varDepth[id->getText()] = initStates.size();
 		}
@@ -1698,10 +1698,10 @@ namespace AstrumLang {
 				                         ->getStart());
 		}
 
+		std::optional<AccessSpecifier> access = std::nullopt;
 		if (firstPass) {
 			AstrumParser::AccessSpecifierContext* acc              = nullptr;
 			AstrumParser::AttributeSpecifierSeqContext* attributes = nullptr;
-			std::optional<AccessSpecifier> access                  = std::nullopt;
 			if (!isTypeDefinitionBody()) {
 				if (auto block =
 				        reinterpret_cast<AstrumParser::BlockDeclarationContext*>(ctx->parent)) {
@@ -1779,6 +1779,47 @@ namespace AstrumLang {
 				symbolTable.globalSymbolTable[currentType + "." + id] = t;
 			}
 		}
+
+		auto interval = ctx->initializerClause()->getSourceInterval();
+		bool isStr    = ctx->theTypeId() && ctx->theTypeId()->getText() == "str";
+		if (!isStr) {
+			auto txt = ctx->initializerClause()->getText();
+			isStr    = txt.find("\"+") != std::string::npos || txt.find("+\"") != std::string::npos;
+		}
+		if (isStr) {
+			std::vector<std::string> literals;
+			bool isPlus = false;
+			for (size_t i = interval.a; i <= interval.b; ++i) {
+				auto token = parser->getTokenStream()->get(i);
+				if (token->getType() == AstrumParser::Identifier) {
+					auto id = token->getText();
+					stringConstants[ctx->initializerClause()].push_back(id);
+				} else if (token->getType() == AstrumParser::StringLiteral) {
+					isStr   = true;
+					auto id = token->getText();
+					stringConstants[ctx->initializerClause()].push_back(id);
+					literals.push_back(id);
+				} else if (token->getType() != AstrumParser::Plus) {
+					isStr = false;
+					stringConstants.erase(ctx->initializerClause());
+					break;
+				} else {
+					isPlus = true;
+				}
+			}
+			if (!isPlus)
+				isStr = false;
+			std::unordered_map<std::string, std::string>& literalTable =
+			    firstPass ? publicStringLiterals : privateStringLiterals;
+
+			int i = 0;
+			if (isStr)
+				for (const auto& lit : literals) {
+					literalTable.insert(
+					    std::make_pair(std::format("__strconst_{}_{}", (void*) ctx->initializerClause(), i++), lit));
+				}
+		}
+
 		if (functionBody && ctx->templateParams()) {
 			notifyErrorListeners("Cannot to use variable template in the function body",
 			                     ctx->templateParams()->getStart());
@@ -1911,8 +1952,18 @@ namespace AstrumLang {
 		if (ctx->Unsafe())
 			--unsafeDepth;
 		while (!typeStack.empty()) typeStack.pop();
-		if (!firstPass && ctx->compoundStatement() && !initStates.empty())
+		if (!firstPass && ctx->compoundStatement() && !initStates.empty()) {
+			auto inner = initStates.top();
 			initStates.pop();
+			auto& external = initStates.top();
+			for (const auto& var : external.potentiallyAssigned)
+			{
+				if (inner.definitelyAssigned.contains(var))
+				{
+					external.definitelyAssigned.insert(var);
+				}
+			}
+		}
 		currentTemplateArgs.clear();
 		currentSubtype.clear();
 		assignmentDepth = 0;
@@ -2180,11 +2231,14 @@ namespace AstrumLang {
 				notifyErrorListeners("Each branch of a function must initialize all out parameters",
 				                     ctx->Return()->getSymbol());
 			}
-			if (isLocalReturn) {
-				localReturns[ctx] = std::make_pair(currentReturnType, isSimpleRefReturn);
-			} else if (isParamReturn) {
-				paramReturns[ctx] = std::make_tuple(currentReturnType, isSimpleRefReturn, currentReturnArg);
-				currentReturnArg.clear();
+			if (currentReturnType) {
+				if (isLocalReturn) {
+					localReturns[ctx] = std::make_pair(currentReturnType, isSimpleRefReturn);
+				} else if (isParamReturn) {
+					paramReturns[ctx] =
+					    std::make_tuple(currentReturnType, isSimpleRefReturn, currentReturnArg);
+					currentReturnArg.clear();
+				}
 			}
 		}
 
@@ -2488,8 +2542,10 @@ namespace AstrumLang {
 				auto& varDepth = initStates.top().varDepth;
 				auto lhsDepth  = varDepth.find(ident);
 				if (lhsDepth != varDepth.end()) {
-					auto lhsMutRef = assignmentDepth ? initStates.top().mutableRefs.contains(
-					    currentAssignment->logicalOrExpression()->getText()) : false;
+					auto lhsMutRef = assignmentDepth
+					                     ? initStates.top().mutableRefs.contains(
+					                           currentAssignment->logicalOrExpression()->getText())
+					                     : false;
 					if (lhsDepth->second > assignmentDepth && (!lhsMutRef || rhsMutRef)) {
 						potentiallyDangerousAssignment = true;
 					}
@@ -2501,10 +2557,10 @@ namespace AstrumLang {
 					}
 				} else if (isReturn && initStates.top().functionParams.contains(ident)) {
 					currentReturnArg = ident;
-					isParamReturn = true;
+					isParamReturn    = true;
 				}
 			}
-			assignmentDepth = 0;
+			assignmentDepth   = 0;
 			isParamAssignment = false;
 			isReturn          = false;
 		}

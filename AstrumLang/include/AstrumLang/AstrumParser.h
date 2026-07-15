@@ -2627,6 +2627,8 @@ public:
     antlr4::tree::TerminalNode *LeftBracket();
     antlr4::tree::TerminalNode *RightBracket();
     ConstantExpressionContext *constantExpression();
+    antlr4::tree::TerminalNode *Amp();
+    antlr4::tree::TerminalNode *Mutable();
     antlr4::tree::TerminalNode *Question();
 
 

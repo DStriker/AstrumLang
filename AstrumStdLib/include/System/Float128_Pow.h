@@ -30,8 +30,8 @@ namespace __ntuples {
 			Builtin::u32 HighHi;
 			constexpr NamedTuple_da175a0d257547d1() = default;
 			constexpr NamedTuple_da175a0d257547d1(Builtin::In<Builtin::u32> _LowLo, Builtin::In<Builtin::u32> _LowHi, Builtin::In<Builtin::u32> _HighLo, Builtin::In<Builtin::u32> _HighHi) : LowLo{_LowLo}, LowHi{_LowHi}, HighLo{_HighLo}, HighHi{_HighHi} {}
-			constexpr FORCE_INLINE decltype(auto) __ref() noexcept { return *this; }
-			constexpr FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+			constexpr FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; }
+			constexpr FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 			template <size_t I> friend auto& get(__ntuples::NamedTuple_da175a0d257547d1&);
 			template <size_t I> friend const auto& get(const __ntuples::NamedTuple_da175a0d257547d1&);
 			
@@ -66,8 +66,8 @@ namespace System {namespace __ntuples {
 			Builtin::u64 High;
 			constexpr NamedTuple_a488367d9020e593() = default;
 			constexpr NamedTuple_a488367d9020e593(Builtin::In<Builtin::u64> _Low, Builtin::In<Builtin::u64> _High) : Low{_Low}, High{_High} {}
-			constexpr FORCE_INLINE decltype(auto) __ref() noexcept { return *this; }
-			constexpr FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+			constexpr FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; }
+			constexpr FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 			template <size_t I> friend auto& get(__ntuples::NamedTuple_a488367d9020e593&);
 			template <size_t I> friend const auto& get(const __ntuples::NamedTuple_a488367d9020e593&);
 			
@@ -96,8 +96,8 @@ namespace System {namespace __ntuples {
 			Builtin::u64 Low;
 			constexpr NamedTuple_659f7778a6155ee5() = default;
 			constexpr NamedTuple_659f7778a6155ee5(Builtin::In<Builtin::u64> _High, Builtin::In<Builtin::u64> _Low) : High{_High}, Low{_Low} {}
-			constexpr FORCE_INLINE decltype(auto) __ref() noexcept { return *this; }
-			constexpr FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+			constexpr FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; }
+			constexpr FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 			template <size_t I> friend auto& get(__ntuples::NamedTuple_659f7778a6155ee5&);
 			template <size_t I> friend const auto& get(const __ntuples::NamedTuple_659f7778a6155ee5&);
 			
@@ -128,8 +128,8 @@ namespace System {namespace __ntuples {
 			Builtin::u32 LowLo;
 			constexpr NamedTuple_2dcf424a354959c5() = default;
 			constexpr NamedTuple_2dcf424a354959c5(Builtin::In<Builtin::u32> _HighHi, Builtin::In<Builtin::u32> _HighLo, Builtin::In<Builtin::u32> _LowHi, Builtin::In<Builtin::u32> _LowLo) : HighHi{_HighHi}, HighLo{_HighLo}, LowHi{_LowHi}, LowLo{_LowLo} {}
-			constexpr FORCE_INLINE decltype(auto) __ref() noexcept { return *this; }
-			constexpr FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+			constexpr FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; }
+			constexpr FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 			template <size_t I> friend auto& get(__ntuples::NamedTuple_2dcf424a354959c5&);
 			template <size_t I> friend const auto& get(const __ntuples::NamedTuple_2dcf424a354959c5&);
 			
@@ -158,7 +158,7 @@ namespace std {
 namespace System {//###############################################################################
 //# Free function declarations
 //###############################################################################
-#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Pow.ast"
+#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Pow.ast"
 	ASTRUMSTD_HIDDEN auto PowImpl(Builtin::f128 x, Builtin::f128 exp)  -> const Builtin::f128;
 //###############################################################################
 //# Global compile-time constants

@@ -34,11 +34,11 @@ namespace Builtin {
 	    usize HashCode() const { return 123456u; }
 	};*/
 
-	struct RefStruct {
+	/*struct RefStruct {
 		Str ToString() const { return "Struct"; }
 
 		usize HashCode() const { return 123456u; }
-	};
+	};*/
 	struct Enum {};
 	struct Union {};
 	struct InterfaceRef;

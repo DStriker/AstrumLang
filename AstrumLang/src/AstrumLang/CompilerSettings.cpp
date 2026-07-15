@@ -34,7 +34,7 @@ namespace AstrumLang {
 			} else if (str.starts_with("-o:")) {
 				get().exePath = str.substr(3);
 			} else if (str.starts_with("-I:")) {
-				CppSymbolParser::args.push_back(arg);
+				//CppSymbolParser::args.push_back(arg);
 				get().includePaths.emplace_back(str.substr(3));
 			} else if (str.starts_with("-L:")) {
 				get().libraryPaths.emplace_back(str.substr(3));
