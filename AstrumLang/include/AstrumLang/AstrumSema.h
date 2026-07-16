@@ -408,6 +408,7 @@ namespace AstrumLang {
 		bool isLocalReturn                  = false;
 		bool isParamReturn                  = false;
 		bool isSimpleRefReturn              = false;
+		bool isLifetimeControl              = false;
 
 	   public:
 		AstrumParser::ModuleContext* ast;

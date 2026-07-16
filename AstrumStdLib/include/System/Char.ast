@@ -57,6 +57,12 @@ public extension byte {
     IsAsciiWhiteSpace: bool ==> this.IsAscii and IsWhiteSpaceLatin1(this);
     IsWhiteSpace: bool ==> this.IsAsciiWhiteSpace;
     IsAsciiPrintable: bool ==> this in b'!'..=b'~';
+    IsUtf8CodePointBoundary: bool == {
+        if this == 0u8 {
+            return true;
+        }
+        return this.NarrowToInt8() >= -0x40i8;
+    }
     ToLower: self ==> this.IsAsciiLetterUpper ? (this + 32u8) : this;
     ToUpper: self ==> this.IsAsciiLetterLower ? (this - 32u8) : this;
 

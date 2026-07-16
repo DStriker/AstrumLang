@@ -1,0 +1,23 @@
+package System.Collections;
+
+public import ISequence;
+import System.Range;
+
+public type Generator<T> = Builtin.Generator<T>;
+
+private TestCoro: (bound: i32) -> Generator<i32> {
+    for i in 0..bound {
+        yield i;
+    }
+}
+
+static assert(type Generator<i32> is IAbstractSequence, "Generator should be ISequence");
+static assert(type Generator<i32> is ISequence<i32>, "Generator should be ISequence");
+static assert(type Generator<i32>.Iterator is IAbstractIterator, "Generator iterator should be IIterator");
+static assert(type Generator<i32>.Iterator is IIterator<i32>, "Generator iterator should be IIterator");
+
+test "Generator" {
+    /*for i in TestCoro(15) {
+        print(i);
+    }*/
+}

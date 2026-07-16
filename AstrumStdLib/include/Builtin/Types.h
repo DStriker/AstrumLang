@@ -1759,3 +1759,254 @@ namespace Builtin {
 		__self _operator_not() const noexcept { return ~__value; }
 	};
 }  // namespace Builtin
+
+#define ADV_CLASS_DEFAULT_CTOR(...)                                                                \
+	__VA_ARGS__() : ___super(new (::operator new(sizeof(__class))) __class) {}
+
+#define ADV_CLASS_FROM_PTR(...)                                                                    \
+                                                                                                   \
+   protected:                                                                                      \
+	##__VA_ARGS__(Builtin::Object* obj) : ___super(obj) {}
+#define ADV_CLASS_WEAK_FROM_PTR(...)                                                               \
+                                                                                                   \
+   protected:                                                                                      \
+	##__VA_ARGS__(Builtin::ObjectSideTable* obj) : ___super(obj) {}
+
+#define ADV_CLASS_INIT(...)                                                                        \
+                                                                                                   \
+   public:                                                                                         \
+	##__VA_ARGS__(__class* obj, InitTag) : ___super(reinterpret_cast<Builtin::Object*>(obj)) {}
+
+#define ADV_CLASS_STRONG_COMMON_CTORS(...)                                                         \
+                                                                                                   \
+   public:                                                                                         \
+	##__VA_ARGS__(const __class& ref);                                                             \
+	##__VA_ARGS__(##__VA_ARGS__ const& copy) : ___super {copy._obj} { Builtin::Retain(_obj); }     \
+	##__VA_ARGS__(##__VA_ARGS__&& moved) noexcept : ___super {moved._obj} {                        \
+		moved._obj = nullptr;                                                                      \
+	}                                                                                              \
+	##__VA_ARGS__& operator=(__class const& ref);                                                  \
+	##__VA_ARGS__& operator=(##__VA_ARGS__ const& copy) {                                          \
+		if (copy._obj != _obj) {                                                                   \
+			Builtin::Release(_obj);                                                                \
+			_obj = copy._obj;                                                                      \
+			Builtin::Retain(_obj);                                                                 \
+		}                                                                                          \
+		return *this;                                                                              \
+	}                                                                                              \
+	##__VA_ARGS__& operator=(##__VA_ARGS__&& moved) {                                              \
+		if (moved._obj != _obj) {                                                                  \
+			Builtin::Release(_obj);                                                                \
+			_obj = moved._obj;                                                                     \
+		}                                                                                          \
+		moved._obj = nullptr;                                                                      \
+		return *this;                                                                              \
+	}                                                                                              \
+                                                                                                   \
+   protected:                                                                                      \
+	##__VA_ARGS__(decltype(nullptr)) noexcept : ___super {nullptr} {}                              \
+	##__VA_ARGS__& operator=(decltype(nullptr)) {                                                  \
+		if (_obj)                                                                                  \
+			Builtin::Release(_obj);                                                                \
+		_obj = nullptr;                                                                            \
+		return *this;                                                                              \
+	}                                                                                              \
+	template <class __OptionalRef>                                                                 \
+	friend class Builtin::OptionalStrongRef;                                                       \
+	template <class __OptionalRef>                                                                 \
+	friend class Builtin::OptionalUnownedRef;
+
+#define ADV_CLASS_STRONG_CTOR_REF(...)                                                             \
+	__VA_ARGS__(const __class& ref) : ___super {ref} {}
+
+#define ADV_CLASS_STRONG_ASSIGN_REF(...)                                                           \
+	operator=(const __class& ref) {                                                                \
+		if (&ref != _obj) {                                                                        \
+			Builtin::Release(_obj);                                                                \
+			_obj = (Builtin::Object*) &ref;                                                        \
+			Builtin::Retain(_obj);                                                                 \
+		}                                                                                          \
+		return *this;                                                                              \
+	}
+
+#define ADV_CLASS_UNOWNED_COMMON_CTORS(...)                                                        \
+                                                                                                   \
+   public:                                                                                         \
+	##__VA_ARGS__(const __class& ref);                                                             \
+	##__VA_ARGS__(##__VA_ARGS__ const& copy) : ___super {copy._obj} {                              \
+		Builtin::UnownedRetain(_obj);                                                              \
+	}                                                                                              \
+	##__VA_ARGS__(__strong_ref const& copy) : ___super {copy._obj} {                               \
+		Builtin::UnownedRetain(_obj);                                                              \
+	}                                                                                              \
+	##__VA_ARGS__(##__VA_ARGS__&& moved) noexcept : ___super {moved._obj} {                        \
+		moved._obj = nullptr;                                                                      \
+	}                                                                                              \
+	##__VA_ARGS__& operator=(const __class& ref);                                                  \
+	##__VA_ARGS__& operator=(##__VA_ARGS__ const& copy) {                                          \
+		if (copy._obj != _obj) {                                                                   \
+			Builtin::UnownedRelease(_obj);                                                         \
+			_obj = copy._obj;                                                                      \
+			Builtin::UnownedRetain(_obj);                                                          \
+		}                                                                                          \
+		return *this;                                                                              \
+	}                                                                                              \
+	##__VA_ARGS__& operator=(__strong_ref const& copy) {                                           \
+		if (copy._obj != _obj) {                                                                   \
+			Builtin::UnownedRelease(_obj);                                                         \
+			_obj = copy._obj;                                                                      \
+			Builtin::UnownedRetain(_obj);                                                          \
+		}                                                                                          \
+		return *this;                                                                              \
+	}                                                                                              \
+	##__VA_ARGS__& operator=(##__VA_ARGS__&& moved) {                                              \
+		if (moved._obj != _obj) {                                                                  \
+			Builtin::UnownedRelease(_obj);                                                         \
+			_obj = moved._obj;                                                                     \
+		}                                                                                          \
+		moved._obj = nullptr;                                                                      \
+		return *this;                                                                              \
+	}                                                                                              \
+	FORCE_INLINE operator __strong_ref() const { return __ref(); }                                 \
+                                                                                                   \
+   protected:                                                                                      \
+	##__VA_ARGS__(decltype(nullptr)) noexcept : ___super {nullptr} {}                              \
+	##__VA_ARGS__& operator=(decltype(nullptr)) {                                                  \
+		if (_obj)                                                                                  \
+			Builtin::UnownedRelease(_obj);                                                         \
+		_obj = nullptr;                                                                            \
+		return *this;                                                                              \
+	}                                                                                              \
+	template <class __OptionalRef>                                                                 \
+	friend class Builtin::OptionalStrongRef;                                                       \
+	template <class __OptionalRef>                                                                 \
+	friend class Builtin::OptionalUnownedRef;
+
+#define ADV_CLASS_UNOWNED_CTOR_REF(...)                                                            \
+	__VA_ARGS__(const __class& ref) : ___super {ref} {}
+
+#define ADV_CLASS_UNOWNED_ASSIGN_REF(...)                                                          \
+	operator=(const __class& ref) {                                                                \
+		if (&ref != _obj) {                                                                        \
+			Builtin::UnownedRelease(_obj);                                                         \
+			_obj = (Builtin::Object*) &ref;                                                        \
+			Builtin::UnownedRetain(_obj);                                                          \
+		}                                                                                          \
+		return *this;                                                                              \
+	}
+
+#define ADV_CLASS_WEAK_COMMON_CTORS(...)                                                           \
+                                                                                                   \
+   public:                                                                                         \
+	##__VA_ARGS__(const __class& ref);                                                             \
+	##__VA_ARGS__() : ___super {nullptr} {}                                                        \
+	##__VA_ARGS__(##__VA_ARGS__ const& copy) : ___super {copy._obj} {                              \
+		if (_obj)                                                                                  \
+			_obj->incrementWeak();                                                                 \
+	}                                                                                              \
+	##__VA_ARGS__(##__VA_ARGS__&& moved) noexcept : ___super {moved._obj} {                        \
+		moved._obj = nullptr;                                                                      \
+	}                                                                                              \
+	##__VA_ARGS__(__strong_ref const& strong) : ___super {formWeakRef(strong._obj)} {}             \
+	##__VA_ARGS__(decltype(nullptr)) : ___super {nullptr} {}                                       \
+	##__VA_ARGS__& operator=(const __class& ref);                                                  \
+	##__VA_ARGS__& operator=(##__VA_ARGS__ const& copy) {                                          \
+		if (copy._obj != _obj) {                                                                   \
+			if (_obj)                                                                              \
+				_obj->decrementWeak();                                                             \
+			_obj = copy._obj;                                                                      \
+			if (_obj)                                                                              \
+				_obj->incrementWeak();                                                             \
+		}                                                                                          \
+		return *this;                                                                              \
+	}                                                                                              \
+	##__VA_ARGS__& operator=(__strong_ref const& strong) {                                         \
+		if (!_obj || strong._obj != _obj->unsafeGetObject()) {                                     \
+			if (_obj)                                                                              \
+				_obj->decrementWeak();                                                             \
+			_obj = formWeakRef(strong._obj);                                                       \
+		}                                                                                          \
+		return *this;                                                                              \
+	}                                                                                              \
+	##__VA_ARGS__& operator=(##__VA_ARGS__&& moved) {                                              \
+		if (moved._obj != _obj) {                                                                  \
+			if (_obj)                                                                              \
+				_obj->decrementWeak();                                                             \
+			_obj = moved._obj;                                                                     \
+		}                                                                                          \
+		moved._obj = nullptr;                                                                      \
+		return *this;                                                                              \
+	}                                                                                              \
+	FORCE_INLINE Builtin::OptionalStrongRef<__strong_ref> pin() const {                            \
+		if (_obj) {                                                                                \
+			auto ptr = _obj->tryRetain();                                                          \
+			if (ptr) {                                                                             \
+				return __strong_ref(ptr);                                                          \
+			}                                                                                      \
+			return nullptr;                                                                        \
+		}                                                                                          \
+		return nullptr;                                                                            \
+	}                                                                                              \
+	FORCE_INLINE __strong_ref operator*() const { return *pin(); }                                 \
+	##__VA_ARGS__& operator=(decltype(nullptr)) {                                                  \
+		if (_obj) {                                                                                \
+			_obj->decrementWeak();                                                                 \
+		}                                                                                          \
+		_obj = nullptr;                                                                            \
+		return *this;                                                                              \
+	}                                                                                              \
+	FORCE_INLINE bool operator==(##__VA_ARGS__ const& other) const noexcept {                      \
+		return _obj == other._obj;                                                                 \
+	}                                                                                              \
+	FORCE_INLINE bool operator!=(##__VA_ARGS__ const& other) const noexcept {                      \
+		return _obj != other._obj;                                                                 \
+	}                                                                                              \
+	FORCE_INLINE bool operator==(decltype(nullptr)) const noexcept { return _obj == nullptr; }     \
+	FORCE_INLINE bool operator!=(decltype(nullptr)) const noexcept { return _obj != nullptr; }     \
+	FORCE_INLINE explicit operator bool() const noexcept { return IsValid(); }                     \
+	template <class __OptionalFunc>                                                                \
+	auto AndThen(__OptionalFunc&& func) const {                                                    \
+		using return_type = std::invoke_result_t<__OptionalFunc, __strong_ref const&>;             \
+		auto strong       = pin();                                                                 \
+		if constexpr (std::is_void_v<return_type>) {                                               \
+			if (strong.IsValid())                                                                  \
+				std::invoke(std::forward<__OptionalFunc>(func), *strong);                          \
+		} else {                                                                                   \
+			using wrapped_type = Builtin::Nullable<return_type>;                                   \
+			if (!strong.IsValid())                                                                 \
+				return wrapped_type(nullptr);                                                      \
+			return wrapped_type(std::invoke(std::forward<__OptionalFunc>(func), *strong));         \
+		}                                                                                          \
+	}                                                                                              \
+	template <class __OptionalValueOr>                                                             \
+	__strong_ref ValueOr(__OptionalValueOr&& func) const {                                         \
+		using return_type = std::invoke_result_t<__OptionalValueOr>;                               \
+		static_assert(std::is_convertible_v<return_type, __strong_ref>,                            \
+		              "Default value must be convertible to left side of the expression");         \
+		auto strong = pin();                                                                       \
+		if (strong.IsValid())                                                                      \
+			return *strong;                                                                        \
+		return std::invoke(std::forward<__OptionalValueOr>(func));                                 \
+	}                                                                                              \
+	template <class F>                                                                             \
+	__weak_ref& AssignIfNull(F&& func) {                                                           \
+		using return_type = std::invoke_result_t<F>;                                               \
+		static_assert(std::is_assignable_v<__weak_ref, return_type>,                               \
+		              "Default value must be convertible to left side of the expression");         \
+		if (!IsValid())                                                                            \
+			*this = std::invoke(std::forward<F>(func));                                            \
+		return *this;                                                                              \
+	}
+
+#define ADV_CLASS_WEAK_CTOR_REF(...)                                                               \
+	__VA_ARGS__(const __class& ref) : ___super {formWeakRef((Builtin::Object*) &ref)} {}
+
+#define ADV_CLASS_WEAK_ASSIGN_REF(...)                                                             \
+	operator=(const __class& ref) {                                                                \
+		if (!_obj || (Builtin::Object*) &ref != _obj->unsafeGetObject()) {                         \
+			if (_obj)                                                                              \
+				_obj->decrementWeak();                                                             \
+			_obj = formWeakRef((Builtin::Object*) &ref);                                           \
+		}                                                                                          \
+		return *this;                                                                              \
+	}

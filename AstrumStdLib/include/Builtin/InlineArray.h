@@ -7,12 +7,16 @@ namespace Builtin {
 	template <class T>
 	class __Class_Basic;
 
-	template <size_t S, class T>
+	template <size_t S, class T, bool IsConstStrArray = false>
 	class InlineArray : public Struct {
 		T arr[S];
 
+		static_assert((IsConstStrArray && std::is_same_v<T, Str>) ||
+		                  !std::is_base_of_v<Builtin::RefStruct, T>,
+		              "Inline array doesn't support ref structs");
+
 	   public:
-		using __self                   = InlineArray<S, T>;
+		using __self                   = InlineArray<S, T, IsConstStrArray>;
 		using __class                  = __Class_Basic<__self>;
 		using ElementType              = T;
 		static constexpr size_t Length = S;
@@ -72,7 +76,6 @@ namespace Builtin {
 			PtrType ptr;
 			size_t index = size_t(-1);
 
-			friend InlineArray<S, T>;
 
 		   public:
 			constexpr Iterator(PtrType ref) noexcept : ptr(ref) {}
@@ -109,16 +112,15 @@ namespace Builtin {
 				return __value.GetCurrentRef();
 			}
 		};
-
 	};
 
-	template<class T, size_t S>
-	auto Iterate(InlineArray<S, T>& arr) noexcept {
-		return typename InlineArray<S, T>::Iterator<false>(&arr.GetDataReference());
+	template <class T, size_t S, bool IsConstStr>
+	auto Iterate(InlineArray<S, T, IsConstStr>& arr) noexcept {
+		return typename InlineArray<S, T, IsConstStr>::Iterator<false>(&arr.GetDataReference());
 	}
-	template <class T, size_t S>
-	auto Iterate(const InlineArray<S, T>& arr) noexcept {
-		return typename InlineArray<S, T>::Iterator<true>(&arr.GetDataReference());
+	template <class T, size_t S, bool IsConstStr>
+	auto Iterate(const InlineArray<S, T, IsConstStr>& arr) noexcept {
+		return typename InlineArray<S, T, IsConstStr>::Iterator<true>(&arr.GetDataReference());
 	}
 
 	template <class T, size_t S, size_t... I>
@@ -129,6 +131,18 @@ namespace Builtin {
 
 	template <class T, size_t S, size_t... I>
 	constexpr InlineArray<S, std::remove_cv_t<T>> _to_array_rvalue_impl(T(&&arr)[S],
+	                                                                    std::index_sequence<I...>) {
+		return {std::move(arr[I])...};
+	}
+
+	template <size_t S, size_t... I>
+	constexpr InlineArray<S, Str, true> _to_array_lvalue_impl_str(Str (&arr)[S],
+	                                                                    std::index_sequence<I...>) {
+		return {arr[I]...};
+	}
+
+	template <size_t S, size_t... I>
+	constexpr InlineArray<S, Str, true> _to_array_rvalue_impl_str(Str(&&arr)[S],
 	                                                                    std::index_sequence<I...>) {
 		return {std::move(arr[I])...};
 	}
@@ -149,6 +163,16 @@ namespace Builtin {
 		static_assert(std::is_move_constructible_v<T>,
 		              "ToInlineArray requires move constructible elements.");
 		return _to_array_rvalue_impl(std::move(arr), std::make_index_sequence<S> {});
+	}
+
+	template <size_t S>
+	constexpr InlineArray<S, Str, true> ToInlineArrayStr(Str (&arr)[S]) {
+		return _to_array_lvalue_impl_str(arr, std::make_index_sequence<S> {});
+	}
+
+	template <size_t S>
+	constexpr InlineArray<S, Str, true> ToInlineArrayStr(Str(&&arr)[S]) {
+		return _to_array_rvalue_impl_str(std::move(arr), std::make_index_sequence<S> {});
 	}
 
 	template <class T>

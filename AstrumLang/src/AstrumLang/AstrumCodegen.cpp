@@ -610,7 +610,8 @@ namespace AstrumLang {
 					}
 				}
 				out << "inline constexpr ";
-				bool isArray = false;
+				bool isArray          = false;
+				isConstantDeclaration = true;
 				if (var.type) {
 					isDeclaration = true;
 					currentType   = var.type->getText();
@@ -627,7 +628,7 @@ namespace AstrumLang {
 						}
 					}
 					printTypeId(var.type);
-					isDeclaration = false;
+					isDeclaration    = false;
 					currentTupleSize = 0;
 					// isArray = var.type->arrayDeclarator();
 				} else {
@@ -646,8 +647,9 @@ namespace AstrumLang {
 			if (!var.compilationCondition.empty()) {
 				out << "#endif " << std::endl;
 			}
-			isArrayDeclaration = false;
-			currentArrayType   = nullptr;
+			isArrayDeclaration    = false;
+			isConstantDeclaration = false;
+			currentArrayType      = nullptr;
 		}
 		currentDeclarationName.clear();
 		currentType.clear();
@@ -3319,8 +3321,7 @@ namespace AstrumLang {
 				}
 
 				out << "auto " << func.id << "(";
-				if (isUnchecked)
-				{
+				if (isUnchecked) {
 					out << "Builtin::UncheckedTag, ";
 				}
 				printParamDeclClause(func.indexerParams);
@@ -3630,7 +3631,8 @@ namespace AstrumLang {
 				}
 				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
 				    << std::string(depth, '\t');
-				bool isStringConcat = false;
+				bool isStringConcat   = false;
+				isConstantDeclaration = true;
 				if (sema.stringConstants.contains(constant.initializer)) {
 					auto elements = sema.stringConstants[constant.initializer];
 					if (elements.size() > 1) {
@@ -3750,6 +3752,7 @@ namespace AstrumLang {
 				if (!constant.compilationCondition.empty()) {
 					out << "#endif " << std::endl << std::string(depth, '\t');
 				}
+				isConstantDeclaration = false;
 			}
 			currentDeclarationName.clear();
 		}
@@ -5257,7 +5260,8 @@ namespace AstrumLang {
 					out << "#if " << constant.compilationCondition << std::endl
 					    << std::string(depth, '\t');
 				}
-				bool isStringConcat = false;
+				bool isStringConcat   = false;
+				isConstantDeclaration = true;
 				if (sema.stringConstants.contains(constant.initializer)) {
 					auto elements = sema.stringConstants[constant.initializer];
 					if (elements.size() > 1) {
@@ -5333,6 +5337,7 @@ namespace AstrumLang {
 				if (!constant.compilationCondition.empty()) {
 					out << "#endif " << std::endl << std::string(depth, '\t');
 				}
+				isConstantDeclaration = false;
 			}
 		}
 		if (type->kind == TypeKind::EnumClass) {
@@ -7471,7 +7476,8 @@ namespace AstrumLang {
 		for (const auto& constant : type->constants) {
 			out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
-			bool isStringConcat = false;
+			bool isStringConcat   = false;
+			isConstantDeclaration = true;
 			if (sema.stringConstants.contains(constant.initializer)) {
 				auto elements = sema.stringConstants[constant.initializer];
 				if (elements.size() > 1) {
@@ -7532,6 +7538,7 @@ namespace AstrumLang {
 			printInitializerClause(constant.initializer);
 			out << ";" << std::endl << std::string(depth, '\t');
 			currentDeclarationName.clear();
+			isConstantDeclaration = false;
 		}
 		for (const auto& alias : type->typeAliases) {
 			if (!alias.type)
@@ -9005,8 +9012,8 @@ namespace AstrumLang {
 		bool needTParams = type->templateParams && type->id.find("_tspec_") == std::string::npos;
 		if (type->extensionType) {
 			printTypeId(type->extensionType);
-			if (!type->extensionType->singleTypeId().empty() && type->extensionType->singleTypeId(0)->typePostfix())
-			{
+			if (!type->extensionType->singleTypeId().empty() &&
+			    type->extensionType->singleTypeId(0)->typePostfix()) {
 				needTParams = false;
 			}
 		} else {
@@ -9245,7 +9252,6 @@ namespace AstrumLang {
 			if (func.varargs >= 0) {
 				out << "[[clang::annotate(\"varargs:" << (int) func.varargs << "\")]] ";
 			}
-
 
 			isFunctionDeclaration = true;
 			if (func.templateParams) {
@@ -10556,8 +10562,7 @@ namespace AstrumLang {
 						if (!func.isMutating)
 							out << "LIFETIMEBOUND";
 						out << ", ";
-						if (isUnchecked)
-						{
+						if (isUnchecked) {
 							out << "Builtin::UncheckedTag, ";
 						}
 						printParamDeclClause(func.indexerParams);
@@ -13017,7 +13022,8 @@ namespace AstrumLang {
 			out << "{";
 		++depth;
 		if (isUnsafe)
-			out << "\tusing namespace Builtin::Unsafe;\tusing namespace " << sema.packageName << "::__Unsafe;\tusing "
+			out << "\tusing namespace Builtin::Unsafe;\tusing namespace " << sema.packageName
+			    << "::__Unsafe;\tusing "
 			       "namespace __"
 			    << filename << "_Protected__Unsafe;";
 		bool funcTopLevel = functionProlog;
@@ -13138,7 +13144,7 @@ namespace AstrumLang {
 					out << ";";
 				} else if (isMainFunction) {
 					out << "\n" << std::string(depth, '\t') << "return 0;";
-				} else if (!isVoidReturn && !isPropertySetter) {
+				} else if (!isVoidReturn && !isPropertySetter && !isCoroutine) {
 					out << "\n" << std::string(depth, '\t') << "return {};";
 				}
 			}
@@ -13739,6 +13745,7 @@ namespace AstrumLang {
 	}
 
 	void AstrumCodegen::printYieldStatement(AstrumParser::YieldStatementContext* ctx) {
+		isCoroutine = true;
 		if (ctx->Break()) {
 			out << "co_return;";
 		} else {
@@ -14758,7 +14765,7 @@ namespace AstrumLang {
 			}
 			out << std::endl;
 		}
-		isUnsafe = prevUnsafe;
+		isUnsafe     = prevUnsafe;
 		functionBody = prev;
 		refParameters.clear();
 		sema.symbolContexts.pop();
@@ -17587,6 +17594,7 @@ namespace AstrumLang {
 				return kv.second == "#DeferredInit" || kv.second == "#Out";
 			});
 		}
+		isCoroutine = false;
 	}
 
 	void AstrumCodegen::printShortFunctionBody(AstrumParser::ShortFunctionBodyContext* ctx) {
@@ -18223,7 +18231,8 @@ namespace AstrumLang {
 				}
 			}
 			out << "constexpr ";
-			bool isArray = false;
+			bool isArray          = false;
+			isConstantDeclaration = true;
 			if (auto t = ctx->theTypeId()) {
 				isDeclaration = true;
 				printTypeId(t);
@@ -18253,8 +18262,9 @@ namespace AstrumLang {
 			printInitializerClause(ctx->initializerClause());
 			out << ";";
 			currentDeclarationName.clear();
-			isArrayDeclaration = false;
-			currentArrayType   = nullptr;
+			isArrayDeclaration    = false;
+			isConstantDeclaration = false;
+			currentArrayType      = nullptr;
 		}
 		currentType.clear();
 	}
@@ -18494,9 +18504,14 @@ namespace AstrumLang {
 		bool first = true;
 		int i      = 0;
 		if (isAutoSizeArrayDeclaration) {
-			out << "Builtin::ToInlineArray<";
-			printTypeSpecifierSeq(autoSizeArrayType);
-			out << ">(";
+			if (isConstantDeclaration && autoSizeArrayType->getText() == "str") {
+				out << "Builtin::ToInlineArrayStr";
+			} else {
+				out << "Builtin::ToInlineArray<";
+				printTypeSpecifierSeq(autoSizeArrayType);
+				out << ">";
+			}
+			out << "(";
 		}
 		out << "{";
 		for (auto part : ctx->collectionExpressionPart()) {
@@ -20501,7 +20516,7 @@ namespace AstrumLang {
 		    out << "typename ";
 		}*/
 		auto pointerDepth = 0;
-		
+
 		for (auto p : ctx->pointerOperator()) {
 			if (p->DoubleStar())
 				pointerDepth += 2;
@@ -20662,6 +20677,9 @@ namespace AstrumLang {
 					if (!functionBody && currentTupleSize > 0) {
 						out << "Builtin::InlineArray<" << currentTupleSize << ", ";
 						printTypeSpecifierSeq(currentArrayType);
+						if (isConstantDeclaration && currentArrayType->getText() == "str") {
+							out << ", true";
+						}
 						out << ">";
 					} else {
 						out << "auto";

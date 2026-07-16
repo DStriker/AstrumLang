@@ -79,6 +79,8 @@ namespace AstrumLang {
 		bool isClearModule              = false;
 		bool isAutoSizeArrayDeclaration = false;
 		bool isArrayDeclaration         = false;
+		bool isConstantDeclaration      = false;
+		bool isCoroutine                = false;
 
 		class StreamSwitcher {
 			std::ofstream* file1;

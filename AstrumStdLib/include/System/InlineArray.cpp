@@ -70,14 +70,6 @@ namespace System {
 		ADV_ASSERT((ADV_UPCS(Length)(sp2.__ref()) == Builtin::i32(5)), "sp2.Length==5");
 		#line 94 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		ADV_ASSERT((ADV_UFCS(_operator_subscript)(sp2.__ref(), Builtin::i32(4)) == Builtin::i32(6)), "sp2[4]==6");
-		#line 96 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		{ auto __for_init_96 = arr; auto __for_iter_96 = ADV_UFCS(Iterate)(__for_init_96.__ref()); while(__for_iter_96.__ref().MoveNext()) {
-		auto& i = __for_iter_96.__ref().GetCurrentRef(); {
-			#line 97 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-			i++;
-			#line 98 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-			print(i);
-		}}}
 		return true;
 	}();
 	#endif	

@@ -1815,8 +1815,9 @@ namespace AstrumLang {
 			int i = 0;
 			if (isStr)
 				for (const auto& lit : literals) {
-					literalTable.insert(
-					    std::make_pair(std::format("__strconst_{}_{}", (void*) ctx->initializerClause(), i++), lit));
+					literalTable.insert(std::make_pair(
+					    std::format("__strconst_{}_{}", (void*) ctx->initializerClause(), i++),
+					    lit));
 				}
 		}
 
@@ -1956,10 +1957,8 @@ namespace AstrumLang {
 			auto inner = initStates.top();
 			initStates.pop();
 			auto& external = initStates.top();
-			for (const auto& var : external.potentiallyAssigned)
-			{
-				if (inner.definitelyAssigned.contains(var))
-				{
+			for (const auto& var : external.potentiallyAssigned) {
+				if (inner.definitelyAssigned.contains(var)) {
 					external.definitelyAssigned.insert(var);
 				}
 			}
@@ -2216,8 +2215,10 @@ namespace AstrumLang {
 	}
 
 	std::any AstrumSema::visitJumpStatement(AstrumParser::JumpStatementContext* ctx) {
-		if (ctx->Return() && !firstPass)
-			isReturn = true;
+		if (ctx->Return() && !firstPass) {
+			isReturn          = true;
+			isLifetimeControl = true;
+		}
 
 		visitChildren(ctx);
 		if (!firstPass) {
@@ -2523,11 +2524,13 @@ namespace AstrumLang {
 		if (!ctx->Or().empty()) {
 			typeStack.push("bool");
 		} else if (!potentiallyDangerousAssignment &&
-		           (assignmentDepth > 0 || isParamAssignment || isReturn)) {
-			auto txt       = ctx->getText();
-			auto isIdent   = [](char c) { return std::isalnum(c) || c == '_'; };
-			int i          = 0;
-			bool rhsMutRef = false;
+		           (assignmentDepth > 0 || isParamAssignment || isReturn) && isLifetimeControl) {
+			isLifetimeControl = false;
+			isReturn          = false;
+			auto txt          = ctx->getText();
+			auto isIdent      = [](char c) { return std::isalnum(c) || c == '_'; };
+			int i             = 0;
+			bool rhsMutRef    = false;
 			while (i < txt.size() && txt[i] == '(') { ++i; }
 			if (i < txt.size() && txt[i] == '&') {
 				rhsMutRef = true;
@@ -2606,12 +2609,14 @@ namespace AstrumLang {
 					auto& varDepth = initStates.top().varDepth;
 					auto lhsDepth  = varDepth.find(txt);
 					if (lhsDepth != varDepth.end()) {
-						assignmentDepth = std::max(assignmentDepth, lhsDepth->second);
+						assignmentDepth   = std::max(assignmentDepth, lhsDepth->second);
+						isLifetimeControl = true;
 					} else {
 						auto& params  = initStates.top().functionParams;
 						auto lhsParam = params.find(txt);
 						if (lhsParam != params.end()) {
 							isParamAssignment = true;
+							isLifetimeControl = true;
 						}
 					}
 				}

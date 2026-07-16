@@ -1,15 +1,36 @@
 package System;
 
-public import UInt32;
-public import UInt64;
-//public import System.Runtime.CompilerServices.Unsafe;
+public import Char;
+public import Span;
 
 public extension str {
     // Returns the number of UTF-8 bytes in the string.
     // For number of chars or grapheme clusters, use the appropriate methods.
     ByteLength: usize ==> this.GetByteLength();
 
-    // Bytes
+    // Represents a string as byte array, efficient for ASCII text processing.
+    Bytes: byte[&] ==> Span<byte>.UnsafeCreate(this.GetDataReference(), this.GetByteLength());
+
+    // Returns the slice of string in given byte range
+    this[range: IndexRange] -> self == {
+        let strLen := this.ByteLength;
+        let start := range.Start.Offset(strLen) as usize;
+        let len := range.Length(strLen);
+
+        if (start + len) > strLen {
+            throw Builtin.IndexOutOfRangeException();
+        }
+        if not this.Bytes[@Unchecked start].IsUtf8CodePointBoundary
+            or not this.Bytes[@Unchecked start + len - 1].IsUtf8CodePointBoundary {
+            throw Builtin.InvalidArgumentException();
+        }
+        return str.UnsafeCreate(this.Bytes[@Unchecked start], len);
+    }
+    @Unchecked
+    this[range: IndexRange] -> self == {
+        return str.UnsafeCreate(Unsafe.Add(this.GetDataReference(), range.Start.Offset(this.ByteLength) as usize),
+            range.Length(this.ByteLength));
+    }
     // Chars
     // GraphemeClusters
     // Substring
@@ -38,6 +59,9 @@ private const test1 :== "PART 1";
 private const test2 :== "PART 2";
 private const test3 :== "Begin " + test1 + " Middle " + test2 + " End";
 static assert(test3 == "Begin PART 1 Middle PART 2 End", "str concatenation failed");
+private const arr: str[_] == [ "Hello", "world", "!" ];
+static assert(arr[0] == "Hello", "str array indexing failed");
+static assert(arr.Length == 3, "str array length failed");
 
 test "Str" {
     s: str = "Hello, world!";
@@ -49,4 +73,9 @@ test "Str" {
     assert "My dog is wolf!".ByteLength == 15;
     const s3 : str == "Begin " + test1 + " Middle " + test2 + " End";
     assert s3.ByteLength == 30;
+    assert s[1u..^1u] == "ello, world";
+
+    for b in arr {
+        print(b);
+    }
 }

@@ -21,6 +21,10 @@ namespace Builtin {
 		constexpr Str(const char* _chars) noexcept
 		    : chars(_chars), len(std::char_traits<char>::length(_chars)) {}
 
+		static constexpr Str UnsafeCreate(const u8& _chars, usize _length) noexcept {
+			return Str(&_chars, _length);
+		}
+
 		constexpr Str& operator=(const char* _chars) noexcept {
 			chars = _chars;
 			len   = std::char_traits<char>::length(_chars);
