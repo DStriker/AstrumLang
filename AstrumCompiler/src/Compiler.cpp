@@ -217,9 +217,9 @@ namespace AstrumLang {
 #endif
 		constexpr const char* stdBuiltinObj[] = {
 #ifdef _WIN32
-		    "Builtin.obj", "BuiltinInt128.obj", "RefCounts.obj"
+		    "Builtin.obj", "BuiltinInt128.obj", "RefCounts.obj", "KernelMath.obj"
 #else
-		    "Builtin.o", "BuiltinInt128.o", "RefCounts.o"
+		    "Builtin.o", "BuiltinInt128.o", "RefCounts.o", "KernelMath.o"
 #endif
 		};
 		constexpr auto testMainFile = "test_main.cpp";

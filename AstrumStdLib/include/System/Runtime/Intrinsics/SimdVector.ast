@@ -11,6 +11,8 @@ public struct <T, Arch> SimdVector
     private type TMask = SimdMask<T, Arch>;
     private type TRegister = Arch.Register<T>;
     public  type TNative = TRegister.TRegister;
+    public  type TValue = T;
+    public  type TArch = Arch;
     private _reg: TRegister;
 
     // Count of elements in vector for this instruction set
@@ -85,6 +87,9 @@ public struct <T, Arch> SimdVector
     public AsUInt64: SimdVector<u64, Arch> => Arch.BitwiseCast<u64>(this);
     public AsFloat32: SimdVector<f32, Arch> => Arch.BitwiseCast<f32>(this);
     public AsFloat64: SimdVector<f64, Arch> => Arch.BitwiseCast<f64>(this);
+
+    // Convertation between other types with same width (f32 -> i32, u64 -> f64)
+    public ConvertTo: <TOut> () -> SimdVector<TOut, Arch> => Arch.Convert<TOut>(this);
 
     public static One: self => Create(T(1));
     public static Zero: self => Create(T(0));
@@ -422,6 +427,11 @@ public struct <T, Arch> SimdVector
     public operator<<: (in ref other: self) -> self => self(this) <<= other;
     public operator<<: (shift: i32) -> self => self(this) <<= shift;
 
+    // x * y + z
+    public FusedMultiplyAdd: (in ref y: self, in ref z: self) -> self => Arch.FusedMultiplyAdd(this, y, z);
+    // x * y - z
+    public FusedMultiplySub: (in ref y: self, in ref z: self) -> self => Arch.FusedMultiplySub(this, y, z);
+
     // Returns vector of absolute values from current
     public Abs: self => Arch.Abs(this);
 
@@ -440,6 +450,53 @@ public struct <T, Arch> SimdVector
         static assert(type T is IFloatingPoint, "CopySign is only available for floating point types");
         return Abs | Arch.BitOfSign(other);
     }
+
+    // Square root
+    public Sqrt: self => Arch.Sqrt(this);
+
+    // Reciprocal square root
+    public ReciprocalSqrt: self => Arch.ReciprocalSqrt(this);
+
+    // Reciprocal
+    public Reciprocal: self => Arch.Reciprocal(this);
+
+    // Roundings
+
+    public Truncate: self => Arch.Truncate(this);
+    public Ceil: self => Arch.Ceil(this);
+    public Floor: self => Arch.Floor(this);
+    public Round: self => Arch.Round(this);
+    public RoundTiesEven: self => Arch.RoundTiesEven(this);
+
+    // Trigonometry
+
+    public ToRadians: self => (this * T.Pi) / T(180);
+    public ToDegrees: self => (this * T(180)) / T.Pi;
+    public Sin: self => Arch.Sin(this);
+    public Cos: self => Arch.Cos(this);
+    public SinCos: (self, self) => Arch.SinCos(this);
+    public Tan: self => Arch.Tan(this);
+    public Cot: self => One / Tan;
+    public Sec: self => One / Cos;
+    public Csc: self => One / Sin;
+    public Sinh: self => Arch.Sinh(this);
+    public Cosh: self => Arch.Cosh(this);
+    public Tanh: self => Arch.Tanh(this);
+    public Coth: self => One / Tanh;
+    public Sech: self => One / Cosh;
+    public Csch: self => One / Sinh;
+    public Asin: self => Arch.Asin(this);
+    public Acos: self => Arch.Acos(this);
+    public Atan: self => Arch.Atan(this);
+    public Acot: self => (One / this).Atan;
+    public Asec: self => (One / this).Acos;
+    public Acsc: self => (One / this).Asin;
+    public Asinh: self => Arch.Asinh(this);
+    public Acosh: self => Arch.Acosh(this);
+    public Atanh: self => Arch.Atanh(this);
+    public Acoth: self => (One / this).Atanh;
+    public Asech: self => (One / this).Acosh;
+    public Acsch: self => (One / this).Asinh;
 
     // Search helpers
 

@@ -3559,6 +3559,8 @@ namespace Builtin {
 
 	inline constexpr float NanValue() noexcept { return NAN; }
 
+	ASTRUMSTD_API std::int32_t RemPiO2(double x, double* y) noexcept;
+
 }  // namespace Builtin
 
 template <class T, class U>

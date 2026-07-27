@@ -75,10 +75,9 @@ using Builtin::usize;
 	int main(int argc, char** argv) {                                                              \
 		Builtin::ApplicationMainPtr = &Namespace ::__Astrum_Main;                                  \
 		ADV_SETLOCAL;                                                                              \
-		return Builtin::AstrumMainStartup(argc, argv);
-}
-namespace Namespace {
-
+		return Builtin::AstrumMainStartup(argc, argv);                                             \
+	}                                                                                              \
+	namespace Namespace {
 #endif
 
 #define ADV_LOOP_LABELS(Label)                                                                     \

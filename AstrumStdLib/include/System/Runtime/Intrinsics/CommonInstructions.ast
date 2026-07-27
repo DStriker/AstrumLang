@@ -335,10 +335,337 @@ public static class CommonInstructions: SimdInstructionSet {
                 return -%vec;
             }
         }
+
+        FusedMultiplyAdd: <T, Arch> (in ref x: SimdVector<T, Arch>, in ref y: SimdVector<T, Arch>, in ref z: SimdVector<T, Arch>)
+        -> SimdVector<T, Arch> => x * y + z;
+
+        FusedMultiplySub: <T, Arch> (in ref x: SimdVector<T, Arch>, in ref y: SimdVector<T, Arch>, in ref z: SimdVector<T, Arch>)
+        -> SimdVector<T, Arch> => x * y - z;
+
+        FusedNegatedMultiplyAdd: <T, Arch> (in ref x: SimdVector<T, Arch>, in ref y: SimdVector<T, Arch>, in ref z: SimdVector<T, Arch>)
+        -> SimdVector<T, Arch> => -x * y + z;
+
+        FusedNegatedMultiplySub: <T, Arch> (in ref x: SimdVector<T, Arch>, in ref y: SimdVector<T, Arch>, in ref z: SimdVector<T, Arch>)
+        -> SimdVector<T, Arch> => -x * y - z;
+
+        Convert: <T2, T1, Arch> (in ref vec: SimdVector<T1, Arch>) -> SimdVector<T2, Arch> {
+            const size :== SimdVector<T1, Arch>::Length;
+            static assert(size == SimdVector<T2, Arch>::Length, "Cannot convert vectors of different lengths");
+            bufIn: BufferedVector<T1, size>;
+            bufOut: BufferedVector<T2, size>;
+            unsafe {
+                vec.StoreAligned(bufIn.>buffer[@Unchecked 0]&);
+                for i in ..size {
+                    bufOut.>buffer[@Unchecked i] = bufIn.>buffer[@Unchecked i] as T2;
+                }
+                return SimdVector<T2, Arch>::LoadAligned(bufOut.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        Truncate: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static if type T is f32 {
+                return SimdVector<T, Arch>::ConditionalSelect(vec.Abs <* 16777216.0f,
+                    vec.ConvertTo<i32>().ConvertTo<f32>(), vec);
+            } else static if type T is f64 {
+                return SimdVector<T, Arch>::ConditionalSelect(vec.Abs <* 9007199254740992.0,
+                    vec.ConvertTo<i64>().ConvertTo<f64>(), vec);
+            } else {
+                return vec;
+            }
+        }
+
+        Ceil: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            let truncated := vec.Truncate;
+            return SimdVector<T, Arch>::ConditionalSelect(truncated <* vec, truncated + T(1), truncated);
+        }
+
+        Floor: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            let truncated := vec.Truncate;
+            return SimdVector<T, Arch>::ConditionalSelect(truncated >* vec, truncated - T(1), truncated);
+        }
+
+        Round: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            let abs := vec.Abs;
+            let ceil := abs.Ceil;
+            let rounded := SimdVector<T, Arch>::ConditionalSelect(ceil - 0.5 >* abs, ceil - T(1), ceil);
+            static if type T is f32 {
+                return SimdVector<T, Arch>::ConditionalSelect(abs >* 16777216.0f, vec, rounded.CopySign(vec));
+            } else static if type T is f64 {
+                return SimdVector<T, Arch>::ConditionalSelect(abs >* 9007199254740992.0, vec, rounded.CopySign(vec));
+            } else {
+                return vec;
+            }
+        }
+
+        RoundTiesEven: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static if type T is IFloatingPoint {
+                const size :== SimdVector<T, Arch>::Length;
+                bufIn: BufferedVector<T, size>;
+                bufOut: BufferedVector<T, size>;
+                unsafe {
+                    vec.StoreAligned(bufIn.>buffer[@Unchecked 0]&);
+                    for i in ..size {
+                        bufOut.>buffer[@Unchecked i] = bufIn.>buffer[@Unchecked i].RoundTiesEven;
+                    }
+                    return SimdVector<T, Arch>::LoadAligned(bufOut.>buffer[@Unchecked 0]&);
+                }
+            } else {
+                return vec;
+            }
+        }
+
+        NearbyInt: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            let sign := BitOfSign(vec);
+            let v := vec ^ sign;
+            let t2n := TVector.Create(FloatConstants<TVector.TValue>::TwoTonmb);
+            let d0 := v +% t2n;
+            let d := d0 -% t2n;
+            return sign ^ TVector::ConditionalSelect(v <* t2n, d, v);
+        }
+
+        Sin: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            let x := vec.Abs;
+            xr := TVector.Create(T.NaN);
+            let n := TrigReduce(x, &xr);
+            let tmp := TVector::ConditionalSelect(n >=* T(2), TVector.One, TVector.Zero);
+            let swapBit := TVector.Create(T(-2)).FusedMultiplyAdd(tmp, n);
+            let signBit := BitOfSign(vec) ^ TVector::ConditionalSelect(tmp !=* TVector.Zero, 
+                TVector.Create(FloatConstants<T>::SignMask), TVector.Zero);
+            let z := xr *% xr;
+            let se := SinEval(z, xr);
+            let ce := CosEval(z);
+            let z1 := TVector::ConditionalSelect(swapBit ==* TVector.Zero, se, ce);
+            return z1 ^ signBit;
+        }
+
+        Cos: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            let x := vec.Abs;
+            xr := TVector.Create(T.NaN);
+            let n := TrigReduce(x, &xr);
+            let tmp := TVector::ConditionalSelect(n >=* T(2), TVector.One, TVector.Zero);
+            let swapBit := TVector.Create(T(-2)).FusedMultiplyAdd(tmp, n);
+            let signBit := TVector::ConditionalSelect((swapBit ^ tmp) !=* TVector.Zero, 
+                TVector.Create(FloatConstants<T>::SignMask), TVector.Zero);
+            let z := xr *% xr;
+            let se := SinEval(z, xr);
+            let ce := CosEval(z);
+            let z1 := TVector::ConditionalSelect(swapBit !=* TVector.Zero, se, ce);
+            return z1 ^ signBit;
+        }
+
+        SinCos: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> (SimdVector<T, Arch>, SimdVector<T, Arch>) {
+            type TVector = SimdVector<T, Arch>;
+            let x := vec.Abs;
+            xr := TVector.Create(T.NaN);
+            let n := TrigReduce(x, &xr);
+            let tmp := TVector::ConditionalSelect(n >=* T(2), TVector.One, TVector.Zero);
+            let swapBit := TVector.Create(T(-2)).FusedMultiplyAdd(tmp, n);
+            let signBitSin := BitOfSign(vec) ^ TVector::ConditionalSelect(tmp !=* TVector.Zero, 
+                TVector.Create(FloatConstants<T>::SignMask), TVector.Zero);
+            let signBitCos := TVector::ConditionalSelect((swapBit ^ tmp) !=* TVector.Zero, 
+                TVector.Create(FloatConstants<T>::SignMask), TVector.Zero);
+            let z := xr *% xr;
+            let se := SinEval(z, xr);
+            let ce := CosEval(z);
+            let z1Sin := TVector::ConditionalSelect(swapBit ==* TVector.Zero, se, ce);
+            let z1Cos := TVector::ConditionalSelect(swapBit !=* TVector.Zero, se, ce);
+            return (z1Sin ^ signBitSin, z1Cos ^ signBitCos);
+        }
+
+        Tan: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            let x := vec.Abs;
+            xr := TVector.Create(T.NaN);
+            let n := TrigReduce(x, &xr);
+            let tmp := TVector::ConditionalSelect(n >=* T(2), TVector.One, TVector.Zero);
+            let swapBit := TVector.Create(T(-2)).FusedMultiplyAdd(tmp, n);
+            let test := swapBit ==* TVector.Zero;
+            let y := TanEval(xr, test);
+            return y ^ BitOfSign(vec);
+        }
+
+        Asin: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            x := vec.Abs;
+            static if type is f32 {
+                let sign := BitOfSign(vec);
+                let largerHalf := x >* T(0.5);
+                z := TVector::ConditionalSelect(largerHalf, TVector.Create(T(0.5)) *% (TVector.One - x), x *% x);
+                x = TVector::ConditionalSelect(largerHalf, z.Sqrt, x);
+                z1 := Horner<TVector, 0x3e2aaae4u, 0x3d9980f6u, 0x3d3a3ec7u, 0x3cc617e3u, 0x3d2cb352u>(z);
+                z1 = z1.FusedMultiplyAdd(z * x, x);
+                z = TVector::ConditionalSelect(largerHalf, TVector.Create(FloatConstants<T>::PiO2) -% (z1 +% z1), z1);
+                return z ^ sign;
+            } else {
+                
+            }
+        }
     }
 
-    @Align(Alignment)
+    @Align(64)
     protected struct <T, Length: usize> BufferedVector {
         public buffer: T[Length];
+    }
+
+    protected Coef: <V, c: u64> () -> V noexcept {
+        type Value = V.TValue;
+        static if type Value is f32 {
+            return V::Create(f32.FromBits(c as u32));
+        } else static if type Value is f64 {
+            return V::Create(f64.FromBits(c));
+        } else {
+            static assert(false, "Unsupported type for Coef");
+        }
+    }
+
+    protected Horner: <V> (in ref _: V) -> V noexcept => V.Zero;
+    protected Horner: <V, C0: u64> (in ref _: V) -> V noexcept => Coef<V, C0>();
+    protected Horner: <V, C0: u64, C1: u64, Tail: u64...> (in ref vec: V) -> V noexcept 
+    => vec.FusedMultiplyAdd(Horner<V, C1, Tail...>(vec), Coef<V, C0>());
+
+    protected Horner1: <V> (in ref _: V) -> V noexcept => V.One;
+    protected Horner1: <V, C0: u64> (in ref vec: V) -> V noexcept => vec + Coef<V, C0>();
+    protected Horner1: <V, C0: u64, C1: u64, Tail: u64...> (in ref vec: V) -> V noexcept 
+    => vec.FusedMultiplyAdd(Horner1<V, C1, Tail...>(vec), Coef<V, C0>());
+
+    protected static class <F> FloatConstants;
+    protected static class FloatConstants<f32> {
+        public const PiO2 :== f32.FromBits(0x3fc90fdbu);
+        public const PiO2_1 :== f32.FromBits(0x3fc90f80u);
+        public const PiO2_1t :== f32.FromBits(0x37354443u);
+        public const PiO2_2 :== f32.FromBits(0x37354400u);
+        public const PiO2_2t :== f32.FromBits(0x2e85a308u);
+        public const PiO2_3 :== f32.FromBits(0x2e85a300u);
+        public const PiO2_3t :== f32.FromBits(0x248d3132u);
+        public const TwoOPi :== f32.FromBits(0x3f22f983u);
+        public const TwentyPi :== f32.FromBits(0x427b53d1u);
+        public const PiO4 :== f32.FromBits(0x3f490fdbu);
+        public const MediumPi :== f32.FromBits(0x43490fdbu);
+        public const SignMask :== f32.FromBits(0x80000000u);
+    }
+    protected static class FloatConstants<f64> {
+        public const PiO2 :== f64.FromBits(0x3ff921fb54442d18u);
+        public const PiO2_1 :== f64.FromBits(0x3ff921fb54400000u);
+        public const PiO2_1t :== f64.FromBits(0x3dd0b4611a626331u);
+        public const PiO2_2 :== f64.FromBits(0x3dd0b4611a600000u);
+        public const PiO2_2t :== f64.FromBits(0x3ba3198a2e037073u);
+        public const PiO2_3 :== f64.FromBits(0x3ba3198a2e000000u);
+        public const PiO2_3t :== f64.FromBits(0x397b839a252049c1u);
+        public const TwoOPi :== f64.FromBits(0x3fe45f306dc9c883u);
+        public const TwentyPi :== f64.FromBits(0x404f6a7a2955385eu);
+        public const PiO4 :== f64.FromBits(0x3fe921fb54442d18u);
+        public const MediumPi :== f64.FromBits(0x412921fb54442d18u);
+        public const SignMask :== f32.FromBits(0x8000000000000000u);
+    }
+
+    protected Quadrant: <Arch> (in ref vec: SimdVector<i32, Arch>) -> SimdVector<i32, Arch> {
+        return vec & 3;
+    }
+
+    protected Quadrant: <Arch> (in ref vec: SimdVector<f32, Arch>) -> SimdVector<f32, Arch> {
+        return Quadrant(vec.ConvertTo<i32>()).ConvertTo<f32>();
+    }
+
+    protected Quadrant: <Arch> (in ref vec: SimdVector<f64, Arch>) -> SimdVector<f64, Arch> {
+        let a := vec *% 0.25;
+        return (a -% a.Floor) *% 4.0;
+    }
+
+    protected TrigReduce: <V> (in ref x: V, ref xref: V) -> V noexcept {
+        type Value = V.TValue;
+
+        if x.LessThanOrEqualAll(FloatConstants<Value>::PiO4) {
+            xref = x;
+            return V.Zero;
+        } else if x.LessThanOrEqualAll(FloatConstants<Value>::PiO2) {
+            let test := x >* FloatConstants<Value>::PiO4;
+            xref = x -% FloatConstants<Value>::PiO2_1;
+            xref -%= FloatConstants<Value>::PiO2_2;
+            xref -%= FloatConstants<Value>::PiO2_3;
+            xref = V::ConditionalSelect(test, xref, x);
+            return V::ConditionalSelect(test, V.One, V.Zero);
+        } else if x.LessThanOrEqualAll(FloatConstants<Value>::TwentyPi) {
+            let xi := (x *% FloatConstants<Value>::TwoOPi).NearbyInt;
+            xref = xi.FusedNegatedMultiplyAdd(FloatConstants<Value>::PiO2_1, x);
+            xref -%= xi *% FloatConstants<Value>::PiO2_2;
+            xref -%= xi *% FloatConstants<Value>::PiO2_3;
+            return Quadrant(xi);
+        } else if x.LessThanOrEqualAll(FloatConstants<Value>::MediumPi) {
+            let fn := (x *% FloatConstants<Value>::TwoOPi).NearbyInt;
+            r := x -% fn *% FloatConstants<Value>::PiO2_1;
+            w := fn *% FloatConstants<Value>::PiO2_1t;
+            t := r;
+            w = fn *% FloatConstants<Value>::PiO2_2;
+            r = t -% w;
+            w = fn *% FloatConstants<Value>::PiO2_2t -% (((t -% r) -% w));
+            t = r;
+            w = fn *% FloatConstants<Value>::PiO2_3;
+            r = t -% w;
+            w = fn *% FloatConstants<Value>::PiO2_3t -% (((t -% r) -% w));
+            xref = r -% w;
+            return Quadrant(fn);
+        } else {
+            const size :== V.Length;
+            tmp: BufferedVector<Value, size>;
+            txr: BufferedVector<Value, size>;
+            args: BufferedVector<Value, size>;
+            unsafe {
+                x.StoreAligned(args.>buffer[@Unchecked 0]&);
+                for i in ..size {
+                    arg: f64 = args[@Unchecked i];
+                    if arg.IsInfinity {
+                        tmp.>buffer[@Unchecked i] = Value.Zero;
+                        txr.>buffer[@Unchecked i] = Value.NaN;
+                    } else {
+                        y0, y1: f64;
+                        let n := Builtin.RemPiO2(arg, UnsafePointerCast<CDouble>(y0&));
+                        tmp.>buffer[@Unchecked i] = Value(n & 3);
+                        txr.>buffer[@Unchecked i] = Value(y0);
+                    }
+                }
+                xref = V::LoadAligned(txr.>buffer[@Unchecked 0]&);
+                return V::LoadAligned(tmp.>buffer[@Unchecked 0]&);
+            }
+        }
+    }
+
+    protected SinEval: <Arch> (in ref z: SimdVector<f32, Arch>, in ref x: SimdVector<f32, Arch>) -> SimdVector<f32, Arch> {
+        let y := Horner<SimdVector<f32, Arch>, 0xbe2aaaa2u, 0x3c08839du, 0xb94ca1f9u>(z);
+        return (y *% z).FusedMultiplyAdd(x, x);
+    }
+
+    protected SinEval: <Arch> (in ref z: SimdVector<f64, Arch>, in ref x: SimdVector<f64, Arch>) -> SimdVector<f64, Arch> {
+        let y := Horner<SimdVector<f64, Arch>, 0xbfc5555555555548u, 0x3f8111111110f7d0u, 0xbf2a01a019bfdf03u, 
+            0x3ec71de3567d4896u, 0xbe5ae5e5a9291691u, 0x3de5d8fd1fcf0ec1u>(z);
+        return (y *% z).FusedMultiplyAdd(x, x);
+    }
+
+    protected CosEval: <Arch> (in ref z: SimdVector<f32, Arch>) -> SimdVector<f32, Arch> {
+        let y := Horner<SimdVector<f32, Arch>, 0x3d2aaaa5u, 0xbab60619u, 0x37ccf5ceu>(z);
+        return SimdVector<f64, Arch>::One +% z.FusedMultiplyAdd(SimdVector<f32, Arch>.Create(-0.5), y *% z *% z);
+    }
+
+    protected CosEval: <Arch> (in ref z: SimdVector<f64, Arch>) -> SimdVector<f64, Arch> {
+        let y := Horner<SimdVector<f64, Arch>, 0x3fe0000000000000u, 0xbfa5555555555551u, 0x3f56c16c16c15d47u, 
+            0xbefa01a019ddbcd9u, 0x3e927e4f8e06d9a5u, 0xbe21eea7c1e514d4u, 0x3da8ff831ad9b219u>(z);
+        return SimdVector<f64, Arch>::One -% y *% z;
+    }
+
+    protected TanEval: <Arch> (in ref z: SimdVector<f32, Arch>, in ref test: SimdMask<f32, Arch>) -> SimdVector<f32, Arch> {
+        let zz := z *% z;
+        y := Horner<SimdVector<f32, Arch>, 0x3eaaaa6fu, 0x3e0896ddu, 0x3d5ac5c9u, 0x3cc821b5u, 0x3b4c779cu, 0x3c19c53bu>(zz);
+        y = y.FusedMultiplyAdd(zz *% z, z);
+        return SimdVector<f32, Arch>::ConditionalSelect(test, y, -SimdVector<f32, Arch>::One / y);
+    }
+
+    protected TanEval: <Arch> (in ref z: SimdVector<f64, Arch>, in ref test: SimdMask<f64, Arch>) -> SimdVector<f64, Arch> {
+        let zz := z *% z;
+        let num := Horner<SimdVector<f64, Arch>, 0xc1711fead3299176u, 0x413199eca5fc9dddu, 0xc0c992d8d24f3f38u>(zz);
+        let den := Horner<SimdVector<f64, Arch>, 0xc189afe03cbe5a31u, 0x4177d98fc2ead8efu, 0xc13427bc582abc96u, 0x40cab8a5eeb36572u>(zz);
+        let y := z.FusedMultiplyAdd((zz *% (num / den)), z);
+        return SimdVector<f64, Arch>::ConditionalSelect(test, y, -SimdVector<f64, Arch>::One / y);
     }
 }
