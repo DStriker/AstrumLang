@@ -37,8 +37,10 @@ template<class T> class MutableSpan;
 			#line 103 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
 			public: inline constexpr auto MoveNext() noexcept -> const bool;
 			#line 112 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
-			public: inline constexpr auto GetCurrent() const  -> const T;
+			public: inline constexpr auto Reset() noexcept -> void;
 			#line 116 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
+			public: inline constexpr auto GetCurrent() const  -> const T;
+			#line 120 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
 			public: inline constexpr auto GetCurrentRef() const  LIFETIMEBOUND -> T&;
 			#line 92 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
 			private: Builtin::MutableRef<T> _ref;
@@ -107,9 +109,9 @@ template<class T> class MutableSpan;
 		public: inline constexpr auto GetLength() const noexcept -> const Builtin::usize;
 		#line 87 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
 		public: inline constexpr auto GetDataReference() const noexcept -> const Builtin::MutableRef<T>;
-		#line 120 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
+		#line 124 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
 		public: inline constexpr auto Iterate() const  -> const Iterator;
-		#line 122 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
+		#line 126 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
 		public: inline constexpr static auto UnsafeCreate(Builtin::MutableRef<T> __data__, Builtin::usize length)  -> const __self;
 		#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
 		private: Builtin::MutableRef<T> _data;
@@ -120,14 +122,14 @@ template<class T> class MutableSpan;
 	
 	
 		} namespace __extensions { using namespace System;
-#line 127 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
-	template<class T> using __extension_MutableSpan_127_MutableSpan = MutableSpan<T>;
-	#line 128 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
-	template<class T> inline constexpr auto getLength(__extension_MutableSpan_127_MutableSpan<T> const& __this ) -> const Builtin::usize;
-	#line 129 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
-	template<class T> inline constexpr auto getIsEmpty(__extension_MutableSpan_127_MutableSpan<T> const& __this ) -> const bool;
-	#line 131 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
-	template<class T> inline constexpr auto getAsBytes(__extension_MutableSpan_127_MutableSpan<T> const& __this ) -> const MutableSpan<Builtin::u8>;
+#line 131 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
+	template<class T> using __extension_MutableSpan_131_MutableSpan = MutableSpan<T>;
+	#line 132 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
+	template<class T> inline constexpr auto getLength(__extension_MutableSpan_131_MutableSpan<T> const& __this ) -> const Builtin::usize;
+	#line 133 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
+	template<class T> inline constexpr auto getIsEmpty(__extension_MutableSpan_131_MutableSpan<T> const& __this ) -> const bool;
+	#line 135 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
+	template<class T> inline constexpr auto getAsBytes(__extension_MutableSpan_131_MutableSpan<T> const& __this ) -> const MutableSpan<Builtin::u8>;
 	} namespace System{
 using __extensions::getLength;
 using __extensions::getIsEmpty;
@@ -376,55 +378,61 @@ using __extensions::getAsBytes;
 		return Builtin::Boolean(false);
 	}
 #line 112 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
-	template<class T> inline constexpr auto MutableSpan<T>::Iterator::GetCurrent() const  -> const T
+	template<class T> inline constexpr auto MutableSpan<T>::Iterator::Reset() noexcept -> void
 	{
 		#line 113 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
-		return ADV_USFCS((Unsafe), Add)(_ref, _index);
+		_index = ADV_USPCS(MaxValue, Builtin::usize)();
 	}
 #line 116 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
-	template<class T> inline constexpr auto MutableSpan<T>::Iterator::GetCurrentRef() const  -> T&
+	template<class T> inline constexpr auto MutableSpan<T>::Iterator::GetCurrent() const  -> const T
 	{
 		#line 117 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
 		return ADV_USFCS((Unsafe), Add)(_ref, _index);
 	}
 #line 120 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
+	template<class T> inline constexpr auto MutableSpan<T>::Iterator::GetCurrentRef() const  -> T&
+	{
+		#line 121 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
+		return ADV_USFCS((Unsafe), Add)(_ref, _index);
+	}
+#line 124 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
 	template<class T> inline constexpr auto MutableSpan<T>::Iterate() const  -> const typename MutableSpan<T>::Iterator
 	{
-		#line 120 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
+		#line 124 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
 		ADV_EXPRESSION_BODY(Iterator{(*this)}); 
 	}
-#line 122 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
+#line 126 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
 	template<class T> inline constexpr auto MutableSpan<T>::UnsafeCreate(Builtin::MutableRef<T> __data__, Builtin::usize length)  -> const __self
 	{
 		T& data = __data__;
-		#line 123 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
-		return __self{Builtin::MutableRef(data), length}; ADV_CHECK_REF_STRUCT_PARAM_RETURN(data, "self", __self);
+		#line 127 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
+		return __self{Builtin::MutableRef(data), length};
 	}
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
 	
 } namespace __extensions { using namespace System;
-#line 128 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
-	template<class T> inline constexpr auto getLength(__extension_MutableSpan_127_MutableSpan<T> const& __this ) -> const Builtin::usize
+#line 132 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
+	template<class T> inline constexpr auto getLength(__extension_MutableSpan_131_MutableSpan<T> const& __this ) -> const Builtin::usize
 	{
-		#line 128 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
+		#line 132 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(GetLength)(__this.__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 129 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
-	template<class T> inline constexpr auto getIsEmpty(__extension_MutableSpan_127_MutableSpan<T> const& __this ) -> const bool
+#line 133 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
+	template<class T> inline constexpr auto getIsEmpty(__extension_MutableSpan_131_MutableSpan<T> const& __this ) -> const bool
 	{
-		#line 129 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
+		#line 133 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(GetLength)(__this.__ref()) == Builtin::u32(0U)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 131 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
-	template<class T> inline constexpr auto getAsBytes(__extension_MutableSpan_127_MutableSpan<T> const& __this ) -> const MutableSpan<Builtin::u8>
+#line 135 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
+	template<class T> inline constexpr auto getAsBytes(__extension_MutableSpan_131_MutableSpan<T> const& __this ) -> const MutableSpan<Builtin::u8>
 	{
-		#line 133 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
-		{	using namespace Builtin::Unsafe;	using namespace System::__Unsafe;	using namespace __MutableSpan_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard133{};
-			#line 134 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
+		#line 137 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
+		{	using namespace Builtin::Unsafe;	using namespace System::__Unsafe;	using namespace __MutableSpan_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard137{};
+			#line 138 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MutableSpan.ast"
 			return MutableSpan<Builtin::u8>{UnsafePointerCast<Builtin::u8>((__RawPtr(std::addressof(ADV_UFCS(GetDataReference)(__this.__ref()))))), ADV_UPCS(Length)(__this.__ref()) * Builtin::usize(sizeof (T))};
 		}
 		return {};

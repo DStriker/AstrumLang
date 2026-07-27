@@ -1213,7 +1213,7 @@ namespace __Float32_Protected {
 	template<class T> inline constexpr auto _operator_div_mod(__extension_Float32_98_f32 const& __this LIFETIMEBOUND, T rhs)  -> const std::tuple<__extension_Float32_98_f32, __extension_Float32_98_f32>
 	{
 		#line 103 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		return std::make_tuple(__this / Builtin::f32{rhs}, __this % Builtin::f32{rhs}); ADV_CHECK_REF_STRUCT_PARAM_RETURN(rhs, "(self,self)", std::tuple<__extension_Float32_98_f32, __extension_Float32_98_f32>);
+		return std::make_tuple(__this / Builtin::f32{rhs}, __this % Builtin::f32{rhs});
 	}
 	
 } namespace System{
@@ -1321,7 +1321,7 @@ namespace __Float32_Protected {
 						#line 149 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 						if (exp == Builtin::i32(1)) {
 							#line 150 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-							return result; ADV_CHECK_REF_STRUCT_LOCAL_RETURN("self", __extension_Float32_120_f32);
+							return result;
 						}
 					}
 					#line 152 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
@@ -1365,7 +1365,7 @@ namespace __Float32_Protected {
 			return ADV_UPCS(IsNegative)(__this.__ref()) ? rhs : __this;
 		}
 		#line 213 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		return rhs; ADV_CHECK_REF_STRUCT_PARAM_RETURN(rhs, "self", __extension_Float32_161_f32);
+		return rhs;
 	}
 	
 } namespace System{
@@ -1388,7 +1388,7 @@ namespace __Float32_Protected {
 			return ADV_UPCS(IsNegative)(__this.__ref()) ? rhs : __this;
 		}
 		#line 231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		return rhs; ADV_CHECK_REF_STRUCT_PARAM_RETURN(rhs, "self", __extension_Float32_161_f32);
+		return rhs;
 	}
 	
 } namespace System{
@@ -1411,7 +1411,7 @@ namespace __Float32_Protected {
 			return ADV_UPCS(IsNegative)(__this.__ref()) ? __this : rhs;
 		}
 		#line 249 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		return rhs; ADV_CHECK_REF_STRUCT_PARAM_RETURN(rhs, "self", __extension_Float32_161_f32);
+		return rhs;
 	}
 	
 } namespace System{
@@ -1434,7 +1434,7 @@ namespace __Float32_Protected {
 			return ADV_UPCS(IsNegative)(__this.__ref()) ? __this : rhs;
 		}
 		#line 267 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		return rhs; ADV_CHECK_REF_STRUCT_PARAM_RETURN(rhs, "self", __extension_Float32_161_f32);
+		return rhs;
 	}
 	
 } namespace System{
@@ -1773,7 +1773,7 @@ namespace __Float32_Protected {
 			return __this;
 		}
 		#line 328 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		return ADV_UPCS(IsNegative)(rhs.__ref()) ? __this : rhs; ADV_CHECK_REF_STRUCT_PARAM_RETURN(rhs, "self", __extension_Float32_300_f32);
+		return ADV_UPCS(IsNegative)(rhs.__ref()) ? __this : rhs;
 	}
 	
 } namespace System{
@@ -1792,7 +1792,7 @@ namespace __Float32_Protected {
 			return __this;
 		}
 		#line 338 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		return ADV_UPCS(IsNegative)(rhs.__ref()) ? __this : rhs; ADV_CHECK_REF_STRUCT_PARAM_RETURN(rhs, "self", __extension_Float32_300_f32);
+		return ADV_UPCS(IsNegative)(rhs.__ref()) ? __this : rhs;
 	}
 	
 } namespace System{
@@ -1903,7 +1903,7 @@ ADV_WARNING_POP
 		#line 448 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (ADV_UPCS(IsNaN)(base.__ref())) {
 			#line 449 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-			return base; ADV_CHECK_REF_STRUCT_PARAM_RETURN(base, "self", __extension_Float32_403_f32);
+			return base;
 		}
 		#line 452 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (base == Builtin::i32(1)) {
@@ -2294,7 +2294,7 @@ ADV_WARNING_POP
 			result /= pow10;
 		}
 		#line 663 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		return result; ADV_CHECK_REF_STRUCT_LOCAL_RETURN("self", __extension_Float32_501_f32);
+		return result;
 	}
 	
 } namespace System{

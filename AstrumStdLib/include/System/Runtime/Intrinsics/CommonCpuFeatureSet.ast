@@ -1,0 +1,63 @@
+package System.Runtime.Intrinsics;
+
+public class CommonCpuFeatureSet {
+    public {
+        static OsXsave: bool => false;
+        static IsSseEnabled: bool => false;
+        static IsAvxEnabled: bool => false;
+        static IsAvx512Enabled: bool => false;
+        static ManufacturerId: str => "<unknown>";
+        static CpuFamily: u32 => 0u;
+        static CpuModel: u32 => 0u;
+        static Sse2: bool => false;
+        static Sse3: bool => false;
+        static Ssse3: bool => false;
+        static Sse41: bool => false;
+        static Sse42: bool => false;
+        static Popcnt: bool => false;
+        static Fma3: bool => false;
+        static Fma4: bool => false;
+        static Avx: bool => false;
+        static Avx_128: bool => false;
+        static AesNi: bool => false;
+        static F16C: bool => false;
+        static Rdrnd: bool => false;
+        static Bmi1: bool => false;
+        static Bmi2: bool => false;
+        static EfficientBmi2: bool => false;
+        static Avx2: bool => false;
+        static Avx2_128: bool => false;
+        static Avx512F: bool => false;
+        static Avx512DQ: bool => false;
+        static RdSeed: bool => false;
+        static Adx: bool => false;
+        static Sha: bool => false;
+        static Gfni: bool => false;
+        static Vaes: bool => false;
+        static Vpclmulqdq: bool => false;
+        static Avx512Ifma: bool => false;
+        static Avx512Pf: bool => false;
+        static Avx512Er: bool => false;
+        static Avx512Cd: bool => false;
+        static Avx512BW: bool => false;
+        static Avx512Vl: bool => false;
+        static Avx512Vl_128: bool => false;
+        static Avx512Vl_256: bool => false;
+        static Avx512Vbmi: bool => false;
+        static Avx512Vbmi2: bool => false;
+        static Avx512VnniBW: bool => false;
+        static Avx512BitAlg: bool => false;
+        static Avx512Vpopcntdq: bool => false;
+        static Avx512_4Vnniw: bool => false;
+        static Avx512_4Fmaps: bool => false;
+        static Avx512Vp2Intersect: bool => false;
+        static Avx512Fp16: bool => false;
+        static Avx512Bf16: bool => false;
+        static AvxVnni: bool => false;
+        static Neon: bool => false;
+        static Neon64: bool => false;
+        static Sve: bool => false;
+        static SveBytes: usize => 0u;
+        static I8mm: bool => false;
+    }
+}

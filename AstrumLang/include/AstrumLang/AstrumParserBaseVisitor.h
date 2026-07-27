@@ -592,6 +592,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual std::any visitNestedColonNameSpecifier(AstrumParser::NestedColonNameSpecifierContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual std::any visitNamespaceName(AstrumParser::NamespaceNameContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -625,6 +629,10 @@ public:
   }
 
   virtual std::any visitPropertyPattern(AstrumParser::PropertyPatternContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual std::any visitForwardDeclaration(AstrumParser::ForwardDeclarationContext *ctx) override {
     return visitChildren(ctx);
   }
 

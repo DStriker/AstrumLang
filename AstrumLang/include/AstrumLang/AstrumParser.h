@@ -112,51 +112,51 @@ public:
     RuleTypename = 133, RuleClassName = 134, RuleDecltypeSpecifier = 135, 
     RuleDecaySpecifier = 136, RuleEnumName = 137, RuleSimpleTypeSpecifier = 138, 
     RuleFunctionTypeId = 139, RuleTypeIdWithSpecification = 140, RuleNamedTupleField = 141, 
-    RuleNestedNameSpecifier = 142, RuleNamespaceName = 143, RuleTemplateName = 144, 
-    RuleSimpleTemplateId = 145, RuleOperatorTemplateId = 146, RuleTemplateId = 147, 
-    RulePatternList = 148, RulePatternCombinationOperator = 149, RulePattern = 150, 
-    RulePropertyPattern = 151, RuleStructDefinition = 152, RuleStructHead = 153, 
-    RuleStructMemberSpecification = 154, RuleMemberDeclarationCompoundStatement = 155, 
-    RuleMemberVersionConditionalDeclaration = 156, RuleMemberVersionIfDeclaration = 157, 
-    RuleMemberVersionElseDeclaration = 158, RuleStructMemberDeclaration = 159, 
-    RuleClassDefinition = 160, RuleClassHead = 161, RuleInterfaceDefinition = 162, 
-    RuleInterfaceHead = 163, RuleInterfaceMemberSpecification = 164, RuleInterfaceMemberDeclaration = 165, 
-    RuleAssociatedTypeDeclaration = 166, RuleEnumDefinition = 167, RuleEnumHead = 168, 
-    RuleEnumBase = 169, RuleEnumList = 170, RuleEnumeratorDefinition = 171, 
-    RuleEnumMemberSpecification = 172, RuleEnumMemberDeclaration = 173, 
-    RuleEnumClassDefinition = 174, RuleEnumClassHead = 175, RuleEnumClassList = 176, 
-    RuleClassEnumeratorDefinition = 177, RuleEnumClassMemberSpecification = 178, 
-    RuleUnionDefinition = 179, RuleUnionHead = 180, RuleUnionList = 181, 
-    RuleUnionEnumerator = 182, RuleUnionEnumeratorClause = 183, RuleUnionMemberSpecification = 184, 
-    RuleExtensionDefinition = 185, RuleExtensionHead = 186, RuleExtensionMemberSpecification = 187, 
-    RuleExtensionMemberDeclaration = 188, RuleBaseClause = 189, RuleBaseSpecifierList = 190, 
-    RuleBaseSpecifier = 191, RuleProperty = 192, RulePropertyBody = 193, 
-    RuleAbstractProperty = 194, RuleInterfaceProperty = 195, RulePropertyGetter = 196, 
-    RulePropertySetter = 197, RuleAbstractPropertyGetter = 198, RuleAbstractPropertySetter = 199, 
-    RuleExternFunctionDeclaration = 200, RuleFunctionTemplateDeclaration = 201, 
-    RuleFunctionDefinition = 202, RuleAbstractMethodDeclaration = 203, RuleInterfaceMethodDeclaration = 204, 
-    RuleFunctionSpecifier = 205, RuleFunctionParams = 206, RuleParamDeclClause = 207, 
-    RuleParamDeclList = 208, RuleParamDeclaration = 209, RuleParamSpecification = 210, 
-    RuleReturnType = 211, RuleFunctionBody = 212, RuleShortFunctionBody = 213, 
-    RuleExceptionSpecification = 214, RuleFriendDeclaration = 215, RuleExternMethodDeclaration = 216, 
-    RuleDefaultedEqualsOperator = 217, RuleOperatorFunctionId = 218, RuleConstructor = 219, 
-    RuleConstructorBody = 220, RuleMemberInitializationList = 221, RuleDelegatingConstructorBody = 222, 
-    RuleDelegatingConstructorStatement = 223, RuleMemberInitializationStatement = 224, 
-    RuleImplicitSpecification = 225, RuleStaticConstructor = 226, RuleDestructor = 227, 
-    RuleStaticDestructor = 228, RuleConversionFunction = 229, RuleConversionFunctionId = 230, 
-    RuleIndexer = 231, RuleIndexerProperty = 232, RuleIndexerGetter = 233, 
-    RuleIndexerSetter = 234, RuleInterfaceIndexer = 235, RuleTemplateParams = 236, 
-    RuleTemplateParamDeclaration = 237, RuleTemplateTypename = 238, RuleTemplateArgumentList = 239, 
-    RuleTemplateArgument = 240, RuleConstraintClause = 241, RuleTypeTrait = 242, 
-    RuleTemplateDeductionGuide = 243, RuleAttributeSpecifierSeq = 244, RuleAttributeSpecifier = 245, 
-    RuleAttributeArgumentClause = 246, RuleShortAttribute = 247, RuleAssignmentOperator = 248, 
-    RuleShiftOperator = 249, RuleUnaryPrefixOperator = 250, RuleUnaryCustomOperator = 251, 
-    RuleRefCaptureOperator = 252, RuleUnaryPostfixOperator = 253, RuleNot = 254, 
-    RuleOperator = 255, RuleLiteral = 256, RuleInterpolatedStringLiteral = 257, 
-    RuleInterpolatedRegularStringLiteral = 258, RuleInterpolatedRegularStringPart = 259, 
-    RuleInterpolatedVerbatiumStringLiteral = 260, RuleInterpolatedVerbatiumStringPart = 261, 
-    RuleInterpolatedMultilineStringLiteral = 262, RuleInterpolatedMultilineStringPart = 263, 
-    RuleInterpolatedExpression = 264
+    RuleNestedNameSpecifier = 142, RuleNestedColonNameSpecifier = 143, RuleNamespaceName = 144, 
+    RuleTemplateName = 145, RuleSimpleTemplateId = 146, RuleOperatorTemplateId = 147, 
+    RuleTemplateId = 148, RulePatternList = 149, RulePatternCombinationOperator = 150, 
+    RulePattern = 151, RulePropertyPattern = 152, RuleForwardDeclaration = 153, 
+    RuleStructDefinition = 154, RuleStructHead = 155, RuleStructMemberSpecification = 156, 
+    RuleMemberDeclarationCompoundStatement = 157, RuleMemberVersionConditionalDeclaration = 158, 
+    RuleMemberVersionIfDeclaration = 159, RuleMemberVersionElseDeclaration = 160, 
+    RuleStructMemberDeclaration = 161, RuleClassDefinition = 162, RuleClassHead = 163, 
+    RuleInterfaceDefinition = 164, RuleInterfaceHead = 165, RuleInterfaceMemberSpecification = 166, 
+    RuleInterfaceMemberDeclaration = 167, RuleAssociatedTypeDeclaration = 168, 
+    RuleEnumDefinition = 169, RuleEnumHead = 170, RuleEnumBase = 171, RuleEnumList = 172, 
+    RuleEnumeratorDefinition = 173, RuleEnumMemberSpecification = 174, RuleEnumMemberDeclaration = 175, 
+    RuleEnumClassDefinition = 176, RuleEnumClassHead = 177, RuleEnumClassList = 178, 
+    RuleClassEnumeratorDefinition = 179, RuleEnumClassMemberSpecification = 180, 
+    RuleUnionDefinition = 181, RuleUnionHead = 182, RuleUnionList = 183, 
+    RuleUnionEnumerator = 184, RuleUnionEnumeratorClause = 185, RuleUnionMemberSpecification = 186, 
+    RuleExtensionDefinition = 187, RuleExtensionHead = 188, RuleExtensionMemberSpecification = 189, 
+    RuleExtensionMemberDeclaration = 190, RuleBaseClause = 191, RuleBaseSpecifierList = 192, 
+    RuleBaseSpecifier = 193, RuleProperty = 194, RulePropertyBody = 195, 
+    RuleAbstractProperty = 196, RuleInterfaceProperty = 197, RulePropertyGetter = 198, 
+    RulePropertySetter = 199, RuleAbstractPropertyGetter = 200, RuleAbstractPropertySetter = 201, 
+    RuleExternFunctionDeclaration = 202, RuleFunctionTemplateDeclaration = 203, 
+    RuleFunctionDefinition = 204, RuleAbstractMethodDeclaration = 205, RuleInterfaceMethodDeclaration = 206, 
+    RuleFunctionSpecifier = 207, RuleFunctionParams = 208, RuleParamDeclClause = 209, 
+    RuleParamDeclList = 210, RuleParamDeclaration = 211, RuleParamSpecification = 212, 
+    RuleReturnType = 213, RuleFunctionBody = 214, RuleShortFunctionBody = 215, 
+    RuleExceptionSpecification = 216, RuleFriendDeclaration = 217, RuleExternMethodDeclaration = 218, 
+    RuleDefaultedEqualsOperator = 219, RuleOperatorFunctionId = 220, RuleConstructor = 221, 
+    RuleConstructorBody = 222, RuleMemberInitializationList = 223, RuleDelegatingConstructorBody = 224, 
+    RuleDelegatingConstructorStatement = 225, RuleMemberInitializationStatement = 226, 
+    RuleImplicitSpecification = 227, RuleStaticConstructor = 228, RuleDestructor = 229, 
+    RuleStaticDestructor = 230, RuleConversionFunction = 231, RuleConversionFunctionId = 232, 
+    RuleIndexer = 233, RuleIndexerProperty = 234, RuleIndexerGetter = 235, 
+    RuleIndexerSetter = 236, RuleInterfaceIndexer = 237, RuleTemplateParams = 238, 
+    RuleTemplateParamDeclaration = 239, RuleTemplateTypename = 240, RuleTemplateArgumentList = 241, 
+    RuleTemplateArgument = 242, RuleConstraintClause = 243, RuleTypeTrait = 244, 
+    RuleTemplateDeductionGuide = 245, RuleAttributeSpecifierSeq = 246, RuleAttributeSpecifier = 247, 
+    RuleAttributeArgumentClause = 248, RuleShortAttribute = 249, RuleAssignmentOperator = 250, 
+    RuleShiftOperator = 251, RuleUnaryPrefixOperator = 252, RuleUnaryCustomOperator = 253, 
+    RuleRefCaptureOperator = 254, RuleUnaryPostfixOperator = 255, RuleNot = 256, 
+    RuleOperator = 257, RuleLiteral = 258, RuleInterpolatedStringLiteral = 259, 
+    RuleInterpolatedRegularStringLiteral = 260, RuleInterpolatedRegularStringPart = 261, 
+    RuleInterpolatedVerbatiumStringLiteral = 262, RuleInterpolatedVerbatiumStringPart = 263, 
+    RuleInterpolatedMultilineStringLiteral = 264, RuleInterpolatedMultilineStringPart = 265, 
+    RuleInterpolatedExpression = 266
   };
 
   explicit AstrumParser(antlr4::TokenStream *input);
@@ -319,6 +319,7 @@ public:
   class TypeIdWithSpecificationContext;
   class NamedTupleFieldContext;
   class NestedNameSpecifierContext;
+  class NestedColonNameSpecifierContext;
   class NamespaceNameContext;
   class TemplateNameContext;
   class SimpleTemplateIdContext;
@@ -328,6 +329,7 @@ public:
   class PatternCombinationOperatorContext;
   class PatternContext;
   class PropertyPatternContext;
+  class ForwardDeclarationContext;
   class StructDefinitionContext;
   class StructHeadContext;
   class StructMemberSpecificationContext;
@@ -565,6 +567,7 @@ public:
     EnumDefinitionContext *enumDefinition();
     EnumClassDefinitionContext *enumClassDefinition();
     UnionDefinitionContext *unionDefinition();
+    ForwardDeclarationContext *forwardDeclaration();
     SymbolSpecifierSeqContext *symbolSpecifierSeq();
     DeclarationCompoundStatementContext *declarationCompoundStatement();
     ExternVariableDeclarationContext *externVariableDeclaration();
@@ -2182,6 +2185,7 @@ public:
     ExpressionContext *expression();
     antlr4::tree::TerminalNode *Offsetof();
     antlr4::tree::TerminalNode *Comma();
+    antlr4::tree::TerminalNode *Version();
     antlr4::tree::TerminalNode *Await();
     BracedInitListContext *bracedInitList();
     CollectionExpressionContext *collectionExpression();
@@ -2290,6 +2294,7 @@ public:
     antlr4::tree::TerminalNode *Dot();
     antlr4::tree::TerminalNode *Type();
     IdExpressionContext *idExpression();
+    NestedColonNameSpecifierContext *nestedColonNameSpecifier();
     antlr4::tree::TerminalNode *LeftBracket();
     antlr4::tree::TerminalNode *RightBracket();
     antlr4::tree::TerminalNode *Question();
@@ -2575,7 +2580,7 @@ public:
     antlr4::tree::TerminalNode *Static();
     antlr4::tree::TerminalNode *Identifier();
     SimpleTemplateIdContext *simpleTemplateId();
-    ConstantExpressionContext *constantExpression();
+    LogicalOrExpressionContext *logicalOrExpression();
     antlr4::tree::TerminalNode *Question();
     std::vector<TheTypeIdContext *> theTypeId();
     TheTypeIdContext* theTypeId(size_t i);
@@ -2955,6 +2960,26 @@ public:
 
   NestedNameSpecifierContext* nestedNameSpecifier();
   NestedNameSpecifierContext* nestedNameSpecifier(int precedence);
+  class ASTRUMLANG_API NestedColonNameSpecifierContext : public antlr4::ParserRuleContext {
+  public:
+    NestedColonNameSpecifierContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Doublecolon();
+    TypenameContext *typename_();
+    NamespaceNameContext *namespaceName();
+    DecltypeSpecifierContext *decltypeSpecifier();
+    antlr4::tree::TerminalNode *Self();
+    NestedColonNameSpecifierContext *nestedColonNameSpecifier();
+    antlr4::tree::TerminalNode *Identifier();
+    SimpleTemplateIdContext *simpleTemplateId();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  NestedColonNameSpecifierContext* nestedColonNameSpecifier();
+  NestedColonNameSpecifierContext* nestedColonNameSpecifier(int precedence);
   class ASTRUMLANG_API NamespaceNameContext : public antlr4::ParserRuleContext {
   public:
     NamespaceNameContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -3106,6 +3131,28 @@ public:
 
   PropertyPatternContext* propertyPattern();
 
+  class ASTRUMLANG_API ForwardDeclarationContext : public antlr4::ParserRuleContext {
+  public:
+    ForwardDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Struct();
+    antlr4::tree::TerminalNode *Identifier();
+    antlr4::tree::TerminalNode *Semi();
+    TemplateParamsContext *templateParams();
+    antlr4::tree::TerminalNode *Ref();
+    antlr4::tree::TerminalNode *Union();
+    antlr4::tree::TerminalNode *Class();
+    antlr4::tree::TerminalNode *Static();
+    antlr4::tree::TerminalNode *Enum();
+    antlr4::tree::TerminalNode *Interface();
+
+
+    virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  ForwardDeclarationContext* forwardDeclaration();
+
   class ASTRUMLANG_API StructDefinitionContext : public antlr4::ParserRuleContext {
   public:
     StructDefinitionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -3236,6 +3283,7 @@ public:
     EnumDefinitionContext *enumDefinition();
     EnumClassDefinitionContext *enumClassDefinition();
     UnionDefinitionContext *unionDefinition();
+    ForwardDeclarationContext *forwardDeclaration();
     SymbolSpecifierSeqContext *symbolSpecifierSeq();
     MemberDeclarationCompoundStatementContext *memberDeclarationCompoundStatement();
     MemberVersionConditionalDeclarationContext *memberVersionConditionalDeclaration();
@@ -4663,6 +4711,7 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *Type();
     TheTypeIdContext *theTypeId();
+    antlr4::tree::TerminalNode *In();
     antlr4::tree::TerminalNode *Is();
     antlr4::tree::TerminalNode *Identifier();
     SimpleTemplateIdContext *simpleTemplateId();
@@ -5206,6 +5255,7 @@ public:
   bool inclusiveOrExpressionSempred(InclusiveOrExpressionContext *_localctx, size_t predicateIndex);
   bool postfixExpressionSempred(PostfixExpressionContext *_localctx, size_t predicateIndex);
   bool nestedNameSpecifierSempred(NestedNameSpecifierContext *_localctx, size_t predicateIndex);
+  bool nestedColonNameSpecifierSempred(NestedColonNameSpecifierContext *_localctx, size_t predicateIndex);
 
   // By default the static state used to implement the parser is lazily initialized during the first
   // call to the constructor. You can call this function if you wish to initialize the static state

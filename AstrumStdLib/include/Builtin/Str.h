@@ -37,8 +37,8 @@ namespace Builtin {
 		constexpr explicit operator bool() const noexcept { return chars && len; }
 
 		constexpr bool operator==(Str other) const noexcept {
-			return len == other.len &&
-			       std::char_traits<char>::compare(chars, other.chars, len) == 0;
+			return len == other.len && (chars == other.chars ||
+			       std::char_traits<char>::compare(chars, other.chars, len) == 0);
 		}
 
 		constexpr bool operator!=(Str other) const noexcept { return !(*this == other); }

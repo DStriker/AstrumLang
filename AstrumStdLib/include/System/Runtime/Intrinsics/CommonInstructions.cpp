@@ -1,12 +1,10 @@
-#include "Optional.h"
+#include "CommonInstructions.h"
 
-namespace System {
+namespace System::Runtime::Intrinsics {
 //###############################################################################
 //# Type definitions
 //###############################################################################
 
-	
-	
 	
 	
 }

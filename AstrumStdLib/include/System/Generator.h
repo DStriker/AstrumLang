@@ -3,14 +3,15 @@
 #include "Builtin/Builtin.h"
 #endif
 #include "ASTRUMSTD_export.h"
-#include "ISequence.h"
+#include "System/Collections/ISequence.h"
+using namespace System::Collections;
 
-namespace System::Collections {
+namespace System {
 namespace __Unsafe {} namespace __Generator_Protected__Unsafe {}
 //###############################################################################
 //# Global type aliases
 //###############################################################################
-#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Collections\\Generator.ast"
+#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Generator.ast"
 template<class T> using Generator = typename Builtin::Generator<T>;
 //###############################################################################
 //# Free function declarations

@@ -28,11 +28,6 @@ template <class T, class U>
 inline constexpr T UnsafeCast(Builtin::FastInt<U> value) noexcept;
 #endif
 
-#if defined(_WIN32) || defined(__BYTE_ORDER__) && (__BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__)
-#define ADV_VERSION_BIG_ENDIAN 0
-#else
-#define ADV_VERSION_BIG_ENDIAN 1
-#endif
 
 namespace Builtin {
 	class Int128;

@@ -1,7 +1,7 @@
 package System;
 
-public import Char;
-public import Span;
+public import CharIterator;
+public import StringComparison;
 
 public extension str {
     // Returns the number of UTF-8 bytes in the string.
@@ -12,6 +12,7 @@ public extension str {
     Bytes: byte[&] ==> Span<byte>.UnsafeCreate(this.GetDataReference(), this.GetByteLength());
 
     // Returns the slice of string in given byte range
+    // Throws InvalidArgumentException if the range bound is not a UTF-8 codepoint boundary.
     this[range: IndexRange] -> self == {
         let strLen := this.ByteLength;
         let start := range.Start.Offset(strLen) as usize;
@@ -21,7 +22,7 @@ public extension str {
             throw Builtin.IndexOutOfRangeException();
         }
         if not this.Bytes[@Unchecked start].IsUtf8CodePointBoundary
-            or not this.Bytes[@Unchecked start + len - 1].IsUtf8CodePointBoundary {
+            or not this.Bytes[@Unchecked start + len].IsUtf8CodePointBoundary {
             throw Builtin.InvalidArgumentException();
         }
         return str.UnsafeCreate(this.Bytes[@Unchecked start], len);
@@ -31,12 +32,87 @@ public extension str {
         return str.UnsafeCreate(Unsafe.Add(this.GetDataReference(), range.Start.Offset(this.ByteLength) as usize),
             range.Length(this.ByteLength));
     }
-    // Chars
+
+    // Returns a sequence of Unicode codepoints from the string.
+    Chars: CharIterator ==> CharIterator(this);
+    // Returns the number of Unicode codepoints in the string.
+    CharCount: usize == {
+        count: usize;
+        for c in this.Chars {
+            ++count;
+        }
+
+        return count;
+    }
     // GraphemeClusters
-    // Substring
-    // Equals
-    // Compare
-    // Contains
+
+    // Returns a slice of string in given char range starting from start to the end of the string
+    Substring: (start: usize) -> self == {
+        if start >= this.ByteLength {
+            throw Builtin.IndexOutOfRangeException();
+        }
+        if not this.Bytes[@Unchecked start].IsUtf8CodePointBoundary {
+            throw Builtin.InvalidArgumentException();
+        }
+        return str.UnsafeCreate(this.Bytes[@Unchecked start], this.ByteLength - start);
+    }
+    // Returns a slice of string in given char range starting from start with given length
+    Substring: (start: usize, length: usize) -> self == {
+        let end := start + length;
+        if end > this.ByteLength {
+            throw Builtin.IndexOutOfRangeException();
+        }
+        if not this.Bytes[@Unchecked start].IsUtf8CodePointBoundary
+            or not this.Bytes[@Unchecked end].IsUtf8CodePointBoundary {
+            throw Builtin.InvalidArgumentException();
+        }
+        return str.UnsafeCreate(this.Bytes[@Unchecked start], length);
+    }
+/*
+    Equals: (other: str) -> bool ==> this == other;
+    Equals: (other: str, comparison: StringComparison) -> bool =
+    {
+        if this === other {
+            return true;
+        }
+
+        if not this or not other or this.ByteLength != other.ByteLength {
+            return false;
+        }
+
+        return switch comparison {
+            ::Invariant or ::InvariantIgnoreCase => CompareInfo.Invariant.Compare(this, other, comparison == ::InvariantIgnoreCase) == 0,
+            ::CurrentCulture or ::CurrentCultureIgnoreCase => CultureInfo.CurrentCulture.CompareInfo.Compare(this, other, comparison == ::CurrentCultureIgnoreCase) == 0,
+            ::Ordinal => EqualsOrdinalHelper(this, other),
+            ::OrdinalIgnoreCase => EqualsOrdinalIgnoreCaseHelper(this, other),
+            _ => throw Builtin.InvalidArgumentException()
+        };
+    }
+    Compare: (other: str) -> i32 ==> this <=> other;
+    Compare: (other: str, comparison: StringComparison) -> i32 =
+    {
+        if this === other {
+            return 0;
+        }
+
+        if not this {
+            return -1;
+        }
+
+        if not other {
+            return 1;
+        }
+
+        return switch comparison {
+            ::Invariant or ::InvariantIgnoreCase => CompareInfo.Invariant.Compare(this, other, comparison == ::InvariantIgnoreCase),
+            ::CurrentCulture or ::CurrentCultureIgnoreCase => CultureInfo.CurrentCulture.CompareInfo.Compare(this, other, comparison == ::CurrentCultureIgnoreCase),
+            ::Ordinal => CompareOrdinalHelper(this, other),
+            ::OrdinalIgnoreCase => CompareOrdinalIgnoreCaseHelper(this, other),
+            _ => throw Builtin.InvalidArgumentException()
+        };
+    }*/
+    
+    //Contains: (val: str) -> bool ==> ;
     // HashCode
     // IndexOf, IndexOfAny
     // LastIndexOf, LastIndexOfAny
@@ -55,6 +131,7 @@ static assert(type str is IEquatable<str>, "str should be IEquatable<str>");
 static assert(type str is ISelfComparable, "str should be ISelfComparable");
 static assert(type str is IComparable<str>, "str should be IComparable<str>");
 
+private const cs: str == "Hello, моя Лерка ❤😆";
 private const test1 :== "PART 1";
 private const test2 :== "PART 2";
 private const test3 :== "Begin " + test1 + " Middle " + test2 + " End";
@@ -65,17 +142,22 @@ static assert(arr.Length == 3, "str array length failed");
 
 test "Str" {
     s: str = "Hello, world!";
-    const cs: str == "Hello, моя Лерка ❤😆";
     assert s == "Hello, world!";
     assert s < "Help";
     assert s.ByteLength == 13;
     assert cs.ByteLength == 32;
+    assert cs.CharCount == 19;
     assert "My dog is wolf!".ByteLength == 15;
     const s3 : str == "Begin " + test1 + " Middle " + test2 + " End";
     assert s3.ByteLength == 30;
     assert s[1u..^1u] == "ello, world";
+    assert "Help".Substring(2u) == "lp";
+    assert s.Substring(1u, 11u) == "ello, world";
 
-    for b in arr {
-        print(b);
-    }
+    let switched := switch s {
+        "Help" => "help",
+        "Hello, world!" => "hello",
+        _ => "unknown"
+    };
+    assert switched == "hello";
 }

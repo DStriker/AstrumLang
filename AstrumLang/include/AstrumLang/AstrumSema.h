@@ -219,6 +219,7 @@ namespace AstrumLang {
 		std::vector<PropertyDefinition> properties;
 		std::vector<MethodDefinition> methods;
 		std::vector<std::shared_ptr<StructDefinition>> nestedStructs;
+		std::vector<ForwardDeclaration> forwardDeclarations;
 		std::vector<ForwardDeclaration> friendTypes;
 		std::vector<FunctionDeclaration> friendFuncDeclarations;
 		std::vector<FunctionDefinition> friendFuncDefinitions;
@@ -1162,6 +1163,8 @@ namespace AstrumLang {
 
 		std::any visitDefaultedEqualsOperator(
 		    AstrumParser::DefaultedEqualsOperatorContext* ctx) override;
+
+		std::any visitForwardDeclaration(AstrumParser::ForwardDeclarationContext* ctx) override;
 	};
 
 }  // namespace AstrumLang

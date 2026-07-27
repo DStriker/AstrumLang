@@ -37,6 +37,68 @@ namespace Builtin {
 	using usize = FastInt<size_t>;
 #endif
 
+#if ADV_VERSION_AVX512F
+	template <class T>
+	using AVX512Mask =
+	    std::conditional_t<(sizeof(T) < 4),
+	                       std::conditional_t<(sizeof(T) == 1), __mmask64, __mmask32>,
+	                       std::conditional_t<(sizeof(T) == 4), __mmask16, __mmask8>>;
+#endif
+
+#if ADV_VERSION_ARM
+	template <class T>
+	struct __NeonVector;
+	template <>
+	struct __NeonVector<i8> {
+		using type = int8x16_t;
+	};
+	template <>
+	struct __NeonVector<u8> {
+		using type = uint8x16_t;
+	};
+	template <>
+	struct __NeonVector<i16> {
+		using type = int16x8_t;
+	};
+	template <>
+	struct __NeonVector<u16> {
+		using type = uint16x8_t;
+	};
+	template <>
+	struct __NeonVector<i32> {
+		using type = int32x4_t;
+	};
+	template <>
+	struct __NeonVector<u32> {
+		using type = uint32x4_t;
+	};
+	template <>
+	struct __NeonVector<i64> {
+		using type = int64x2_t;
+	};
+	template <>
+	struct __NeonVector<u64> {
+		using type = uint64x2_t;
+	};
+	template <>
+	struct __NeonVector<f32> {
+		using type = float32x4_t;
+	};
+	template <>
+	struct __NeonVector<f64> {
+		using type = float64x2_t;
+	};
+
+	template<class T>
+	using NeonVector = __NeonVector<T>::type;
+#endif
+
+	template<auto val>
+	using Constant = std::integral_constant<decltype(val), val>;
+
+	template <size_t... vals>
+	using IndexSequence = std::index_sequence<vals...>;
+
 	template <int64_t Number>
 	struct IntLiteral {
 		constexpr IntLiteral() noexcept = default;

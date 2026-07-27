@@ -1,0 +1,74 @@
+package System;
+
+public import Char;
+public import Span;
+public import System.Collections.ISequence;
+public import System.Collections.IIterator;
+
+public ref struct CharIterator: IAbstractSequence, ISequence<char>, IAbstractIterator, IIterator<char> {
+    public type ElementType = char;
+
+    private _data: byte[&];
+    private _nextIndex: usize;
+    private _current: char;
+
+    public this(data: str) noexcept == {
+        this._data = Span<byte>.UnsafeCreate(data.GetDataReference(), data.GetByteLength());
+        this._nextIndex = 0u;
+        this._current = '\0';
+    }
+
+    public mut MoveNext: () -> bool == {
+        if _nextIndex >= _data.Length {
+            return false;
+        }
+
+        _current = _data[@Unchecked _nextIndex++];
+        if _current.IsAscii {
+            return true;
+        }
+
+        // Invalid UTF-8 data
+        if not byte(_current).IsUtf8CodePointBoundary {
+            throw Builtin.InvalidOperationException();
+        }
+
+        let trailingBytes := TrailingBytes[@Unchecked _current];
+        if _nextIndex + trailingBytes > _data.Length {
+            return true;
+        }
+
+        currentChar := _current as u32;
+        for i in ..trailingBytes {
+            currentChar <<= 6;
+            currentChar += _data[@Unchecked _nextIndex++];
+        }
+
+        currentChar -= Offsets[@Unchecked trailingBytes];
+        _current = currentChar as char;
+
+        return true;
+    }
+
+    public mut Reset: () ==> _nextIndex = 0u;
+
+    public GetCurrent: () -> char ==> this._current;
+
+    public Iterate: () -> CharIterator ==> this;
+
+    private const TrailingBytes: byte[_] == [
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5
+    ];
+
+    private const Offsets: u32[_] == [
+        0x00000000, 0x00003080, 0x000E2080,
+		0x03C82080, 0xFA082080, 0x82082080
+    ];
+}

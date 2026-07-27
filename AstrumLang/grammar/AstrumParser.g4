@@ -54,6 +54,7 @@ declaration
     | attributeSpecifierSeq? accessSpecifier? enumDefinition
     | attributeSpecifierSeq? accessSpecifier? enumClassDefinition
     | attributeSpecifierSeq? accessSpecifier? unionDefinition
+    | accessSpecifier? forwardDeclaration
     | symbolSpecifierSeq declarationCompoundStatement
     | attributeSpecifierSeq? externVariableDeclaration
     | versionDefinition
@@ -554,6 +555,7 @@ unaryExpressionTail
     | Alignof LeftParen theTypeId RightParen
     | Nameof LeftParen (theTypeId | expression) RightParen
     | Offsetof LeftParen theTypeId Comma Identifier RightParen
+    | Version LeftParen Identifier RightParen
     | Await (expression | bracedInitList | collectionExpression)
     ;
 
@@ -589,6 +591,7 @@ postfixExpression
     | Forward postfixExpression
     | postfixExpression Dot IntegerLiteral
     | simpleTypeSpecifier Dot (Type | idExpression)
+    | nestedColonNameSpecifier idExpression
     | postfixExpression Question? Dot Greater? idExpression
     | postfixExpression Exclamation
     ;
@@ -683,7 +686,7 @@ theTypeId
     : singleTypeId (VertLine singleTypeId)*
     | Amp Mutable? singleTypeId
     | Static (Identifier | simpleTemplateId)
-    | constantExpression Question theTypeId Colon theTypeId
+    | logicalOrExpression Question theTypeId Colon theTypeId
     ;
 
 singleTypeId
@@ -813,6 +816,11 @@ nestedNameSpecifier
     | nestedNameSpecifier (Identifier | simpleTemplateId) Dot
     ;
 
+nestedColonNameSpecifier
+    : (typename | namespaceName | decltypeSpecifier | Self) Doublecolon
+    | nestedColonNameSpecifier (Identifier | simpleTemplateId) Doublecolon
+    ;
+
 namespaceName
     : Identifier
     ;
@@ -860,6 +868,12 @@ propertyPattern
 
 // structs
 
+forwardDeclaration
+    : (Ref | Union)? Struct templateParams? Identifier Semi
+    | (Static | Enum)? Class templateParams? Identifier Semi
+    | (Interface | Enum | Union) templateParams? Identifier Semi
+    ;
+
 structDefinition
     : structHead LeftBrace structMemberSpecification? RightBrace
     ;
@@ -899,6 +913,7 @@ structMemberDeclaration
     | attributeSpecifierSeq? accessSpecifier? enumDefinition
     | attributeSpecifierSeq? accessSpecifier? enumClassDefinition
     | attributeSpecifierSeq? accessSpecifier? unionDefinition
+    | accessSpecifier? forwardDeclaration
     | symbolSpecifierSeq memberDeclarationCompoundStatement
     | memberVersionConditionalDeclaration
     | attributeSpecifierSeq? (accessSpecifier | protectedInternal)? functionDefinition
@@ -1322,7 +1337,7 @@ templateParamDeclaration
 
 templateTypename
     : Type
-    | theTypeId
+    | In? theTypeId
     | Is (Identifier | simpleTemplateId)
     ;
 

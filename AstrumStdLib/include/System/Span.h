@@ -35,8 +35,10 @@ template<class T> class Span;
 			#line 106 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 			public: inline constexpr auto MoveNext() noexcept -> const bool;
 			#line 115 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-			public: inline constexpr auto GetCurrent() const  -> const T;
+			public: inline constexpr auto Reset() noexcept -> void;
 			#line 119 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
+			public: inline constexpr auto GetCurrent() const  -> const T;
+			#line 123 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 			public: inline constexpr auto GetCurrentRef() const  LIFETIMEBOUND -> const T&;
 			#line 95 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 			private: Builtin::Ref<T> _ref;
@@ -99,9 +101,9 @@ template<class T> class Span;
 		public: inline constexpr auto GetLength() const noexcept -> const Builtin::usize;
 		#line 90 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 		public: inline constexpr auto GetDataReference() const noexcept -> const Builtin::Ref<T>;
-		#line 123 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
+		#line 127 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 		public: inline constexpr auto Iterate() const  -> const Iterator;
-		#line 125 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
+		#line 129 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 		public: inline constexpr static auto UnsafeCreate(const T& data, Builtin::usize length)  -> const __self;
 		#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 		private: Builtin::Ref<T> _data;
@@ -112,14 +114,14 @@ template<class T> class Span;
 	
 	
 		} namespace __extensions { using namespace System;
-#line 130 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-	template<class T> using __extension_Span_130_Span = Span<T>;
-	#line 131 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-	template<class T> inline constexpr auto getLength(__extension_Span_130_Span<T> const& __this ) -> const Builtin::usize;
-	#line 132 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-	template<class T> inline constexpr auto getIsEmpty(__extension_Span_130_Span<T> const& __this ) -> const bool;
-	#line 134 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-	template<class T> inline constexpr auto getAsBytes(__extension_Span_130_Span<T> const& __this ) -> const Span<Builtin::u8>;
+#line 134 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
+	template<class T> using __extension_Span_134_Span = Span<T>;
+	#line 135 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
+	template<class T> inline constexpr auto getLength(__extension_Span_134_Span<T> const& __this ) -> const Builtin::usize;
+	#line 136 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
+	template<class T> inline constexpr auto getIsEmpty(__extension_Span_134_Span<T> const& __this ) -> const bool;
+	#line 138 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
+	template<class T> inline constexpr auto getAsBytes(__extension_Span_134_Span<T> const& __this ) -> const Span<Builtin::u8>;
 	} namespace System{
 using __extensions::getLength;
 using __extensions::getIsEmpty;
@@ -327,54 +329,60 @@ using __extensions::getAsBytes;
 		return Builtin::Boolean(false);
 	}
 #line 115 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-	template<class T> inline constexpr auto Span<T>::Iterator::GetCurrent() const  -> const T
+	template<class T> inline constexpr auto Span<T>::Iterator::Reset() noexcept -> void
 	{
 		#line 116 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-		return ADV_USFCS((Unsafe), Add)(_ref, _index);
+		_index = ADV_USPCS(MaxValue, Builtin::usize)();
 	}
 #line 119 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-	template<class T> inline constexpr auto Span<T>::Iterator::GetCurrentRef() const  -> const T&
+	template<class T> inline constexpr auto Span<T>::Iterator::GetCurrent() const  -> const T
 	{
 		#line 120 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 		return ADV_USFCS((Unsafe), Add)(_ref, _index);
 	}
 #line 123 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
+	template<class T> inline constexpr auto Span<T>::Iterator::GetCurrentRef() const  -> const T&
+	{
+		#line 124 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
+		return ADV_USFCS((Unsafe), Add)(_ref, _index);
+	}
+#line 127 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 	template<class T> inline constexpr auto Span<T>::Iterate() const  -> const typename Span<T>::Iterator
 	{
-		#line 123 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
+		#line 127 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 		ADV_EXPRESSION_BODY(Iterator{(*this)}); 
 	}
-#line 125 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
+#line 129 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 	template<class T> inline constexpr auto Span<T>::UnsafeCreate(const T& data, Builtin::usize length)  -> const __self
 	{
-		#line 126 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-		return __self{data, length}; ADV_CHECK_REF_STRUCT_PARAM_RETURN(data, "self", __self);
+		#line 130 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
+		return __self{data, length};
 	}
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 	
 } namespace __extensions { using namespace System;
-#line 131 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-	template<class T> inline constexpr auto getLength(__extension_Span_130_Span<T> const& __this ) -> const Builtin::usize
+#line 135 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
+	template<class T> inline constexpr auto getLength(__extension_Span_134_Span<T> const& __this ) -> const Builtin::usize
 	{
-		#line 131 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
+		#line 135 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(GetLength)(__this.__ref())); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 132 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-	template<class T> inline constexpr auto getIsEmpty(__extension_Span_130_Span<T> const& __this ) -> const bool
+#line 136 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
+	template<class T> inline constexpr auto getIsEmpty(__extension_Span_134_Span<T> const& __this ) -> const bool
 	{
-		#line 132 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
+		#line 136 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(GetLength)(__this.__ref()) == Builtin::u32(0U)); 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;
-#line 134 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-	template<class T> inline constexpr auto getAsBytes(__extension_Span_130_Span<T> const& __this ) -> const Span<Builtin::u8>
+#line 138 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
+	template<class T> inline constexpr auto getAsBytes(__extension_Span_134_Span<T> const& __this ) -> const Span<Builtin::u8>
 	{
-		#line 136 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-		{	using namespace Builtin::Unsafe;	using namespace System::__Unsafe;	using namespace __Span_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard136{};
-			#line 137 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
+		#line 140 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
+		{	using namespace Builtin::Unsafe;	using namespace System::__Unsafe;	using namespace __Span_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard140{};
+			#line 141 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 			return Span<Builtin::u8>{UnsafePointerCast<Builtin::u8>((__RawPtr(std::addressof(ADV_UFCS(GetDataReference)(__this.__ref()))))), ADV_UPCS(Length)(__this.__ref()) * Builtin::usize(sizeof (T))};
 		}
 		return {};

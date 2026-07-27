@@ -108,6 +108,10 @@ public ref struct <T> MutableSpan: ISelfEquatable, IAbstractSequence, ISequence<
             }
             return false;
         }
+        
+        public mut Reset: () noexcept == {
+            _index = usize.MaxValue;
+        }
 
         public GetCurrent: () -> T == {
             return Unsafe.Add(_ref, _index);

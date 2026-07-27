@@ -13,6 +13,10 @@
 
 namespace Builtin {
 
+	struct AccessViolationException : public std::runtime_error {
+		AccessViolationException() : std::runtime_error("Access violation") {}
+	};
+
 	struct IntegerOverflowException : public std::runtime_error {
 		IntegerOverflowException() : std::runtime_error("Integer overflow") {}
 	};

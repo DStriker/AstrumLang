@@ -19,7 +19,9 @@ namespace Builtin {
 namespace System {
 	template <class T>
 	class Optional;
-}
+	template <class T>
+	class OptionalRef;
+}  // namespace System
 
 namespace Builtin {
 	struct EmptyType {
@@ -35,9 +37,9 @@ namespace Builtin {
 	};*/
 
 	/*struct RefStruct {
-		Str ToString() const { return "Struct"; }
+	    Str ToString() const { return "Struct"; }
 
-		usize HashCode() const { return 123456u; }
+	    usize HashCode() const { return 123456u; }
 	};*/
 	struct Enum {};
 	struct Union {};
@@ -416,8 +418,12 @@ namespace Builtin {
 	        std::is_base_of_v<ObjectRef__Unowned, T>, OptionalUnownedRef<T>,
 	        std::conditional_t<
 	            std::is_base_of_v<ObjectRef__Weak, T>, T,
-	            std::conditional_t<std::is_base_of_v<FuncBase, T>, OptionalFunctionRef<T>,
-	                               std::conditional_t<IsNullable<T>, T, System::Optional<T>>>>>>;
+	            std::conditional_t<
+	                std::is_base_of_v<FuncBase, T>, OptionalFunctionRef<T>,
+	                std::conditional_t<
+	                    IsNullable<T>, T,
+	                    std::conditional_t<std::is_base_of_v<RefStruct, T>, System::OptionalRef<T>,
+	                                       System::Optional<T>>>>>>>;
 
 	template <class T>
 	class OptionalStrongRef {
@@ -1140,10 +1146,12 @@ namespace Builtin {
 		                              std::derived_from<leftType, ObjectRef__Unowned>;
 		constexpr bool isRightObject = std::derived_from<rightType, ObjectRef> ||
 		                               std::derived_from<rightType, ObjectRef__Unowned>;
-		constexpr bool isLeftNullable        = IsNullable<leftType>;
-		constexpr bool isRightNullable       = IsNullable<rightType>;
-		constexpr bool isLeftSystemOptional  = is_instance_of_v<leftType, System::Optional>;
-		constexpr bool isRightSystemOptional = is_instance_of_v<rightType, System::Optional>;
+		constexpr bool isLeftNullable       = IsNullable<leftType>;
+		constexpr bool isRightNullable      = IsNullable<rightType>;
+		constexpr bool isLeftSystemOptional = is_instance_of_v<leftType, System::Optional> ||
+		                                      is_instance_of_v<leftType, System::OptionalRef>;
+		constexpr bool isRightSystemOptional = is_instance_of_v<rightType, System::Optional> ||
+		                                       is_instance_of_v<rightType, System::OptionalRef>;
 
 		auto getObjectReference = []<class Obj>(Obj&& obj) {
 			using T = std::decay_t<Obj>;
@@ -1164,7 +1172,9 @@ namespace Builtin {
 			return GetObjectReference(&lhs) == GetObjectReference(&rhs);
 		} else if constexpr (isLeftNullable && isRightNullable) {
 			if constexpr (isLeftSystemOptional && isRightSystemOptional) {
-				return lhs == rhs;
+				return (!lhs.IsValid() && !rhs.IsValid()) ||
+				       (lhs.IsValid() && rhs.IsValid() && sizeof(lhs) == sizeof(rhs) &&
+				        std::memcmp(&lhs, &rhs, sizeof(lhs)) == 0);
 			} else if constexpr (!isLeftSystemOptional && !isRightSystemOptional) {
 				return lhs.IsValid() == rhs.IsValid() &&
 				       (!lhs.IsValid() || getObjectReference(lhs) == getObjectReference(rhs));
@@ -1173,8 +1183,12 @@ namespace Builtin {
 			return rhs.IsValid() && GetObjectReference(&lhs) == getObjectReference(rhs);
 		} else if constexpr (isLeftNullable && !isLeftSystemOptional && isRightObject) {
 			return lhs.IsValid() && getObjectReference(lhs) == GetObjectReference(&rhs);
-		} else if constexpr (requires { std::declval<leftType>() == std::declval<rightType>(); }) {
+		} /*else if constexpr (requires {
+			std::declval<leftType>() == std::declval<rightType>(); }) {
 			return lhs == rhs;
+		}*/
+		else if constexpr(sizeof(lhs) == sizeof(rhs)) {
+            return std::memcmp(&lhs, &rhs, sizeof(lhs)) == 0;
 		}
 
 		return false;
@@ -1714,6 +1728,22 @@ namespace Builtin {
 
 	struct UncheckedTag {};
 	struct FakeTypeTag {};
+
+	template <typename... Ts>
+	struct TTypeListHead;
+
+	template <typename T, typename... Ts>
+	struct TTypeListHead<T, Ts...> {
+		using type = T;
+	};
+
+	template <>
+	struct TTypeListHead<> {
+		using type = FakeTypeTag;
+	};
+
+	template <typename... Ts>
+	using TypeListHead = typename TTypeListHead<Ts...>::type;
 
 #ifdef Builtin_OVERFLOW_CHECKS
 	template <class T>

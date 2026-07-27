@@ -89,6 +89,8 @@ namespace Builtin {
 				return false;
 			}
 
+			constexpr void Reset() noexcept { index = size_t(-1); }
+
 			constexpr const T GetCurrent() const { return ptr[index]; }
 			constexpr decltype(auto) GetCurrentRef() const { return ptr[index]; }
 		};

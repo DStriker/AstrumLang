@@ -4,6 +4,7 @@
 
 #include "Boolean.h"
 #include "Char.h"
+#include "CpuId.h"
 #include "DebugPrint.h"
 #include "Decimal.h"
 #include "Defer.h"
@@ -11,6 +12,7 @@
 #include "Floating.h"
 #include "FuncParameterMode.h"
 #include "FunctionRef.h"
+#include "Generator.h"
 #include "InlineArray.h"
 #include "LocalFunctions.h"
 #include "RawPtr.h"
@@ -19,7 +21,6 @@
 #include "Tests.h"
 #include "Types.h"
 #include "UnsafeContext.h"
-#include "Generator.h"
 
 #ifndef ASTRUMSTD_EXPORTS
 //#include "System/package.h"
@@ -308,10 +309,9 @@ struct ___dependent_false : std::false_type {};
 	LAMBDA_NO_DISCARD(Args&&... params)                                                            \
 	    FORCE_INLINE_LAMBDA_CLANG /* noexcept(ADV_USFCS_IS_NOTHROW_ARG(TYPE, TEMPKW, __VA_ARGS__)) \
 	                               */                                                              \
-	                                  FORCE_INLINE_LAMBDA                                          \
-	                                      ->decltype(auto) /*REQUIRES(requires                     \
-	                                                          ADV_USFCS_CONSTRAINT_ARG(TYPE,       \
-	                                                          TEMPKW, __VA_ARGS__))*/              \
+	        FORCE_INLINE_LAMBDA->decltype(auto) /*REQUIRES(requires                                \
+	                                               ADV_USFCS_CONSTRAINT_ARG(TYPE,                  \
+	                                               TEMPKW, __VA_ARGS__))*/                         \
 	{                                                                                              \
 		if constexpr (requires {                                                                   \
 			              ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);    \
@@ -2572,15 +2572,19 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
    private:                                                                                        \
 	template <class _PropertyType = __VA_ARGS__, class _ParentType = ADV_PROPERTY_SELF>            \
 	struct __Property_##propertyName {                                                             \
-		FORCE_INLINE constexpr __VA_ARGS__ get() const {                                           \
-			static __VA_ARGS__ data = _ParentType::initFunc();                                     \
-			return data;                                                                           \
-		}                                                                                          \
 		using __property_underlying_type = _PropertyType;                                          \
+		using __parent_type              = _ParentType;                                            \
 		using __self                     = typename Builtin::SelfProxyType<_PropertyType>;         \
 		using __class                    = typename Builtin::ClassProxyType<_PropertyType>;        \
-		FORCE_INLINE constexpr operator __VA_ARGS__() const { return get(); }                      \
-		FORCE_INLINE constexpr decltype(auto) __ref() const { return get(); }                      \
+		dllAccessSpecifier __property_underlying_type& get() const;                                \
+		FORCE_INLINE constexpr operator _PropertyType() const { return get(); }                    \
+		FORCE_INLINE constexpr decltype(auto) __ref() const {                                      \
+			if constexpr (std::is_same_v<_PropertyType, bool>) {                                   \
+				return get();                                                                      \
+			} else {                                                                               \
+				return get().__ref();                                                              \
+			}                                                                                      \
+		}                                                                                          \
                                                                                                    \
 		FORCE_INLINE constexpr decltype(auto) operator+() const requires                           \
 		    requires(_PropertyType t) {                                                            \
@@ -2753,6 +2757,7 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			*t;                                                                                    \
 		}                                                                                          \
 		{ return *get(); }                                                                         \
+		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator==(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
 				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
@@ -2830,11 +2835,10 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 	              "Abstract type " #Type " does not have abstract members");
 #define ADV_CHECK_STATIC_CLASS(Type, ...)                                                          \
 	static_assert(std::is_base_of_v<Builtin::StaticClass, ##__VA_ARGS__>,                          \
-	              "The type " #Type " cannot be inherited by static class");
+	              "The type " Type " cannot be inherited by static class");
 #define ADV_CHECK_INTERFACE_IMPLEMENTATION(Type, Interface, ...)                                   \
 	static_assert(Builtin::ImplementsInterface<##__VA_ARGS__>(),                                   \
 	              "The type " #Type " does not implement interface " #Interface);
-
 
 #define ADV_INTERFACE_STRONG_COMMON_CTORS(...)                                                     \
                                                                                                    \

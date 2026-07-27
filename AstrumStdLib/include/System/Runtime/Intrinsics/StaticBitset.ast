@@ -1,0 +1,48 @@
+package System.Runtime.Intrinsics;
+
+internal struct <KeyType> StaticBitset {
+    private _bitset: u32;
+
+    public this(bitset: u32) noexcept == {
+        this._bitset = bitset;
+    }
+
+    public AllBitsSet: <Bits: in KeyType...> () -> bool noexcept == {
+        const mask :== MakeBitMask(u32(Bits)...);
+        return (_bitset & mask) == mask;
+    }
+
+    public IsSet: <Bit: in KeyType> () -> bool noexcept == {
+        return AllBitsSet<Bit>();
+    }
+
+    public mut SetBit: <Bit: in KeyType> () noexcept == {
+        const mask :== MakeBitMask(u32(Bit));
+        _bitset |= mask;
+    }
+
+    public GetRange: <Start: in KeyType, End: in KeyType> () -> u32 noexcept == {
+        const startBit :== Start as u32;
+        const endBit :== End as u32;
+        const width :== endBit - startBit;
+        const mask :== MakeLowMask<u32>(width);
+        return (_bitset >> startBit) & mask;
+    }
+
+    public static MakeBitMask: <I> (bit: I) -> I noexcept == {
+        assert bit < (sizeof(I) * 8);
+        return I(1) << bit;
+    }
+
+    public static MakeBitMask: <I, Args...> (bit: I, bits: Args...) -> I noexcept == {
+        return MakeBitMask<I>(bit) | MakeBitMask<I>(I(bits)...);
+    }
+
+    private static MakeLowMask: <I> (width: I) -> I noexcept == {
+        assert width <= (sizeof(I) * 8);
+        if width == (sizeof(I) * 8) {
+            return ~I();
+        }
+        return (I(1) << width) - 1;
+    }
+}

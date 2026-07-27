@@ -11,7 +11,7 @@ namespace AstrumLang {
 		std::unordered_map<std::string, std::vector<std::string>> enumValues;
 		std::unordered_set<std::string> importedPackages;
 		std::vector<std::pair<std::string, AstrumParser::TheTypeIdContext*>> namedReturns;
-		std::vector<ConstantDefinition> selfConstants;
+		std::vector<std::pair<ConstantDefinition, StructDefinition*>> selfConstants;
 		std::stack<AstrumParser::UnaryExpressionContext*> unaryExpressions;
 		std::stack<AstrumParser::SelectionStatementContext*> switchStatements;
 		std::stack<AstrumParser::SwitchExpressionContext*> switchExpressions;
@@ -81,6 +81,7 @@ namespace AstrumLang {
 		bool isArrayDeclaration         = false;
 		bool isConstantDeclaration      = false;
 		bool isCoroutine                = false;
+		bool isWrapper                  = false;
 
 		class StreamSwitcher {
 			std::ofstream* file1;
@@ -309,6 +310,7 @@ namespace AstrumLang {
 		void printQualifiedId(AstrumParser::QualifiedIdContext* ctx);
 		void printUnqualifiedId(AstrumParser::UnqualifiedIdContext* ctx);
 		void printNestedNameSpecifier(AstrumParser::NestedNameSpecifierContext* ctx);
+		void printNestedColonNameSpecifier(AstrumParser::NestedColonNameSpecifierContext* ctx);
 		void printIdentifier(antlr4::tree::TerminalNode* node);
 		void printLiteral(AstrumParser::LiteralContext* ctx);
 		void printIntegerLiteral(std::string txt, bool minus);

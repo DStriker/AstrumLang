@@ -727,7 +727,7 @@ namespace AstrumLang {
 				out << "namespace __" << filename << "_Protected" << (isUnsafe ? "__Unsafe" : "")
 				    << " { ";
 			} else if (isUnsafe) {
-				out << "namespace __Unsafe { [[clang::annotate(\"unsafe\")]] ";
+				out << "namespace __Unsafe { ";
 			}
 
 			if (func.varargs >= 0) {
@@ -770,6 +770,9 @@ namespace AstrumLang {
 				out << " ";
 			} else if (func.templateSpecializationArgs) {
 				out << "template<> ";
+			}
+			if (isUnsafe) {
+				out << "[[clang::annotate(\"unsafe\")]] ";
 			}
 
 			if (func.isConsteval) {
@@ -1224,7 +1227,7 @@ namespace AstrumLang {
 				out << "#line " << base->getStart()->getLine() << " \"" << fullFilename
 				    << ".ast\"\n"
 				    << std::string(depth, '\t');
-				out << "ADV_CHECK_STATIC_CLASS(" << base->getText() << ", ";
+				out << "ADV_CHECK_STATIC_CLASS(\"" << base->getText() << "\", ";
 				if (base->nestedNameSpecifier()) {
 					printNestedNameSpecifier(base->nestedNameSpecifier());
 				}
@@ -1241,8 +1244,10 @@ namespace AstrumLang {
 			       "FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; "
 			       "}\n"
 			    << std::string(depth, '\t');
-		if (!sema.symbolContexts.empty())
+		if (!sema.symbolContexts.empty()) {
+			sema.typeset.insert(type->id);
 			sema.symbolContexts.push(sema.symbolContexts.top());
+		}
 		if (type->kind == TypeKind::Class || type->kind == TypeKind::EnumClass) {
 			for (const auto& nested : type->nestedStructs) {
 				if (!nested->compilationCondition.empty()) {
@@ -1285,7 +1290,80 @@ namespace AstrumLang {
 					out << "#endif " << std::endl << std::string(depth, '\t');
 				}
 			}
+			for (const auto& decl : type->forwardDeclarations) {
+				if (!decl.compilationCondition.empty()) {
+					out << "#if " << decl.compilationCondition << std::endl
+					    << std::string(depth, '\t');
+				}
+				switch (decl.access) {
+					case AccessSpecifier::Public:
+					case AccessSpecifier::Internal:
+						out << "public: ";
+						break;
+					case AccessSpecifier::Protected:
+					case AccessSpecifier::ProtectedInternal:
+						out << "protected: ";
+						break;
+					case AccessSpecifier::Private:
+						out << "private: ";
+						break;
+				}
+				if (decl.templateParams) {
+					printTemplateParams(decl.templateParams);
+					out << " ";
+				}
+				out << "using " << decl.id << " = __self::" << decl.id;
+				if (decl.templateParams) {
+					out << "<";
+					bool first = true;
+					for (auto param : decl.templateParams->templateParamDeclaration()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printIdentifier(param->Identifier());
+						if (param->Ellipsis())
+							out << "...";
+					}
+					out << ">";
+				}
+				out << ";\n" << std::string(depth, '\t');
+				if (!decl.compilationCondition.empty()) {
+					out << "#endif " << std::endl << std::string(depth, '\t');
+				}
+			}
 		} else {
+			for (const auto& decl : type->forwardDeclarations) {
+				if (!decl.compilationCondition.empty()) {
+					out << "#if " << decl.compilationCondition << std::endl
+					    << std::string(depth, '\t');
+				}
+				switch (decl.access) {
+					case AccessSpecifier::Public:
+					case AccessSpecifier::Internal:
+						out << "public: ";
+						break;
+					case AccessSpecifier::Protected:
+					case AccessSpecifier::ProtectedInternal:
+						out << "protected: ";
+						break;
+					case AccessSpecifier::Private:
+						out << "private: ";
+						break;
+				}
+				if (decl.templateParams) {
+					printTemplateParams(decl.templateParams);
+					out << " ";
+				}
+				if (decl.isRawUnion) {
+					out << "union ";
+				} else {
+					out << "class ";
+				}
+				out << decl.id << ";\n" << std::string(depth, '\t');
+				if (!decl.compilationCondition.empty()) {
+					out << "#endif " << std::endl << std::string(depth, '\t');
+				}
+			}
 			bool cachedNested = isNested;
 			isNested          = true;
 			for (const auto& nested : type->nestedStructs) {
@@ -2026,8 +2104,10 @@ namespace AstrumLang {
 						out << " = ";
 						printInitializerClause(prop.initializer);
 					}
-					out << ";";
-					printRefStructCheck(prop.type);
+					if (type->kind != TypeKind::RefStruct || prop.isStatic) {
+						out << ";";
+						printRefStructCheck(prop.type);
+					}
 					out << ";" << std::endl << std::string(depth, '\t');
 				}
 
@@ -2953,6 +3033,19 @@ namespace AstrumLang {
 					break;
 			}
 			isUnsafe = func.isUnsafe;
+
+			isFunctionDeclaration = true;
+			if (func.templateParams) {
+				printTemplateParams(func.templateParams);
+				out << " ";
+			} else if (func.templateSpecializationArgs) {
+				out << "template<> ";
+			}
+
+			if (func.constraints) {
+				printConstraintClause(func.constraints);
+				out << " ";
+			}
 			if (isUnsafe) {
 				out << "[[clang::annotate(\"unsafe\")]] ";
 			}
@@ -2986,20 +3079,6 @@ namespace AstrumLang {
 					}
 				}
 			}
-
-			isFunctionDeclaration = true;
-			if (func.templateParams) {
-				printTemplateParams(func.templateParams);
-				out << " ";
-			} else if (func.templateSpecializationArgs) {
-				out << "template<> ";
-			}
-
-			if (func.constraints) {
-				printConstraintClause(func.constraints);
-				out << " ";
-			}
-
 			if (func.isConsteval) {
 				out << "inline consteval ";
 			} else if (func.isConstexpr) {
@@ -3711,7 +3790,7 @@ namespace AstrumLang {
 				                      sema.contextTypes[constant.initializer].ends_with(type->id) ||
 				                  type->kind == TypeKind::Enum;
 				if (isSelfType)
-					selfConstants.push_back(constant);
+					selfConstants.emplace_back(std::pair {constant, type});
 				if (constant.templateParams) {
 					isFunctionDeclaration = true;
 					printTemplateParams(constant.templateParams);
@@ -3728,6 +3807,18 @@ namespace AstrumLang {
 				bool isArray = false;
 				if (constant.type) {
 					isDeclaration = true;
+					if (!constant.type->singleTypeId().empty()) {
+						if (auto postfix = constant.type->singleTypeId(0)->typePostfix()) {
+							isArrayDeclaration = !postfix->arrayDeclarator().empty();
+							if (auto ts = constant.type->singleTypeId(0)->typeSpecifierSeq())
+								currentArrayType = ts;
+							if (auto expr = constant.initializer) {
+								if (auto coll = expr->collectionExpression()) {
+									currentTupleSize = coll->collectionExpressionPart().size();
+								}
+							}
+						}
+					}
 					printTypeId(constant.type);
 					isDeclaration = false;
 					// isArray = constant.type->arrayDeclarator();
@@ -3753,6 +3844,8 @@ namespace AstrumLang {
 					out << "#endif " << std::endl << std::string(depth, '\t');
 				}
 				isConstantDeclaration = false;
+				currentArrayType      = nullptr;
+				currentTupleSize      = 0;
 			}
 			currentDeclarationName.clear();
 		}
@@ -3804,10 +3897,12 @@ namespace AstrumLang {
 		if (type->kind == TypeKind::Struct && !isVariadicTemplateStruct) {
 			out << "template <size_t I";
 			if (type->templateParams) {
+				isTemplateParamDeclaration = true;
 				for (auto param : type->templateParams->templateParamDeclaration()) {
 					out << ", ";
 					printTemplateParamDeclaration(param);
 				}
+				isTemplateParamDeclaration = false;
 			}
 			out << "> friend auto& get(" << type->id;
 			if (type->templateParams) {
@@ -3836,10 +3931,12 @@ namespace AstrumLang {
 			out << "&);\n" << std::string(depth, '\t');
 			out << "template <size_t I";
 			if (type->templateParams) {
+				isTemplateParamDeclaration = true;
 				for (auto param : type->templateParams->templateParamDeclaration()) {
 					out << ", ";
 					printTemplateParamDeclaration(param);
 				}
+				isTemplateParamDeclaration = false;
 			}
 			out << "> friend const auto& get(const " << type->id;
 			if (type->templateParams) {
@@ -4055,6 +4152,7 @@ namespace AstrumLang {
 	}
 
 	void AstrumCodegen::printStructWrapper(StructDefinition* type) {
+		isWrapper = true;
 		out << "\n" << std::string(depth, '\t');
 		if (!type->compilationCondition.empty()) {
 			out << "#if " << type->compilationCondition << std::endl << std::string(depth, '\t');
@@ -4147,9 +4245,46 @@ namespace AstrumLang {
 		    << std::string(depth, '\t');
 		out << "operator __underlying() const noexcept { return __value; }\n"
 		    << std::string(depth, '\t');
+		for (const auto& alias : type->typeAliases) {
+			// isUnsafe = alias.isUnsafe;
+			if (!alias.compilationCondition.empty()) {
+				out << "#if " << alias.compilationCondition << std::endl
+				    << std::string(depth, '\t');
+			}
+			out << "#line " << alias.pos.line << " \"" << fullFilename << ".ast\"\n"
+			    << std::string(depth, '\t');
+			switch (alias.access) {
+				case AccessSpecifier::Public:
+					out << "public: ";
+					break;
+				case AccessSpecifier::Protected:
+					out << "protected: ";
+					break;
+				case AccessSpecifier::Private:
+					out << "private: ";
+					break;
+			}
+			if (alias.templateParams) {
+				isFunctionDeclaration = true;
+				printTemplateParams(alias.templateParams);
+				isFunctionDeclaration = false;
+				out << " ";
+			}
+			isUnsafe = alias.isUnsafe;
+			out << "using " << alias.id << (isUnsafe ? " [[clang::annotate(\"unsafe\")]]" : "")
+			    << " = ";
+			printTypeId(alias.type);
+			out << ";";
+			isUnsafe = false;
+			out << std::endl << std::string(depth, '\t');
+			if (!alias.compilationCondition.empty()) {
+				out << "#endif " << std::endl << std::string(depth, '\t');
+			}
+		}
 		for (const auto& prop : type->properties) {
 			if (prop.isStatic || prop.access != AccessSpecifier::Public)
 				continue;
+			isUnsafe = prop.isUnsafe;
 			if (!prop.compilationCondition.empty()) {
 				out << "#if " << prop.compilationCondition << std::endl << std::string(depth, '\t');
 			}
@@ -4183,7 +4318,7 @@ namespace AstrumLang {
 		}
 		for (const auto& method : type->methods) {
 			if (method.templateParams || method.templateSpecializationArgs ||
-			    method.isConstructor || method.isDestructor ||
+			    method.isConstructor || method.isDestructor || method.isConverter ||
 			    method.access != AccessSpecifier::Public ||
 			    method.params && !method.returnType && method.expression)
 				continue;
@@ -4191,6 +4326,7 @@ namespace AstrumLang {
 				out << "#if " << method.compilationCondition << std::endl
 				    << std::string(depth, '\t');
 			}
+			isUnsafe = method.isUnsafe;
 			if (method.isConverter) {
 				out << "operator ";
 				printTypeId(method.returnType);
@@ -4357,6 +4493,8 @@ namespace AstrumLang {
 		if (!type->compilationCondition.empty()) {
 			out << "#endif " << std::endl;
 		}
+		isUnsafe  = false;
+		isWrapper = false;
 	}
 
 	void AstrumCodegen::printClassRef(StructDefinition* type) {
@@ -9883,8 +10021,12 @@ namespace AstrumLang {
 			if (!type->compilationCondition.empty()) {
 				out << "#if " << type->compilationCondition << std::endl;
 			}
-			lastEnumValue.clear();
-			for (const auto& constant : selfConstants) {
+
+			StructDefinition* prevType = nullptr;
+			for (const auto& [constant, type] : selfConstants) {
+				if (type != prevType)
+					lastEnumValue.clear();
+				prevType = type;
 				out << "\n" << std::string(depth, '\t');
 				if (!constant.compilationCondition.empty()) {
 					out << "#if " << constant.compilationCondition << std::endl
@@ -12435,6 +12577,7 @@ namespace AstrumLang {
 
 		sema.symbolContexts.push({});
 		sema.symbolContexts.push({});
+		sema.typeset.globalTypes.erase("mask");
 		sema.typeset.globalTypes.erase("result");
 		sema.typeset.globalTypes.erase("category");
 		sema.typeset.globalTypes.erase("span");
@@ -12609,11 +12752,27 @@ namespace AstrumLang {
 			if (auto decl = condition->versionIfDeclaration()->declaration()) {
 				if (auto func = decl->functionDefinition()) {
 					printFunctionDefinition(func);
+				} else if (auto type = decl->structDefinition()) {
+					printStructDefinition(type);
+				} else if (auto type = decl->classDefinition()) {
+					printClassDefinition(type);
+				} else if (auto type = decl->enumClassDefinition()) {
+					printEnumClassDefinition(type);
+				} else if (auto type = decl->enumDefinition()) {
+					printEnumDefinition(type);
 				}
 				if (auto elseBranch = condition->versionElseDeclaration()) {
 					decl = elseBranch->declaration();
 					if (auto func = decl->functionDefinition()) {
 						printFunctionDefinition(func);
+					} else if (auto type = decl->structDefinition()) {
+						printStructDefinition(type);
+					} else if (auto type = decl->classDefinition()) {
+						printClassDefinition(type);
+					} else if (auto type = decl->enumClassDefinition()) {
+						printEnumClassDefinition(type);
+					} else if (auto type = decl->enumDefinition()) {
+						printEnumDefinition(type);
 					}
 				}
 			}
@@ -13905,6 +14064,8 @@ namespace AstrumLang {
 		if (auto t = ctx->templateTypename()) {
 			if (auto name = t->theTypeId()) {
 				printTypeId(name);
+				if (t->In())
+					out << " const&";
 			} else if (t->Is()) {
 				out << "__ImplementsInterface_";
 				if (t->simpleTemplateId()) {
@@ -13951,6 +14112,9 @@ namespace AstrumLang {
 	}
 
 	void AstrumCodegen::printSimpleTemplateId(AstrumParser::SimpleTemplateIdContext* ctx) {
+		/*if (isNestedTypeId) {
+		    out << "template ";
+		}*/
 		out << ctx->templateName()->getText() << "<";
 		if (auto args = ctx->templateArgumentList()) {
 			printTemplateArgumentList(args);
@@ -14005,6 +14169,8 @@ namespace AstrumLang {
 			    << std::string(depth, '\t');
 		}
 
+		sema.typeset.insert(ctx->structHead()->className()->getText());
+		sema.symbolContexts.push(sema.symbolContexts.top());
 		if (ctx->structMemberSpecification())
 			printStructMemberSpecification(ctx->structMemberSpecification());
 
@@ -14250,6 +14416,7 @@ namespace AstrumLang {
 			}
 		}
 
+		sema.symbolContexts.pop();
 		currentShortType = prevTypeName;
 	}
 
@@ -14284,9 +14451,12 @@ namespace AstrumLang {
 		currentAccessSpecifier = std::nullopt;
 		auto prevTypeName      = currentShortType;
 
+		sema.typeset.insert(ctx->classHead()->className()->getText());
+		sema.symbolContexts.push(sema.symbolContexts.top());
 		if (ctx->structMemberSpecification())
 			printStructMemberSpecification(ctx->structMemberSpecification());
 
+		sema.symbolContexts.pop();
 		currentShortType = prevTypeName;
 	}
 
@@ -14354,7 +14524,7 @@ namespace AstrumLang {
 			}
 			printMemberDeclarationCompoundStatement(compound);
 		} else if (auto member = ctx->memberBlockDeclaration()) {
-			if (isStructDeclaration ||
+			if (isStructDeclaration || member->aliasDeclaration() ||
 			    member->simpleDeclaration() && member->simpleDeclaration()->declSpecifierSeq() &&
 			        member->simpleDeclaration()->declSpecifierSeq()->getText().find("lazy") !=
 			            std::string::npos) {
@@ -14467,9 +14637,12 @@ namespace AstrumLang {
 		if (isStructDeclaration || functionBody)
 			return;
 
+		sema.typeset.insert(ctx->enumHead()->Identifier()->getText());
+		sema.symbolContexts.push(sema.symbolContexts.top());
 		if (ctx->enumMemberSpecification()) {
 			printEnumMemberSpecification(ctx->enumMemberSpecification());
 		}
+		sema.symbolContexts.pop();
 	}
 
 	void AstrumCodegen::printEnumMemberSpecification(
@@ -14491,10 +14664,13 @@ namespace AstrumLang {
 			return;
 
 		currentType = ctx->enumClassHead()->Identifier()->getText();
+		sema.typeset.insert(currentType);
+		sema.symbolContexts.push(sema.symbolContexts.top());
 		printEnumClassList(ctx->enumClassList());
 		if (ctx->enumClassMemberSpecification()) {
 			printEnumClassMemberSpecification(ctx->enumClassMemberSpecification());
 		}
+		sema.symbolContexts.pop();
 	}
 
 	void AstrumCodegen::printEnumClassList(AstrumParser::EnumClassListContext* ctx) {}
@@ -17519,7 +17695,7 @@ namespace AstrumLang {
 			else if (type == Move || type == Forward)
 				out << "&&";
 
-			if (/*!isFunctionDeclaration && */ (type == Ref || type == Inout)) {
+			if (!isWrapper && (type == Ref || type == Inout)) {
 				refParameters[id] = t;
 				id                = "__" + id + "__";
 			}
@@ -17742,13 +17918,13 @@ namespace AstrumLang {
 			auto parent = prop.parentType;
 			StringReplace(parent, ".", "::");
 			StringReplace(parent, "::::::", "...");
-			auto pos = parent.find("<{{specialization}}>");
-			if (pos != parent.npos) {
-				out << parent.substr(0, pos);
+			auto pos1 = parent.find("<{{specialization}}>");
+			if (pos1 != parent.npos) {
+				out << parent.substr(0, pos1);
 				out << "<";
 				printTemplateArgumentList(prop.parentTemplateSpecializationArgs);
 				out << ">";
-				out << parent.substr(pos + 20);
+				out << parent.substr(pos1 + 20);
 			} else {
 				out << parent;
 			}
@@ -17765,15 +17941,57 @@ namespace AstrumLang {
 			printTypeId(prop.type);
 			out << " ";
 
-			currentShortType.clear();
-			currentTypeWithTemplate.clear();
-
 			out << " { return ";
 			if (prop.initializer)
 				printInitializerClause(prop.initializer);
 			else
 				out << "{}";
 			out << "; }";
+
+			out << std::endl << std::string(depth, '\t');
+
+			out << "#line " << pos.line << " \"" << fullFilename << ".ast\"\n"
+			    << std::string(depth, '\t');
+			if (prop.parentTemplateParams) {
+				printTemplateParams(prop.parentTemplateParams);
+				out << " ";
+				if (prop.parentConstraints) {
+					printConstraintClause(prop.parentConstraints);
+					out << " ";
+				}
+			} else {
+				out << "template<> ";
+			}
+			if (prop.isConst)
+				out << "const ";
+			if (pos1 != parent.npos) {
+				out << parent.substr(0, pos1);
+				out << "<";
+				printTemplateArgumentList(prop.parentTemplateSpecializationArgs);
+				out << ">";
+				out << parent.substr(pos1 + 20);
+			} else {
+				out << parent;
+			}
+			out << "::__Property_" << prop.id << "<>";
+			out << "::__property_underlying_type& ";
+			if (pos1 != parent.npos) {
+				out << parent.substr(0, pos1);
+				out << "<";
+				printTemplateArgumentList(prop.parentTemplateSpecializationArgs);
+				out << ">";
+				out << parent.substr(pos1 + 20);
+			} else {
+				out << parent;
+			}
+			out << "::__Property_" << prop.id << "<>";
+			out << "::get() const ";
+
+			currentShortType.clear();
+			currentTypeWithTemplate.clear();
+
+			out << " { static __property_underlying_type data = __parent_type::__lazy_init_"
+			    << prop.id << "(); return data; }";
 
 			out << std::endl << std::string(depth, '\t');
 			return;
@@ -18005,20 +18223,23 @@ namespace AstrumLang {
 			out << "Builtin::i64";
 		} else if (ctx->U64()) {
 			out << "Builtin::u64";
-		} else if (ctx->I128()) {
-			out << "Builtin::i128";
-		} else if (ctx->U128()) {
-			out << "Builtin::u128";
 		} else if (ctx->Isize()) {
 			out << "Builtin::isize";
 		} else if (ctx->Usize()) {
 			out << "Builtin::usize";
-		} else if (ctx->F16()) {
-			out << "Builtin::f16";
 		} else if (ctx->F32()) {
 			out << "Builtin::f32";
 		} else if (ctx->F64()) {
 			out << "Builtin::f64";
+		} else if (ctx->Bool()) {
+			out << "bool";
+		}
+		if (ctx->F16()) {
+			out << "Builtin::f16";
+		} else if (ctx->I128()) {
+			out << "Builtin::i128";
+		} else if (ctx->U128()) {
+			out << "Builtin::u128";
 		} else if (ctx->F128()) {
 			out << "Builtin::f128";
 		} else if (ctx->Fext()) {
@@ -18029,8 +18250,6 @@ namespace AstrumLang {
 			out << "Builtin::char32";
 		} else if (ctx->Decimal()) {
 			out << "System::Decimal";
-		} else if (ctx->Bool()) {
-			out << "bool";
 		} else if (ctx->Str()) {
 			out << "Builtin::Str";
 		} else if (ctx->Object()) {
@@ -18106,23 +18325,30 @@ namespace AstrumLang {
 			if (sema.typeset.contains(currentShortType + "." + txt)) {
 				out << "typename " << currentTypeWithTemplate << "::";
 			}
+			bool isNested = false;
 			if (auto nested = ctx->nestedNameSpecifier()) {
 				out << "typename ";
 				printNestedNameSpecifier(nested);
+				isNested = true;
 			} else if (sema.protectedSymbols.contains(ctx->getText())) {
 				out << "__" << filename << "_Protected::";
 			}
-			auto type = ctx->typename_();
-			if (auto tid = type->simpleTemplateId()) {
-				printSimpleTemplateId(tid);
-			} else if (auto cid = type->className()) {
-				if (auto tid = cid->simpleTemplateId()) {
+			if (auto type = ctx->typename_()) {
+				if (auto tid = type->simpleTemplateId()) {
+					if (isNested)
+						out << "template ";
 					printSimpleTemplateId(tid);
+				} else if (auto cid = type->className()) {
+					if (auto tid = cid->simpleTemplateId()) {
+						if (isNested)
+							out << "template ";
+						printSimpleTemplateId(tid);
+					} else {
+						out << type->getText();
+					}
 				} else {
-					out << ctx->typename_()->getText();
+					out << type->getText();
 				}
-			} else {
-				out << ctx->typename_()->getText();
 			}
 		}
 	}
@@ -18283,6 +18509,8 @@ namespace AstrumLang {
 	}
 
 	void AstrumCodegen::printAliasDeclaration(AstrumParser::AliasDeclarationContext* ctx) {
+		auto name = ctx->Identifier()->getText();
+		sema.typeset.insert(name);
 		if (functionBody) {
 			if (auto tpl = ctx->templateParams()) {
 				isFunctionDeclaration = true;
@@ -18290,8 +18518,6 @@ namespace AstrumLang {
 				isFunctionDeclaration = false;
 				out << " ";
 			}
-			auto name = ctx->Identifier()->getText();
-			sema.typeset.insert(name);
 			out << "using ";
 			printIdentifier(ctx->Identifier());
 			out << " = ";
@@ -19653,6 +19879,8 @@ namespace AstrumLang {
 			} else if (auto coll = ctx->collectionExpression()) {
 				printCollectionExpression(coll);
 			}
+		} else if (ctx->Version()) {
+			out << "ADV_VERSION_" << ctx->Identifier()->getText();
 		}
 	}
 
@@ -20226,6 +20454,9 @@ namespace AstrumLang {
 			printNewExpression(ctx->newExpression());
 		} else if (ctx->stackallocExpression()) {
 			printStackallocExpression(ctx->stackallocExpression());
+		} else if (auto nested = ctx->nestedColonNameSpecifier()) {
+			printNestedColonNameSpecifier(nested);
+			printIdExpression(ctx->idExpression());
 		}
 	}
 
@@ -20598,9 +20829,9 @@ namespace AstrumLang {
 				printSingleTypeId(type);
 			}
 			out << ">";
-		} else if (ctx->constantExpression()) {
+		} else if (ctx->logicalOrExpression()) {
 			out << "std::conditional_t<";
-			printConstantExpression(ctx->constantExpression());
+			printLogicalOrExpression(ctx->logicalOrExpression());
 			out << ", ";
 			printTypeId(ctx->theTypeId(0));
 			out << ", ";
@@ -20777,6 +21008,58 @@ namespace AstrumLang {
 	void AstrumCodegen::printNestedNameSpecifier(AstrumParser::NestedNameSpecifierContext* ctx) {
 		if (auto nested = ctx->nestedNameSpecifier()) {
 			printNestedNameSpecifier(nested);
+			if (auto tid = ctx->simpleTemplateId()) {
+				printSimpleTemplateId(tid);
+			} else {
+				printIdentifier(ctx->Identifier());
+			}
+			out << "::";
+		} else {
+			if (auto name = ctx->typename_()) {
+				if (auto tid = name->simpleTemplateId()) {
+					printSimpleTemplateId(tid);
+				} else {
+					out << name->getText();
+				}
+			}
+			if (auto name = ctx->namespaceName()) {
+				out << name->getText();
+			}
+			if (auto decl = ctx->decltypeSpecifier()) {
+				out << "decltype(";
+				printExpression(decl->expression());
+				out << ")";
+			}
+			if (ctx->Self()) {
+				if (isExtension) {
+					out << currentExtensionName;
+					if (currentTemplateParams) {
+						out << "<";
+						bool first = true;
+						for (auto decl : currentTemplateParams->templateParamDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(decl->Identifier());
+						}
+						out << ">";
+					}
+				} else if (isInterfaceConcept) {
+					out << "__AnyType::__self";
+				} else if (isInterface) {
+					out << "Builtin::OptionalStrongRef<Builtin::ObjectRef>";
+				} else {
+					out << "__self";
+				}
+			}
+			out << "::";
+		}
+	}
+
+	void AstrumCodegen::printNestedColonNameSpecifier(
+	    AstrumParser::NestedColonNameSpecifierContext* ctx) {
+		if (auto nested = ctx->nestedColonNameSpecifier()) {
+			printNestedColonNameSpecifier(nested);
 			if (auto tid = ctx->simpleTemplateId()) {
 				printSimpleTemplateId(tid);
 			} else {

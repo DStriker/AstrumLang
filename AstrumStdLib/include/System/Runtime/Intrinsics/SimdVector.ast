@@ -1,0 +1,598 @@
+package System.Runtime.Intrinsics;
+
+public import SimdInstructionSet;
+public import System.IEquatable;
+
+public struct <T, Arch> SimdVector
+{
+    static assert(SimdInstructionSet::IsSimdType<T>, "T must be a SIMD type");
+    static assert(type Arch is SimdInstructionSet, "Arch must be a SIMD instruction set");
+
+    private type TMask = SimdMask<T, Arch>;
+    private type TRegister = Arch.Register<T>;
+    public  type TNative = TRegister.TRegister;
+    private _reg: TRegister;
+
+    // Count of elements in vector for this instruction set
+    public const Length: u32 == sizeof(TNative) / sizeof(T);
+
+    public implicit this(reg: TNative) noexcept = {
+        _reg.data = reg;
+    }
+    public implicit operator TNative noexcept => _reg.data;
+
+    public ToNative: () -> TNative => _reg.data;
+
+    // Creates a new instance with all elements initialized to the specified value
+    public static Create: <U> (val: U) -> self => Arch.Broadcast<T, Arch>(val as T);
+    // Creates a new instance with elements initialized to the specified values
+    public static Create: <Ts...> (val0: T, val1: T, tail: Ts...) -> self = {
+        static assert(sizeof...(Ts) + 2 == Length, "Invalid number of arguments");
+        return Arch.CreateFrom<Arch>(val0, val1, T(tail)...);
+    }
+    // Creates a new instance from bool vector
+    public static FromMask: (in ref b: TMask) -> self => Arch.FromMask<T, Arch>(b);
+
+    // Loads a vector from the given aligned memory source
+    // Throws AccessViolationException if source is not aligned
+    public static unsafe LoadAligned: (source: *const T) -> self = {
+        @Unlikely
+        if (source.UnsafeNarrowToInteger() % Arch.Alignment != 0)
+            throw Builtin.AccessViolationException();
+
+        return Arch.LoadAligned<T, Arch>(source);
+    }
+
+    // Loads a vector from the given memory source
+    public static unsafe Load: (source: *const T) -> self => Arch.Load<T, Arch>(source);
+
+    // Loads a vector from the given memory source
+    public static LoadUnsafe: (in ref source: T) -> self = {
+        unsafe {
+            return Arch.Load<T, Arch>(source&);
+        }
+    }
+
+    // Stores a vector at the given aligned memory destination
+    // Throws AccessViolationException if destination is not aligned
+    public unsafe StoreAligned: (destination: *T) = {
+        @Unlikely
+        if (destination.UnsafeNarrowToInteger() % Arch.Alignment != 0)
+            throw Builtin.AccessViolationException();
+
+        Arch.StoreAligned(this, destination);
+    }
+
+    // Stores a vector at the given memory destination
+    public unsafe Store: (destination: *T) => Arch.Store(this, destination);
+
+    // Stores a vector at the given memory destination
+    public StoreUnsafe: (ref destination: T) = {
+        unsafe {
+            Arch.Store(this, destination&);
+        }
+    }
+
+    // Reinterpret casts to other types
+
+    public AsInt8: SimdVector<i8, Arch> => Arch.BitwiseCast<i8>(this);
+    public AsInt16: SimdVector<i16, Arch> => Arch.BitwiseCast<i16>(this);
+    public AsInt32: SimdVector<i32, Arch> => Arch.BitwiseCast<i32>(this);
+    public AsInt64: SimdVector<i64, Arch> => Arch.BitwiseCast<i64>(this);
+    public AsUInt8: SimdVector<u8, Arch> => Arch.BitwiseCast<u8>(this);
+    public AsUInt16: SimdVector<u16, Arch> => Arch.BitwiseCast<u16>(this);
+    public AsUInt32: SimdVector<u32, Arch> => Arch.BitwiseCast<u32>(this);
+    public AsUInt64: SimdVector<u64, Arch> => Arch.BitwiseCast<u64>(this);
+    public AsFloat32: SimdVector<f32, Arch> => Arch.BitwiseCast<f32>(this);
+    public AsFloat64: SimdVector<f64, Arch> => Arch.BitwiseCast<f64>(this);
+
+    public static One: self => Create(T(1));
+    public static Zero: self => Create(T(0));
+
+    // Get element by index
+    // Throws IndexOutOfRangeException if index is out of range
+    public this[index: usize] -> T = {
+        if index >= Length {
+            throw Builtin.IndexOutOfRangeException();
+        }
+        return Arch.GetElement(this, index);
+    }
+
+    // Comparisons
+    public operator==: (in ref other: self) -> bool noexcept => Arch.Equal(this, other).All;
+    public operator!=: (in ref other: self) -> bool noexcept => Arch.NotEqual(this, other).Any;
+    public operator==: (other: T) -> bool noexcept => Arch.Equal(this, Create(other)).All;
+    public operator!=: (other: T) -> bool noexcept => Arch.NotEqual(this, Create(other)).Any;
+
+    public operator==*: (in ref other: self) -> TMask noexcept => Arch.Equal(this, other);
+    public operator!=*: (in ref other: self) -> TMask noexcept => Arch.NotEqual(this, other);
+    public operator<* :  (in ref other: self) -> TMask noexcept => Arch.Less(this, other);
+    public operator<=*: (in ref other: self) -> TMask noexcept => Arch.LessOrEqual(this, other);
+    public operator>* :  (in ref other: self) -> TMask noexcept => Arch.Greater(this, other);
+    public operator>=*: (in ref other: self) -> TMask noexcept => Arch.GreaterOrEqual(this, other);
+    public operator<* :  (other: T) -> TMask noexcept => Arch.Less(this, Create(other));
+    public operator<=*: (other: T) -> TMask noexcept => Arch.LessOrEqual(this, Create(other));
+    public operator>* :  (other: T) -> TMask noexcept => Arch.Greater(this, Create(other));
+    public operator>=*: (other: T) -> TMask noexcept => Arch.GreaterOrEqual(this, Create(other));
+
+    // Returns true if all elements in the first vector are equal to 
+    // the corresponding elements in the second vector
+    public EqualsAll: (in ref other: self) -> bool noexcept = {
+        let mask := this ==* other;
+        return mask.All;
+    }
+    // Returns true if any elements in the first vector are equal to
+    // the corresponding elements in the second vector
+    public EqualsAny: (in ref other: self) -> bool noexcept = {
+        let mask := this ==* other;
+        return mask.Any;
+    }
+    // Returns true if all elements in the first vector are less than
+    // the corresponding elements in the second vector
+    public LessThanAll: (in ref other: self) -> bool noexcept = {
+        let mask := this <* other;
+        return mask.All;
+    }
+    // Returns true if any elements in the first vector are less than
+    // the corresponding elements in the second vector
+    public LessThanAny: (in ref other: self) -> bool noexcept = {
+        let mask := this <* other;
+        return mask.Any;
+    }
+    // Returns true if all elements in the first vector are less than the given value
+    public LessThanAll: (other: T) -> bool noexcept = {
+        let mask := this <* Create(other);
+        return mask.All;
+    }
+    // Returns true if any elements in the first vector are less than the given value
+    public LessThanAny: (other: T) -> bool noexcept = {
+        let mask := this <* Create(other);
+        return mask.Any;
+    }
+    // Returns true if all elements in the first vector are less than or equal to
+    // the corresponding elements in the second vector
+    public LessThanOrEqualAll: (in ref other: self) -> bool noexcept = {
+        let mask := this <=* other;
+        return mask.All;
+    }
+    // Returns true if any elements in the first vector are less than or equal to
+    // the corresponding elements in the second vector
+    public LessThanOrEqualAny: (in ref other: self) -> bool noexcept = {
+        let mask := this <=* other;
+        return mask.Any;
+    }
+    // Returns true if all elements in the first vector are less than or equal to the given value
+    public LessThanOrEqualAll: (other: T) -> bool noexcept = {
+        let mask := this <=* Create(other);
+        return mask.All;
+    }
+    // Returns true if any elements in the first vector are less than or equal to the given value
+    public LessThanOrEqualAny: (other: T) -> bool noexcept = {
+        let mask := this <=* Create(other);
+        return mask.Any;
+    }
+    // Returns true if all elements in the first vector are greater than
+    // the corresponding elements in the second vector
+    public GreaterThanAll: (in ref other: self) -> bool noexcept = {
+        let mask := this >* other;
+        return mask.All;
+    }
+    // Returns true if any elements in the first vector are greater than
+    // the corresponding elements in the second vector
+    public GreaterThanAny: (in ref other: self) -> bool noexcept = {
+        let mask := this >* other;
+        return mask.Any;
+    }
+    // Returns true if all elements in the first vector are greater than the given value
+    public GreaterThanAll: (other: T) -> bool noexcept = {
+        let mask := this >* Create(other);
+        return mask.All;
+    }
+    // Returns true if any elements in the first vector are greater than the given value
+    public GreaterThanAny: (other: T) -> bool noexcept = {
+        let mask := this >* Create(other);
+        return mask.Any;
+    }
+    // Returns true if all elements in the first vector are greater than or equal to
+    // the corresponding elements in the second vector
+    public GreaterThanOrEqualAll: (in ref other: self) -> bool noexcept = {
+        let mask := this >=* other;
+        return mask.All;
+    }
+    // Returns true if any elements in the first vector are greater than or equal to
+    // the corresponding elements in the second vector
+    public GreaterThanOrEqualAny: (in ref other: self) -> bool noexcept = {
+        let mask := this >=* other;
+        return mask.Any;
+    }
+    // Returns true if all elements in the first vector are greater than or equal to the given value
+    public GreaterThanOrEqualAll: (other: T) -> bool noexcept = {
+        let mask := this >=* Create(other);
+        return mask.All;
+    }
+    // Returns true if any elements in the first vector are greater than or equal to the given value
+    public GreaterThanOrEqualAny: (other: T) -> bool noexcept = {
+        let mask := this >=* Create(other);
+        return mask.Any;
+    }
+
+    public operator==!: (in ref other: self) -> bool noexcept => EqualsAll(other);
+    public operator==!: (other: T) -> bool noexcept => All(other);
+    public operator!=!: (in ref other: self) -> bool noexcept => not EqualsAll(other);
+    public operator!=!: (other: T) -> bool noexcept => not All(other);
+    public operator==?: (in ref other: self) -> bool noexcept => EqualsAny(other);
+    public operator==?: (other: T) -> bool noexcept => Any(other);
+    public operator!=?: (in ref other: self) -> bool noexcept => not EqualsAny(other);
+    public operator!=?: (other: T) -> bool noexcept => not Any(other);
+
+    public operator<!: (in ref other: self) -> bool noexcept => LessThanAll(other);
+    public operator<!: (other: T) -> bool noexcept => LessThanAll(other);
+    public operator<?: (in ref other: self) -> bool noexcept => LessThanAny(other);
+    public operator<?: (other: T) -> bool noexcept => LessThanAny(other);
+    public operator>!: (in ref other: self) -> bool noexcept => GreaterThanAll(other);
+    public operator>!: (other: T) -> bool noexcept => GreaterThanAll(other);
+    public operator>?: (in ref other: self) -> bool noexcept => GreaterThanAny(other);
+    public operator>?: (other: T) -> bool noexcept => GreaterThanAny(other);
+
+    public operator<=!: (in ref other: self) -> bool noexcept => LessThanOrEqualAll(other);
+    public operator<=!: (other: T) -> bool noexcept => LessThanOrEqualAll(other);
+    public operator<=?: (in ref other: self) -> bool noexcept => LessThanOrEqualAny(other);
+    public operator<=?: (other: T) -> bool noexcept => LessThanOrEqualAny(other);
+    public operator>=!: (in ref other: self) -> bool noexcept => GreaterThanOrEqualAll(other);
+    public operator>=!: (other: T) -> bool noexcept => GreaterThanOrEqualAll(other);
+    public operator>=?: (in ref other: self) -> bool noexcept => GreaterThanOrEqualAny(other);
+    public operator>=?: (other: T) -> bool noexcept => GreaterThanOrEqualAny(other);
+
+    // Arithmetic
+
+    // Unary operators
+    public operator+: () -> self noexcept => this;
+    public operator-: () -> self noexcept => Arch.Negate(this);
+    public operator-%: () -> self noexcept => Arch.WrappingNegate(this);
+    public operator-!: () -> self noexcept => Arch.StrictNegate(this);
+    public operator-%?: () -> (self, TMask) noexcept => Arch.OverflowingNegate(this);
+    public operator~: () -> self noexcept => Arch.BitwiseNot(this);
+
+    // Update operators
+    public operator+=: (in ref other: self) -> ref self => this = Arch.Add(this, other);
+    public operator+=: (other: T) -> ref self => this = Arch.Add(this, Create(other));
+    public operator+%=: (in ref other: self) -> ref self => this = Arch.WrappingAdd(this, other);
+    public operator+%=: (other: T) -> ref self => this = Arch.WrappingAdd(this, Create(other));
+    public operator+|=: (in ref other: self) -> ref self => this = Arch.SaturatingAdd(this, other);
+    public operator+|=: (other: T) -> ref self => this = Arch.SaturatingAdd(this, Create(other));
+    public operator+!=: (in ref other: self) -> ref self => this = Arch.StrictAdd(this, other);
+    public operator+!=: (other: T) -> ref self => this = Arch.StrictAdd(this, Create(other));
+    public operator-=: (in ref other: self) -> ref self => this = Arch.Subtract(this, other);
+    public operator-=: (other: T) -> ref self => this = Arch.Subtract(this, Create(other));
+    public operator-%=: (in ref other: self) -> ref self => this = Arch.WrappingSubtract(this, other);
+    public operator-%=: (other: T) -> ref self => this = Arch.WrappingSubtract(this, Create(other));
+    public operator-|=: (in ref other: self) -> ref self => this = Arch.SaturatingSubtract(this, other);
+    public operator-|=: (other: T) -> ref self => this = Arch.SaturatingSubtract(this, Create(other));
+    public operator-!=: (in ref other: self) -> ref self => this = Arch.StrictSubtract(this, other);
+    public operator-!=: (other: T) -> ref self => this = Arch.StrictSubtract(this, Create(other));
+    public operator*=: (in ref other: self) -> ref self => this = Arch.Multiply(this, other);
+    public operator*=: (other: T) -> ref self => this = Arch.Multiply(this, Create(other));
+    public operator*%=: (in ref other: self) -> ref self => this = Arch.WrappingMultiply(this, other);
+    public operator*%=: (other: T) -> ref self => this = Arch.WrappingMultiply(this, Create(other));
+    public operator*!=: (in ref other: self) -> ref self => this = Arch.StrictMultiply(this, other);
+    public operator*!=: (other: T) -> ref self => this = Arch.StrictMultiply(this, Create(other));
+    public operator/=: (in ref other: self) -> ref self => this = Arch.Divide(this, other);
+    public operator/=: (other: T) -> ref self => this = Arch.Divide(this, Create(other));
+    public operator/%=: (in ref other: self) -> ref self => this = Arch.WrappingDivide(this, other);
+    public operator/%=: (other: T) -> ref self => this = Arch.WrappingDivide(this, Create(other));
+    public operator/!=: (in ref other: self) -> ref self => this = Arch.StrictDivide(this, other);
+    public operator/!=: (other: T) -> ref self => this = Arch.StrictDivide(this, Create(other));
+    public operator%=: (in ref other: self) -> ref self = {
+        static assert(type T is not f32 or f64, "Modulo operator is not supported for floating-point types");
+        return this = Arch.Mod(this, other);
+    }
+    public operator%=: (other: T) -> ref self = {
+        static assert(type T is not f32 or f64, "Modulo operator is not supported for floating-point types");
+        return this = Arch.Mod(this, Create(other));
+    }
+    public operator%%=: (in ref other: self) -> ref self = {
+        static assert(type T is not f32 or f64, "Modulo operator is not supported for floating-point types");
+        return this = Arch.WrappingMod(this, other);
+    }
+    public operator%%=: (other: T) -> ref self = {
+        static assert(type T is not f32 or f64, "Modulo operator is not supported for floating-point types");
+        return this = Arch.WrappingMod(this, Create(other));
+    }
+    public operator%!=: (in ref other: self) -> ref self = {
+        static assert(type T is not f32 or f64, "Modulo operator is not supported for floating-point types");
+        return this = Arch.StrictMod(this, other);
+    }
+    public operator%!=: (other: T) -> ref self = {
+        static assert(type T is not f32 or f64, "Modulo operator is not supported for floating-point types");
+        return this = Arch.StrictMod(this, Create(other));
+    }
+    public operator&=: (in ref other: self) -> ref self => this = Arch.BitwiseAnd(this, other);
+    public operator&=: (other: T) -> ref self => this = Arch.BitwiseAnd(this, Create(other));
+    public operator&~=: (in ref other: self) -> ref self => this = Arch.BitwiseAndNot(this, other);
+    public operator&~=: (other: T) -> ref self => this = Arch.BitwiseAndNot(this, Create(other));
+    public operator|=: (in ref other: self) -> ref self => this = Arch.BitwiseOr(this, other);
+    public operator|=: (other: T) -> ref self => this = Arch.BitwiseOr(this, Create(other));
+    public operator^=: (in ref other: self) -> ref self => this = Arch.BitwiseXor(this, other);
+    public operator^=: (other: T) -> ref self => this = Arch.BitwiseXor(this, Create(other));
+    public operator>>=: (in ref other: self) -> ref self = {
+        static assert(type T is not f32 or f64, "Bitwise operators is not supported for floating-point types");
+        return this = Arch.RightShift(this, other);
+    }
+    public operator>>>=: (in ref other: self) -> ref self = {
+        static assert(type T is not f32 or f64, "Bitwise operators is not supported for floating-point types");
+        return this = Arch.UnsignedRightShift(this, other);
+    }
+    public operator<<=: (in ref other: self) -> ref self = {
+        static assert(type T is not f32 or f64, "Bitwise operators is not supported for floating-point types");
+        return this = Arch.LeftShift(this, other);
+    }
+    public operator>>=: (shift: i32) -> ref self = {
+        static assert(type T is not f32 or f64, "Bitwise operators is not supported for floating-point types");
+        return this = Arch.RightShift(this, shift);
+    }
+    public operator>>>=: (shift: i32) -> ref self = {
+        static assert(type T is not f32 or f64, "Bitwise operators is not supported for floating-point types");
+        return this = Arch.UnsignedRightShift(this, shift);
+    }
+    public operator<<=: (shift: i32) -> ref self = {
+        static assert(type T is not f32 or f64, "Bitwise operators is not supported for floating-point types");
+        return this = Arch.LeftShift(this, shift);
+    }
+
+    // Increment/decrement operators
+    @Commutative
+    public operator++: () -> ref self => this = Arch.Add(this, self.Create(T(1)));
+    @Commutative
+    public operator++%: () -> ref self => this = Arch.WrappingAdd(this, self.Create(T(1)));
+    @Commutative
+    public operator++|: () -> ref self => this = Arch.SaturatingAdd(this, self.Create(T(1)));
+    @Commutative
+    public operator++!: () -> ref self => this = Arch.StrictAdd(this, self.Create(T(1)));
+    
+    public operator++%?: () -> (self, TMask) => Arch.OverflowingAdd(this, self.Create(T(1)));
+    @Commutative
+    public operator--: () -> ref self => this = Arch.Subtract(this, self.Create(T(1)));
+    @Commutative
+    public operator--%: () -> ref self => this = Arch.WrappingSubtract(this, self.Create(T(1)));
+    @Commutative
+    public operator--|: () -> ref self => this = Arch.SaturatingSubtract(this, self.Create(T(1)));
+    @Commutative
+    public operator--!: () -> ref self => this = Arch.StrictSubtract(this, self.Create(T(1)));
+    
+    public operator--%?: () -> (self, TMask) => Arch.OverflowingSubtract(this, self.Create(T(1)));
+
+    // Binary operators are producing new values
+
+    public operator+: (in ref other: self) -> self => self(this) += other;
+    public operator+: (other: T) -> self => self(this) += other;
+    public operator+%: (in ref other: self) -> self => self(this) +%= other;
+    public operator+%: (other: T) -> self => self(this) +%= other;
+    public operator+|: (in ref other: self) -> self => self(this) +|= other;
+    public operator+|: (other: T) -> self => self(this) +|= other;
+    public operator+!: (in ref other: self) -> self => self(this) +!= other;
+    public operator+!: (other: T) -> self => self(this) +!= other;
+    public operator+%?: (in ref other: self) -> (self, TMask) => Arch.OverflowingAdd(this, other);
+    public operator+%?: (other: T) -> (self, TMask) => Arch.OverflowingAdd(this, self.Create(other));
+    public operator-: (in ref other: self) -> self => self(this) -= other;
+    public operator-: (other: T) -> self => self(this) -= other;
+    public operator-%: (in ref other: self) -> self => self(this) -%= other;
+    public operator-%: (other: T) -> self => self(this) -%= other;
+    public operator-|: (in ref other: self) -> self => self(this) -|= other;
+    public operator-|: (other: T) -> self => self(this) -|= other;
+    public operator-!: (in ref other: self) -> self => self(this) -!= other;
+    public operator-!: (other: T) -> self => self(this) -!= other;
+    public operator-%?: (in ref other: self) -> (self, TMask) => Arch.OverflowingSubtract(this, other);
+    public operator-%?: (other: T) -> (self, TMask) => Arch.OverflowingSubtract(this, self.Create(other));
+    public operator*: (in ref other: self) -> self => self(this) *= other;
+    public operator*: (other: T) -> self => self(this) *= other;
+    public operator*%: (in ref other: self) -> self => self(this) *%= other;
+    public operator*%: (other: T) -> self => self(this) *%= other;
+    public operator*!: (in ref other: self) -> self => self(this) *!= other;
+    public operator*!: (other: T) -> self => self(this) *!= other;
+    public operator*%?: (in ref other: self) -> (self, TMask) => Arch.OverflowingMultiply(this, other);
+    public operator*%?: (other: T) -> (self, TMask) => Arch.OverflowingMultiply(this, self.Create(other));
+    public operator/: (in ref other: self) -> self => self(this) /= other;
+    public operator/: (other: T) -> self => self(this) /= other;
+    public operator/%: (in ref other: self) -> self => self(this) /%= other;
+    public operator/%: (other: T) -> self => self(this) /%= other;
+    public operator/!: (in ref other: self) -> self => self(this) /!= other;
+    public operator/!: (other: T) -> self => self(this) /!= other;
+    public operator/%?: (in ref other: self) -> (self, TMask) => Arch.OverflowingDivide(this, other);
+    public operator/%?: (other: T) -> (self, TMask) => Arch.OverflowingDivide(this, self.Create(other));
+    public operator%: (in ref other: self) -> self => self(this) %= other;
+    public operator%: (other: T) -> self => self(this) %= other;
+    public operator%%: (in ref other: self) -> self => self(this) %%= other;
+    public operator%%: (other: T) -> self => self(this) %%= other;
+    public operator%!: (in ref other: self) -> self => self(this) %!= other;
+    public operator%!: (other: T) -> self => self(this) %!= other;
+    public operator%%?: (in ref other: self) -> (self, TMask) => Arch.OverflowingMod(this, other);
+    public operator%%?: (other: T) -> (self, TMask) => Arch.OverflowingMod(this, self.Create(other));
+    public operator&: (in ref other: self) -> self => self(this) &= other;
+    public operator&: (other: T) -> self => self(this) &= other;
+    public operator&~: (in ref other: self) -> self => self(this) &~= other;
+    public operator&~: (other: T) -> self => self(this) &~= other;
+    public operator|: (in ref other: self) -> self => self(this) |= other;
+    public operator|: (other: T) -> self => self(this) |= other;
+    public operator^: (in ref other: self) -> self => self(this) ^= other;
+    public operator^: (other: T) -> self => self(this) ^= other;
+    public operator>>: (in ref other: self) -> self => self(this) >>= other;
+    public operator>>: (shift: i32) -> self => self(this) >>= shift;
+    public operator>>>: (in ref other: self) -> self => self(this) >>>= other;
+    public operator>>>: (shift: i32) -> self => self(this) >>>= shift;
+    public operator<<: (in ref other: self) -> self => self(this) <<= other;
+    public operator<<: (shift: i32) -> self => self(this) <<= shift;
+
+    // Returns vector of absolute values from current
+    public Abs: self => Arch.Abs(this);
+
+    // Ternary conditional operator
+    // If condition for current index is true, selects an element from trueBranch, otherwise from falseBranch
+    public static ConditionalSelect: (in ref condition: TMask, in ref trueBranch: self, in ref falseBranch: self) -> self 
+    => Arch.Select(condition, trueBranch, falseBranch);
+
+    // Returns vector of sign values: -1 for negative, 0 for zero, 1 for positive
+    public Sign: self {
+        return ConditionalSelect(this >* Zero, One, Zero) - ConditionalSelect(this <* Zero, One, Zero);
+    }
+
+    // Copies sign bit from other to current
+    public CopySign: (in ref other: self) -> self {
+        static assert(type T is IFloatingPoint, "CopySign is only available for floating point types");
+        return Abs | Arch.BitOfSign(other);
+    }
+
+    // Search helpers
+
+    // Returns true if all elements are equal to val
+    public All: (val: T) -> bool = {
+        let mask := this ==* val;
+        return mask.All;
+    }
+    // Returns true if any element is equal to val
+    public Any: (val: T) -> bool = {
+        let mask := this ==* val;
+        return mask.Any;
+    }
+    // Returns true if no elements are equal to val
+    public None: (val: T) -> bool => not Any(val);
+    // Returns the number of elements equal to val
+    public Count: (val: T) -> usize = {
+        let mask := this ==* val;
+        return mask.Count;
+    }
+    // Returns the index of the first element equal to val, or null if no such element exists
+    public IndexOf: (val: T) -> usize? = {
+        let mask := this ==* val;
+        return mask.FirstSet;
+    }
+    // Returns the index of the last element equal to val, or null if no such element exists
+    public LastIndexOf: (val: T) -> usize? = {
+        let mask := this ==* val;
+        return mask.LastSet;
+    }
+}
+
+public struct <T, Arch> SimdMask
+{
+    static assert(SimdInstructionSet::IsSimdType<T>, "T must be a SIMD type");
+    static assert(type Arch is SimdInstructionSet, "Arch must be a SIMD instruction set");
+
+    private type TVector = SimdVector<T, Arch>;
+    private type TRegister = Arch.BoolRegister<T>;
+    public  type TNative = TRegister.TRegister;
+    private _reg: TRegister;
+
+    // Count of elements in vector for this instruction set
+    public const Length: u32 == sizeof(TVector) / sizeof(T);
+
+    public implicit this(reg: TNative) noexcept => this._reg = TRegister(reg);
+    public implicit operator TNative noexcept => _reg.data;
+
+    public ToNative: () -> TNative => _reg.data;
+
+    private static MakeRegister: <U, V..., I: usize, Is: usize...> (_: Builtin.IndexSequence<I, Is...>, u: U, v: V...)
+    -> TNative noexcept => MakeRegister(Builtin::IndexSequence<Is...>(), u, u, v...);
+    private static MakeRegister: <V...> (_: Builtin.IndexSequence<>, v: V...) -> TNative noexcept
+    => Arch.CreateMaskFrom<T, Arch>(v...).ToNative();
+
+    // Creates a new instance with all elements initialized to the specified value
+    public static Create: (val: bool) -> self => MakeRegister(Builtin.IndexSequence<Length - 1u>(), val);
+    // Creates a new instance with elements initialized to the specified values
+    public static Create: <Ts...> (val0: bool, val1: bool, tail: Ts...) -> self = {
+        static assert(sizeof...(Ts) + 2 == Length, "Invalid number of arguments");
+        return Arch.CreateMaskFrom<T, Arch, Ts...>(val0, val1, bool(tail)...);
+    }
+    // Creates a new instance from scalar mask
+    public static FromScalarMask: (mask: u64) -> self => Arch.MaskFromScalar<T, Arch>(mask);
+    // Converts a vector mask to scalar mask
+    public ScalarMask: u64 => Arch.MaskToScalar(this);
+
+    // Loads a vector from the given aligned memory source
+    // Throws AccessViolationException if source is not aligned
+    public static unsafe LoadAligned: (source: *const bool) -> self = {
+        @Unlikely
+        if (source.UnsafeNarrowToInteger() % Arch.Alignment != 0)
+            throw Builtin.AccessViolationException();
+
+        return Arch.LoadMask<T, Arch>(source);
+    }
+
+    // Loads a vector from the given memory source
+    public static unsafe Load: (source: *const bool) -> self => Arch.LoadMask<T, Arch>(source);
+
+    // Loads a vector from the given memory source
+    public static LoadUnsafe: (in ref source: bool) -> self = {
+        unsafe {
+            return Arch.LoadMask<T, Arch>(source&);
+        }
+    }
+
+    // Stores a vector at the given memory destination
+    public unsafe Store: (destination: *bool) => Arch.Store(this, destination);
+
+    // Stores a vector at the given memory destination
+    public StoreUnsafe: (ref destination: bool) = {
+        unsafe {
+            Arch.Store(this, destination&);
+        }
+    }
+
+    public static True: self => Create(true);
+    public static False: self => Create(false);
+
+    // Get element by index
+    // Throws IndexOutOfRangeException if index is out of range
+    public this[index: usize] -> T = {
+        if index >= Length {
+            throw Builtin.IndexOutOfRangeException();
+        }
+        return Arch.GetMaskElement(this, index);
+    }
+
+    // Comparisons
+    public operator==: (in ref other: self) -> self noexcept => Arch.Equal(this, other).All;
+    public operator!=: (in ref other: self) -> self noexcept => Arch.NotEqual(this, other).Any;
+
+    public operator==*: (in ref other: self) -> self noexcept => Arch.Equal(this, other).ToNative();
+    public operator!=*: (in ref other: self) -> self noexcept => Arch.NotEqual(this, other).ToNative();
+
+    // Arithmetic
+
+    // Unary operators
+    public operator~: () -> self noexcept => Arch.BitwiseNot(this).ToNative();
+
+    // Update operators
+    public operator&=: (in ref other: self) -> ref self => this = Arch.BitwiseAnd(this, other).ToNative();
+    public operator|=: (in ref other: self) -> ref self => this = Arch.BitwiseOr(this, other).ToNative();
+    public operator^=: (in ref other: self) -> ref self => this = Arch.BitwiseXor(this, other).ToNative();
+
+    // Binary operators are producing new values
+
+    public operator&: (in ref other: self) -> self => self(this) &= other;
+    public operator|: (in ref other: self) -> self => self(this) |= other;
+    public operator^: (in ref other: self) -> self => self(this) ^= other;
+
+    // Search helpers
+
+    public All: bool => Arch.All(this);
+    public Any: bool => Arch.Any(this);
+    public None: bool => not Any;
+    public Count: usize => Builtin.PopCount(ScalarMask as u64);
+    public FirstSet: usize? = {
+        const unusedBits :== 64uz - Length;
+        const lowMask :== Length < 64 ? (1u64 << i32(Length % 64)) - 1 : ~u64(0);
+        let index := Builtin.LeadingZeroCount(u64(ScalarMask));
+        if index >= 64 {
+            return null;
+        }
+        return index - unusedBits;
+    }
+    public LastSet: usize? = {
+        const stop :== Length < 64 ? (1u64 << i32(Length % 64)) : 0u64;
+        let index := Builtin.TrailingZeroCount(u64(ScalarMask) | stop);
+        if index >= Length {
+            return null;
+        }
+        return Length - 1 - index;
+    }
+}

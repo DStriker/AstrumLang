@@ -1,0 +1,10 @@
+package System;
+
+public enum StringComparison: u8 {
+    Invariant,
+    InvariantIgnoreCase,
+    CurrentCulture,
+    CurrentCultureIgnoreCase,
+    Ordinal,
+    OrdinalIgnoreCase
+}

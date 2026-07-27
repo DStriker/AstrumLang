@@ -1,0 +1,48 @@
+package System.Runtime.Intrinsics;
+
+public import SimdInstructionSet;
+public import Arm;
+public import X86;
+
+public static class UnsupportedArch: SimdInstructionSet {
+    public {
+        const IsCompileTimeSupported: bool == false;
+        const Alignment: usize == 0u;
+        const RequiresAlignment: bool == false;
+        const Name: str == "Unsupported";
+    }
+}
+
+public static class Simd {
+    public static class <Archs...> ArchList {
+        public {
+            type Best = type Builtin.TypeListHead<Archs...> == Builtin.FakeTypeTag ? UnsupportedArch : Builtin.TypeListHead<Archs...>;
+            type Add<Arch> = ArchList<Archs..., Arch>;
+            type Extend<Other...> = ArchList<Archs..., Other...>;
+        }
+    }
+
+    public type AllInstructionSets = ArchList<I8mmNeon64, Neon64, Neon, Avx512VnniAvx512Vbmi2, Avx512Vbmi2, Avx512Vbmi, Avx512IFMA,
+                                     Avx512PF, Avx512VnniAvx512BW, Avx512BW, Avx512ER, Avx512DQ, Avx512VL, Avx512CD, Avx512F,
+                                     AvxVnni, Fma3Avx2, Avx2, Fma3Avx, Avx, Avx2128, Avx128, Fma4, Fma3Sse42,
+                                     Sse42, Sse41, Ssse3, Sse3, Sse2>;
+    public type ArmInstructionSets = ArchList<I8mmNeon64, Neon64, Neon>;
+    public type X86InstructionSets = ArchList<Avx512VnniAvx512Vbmi2, Avx512Vbmi2, Avx512Vbmi, Avx512IFMA,
+                                     Avx512PF, Avx512VnniAvx512BW, Avx512BW, Avx512ER, Avx512DQ, Avx512VL, Avx512CD, Avx512F,
+                                     AvxVnni, Fma3Avx2, Avx2, Fma3Avx, Avx, Avx2128, Avx128, Fma4, Fma3Sse42,
+                                     Sse42, Sse41, Ssse3, Sse3, Sse2>;
+
+    private {
+        static class <L, Archs...> SupportedHelper;
+        static class <L> SupportedHelper<L, ArchList<>> {
+            public type SupportedType = L;
+        }
+        static class <L, Arch, Archs...> SupportedHelper<L, ArchList<Arch, Archs...>>
+            : SupportedHelper<Arch.IsCompileTimeSupported ? L.Add<Arch> : L, ArchList<Archs...>> {}
+
+        static class <Archs...> Supported: SupportedHelper<ArchList<>, Archs...> {}
+    }
+
+    public type SupportedInstructionSets = Supported<AllInstructionSets>.SupportedType;
+    public type DefaultInstructionSet = SupportedInstructionSets.Best;
+}

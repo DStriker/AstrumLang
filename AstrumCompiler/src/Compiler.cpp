@@ -647,7 +647,7 @@ namespace AstrumLang {
 		std::mutex astDumpMutex;
 
 		// AST generation
-		auto generateAst = [&](const auto& src) {
+		auto generateAst = [&](auto src) {
 			// creates a token stream
 			auto antlrStream = new antlr4::ANTLRFileStream();
 			antlrStream->loadFromFile(src);
@@ -664,18 +664,22 @@ namespace AstrumLang {
 			// read source file
 			std::ifstream srcStream(src);
 			std::string line;
-			auto& srcCode = sourceCode[src];
-			while (std::getline(srcStream, line)) { srcCode.emplace_back(line); }
+			std::vector<std::string>* srcCode = nullptr;
+			{
+				std::lock_guard g {astDumpMutex};
+				srcCode = &sourceCode[src];
+			}
+			while (std::getline(srcStream, line)) { srcCode->emplace_back(line); }
 
 			// makes a syntax analysis
 			auto parser = new AstrumParser(tokenStream);
 			setupErrorListeners(parser);
-			parsers[src] = parser;
 
 			// building AST
 			AstrumParser::ModuleContext* astRoot = parser->module();
 			{
 				std::lock_guard g {astDumpMutex};
+				parsers[src] = parser;
 				ast[src] = astRoot;
 			}
 

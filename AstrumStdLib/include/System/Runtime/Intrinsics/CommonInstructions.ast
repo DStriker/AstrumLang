@@ -1,0 +1,344 @@
+package System.Runtime.Intrinsics;
+
+public import SimdVector;
+public import System.Float32;
+public import System.Float64;
+public import System.Range;
+
+public static class CommonInstructions: SimdInstructionSet {
+    public {
+        Abs: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static if type T is IUnsignedNumber {
+                return vec;
+            } else {
+                let sign := BitOfSign(vec);
+                let inv := vec ^ sign;
+                return inv - sign;
+            }
+        }
+
+        BitOfSign: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type Vec = SimdVector<T, Arch>;
+            static if type T is IUnsignedNumber {
+                return Vec.Zero;
+            } else static if type T is IBinaryInteger {
+                return vec >> (8 * sizeof(T) - 1);
+            } else static if type T == f32 {
+                return vec & f32.FromBits(0x80000000u);
+            } else static if type T == f64 {
+                return vec & f64.FromBits(0x8000000000000000u);
+            } else {
+                static assert(false, "Unsupported type");
+                return vec;
+            }
+        }
+
+        FromMask: <T, Arch> (in ref mask: SimdMask<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            return TVector(mask.ToNative() as TVector.TNative) & TVector.Create(T(1));
+        }
+
+        GetElement: <T, Arch> (in ref vec: SimdVector<T, Arch>, index: usize) -> T {
+            unsafe {
+                buf: BufferedVector<T, SimdVector<T, Arch>::Length>;
+                vec.StoreAligned(buf[0]&);
+                return buf.>buffer[index];
+            }
+        }
+
+        GetMaskElement: <T, Arch> (in ref vec: SimdMask<T, Arch>, index: usize) -> bool {
+            unsafe {
+                buf: BufferedVector<bool, SimdMask<T, Arch>::Length>;
+                vec.StoreAligned(buf[0]&);
+                return buf.>buffer[index];
+            }
+        }
+
+        WrappingMultiply: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            const size :== SimdVector<T, Arch>::Length;
+            bufLeft: BufferedVector<T, size>;
+            bufRight: BufferedVector<T, size>;
+            bufResult: BufferedVector<T, size>;
+            unsafe {
+                left.StoreAligned(bufLeft.>buffer[@Unchecked 0]&);
+                right.StoreAligned(bufRight.>buffer[@Unchecked 0]&);
+                for i in ..size {
+                    bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] *% bufRight.>buffer[@Unchecked i];
+                }
+                return SimdVector<T, Arch>::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        WrappingDivide: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            const size :== SimdVector<T, Arch>::Length;
+            bufLeft: BufferedVector<T, size>;
+            bufRight: BufferedVector<T, size>;
+            bufResult: BufferedVector<T, size>;
+            unsafe {
+                left.StoreAligned(bufLeft.>buffer[@Unchecked 0]&);
+                right.StoreAligned(bufRight.>buffer[@Unchecked 0]&);
+                for i in ..size {
+                    bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] \% bufRight.>buffer[@Unchecked i];
+                }
+                return SimdVector<T, Arch>::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        WrappingMod: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            const size :== SimdVector<T, Arch>::Length;
+            bufLeft: BufferedVector<T, size>;
+            bufRight: BufferedVector<T, size>;
+            bufResult: BufferedVector<T, size>;
+            unsafe {
+                left.StoreAligned(bufLeft.>buffer[@Unchecked 0]&);
+                right.StoreAligned(bufRight.>buffer[@Unchecked 0]&);
+                for i in ..size {
+                    bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] %% bufRight.>buffer[@Unchecked i];
+                }
+                return SimdVector<T, Arch>::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        LeftShift: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            const size :== SimdVector<T, Arch>::Length;
+            bufLeft: BufferedVector<T, size>;
+            bufRight: BufferedVector<T, size>;
+            bufResult: BufferedVector<T, size>;
+            unsafe {
+                left.StoreAligned(bufLeft.>buffer[@Unchecked 0]&);
+                right.StoreAligned(bufRight.>buffer[@Unchecked 0]&);
+                for i in ..size {
+                    bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] << i32(bufRight.>buffer[@Unchecked i]);
+                }
+                return SimdVector<T, Arch>::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        RightShift: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            const size :== SimdVector<T, Arch>::Length;
+            bufLeft: BufferedVector<T, size>;
+            bufRight: BufferedVector<T, size>;
+            bufResult: BufferedVector<T, size>;
+            unsafe {
+                left.StoreAligned(bufLeft.>buffer[@Unchecked 0]&);
+                right.StoreAligned(bufRight.>buffer[@Unchecked 0]&);
+                for i in ..size {
+                    bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] >> i32(bufRight.>buffer[@Unchecked i]);
+                }
+                return SimdVector<T, Arch>::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        UnsignedRightShift: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            const size :== SimdVector<T, Arch>::Length;
+            bufLeft: BufferedVector<T, size>;
+            bufRight: BufferedVector<T, size>;
+            bufResult: BufferedVector<T, size>;
+            unsafe {
+                left.StoreAligned(bufLeft.>buffer[@Unchecked 0]&);
+                right.StoreAligned(bufRight.>buffer[@Unchecked 0]&);
+                for i in ..size {
+                    bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] >>> i32(bufRight.>buffer[@Unchecked i]);
+                }
+                return SimdVector<T, Arch>::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        Average: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static if type T is IUnsignedNumber {
+                return (left & right) + ((left ^ right) >> 1);
+            } else static if type T is IBinaryInteger {
+                let t := (left & right) + ((left ^ right) >> 1);
+                let tu := BitwiseCast<T.Unsigned>(t);
+                let avg = t + (BitwiseCast<T>(tu >> (8 * sizeof(T) - 1)) & (left ^ right));
+                return avg;
+            } else {
+                return (left + right) / 2;
+            }
+        }
+
+        AverageReverse: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static if type T is IBinaryInteger {
+                const shift :== 8 * sizeof(T) - 1;
+                let adj := type T is IUnsignedNumber ? (((left ^ right) << shift) >> shift) : ((left ^ right) & 0x1);
+                return Average(left, right) + adj;
+            } else {
+                return Average(left, right);
+            }
+        }
+
+        BitwiseCast: <T2, T1, Arch> (in ref vec: SimdVector<T1, Arch>) -> SimdVector<T2, Arch> {
+            static assert(type T1 is IBinaryInteger and type T2 is IBinaryInteger and sizeof(T1) == sizeof(T2), 
+                "Common BitwiseCast is only supported for integral vectors of the same size");
+            return vec.ToNative();
+        }
+
+        OverflowingAdd: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) 
+        -> (SimdVector<T, Arch>, SimdMask<T, Arch>) {
+            static if type T is IBinaryInteger {
+                let sum := left +% right;
+                static if type T is IUnsignedNumber {
+                    return (sum, (sum <* left) | (sum <* right));
+                } else {
+                    return (sum, ((sum ^ left) & (sum ^ right)) <* T(0));
+                }
+            } else {
+                return (left +% right, SimdMask<T, Arch>::False);
+            }
+        }
+
+        StrictAdd: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            sum, overflow := OverflowingAdd(left, right);
+            if overflow.Any {
+                throw Builtin.IntegerOverflowException();
+            }
+            return sum;
+        }
+
+        Add: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            if debug {
+                return StrictAdd(left, right);
+            } else {
+                return left +% right;
+            }
+        }
+
+        OverflowingSubtract: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) 
+        -> (SimdVector<T, Arch>, SimdMask<T, Arch>) {
+            static if type T is IBinaryInteger {
+                let diff := left -% right;
+                static if type T is IUnsignedNumber {
+                    return (diff, (diff >* left) | (diff >* right));
+                } else {
+                    return (diff, ((left ^ right) & (diff ^ a)) <* T(0));
+                }
+            } else {
+                return (left -% right, SimdMask<T, Arch>::False);
+            }
+        }
+
+        StrictSubtract: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            diff, overflow := OverflowingSubtract(left, right);
+            if overflow.Any {
+                throw Builtin.IntegerOverflowException();
+            }
+            return diff;
+        }
+
+        Subtract: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            if debug {
+                return StrictSubtract(left, right);
+            } else {
+                return left -% right;
+            }
+        }
+
+        OverflowingMultiply: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) 
+        -> (SimdVector<T, Arch>, SimdMask<T, Arch>) {
+            static if type T is IBinaryInteger {
+                let prod := left *% right;
+                return (prod, (prod / right) !=* left);
+            } else {
+                return (left *% right, SimdMask<T, Arch>::False);
+            }
+        }
+
+        StrictMultiply: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            prod, overflow := OverflowingMultiply(left, right);
+            if overflow.Any {
+                throw Builtin.IntegerOverflowException();
+            }
+            return prod;
+        }
+
+        Multiply: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            if debug {
+                return StrictMultiply(left, right);
+            } else {
+                return left *% right;
+            }
+        }
+
+        OverflowingDivide: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) 
+        -> (SimdVector<T, Arch>, SimdMask<T, Arch>) {
+            static if type T is IBinaryInteger and type T is not IUnsignedNumber {
+                let div := left /% right;
+                return (div, (left ==* T.MinValue) & (right ==* T.MinusOne));
+            } else {
+                return (left /% right, SimdMask<T, Arch>::False);
+            }
+        }
+
+        StrictDivide: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            div, overflow := OverflowingDivide(left, right);
+            if overflow.Any {
+                throw Builtin.IntegerOverflowException();
+            }
+            return div;
+        }
+
+        Divide: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            if debug {
+                return StrictDivide(left, right);
+            } else {
+                return left /% right;
+            }
+        }
+
+        OverflowingMod: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) 
+        -> (SimdVector<T, Arch>, SimdMask<T, Arch>) {
+            static if type T is IBinaryInteger and type T is not IUnsignedNumber {
+                let div := left %% right;
+                return (div, (left ==* T.MinValue) & (right ==* T.MinusOne));
+            } else {
+                return (left %% right, SimdMask<T, Arch>::False);
+            }
+        }
+
+        StrictMod: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            mod, overflow := OverflowingMod(left, right);
+            if overflow.Any {
+                throw Builtin.IntegerOverflowException();
+            }
+            return mod;
+        }
+
+        Mod: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            if debug {
+                return StrictMod(left, right);
+            } else {
+                return left %% right;
+            }
+        }
+
+        OverflowingNegate: <T, Arch> (in ref vec: SimdVector<T, Arch>) 
+        -> (SimdVector<T, Arch>, SimdMask<T, Arch>) {
+            static if type T is IBinaryInteger and type T is not IUnsignedNumber {
+                return (-%vec, (vec ==* T.MinValue));
+            } else {
+                return (-%vec, SimdMask<T, Arch>::False);
+            }
+        }
+
+        StrictNegate: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            neg, overflow := OverflowingAdd(vec);
+            if overflow.Any {
+                throw Builtin.IntegerOverflowException();
+            }
+            return neg;
+        }
+
+        Negate: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            if debug {
+                return StrictNegate(vec);
+            } else {
+                return -%vec;
+            }
+        }
+    }
+
+    @Align(Alignment)
+    protected struct <T, Length: usize> BufferedVector {
+        public buffer: T[Length];
+    }
+}

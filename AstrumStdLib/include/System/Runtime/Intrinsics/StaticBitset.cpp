@@ -1,12 +1,10 @@
-#include "Optional.h"
+#include "StaticBitset.h"
 
-namespace System {
+namespace System::Runtime::Intrinsics {
 //###############################################################################
 //# Type definitions
 //###############################################################################
 
-	
-	
 	
 	
 }

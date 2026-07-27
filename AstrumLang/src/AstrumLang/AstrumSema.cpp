@@ -2604,7 +2604,7 @@ namespace AstrumLang {
 					    "Cannot to use assignment operators in the condition. Maybe you mean the "
 					    "equality operator?",
 					    ctx->assignmentOperator()->getStart());
-				if (!firstPass && functionBody) {
+				if (!firstPass && functionBody && !initStates.empty()) {
 					auto txt       = ctx->logicalOrExpression()->getText();
 					auto& varDepth = initStates.top().varDepth;
 					auto lhsDepth  = varDepth.find(txt);
@@ -3716,7 +3716,6 @@ namespace AstrumLang {
 
 	std::any AstrumSema::visitStructDefinition(AstrumParser::StructDefinitionContext* ctx) {
 		symbolContexts.push(symbolContexts.top());
-		currentAccessSpecifier.push(std::nullopt);
 		if (ctx->structHead()->Ref())
 			currentTypeKind.push(TypeKind::RefStruct);
 		else if (ctx->structHead()->Union())
@@ -3828,6 +3827,7 @@ namespace AstrumLang {
 			}
 			currentTypeWithTemplate.push(name);
 		}
+		currentAccessSpecifier.push(std::nullopt);
 
 		visitChildren(ctx);
 
@@ -3959,7 +3959,6 @@ namespace AstrumLang {
 
 	std::any AstrumSema::visitClassDefinition(AstrumParser::ClassDefinitionContext* ctx) {
 		symbolContexts.push(symbolContexts.top());
-		currentAccessSpecifier.push(std::nullopt);
 		bool isStatic = ctx->classHead()->Static();
 		if (isStatic) {
 			currentTypeKind.push(TypeKind::StaticClass);
@@ -4068,6 +4067,7 @@ namespace AstrumLang {
 				name = "__Class_" + name;
 			currentTypeWithTemplate.push(name);
 		}
+		currentAccessSpecifier.push(std::nullopt);
 
 		visitChildren(ctx);
 
@@ -4140,7 +4140,6 @@ namespace AstrumLang {
 
 	std::any AstrumSema::visitInterfaceDefinition(AstrumParser::InterfaceDefinitionContext* ctx) {
 		symbolContexts.push(symbolContexts.top());
-		currentAccessSpecifier.push(std::nullopt);
 		currentTypeKind.push(TypeKind::Interface);
 
 		bool primaryType = true;
@@ -4218,6 +4217,7 @@ namespace AstrumLang {
 			currentTypeWithTemplate.push(name);
 		}
 
+		currentAccessSpecifier.push(std::nullopt);
 		visitChildren(ctx);
 
 		auto pos = currentType.rfind('.');
@@ -4453,7 +4453,6 @@ namespace AstrumLang {
 
 	std::any AstrumSema::visitEnumClassDefinition(AstrumParser::EnumClassDefinitionContext* ctx) {
 		symbolContexts.push(symbolContexts.top());
-		currentAccessSpecifier.push(std::nullopt);
 		currentTypeKind.push(TypeKind::EnumClass);
 
 		bool primaryType = true;
@@ -4513,6 +4512,7 @@ namespace AstrumLang {
 			structStack.push(def);
 			currentTypeWithTemplate.push("__Class_" + name);
 		}
+		currentAccessSpecifier.push(std::nullopt);
 
 		visitChildren(ctx);
 
@@ -4613,7 +4613,6 @@ namespace AstrumLang {
 
 	std::any AstrumSema::visitUnionDefinition(AstrumParser::UnionDefinitionContext* ctx) {
 		symbolContexts.push(symbolContexts.top());
-		currentAccessSpecifier.push(std::nullopt);
 		currentTypeKind.push(TypeKind::Union);
 
 		bool primaryType = true;
@@ -4699,6 +4698,7 @@ namespace AstrumLang {
 			}
 			currentTypeWithTemplate.push(name);
 		}
+		currentAccessSpecifier.push(std::nullopt);
 
 		visitChildren(ctx);
 
@@ -8458,6 +8458,76 @@ namespace AstrumLang {
 		if (firstPass) {
 			structStack.top()->isDefaultEquals = true;
 		}
+		return 0;
+	}
+
+	std::any AstrumSema::visitForwardDeclaration(AstrumParser::ForwardDeclarationContext* ctx) {
+		if (firstPass) {
+			AstrumParser::AccessSpecifierContext* acc = nullptr;
+			std::optional<AccessSpecifier> access     = std::nullopt;
+			bool isProtectedInternal                  = false;
+			if (auto decl = reinterpret_cast<AstrumParser::StructMemberDeclarationContext*>(
+			               ctx->parent)) {
+				isProtectedInternal = decl->protectedInternal();
+				if (decl->accessSpecifier()) {
+					acc = decl->accessSpecifier();
+				}
+			} else if (auto decl = reinterpret_cast<AstrumParser::DeclarationContext*>(
+			               ctx->parent)) {
+				if (decl->accessSpecifier()) {
+					acc = decl->accessSpecifier();
+				}
+			}
+
+			if (acc) {
+				if (currentAccessSpecifier.top())
+					notifyErrorListeners("Cannot to redefine access specifier", acc->getStart());
+				if (acc->Public()) {
+					access = AccessSpecifier::Public;
+				} else if (acc->Protected()) {
+					if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+						notifyErrorListeners(
+						    "Cannot to declare protected member outside the class body",
+						    acc->getStart());
+					access = AccessSpecifier::Protected;
+				} else if (acc->Private()) {
+					access = AccessSpecifier::Private;
+				} else if (acc->Internal()) {
+					access = AccessSpecifier::Internal;
+				}
+			} else if (isProtectedInternal) {
+				if (currentAccessSpecifier.top())
+					notifyErrorListeners("Cannot to redefine access specifier", acc->getStart());
+				if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+					notifyErrorListeners(
+					    "Cannot to declare protected internal member outside the class body",
+					    acc->getStart());
+				access = AccessSpecifier::ProtectedInternal;
+			}
+			if (isTypeDefinitionBody() && currentTypeKind.top() == TypeKind::Extension) {
+				access = structStack.top()->access;
+			}
+
+			if (currentAccessSpecifier.top())
+				access = currentAccessSpecifier.top();
+			if (!access)
+				access = AccessSpecifier::Internal;
+			ForwardDeclaration decl = {
+			    ctx->Identifier()->getText(),
+			    ctx->templateParams(),
+			    nullptr,
+			    *access,
+			    {ctx->getStart()->getLine(), ctx->getStart()->getCharPositionInLine()},
+			    getCurrentCompilationCondition(),
+			    false,
+			    ctx->Union() && ctx->Struct()};
+			if (isTypeDefinitionBody()) {
+				structStack.top()->forwardDeclarations.push_back(decl);
+			} else {
+				forwardDeclarations.push_back(decl);
+			}
+		}
+
 		return 0;
 	}
 

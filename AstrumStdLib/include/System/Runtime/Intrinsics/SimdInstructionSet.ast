@@ -1,0 +1,24 @@
+package System.Runtime.Intrinsics;
+
+public import X86.X86;
+public import Arm.Arm;
+
+public static class SimdInstructionSet {
+    public {
+        const IsCompileTimeSupported: bool == false;
+        const Alignment: usize == 0u;
+        const RequiresAlignment: bool == false;
+        const Name: str == "none";
+        const IsSimdType: <T> bool == type T is i8 or u8 or i16 or u16 or i32 or u32 or i64 or u64 or f32 or f64;
+
+        IsRuntimeAvailable: bool => false;
+    }
+}
+
+if version(X86) {
+    public type CpuFeatureSet = X86Features.CpuFeatureSet;
+} else if version(ARM) {
+    public type CpuFeatureSet = ArmFeatures.CpuFeatureSet;
+} else {
+    public type CpuFeatureSet = CommonCpuFeatureSet;
+}

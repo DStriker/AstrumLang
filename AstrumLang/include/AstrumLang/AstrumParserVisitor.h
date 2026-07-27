@@ -309,6 +309,8 @@ public:
 
     virtual std::any visitNestedNameSpecifier(AstrumParser::NestedNameSpecifierContext *context) = 0;
 
+    virtual std::any visitNestedColonNameSpecifier(AstrumParser::NestedColonNameSpecifierContext *context) = 0;
+
     virtual std::any visitNamespaceName(AstrumParser::NamespaceNameContext *context) = 0;
 
     virtual std::any visitTemplateName(AstrumParser::TemplateNameContext *context) = 0;
@@ -326,6 +328,8 @@ public:
     virtual std::any visitPattern(AstrumParser::PatternContext *context) = 0;
 
     virtual std::any visitPropertyPattern(AstrumParser::PropertyPatternContext *context) = 0;
+
+    virtual std::any visitForwardDeclaration(AstrumParser::ForwardDeclarationContext *context) = 0;
 
     virtual std::any visitStructDefinition(AstrumParser::StructDefinitionContext *context) = 0;
 
