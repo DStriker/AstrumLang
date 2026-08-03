@@ -10,8 +10,9 @@ namespace AstrumLang {
 
 	static void processError(const std::string& msg, const antlr4::Token* token,
 	                         SourcePosition position) {
-		//auto filename = Compiler::getCurrentFilename();
-		auto filename = token->getTokenSource()->getSourceName();
+		std::string filename = "<unknown>";
+		if (token)
+			filename = token->getTokenSource()->getSourceName();
 		std::ostringstream out;
 		out << "\x1b[1m\x1b[34m" << filename << ":" << position.toString()
 		          << ":\x1b[31m error: \x1b[22m" << msg << "\x1b[33m" << std::endl;

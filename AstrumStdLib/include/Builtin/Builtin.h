@@ -193,6 +193,12 @@ struct ___dependent_false : std::false_type {};
 			return ADV_FORWARD(obj).ADV_UFCS_REMPARENS QUAL TEMPKW __VA_ARGS__(                    \
 			    ADV_FORWARD(params)...);                                                           \
 		} else if constexpr (requires {                                                            \
+			                     ADV_FORWARD(obj).__ref().ADV_UFCS_REMPARENS QUAL TEMPKW           \
+			                     __VA_ARGS__(ADV_FORWARD(params)...);                              \
+		                     }) {                                                                  \
+			return ADV_FORWARD(obj).__ref().ADV_UFCS_REMPARENS QUAL TEMPKW __VA_ARGS__(            \
+			    ADV_FORWARD(params)...);                                                           \
+		} else if constexpr (requires {                                                            \
 			                     MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                         \
 			                     (ADV_FORWARD(obj), ADV_FORWARD(params)...);                       \
 		                     }) {                                                                  \
@@ -302,9 +308,43 @@ struct ___dependent_false : std::false_type {};
 #define ADV_USFCS_CONSTRAINT_ARG(...) IsViable
 #endif
 
+#if defined(GCC) || defined(CLANG)
 #define ADV_USFCS_(CAPTURE, REQUIRES, TYPE, TEMPKW, ...)                                           \
-	[CAPTURE]<class... Args ADV_USFCS_IS_NOTHROW_PARAM(                                            \
-	    TYPE, TEMPKW, __VA_ARGS__) /* ADV_USFCS_CONSTRAINT_PARAM(TYPE, TEMPKW, __VA_ARGS__)*/>     \
+	[CAPTURE]<                                                                                     \
+	    class __USFCS_T, class... Args /*ADV_USFCS_IS_NOTHROW_PARAM(*/                             \
+	    /*TYPE, TEMPKW, __VA_ARGS__)  ADV_USFCS_CONSTRAINT_PARAM(TYPE, TEMPKW, __VA_ARGS__)*/>     \
+	LAMBDA_NO_DISCARD(Args&&... params)                                                            \
+	    FORCE_INLINE_LAMBDA_CLANG /* noexcept(ADV_USFCS_IS_NOTHROW_ARG(TYPE, TEMPKW, __VA_ARGS__)) \
+	                               */                                                              \
+	        FORCE_INLINE_LAMBDA->decltype(auto) /*REQUIRES(requires                                \
+	                                               ADV_USFCS_CONSTRAINT_ARG(TYPE,                  \
+	                                               TEMPKW, __VA_ARGS__))*/                         \
+	{                                                                                              \
+		if constexpr (requires { __USFCS_T ::TEMPKW __VA_ARGS__(ADV_FORWARD(params)...); }) {      \
+			return __USFCS_T ::TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);                         \
+		} else if constexpr (requires {                                                            \
+			                     [&]() {                                                           \
+				                     using namespace __extensions;                                 \
+				                     __static_##__VA_ARGS__<__USFCS_T>::get(                       \
+				                         ADV_FORWARD(params)...);                                  \
+			                     }();                                                              \
+		                     }) {                                                                  \
+			return [&]() {                                                                         \
+				using namespace __extensions;                                                      \
+				ADV_EXPRESSION_BODY(                                                               \
+				    __static_##__VA_ARGS__<__USFCS_T>::get(ADV_FORWARD(params)...));               \
+			}();                                                                                   \
+		} else {                                                                                   \
+			static_assert(false,                                                                   \
+			              "Method " #__VA_ARGS__ " not found by USFCS system for type " #TYPE);    \
+		}                                                                                          \
+	}                                                                                              \
+	.template operator()<ADV_UFCS_REMPARENS TYPE>
+#else
+#define ADV_USFCS_(CAPTURE, REQUIRES, TYPE, TEMPKW, ...)                                           \
+	[CAPTURE]<                                                                                     \
+	    class... Args /*ADV_USFCS_IS_NOTHROW_PARAM(*/                                              \
+	    /*TYPE, TEMPKW, __VA_ARGS__)  ADV_USFCS_CONSTRAINT_PARAM(TYPE, TEMPKW, __VA_ARGS__)*/>     \
 	LAMBDA_NO_DISCARD(Args&&... params)                                                            \
 	    FORCE_INLINE_LAMBDA_CLANG /* noexcept(ADV_USFCS_IS_NOTHROW_ARG(TYPE, TEMPKW, __VA_ARGS__)) \
 	                               */                                                              \
@@ -331,10 +371,9 @@ struct ___dependent_false : std::false_type {};
 		} else {                                                                                   \
 			static_assert(false,                                                                   \
 			              "Method " #__VA_ARGS__ " not found by USFCS system for type " #TYPE);    \
-			ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);                  \
-			__static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(ADV_FORWARD(params)...);          \
 		}                                                                                          \
 	}
+#endif
 
 #define ADV_USFCS(TYPE, ...) ADV_USFCS_(&, ADV_UFCS_EMPTY, TYPE, , __VA_ARGS__)
 #define ADV_USFCS_TEMPLATE(TYPE, ...) ADV_USFCS_(&, ADV_UFCS_EMPTY, TYPE, template, __VA_ARGS__)
@@ -492,13 +531,35 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 #define ADV_USPCS_CONSTRAINT_ARG2(PROPERTY, ...) IsViable
 #endif
 
+#define _BUILTIN_GET_EXTENSION_STATIC_PROPERTY(PROPERTY, ...)                                      \
+	__extensions::__static_get##PROPERTY<__VA_ARGS__>::get()
+
+#if defined(GCC) || defined(CLANG)
 #define ADV_USPCS_(PROPERTY, ...)                                                                  \
-	[]<class __USPCS_T = void ADV_USPCS_IS_NOTHROW_PARAM(PROPERTY, __VA_ARGS__)                    \
-	       ADV_USPCS_CONSTRAINT_PARAM(PROPERTY, __VA_ARGS__)>                                      \
-	LAMBDA_NO_DISCARD()                                                                            \
-	    FORCE_INLINE_LAMBDA_CLANG noexcept(ADV_USPCS_IS_NOTHROW(PROPERTY, __VA_ARGS__))            \
-	        FORCE_INLINE_LAMBDA->decltype(auto) /*requires*/                                       \
-	        ADV_USPCS_CONSTRAINT_ARG(PROPERTY, __VA_ARGS__) {                                      \
+	[]<class __USPCS_T> LAMBDA_NO_DISCARD()                                                        \
+	    FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA -> decltype(auto) /*requires*/ {             \
+		    if constexpr (requires { __USPCS_T ::##PROPERTY; }) {                                  \
+			    return std::add_lvalue_reference_t<decltype(__USPCS_T ::##PROPERTY)>(              \
+			        __USPCS_T ::##PROPERTY);                                                       \
+		    } else if constexpr (requires {                                                        \
+			                         []() {                                                        \
+				                         using namespace __extensions;                             \
+				                         return __static_get##PROPERTY<__USPCS_T>::get();          \
+			                         }();                                                          \
+		                         }) {                                                              \
+			    return []() {                                                                      \
+				    using namespace __extensions;                                                  \
+				    return __static_get##PROPERTY<__USPCS_T>::get();                               \
+			    }();                                                                               \
+		    } else {                                                                               \
+			    static_assert(false,                                                               \
+			                  "Property " #PROPERTY " not found for this type " #__VA_ARGS__);     \
+		    }                                                                                      \
+	    }.template operator()<__VA_ARGS__>
+#else
+#define ADV_USPCS_(PROPERTY, ...)                                                                  \
+	[]<class __USPCS_T = void> LAMBDA_NO_DISCARD()                                                 \
+	    FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA->decltype(auto) /*requires*/ {               \
 		if constexpr (requires { __VA_ARGS__ ::##PROPERTY; }) {                                    \
 			return std::add_lvalue_reference_t<decltype(__VA_ARGS__ ::##PROPERTY)>(                \
 			    __VA_ARGS__ ::##PROPERTY);                                                         \
@@ -514,10 +575,9 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			}();                                                                                   \
 		} else {                                                                                   \
 			static_assert(false, "Property " #PROPERTY " not found for this type " #__VA_ARGS__);  \
-			__VA_ARGS__ ::##PROPERTY;                                                              \
-			__static_get##PROPERTY<__VA_ARGS__>::get();                                            \
 		}                                                                                          \
 	}
+#endif
 
 #define ADV_USPCS(PROPERTY, ...) ADV_USPCS_(PROPERTY, __VA_ARGS__)
 

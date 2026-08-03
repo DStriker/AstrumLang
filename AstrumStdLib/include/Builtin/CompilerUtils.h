@@ -1,10 +1,67 @@
 #pragma once
 #if defined __clang__
 #define CLANG
+#define ADV_VERSION_CLANG 1
+#define ADV_VERSION_GCC 0
+#define ADV_VERSION_MSVC 0
 #elif defined __GNUC__
 #define GCC
+#define ADV_VERSION_CLANG 0
+#define ADV_VERSION_GCC 1
+#define ADV_VERSION_MSVC 0
 #elif defined _MSC_VER
 #define MSVC
+#define ADV_VERSION_CLANG 0
+#define ADV_VERSION_GCC 0
+#define ADV_VERSION_MSVC 1
+#endif
+
+#ifdef _WIN32
+#define ADV_VERSION_WINDOWS 1
+#else
+#define ADV_VERSION_WINDOWS 0
+#endif
+
+#ifdef _WIN64
+#define ADV_VERSION_WINDOWS64 1
+#else
+#define ADV_VERSION_WINDOWS64 0
+#endif
+
+#ifdef __APPLE__
+#define ADV_VERSION_MACOS 1
+#else
+#define ADV_VERSION_MACOS 0
+#endif
+
+#ifdef __linux__
+#define ADV_VERSION_LINUX 1
+#else
+#define ADV_VERSION_LINUX 0
+#endif
+
+#ifdef __FreeBSD__
+#define ADV_VERSION_FREEBSD 1
+#else
+#define ADV_VERSION_FREEBSD 0
+#endif
+
+#ifdef __ANDROID__
+#define ADV_VERSION_ANDROID 1
+#else
+#define ADV_VERSION_ANDROID 0
+#endif
+
+#ifdef __MINGW32__
+#define ADV_VERSION_MINGW32 1
+#else
+#define ADV_VERSION_MINGW32 0
+#endif
+
+#ifdef __MINGW64__
+#define ADV_VERSION_MINGW64 1
+#else
+#define ADV_VERSION_MINGW64 0
 #endif
 
 #define NODISCARD [[nodiscard]]
@@ -537,6 +594,7 @@ _Pragma("GCC diagnostic ignored \"" #TextCode "\")
 #endif
 
 #if ADV_VERSION_FMA4
+#include <ammintrin.h>
 #include <x86intrin.h>
 #endif
 
@@ -550,4 +608,9 @@ _Pragma("GCC diagnostic ignored \"" #TextCode "\")
 
 #if ADV_VERSION_SVE
 #include <arm_sve.h>
+#endif
+
+// SVML intrinsics for Windows (missing for clang-cl)
+#if ADV_VERSION_MSVC && ADV_VERSION_CLANG
+#include "SvmlIntrin.h"
 #endif

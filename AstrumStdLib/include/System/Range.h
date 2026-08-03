@@ -99,6 +99,7 @@ template<class T, bool IsClosed> requires(Builtin::TypeIs<T, IValueEnumerable>()
 			public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 			#line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 			public: using ElementType = T;
+			public: Iterator() = default;
 			#line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 			public: inline constexpr explicit Iterator(const Range<T, IsClosed>& range) ;
 			#line 46 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
@@ -127,6 +128,7 @@ template<class T, bool IsClosed> requires(Builtin::TypeIs<T, IValueEnumerable>()
 			public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
 			#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 			public: using ElementType = T;
+			public: ReverseIterator() = default;
 			#line 88 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 			public: inline constexpr explicit ReverseIterator(const Range<T, IsClosed>& range) ;
 			#line 93 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
@@ -162,6 +164,8 @@ template<class T, bool IsClosed> requires(Builtin::TypeIs<T, IValueEnumerable>()
 			__self __value;
 			__Class_Iterator(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>) : __value{value} {}
 			operator __underlying() const noexcept { return __value; }
+			#line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+			public: using ElementType = T;
 			auto MoveNext() -> bool const { ADV_EXPRESSION_BODY(__value.MoveNext()); }
 			auto GetCurrent() const  -> T const { ADV_EXPRESSION_BODY(__value.GetCurrent()); }
 			
@@ -191,6 +195,8 @@ template<class T, bool IsClosed> requires(Builtin::TypeIs<T, IValueEnumerable>()
 			__self __value;
 			__Class_ReverseIterator(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>) : __value{value} {}
 			operator __underlying() const noexcept { return __value; }
+			#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+			public: using ElementType = T;
 			auto Iterate() const  -> __self const { ADV_EXPRESSION_BODY(__value.Iterate()); }
 			auto MoveNext() -> bool const { ADV_EXPRESSION_BODY(__value.MoveNext()); }
 			auto GetCurrent() const  -> T const { ADV_EXPRESSION_BODY(__value.GetCurrent()); }
@@ -354,6 +360,8 @@ using __extensions::__static_getAll;
 		using ReverseIterator = __self::ReverseIterator;
 		__Class_Range(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>) : __value{value} {}
 		operator __underlying() const noexcept { return __value; }
+		#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		public: using ElementType = T;
 		auto getHashCode() const -> Builtin::u64 { return __value.getHashCode(); }
 		auto Iterate() const  -> Iterator const { ADV_EXPRESSION_BODY(__value.Iterate()); }
 		auto operator==(const __self& other) const  -> bool const { ADV_EXPRESSION_BODY(__value.operator==(other)); }
@@ -414,7 +422,7 @@ using __extensions::__static_getAll;
 	template<class T, bool IsClosed> requires(Builtin::TypeIs<T, IValueEnumerable>() || Builtin::TypeIs<T, IRangeCustomIterator>()) inline constexpr auto Range<T, IsClosed>::Iterate() const  -> const typename Range<T, IsClosed>::Iterator
 	{
 		#line 35 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-		ADV_EXPRESSION_BODY(Iterator((*this))); 
+		ADV_EXPRESSION_BODY(Iterator{(*this)}); 
 	}
 #line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	template<class T, bool IsClosed> requires(Builtin::TypeIs<T, IValueEnumerable>() || Builtin::TypeIs<T, IRangeCustomIterator>()) inline constexpr Range<T, IsClosed>::Iterator::Iterator(const Range<T, IsClosed>& range)  : 
@@ -628,7 +636,7 @@ using __extensions::__static_getAll;
 #line 234 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	template<class T, bool IsClosed> requires(std::convertible_to<T, Index>) inline constexpr IndexRange::IndexRange(const Range<T, IsClosed>& range)  :
 	#line 237 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	IndexRange(Builtin::Cast<true, Index>(ADV_UPCS_NONLOCAL(Start)(range.__ref())), Builtin::Cast<true, Index>(ADV_UPCS_NONLOCAL(End)(range.__ref())), IsClosed)
+	IndexRange(Builtin::Cast<true, Index>(ADV_UPCS(Start)(range.__ref())), Builtin::Cast<true, Index>(ADV_UPCS(End)(range.__ref())), IsClosed)
 	{
 	}
 #line 240 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
@@ -780,7 +788,7 @@ using __extensions::__static_getAll;
 	template<class T, bool IsClosed> inline constexpr auto getReversed(__extension_Range_143_Range<T, IsClosed> const& __this ) -> const typename __extension_Range_143_Range<T, IsClosed>::ReverseIterator
 	{
 		#line 146 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-		ADV_EXPRESSION_BODY(typename __extension_Range_143_Range<T, IsClosed>::ReverseIterator{__this}); 
+		return { __this }; 
 	}
 	} namespace System{
 } namespace __extensions { using namespace System;

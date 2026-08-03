@@ -518,6 +518,7 @@ namespace AstrumLang {
 		    paramReturns;
 		std::map<SourcePosition, MethodDefinition> methods;
 		std::map<SourcePosition, PropertyDefinition> properties;
+		std::unordered_set<std::string> memberIds;
 
 		AstrumSema(AstrumParser* parser, AstrumParser::ModuleContext* module,
 		           std::string_view file);

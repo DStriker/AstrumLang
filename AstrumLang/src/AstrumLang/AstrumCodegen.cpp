@@ -348,10 +348,17 @@ namespace AstrumLang {
 		}
 
 		currentType.clear();
-		if (firstPass)
-			return;
+		/*if (firstPass)
+		    return;*/
 
 		for (const auto& field : sema.staticFields) {
+			auto parent = field.parentType;
+			StringReplace(parent, ".", "::");
+			StringReplace(parent, "::::::", "...");
+			bool isTemplate = field.templateParams != nullptr;
+			if (firstPass != isTemplate)
+				continue;
+
 			if (!field.compilationCondition.empty()) {
 				out << "#if " << field.compilationCondition << std::endl;
 			}
@@ -366,6 +373,8 @@ namespace AstrumLang {
 			} else if (field.isTypeSpecialization) {
 				out << "template<> ";
 			}
+			if (isTemplate)
+				out << "inline ";
 			if (field.isConst)
 				out << "const ";
 			if (field.isThreadLocal)
@@ -384,11 +393,21 @@ namespace AstrumLang {
 					}
 				}
 			}
-			printTypeId(field.type);
+			currentType = field.type->getText();
+			if (currentType == "self") {
+				if (field.access == AccessSpecifier::Protected) {
+					out << "__" << filename << "_Protected" << (isUnsafe ? "__Unsafe" : "") << "::";
+				} else if (isUnsafe) {
+					out << "__Unsafe::";
+				}
+				out << parent;
+			} else {
+				printTypeId(field.type);
+			}
+
 			currentTupleSize = 0;
 			isDeclaration    = false;
 			// isArray = field.type->arrayDeclarator();
-			currentType = field.type->getText();
 			if (field.isUnowned)
 				out << "::__unowned_ref";
 			else if (field.isWeak)
@@ -399,9 +418,6 @@ namespace AstrumLang {
 			} else if (isUnsafe) {
 				out << "__Unsafe::";
 			}
-			auto parent = field.parentType;
-			StringReplace(parent, ".", "::");
-			StringReplace(parent, "::::::", "...");
 			out << parent << "::" << field.id;
 			// if (isArray) printArrayDeclarator(field.type->arrayDeclarator());
 			currentDeclarationName = field.id;
@@ -426,6 +442,12 @@ namespace AstrumLang {
 		for (const auto& [pos, prop] : sema.properties) {
 			if (!prop.isStatic)
 				continue;
+			auto parent = prop.parentType;
+			StringReplace(parent, ".", "::");
+			StringReplace(parent, "::::::", "...");
+			bool isTemplate = prop.parentTemplateParams != nullptr;
+			if (firstPass != isTemplate)
+				continue;
 			if (!prop.compilationCondition.empty()) {
 				out << "#if " << prop.compilationCondition << std::endl;
 			}
@@ -440,6 +462,8 @@ namespace AstrumLang {
 			} else if (prop.parentTemplateSpecializationArgs) {
 				out << "template<> ";
 			}
+			if (isTemplate)
+				out << "inline ";
 			isUnsafe = prop.isUnsafeType;
 			if (prop.isProtectedType) {
 				out << "__" << filename << "_Protected" << (isUnsafe ? "__Unsafe" : "") << "::";
@@ -447,9 +471,6 @@ namespace AstrumLang {
 				out << "__Unsafe::";
 			}
 
-			auto parent = prop.parentType;
-			StringReplace(parent, ".", "::");
-			StringReplace(parent, "::::::", "...");
 			out << parent << "::__Property_" << prop.id << "<> ";
 			if (prop.isProtectedType) {
 				out << "__" << filename << "_Protected" << (isUnsafe ? "__Unsafe" : "") << "::";
@@ -461,6 +482,8 @@ namespace AstrumLang {
 				out << "#endif " << std::endl;
 			}
 		}
+		if (firstPass)
+			return;
 		for (const auto& type : sema.globalStructs) {
 			out.switchTo(false);
 			if (!type->compilationCondition.empty()) {
@@ -959,6 +982,13 @@ namespace AstrumLang {
 			}
 		}
 		isUnsafe = false;
+		out.switchTo(true);
+		out << "} namespace __extensions {\n";
+		for (const auto& ext : sema.memberIds) {
+			out << "template<class __TT> struct __static_" << ext << ";\n";
+			out << "template<class __TT> struct __static_get" << ext << ";\n";
+		}
+		out << "} namespace " << sema.packageName << " {\n";
 	}
 
 	void AstrumCodegen::printType(StructDefinition* type) {
@@ -1224,6 +1254,9 @@ namespace AstrumLang {
 		} else if (type->kind == TypeKind::StaticClass) {
 			if (type->interfaces) {
 				auto base = type->interfaces->baseSpecifier(0);
+				out << "private: using ___super = ";
+				printBaseSpecifier(base);
+				out << ";\n" << std::string(depth, '\t');
 				out << "#line " << base->getStart()->getLine() << " \"" << fullFilename
 				    << ".ast\"\n"
 				    << std::string(depth, '\t');
@@ -2416,7 +2449,7 @@ namespace AstrumLang {
 
 					if (prop.isStatic) {
 						out << ", ";
-						if (!CompilerSettings::get().dllName.empty()) {
+						if (!CompilerSettings::get().dllName.empty() && !type->templateParams) {
 							out << CompilerSettings::get().dllName;
 							if (prop.access == AccessSpecifier::Internal ||
 							    prop.access == AccessSpecifier::ProtectedInternal) {
@@ -2482,7 +2515,7 @@ namespace AstrumLang {
 
 					if (prop.isStatic) {
 						out << ", ";
-						if (!CompilerSettings::get().dllName.empty()) {
+						if (!CompilerSettings::get().dllName.empty() && !type->templateParams) {
 							out << CompilerSettings::get().dllName;
 							if (prop.access == AccessSpecifier::Internal ||
 							    prop.access == AccessSpecifier::ProtectedInternal) {
@@ -2517,7 +2550,7 @@ namespace AstrumLang {
 				}
 
 				out << ", ";
-				if (!CompilerSettings::get().dllName.empty()) {
+				if (!CompilerSettings::get().dllName.empty() && !type->templateParams) {
 					out << CompilerSettings::get().dllName;
 					if (prop.access == AccessSpecifier::Internal ||
 					    prop.access == AccessSpecifier::ProtectedInternal) {
@@ -2552,7 +2585,7 @@ namespace AstrumLang {
 
 				if (prop.isStatic) {
 					out << ", ";
-					if (!CompilerSettings::get().dllName.empty()) {
+					if (!CompilerSettings::get().dllName.empty() && !type->templateParams) {
 						out << CompilerSettings::get().dllName;
 						if (prop.access == AccessSpecifier::Internal ||
 						    prop.access == AccessSpecifier::ProtectedInternal) {
@@ -3442,8 +3475,8 @@ namespace AstrumLang {
 			}
 			out << "#line " << field.pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
-			bool hasVisibility =
-			    !isPrivateStruct && field.isStatic && !CompilerSettings::get().dllName.empty();
+			bool hasVisibility = !isPrivateStruct && field.isStatic &&
+			                     !CompilerSettings::get().dllName.empty() && !type->templateParams;
 			switch (field.access) {
 				case AccessSpecifier::Public:
 					out << "public: ";
@@ -3568,7 +3601,9 @@ namespace AstrumLang {
 			}
 			out << ";";
 			if ((type->kind != TypeKind::RefStruct || field.isStatic || field.isThreadLocal) &&
-			    currentTupleSize == 0) {
+			    currentTupleSize == 0 &&
+			    (field.type->getText() != "self" ||
+			     type->kind == TypeKind::RefStruct && field.isStatic)) {
 				if (!sema.contextTypes.contains(field.type) ||
 				    !sema.contextTypes[field.type].ends_with(type->id)) {
 					printRefStructCheck(field.type);
@@ -5036,7 +5071,7 @@ namespace AstrumLang {
 				}
 
 				out << ", ";
-				if (!CompilerSettings::get().dllName.empty()) {
+				if (!CompilerSettings::get().dllName.empty() && !type->templateParams) {
 					out << CompilerSettings::get().dllName;
 					if (prop.access == AccessSpecifier::Internal ||
 					    prop.access == AccessSpecifier::ProtectedInternal) {
@@ -5278,7 +5313,8 @@ namespace AstrumLang {
 						break;
 				}
 				out << ", ";
-				if (!field.isThreadLocal && !CompilerSettings::get().dllName.empty()) {
+				if (!field.isThreadLocal && !CompilerSettings::get().dllName.empty() &&
+				    !type->templateParams) {
 					out << CompilerSettings::get().dllName;
 					if (field.access == AccessSpecifier::Internal ||
 					    field.access == AccessSpecifier::ProtectedInternal) {
@@ -5334,7 +5370,7 @@ namespace AstrumLang {
 						break;
 				}
 				out << ", ";
-				if (!CompilerSettings::get().dllName.empty()) {
+				if (!CompilerSettings::get().dllName.empty() && !type->templateParams) {
 					out << CompilerSettings::get().dllName;
 					if (field.access == AccessSpecifier::Internal ||
 					    field.access == AccessSpecifier::ProtectedInternal) {
@@ -18257,6 +18293,17 @@ namespace AstrumLang {
 		} else if (ctx->Self()) {
 			if (isExtension) {
 				out << currentExtensionName;
+				if (currentTemplateParams) {
+					out << "<";
+					bool first = true;
+					for (auto decl : currentTemplateParams->templateParamDeclaration()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printIdentifier(decl->Identifier());
+					}
+					out << ">";
+				}
 			} else if (isInterfaceConcept) {
 				out << "typename __AnyType::__self";
 			} else if (isInterface) {
@@ -18327,7 +18374,8 @@ namespace AstrumLang {
 			}
 			bool isNested = false;
 			if (auto nested = ctx->nestedNameSpecifier()) {
-				out << "typename ";
+				if (!nested->getText().starts_with("self.") || !isPostfixExpression)
+					out << "typename ";
 				printNestedNameSpecifier(nested);
 				isNested = true;
 			} else if (sema.protectedSymbols.contains(ctx->getText())) {
@@ -19954,6 +20002,7 @@ namespace AstrumLang {
 		}
 
 		if (ctx->LeftParen()) {
+			isPostfixExpression = true;
 			if (auto expr = ctx->postfixExpression()) {
 				auto txt    = expr->getText();
 				auto dotpos = txt.rfind('.');
@@ -20232,12 +20281,20 @@ namespace AstrumLang {
 				}
 			} else if (auto t = ctx->simpleTypeSpecifier()) {
 				printSimpleTypeSpecifier(t);
-				out << "{";
+				bool isSelfMember = t->getText().starts_with("self.");
+				if (isSelfMember)
+					out << "(";
+				else
+					out << "{";
 				if (auto expressions = ctx->expressionList()) {
 					printExpressionList(expressions);
 				}
-				out << "}";
+				if (isSelfMember)
+					out << ")";
+				else
+					out << "}";
 			}
+			isPostfixExpression = false;
 		} else if (ctx->LeftBracket()) {
 			const std::string funcname = "_operator_subscript";
 			std::string ufcs           = "ADV_UFCS";
@@ -20456,6 +20513,9 @@ namespace AstrumLang {
 			printStackallocExpression(ctx->stackallocExpression());
 		} else if (auto nested = ctx->nestedColonNameSpecifier()) {
 			printNestedColonNameSpecifier(nested);
+			if (auto tid = ctx->idExpression()->unqualifiedId()->templateId()) {
+				out << "template ";
+			}
 			printIdExpression(ctx->idExpression());
 		}
 	}

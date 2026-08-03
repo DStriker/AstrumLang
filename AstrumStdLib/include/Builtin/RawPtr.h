@@ -24,6 +24,7 @@ namespace Builtin::Unsafe {
 		}
 
 		constexpr operator T*() const noexcept { return value; }
+		constexpr operator __RawPtr<const T>() const noexcept { return (const T*)value; }
 
 		constexpr auto& operator*() requires(!std::is_same_v<T, void>) { return *value; }
 

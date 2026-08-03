@@ -35,27 +35,28 @@ public static class CommonInstructions: SimdInstructionSet {
 
         FromMask: <T, Arch> (in ref mask: SimdMask<T, Arch>) -> SimdVector<T, Arch> {
             type TVector = SimdVector<T, Arch>;
-            return TVector(mask.ToNative() as TVector.TNative) & TVector.Create(T(1));
+            return TVector(mask.ToNative() as TVector.TNative) & TVector::Create(T(1));
         }
 
         GetElement: <T, Arch> (in ref vec: SimdVector<T, Arch>, index: usize) -> T {
             unsafe {
                 buf: BufferedVector<T, SimdVector<T, Arch>::Length>;
-                vec.StoreAligned(buf[0]&);
-                return buf.>buffer[index];
+                vec.StoreAligned(buf.>buffer[0]&);
+                return buf.>buffer[index as i32];
             }
         }
 
         GetMaskElement: <T, Arch> (in ref vec: SimdMask<T, Arch>, index: usize) -> bool {
             unsafe {
                 buf: BufferedVector<bool, SimdMask<T, Arch>::Length>;
-                vec.StoreAligned(buf[0]&);
-                return buf.>buffer[index];
+                vec.StoreAligned(buf.>buffer[0]&);
+                return buf.>buffer[index as i32];
             }
         }
 
         WrappingMultiply: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
-            const size :== SimdVector<T, Arch>::Length;
+            const size :== i32(SimdVector<T, Arch>::Length);
+            type TVector = SimdVector<T, Arch>;
             bufLeft: BufferedVector<T, size>;
             bufRight: BufferedVector<T, size>;
             bufResult: BufferedVector<T, size>;
@@ -65,12 +66,16 @@ public static class CommonInstructions: SimdInstructionSet {
                 for i in ..size {
                     bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] *% bufRight.>buffer[@Unchecked i];
                 }
-                return SimdVector<T, Arch>::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+                return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
             }
         }
 
         WrappingDivide: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
-            const size :== SimdVector<T, Arch>::Length;
+            if right.Any(T.Zero) {
+                throw Builtin.DivisionByZeroException();
+            }
+            const size :== i32(SimdVector<T, Arch>::Length);
+            type TVector = SimdVector<T, Arch>;
             bufLeft: BufferedVector<T, size>;
             bufRight: BufferedVector<T, size>;
             bufResult: BufferedVector<T, size>;
@@ -80,12 +85,16 @@ public static class CommonInstructions: SimdInstructionSet {
                 for i in ..size {
                     bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] \% bufRight.>buffer[@Unchecked i];
                 }
-                return SimdVector<T, Arch>::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+                return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
             }
         }
 
         WrappingMod: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
-            const size :== SimdVector<T, Arch>::Length;
+            if right.Any(T.Zero) {
+                throw Builtin.DivisionByZeroException();
+            }
+            const size :== i32(SimdVector<T, Arch>::Length);
+            type TVector = SimdVector<T, Arch>;
             bufLeft: BufferedVector<T, size>;
             bufRight: BufferedVector<T, size>;
             bufResult: BufferedVector<T, size>;
@@ -95,12 +104,13 @@ public static class CommonInstructions: SimdInstructionSet {
                 for i in ..size {
                     bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] %% bufRight.>buffer[@Unchecked i];
                 }
-                return SimdVector<T, Arch>::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+                return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
             }
         }
 
         LeftShift: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
-            const size :== SimdVector<T, Arch>::Length;
+            const size :== i32(SimdVector<T, Arch>::Length);
+            type TVector = SimdVector<T, Arch>;
             bufLeft: BufferedVector<T, size>;
             bufRight: BufferedVector<T, size>;
             bufResult: BufferedVector<T, size>;
@@ -110,12 +120,13 @@ public static class CommonInstructions: SimdInstructionSet {
                 for i in ..size {
                     bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] << i32(bufRight.>buffer[@Unchecked i]);
                 }
-                return SimdVector<T, Arch>::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+                return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
             }
         }
 
         RightShift: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
-            const size :== SimdVector<T, Arch>::Length;
+            const size :== i32(SimdVector<T, Arch>::Length);
+            type TVector = SimdVector<T, Arch>;
             bufLeft: BufferedVector<T, size>;
             bufRight: BufferedVector<T, size>;
             bufResult: BufferedVector<T, size>;
@@ -125,12 +136,13 @@ public static class CommonInstructions: SimdInstructionSet {
                 for i in ..size {
                     bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] >> i32(bufRight.>buffer[@Unchecked i]);
                 }
-                return SimdVector<T, Arch>::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+                return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
             }
         }
 
         UnsignedRightShift: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
-            const size :== SimdVector<T, Arch>::Length;
+            const size :== i32(SimdVector<T, Arch>::Length);
+            type TVector = SimdVector<T, Arch>;
             bufLeft: BufferedVector<T, size>;
             bufRight: BufferedVector<T, size>;
             bufResult: BufferedVector<T, size>;
@@ -140,7 +152,7 @@ public static class CommonInstructions: SimdInstructionSet {
                 for i in ..size {
                     bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] >>> i32(bufRight.>buffer[@Unchecked i]);
                 }
-                return SimdVector<T, Arch>::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+                return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
             }
         }
 
@@ -150,7 +162,7 @@ public static class CommonInstructions: SimdInstructionSet {
             } else static if type T is IBinaryInteger {
                 let t := (left & right) + ((left ^ right) >> 1);
                 let tu := BitwiseCast<T.Unsigned>(t);
-                let avg = t + (BitwiseCast<T>(tu >> (8 * sizeof(T) - 1)) & (left ^ right));
+                let avg := t + (BitwiseCast<T>(tu >> (8 * sizeof(T) - 1)) & (left ^ right));
                 return avg;
             } else {
                 return (left + right) / 2;
@@ -178,9 +190,9 @@ public static class CommonInstructions: SimdInstructionSet {
             static if type T is IBinaryInteger {
                 let sum := left +% right;
                 static if type T is IUnsignedNumber {
-                    return (sum, (sum <* left) | (sum <* right));
+                    return (sum, (sum <^ left) | (sum <^ right));
                 } else {
-                    return (sum, ((sum ^ left) & (sum ^ right)) <* T(0));
+                    return (sum, ((sum ^ left) & (sum ^ right)) <^ T(0));
                 }
             } else {
                 return (left +% right, SimdMask<T, Arch>::False);
@@ -208,9 +220,9 @@ public static class CommonInstructions: SimdInstructionSet {
             static if type T is IBinaryInteger {
                 let diff := left -% right;
                 static if type T is IUnsignedNumber {
-                    return (diff, (diff >* left) | (diff >* right));
+                    return (diff, (diff >^ left) | (diff >^ right));
                 } else {
-                    return (diff, ((left ^ right) & (diff ^ a)) <* T(0));
+                    return (diff, ((left ^ right) & (diff ^ left)) <^ T(0));
                 }
             } else {
                 return (left -% right, SimdMask<T, Arch>::False);
@@ -237,7 +249,7 @@ public static class CommonInstructions: SimdInstructionSet {
         -> (SimdVector<T, Arch>, SimdMask<T, Arch>) {
             static if type T is IBinaryInteger {
                 let prod := left *% right;
-                return (prod, (prod / right) !=* left);
+                return (prod, (prod / right) !=^ left);
             } else {
                 return (left *% right, SimdMask<T, Arch>::False);
             }
@@ -261,11 +273,14 @@ public static class CommonInstructions: SimdInstructionSet {
 
         OverflowingDivide: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) 
         -> (SimdVector<T, Arch>, SimdMask<T, Arch>) {
+            if right.Any(T.Zero) {
+                throw Builtin.DivisionByZeroException();
+            }
             static if type T is IBinaryInteger and type T is not IUnsignedNumber {
-                let div := left /% right;
-                return (div, (left ==* T.MinValue) & (right ==* T.MinusOne));
+                let div := left \% right;
+                return (div, (left ==^ T.MinValue) & (right ==^ T.MinusOne));
             } else {
-                return (left /% right, SimdMask<T, Arch>::False);
+                return (left \% right, SimdMask<T, Arch>::False);
             }
         }
 
@@ -281,15 +296,18 @@ public static class CommonInstructions: SimdInstructionSet {
             if debug {
                 return StrictDivide(left, right);
             } else {
-                return left /% right;
+                return left \% right;
             }
         }
 
         OverflowingMod: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) 
         -> (SimdVector<T, Arch>, SimdMask<T, Arch>) {
+            if right.Any(T.Zero) {
+                throw Builtin.DivisionByZeroException();
+            }
             static if type T is IBinaryInteger and type T is not IUnsignedNumber {
                 let div := left %% right;
-                return (div, (left ==* T.MinValue) & (right ==* T.MinusOne));
+                return (div, (left ==^ T.MinValue) & (right ==^ T.MinusOne));
             } else {
                 return (left %% right, SimdMask<T, Arch>::False);
             }
@@ -304,24 +322,28 @@ public static class CommonInstructions: SimdInstructionSet {
         }
 
         Mod: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
-            if debug {
-                return StrictMod(left, right);
+            static if type T is IFloatingPoint {
+                return (left / right).Truncate.FusedNegatedMultiplyAdd(right, left);
             } else {
-                return left %% right;
+                if debug {
+                    return StrictMod(left, right);
+                } else {
+                    return left %% right;
+                }
             }
         }
 
         OverflowingNegate: <T, Arch> (in ref vec: SimdVector<T, Arch>) 
         -> (SimdVector<T, Arch>, SimdMask<T, Arch>) {
             static if type T is IBinaryInteger and type T is not IUnsignedNumber {
-                return (-%vec, (vec ==* T.MinValue));
+                return (-%vec, (vec ==^ T.MinValue));
             } else {
                 return (-%vec, SimdMask<T, Arch>::False);
-            }
+            };
         }
 
         StrictNegate: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
-            neg, overflow := OverflowingAdd(vec);
+            neg, overflow := OverflowingNegate(vec);
             if overflow.Any {
                 throw Builtin.IntegerOverflowException();
             }
@@ -349,7 +371,8 @@ public static class CommonInstructions: SimdInstructionSet {
         -> SimdVector<T, Arch> => -x * y - z;
 
         Convert: <T2, T1, Arch> (in ref vec: SimdVector<T1, Arch>) -> SimdVector<T2, Arch> {
-            const size :== SimdVector<T1, Arch>::Length;
+            const size :== i32(SimdVector<T1, Arch>::Length);
+            type TVector = SimdVector<T2, Arch>;
             static assert(size == SimdVector<T2, Arch>::Length, "Cannot convert vectors of different lengths");
             bufIn: BufferedVector<T1, size>;
             bufOut: BufferedVector<T2, size>;
@@ -358,16 +381,37 @@ public static class CommonInstructions: SimdInstructionSet {
                 for i in ..size {
                     bufOut.>buffer[@Unchecked i] = bufIn.>buffer[@Unchecked i] as T2;
                 }
-                return SimdVector<T2, Arch>::LoadAligned(bufOut.>buffer[@Unchecked 0]&);
+                return TVector::LoadAligned(bufOut.>buffer[@Unchecked 0]&);
             }
         }
 
+        Clamp: <T, Arch> (in ref vec: SimdVector<T, Arch>, in ref min: SimdVector<T, Arch>, 
+        in ref max: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            if max.LessThanAny(min) {
+                throw Builtin.InvalidArgumentException();
+            }
+            let x := TVector::ConditionalSelect(vec <^ min, min, vec);
+            return TVector::ConditionalSelect(x >^ max, max, x);
+        }
+
+        Lerp: <T, Arch> (in ref min: SimdVector<T, Arch>, in ref max: SimdVector<T, Arch>, 
+        in ref amount: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static assert(type T is IFloatingPoint, "Lerp only works on floating point types");
+            type TVector = SimdVector<T, Arch>;
+            if max.LessThanAny(min) {
+                throw Builtin.InvalidArgumentException();
+            }
+            return min *% (TVector::One -% amount) +% (max *% amount);
+        }
+
         Truncate: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
             static if type T is f32 {
-                return SimdVector<T, Arch>::ConditionalSelect(vec.Abs <* 16777216.0f,
+                return TVector::ConditionalSelect(vec.>Abs <^ 16777216.0f,
                     vec.ConvertTo<i32>().ConvertTo<f32>(), vec);
             } else static if type T is f64 {
-                return SimdVector<T, Arch>::ConditionalSelect(vec.Abs <* 9007199254740992.0,
+                return TVector::ConditionalSelect(vec.>Abs <^ 9007199254740992.0,
                     vec.ConvertTo<i64>().ConvertTo<f64>(), vec);
             } else {
                 return vec;
@@ -375,23 +419,26 @@ public static class CommonInstructions: SimdInstructionSet {
         }
 
         Ceil: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
             let truncated := vec.Truncate;
-            return SimdVector<T, Arch>::ConditionalSelect(truncated <* vec, truncated + T(1), truncated);
+            return TVector::ConditionalSelect(truncated <^ vec, truncated + T(1), truncated);
         }
 
         Floor: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
             let truncated := vec.Truncate;
-            return SimdVector<T, Arch>::ConditionalSelect(truncated >* vec, truncated - T(1), truncated);
+            return TVector::ConditionalSelect(truncated >^ vec, truncated - T(1), truncated);
         }
 
         Round: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
             let abs := vec.Abs;
             let ceil := abs.Ceil;
-            let rounded := SimdVector<T, Arch>::ConditionalSelect(ceil - 0.5 >* abs, ceil - T(1), ceil);
+            let rounded := TVector::ConditionalSelect(ceil - T(0.5) >^ abs, ceil - T(1), ceil);
             static if type T is f32 {
-                return SimdVector<T, Arch>::ConditionalSelect(abs >* 16777216.0f, vec, rounded.CopySign(vec));
+                return TVector::ConditionalSelect(abs >^ 16777216.0f, vec, rounded.CopySign(vec));
             } else static if type T is f64 {
-                return SimdVector<T, Arch>::ConditionalSelect(abs >* 9007199254740992.0, vec, rounded.CopySign(vec));
+                return TVector::ConditionalSelect(abs >^ 9007199254740992.0, vec, rounded.CopySign(vec));
             } else {
                 return vec;
             }
@@ -399,7 +446,8 @@ public static class CommonInstructions: SimdInstructionSet {
 
         RoundTiesEven: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
             static if type T is IFloatingPoint {
-                const size :== SimdVector<T, Arch>::Length;
+                type TVector = SimdVector<T, Arch>;
+                const size :== i32(SimdVector<T, Arch>::Length);
                 bufIn: BufferedVector<T, size>;
                 bufOut: BufferedVector<T, size>;
                 unsafe {
@@ -407,7 +455,7 @@ public static class CommonInstructions: SimdInstructionSet {
                     for i in ..size {
                         bufOut.>buffer[@Unchecked i] = bufIn.>buffer[@Unchecked i].RoundTiesEven;
                     }
-                    return SimdVector<T, Arch>::LoadAligned(bufOut.>buffer[@Unchecked 0]&);
+                    return TVector::LoadAligned(bufOut.>buffer[@Unchecked 0]&);
                 }
             } else {
                 return vec;
@@ -416,94 +464,895 @@ public static class CommonInstructions: SimdInstructionSet {
 
         NearbyInt: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
             type TVector = SimdVector<T, Arch>;
+            type TValue = TVector.TValue;
             let sign := BitOfSign(vec);
             let v := vec ^ sign;
-            let t2n := TVector.Create(FloatConstants<TVector.TValue>::TwoTonmb);
+            let t2n := TVector::Create(FloatConstants<TValue>::TwoToNmb);
             let d0 := v +% t2n;
             let d := d0 -% t2n;
-            return sign ^ TVector::ConditionalSelect(v <* t2n, d, v);
+            return sign ^ TVector::ConditionalSelect(v <^ t2n, d, v);
         }
 
         Sin: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static assert(type T is IFloatingPoint, "Sin only works on floating point types");
             type TVector = SimdVector<T, Arch>;
             let x := vec.Abs;
-            xr := TVector.Create(T.NaN);
+            xr := TVector::Create(T.NaN);
             let n := TrigReduce(x, &xr);
-            let tmp := TVector::ConditionalSelect(n >=* T(2), TVector.One, TVector.Zero);
-            let swapBit := TVector.Create(T(-2)).FusedMultiplyAdd(tmp, n);
-            let signBit := BitOfSign(vec) ^ TVector::ConditionalSelect(tmp !=* TVector.Zero, 
-                TVector.Create(FloatConstants<T>::SignMask), TVector.Zero);
+            let tmp := TVector::ConditionalSelect(n >=^ T(2), TVector::One, TVector::Zero);
+            let swapBit := TVector::Create(T(-2)).FusedMultiplyAdd(tmp, n);
+            let signBit := BitOfSign(vec) ^ TVector::ConditionalSelect(tmp !=^ TVector::Zero, 
+                TVector::Create(FloatConstants<T>::SignMask), TVector::Zero);
             let z := xr *% xr;
             let se := SinEval(z, xr);
             let ce := CosEval(z);
-            let z1 := TVector::ConditionalSelect(swapBit ==* TVector.Zero, se, ce);
+            let z1 := TVector::ConditionalSelect(swapBit ==^ TVector::Zero, se, ce);
             return z1 ^ signBit;
         }
 
         Cos: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static assert(type T is IFloatingPoint, "Cos only works on floating point types");
             type TVector = SimdVector<T, Arch>;
             let x := vec.Abs;
-            xr := TVector.Create(T.NaN);
+            xr := TVector::Create(T.NaN);
             let n := TrigReduce(x, &xr);
-            let tmp := TVector::ConditionalSelect(n >=* T(2), TVector.One, TVector.Zero);
-            let swapBit := TVector.Create(T(-2)).FusedMultiplyAdd(tmp, n);
-            let signBit := TVector::ConditionalSelect((swapBit ^ tmp) !=* TVector.Zero, 
-                TVector.Create(FloatConstants<T>::SignMask), TVector.Zero);
+            let tmp := TVector::ConditionalSelect(n >=^ T(2), TVector::One, TVector::Zero);
+            let swapBit := TVector::Create(T(-2)).FusedMultiplyAdd(tmp, n);
+            let signBit := TVector::ConditionalSelect((swapBit ^ tmp) !=^ TVector::Zero, 
+                TVector::Create(FloatConstants<T>::SignMask), TVector::Zero);
             let z := xr *% xr;
             let se := SinEval(z, xr);
             let ce := CosEval(z);
-            let z1 := TVector::ConditionalSelect(swapBit !=* TVector.Zero, se, ce);
+            let z1 := TVector::ConditionalSelect(swapBit !=^ TVector::Zero, se, ce);
             return z1 ^ signBit;
         }
 
         SinCos: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> (SimdVector<T, Arch>, SimdVector<T, Arch>) {
+            static assert(type T is IFloatingPoint, "SinCos only works on floating point types");
             type TVector = SimdVector<T, Arch>;
             let x := vec.Abs;
-            xr := TVector.Create(T.NaN);
+            xr := TVector::Create(T.NaN);
             let n := TrigReduce(x, &xr);
-            let tmp := TVector::ConditionalSelect(n >=* T(2), TVector.One, TVector.Zero);
-            let swapBit := TVector.Create(T(-2)).FusedMultiplyAdd(tmp, n);
-            let signBitSin := BitOfSign(vec) ^ TVector::ConditionalSelect(tmp !=* TVector.Zero, 
-                TVector.Create(FloatConstants<T>::SignMask), TVector.Zero);
-            let signBitCos := TVector::ConditionalSelect((swapBit ^ tmp) !=* TVector.Zero, 
-                TVector.Create(FloatConstants<T>::SignMask), TVector.Zero);
+            let tmp := TVector::ConditionalSelect(n >=^ T(2), TVector::One, TVector::Zero);
+            let swapBit := TVector::Create(T(-2)).FusedMultiplyAdd(tmp, n);
+            let signBitSin := BitOfSign(vec) ^ TVector::ConditionalSelect(tmp !=^ TVector::Zero, 
+                TVector::Create(FloatConstants<T>::SignMask), TVector::Zero);
+            let signBitCos := TVector::ConditionalSelect((swapBit ^ tmp) !=^ TVector::Zero, 
+                TVector::Create(FloatConstants<T>::SignMask), TVector::Zero);
             let z := xr *% xr;
             let se := SinEval(z, xr);
             let ce := CosEval(z);
-            let z1Sin := TVector::ConditionalSelect(swapBit ==* TVector.Zero, se, ce);
-            let z1Cos := TVector::ConditionalSelect(swapBit !=* TVector.Zero, se, ce);
+            let z1Sin := TVector::ConditionalSelect(swapBit ==^ TVector::Zero, se, ce);
+            let z1Cos := TVector::ConditionalSelect(swapBit !=^ TVector::Zero, se, ce);
             return (z1Sin ^ signBitSin, z1Cos ^ signBitCos);
         }
 
         Tan: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static assert(type T is IFloatingPoint, "Tan only works on floating point types");
             type TVector = SimdVector<T, Arch>;
             let x := vec.Abs;
-            xr := TVector.Create(T.NaN);
+            xr := TVector::Create(T.NaN);
             let n := TrigReduce(x, &xr);
-            let tmp := TVector::ConditionalSelect(n >=* T(2), TVector.One, TVector.Zero);
-            let swapBit := TVector.Create(T(-2)).FusedMultiplyAdd(tmp, n);
-            let test := swapBit ==* TVector.Zero;
-            let y := TanEval(xr, test);
+            let tmp := TVector::ConditionalSelect(n >=^ T(2), TVector::One, TVector::Zero);
+            let swapBit := TVector::Create(T(-2)).FusedMultiplyAdd(tmp, n);
+            let test1 := swapBit ==^ TVector::Zero;
+            let y := TanEval(xr, test1);
             return y ^ BitOfSign(vec);
         }
 
         Asin: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static assert(type T is IFloatingPoint, "Asin only works on floating point types");
             type TVector = SimdVector<T, Arch>;
             x := vec.Abs;
-            static if type is f32 {
+            static if type T is f32 {
                 let sign := BitOfSign(vec);
-                let largerHalf := x >* T(0.5);
-                z := TVector::ConditionalSelect(largerHalf, TVector.Create(T(0.5)) *% (TVector.One - x), x *% x);
+                let largerHalf := x >^ T(0.5);
+                z := TVector::ConditionalSelect(largerHalf, TVector::Create(T(0.5)) *% (TVector::One -% x), x *% x);
                 x = TVector::ConditionalSelect(largerHalf, z.Sqrt, x);
                 z1 := Horner<TVector, 0x3e2aaae4u, 0x3d9980f6u, 0x3d3a3ec7u, 0x3cc617e3u, 0x3d2cb352u>(z);
                 z1 = z1.FusedMultiplyAdd(z * x, x);
-                z = TVector::ConditionalSelect(largerHalf, TVector.Create(FloatConstants<T>::PiO2) -% (z1 +% z1), z1);
+                z = TVector::ConditionalSelect(largerHalf, TVector::Create(FloatConstants<T>::PiO2) -% (z1 +% z1), z1);
                 return z ^ sign;
             } else {
-                
+                let smallCond := x <^ FloatConstants<f64>::SqrtEps;
+                let ct1 := TVector::Create(f64.FromBits(0x3fe4000000000000u));
+                zz1 := TVector::One -% x;
+                let vp := zz1 *% Horner<TVector, 0x403c896240f3081du, 0xc03991aaac01ab68u, 0x401bdff5baf33e6au,
+                    0xbfe2079259f9290fu, 0x3f684fc3988e9f08u>(zz1) / Horner1<TVector, 0x40756709b0b644beu, 
+                    0xc077fe08959063eeu, 0x40626219af6a7f42u, 0xc035f2a2b6bf5d8cu>(zz1);
+                zz1 = (zz1 +% zz1).Sqrt;
+                z := FloatConstants<f64>::PiO4 -% zz1;
+                zz1 = zz1.FusedMultiplySub(vp, FloatConstants<f64>::PiO2_Lo);
+                z = z -% zz1;
+                zz1 = z +% FloatConstants<f64>::PiO4;
+                zz2 := x.FusedMultiplyAdd(z, x);
+                return TVector::ConditionalSelect(x >^ TVector::One, TVector::Create(f64.NaN), 
+                    TVector::ConditionalSelect(smallCond, x, TVector::ConditionalSelect(x >^ ct1, zz1, zz2))
+                    ^ BitOfSign(vec));
+            }
+        }
+
+        Acos: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static assert(type T is IFloatingPoint, "Acos only works on floating point types");
+            type TVector = SimdVector<T, Arch>;
+            vx := vec.Abs;
+            x := vx;
+            let largerHalf := x >^ T(0.5);
+            x = TVector::ConditionalSelect(largerHalf, (TVector::Create(T(-0.5)).FusedMultiplyAdd(x, TVector::Create(T(0.5)))).Sqrt,
+                vec);
+            x = x.Asin;
+            x = TVector::ConditionalSelect(largerHalf, x +% x, x);
+            x = TVector::ConditionalSelect(vec <^ TVector::Create(T(-0.5)), TVector::Create(T.Pi) -% x, x);
+            return TVector::ConditionalSelect(largerHalf, x, TVector::Create(FloatConstants<T>::PiO2) -% x);
+            //return TVector::ConditionalSelect(vx >^ TVector::One, TVector::Create(T.NaN), x);
+        }
+
+        Atan: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static assert(type T is IFloatingPoint, "Atan only works on floating point types");
+            type TVector = SimdVector<T, Arch>;
+            x := vec.Abs;
+            let xr := x.Reciprocal;
+            x = AtanEval(x, xr);
+            return x ^ BitOfSign(vec);
+        }
+
+        SignNotZero: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            static if type T is f32 {
+                return TVector::One | (vec & FloatConstants<f32>::SignMask);
+            } else static if type T is f64 {
+                return TVector::One | (vec & FloatConstants<f64>::SignMask);
+            } else {
+                return TVector::One | (vec >> (8 * sizeof(T) - 1));
+            }
+        }
+
+        Atan2: <T, Arch> (in ref x: SimdVector<T, Arch>, in ref y: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static assert(type T is IFloatingPoint, "Atan2 only works on floating point types");
+            type TVector = SimdVector<T, Arch>;
+            let q := (x / y).Abs;
+            let qp := q.Reciprocal;
+            let z := AtanEval(q, qp);
+            return TVector::ConditionalSelect(y >^ TVector::Zero, z, TVector::Create(T.Pi) -% z) * SignNotZero(x);
+        }
+
+        Sinh: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static assert(type T is IFloatingPoint, "Sinh only works on floating point types");
+            type TVector = SimdVector<T, Arch>;
+            let half := TVector::Create(T(0.5));
+            let x := vec.Abs;
+            let lt1 := x <^ TVector::One;
+            let bts := BitOfSign(vec);
+            z := TVector::Zero;
+            if lt1.Any {
+                let sqr := x *% x;
+                static if type T is f32 {
+                    z = x *% Horner<TVector, 0x3f800000u, 0x3e2aaaccu, 0x3c087bbeu, 0x39559e2fu>(sqr);
+                } else static if type T is f64 {
+                    z = x.FusedMultiplyAdd((Horner<TVector, 0xc115782bdbf6ab05u, 0xc0c694b8c71d6182u, 
+                        0xc064773a398ff4feu, 0xbfe9435fe8bb3cd6u>(sqr) / Horner1<TVector, 
+                        0xc1401a20e4f90044u, 0x40e1a7ba7ed72245u, 0xc0715b6096e96484u>(sqr)) *% sqr, x);
+                }
+                if lt1.All {
+                    return z ^ bts;
+                }
+            }
+            let test1 := x >^ (FloatConstants<T>::MaxLog - FloatConstants<T>::Log2);
+            let fac := TVector::ConditionalSelect(test1, half, TVector::One);
+            let tmp := (x *% fac).Exp;
+            let tmp1 := half *% tmp;
+            let r := TVector::ConditionalSelect(test1, tmp1 *% tmp, tmp1 -% half / tmp);
+            return TVector::ConditionalSelect(lt1, z, r) ^ bts;
+        }
+
+        Cosh: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static assert(type T is IFloatingPoint, "Cosh only works on floating point types");
+            type TVector = SimdVector<T, Arch>;
+            let x := vec.Abs;
+            let test1 := x >^ (FloatConstants<T>::MaxLog - FloatConstants<T>::Log2);
+            let fac := TVector::ConditionalSelect(test1, TVector::Create(T(0.5)), TVector::One);
+            let tmp := (x *% fac).Exp;
+            let tmp1 := TVector::Create(T(0.5)) *% tmp;
+            return TVector::ConditionalSelect(test1, tmp1 *% tmp, tmp.Midpoint(tmp.Reciprocal));
+        }
+
+        Tanh: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static assert(type T is IFloatingPoint, "Tanh only works on floating point types");
+            type TVector = SimdVector<T, Arch>;
+            let one := TVector::One;
+            let x := vec.Abs;
+            let test1 := x <^ (TVector::Create(5) / TVector::Create(8));
+            let bts := BitOfSign(vec);
+            z := one;
+            if test1.Any {
+                let sqr := x *% x;
+                static if type T is f32 {
+                    z = (Horner<TVector, 0xbeaaaa99u, 0x3e088393u, 0xbd5c1e2du, 0x3ca9134eu, 0xbbbaf0eau>(sqr) *% sqr)
+                        .FusedMultiplyAdd(x, x);
+                } else static if type T is f64 {
+                    z = (sqr *% Horner<TVector, 0xc0993ac030580563u, 0xc058d26a0e26682du, 
+                        0xbfeedc5baafd6f4bu>(sqr) / Horner1<TVector, 
+                        0x40b2ec102442040cu, 0x40a176fa0e5535fau, 0x405c33f28a581B86u>(sqr))
+                        .FusedMultiplyAdd(x, x);
+                }
+                if test1.All {
+                    return z ^ bts;
+                }
+            }
+            let r := TVector::Create(-2).FusedMultiplyAdd(((x +% x).Exp +% one).Reciprocal, one);
+            return TVector::ConditionalSelect(test1, z, r) ^ bts;
+        }
+
+        Asinh: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static assert(type T is IFloatingPoint, "Asinh only works on floating point types");
+            type TVector = SimdVector<T, Arch>;
+            let x := vec.Abs;
+            static if type T is f32 {
+                let lhalf := x <^ T(0.5);
+                let xx := x *% x;
+                let bts := BitOfSign(vec);
+                z := TVector::Zero;
+                if lhalf.Any {
+                    z = x *% Horner<TVector, 0x3f800000u, 0xbe2aa9adu, 0x3d9949b1u, 0xbd2ee581u, 0x3ca4d6e6u>(xx);
+                    if lhalf.All {
+                        return z ^ bts;
+                    }
+                }
+                let tmp := TVector::ConditionalSelect(x >^ FloatConstants<f32>::OneOSqrtEps, x, x.Midpoint(TVector::One.Hypot(x)));
+                return TVector::ConditionalSelect(vec.IsNaN, TVector::Create(f32.NaN), 
+                    TVector::ConditionalSelect(lhalf, z, tmp.Ln +% FloatConstants<f32>::Log2) ^ bts);
+            } else {
+                let test1 := x >^ FloatConstants<f64>::OneOSqrtEps;
+                z := TVector::ConditionalSelect(test1, x -% TVector::One, x +% x *% x / (TVector::One +% TVector::One.Hypot(x)));
+                z = TVector::ConditionalSelect(x.IsInfinity, x, z);
+                let l1p := z.LnP1;
+                z = TVector::ConditionalSelect(test1, l1p +% FloatConstants<f64>::Log2, l1p);
+                return BitOfSign(vec) ^ z;
+            }
+        }
+
+        Acosh: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static assert(type T is IFloatingPoint, "Acosh only works on floating point types");
+            type TVector = SimdVector<T, Arch>;
+            let x := vec -% TVector::One;
+            let test1 := x >^ FloatConstants<T>::OneOTwoEps;
+            let z := TVector::ConditionalSelect(test1, vec, x +% (x +% x +% x *% x).Sqrt);
+            let l1p := z.LnP1;
+            return TVector::ConditionalSelect(test1, l1p +% FloatConstants<T>::Log2, l1p);
+        }
+
+        Atanh: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static assert(type T is IFloatingPoint, "Atanh only works on floating point types");
+            type TVector = SimdVector<T, Arch>;
+            let x := vec.Abs;
+            let t := x +% x;
+            let z := TVector::One -% x;
+            let test1 := x <^ T(0.5);
+            let tmp := TVector::ConditionalSelect(test1, x, t) / z;
+            return BitOfSign(vec) ^ (TVector::Create(T(0.5)) *% 
+                (TVector::ConditionalSelect(test1, t.FusedMultiplyAdd(tmp, t), tmp)).LnP1);
+        }
+
+        IsNaN: <T, Arch> (in ref x: SimdVector<T, Arch>) -> SimdMask<T, Arch> {
+            return x !=^ x;
+        }
+
+        IsInfinity: <T, Arch> (in ref x: SimdVector<T, Arch>) -> SimdMask<T, Arch> {
+            static if type T is IFloatingPoint {
+                return (x ==^ T.PositiveInfinity) | (x ==^ T.NegativeInfinity);
+            }
+            return SimdMask<T, Arch>::False;
+        }
+
+        IsFinite: <T, Arch> (in ref x: SimdVector<T, Arch>) -> SimdMask<T, Arch> {
+            static if type T is IFloatingPoint {
+                return (x -% x) ==^ T.Zero;
+            }
+            return SimdMask<T, Arch>::True;
+        }
+
+        IsInteger: <T, Arch> (in ref x: SimdVector<T, Arch>) -> SimdMask<T, Arch> {
+            static if type T is IFloatingPoint {
+                return x ==^ x.Truncate;
+            }
+            return SimdMask<T, Arch>::True;
+        }
+
+        IsEvenInteger: <T, Arch> (in ref x: SimdVector<T, Arch>) -> SimdMask<T, Arch> {
+            static if type T is IFloatingPoint {
+                return x.IsInteger & (((x.ConvertTo<i64>() % 2).Abs).ConvertTo<T>() ==^ T.Zero);
+            } else {
+                return (x & T.One) ==^ T(0);
+            }
+        }
+
+        IsOddInteger: <T, Arch> (in ref x: SimdVector<T, Arch>) -> SimdMask<T, Arch> {
+            static if type T is IFloatingPoint {
+                return x.IsInteger & (((x.ConvertTo<FloatInt<T>>() % 2).Abs).ConvertTo<T>() !=^ T.Zero);
+            } else {
+                return (x & T.One) !=^ T(0);
+            }
+        }
+
+        Pow: <T, Arch> (in ref x: SimdVector<T, Arch>, in ref y: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            let zero := TVector::Zero;
+            let neg := x <^ zero;
+            let isZeroPosPow := (x ==^ zero) & (y >=^ zero);
+            let adj := TVector::ConditionalSelect(isZeroPosPow, TVector::One, x.Abs);
+            z := (y *% adj.Ln).Exp;
+            z = TVector::ConditionalSelect(isZeroPosPow, zero, z);
+            z = TVector::ConditionalSelect(y.IsOddInteger & neg, -z, z);
+            let invalid := neg & ((y.IsInteger | y.IsInfinity) ==^ SimdMask<T, Arch>::False);
+            return TVector::ConditionalSelect(invalid, TVector::Create(T.NaN), z);
+        }
+
+        IPow: <T, Arch> (in ref x: SimdVector<T, Arch>, exp: i32) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            a := x;
+            b := exp;
+            let recip := b < 0;
+            b = b.Abs;
+            result := TVector::One;
+            for {
+                if b & 1 {
+                    result *= a;
+                }
+                b \= 2;
+                if b == 0 {
+                    break;
+                }
+                a *= a;
+            }
+            static if type T is IFloatingPoint {
+                return recip ? result.Reciprocal : result;
+            } else {
+                if (recip)
+                    throw Builtin.InvalidArgumentException();
+                return result;
+            }
+        }
+
+        WrappingIPow: <T, Arch> (in ref x: SimdVector<T, Arch>, exp: i32) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            a := x;
+            b := exp;
+            let recip := b < 0;
+            result := TVector::One;
+            for {
+                if b & 1 {
+                    result *%= a;
+                }
+                b \= 2;
+                if b == 0 {
+                    break;
+                }
+                a *%= a;
+            }
+            return recip ? result.Reciprocal : result;
+        }
+
+        StrictIPow: <T, Arch> (in ref x: SimdVector<T, Arch>, exp: i32) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            a := x;
+            b := exp;
+            let recip := b < 0;
+            result := TVector::One;
+            for {
+                if b & 1 {
+                    result *%= a;
+                }
+                b \= 2;
+                if b == 0 {
+                    break;
+                }
+                a *%= a;
+            }
+            return recip ? result.Reciprocal : result;
+        }
+
+        Hypot: <T, Arch> (in ref x: SimdVector<T, Arch>, in ref y: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            static assert(type T is IFloatingPoint, "Hypot is only defined for floating point types");
+            return x.FusedMultiplyAdd(x, y *% y).Sqrt;
+        }
+
+        Frexp: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> (SimdVector<T, Arch>, SimdVector<FloatInt<T>, Arch>) {
+            type TVector = SimdVector<T, Arch>;
+            type TNative = SimdMask<FloatInt<T>, Arch>.TNative;
+            type IVector = SimdVector<FloatInt<T>, Arch>;
+            static if type T is f32 {
+                let m1f := IVector::Create(FloatConstants<T>::Mask1Frexp);
+                let r1 := m1f & vec.AsInt32;
+                let x := vec & (~m1f).AsFloat32;
+                exp := (r1 >> FloatConstants<T>::MantissaBits) -% FloatConstants<T>::MaxExponentM1;
+                exp = IVector::ConditionalSelect(Builtin.BitCast<TNative>((vec !=^ TVector::Zero).ToNative()),
+                    exp, IVector::Zero);
+                let mant := TVector::ConditionalSelect(vec !=^ TVector::Zero, 
+                    x | Builtin.BitCast<f32>(FloatConstants<T>::Mask2Frexp), TVector::Zero);
+                return (mant, exp);
+            } else static if type T is f64 {
+                type IVector = SimdVector<i64, Arch>;
+                let m1f := IVector::Create(FloatConstants<T>::Mask1Frexp);
+                let r1 := m1f & vec.AsInt64;
+                let x := vec & (~m1f).AsFloat64;
+                exp := (r1 >> FloatConstants<T>::MantissaBits) -% FloatConstants<T>::MaxExponentM1;
+                exp = IVector::ConditionalSelect(Builtin.BitCast<TNative>((vec !=^ TVector::Zero).ToNative()),
+                    exp, IVector::Zero);
+                let mant := TVector::ConditionalSelect(vec !=^ TVector::Zero, 
+                    x | Builtin.BitCast<f64>(FloatConstants<T>::Mask2Frexp), TVector::Zero);
+                return (mant, exp);
+            } else {
+                static assert(false, "Unsupported type for Frexp");
+                return (TVector(), IVector());
+            }
+        }
+
+        Ldexp: <T, Arch> (in ref x: SimdVector<T, Arch>, exp: SimdVector<FloatInt<T>, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            type IVector = SimdVector<FloatInt<T>, Arch>;
+            ik := exp +% FloatConstants<T>::MaxExponent;
+            ik <<= FloatConstants<T>::MantissaBits;
+            static if type T is f32 {
+                return x *% ik.AsFloat32;
+            } else static if type T is f64 {
+                return x *% ik.AsFloat64;
+            }
+        }
+
+        Cbrt: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            type TNative = SimdMask<T, Arch>.TNative;
+            type IVector = SimdVector<FloatInt<T>, Arch>;
+            z := vec.Abs;
+            let denormal := z <^ T.MinPositiveValue;
+            z = TVector::ConditionalSelect(denormal, z *% FloatConstants<T>::TwoToNmb, z);
+            let f := TVector::ConditionalSelect(denormal, TVector::Create(T.FromBits(FloatConstants<T>::TwoToNmbO3)), TVector::One);
+            static if type T is f32 {
+                const CBRT2  :== f32.FromBits(0x3fa14518u);
+                const CBRT4  :== f32.FromBits(0x3fcb2ff5u);
+                const CBRT2I :== f32.FromBits(0x3f4b2ff5u);
+                const CBRT4I :== f32.FromBits(0x3f214518u);
+                m, ex := Frexp(z);
+                x := Horner<TVector, 0x3ece0609u, 0x3f91eb77u, 0xbf745265u, 0x3f0bf0feu, 0xbe09e49au>(m);
+                e := ex;
+                let flag := e.IsPositive;
+                e1 := e.Abs;
+                rem := e1;
+                e1 /= 3;
+                rem -%= e1 *% 3;
+                e = e1 *% e.Sign;
+                let cbrt2 := TVector::ConditionalSelect(Builtin.BitCast<TNative>(flag.ToNative()),
+                    TVector::Create(CBRT2), TVector::Create(CBRT2I));
+                let cbrt4 := TVector::ConditionalSelect(Builtin.BitCast<TNative>(flag.ToNative()),
+                    TVector::Create(CBRT4), TVector::Create(CBRT4I));
+                fact := TVector::ConditionalSelect(Builtin.BitCast<TNative>((rem ==^ 1).ToNative()),
+                    cbrt2, TVector::One);
+                fact = TVector::ConditionalSelect(Builtin.BitCast<TNative>((rem ==^ 2).ToNative()),
+                    cbrt4, fact);
+                x = Ldexp(x *% fact, e);
+                x -%= (x -% z / (x *% x)) *% (1.0f / 3.0f);
+                x = (x | BitOfSign(vec)) *% f;
+                return TVector::ConditionalSelect(vec.IsZero | vec.IsInfinity, vec, x);
+            } else static if type T is f64 {
+                const CBRT2  :== f64.FromBits(0x3ff428a2f98d728bu);
+                const CBRT4  :== f64.FromBits(0x3ff965fea53d6e3du);
+                const CBRT2I :== f64.FromBits(0x3fe965fea53d6e3du);
+                const CBRT4I :== f64.FromBits(0x3fe428a2f98d728bu);
+                m, ex := Frexp(z);
+                x := Horner<TVector, 0x3fd9c0c12122a4feu, 0x3ff23d6ee505873au, 0xbfee8a4ca3ba37b8u,
+                    0x3fe17e1fc7e59d58u, 0xbfc13c93386fdff6u>(m);
+                e := ex;
+                let flag := e.IsPositive;
+                e1 := e.Abs;
+                rem := e1;
+                e1 /= 3;
+                rem -%= e1 *% 3;
+                e = e1 *% e.Sign;
+                let cbrt2 := TVector::ConditionalSelect(Builtin.BitCast<TNative>(flag.ToNative()),
+                    TVector::Create(CBRT2), TVector::Create(CBRT2I));
+                let cbrt4 := TVector::ConditionalSelect(Builtin.BitCast<TNative>(flag.ToNative()),
+                    TVector::Create(CBRT4), TVector::Create(CBRT4I));
+                fact := TVector::ConditionalSelect(Builtin.BitCast<TNative>((rem ==^ 1).ToNative()),
+                    cbrt2, TVector::One);
+                fact = TVector::ConditionalSelect(Builtin.BitCast<TNative>((rem ==^ 2).ToNative()),
+                    cbrt4, fact);
+                x = Ldexp(x *% fact, e);
+                x -%= (x -% z / (x *% x)) *% (1.0f / 3.0f);
+                x -%= (x -% z / (x *% x)) *% (1.0f / 3.0f);
+                x = (x | BitOfSign(vec)) *% f;
+                return TVector::ConditionalSelect(vec.IsZero | vec.IsInfinity, vec, x);
+            } else {
+                static assert(false, "Unsupported type for Cbrt");
+            }
+        }
+
+        Ln: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            type TNative = SimdMask<FloatInt<T>, Arch>.TNative;
+            type IVector = SimdVector<FloatInt<T>, Arch>;
+            x := vec;
+            k: IVector;
+            let notZero := ~vec.IsZero;
+            static if type T is f32 {
+                let test1 := (vec <^ T.MinPositiveValue) & notZero;
+                if test1.Any {
+                    k = IVector::ConditionalSelect(Builtin.BitCast<TNative>(test1.ToNative()),
+                        k -% 23, k);
+                    x = TVector::ConditionalSelect(test1, x *% 8388608u, x);
+                }
+                ix := x.AsInt32;
+                ix +%= 0x3f800000 -% 0x3f3504f3;
+                k +%= (ix >> 23) -% 0x7f;
+                ix = (ix & 0x007fffff) +% 0x3f3504f3;
+                x = ix.AsFloat32;
+                let f := --%x;
+                let s := f / (f +% 2);
+                let z := s *% s;
+                let w := z *% z;
+                let t1 := w *% Horner<TVector, 0x3eccce13u, 0x3e789e26u>(w);
+                let t2 := z *% Horner<TVector, 0x3f2aaaaau, 0x3e91e9eeu>(w);
+                let r1 := t2 +% t1;
+                let hfsq := f *% T(0.5) *% f;
+                let dk := k.ConvertTo<f32>();
+                let r := dk.FusedMultiplyAdd(FloatConstants<T>::Log2Hi, s.FusedMultiplyAdd(hfsq +% r1, 
+                    dk *% FloatConstants<T>::Log2Lo) -% hfsq +% f);
+                let zz := TVector::ConditionalSelect(notZero, TVector::ConditionalSelect(vec.IsPositiveInfinity, 
+                    TVector::Create(f32.PositiveInfinity), r), TVector::Create(f32.NegativeInfinity));
+                return TVector::ConditionalSelect(~(vec.IsPositive), TVector::Create(f32.NaN), zz);
+            } else static if type T is f64 {
+                hx := x.AsInt64 >> 32;
+                let test1 := (vec <^ T.MinPositiveValue) & notZero;
+                if test1.Any {
+                    k = IVector::ConditionalSelect(Builtin.BitCast<TNative>(test1.ToNative()),
+                        k -% 54, k);
+                    x = TVector::ConditionalSelect(test1, x *% 18014398509481984u, x);
+                }
+                hx +%= 0x3ff00000 -% 0x3fe6a09e;
+                k +%= (hx >> 20) -% 0x3ff;
+                let dk := k.ConvertTo<f64>();
+                hx = (hx & 0x000fffff) +% 0x3fe6a09e;
+                x = (hx << 32 | (IVector::Create(0xffffffffi64) & x.AsInt64)).AsFloat64;
+                let f := --%x;
+                let s := f / (f +% 2);
+                let z := s *% s;
+                let w := z *% z;
+                let t1 := w *% Horner<TVector, 0x3fd999999997fa04u, 0x3fcc71c51d8e78afu, 0x3fc39a09d078c69fu>(w);
+                let t2 := z *% Horner<TVector, 0x3fe5555555555593u, 0x3fd2492494229359u, 0x3fc7466496cb03deu, 0x3fc2f112df3e5244u>(w);
+                let r1 := t2 +% t1;
+                let hfsq := f *% T(0.5) *% f;
+                let r := dk.FusedMultiplyAdd(FloatConstants<T>::Log2Hi, s.FusedMultiplyAdd(hfsq +% r1, 
+                    dk *% FloatConstants<T>::Log2Lo) -% hfsq +% f);
+                let zz := TVector::ConditionalSelect(notZero, TVector::ConditionalSelect(vec.IsPositiveInfinity, 
+                    TVector::Create(f64.PositiveInfinity), r), TVector::Create(f64.NegativeInfinity));
+                return TVector::ConditionalSelect(~(vec.IsPositive), TVector::Create(f64.NaN), zz);
+            } else {
+                static assert(false, "Unsupported type for Ln");
+            }
+        }
+
+        Ln1P: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            type IVector = SimdVector<FloatInt<T>, Arch>;
+            let uf := vec + TVector::One;
+            return Ln(uf);
+        }
+
+        Log2: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            type TNative = SimdMask<FloatInt<T>, Arch>.TNative;
+            type IVector = SimdVector<FloatInt<T>, Arch>;
+            x := vec;
+            k: IVector;
+            let notZero := ~vec.IsZero;
+            static if type T is f32 {
+                let test1 := (vec <^ T.MinPositiveValue) & notZero;
+                if test1.Any {
+                    k = IVector::ConditionalSelect(Builtin.BitCast<TNative>(test1.ToNative()),
+                        k -% 25, k);
+                    x = TVector::ConditionalSelect(test1, x *% 33554432u, x);
+                }
+                ix := x.AsInt32;
+                ix +%= 0x3f800000 -% 0x3f3504f3;
+                k +%= (ix >> 23) -% 0x7f;
+                ix = (ix & 0x007fffff) +% 0x3f3504f3;
+                x = ix.AsFloat32;
+                let f := --%x;
+                let s := f / (f +% 2);
+                let z := s *% s;
+                let w := z *% z;
+                let t1 := w *% Horner<TVector, 0x3eccce13u, 0x3e789e26u>(w);
+                let t2 := z *% Horner<TVector, 0x3f2aaaaau, 0x3e91e9eeu>(w);
+                let r1 := t2 +% t1;
+                let hfsq := f *% T(0.5) *% f;
+                let dk := k.ConvertTo<f32>();
+                let r := (s.FusedMultiplySub(hfsq +% r1, hfsq) +% f).FusedMultiplyAdd(FloatConstants<T>::InvLog2, dk);
+                let zz := TVector::ConditionalSelect(notZero, TVector::ConditionalSelect(vec.IsPositiveInfinity, 
+                    TVector::Create(f32.PositiveInfinity), r), TVector::Create(f32.NegativeInfinity));
+                return TVector::ConditionalSelect(~(vec.IsPositive), TVector::Create(f32.NaN), zz);
+            } else static if type T is f64 {
+                hx := x.AsInt64 >> 32;
+                let test1 := (vec <^ T.MinPositiveValue) & notZero;
+                if test1.Any {
+                    k = IVector::ConditionalSelect(Builtin.BitCast<TNative>(test1.ToNative()),
+                        k -% 54, k);
+                    x = TVector::ConditionalSelect(test1, x *% 18014398509481984u, x);
+                }
+                hx +%= 0x3ff00000 -% 0x3fe6a09e;
+                k +%= (hx >> 20) -% 0x3ff;
+                let dk := k.ConvertTo<f64>();
+                hx = (hx & 0x000fffff) +% 0x3fe6a09e;
+                x = (hx << 32 | (IVector::Create(0xffffffffi64) & x.AsInt64)).AsFloat64;
+                let f := --%x;
+                let s := f / (f +% 2);
+                let z := s *% s;
+                let w := z *% z;
+                let t1 := w *% Horner<TVector, 0x3fd999999997fa04u, 0x3fcc71c51d8e78afu, 0x3fc39a09d078c69fu>(w);
+                let t2 := z *% Horner<TVector, 0x3fe5555555555593u, 0x3fd2492494229359u, 0x3fc7466496cb03deu, 0x3fc2f112df3e5244u>(w);
+                let r1 := t2 +% t1;
+                let hfsq := f *% T(0.5) *% f;
+                hi := f -% hfsq;
+                hi = hi & (i64.AllBitsSet << 32).AsFloat64;
+                let lo := s.FusedMultiplyAdd(hfsq +% r1, f -% hi -% hfsq);
+                valHi := hi *% FloatConstants<T>::InvLog2Hi;
+                valLo := (lo +% hi).FusedMultiplyAdd(FloatConstants<T>::InvLog2Lo, lo *% FloatConstants<T>::InvLog2Hi);
+                let w1 := dk +% valHi;
+                valLo +%= (dk -% w1) +% valHi;
+                valHi = w1;
+                let r := valLo +% valHi;
+                let zz := TVector::ConditionalSelect(notZero, TVector::ConditionalSelect(vec.IsPositiveInfinity, 
+                    TVector::Create(f64.PositiveInfinity), r), TVector::Create(f64.NegativeInfinity));
+                return TVector::ConditionalSelect(~(vec.IsPositive), TVector::Create(f64.NaN), zz);
+            } else {
+                static assert(false, "Unsupported type for Log2");
+            }
+        }
+
+        Log10: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            type TNative = SimdMask<FloatInt<T>, Arch>.TNative;
+            type IVector = SimdVector<FloatInt<T>, Arch>;
+            x := vec;
+            k: IVector;
+            let notZero := ~vec.IsZero;
+            static if type T is f32 {
+                let test1 := (vec <^ T.MinPositiveValue) & notZero;
+                if test1.Any {
+                    k = IVector::ConditionalSelect(Builtin.BitCast<TNative>(test1.ToNative()),
+                        k -% 25, k);
+                    x = TVector::ConditionalSelect(test1, x *% 33554432u, x);
+                }
+                ix := x.AsInt32;
+                ix +%= 0x3f800000 -% 0x3f3504f3;
+                k +%= (ix >> 23) -% 0x7f;
+                ix = (ix & 0x007fffff) +% 0x3f3504f3;
+                x = ix.AsFloat32;
+                let f := --%x;
+                let s := f / (f +% 2);
+                let z := s *% s;
+                let w := z *% z;
+                let t1 := w *% Horner<TVector, 0x3eccce13u, 0x3e789e26u>(w);
+                let t2 := z *% Horner<TVector, 0x3f2aaaaau, 0x3e91e9eeu>(w);
+                let r1 := t2 +% t1;
+                let hfsq := f *% T(0.5) *% f;
+                let dk := k.ConvertTo<f32>();
+                let hi := (f -% hfsq) & (f32.FromBits(0xfffff000u));
+                let lo := s.FusedMultiplyAdd(hfsq +% r1, f -% hi -% hfsq);
+                let r := dk.FusedMultiplyAdd(FloatConstants<T>::Log10_2Hi, hi.FusedMultiplyAdd(FloatConstants<T>::InvLn10Hi, 
+                    lo.FusedMultiplyAdd(FloatConstants<T>::InvLn10Hi, (lo +% hi).FusedMultiplyAdd(FloatConstants<T>::InvLn10Lo,
+                    dk *% FloatConstants<T>::Log10_2Lo))));
+                let zz := TVector::ConditionalSelect(notZero, TVector::ConditionalSelect(vec.IsPositiveInfinity, 
+                    TVector::Create(f32.PositiveInfinity), r), TVector::Create(f32.NegativeInfinity));
+                return TVector::ConditionalSelect(~(vec.IsPositive), TVector::Create(f32.NaN), zz);
+            } else static if type T is f64 {
+                hx := x.AsInt64 >> 32;
+                let test1 := (vec <^ T.MinPositiveValue) & notZero;
+                if test1.Any {
+                    k = IVector::ConditionalSelect(Builtin.BitCast<TNative>(test1.ToNative()),
+                        k -% 54, k);
+                    x = TVector::ConditionalSelect(test1, x *% 18014398509481984u, x);
+                }
+                hx +%= 0x3ff00000 -% 0x3fe6a09e;
+                k +%= (hx >> 20) -% 0x3ff;
+                let dk := k.ConvertTo<f64>();
+                hx = (hx & 0x000fffff) +% 0x3fe6a09e;
+                x = (hx << 32 | (IVector::Create(0xffffffffi64) & x.AsInt64)).AsFloat64;
+                let f := --%x;
+                let s := f / (f +% 2);
+                let z := s *% s;
+                let w := z *% z;
+                let t1 := w *% Horner<TVector, 0x3fd999999997fa04u, 0x3fcc71c51d8e78afu, 0x3fc39a09d078c69fu>(w);
+                let t2 := z *% Horner<TVector, 0x3fe5555555555593u, 0x3fd2492494229359u, 0x3fc7466496cb03deu, 0x3fc2f112df3e5244u>(w);
+                let r1 := t2 +% t1;
+                let hfsq := f *% T(0.5) *% f;
+                hi := f -% hfsq;
+                hi = hi & (i64.AllBitsSet << 32).AsFloat64;
+                let lo := f -% hi -% hfsq +% s *% (hfsq +% r1);
+                valHi := hi *% FloatConstants<T>::InvLn10Hi;
+                let y := dk *% FloatConstants<T>::Log10_2Hi;
+                valLo := dk *% FloatConstants<T>::Log10_Lo +% (lo +% hi) *% FloatConstants<T>::InvLn10Lo +% 
+                    lo *% FloatConstants<T>::InvLn10Hi;
+                let w1 := y +% valHi;
+                valLo +%= (y -% w1) +% valHi;
+                valHi = w1;
+                let r := valLo +% valHi;
+                let zz := TVector::ConditionalSelect(notZero, TVector::ConditionalSelect(vec.IsPositiveInfinity, 
+                    TVector::Create(f64.PositiveInfinity), r), TVector::Create(f64.NegativeInfinity));
+                return TVector::ConditionalSelect(~(vec.IsPositive), TVector::Create(f64.NaN), zz);
+            } else {
+                static assert(false, "Unsupported type for Log10");
+            }
+        }
+
+        Exp: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            static if type T is f32 {
+                let k := NearbyInt(vec *% FloatConstants<T>::InvLog2);
+                x := k.FusedNegatedMultiplyAdd(FloatConstants<T>::Log2Hi, vec);
+                x = k.FusedNegatedMultiplyAdd(FloatConstants<T>::Log2Lo, x);
+                let y := Horner<TVector, 0x3f000000u, 0x3e2aa9a5u, 0x3d2aa957u, 0x3c098d8bu, 0x3ab778cfu>(x);
+                x = y.FusedMultiplyAdd(x *% x, x) +% TVector::One;
+                x = TVector::ConditionalSelect(vec <=^ FloatConstants<T>::MinLog, TVector::Zero, Ldexp(x, k.ConvertTo<i32>()));
+                x = TVector::ConditionalSelect(vec >=^ FloatConstants<T>::MaxLog, TVector::Create(T.PositiveInfinity), x);
+                return x;
+            } else static if type T is f64 {
+                let k := NearbyInt(vec *% FloatConstants<T>::InvLog2);
+                let hi := k.FusedNegatedMultiplyAdd(FloatConstants<T>::Log2Hi, vec);
+                let lo := k *% FloatConstants<T>::Log2Lo;
+                let x := hi -% lo;
+                let t := x *% x;
+                c := t.FusedNegatedMultiplyAdd(Horner<TVector, 0x3fc555555555553eu, 0xbf66c16c16bebd93u, 0x3f11566aaf25de2cu,
+                    0xbebbbd41c5d26bf1u, 0x3e66376972bea4d0u>(t), x);
+                c = TVector::One -% (((lo -% (x *% c) / (TVector::Create(2) -% c)) -% hi));
+                c = TVector::ConditionalSelect(vec <=^ FloatConstants<T>::MinLog, TVector::Zero, Ldexp(c, k.ConvertTo<i64>()));
+                c = TVector::ConditionalSelect(vec >=^ FloatConstants<T>::MaxLog, TVector::Create(T.PositiveInfinity), c);
+                return c;
+            } else {
+                static assert(false, "Unsupported type for Exp");
+            }
+        }
+
+        ExpM1: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            type IVector = SimdVector<FloatInt<T>, Arch>;
+            static if type T is f32 {
+                let k := NearbyInt(vec *% FloatConstants<T>::InvLog2);
+                x := k.FusedNegatedMultiplyAdd(FloatConstants<T>::Log2Hi, vec);
+                x = k.FusedNegatedMultiplyAdd(FloatConstants<T>::Log2Lo, x);
+                let hx := x *% 0.5f;
+                let hxs := x *% hx;
+                let r := Horner<TVector, 0x3F800000u, 0xBD08887Fu, 0x3ACF6DB4u>(hxs);
+                let t := r.FusedNegatedMultiplyAdd(hx, 3.0f);
+                e := hxs *% ((r -% t) / (TVector::Create(6.0f) -% x *% t));
+                e = x.FusedMultiplySub(e, hxs);
+                let ik := k.ConvertTo<i32>();
+                let two2mk := ((IVector::Create(FloatConstants<T>::MaxExponent) -% ik) << FloatConstants<T>::MantissaBits).AsFloat32;
+                let y := TVector::One -% two2mk -% (e -% x);
+                return Ldexp(y, ik);
+            } else static if type T is f64 {
+                let k := NearbyInt(vec *% FloatConstants<T>::InvLog2);
+                let hi := k.FusedNegatedMultiplyAdd(FloatConstants<T>::Log2Hi, vec);
+                let lo := k *% FloatConstants<T>::Log2Lo;
+                let x := hi -% lo;
+                let hxs := x *% x *% 0.5;
+                let r := Horner<TVector, 0x3FF0000000000000u, 0xBFA11111111110F4u, 0x3F5A01A019FE5585u,
+                    0xBF14CE199EAADBB7u, 0x3ED0CFCA86E65239u, 0xBE8AFDB76E09C32Du>(hxs);
+                let t := TVector::Create(3.0) -% r *% x *% 0.5;
+                e := hxs *% ((r -% t) / (TVector::Create(6.0) -% x *% t));
+                let c := (hi -% x) -% lo;
+                e = (x *% (e -% c) -% c) -% hxs;
+                let ik := k.ConvertTo<i64>();
+                let two2mk := ((IVector::Create(FloatConstants<T>::MaxExponent) -% ik) << FloatConstants<T>::MantissaBits).AsFloat64;
+                let ct1 := TVector::One -% two2mk -% (e -% x);
+                let ct2 := x -% (e +% two2mk) +% TVector::One;
+                let y := TVector::ConditionalSelect(k <^ 20.0, ct1, ct2);
+                return Ldexp(y, ik);
+            } else {
+                static assert(false, "Unsupported type for ExpM1");
+            }
+        }
+
+        Exp2: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            static if type T is f32 {
+                let k := NearbyInt(vec);
+                x := vec -% k;
+                let y := Horner<TVector, 0x3e75fdf1u, 0x3d6356ebu, 0x3c1d9422u, 0x3ab01218u, 0x3922c8c4u>(x);
+                x = y.FusedMultiplyAdd(x *% x, x *% FloatConstants<T>::Log2) +% TVector::One;
+                x = TVector::ConditionalSelect(vec <=^ FloatConstants<T>::MinLog2, TVector::Zero, Ldexp(x, k.ConvertTo<i32>()));
+                x = TVector::ConditionalSelect(vec >=^ FloatConstants<T>::MaxLog2, TVector::Create(T.PositiveInfinity), x);
+                return x;
+            } else static if type T is f64 {
+                let k := NearbyInt(vec);
+                let x := (vec -% k) *% FloatConstants<T>::Log2;
+                let t := x *% x;
+                c := t.FusedNegatedMultiplyAdd(Horner<TVector, 0x3fc555555555553eu, 0xbf66c16c16bebd93u, 0x3f11566aaf25de2cu,
+                    0xbebbbd41c5d26bf1u, 0x3e66376972bea4d0u>(t), x);
+                c = TVector::One +% x +% x *% c / (TVector::Create(2) -% c);
+                c = TVector::ConditionalSelect(vec <=^ FloatConstants<T>::MinLog2, TVector::Zero, Ldexp(c, k.ConvertTo<i64>()));
+                c = TVector::ConditionalSelect(vec >=^ FloatConstants<T>::MaxLog2, TVector::Create(T.PositiveInfinity), c);
+                return c;
+            } else {
+                static assert(false, "Unsupported type for Exp2");
+            }
+        }
+
+        Exp10: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            static if type T is f32 {
+                let k := NearbyInt(vec *% FloatConstants<T>::InvLg2);
+                x := k.FusedNegatedMultiplyAdd(FloatConstants<T>::Lg2Hi, vec);
+                x -%= k *% FloatConstants<T>::Lg2Lo;
+                let y := x *% Horner<TVector, 0x40135d8eu, 0x4029a926u, 0x400237dau, 0x3f95eb4cu, 0x3f0aacefu, 0x3e54dff1u>(x);
+                x = y +% TVector::One;
+                x = TVector::ConditionalSelect(vec <=^ FloatConstants<T>::MinLog10, TVector::Zero, Ldexp(x, k.ConvertTo<i32>()));
+                x = TVector::ConditionalSelect(vec >=^ FloatConstants<T>::MaxLog10, TVector::Create(T.PositiveInfinity), x);
+                return x;
+            } else static if type T is f64 {
+                let k := NearbyInt(vec *% FloatConstants<T>::InvLg2);
+                x := k.FusedNegatedMultiplyAdd(FloatConstants<T>::Lg2Hi, vec);
+                x  = k.FusedNegatedMultiplyAdd(FloatConstants<T>::Lg2Lo, x);
+                let xx := x *% x;
+                let px := x *% Horner<TVector, 0x40a2b4798e134a01u, 0x40796b7a050349e4u, 0x40277d9474c55934u, 0x3fa4fd75f3062dd4u>(xx);
+                let x2 := px / (Horner1<TVector, 0x40a03f37650df6e2u, 0x4093e05eefd67782u, 0x405545fdce51ca08u>(xx) -% px);
+                c := (x2 +% x2) +% TVector::One;
+                c = TVector::ConditionalSelect(vec <=^ FloatConstants<T>::MinLog10, TVector::Zero, Ldexp(c, k.ConvertTo<i64>()));
+                c = TVector::ConditionalSelect(vec >=^ FloatConstants<T>::MaxLog10, TVector::Create(T.PositiveInfinity), c);
+                return c;
+            } else {
+                static assert(false, "Unsupported type for Exp10");
+            }
+        }
+
+        Sum: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> T {
+            unsafe {
+                buf: BufferedVector<T, SimdVector<T, Arch>::Length>;
+                vec.StoreAligned(buf.>buffer[@Unchecked 0]&);
+                acc: T;
+                for val in buf.>buffer {
+                    acc += val;
+                }
+                return acc;
+            }
+        }
+
+        Product: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> T {
+            unsafe {
+                buf: BufferedVector<T, SimdVector<T, Arch>::Length>;
+                vec.StoreAligned(buf.>buffer[@Unchecked 0]&);
+                acc := T(1);
+                for val in buf.>buffer {
+                    acc *= val;
+                }
+                return acc;
+            }
+        }
+
+        MinElement: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> T {
+            unsafe {
+                buf: BufferedVector<T, SimdVector<T, Arch>::Length>;
+                vec.StoreAligned(buf.>buffer[@Unchecked 0]&);
+                result: T = buf.>buffer[@Unchecked 0];
+                for val in buf.>buffer {
+                    result = result.Min(val);
+                }
+                return result;
+            }
+        }
+
+        MaxElement: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> T {
+            unsafe {
+                buf: BufferedVector<T, SimdVector<T, Arch>::Length>;
+                vec.StoreAligned(buf.>buffer[@Unchecked 0]&);
+                result: T = buf.>buffer[@Unchecked 0];
+                for val in buf.>buffer {
+                    result = result.Max(val);
+                }
+                return result;
             }
         }
     }
+
+    protected type FloatInt<T> = type T is f32 ? i32 : i64;
 
     @Align(64)
     protected struct <T, Length: usize> BufferedVector {
@@ -523,13 +1372,15 @@ public static class CommonInstructions: SimdInstructionSet {
 
     protected Horner: <V> (in ref _: V) -> V noexcept => V.Zero;
     protected Horner: <V, C0: u64> (in ref _: V) -> V noexcept => Coef<V, C0>();
-    protected Horner: <V, C0: u64, C1: u64, Tail: u64...> (in ref vec: V) -> V noexcept 
-    => vec.FusedMultiplyAdd(Horner<V, C1, Tail...>(vec), Coef<V, C0>());
+    protected Horner: <V, C0: u64, C1: u64, Tail: u64...> (in ref vec: V) -> V noexcept = {
+        return vec.>FusedMultiplyAdd(Horner<V, C1, Tail...>(vec), Coef<V, C0>());
+    }
 
     protected Horner1: <V> (in ref _: V) -> V noexcept => V.One;
     protected Horner1: <V, C0: u64> (in ref vec: V) -> V noexcept => vec + Coef<V, C0>();
-    protected Horner1: <V, C0: u64, C1: u64, Tail: u64...> (in ref vec: V) -> V noexcept 
-    => vec.FusedMultiplyAdd(Horner1<V, C1, Tail...>(vec), Coef<V, C0>());
+    protected Horner1: <V, C0: u64, C1: u64, Tail: u64...> (in ref vec: V) -> V noexcept = {
+        return vec.>FusedMultiplyAdd(Horner1<V, C1, Tail...>(vec), Coef<V, C0>());
+    }
 
     protected static class <F> FloatConstants;
     protected static class FloatConstants<f32> {
@@ -540,11 +1391,44 @@ public static class CommonInstructions: SimdInstructionSet {
         public const PiO2_2t :== f32.FromBits(0x2e85a308u);
         public const PiO2_3 :== f32.FromBits(0x2e85a300u);
         public const PiO2_3t :== f32.FromBits(0x248d3132u);
+        public const PiO2_Lo :== f32.FromBits(0xb33bbd2eu);
+        public const PiO4_Lo :== f32.FromBits(0xb2bbbd2eu);
         public const TwoOPi :== f32.FromBits(0x3f22f983u);
         public const TwentyPi :== f32.FromBits(0x427b53d1u);
         public const PiO4 :== f32.FromBits(0x3f490fdbu);
         public const MediumPi :== f32.FromBits(0x43490fdbu);
         public const SignMask :== f32.FromBits(0x80000000u);
+        public const SqrtEps :== f32.FromBits(0x39b504f3u);
+        public const Tan3PiO8 :== f32.FromBits(0x401a827au);
+        public const TanPiO8 :== f32.FromBits(0x3ed413cdu);
+        public const MaxLog :== 88.3762626647949f;
+        public const MinLog :== -88.3762626647949f;
+        public const MaxLog2 :== 127.0f;
+        public const MinLog2 :== -127.0f;
+        public const MaxLog10 :== 38.23080825805664f;
+        public const MinLog10 :== -37.89999771118164f;
+        public const Log2 :== 0.6931471805599453094172321214581765680755001343602553f;
+        public const Log2Hi :== f32.FromBits(0x3f318000u);
+        public const Log2Lo :== f32.FromBits(0xb95e8083u);
+        public const Lg2Hi :== f32.FromBits(0x3e9a0000u);
+        public const Lg2Lo :== f32.FromBits(0x39826a14u);
+        public const InvLog2 :== 1.442695040888963407359924681001892137426645954152986f;
+        public const InvLog2Hi :== f32.FromBits(0x3fb8b000u);
+        public const InvLog2Lo :== f32.FromBits(0xb9389ad4u);
+        public const InvLg2 :== 3.32192809488736234787031942949f;
+        public const Log10_2Hi :== 3.0102920532e-1f;
+        public const Log10_2Lo :== 7.9034151668e-7f;
+        public const InvLn10Hi :== 4.3432617188e-1f;
+        public const InvLn10Lo :== -3.1689971365e-5f;
+        public const OneOTwoEps :== f32.FromBits(0x4a800000u);
+        public const OneOSqrtEps :== f32.FromBits(0x453504f3u);
+        public const Mask1Frexp :== 0x7f800000;
+        public const Mask2Frexp :== 0x3f000000;
+        public const MaxExponent :== 127;
+        public const MaxExponentM1 :== 126;
+        public const MantissaBits :== 23;
+        public const TwoToNmb :== 8388608.0f;
+        public const TwoToNmbO3 :== 0x3ba14518u;
     }
     protected static class FloatConstants<f64> {
         public const PiO2 :== f64.FromBits(0x3ff921fb54442d18u);
@@ -554,11 +1438,44 @@ public static class CommonInstructions: SimdInstructionSet {
         public const PiO2_2t :== f64.FromBits(0x3ba3198a2e037073u);
         public const PiO2_3 :== f64.FromBits(0x3ba3198a2e000000u);
         public const PiO2_3t :== f64.FromBits(0x397b839a252049c1u);
+        public const PiO2_Lo :== f64.FromBits(0x3c91a62633145c07u);
+        public const PiO4_Lo :== f64.FromBits(0x3c81a62633145c07u);
         public const TwoOPi :== f64.FromBits(0x3fe45f306dc9c883u);
         public const TwentyPi :== f64.FromBits(0x404f6a7a2955385eu);
         public const PiO4 :== f64.FromBits(0x3fe921fb54442d18u);
         public const MediumPi :== f64.FromBits(0x412921fb54442d18u);
-        public const SignMask :== f32.FromBits(0x8000000000000000u);
+        public const SignMask :== f64.FromBits(0x8000000000000000u);
+        public const SqrtEps :== f64.FromBits(0x3e50000000000000u);
+        public const Tan3PiO8 :== f64.FromBits(0x4003504f333f9de6u);
+        public const TanPiO8 :== f64.FromBits(0x3fda827999fcef31u);
+        public const MaxLog :== 709.78271289338400;
+        public const MinLog :== -708.3964185322641;
+        public const MaxLog2 :== 1023.0;
+        public const MinLog2 :== -1023.0;
+        public const MaxLog10 :== 308.2547155599167;
+        public const MinLog10 :== -308.2547155599167;
+        public const Log2 :== 0.6931471805599453094172321214581765680755001343602553;
+        public const Log2Hi :== f64.FromBits(0x3fe62e42fee00000u);
+        public const Log2Lo :== f64.FromBits(0x3dea39ef35793c76u);
+        public const Lg2Hi :== f64.FromBits(0x3fd3440000000000u);
+        public const Lg2Lo :== f64.FromBits(0x3ed3509f79fef312u);
+        public const InvLog2 :== 1.442695040888963407359924681001892137426645954152986;
+        public const InvLog2Hi :== f64.FromBits(0x3ff7154765200000u);
+        public const InvLog2Lo :== f64.FromBits(0x3de705fc2eefa200u);
+        public const InvLg2 :== 3.32192809488736234787031942949;
+        public const Log10_2Hi :== 3.01029995663611771306e-1;
+        public const Log10_2Lo :== 3.69423907715893078616e-13;
+        public const InvLn10Hi :== 4.34294481878168880939e-1;
+        public const InvLn10Lo :== 2.50829467116452752298e-11;
+        public const OneOTwoEps :== f64.FromBits(0x4320000000000000u);
+        public const OneOSqrtEps :== f64.FromBits(0x4190000000000000u);
+        public const Mask1Frexp :== 0x7ff0000000000000;
+        public const Mask2Frexp :== 0x3fe0000000000000;
+        public const MaxExponent :== 1023;
+        public const MaxExponentM1 :== 1022;
+        public const MantissaBits :== 52;
+        public const TwoToNmb :== 4503599627370496.0;
+        public const TwoToNmbO3 :== 0x3ed428a2f98d7286u;
     }
 
     protected Quadrant: <Arch> (in ref vec: SimdVector<i32, Arch>) -> SimdVector<i32, Arch> {
@@ -579,22 +1496,22 @@ public static class CommonInstructions: SimdInstructionSet {
 
         if x.LessThanOrEqualAll(FloatConstants<Value>::PiO4) {
             xref = x;
-            return V.Zero;
+            return V::Zero;
         } else if x.LessThanOrEqualAll(FloatConstants<Value>::PiO2) {
-            let test := x >* FloatConstants<Value>::PiO4;
+            let test1 := x >^ FloatConstants<Value>::PiO4;
             xref = x -% FloatConstants<Value>::PiO2_1;
             xref -%= FloatConstants<Value>::PiO2_2;
             xref -%= FloatConstants<Value>::PiO2_3;
-            xref = V::ConditionalSelect(test, xref, x);
-            return V::ConditionalSelect(test, V.One, V.Zero);
+            xref = V::ConditionalSelect(test1, xref, x);
+            return V::ConditionalSelect(test1, V::One, V::Zero);
         } else if x.LessThanOrEqualAll(FloatConstants<Value>::TwentyPi) {
-            let xi := (x *% FloatConstants<Value>::TwoOPi).NearbyInt;
+            let xi := NearbyInt(x *% FloatConstants<Value>::TwoOPi);
             xref = xi.FusedNegatedMultiplyAdd(FloatConstants<Value>::PiO2_1, x);
             xref -%= xi *% FloatConstants<Value>::PiO2_2;
             xref -%= xi *% FloatConstants<Value>::PiO2_3;
             return Quadrant(xi);
         } else if x.LessThanOrEqualAll(FloatConstants<Value>::MediumPi) {
-            let fn := (x *% FloatConstants<Value>::TwoOPi).NearbyInt;
+            let fn := NearbyInt(x *% FloatConstants<Value>::TwoOPi);
             r := x -% fn *% FloatConstants<Value>::PiO2_1;
             w := fn *% FloatConstants<Value>::PiO2_1t;
             t := r;
@@ -608,17 +1525,17 @@ public static class CommonInstructions: SimdInstructionSet {
             xref = r -% w;
             return Quadrant(fn);
         } else {
-            const size :== V.Length;
+            const size :== i32(V::Length);
             tmp: BufferedVector<Value, size>;
             txr: BufferedVector<Value, size>;
             args: BufferedVector<Value, size>;
             unsafe {
                 x.StoreAligned(args.>buffer[@Unchecked 0]&);
                 for i in ..size {
-                    arg: f64 = args[@Unchecked i];
+                    arg: f64 = args.>buffer[@Unchecked i];
                     if arg.IsInfinity {
-                        tmp.>buffer[@Unchecked i] = Value.Zero;
-                        txr.>buffer[@Unchecked i] = Value.NaN;
+                        tmp.>buffer[@Unchecked i] = Value(0);
+                        txr.>buffer[@Unchecked i] = _BUILTIN_GET_EXTENSION_STATIC_PROPERTY(NaN, Value);
                     } else {
                         y0, y1: f64;
                         let n := Builtin.RemPiO2(arg, UnsafePointerCast<CDouble>(y0&));
@@ -644,28 +1561,64 @@ public static class CommonInstructions: SimdInstructionSet {
     }
 
     protected CosEval: <Arch> (in ref z: SimdVector<f32, Arch>) -> SimdVector<f32, Arch> {
-        let y := Horner<SimdVector<f32, Arch>, 0x3d2aaaa5u, 0xbab60619u, 0x37ccf5ceu>(z);
-        return SimdVector<f64, Arch>::One +% z.FusedMultiplyAdd(SimdVector<f32, Arch>.Create(-0.5), y *% z *% z);
+        type TVector = SimdVector<f32, Arch>;
+        let y := Horner<TVector, 0x3d2aaaa5u, 0xbab60619u, 0x37ccf5ceu>(z);
+        return TVector::One +% z.FusedMultiplyAdd(TVector::Create(-0.5f), y *% z *% z);
     }
 
     protected CosEval: <Arch> (in ref z: SimdVector<f64, Arch>) -> SimdVector<f64, Arch> {
-        let y := Horner<SimdVector<f64, Arch>, 0x3fe0000000000000u, 0xbfa5555555555551u, 0x3f56c16c16c15d47u, 
+        type TVector = SimdVector<f64, Arch>;
+        let y := Horner<TVector, 0x3fe0000000000000u, 0xbfa5555555555551u, 0x3f56c16c16c15d47u, 
             0xbefa01a019ddbcd9u, 0x3e927e4f8e06d9a5u, 0xbe21eea7c1e514d4u, 0x3da8ff831ad9b219u>(z);
-        return SimdVector<f64, Arch>::One -% y *% z;
+        return TVector::One -% y *% z;
     }
 
-    protected TanEval: <Arch> (in ref z: SimdVector<f32, Arch>, in ref test: SimdMask<f32, Arch>) -> SimdVector<f32, Arch> {
+    protected TanEval: <Arch> (in ref z: SimdVector<f32, Arch>, in ref test1: SimdMask<f32, Arch>) -> SimdVector<f32, Arch> {
+        type TVector = SimdVector<f32, Arch>;
         let zz := z *% z;
         y := Horner<SimdVector<f32, Arch>, 0x3eaaaa6fu, 0x3e0896ddu, 0x3d5ac5c9u, 0x3cc821b5u, 0x3b4c779cu, 0x3c19c53bu>(zz);
         y = y.FusedMultiplyAdd(zz *% z, z);
-        return SimdVector<f32, Arch>::ConditionalSelect(test, y, -SimdVector<f32, Arch>::One / y);
+        return TVector::ConditionalSelect(test1, y, TVector::Create(-1) / y);
     }
 
-    protected TanEval: <Arch> (in ref z: SimdVector<f64, Arch>, in ref test: SimdMask<f64, Arch>) -> SimdVector<f64, Arch> {
+    protected TanEval: <Arch> (in ref z: SimdVector<f64, Arch>, in ref test1: SimdMask<f64, Arch>) -> SimdVector<f64, Arch> {
+        type TVector = SimdVector<f64, Arch>;
         let zz := z *% z;
-        let num := Horner<SimdVector<f64, Arch>, 0xc1711fead3299176u, 0x413199eca5fc9dddu, 0xc0c992d8d24f3f38u>(zz);
-        let den := Horner<SimdVector<f64, Arch>, 0xc189afe03cbe5a31u, 0x4177d98fc2ead8efu, 0xc13427bc582abc96u, 0x40cab8a5eeb36572u>(zz);
+        let num := Horner<TVector, 0xc1711fead3299176u, 0x413199eca5fc9dddu, 0xc0c992d8d24f3f38u>(zz);
+        let den := Horner<TVector, 0xc189afe03cbe5a31u, 0x4177d98fc2ead8efu, 0xc13427bc582abc96u, 0x40cab8a5eeb36572u>(zz);
         let y := z.FusedMultiplyAdd((zz *% (num / den)), z);
-        return SimdVector<f64, Arch>::ConditionalSelect(test, y, -SimdVector<f64, Arch>::One / y);
+        return TVector::ConditionalSelect(test1, y, TVector::Create(-1) / y);
+    }
+
+    protected AtanEval: <T, Arch> (in ref x: SimdVector<T, Arch>, in ref recx: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+        type TVector = SimdVector<T, Arch>;
+        static if type T is f32 {
+            let flag1 := x <^ FloatConstants<f32>::Tan3PiO8;
+            let flag2 := (x >=^ f32.FromBits(0x3ed413cdu)) & flag1;
+            yy := TVector::ConditionalSelect(flag1, TVector::Zero, TVector::Create(FloatConstants<f32>::PiO2));
+            yy = TVector::ConditionalSelect(flag2, TVector::Create(FloatConstants<f32>::PiO4), yy);
+            xx := TVector::ConditionalSelect(flag1, x, -recx);
+            xx = TVector::ConditionalSelect(flag2, (x -% TVector::One) / (x +% TVector::One), xx);
+            let z := xx *% xx;
+            z1 := Horner<TVector, 0xbeaaaa2au, 0x3e4c925fu, 0xbe0e1b85u, 0x3da4f0d1u>(z);
+            z1 = xx.FusedMultiplyAdd(z1 *% z, xx);
+            z1 = TVector::ConditionalSelect(flag2, z1 +% FloatConstants<f32>::PiO4_Lo, z1);
+            z1 = TVector::ConditionalSelect(flag1 ==^ SimdMask<T, Arch>::False, z1 +% FloatConstants<f32>::PiO2_Lo, z1);
+            return yy +% z1;
+        } else {
+            let flag1 := x <^ FloatConstants<f64>::Tan3PiO8;
+            let flag2 := (x >=^ FloatConstants<f64>::TanPiO8) & flag1;
+            yy := TVector::ConditionalSelect(flag1, TVector::Zero, TVector::Create(FloatConstants<f64>::PiO2));
+            yy = TVector::ConditionalSelect(flag2, TVector::Create(FloatConstants<f64>::PiO4), yy);
+            xx := TVector::ConditionalSelect(flag1, x, -recx);
+            xx = TVector::ConditionalSelect(flag2, (x -% TVector::One) / (x +% TVector::One), xx);
+            z := xx *% xx;
+            z *%= Horner<TVector, 0xc0503669fd28ec8eu, 0xc05eb8bf2d05ba25u, 0xc052c08c36880273u, 0xc03028545b6b807au, 0xbfec007fa1f72594u>(z)
+                / Horner1<TVector, 0x4068519efbbd62ecu, 0x407e563f13b049eau, 0x407b0e18d2e2be3bu, 0x4064a0dd43b8fa25u, 0x4038dbc45b14603cu>(z);
+            z = xx.FusedMultiplyAdd(z, xx);
+            z = TVector::ConditionalSelect(flag2, z +% FloatConstants<f64>::PiO4_Lo, z);
+            z = z +% TVector::ConditionalSelect(flag1, TVector::Zero, TVector::Create(FloatConstants<f64>::PiO2_Lo));
+            return yy +% z;
+        }
     }
 }

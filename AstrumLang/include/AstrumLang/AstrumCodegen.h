@@ -82,6 +82,7 @@ namespace AstrumLang {
 		bool isConstantDeclaration      = false;
 		bool isCoroutine                = false;
 		bool isWrapper                  = false;
+		bool isPostfixExpression        = false;
 
 		class StreamSwitcher {
 			std::ofstream* file1;

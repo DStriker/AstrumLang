@@ -775,7 +775,7 @@ namespace AstrumLang {
 	std::any AstrumSema::visitAssertDeclaration(AstrumParser::AssertDeclarationContext* ctx) {
 		if (firstPass) {
 			if (ctx->Static()) {
-				if (isTypeDefinitionBody()) {
+				if (isTypeDefinitionBody() && !functionBody) {
 					structStack.top()->staticAsserts.push_back(
 					    {ctx->constantExpression(),
 					     ctx->StringLiteral()->getText(),
@@ -1727,7 +1727,8 @@ namespace AstrumLang {
 
 			access = resolveAccessSpecifier(acc, false);
 			if (access && *access == AccessSpecifier::Protected) {
-				if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+				if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class &&
+				    currentTypeKind.top() != TypeKind::StaticClass)
 					notifyErrorListeners("Cannot to declare protected member outside the class",
 					                     acc->Protected()->getSymbol());
 			} else if (access && *access == AccessSpecifier::Internal) {
@@ -1896,7 +1897,8 @@ namespace AstrumLang {
 			}
 			if (*access == AccessSpecifier::Protected) {
 				protectedSymbols.insert(name);
-				if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+				if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class &&
+				    currentTypeKind.top() != TypeKind::StaticClass)
 					notifyErrorListeners(
 					    "Cannot to declare protected member outside the class body",
 					    acc->Protected()->getSymbol());
@@ -2895,6 +2897,10 @@ namespace AstrumLang {
 							    ctx->postfixExpression()->getStart());
 					}
 				}
+				if (auto id = ctx->idExpression())
+				{
+					memberIds.insert(id->getText());
+				}
 			}
 		}
 
@@ -3279,7 +3285,8 @@ namespace AstrumLang {
 	}
 
 	std::any AstrumSema::visitPrimaryExpression(AstrumParser::PrimaryExpressionContext* ctx) {
-		if (ctx->Super() && (currentType.empty() || currentTypeKind.top() != TypeKind::Class))
+		if (ctx->Super() && (currentType.empty() || (currentTypeKind.top() != TypeKind::Class &&
+		                                             currentTypeKind.top() != TypeKind::StaticClass)))
 			notifyErrorListeners("Super keyword can using only in the derived class",
 			                     ctx->Super()->getSymbol());
 		if (ctx->Field() && propertyBody)
@@ -5028,7 +5035,8 @@ namespace AstrumLang {
 				if (acc->Public()) {
 					access = AccessSpecifier::Public;
 				} else if (acc->Protected()) {
-					if (currentTypeKind.top() != TypeKind::Class)
+					if (currentTypeKind.top() != TypeKind::Class && currentTypeKind.top() !=
+					    TypeKind::StaticClass)
 						notifyErrorListeners(
 						    "Cannot to declare protected member outside the class body",
 						    acc->getStart());
@@ -5397,7 +5405,8 @@ namespace AstrumLang {
 
 	std::any AstrumSema::visitPropertyGetter(AstrumParser::PropertyGetterContext* ctx) {
 		symbolContexts.push(symbolContexts.top());
-		if (currentTypeKind.top() != TypeKind::Class) {
+		if (currentTypeKind.top() != TypeKind::Class &&
+		    currentTypeKind.top() != TypeKind::StaticClass) {
 			if (auto spec = ctx->accessSpecifier()) {
 				if (spec->Protected())
 					notifyErrorListeners("Cannot to declare protected member outside the class",
@@ -5429,7 +5438,8 @@ namespace AstrumLang {
 
 	std::any AstrumSema::visitPropertySetter(AstrumParser::PropertySetterContext* ctx) {
 		symbolContexts.push(symbolContexts.top());
-		if (currentTypeKind.top() != TypeKind::Class) {
+		if (currentTypeKind.top() != TypeKind::Class &&
+		    currentTypeKind.top() != TypeKind::StaticClass) {
 			if (auto spec = ctx->accessSpecifier()) {
 				if (spec->Protected())
 					notifyErrorListeners("Cannot to declare protected member outside the class",
@@ -5969,7 +5979,8 @@ namespace AstrumLang {
 				if (acc->Public()) {
 					access = AccessSpecifier::Public;
 				} else if (acc->Protected()) {
-					if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+					if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class &&
+					    currentTypeKind.top() != TypeKind::StaticClass)
 						notifyErrorListeners(
 						    "Cannot to declare protected member outside the class body",
 						    acc->getStart());
@@ -5982,7 +5993,8 @@ namespace AstrumLang {
 			} else if (isProtectedInternal) {
 				if (currentAccessSpecifier.top())
 					notifyErrorListeners("Cannot to redefine access specifier", acc->getStart());
-				if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+				if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class &&
+				    currentTypeKind.top() != TypeKind::StaticClass)
 					notifyErrorListeners(
 					    "Cannot to declare protected internal member outside the class body",
 					    ctx->getStart());
@@ -8485,7 +8497,8 @@ namespace AstrumLang {
 				if (acc->Public()) {
 					access = AccessSpecifier::Public;
 				} else if (acc->Protected()) {
-					if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+					if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class &&
+					    currentTypeKind.top() != TypeKind::StaticClass)
 						notifyErrorListeners(
 						    "Cannot to declare protected member outside the class body",
 						    acc->getStart());
@@ -8498,7 +8511,8 @@ namespace AstrumLang {
 			} else if (isProtectedInternal) {
 				if (currentAccessSpecifier.top())
 					notifyErrorListeners("Cannot to redefine access specifier", acc->getStart());
-				if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class)
+				if (isTypeDefinitionBody() && currentTypeKind.top() != TypeKind::Class &&
+				    currentTypeKind.top() != TypeKind::StaticClass)
 					notifyErrorListeners(
 					    "Cannot to declare protected internal member outside the class body",
 					    acc->getStart());

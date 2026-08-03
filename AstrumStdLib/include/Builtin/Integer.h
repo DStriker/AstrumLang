@@ -99,6 +99,9 @@ namespace Builtin {
 	template <size_t... vals>
 	using IndexSequence = std::index_sequence<vals...>;
 
+	template<size_t S>
+	using MakeIndexSequence = std::make_index_sequence<S>;
+
 	template <int64_t Number>
 	struct IntLiteral {
 		constexpr IntLiteral() noexcept = default;
