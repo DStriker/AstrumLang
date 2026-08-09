@@ -18,6 +18,7 @@ namespace AstrumLang {
 		std::stack<std::pair<int, int>> switchProcessedVariants;
 		AstrumParser::TemplateParamsContext* currentTemplateParams         = nullptr;
 		AstrumParser::TemplateArgumentListContext* currentTemplateSpecArgs = nullptr;
+		AstrumParser::TemplateParamsContext* currentProxyTemplateParams     = nullptr;
 		AstrumParser::SimpleDeclarationContext* currentDeclaration         = nullptr;
 		AstrumParser::AssignmentExpressionContext* currentAssignment       = nullptr;
 		AstrumParser::EqualityExpressionContext* currentEquality           = nullptr;
@@ -123,6 +124,7 @@ namespace AstrumLang {
 		void printRefStructCheck(AstrumParser::TheTypeIdContext* type);
 		void printSpecialFunctionDefinitions();
 		void printTypeSpecialFunctionDefinitions(StructDefinition* type, StructDefinition* parent);
+		void printCurrentFuncTemplateParams();
 
 	   public:
 		/*const*/ AstrumSema& sema;
