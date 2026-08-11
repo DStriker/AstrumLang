@@ -741,16 +741,16 @@ public struct <T, Arch> SimdMask
     public static False: self => Create(false);
 
     // Comparisons
-    public operator==: (in ref other: self) -> self noexcept => Arch::Equal(this, other).All;
-    public operator!=: (in ref other: self) -> self noexcept => Arch::NotEqual(this, other).Any;
+    public operator==: (in ref other: self) -> bool noexcept => Arch::Equal(this, other).All;
+    public operator!=: (in ref other: self) -> bool noexcept => Arch::NotEqual(this, other).Any;
 
-    public operator==^: (in ref other: self) -> self noexcept => Arch::Equal(this, other).ToNative();
-    public operator!=^: (in ref other: self) -> self noexcept => Arch::NotEqual(this, other).ToNative();
+    public operator==^: (in ref other: self) -> self noexcept => Arch::Equal(this, other);
+    public operator!=^: (in ref other: self) -> self noexcept => Arch::NotEqual(this, other);
 
     // Arithmetic
 
     // Unary operators
-    public operator~: () -> self noexcept => Arch::BitwiseNot(this).ToNative();
+    public operator~: () -> self noexcept => Arch::BitwiseNot(this);
 
     // Update operators
     public mut operator&=: (in ref other: self) -> ref self => this = Arch::BitwiseAnd(this, other).ToNative();

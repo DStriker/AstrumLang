@@ -1045,6 +1045,7 @@ namespace AstrumLang {
 			out << "template<> ";
 		}
 		currentProxyTemplateParams = nullptr;
+		integerTemplateParams.clear();
 		if (type->kind == TypeKind::Class || type->kind == TypeKind::EnumClass) {
 			out << "class ";
 		} else if (type->kind == TypeKind::UnionStruct) {
@@ -1143,7 +1144,26 @@ namespace AstrumLang {
 				break;
 		}
 
-		out << " {\n" << std::string(++depth, '\t') << "public: using __self = " << type->id;
+		out << " {\n" << std::string(++depth, '\t');
+		if (type->templateParams) {
+			for (auto param : type->templateParams->templateParamDeclaration()) {
+				if (param->templateTypename() && param->templateTypename()->theTypeId() &&
+				    !param->Ellipsis()) {
+					auto txt = param->templateTypename()->theTypeId()->getText();
+					if (txt == "i8" || txt == "u8" || txt == "byte" || txt == "i16" ||
+					    txt == "u16" || txt == "i32" || txt == "u32" || txt == "i64" ||
+					    txt == "u64" || txt == "isize" || txt == "usize" || txt == "f32" ||
+					    txt == "f64") {
+						out << "\n" << std::string(depth, '\t');
+						out << "private: static constexpr Builtin::" << txt << " ";
+						printIdentifier(param->Identifier());
+						out << " = $tparam$" << param->Identifier()->getText() << ";\n"
+						    << std::string(depth, '\t');
+					}
+				}
+			}
+		}
+		out << "public: using __self = " << type->id;
 		if (type->templateSpecializationArgs) {
 			out << "<";
 			printTemplateArgumentList(type->templateSpecializationArgs);
@@ -1457,23 +1477,6 @@ namespace AstrumLang {
 				out << "\n" << std::string(depth, '\t');
 			}
 			isNested = cachedNested;
-		}
-		if (type->templateParams) {
-			for (auto param : type->templateParams->templateParamDeclaration()) {
-				if (param->templateTypename() && param->templateTypename()->theTypeId() &&
-				    !param->Ellipsis()) {
-					auto txt = param->templateTypename()->theTypeId()->getText();
-					if (txt == "i8" || txt == "u8" || txt == "byte" || txt == "i16" ||
-					    txt == "u16" || txt == "i32" || txt == "u32" || txt == "i64" ||
-					    txt == "u64" || txt == "isize" || txt == "usize" || txt == "f32" ||
-					    txt == "f64") {
-						out << "\n" << std::string(depth, '\t');
-						out << "static constexpr Builtin::" << txt << " ";
-						printIdentifier(param->Identifier());
-						out << " = $tparam$" << param->Identifier()->getText() << ";";
-					}
-				}
-			}
 		}
 
 		for (const auto& alias : type->typeAliases) {
@@ -4601,6 +4604,7 @@ namespace AstrumLang {
 			out << "template<> ";
 		}
 		currentProxyTemplateParams = nullptr;
+		integerTemplateParams.clear();
 		out << "class ";
 		if (isUnsafe)
 			out << "[[clang::annotate(\"unsafe\")]] ";
@@ -4623,7 +4627,26 @@ namespace AstrumLang {
 			out << ">";
 		}
 
-		out << " {\n" << std::string(++depth, '\t') << "public: using __self = " << type->id;
+		out << " {\n" << std::string(++depth, '\t');
+		if (type->templateParams) {
+			for (auto param : type->templateParams->templateParamDeclaration()) {
+				if (param->templateTypename() && param->templateTypename()->theTypeId() &&
+				    !param->Ellipsis()) {
+					auto txt = param->templateTypename()->theTypeId()->getText();
+					if (txt == "i8" || txt == "u8" || txt == "byte" || txt == "i16" ||
+					    txt == "u16" || txt == "i32" || txt == "u32" || txt == "i64" ||
+					    txt == "u64" || txt == "isize" || txt == "usize" || txt == "f32" ||
+					    txt == "f64") {
+						out << "\n" << std::string(depth, '\t');
+						out << "private: static constexpr Builtin::" << txt << " ";
+						printIdentifier(param->Identifier());
+						out << " = $tparam$" << param->Identifier()->getText() << ";\n"
+						    << std::string(depth, '\t');
+					}
+				}
+			}
+		}
+		out << "public: using __self = " << type->id;
 		if (type->templateSpecializationArgs) {
 			out << "<";
 			printTemplateArgumentList(type->templateSpecializationArgs);
@@ -4801,23 +4824,6 @@ namespace AstrumLang {
 		out << "ADV_CLASS_STRONG_COMMON_CTORS(" << type->id << ")\n" << std::string(depth, '\t');
 		isNested = true;
 
-		if (type->templateParams) {
-			for (auto param : type->templateParams->templateParamDeclaration()) {
-				if (param->templateTypename() && param->templateTypename()->theTypeId() &&
-				    !param->Ellipsis()) {
-					auto txt = param->templateTypename()->theTypeId()->getText();
-					if (txt == "i8" || txt == "u8" || txt == "byte" || txt == "i16" ||
-					    txt == "u16" || txt == "i32" || txt == "u32" || txt == "i64" ||
-					    txt == "u64" || txt == "isize" || txt == "usize" || txt == "f32" ||
-					    txt == "f64") {
-						out << "\n" << std::string(depth, '\t');
-						out << "static constexpr Builtin::" << txt << " ";
-						printIdentifier(param->Identifier());
-						out << " = $tparam$" << param->Identifier()->getText() << ";";
-					}
-				}
-			}
-		}
 		for (const auto& alias : type->typeAliases) {
 			if (!alias.compilationCondition.empty()) {
 				out << "#if " << alias.compilationCondition << std::endl
@@ -14185,10 +14191,12 @@ namespace AstrumLang {
 			isVariadicTemplate = true;
 		}
 		out << " ";
-		if (currentProxyTemplateParams && !ctx->Ellipsis() && (txt == "i8" || txt == "u8" || txt == "byte" ||
-		    txt == "i16" || txt == "u16" || txt == "i32" || txt == "u32" || txt == "i64" ||
-		    txt == "u64" || txt == "isize" || txt == "usize" || txt == "f32" || txt == "f64"))
-		{
+		if (currentProxyTemplateParams && !ctx->Ellipsis() &&
+		    (txt == "i8" || txt == "u8" || txt == "byte" || txt == "i16" || txt == "u16" ||
+		     txt == "i32" || txt == "u32" || txt == "i64" || txt == "u64" || txt == "isize" ||
+		     txt == "usize" || txt == "f32" || txt == "f64")) {
+			auto txt = ctx->Identifier()->getText();
+			integerTemplateParams.insert(txt);
 			out << "$tparam$";
 		}
 		printIdentifier(ctx->Identifier());
@@ -14229,6 +14237,16 @@ namespace AstrumLang {
 		if (auto id = ctx->simpleTemplateId()) {
 			printSimpleTemplateId(id);
 		} else {
+			if (isFunctionParams && currentProxyTemplateParams && !isFunctionDeclaration) {
+				auto id = ctx->Identifier()->getText();
+				for (auto decl : currentProxyTemplateParams->templateParamDeclaration()) {
+					auto did = decl->Identifier()->getText();
+					if (did == id && integerTemplateParams.contains(did)) {
+						out << "$tparam$";
+						break;
+					}
+				}
+			}
 			printIdentifier(ctx->Identifier());
 		}
 	}
@@ -15045,9 +15063,10 @@ namespace AstrumLang {
 			}
 			out << std::endl;
 		}
-		isUnsafe                  = prevUnsafe;
-		functionBody              = prev;
+		isUnsafe                   = prevUnsafe;
+		functionBody               = prev;
 		currentProxyTemplateParams = nullptr;
+		integerTemplateParams.clear();
 		refParameters.clear();
 		sema.symbolContexts.pop();
 	}
@@ -17239,8 +17258,9 @@ namespace AstrumLang {
 				out << "#endif " << std::endl;
 			}
 			out.switchTo(false);
-			isMainFunction            = false;
+			isMainFunction             = false;
 			currentProxyTemplateParams = nullptr;
+			integerTemplateParams.clear();
 		} else {
 			SourcePosition pos = {ctx->getStart()->getLine(),
 			                      ctx->getStart()->getCharPositionInLine()};
@@ -17646,8 +17666,9 @@ namespace AstrumLang {
 				out << std::endl;
 			}
 		}
-		isUnsafe                  = prevUnsafe;
+		isUnsafe                   = prevUnsafe;
 		currentProxyTemplateParams = nullptr;
+		integerTemplateParams.clear();
 		refParameters.clear();
 		namedReturns.clear();
 		sema.symbolContexts.pop();
@@ -17728,6 +17749,7 @@ namespace AstrumLang {
 	}
 
 	void AstrumCodegen::printFunctionParameters(AstrumParser::FunctionParamsContext* ctx) {
+		isFunctionParams = true;
 		out << "(";
 		if (auto clause = ctx->paramDeclClause()) {
 			printParamDeclClause(clause);
@@ -17735,6 +17757,7 @@ namespace AstrumLang {
 			// out << "Builtin::Array<Builtin::Str>";
 		}
 		out << ")";
+		isFunctionParams = false;
 	}
 
 	void AstrumCodegen::printParamDeclClause(AstrumParser::ParamDeclClauseContext* ctx) {
@@ -18467,7 +18490,19 @@ namespace AstrumLang {
 							out << "template ";
 						printSimpleTemplateId(tid);
 					} else {
-						out << type->getText();
+						auto id = type->getText();
+						if (isFunctionParams && currentProxyTemplateParams &&
+						    !isFunctionDeclaration) {
+							for (auto decl :
+							     currentProxyTemplateParams->templateParamDeclaration()) {
+								auto did = decl->Identifier()->getText();
+								if (did == id && integerTemplateParams.contains(did)) {
+									out << "$tparam$";
+									break;
+								}
+							}
+						}
+						out << id;
 					}
 				} else {
 					out << type->getText();
@@ -20081,9 +20116,11 @@ namespace AstrumLang {
 			if (auto expr = ctx->postfixExpression()) {
 				auto txt    = expr->getText();
 				auto dotpos = txt.rfind('.');
+				if (dotpos == txt.npos)
+					dotpos = txt.rfind("::");
 				auto tplpos = txt.rfind('<');
-				if (dotpos != txt.npos && tplpos != txt.npos && dotpos < tplpos ||
-				    dotpos == txt.npos && tplpos != txt.npos)
+				if ((dotpos != txt.npos && tplpos != txt.npos && dotpos < tplpos) ||
+				    (dotpos == txt.npos && tplpos != txt.npos))
 					txt = txt.substr(0, tplpos);
 				auto txt2      = txt;
 				bool extension = false;
@@ -20356,15 +20393,16 @@ namespace AstrumLang {
 				}
 			} else if (auto t = ctx->simpleTypeSpecifier()) {
 				printSimpleTypeSpecifier(t);
-				bool isSelfMember = t->getText().starts_with("self.");
-				if (isSelfMember)
+				bool isMember = t->getText().find_first_of('.') != std::string::npos ||
+				                t->getText().find_first_of('::') != std::string::npos;
+				if (isMember)
 					out << "(";
 				else
 					out << "{";
 				if (auto expressions = ctx->expressionList()) {
 					printExpressionList(expressions);
 				}
-				if (isSelfMember)
+				if (isMember)
 					out << ")";
 				else
 					out << "}";
@@ -21135,6 +21173,16 @@ namespace AstrumLang {
 					out << ")";
 				}
 			} else {
+				if (isFunctionParams && currentProxyTemplateParams && !isFunctionDeclaration) {
+					auto id = ctx->Identifier()->getText();
+					for (auto decl : currentProxyTemplateParams->templateParamDeclaration()) {
+						auto did = decl->Identifier()->getText();
+						if (did == id && integerTemplateParams.contains(did)) {
+							out << "$tparam$";
+							break;
+						}
+					}
+				}
 				printIdentifier(ctx->Identifier());
 			}
 		}
@@ -21205,6 +21253,8 @@ namespace AstrumLang {
 			if (auto name = ctx->typename_()) {
 				if (auto tid = name->simpleTemplateId()) {
 					printSimpleTemplateId(tid);
+				} else if (auto cls = name->className()) {
+					printClassName(cls);
 				} else {
 					out << name->getText();
 				}

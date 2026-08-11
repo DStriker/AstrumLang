@@ -16,9 +16,10 @@ namespace AstrumLang {
 		std::stack<AstrumParser::SelectionStatementContext*> switchStatements;
 		std::stack<AstrumParser::SwitchExpressionContext*> switchExpressions;
 		std::stack<std::pair<int, int>> switchProcessedVariants;
+		std::unordered_set<std::string> integerTemplateParams;
 		AstrumParser::TemplateParamsContext* currentTemplateParams         = nullptr;
 		AstrumParser::TemplateArgumentListContext* currentTemplateSpecArgs = nullptr;
-		AstrumParser::TemplateParamsContext* currentProxyTemplateParams     = nullptr;
+		AstrumParser::TemplateParamsContext* currentProxyTemplateParams    = nullptr;
 		AstrumParser::SimpleDeclarationContext* currentDeclaration         = nullptr;
 		AstrumParser::AssignmentExpressionContext* currentAssignment       = nullptr;
 		AstrumParser::EqualityExpressionContext* currentEquality           = nullptr;
@@ -84,6 +85,7 @@ namespace AstrumLang {
 		bool isCoroutine                = false;
 		bool isWrapper                  = false;
 		bool isPostfixExpression        = false;
+		bool isFunctionParams           = false;
 
 		class StreamSwitcher {
 			std::ofstream* file1;

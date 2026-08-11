@@ -37,7 +37,7 @@ namespace Builtin {
 	using usize = FastInt<size_t>;
 #endif
 
-#if ADV_VERSION_AVX512F
+#if ADV_VERSION_X86
 	template <class T>
 	using AVX512Mask =
 	    std::conditional_t<(sizeof(T) < 4),

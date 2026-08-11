@@ -14,6 +14,36 @@ namespace __Unsafe {} namespace __SimdVector_Protected__Unsafe {}
 //###############################################################################
 template<class T, class Arch> class SimdVector;
 template<class T, class Arch> class SimdMask;
+} namespace __extensions {
+template<class __TT> struct __static_Asinh;
+template<class __TT> struct __static_getAsinh;
+template<class __TT> struct __static_Pi;
+template<class __TT> struct __static_getPi;
+template<class __TT> struct __static_Acosh;
+template<class __TT> struct __static_getAcosh;
+template<class __TT> struct __static_Reciprocal;
+template<class __TT> struct __static_getReciprocal;
+template<class __TT> struct __static_Atanh;
+template<class __TT> struct __static_getAtanh;
+template<class __TT> struct __static_Acos;
+template<class __TT> struct __static_getAcos;
+template<class __TT> struct __static_PopCount;
+template<class __TT> struct __static_getPopCount;
+template<class __TT> struct __static_Atan;
+template<class __TT> struct __static_getAtan;
+template<class __TT> struct __static_Asin;
+template<class __TT> struct __static_getAsin;
+template<class __TT> struct __static_NegativeInfinity;
+template<class __TT> struct __static_getNegativeInfinity;
+template<class __TT> struct __static_PositiveInfinity;
+template<class __TT> struct __static_getPositiveInfinity;
+template<class __TT> struct __static_Zero;
+template<class __TT> struct __static_getZero;
+template<class __TT> struct __static_LeadingZeroCount;
+template<class __TT> struct __static_getLeadingZeroCount;
+template<class __TT> struct __static_TrailingZeroCount;
+template<class __TT> struct __static_getTrailingZeroCount;
+} namespace System::Runtime::Intrinsics {
 //###############################################################################
 //# Type definitions
 //###############################################################################
@@ -912,9 +942,9 @@ using __extensions::getSinCos;
 		public: inline auto _operator_subscript(Builtin::usize index)  -> const T;
 		public: inline auto _operator_subscript(Builtin::usize index) const  -> const T;
 		#line 744 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-		public: inline auto operator==(const __self& other) const noexcept -> const __self;
+		public: inline auto operator==(const __self& other) const noexcept -> const bool;
 		#line 745 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-		public: inline auto operator!=(const __self& other) const noexcept -> const __self;
+		public: inline auto operator!=(const __self& other) const noexcept -> const bool;
 		#line 747 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		public: inline auto _operator_eq_eq_xor(const __self& other) const noexcept -> const __self;
 		#line 748 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
@@ -1292,8 +1322,8 @@ using __extensions::getSinCos;
 		auto StoreUnsafe(Builtin::MutableRef<bool> destination) const  -> void { ADV_EXPRESSION_BODY(__value.StoreUnsafe(destination)); }
 		decltype(auto) getAt(Builtin::usize index)  { return __value._operator_subscript(index); }
 		decltype(auto) getAt(Builtin::usize index) const  { return __value._operator_subscript(index); }
-		auto operator==(const __self& other) const noexcept -> __self const { ADV_EXPRESSION_BODY(__value.operator==(other)); }
-		auto operator!=(const __self& other) const noexcept -> __self const { ADV_EXPRESSION_BODY(__value.operator!=(other)); }
+		auto operator==(const __self& other) const noexcept -> bool const { ADV_EXPRESSION_BODY(__value.operator==(other)); }
+		auto operator!=(const __self& other) const noexcept -> bool const { ADV_EXPRESSION_BODY(__value.operator!=(other)); }
 		auto _operator_eq_eq_xor(const __self& other) const noexcept -> __self const { ADV_EXPRESSION_BODY(__value._operator_eq_eq_xor(other)); }
 		auto _operator_ne_eq_xor(const __self& other) const noexcept -> __self const { ADV_EXPRESSION_BODY(__value._operator_ne_eq_xor(other)); }
 		auto _operator_not() const noexcept -> __self const { ADV_EXPRESSION_BODY(__value._operator_not()); }
@@ -3338,8 +3368,9 @@ ADV_WARNING_POP
 		ADV_EXPRESSION_BODY(ADV_UPCS(data)(_reg.__ref())); 
 	}
 #line 680 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> template<class U, class... V, size_t I, size_t... Is> inline auto SimdMask<T, Arch>::MakeRegister(typename Builtin::template IndexSequence<I, Is...> __var_680_68, U u, V... v) noexcept -> const typename SimdMask<T, Arch>::TNative
+	template<class T, class Arch> template<class U, class... V, size_t $tparam$I, size_t... Is> inline auto SimdMask<T, Arch>::MakeRegister(typename Builtin::template IndexSequence<$tparam$I, Is...> __var_680_68, U u, V... v) noexcept -> const typename SimdMask<T, Arch>::TNative
 	{
+		constexpr Builtin::usize I = $tparam$I;
 		#line 682 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		return MakeRegister(Builtin::template IndexSequence<Is...>(), u, u, v...);
 	}
@@ -3461,13 +3492,13 @@ ADV_WARNING_POP
 	}
 	
 #line 744 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto SimdMask<T, Arch>::operator==(const __self& other) const noexcept -> const __self
+	template<class T, class Arch> inline auto SimdMask<T, Arch>::operator==(const __self& other) const noexcept -> const bool
 	{
 		#line 744 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(All)(Arch::Equal((*this), other).__ref())); 
 	}
 #line 745 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto SimdMask<T, Arch>::operator!=(const __self& other) const noexcept -> const __self
+	template<class T, class Arch> inline auto SimdMask<T, Arch>::operator!=(const __self& other) const noexcept -> const bool
 	{
 		#line 745 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Any)(Arch::NotEqual((*this), other).__ref())); 
@@ -3476,19 +3507,19 @@ ADV_WARNING_POP
 	template<class T, class Arch> inline auto SimdMask<T, Arch>::_operator_eq_eq_xor(const __self& other) const noexcept -> const __self
 	{
 		#line 747 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-		ADV_EXPRESSION_BODY(ADV_UFCS(ToNative)(Arch::Equal((*this), other).__ref())); 
+		ADV_EXPRESSION_BODY(Arch::Equal((*this), other)); 
 	}
 #line 748 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 	template<class T, class Arch> inline auto SimdMask<T, Arch>::_operator_ne_eq_xor(const __self& other) const noexcept -> const __self
 	{
 		#line 748 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-		ADV_EXPRESSION_BODY(ADV_UFCS(ToNative)(Arch::NotEqual((*this), other).__ref())); 
+		ADV_EXPRESSION_BODY(Arch::NotEqual((*this), other)); 
 	}
 #line 753 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 	template<class T, class Arch> inline auto SimdMask<T, Arch>::_operator_not() const noexcept -> const __self
 	{
 		#line 753 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-		ADV_EXPRESSION_BODY(ADV_UFCS(ToNative)(Arch::BitwiseNot((*this)).__ref())); 
+		ADV_EXPRESSION_BODY(Arch::BitwiseNot((*this))); 
 	}
 #line 756 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 	template<class T, class Arch> inline auto SimdMask<T, Arch>::operator&=(const __self& other)  -> __self&

@@ -34,7 +34,9 @@ template<class __TT> struct __static_getFromBits;
 		protected: 
 		template<class T, size_t Length> class __Class_BufferedVector;
 		#line 1358 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		template<class T, size_t Length> struct alignas(size_t((Builtin::i32(64)))) BufferedVector final : public Builtin::Struct {
+		template<class T, size_t $tparam$Length> struct alignas(size_t((Builtin::i32(64)))) BufferedVector final : public Builtin::Struct {
+			
+			private: static constexpr Builtin::usize Length = $tparam$Length;
 			public: using __self = BufferedVector<T, Length>;
 			public: using __class = __Class_BufferedVector<T, Length>;
 			public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
@@ -479,6 +481,30 @@ template<class __TT> struct __static_getFromBits;
 		protected: template<class Arch> static auto TanEval(const SimdVector<Builtin::f64, Arch>& z, const SimdMask<Builtin::f64, Arch>& test1)  -> const SimdVector<Builtin::f64, Arch>;
 		#line 1598 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		protected: template<class T, class Arch> static auto AtanEval(const SimdVector<T, Arch>& x, const SimdVector<T, Arch>& recx)  -> const SimdVector<T, Arch>;
+		#line 1630 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		protected: template<size_t I, int32_t V0, int32_t... Vs> inline constexpr static auto GetAt() noexcept -> const Builtin::i32;
+		#line 1638 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		protected: template<size_t I, size_t N, int32_t... Vs> inline constexpr static auto IsDupLoInternal() noexcept -> const bool;
+		#line 1648 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		protected: template<int32_t... Vs> inline constexpr static auto IsDupLo() noexcept -> const bool;
+		#line 1651 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		protected: template<size_t I, size_t N, int32_t... Vs> inline constexpr static auto IsDupHiInternal() noexcept -> const bool;
+		#line 1662 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		protected: template<int32_t... Vs> inline constexpr static auto IsDupHi() noexcept -> const bool;
+		#line 1665 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		protected: template<size_t I> inline constexpr static auto IdentityInternal() noexcept -> const bool;
+		#line 1666 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		protected: template<size_t I, int32_t V0, int32_t... Vs> inline constexpr static auto IdentityInternal() noexcept -> const bool;
+		#line 1669 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		protected: template<int32_t... Vs> inline constexpr static auto IsIdentity() noexcept -> const bool;
+		#line 1672 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		protected: template<size_t I, int32_t V0, int32_t... Vs> inline constexpr static auto GetNth() noexcept -> const Builtin::i32;
+		#line 1679 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		protected: template<size_t I, size_t N, size_t H, int32_t... Vs> inline constexpr static auto IsCrossLaneInternal() noexcept -> const bool;
+		#line 1689 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		protected: template<int32_t... Vs> inline constexpr static auto IsCrossLane() noexcept -> const bool;
+		#line 1696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		protected: ASTRUMSTD_API static auto Morton(Builtin::u16 x, Builtin::u16 y) noexcept -> const Builtin::u32;
 		
 	};
 	
@@ -558,7 +584,7 @@ template<class __TT> struct __static_getFromBits;
 		#line 42 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::Intrinsics::__Unsafe;	using namespace __CommonInstructions_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard42{};
 			#line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			BufferedVector<T, SimdVector<T,Arch>::Length> buf{}; 
+			BufferedVector<T, SimdVector<T, Arch>::Length> buf{}; 
 			#line 44 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			ADV_UFCS(StoreAligned)(vec.__ref(), (__RawPtr(std::addressof(ADV_UFCS(_operator_subscript)(buf.__ref().buffer.__ref(), Builtin::i32(0))))));
 			#line 45 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -572,7 +598,7 @@ template<class __TT> struct __static_getFromBits;
 		#line 50 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::Intrinsics::__Unsafe;	using namespace __CommonInstructions_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard50{};
 			#line 51 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			BufferedVector<bool, SimdMask<T,Arch>::Length> buf{}; 
+			BufferedVector<bool, SimdMask<T, Arch>::Length> buf{}; 
 			#line 52 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			ADV_UFCS(StoreAligned)(vec.__ref(), (__RawPtr(std::addressof(ADV_UFCS(_operator_subscript)(buf.__ref().buffer.__ref(), Builtin::i32(0))))));
 			#line 53 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -584,7 +610,7 @@ template<class __TT> struct __static_getFromBits;
 	template<class T, class Arch> auto CommonInstructions::WrappingMultiply(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const SimdVector<T, Arch>
 	{
 		#line 58 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		constexpr Builtin::Auto<decltype(Builtin::i32{SimdVector<T,Arch>::Length})> size = Builtin::i32{SimdVector<T,Arch>::Length};
+		constexpr Builtin::Auto<decltype(Builtin::i32{SimdVector<T, Arch>::Length})> size = Builtin::i32{SimdVector<T, Arch>::Length};
 		#line 59 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		using TVector = SimdVector<T, Arch>;
 		#line 60 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -619,7 +645,7 @@ template<class __TT> struct __static_getFromBits;
 			Builtin::Throw(Builtin::DivisionByZeroException{});
 		}
 		#line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		constexpr Builtin::Auto<decltype(Builtin::i32{SimdVector<T,Arch>::Length})> size = Builtin::i32{SimdVector<T,Arch>::Length};
+		constexpr Builtin::Auto<decltype(Builtin::i32{SimdVector<T, Arch>::Length})> size = Builtin::i32{SimdVector<T, Arch>::Length};
 		#line 78 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		using TVector = SimdVector<T, Arch>;
 		#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -654,7 +680,7 @@ template<class __TT> struct __static_getFromBits;
 			Builtin::Throw(Builtin::DivisionByZeroException{});
 		}
 		#line 96 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		constexpr Builtin::Auto<decltype(Builtin::i32{SimdVector<T,Arch>::Length})> size = Builtin::i32{SimdVector<T,Arch>::Length};
+		constexpr Builtin::Auto<decltype(Builtin::i32{SimdVector<T, Arch>::Length})> size = Builtin::i32{SimdVector<T, Arch>::Length};
 		#line 97 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		using TVector = SimdVector<T, Arch>;
 		#line 98 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -684,7 +710,7 @@ template<class __TT> struct __static_getFromBits;
 	template<class T, class Arch> auto CommonInstructions::LeftShift(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const SimdVector<T, Arch>
 	{
 		#line 112 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		constexpr Builtin::Auto<decltype(Builtin::i32{SimdVector<T,Arch>::Length})> size = Builtin::i32{SimdVector<T,Arch>::Length};
+		constexpr Builtin::Auto<decltype(Builtin::i32{SimdVector<T, Arch>::Length})> size = Builtin::i32{SimdVector<T, Arch>::Length};
 		#line 113 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		using TVector = SimdVector<T, Arch>;
 		#line 114 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -714,7 +740,7 @@ template<class __TT> struct __static_getFromBits;
 	template<class T, class Arch> auto CommonInstructions::RightShift(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const SimdVector<T, Arch>
 	{
 		#line 128 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		constexpr Builtin::Auto<decltype(Builtin::i32{SimdVector<T,Arch>::Length})> size = Builtin::i32{SimdVector<T,Arch>::Length};
+		constexpr Builtin::Auto<decltype(Builtin::i32{SimdVector<T, Arch>::Length})> size = Builtin::i32{SimdVector<T, Arch>::Length};
 		#line 129 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		using TVector = SimdVector<T, Arch>;
 		#line 130 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -744,7 +770,7 @@ template<class __TT> struct __static_getFromBits;
 	template<class T, class Arch> auto CommonInstructions::UnsignedRightShift(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const SimdVector<T, Arch>
 	{
 		#line 144 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		constexpr Builtin::Auto<decltype(Builtin::i32{SimdVector<T,Arch>::Length})> size = Builtin::i32{SimdVector<T,Arch>::Length};
+		constexpr Builtin::Auto<decltype(Builtin::i32{SimdVector<T, Arch>::Length})> size = Builtin::i32{SimdVector<T, Arch>::Length};
 		#line 145 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		using TVector = SimdVector<T, Arch>;
 		#line 146 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -848,7 +874,7 @@ template<class __TT> struct __static_getFromBits;
 			#line 197 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			{
 				#line 198 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				return std::make_tuple(ADV_UFCS(_operator_add_mod)(left, right), SimdMask<T,Arch>::False);
+				return std::make_tuple(ADV_UFCS(_operator_add_mod)(left, right), SimdMask<T, Arch>::False);
 			}
 		}
 		return {};
@@ -901,7 +927,7 @@ template<class __TT> struct __static_getFromBits;
 			#line 227 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			{
 				#line 228 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				return std::make_tuple(ADV_UFCS(_operator_sub_mod)(left, right), SimdMask<T,Arch>::False);
+				return std::make_tuple(ADV_UFCS(_operator_sub_mod)(left, right), SimdMask<T, Arch>::False);
 			}
 		}
 		return {};
@@ -945,7 +971,7 @@ template<class __TT> struct __static_getFromBits;
 			#line 253 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			{
 				#line 254 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				return std::make_tuple(ADV_UFCS(_operator_mul_mod)(left, right), SimdMask<T,Arch>::False);
+				return std::make_tuple(ADV_UFCS(_operator_mul_mod)(left, right), SimdMask<T, Arch>::False);
 			}
 		}
 		return {};
@@ -994,7 +1020,7 @@ template<class __TT> struct __static_getFromBits;
 			#line 282 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			{
 				#line 283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				return std::make_tuple(ADV_UFCS(_operator_bsl_mod)(left, right), SimdMask<T,Arch>::False);
+				return std::make_tuple(ADV_UFCS(_operator_bsl_mod)(left, right), SimdMask<T, Arch>::False);
 			}
 		}
 		return {};
@@ -1043,7 +1069,7 @@ template<class __TT> struct __static_getFromBits;
 			#line 311 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			{
 				#line 312 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				return std::make_tuple(ADV_UFCS(_operator_mod_mod)(left, right), SimdMask<T,Arch>::False);
+				return std::make_tuple(ADV_UFCS(_operator_mod_mod)(left, right), SimdMask<T, Arch>::False);
 			}
 		}
 		return {};
@@ -1094,7 +1120,7 @@ template<class __TT> struct __static_getFromBits;
 			#line 340 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			{
 				#line 341 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				return std::make_tuple(ADV_UFCS(_operator_sub_mod)(vec), SimdMask<T,Arch>::False);
+				return std::make_tuple(ADV_UFCS(_operator_sub_mod)(vec), SimdMask<T, Arch>::False);
 			}
 		}
 		#line 342 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -1155,11 +1181,11 @@ template<class __TT> struct __static_getFromBits;
 	template<class T2, class T1, class Arch> auto CommonInstructions::Convert(const SimdVector<T1, Arch>& vec)  -> const SimdVector<T2, Arch>
 	{
 		#line 374 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		constexpr Builtin::Auto<decltype(Builtin::i32{SimdVector<T1,Arch>::Length})> size = Builtin::i32{SimdVector<T1,Arch>::Length};
+		constexpr Builtin::Auto<decltype(Builtin::i32{SimdVector<T1, Arch>::Length})> size = Builtin::i32{SimdVector<T1, Arch>::Length};
 		#line 375 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		using TVector = SimdVector<T2, Arch>;
 		#line 376 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		static_assert(size == SimdVector<T2,Arch>::Length, "Cannot convert vectors of different lengths");
+		static_assert(size == SimdVector<T2, Arch>::Length, "Cannot convert vectors of different lengths");
 		#line 377 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		BufferedVector<T1, size> bufIn{}; 
 		#line 378 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -1291,7 +1317,7 @@ template<class __TT> struct __static_getFromBits;
 			#line 449 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			using TVector = SimdVector<T, Arch>;
 			#line 450 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			constexpr Builtin::Auto<decltype(Builtin::i32{SimdVector<T,Arch>::Length})> size = Builtin::i32{SimdVector<T,Arch>::Length};
+			constexpr Builtin::Auto<decltype(Builtin::i32{SimdVector<T, Arch>::Length})> size = Builtin::i32{SimdVector<T, Arch>::Length};
 			#line 451 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			BufferedVector<T, size> bufIn{}; 
 			#line 452 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -1487,7 +1513,7 @@ template<class __TT> struct __static_getFromBits;
 			#line 556 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			{
 				#line 557 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				const Builtin::Auto<decltype(ADV_UFCS(_operator_lt_xor)(x, FloatConstants<f64>::SqrtEps))> smallCond = ADV_UFCS(_operator_lt_xor)(x, FloatConstants<f64>::SqrtEps); 
+				const Builtin::Auto<decltype(ADV_UFCS(_operator_lt_xor)(x, FloatConstants<Builtin::f64>::SqrtEps))> smallCond = ADV_UFCS(_operator_lt_xor)(x, FloatConstants<Builtin::f64>::SqrtEps); 
 				#line 558 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 				const Builtin::Auto<decltype(TVector::Create(ADV_USFCS((Builtin::f64), FromBits)(Builtin::u64(0x3fe4000000000000ULL))))> ct1 = TVector::Create(ADV_USFCS((Builtin::f64), FromBits)(Builtin::u64(0x3fe4000000000000ULL))); 
 				#line 559 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -1497,13 +1523,13 @@ template<class __TT> struct __static_getFromBits;
 				#line 563 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 				zz1 = ADV_UPCS(Sqrt)((ADV_UFCS(_operator_add_mod)(zz1, zz1)).__ref());
 				#line 564 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				Builtin::Auto<decltype(ADV_UFCS(_operator_sub_mod)(FloatConstants<f64>::PiO4, zz1))> z = ADV_UFCS(_operator_sub_mod)(FloatConstants<f64>::PiO4, zz1); 
+				Builtin::Auto<decltype(ADV_UFCS(_operator_sub_mod)(FloatConstants<Builtin::f64>::PiO4, zz1))> z = ADV_UFCS(_operator_sub_mod)(FloatConstants<Builtin::f64>::PiO4, zz1); 
 				#line 565 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				zz1 = ADV_UFCS(FusedMultiplySub)(zz1.__ref(), vp, FloatConstants<f64>::PiO2_Lo);
+				zz1 = ADV_UFCS(FusedMultiplySub)(zz1.__ref(), vp, FloatConstants<Builtin::f64>::PiO2_Lo);
 				#line 566 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 				z = ADV_UFCS(_operator_sub_mod)(z, zz1);
 				#line 567 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				zz1 = ADV_UFCS(_operator_add_mod)(z, FloatConstants<f64>::PiO4);
+				zz1 = ADV_UFCS(_operator_add_mod)(z, FloatConstants<Builtin::f64>::PiO4);
 				#line 568 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 				Builtin::Auto<decltype(ADV_UFCS(FusedMultiplyAdd)(x.__ref(), z, x))> zz2 = ADV_UFCS(FusedMultiplyAdd)(x.__ref(), z, x); 
 				#line 569 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -1560,12 +1586,12 @@ template<class __TT> struct __static_getFromBits;
 		#line 601 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		if constexpr (Builtin::TypeIs<T, Builtin::f32>()) {
 			#line 602 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			return TVector::One | (vec & FloatConstants<f32>::SignMask);
+			return TVector::One | (vec & FloatConstants<Builtin::f32>::SignMask);
 		} else {
 			#line 603 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			if constexpr (Builtin::TypeIs<T, Builtin::f64>()) {
 				#line 604 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				return TVector::One | (vec & FloatConstants<f64>::SignMask);
+				return TVector::One | (vec & FloatConstants<Builtin::f64>::SignMask);
 			} else {
 				#line 605 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 				{
@@ -1736,14 +1762,14 @@ template<class __TT> struct __static_getFromBits;
 				}
 			}
 			#line 701 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			const Builtin::Auto<decltype(TVector::ConditionalSelect(ADV_UFCS(_operator_gt_xor)(x, FloatConstants<f32>::OneOSqrtEps), x, ADV_UFCS(Midpoint)(x.__ref(), ADV_UFCS(Hypot)(TVector::One.__ref(), x))))> tmp = TVector::ConditionalSelect(ADV_UFCS(_operator_gt_xor)(x, FloatConstants<f32>::OneOSqrtEps), x, ADV_UFCS(Midpoint)(x.__ref(), ADV_UFCS(Hypot)(TVector::One.__ref(), x))); 
+			const Builtin::Auto<decltype(TVector::ConditionalSelect(ADV_UFCS(_operator_gt_xor)(x, FloatConstants<Builtin::f32>::OneOSqrtEps), x, ADV_UFCS(Midpoint)(x.__ref(), ADV_UFCS(Hypot)(TVector::One.__ref(), x))))> tmp = TVector::ConditionalSelect(ADV_UFCS(_operator_gt_xor)(x, FloatConstants<Builtin::f32>::OneOSqrtEps), x, ADV_UFCS(Midpoint)(x.__ref(), ADV_UFCS(Hypot)(TVector::One.__ref(), x))); 
 			#line 702 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			return TVector::ConditionalSelect(ADV_UPCS(IsNaN)(vec.__ref()), TVector::Create(ADV_USPCS(NaN, Builtin::f32)()), TVector::ConditionalSelect(lhalf, z, ADV_UFCS(_operator_add_mod)(ADV_UPCS(Ln)(tmp.__ref()), FloatConstants<f32>::Log2)) ^ bts);
+			return TVector::ConditionalSelect(ADV_UPCS(IsNaN)(vec.__ref()), TVector::Create(ADV_USPCS(NaN, Builtin::f32)()), TVector::ConditionalSelect(lhalf, z, ADV_UFCS(_operator_add_mod)(ADV_UPCS(Ln)(tmp.__ref()), FloatConstants<Builtin::f32>::Log2)) ^ bts);
 		} else {
 			#line 704 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			{
 				#line 705 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				const Builtin::Auto<decltype(ADV_UFCS(_operator_gt_xor)(x, FloatConstants<f64>::OneOSqrtEps))> test1 = ADV_UFCS(_operator_gt_xor)(x, FloatConstants<f64>::OneOSqrtEps); 
+				const Builtin::Auto<decltype(ADV_UFCS(_operator_gt_xor)(x, FloatConstants<Builtin::f64>::OneOSqrtEps))> test1 = ADV_UFCS(_operator_gt_xor)(x, FloatConstants<Builtin::f64>::OneOSqrtEps); 
 				#line 706 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 				Builtin::Auto<decltype(TVector::ConditionalSelect(test1, ADV_UFCS(_operator_sub_mod)(x, TVector::One), ADV_UFCS(_operator_add_mod)(x, ADV_UFCS(_operator_mul_mod)(x, x) / (ADV_UFCS(_operator_add_mod)(TVector::One, ADV_UFCS(Hypot)(TVector::One.__ref(), x))))))> z = TVector::ConditionalSelect(test1, ADV_UFCS(_operator_sub_mod)(x, TVector::One), ADV_UFCS(_operator_add_mod)(x, ADV_UFCS(_operator_mul_mod)(x, x) / (ADV_UFCS(_operator_add_mod)(TVector::One, ADV_UFCS(Hypot)(TVector::One.__ref(), x))))); 
 				#line 707 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -1751,7 +1777,7 @@ template<class __TT> struct __static_getFromBits;
 				#line 708 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 				const Builtin::Auto<decltype(ADV_UPCS(LnP1)(z.__ref()))> l1p = ADV_UPCS(LnP1)(z.__ref()); 
 				#line 709 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				z = TVector::ConditionalSelect(test1, ADV_UFCS(_operator_add_mod)(l1p, FloatConstants<f64>::Log2), l1p);
+				z = TVector::ConditionalSelect(test1, ADV_UFCS(_operator_add_mod)(l1p, FloatConstants<Builtin::f64>::Log2), l1p);
 				#line 710 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 				return BitOfSign(vec) ^ z;
 			}
@@ -1811,7 +1837,7 @@ template<class __TT> struct __static_getFromBits;
 			return (ADV_UFCS(_operator_eq_eq_xor)(x, ADV_USPCS(PositiveInfinity, T)())) | (ADV_UFCS(_operator_eq_eq_xor)(x, ADV_USPCS(NegativeInfinity, T)()));
 		}
 		#line 744 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		return SimdMask<T,Arch>::False;
+		return SimdMask<T, Arch>::False;
 	}
 #line 747 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 	template<class T, class Arch> auto CommonInstructions::IsFinite(const SimdVector<T, Arch>& x)  -> const SimdMask<T, Arch>
@@ -1822,7 +1848,7 @@ template<class __TT> struct __static_getFromBits;
 			return ADV_UFCS(_operator_eq_eq_xor)((ADV_UFCS(_operator_sub_mod)(x, x)), ADV_USPCS(Zero, T)());
 		}
 		#line 751 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		return SimdMask<T,Arch>::True;
+		return SimdMask<T, Arch>::True;
 	}
 #line 754 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 	template<class T, class Arch> auto CommonInstructions::IsInteger(const SimdVector<T, Arch>& x)  -> const SimdMask<T, Arch>
@@ -1833,7 +1859,7 @@ template<class __TT> struct __static_getFromBits;
 			return ADV_UFCS(_operator_eq_eq_xor)(x, ADV_UPCS(Truncate)(x.__ref()));
 		}
 		#line 758 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		return SimdMask<T,Arch>::True;
+		return SimdMask<T, Arch>::True;
 	}
 #line 761 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 	template<class T, class Arch> auto CommonInstructions::IsEvenInteger(const SimdVector<T, Arch>& x)  -> const SimdMask<T, Arch>
@@ -1887,7 +1913,7 @@ template<class __TT> struct __static_getFromBits;
 		#line 785 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		z = TVector::ConditionalSelect(ADV_UPCS(IsOddInteger)(y.__ref()) & neg, -z, z);
 		#line 786 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		const Builtin::Auto<decltype(neg & (ADV_UFCS(_operator_eq_eq_xor)((ADV_UPCS(IsInteger)(y.__ref()) | ADV_UPCS(IsInfinity)(y.__ref())), SimdMask<T,Arch>::False)))> invalid = neg & (ADV_UFCS(_operator_eq_eq_xor)((ADV_UPCS(IsInteger)(y.__ref()) | ADV_UPCS(IsInfinity)(y.__ref())), SimdMask<T,Arch>::False)); 
+		const Builtin::Auto<decltype(neg & (ADV_UFCS(_operator_eq_eq_xor)((ADV_UPCS(IsInteger)(y.__ref()) | ADV_UPCS(IsInfinity)(y.__ref())), SimdMask<T, Arch>::False)))> invalid = neg & (ADV_UFCS(_operator_eq_eq_xor)((ADV_UPCS(IsInteger)(y.__ref()) | ADV_UPCS(IsInfinity)(y.__ref())), SimdMask<T, Arch>::False)); 
 		#line 787 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		return TVector::ConditionalSelect(invalid, TVector::Create(ADV_USPCS(NaN, T)()), z);
 	}
@@ -2862,7 +2888,7 @@ template<class __TT> struct __static_getFromBits;
 		#line 1307 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::Intrinsics::__Unsafe;	using namespace __CommonInstructions_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard1307{};
 			#line 1308 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			BufferedVector<T, SimdVector<T,Arch>::Length> buf{}; 
+			BufferedVector<T, SimdVector<T, Arch>::Length> buf{}; 
 			#line 1309 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			ADV_UFCS(StoreAligned)(vec.__ref(), (__RawPtr(std::addressof(ADV_UFCS(_operator_subscript)(buf.__ref().buffer.__ref(), Builtin::UncheckedTag{}, Builtin::i32(0))))));
 			#line 1310 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -2884,7 +2910,7 @@ template<class __TT> struct __static_getFromBits;
 		#line 1319 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::Intrinsics::__Unsafe;	using namespace __CommonInstructions_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard1319{};
 			#line 1320 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			BufferedVector<T, SimdVector<T,Arch>::Length> buf{}; 
+			BufferedVector<T, SimdVector<T, Arch>::Length> buf{}; 
 			#line 1321 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			ADV_UFCS(StoreAligned)(vec.__ref(), (__RawPtr(std::addressof(ADV_UFCS(_operator_subscript)(buf.__ref().buffer.__ref(), Builtin::UncheckedTag{}, Builtin::i32(0))))));
 			#line 1322 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -2906,7 +2932,7 @@ template<class __TT> struct __static_getFromBits;
 		#line 1331 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::Intrinsics::__Unsafe;	using namespace __CommonInstructions_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard1331{};
 			#line 1332 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			BufferedVector<T, SimdVector<T,Arch>::Length> buf{}; 
+			BufferedVector<T, SimdVector<T, Arch>::Length> buf{}; 
 			#line 1333 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			ADV_UFCS(StoreAligned)(vec.__ref(), (__RawPtr(std::addressof(ADV_UFCS(_operator_subscript)(buf.__ref().buffer.__ref(), Builtin::UncheckedTag{}, Builtin::i32(0))))));
 			#line 1334 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -2928,7 +2954,7 @@ template<class __TT> struct __static_getFromBits;
 		#line 1343 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::Intrinsics::__Unsafe;	using namespace __CommonInstructions_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard1343{};
 			#line 1344 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			BufferedVector<T, SimdVector<T,Arch>::Length> buf{}; 
+			BufferedVector<T, SimdVector<T, Arch>::Length> buf{}; 
 			#line 1345 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			ADV_UFCS(StoreAligned)(vec.__ref(), (__RawPtr(std::addressof(ADV_UFCS(_operator_subscript)(buf.__ref().buffer.__ref(), Builtin::UncheckedTag{}, Builtin::i32(0))))));
 			#line 1346 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -2945,8 +2971,9 @@ template<class __TT> struct __static_getFromBits;
 		return {};
 	}
 #line 1362 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-	template<class V, uint64_t c> auto CommonInstructions::Coef() noexcept -> const V
+	template<class V, uint64_t $tparam$c> auto CommonInstructions::Coef() noexcept -> const V
 	{
+		constexpr Builtin::u64 c = $tparam$c;
 		#line 1363 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		using Value = typename V::TValue;
 		#line 1364 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -2999,14 +3026,17 @@ template<class __TT> struct __static_getFromBits;
 		ADV_EXPRESSION_BODY(ADV_USPCS(Zero, V)()); 
 	}
 #line 1379 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-	template<class V, uint64_t C0> inline auto CommonInstructions::Horner(const V& __var_1379_43) noexcept -> const V
+	template<class V, uint64_t $tparam$C0> inline auto CommonInstructions::Horner(const V& __var_1379_43) noexcept -> const V
 	{
+		constexpr Builtin::u64 C0 = $tparam$C0;
 		#line 1379 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		ADV_EXPRESSION_BODY(Coef<V, C0>()); 
 	}
 #line 1380 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-	template<class V, uint64_t C0, uint64_t C1, uint64_t... Tail> inline auto CommonInstructions::Horner(const V& vec) noexcept -> const V
+	template<class V, uint64_t $tparam$C0, uint64_t $tparam$C1, uint64_t... Tail> inline auto CommonInstructions::Horner(const V& vec) noexcept -> const V
 	{
+		constexpr Builtin::u64 C0 = $tparam$C0;
+		constexpr Builtin::u64 C1 = $tparam$C1;
 		#line 1381 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		return vec.__ref().FusedMultiplyAdd(Horner<V, C1, Tail...>(vec), Coef<V, C0>());
 	}
@@ -3017,14 +3047,17 @@ template<class __TT> struct __static_getFromBits;
 		ADV_EXPRESSION_BODY(ADV_USPCS(One, V)()); 
 	}
 #line 1385 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-	template<class V, uint64_t C0> inline auto CommonInstructions::Horner1(const V& vec) noexcept -> const V
+	template<class V, uint64_t $tparam$C0> inline auto CommonInstructions::Horner1(const V& vec) noexcept -> const V
 	{
+		constexpr Builtin::u64 C0 = $tparam$C0;
 		#line 1385 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		ADV_EXPRESSION_BODY(vec + Coef<V, C0>()); 
 	}
 #line 1386 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-	template<class V, uint64_t C0, uint64_t C1, uint64_t... Tail> inline auto CommonInstructions::Horner1(const V& vec) noexcept -> const V
+	template<class V, uint64_t $tparam$C0, uint64_t $tparam$C1, uint64_t... Tail> inline auto CommonInstructions::Horner1(const V& vec) noexcept -> const V
 	{
+		constexpr Builtin::u64 C0 = $tparam$C0;
+		constexpr Builtin::u64 C1 = $tparam$C1;
 		#line 1387 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		return vec.__ref().FusedMultiplyAdd(Horner1<V, C1, Tail...>(vec), Coef<V, C0>());
 	}
@@ -3243,13 +3276,13 @@ template<class __TT> struct __static_getFromBits;
 		#line 1600 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		if constexpr (Builtin::TypeIs<T, Builtin::f32>()) {
 			#line 1601 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			const Builtin::Auto<decltype(ADV_UFCS(_operator_lt_xor)(x, FloatConstants<f32>::Tan3PiO8))> flag1 = ADV_UFCS(_operator_lt_xor)(x, FloatConstants<f32>::Tan3PiO8); 
+			const Builtin::Auto<decltype(ADV_UFCS(_operator_lt_xor)(x, FloatConstants<Builtin::f32>::Tan3PiO8))> flag1 = ADV_UFCS(_operator_lt_xor)(x, FloatConstants<Builtin::f32>::Tan3PiO8); 
 			#line 1602 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			const Builtin::Auto<decltype((ADV_UFCS(_operator_gt_eq_xor)(x, ADV_USFCS((Builtin::f32), FromBits)(Builtin::u32(0x3ed413cdU)))) & flag1)> flag2 = (ADV_UFCS(_operator_gt_eq_xor)(x, ADV_USFCS((Builtin::f32), FromBits)(Builtin::u32(0x3ed413cdU)))) & flag1; 
 			#line 1603 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			Builtin::Auto<decltype(TVector::ConditionalSelect(flag1, TVector::Zero, TVector::Create(FloatConstants<f32>::PiO2)))> yy = TVector::ConditionalSelect(flag1, TVector::Zero, TVector::Create(FloatConstants<f32>::PiO2)); 
+			Builtin::Auto<decltype(TVector::ConditionalSelect(flag1, TVector::Zero, TVector::Create(FloatConstants<Builtin::f32>::PiO2)))> yy = TVector::ConditionalSelect(flag1, TVector::Zero, TVector::Create(FloatConstants<Builtin::f32>::PiO2)); 
 			#line 1604 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			yy = TVector::ConditionalSelect(flag2, TVector::Create(FloatConstants<f32>::PiO4), yy);
+			yy = TVector::ConditionalSelect(flag2, TVector::Create(FloatConstants<Builtin::f32>::PiO4), yy);
 			#line 1605 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			Builtin::Auto<decltype(TVector::ConditionalSelect(flag1, x, -recx))> xx = TVector::ConditionalSelect(flag1, x, -recx); 
 			#line 1606 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -3261,22 +3294,22 @@ template<class __TT> struct __static_getFromBits;
 			#line 1609 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			z1 = ADV_UFCS(FusedMultiplyAdd)(xx.__ref(), ADV_UFCS(_operator_mul_mod)(z1, z), xx);
 			#line 1610 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			z1 = TVector::ConditionalSelect(flag2, ADV_UFCS(_operator_add_mod)(z1, FloatConstants<f32>::PiO4_Lo), z1);
+			z1 = TVector::ConditionalSelect(flag2, ADV_UFCS(_operator_add_mod)(z1, FloatConstants<Builtin::f32>::PiO4_Lo), z1);
 			#line 1611 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			z1 = TVector::ConditionalSelect(ADV_UFCS(_operator_eq_eq_xor)(flag1, SimdMask<T,Arch>::False), ADV_UFCS(_operator_add_mod)(z1, FloatConstants<f32>::PiO2_Lo), z1);
+			z1 = TVector::ConditionalSelect(ADV_UFCS(_operator_eq_eq_xor)(flag1, SimdMask<T, Arch>::False), ADV_UFCS(_operator_add_mod)(z1, FloatConstants<Builtin::f32>::PiO2_Lo), z1);
 			#line 1612 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			return ADV_UFCS(_operator_add_mod)(yy, z1);
 		} else {
 			#line 1613 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			{
 				#line 1614 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				const Builtin::Auto<decltype(ADV_UFCS(_operator_lt_xor)(x, FloatConstants<f64>::Tan3PiO8))> flag1 = ADV_UFCS(_operator_lt_xor)(x, FloatConstants<f64>::Tan3PiO8); 
+				const Builtin::Auto<decltype(ADV_UFCS(_operator_lt_xor)(x, FloatConstants<Builtin::f64>::Tan3PiO8))> flag1 = ADV_UFCS(_operator_lt_xor)(x, FloatConstants<Builtin::f64>::Tan3PiO8); 
 				#line 1615 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				const Builtin::Auto<decltype((ADV_UFCS(_operator_gt_eq_xor)(x, FloatConstants<f64>::TanPiO8)) & flag1)> flag2 = (ADV_UFCS(_operator_gt_eq_xor)(x, FloatConstants<f64>::TanPiO8)) & flag1; 
+				const Builtin::Auto<decltype((ADV_UFCS(_operator_gt_eq_xor)(x, FloatConstants<Builtin::f64>::TanPiO8)) & flag1)> flag2 = (ADV_UFCS(_operator_gt_eq_xor)(x, FloatConstants<Builtin::f64>::TanPiO8)) & flag1; 
 				#line 1616 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				Builtin::Auto<decltype(TVector::ConditionalSelect(flag1, TVector::Zero, TVector::Create(FloatConstants<f64>::PiO2)))> yy = TVector::ConditionalSelect(flag1, TVector::Zero, TVector::Create(FloatConstants<f64>::PiO2)); 
+				Builtin::Auto<decltype(TVector::ConditionalSelect(flag1, TVector::Zero, TVector::Create(FloatConstants<Builtin::f64>::PiO2)))> yy = TVector::ConditionalSelect(flag1, TVector::Zero, TVector::Create(FloatConstants<Builtin::f64>::PiO2)); 
 				#line 1617 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				yy = TVector::ConditionalSelect(flag2, TVector::Create(FloatConstants<f64>::PiO4), yy);
+				yy = TVector::ConditionalSelect(flag2, TVector::Create(FloatConstants<Builtin::f64>::PiO4), yy);
 				#line 1618 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 				Builtin::Auto<decltype(TVector::ConditionalSelect(flag1, x, -recx))> xx = TVector::ConditionalSelect(flag1, x, -recx); 
 				#line 1619 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -3288,14 +3321,164 @@ template<class __TT> struct __static_getFromBits;
 				#line 1623 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 				z = ADV_UFCS(FusedMultiplyAdd)(xx.__ref(), z, xx);
 				#line 1624 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				z = TVector::ConditionalSelect(flag2, ADV_UFCS(_operator_add_mod)(z, FloatConstants<f64>::PiO4_Lo), z);
+				z = TVector::ConditionalSelect(flag2, ADV_UFCS(_operator_add_mod)(z, FloatConstants<Builtin::f64>::PiO4_Lo), z);
 				#line 1625 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				z = ADV_UFCS(_operator_add_mod)(z, TVector::ConditionalSelect(flag1, TVector::Zero, TVector::Create(FloatConstants<f64>::PiO2_Lo)));
+				z = ADV_UFCS(_operator_add_mod)(z, TVector::ConditionalSelect(flag1, TVector::Zero, TVector::Create(FloatConstants<Builtin::f64>::PiO2_Lo)));
 				#line 1626 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 				return ADV_UFCS(_operator_add_mod)(yy, z);
 			}
 		}
 		return {};
+	}
+#line 1630 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+	template<size_t $tparam$I, int32_t $tparam$V0, int32_t... Vs> inline constexpr auto CommonInstructions::GetAt() noexcept -> const Builtin::i32
+	{
+		constexpr Builtin::usize I = $tparam$I;
+		constexpr Builtin::i32 V0 = $tparam$V0;
+		#line 1631 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		if constexpr (I == Builtin::i32(0)) {
+			#line 1632 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+			return V0;
+		} else {
+			#line 1633 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+			{
+				#line 1634 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+				return GetAt<Builtin::usize{I} - Builtin::u32(1U), Vs...>();
+			}
+		}
+		return {};
+	}
+#line 1638 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+	template<size_t $tparam$I, size_t $tparam$N, int32_t... Vs> inline constexpr auto CommonInstructions::IsDupLoInternal() noexcept -> const bool
+	{
+		constexpr Builtin::usize I = $tparam$I;
+		constexpr Builtin::usize N = $tparam$N;
+		#line 1639 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		constexpr Builtin::usize half = N >> Builtin::i32(1);
+		#line 1640 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		if constexpr (I == half) {
+			#line 1641 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+			return Builtin::Boolean(true);
+		} else {
+			#line 1642 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+			{
+				#line 1643 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+				static_assert((I <=> half) < 0, "Too large index");
+				#line 1644 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+				return (GetAt<I, Vs...>() <=> half) < 0 && GetAt<half + I, Vs...>() == GetAt<I, Vs...>() && IsDupLoInternal<Builtin::u32(1U) + I, N, Vs...>();
+			}
+		}
+		return {};
+	}
+#line 1648 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+	template<int32_t... Vs> inline constexpr auto CommonInstructions::IsDupLo() noexcept -> const bool
+	{
+		#line 1649 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		return IsDupLoInternal<Builtin::i32(0), Builtin::usize(sizeof...(Vs)), Vs...>();
+	}
+#line 1651 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+	template<size_t $tparam$I, size_t $tparam$N, int32_t... Vs> inline constexpr auto CommonInstructions::IsDupHiInternal() noexcept -> const bool
+	{
+		constexpr Builtin::usize I = $tparam$I;
+		constexpr Builtin::usize N = $tparam$N;
+		#line 1652 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		constexpr Builtin::usize half = N >> Builtin::i32(1);
+		#line 1653 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		if constexpr (I == half) {
+			#line 1654 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+			return Builtin::Boolean(true);
+		} else {
+			#line 1655 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+			{
+				#line 1656 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+				static_assert((I <=> half) < 0, "Too large index");
+				#line 1657 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+				return (GetAt<I, Vs...>() <=> half) >= 0 && (GetAt<I, Vs...>() <=> N) < 0 && GetAt<half + I, Vs...>() == GetAt<I, Vs...>() && IsDupHiInternal<Builtin::u32(1U) + I, N, Vs...>();
+			}
+		}
+		return {};
+	}
+#line 1662 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+	template<int32_t... Vs> inline constexpr auto CommonInstructions::IsDupHi() noexcept -> const bool
+	{
+		#line 1663 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		return IsDupHiInternal<Builtin::i32(0), Builtin::usize(sizeof...(Vs)), Vs...>();
+	}
+#line 1665 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+	template<size_t $tparam$I> inline constexpr auto CommonInstructions::IdentityInternal() noexcept -> const bool
+	{
+		constexpr Builtin::usize I = $tparam$I;
+		#line 1665 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
+	}
+#line 1666 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+	template<size_t $tparam$I, int32_t $tparam$V0, int32_t... Vs> inline constexpr auto CommonInstructions::IdentityInternal() noexcept -> const bool
+	{
+		constexpr Builtin::usize I = $tparam$I;
+		constexpr Builtin::i32 V0 = $tparam$V0;
+		#line 1667 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		return V0 == I && IdentityInternal<Builtin::u32(1U) + I, Vs...>();
+	}
+#line 1669 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+	template<int32_t... Vs> inline constexpr auto CommonInstructions::IsIdentity() noexcept -> const bool
+	{
+		#line 1670 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		return IdentityInternal<Builtin::i32(0), Vs...>();
+	}
+#line 1672 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+	template<size_t $tparam$I, int32_t $tparam$V0, int32_t... Vs> inline constexpr auto CommonInstructions::GetNth() noexcept -> const Builtin::i32
+	{
+		constexpr Builtin::usize I = $tparam$I;
+		constexpr Builtin::i32 V0 = $tparam$V0;
+		#line 1673 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		if constexpr (I == Builtin::i32(0)) {
+			#line 1674 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+			return V0;
+		} else {
+			#line 1675 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+			{
+				#line 1676 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+				return GetNth<I - Builtin::u32(1U), Vs...>();
+			}
+		}
+		return {};
+	}
+#line 1679 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+	template<size_t $tparam$I, size_t $tparam$N, size_t $tparam$H, int32_t... Vs> inline constexpr auto CommonInstructions::IsCrossLaneInternal() noexcept -> const bool
+	{
+		constexpr Builtin::usize I = $tparam$I;
+		constexpr Builtin::usize N = $tparam$N;
+		constexpr Builtin::usize H = $tparam$H;
+		#line 1680 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		if constexpr ((I <=> N) >= 0) {
+			#line 1681 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+			return Builtin::Boolean(false);
+		} else {
+			#line 1682 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+			{
+				#line 1683 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+				constexpr Builtin::Auto<decltype(GetNth<I, Vs...>())> Vi = GetNth<I, Vs...>();
+				#line 1684 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+				constexpr Builtin::Auto<decltype(((I <=> H) < 0 ? ((Vi <=> H) >= 0) : ((Vi <=> H) < 0)))> current = ((I <=> H) < 0 ? ((Vi <=> H) >= 0) : ((Vi <=> H) < 0));
+				#line 1685 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+				constexpr Builtin::Auto<decltype(IsCrossLaneInternal<Builtin::u32(1U) + I, N, H, Vs...>())> next = IsCrossLaneInternal<Builtin::u32(1U) + I, N, H, Vs...>();
+				#line 1686 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+				return current || next;
+			}
+		}
+		return {};
+	}
+#line 1689 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+	template<int32_t... Vs> inline constexpr auto CommonInstructions::IsCrossLane() noexcept -> const bool
+	{
+		#line 1690 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		constexpr Builtin::Auto<decltype(Builtin::usize(sizeof...(Vs)))> Size = Builtin::usize(sizeof...(Vs));
+		#line 1691 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		constexpr Builtin::Auto<decltype(Size >> Builtin::i32(1))> Half = Size >> Builtin::i32(1);
+		#line 1692 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		static_assert((Size <=> Builtin::i32(1)) >= 0, "No elements");
+		#line 1693 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
+		return IsCrossLaneInternal<Builtin::i32(0), Size, Half, Vs...>();
 	}
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 	
