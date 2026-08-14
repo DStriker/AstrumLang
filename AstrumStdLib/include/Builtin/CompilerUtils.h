@@ -491,6 +491,12 @@ _Pragma("GCC diagnostic ignored \"" #TextCode "\")
 #define ADV_VERSION_SVE_BITS 0
 #endif
 
+#ifdef __ARM_FEATURE_FMA
+#define ADV_VERSION_ARM_FMA 1
+#else
+#define ADV_VERSION_ARM_FMA 0
+#endif
+
 #if defined(__riscv_vector) && defined(__riscv_v_fixed_vlen) && __riscv_v_fixed_vlen > 0
 #define ADV_VERSION_RVV 1
 #define ADV_VERSION_RVV_BITS __riscv_v_fixed_vlen

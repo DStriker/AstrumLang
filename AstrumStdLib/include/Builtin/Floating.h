@@ -2727,15 +2727,13 @@ namespace Builtin {
 
 			if (xyExponent < (0x3FFF + 112) && xy != Float128()) {
 				const auto largeNumber = std::bit_cast<Float128>(u128(0x406F000000000000u, 0u));
-				if (xySign)
-				{
+				if (xySign) {
 					y = xy - largeNumber + largeNumber - xy;
 				} else {
 					y = xy + largeNumber - largeNumber - xy;
 				}
 
-				if (xyExponent <= 0x3FFF - 1)
-				{
+				if (xyExponent <= 0x3FFF - 1) {
 					xy = xySign ? -1 : 0;
 				} else if (y > Float128()) {
 					xy = xy + y - 1;
@@ -3505,7 +3503,7 @@ namespace Builtin {
 			return f128(ParseInt128(input));
 		}
 
-		auto integerPart = ParseInt128(input.substr(0, decimalPos));
+		auto integerPart       = ParseInt128(input.substr(0, decimalPos));
 		const bool isMinusZero = integerPart == 0 && input.starts_with("-");
 		f128 result(integerPart);
 		std::string_view decimalText = input.substr(decimalPos + 1, expPos);
@@ -3560,6 +3558,25 @@ namespace Builtin {
 	inline constexpr float NanValue() noexcept { return NAN; }
 
 	ASTRUMSTD_API std::int32_t RemPiO2(double x, double* y) noexcept;
+
+#if ADV_VERSION_ARM
+	template <>
+	struct __NeonVector<f32> {
+		using type = float32x4_t;
+	};
+	template <>
+	struct __NeonVector<f64> {
+		using type = float64x2_t;
+	};
+#endif
+	template <>
+	struct __NeonMask<f32> {
+		using type = u32;
+	};
+	template <>
+	struct __NeonMask<f64> {
+		using type = u64;
+	};
 
 }  // namespace Builtin
 

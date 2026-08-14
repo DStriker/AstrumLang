@@ -2897,8 +2897,7 @@ namespace AstrumLang {
 							    ctx->postfixExpression()->getStart());
 					}
 				}
-				if (auto id = ctx->idExpression())
-				{
+				if (auto id = ctx->idExpression()) {
 					memberIds.insert(id->getText());
 				}
 			}
@@ -3285,8 +3284,9 @@ namespace AstrumLang {
 	}
 
 	std::any AstrumSema::visitPrimaryExpression(AstrumParser::PrimaryExpressionContext* ctx) {
-		if (ctx->Super() && (currentType.empty() || (currentTypeKind.top() != TypeKind::Class &&
-		                                             currentTypeKind.top() != TypeKind::StaticClass)))
+		if (ctx->Super() &&
+		    (currentType.empty() || (currentTypeKind.top() != TypeKind::Class &&
+		                             currentTypeKind.top() != TypeKind::StaticClass)))
 			notifyErrorListeners("Super keyword can using only in the derived class",
 			                     ctx->Super()->getSymbol());
 		if (ctx->Field() && propertyBody)
@@ -5035,8 +5035,8 @@ namespace AstrumLang {
 				if (acc->Public()) {
 					access = AccessSpecifier::Public;
 				} else if (acc->Protected()) {
-					if (currentTypeKind.top() != TypeKind::Class && currentTypeKind.top() !=
-					    TypeKind::StaticClass)
+					if (currentTypeKind.top() != TypeKind::Class &&
+					    currentTypeKind.top() != TypeKind::StaticClass)
 						notifyErrorListeners(
 						    "Cannot to declare protected member outside the class body",
 						    acc->getStart());
@@ -5505,6 +5505,7 @@ namespace AstrumLang {
 		bool isUnsafe        = false;
 		bool isRefReturn     = false;
 		bool isConstReturn   = false;
+		bool isAutoReturn    = false;
 		bool isForwardReturn = false;
 
 		bool isStatic = false, isMutating = false, isVirtual = false, isOverride = false,
@@ -5581,6 +5582,8 @@ namespace AstrumLang {
 				}
 				if (ret->Forward())
 					isForwardReturn = true;
+				if (ret->getText() == "_")
+					isAutoReturn = true;
 			}
 
 			std::optional<AccessSpecifier> access = std::nullopt;
@@ -5627,6 +5630,7 @@ namespace AstrumLang {
 			    isUnsafe,
 			    isRefReturn,
 			    isConstReturn,
+			    isAutoReturn,
 			    isForwardReturn,
 			    false,
 			    varargDepth});
@@ -5665,6 +5669,7 @@ namespace AstrumLang {
 		bool isFinal                                        = false;
 		bool isRefReturn                                    = false;
 		bool isConstReturn                                  = false;
+		bool isAutoReturn                                   = false;
 		bool isForwardReturn                                = false;
 		bool isCommutative                                  = false;
 		bool isMain                                         = false;
@@ -5909,6 +5914,9 @@ namespace AstrumLang {
 				}
 				if (ret->Forward())
 					isForwardReturn = true;
+
+				if (returnType && returnType->getText() == "_")
+					isAutoReturn = true;
 			}
 
 			bool isDefault = false;
@@ -6159,6 +6167,7 @@ namespace AstrumLang {
 				    isUnsafe,
 				    isRefReturn,
 				    isConstReturn,
+				    isAutoReturn,
 				    isForwardReturn,
 				    isCommutative,
 				    varargDepth};
@@ -6190,6 +6199,7 @@ namespace AstrumLang {
 				    isUnsafe,
 				    isRefReturn,
 				    isConstReturn,
+				    isAutoReturn,
 				    isForwardReturn,
 				    isCommutative,
 				    varargDepth,
@@ -6231,6 +6241,7 @@ namespace AstrumLang {
 				        isUnsafe,
 				        isRefReturn,
 				        isConstReturn,
+				        isAutoReturn,
 				        isForwardReturn,
 				        isCommutative,
 				        varargDepth,
@@ -6441,6 +6452,7 @@ namespace AstrumLang {
                 isConstReturn,
                 false,
                 false,
+                false,
                 varargDepth,
                 currentType,
                 fullType,
@@ -6601,6 +6613,7 @@ namespace AstrumLang {
                 false,
                 isRefReturn,
                 isConstReturn,
+                false,
                 false,
                 false,
                 varargDepth,
@@ -7002,6 +7015,7 @@ namespace AstrumLang {
 			    false,
 			    false,
 			    false,
+			    false,
 			    varargDepth,
 			    currentType,
 			    fullType,
@@ -7039,6 +7053,7 @@ namespace AstrumLang {
 			        isConstexpr,
 			        false,
 			        isUnsafe,
+			        false,
 			        false,
 			        false,
 			        false,
@@ -7245,6 +7260,7 @@ namespace AstrumLang {
 		                                                          false,
 		                                                          false,
 		                                                          false,
+		                                                          false,
 		                                                          -1,
 		                                                          currentType,
 		                                                          fullType,
@@ -7281,6 +7297,7 @@ namespace AstrumLang {
 		             isConstexpr,
 		             false,
 		             isUnsafe,
+		             false,
 		             false,
 		             false,
 		             false,
@@ -7437,6 +7454,7 @@ namespace AstrumLang {
 			    isConstReturn,
 			    false,
 			    false,
+			    false,
 			    -1,
 			    currentType,
 			    fullType,
@@ -7478,6 +7496,7 @@ namespace AstrumLang {
 			        isUnsafe,
 			        isRefReturn,
 			        isConstReturn,
+			        false,
 			        false,
 			        false,
 			        -1,
@@ -7538,6 +7557,7 @@ namespace AstrumLang {
 		bool isFinal                                            = false;
 		bool isRefReturn                                        = false;
 		bool isConstReturn                                      = false;
+		bool isAutoReturn                                       = false;
 		bool isForwardReturn                                    = false;
 		int8_t varargDepth                                      = -1;
 		AstrumParser::TheTypeIdContext* returnType              = ctx->returnType()->theTypeId();
@@ -7685,6 +7705,8 @@ namespace AstrumLang {
 					isRefReturn = true;
 				if (ret->Forward())
 					isForwardReturn = true;
+				if (ret->theTypeId() && ret->theTypeId()->getText() == "_")
+					isAutoReturn = true;
 			}
 
 			if (auto body = ctx->functionBody()) {
@@ -7774,6 +7796,7 @@ namespace AstrumLang {
 			    isUnsafe,
 			    isRefReturn,
 			    isConstReturn,
+			    isAutoReturn,
 			    isForwardReturn,
 			    false,
 			    varargDepth,
@@ -7820,6 +7843,7 @@ namespace AstrumLang {
 			        isUnsafe,
 			        isRefReturn,
 			        isConstReturn,
+			        isAutoReturn,
 			        isForwardReturn,
 			        false,
 			        varargDepth,
@@ -8014,6 +8038,7 @@ namespace AstrumLang {
 			    isUnsafe,
 			    isRefReturn,
 			    isConstReturn,
+			    false,
 			    isForwardReturn,
 			    false,
 			    varargDepth,
@@ -8295,6 +8320,7 @@ namespace AstrumLang {
                 false,
                 false,
                 false,
+                false,
                 -1,
                 currentType,
                 fullType,
@@ -8381,6 +8407,7 @@ namespace AstrumLang {
                 getCurrentCompilationCondition(),
                 isInline || isConstexpr,
                 isConstexpr,
+                false,
                 false,
                 false,
                 false,
@@ -8478,14 +8505,14 @@ namespace AstrumLang {
 			AstrumParser::AccessSpecifierContext* acc = nullptr;
 			std::optional<AccessSpecifier> access     = std::nullopt;
 			bool isProtectedInternal                  = false;
-			if (auto decl = reinterpret_cast<AstrumParser::StructMemberDeclarationContext*>(
-			               ctx->parent)) {
+			if (auto decl =
+			        reinterpret_cast<AstrumParser::StructMemberDeclarationContext*>(ctx->parent)) {
 				isProtectedInternal = decl->protectedInternal();
 				if (decl->accessSpecifier()) {
 					acc = decl->accessSpecifier();
 				}
-			} else if (auto decl = reinterpret_cast<AstrumParser::DeclarationContext*>(
-			               ctx->parent)) {
+			} else if (auto decl =
+			               reinterpret_cast<AstrumParser::DeclarationContext*>(ctx->parent)) {
 				if (decl->accessSpecifier()) {
 					acc = decl->accessSpecifier();
 				}

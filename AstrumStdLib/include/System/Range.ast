@@ -23,11 +23,11 @@ where type T is IValueEnumerable or type T is IRangeCustomIterator
             throw Builtin.InvalidArgumentException();
         }
 
-        static if not IsClosed {
+        /*static if not IsClosed {
             if end == start {
                 throw Builtin.InvalidArgumentException();
             }
-        }
+        }*/
     }
 
     public mut Clear: () ==> _start = _end = T();
@@ -48,7 +48,11 @@ where type T is IValueEnumerable or type T is IRangeCustomIterator
             switch _state {
                 1 => {
                     this._state = 2;
-                    return true;
+                    static if not IsClosed {
+                        return _current != _end;
+                    } else {
+                        return true;
+                    }
                 }
                 2 => {
                     static if IsClosed {
@@ -96,11 +100,13 @@ where type T is IValueEnumerable or type T is IRangeCustomIterator
         {
             switch _state {
                 1 => {
+                    this._state = 2;
                     static if not IsClosed {
                         StepBackward();
+                        return _current != _end;
+                    } else {
+                        return true;
                     }
-                    this._state = 2;
-                    return true;
                 }
                 2 => {
                     if _current != _end {

@@ -7,6 +7,92 @@ public import System.Range;
 
 public static class CommonInstructions: SimdInstructionSet {
     public {
+        unsafe LoadAligned: <T, Arch> (src: *const T) -> SimdVector<T, Arch> {
+            vec: SimdVector<T, Arch>;
+            std.memcpy(vec&, src, sizeof(vec));
+            return vec;
+        }
+
+        unsafe Load: <T, Arch> (src: *const T) -> SimdVector<T, Arch> {
+            vec: SimdVector<T, Arch>;
+            std.memcpy(vec&, src, sizeof(vec));
+            return vec;
+        }
+
+        unsafe LoadMask: <T, Arch> (src: *const bool) -> SimdMask<T, Arch> {
+            type TMask = SimdMask<T, Arch>;
+            const size :== i32(TMask::Length);
+            buf: BufferedVector<T, size>;
+            for i in ..size {
+                buf.>buffer[@Unchecked i] = src[i] ? T.AllBitsSet : T.Zero;
+            }
+            return UnsafePointerCast<TMask>(buf&)*;
+        }
+
+        unsafe StoreAligned: <T, Arch> (in ref src: SimdVector<T, Arch>, dst: *T) {
+            std.memcpy(dst, src&, sizeof(src));
+        }
+
+        unsafe Store: <T, Arch> (in ref src: SimdVector<T, Arch>, dst: *T) {
+            std.memcpy(dst, src&, sizeof(src));
+        }
+
+        unsafe Store: <T, Arch> (in ref src: SimdMask<T, Arch>, dst: *bool) {
+            type TMask = SimdMask<T, Arch>;
+            const size :== TMask::Length;
+            bufSrc: BufferedVector<T, size>;
+            std.memcpy(bufSrc&, src&, sizeof(src));
+            for i in ..size {
+                dst[i] = bufSrc.>buffer[@Unchecked i] != T(0);
+            }
+        }
+
+        Broadcast: <T, Arch> (val: T) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            const size :== TVector::Length;
+            unsafe {
+                buf: BufferedVector<T, size>;
+                for i in ..size {
+                    buf.>buffer[@Unchecked i] = val;
+                }
+                return LoadAligned<T, Arch>(buf.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        CreateFrom: <Arch, T, Args...> (val0: T, vals: Args...) -> SimdVector<T, Arch> {
+            return {}; // Instruction sets should be to implement
+        }
+
+        CreateMaskFrom: <T, Arch, Ts...> (values: Ts...) -> SimdMask<T, Arch> {
+            return {}; // Instruction sets should be to implement
+        }
+
+        MaskFromScalar: <T, Arch> (mask: u64) -> SimdMask<T, Arch> {
+            type TMask = SimdMask<T, Arch>;
+            const size :== i32(TMask::Length);
+            unsafe {
+                buf: BufferedVector<bool, size>;
+                for i in ..size {
+                    buf.>buffer[@Unchecked i] = (mask & (1u << i));
+                }
+                return LoadMask<T, Arch>(buf.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        MaskToScalar: <T, Arch> (in ref mask: SimdMask<T, Arch>) -> u64 {
+            type TMask = SimdMask<T, Arch>;
+            const size :== i32(TMask::Length);
+            unsafe {
+                buf: BufferedVector<T, size>;
+                std.memcpy(buf&, mask&, sizeof(mask));
+                scalar: u64;
+                for i in ..size {
+                    scalar |= (buf.>buffer[@Unchecked i] != T(0)) ? (1u64 << i) : 0u64;
+                }
+                return scalar;
+            }
+        }
+
         Abs: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
             static if type T is IUnsignedNumber {
                 return vec;
@@ -49,8 +135,168 @@ public static class CommonInstructions: SimdInstructionSet {
         GetMaskElement: <T, Arch> (in ref vec: SimdMask<T, Arch>, index: usize) -> bool {
             unsafe {
                 buf: BufferedVector<bool, SimdMask<T, Arch>::Length>;
-                vec.StoreAligned(buf.>buffer[0]&);
+                vec.>Store(buf.>buffer[0]&);
                 return buf.>buffer[index as i32];
+            }
+        }
+
+        Equal: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdMask<T, Arch> {
+            type TMask = SimdMask<T, Arch>;
+            const size :== i32(TMask::Length);
+            unsafe {
+                buf: BufferedVector<bool, size>;
+                for i in ..size {
+                    buf.>buffer[@Unchecked i] = left[i as usize] == right[i as usize];
+                }
+                return LoadMask<T, Arch>(buf.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        Equal: <T, Arch> (in ref left: SimdMask<T, Arch>, in ref right: SimdMask<T, Arch>) -> SimdMask<T, Arch> {
+            type TMask = SimdMask<T, Arch>;
+            const size :== i32(TMask::Length);
+            unsafe {
+                buf: BufferedVector<bool, size>;
+                for i in ..size {
+                    buf.>buffer[@Unchecked i] = left[i as usize] == right[i as usize];
+                }
+                return LoadMask<T, Arch>(buf.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        NotEqual: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdMask<T, Arch> {
+            type TMask = SimdMask<T, Arch>;
+            const size :== i32(TMask::Length);
+            unsafe {
+                buf: BufferedVector<bool, size>;
+                for i in ..size {
+                    buf.>buffer[@Unchecked i] = left[i as usize] != right[i as usize];
+                }
+                return LoadMask<T, Arch>(buf.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        NotEqual: <T, Arch> (in ref left: SimdMask<T, Arch>, in ref right: SimdMask<T, Arch>) -> SimdMask<T, Arch> {
+            type TMask = SimdMask<T, Arch>;
+            const size :== i32(TMask::Length);
+            unsafe {
+                buf: BufferedVector<bool, size>;
+                for i in ..size {
+                    buf.>buffer[@Unchecked i] = left[i as usize] != right[i as usize];
+                }
+                return LoadMask<T, Arch>(buf.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        Less: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdMask<T, Arch> {
+            type TMask = SimdMask<T, Arch>;
+            const size :== i32(TMask::Length);
+            unsafe {
+                buf: BufferedVector<bool, size>;
+                for i in ..size {
+                    buf.>buffer[@Unchecked i] = left[i as usize] < right[i as usize];
+                }
+                return LoadMask<T, Arch>(buf.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        LessOrEqual: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdMask<T, Arch> {
+            type TMask = SimdMask<T, Arch>;
+            const size :== i32(TMask::Length);
+            unsafe {
+                buf: BufferedVector<bool, size>;
+                for i in ..size {
+                    buf.>buffer[@Unchecked i] = left[i as usize] <= right[i as usize];
+                }
+                return LoadMask<T, Arch>(buf.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        Greater: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdMask<T, Arch> {
+            type TMask = SimdMask<T, Arch>;
+            const size :== i32(TMask::Length);
+            unsafe {
+                buf: BufferedVector<bool, size>;
+                for i in ..size {
+                    buf.>buffer[@Unchecked i] = left[i as usize] > right[i as usize];
+                }
+                return LoadMask<T, Arch>(buf.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        GreaterOrEqual: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdMask<T, Arch> {
+            type TMask = SimdMask<T, Arch>;
+            const size :== i32(TMask::Length);
+            unsafe {
+                buf: BufferedVector<bool, size>;
+                for i in ..size {
+                    buf.>buffer[@Unchecked i] = left[i as usize] >= right[i as usize];
+                }
+                return LoadMask<T, Arch>(buf.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        First: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> T {
+            return vec[0u];
+        }
+
+        Select: <T, Arch> (in ref condition: SimdMask<T, Arch>, in ref trueVec: SimdVector<T, Arch>, 
+            in ref falseVec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            const size :== i32(TVector::Length);
+            unsafe {
+                bufTrue: BufferedVector<T, size>;
+                bufFalse: BufferedVector<T, size>;
+                bufResult: BufferedVector<T, size>;
+                trueVec.StoreAligned(bufTrue.>buffer[@Unchecked 0]&);
+                falseVec.StoreAligned(bufFalse.>buffer[@Unchecked 0]&);
+                for i in ..size {
+                    bufResult.>buffer[@Unchecked i] = (condition[i as usize] != T(0)) ? bufTrue.>buffer[@Unchecked i]
+                                                                                    : bufFalse.>buffer[@Unchecked i];
+                }
+                return LoadAligned<T, Arch>(bufResult.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        Swizzle: <I0: i32, I1: i32, Arch, T> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            return {};
+        }
+        Swizzle: <I0: i32, I1: i32, I2: i32, I3: i32, Arch, T> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            return {};
+        }
+        Swizzle: <I0: i32, I1: i32, I2: i32, I3: i32, I4: i32, I5: i32, I6: i32, I7: i32, Arch, T> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            return {};
+        }
+
+        WrappingAdd: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            const size :== i32(SimdVector<T, Arch>::Length);
+            type TVector = SimdVector<T, Arch>;
+            bufLeft: BufferedVector<T, size>;
+            bufRight: BufferedVector<T, size>;
+            bufResult: BufferedVector<T, size>;
+            unsafe {
+                left.StoreAligned(bufLeft.>buffer[@Unchecked 0]&);
+                right.StoreAligned(bufRight.>buffer[@Unchecked 0]&);
+                for i in ..size {
+                    bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] + bufRight.>buffer[@Unchecked i];
+                }
+                return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        WrappingSubtract: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            const size :== i32(SimdVector<T, Arch>::Length);
+            type TVector = SimdVector<T, Arch>;
+            bufLeft: BufferedVector<T, size>;
+            bufRight: BufferedVector<T, size>;
+            bufResult: BufferedVector<T, size>;
+            unsafe {
+                left.StoreAligned(bufLeft.>buffer[@Unchecked 0]&);
+                right.StoreAligned(bufRight.>buffer[@Unchecked 0]&);
+                for i in ..size {
+                    bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] - bufRight.>buffer[@Unchecked i];
+                }
+                return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
             }
         }
 
@@ -64,7 +310,11 @@ public static class CommonInstructions: SimdInstructionSet {
                 left.StoreAligned(bufLeft.>buffer[@Unchecked 0]&);
                 right.StoreAligned(bufRight.>buffer[@Unchecked 0]&);
                 for i in ..size {
-                    bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] *% bufRight.>buffer[@Unchecked i];
+                    static if type T is f32 or f64 {
+                        bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] * bufRight.>buffer[@Unchecked i];
+                    } else {
+                        bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] *% bufRight.>buffer[@Unchecked i];
+                    }
                 }
                 return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
             }
@@ -83,7 +333,11 @@ public static class CommonInstructions: SimdInstructionSet {
                 left.StoreAligned(bufLeft.>buffer[@Unchecked 0]&);
                 right.StoreAligned(bufRight.>buffer[@Unchecked 0]&);
                 for i in ..size {
-                    bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] \% bufRight.>buffer[@Unchecked i];
+                    static if type T is f32 or f64 {
+                        bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] / bufRight.>buffer[@Unchecked i];
+                    } else {
+                        bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] \% bufRight.>buffer[@Unchecked i];
+                    }
                 }
                 return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
             }
@@ -102,12 +356,154 @@ public static class CommonInstructions: SimdInstructionSet {
                 left.StoreAligned(bufLeft.>buffer[@Unchecked 0]&);
                 right.StoreAligned(bufRight.>buffer[@Unchecked 0]&);
                 for i in ..size {
-                    bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] %% bufRight.>buffer[@Unchecked i];
+                    static if type T is f32 or f64 {
+                        bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] % bufRight.>buffer[@Unchecked i];
+                    } else {
+                        bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] %% bufRight.>buffer[@Unchecked i];
+                    }
                 }
                 return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
             }
         }
+        WrappingNegate: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            const size :== i32(SimdVector<T, Arch>::Length);
+            type TVector = SimdVector<T, Arch>;
+            bufLeft: BufferedVector<T, size>;
+            bufResult: BufferedVector<T, size>;
+            unsafe {
+                vec.StoreAligned(bufLeft.>buffer[@Unchecked 0]&);
+                for i in ..size {
+                    static if type T is f32 or f64 {
+                        bufResult.>buffer[@Unchecked i] = -bufLeft.>buffer[@Unchecked i];
+                    } else {
+                        bufResult.>buffer[@Unchecked i] = -%bufLeft.>buffer[@Unchecked i];
+                    }
+                }
+                return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+            }
+        }
+        BitwiseNot: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            unsafe {
+                res: SimdVector<T, Arch>;
+                ptr1 := UnsafePointerCast<u64>(vec&);
+                ptr2 := UnsafePointerCast<u64>(res&);
+                ptr2[0] = ~ptr1[0];
+                ptr2[1] = ~ptr1[1];
+                return res;
+            }
+        }
+        BitwiseNot: <T, Arch> (in ref vec: SimdMask<T, Arch>) -> SimdMask<T, Arch> {
+            unsafe {
+                res: SimdVector<T, Arch>;
+                ptr1 := UnsafePointerCast<u64>(vec&);
+                ptr2 := UnsafePointerCast<u64>(res&);
+                ptr2[0] = ~ptr1[0];
+                ptr2[1] = ~ptr1[1];
+                return res;
+            }
+        }
+        BitwiseAnd: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            unsafe {
+                res: SimdVector<T, Arch>;
+                ptr1 := UnsafePointerCast<u64>(left&);
+                ptr2 := UnsafePointerCast<u64>(right&);
+                ptr3 := UnsafePointerCast<u64>(res&);
+                ptr3[0] = ptr1[0] & ptr2[0];
+                ptr3[1] = ptr1[1] & ptr2[1];
+                return res;
+            }
+        }
+        BitwiseAnd: <T, Arch> (in ref left: SimdMask<T, Arch>, in ref right: SimdMask<T, Arch>) -> SimdVector<T, Arch> {
+            unsafe {
+                res: SimdVector<T, Arch>;
+                ptr1 := UnsafePointerCast<u64>(left&);
+                ptr2 := UnsafePointerCast<u64>(right&);
+                ptr3 := UnsafePointerCast<u64>(res&);
+                ptr3[0] = ptr1[0] & ptr2[0];
+                ptr3[1] = ptr1[1] & ptr2[1];
+                return res;
+            }
+        }
+        BitwiseAndNot: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            unsafe {
+                res: SimdVector<T, Arch>;
+                ptr1 := UnsafePointerCast<u64>(left&);
+                ptr2 := UnsafePointerCast<u64>(right&);
+                ptr3 := UnsafePointerCast<u64>(res&);
+                ptr3[0] = ptr1[0] & (~ptr2[0]);
+                ptr3[1] = ptr1[1] & (~ptr2[1]);
+                return res;
+            }
+        }
+        BitwiseAndNot: <T, Arch> (in ref left: SimdMask<T, Arch>, in ref right: SimdMask<T, Arch>) -> SimdVector<T, Arch> {
+            unsafe {
+                res: SimdVector<T, Arch>;
+                ptr1 := UnsafePointerCast<u64>(left&);
+                ptr2 := UnsafePointerCast<u64>(right&);
+                ptr3 := UnsafePointerCast<u64>(res&);
+                ptr3[0] = ptr1[0] & (~ptr2[0]);
+                ptr3[1] = ptr1[1] & (~ptr2[1]);
+                return res;
+            }
+        }
+        BitwiseOr: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            unsafe {
+                res: SimdVector<T, Arch>;
+                ptr1 := UnsafePointerCast<u64>(left&);
+                ptr2 := UnsafePointerCast<u64>(right&);
+                ptr3 := UnsafePointerCast<u64>(res&);
+                ptr3[0] = ptr1[0] | ptr2[0];
+                ptr3[1] = ptr1[1] | ptr2[1];
+                return res;
+            }
+        }
+        BitwiseOr: <T, Arch> (in ref left: SimdMask<T, Arch>, in ref right: SimdMask<T, Arch>) -> SimdVector<T, Arch> {
+            unsafe {
+                res: SimdVector<T, Arch>;
+                ptr1 := UnsafePointerCast<u64>(left&);
+                ptr2 := UnsafePointerCast<u64>(right&);
+                ptr3 := UnsafePointerCast<u64>(res&);
+                ptr3[0] = ptr1[0] | ptr2[0];
+                ptr3[1] = ptr1[1] | ptr2[1];
+                return res;
+            }
+        }
+        BitwiseXor: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            unsafe {
+                res: SimdVector<T, Arch>;
+                ptr1 := UnsafePointerCast<u64>(left&);
+                ptr2 := UnsafePointerCast<u64>(right&);
+                ptr3 := UnsafePointerCast<u64>(res&);
+                ptr3[0] = ptr1[0] ^ ptr2[0];
+                ptr3[1] = ptr1[1] ^ ptr2[1];
+                return res;
+            }
+        }
+        BitwiseXor: <T, Arch> (in ref left: SimdMask<T, Arch>, in ref right: SimdMask<T, Arch>) -> SimdVector<T, Arch> {
+            unsafe {
+                res: SimdVector<T, Arch>;
+                ptr1 := UnsafePointerCast<u64>(left&);
+                ptr2 := UnsafePointerCast<u64>(right&);
+                ptr3 := UnsafePointerCast<u64>(res&);
+                ptr3[0] = ptr1[0] ^ ptr2[0];
+                ptr3[1] = ptr1[1] ^ ptr2[1];
+                return res;
+            }
+        }
 
+        LeftShift: <T, Arch> (in ref vec: SimdVector<T, Arch>, shift: i32) -> SimdVector<T, Arch> {
+            const size :== i32(SimdVector<T, Arch>::Length);
+            type TVector = SimdVector<T, Arch>;
+            bufLeft: BufferedVector<T, size>;
+            bufResult: BufferedVector<T, size>;
+            unsafe {
+                vec.StoreAligned(bufLeft.>buffer[@Unchecked 0]&);
+                for i in ..size {
+                    bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] << shift;
+                }
+                return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+            }
+        }
         LeftShift: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
             const size :== i32(SimdVector<T, Arch>::Length);
             type TVector = SimdVector<T, Arch>;
@@ -124,6 +520,19 @@ public static class CommonInstructions: SimdInstructionSet {
             }
         }
 
+        RightShift: <T, Arch> (in ref vec: SimdVector<T, Arch>, shift: i32) -> SimdVector<T, Arch> {
+            const size :== i32(SimdVector<T, Arch>::Length);
+            type TVector = SimdVector<T, Arch>;
+            bufLeft: BufferedVector<T, size>;
+            bufResult: BufferedVector<T, size>;
+            unsafe {
+                vec.StoreAligned(bufLeft.>buffer[@Unchecked 0]&);
+                for i in ..size {
+                    bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] >> shift;
+                }
+                return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+            }
+        }
         RightShift: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
             const size :== i32(SimdVector<T, Arch>::Length);
             type TVector = SimdVector<T, Arch>;
@@ -140,6 +549,19 @@ public static class CommonInstructions: SimdInstructionSet {
             }
         }
 
+        UnsignedRightShift: <T, Arch> (in ref vec: SimdVector<T, Arch>, shift: i32) -> SimdVector<T, Arch> {
+            const size :== i32(SimdVector<T, Arch>::Length);
+            type TVector = SimdVector<T, Arch>;
+            bufLeft: BufferedVector<T, size>;
+            bufResult: BufferedVector<T, size>;
+            unsafe {
+                vec.StoreAligned(bufLeft.>buffer[@Unchecked 0]&);
+                for i in ..size {
+                    bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] >>> shift;
+                }
+                return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+            }
+        }
         UnsignedRightShift: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
             const size :== i32(SimdVector<T, Arch>::Length);
             type TVector = SimdVector<T, Arch>;
@@ -151,6 +573,45 @@ public static class CommonInstructions: SimdInstructionSet {
                 right.StoreAligned(bufRight.>buffer[@Unchecked 0]&);
                 for i in ..size {
                     bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i] >>> i32(bufRight.>buffer[@Unchecked i]);
+                }
+                return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+            }
+        }
+
+        All: <T, Arch> (in ref vec: SimdMask<T, Arch>) -> bool {
+            return MaskToScalar(vec) == u64.AllBitsSet;
+        }
+
+        Any: <T, Arch> (in ref vec: SimdMask<T, Arch>) -> bool {
+            return MaskToScalar(vec) != 0;
+        }
+
+        Max: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            const size :== i32(SimdVector<T, Arch>::Length);
+            type TVector = SimdVector<T, Arch>;
+            bufLeft: BufferedVector<T, size>;
+            bufRight: BufferedVector<T, size>;
+            bufResult: BufferedVector<T, size>;
+            unsafe {
+                left.StoreAligned(bufLeft.>buffer[@Unchecked 0]&);
+                right.StoreAligned(bufRight.>buffer[@Unchecked 0]&);
+                for i in ..size {
+                    bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i].Max(bufRight.>buffer[@Unchecked i]);
+                }
+                return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+            }
+        }
+        Min: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            const size :== i32(SimdVector<T, Arch>::Length);
+            type TVector = SimdVector<T, Arch>;
+            bufLeft: BufferedVector<T, size>;
+            bufRight: BufferedVector<T, size>;
+            bufResult: BufferedVector<T, size>;
+            unsafe {
+                left.StoreAligned(bufLeft.>buffer[@Unchecked 0]&);
+                right.StoreAligned(bufRight.>buffer[@Unchecked 0]&);
+                for i in ..size {
+                    bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i].Min(bufRight.>buffer[@Unchecked i]);
                 }
                 return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
             }
@@ -180,9 +641,11 @@ public static class CommonInstructions: SimdInstructionSet {
         }
 
         BitwiseCast: <T2, T1, Arch> (in ref vec: SimdVector<T1, Arch>) -> SimdVector<T2, Arch> {
-            static assert(type T1 is IBinaryInteger and type T2 is IBinaryInteger and sizeof(T1) == sizeof(T2), 
-                "Common BitwiseCast is only supported for integral vectors of the same size");
-            return vec.ToNative();
+            unsafe {
+                dst: SimdVector<T2, Arch>;
+                std.memcpy(dst&, vec&, sizeof(dst));
+                return dst;
+            }
         }
 
         OverflowingAdd: <T, Arch> (in ref left: SimdVector<T, Arch>, in ref right: SimdVector<T, Arch>) 
@@ -771,6 +1234,27 @@ public static class CommonInstructions: SimdInstructionSet {
                 return x.IsInteger & (((x.ConvertTo<FloatInt<T>>() % 2).Abs).ConvertTo<T>() !=^ T.Zero);
             } else {
                 return (x & T.One) !=^ T(0);
+            }
+        }
+        Reciprocal: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            return TVector::One / vec;
+        }
+        ReciprocalSqrt: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            type TVector = SimdVector<T, Arch>;
+            return TVector::One / vec.Sqrt;
+        }
+        Sqrt: <T, Arch> (in ref vec: SimdVector<T, Arch>) -> SimdVector<T, Arch> {
+            const size :== i32(SimdVector<T, Arch>::Length);
+            type TVector = SimdVector<T, Arch>;
+            bufLeft: BufferedVector<T, size>;
+            bufResult: BufferedVector<T, size>;
+            unsafe {
+                vec.StoreAligned(bufLeft.>buffer[@Unchecked 0]&);
+                for i in ..size {
+                    bufResult.>buffer[@Unchecked i] = bufLeft.>buffer[@Unchecked i].Sqrt;
+                }
+                return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
             }
         }
 

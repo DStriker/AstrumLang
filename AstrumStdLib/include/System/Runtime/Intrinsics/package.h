@@ -1,6 +1,6 @@
-#include "Arch.h"
 #include "CommonCpuFeatureSet.h"
 #include "CommonInstructions.h"
+#include "Simd.h"
 #include "SimdInstructionSet.h"
 #include "SimdVector.h"
 #include "StaticBitset.h"

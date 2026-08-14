@@ -669,6 +669,7 @@ public struct <T, Arch> SimdMask
 
     // Count of elements in vector for this instruction set
     public const Length: u32 == u32(sizeof(TVector) \ sizeof(T));
+    static assert(Length > 0, "Invalid vector length");
 
     public implicit this(reg: TNative) noexcept = {
         _reg.data = reg;
@@ -687,7 +688,9 @@ public struct <T, Arch> SimdMask
     }
 
     // Creates a new instance with all elements initialized to the specified value
-    public static Create: (val: bool) -> self => MakeRegister(Builtin.MakeIndexSequence<Length - 1u>(), val);
+    public static Create: (val: bool) -> self = {
+        return MakeRegister(Builtin.MakeIndexSequence<Length - 1u>(), val);
+    }
     // Creates a new instance with elements initialized to the specified values
     public static Create: <Ts...> (val0: bool, val1: bool, tail: Ts...) -> self = {
         static assert(sizeof...(Ts) + 2 == Length, "Invalid number of arguments");

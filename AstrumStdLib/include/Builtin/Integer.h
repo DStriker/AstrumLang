@@ -80,18 +80,47 @@ namespace Builtin {
 	struct __NeonVector<u64> {
 		using type = uint64x2_t;
 	};
-	template <>
-	struct __NeonVector<f32> {
-		using type = float32x4_t;
-	};
-	template <>
-	struct __NeonVector<f64> {
-		using type = float64x2_t;
-	};
 
 	template<class T>
 	using NeonVector = __NeonVector<T>::type;
 #endif
+	template <class T>
+	struct __NeonMask;
+	template <>
+	struct __NeonMask<i8> {
+		using type = u8;
+	};
+	template <>
+	struct __NeonMask<u8> {
+		using type = u8;
+	};
+	template <>
+	struct __NeonMask<i16> {
+		using type = u16;
+	};
+	template <>
+	struct __NeonMask<u16> {
+		using type = u16;
+	};
+	template <>
+	struct __NeonMask<i32> {
+		using type = u32;
+	};
+	template <>
+	struct __NeonMask<u32> {
+		using type = u32;
+	};
+	template <>
+	struct __NeonMask<i64> {
+		using type = u64;
+	};
+	template <>
+	struct __NeonMask<u64> {
+		using type = u64;
+	};
+
+	template <class T>
+	using NeonMask = __NeonMask<T>::type;
 
 	template<auto val>
 	using Constant = std::integral_constant<decltype(val), val>;
@@ -101,6 +130,12 @@ namespace Builtin {
 
 	template<size_t S>
 	using MakeIndexSequence = std::make_index_sequence<S>;
+
+	template <int... vals>
+	using IntegerSequence = std::integer_sequence<int, vals...>;
+
+	template <int S>
+	using MakeIntegerSequence = std::make_integer_sequence<int, S>;
 
 	template <int64_t Number>
 	struct IntLiteral {

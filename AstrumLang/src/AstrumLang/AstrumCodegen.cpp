@@ -825,7 +825,9 @@ namespace AstrumLang {
 			if (func.exceptionSpecification)
 				printExceptionSpecification(func.exceptionSpecification);
 			out << " -> ";
-			if (func.returnType) {
+			if (func.isAutoReturn) {
+				out << "auto";
+			} else if (func.returnType) {
 				if (func.isConstReturn || !func.isRefReturn)
 					out << "const ";
 				printTypeId(func.returnType);
@@ -3220,6 +3222,8 @@ namespace AstrumLang {
 					if (func.isRefReturn)
 						out << "&";
 					out << ">";
+				} else if (func.isAutoReturn) {
+					out << "auto";
 				} else if (func.returnType) {
 					if (!func.isRefReturn)
 						out << "const ";
@@ -9621,7 +9625,9 @@ namespace AstrumLang {
 			if (func.exceptionSpecification)
 				printExceptionSpecification(func.exceptionSpecification);
 			out << " -> ";
-			if (func.returnType || func.isConstructor) {
+			if (func.isAutoReturn) {
+				out << "auto";
+			} else if (func.returnType || func.isConstructor) {
 				if (func.returnType)
 					currentType = func.returnType->getText();
 				if (!func.isMutating && (!func.isRefReturn || func.isConstReturn))
@@ -10916,7 +10922,9 @@ namespace AstrumLang {
 					if (func.exceptionSpecification)
 						printExceptionSpecification(func.exceptionSpecification);
 					out << " -> ";
-					if (func.returnType || func.isConstructor) {
+					if (func.isAutoReturn) {
+						out << "auto";
+					} else if (func.returnType || func.isConstructor) {
 						if (func.returnType)
 							currentType = func.returnType->getText();
 						if (!func.isMutating && (!func.isRefReturn || func.isConstReturn))
@@ -15829,6 +15837,8 @@ namespace AstrumLang {
 				if (func.isRefReturn)
 					out << "&";
 				out << ">";
+			} else if (func.isAutoReturn) {
+				out << "auto";
 			} else if (func.returnType) {
 				auto ret = func.returnType;
 				if (!func.isRefReturn)
@@ -15947,6 +15957,8 @@ namespace AstrumLang {
 					if (func.isRefReturn)
 						out << "&";
 					out << ">";
+				} else if (func.isAutoReturn) {
+					out << "auto";
 				} else if (func.returnType) {
 					auto ret = func.returnType;
 					printTypeId(ret);
@@ -17154,7 +17166,9 @@ namespace AstrumLang {
 			if (func.exceptionSpecification)
 				printExceptionSpecification(func.exceptionSpecification);
 			out << " -> ";
-			if (func.returnType) {
+			if (func.isAutoReturn) {
+				out << "auto";
+			} else if (func.returnType) {
 				if (func.isConstReturn || !func.isRefReturn)
 					out << "const ";
 				auto ret = func.returnType;
@@ -17350,7 +17364,9 @@ namespace AstrumLang {
 				if (func.exceptionSpecification)
 					printExceptionSpecification(func.exceptionSpecification);
 				out << " -> ";
-				if (func.returnType) {
+				if (func.isAutoReturn) {
+					out << "auto";
+				} else if (func.returnType) {
 					if (func.isConstReturn || !func.isRefReturn)
 						out << "const ";
 					auto ret = func.returnType;

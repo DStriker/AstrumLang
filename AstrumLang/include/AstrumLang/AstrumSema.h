@@ -101,6 +101,7 @@ namespace AstrumLang {
 		bool isUnsafe        = false;
 		bool isRefReturn     = false;
 		bool isConstReturn   = false;
+		bool isAutoReturn    = false;
 		bool isForwardReturn = false;
 		bool isCommutative   = false;
 		int8_t varargs       = -1;
