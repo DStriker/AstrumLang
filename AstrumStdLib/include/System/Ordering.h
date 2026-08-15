@@ -5,21 +5,23 @@
 #include "ASTRUMSTD_export.h"
 
 namespace System {
-namespace __Unsafe {} namespace __Ordering_Protected__Unsafe {}
+namespace __Unsafe {} namespace __Ordering$Protected__Unsafe {}
 //###############################################################################
 //# Type forward declarations
 //###############################################################################
 class Ordering;
-class __Class_Ordering;
+class $Class_Ordering;
+} namespace $extensions {
+} namespace System {
 //###############################################################################
 //# Type definitions
 //###############################################################################
-class __Class_Ordering;
+class $Class_Ordering;
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
 	struct Ordering final : public Builtin::Enum {
-		public: using __self = Ordering;
-		public: using __class = __Class_Ordering;
-		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
+		public: using $self = Ordering;
+		public: using $class = $Class_Ordering;
+		public: FORCE_INLINE constexpr decltype(auto) $ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) $ref() const noexcept { return *this; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
 		private: Builtin::i32 __value;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
@@ -38,8 +40,8 @@ class __Class_Ordering;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
 		public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
-		public: constexpr bool operator ==(const __self& that) const noexcept { return __value == that.__value; } 
-		public: constexpr auto operator <=>(const __self& that) const noexcept { return __value <=> that.__value; } 
+		public: constexpr bool operator ==(const $self& that) const noexcept { return __value == that.__value; } 
+		public: constexpr auto operator <=>(const $self& that) const noexcept { return __value <=> that.__value; } 
 		#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
 		public: static ASTRUMSTD_HIDDEN const Ordering Less;
 		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
@@ -50,7 +52,7 @@ class __Class_Ordering;
 		public: constexpr operator Builtin::i32() const noexcept { return __value; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
 		private: constexpr Ordering(Builtin::i32 value) : __value(value) {}
-		public: static constexpr __self FromValue(Builtin::i32 rawValue) { return __self(rawValue); }
+		public: static constexpr $self FromValue(Builtin::i32 rawValue) { return $self(rawValue); }
 		
 	};
 	
@@ -72,13 +74,13 @@ class __Class_Ordering;
 	
 	
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
-	class __Class_Ordering final : public Builtin::ValueType
+	class $Class_Ordering final : public Builtin::ValueType
 	{
 		#line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
-		public: using __underlying = Ordering; using __self = __underlying;
-		__self __value;
-		__Class_Ordering(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>) : __value{value} {}
-		operator __underlying() const noexcept { return __value; }
+		public: using $underlying = Ordering; using $self = $underlying;
+		$self __value;
+		$Class_Ordering(const $underlying& value) noexcept(std::is_nothrow_copy_constructible_v<$underlying>) : __value{value} {}
+		operator $underlying() const noexcept { return __value; }
 		
 	};
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"

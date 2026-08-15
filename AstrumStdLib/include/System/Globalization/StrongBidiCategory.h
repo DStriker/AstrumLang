@@ -5,21 +5,23 @@
 #include "ASTRUMSTD_export.h"
 
 namespace System::Globalization {
-namespace __Unsafe {} namespace __StrongBidiCategory_Protected__Unsafe {}
+namespace __Unsafe {} namespace __StrongBidiCategory$Protected__Unsafe {}
 //###############################################################################
 //# Type forward declarations
 //###############################################################################
 class StrongBidiCategory;
-class __Class_StrongBidiCategory;
+class $Class_StrongBidiCategory;
+} namespace $extensions {
+} namespace System::Globalization {
 //###############################################################################
 //# Type definitions
 //###############################################################################
-class __Class_StrongBidiCategory;
+class $Class_StrongBidiCategory;
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\StrongBidiCategory.ast"
 	struct StrongBidiCategory final : public Builtin::Enum {
-		public: using __self = StrongBidiCategory;
-		public: using __class = __Class_StrongBidiCategory;
-		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
+		public: using $self = StrongBidiCategory;
+		public: using $class = $Class_StrongBidiCategory;
+		public: FORCE_INLINE constexpr decltype(auto) $ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) $ref() const noexcept { return *this; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\StrongBidiCategory.ast"
 		private: Builtin::u8 __value;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\StrongBidiCategory.ast"
@@ -38,8 +40,8 @@ class __Class_StrongBidiCategory;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\StrongBidiCategory.ast"
 		public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\StrongBidiCategory.ast"
-		public: constexpr bool operator ==(const __self& that) const noexcept { return __value == that.__value; } 
-		public: constexpr auto operator <=>(const __self& that) const noexcept { return __value <=> that.__value; } 
+		public: constexpr bool operator ==(const $self& that) const noexcept { return __value == that.__value; } 
+		public: constexpr auto operator <=>(const $self& that) const noexcept { return __value <=> that.__value; } 
 		#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\StrongBidiCategory.ast"
 		public: static ASTRUMSTD_HIDDEN const StrongBidiCategory Other;
 		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\StrongBidiCategory.ast"
@@ -50,7 +52,7 @@ class __Class_StrongBidiCategory;
 		public: constexpr operator Builtin::u8() const noexcept { return __value; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\StrongBidiCategory.ast"
 		private: constexpr StrongBidiCategory(Builtin::u8 value) : __value(value) {}
-		public: static constexpr __self FromValue(Builtin::u8 rawValue) { return __self(rawValue); }
+		public: static constexpr $self FromValue(Builtin::u8 rawValue) { return $self(rawValue); }
 		
 	};
 	
@@ -72,13 +74,13 @@ class __Class_StrongBidiCategory;
 	
 	
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\StrongBidiCategory.ast"
-	class __Class_StrongBidiCategory final : public Builtin::ValueType
+	class $Class_StrongBidiCategory final : public Builtin::ValueType
 	{
 		#line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\StrongBidiCategory.ast"
-		public: using __underlying = StrongBidiCategory; using __self = __underlying;
-		__self __value;
-		__Class_StrongBidiCategory(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>) : __value{value} {}
-		operator __underlying() const noexcept { return __value; }
+		public: using $underlying = StrongBidiCategory; using $self = $underlying;
+		$self __value;
+		$Class_StrongBidiCategory(const $underlying& value) noexcept(std::is_nothrow_copy_constructible_v<$underlying>) : __value{value} {}
+		operator $underlying() const noexcept { return __value; }
 		
 	};
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\StrongBidiCategory.ast"

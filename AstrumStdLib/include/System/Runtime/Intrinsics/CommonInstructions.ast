@@ -1817,7 +1817,7 @@ public static class CommonInstructions: SimdInstructionSet {
                 vec.StoreAligned(buf.>buffer[@Unchecked 0]&);
                 result: T = buf.>buffer[@Unchecked 0];
                 for val in buf.>buffer {
-                    result = result.Min(val);
+                    result = val < result ? val : result;
                 }
                 return result;
             }
@@ -1829,7 +1829,7 @@ public static class CommonInstructions: SimdInstructionSet {
                 vec.StoreAligned(buf.>buffer[@Unchecked 0]&);
                 result: T = buf.>buffer[@Unchecked 0];
                 for val in buf.>buffer {
-                    result = result.Max(val);
+                    result = val > result ? val : result;
                 }
                 return result;
             }

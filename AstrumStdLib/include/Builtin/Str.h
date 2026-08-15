@@ -6,10 +6,10 @@ namespace Builtin {
 	struct RefStruct {};
 
 	struct Str : public RefStruct {
-		using __self  = Str;
-		using __class = __Class_Basic<Str>;
-		constexpr decltype(auto) __ref() noexcept { return *this; }
-		constexpr decltype(auto) __ref() const noexcept { return *this; }
+		using $self  = Str;
+		using $class = $Class_Basic<Str>;
+		constexpr decltype(auto) $ref() noexcept { return *this; }
+		constexpr decltype(auto) $ref() const noexcept { return *this; }
 
 		constexpr Str() noexcept : chars {nullptr}, len(0) {}
 		constexpr Str(const char* _chars, usize _length) noexcept : chars(_chars), len(_length) {}

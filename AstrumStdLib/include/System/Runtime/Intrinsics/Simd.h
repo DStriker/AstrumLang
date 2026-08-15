@@ -10,27 +10,23 @@ using namespace Arm;
 using namespace X86;
 
 namespace System::Runtime::Intrinsics {
-namespace __Unsafe {} namespace __Simd_Protected__Unsafe {}
+namespace __Unsafe {} namespace __Simd$Protected__Unsafe {}
 //###############################################################################
 //# Type forward declarations
 //###############################################################################
 class Simd;
-} namespace __extensions {
-template<class __TT> struct __static_IsCompileTimeSupported;
-template<class __TT> struct __static_getIsCompileTimeSupported;
-} namespace System::Runtime::Intrinsics {
 //###############################################################################
 //# Type definitions
 //###############################################################################
 #line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\Simd.ast"
 	struct Simd : public Builtin::StaticClass {
-		public: using __self = Simd;
+		public: using $self = Simd;
 		private: template<class L, class... Archs> class SupportedHelper;
 		public: 
 		#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\Simd.ast"
 		struct UnsupportedArch : public SimdInstructionSet {
-			public: using __self = UnsupportedArch;
-			private: using ___super = SimdInstructionSet;
+			public: using $self = UnsupportedArch;
+			private: using $super = SimdInstructionSet;
 			#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\Simd.ast"
 			ADV_CHECK_STATIC_CLASS("SimdInstructionSet", SimdInstructionSet);
 			private: UnsupportedArch() = default;
@@ -48,7 +44,7 @@ template<class __TT> struct __static_getIsCompileTimeSupported;
 		public: 
 		#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\Simd.ast"
 		template<class... Archs> struct ArchList : public Builtin::StaticClass {
-			public: using __self = ArchList<Archs...>;
+			public: using $self = ArchList<Archs...>;
 			#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\Simd.ast"
 			public: using Best = std::conditional_t<std::is_same_v<typename Builtin::template TypeListHead<Archs...>, typename Builtin::FakeTypeTag>, UnsupportedArch, typename Builtin::template TypeListHead<Archs...>>;
 			#line 20 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\Simd.ast"
@@ -62,7 +58,7 @@ template<class __TT> struct __static_getIsCompileTimeSupported;
 		private: 
 		#line 42 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\Simd.ast"
 		template<class L> struct SupportedHelper<L, ArchList<>> : public Builtin::StaticClass {
-			public: using __self = SupportedHelper<L, ArchList<>>;
+			public: using $self = SupportedHelper<L, ArchList<>>;
 			#line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\Simd.ast"
 			public: using SupportedType = L;
 			private: SupportedHelper() = default;
@@ -72,8 +68,8 @@ template<class __TT> struct __static_getIsCompileTimeSupported;
 		private: 
 		#line 45 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\Simd.ast"
 		template<class L, class Arch, class... Archs> struct SupportedHelper<L, ArchList<Arch, Archs...>> : public SupportedHelper<std::conditional_t<ADV_USPCS(IsCompileTimeSupported, Arch)(), typename L::template Add<Arch>, L>, ArchList<Archs...>> {
-			public: using __self = SupportedHelper<L, ArchList<Arch, Archs...>>;
-			private: using ___super = SupportedHelper<std::conditional_t<ADV_USPCS(IsCompileTimeSupported, Arch)(), typename L::template Add<Arch>, L>, ArchList<Archs...>>;
+			public: using $self = SupportedHelper<L, ArchList<Arch, Archs...>>;
+			private: using $super = SupportedHelper<std::conditional_t<ADV_USPCS(IsCompileTimeSupported, Arch)(), typename L::template Add<Arch>, L>, ArchList<Archs...>>;
 			#line 46 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\Simd.ast"
 			ADV_CHECK_STATIC_CLASS("SupportedHelper<Arch.IsCompileTimeSupported?L.Add<Arch>:L,ArchList<Archs...>>", SupportedHelper<std::conditional_t<ADV_USPCS(IsCompileTimeSupported, Arch)(), typename L::template Add<Arch>, L>, ArchList<Archs...>>);
 			private: SupportedHelper() = default;
@@ -83,8 +79,8 @@ template<class __TT> struct __static_getIsCompileTimeSupported;
 		private: 
 		#line 48 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\Simd.ast"
 		template<class... Archs> struct Supported : public SupportedHelper<ArchList<>, Archs...> {
-			public: using __self = Supported<Archs...>;
-			private: using ___super = SupportedHelper<ArchList<>, Archs...>;
+			public: using $self = Supported<Archs...>;
+			private: using $super = SupportedHelper<ArchList<>, Archs...>;
 			#line 48 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\Simd.ast"
 			ADV_CHECK_STATIC_CLASS("SupportedHelper<ArchList<>,Archs...>", SupportedHelper<ArchList<>, Archs...>);
 			private: Supported() = default;
@@ -94,7 +90,7 @@ template<class __TT> struct __static_getIsCompileTimeSupported;
 		private: 
 		#line 57 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\Simd.ast"
 		template<class Functor, class... Archs> struct InvokeDispatcher : public Builtin::StaticClass {
-			public: using __self = InvokeDispatcher<Functor, Archs...>;
+			public: using $self = InvokeDispatcher<Functor, Archs...>;
 			#line 58 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\Simd.ast"
 			public: using UsedInstructionSets = ArchList<Archs...>;
 			private: InvokeDispatcher() = default;
@@ -147,7 +143,17 @@ template<class __TT> struct __static_getIsCompileTimeSupported;
 		
 	};
 	
-	//###############################################################################
+	} namespace $extensions {
+template<class __TT> struct $static_IsCompileTimeSupported;
+template<class __TT> struct $static_getIsCompileTimeSupported;
+template<class __TT> struct $static_IsRuntimeAvailable;
+template<class __TT> struct $static_getIsRuntimeAvailable;
+template<class __TT> struct $static_Length;
+template<class __TT> struct $static_getLength;
+template<class __TT> struct $static_Sum;
+template<class __TT> struct $static_getSum;
+} namespace System::Runtime::Intrinsics {
+//###############################################################################
 //# Function definitions
 //###############################################################################
 

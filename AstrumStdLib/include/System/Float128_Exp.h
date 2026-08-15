@@ -6,7 +6,13 @@
 #include "InlineArray.h"
 
 namespace System {
-namespace __Unsafe {} namespace __Float128_Exp_Protected__Unsafe {}
+namespace __Unsafe {} namespace __Float128_Exp$Protected__Unsafe {}
+} namespace $extensions {
+template<class __TT> struct $static_MinValue;
+template<class __TT> struct $static_getMinValue;
+template<class __TT> struct $static_FromBits;
+template<class __TT> struct $static_getFromBits;
+} namespace System {
 //###############################################################################
 //# Free function declarations
 //###############################################################################

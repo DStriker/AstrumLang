@@ -1,6 +1,8 @@
 package System;
 
-public import MutableSpan;
+public import Range;
+public import System.Runtime.CompilerServices.Unsafe;
+import System.Runtime.Intrinsics.Simd;
 
 public ref struct <T> Span: ISelfEquatable, IAbstractSequence, ISequence<T> {
     public type ElementType = T;
@@ -129,6 +131,45 @@ public ref struct <T> Span: ISelfEquatable, IAbstractSequence, ISequence<T> {
     public static UnsafeCreate: (in ref data: T, length: usize) -> self == {
         return self(data, length);
     }
+
+    // Searches for the specified value and returns true if found
+    public Contains: (in ref val: T) -> bool == {
+        static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+        if consteval {
+            for i in this {
+                if i == val {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            if version(X86 or ARM) {
+                static if Builtin.IsBitwiseEquatable<T> {
+                    // SIMD path
+                    static if sizeof(T) == 1 {
+                        return SpanHelpers.ContainsByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(_data), _length), 
+                            Unsafe.BitCast<byte>(val));
+                    } else static if sizeof(T) == 2 {
+                        return SpanHelpers.ContainsWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(_data), _length), 
+                            Unsafe.BitCast<u16>(val));
+                    } else static if sizeof(T) == 4 {
+                        return SpanHelpers.ContainsDword(Span<u32>::UnsafeCreate(Unsafe.As<u32>(_data), _length), 
+                            Unsafe.BitCast<u32>(val));
+                    } else static if sizeof(T) == 8 {
+                        return SpanHelpers.ContainsQword(Span<u64>::UnsafeCreate(Unsafe.As<u64>(_data), _length), 
+                            Unsafe.BitCast<u64>(val));
+                    }
+                } else {
+                    // Regular path
+                    return SpanHelpers.ContainsGeneralCase(this, val);
+                }
+            } else {
+                return SpanHelpers.ContainsGeneralCase(this, val);
+            }
+        }
+    }
+
+    public operator in: (in ref val: T) -> bool ==> Contains(val);
 }
 
 public extension <T> Span {
@@ -141,11 +182,284 @@ public extension <T> Span {
             return Span<byte>(UnsafePointerCast<byte>(this.GetDataReference()&), this.Length * sizeof(T));
         }
     }
+    AsSpan: Span<T> ==> this;
+}
+
+public ref struct <T> MutableSpan: ISelfEquatable, IAbstractSequence, ISequence<T> {
+    public type ElementType = T;
+
+    private _data: &mut T;
+    private _length: usize;
+
+    public unsafe this(ptr: *T, length: usize) == {
+        this._data = ptr*;
+        this._length = length;
+
+        if ptr == null {
+            throw Builtin.InvalidArgumentException();
+        }
+    }
+
+    private this(ref data: T, length: usize) noexcept == {
+        this._data = data;
+        this._length = length;
+    }
+
+    public implicit this<S: usize>(arr: &mut T[S]) noexcept == {
+        this._data = arr.GetDataReference();
+        this._length = S;
+    }
+
+    public this[index: i32] -> &mut T == {
+        let realIndex := index as usize;
+        if realIndex >= _length {
+            throw Builtin.IndexOutOfRangeException();
+        }
+        return Unsafe.Add(_data, realIndex);
+    }
+    @Unchecked
+    public this[index: i32] -> &mut T == {
+        return Unsafe.Add(_data, index as usize);
+    }
+    public this[index: Index] -> &mut T == {
+        let realIndex := index.Offset(_length) as usize;
+
+        if realIndex >= _length {
+            throw Builtin.IndexOutOfRangeException();
+        }
+        return Unsafe.Add(_data, realIndex);
+    }
+    @Unchecked
+    public this[index: Index] -> &mut T == {
+        return Unsafe.Add(_data, index.Offset(_length) as usize);
+    }
+    public this[range: IndexRange] -> self == {
+        let start := range.Start.Offset(_length) as usize;
+        let len := range.Length(_length);
+
+        if start >= _length or (start + len) > _length {
+            throw Builtin.IndexOutOfRangeException();
+        }
+        return self(Unsafe.Add(_data, start), len);
+    }
+    @Unchecked
+    public this[range: IndexRange] -> self == {
+        return self(Unsafe.Add(_data, range.Start.Offset(_length) as usize), range.Length(_length));
+    }
+
+    public Slice: (start: usize) -> self == {
+        if start >= _length {
+            throw Builtin.IndexOutOfRangeException();
+        }
+        return self(Unsafe.Add(_data, start), _length - start);
+    }
+
+    public Slice: (start: usize, length: usize) -> self == {
+        if start + length >= _length {
+            throw Builtin.IndexOutOfRangeException();
+        }
+        return self(Unsafe.Add(_data, start), length);
+    }
+
+    public operator==: (other: self) -> bool noexcept == {
+        return _length == other._length and Unsafe.AreSame(_data, other._data);
+    }
+
+    public GetLength: () -> usize noexcept ==> _length;
+    public GetDataReference: () -> &mut T noexcept ==> _data;
+
+    public ref struct Iterator: IAbstractIterator, IIterator<T>, IAbstractRefIterator, IRefIterator<T> {
+        public type ElementType = T;
+
+        private _ref: &mut T;
+        private _length: usize;
+        private _index: usize;
+        friend MutableSpan<T>;
+
+        private this(span: MutableSpan<T>) noexcept == {
+            this._ref = span.GetDataReference();
+            this._length = span.Length;
+            this._index = usize.MaxValue;
+        }
+
+        public mut MoveNext: () -> bool noexcept == {
+            let newIndex := _index +% 1uz;
+            if newIndex < _length {
+                _index = newIndex;
+                return true;
+            }
+            return false;
+        }
+        
+        public mut Reset: () noexcept == {
+            _index = usize.MaxValue;
+        }
+
+        public GetCurrent: () -> T == {
+            return Unsafe.Add(_ref, _index);
+        }
+
+        public GetCurrentRef: () -> ref T == {
+            return Unsafe.Add(_ref, _index);
+        }
+    }
+    public Iterate: () -> Iterator ==> Iterator(this);
+    
+    public static UnsafeCreate: (ref data: T, length: usize) -> self == {
+        return self(&data, length);
+    }
+
+    // Searches for the specified value and returns true if found
+    public Contains: (in ref val: T) -> bool == {
+        return this.AsSpan.Contains(val);
+    }
+    public operator in: (in ref val: T) -> bool ==> Contains(val);
+}
+
+public extension <T> MutableSpan {
+    Length: usize ==> this.GetLength();
+    IsEmpty: bool ==> this.GetLength() == 0u;
+
+    AsBytes: MutableSpan<byte> ==
+    {
+        unsafe {
+            return MutableSpan<byte>(UnsafePointerCast<byte>(this.GetDataReference()&), this.Length * sizeof(T));
+        }
+    }
+    AsSpan: Span<T> ==> this;
+    AsMutableSpan: () -> MutableSpan<T> ==> this;
+}
+
+public static class SpanHelpers {
+    public ContainsGeneralCase: <T> (data: T[&], val: T) -> bool {
+        length := data.Length;
+        offset: i32;
+        while length >= 8u {
+            length -= 8u;
+
+            if data[@Unchecked offset] == val or
+                data[@Unchecked offset + 1] == val or
+                data[@Unchecked offset + 2] == val or
+                data[@Unchecked offset + 3] == val or
+                data[@Unchecked offset + 4] == val or
+                data[@Unchecked offset + 5] == val or
+                data[@Unchecked offset + 6] == val or
+                data[@Unchecked offset + 7] == val
+            {
+                return true;
+            }
+
+            offset += 8;
+        }
+
+        while length >= 4u {
+            length -= 4u;
+
+            if data[@Unchecked offset] == val or
+                data[@Unchecked offset + 1] == val or
+                data[@Unchecked offset + 2] == val or
+                data[@Unchecked offset + 3] == val
+            {
+                return true;
+            }
+
+            offset += 4;
+        }
+
+        while length > 0 {
+            --length;
+            if data[@Unchecked offset] == val {
+                return true;
+            }
+            ++offset;
+        }
+        return false;
+    }
+
+    public ContainsByte: (data: byte[&], val: byte) -> bool {
+        let length := data.Length;
+        if length < 16u {
+            return ContainsGeneralCase(data, val);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanContains<byte>, Neon, Sse2>(data, val);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanContains<byte>, Neon, Avx2, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanContains<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val);
+        }
+    }
+
+    public ContainsWord: (data: u16[&], val: u16) -> bool {
+        let length := data.Length;
+        if length < 8u {
+            return ContainsGeneralCase(data, val);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanContains<u16>, Neon, Sse2>(data, val);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanContains<u16>, Neon, Avx2, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanContains<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val);
+        }
+    }
+
+    public ContainsDword: (data: u32[&], val: u32) -> bool {
+        let length := data.Length;
+        if length < 4u {
+            return ContainsGeneralCase(data, val);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanContains<u32>, Neon, Avx512VL128, Sse2>(data, val);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanContains<u32>, Neon, Avx512VL256, Avx2, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanContains<u32>, Neon, Avx512F, Avx2, Sse2>(data, val);
+        }
+    }
+
+    public ContainsQword: (data: u64[&], val: u64) -> bool {
+        let length := data.Length;
+        if length < 2u {
+            return ContainsGeneralCase(data, val);
+        } else if length < 4u {
+            return Simd.RuntimeDispatch<SpanContains<u64>, Neon, Avx512VL128, Sse42, Sse2>(data, val);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanContains<u64>, Neon, Avx512VL256, Avx2, Sse42, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanContains<u64>, Neon, Avx512F, Avx2, Sse42, Sse2>(data, val);
+        }
+    }
+}
+
+private static class <T> SpanContains {
+    public Invoke: <Arch> (data: T[&], val: T) -> bool {
+        type TVector = SimdVector<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := count - vecSize;
+        let values := TVector::Create(val);
+        current: TVector;
+        for i := 0u; i <= vecLast; i += vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i]);
+            if current.EqualsAny(values) {
+                return true;
+            }
+        }
+        if not count.IsMultipleOf(vecSize) {
+            current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
+            if current.EqualsAny(values) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 static assert(sizeof(i32[&]) == sizeof(usize) * 2, "Span should be 2 pointers wide");
 static assert(type i32[&] is ISelfEquatable, "i32[&] should be ISelfEquatable");
 static assert(type i32[&] is IEquatable<i32[&]>, "i32[&] should be IEquatable<i32[&]>");
+
+static assert(sizeof(i32[&mut]) == sizeof(usize) * 2, "MutableSpan should be 2 pointers wide");
+static assert(type i32[&mut] is ISelfEquatable, "i32[&mut] should be ISelfEquatable");
+static assert(type i32[&mut] is IEquatable<i32[&mut]>, "i32[&mut] should be IEquatable<i32[&mut]>");
 
 test "Span" {
     arr: i32[_] = [1, 2, 3, 4, 5];
@@ -162,10 +476,35 @@ test "Span" {
     assert sp == sp2;
     assert sp[..^1u].Length == 2;
     assert sp[..=^1u].Length == 3;
-    spm: i32[&mut] = MutableSpan<i32>.UnsafeCreate(&arr[1], 3u);
-    sp = spm;
+    spmm: i32[&mut] = MutableSpan<i32>.UnsafeCreate(&arr[1], 3u);
+    sp = spmm;
     assert sp[0] == 2;
     assert sp[1] == 3;
     assert sp[2] == 4;
+
+    arrwide: i32[_] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+    sp = arrwide[1u..^1u];
+
+    assert 3 in sp;
+    assert 13 in sp;
+    assert 26 not in sp;
+
+    let spm: i32[&mut] = MutableSpan<i32>.UnsafeCreate(&arr[1], 3u);
+    assert spm.Length == 3;
+    assert not spm.IsEmpty;
+    spm[0] = 20;
+    assert spm[0] == 20;
+    assert spm[1] == 3;
+    assert spm[2] == 4;
+    assert spm[@Unchecked 3] == 5;
+    assert spm[^1u] == 4;
+    assert spm[^2u] == 3;
+    spm2: i32[&mut] = MutableSpan<i32>.UnsafeCreate(&arr[1], 3u);
+    assert spm == spm2;
+    assert spm[..^1u].Length == 2;
+    assert spm[..=^1u].Length == 3;
+
+    assert 3 in spm;
+    assert 6 not in spm;
 }
 

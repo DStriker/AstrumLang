@@ -169,15 +169,15 @@ inline constexpr auto S11 = ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builti
 #line 627 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 inline constexpr auto S12 = ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FAB3D19FFD7AD8BF000000000000000"));
 #line 629 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-inline constexpr auto AtanHi = Builtin::ToInlineArray<Builtin::f128>({Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFDDAC670561BB4F68ADFC88BD97875"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFE921FB54442D18469898CC51701B8"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFEF730BD281F69B200F10F5E197794"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFF921FB54442D18469898CC51701B8")))});
+inline constexpr Builtin::InlineArray<4, Builtin::f128> AtanHi = Builtin::ToInlineArray<Builtin::f128>({Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFDDAC670561BB4F68ADFC88BD97875"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFE921FB54442D18469898CC51701B8"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFEF730BD281F69B200F10F5E197794"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFF921FB54442D18469898CC51701B8")))});
 #line 636 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-inline constexpr auto AtanLo = Builtin::ToInlineArray<Builtin::f128>({Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3F89A06DC282B0E4C39BE01C59E2DCDD"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3F8BCD129024E088A67CC74020BBEA64"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBF8BEBE566C99ADA9F231BCCAE27916C"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3F8CCD129024E088A67CC74020BBEA64")))});
+inline constexpr Builtin::InlineArray<4, Builtin::f128> AtanLo = Builtin::ToInlineArray<Builtin::f128>({Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3F89A06DC282B0E4C39BE01C59E2DCDD"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3F8BCD129024E088A67CC74020BBEA64"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBF8BEBE566C99ADA9F231BCCAE27916C"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3F8CCD129024E088A67CC74020BBEA64")))});
 #line 643 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-inline constexpr auto AT = Builtin::ToInlineArray<Builtin::f128>({Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFD5555555555555555555555555551"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFFC999999999999999999999999149E"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFC2492492492492492492490794362"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFFBC71C71C71C71C71C71C1C2AFE323"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFB745D1745D1745D174185B65D7596"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFFB3B13B13B13B13B118C1975E2A610"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFB1111111111111057D0A538CAD4F9"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFFAE1E1E1E1E1E1889E87FC4C058330"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFAAF286BCA1AE28E037B9171F0F80C"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFFA861861861632788A5CC72D12DD95"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFA642C8590766CAC8236DD04294B9B"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFFA47AE1475D4D458F3E5A99BC9E94B"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFA2F684B8258F7459A07EDD01DF529"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFFA1A7B9140F09651610294D6980DCE"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFA0841D983C8EFF2467423A0A86E23"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFF9F0781F2D564379FDACD9A9394763"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FF9D3FEEE0C8B8DBEED38882F4E9337"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFF9BA14C1DA11FB7C8BAE68A03D216F"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FF9A078FBEBF61BE4A8F661AE4EEFE2"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFF9812953610BD44D6FFEC7D9A23D57"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FF94F98EB1394EEE119CF2D75D7C25B"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFF8FA3B3B6B7AE1B137A0499210FD65"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FF81B46E01727FC7DCF338D5EAA9BA0"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFF652D94B4071FF85CE62C980D9F92C")))});
+inline constexpr Builtin::InlineArray<24, Builtin::f128> AT = Builtin::ToInlineArray<Builtin::f128>({Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFD5555555555555555555555555551"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFFC999999999999999999999999149E"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFC2492492492492492492490794362"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFFBC71C71C71C71C71C71C1C2AFE323"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFB745D1745D1745D174185B65D7596"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFFB3B13B13B13B13B118C1975E2A610"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFB1111111111111057D0A538CAD4F9"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFFAE1E1E1E1E1E1889E87FC4C058330"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFAAF286BCA1AE28E037B9171F0F80C"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFFA861861861632788A5CC72D12DD95"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFA642C8590766CAC8236DD04294B9B"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFFA47AE1475D4D458F3E5A99BC9E94B"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFA2F684B8258F7459A07EDD01DF529"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFFA1A7B9140F09651610294D6980DCE"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFA0841D983C8EFF2467423A0A86E23"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFF9F0781F2D564379FDACD9A9394763"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FF9D3FEEE0C8B8DBEED38882F4E9337"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFF9BA14C1DA11FB7C8BAE68A03D216F"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FF9A078FBEBF61BE4A8F661AE4EEFE2"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFF9812953610BD44D6FFEC7D9A23D57"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FF94F98EB1394EEE119CF2D75D7C25B"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFF8FA3B3B6B7AE1B137A0499210FD65"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FF81B46E01727FC7DCF338D5EAA9BA0"))), Builtin::f128(ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0xBFF652D94B4071FF85CE62C980D9F92C")))});
 #line 671 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-inline constexpr auto IPIO2 = Builtin::ToInlineArray<Builtin::i32>({Builtin::i32(Builtin::i32(0xA2F983)), Builtin::i32(Builtin::i32(0x6E4E44)), Builtin::i32(Builtin::i32(0x1529FC)), Builtin::i32(Builtin::i32(0x2757D1)), Builtin::i32(Builtin::i32(0xF534DD)), Builtin::i32(Builtin::i32(0xC0DB62)), Builtin::i32(Builtin::i32(0x95993C)), Builtin::i32(Builtin::i32(0x439041)), Builtin::i32(Builtin::i32(0xFE5163)), Builtin::i32(Builtin::i32(0xABDEBB)), Builtin::i32(Builtin::i32(0xC561B7)), Builtin::i32(Builtin::i32(0x246E3A)), Builtin::i32(Builtin::i32(0x424DD2)), Builtin::i32(Builtin::i32(0xE00649)), Builtin::i32(Builtin::i32(0x2EEA09)), Builtin::i32(Builtin::i32(0xD1921C)), Builtin::i32(Builtin::i32(0xFE1DEB)), Builtin::i32(Builtin::i32(0x1CB129)), Builtin::i32(Builtin::i32(0xA73EE8)), Builtin::i32(Builtin::i32(0x8235F5)), Builtin::i32(Builtin::i32(0x2EBB44)), Builtin::i32(Builtin::i32(0x84E99C)), Builtin::i32(Builtin::i32(0x7026B4)), Builtin::i32(Builtin::i32(0x5F7E41)), Builtin::i32(Builtin::i32(0x3991D6)), Builtin::i32(Builtin::i32(0x398353)), Builtin::i32(Builtin::i32(0x39F49C)), Builtin::i32(Builtin::i32(0x845F8B)), Builtin::i32(Builtin::i32(0xBDF928)), Builtin::i32(Builtin::i32(0x3B1FF8)), Builtin::i32(Builtin::i32(0x97FFDE)), Builtin::i32(Builtin::i32(0x05980F)), Builtin::i32(Builtin::i32(0xEF2F11)), Builtin::i32(Builtin::i32(0x8B5A0A)), Builtin::i32(Builtin::i32(0x6D1F6D)), Builtin::i32(Builtin::i32(0x367ECF)), Builtin::i32(Builtin::i32(0x27CB09)), Builtin::i32(Builtin::i32(0xB74F46)), Builtin::i32(Builtin::i32(0x3F669E)), Builtin::i32(Builtin::i32(0x5FEA2D)), Builtin::i32(Builtin::i32(0x7527BA)), Builtin::i32(Builtin::i32(0xC7EBE5)), Builtin::i32(Builtin::i32(0xF17B3D)), Builtin::i32(Builtin::i32(0x0739F7)), Builtin::i32(Builtin::i32(0x8A5292)), Builtin::i32(Builtin::i32(0xEA6BFB)), Builtin::i32(Builtin::i32(0x5FB11F)), Builtin::i32(Builtin::i32(0x8D5D08)), Builtin::i32(Builtin::i32(0x560330)), Builtin::i32(Builtin::i32(0x46FC7B)), Builtin::i32(Builtin::i32(0x6BABF0)), Builtin::i32(Builtin::i32(0xCFBC20)), Builtin::i32(Builtin::i32(0x9AF436)), Builtin::i32(Builtin::i32(0x1DA9E3)), Builtin::i32(Builtin::i32(0x91615E)), Builtin::i32(Builtin::i32(0xE61B08)), Builtin::i32(Builtin::i32(0x659985)), Builtin::i32(Builtin::i32(0x5F14A0)), Builtin::i32(Builtin::i32(0x68408D)), Builtin::i32(Builtin::i32(0xFFD880)), Builtin::i32(Builtin::i32(0x4D7327)), Builtin::i32(Builtin::i32(0x310606)), Builtin::i32(Builtin::i32(0x1556CA)), Builtin::i32(Builtin::i32(0x73A8C9)), Builtin::i32(Builtin::i32(0x60E27B)), Builtin::i32(Builtin::i32(0xC08C6B)), Builtin::i32(Builtin::i32(0x47C419)), Builtin::i32(Builtin::i32(0xC367CD)), Builtin::i32(Builtin::i32(0xDCE809)), Builtin::i32(Builtin::i32(0x2A8359)), Builtin::i32(Builtin::i32(0xC4768B)), Builtin::i32(Builtin::i32(0x961CA6)), Builtin::i32(Builtin::i32(0xDDAF44)), Builtin::i32(Builtin::i32(0xD15719)), Builtin::i32(Builtin::i32(0x053EA5)), Builtin::i32(Builtin::i32(0xFF0705)), Builtin::i32(Builtin::i32(0x3F7E33)), Builtin::i32(Builtin::i32(0xE832C2)), Builtin::i32(Builtin::i32(0xDE4F98)), Builtin::i32(Builtin::i32(0x327DBB)), Builtin::i32(Builtin::i32(0xC33D26)), Builtin::i32(Builtin::i32(0xEF6B1E)), Builtin::i32(Builtin::i32(0x5EF89F)), Builtin::i32(Builtin::i32(0x3A1F35)), Builtin::i32(Builtin::i32(0xCAF27F)), Builtin::i32(Builtin::i32(0x1D87F1)), Builtin::i32(Builtin::i32(0x21907C)), Builtin::i32(Builtin::i32(0x7C246A)), Builtin::i32(Builtin::i32(0xFA6ED5)), Builtin::i32(Builtin::i32(0x772D30)), Builtin::i32(Builtin::i32(0x433B15)), Builtin::i32(Builtin::i32(0xC614B5)), Builtin::i32(Builtin::i32(0x9D19C3)), Builtin::i32(Builtin::i32(0xC2C4AD)), Builtin::i32(Builtin::i32(0x414D2C)), Builtin::i32(Builtin::i32(0x5D000C)), Builtin::i32(Builtin::i32(0x467D86)), Builtin::i32(Builtin::i32(0x2D71E3)), Builtin::i32(Builtin::i32(0x9AC69B)), Builtin::i32(Builtin::i32(0x006233)), Builtin::i32(Builtin::i32(0x7CD2B4)), Builtin::i32(Builtin::i32(0x97A7B4)), Builtin::i32(Builtin::i32(0xD55537)), Builtin::i32(Builtin::i32(0xF63ED7)), Builtin::i32(Builtin::i32(0x1810A3)), Builtin::i32(Builtin::i32(0xFC764D)), Builtin::i32(Builtin::i32(0x2A9D64)), Builtin::i32(Builtin::i32(0xABD770)), Builtin::i32(Builtin::i32(0xF87C63)), Builtin::i32(Builtin::i32(0x57B07A)), Builtin::i32(Builtin::i32(0xE71517)), Builtin::i32(Builtin::i32(0x5649C0)), Builtin::i32(Builtin::i32(0xD9D63B)), Builtin::i32(Builtin::i32(0x3884A7)), Builtin::i32(Builtin::i32(0xCB2324)), Builtin::i32(Builtin::i32(0x778AD6)), Builtin::i32(Builtin::i32(0x23545A)), Builtin::i32(Builtin::i32(0xB91F00)), Builtin::i32(Builtin::i32(0x1B0AF1)), Builtin::i32(Builtin::i32(0xDFCE19)), Builtin::i32(Builtin::i32(0xFF319F)), Builtin::i32(Builtin::i32(0x6A1E66)), Builtin::i32(Builtin::i32(0x615799)), Builtin::i32(Builtin::i32(0x47FBAC)), Builtin::i32(Builtin::i32(0xD87F7E)), Builtin::i32(Builtin::i32(0xB76522)), Builtin::i32(Builtin::i32(0x89E832)), Builtin::i32(Builtin::i32(0x60BFE6)), Builtin::i32(Builtin::i32(0xCDC4EF)), Builtin::i32(Builtin::i32(0x09366C)), Builtin::i32(Builtin::i32(0xD43F5D)), Builtin::i32(Builtin::i32(0xD7DE16)), Builtin::i32(Builtin::i32(0xDE3B58)), Builtin::i32(Builtin::i32(0x929BDE)), Builtin::i32(Builtin::i32(0x2822D2)), Builtin::i32(Builtin::i32(0xE88628)), Builtin::i32(Builtin::i32(0x4D58E2)), Builtin::i32(Builtin::i32(0x32CAC6)), Builtin::i32(Builtin::i32(0x16E308)), Builtin::i32(Builtin::i32(0xCB7DE0)), Builtin::i32(Builtin::i32(0x50C017)), Builtin::i32(Builtin::i32(0xA71DF3)), Builtin::i32(Builtin::i32(0x5BE018)), Builtin::i32(Builtin::i32(0x34132E)), Builtin::i32(Builtin::i32(0x621283)), Builtin::i32(Builtin::i32(0x014883)), Builtin::i32(Builtin::i32(0x5B8EF5)), Builtin::i32(Builtin::i32(0x7FB0AD)), Builtin::i32(Builtin::i32(0xF2E91E)), Builtin::i32(Builtin::i32(0x434A48)), Builtin::i32(Builtin::i32(0xD36710)), Builtin::i32(Builtin::i32(0xD8DDAA)), Builtin::i32(Builtin::i32(0x425FAE)), Builtin::i32(Builtin::i32(0xCE616A)), Builtin::i32(Builtin::i32(0xA4280A)), Builtin::i32(Builtin::i32(0xB499D3)), Builtin::i32(Builtin::i32(0xF2A606)), Builtin::i32(Builtin::i32(0x7F775C)), Builtin::i32(Builtin::i32(0x83C2A3)), Builtin::i32(Builtin::i32(0x883C61)), Builtin::i32(Builtin::i32(0x78738A)), Builtin::i32(Builtin::i32(0x5A8CAF)), Builtin::i32(Builtin::i32(0xBDD76F)), Builtin::i32(Builtin::i32(0x63A62D)), Builtin::i32(Builtin::i32(0xCBBFF4)), Builtin::i32(Builtin::i32(0xEF818D)), Builtin::i32(Builtin::i32(0x67C126)), Builtin::i32(Builtin::i32(0x45CA55)), Builtin::i32(Builtin::i32(0x36D9CA)), Builtin::i32(Builtin::i32(0xD2A828)), Builtin::i32(Builtin::i32(0x8D61C2)), Builtin::i32(Builtin::i32(0x77C912)), Builtin::i32(Builtin::i32(0x142604)), Builtin::i32(Builtin::i32(0x9B4612)), Builtin::i32(Builtin::i32(0xC459C4)), Builtin::i32(Builtin::i32(0x44C5C8)), Builtin::i32(Builtin::i32(0x91B24D)), Builtin::i32(Builtin::i32(0xF31700)), Builtin::i32(Builtin::i32(0xAD43D4)), Builtin::i32(Builtin::i32(0xE54929)), Builtin::i32(Builtin::i32(0x10D5FD)), Builtin::i32(Builtin::i32(0xFCBE00)), Builtin::i32(Builtin::i32(0xCC941E)), Builtin::i32(Builtin::i32(0xEECE70)), Builtin::i32(Builtin::i32(0xF53E13)), Builtin::i32(Builtin::i32(0x80F1EC)), Builtin::i32(Builtin::i32(0xC3E7B3)), Builtin::i32(Builtin::i32(0x28F8C7)), Builtin::i32(Builtin::i32(0x940593)), Builtin::i32(Builtin::i32(0x3E71C1)), Builtin::i32(Builtin::i32(0xB3092E)), Builtin::i32(Builtin::i32(0xF3450B)), Builtin::i32(Builtin::i32(0x9C1288)), Builtin::i32(Builtin::i32(0x7B20AB)), Builtin::i32(Builtin::i32(0x9FB52E)), Builtin::i32(Builtin::i32(0xC29247)), Builtin::i32(Builtin::i32(0x2F327B)), Builtin::i32(Builtin::i32(0x6D550C)), Builtin::i32(Builtin::i32(0x90A772)), Builtin::i32(Builtin::i32(0x1FE76B)), Builtin::i32(Builtin::i32(0x96CB31)), Builtin::i32(Builtin::i32(0x4A1679)), Builtin::i32(Builtin::i32(0xE27941)), Builtin::i32(Builtin::i32(0x89DFF4)), Builtin::i32(Builtin::i32(0x9794E8)), Builtin::i32(Builtin::i32(0x84E6E2)), Builtin::i32(Builtin::i32(0x973199)), Builtin::i32(Builtin::i32(0x6BED88)), Builtin::i32(Builtin::i32(0x365F5F)), Builtin::i32(Builtin::i32(0x0EFDBB)), Builtin::i32(Builtin::i32(0xB49A48)), Builtin::i32(Builtin::i32(0x6CA467)), Builtin::i32(Builtin::i32(0x427271)), Builtin::i32(Builtin::i32(0x325D8D)), Builtin::i32(Builtin::i32(0xB8159F)), Builtin::i32(Builtin::i32(0x09E5BC)), Builtin::i32(Builtin::i32(0x25318D)), Builtin::i32(Builtin::i32(0x3974F7)), Builtin::i32(Builtin::i32(0x1C0530)), Builtin::i32(Builtin::i32(0x010C0D)), Builtin::i32(Builtin::i32(0x68084B)), Builtin::i32(Builtin::i32(0x58EE2C)), Builtin::i32(Builtin::i32(0x90AA47)), Builtin::i32(Builtin::i32(0x02E774)), Builtin::i32(Builtin::i32(0x24D6BD)), Builtin::i32(Builtin::i32(0xA67DF7)), Builtin::i32(Builtin::i32(0x72486E)), Builtin::i32(Builtin::i32(0xEF169F)), Builtin::i32(Builtin::i32(0xA6948E)), Builtin::i32(Builtin::i32(0xF691B4)), Builtin::i32(Builtin::i32(0x5153D1)), Builtin::i32(Builtin::i32(0xF20ACF)), Builtin::i32(Builtin::i32(0x339820)), Builtin::i32(Builtin::i32(0x7E4BF5)), Builtin::i32(Builtin::i32(0x6863B2)), Builtin::i32(Builtin::i32(0x5F3EDD)), Builtin::i32(Builtin::i32(0x035D40)), Builtin::i32(Builtin::i32(0x7F8985)), Builtin::i32(Builtin::i32(0x295255)), Builtin::i32(Builtin::i32(0xC06437)), Builtin::i32(Builtin::i32(0x10D86D)), Builtin::i32(Builtin::i32(0x324832)), Builtin::i32(Builtin::i32(0x754C5B)), Builtin::i32(Builtin::i32(0xD4714E)), Builtin::i32(Builtin::i32(0x6E5445)), Builtin::i32(Builtin::i32(0xC1090B)), Builtin::i32(Builtin::i32(0x69F52A)), Builtin::i32(Builtin::i32(0xD56614)), Builtin::i32(Builtin::i32(0x9D0727)), Builtin::i32(Builtin::i32(0x50045D)), Builtin::i32(Builtin::i32(0xDB3BB4)), Builtin::i32(Builtin::i32(0xC576EA)), Builtin::i32(Builtin::i32(0x17F987)), Builtin::i32(Builtin::i32(0x7D6B49)), Builtin::i32(Builtin::i32(0xBA271D)), Builtin::i32(Builtin::i32(0x296996)), Builtin::i32(Builtin::i32(0xACCCC6)), Builtin::i32(Builtin::i32(0x5414AD)), Builtin::i32(Builtin::i32(0x6AE290)), Builtin::i32(Builtin::i32(0x89D988)), Builtin::i32(Builtin::i32(0x50722C)), Builtin::i32(Builtin::i32(0xBEA404)), Builtin::i32(Builtin::i32(0x940777)), Builtin::i32(Builtin::i32(0x7030F3)), Builtin::i32(Builtin::i32(0x27FC00)), Builtin::i32(Builtin::i32(0xA871EA)), Builtin::i32(Builtin::i32(0x49C266)), Builtin::i32(Builtin::i32(0x3DE064)), Builtin::i32(Builtin::i32(0x83DD97)), Builtin::i32(Builtin::i32(0x973FA3)), Builtin::i32(Builtin::i32(0xFD9443)), Builtin::i32(Builtin::i32(0x8C860D)), Builtin::i32(Builtin::i32(0xDE4131)), Builtin::i32(Builtin::i32(0x9D3992)), Builtin::i32(Builtin::i32(0x8C70DD)), Builtin::i32(Builtin::i32(0xE7B717)), Builtin::i32(Builtin::i32(0x3BDF08)), Builtin::i32(Builtin::i32(0x2B3715)), Builtin::i32(Builtin::i32(0xA0805C)), Builtin::i32(Builtin::i32(0x93805A)), Builtin::i32(Builtin::i32(0x921110)), Builtin::i32(Builtin::i32(0xD8E80F)), Builtin::i32(Builtin::i32(0xAF806C)), Builtin::i32(Builtin::i32(0x4BFFDB)), Builtin::i32(Builtin::i32(0x0F9038)), Builtin::i32(Builtin::i32(0x761859)), Builtin::i32(Builtin::i32(0x15A562)), Builtin::i32(Builtin::i32(0xBBCB61)), Builtin::i32(Builtin::i32(0xB989C7)), Builtin::i32(Builtin::i32(0xBD4010)), Builtin::i32(Builtin::i32(0x04F2D2)), Builtin::i32(Builtin::i32(0x277549)), Builtin::i32(Builtin::i32(0xF6B6EB)), Builtin::i32(Builtin::i32(0xBB22DB)), Builtin::i32(Builtin::i32(0xAA140A)), Builtin::i32(Builtin::i32(0x2F2689)), Builtin::i32(Builtin::i32(0x768364)), Builtin::i32(Builtin::i32(0x333B09)), Builtin::i32(Builtin::i32(0x1A940E)), Builtin::i32(Builtin::i32(0xAA3A51)), Builtin::i32(Builtin::i32(0xC2A31D)), Builtin::i32(Builtin::i32(0xAEEDAF)), Builtin::i32(Builtin::i32(0x12265C)), Builtin::i32(Builtin::i32(0x4DC26D)), Builtin::i32(Builtin::i32(0x9C7A2D)), Builtin::i32(Builtin::i32(0x9756C0)), Builtin::i32(Builtin::i32(0x833F03)), Builtin::i32(Builtin::i32(0xF6F009)), Builtin::i32(Builtin::i32(0x8C402B)), Builtin::i32(Builtin::i32(0x99316D)), Builtin::i32(Builtin::i32(0x07B439)), Builtin::i32(Builtin::i32(0x15200C)), Builtin::i32(Builtin::i32(0x5BC3D8)), Builtin::i32(Builtin::i32(0xC492F5)), Builtin::i32(Builtin::i32(0x4BADC6)), Builtin::i32(Builtin::i32(0xA5CA4E)), Builtin::i32(Builtin::i32(0xCD37A7)), Builtin::i32(Builtin::i32(0x36A9E6)), Builtin::i32(Builtin::i32(0x9492AB)), Builtin::i32(Builtin::i32(0x6842DD)), Builtin::i32(Builtin::i32(0xDE6319)), Builtin::i32(Builtin::i32(0xEF8C76)), Builtin::i32(Builtin::i32(0x528B68)), Builtin::i32(Builtin::i32(0x37DBFC)), Builtin::i32(Builtin::i32(0xABA1AE)), Builtin::i32(Builtin::i32(0x3115DF)), Builtin::i32(Builtin::i32(0xA1AE00)), Builtin::i32(Builtin::i32(0xDAFB0C)), Builtin::i32(Builtin::i32(0x664D64)), Builtin::i32(Builtin::i32(0xB705ED)), Builtin::i32(Builtin::i32(0x306529)), Builtin::i32(Builtin::i32(0xBF5657)), Builtin::i32(Builtin::i32(0x3AFF47)), Builtin::i32(Builtin::i32(0xB9F96A)), Builtin::i32(Builtin::i32(0xF3BE75)), Builtin::i32(Builtin::i32(0xDF9328)), Builtin::i32(Builtin::i32(0x3080AB)), Builtin::i32(Builtin::i32(0xF68C66)), Builtin::i32(Builtin::i32(0x15CB04)), Builtin::i32(Builtin::i32(0x0622FA)), Builtin::i32(Builtin::i32(0x1DE4D9)), Builtin::i32(Builtin::i32(0xA4B33D)), Builtin::i32(Builtin::i32(0x8F1B57)), Builtin::i32(Builtin::i32(0x09CD36)), Builtin::i32(Builtin::i32(0xE9424E)), Builtin::i32(Builtin::i32(0xA4BE13)), Builtin::i32(Builtin::i32(0xB52333)), Builtin::i32(Builtin::i32(0x1AAAF0)), Builtin::i32(Builtin::i32(0xA8654F)), Builtin::i32(Builtin::i32(0xA5C1D2)), Builtin::i32(Builtin::i32(0x0F3F0B)), Builtin::i32(Builtin::i32(0xCD785B)), Builtin::i32(Builtin::i32(0x76F923)), Builtin::i32(Builtin::i32(0x048B7B)), Builtin::i32(Builtin::i32(0x721789)), Builtin::i32(Builtin::i32(0x53A6C6)), Builtin::i32(Builtin::i32(0xE26E6F)), Builtin::i32(Builtin::i32(0x00EBEF)), Builtin::i32(Builtin::i32(0x584A9B)), Builtin::i32(Builtin::i32(0xB7DAC4)), Builtin::i32(Builtin::i32(0xBA66AA)), Builtin::i32(Builtin::i32(0xCFCF76)), Builtin::i32(Builtin::i32(0x1D02D1)), Builtin::i32(Builtin::i32(0x2DF1B1)), Builtin::i32(Builtin::i32(0xC1998C)), Builtin::i32(Builtin::i32(0x77ADC3)), Builtin::i32(Builtin::i32(0xDA4886)), Builtin::i32(Builtin::i32(0xA05DF7)), Builtin::i32(Builtin::i32(0xF480C6)), Builtin::i32(Builtin::i32(0x2FF0AC)), Builtin::i32(Builtin::i32(0x9AECDD)), Builtin::i32(Builtin::i32(0xBC5C3F)), Builtin::i32(Builtin::i32(0x6DDED0)), Builtin::i32(Builtin::i32(0x1FC790)), Builtin::i32(Builtin::i32(0xB6DB2A)), Builtin::i32(Builtin::i32(0x3A25A3)), Builtin::i32(Builtin::i32(0x9AAF00)), Builtin::i32(Builtin::i32(0x9353AD)), Builtin::i32(Builtin::i32(0x0457B6)), Builtin::i32(Builtin::i32(0xB42D29)), Builtin::i32(Builtin::i32(0x7E804B)), Builtin::i32(Builtin::i32(0xA707DA)), Builtin::i32(Builtin::i32(0x0EAA76)), Builtin::i32(Builtin::i32(0xA1597B)), Builtin::i32(Builtin::i32(0x2A1216)), Builtin::i32(Builtin::i32(0x2DB7DC)), Builtin::i32(Builtin::i32(0xFDE5FA)), Builtin::i32(Builtin::i32(0xFEDB89)), Builtin::i32(Builtin::i32(0xFDBE89)), Builtin::i32(Builtin::i32(0x6C76E4)), Builtin::i32(Builtin::i32(0xFCA906)), Builtin::i32(Builtin::i32(0x70803E)), Builtin::i32(Builtin::i32(0x156E85)), Builtin::i32(Builtin::i32(0xFF87FD)), Builtin::i32(Builtin::i32(0x073E28)), Builtin::i32(Builtin::i32(0x336761)), Builtin::i32(Builtin::i32(0x86182A)), Builtin::i32(Builtin::i32(0xEABD4D)), Builtin::i32(Builtin::i32(0xAFE7B3)), Builtin::i32(Builtin::i32(0x6E6D8F)), Builtin::i32(Builtin::i32(0x396795)), Builtin::i32(Builtin::i32(0x5BBF31)), Builtin::i32(Builtin::i32(0x48D784)), Builtin::i32(Builtin::i32(0x16DF30)), Builtin::i32(Builtin::i32(0x432DC7)), Builtin::i32(Builtin::i32(0x356125)), Builtin::i32(Builtin::i32(0xCE70C9)), Builtin::i32(Builtin::i32(0xB8CB30)), Builtin::i32(Builtin::i32(0xFD6CBF)), Builtin::i32(Builtin::i32(0xA200A4)), Builtin::i32(Builtin::i32(0xE46C05)), Builtin::i32(Builtin::i32(0xA0DD5A)), Builtin::i32(Builtin::i32(0x476F21)), Builtin::i32(Builtin::i32(0xD21262)), Builtin::i32(Builtin::i32(0x845CB9)), Builtin::i32(Builtin::i32(0x496170)), Builtin::i32(Builtin::i32(0xE0566B)), Builtin::i32(Builtin::i32(0x015299)), Builtin::i32(Builtin::i32(0x375550)), Builtin::i32(Builtin::i32(0xB7D51E)), Builtin::i32(Builtin::i32(0xC4F133)), Builtin::i32(Builtin::i32(0x5F6E13)), Builtin::i32(Builtin::i32(0xE4305D)), Builtin::i32(Builtin::i32(0xA92E85)), Builtin::i32(Builtin::i32(0xC3B21D)), Builtin::i32(Builtin::i32(0x3632A1)), Builtin::i32(Builtin::i32(0xA4B708)), Builtin::i32(Builtin::i32(0xD4B1EA)), Builtin::i32(Builtin::i32(0x21F716)), Builtin::i32(Builtin::i32(0xE4698F)), Builtin::i32(Builtin::i32(0x77FF27)), Builtin::i32(Builtin::i32(0x80030C)), Builtin::i32(Builtin::i32(0x2D408D)), Builtin::i32(Builtin::i32(0xA0CD4F)), Builtin::i32(Builtin::i32(0x99A520)), Builtin::i32(Builtin::i32(0xD3A2B3)), Builtin::i32(Builtin::i32(0x0A5D2F)), Builtin::i32(Builtin::i32(0x42F9B4)), Builtin::i32(Builtin::i32(0xCBDA11)), Builtin::i32(Builtin::i32(0xD0BE7D)), Builtin::i32(Builtin::i32(0xC1DB9B)), Builtin::i32(Builtin::i32(0xBD17AB)), Builtin::i32(Builtin::i32(0x81A2CA)), Builtin::i32(Builtin::i32(0x5C6A08)), Builtin::i32(Builtin::i32(0x17552E)), Builtin::i32(Builtin::i32(0x550027)), Builtin::i32(Builtin::i32(0xF0147F)), Builtin::i32(Builtin::i32(0x8607E1)), Builtin::i32(Builtin::i32(0x640B14)), Builtin::i32(Builtin::i32(0x8D4196)), Builtin::i32(Builtin::i32(0xDEBE87)), Builtin::i32(Builtin::i32(0x2AFDDA)), Builtin::i32(Builtin::i32(0xB6256B)), Builtin::i32(Builtin::i32(0x34897B)), Builtin::i32(Builtin::i32(0xFEF305)), Builtin::i32(Builtin::i32(0x9EBFB9)), Builtin::i32(Builtin::i32(0x4F6A68)), Builtin::i32(Builtin::i32(0xA82A4A)), Builtin::i32(Builtin::i32(0x5AC44F)), Builtin::i32(Builtin::i32(0xBCF82D)), Builtin::i32(Builtin::i32(0x985AD7)), Builtin::i32(Builtin::i32(0x95C7F4)), Builtin::i32(Builtin::i32(0x8D4D0D)), Builtin::i32(Builtin::i32(0xA63A20)), Builtin::i32(Builtin::i32(0x5F57A4)), Builtin::i32(Builtin::i32(0xB13F14)), Builtin::i32(Builtin::i32(0x953880)), Builtin::i32(Builtin::i32(0x0120CC)), Builtin::i32(Builtin::i32(0x86DD71)), Builtin::i32(Builtin::i32(0xB6DEC9)), Builtin::i32(Builtin::i32(0xF560BF)), Builtin::i32(Builtin::i32(0x11654D)), Builtin::i32(Builtin::i32(0x6B0701)), Builtin::i32(Builtin::i32(0xACB08C)), Builtin::i32(Builtin::i32(0xD0C0B2)), Builtin::i32(Builtin::i32(0x485551)), Builtin::i32(Builtin::i32(0x0EFB1E)), Builtin::i32(Builtin::i32(0xC37295)), Builtin::i32(Builtin::i32(0x3B06A3)), Builtin::i32(Builtin::i32(0x3540C0)), Builtin::i32(Builtin::i32(0x7BDC06)), Builtin::i32(Builtin::i32(0xCC45E0)), Builtin::i32(Builtin::i32(0xFA294E)), Builtin::i32(Builtin::i32(0xC8CAD6)), Builtin::i32(Builtin::i32(0x41F3E8)), Builtin::i32(Builtin::i32(0xDE647C)), Builtin::i32(Builtin::i32(0xD8649B)), Builtin::i32(Builtin::i32(0x31BED9)), Builtin::i32(Builtin::i32(0xC397A4)), Builtin::i32(Builtin::i32(0xD45877)), Builtin::i32(Builtin::i32(0xC5E369)), Builtin::i32(Builtin::i32(0x13DAF0)), Builtin::i32(Builtin::i32(0x3C3ABA)), Builtin::i32(Builtin::i32(0x461846)), Builtin::i32(Builtin::i32(0x5F7555)), Builtin::i32(Builtin::i32(0xF5BDD2)), Builtin::i32(Builtin::i32(0xC6926E)), Builtin::i32(Builtin::i32(0x5D2EAC)), Builtin::i32(Builtin::i32(0xED440E)), Builtin::i32(Builtin::i32(0x423E1C)), Builtin::i32(Builtin::i32(0x87C461)), Builtin::i32(Builtin::i32(0xE9FD29)), Builtin::i32(Builtin::i32(0xF3D6E7)), Builtin::i32(Builtin::i32(0xCA7C22)), Builtin::i32(Builtin::i32(0x35916F)), Builtin::i32(Builtin::i32(0xC5E008)), Builtin::i32(Builtin::i32(0x8DD7FF)), Builtin::i32(Builtin::i32(0xE26A6E)), Builtin::i32(Builtin::i32(0xC6FDB0)), Builtin::i32(Builtin::i32(0xC10893)), Builtin::i32(Builtin::i32(0x745D7C)), Builtin::i32(Builtin::i32(0xB2AD6B)), Builtin::i32(Builtin::i32(0x9D6ECD)), Builtin::i32(Builtin::i32(0x7B723E)), Builtin::i32(Builtin::i32(0x6A11C6)), Builtin::i32(Builtin::i32(0xA9CFF7)), Builtin::i32(Builtin::i32(0xDF7329)), Builtin::i32(Builtin::i32(0xBAC9B5)), Builtin::i32(Builtin::i32(0x5100B7)), Builtin::i32(Builtin::i32(0x0DB2E2)), Builtin::i32(Builtin::i32(0x24BA74)), Builtin::i32(Builtin::i32(0x607DE5)), Builtin::i32(Builtin::i32(0x8AD874)), Builtin::i32(Builtin::i32(0x2C150D)), Builtin::i32(Builtin::i32(0x0C1881)), Builtin::i32(Builtin::i32(0x94667E)), Builtin::i32(Builtin::i32(0x162901)), Builtin::i32(Builtin::i32(0x767A9F)), Builtin::i32(Builtin::i32(0xBEFDFD)), Builtin::i32(Builtin::i32(0xEF4556)), Builtin::i32(Builtin::i32(0x367ED9)), Builtin::i32(Builtin::i32(0x13D9EC)), Builtin::i32(Builtin::i32(0xB9BA8B)), Builtin::i32(Builtin::i32(0xFC97C4)), Builtin::i32(Builtin::i32(0x27A831)), Builtin::i32(Builtin::i32(0xC36EF1)), Builtin::i32(Builtin::i32(0x36C594)), Builtin::i32(Builtin::i32(0x56A8D8)), Builtin::i32(Builtin::i32(0xB5A8B4)), Builtin::i32(Builtin::i32(0x0ECCCF)), Builtin::i32(Builtin::i32(0x2D8912)), Builtin::i32(Builtin::i32(0x34576F)), Builtin::i32(Builtin::i32(0x89562C)), Builtin::i32(Builtin::i32(0xE3CE99)), Builtin::i32(Builtin::i32(0xB920D6)), Builtin::i32(Builtin::i32(0xAA5E6B)), Builtin::i32(Builtin::i32(0x9C2A3E)), Builtin::i32(Builtin::i32(0xCC5F11)), Builtin::i32(Builtin::i32(0x4A0BFD)), Builtin::i32(Builtin::i32(0xFBF4E1)), Builtin::i32(Builtin::i32(0x6D3B8E)), Builtin::i32(Builtin::i32(0x2C86E2)), Builtin::i32(Builtin::i32(0x84D4E9)), Builtin::i32(Builtin::i32(0xA9B4FC)), Builtin::i32(Builtin::i32(0xD1EEEF)), Builtin::i32(Builtin::i32(0xC9352E)), Builtin::i32(Builtin::i32(0x61392F)), Builtin::i32(Builtin::i32(0x442138)), Builtin::i32(Builtin::i32(0xC8D91B)), Builtin::i32(Builtin::i32(0x0AFC81)), Builtin::i32(Builtin::i32(0x6A4AFB)), Builtin::i32(Builtin::i32(0xD81C2F)), Builtin::i32(Builtin::i32(0x84B453)), Builtin::i32(Builtin::i32(0x8C994E)), Builtin::i32(Builtin::i32(0xCC2254)), Builtin::i32(Builtin::i32(0xDC552A)), Builtin::i32(Builtin::i32(0xD6C6C0)), Builtin::i32(Builtin::i32(0x96190B)), Builtin::i32(Builtin::i32(0xB8701A)), Builtin::i32(Builtin::i32(0x649569)), Builtin::i32(Builtin::i32(0x605A26)), Builtin::i32(Builtin::i32(0xEE523F)), Builtin::i32(Builtin::i32(0x0F117F)), Builtin::i32(Builtin::i32(0x11B5F4)), Builtin::i32(Builtin::i32(0xF5CBFC)), Builtin::i32(Builtin::i32(0x2DBC34)), Builtin::i32(Builtin::i32(0xEEBC34)), Builtin::i32(Builtin::i32(0xCC5DE8)), Builtin::i32(Builtin::i32(0x605EDD)), Builtin::i32(Builtin::i32(0x9B8E67)), Builtin::i32(Builtin::i32(0xEF3392)), Builtin::i32(Builtin::i32(0xB817C9)), Builtin::i32(Builtin::i32(0x9B5861)), Builtin::i32(Builtin::i32(0xBC57E1)), Builtin::i32(Builtin::i32(0xC68351)), Builtin::i32(Builtin::i32(0x103ED8)), Builtin::i32(Builtin::i32(0x4871DD)), Builtin::i32(Builtin::i32(0xDD1C2D)), Builtin::i32(Builtin::i32(0xA118AF)), Builtin::i32(Builtin::i32(0x462C21)), Builtin::i32(Builtin::i32(0xD7F359)), Builtin::i32(Builtin::i32(0x987AD9)), Builtin::i32(Builtin::i32(0xC0549E)), Builtin::i32(Builtin::i32(0xFA864F)), Builtin::i32(Builtin::i32(0xFC0656)), Builtin::i32(Builtin::i32(0xAE79E5)), Builtin::i32(Builtin::i32(0x362289)), Builtin::i32(Builtin::i32(0x22AD38)), Builtin::i32(Builtin::i32(0xDC9367)), Builtin::i32(Builtin::i32(0xAAE855)), Builtin::i32(Builtin::i32(0x382682)), Builtin::i32(Builtin::i32(0x9BE7CA)), Builtin::i32(Builtin::i32(0xA40D51)), Builtin::i32(Builtin::i32(0xB13399)), Builtin::i32(Builtin::i32(0x0ED7A9)), Builtin::i32(Builtin::i32(0x480569)), Builtin::i32(Builtin::i32(0xF0B265)), Builtin::i32(Builtin::i32(0xA7887F)), Builtin::i32(Builtin::i32(0x974C88)), Builtin::i32(Builtin::i32(0x36D1F9)), Builtin::i32(Builtin::i32(0xB39221)), Builtin::i32(Builtin::i32(0x4A827B)), Builtin::i32(Builtin::i32(0x21CF98)), Builtin::i32(Builtin::i32(0xDC9F40)), Builtin::i32(Builtin::i32(0x5547DC)), Builtin::i32(Builtin::i32(0x3A74E1)), Builtin::i32(Builtin::i32(0x42EB67)), Builtin::i32(Builtin::i32(0xDF9DFE)), Builtin::i32(Builtin::i32(0x5FD45E)), Builtin::i32(Builtin::i32(0xA4677B)), Builtin::i32(Builtin::i32(0x7AACBA)), Builtin::i32(Builtin::i32(0xA2F655)), Builtin::i32(Builtin::i32(0x23882B)), Builtin::i32(Builtin::i32(0x55BA41)), Builtin::i32(Builtin::i32(0x086E59)), Builtin::i32(Builtin::i32(0x862A21)), Builtin::i32(Builtin::i32(0x834739)), Builtin::i32(Builtin::i32(0xE6E389)), Builtin::i32(Builtin::i32(0xD49EE5)), Builtin::i32(Builtin::i32(0x40FB49)), Builtin::i32(Builtin::i32(0xE956FF)), Builtin::i32(Builtin::i32(0xCA0F1C)), Builtin::i32(Builtin::i32(0x8A59C5)), Builtin::i32(Builtin::i32(0x2BFA94)), Builtin::i32(Builtin::i32(0xC5C1D3)), Builtin::i32(Builtin::i32(0xCFC50F)), Builtin::i32(Builtin::i32(0xAE5ADB)), Builtin::i32(Builtin::i32(0x86C547)), Builtin::i32(Builtin::i32(0x624385)), Builtin::i32(Builtin::i32(0x3B8621)), Builtin::i32(Builtin::i32(0x94792C)), Builtin::i32(Builtin::i32(0x876110)), Builtin::i32(Builtin::i32(0x7B4C2A)), Builtin::i32(Builtin::i32(0x1A2C80)), Builtin::i32(Builtin::i32(0x12BF43)), Builtin::i32(Builtin::i32(0x902688)), Builtin::i32(Builtin::i32(0x893C78)), Builtin::i32(Builtin::i32(0xE4C4A8)), Builtin::i32(Builtin::i32(0x7BDBE5)), Builtin::i32(Builtin::i32(0xC23AC4)), Builtin::i32(Builtin::i32(0xEAF426)), Builtin::i32(Builtin::i32(0x8A67F7)), Builtin::i32(Builtin::i32(0xBF920D)), Builtin::i32(Builtin::i32(0x2BA365)), Builtin::i32(Builtin::i32(0xB1933D)), Builtin::i32(Builtin::i32(0x0B7CBD)), Builtin::i32(Builtin::i32(0xDC51A4)), Builtin::i32(Builtin::i32(0x63DD27)), Builtin::i32(Builtin::i32(0xDDE169)), Builtin::i32(Builtin::i32(0x19949A)), Builtin::i32(Builtin::i32(0x9529A8)), Builtin::i32(Builtin::i32(0x28CE68)), Builtin::i32(Builtin::i32(0xB4ED09)), Builtin::i32(Builtin::i32(0x209F44)), Builtin::i32(Builtin::i32(0xCA984E)), Builtin::i32(Builtin::i32(0x638270)), Builtin::i32(Builtin::i32(0x237C7E)), Builtin::i32(Builtin::i32(0x32B90F)), Builtin::i32(Builtin::i32(0x8EF5A7)), Builtin::i32(Builtin::i32(0xE75614)), Builtin::i32(Builtin::i32(0x08F121)), Builtin::i32(Builtin::i32(0x2A9DB5)), Builtin::i32(Builtin::i32(0x4D7E6F)), Builtin::i32(Builtin::i32(0x5119A5)), Builtin::i32(Builtin::i32(0xABF9B5)), Builtin::i32(Builtin::i32(0xD6DF82)), Builtin::i32(Builtin::i32(0x61DD96)), Builtin::i32(Builtin::i32(0x023616)), Builtin::i32(Builtin::i32(0x9F3AC4)), Builtin::i32(Builtin::i32(0xA1A283)), Builtin::i32(Builtin::i32(0x6DED72)), Builtin::i32(Builtin::i32(0x7A8D39)), Builtin::i32(Builtin::i32(0xA9B882)), Builtin::i32(Builtin::i32(0x5C326B)), Builtin::i32(Builtin::i32(0x5B2746)), Builtin::i32(Builtin::i32(0xED3400)), Builtin::i32(Builtin::i32(0x7700D2)), Builtin::i32(Builtin::i32(0x55F4FC)), Builtin::i32(Builtin::i32(0x4D5901)), Builtin::i32(Builtin::i32(0x8071E0))});
+inline constexpr Builtin::InlineArray<690, Builtin::i32> IPIO2 = Builtin::ToInlineArray<Builtin::i32>({Builtin::i32(Builtin::i32(0xA2F983)), Builtin::i32(Builtin::i32(0x6E4E44)), Builtin::i32(Builtin::i32(0x1529FC)), Builtin::i32(Builtin::i32(0x2757D1)), Builtin::i32(Builtin::i32(0xF534DD)), Builtin::i32(Builtin::i32(0xC0DB62)), Builtin::i32(Builtin::i32(0x95993C)), Builtin::i32(Builtin::i32(0x439041)), Builtin::i32(Builtin::i32(0xFE5163)), Builtin::i32(Builtin::i32(0xABDEBB)), Builtin::i32(Builtin::i32(0xC561B7)), Builtin::i32(Builtin::i32(0x246E3A)), Builtin::i32(Builtin::i32(0x424DD2)), Builtin::i32(Builtin::i32(0xE00649)), Builtin::i32(Builtin::i32(0x2EEA09)), Builtin::i32(Builtin::i32(0xD1921C)), Builtin::i32(Builtin::i32(0xFE1DEB)), Builtin::i32(Builtin::i32(0x1CB129)), Builtin::i32(Builtin::i32(0xA73EE8)), Builtin::i32(Builtin::i32(0x8235F5)), Builtin::i32(Builtin::i32(0x2EBB44)), Builtin::i32(Builtin::i32(0x84E99C)), Builtin::i32(Builtin::i32(0x7026B4)), Builtin::i32(Builtin::i32(0x5F7E41)), Builtin::i32(Builtin::i32(0x3991D6)), Builtin::i32(Builtin::i32(0x398353)), Builtin::i32(Builtin::i32(0x39F49C)), Builtin::i32(Builtin::i32(0x845F8B)), Builtin::i32(Builtin::i32(0xBDF928)), Builtin::i32(Builtin::i32(0x3B1FF8)), Builtin::i32(Builtin::i32(0x97FFDE)), Builtin::i32(Builtin::i32(0x05980F)), Builtin::i32(Builtin::i32(0xEF2F11)), Builtin::i32(Builtin::i32(0x8B5A0A)), Builtin::i32(Builtin::i32(0x6D1F6D)), Builtin::i32(Builtin::i32(0x367ECF)), Builtin::i32(Builtin::i32(0x27CB09)), Builtin::i32(Builtin::i32(0xB74F46)), Builtin::i32(Builtin::i32(0x3F669E)), Builtin::i32(Builtin::i32(0x5FEA2D)), Builtin::i32(Builtin::i32(0x7527BA)), Builtin::i32(Builtin::i32(0xC7EBE5)), Builtin::i32(Builtin::i32(0xF17B3D)), Builtin::i32(Builtin::i32(0x0739F7)), Builtin::i32(Builtin::i32(0x8A5292)), Builtin::i32(Builtin::i32(0xEA6BFB)), Builtin::i32(Builtin::i32(0x5FB11F)), Builtin::i32(Builtin::i32(0x8D5D08)), Builtin::i32(Builtin::i32(0x560330)), Builtin::i32(Builtin::i32(0x46FC7B)), Builtin::i32(Builtin::i32(0x6BABF0)), Builtin::i32(Builtin::i32(0xCFBC20)), Builtin::i32(Builtin::i32(0x9AF436)), Builtin::i32(Builtin::i32(0x1DA9E3)), Builtin::i32(Builtin::i32(0x91615E)), Builtin::i32(Builtin::i32(0xE61B08)), Builtin::i32(Builtin::i32(0x659985)), Builtin::i32(Builtin::i32(0x5F14A0)), Builtin::i32(Builtin::i32(0x68408D)), Builtin::i32(Builtin::i32(0xFFD880)), Builtin::i32(Builtin::i32(0x4D7327)), Builtin::i32(Builtin::i32(0x310606)), Builtin::i32(Builtin::i32(0x1556CA)), Builtin::i32(Builtin::i32(0x73A8C9)), Builtin::i32(Builtin::i32(0x60E27B)), Builtin::i32(Builtin::i32(0xC08C6B)), Builtin::i32(Builtin::i32(0x47C419)), Builtin::i32(Builtin::i32(0xC367CD)), Builtin::i32(Builtin::i32(0xDCE809)), Builtin::i32(Builtin::i32(0x2A8359)), Builtin::i32(Builtin::i32(0xC4768B)), Builtin::i32(Builtin::i32(0x961CA6)), Builtin::i32(Builtin::i32(0xDDAF44)), Builtin::i32(Builtin::i32(0xD15719)), Builtin::i32(Builtin::i32(0x053EA5)), Builtin::i32(Builtin::i32(0xFF0705)), Builtin::i32(Builtin::i32(0x3F7E33)), Builtin::i32(Builtin::i32(0xE832C2)), Builtin::i32(Builtin::i32(0xDE4F98)), Builtin::i32(Builtin::i32(0x327DBB)), Builtin::i32(Builtin::i32(0xC33D26)), Builtin::i32(Builtin::i32(0xEF6B1E)), Builtin::i32(Builtin::i32(0x5EF89F)), Builtin::i32(Builtin::i32(0x3A1F35)), Builtin::i32(Builtin::i32(0xCAF27F)), Builtin::i32(Builtin::i32(0x1D87F1)), Builtin::i32(Builtin::i32(0x21907C)), Builtin::i32(Builtin::i32(0x7C246A)), Builtin::i32(Builtin::i32(0xFA6ED5)), Builtin::i32(Builtin::i32(0x772D30)), Builtin::i32(Builtin::i32(0x433B15)), Builtin::i32(Builtin::i32(0xC614B5)), Builtin::i32(Builtin::i32(0x9D19C3)), Builtin::i32(Builtin::i32(0xC2C4AD)), Builtin::i32(Builtin::i32(0x414D2C)), Builtin::i32(Builtin::i32(0x5D000C)), Builtin::i32(Builtin::i32(0x467D86)), Builtin::i32(Builtin::i32(0x2D71E3)), Builtin::i32(Builtin::i32(0x9AC69B)), Builtin::i32(Builtin::i32(0x006233)), Builtin::i32(Builtin::i32(0x7CD2B4)), Builtin::i32(Builtin::i32(0x97A7B4)), Builtin::i32(Builtin::i32(0xD55537)), Builtin::i32(Builtin::i32(0xF63ED7)), Builtin::i32(Builtin::i32(0x1810A3)), Builtin::i32(Builtin::i32(0xFC764D)), Builtin::i32(Builtin::i32(0x2A9D64)), Builtin::i32(Builtin::i32(0xABD770)), Builtin::i32(Builtin::i32(0xF87C63)), Builtin::i32(Builtin::i32(0x57B07A)), Builtin::i32(Builtin::i32(0xE71517)), Builtin::i32(Builtin::i32(0x5649C0)), Builtin::i32(Builtin::i32(0xD9D63B)), Builtin::i32(Builtin::i32(0x3884A7)), Builtin::i32(Builtin::i32(0xCB2324)), Builtin::i32(Builtin::i32(0x778AD6)), Builtin::i32(Builtin::i32(0x23545A)), Builtin::i32(Builtin::i32(0xB91F00)), Builtin::i32(Builtin::i32(0x1B0AF1)), Builtin::i32(Builtin::i32(0xDFCE19)), Builtin::i32(Builtin::i32(0xFF319F)), Builtin::i32(Builtin::i32(0x6A1E66)), Builtin::i32(Builtin::i32(0x615799)), Builtin::i32(Builtin::i32(0x47FBAC)), Builtin::i32(Builtin::i32(0xD87F7E)), Builtin::i32(Builtin::i32(0xB76522)), Builtin::i32(Builtin::i32(0x89E832)), Builtin::i32(Builtin::i32(0x60BFE6)), Builtin::i32(Builtin::i32(0xCDC4EF)), Builtin::i32(Builtin::i32(0x09366C)), Builtin::i32(Builtin::i32(0xD43F5D)), Builtin::i32(Builtin::i32(0xD7DE16)), Builtin::i32(Builtin::i32(0xDE3B58)), Builtin::i32(Builtin::i32(0x929BDE)), Builtin::i32(Builtin::i32(0x2822D2)), Builtin::i32(Builtin::i32(0xE88628)), Builtin::i32(Builtin::i32(0x4D58E2)), Builtin::i32(Builtin::i32(0x32CAC6)), Builtin::i32(Builtin::i32(0x16E308)), Builtin::i32(Builtin::i32(0xCB7DE0)), Builtin::i32(Builtin::i32(0x50C017)), Builtin::i32(Builtin::i32(0xA71DF3)), Builtin::i32(Builtin::i32(0x5BE018)), Builtin::i32(Builtin::i32(0x34132E)), Builtin::i32(Builtin::i32(0x621283)), Builtin::i32(Builtin::i32(0x014883)), Builtin::i32(Builtin::i32(0x5B8EF5)), Builtin::i32(Builtin::i32(0x7FB0AD)), Builtin::i32(Builtin::i32(0xF2E91E)), Builtin::i32(Builtin::i32(0x434A48)), Builtin::i32(Builtin::i32(0xD36710)), Builtin::i32(Builtin::i32(0xD8DDAA)), Builtin::i32(Builtin::i32(0x425FAE)), Builtin::i32(Builtin::i32(0xCE616A)), Builtin::i32(Builtin::i32(0xA4280A)), Builtin::i32(Builtin::i32(0xB499D3)), Builtin::i32(Builtin::i32(0xF2A606)), Builtin::i32(Builtin::i32(0x7F775C)), Builtin::i32(Builtin::i32(0x83C2A3)), Builtin::i32(Builtin::i32(0x883C61)), Builtin::i32(Builtin::i32(0x78738A)), Builtin::i32(Builtin::i32(0x5A8CAF)), Builtin::i32(Builtin::i32(0xBDD76F)), Builtin::i32(Builtin::i32(0x63A62D)), Builtin::i32(Builtin::i32(0xCBBFF4)), Builtin::i32(Builtin::i32(0xEF818D)), Builtin::i32(Builtin::i32(0x67C126)), Builtin::i32(Builtin::i32(0x45CA55)), Builtin::i32(Builtin::i32(0x36D9CA)), Builtin::i32(Builtin::i32(0xD2A828)), Builtin::i32(Builtin::i32(0x8D61C2)), Builtin::i32(Builtin::i32(0x77C912)), Builtin::i32(Builtin::i32(0x142604)), Builtin::i32(Builtin::i32(0x9B4612)), Builtin::i32(Builtin::i32(0xC459C4)), Builtin::i32(Builtin::i32(0x44C5C8)), Builtin::i32(Builtin::i32(0x91B24D)), Builtin::i32(Builtin::i32(0xF31700)), Builtin::i32(Builtin::i32(0xAD43D4)), Builtin::i32(Builtin::i32(0xE54929)), Builtin::i32(Builtin::i32(0x10D5FD)), Builtin::i32(Builtin::i32(0xFCBE00)), Builtin::i32(Builtin::i32(0xCC941E)), Builtin::i32(Builtin::i32(0xEECE70)), Builtin::i32(Builtin::i32(0xF53E13)), Builtin::i32(Builtin::i32(0x80F1EC)), Builtin::i32(Builtin::i32(0xC3E7B3)), Builtin::i32(Builtin::i32(0x28F8C7)), Builtin::i32(Builtin::i32(0x940593)), Builtin::i32(Builtin::i32(0x3E71C1)), Builtin::i32(Builtin::i32(0xB3092E)), Builtin::i32(Builtin::i32(0xF3450B)), Builtin::i32(Builtin::i32(0x9C1288)), Builtin::i32(Builtin::i32(0x7B20AB)), Builtin::i32(Builtin::i32(0x9FB52E)), Builtin::i32(Builtin::i32(0xC29247)), Builtin::i32(Builtin::i32(0x2F327B)), Builtin::i32(Builtin::i32(0x6D550C)), Builtin::i32(Builtin::i32(0x90A772)), Builtin::i32(Builtin::i32(0x1FE76B)), Builtin::i32(Builtin::i32(0x96CB31)), Builtin::i32(Builtin::i32(0x4A1679)), Builtin::i32(Builtin::i32(0xE27941)), Builtin::i32(Builtin::i32(0x89DFF4)), Builtin::i32(Builtin::i32(0x9794E8)), Builtin::i32(Builtin::i32(0x84E6E2)), Builtin::i32(Builtin::i32(0x973199)), Builtin::i32(Builtin::i32(0x6BED88)), Builtin::i32(Builtin::i32(0x365F5F)), Builtin::i32(Builtin::i32(0x0EFDBB)), Builtin::i32(Builtin::i32(0xB49A48)), Builtin::i32(Builtin::i32(0x6CA467)), Builtin::i32(Builtin::i32(0x427271)), Builtin::i32(Builtin::i32(0x325D8D)), Builtin::i32(Builtin::i32(0xB8159F)), Builtin::i32(Builtin::i32(0x09E5BC)), Builtin::i32(Builtin::i32(0x25318D)), Builtin::i32(Builtin::i32(0x3974F7)), Builtin::i32(Builtin::i32(0x1C0530)), Builtin::i32(Builtin::i32(0x010C0D)), Builtin::i32(Builtin::i32(0x68084B)), Builtin::i32(Builtin::i32(0x58EE2C)), Builtin::i32(Builtin::i32(0x90AA47)), Builtin::i32(Builtin::i32(0x02E774)), Builtin::i32(Builtin::i32(0x24D6BD)), Builtin::i32(Builtin::i32(0xA67DF7)), Builtin::i32(Builtin::i32(0x72486E)), Builtin::i32(Builtin::i32(0xEF169F)), Builtin::i32(Builtin::i32(0xA6948E)), Builtin::i32(Builtin::i32(0xF691B4)), Builtin::i32(Builtin::i32(0x5153D1)), Builtin::i32(Builtin::i32(0xF20ACF)), Builtin::i32(Builtin::i32(0x339820)), Builtin::i32(Builtin::i32(0x7E4BF5)), Builtin::i32(Builtin::i32(0x6863B2)), Builtin::i32(Builtin::i32(0x5F3EDD)), Builtin::i32(Builtin::i32(0x035D40)), Builtin::i32(Builtin::i32(0x7F8985)), Builtin::i32(Builtin::i32(0x295255)), Builtin::i32(Builtin::i32(0xC06437)), Builtin::i32(Builtin::i32(0x10D86D)), Builtin::i32(Builtin::i32(0x324832)), Builtin::i32(Builtin::i32(0x754C5B)), Builtin::i32(Builtin::i32(0xD4714E)), Builtin::i32(Builtin::i32(0x6E5445)), Builtin::i32(Builtin::i32(0xC1090B)), Builtin::i32(Builtin::i32(0x69F52A)), Builtin::i32(Builtin::i32(0xD56614)), Builtin::i32(Builtin::i32(0x9D0727)), Builtin::i32(Builtin::i32(0x50045D)), Builtin::i32(Builtin::i32(0xDB3BB4)), Builtin::i32(Builtin::i32(0xC576EA)), Builtin::i32(Builtin::i32(0x17F987)), Builtin::i32(Builtin::i32(0x7D6B49)), Builtin::i32(Builtin::i32(0xBA271D)), Builtin::i32(Builtin::i32(0x296996)), Builtin::i32(Builtin::i32(0xACCCC6)), Builtin::i32(Builtin::i32(0x5414AD)), Builtin::i32(Builtin::i32(0x6AE290)), Builtin::i32(Builtin::i32(0x89D988)), Builtin::i32(Builtin::i32(0x50722C)), Builtin::i32(Builtin::i32(0xBEA404)), Builtin::i32(Builtin::i32(0x940777)), Builtin::i32(Builtin::i32(0x7030F3)), Builtin::i32(Builtin::i32(0x27FC00)), Builtin::i32(Builtin::i32(0xA871EA)), Builtin::i32(Builtin::i32(0x49C266)), Builtin::i32(Builtin::i32(0x3DE064)), Builtin::i32(Builtin::i32(0x83DD97)), Builtin::i32(Builtin::i32(0x973FA3)), Builtin::i32(Builtin::i32(0xFD9443)), Builtin::i32(Builtin::i32(0x8C860D)), Builtin::i32(Builtin::i32(0xDE4131)), Builtin::i32(Builtin::i32(0x9D3992)), Builtin::i32(Builtin::i32(0x8C70DD)), Builtin::i32(Builtin::i32(0xE7B717)), Builtin::i32(Builtin::i32(0x3BDF08)), Builtin::i32(Builtin::i32(0x2B3715)), Builtin::i32(Builtin::i32(0xA0805C)), Builtin::i32(Builtin::i32(0x93805A)), Builtin::i32(Builtin::i32(0x921110)), Builtin::i32(Builtin::i32(0xD8E80F)), Builtin::i32(Builtin::i32(0xAF806C)), Builtin::i32(Builtin::i32(0x4BFFDB)), Builtin::i32(Builtin::i32(0x0F9038)), Builtin::i32(Builtin::i32(0x761859)), Builtin::i32(Builtin::i32(0x15A562)), Builtin::i32(Builtin::i32(0xBBCB61)), Builtin::i32(Builtin::i32(0xB989C7)), Builtin::i32(Builtin::i32(0xBD4010)), Builtin::i32(Builtin::i32(0x04F2D2)), Builtin::i32(Builtin::i32(0x277549)), Builtin::i32(Builtin::i32(0xF6B6EB)), Builtin::i32(Builtin::i32(0xBB22DB)), Builtin::i32(Builtin::i32(0xAA140A)), Builtin::i32(Builtin::i32(0x2F2689)), Builtin::i32(Builtin::i32(0x768364)), Builtin::i32(Builtin::i32(0x333B09)), Builtin::i32(Builtin::i32(0x1A940E)), Builtin::i32(Builtin::i32(0xAA3A51)), Builtin::i32(Builtin::i32(0xC2A31D)), Builtin::i32(Builtin::i32(0xAEEDAF)), Builtin::i32(Builtin::i32(0x12265C)), Builtin::i32(Builtin::i32(0x4DC26D)), Builtin::i32(Builtin::i32(0x9C7A2D)), Builtin::i32(Builtin::i32(0x9756C0)), Builtin::i32(Builtin::i32(0x833F03)), Builtin::i32(Builtin::i32(0xF6F009)), Builtin::i32(Builtin::i32(0x8C402B)), Builtin::i32(Builtin::i32(0x99316D)), Builtin::i32(Builtin::i32(0x07B439)), Builtin::i32(Builtin::i32(0x15200C)), Builtin::i32(Builtin::i32(0x5BC3D8)), Builtin::i32(Builtin::i32(0xC492F5)), Builtin::i32(Builtin::i32(0x4BADC6)), Builtin::i32(Builtin::i32(0xA5CA4E)), Builtin::i32(Builtin::i32(0xCD37A7)), Builtin::i32(Builtin::i32(0x36A9E6)), Builtin::i32(Builtin::i32(0x9492AB)), Builtin::i32(Builtin::i32(0x6842DD)), Builtin::i32(Builtin::i32(0xDE6319)), Builtin::i32(Builtin::i32(0xEF8C76)), Builtin::i32(Builtin::i32(0x528B68)), Builtin::i32(Builtin::i32(0x37DBFC)), Builtin::i32(Builtin::i32(0xABA1AE)), Builtin::i32(Builtin::i32(0x3115DF)), Builtin::i32(Builtin::i32(0xA1AE00)), Builtin::i32(Builtin::i32(0xDAFB0C)), Builtin::i32(Builtin::i32(0x664D64)), Builtin::i32(Builtin::i32(0xB705ED)), Builtin::i32(Builtin::i32(0x306529)), Builtin::i32(Builtin::i32(0xBF5657)), Builtin::i32(Builtin::i32(0x3AFF47)), Builtin::i32(Builtin::i32(0xB9F96A)), Builtin::i32(Builtin::i32(0xF3BE75)), Builtin::i32(Builtin::i32(0xDF9328)), Builtin::i32(Builtin::i32(0x3080AB)), Builtin::i32(Builtin::i32(0xF68C66)), Builtin::i32(Builtin::i32(0x15CB04)), Builtin::i32(Builtin::i32(0x0622FA)), Builtin::i32(Builtin::i32(0x1DE4D9)), Builtin::i32(Builtin::i32(0xA4B33D)), Builtin::i32(Builtin::i32(0x8F1B57)), Builtin::i32(Builtin::i32(0x09CD36)), Builtin::i32(Builtin::i32(0xE9424E)), Builtin::i32(Builtin::i32(0xA4BE13)), Builtin::i32(Builtin::i32(0xB52333)), Builtin::i32(Builtin::i32(0x1AAAF0)), Builtin::i32(Builtin::i32(0xA8654F)), Builtin::i32(Builtin::i32(0xA5C1D2)), Builtin::i32(Builtin::i32(0x0F3F0B)), Builtin::i32(Builtin::i32(0xCD785B)), Builtin::i32(Builtin::i32(0x76F923)), Builtin::i32(Builtin::i32(0x048B7B)), Builtin::i32(Builtin::i32(0x721789)), Builtin::i32(Builtin::i32(0x53A6C6)), Builtin::i32(Builtin::i32(0xE26E6F)), Builtin::i32(Builtin::i32(0x00EBEF)), Builtin::i32(Builtin::i32(0x584A9B)), Builtin::i32(Builtin::i32(0xB7DAC4)), Builtin::i32(Builtin::i32(0xBA66AA)), Builtin::i32(Builtin::i32(0xCFCF76)), Builtin::i32(Builtin::i32(0x1D02D1)), Builtin::i32(Builtin::i32(0x2DF1B1)), Builtin::i32(Builtin::i32(0xC1998C)), Builtin::i32(Builtin::i32(0x77ADC3)), Builtin::i32(Builtin::i32(0xDA4886)), Builtin::i32(Builtin::i32(0xA05DF7)), Builtin::i32(Builtin::i32(0xF480C6)), Builtin::i32(Builtin::i32(0x2FF0AC)), Builtin::i32(Builtin::i32(0x9AECDD)), Builtin::i32(Builtin::i32(0xBC5C3F)), Builtin::i32(Builtin::i32(0x6DDED0)), Builtin::i32(Builtin::i32(0x1FC790)), Builtin::i32(Builtin::i32(0xB6DB2A)), Builtin::i32(Builtin::i32(0x3A25A3)), Builtin::i32(Builtin::i32(0x9AAF00)), Builtin::i32(Builtin::i32(0x9353AD)), Builtin::i32(Builtin::i32(0x0457B6)), Builtin::i32(Builtin::i32(0xB42D29)), Builtin::i32(Builtin::i32(0x7E804B)), Builtin::i32(Builtin::i32(0xA707DA)), Builtin::i32(Builtin::i32(0x0EAA76)), Builtin::i32(Builtin::i32(0xA1597B)), Builtin::i32(Builtin::i32(0x2A1216)), Builtin::i32(Builtin::i32(0x2DB7DC)), Builtin::i32(Builtin::i32(0xFDE5FA)), Builtin::i32(Builtin::i32(0xFEDB89)), Builtin::i32(Builtin::i32(0xFDBE89)), Builtin::i32(Builtin::i32(0x6C76E4)), Builtin::i32(Builtin::i32(0xFCA906)), Builtin::i32(Builtin::i32(0x70803E)), Builtin::i32(Builtin::i32(0x156E85)), Builtin::i32(Builtin::i32(0xFF87FD)), Builtin::i32(Builtin::i32(0x073E28)), Builtin::i32(Builtin::i32(0x336761)), Builtin::i32(Builtin::i32(0x86182A)), Builtin::i32(Builtin::i32(0xEABD4D)), Builtin::i32(Builtin::i32(0xAFE7B3)), Builtin::i32(Builtin::i32(0x6E6D8F)), Builtin::i32(Builtin::i32(0x396795)), Builtin::i32(Builtin::i32(0x5BBF31)), Builtin::i32(Builtin::i32(0x48D784)), Builtin::i32(Builtin::i32(0x16DF30)), Builtin::i32(Builtin::i32(0x432DC7)), Builtin::i32(Builtin::i32(0x356125)), Builtin::i32(Builtin::i32(0xCE70C9)), Builtin::i32(Builtin::i32(0xB8CB30)), Builtin::i32(Builtin::i32(0xFD6CBF)), Builtin::i32(Builtin::i32(0xA200A4)), Builtin::i32(Builtin::i32(0xE46C05)), Builtin::i32(Builtin::i32(0xA0DD5A)), Builtin::i32(Builtin::i32(0x476F21)), Builtin::i32(Builtin::i32(0xD21262)), Builtin::i32(Builtin::i32(0x845CB9)), Builtin::i32(Builtin::i32(0x496170)), Builtin::i32(Builtin::i32(0xE0566B)), Builtin::i32(Builtin::i32(0x015299)), Builtin::i32(Builtin::i32(0x375550)), Builtin::i32(Builtin::i32(0xB7D51E)), Builtin::i32(Builtin::i32(0xC4F133)), Builtin::i32(Builtin::i32(0x5F6E13)), Builtin::i32(Builtin::i32(0xE4305D)), Builtin::i32(Builtin::i32(0xA92E85)), Builtin::i32(Builtin::i32(0xC3B21D)), Builtin::i32(Builtin::i32(0x3632A1)), Builtin::i32(Builtin::i32(0xA4B708)), Builtin::i32(Builtin::i32(0xD4B1EA)), Builtin::i32(Builtin::i32(0x21F716)), Builtin::i32(Builtin::i32(0xE4698F)), Builtin::i32(Builtin::i32(0x77FF27)), Builtin::i32(Builtin::i32(0x80030C)), Builtin::i32(Builtin::i32(0x2D408D)), Builtin::i32(Builtin::i32(0xA0CD4F)), Builtin::i32(Builtin::i32(0x99A520)), Builtin::i32(Builtin::i32(0xD3A2B3)), Builtin::i32(Builtin::i32(0x0A5D2F)), Builtin::i32(Builtin::i32(0x42F9B4)), Builtin::i32(Builtin::i32(0xCBDA11)), Builtin::i32(Builtin::i32(0xD0BE7D)), Builtin::i32(Builtin::i32(0xC1DB9B)), Builtin::i32(Builtin::i32(0xBD17AB)), Builtin::i32(Builtin::i32(0x81A2CA)), Builtin::i32(Builtin::i32(0x5C6A08)), Builtin::i32(Builtin::i32(0x17552E)), Builtin::i32(Builtin::i32(0x550027)), Builtin::i32(Builtin::i32(0xF0147F)), Builtin::i32(Builtin::i32(0x8607E1)), Builtin::i32(Builtin::i32(0x640B14)), Builtin::i32(Builtin::i32(0x8D4196)), Builtin::i32(Builtin::i32(0xDEBE87)), Builtin::i32(Builtin::i32(0x2AFDDA)), Builtin::i32(Builtin::i32(0xB6256B)), Builtin::i32(Builtin::i32(0x34897B)), Builtin::i32(Builtin::i32(0xFEF305)), Builtin::i32(Builtin::i32(0x9EBFB9)), Builtin::i32(Builtin::i32(0x4F6A68)), Builtin::i32(Builtin::i32(0xA82A4A)), Builtin::i32(Builtin::i32(0x5AC44F)), Builtin::i32(Builtin::i32(0xBCF82D)), Builtin::i32(Builtin::i32(0x985AD7)), Builtin::i32(Builtin::i32(0x95C7F4)), Builtin::i32(Builtin::i32(0x8D4D0D)), Builtin::i32(Builtin::i32(0xA63A20)), Builtin::i32(Builtin::i32(0x5F57A4)), Builtin::i32(Builtin::i32(0xB13F14)), Builtin::i32(Builtin::i32(0x953880)), Builtin::i32(Builtin::i32(0x0120CC)), Builtin::i32(Builtin::i32(0x86DD71)), Builtin::i32(Builtin::i32(0xB6DEC9)), Builtin::i32(Builtin::i32(0xF560BF)), Builtin::i32(Builtin::i32(0x11654D)), Builtin::i32(Builtin::i32(0x6B0701)), Builtin::i32(Builtin::i32(0xACB08C)), Builtin::i32(Builtin::i32(0xD0C0B2)), Builtin::i32(Builtin::i32(0x485551)), Builtin::i32(Builtin::i32(0x0EFB1E)), Builtin::i32(Builtin::i32(0xC37295)), Builtin::i32(Builtin::i32(0x3B06A3)), Builtin::i32(Builtin::i32(0x3540C0)), Builtin::i32(Builtin::i32(0x7BDC06)), Builtin::i32(Builtin::i32(0xCC45E0)), Builtin::i32(Builtin::i32(0xFA294E)), Builtin::i32(Builtin::i32(0xC8CAD6)), Builtin::i32(Builtin::i32(0x41F3E8)), Builtin::i32(Builtin::i32(0xDE647C)), Builtin::i32(Builtin::i32(0xD8649B)), Builtin::i32(Builtin::i32(0x31BED9)), Builtin::i32(Builtin::i32(0xC397A4)), Builtin::i32(Builtin::i32(0xD45877)), Builtin::i32(Builtin::i32(0xC5E369)), Builtin::i32(Builtin::i32(0x13DAF0)), Builtin::i32(Builtin::i32(0x3C3ABA)), Builtin::i32(Builtin::i32(0x461846)), Builtin::i32(Builtin::i32(0x5F7555)), Builtin::i32(Builtin::i32(0xF5BDD2)), Builtin::i32(Builtin::i32(0xC6926E)), Builtin::i32(Builtin::i32(0x5D2EAC)), Builtin::i32(Builtin::i32(0xED440E)), Builtin::i32(Builtin::i32(0x423E1C)), Builtin::i32(Builtin::i32(0x87C461)), Builtin::i32(Builtin::i32(0xE9FD29)), Builtin::i32(Builtin::i32(0xF3D6E7)), Builtin::i32(Builtin::i32(0xCA7C22)), Builtin::i32(Builtin::i32(0x35916F)), Builtin::i32(Builtin::i32(0xC5E008)), Builtin::i32(Builtin::i32(0x8DD7FF)), Builtin::i32(Builtin::i32(0xE26A6E)), Builtin::i32(Builtin::i32(0xC6FDB0)), Builtin::i32(Builtin::i32(0xC10893)), Builtin::i32(Builtin::i32(0x745D7C)), Builtin::i32(Builtin::i32(0xB2AD6B)), Builtin::i32(Builtin::i32(0x9D6ECD)), Builtin::i32(Builtin::i32(0x7B723E)), Builtin::i32(Builtin::i32(0x6A11C6)), Builtin::i32(Builtin::i32(0xA9CFF7)), Builtin::i32(Builtin::i32(0xDF7329)), Builtin::i32(Builtin::i32(0xBAC9B5)), Builtin::i32(Builtin::i32(0x5100B7)), Builtin::i32(Builtin::i32(0x0DB2E2)), Builtin::i32(Builtin::i32(0x24BA74)), Builtin::i32(Builtin::i32(0x607DE5)), Builtin::i32(Builtin::i32(0x8AD874)), Builtin::i32(Builtin::i32(0x2C150D)), Builtin::i32(Builtin::i32(0x0C1881)), Builtin::i32(Builtin::i32(0x94667E)), Builtin::i32(Builtin::i32(0x162901)), Builtin::i32(Builtin::i32(0x767A9F)), Builtin::i32(Builtin::i32(0xBEFDFD)), Builtin::i32(Builtin::i32(0xEF4556)), Builtin::i32(Builtin::i32(0x367ED9)), Builtin::i32(Builtin::i32(0x13D9EC)), Builtin::i32(Builtin::i32(0xB9BA8B)), Builtin::i32(Builtin::i32(0xFC97C4)), Builtin::i32(Builtin::i32(0x27A831)), Builtin::i32(Builtin::i32(0xC36EF1)), Builtin::i32(Builtin::i32(0x36C594)), Builtin::i32(Builtin::i32(0x56A8D8)), Builtin::i32(Builtin::i32(0xB5A8B4)), Builtin::i32(Builtin::i32(0x0ECCCF)), Builtin::i32(Builtin::i32(0x2D8912)), Builtin::i32(Builtin::i32(0x34576F)), Builtin::i32(Builtin::i32(0x89562C)), Builtin::i32(Builtin::i32(0xE3CE99)), Builtin::i32(Builtin::i32(0xB920D6)), Builtin::i32(Builtin::i32(0xAA5E6B)), Builtin::i32(Builtin::i32(0x9C2A3E)), Builtin::i32(Builtin::i32(0xCC5F11)), Builtin::i32(Builtin::i32(0x4A0BFD)), Builtin::i32(Builtin::i32(0xFBF4E1)), Builtin::i32(Builtin::i32(0x6D3B8E)), Builtin::i32(Builtin::i32(0x2C86E2)), Builtin::i32(Builtin::i32(0x84D4E9)), Builtin::i32(Builtin::i32(0xA9B4FC)), Builtin::i32(Builtin::i32(0xD1EEEF)), Builtin::i32(Builtin::i32(0xC9352E)), Builtin::i32(Builtin::i32(0x61392F)), Builtin::i32(Builtin::i32(0x442138)), Builtin::i32(Builtin::i32(0xC8D91B)), Builtin::i32(Builtin::i32(0x0AFC81)), Builtin::i32(Builtin::i32(0x6A4AFB)), Builtin::i32(Builtin::i32(0xD81C2F)), Builtin::i32(Builtin::i32(0x84B453)), Builtin::i32(Builtin::i32(0x8C994E)), Builtin::i32(Builtin::i32(0xCC2254)), Builtin::i32(Builtin::i32(0xDC552A)), Builtin::i32(Builtin::i32(0xD6C6C0)), Builtin::i32(Builtin::i32(0x96190B)), Builtin::i32(Builtin::i32(0xB8701A)), Builtin::i32(Builtin::i32(0x649569)), Builtin::i32(Builtin::i32(0x605A26)), Builtin::i32(Builtin::i32(0xEE523F)), Builtin::i32(Builtin::i32(0x0F117F)), Builtin::i32(Builtin::i32(0x11B5F4)), Builtin::i32(Builtin::i32(0xF5CBFC)), Builtin::i32(Builtin::i32(0x2DBC34)), Builtin::i32(Builtin::i32(0xEEBC34)), Builtin::i32(Builtin::i32(0xCC5DE8)), Builtin::i32(Builtin::i32(0x605EDD)), Builtin::i32(Builtin::i32(0x9B8E67)), Builtin::i32(Builtin::i32(0xEF3392)), Builtin::i32(Builtin::i32(0xB817C9)), Builtin::i32(Builtin::i32(0x9B5861)), Builtin::i32(Builtin::i32(0xBC57E1)), Builtin::i32(Builtin::i32(0xC68351)), Builtin::i32(Builtin::i32(0x103ED8)), Builtin::i32(Builtin::i32(0x4871DD)), Builtin::i32(Builtin::i32(0xDD1C2D)), Builtin::i32(Builtin::i32(0xA118AF)), Builtin::i32(Builtin::i32(0x462C21)), Builtin::i32(Builtin::i32(0xD7F359)), Builtin::i32(Builtin::i32(0x987AD9)), Builtin::i32(Builtin::i32(0xC0549E)), Builtin::i32(Builtin::i32(0xFA864F)), Builtin::i32(Builtin::i32(0xFC0656)), Builtin::i32(Builtin::i32(0xAE79E5)), Builtin::i32(Builtin::i32(0x362289)), Builtin::i32(Builtin::i32(0x22AD38)), Builtin::i32(Builtin::i32(0xDC9367)), Builtin::i32(Builtin::i32(0xAAE855)), Builtin::i32(Builtin::i32(0x382682)), Builtin::i32(Builtin::i32(0x9BE7CA)), Builtin::i32(Builtin::i32(0xA40D51)), Builtin::i32(Builtin::i32(0xB13399)), Builtin::i32(Builtin::i32(0x0ED7A9)), Builtin::i32(Builtin::i32(0x480569)), Builtin::i32(Builtin::i32(0xF0B265)), Builtin::i32(Builtin::i32(0xA7887F)), Builtin::i32(Builtin::i32(0x974C88)), Builtin::i32(Builtin::i32(0x36D1F9)), Builtin::i32(Builtin::i32(0xB39221)), Builtin::i32(Builtin::i32(0x4A827B)), Builtin::i32(Builtin::i32(0x21CF98)), Builtin::i32(Builtin::i32(0xDC9F40)), Builtin::i32(Builtin::i32(0x5547DC)), Builtin::i32(Builtin::i32(0x3A74E1)), Builtin::i32(Builtin::i32(0x42EB67)), Builtin::i32(Builtin::i32(0xDF9DFE)), Builtin::i32(Builtin::i32(0x5FD45E)), Builtin::i32(Builtin::i32(0xA4677B)), Builtin::i32(Builtin::i32(0x7AACBA)), Builtin::i32(Builtin::i32(0xA2F655)), Builtin::i32(Builtin::i32(0x23882B)), Builtin::i32(Builtin::i32(0x55BA41)), Builtin::i32(Builtin::i32(0x086E59)), Builtin::i32(Builtin::i32(0x862A21)), Builtin::i32(Builtin::i32(0x834739)), Builtin::i32(Builtin::i32(0xE6E389)), Builtin::i32(Builtin::i32(0xD49EE5)), Builtin::i32(Builtin::i32(0x40FB49)), Builtin::i32(Builtin::i32(0xE956FF)), Builtin::i32(Builtin::i32(0xCA0F1C)), Builtin::i32(Builtin::i32(0x8A59C5)), Builtin::i32(Builtin::i32(0x2BFA94)), Builtin::i32(Builtin::i32(0xC5C1D3)), Builtin::i32(Builtin::i32(0xCFC50F)), Builtin::i32(Builtin::i32(0xAE5ADB)), Builtin::i32(Builtin::i32(0x86C547)), Builtin::i32(Builtin::i32(0x624385)), Builtin::i32(Builtin::i32(0x3B8621)), Builtin::i32(Builtin::i32(0x94792C)), Builtin::i32(Builtin::i32(0x876110)), Builtin::i32(Builtin::i32(0x7B4C2A)), Builtin::i32(Builtin::i32(0x1A2C80)), Builtin::i32(Builtin::i32(0x12BF43)), Builtin::i32(Builtin::i32(0x902688)), Builtin::i32(Builtin::i32(0x893C78)), Builtin::i32(Builtin::i32(0xE4C4A8)), Builtin::i32(Builtin::i32(0x7BDBE5)), Builtin::i32(Builtin::i32(0xC23AC4)), Builtin::i32(Builtin::i32(0xEAF426)), Builtin::i32(Builtin::i32(0x8A67F7)), Builtin::i32(Builtin::i32(0xBF920D)), Builtin::i32(Builtin::i32(0x2BA365)), Builtin::i32(Builtin::i32(0xB1933D)), Builtin::i32(Builtin::i32(0x0B7CBD)), Builtin::i32(Builtin::i32(0xDC51A4)), Builtin::i32(Builtin::i32(0x63DD27)), Builtin::i32(Builtin::i32(0xDDE169)), Builtin::i32(Builtin::i32(0x19949A)), Builtin::i32(Builtin::i32(0x9529A8)), Builtin::i32(Builtin::i32(0x28CE68)), Builtin::i32(Builtin::i32(0xB4ED09)), Builtin::i32(Builtin::i32(0x209F44)), Builtin::i32(Builtin::i32(0xCA984E)), Builtin::i32(Builtin::i32(0x638270)), Builtin::i32(Builtin::i32(0x237C7E)), Builtin::i32(Builtin::i32(0x32B90F)), Builtin::i32(Builtin::i32(0x8EF5A7)), Builtin::i32(Builtin::i32(0xE75614)), Builtin::i32(Builtin::i32(0x08F121)), Builtin::i32(Builtin::i32(0x2A9DB5)), Builtin::i32(Builtin::i32(0x4D7E6F)), Builtin::i32(Builtin::i32(0x5119A5)), Builtin::i32(Builtin::i32(0xABF9B5)), Builtin::i32(Builtin::i32(0xD6DF82)), Builtin::i32(Builtin::i32(0x61DD96)), Builtin::i32(Builtin::i32(0x023616)), Builtin::i32(Builtin::i32(0x9F3AC4)), Builtin::i32(Builtin::i32(0xA1A283)), Builtin::i32(Builtin::i32(0x6DED72)), Builtin::i32(Builtin::i32(0x7A8D39)), Builtin::i32(Builtin::i32(0xA9B882)), Builtin::i32(Builtin::i32(0x5C326B)), Builtin::i32(Builtin::i32(0x5B2746)), Builtin::i32(Builtin::i32(0xED3400)), Builtin::i32(Builtin::i32(0x7700D2)), Builtin::i32(Builtin::i32(0x55F4FC)), Builtin::i32(Builtin::i32(0x4D5901)), Builtin::i32(Builtin::i32(0x8071E0))});
 #line 790 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-inline constexpr auto PIO2 = Builtin::ToInlineArray<Builtin::f64>({Builtin::f64(Builtin::f64(1.57079625129699707031e+00)), Builtin::f64(Builtin::f64(7.54978941586159635335e-08)), Builtin::f64(Builtin::f64(5.39030252995776476554e-15)), Builtin::f64(Builtin::f64(3.28200341580791294123e-22)), Builtin::f64(Builtin::f64(1.27065575308067607349e-29)), Builtin::f64(Builtin::f64(1.22933308981111328932e-36)), Builtin::f64(Builtin::f64(2.73370053816464559624e-44)), Builtin::f64(Builtin::f64(2.16741683877804819444e-51))});
+inline constexpr Builtin::InlineArray<8, Builtin::f64> PIO2 = Builtin::ToInlineArray<Builtin::f64>({Builtin::f64(Builtin::f64(1.57079625129699707031e+00)), Builtin::f64(Builtin::f64(7.54978941586159635335e-08)), Builtin::f64(Builtin::f64(5.39030252995776476554e-15)), Builtin::f64(Builtin::f64(3.28200341580791294123e-22)), Builtin::f64(Builtin::f64(1.27065575308067607349e-29)), Builtin::f64(Builtin::f64(1.22933308981111328932e-36)), Builtin::f64(Builtin::f64(2.73370053816464559624e-44)), Builtin::f64(Builtin::f64(2.16741683877804819444e-51))});
 #line 802 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 inline constexpr auto Quarter = ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFD0000000000000000000000000000"));
 #line 803 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -211,14 +211,14 @@ inline constexpr auto PI_4 = ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Built
 			return ADV_USPCS(NaN, Builtin::f128)();
 		}
 		#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		if ((ADV_UPCS(Abs)(x.__ref()) <=> PI_4) < 0) {
+		if ((ADV_UPCS(Abs)(x.$ref()) <=> PI_4) < 0) {
 			#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			if ((exp <=> Builtin::i32(0x3fff) - (ADV_UFCS(_operator_bsl)(Builtin::i32(113), Builtin::i32(2)))) < 0) {
 				#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				return x; ADV_CHECK_REF_STRUCT_PARAM_RETURN(x, "f128", Builtin::f128);
+				return x;
 			}
 			#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			return SinInternal(x, Builtin::i32(0), Builtin::i32(0)); ADV_CHECK_REF_STRUCT_PARAM_RETURN(x, "f128", Builtin::f128);
+			return SinInternal(x, Builtin::i32(0), Builtin::i32(0));
 		}
 		#line 22 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		Builtin::f128 high{}, low{}; 
@@ -229,7 +229,7 @@ inline constexpr auto PI_4 = ADV_USFCS_NONLOCAL((Builtin::f128), FromBits)(Built
 ADV_WARNING_DISABLE(4715, -Wreturn-type)
 		{
 			#line 26 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			auto __tmp__valid_25 = Builtin::Cast<false, std::decay_t<decltype(n)>::__self>(n);
+			auto __tmp__valid_25 = Builtin::Cast<false, std::decay_t<decltype(n)>::$self>(n);
 			#line 26 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			if(__tmp__valid_25.IsValid() && Builtin::Is(*__tmp__valid_25, Builtin::i32(0))) {
 				#line 26 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -258,7 +258,7 @@ ADV_WARNING_DISABLE(4715, -Wreturn-type)
 			}
 		}
 ADV_WARNING_POP
-		(); ADV_CHECK_REF_STRUCT_LOCAL_RETURN("f128", Builtin::f128);
+		();
 	}
 
 #line 33 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -272,7 +272,7 @@ ADV_WARNING_POP
 			return ADV_USPCS(NaN, Builtin::f128)();
 		}
 		#line 42 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		if ((ADV_UPCS(Abs)(x.__ref()) <=> PI_4) < 0) {
+		if ((ADV_UPCS(Abs)(x.$ref()) <=> PI_4) < 0) {
 			#line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			if ((exp <=> Builtin::i32(0x3fff) - (ADV_UFCS(_operator_bsl)(Builtin::i32(113), Builtin::i32(2)))) < 0) {
 				#line 44 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -290,7 +290,7 @@ ADV_WARNING_POP
 ADV_WARNING_DISABLE(4715, -Wreturn-type)
 		{
 			#line 54 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			auto __tmp__valid_53 = Builtin::Cast<false, std::decay_t<decltype(n)>::__self>(n);
+			auto __tmp__valid_53 = Builtin::Cast<false, std::decay_t<decltype(n)>::$self>(n);
 			#line 54 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			if(__tmp__valid_53.IsValid() && Builtin::Is(*__tmp__valid_53, Builtin::i32(0))) {
 				#line 54 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -333,7 +333,7 @@ ADV_WARNING_POP
 			return std::make_tuple(ADV_USPCS(NaN, Builtin::f128)(), ADV_USPCS(NaN, Builtin::f128)());
 		}
 		#line 70 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		if ((ADV_UPCS(Abs)(x.__ref()) <=> PI_4) < 0) {
+		if ((ADV_UPCS(Abs)(x.$ref()) <=> PI_4) < 0) {
 			#line 71 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			if ((exp <=> Builtin::i32(0x3fff) - (ADV_UFCS(_operator_bsl)(Builtin::i32(113), Builtin::i32(2)))) < 0) {
 				#line 72 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -355,7 +355,7 @@ ADV_WARNING_POP
 ADV_WARNING_DISABLE(4715, -Wreturn-type)
 		{
 			#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			auto __tmp__valid_83 = Builtin::Cast<false, std::decay_t<decltype(n)>::__self>(n);
+			auto __tmp__valid_83 = Builtin::Cast<false, std::decay_t<decltype(n)>::$self>(n);
 			#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			if(__tmp__valid_83.IsValid() && Builtin::Is(*__tmp__valid_83, Builtin::i32(0))) {
 				#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -391,7 +391,7 @@ ADV_WARNING_POP
 	auto TanImpl(Builtin::f128 x)  -> const Builtin::f128
 	{
 		#line 93 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		Builtin::Auto<decltype(ADV_UFCS(High64)(ADV_UPCS(Bits)(x.__ref()).__ref()) & Builtin::u64(0x7fffffffffffffffULL))> ix = ADV_UFCS(High64)(ADV_UPCS(Bits)(x.__ref()).__ref()) & Builtin::u64(0x7fffffffffffffffULL); 
+		Builtin::Auto<decltype(ADV_UFCS(High64)(ADV_UPCS(Bits)(x.$ref()).$ref()) & Builtin::u64(0x7fffffffffffffffULL))> ix = ADV_UFCS(High64)(ADV_UPCS(Bits)(x.$ref()).$ref()) & Builtin::u64(0x7fffffffffffffffULL); 
 		#line 94 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		if ((ix <=> Builtin::u64(0x3ffe921fb54442d1ULL)) <= 0) {
 			#line 95 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -422,7 +422,7 @@ ADV_WARNING_POP
 		#line 107 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		const Builtin::Auto<decltype(BiasedExponent(x))> exp = BiasedExponent(x); 
 		#line 108 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype(ADV_UPCS(IsNegative)(x.__ref()))> sign = ADV_UPCS(IsNegative)(x.__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(IsNegative)(x.$ref()))> sign = ADV_UPCS(IsNegative)(x.$ref()); 
 		#line 111 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		if ((exp <=> Builtin::u32(0x3FFFU)) >= 0) {
 			#line 112 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -444,20 +444,20 @@ ADV_WARNING_POP
 			return x + x * R(x * x);
 		}
 		#line 129 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_USPCS(One, Builtin::f128)() - ADV_UPCS(Abs)(x.__ref())) * Builtin::f128{Builtin::f64(0.5)})> z = (ADV_USPCS(One, Builtin::f128)() - ADV_UPCS(Abs)(x.__ref())) * Builtin::f128{Builtin::f64(0.5)}; 
+		const Builtin::Auto<decltype((ADV_USPCS(One, Builtin::f128)() - ADV_UPCS(Abs)(x.$ref())) * Builtin::f128{Builtin::f64(0.5)})> z = (ADV_USPCS(One, Builtin::f128)() - ADV_UPCS(Abs)(x.$ref())) * Builtin::f128{Builtin::f64(0.5)}; 
 		#line 130 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype(ADV_UPCS(Sqrt)(z.__ref()))> s = ADV_UPCS(Sqrt)(z.__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(Sqrt)(z.$ref()))> s = ADV_UPCS(Sqrt)(z.$ref()); 
 		#line 131 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		const Builtin::Auto<decltype(R(z))> r = R(z); 
 		#line 132 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		if ((((ADV_UFCS(High64)(ADV_UPCS(Bits)(x.__ref()).__ref()) >> Builtin::i32(32)) & Builtin::u32(0xFFFFU)) <=> Builtin::i32(0xEE00)) >= 0) {
+		if ((((ADV_UFCS(High64)(ADV_UPCS(Bits)(x.$ref()).$ref()) >> Builtin::i32(32)) & Builtin::u32(0xFFFFU)) <=> Builtin::i32(0xEE00)) >= 0) {
 			#line 133 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			x = PIO2_HI - (Builtin::f128{Builtin::i32(2)} * (s + s * r) - PIO2_LO);
 		} else {
 			#line 134 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			{
 				#line 135 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				const Builtin::Auto<decltype(ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{ADV_UFCS(High64)(ADV_UPCS(Bits)(s.__ref()).__ref()), Builtin::u32(0U)}))> f = ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{ADV_UFCS(High64)(ADV_UPCS(Bits)(s.__ref()).__ref()), Builtin::u32(0U)}); 
+				const Builtin::Auto<decltype(ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{ADV_UFCS(High64)(ADV_UPCS(Bits)(s.$ref()).$ref()), Builtin::u32(0U)}))> f = ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{ADV_UFCS(High64)(ADV_UPCS(Bits)(s.$ref()).$ref()), Builtin::u32(0U)}); 
 				#line 136 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				const Builtin::Auto<decltype((z - f * f) / (s + f))> c = (z - f * f) / (s + f); 
 				#line 137 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -465,7 +465,7 @@ ADV_WARNING_POP
 			}
 		}
 		#line 140 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		return sign ? -x : x; ADV_CHECK_REF_STRUCT_LOCAL_RETURN("f128", Builtin::f128);
+		return sign ? -x : x;
 	}
 
 #line 143 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -497,7 +497,7 @@ ADV_WARNING_POP
 			return ADV_USPCS(NaN, Builtin::f128)();
 		}
 		#line 163 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype(ADV_UPCS(Atan)((ADV_UPCS(Sqrt)((ADV_USPCS(One, Builtin::f128)() - (x * x)).__ref()) / x).__ref()))> y = ADV_UPCS(Atan)((ADV_UPCS(Sqrt)((ADV_USPCS(One, Builtin::f128)() - (x * x)).__ref()) / x).__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(Atan)((ADV_UPCS(Sqrt)((ADV_USPCS(One, Builtin::f128)() - (x * x)).$ref()) / x).$ref()))> y = ADV_UPCS(Atan)((ADV_UPCS(Sqrt)((ADV_USPCS(One, Builtin::f128)() - (x * x)).$ref()) / x).$ref()); 
 		#line 164 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		return (x <=> Builtin::i32(0)) > 0 ? y : y + ADV_USPCS(Pi, Builtin::f128)();
 	}
@@ -508,19 +508,19 @@ ADV_WARNING_POP
 		#line 169 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		const Builtin::Auto<decltype(BiasedExponent(x))> exp = BiasedExponent(x); 
 		#line 170 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype(ADV_UPCS(IsNegative)(x.__ref()))> sign = ADV_UPCS(IsNegative)(x.__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(IsNegative)(x.$ref()))> sign = ADV_UPCS(IsNegative)(x.$ref()); 
 		#line 172 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		if ((exp <=> Builtin::i32(0x3FFF) + Builtin::i32(114)) >= 0) {
 			#line 173 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			if (ADV_UPCS(IsNaN)(x.__ref())) {
+			if (ADV_UPCS(IsNaN)(x.$ref())) {
 				#line 174 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				return x;
 			}
 			#line 176 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			return sign ? -(ADV_UFCS(_operator_subscript)(AtanHi.__ref(), Builtin::i32(3))) : ADV_UFCS(_operator_subscript)(AtanHi.__ref(), Builtin::i32(3));
+			return sign ? -(ADV_UFCS(_operator_subscript)(AtanHi.$ref(), Builtin::i32(3))) : ADV_UFCS(_operator_subscript)(AtanHi.$ref(), Builtin::i32(3));
 		}
 		#line 179 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((Builtin::u32{exp} << Builtin::i32(8)) | ADV_UFCS(NarrowToUInt8)((ADV_UFCS(High64)(ADV_UPCS(Bits)(x.__ref()).__ref()) >> Builtin::i32(40)).__ref()))> expman = (Builtin::u32{exp} << Builtin::i32(8)) | ADV_UFCS(NarrowToUInt8)((ADV_UFCS(High64)(ADV_UPCS(Bits)(x.__ref()).__ref()) >> Builtin::i32(40)).__ref()); 
+		const Builtin::Auto<decltype((Builtin::u32{exp} << Builtin::i32(8)) | ADV_UFCS(NarrowToUInt8)((ADV_UFCS(High64)(ADV_UPCS(Bits)(x.$ref()).$ref()) >> Builtin::i32(40)).$ref()))> expman = (Builtin::u32{exp} << Builtin::i32(8)) | ADV_UFCS(NarrowToUInt8)((ADV_UFCS(High64)(ADV_UPCS(Bits)(x.$ref()).$ref()) >> Builtin::i32(40)).$ref()); 
 		#line 180 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		Builtin::i32 id{}; 
 		#line 182 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -528,12 +528,12 @@ ADV_WARNING_POP
 			#line 183 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			if ((exp <=> Builtin::i32(0x3FFF) - (ADV_UFCS(_operator_bsl)(Builtin::i32(114), Builtin::i32(2)))) < 0) {
 				#line 184 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				if (ADV_UPCS(IsSubnormal)(x.__ref())) {
+				if (ADV_UPCS(IsSubnormal)(x.$ref())) {
 					#line 185 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 					x = ADV_USPCS(NegativeInfinity, Builtin::f128)();
 				}
 				#line 187 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				return x; ADV_CHECK_REF_STRUCT_PARAM_RETURN(x, "f128", Builtin::f128);
+				return x;
 			}
 			#line 189 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			id = Builtin::i32(-1);
@@ -541,7 +541,7 @@ ADV_WARNING_POP
 			#line 190 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			{
 				#line 191 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				x = ADV_UPCS(Abs)(x.__ref());
+				x = ADV_UPCS(Abs)(x.$ref());
 				#line 192 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				if ((expman <=> (Builtin::i32(0x3fff) << Builtin::i32(8)) + Builtin::i32(0x30)) < 0) {
 					#line 194 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -597,16 +597,16 @@ ADV_WARNING_POP
 			return x - x * (s1 + s2);
 		}
 		#line 220 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		z = ADV_UFCS(_operator_subscript)(AtanHi.__ref(), id) - ((x * (s1 + s2) - ADV_UFCS(_operator_subscript)(AtanLo.__ref(), id)) - x);
+		z = ADV_UFCS(_operator_subscript)(AtanHi.$ref(), id) - ((x * (s1 + s2) - ADV_UFCS(_operator_subscript)(AtanLo.$ref(), id)) - x);
 		#line 221 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		return sign ? -z : z; ADV_CHECK_REF_STRUCT_LOCAL_RETURN("f128", Builtin::f128);
+		return sign ? -z : z;
 	}
 
 #line 224 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 	auto Atan2Impl(Builtin::f128 y, Builtin::f128 x)  -> const Builtin::f128
 	{
 		#line 226 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		if (ADV_UPCS(IsNaN)(x.__ref()) || ADV_UPCS(IsNaN)(y.__ref())) {
+		if (ADV_UPCS(IsNaN)(x.$ref()) || ADV_UPCS(IsNaN)(y.$ref())) {
 			#line 227 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			return ADV_USPCS(NaN, Builtin::f128)();
 		}
@@ -615,7 +615,7 @@ ADV_WARNING_POP
 		#line 231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		const Builtin::i32 ey = BiasedExponent(y); 
 		#line 232 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype(Builtin::i32{Builtin::i32(2) * (ADV_UFCS(High64)(ADV_UPCS(Bits)(x.__ref()).__ref()) >> Builtin::i32(63)) | (ADV_UFCS(High64)(ADV_UPCS(Bits)(y.__ref()).__ref()) >> Builtin::i32(63))})> m = Builtin::i32{Builtin::i32(2) * (ADV_UFCS(High64)(ADV_UPCS(Bits)(x.__ref()).__ref()) >> Builtin::i32(63)) | (ADV_UFCS(High64)(ADV_UPCS(Bits)(y.__ref()).__ref()) >> Builtin::i32(63))}; 
+		const Builtin::Auto<decltype(Builtin::i32{Builtin::i32(2) * (ADV_UFCS(High64)(ADV_UPCS(Bits)(x.$ref()).$ref()) >> Builtin::i32(63)) | (ADV_UFCS(High64)(ADV_UPCS(Bits)(y.$ref()).$ref()) >> Builtin::i32(63))})> m = Builtin::i32{Builtin::i32(2) * (ADV_UFCS(High64)(ADV_UPCS(Bits)(x.$ref()).$ref()) >> Builtin::i32(63)) | (ADV_UFCS(High64)(ADV_UPCS(Bits)(y.$ref()).$ref()) >> Builtin::i32(63))}; 
 		#line 234 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		if (y == Builtin::i32(0)) {
 			#line 235 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -623,7 +623,7 @@ ADV_WARNING_POP
 ADV_WARNING_DISABLE(4715, -Wreturn-type)
 			{
 				#line 236 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				auto __tmp__valid_235 = Builtin::Cast<false, std::decay_t<decltype(m)>::__self>(m);
+				auto __tmp__valid_235 = Builtin::Cast<false, std::decay_t<decltype(m)>::$self>(m);
 				#line 236 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				if(__tmp__valid_235.IsValid() && Builtin::Is(*__tmp__valid_235, Builtin::i32(0)) || Builtin::Is(*__tmp__valid_235, Builtin::i32(1))) {
 					#line 236 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -667,7 +667,7 @@ ADV_WARNING_POP
 ADV_WARNING_DISABLE(4715, -Wreturn-type)
 				{
 					#line 249 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-					auto __tmp__valid_248 = Builtin::Cast<false, std::decay_t<decltype(m)>::__self>(m);
+					auto __tmp__valid_248 = Builtin::Cast<false, std::decay_t<decltype(m)>::$self>(m);
 					#line 249 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 					if(__tmp__valid_248.IsValid() && Builtin::Is(*__tmp__valid_248, Builtin::i32(0))) {
 						#line 249 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -710,7 +710,7 @@ ADV_WARNING_POP
 ADV_WARNING_DISABLE(4715, -Wreturn-type)
 					{
 						#line 256 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-						auto __tmp__valid_255 = Builtin::Cast<false, std::decay_t<decltype(m)>::__self>(m);
+						auto __tmp__valid_255 = Builtin::Cast<false, std::decay_t<decltype(m)>::$self>(m);
 						#line 256 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 						if(__tmp__valid_255.IsValid() && Builtin::Is(*__tmp__valid_255, Builtin::i32(0))) {
 							#line 256 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -763,7 +763,7 @@ ADV_WARNING_POP
 			#line 271 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			{
 				#line 272 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				z = ADV_UPCS(Atan)((ADV_UPCS(Abs)((y / x).__ref())).__ref());
+				z = ADV_UPCS(Atan)((ADV_UPCS(Abs)((y / x).$ref())).$ref());
 			}
 		}
 		#line 275 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -771,7 +771,7 @@ ADV_WARNING_POP
 ADV_WARNING_DISABLE(4715, -Wreturn-type)
 		{
 			#line 276 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			auto __tmp__valid_275 = Builtin::Cast<false, std::decay_t<decltype(m)>::__self>(m);
+			auto __tmp__valid_275 = Builtin::Cast<false, std::decay_t<decltype(m)>::$self>(m);
 			#line 276 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			if(__tmp__valid_275.IsValid() && Builtin::Is(*__tmp__valid_275, Builtin::i32(0))) {
 				#line 276 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -800,7 +800,7 @@ ADV_WARNING_DISABLE(4715, -Wreturn-type)
 			}
 		}
 ADV_WARNING_POP
-		(); ADV_CHECK_REF_STRUCT_LOCAL_RETURN("f128", Builtin::f128);
+		();
 	}
 
 #line 283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -811,7 +811,7 @@ ADV_WARNING_POP
 		#line 286 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		constexpr Builtin::Auto<decltype(ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FC6A62633145C06E0E6894812704453")))> PiLo = ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FC6A62633145C06E0E6894812704453"));
 		#line 288 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype(ADV_UPCS(Abs)(x.__ref()))> ax = ADV_UPCS(Abs)(x.__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(Abs)(x.$ref()))> ax = ADV_UPCS(Abs)(x.$ref()); 
 		#line 289 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		Builtin::f128 hi{}, lo{}, s{}; 
 		#line 291 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -826,7 +826,7 @@ ADV_WARNING_POP
 						return x;
 					}
 					#line 298 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-					hi = ADV_UFCS(ToFloat64)(x.__ref());
+					hi = ADV_UFCS(ToFloat64)(x.$ref());
 					#line 299 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 					hi *= ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x40700000000000000000000000000000"));
 					#line 300 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -902,26 +902,26 @@ ADV_WARNING_POP
 						}
 					}
 					#line 340 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-					s = ADV_UPCS(IsEvenInteger)(ai.__ref()) ? s : -s;
+					s = ADV_UPCS(IsEvenInteger)(ai.$ref()) ? s : -s;
 				}
 			}
 			#line 343 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			return (x <=> Builtin::i32(0)) < 0 ? -s : s;
 		}
 		#line 346 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		if (ADV_UPCS(IsNaN)(x.__ref()) || ADV_UPCS(IsInfinity)(x.__ref())) {
+		if (ADV_UPCS(IsNaN)(x.$ref()) || ADV_UPCS(IsInfinity)(x.$ref())) {
 			#line 347 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			return ADV_USPCS(NaN, Builtin::f128)();
 		}
 		#line 350 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		return ADV_UFCS(CopySign)(ADV_USPCS(Zero, Builtin::f128)().__ref(), x); ADV_CHECK_REF_STRUCT_PARAM_RETURN(x, "f128", Builtin::f128);
+		return ADV_UFCS(CopySign)(ADV_USPCS(Zero, Builtin::f128)().$ref(), x);
 	}
 
 #line 353 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 	auto CosPiImpl(Builtin::f128 x)  -> const Builtin::f128
 	{
 		#line 355 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype(ADV_UPCS(Abs)(x.__ref()))> ax = ADV_UPCS(Abs)(x.__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(Abs)(x.$ref()))> ax = ADV_UPCS(Abs)(x.$ref()); 
 		#line 356 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		Builtin::f128 c{}; 
 		#line 358 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -931,13 +931,13 @@ ADV_WARNING_POP
 				#line 360 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				if ((ax <=> ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FC30000000000000000000000000000"))) < 0) {
 					#line 361 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-					if (ADV_UFCS(NarrowToInt32)(x.__ref()) == Builtin::i32(0)) {
+					if (ADV_UFCS(NarrowToInt32)(x.$ref()) == Builtin::i32(0)) {
 						#line 362 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 						return ADV_USPCS(One, Builtin::f128)();
 					}
 				}
 				#line 366 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				return CosPiInternal(ax); ADV_CHECK_REF_STRUCT_LOCAL_RETURN("f128", Builtin::f128);
+				return CosPiInternal(ax);
 			}
 			#line 369 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			if ((ax <=> HalfOne) < 0) {
@@ -962,7 +962,7 @@ ADV_WARNING_POP
 				}
 			}
 			#line 380 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			return c; ADV_CHECK_REF_STRUCT_LOCAL_RETURN("f128", Builtin::f128);
+			return c;
 		}
 		#line 383 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		if ((ax <=> ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x406F0000000000000000000000000000"))) < 0) {
@@ -1003,10 +1003,10 @@ ADV_WARNING_POP
 				}
 			}
 			#line 403 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			return ADV_UPCS(IsEvenInteger)(ai.__ref()) ? c : -c; ADV_CHECK_REF_STRUCT_LOCAL_RETURN("f128", Builtin::f128);
+			return ADV_UPCS(IsEvenInteger)(ai.$ref()) ? c : -c;
 		}
 		#line 406 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		if (ADV_UPCS(IsNaN)(x.__ref()) || ADV_UPCS(IsInfinity)(x.__ref())) {
+		if (ADV_UPCS(IsNaN)(x.$ref()) || ADV_UPCS(IsInfinity)(x.$ref())) {
 			#line 407 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			return ADV_USPCS(NaN, Builtin::f128)();
 		}
@@ -1016,7 +1016,7 @@ ADV_WARNING_POP
 			return ADV_USPCS(One, Builtin::f128)();
 		}
 		#line 414 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		return ADV_UPCS(IsEvenInteger)(ax.__ref()) ? ADV_USPCS(One, Builtin::f128)() : ADV_USPCS(MinusOne, Builtin::f128)();
+		return ADV_UPCS(IsEvenInteger)(ax.$ref()) ? ADV_USPCS(One, Builtin::f128)() : ADV_USPCS(MinusOne, Builtin::f128)();
 	}
 
 #line 417 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -1027,7 +1027,7 @@ ADV_WARNING_POP
 		#line 420 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		constexpr Builtin::Auto<decltype(ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FC6A62633145C06E0E6894812704453")))> PiLo = ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FC6A62633145C06E0E6894812704453"));
 		#line 422 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype(ADV_UPCS(Abs)(x.__ref()))> ax = ADV_UPCS(Abs)(x.__ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(Abs)(x.$ref()))> ax = ADV_UPCS(Abs)(x.$ref()); 
 		#line 423 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		Builtin::f128 hi{}, lo{}, t{}; 
 		#line 425 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -1042,7 +1042,7 @@ ADV_WARNING_POP
 						return x;
 					}
 					#line 432 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-					hi = ADV_UFCS(ToFloat64)(x.__ref());
+					hi = ADV_UFCS(ToFloat64)(x.$ref());
 					#line 433 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 					hi *= ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x40700000000000000000000000000000"));
 					#line 434 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -1075,11 +1075,11 @@ ADV_WARNING_POP
 			#line 450 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			const auto& [ai, ar] = FastFloor(ax);
 			#line 451 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			const Builtin::Auto<decltype(ADV_UPCS(IsEvenInteger)(ai.__ref()) ? ADV_USPCS(One, Builtin::f128)() : ADV_USPCS(MinusOne, Builtin::f128)())> odd = ADV_UPCS(IsEvenInteger)(ai.__ref()) ? ADV_USPCS(One, Builtin::f128)() : ADV_USPCS(MinusOne, Builtin::f128)(); 
+			const Builtin::Auto<decltype(ADV_UPCS(IsEvenInteger)(ai.$ref()) ? ADV_USPCS(One, Builtin::f128)() : ADV_USPCS(MinusOne, Builtin::f128)())> odd = ADV_UPCS(IsEvenInteger)(ai.$ref()) ? ADV_USPCS(One, Builtin::f128)() : ADV_USPCS(MinusOne, Builtin::f128)(); 
 			#line 453 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			if ((ar <=> HalfOne) < 0) {
 				#line 454 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				t = ar == Builtin::i32(0) ? ADV_UFCS(CopySign)(ADV_USPCS(Zero, Builtin::f128)().__ref(), odd) : TanPiInternal(ar);
+				t = ar == Builtin::i32(0) ? ADV_UFCS(CopySign)(ADV_USPCS(Zero, Builtin::f128)().$ref(), odd) : TanPiInternal(ar);
 			} else {
 				#line 455 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				if (ar == HalfOne) {
@@ -1097,14 +1097,14 @@ ADV_WARNING_POP
 			return (x <=> Builtin::i32(0)) < 0 ? -t : t;
 		}
 		#line 464 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		if (ADV_UPCS(IsNaN)(x.__ref()) || ADV_UPCS(IsInfinity)(x.__ref())) {
+		if (ADV_UPCS(IsNaN)(x.$ref()) || ADV_UPCS(IsInfinity)(x.$ref())) {
 			#line 465 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			return ADV_USPCS(NaN, Builtin::f128)();
 		}
 		#line 468 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		t = ADV_UPCS(IsEvenInteger)(ax.__ref()) ? ADV_USPCS(Zero, Builtin::f128)() : ADV_USPCS(NegativeZero, Builtin::f128)();
+		t = ADV_UPCS(IsEvenInteger)(ax.$ref()) ? ADV_USPCS(Zero, Builtin::f128)() : ADV_USPCS(NegativeZero, Builtin::f128)();
 		#line 469 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		return ADV_UFCS(CopySign)(t.__ref(), x); ADV_CHECK_REF_STRUCT_PARAM_RETURN(x, "f128", Builtin::f128);
+		return ADV_UFCS(CopySign)(t.$ref(), x);
 	}
 
 
@@ -1130,7 +1130,7 @@ ADV_WARNING_POP
 	inline constexpr auto BiasedExponent(Builtin::f128 value) noexcept -> const Builtin::u16
 	{
 		#line 498 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		ADV_EXPRESSION_BODY(ExtractBiasedExponentFromBits(ADV_UPCS(Bits)(value.__ref()))); 
+		ADV_EXPRESSION_BODY(ExtractBiasedExponentFromBits(ADV_UPCS(Bits)(value.$ref()))); 
 	}
 
 #line 499 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -1151,7 +1151,7 @@ ADV_WARNING_POP
 	inline constexpr auto TrailingSignificand(Builtin::f128 value) noexcept -> const Builtin::u128
 	{
 		#line 501 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		ADV_EXPRESSION_BODY(ExtractTrailingSignificandFromBits(ADV_UPCS(Bits)(value.__ref()))); 
+		ADV_EXPRESSION_BODY(ExtractTrailingSignificandFromBits(ADV_UPCS(Bits)(value.$ref()))); 
 	}
 
 #line 503 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -1237,54 +1237,54 @@ ADV_WARNING_POP
 	inline constexpr auto Even(Builtin::f128 x) noexcept -> const Builtin::f128
 	{
 		#line 557 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(20)) + x * ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(22))))> x0 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(20)) + x * ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(22))); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(20)) + x * ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(22))))> x0 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(20)) + x * ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(22))); 
 		#line 558 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(18)) + x * x0))> x1 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(18)) + x * x0); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(18)) + x * x0))> x1 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(18)) + x * x0); 
 		#line 559 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(16)) + x * x1))> x2 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(16)) + x * x1); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(16)) + x * x1))> x2 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(16)) + x * x1); 
 		#line 560 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(14)) + x * x2))> x3 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(14)) + x * x2); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(14)) + x * x2))> x3 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(14)) + x * x2); 
 		#line 561 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(12)) + x * x3))> x4 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(12)) + x * x3); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(12)) + x * x3))> x4 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(12)) + x * x3); 
 		#line 562 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(10)) + x * x4))> x5 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(10)) + x * x4); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(10)) + x * x4))> x5 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(10)) + x * x4); 
 		#line 563 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(8)) + x * x5))> x6 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(8)) + x * x5); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(8)) + x * x5))> x6 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(8)) + x * x5); 
 		#line 564 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(6)) + x * x6))> x7 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(6)) + x * x6); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(6)) + x * x6))> x7 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(6)) + x * x6); 
 		#line 565 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(4)) + x * x7))> x8 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(4)) + x * x7); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(4)) + x * x7))> x8 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(4)) + x * x7); 
 		#line 566 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(2)) + x * x8))> x9 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(2)) + x * x8); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(2)) + x * x8))> x9 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(2)) + x * x8); 
 		#line 567 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		return (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(0)) + x * x9);
+		return (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(0)) + x * x9);
 	}
 
 #line 570 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 	inline constexpr auto Odd(Builtin::f128 x) noexcept -> const Builtin::f128
 	{
 		#line 572 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(21)) + x * ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(23))))> x0 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(21)) + x * ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(23))); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(21)) + x * ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(23))))> x0 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(21)) + x * ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(23))); 
 		#line 573 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(19)) + x * x0))> x1 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(19)) + x * x0); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(19)) + x * x0))> x1 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(19)) + x * x0); 
 		#line 574 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(17)) + x * x1))> x2 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(17)) + x * x1); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(17)) + x * x1))> x2 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(17)) + x * x1); 
 		#line 575 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(15)) + x * x2))> x3 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(15)) + x * x2); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(15)) + x * x2))> x3 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(15)) + x * x2); 
 		#line 576 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(13)) + x * x3))> x4 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(13)) + x * x3); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(13)) + x * x3))> x4 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(13)) + x * x3); 
 		#line 577 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(11)) + x * x4))> x5 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(11)) + x * x4); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(11)) + x * x4))> x5 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(11)) + x * x4); 
 		#line 578 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(9)) + x * x5))> x6 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(9)) + x * x5); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(9)) + x * x5))> x6 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(9)) + x * x5); 
 		#line 579 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(7)) + x * x6))> x7 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(7)) + x * x6); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(7)) + x * x6))> x7 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(7)) + x * x6); 
 		#line 580 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(5)) + x * x7))> x8 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(5)) + x * x7); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(5)) + x * x7))> x8 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(5)) + x * x7); 
 		#line 581 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(3)) + x * x8))> x9 = (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(3)) + x * x8); 
+		const Builtin::Auto<decltype((ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(3)) + x * x8))> x9 = (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(3)) + x * x8); 
 		#line 582 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		return (ADV_UFCS(_operator_subscript)(AT.__ref(), Builtin::i32(1)) + x * x9);
+		return (ADV_UFCS(_operator_subscript)(AT.$ref(), Builtin::i32(1)) + x * x9);
 	}
 
 
@@ -1393,13 +1393,13 @@ ADV_WARNING_POP
 		#line 839 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		const Builtin::i32 ex = BiasedExponent(x); 
 		#line 842 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		if ((ADV_UPCS(Abs)(x.__ref()) <=> ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x402C921F000000000000000000000000"))) < 0) {
+		if ((ADV_UPCS(Abs)(x.$ref()) <=> ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x402C921F000000000000000000000000"))) < 0) {
 			#line 843 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			constexpr Builtin::Auto<decltype(ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFE45F306DC9C882A53F84EAFA3EA6A")))> INVPIO2 = ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x3FFE45F306DC9C882A53F84EAFA3EA6A"));
 			#line 844 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			Builtin::Auto<decltype(x * INVPIO2 + RoundingEpsilon - RoundingEpsilon)> fn = x * INVPIO2 + RoundingEpsilon - RoundingEpsilon; 
 			#line 845 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			n = (ADV_UFCS(NarrowToUInt32)(ADV_UFCS(NarrowToInt64)(fn.__ref()).__ref()) & Builtin::u32(0x7FFFFFFFU));
+			n = (ADV_UFCS(NarrowToUInt32)(ADV_UFCS(NarrowToInt64)(fn.$ref()).$ref()) & Builtin::u32(0x7FFFFFFFU));
 			#line 846 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			r = x - fn * PIO2_1;
 			#line 847 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -1468,7 +1468,7 @@ ADV_WARNING_POP
 			#line 886 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			y1 = (r - y0) - w;
 			#line 887 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			return ADV_UFCS(NarrowToInt32)(n.__ref()); ADV_CHECK_REF_STRUCT_LOCAL_RETURN("i32", Builtin::i32);
+			return ADV_UFCS(NarrowToInt32)(n.$ref());
 		}
 		#line 890 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		if (ex == Builtin::u32(0x7FFFU)) {
@@ -1485,14 +1485,14 @@ ADV_WARNING_POP
 		for (; (i <=> NX - Builtin::i32(1)) < 0; i++) 
 		{
 			#line 899 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			ADV_UFCS(_operator_subscript)(tx.__ref(), i) = ADV_UFCS(NarrowToInt32)(z.__ref());
+			ADV_UFCS(_operator_subscript)(tx.$ref(), i) = ADV_UFCS(NarrowToInt32)(z.$ref());
 			#line 900 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			z = (z - ADV_UFCS(_operator_subscript)(tx.__ref(), i)) * ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x40170000000000000000000000000000"));
+			z = (z - ADV_UFCS(_operator_subscript)(tx.$ref(), i)) * ADV_USFCS((Builtin::f128), FromBits)(Builtin::ParseUInt128("0x40170000000000000000000000000000"));
 		}
 		#line 902 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		ADV_UFCS(_operator_subscript)(tx.__ref(), i) = ADV_UFCS(ToFloat64)(z.__ref());
+		ADV_UFCS(_operator_subscript)(tx.$ref(), i) = ADV_UFCS(ToFloat64)(z.$ref());
 		#line 903 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		while (ADV_UFCS(_operator_subscript)(tx.__ref(), i) == Builtin::i32(0)) 
+		while (ADV_UFCS(_operator_subscript)(tx.$ref(), i) == Builtin::i32(0)) 
 		{
 			#line 904 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			ADV_UFCS(_operator_sub_sub_mod_postfix)(i);
@@ -1512,7 +1512,7 @@ ADV_WARNING_POP
 			#line 914 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			Builtin::f64 fw{}; 
 			#line 916 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			const Builtin::Auto<decltype(ADV_UFCS(_operator_subscript)(INIT_JK.__ref(), prec))> jk = ADV_UFCS(_operator_subscript)(INIT_JK.__ref(), prec); 
+			const Builtin::Auto<decltype(ADV_UFCS(_operator_subscript)(INIT_JK.$ref(), prec))> jk = ADV_UFCS(_operator_subscript)(INIT_JK.$ref(), prec); 
 			#line 917 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			const Builtin::Auto<decltype(jk)> jp = jk; 
 			#line 919 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -1538,7 +1538,7 @@ ADV_WARNING_POP
 			for (; (i <=> m) <= 0; i++) 
 			{
 				#line 929 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				ADV_UFCS(_operator_subscript)(f.__ref(), i) = (j <=> Builtin::i32(0)) < 0 ? Builtin::f64(0.0) : ADV_UFCS(_operator_subscript)(IPIO2.__ref(), j);
+				ADV_UFCS(_operator_subscript)(f.$ref(), i) = (j <=> Builtin::i32(0)) < 0 ? Builtin::f64(0.0) : ADV_UFCS(_operator_subscript)(IPIO2.$ref(), j);
 				#line 930 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				j++;
 			}
@@ -1555,7 +1555,7 @@ ADV_WARNING_POP
 				for (; (j <=> jx) <= 0; j++) 
 				{
 					#line 938 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-					fw += ADV_UFCS(_operator_subscript)(tx.__ref(), j) * ADV_UFCS(_operator_subscript)(f.__ref(), jx + i - j);
+					fw += ADV_UFCS(_operator_subscript)(tx.$ref(), j) * ADV_UFCS(_operator_subscript)(f.$ref(), jx + i - j);
 				}
 			}
 			#line 942 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -1568,27 +1568,27 @@ ADV_WARNING_POP
 				#line 946 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				i = Builtin::i32(0);
 				#line 947 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				z = ADV_UFCS(_operator_subscript)(q.__ref(), jx);
+				z = ADV_UFCS(_operator_subscript)(q.$ref(), jx);
 				#line 948 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				j = jz;
 				#line 949 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				for (; (j <=> Builtin::i32(0)) > 0; j++) 
 				{
 					#line 950 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-					fw = ADV_UFCS(NarrowToInt32)((Builtin::f64(5.9604644775390625e-8) * z).__ref());
+					fw = ADV_UFCS(NarrowToInt32)((Builtin::f64(5.9604644775390625e-8) * z).$ref());
 					#line 951 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-					ADV_UFCS(_operator_subscript)(iq.__ref(), i) = ADV_UFCS(NarrowToInt32)((z - Builtin::f64(1.6777216e7) * fw).__ref());
+					ADV_UFCS(_operator_subscript)(iq.$ref(), i) = ADV_UFCS(NarrowToInt32)((z - Builtin::f64(1.6777216e7) * fw).$ref());
 					#line 952 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-					z = ADV_UFCS(_operator_subscript)(q.__ref(), j - Builtin::i32(1)) + fw;
+					z = ADV_UFCS(_operator_subscript)(q.$ref(), j - Builtin::i32(1)) + fw;
 					#line 953 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 					i++;
 				}
 				#line 956 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				z = ADV_UFCS(ScaleB)(z.__ref(), q0);
+				z = ADV_UFCS(ScaleB)(z.$ref(), q0);
 				#line 957 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				z -= Builtin::f64(8.0) * ADV_UPCS(Floor)((z * Builtin::f64(0.125)).__ref());
+				z -= Builtin::f64(8.0) * ADV_UPCS(Floor)((z * Builtin::f64(0.125)).$ref());
 				#line 958 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				n = ADV_UFCS(NarrowToInt32)(z.__ref());
+				n = ADV_UFCS(NarrowToInt32)(z.$ref());
 				#line 959 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				z -= n;
 				#line 960 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -1596,18 +1596,18 @@ ADV_WARNING_POP
 				#line 962 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				if ((q0 <=> Builtin::i32(0)) > 0) {
 					#line 963 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-					i = ADV_UFCS(_operator_subscript)(iq.__ref(), jz - Builtin::i32(1)) >> (Builtin::i32(24) - q0);
+					i = ADV_UFCS(_operator_subscript)(iq.$ref(), jz - Builtin::i32(1)) >> (Builtin::i32(24) - q0);
 					#line 964 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 					ADV_UFCS(_operator_add_mod_eq)(n, i);
 					#line 965 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-					ADV_UFCS(_operator_sub_mod_eq)(ADV_UFCS(_operator_subscript)(iq.__ref(), jz - Builtin::i32(1)), i << (Builtin::i32(24) - q0));
+					ADV_UFCS(_operator_sub_mod_eq)(ADV_UFCS(_operator_subscript)(iq.$ref(), jz - Builtin::i32(1)), i << (Builtin::i32(24) - q0));
 					#line 966 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-					ih = ADV_UFCS(_operator_subscript)(iq.__ref(), jz - Builtin::i32(1)) >> (Builtin::i32(23) - q0);
+					ih = ADV_UFCS(_operator_subscript)(iq.$ref(), jz - Builtin::i32(1)) >> (Builtin::i32(23) - q0);
 				} else {
 					#line 967 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 					if (q0 == Builtin::i32(0)) {
 						#line 968 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-						ih = ADV_UFCS(_operator_subscript)(iq.__ref(), jz - Builtin::i32(1)) >> Builtin::i32(23);
+						ih = ADV_UFCS(_operator_subscript)(iq.$ref(), jz - Builtin::i32(1)) >> Builtin::i32(23);
 					} else {
 						#line 969 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 						if ((z <=> Builtin::f64(0.5)) >= 0) {
@@ -1628,7 +1628,7 @@ ADV_WARNING_POP
 					for (; (i <=> jz) < 0; i++) 
 					{
 						#line 978 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-						j = ADV_UFCS(_operator_subscript)(iq.__ref(), i);
+						j = ADV_UFCS(_operator_subscript)(iq.$ref(), i);
 						#line 979 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 						if (carry == Builtin::i32(0)) {
 							#line 980 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -1636,13 +1636,13 @@ ADV_WARNING_POP
 								#line 981 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 								carry = Builtin::i32(1);
 								#line 982 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-								ADV_UFCS(_operator_subscript)(iq.__ref(), i) = Builtin::i32(0x1000000) - j;
+								ADV_UFCS(_operator_subscript)(iq.$ref(), i) = Builtin::i32(0x1000000) - j;
 							}
 						} else {
 							#line 984 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 							{
 								#line 985 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-								ADV_UFCS(_operator_subscript)(iq.__ref(), i) = Builtin::i32(0xffffff) - j;
+								ADV_UFCS(_operator_subscript)(iq.$ref(), i) = Builtin::i32(0xffffff) - j;
 							}
 						}
 					}
@@ -1651,13 +1651,13 @@ ADV_WARNING_POP
 						#line 989 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 						{
 							#line 990 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-							auto __tmp__valid_989 = Builtin::Cast<false, std::decay_t<decltype(q0)>::__self>(q0);
+							auto __tmp__valid_989 = Builtin::Cast<false, std::decay_t<decltype(q0)>::$self>(q0);
 							#line 990 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 							if(__tmp__valid_989.IsValid() && Builtin::Is(*__tmp__valid_989, Builtin::i32(1)))  {
 								#line 990 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 								const auto& q0 = *__tmp__valid_989;
 								#line 990 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-								ADV_UFCS(_operator_subscript)(iq.__ref(), jz - Builtin::i32(1)) &= Builtin::i32(0x7fffff);
+								ADV_UFCS(_operator_subscript)(iq.$ref(), jz - Builtin::i32(1)) &= Builtin::i32(0x7fffff);
 							}
 							else {
 								#line 991 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -1665,7 +1665,7 @@ ADV_WARNING_POP
 									#line 991 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 									const auto& q0 = *__tmp__valid_989;
 									#line 991 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-									ADV_UFCS(_operator_subscript)(iq.__ref(), jz - Builtin::i32(1)) &= Builtin::i32(0x3fffff);
+									ADV_UFCS(_operator_subscript)(iq.$ref(), jz - Builtin::i32(1)) &= Builtin::i32(0x3fffff);
 								}
 								 else { using __switchType = decltype(q0); static_assert((!std::derived_from<__switchType, Builtin::Enum> && !std::derived_from<__switchType, Builtin::EnumClassRef> && !std::derived_from<__switchType, Builtin::Union>) || Builtin::GetVariantsCount<__switchType>() <= 0, "Switch does not handle all possible variants, add a default branch"); }
 							}
@@ -1679,7 +1679,7 @@ ADV_WARNING_POP
 						#line 996 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 						if (carry != Builtin::i32(0)) {
 							#line 997 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-							z -= ADV_UFCS(ScaleB)(Builtin::f64(1.0).__ref(), q0);
+							z -= ADV_UFCS(ScaleB)(Builtin::f64(1.0).$ref(), q0);
 						}
 					}
 				}
@@ -1693,14 +1693,14 @@ ADV_WARNING_POP
 					for (; (i <=> jk) >= 0; i--) 
 					{
 						#line 1007 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-						j |= ADV_UFCS(_operator_subscript)(iq.__ref(), i);
+						j |= ADV_UFCS(_operator_subscript)(iq.$ref(), i);
 					}
 					#line 1011 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 					if (j == Builtin::i32(0)) {
 						#line 1012 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 						Builtin::Auto<decltype(Builtin::i32(1))> k = Builtin::i32(1); 
 						#line 1013 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-						while (ADV_UFCS(_operator_subscript)(iq.__ref(), jk - k) == Builtin::i32(0)) 
+						while (ADV_UFCS(_operator_subscript)(iq.$ref(), jk - k) == Builtin::i32(0)) 
 						{
 							#line 1013 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 							k++;
@@ -1711,7 +1711,7 @@ ADV_WARNING_POP
 						for (; (i <=> jz + k) <= 0; i++) 
 						{
 							#line 1016 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-							ADV_UFCS(_operator_subscript)(f.__ref(), jx + i) = ADV_UFCS(_operator_subscript)(IPIO2.__ref(), jv + i);
+							ADV_UFCS(_operator_subscript)(f.$ref(), jx + i) = ADV_UFCS(_operator_subscript)(IPIO2.$ref(), jv + i);
 							#line 1017 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 							fw = Builtin::i32(0);
 							#line 1018 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -1720,10 +1720,10 @@ ADV_WARNING_POP
 							for (; (j <=> jx) <= 0; j++) 
 							{
 								#line 1020 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-								fw += ADV_UFCS(_operator_subscript)(tx.__ref(), j) * ADV_UFCS(_operator_subscript)(f.__ref(), jx + i - j);
+								fw += ADV_UFCS(_operator_subscript)(tx.$ref(), j) * ADV_UFCS(_operator_subscript)(f.$ref(), jx + i - j);
 							}
 							#line 1022 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-							ADV_UFCS(_operator_subscript)(q.__ref(), i) = fw;
+							ADV_UFCS(_operator_subscript)(q.$ref(), i) = fw;
 						}
 						#line 1024 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 						jz += k;
@@ -1743,7 +1743,7 @@ ADV_WARNING_POP
 				#line 1033 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				q0 -= Builtin::i32(24);
 				#line 1034 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				while (ADV_UFCS(_operator_subscript)(iq.__ref(), jz) == Builtin::i32(0)) 
+				while (ADV_UFCS(_operator_subscript)(iq.$ref(), jz) == Builtin::i32(0)) 
 				{
 					#line 1035 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 					jz--;
@@ -1754,37 +1754,37 @@ ADV_WARNING_POP
 				#line 1038 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				{
 					#line 1039 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-					z = ADV_UFCS(ScaleB)(z.__ref(), -q0);
+					z = ADV_UFCS(ScaleB)(z.$ref(), -q0);
 					#line 1040 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 					if ((z <=> Builtin::f64(1.6777216e7)) >= 0) {
 						#line 1041 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-						fw = ADV_UFCS(NarrowToInt32)((Builtin::f64(5.9604644775390625e-8) * z).__ref());
+						fw = ADV_UFCS(NarrowToInt32)((Builtin::f64(5.9604644775390625e-8) * z).$ref());
 						#line 1042 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-						ADV_UFCS(_operator_subscript)(iq.__ref(), jz) = ADV_UFCS(NarrowToInt32)((z - Builtin::f64(1.6777216e7) * fw).__ref());
+						ADV_UFCS(_operator_subscript)(iq.$ref(), jz) = ADV_UFCS(NarrowToInt32)((z - Builtin::f64(1.6777216e7) * fw).$ref());
 						#line 1043 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 						jz++;
 						#line 1044 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 						q0 += Builtin::i32(24);
 						#line 1045 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-						ADV_UFCS(_operator_subscript)(iq.__ref(), jz) = ADV_UFCS(NarrowToInt32)(fw.__ref());
+						ADV_UFCS(_operator_subscript)(iq.$ref(), jz) = ADV_UFCS(NarrowToInt32)(fw.$ref());
 					} else {
 						#line 1046 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 						{
 							#line 1047 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-							ADV_UFCS(_operator_subscript)(iq.__ref(), jz) = ADV_UFCS(NarrowToInt32)(z.__ref());
+							ADV_UFCS(_operator_subscript)(iq.$ref(), jz) = ADV_UFCS(NarrowToInt32)(z.$ref());
 						}
 					}
 				}
 			}
 			#line 1051 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			fw = ADV_UFCS(ScaleB)(Builtin::f64(1.0).__ref(), q0);
+			fw = ADV_UFCS(ScaleB)(Builtin::f64(1.0).$ref(), q0);
 			#line 1052 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			i = jz;
 			#line 1053 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			for (; (i <=> Builtin::i32(0)) >= 0; i--) 
 			{
 				#line 1054 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				ADV_UFCS(_operator_subscript)(q.__ref(), i) = fw * ADV_UFCS(_operator_subscript)(iq.__ref(), i);
+				ADV_UFCS(_operator_subscript)(q.$ref(), i) = fw * ADV_UFCS(_operator_subscript)(iq.$ref(), i);
 				#line 1055 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				fw *= Builtin::f64(5.9604644775390625e-8);
 			}
@@ -1799,10 +1799,10 @@ ADV_WARNING_POP
 				for (Builtin::Auto<decltype(Builtin::i32(0))> k = Builtin::i32(0); (k <=> jp) <= 0 && (k <=> jz - i) <= 0; k++) 
 				{
 					#line 1062 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-					fw += ADV_UFCS(_operator_subscript)(PIO2.__ref(), k) * ADV_UFCS(_operator_subscript)(q.__ref(), i + k);
+					fw += ADV_UFCS(_operator_subscript)(PIO2.$ref(), k) * ADV_UFCS(_operator_subscript)(q.$ref(), i + k);
 				}
 				#line 1064 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				ADV_UFCS(_operator_subscript)(fq.__ref(), jz - i) = fw;
+				ADV_UFCS(_operator_subscript)(fq.$ref(), jz - i) = fw;
 			}
 			#line 1067 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			i = jz;
@@ -1810,11 +1810,11 @@ ADV_WARNING_POP
 			for (; (i <=> Builtin::i32(0)) > 0; i--) 
 			{
 				#line 1069 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				fw = ADV_UFCS(_operator_subscript)(fq.__ref(), i - Builtin::i32(1)) + ADV_UFCS(_operator_subscript)(fq.__ref(), i);
+				fw = ADV_UFCS(_operator_subscript)(fq.$ref(), i - Builtin::i32(1)) + ADV_UFCS(_operator_subscript)(fq.$ref(), i);
 				#line 1070 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				ADV_UFCS(_operator_subscript)(fq.__ref(), i) += ADV_UFCS(_operator_subscript)(fq.__ref(), i - Builtin::i32(1)) - fw;
+				ADV_UFCS(_operator_subscript)(fq.$ref(), i) += ADV_UFCS(_operator_subscript)(fq.$ref(), i - Builtin::i32(1)) - fw;
 				#line 1071 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				ADV_UFCS(_operator_subscript)(fq.__ref(), i - Builtin::i32(1)) = fw;
+				ADV_UFCS(_operator_subscript)(fq.$ref(), i - Builtin::i32(1)) = fw;
 			}
 			#line 1074 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			i = jz;
@@ -1822,11 +1822,11 @@ ADV_WARNING_POP
 			for (; (i <=> Builtin::i32(1)) > 0; i--) 
 			{
 				#line 1076 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				fw = ADV_UFCS(_operator_subscript)(fq.__ref(), i - Builtin::i32(1)) + ADV_UFCS(_operator_subscript)(fq.__ref(), i);
+				fw = ADV_UFCS(_operator_subscript)(fq.$ref(), i - Builtin::i32(1)) + ADV_UFCS(_operator_subscript)(fq.$ref(), i);
 				#line 1077 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				ADV_UFCS(_operator_subscript)(fq.__ref(), i) += ADV_UFCS(_operator_subscript)(fq.__ref(), i - Builtin::i32(1)) - fw;
+				ADV_UFCS(_operator_subscript)(fq.$ref(), i) += ADV_UFCS(_operator_subscript)(fq.$ref(), i - Builtin::i32(1)) - fw;
 				#line 1078 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				ADV_UFCS(_operator_subscript)(fq.__ref(), i - Builtin::i32(1)) = fw;
+				ADV_UFCS(_operator_subscript)(fq.$ref(), i - Builtin::i32(1)) = fw;
 			}
 			#line 1081 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			fw = Builtin::i32(0);
@@ -1836,51 +1836,51 @@ ADV_WARNING_POP
 			for (; (i <=> Builtin::i32(2)) >= 0; i--) 
 			{
 				#line 1084 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				fw += ADV_UFCS(_operator_subscript)(fq.__ref(), i);
+				fw += ADV_UFCS(_operator_subscript)(fq.$ref(), i);
 			}
 			#line 1087 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			if (ih == Builtin::i32(0)) {
 				#line 1088 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				ADV_UFCS(_operator_subscript)(ty.__ref(), Builtin::i32(0)) = ADV_UFCS(_operator_subscript)(fq.__ref(), Builtin::i32(0));
+				ADV_UFCS(_operator_subscript)(ty.$ref(), Builtin::i32(0)) = ADV_UFCS(_operator_subscript)(fq.$ref(), Builtin::i32(0));
 				#line 1089 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				ADV_UFCS(_operator_subscript)(ty.__ref(), Builtin::i32(1)) = ADV_UFCS(_operator_subscript)(fq.__ref(), Builtin::i32(1));
+				ADV_UFCS(_operator_subscript)(ty.$ref(), Builtin::i32(1)) = ADV_UFCS(_operator_subscript)(fq.$ref(), Builtin::i32(1));
 				#line 1090 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				ADV_UFCS(_operator_subscript)(ty.__ref(), Builtin::i32(2)) = fw;
+				ADV_UFCS(_operator_subscript)(ty.$ref(), Builtin::i32(2)) = fw;
 			} else {
 				#line 1091 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				{
 					#line 1092 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-					ADV_UFCS(_operator_subscript)(ty.__ref(), Builtin::i32(0)) = -(ADV_UFCS(_operator_subscript)(fq.__ref(), Builtin::i32(0)));
+					ADV_UFCS(_operator_subscript)(ty.$ref(), Builtin::i32(0)) = -(ADV_UFCS(_operator_subscript)(fq.$ref(), Builtin::i32(0)));
 					#line 1093 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-					ADV_UFCS(_operator_subscript)(ty.__ref(), Builtin::i32(1)) = -(ADV_UFCS(_operator_subscript)(fq.__ref(), Builtin::i32(1)));
+					ADV_UFCS(_operator_subscript)(ty.$ref(), Builtin::i32(1)) = -(ADV_UFCS(_operator_subscript)(fq.$ref(), Builtin::i32(1)));
 					#line 1094 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-					ADV_UFCS(_operator_subscript)(ty.__ref(), Builtin::i32(2)) = -fw;
+					ADV_UFCS(_operator_subscript)(ty.$ref(), Builtin::i32(2)) = -fw;
 				}
 			}
 			#line 1097 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			n &= Builtin::i32(7);
 		}
 		#line 1100 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		t = Builtin::f128{ADV_UFCS(_operator_subscript)(ty.__ref(), Builtin::i32(2))} + ADV_UFCS(_operator_subscript)(ty.__ref(), Builtin::i32(1));
+		t = Builtin::f128{ADV_UFCS(_operator_subscript)(ty.$ref(), Builtin::i32(2))} + ADV_UFCS(_operator_subscript)(ty.$ref(), Builtin::i32(1));
 		#line 1101 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		r = t + ADV_UFCS(_operator_subscript)(ty.__ref(), Builtin::i32(0));
+		r = t + ADV_UFCS(_operator_subscript)(ty.$ref(), Builtin::i32(0));
 		#line 1102 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		w = ADV_UFCS(_operator_subscript)(ty.__ref(), Builtin::i32(0)) - (r - t);
+		w = ADV_UFCS(_operator_subscript)(ty.$ref(), Builtin::i32(0)) - (r - t);
 		#line 1103 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		if (ADV_UPCS(IsNegative)(u.__ref())) {
+		if (ADV_UPCS(IsNegative)(u.$ref())) {
 			#line 1104 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			y0 = -r;
 			#line 1105 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			y1 = -w;
 			#line 1106 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			return ADV_UFCS(NarrowToInt32)(-n.__ref());
+			return ADV_UFCS(NarrowToInt32)(-n.$ref());
 		}
 		#line 1109 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		y0 = r;
 		#line 1110 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		y1 = w;
 		#line 1111 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		return ADV_UFCS(NarrowToInt32)(n.__ref()); ADV_CHECK_REF_STRUCT_LOCAL_RETURN("i32", Builtin::i32);
+		return ADV_UFCS(NarrowToInt32)(n.$ref());
 	}
 
 #line 1114 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -1981,7 +1981,7 @@ ADV_WARNING_POP
 		#line 1169 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		constexpr Builtin::Auto<decltype(Builtin::ParseFloat128("-5.323131271912475695157127875560667378597e2"))> U4 = Builtin::ParseFloat128("-5.323131271912475695157127875560667378597e2");
 		#line 1171 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		Builtin::Auto<decltype(ADV_UPCS(Bits)(x.__ref()))> bits = ADV_UPCS(Bits)(x.__ref()); 
+		Builtin::Auto<decltype(ADV_UPCS(Bits)(x.$ref()))> bits = ADV_UPCS(Bits)(x.$ref()); 
 		#line 1172 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		const Builtin::Auto<decltype((bits & SignMask) != Builtin::i32(0))> sign = (bits & SignMask) != Builtin::i32(0); 
 		#line 1173 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -1991,21 +1991,21 @@ ADV_WARNING_POP
 		#line 1177 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		if ((exp <=> Builtin::u32(0x3fc6U)) < 0) {
 			#line 1178 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			if (ADV_UFCS(NarrowToInt32)(x.__ref()) == Builtin::i32(0)) {
+			if (ADV_UFCS(NarrowToInt32)(x.$ref()) == Builtin::i32(0)) {
 				#line 1179 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				if (((bits & (ADV_UFCS(_operator_not)(SignMask))) | (iy + Builtin::i32(1))) == Builtin::i32(0)) {
 					#line 1180 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-					return ADV_UPCS(ReciprocalEstimate)(ADV_UPCS(Abs)(x.__ref()).__ref()); ADV_CHECK_REF_STRUCT_PARAM_RETURN(x, "f128", Builtin::f128);
+					return ADV_UPCS(ReciprocalEstimate)(ADV_UPCS(Abs)(x.$ref()).$ref());
 				} else {
 					#line 1181 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 					if (iy == Builtin::i32(1)) {
 						#line 1182 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-						return x; ADV_CHECK_REF_STRUCT_PARAM_RETURN(x, "f128", Builtin::f128);
+						return x;
 					} else {
 						#line 1183 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 						{
 							#line 1184 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-							return ADV_UPCS(ReciprocalEstimate)(-x.__ref());
+							return ADV_UPCS(ReciprocalEstimate)(-x.$ref());
 						}
 					}
 				}
@@ -2061,7 +2061,7 @@ ADV_WARNING_POP
 				w = -w;
 			}
 			#line 1221 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			return w; ADV_CHECK_REF_STRUCT_LOCAL_RETURN("f128", Builtin::f128);
+			return w;
 		}
 		#line 1224 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		if (iy == Builtin::i32(1)) {
@@ -2069,13 +2069,13 @@ ADV_WARNING_POP
 			return w;
 		}
 		#line 1228 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype(ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{ADV_UFCS(High64)(ADV_UPCS(Bits)(w.__ref()).__ref()), Builtin::u32(0U)}))> u = ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{ADV_UFCS(High64)(ADV_UPCS(Bits)(w.__ref()).__ref()), Builtin::u32(0U)}); 
+		const Builtin::Auto<decltype(ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{ADV_UFCS(High64)(ADV_UPCS(Bits)(w.$ref()).$ref()), Builtin::u32(0U)}))> u = ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{ADV_UFCS(High64)(ADV_UPCS(Bits)(w.$ref()).$ref()), Builtin::u32(0U)}); 
 		#line 1229 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		v = r - (u - x);
 		#line 1230 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		z = ADV_UPCS(ReciprocalEstimate)(-w.__ref());
+		z = ADV_UPCS(ReciprocalEstimate)(-w.$ref());
 		#line 1231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		const Builtin::Auto<decltype(ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{ADV_UFCS(High64)(ADV_UPCS(Bits)(z.__ref()).__ref()), Builtin::u32(0U)}))> u1 = ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{ADV_UFCS(High64)(ADV_UPCS(Bits)(z.__ref()).__ref()), Builtin::u32(0U)}); 
+		const Builtin::Auto<decltype(ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{ADV_UFCS(High64)(ADV_UPCS(Bits)(z.$ref()).$ref()), Builtin::u32(0U)}))> u1 = ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{ADV_UFCS(High64)(ADV_UPCS(Bits)(z.$ref()).$ref()), Builtin::u32(0U)}); 
 		#line 1232 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		s = ADV_USPCS(One, Builtin::f128)() + u1 * u;
 		#line 1233 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -2105,13 +2105,13 @@ ADV_WARNING_POP
 				#line 1246 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				const Builtin::Auto<decltype(ADV_USPCS(MaxValue, Builtin::u64)() >> (e - Builtin::i32(48)))> m = ADV_USPCS(MaxValue, Builtin::u64)() >> (e - Builtin::i32(48)); 
 				#line 1247 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				ai = ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{ADV_UFCS(High64)(ADV_UPCS(Bits)(x.__ref()).__ref()), ADV_UFCS(Low64)(ADV_UPCS(Bits)(x.__ref()).__ref()) & (ADV_UFCS(_operator_not)(m))});
+				ai = ADV_USFCS((Builtin::f128), FromBits)(Builtin::u128{ADV_UFCS(High64)(ADV_UPCS(Bits)(x.$ref()).$ref()), ADV_UFCS(Low64)(ADV_UPCS(Bits)(x.$ref()).$ref()) & (ADV_UFCS(_operator_not)(m))});
 			}
 		}
 		#line 1249 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		ar = x - ai;
 		#line 1250 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		return std::make_tuple(ai, ar); ADV_CHECK_REF_STRUCT_LOCAL_RETURN("(f128,f128)", std::tuple<Builtin::f128, Builtin::f128>);
+		return std::make_tuple(ai, ar);
 	}
 
 #line 1253 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -2137,7 +2137,7 @@ ADV_WARNING_POP
 		#line 1265 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		Builtin::f128 hi{}, lo{}; 
 		#line 1266 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		hi = ADV_UFCS(ToFloat64)(x.__ref());
+		hi = ADV_UFCS(ToFloat64)(x.$ref());
 		#line 1267 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		lo = x - hi;
 		#line 1268 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -2147,7 +2147,7 @@ ADV_WARNING_POP
 		#line 1270 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		Sum2(Builtin::MutableRef(hi), Builtin::MutableRef(lo));
 		#line 1272 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		return SinInternal(hi, lo, Builtin::i32(1)); ADV_CHECK_REF_STRUCT_LOCAL_RETURN("f128", Builtin::f128);
+		return SinInternal(hi, lo, Builtin::i32(1));
 	}
 
 #line 1275 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -2160,7 +2160,7 @@ ADV_WARNING_POP
 		#line 1280 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		Builtin::f128 hi{}, lo{}; 
 		#line 1281 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		hi = ADV_UFCS(ToFloat64)(x.__ref());
+		hi = ADV_UFCS(ToFloat64)(x.$ref());
 		#line 1282 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		lo = x - hi;
 		#line 1283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -2170,7 +2170,7 @@ ADV_WARNING_POP
 		#line 1285 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		Sum2(Builtin::MutableRef(hi), Builtin::MutableRef(lo));
 		#line 1287 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		return CosInternal(hi, lo); ADV_CHECK_REF_STRUCT_LOCAL_RETURN("f128", Builtin::f128);
+		return CosInternal(hi, lo);
 	}
 
 #line 1290 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -2185,7 +2185,7 @@ ADV_WARNING_POP
 		#line 1296 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 		if ((x <=> Quarter) < 0) {
 			#line 1297 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-			hi = ADV_UFCS(ToFloat64)(x.__ref());
+			hi = ADV_UFCS(ToFloat64)(x.$ref());
 			#line 1298 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 			lo = x - hi;
 			#line 1299 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -2202,7 +2202,7 @@ ADV_WARNING_POP
 				#line 1304 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				x = HalfOne - x;
 				#line 1305 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-				hi = ADV_UFCS(ToFloat64)(x.__ref());
+				hi = ADV_UFCS(ToFloat64)(x.$ref());
 				#line 1306 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
 				lo = x - hi;
 				#line 1307 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
@@ -2222,7 +2222,7 @@ ADV_WARNING_POP
 			}
 		}
 		#line 1315 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128_Trig.ast"
-		return t; ADV_CHECK_REF_STRUCT_LOCAL_RETURN("f128", Builtin::f128);
+		return t;
 	}
 
 

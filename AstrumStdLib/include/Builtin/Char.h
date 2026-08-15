@@ -4,10 +4,10 @@
 namespace Builtin {
 
 	struct Character : public Struct {
-		using __self  = Character;
-		using __class = __Class_Basic<__self>;
-		constexpr decltype(auto) __ref() noexcept { return *this; }
-		constexpr decltype(auto) __ref() const noexcept { return *this; }
+		using $self  = Character;
+		using $class = $Class_Basic<$self>;
+		constexpr decltype(auto) $ref() noexcept { return *this; }
+		constexpr decltype(auto) $ref() const noexcept { return *this; }
 
 		constexpr Character() noexcept = default;
 		constexpr Character(bool)      = delete;

@@ -258,7 +258,7 @@ namespace AstrumLang {
 				cmd += quotes;
 				if (CompilerSettings::get().buildAllMode ||
 				    std::find(modifiedFiles.begin(), modifiedFiles.end(), src) !=
-				    modifiedFiles.end()) {
+				        modifiedFiles.end()) {
 					cmd += srcPath.string();
 				} else {
 					srcPath.replace_extension("o");
@@ -384,14 +384,15 @@ namespace AstrumLang {
 					continue;
 				cmd += " ";
 				cmd += quotes;
-				if (CompilerSettings::get().buildAllMode || std::find(modifiedFiles.begin(), modifiedFiles.end(), src) != modifiedFiles.end())
-				{
+				if (CompilerSettings::get().buildAllMode ||
+				    std::find(modifiedFiles.begin(), modifiedFiles.end(), src) !=
+				        modifiedFiles.end()) {
 					cmd += srcPath.string();
 				} else {
 					srcPath.replace_extension("obj");
-					cmd +=
-					    CompilerSettings::get().debugBuild ? R"(obj\\Debug\\)" : R"(obj\\Release\\)";
-                    cmd += srcPath.filename().string();
+					cmd += CompilerSettings::get().debugBuild ? R"(obj\\Debug\\)"
+					                                          : R"(obj\\Release\\)";
+					cmd += srcPath.filename().string();
 				}
 				cmd += quotes;
 			}
@@ -680,7 +681,7 @@ namespace AstrumLang {
 			{
 				std::lock_guard g {astDumpMutex};
 				parsers[src] = parser;
-				ast[src] = astRoot;
+				ast[src]     = astRoot;
 			}
 
 			if (parser->getNumberOfSyntaxErrors()) {
@@ -746,6 +747,7 @@ namespace AstrumLang {
 
 		// topological sort
 		auto orderedSources = dependencies.getSortedNodes();
+		for (const auto& src : orderedSources) { std::cout << src << "\n"; }
 
 		// first codegen pass
 		std::cout << "Stage 1: Codegen first pass\n";
@@ -863,7 +865,8 @@ namespace AstrumLang {
 		}
 		mainFile.open(path);
 		mainFile << "#include \"Builtin/Builtin.h\"\n#include <windows.h>\n"
-		         << "int main(int argc, char** argv) { ADV_SETLOCAL; return Builtin::TestMain(argc, argv); }\n";
+		         << "int main(int argc, char** argv) { ADV_SETLOCAL; return "
+		            "Builtin::TestMain(argc, argv); }\n";
 	}
 
 }  // namespace AstrumLang

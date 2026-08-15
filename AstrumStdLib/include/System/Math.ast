@@ -20,7 +20,7 @@ public static class Math {
         rootN: usize = 0u;
 
         while n < 256 {
-            result[n] = (rootN as u8, (n - rootN ^^ 2u) as u8);
+            result[n as i32] = (rootN as u8, (n - rootN ^^ 2u) as u8);
             n++;
             if n == (rootN + 1) ^^ 2u {
                 rootN++;
@@ -38,7 +38,7 @@ public static class Math {
         const SHIFT :== T.BitWidth - 8;
         num >>= SHIFT as i32;
 
-        return _isqrtLookupTable[num as usize];
+        return _isqrtLookupTable[num as i32];
     }
     private _isqrtMiddleStage: <T: is IFixedWidthInteger, U: is IFixedWidthInteger> (num: T, root, rem) -> (U, U) ==
     {
@@ -87,7 +87,7 @@ public static class Math {
         return result;
     }
 
-    public Isqrt8: (num: u8) -> u8 noexcept ==> _isqrtLookupTable[num as usize].0;
+    public Isqrt8: (num: u8) -> u8 noexcept ==> _isqrtLookupTable[num as i32].0;
 
     public Isqrt16: (num: u16) -> u16 ==
     {

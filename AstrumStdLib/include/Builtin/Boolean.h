@@ -3,15 +3,15 @@
 
 namespace Builtin {
 	template <class T>
-	class __Class_Basic;
+	class $Class_Basic;
 
 	struct Boolean : public Struct {
-		using __self       = Boolean;
-		using __class      = __Class_Basic<Boolean>;
-		using __underlying = bool;
+		using $self       = Boolean;
+		using $class      = $Class_Basic<Boolean>;
+		using $underlying = bool;
 
-		constexpr __self& __ref() noexcept { return *this; }
-		constexpr const __self& __ref() const noexcept { return *this; }
+		constexpr $self& $ref() noexcept { return *this; }
+		constexpr const $self& $ref() const noexcept { return *this; }
 
 		constexpr Boolean() noexcept = default;
 		constexpr Boolean(bool value) noexcept : _value(value) {}

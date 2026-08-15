@@ -5067,15 +5067,15 @@ namespace Builtin {
 	NODISCARD constexpr inline bool SafeMultiply(T const& t, U const& u, T& result) noexcept {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
 
-		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 
 		return MultiplicationHelper<
 		    TLeftInt, TRightInt,
@@ -5087,14 +5087,14 @@ namespace Builtin {
 	constexpr inline void StrictMultiply(T const& t, U const& u, T& result) {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
-		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 
 		MultiplicationHelper<TLeftInt, TRightInt,
 		                     MultiplicationMethod<TLeftInt, TRightInt>::method>::
@@ -5105,14 +5105,14 @@ namespace Builtin {
 	constexpr inline void WrappingMultiply(T const& t, U const& u, T& result) noexcept {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
-		using TLeftInt       = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt      = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt       = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt      = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 		using TLeftUnsigned  = std::make_unsigned_t<TLeftInt>;
 		using TRightUnsigned = std::make_unsigned_t<TRightInt>;
 
@@ -5128,14 +5128,14 @@ namespace Builtin {
 	constexpr inline void SaturatingMultiply(T const& t, U const& u, T& result) noexcept {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
-		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 
 		auto status = MultiplicationHelper<
 		    TLeftInt, TRightInt,
@@ -5161,14 +5161,14 @@ namespace Builtin {
 	NODISCARD constexpr inline bool SafeDivide(T t, U u, T& result) noexcept {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
-		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 
 		return DivisionHelper<TLeftInt, TRightInt, DivisionMethod<TLeftInt, TRightInt>::method>::
 		           Divide(t, u, result.__builtin_ref()) == SafeInt_NoError;
@@ -5178,14 +5178,14 @@ namespace Builtin {
 	NODISCARD constexpr inline void StrictDivide(T t, U u, T& result) {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
-		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 
 		DivisionHelper<TLeftInt, TRightInt, DivisionMethod<TLeftInt, TRightInt>::method>::
 		    DivideThrow(t, u, result.__builtin_ref());
@@ -5195,14 +5195,14 @@ namespace Builtin {
 	NODISCARD constexpr inline void WrappingDivide(T t, U u, T& result) {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
-		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 
 		auto status =
 		    DivisionHelper<TLeftInt, TRightInt, DivisionMethod<TLeftInt, TRightInt>::method>::
@@ -5219,14 +5219,14 @@ namespace Builtin {
 	NODISCARD constexpr inline void SaturatingDivide(T t, U u, T& result) {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
-		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 
 		auto status =
 		    DivisionHelper<TLeftInt, TRightInt, DivisionMethod<TLeftInt, TRightInt>::method>::
@@ -5253,14 +5253,14 @@ namespace Builtin {
 	NODISCARD constexpr inline bool SafeDivExact(T t, U u, T& result) noexcept {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
-		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 
 		auto status =
 		    DivisionHelper<TLeftInt, TRightInt, DivisionMethod<TLeftInt, TRightInt>::method>::
@@ -5287,14 +5287,14 @@ namespace Builtin {
 	NODISCARD constexpr inline bool SafeModulus(T t, U u, T& result) noexcept {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
-		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 		if constexpr (!std::is_unsigned_v<TLeftInt> && !std::is_unsigned_v<TRightInt>) {
 			if (t == std::numeric_limits<TLeftInt>::min() && u == -1)
 				return false;
@@ -5308,17 +5308,17 @@ namespace Builtin {
 	NODISCARD constexpr inline void StrictModulus(T t, U u, T& result) {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
-		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 
-		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 		if constexpr (!std::is_unsigned_v<TLeftInt> && !std::is_unsigned_v<TRightInt>) {
 			if (t == std::numeric_limits<TLeftInt>::min() && u == -1)
 				throw IntegerOverflowException();
@@ -5332,14 +5332,14 @@ namespace Builtin {
 	NODISCARD constexpr inline void WrappingModulus(T t, U u, T& result) {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
-		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 
 		auto status =
 		    ModulusHelper<TLeftInt, TRightInt, ValidComparison<TLeftInt, TRightInt>::method>::
@@ -5366,14 +5366,14 @@ namespace Builtin {
 	NODISCARD constexpr inline bool SafeAdd(T const& t, U const& u, T& result) noexcept {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
-		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 
 		return AdditionHelper<TLeftInt, TRightInt, AdditionMethod<TLeftInt, TRightInt>::method>::
 		    Addition(t, u, result.__builtin_ref());
@@ -5383,14 +5383,14 @@ namespace Builtin {
 	constexpr inline void StrictAdd(T const& t, U const& u, T& result) {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
-		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 
 		AdditionHelper<TLeftInt, TRightInt, AdditionMethod<TLeftInt, TRightInt>::method>::
 		    AdditionThrow(t, u, result.__builtin_ref());
@@ -5400,14 +5400,14 @@ namespace Builtin {
 	constexpr inline void WrappingAdd(T const& t, U const& u, T& result) noexcept {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
-		using TLeftInt       = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt      = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt       = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt      = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 		using TLeftUnsigned  = std::make_unsigned_t<TLeftInt>;
 		using TRightUnsigned = std::make_unsigned_t<TRightInt>;
 
@@ -5422,14 +5422,14 @@ namespace Builtin {
 	constexpr inline void SaturatingAdd(T const& t, U const& u, T& result) noexcept {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
-		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 
 		auto status =
 		    AdditionHelper<TLeftInt, TRightInt, AdditionMethod<TLeftInt, TRightInt>::method>::
@@ -5454,14 +5454,14 @@ namespace Builtin {
 	NODISCARD constexpr inline bool SafeSubtract(T const& t, U const& u, T& result) noexcept {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
-		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 
 		return SubtractionHelper<
 		    TLeftInt, TRightInt,
@@ -5472,14 +5472,14 @@ namespace Builtin {
 	constexpr inline void StrictSubtract(T const& t, U const& u, T& result) {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
-		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 
 		SubtractionHelper<TLeftInt, TRightInt, SubtractionMethod<TLeftInt, TRightInt>::method>::
 		    SubtractThrow(t, u, result.__builtin_ref());
@@ -5489,14 +5489,14 @@ namespace Builtin {
 	constexpr inline void WrappingSubtract(T const& t, U const& u, T& result) noexcept {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
-		using TLeftInt       = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt      = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt       = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt      = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 		using TLeftUnsigned  = std::make_unsigned_t<TLeftInt>;
 		using TRightUnsigned = std::make_unsigned_t<TRightInt>;
 
@@ -5511,14 +5511,14 @@ namespace Builtin {
 	constexpr inline void SaturatingSubtract(T const& t, U const& u, T& result) noexcept {
 		using TLeft                = std::decay_t<T>;
 		using TRight               = std::decay_t<U>;
-		constexpr bool isStdT      = requires { typename TLeft::__underlying; };
-		constexpr bool isStdU      = requires { typename TRight::__underlying; };
+		constexpr bool isStdT      = requires { typename TLeft::$underlying; };
+		constexpr bool isStdU      = requires { typename TRight::$underlying; };
 		constexpr bool isIntegralT = std::is_integral_v<TLeft>;
 		constexpr bool isIntegralU = std::is_integral_v<TRight>;
 		static_assert(isStdT || isIntegralT);
 		static_assert(isStdU || isIntegralU);
-		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::__underlying, TLeft>;
-		using TRightInt = std::conditional_t<isStdU, typename TRight::__underlying, TRight>;
+		using TLeftInt  = std::conditional_t<isStdT, typename TLeft::$underlying, TLeft>;
+		using TRightInt = std::conditional_t<isStdU, typename TRight::$underlying, TRight>;
 
 		auto status =
 		    SubtractionHelper<TLeftInt, TRightInt, SubtractionMethod<TLeftInt, TRightInt>::method>::
@@ -5542,10 +5542,10 @@ namespace Builtin {
 	template <class T>
 	NODISCARD constexpr inline bool SafeNegate(T t, T& result) noexcept {
 		using TDecayed            = std::decay_t<T>;
-		constexpr bool isStd      = requires { typename TDecayed::__underlying; };
+		constexpr bool isStd      = requires { typename TDecayed::$underlying; };
 		constexpr bool isIntegral = std::is_integral_v<TDecayed>;
 		static_assert(isStd || isIntegral);
-		using TInt = std::conditional_t<isStd, typename TDecayed::__underlying, TDecayed>;
+		using TInt = std::conditional_t<isStd, typename TDecayed::$underlying, TDecayed>;
 		return NegationHelper<TInt, std::numeric_limits<TInt>::is_signed>::Negative(
 		    t, result.__builtin_ref());
 	}
@@ -5553,19 +5553,19 @@ namespace Builtin {
 	template <class T>
 	NODISCARD constexpr inline void StrictNegate(T t, T& result) noexcept {
 		using TDecayed            = std::decay_t<T>;
-		constexpr bool isStd      = requires { typename TDecayed::__underlying; };
+		constexpr bool isStd      = requires { typename TDecayed::$underlying; };
 		constexpr bool isIntegral = std::is_integral_v<TDecayed>;
 		static_assert(isStd || isIntegral);
-		using TInt = std::conditional_t<isStd, typename TDecayed::__underlying, TDecayed>;
+		using TInt = std::conditional_t<isStd, typename TDecayed::$underlying, TDecayed>;
 		result.__builtin_ref() =
 		    NegationHelper<TInt, std::numeric_limits<TInt>::is_signed>::NegativeThrow(t);
 	}
 
 	template <class T>
 	NODISCARD constexpr inline void WrappingNegate(T t, T& result) noexcept {
-		constexpr bool isStd = requires { typename std::decay_t<T>::__underlying; };
+		constexpr bool isStd = requires { typename std::decay_t<T>::$underlying; };
 		using TInt =
-		    std::conditional_t<isStd, typename std::decay_t<T>::__underlying, std::decay_t<T>>;
+		    std::conditional_t<isStd, typename std::decay_t<T>::$underlying, std::decay_t<T>>;
 		using TSigned          = std::make_signed_t<TInt>;
 		if constexpr (sizeof(T) == 16 && std::numeric_limits<T>::is_signed)
 		{
@@ -5581,10 +5581,10 @@ namespace Builtin {
 	template <class T>
 	NODISCARD constexpr inline void SaturatingNegate(T t, T& result) noexcept {
 		using TDecayed            = std::decay_t<T>;
-		constexpr bool isStd      = requires { typename TDecayed::__underlying; };
+		constexpr bool isStd      = requires { typename TDecayed::$underlying; };
 		constexpr bool isIntegral = std::is_integral_v<TDecayed>;
 		static_assert(isStd || isIntegral);
-		using TInt = std::conditional_t<isStd, typename TDecayed::__underlying, TDecayed>;
+		using TInt = std::conditional_t<isStd, typename TDecayed::$underlying, TDecayed>;
 
 		static_assert(!std::is_unsigned_v<TInt>,
 		              "SaturatingNegate does not supported for unsigned types");
@@ -5607,20 +5607,20 @@ namespace Builtin {
 	template <class T>
 	inline constexpr T UncheckedShiftLeft(T t, int amount) noexcept {
 		using TDecayed            = std::decay_t<T>;
-		constexpr bool isStd      = requires { typename TDecayed::__underlying; };
+		constexpr bool isStd      = requires { typename TDecayed::$underlying; };
 		constexpr bool isIntegral = std::is_integral_v<TDecayed>;
 		static_assert(isStd || isIntegral);
-		using TInt = std::conditional_t<isStd, typename TDecayed::__underlying, TDecayed>;
+		using TInt = std::conditional_t<isStd, typename TDecayed::$underlying, TDecayed>;
 		return T((TInt) t << amount);
 	}
 
 	template <class T>
 	inline constexpr T UncheckedShiftRight(T t, int amount) noexcept {
 		using TDecayed            = std::decay_t<T>;
-		constexpr bool isStd      = requires { typename TDecayed::__underlying; };
+		constexpr bool isStd      = requires { typename TDecayed::$underlying; };
 		constexpr bool isIntegral = std::is_integral_v<TDecayed>;
 		static_assert(isStd || isIntegral);
-		using TInt = std::conditional_t<isStd, typename TDecayed::__underlying, TDecayed>;
+		using TInt = std::conditional_t<isStd, typename TDecayed::$underlying, TDecayed>;
 		return T((TInt) t >> amount);
 	}
 
@@ -5797,7 +5797,7 @@ namespace Builtin {
 
 	template <class T>
 	inline constexpr bool CarryingAdd(T left, T right, bool carry, T& res) noexcept {
-		using TInt      = typename T::__underlying;
+		using TInt      = typename T::$underlying;
 		using TUnsigned = std::make_unsigned_t<TInt>;
 		TInt leftValue  = (TInt) left;
 		TInt rightValue = (TInt) right;
@@ -5908,7 +5908,7 @@ namespace Builtin {
 
 	template <class T>
 	inline constexpr bool BorrowingSub(T left, T right, bool borrow, T& res) noexcept {
-		using TInt      = typename T::__underlying;
+		using TInt      = typename T::$underlying;
 		using TUnsigned = std::make_unsigned_t<TInt>;
 		auto leftValue  = (TInt) left;
 		auto rightValue = (TInt) right;
@@ -6253,35 +6253,35 @@ namespace Builtin {
 
 	template <class T>
 	inline constexpr T BitsRotateLeft(T input, int shift) noexcept {
-		using TInt      = typename T::__underlying;
+		using TInt      = typename T::$underlying;
 		using TUnsigned = std::make_unsigned_t<TInt>;
 		return (TInt) std::rotl(TUnsigned((TInt) input), shift);
 	}
 
 	template <class T>
 	inline constexpr T BitsRotateRight(T input, int shift) noexcept {
-		using TInt      = typename T::__underlying;
+		using TInt      = typename T::$underlying;
 		using TUnsigned = std::make_unsigned_t<TInt>;
 		return (TInt) std::rotr(TUnsigned((TInt) input), shift);
 	}
 
 	template <class T>
 	inline constexpr unsigned LeadingZeroCount(T input) noexcept {
-		using TInt      = typename T::__underlying;
+		using TInt      = typename T::$underlying;
 		using TUnsigned = std::make_unsigned_t<TInt>;
 		return std::countl_zero(TUnsigned((TInt) input));
 	}
 
 	template <class T>
 	inline constexpr unsigned TrailingZeroCount(T input) noexcept {
-		using TInt      = typename T::__underlying;
+		using TInt      = typename T::$underlying;
 		using TUnsigned = std::make_unsigned_t<TInt>;
 		return std::countr_zero(TUnsigned((TInt) input));
 	}
 
 	template <class T>
 	inline constexpr unsigned PopCount(T input) noexcept {
-		using TInt      = typename T::__underlying;
+		using TInt      = typename T::$underlying;
 		using TUnsigned = std::make_unsigned_t<TInt>;
 		return std::popcount(TUnsigned((TInt) input));
 	}
@@ -6347,13 +6347,13 @@ namespace Builtin {
 #if USE_INTRINSICS
 #ifdef MSVC
 		if (std::is_constant_evaluated())
-			return (typename T::__underlying) ((src << 8) | (src >> 8));
-		return (typename T::__underlying) _byteswap_ushort(src);
+			return (typename T::$underlying) ((src << 8) | (src >> 8));
+		return (typename T::$underlying) _byteswap_ushort(src);
 #else
-		return (typename T::__underlying) __builtin_bswap16(src);
+		return (typename T::$underlying) __builtin_bswap16(src);
 #endif
 #else
-		return (typename T::__underlying) ((src << 8) | (src >> 8));
+		return (typename T::$underlying) ((src << 8) | (src >> 8));
 #endif
 	}
 
@@ -6362,15 +6362,15 @@ namespace Builtin {
 #if USE_INTRINSICS
 #ifdef MSVC
 		if (std::is_constant_evaluated())
-			return (typename T::__underlying) (((src << 24) | (src >> 24)) |
+			return (typename T::$underlying) (((src << 24) | (src >> 24)) |
 			                                   ((src << 8) & 0x00FF0000) |
 			                                   ((src >> 8) & 0x0000FF00));
-		return (typename T::__underlying) _byteswap_ulong(src);
+		return (typename T::$underlying) _byteswap_ulong(src);
 #else
-		return (typename T::__underlying) __builtin_bswap32(src);
+		return (typename T::$underlying) __builtin_bswap32(src);
 #endif
 #else
-		return (typename T::__underlying) (((src << 24) | (src >> 24)) | ((src << 8) & 0x00FF0000) |
+		return (typename T::$underlying) (((src << 24) | (src >> 24)) | ((src << 8) & 0x00FF0000) |
 		                                   ((src >> 8) & 0x0000FF00));
 #endif
 	}
@@ -6383,11 +6383,11 @@ namespace Builtin {
 			src = (src & 0x00000000FFFFFFFFULL) << 32 | (src & 0xFFFFFFFF00000000ULL) >> 32;
 			src = (src & 0x0000FFFF0000FFFFULL) << 16 | (src & 0xFFFF0000FFFF0000ULL) >> 16;
 			src = (src & 0x00FF00FF00FF00FFULL) << 8 | (src & 0xFF00FF00FF00FF00ULL) >> 8;
-			return (typename T::__underlying) src;
+			return (typename T::$underlying) src;
 		}
-		return (typename T::__underlying) _byteswap_uint64(src);
+		return (typename T::$underlying) _byteswap_uint64(src);
 #else
-		return (typename T::__underlying) __builtin_bswap64(src);
+		return (typename T::$underlying) __builtin_bswap64(src);
 #endif
 #else
 		src = (src & 0x00000000FFFFFFFFULL) << 32 | (src & 0xFFFFFFFF00000000ULL) >> 32;

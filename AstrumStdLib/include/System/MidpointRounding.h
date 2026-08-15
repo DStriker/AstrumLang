@@ -5,21 +5,23 @@
 #include "ASTRUMSTD_export.h"
 
 namespace System {
-namespace __Unsafe {} namespace __MidpointRounding_Protected__Unsafe {}
+namespace __Unsafe {} namespace __MidpointRounding$Protected__Unsafe {}
 //###############################################################################
 //# Type forward declarations
 //###############################################################################
 class MidpointRounding;
-class __Class_MidpointRounding;
+class $Class_MidpointRounding;
+} namespace $extensions {
+} namespace System {
 //###############################################################################
 //# Type definitions
 //###############################################################################
-class __Class_MidpointRounding;
+class $Class_MidpointRounding;
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
 	struct MidpointRounding final : public Builtin::Enum {
-		public: using __self = MidpointRounding;
-		public: using __class = __Class_MidpointRounding;
-		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
+		public: using $self = MidpointRounding;
+		public: using $class = $Class_MidpointRounding;
+		public: FORCE_INLINE constexpr decltype(auto) $ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) $ref() const noexcept { return *this; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
 		private: Builtin::u8 __value;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
@@ -38,8 +40,8 @@ class __Class_MidpointRounding;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
 		public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
-		public: constexpr bool operator ==(const __self& that) const noexcept { return __value == that.__value; } 
-		public: constexpr auto operator <=>(const __self& that) const noexcept { return __value <=> that.__value; } 
+		public: constexpr bool operator ==(const $self& that) const noexcept { return __value == that.__value; } 
+		public: constexpr auto operator <=>(const $self& that) const noexcept { return __value <=> that.__value; } 
 		#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
 		public: static ASTRUMSTD_HIDDEN const MidpointRounding ToEven;
 		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
@@ -54,7 +56,7 @@ class __Class_MidpointRounding;
 		public: constexpr operator Builtin::u8() const noexcept { return __value; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
 		private: constexpr MidpointRounding(Builtin::u8 value) : __value(value) {}
-		public: static constexpr __self FromValue(Builtin::u8 rawValue) { return __self(rawValue); }
+		public: static constexpr $self FromValue(Builtin::u8 rawValue) { return $self(rawValue); }
 		
 	};
 	
@@ -84,13 +86,13 @@ class __Class_MidpointRounding;
 	
 	
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
-	class __Class_MidpointRounding final : public Builtin::ValueType
+	class $Class_MidpointRounding final : public Builtin::ValueType
 	{
 		#line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
-		public: using __underlying = MidpointRounding; using __self = __underlying;
-		__self __value;
-		__Class_MidpointRounding(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>) : __value{value} {}
-		operator __underlying() const noexcept { return __value; }
+		public: using $underlying = MidpointRounding; using $self = $underlying;
+		$self __value;
+		$Class_MidpointRounding(const $underlying& value) noexcept(std::is_nothrow_copy_constructible_v<$underlying>) : __value{value} {}
+		operator $underlying() const noexcept { return __value; }
 		
 	};
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"

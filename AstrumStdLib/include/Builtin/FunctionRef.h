@@ -111,17 +111,17 @@ namespace Builtin {
 		template <class... TArgs>
 		decltype(auto) operator()(TArgs&&... args) const {
 			if constexpr (IsNullable<TObject>) {
-				if constexpr (!std::is_void_v<decltype(((*_obj).__ref().*
+				if constexpr (!std::is_void_v<decltype(((*_obj).$ref().*
 				                                        _method)(std::forward<TArgs>(args)...))>) {
-					return ((*_obj).__ref().*_method)(std::forward<TArgs>(args)...);
+					return ((*_obj).$ref().*_method)(std::forward<TArgs>(args)...);
 				} else {
-					((*_obj).__ref().*_method)(std::forward<TArgs>(args)...);
+					((*_obj).$ref().*_method)(std::forward<TArgs>(args)...);
 				}
-			} else if constexpr (!std::is_void_v<decltype((_obj.__ref().*_method)(
+			} else if constexpr (!std::is_void_v<decltype((_obj.$ref().*_method)(
 			                         std::forward<TArgs>(args)...))>) {
-				return (_obj.__ref().*_method)(std::forward<TArgs>(args)...);
+				return (_obj.$ref().*_method)(std::forward<TArgs>(args)...);
 			} else {
-				(_obj.__ref().*_method)(std::forward<TArgs>(args)...);
+				(_obj.$ref().*_method)(std::forward<TArgs>(args)...);
 			}
 		}
 
@@ -132,7 +132,7 @@ namespace Builtin {
 
 	template <class TObject, class TResult, class... TArgs>
 	class ExtensionMethod {
-		using MethodPointer = TResult (*)(const typename TObject::__self&, TArgs...);
+		using MethodPointer = TResult (*)(const typename TObject::$self&, TArgs...);
 		TObject _obj;
 		MethodPointer _method;
 
@@ -157,7 +157,7 @@ namespace Builtin {
 
 	template <class TObject, class... TArgs>
 	class ExtensionMethod<TObject, void, TArgs...> {
-		using MethodPointer = void (*)(const typename TObject::__self&, TArgs...);
+		using MethodPointer = void (*)(const typename TObject::$self&, TArgs...);
 		TObject _obj;
 		MethodPointer _method;
 
@@ -184,7 +184,7 @@ namespace Builtin {
 	class FunctionRef;
 
 	template <class TResult, class... TArgs>
-	class __Class_FunctionRef;
+	class $Class_FunctionRef;
 
 	template <class TResult, class... TArgs>
 	class FunctionRef<TResult(TArgs...)> : public FuncBase {
@@ -322,19 +322,19 @@ namespace Builtin {
 
 		bool operator==(decltype(nullptr)) const noexcept { return isEmpty(); }
 
-		decltype(auto) __ref() const noexcept { return *this; }
-		using __self  = FunctionRef<TResult(TArgs...)>;
-		using __class = __Class_FunctionRef<TResult, TArgs...>;
+		decltype(auto) $ref() const noexcept { return *this; }
+		using $self  = FunctionRef<TResult(TArgs...)>;
+		using $class = $Class_FunctionRef<TResult, TArgs...>;
 	};
 
 	template <class TResult, class... TArgs>
-	class __Class_FunctionRef final : public ValueType {
+	class $Class_FunctionRef final : public ValueType {
 	   public:
-		using __underlying = FunctionRef<TResult(TArgs...)>;
-		using __self       = __underlying;
-		__self __value;
-		__Class_FunctionRef(const __underlying& value) : __value {value} {}
-		operator __underlying() const noexcept { return __value; }
+		using $underlying = FunctionRef<TResult(TArgs...)>;
+		using $self       = $underlying;
+		$self __value;
+		$Class_FunctionRef(const $underlying& value) : __value {value} {}
+		operator $underlying() const noexcept { return __value; }
 	};
 
 	template <class T>
@@ -344,8 +344,8 @@ namespace Builtin {
 	   public:
 		static_assert(std::is_base_of_v<FuncBase, T>);
 		static constexpr bool __IS_ADV_NULLABLE = true;
-		using __class                           = typename T::__class;
-		using __self                            = T;
+		using $class                           = typename T::$class;
+		using $self                            = T;
 		template <class U>
 		friend class OptionalFunctionRef;
 
@@ -387,7 +387,7 @@ namespace Builtin {
 			return *this;
 		}
 
-		FORCE_INLINE decltype(auto) __ref() const noexcept { return *this; }
+		FORCE_INLINE decltype(auto) $ref() const noexcept { return *this; }
 
 		FORCE_INLINE T& operator*() {
 			if (ref == nullptr)

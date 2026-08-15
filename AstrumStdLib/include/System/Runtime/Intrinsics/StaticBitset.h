@@ -5,20 +5,22 @@
 #include "ASTRUMSTD_export.h"
 
 namespace System::Runtime::Intrinsics {
-namespace __Unsafe {} namespace __StaticBitset_Protected__Unsafe {}
+namespace __Unsafe {} namespace __StaticBitset$Protected__Unsafe {}
 //###############################################################################
 //# Type forward declarations
 //###############################################################################
 template<class KeyType> class StaticBitset;
+} namespace $extensions {
+} namespace System::Runtime::Intrinsics {
 //###############################################################################
 //# Type definitions
 //###############################################################################
-template<class KeyType> class __Class_StaticBitset;
+template<class KeyType> class $Class_StaticBitset;
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\StaticBitset.ast"
 	template<class KeyType> struct StaticBitset final : public Builtin::Struct {
-		public: using __self = StaticBitset<KeyType>;
-		public: using __class = __Class_StaticBitset<KeyType>;
-		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
+		public: using $self = StaticBitset<KeyType>;
+		public: using $class = $Class_StaticBitset<KeyType>;
+		public: FORCE_INLINE constexpr decltype(auto) $ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) $ref() const noexcept { return *this; }
 		public: StaticBitset() = default;
 		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\StaticBitset.ast"
 		public: inline constexpr explicit StaticBitset(Builtin::u32 bitset) noexcept;
@@ -45,13 +47,13 @@ template<class KeyType> class __Class_StaticBitset;
 	
 	
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\StaticBitset.ast"
-	template<class KeyType> class __Class_StaticBitset final : public Builtin::ValueType
+	template<class KeyType> class $Class_StaticBitset final : public Builtin::ValueType
 	{
 		#line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\StaticBitset.ast"
-		public: using __underlying = StaticBitset<KeyType>; using __self = __underlying;
-		__self __value;
-		__Class_StaticBitset(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>) : __value{value} {}
-		operator __underlying() const noexcept { return __value; }
+		public: using $underlying = StaticBitset<KeyType>; using $self = $underlying;
+		$self __value;
+		$Class_StaticBitset(const $underlying& value) noexcept(std::is_nothrow_copy_constructible_v<$underlying>) : __value{value} {}
+		operator $underlying() const noexcept { return __value; }
 		
 	};
 	

@@ -4,20 +4,20 @@
 namespace Builtin {
 
 	template <class T>
-	class __Class_FastInt;
+	class $Class_FastInt;
 
 	template <class T>
 	struct alignas(T) FastInt : public Struct {
 		static_assert(std::is_integral_v<T> || std::is_enum_v<T>, "T must be integer");
 		template <class U>
 		friend struct FastInt;
-		using __self  = FastInt<T>;
-		using __class      = __Class_FastInt<T>;
-		using __underlying = T;
+		using $self                   = FastInt<T>;
+		using $class                  = $Class_FastInt<T>;
+		using $underlying             = T;
 		using Unsigned                = FastInt<std::make_unsigned_t<T>>;
 		using DivisibleArithmeticType = double;
-		constexpr __self& __ref() noexcept { return *this; }
-		constexpr const __self& __ref() const noexcept { return *this; }
+		constexpr $self& $ref() noexcept { return *this; }
+		constexpr const $self& $ref() const noexcept { return *this; }
 
 		constexpr FastInt() noexcept = default; /* {
 		    //static_assert(std::is_integral_v<T> || std::is_enum_v<T>, "T must be integer");
@@ -230,8 +230,8 @@ namespace Builtin {
 		constexpr const FastInt<T>& operator+() const noexcept { return *this; }
 
 		constexpr FastInt<T> operator-() const {
-			//static_assert(std::numeric_limits<T>::is_signed,
-			              //"Cannot to negate the unsigned number");
+			// static_assert(std::numeric_limits<T>::is_signed,
+			//"Cannot to negate the unsigned number");
 			return (T) -value;
 		}
 
@@ -265,8 +265,7 @@ namespace Builtin {
 			if (rhs == 0)
 				throw DivisionByZeroException();
 			T result = 0;
-			ModulusHelper<T, U, ValidComparison<T, U>::method>::Modulus(value, (U) rhs,
-			                                                                 result);
+			ModulusHelper<T, U, ValidComparison<T, U>::method>::Modulus(value, (U) rhs, result);
 			return FastInt<T>(result);
 		}
 
@@ -291,7 +290,7 @@ namespace Builtin {
 		constexpr FastInt<T>& operator%=(FastInt<U> rhs) {
 			if (rhs == 0)
 				throw DivisionByZeroException();
-			ModulusHelper<T, U, ValidComparison<T, U>::method>::Modulus(value, (U)rhs, value);
+			ModulusHelper<T, U, ValidComparison<T, U>::method>::Modulus(value, (U) rhs, value);
 			return *this;
 		}
 
@@ -347,7 +346,7 @@ namespace Builtin {
 		constexpr FastInt<T>& DivAssign(FastInt<U> rhs) {
 			if (rhs == 0)
 				throw DivisionByZeroException();
-			DivisionHelper<T, U, DivisionMethod<T, U>::method>::Divide(value, (U)rhs, value);
+			DivisionHelper<T, U, DivisionMethod<T, U>::method>::Divide(value, (U) rhs, value);
 			return *this;
 		}
 
@@ -363,7 +362,7 @@ namespace Builtin {
 		constexpr FastInt<T>& operator/=(FastInt<U> rhs) {
 			if (rhs == 0)
 				throw DivisionByZeroException();
-			value = (T)std::round((double) value / (double) rhs);
+			value = (T) std::round((double) value / (double) rhs);
 			return *this;
 		}
 
@@ -552,10 +551,11 @@ namespace Builtin {
 		T value {};
 	};
 
-	
+	static_assert(std::has_unique_object_representations_v<FastInt<int>>);
+	static_assert(std::has_unique_object_representations_v<FastInt<unsigned>>);
+
 	template <class T, class U>
-	constexpr auto operator<=>(const FastInt<U>& lhs,
-	                           const FastInt<T>& rhs) noexcept {
+	constexpr auto operator<=>(const FastInt<U>& lhs, const FastInt<T>& rhs) noexcept {
 		if (GreaterThanTest<T, U, ValidComparison<T, U>::method>::GreaterThan((T) rhs, (U) lhs)) {
 			return -1;
 		}
@@ -749,7 +749,8 @@ namespace Builtin {
 }  // namespace Builtin
 
 template <class T, class U>
-requires requires(T t, U u) { t == u; } && (!requires(T t, U u) {
-	t.operator!=(u);
-})
-inline constexpr bool operator!=(T lhs, U rhs) { return !(lhs == rhs); }
+requires requires(T t, U u) {
+	t == u;
+} &&(!requires(T t, U u) { t.operator!=(u); }) inline constexpr bool operator!=(T lhs, U rhs) {
+	return !(lhs == rhs);
+}

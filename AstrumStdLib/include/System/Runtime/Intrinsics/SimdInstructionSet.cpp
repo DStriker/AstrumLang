@@ -8,7 +8,7 @@ namespace System::Runtime::Intrinsics {
 //# Type definitions
 //###############################################################################
 #line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdInstructionSet.ast"
-SimdInstructionSet::__Property_IsRuntimeAvailable<> SimdInstructionSet::IsRuntimeAvailable;
+SimdInstructionSet::$Property_IsRuntimeAvailable<> SimdInstructionSet::IsRuntimeAvailable;
 
 	
 	

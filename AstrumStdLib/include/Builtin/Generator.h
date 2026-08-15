@@ -15,7 +15,7 @@ namespace Builtin {
 	template <class T>
 	class Generator__Weak;
 	template <class T>
-	class __Class_Generator;
+	class $Class_Generator;
 
 	template <class T>
 	struct GeneratorPromise {
@@ -67,31 +67,31 @@ namespace Builtin {
 	template <class T>
 	class Generator : public ObjectRef {
 	   public:
-		using __self = Generator<T>;
+		using $self = Generator<T>;
 
 	   private:
-		using ___super = ObjectRef;
+		using $super = ObjectRef;
 
 	   public:
-		using __class = __Class_Generator<T>;
+		using $class = $Class_Generator<T>;
 
 	   private:
 		friend class Generator__Unowned<T>;
-		friend class __Class_Generator<T>;
+		friend class $Class_Generator<T>;
 		friend class Generator__Weak<T>;
 
 	   public:
-		using __strong_ref = Generator<T>;
+		using $strong_ref = Generator<T>;
 
 	   public:
-		using __unowned_ref = Generator__Unowned<T>;
+		using $unowned_ref = Generator__Unowned<T>;
 
 	   public:
-		using __weak_ref = Generator__Weak<T>;
+		using $weak_ref = Generator__Weak<T>;
 
 	   public:
-		FORCE_INLINE decltype(auto) __ref() const noexcept {
-			return *reinterpret_cast<__class*>(_obj);
+		FORCE_INLINE decltype(auto) $ref() const noexcept {
+			return *reinterpret_cast<$class*>(_obj);
 		}
 		ADV_CLASS_FROM_PTR(Generator)
 		ADV_CLASS_INIT(Generator)
@@ -100,14 +100,14 @@ namespace Builtin {
 	   public:
 		using ElementType = T;
 
-		class __Class_Iterator;
+		class $Class_Iterator;
 
 		struct Iterator : public Struct {
 			using ElementType = T;
-			using __self      = Iterator;
-			using __class     = __Class_Iterator;
-			constexpr __self& __ref() noexcept { return *this; }
-			constexpr const __self& __ref() const noexcept { return *this; }
+			using $self      = Iterator;
+			using $class     = $Class_Iterator;
+			constexpr $self& $ref() noexcept { return *this; }
+			constexpr const $self& $ref() const noexcept { return *this; }
 
 		   private:
 			CoroutineHandle<T> _coroutine;
@@ -131,16 +131,16 @@ namespace Builtin {
 			const T& GetCurrentRef() const { return _coroutine.promise().value(); }
 		};
 
-		class __Class_Iterator : public ValueType {
+		class $Class_Iterator : public ValueType {
 			Iterator __value;
 
 		   public:
-			using __self       = Iterator;
-			using __underlying = __self;
-			__Class_Iterator(const __underlying& value) noexcept(
-			    std::is_nothrow_copy_constructible_v<__underlying>)
+			using $self       = Iterator;
+			using $underlying = $self;
+			$Class_Iterator(const $underlying& value) noexcept(
+			    std::is_nothrow_copy_constructible_v<$underlying>)
 			    : __value {value} {}
-			operator __underlying() const noexcept { return __value; }
+			operator $underlying() const noexcept { return __value; }
 
 			constexpr bool MoveNext() noexcept { return __value.MoveNext(); }
 
@@ -154,87 +154,87 @@ namespace Builtin {
 	};
 
 	template <class T>
-	class Generator__Unowned : public ObjectRef__Unowned {
+	class Generator__Unowned : public ObjectRef$Unowned {
 	   public:
-		using __self = Generator<T>;
+		using $self = Generator<T>;
 
 	   public:
-		using __strong_ref = Generator<T>;
+		using $strong_ref = Generator<T>;
 
 	   public:
-		using __unowned_ref = Generator__Unowned<T>;
+		using $unowned_ref = Generator__Unowned<T>;
 
 	   public:
-		using __weak_ref = Generator__Weak<T>;
+		using $weak_ref = Generator__Weak<T>;
 
 	   private:
-		using ___super = ObjectRef__Unowned;
+		using $super = ObjectRef$Unowned;
 
 	   public:
-		using __class = __Class_Generator<T>;
+		using $class = $Class_Generator<T>;
 
 	   public:
-		FORCE_INLINE decltype(auto) __ref() const noexcept {
+		FORCE_INLINE decltype(auto) $ref() const noexcept {
 			Builtin::UnownedCheck(_obj);
-			return *reinterpret_cast<__class*>(_obj);
+			return *reinterpret_cast<$class*>(_obj);
 		}
 		ADV_CLASS_FROM_PTR(Generator__Unowned)
 		ADV_CLASS_UNOWNED_COMMON_CTORS(Generator__Unowned)
 	};
 
 	template <class T>
-	class Generator__Weak : public ObjectRef__Weak {
+	class Generator__Weak : public ObjectRef$Weak {
 	   public:
-		using __self = Generator<T>;
+		using $self = Generator<T>;
 
 	   public:
-		using __strong_ref = Generator<T>;
+		using $strong_ref = Generator<T>;
 
 	   public:
-		using __unowned_ref = Generator__Unowned<T>;
+		using $unowned_ref = Generator__Unowned<T>;
 
 	   public:
-		using __weak_ref = Generator__Weak<T>;
+		using $weak_ref = Generator__Weak<T>;
 
 	   private:
-		using ___super = ObjectRef__Weak;
+		using $super = ObjectRef$Weak;
 
 	   public:
-		using __class                           = __Class_Generator<T>;
+		using $class                           = $Class_Generator<T>;
 		static constexpr bool __IS_ADV_NULLABLE = true;
 
 	   public:
-		FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
+		FORCE_INLINE constexpr decltype(auto) $ref() const noexcept { return *this; }
 		ADV_CLASS_WEAK_FROM_PTR(Generator__Weak)
 		ADV_CLASS_WEAK_COMMON_CTORS(Generator__Weak)
-#define ADV_PROPERTY_SELF __self
+#define ADV_PROPERTY_SELF $self
 	};
 
 	template <class T>
-	class __Class_Generator : public Object {
+	class $Class_Generator : public Object {
 	   public:
-		using __self = Generator<T>;
+		using $self = Generator<T>;
 
 	   private:
-		using ___super = Object;
+		using $super = Object;
 
 	   public:
-		using __selfClass = __Class_Generator<T>;
-		friend class __self;
-		friend class __self::__weak_ref;
+		using $selfClass = $Class_Generator<T>;
+		friend class $self;
+		friend class $self::$weak_ref;
 
-		FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; }
-		FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
+		FORCE_INLINE constexpr decltype(auto) $ref() noexcept { return *this; }
+		FORCE_INLINE constexpr decltype(auto) $ref() const noexcept { return *this; }
 
-		using Iterator     = __self::Iterator;
+		using Iterator     = $self::Iterator;
 		using promise_type = GeneratorPromise<T>;
 
 	   public:
-		inline explicit __Class_Generator(CoroutineHandle<T> handle) noexcept : _coroutine(handle) {}
+		inline explicit $Class_Generator(CoroutineHandle<T> handle) noexcept : _coroutine(handle) {}
 
 	   public:
-		inline __Class_Generator() noexcept : _coroutine(nullptr) {}
-		inline ~__Class_Generator() {
+		inline $Class_Generator() noexcept : _coroutine(nullptr) {}
+		inline ~$Class_Generator() {
 			if (_coroutine) {
 				_coroutine.destroy();
 			}

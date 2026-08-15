@@ -127,6 +127,7 @@ namespace AstrumLang {
 		void printSpecialFunctionDefinitions();
 		void printTypeSpecialFunctionDefinitions(StructDefinition* type, StructDefinition* parent);
 		void printCurrentFuncTemplateParams();
+		void printExtensionNames();
 
 	   public:
 		/*const*/ AstrumSema& sema;

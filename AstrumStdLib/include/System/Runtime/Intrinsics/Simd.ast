@@ -90,12 +90,11 @@ private static class SumTest {
         for i := 0u; i != vecLimit; i += vecSize {
             accumulator += TVector::LoadUnsafe(ints[@Unchecked i]);
         }
-        type FVector = SimdVector<f32, Arch>;-
+        type FVector = SimdVector<f32, Arch>;
         sum := accumulator.Sum;
         for i in vecLimit..count {
             sum += ints[@Unchecked i];
         }
-        print(Arch::Name);
         return sum;
     }
 }

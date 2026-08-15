@@ -73,7 +73,7 @@ using Builtin::usize;
 #define ADV_ENTRY_POINT(Namespace)                                                                 \
 	}                                                                                              \
 	int main(int argc, char** argv) {                                                              \
-		Builtin::ApplicationMainPtr = &Namespace ::__Astrum_Main;                                  \
+		Builtin::ApplicationMainPtr = &Namespace ::$Astrum_Main;                                   \
 		ADV_SETLOCAL;                                                                              \
 		return Builtin::AstrumMainStartup(argc, argv);                                             \
 	}                                                                                              \
@@ -122,7 +122,7 @@ struct ___dependent_false : std::false_type {};
 			    std::declval<Args>()...);                                                          \
 		};                                                                                         \
 		requires noexcept(MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(                               \
-		    __extensions::__proxy {std::declval<Obj>()}, std::declval<Args>()...));                \
+		    $extensions::$proxy {std::declval<Obj>()}, std::declval<Args>()...));                  \
 	}                                                                                              \
 	|| requires {                                                                                  \
 		requires !requires {                                                                       \
@@ -156,7 +156,7 @@ struct ___dependent_false : std::false_type {};
 	}                                                                                              \
 	|| requires {                                                                                  \
 		MVFWD(ADV_UFCS_REMPARENS QUALID __VA_ARGS__)                                               \
-		(__extensions::__proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...);                        \
+		($extensions::$proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...);                          \
 	}                                                                                              \
 	|| requires {                                                                                  \
 		MVFWD(ADV_UFCS_REMPARENS QUALID __VA_ARGS__)(ADV_FORWARD(obj), ADV_FORWARD(params)...);    \
@@ -170,7 +170,7 @@ struct ___dependent_false : std::false_type {};
 	}                                                                                              \
 	|| requires {                                                                                  \
 		MVFWD(ADV_UFCS_REMPARENS QUALID __VA_ARGS__)                                               \
-		(__extensions::__proxy {std::declval<Obj>()}, std::declval<Args>()...);                    \
+		($extensions::$proxy {std::declval<Obj>()}, std::declval<Args>()...);                      \
 	}                                                                                              \
 	|| requires {                                                                                  \
 		MVFWD(ADV_UFCS_REMPARENS QUALID __VA_ARGS__)                                               \
@@ -193,10 +193,10 @@ struct ___dependent_false : std::false_type {};
 			return ADV_FORWARD(obj).ADV_UFCS_REMPARENS QUAL TEMPKW __VA_ARGS__(                    \
 			    ADV_FORWARD(params)...);                                                           \
 		} else if constexpr (requires {                                                            \
-			                     ADV_FORWARD(obj).__ref().ADV_UFCS_REMPARENS QUAL TEMPKW           \
+			                     ADV_FORWARD(obj).$ref().ADV_UFCS_REMPARENS QUAL TEMPKW            \
 			                     __VA_ARGS__(ADV_FORWARD(params)...);                              \
 		                     }) {                                                                  \
-			return ADV_FORWARD(obj).__ref().ADV_UFCS_REMPARENS QUAL TEMPKW __VA_ARGS__(            \
+			return ADV_FORWARD(obj).$ref().ADV_UFCS_REMPARENS QUAL TEMPKW __VA_ARGS__(             \
 			    ADV_FORWARD(params)...);                                                           \
 		} else if constexpr (requires {                                                            \
 			                     MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                         \
@@ -206,17 +206,16 @@ struct ___dependent_false : std::false_type {};
 			                                                 ADV_FORWARD(params)...);              \
 		} else if constexpr (requires {                                                            \
 			                     MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                         \
-			                     (__extensions::__proxy {ADV_FORWARD(obj)},                        \
-			                      ADV_FORWARD(params)...);                                         \
+			                     ($extensions::$proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...); \
 		                     }) {                                                                  \
 			if constexpr (std::is_lvalue_reference_v<Obj&&> &&                                     \
 			              !std::is_const_v<std::remove_reference_t<Obj>>) {                        \
 				return MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(                                  \
-				    __extensions::__proxy<decltype(ADV_FORWARD(obj))> {ADV_FORWARD(obj)},          \
+				    $extensions::$proxy<decltype(ADV_FORWARD(obj))> {ADV_FORWARD(obj)},            \
 				    ADV_FORWARD(params)...);                                                       \
 			} else                                                                                 \
 				return MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(                                  \
-				    __extensions::__proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...);             \
+				    $extensions::$proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...);               \
 		} else if constexpr (requires {                                                            \
 			                     obj.ADV_UFCS_REMPARENS QUAL TEMPKW __VA_ARGS__(                   \
 			                         ADV_FORWARD(params)...);                                      \
@@ -225,7 +224,7 @@ struct ___dependent_false : std::false_type {};
 			              "Implicit discard of an object's modified value is not allowed");        \
 			ADV_FORWARD(obj).ADV_UFCS_REMPARENS QUAL TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);   \
 			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                                              \
-			(__extensions::__proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...);                    \
+			($extensions::$proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...);                      \
 			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(ADV_FORWARD(obj), ADV_FORWARD(params)...);   \
 		} else if constexpr (requires {                                                            \
 			                     MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                         \
@@ -235,14 +234,14 @@ struct ___dependent_false : std::false_type {};
 			              "Implicit discard of an object's modified value is not allowed");        \
 			ADV_FORWARD(obj).ADV_UFCS_REMPARENS QUAL TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);   \
 			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                                              \
-			(__extensions::__proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...);                    \
+			($extensions::$proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...);                      \
 			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(ADV_FORWARD(obj), ADV_FORWARD(params)...);   \
 		} else {                                                                                   \
 			static_assert(___dependent_false<Obj>::value,                                          \
 			              "Method " #__VA_ARGS__ " not found by UFCS system for received object"); \
 			ADV_FORWARD(obj).ADV_UFCS_REMPARENS QUAL TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);   \
 			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                                              \
-			(__extensions::__proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...);                    \
+			($extensions::$proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...);                      \
 			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(ADV_FORWARD(obj), ADV_FORWARD(params)...);   \
 		}                                                                                          \
 	}
@@ -287,9 +286,9 @@ struct ___dependent_false : std::false_type {};
 #define ADV_USFCS_CONSTRAINT_PARAM(...) /*empty*/
 #define ADV_USFCS_CONSTRAINT_ARG(TYPE, TEMPKW, ...)                                                \
 	requires { ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(ADV_FORWARD(params)...); }             \
-	|| requires { __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(std::declval<Args>()...); } \
+	|| requires { $static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(std::declval<Args>()...); }  \
 	|| requires {                                                                                  \
-		__extensions::template __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(               \
+		$extensions::template $static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(                 \
 		    std::declval<Args>()...);                                                              \
 	}
 #if defined(_MSC_VER)
@@ -299,10 +298,10 @@ struct ___dependent_false : std::false_type {};
 	, bool IsViable = (                                                                            \
 	      requires { ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(std::declval<Args>()...); } ||   \
 	      requires {                                                                               \
-		      __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(std::declval<Args>()...);       \
+		      $static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(std::declval<Args>()...);        \
 	      } ||                                                                                     \
 	      requires {                                                                               \
-		      __extensions::template __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(         \
+		      $extensions::template $static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(           \
 		          std::declval<Args>()...);                                                        \
 	      })
 #define ADV_USFCS_CONSTRAINT_ARG(...) IsViable
@@ -324,15 +323,15 @@ struct ___dependent_false : std::false_type {};
 			return __USFCS_T ::TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);                         \
 		} else if constexpr (requires {                                                            \
 			                     [&]() {                                                           \
-				                     using namespace __extensions;                                 \
-				                     __static_##__VA_ARGS__<__USFCS_T>::get(                       \
+				                     using namespace $extensions;                                  \
+				                     $static_##__VA_ARGS__<__USFCS_T>::get(                        \
 				                         ADV_FORWARD(params)...);                                  \
 			                     }();                                                              \
 		                     }) {                                                                  \
 			return [&]() {                                                                         \
-				using namespace __extensions;                                                      \
+				using namespace $extensions;                                                       \
 				ADV_EXPRESSION_BODY(                                                               \
-				    __static_##__VA_ARGS__<__USFCS_T>::get(ADV_FORWARD(params)...));               \
+				    $static_##__VA_ARGS__<__USFCS_T>::get(ADV_FORWARD(params)...));                \
 			}();                                                                                   \
 		} else {                                                                                   \
 			static_assert(false,                                                                   \
@@ -358,15 +357,15 @@ struct ___dependent_false : std::false_type {};
 			return ADV_UFCS_REMPARENS TYPE ::TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);           \
 		} else if constexpr (requires {                                                            \
 			                     [&]() {                                                           \
-				                     using namespace __extensions;                                 \
-				                     __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(         \
+				                     using namespace $extensions;                                  \
+				                     $static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(          \
 				                         ADV_FORWARD(params)...);                                  \
 			                     }();                                                              \
 		                     }) {                                                                  \
 			return [&]() {                                                                         \
-				using namespace __extensions;                                                      \
+				using namespace $extensions;                                                       \
 				ADV_EXPRESSION_BODY(                                                               \
-				    __static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(ADV_FORWARD(params)...)); \
+				    $static_##__VA_ARGS__<ADV_UFCS_REMPARENS TYPE>::get(ADV_FORWARD(params)...));  \
 			}();                                                                                   \
 		} else {                                                                                   \
 			static_assert(false,                                                                   \
@@ -388,8 +387,8 @@ struct ___dependent_false : std::false_type {};
 		requires noexcept(std::declval<Obj>().get##PROPERTY());                                    \
 	}                                                                                              \
 	|| requires {                                                                                  \
-		requires requires { get##PROPERTY(__extensions::__proxy {std::declval<Obj>()}); };         \
-		requires noexcept(get##PROPERTY(__extensions::__proxy {std::declval<Obj>()}));             \
+		requires requires { get##PROPERTY($extensions::$proxy {std::declval<Obj>()}); };           \
+		requires noexcept(get##PROPERTY($extensions::$proxy {std::declval<Obj>()}));               \
 	}                                                                                              \
 	|| requires {                                                                                  \
 		requires requires { get##PROPERTY(std::declval<Obj>()); };                                 \
@@ -411,9 +410,9 @@ struct ___dependent_false : std::false_type {};
 #define ADV_UPCS_CONSTRAINT_ARG(PROPERTY)                                                          \
 	requires { ADV_FORWARD(std::declval<Obj>()).##PROPERTY; }                                      \
 	|| requires {                                                                                  \
-		_get_property_##PROPERTY(__extensions::__proxy {ADV_FORWARD(std::declval<Obj>())});        \
+		_get_property_##PROPERTY($extensions::$proxy {ADV_FORWARD(std::declval<Obj>())});          \
 	}                                                                                              \
-	|| requires { get##PROPERTY(__extensions::__proxy {ADV_FORWARD(std::declval<Obj>())}); }       \
+	|| requires { get##PROPERTY($extensions::$proxy {ADV_FORWARD(std::declval<Obj>())}); }         \
 	|| requires { _get_property_##PROPERTY(ADV_FORWARD(std::declval<Obj>())); }                    \
 	|| requires { get##PROPERTY(ADV_FORWARD(std::declval<Obj>())); }
 #if defined(_MSC_VER)
@@ -423,9 +422,9 @@ struct ___dependent_false : std::false_type {};
 	, bool IsViable = (                                                                            \
 	      requires { ADV_FORWARD(std::declval<Obj>()).##PROPERTY; } ||                             \
 	      requires {                                                                               \
-		      _get_property_##PROPERTY(__extensions::__proxy {ADV_FORWARD(std::declval<Obj>())});  \
+		      _get_property_##PROPERTY($extensions::$proxy {ADV_FORWARD(std::declval<Obj>())});    \
 	      } ||                                                                                     \
-	      requires { get##PROPERTY(__extensions::__proxy {ADV_FORWARD(std::declval<Obj>())}); } || \
+	      requires { get##PROPERTY($extensions::$proxy {ADV_FORWARD(std::declval<Obj>())}); } ||   \
 	      requires { _get_property_##PROPERTY(ADV_FORWARD(std::declval<Obj>())); } ||              \
 	      requires { get##PROPERTY(ADV_FORWARD(std::declval<Obj>())); })
 #define ADV_UPCS_CONSTRAINT_ARG(...) IsViable
@@ -438,14 +437,14 @@ struct ___dependent_false : std::false_type {};
 		    if constexpr (requires { ADV_FORWARD(obj).##PROPERTY; }) {                             \
 			    return std::add_lvalue_reference_t<decltype(obj.##PROPERTY)>(obj.##PROPERTY);      \
 		    } else if constexpr (requires {                                                        \
-			                         get##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});      \
+			                         get##PROPERTY($extensions::$proxy {ADV_FORWARD(obj)});        \
 		                         }) {                                                              \
-			    return get##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                    \
+			    return get##PROPERTY($extensions::$proxy {ADV_FORWARD(obj)});                      \
 		    } else if constexpr (requires {                                                        \
 			                         _get_property_##PROPERTY(                                     \
-			                             __extensions::__proxy {ADV_FORWARD(obj)});                \
+			                             $extensions::$proxy {ADV_FORWARD(obj)});                  \
 		                         }) {                                                              \
-			    return _get_property_##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});         \
+			    return _get_property_##PROPERTY($extensions::$proxy {ADV_FORWARD(obj)});           \
 		    } else if constexpr (requires { _get_property_##PROPERTY(ADV_FORWARD(obj)); }) {       \
 			    return _get_property_##PROPERTY(ADV_FORWARD(obj));                                 \
 		    } else if constexpr (requires { get##PROPERTY(ADV_FORWARD(obj)); }) {                  \
@@ -456,32 +455,32 @@ struct ___dependent_false : std::false_type {};
 			    ADV_FORWARD(obj).##PROPERTY;                                                       \
 			    _get_property_##PROPERTY(ADV_FORWARD(obj));                                        \
 			    get##PROPERTY(ADV_FORWARD(obj));                                                   \
-			    _get_property_##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                \
-			    get##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                           \
+			    _get_property_##PROPERTY($extensions::$proxy {ADV_FORWARD(obj)});                  \
+			    get##PROPERTY($extensions::$proxy {ADV_FORWARD(obj)});                             \
 		    } else if constexpr (requires { _get_property_##PROPERTY(obj); }) {                    \
 			    static_assert(___dependent_false<Obj>::value,                                      \
 			                  "Implicit discard of an object's modified value is not allowed");    \
 			    ADV_FORWARD(obj).##PROPERTY;                                                       \
 			    _get_property_##PROPERTY(ADV_FORWARD(obj));                                        \
 			    get##PROPERTY(ADV_FORWARD(obj));                                                   \
-			    _get_property_##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                \
-			    get##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                           \
+			    _get_property_##PROPERTY($extensions::$proxy {ADV_FORWARD(obj)});                  \
+			    get##PROPERTY($extensions::$proxy {ADV_FORWARD(obj)});                             \
 		    } else if constexpr (requires { get##PROPERTY(obj); }) {                               \
 			    static_assert(___dependent_false<Obj>::value,                                      \
 			                  "Implicit discard of an object's modified value is not allowed");    \
 			    ADV_FORWARD(obj).##PROPERTY;                                                       \
 			    _get_property_##PROPERTY(ADV_FORWARD(obj));                                        \
 			    get##PROPERTY(ADV_FORWARD(obj));                                                   \
-			    _get_property_##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                \
-			    get##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                           \
+			    _get_property_##PROPERTY($extensions::$proxy {ADV_FORWARD(obj)});                  \
+			    get##PROPERTY($extensions::$proxy {ADV_FORWARD(obj)});                             \
 		    } else {                                                                               \
 			    static_assert(___dependent_false<Obj>::value,                                      \
 			                  "Property " #PROPERTY " not found for received object");             \
 			    ADV_FORWARD(obj).##PROPERTY;                                                       \
 			    _get_property_##PROPERTY(ADV_FORWARD(obj));                                        \
 			    get##PROPERTY(ADV_FORWARD(obj));                                                   \
-			    _get_property_##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                \
-			    get##PROPERTY(__extensions::__proxy {ADV_FORWARD(obj)});                           \
+			    _get_property_##PROPERTY($extensions::$proxy {ADV_FORWARD(obj)});                  \
+			    get##PROPERTY($extensions::$proxy {ADV_FORWARD(obj)});                             \
 		    }                                                                                      \
 	    }
 
@@ -495,10 +494,10 @@ struct ___dependent_false : std::false_type {};
 		requires noexcept(__VA_ARGS__ ::get##PROPERTY());                                          \
 	}
 /* || requires {                                                                                  \
-    requires requires { []() { using namespace __extensions; return
-__static_get##PROPERTY<__VA_ARGS__>::get(); }(); };                              \
-    requires noexcept([]() { using namespace __extensions; return
-__static_get##PROPERTY<__VA_ARGS__>::get(); }());                                  \
+    requires requires { []() { using namespace $extensions; return
+$static_get##PROPERTY<__VA_ARGS__>::get(); }(); };                              \
+    requires noexcept([]() { using namespace $extensions; return
+$static_get##PROPERTY<__VA_ARGS__>::get(); }());                                  \
 }*/
 
 #if defined(__GNUC__) && !defined(__clang__)
@@ -516,8 +515,8 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 #define ADV_USPCS_CONSTRAINT_PARAM(PROPERTY, ...) /*empty*/
 #define ADV_USPCS_CONSTRAINT_ARG(PROPERTY, ...)                                                    \
 	requires { __VA_ARGS__ ::##PROPERTY; }
-// requires { []() { using namespace __extensions; return
-// __static_get##PROPERTY<__VA_ARGS__>::get(); }(); }
+// requires { []() { using namespace $extensions; return
+// $static_get##PROPERTY<__VA_ARGS__>::get(); }(); }
 #if defined(_MSC_VER)
 #undef ADV_USPCS_CONSTRAINT_PARAM
 #undef ADV_USPCS_CONSTRAINT_ARG
@@ -526,13 +525,13 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 #define ADV_USPCS_CONSTRAINT_PARAM2(PROPERTY, ...)                                                 \
 	, bool IsViable = (                                                                            \
 	      requires { __VA_ARGS__ ::##PROPERTY; }
-// requires { []() { using namespace __extensions; return
-// __static_get##PROPERTY<__VA_ARGS__>::get(); }(); })
+// requires { []() { using namespace $extensions; return
+// $static_get##PROPERTY<__VA_ARGS__>::get(); }(); })
 #define ADV_USPCS_CONSTRAINT_ARG2(PROPERTY, ...) IsViable
 #endif
 
 #define _BUILTIN_GET_EXTENSION_STATIC_PROPERTY(PROPERTY, ...)                                      \
-	__extensions::__static_get##PROPERTY<__VA_ARGS__>::get()
+	$extensions::$static_get##PROPERTY<__VA_ARGS__>::get()
 
 #if defined(GCC) || defined(CLANG)
 #define ADV_USPCS_(PROPERTY, ...)                                                                  \
@@ -543,13 +542,13 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			        __USPCS_T ::##PROPERTY);                                                       \
 		    } else if constexpr (requires {                                                        \
 			                         []() {                                                        \
-				                         using namespace __extensions;                             \
-				                         return __static_get##PROPERTY<__USPCS_T>::get();          \
+				                         using namespace $extensions;                              \
+				                         return $static_get##PROPERTY<__USPCS_T>::get();           \
 			                         }();                                                          \
 		                         }) {                                                              \
 			    return []() {                                                                      \
-				    using namespace __extensions;                                                  \
-				    return __static_get##PROPERTY<__USPCS_T>::get();                               \
+				    using namespace $extensions;                                                   \
+				    return $static_get##PROPERTY<__USPCS_T>::get();                                \
 			    }();                                                                               \
 		    } else {                                                                               \
 			    static_assert(false,                                                               \
@@ -565,13 +564,13 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			    __VA_ARGS__ ::##PROPERTY);                                                         \
 		} else if constexpr (requires {                                                            \
 			                     []() {                                                            \
-				                     using namespace __extensions;                                 \
-				                     return __static_get##PROPERTY<__VA_ARGS__>::get();            \
+				                     using namespace $extensions;                                  \
+				                     return $static_get##PROPERTY<__VA_ARGS__>::get();             \
 			                     }();                                                              \
 		                     }) {                                                                  \
 			return []() {                                                                          \
-				using namespace __extensions;                                                      \
-				return __static_get##PROPERTY<__VA_ARGS__>::get();                                 \
+				using namespace $extensions;                                                       \
+				return $static_get##PROPERTY<__VA_ARGS__>::get();                                  \
 			}();                                                                                   \
 		} else {                                                                                   \
 			static_assert(false, "Property " #PROPERTY " not found for this type " #__VA_ARGS__);  \
@@ -582,53 +581,53 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 #define ADV_USPCS(PROPERTY, ...) ADV_USPCS_(PROPERTY, __VA_ARGS__)
 
 #define ADV_METHOD_BINDING_STRONG(MethodName, ...) [&]<class Obj>(Obj&& obj) {                                                                    \
-		using T = std::decay_t<Obj>::__self;                                                       \
+		using T = std::decay_t<Obj>::$self;                                                       \
 		if constexpr (requires { &T::MethodName; }) {                                              \
 			return Builtin::InstanceMethod(T(std::forward<Obj>(obj)), &T::MethodName);          \
 		} else if constexpr (requires {                                                            \
-			                     typename T::__class;                                              \
-			                     &T::__class::MethodName;                                          \
+			                     typename T::$class;                                              \
+			                     &T::$class::MethodName;                                          \
 		                     }) {                                                                  \
-			return Builtin::InstanceMethod(T(std::forward<Obj>(obj)), &T::__class::MethodName); \
+			return Builtin::InstanceMethod(T(std::forward<Obj>(obj)), &T::$class::MethodName); \
 		else if constexpr (                                                                      \
-		    requires {  MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}); } ||                                 \
-		    requires { MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {}); } ||       \
+		    requires {  MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}); } ||                                 \
+		    requires { MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {}); } ||       \
 		    requires {                                                                             \
-			    MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
+			    MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
 			               Builtin::TypeDummy {});                                              \
 		    } ||                                                                                   \
 		    requires {                                                                             \
-			    MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
+			    MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
 			               Builtin::TypeDummy {}, Builtin::TypeDummy {});                    \
 		    } ||                                                                                   \
 		    requires {                                                                             \
-			    MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
-			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
-			               Builtin::TypeDummy {});                                              \
-		    } ||                                                                                   \
-		    requires {                                                                             \
-			    MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
-			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
-			               Builtin::TypeDummy {}, Builtin::TypeDummy {});                    \
-		    } ||                                                                                   \
-		    requires {                                                                             \
-			    MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
-			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
+			    MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
 			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
 			               Builtin::TypeDummy {});                                              \
 		    } ||                                                                                   \
 		    requires {                                                                             \
-			    MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
+			    MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
+			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
+			               Builtin::TypeDummy {}, Builtin::TypeDummy {});                    \
+		    } ||                                                                                   \
+		    requires {                                                                             \
+			    MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
+			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
+			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
+			               Builtin::TypeDummy {});                                              \
+		    } ||                                                                                   \
+		    requires {                                                                             \
+			    MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
 			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
 			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
 			               Builtin::TypeDummy {}, Builtin::TypeDummy {});                    \
 		    } ||                                                                                   \
 		    requires {                                                                             \
-			    MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {}, Builtin::TypeDummy {}, \
+			    MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {}, Builtin::TypeDummy {}, \
 			        Builtin::TypeDummy {}, Builtin::TypeDummy {}, Builtin::TypeDummy {},  \
 			        Builtin::TypeDummy {}, Builtin::TypeDummy {}, Builtin::TypeDummy {}); \
 		    }) {                                                                                   \
-			return Builtin::ExtensionMethod(T(std::forward<Obj>(obj)), __extensions:: MethodName);             \
+			return Builtin::ExtensionMethod(T(std::forward<Obj>(obj)), $extensions:: MethodName);             \
 		} else if constexpr (                                                                      \
 		    requires { MethodName(T(std::forward<Obj>(obj))); } ||                                 \
 		    requires { MethodName(T(std::forward<Obj>(obj)), Builtin::TypeDummy {}); } ||       \
@@ -673,60 +672,60 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			static_assert(false,                                                                   \
 			              "Cannot to deduce method " #MethodName " for object " #__VA_ARGS__);     \
 			&T::MethodName;                                                                        \
-			&T::__class::MethodName;                                                               \
+			&T::$class::MethodName;                                                               \
 			Builtin::ExtensionMethod(T(std::forward<Obj>(obj)), MethodName);                    \
 		}                                                                                          \
 	}(__VA_ARGS__)
 #define ADV_METHOD_BINDING_UNOWNED(MethodName, ...) [&]<class Obj>(Obj&& obj) {                                                                    \
-		using T = std::decay_t<Obj>::__self;                                                       \
-		using U = typename T::__unowned_ref;                                                       \
+		using T = std::decay_t<Obj>::$self;                                                       \
+		using U = typename T::$unowned_ref;                                                       \
 		if constexpr (requires { &T::MethodName; }) {                                              \
 			return Builtin::InstanceMethod(U(std::forward<Obj>(obj)), &T::MethodName);          \
 		} else if constexpr (requires {                                                            \
-			                     typename T::__class;                                              \
-			                     &T::__class::MethodName;                                          \
+			                     typename T::$class;                                              \
+			                     &T::$class::MethodName;                                          \
 		                     }) {                                                                  \
-			return Builtin::InstanceMethod(U(std::forward<Obj>(obj)), &T::__class::MethodName); \
+			return Builtin::InstanceMethod(U(std::forward<Obj>(obj)), &T::$class::MethodName); \
 		else if constexpr (                                                                      \
-		    requires { MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}); } ||                                 \
-		    requires { MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {}); } ||       \
+		    requires { MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}); } ||                                 \
+		    requires { MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {}); } ||       \
 		    requires {                                                                             \
-			    MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
+			    MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
 			               Builtin::TypeDummy {});                                              \
 		    } ||                                                                                   \
 		    requires {                                                                             \
-			    MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
+			    MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
 			               Builtin::TypeDummy {}, Builtin::TypeDummy {});                    \
 		    } ||                                                                                   \
 		    requires {                                                                             \
-			    MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
-			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
-			               Builtin::TypeDummy {});                                              \
-		    } ||                                                                                   \
-		    requires {                                                                             \
-			    MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
-			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
-			               Builtin::TypeDummy {}, Builtin::TypeDummy {});                    \
-		    } ||                                                                                   \
-		    requires {                                                                             \
-			    MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
-			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
+			    MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
 			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
 			               Builtin::TypeDummy {});                                              \
 		    } ||                                                                                   \
 		    requires {                                                                             \
-			    MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
+			    MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
+			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
+			               Builtin::TypeDummy {}, Builtin::TypeDummy {});                    \
+		    } ||                                                                                   \
+		    requires {                                                                             \
+			    MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
+			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
+			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
+			               Builtin::TypeDummy {});                                              \
+		    } ||                                                                                   \
+		    requires {                                                                             \
+			    MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
 			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
 			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
 			               Builtin::TypeDummy {}, Builtin::TypeDummy {});                    \
 		    } ||                                                                                   \
 		    requires {                                                                             \
-			    __extensions:: MethodName(                                                                        \
+			    $extensions:: MethodName(                                                                        \
 			        T(std::forward<Obj>(obj)), Builtin::TypeDummy {}, Builtin::TypeDummy {}, \
 			        Builtin::TypeDummy {}, Builtin::TypeDummy {}, Builtin::TypeDummy {},  \
 			        Builtin::TypeDummy {}, Builtin::TypeDummy {}, Builtin::TypeDummy {}); \
 		    }) {                                                                                   \
-			return Builtin::ExtensionMethod(U(std::forward<Obj>(obj)), __extensions:: MethodName);             \
+			return Builtin::ExtensionMethod(U(std::forward<Obj>(obj)), $extensions:: MethodName);             \
 		} else if constexpr (                                                                      \
 		    requires { MethodName(T(std::forward<Obj>(obj))); } ||                                 \
 		    requires { MethodName(T(std::forward<Obj>(obj)), Builtin::TypeDummy {}); } ||       \
@@ -771,60 +770,60 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			static_assert(false,                                                                   \
 			              "Cannot to deduce method " #MethodName " for object " #__VA_ARGS__);     \
 			&T::MethodName;                                                                        \
-			&T::__class::MethodName;                                                               \
+			&T::$class::MethodName;                                                               \
 			Builtin::ExtensionMethod(U(std::forward<Obj>(obj)), MethodName);                    \
 		}                                                                                          \
 	}(__VA_ARGS__)
 #define ADV_METHOD_BINDING_WEAK(MethodName, ...) [&]<class Obj>(Obj&& obj) {                                                                    \
-		using T = std::decay_t<Obj>::__self;                                                       \
-		using W = typename T::__weak_ref;                                                          \
+		using T = std::decay_t<Obj>::$self;                                                       \
+		using W = typename T::$weak_ref;                                                          \
 		if constexpr (requires { &T::MethodName; }) {                                              \
 			return Builtin::InstanceMethod(W(std::forward<Obj>(obj)), &T::MethodName);          \
 		} else if constexpr (requires {                                                            \
-			                     typename T::__class;                                              \
-			                     &T::__class::MethodName;                                          \
+			                     typename T::$class;                                              \
+			                     &T::$class::MethodName;                                          \
 		                     }) {                                                                  \
-			return Builtin::InstanceMethod(W(std::forward<Obj>(obj)), &T::__class::MethodName); \
+			return Builtin::InstanceMethod(W(std::forward<Obj>(obj)), &T::$class::MethodName); \
 		else if constexpr (                                                                      \
-		    requires { MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}); } ||                                 \
-		    requires { MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {}); } ||       \
+		    requires { MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}); } ||                                 \
+		    requires { MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {}); } ||       \
 		    requires {                                                                             \
-			    MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
+			    MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
 			               Builtin::TypeDummy {});                                              \
 		    } ||                                                                                   \
 		    requires {                                                                             \
-			    MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
+			    MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
 			               Builtin::TypeDummy {}, Builtin::TypeDummy {});                    \
 		    } ||                                                                                   \
 		    requires {                                                                             \
-			    MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
-			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
-			               Builtin::TypeDummy {});                                              \
-		    } ||                                                                                   \
-		    requires {                                                                             \
-			    MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
-			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
-			               Builtin::TypeDummy {}, Builtin::TypeDummy {});                    \
-		    } ||                                                                                   \
-		    requires {                                                                             \
-			    MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
-			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
+			    MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
 			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
 			               Builtin::TypeDummy {});                                              \
 		    } ||                                                                                   \
 		    requires {                                                                             \
-			    MethodName(__extensions::__proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
+			    MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
+			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
+			               Builtin::TypeDummy {}, Builtin::TypeDummy {});                    \
+		    } ||                                                                                   \
+		    requires {                                                                             \
+			    MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
+			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
+			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
+			               Builtin::TypeDummy {});                                              \
+		    } ||                                                                                   \
+		    requires {                                                                             \
+			    MethodName($extensions::$proxy{T(std::forward<Obj>(obj))}, Builtin::TypeDummy {},                    \
 			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
 			               Builtin::TypeDummy {}, Builtin::TypeDummy {},                     \
 			               Builtin::TypeDummy {}, Builtin::TypeDummy {});                    \
 		    } ||                                                                                   \
 		    requires {                                                                             \
-			    __extensions:: MethodName(                                                                        \
+			    $extensions:: MethodName(                                                                        \
 			        T(std::forward<Obj>(obj)), Builtin::TypeDummy {}, Builtin::TypeDummy {}, \
 			        Builtin::TypeDummy {}, Builtin::TypeDummy {}, Builtin::TypeDummy {},  \
 			        Builtin::TypeDummy {}, Builtin::TypeDummy {}, Builtin::TypeDummy {}); \
 		    }) {                                                                                   \
-			return Builtin::ExtensionMethod(W(std::forward<Obj>(obj)), __extensions:: MethodName);             \
+			return Builtin::ExtensionMethod(W(std::forward<Obj>(obj)), $extensions:: MethodName);             \
 		} else if constexpr (                                                                      \
 		    requires { MethodName(T(std::forward<Obj>(obj))); } ||                                 \
 		    requires { MethodName(T(std::forward<Obj>(obj)), Builtin::TypeDummy {}); } ||       \
@@ -869,7 +868,7 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			static_assert(false,                                                                   \
 			              "Cannot to deduce method " #MethodName " for object " #__VA_ARGS__);     \
 			&T::MethodName;                                                                        \
-			&T::__class::MethodName;                                                               \
+			&T::$class::MethodName;                                                               \
 			Builtin::ExtensionMethod(W(std::forward<Obj>(obj)), MethodName);                    \
 		}                                                                                          \
 	}(__VA_ARGS__)
@@ -879,7 +878,7 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 #define ADV_USE_DECLSPEC_PROPERTY 0
 #endif
 
-#define ADV_PROPERTY_SELF __self
+#define ADV_PROPERTY_SELF $self
 
 #if ADV_USE_DECLSPEC_PROPERTY
 
@@ -906,16 +905,16 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
                                                                                                    \
    private:                                                                                        \
 	template <class _PropertyType = __VA_ARGS__, class _ParentType = ADV_PROPERTY_SELF>            \
-	struct __Property_##propertyName {                                                             \
+	struct $Property_##propertyName {                                                              \
 		FORCE_INLINE constexpr __VA_ARGS__ get() const {                                           \
 			ADV_PROPERTY_GET_PARENT_POINTER(propertyName);                                         \
 			return parent->getterFunc();                                                           \
 		}                                                                                          \
-		using __property_underlying_type = _PropertyType;                                          \
-		using __self                     = typename Builtin::SelfProxyType<_PropertyType>;         \
-		using __class                    = typename Builtin::ClassProxyType<_PropertyType>;        \
+		using $property_underlying_type = _PropertyType;                                           \
+		using $self                     = typename Builtin::SelfProxyType<_PropertyType>;          \
+		using $class                    = typename Builtin::ClassProxyType<_PropertyType>;         \
 		FORCE_INLINE constexpr operator __VA_ARGS__() const { return get(); }                      \
-		FORCE_INLINE constexpr decltype(auto) __ref() const { return get(); }                      \
+		FORCE_INLINE constexpr decltype(auto) $ref() const { return get(); }                       \
                                                                                                    \
 		FORCE_INLINE constexpr decltype(auto) operator+() const requires                           \
 		    requires(_PropertyType t) {                                                            \
@@ -935,12 +934,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator+(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() +                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() +                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() + other);                                                            \
 			}                                                                                      \
@@ -948,12 +946,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator-(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() -                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() -                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() - other);                                                            \
 			}                                                                                      \
@@ -961,12 +958,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator*(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() *                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() *                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() * other);                                                            \
 			}                                                                                      \
@@ -974,12 +970,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator/(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() /                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() /                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() / other);                                                            \
 			}                                                                                      \
@@ -987,12 +982,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator%(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() %                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() %                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() % other);                                                            \
 			}                                                                                      \
@@ -1000,12 +994,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator&(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() &                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() &                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() & other);                                                            \
 			}                                                                                      \
@@ -1013,12 +1006,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator|(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() |                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() |                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() | other);                                                            \
 			}                                                                                      \
@@ -1026,12 +1018,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator^(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() ^                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() ^                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() ^ other);                                                            \
 			}                                                                                      \
@@ -1039,11 +1030,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator<<(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
 				return (                                                                           \
 				    get()                                                                          \
-				    << static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>( \
+				    << static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>(  \
 				           std::forward<_ElemRight>(other)));                                      \
 			} else {                                                                               \
 				return (get() << other);                                                           \
@@ -1052,23 +1043,22 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator>>(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() >>                                                                       \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() >>                                                                   \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() >> other);                                                           \
 			}                                                                                      \
 		}                                                                                          \
 		template <class... _ElemRight>                                                             \
 		FORCE_INLINE constexpr decltype(auto) _operator_subscript(_ElemRight&&... other) {         \
-			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);          \
+			return get().$ref()._operator_subscript(std::forward<_ElemRight>(other)...);           \
 		}                                                                                          \
 		template <class... _ElemRight>                                                             \
 		FORCE_INLINE constexpr decltype(auto) _operator_subscript(_ElemRight&&... other) const {   \
-			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);          \
+			return get().$ref()._operator_subscript(std::forward<_ElemRight>(other)...);           \
 		}                                                                                          \
 		template <class... Args>                                                                   \
 		FORCE_INLINE constexpr decltype(auto) operator()(Args&&... other) {                        \
@@ -1081,7 +1071,7 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class Ch>                                                                        \
 		friend FORCE_INLINE constexpr decltype(auto) operator<<(                                   \
 		    std::basic_ostream<Ch>& stream,                                                        \
-		    const __Property_##propertyName<_PropertyType, _ParentType>& elem) {                   \
+		    const $Property_##propertyName<_PropertyType, _ParentType>& elem) {                    \
 			return stream << elem.get();                                                           \
 		}                                                                                          \
 		FORCE_INLINE constexpr decltype(auto) operator*() requires requires(_PropertyType t) {     \
@@ -1091,12 +1081,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator==(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() ==                                                                       \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() ==                                                                   \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() == other);                                                           \
 			}                                                                                      \
@@ -1104,12 +1093,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator!=(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() !=                                                                       \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() !=                                                                   \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() != other);                                                           \
 			}                                                                                      \
@@ -1117,12 +1105,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr int operator<=>(_ElemRight&& other) const {                         \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() <=>                                                                      \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() <=>                                                                  \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() <=> other);                                                          \
 			}                                                                                      \
@@ -1133,38 +1120,38 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		}                                                                                          \
 	};                                                                                             \
 	accessSpecifier:                                                                               \
-	ADV_VIRTUAL_FIELD __Property_##propertyName<> propertyName;
+	ADV_VIRTUAL_FIELD $Property_##propertyName<> propertyName;
 
 #define ADV_PROPERTY_SETTER(accessSpecifier, propertyName, setterFunc, ...)                        \
                                                                                                    \
    private:                                                                                        \
 	template <class _PropertyType = __VA_ARGS__, class _ParentType = ADV_PROPERTY_SELF>            \
-	struct __Property_##propertyName {                                                             \
-		using __property_underlying_type    = _PropertyType;                                       \
+	struct $Property_##propertyName {                                                              \
+		using $property_underlying_type     = _PropertyType;                                       \
 		FORCE_INLINE constexpr void operator=(const __VA_ARGS__& value) {                          \
 			ADV_PROPERTY_GET_PARENT_POINTER(propertyName);                                         \
 			parent->setterFunc(value);                                                             \
 		}                                                                                          \
 	};                                                                                             \
 	accessSpecifier:                                                                               \
-	ADV_VIRTUAL_FIELD __Property_##propertyName<> propertyName;
+	ADV_VIRTUAL_FIELD $Property_##propertyName<> propertyName;
 
 #define ADV_PROPERTY_GETTER_SETTER(accessSpecifier, propertyName, getterAccess, getterFunc,        \
                                    setterAccess, setterFunc, ...)                                  \
                                                                                                    \
    private:                                                                                        \
 	template <class _PropertyType = __VA_ARGS__, class _ParentType = ADV_PROPERTY_SELF>            \
-	struct __Property_##propertyName {                                                             \
+	struct $Property_##propertyName {                                                              \
 		friend _ParentType;                                                                        \
 		getterAccess : FORCE_INLINE constexpr __VA_ARGS__ get() const {                            \
 			ADV_PROPERTY_GET_PARENT_POINTER(propertyName);                                         \
 			return parent->getterFunc();                                                           \
 		}                                                                                          \
-		using __property_underlying_type = _PropertyType;                                          \
-		using __self                     = typename Builtin::SelfProxyType<_PropertyType>;         \
-		using __class                    = typename Builtin::ClassProxyType<_PropertyType>;        \
+		using $property_underlying_type = _PropertyType;                                           \
+		using $self                     = typename Builtin::SelfProxyType<_PropertyType>;          \
+		using $class                    = typename Builtin::ClassProxyType<_PropertyType>;         \
 		FORCE_INLINE constexpr operator __VA_ARGS__() const { return get(); }                      \
-		FORCE_INLINE constexpr decltype(auto) __ref() const { return get(); }                      \
+		FORCE_INLINE constexpr decltype(auto) $ref() const { return get(); }                       \
                                                                                                    \
 		FORCE_INLINE constexpr decltype(auto) operator+() const requires                           \
 		    requires(_PropertyType t) {                                                            \
@@ -1184,12 +1171,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator+(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() +                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() +                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() + other);                                                            \
 			}                                                                                      \
@@ -1197,12 +1183,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator-(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() -                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() -                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() - other);                                                            \
 			}                                                                                      \
@@ -1210,12 +1195,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator*(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() *                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() *                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() * other);                                                            \
 			}                                                                                      \
@@ -1223,12 +1207,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator/(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() /                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() /                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() / other);                                                            \
 			}                                                                                      \
@@ -1236,12 +1219,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator%(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() %                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() %                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() % other);                                                            \
 			}                                                                                      \
@@ -1249,12 +1231,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator&(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() &                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() &                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() & other);                                                            \
 			}                                                                                      \
@@ -1262,12 +1243,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator|(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() |                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() |                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() | other);                                                            \
 			}                                                                                      \
@@ -1275,12 +1255,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator^(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() ^                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() ^                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() ^ other);                                                            \
 			}                                                                                      \
@@ -1288,11 +1267,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator<<(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
 				return (                                                                           \
 				    get()                                                                          \
-				    << static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>( \
+				    << static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>(  \
 				           std::forward<_ElemRight>(other)));                                      \
 			} else {                                                                               \
 				return (get() << other);                                                           \
@@ -1301,23 +1280,22 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator>>(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() >>                                                                       \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() >>                                                                   \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() >> other);                                                           \
 			}                                                                                      \
 		}                                                                                          \
 		template <class... _ElemRight>                                                             \
 		FORCE_INLINE constexpr decltype(auto) _operator_subscript(_ElemRight&&... other) {         \
-			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);          \
+			return get().$ref()._operator_subscript(std::forward<_ElemRight>(other)...);           \
 		}                                                                                          \
 		template <class... _ElemRight>                                                             \
 		FORCE_INLINE constexpr decltype(auto) _operator_subscript(_ElemRight&&... other) const {   \
-			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);          \
+			return get().$ref()._operator_subscript(std::forward<_ElemRight>(other)...);           \
 		}                                                                                          \
 		template <class... Args>                                                                   \
 		FORCE_INLINE constexpr decltype(auto) operator()(Args&&... other) {                        \
@@ -1329,8 +1307,7 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		}                                                                                          \
 		template <class Ch>                                                                        \
 		friend FORCE_INLINE constexpr decltype(auto) operator<<(                                   \
-		    std::basic_ostream<Ch>& stream,                                                        \
-		    const __Property_##propertyName<_PropertyType>& elem) {                                \
+		    std::basic_ostream<Ch>& stream, const $Property_##propertyName<_PropertyType>& elem) { \
 			return stream << elem.get();                                                           \
 		}                                                                                          \
 		FORCE_INLINE constexpr decltype(auto) operator*() requires requires(_PropertyType t) {     \
@@ -1340,12 +1317,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator==(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() ==                                                                       \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() ==                                                                   \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() == other);                                                           \
 			}                                                                                      \
@@ -1353,12 +1329,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator!=(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() !=                                                                       \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() !=                                                                   \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() != other);                                                           \
 			}                                                                                      \
@@ -1366,12 +1341,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr int operator<=>(_ElemRight&& other) const {                         \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() <=>                                                                      \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() <=>                                                                  \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() <=> other);                                                          \
 			}                                                                                      \
@@ -1391,12 +1365,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t += u; }*/ {      \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() +=                                                               \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() +=                                                           \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() += other);                                                   \
 			}                                                                                      \
@@ -1406,12 +1379,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t -= u; }*/ {      \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() -=                                                               \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() -=                                                           \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() -= other);                                                   \
 			}                                                                                      \
@@ -1421,12 +1393,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t *= u; }*/ {      \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() *=                                                               \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() *=                                                           \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() *= other);                                                   \
 			}                                                                                      \
@@ -1436,12 +1407,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t /= u; }*/ {      \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() /=                                                               \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() /=                                                           \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() /= other);                                                   \
 			}                                                                                      \
@@ -1451,12 +1421,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t %= u; }*/ {      \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() %=                                                               \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() %=                                                           \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() %= other);                                                   \
 			}                                                                                      \
@@ -1466,12 +1435,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t &= u; }*/ {      \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() &=                                                               \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() &=                                                           \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() &= other);                                                   \
 			}                                                                                      \
@@ -1481,12 +1449,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t |= u; }*/ {      \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() |=                                                               \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() |=                                                           \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() |= other);                                                   \
 			}                                                                                      \
@@ -1496,12 +1463,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t ^= u; }*/ {      \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() ^=                                                               \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() ^=                                                           \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() ^= other);                                                   \
 			}                                                                                      \
@@ -1511,12 +1477,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t <<= u; }*/ {     \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() <<=                                                              \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() <<=                                                          \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() <<= other);                                                  \
 			}                                                                                      \
@@ -1526,12 +1491,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t >>= u; }*/ {     \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() >>=                                                              \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() >>=                                                          \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() >>= other);                                                  \
 			}                                                                                      \
@@ -1562,7 +1526,7 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		}                                                                                          \
 	};                                                                                             \
 	accessSpecifier:                                                                               \
-	ADV_VIRTUAL_FIELD __Property_##propertyName<> propertyName;
+	ADV_VIRTUAL_FIELD $Property_##propertyName<> propertyName;
 
 #endif  // if ADV_USE_DECLSPEC_PROPERTY
 
@@ -1571,13 +1535,13 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
                                                                                                    \
    private:                                                                                        \
 	template <class _PropertyType = __VA_ARGS__, class _ParentType = ADV_PROPERTY_SELF>            \
-	struct __Property_##propertyName {                                                             \
-		using __property_underlying_type = _PropertyType;                                          \
-		using __self                     = typename Builtin::SelfProxyType<_PropertyType>;         \
-		using __class                    = typename Builtin::ClassProxyType<_PropertyType>;        \
+	struct $Property_##propertyName {                                                              \
+		using $property_underlying_type = _PropertyType;                                           \
+		using $self                     = typename Builtin::SelfProxyType<_PropertyType>;          \
+		using $class                    = typename Builtin::ClassProxyType<_PropertyType>;         \
 		FORCE_INLINE constexpr __VA_ARGS__ get() const { return _ParentType::getterFunc(); }       \
 		FORCE_INLINE constexpr operator __VA_ARGS__() const { return get(); }                      \
-		FORCE_INLINE constexpr decltype(auto) __ref() const { return get(); }                      \
+		FORCE_INLINE constexpr decltype(auto) $ref() const { return get(); }                       \
                                                                                                    \
 		FORCE_INLINE constexpr decltype(auto) operator+() const requires                           \
 		    requires(_PropertyType t) {                                                            \
@@ -1597,12 +1561,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator+(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() +                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() +                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() + other);                                                            \
 			}                                                                                      \
@@ -1610,12 +1573,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator-(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() -                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() -                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() - other);                                                            \
 			}                                                                                      \
@@ -1623,12 +1585,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator*(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() *                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() *                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() * other);                                                            \
 			}                                                                                      \
@@ -1636,12 +1597,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator/(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() /                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() /                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() / other);                                                            \
 			}                                                                                      \
@@ -1649,12 +1609,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator%(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() %                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() %                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() % other);                                                            \
 			}                                                                                      \
@@ -1662,12 +1621,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator&(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() &                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() &                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() & other);                                                            \
 			}                                                                                      \
@@ -1675,12 +1633,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator|(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() |                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() |                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() | other);                                                            \
 			}                                                                                      \
@@ -1688,12 +1645,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator^(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() ^                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() ^                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() ^ other);                                                            \
 			}                                                                                      \
@@ -1701,11 +1657,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator<<(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
 				return (                                                                           \
 				    get()                                                                          \
-				    << static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>( \
+				    << static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>(  \
 				           std::forward<_ElemRight>(other)));                                      \
 			} else {                                                                               \
 				return (get() << other);                                                           \
@@ -1714,23 +1670,22 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator>>(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() >>                                                                       \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() >>                                                                   \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() >> other);                                                           \
 			}                                                                                      \
 		}                                                                                          \
 		template <class... _ElemRight>                                                             \
 		FORCE_INLINE constexpr decltype(auto) _operator_subscript(_ElemRight&&... other) {         \
-			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);          \
+			return get().$ref()._operator_subscript(std::forward<_ElemRight>(other)...);           \
 		}                                                                                          \
 		template <class... _ElemRight>                                                             \
 		FORCE_INLINE constexpr decltype(auto) _operator_subscript(_ElemRight&&... other) const {   \
-			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);          \
+			return get().$ref()._operator_subscript(std::forward<_ElemRight>(other)...);           \
 		}                                                                                          \
 		template <class... Args>                                                                   \
 		FORCE_INLINE constexpr decltype(auto) operator()(Args&&... other) {                        \
@@ -1742,8 +1697,7 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		}                                                                                          \
 		template <class Ch>                                                                        \
 		friend FORCE_INLINE constexpr decltype(auto) operator<<(                                   \
-		    std::basic_ostream<Ch>& stream,                                                        \
-		    const __Property_##propertyName<_PropertyType>& elem) {                                \
+		    std::basic_ostream<Ch>& stream, const $Property_##propertyName<_PropertyType>& elem) { \
 			return stream << elem.get();                                                           \
 		}                                                                                          \
 		FORCE_INLINE constexpr decltype(auto) operator*() requires requires(_PropertyType t) {     \
@@ -1753,12 +1707,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator==(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() ==                                                                       \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() ==                                                                   \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() == other);                                                           \
 			}                                                                                      \
@@ -1766,12 +1719,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator!=(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() !=                                                                       \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() !=                                                                   \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() != other);                                                           \
 			}                                                                                      \
@@ -1779,12 +1731,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr int operator<=>(_ElemRight&& other) const {                         \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() <=>                                                                      \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() <=>                                                                  \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() <=> other);                                                          \
 			}                                                                                      \
@@ -1795,37 +1746,37 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		}                                                                                          \
 	};                                                                                             \
 	accessSpecifier:                                                                               \
-	static dllAccessSpecifier __Property_##propertyName<> propertyName;
+	static dllAccessSpecifier $Property_##propertyName<> propertyName;
 
 #define ADV_PROPERTY_SETTER_STATIC(accessSpecifier, dllAccessSpecifier, propertyName, setterFunc,  \
                                    ...)                                                            \
                                                                                                    \
    private:                                                                                        \
 	template <class _PropertyType = __VA_ARGS__, class _ParentType = ADV_PROPERTY_SELF>            \
-	struct __Property_##propertyName {                                                             \
-		using __property_underlying_type    = _PropertyType;                                       \
+	struct $Property_##propertyName {                                                              \
+		using $property_underlying_type     = _PropertyType;                                       \
 		FORCE_INLINE constexpr void operator=(const __VA_ARGS__& value) {                          \
 			_ParentType::setterFunc(value);                                                        \
 		}                                                                                          \
 	};                                                                                             \
 	accessSpecifier:                                                                               \
-	static dllAccessSpecifier __Property_##propertyName<> propertyName;
+	static dllAccessSpecifier $Property_##propertyName<> propertyName;
 
 #define ADV_PROPERTY_GETTER_SETTER_STATIC(accessSpecifier, dllAccessSpecifier, propertyName,       \
                                           getterAccess, getterFunc, setterAccess, setterFunc, ...) \
                                                                                                    \
    private:                                                                                        \
 	template <class _PropertyType = __VA_ARGS__, class _ParentType = ADV_PROPERTY_SELF>            \
-	struct __Property_##propertyName {                                                             \
+	struct $Property_##propertyName {                                                              \
 		friend _ParentType;                                                                        \
 		getterAccess : FORCE_INLINE constexpr __VA_ARGS__ get() const {                            \
 			return _ParentType::getterFunc();                                                      \
 		}                                                                                          \
-		using __property_underlying_type = _PropertyType;                                          \
-		using __self                     = typename Builtin::SelfProxyType<_PropertyType>;         \
-		using __class                    = typename Builtin::ClassProxyType<_PropertyType>;        \
+		using $property_underlying_type = _PropertyType;                                           \
+		using $self                     = typename Builtin::SelfProxyType<_PropertyType>;          \
+		using $class                    = typename Builtin::ClassProxyType<_PropertyType>;         \
 		FORCE_INLINE constexpr operator __VA_ARGS__() const { return get(); }                      \
-		FORCE_INLINE constexpr decltype(auto) __ref() const { return get(); }                      \
+		FORCE_INLINE constexpr decltype(auto) $ref() const { return get(); }                       \
                                                                                                    \
 		FORCE_INLINE constexpr decltype(auto) operator+() const requires                           \
 		    requires(_PropertyType t) {                                                            \
@@ -1845,12 +1796,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator+(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() +                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() +                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() + other);                                                            \
 			}                                                                                      \
@@ -1858,12 +1808,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator-(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() -                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() -                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() - other);                                                            \
 			}                                                                                      \
@@ -1871,12 +1820,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator*(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() *                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() *                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() * other);                                                            \
 			}                                                                                      \
@@ -1884,12 +1832,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator/(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() /                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() /                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() / other);                                                            \
 			}                                                                                      \
@@ -1897,12 +1844,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator%(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() %                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() %                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() % other);                                                            \
 			}                                                                                      \
@@ -1910,12 +1856,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator&(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() &                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() &                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() & other);                                                            \
 			}                                                                                      \
@@ -1923,12 +1868,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator|(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() |                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() |                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() | other);                                                            \
 			}                                                                                      \
@@ -1936,12 +1880,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator^(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() ^                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() ^                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() ^ other);                                                            \
 			}                                                                                      \
@@ -1949,11 +1892,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator<<(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
 				return (                                                                           \
 				    get()                                                                          \
-				    << static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>( \
+				    << static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>(  \
 				           std::forward<_ElemRight>(other)));                                      \
 			} else {                                                                               \
 				return (get() << other);                                                           \
@@ -1962,23 +1905,22 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator>>(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() >>                                                                       \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() >>                                                                   \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() >> other);                                                           \
 			}                                                                                      \
 		}                                                                                          \
 		template <class... _ElemRight>                                                             \
 		FORCE_INLINE constexpr decltype(auto) _operator_subscript(_ElemRight&&... other) {         \
-			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);          \
+			return get().$ref()._operator_subscript(std::forward<_ElemRight>(other)...);           \
 		}                                                                                          \
 		template <class... _ElemRight>                                                             \
 		FORCE_INLINE constexpr decltype(auto) _operator_subscript(_ElemRight&&... other) const {   \
-			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);          \
+			return get().$ref()._operator_subscript(std::forward<_ElemRight>(other)...);           \
 		}                                                                                          \
 		template <class... Args>                                                                   \
 		FORCE_INLINE constexpr decltype(auto) operator()(Args&&... other) {                        \
@@ -1990,8 +1932,7 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		}                                                                                          \
 		template <class Ch>                                                                        \
 		friend FORCE_INLINE constexpr decltype(auto) operator<<(                                   \
-		    std::basic_ostream<Ch>& stream,                                                        \
-		    const __Property_##propertyName<_PropertyType>& elem) {                                \
+		    std::basic_ostream<Ch>& stream, const $Property_##propertyName<_PropertyType>& elem) { \
 			return stream << elem.get();                                                           \
 		}                                                                                          \
 		FORCE_INLINE constexpr decltype(auto) operator*() requires requires(_PropertyType t) {     \
@@ -2001,12 +1942,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator==(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() ==                                                                       \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() ==                                                                   \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() == other);                                                           \
 			}                                                                                      \
@@ -2014,12 +1954,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator!=(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() !=                                                                       \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() !=                                                                   \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() != other);                                                           \
 			}                                                                                      \
@@ -2027,12 +1966,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr int operator<=>(_ElemRight&& other) const {                         \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() <=>                                                                      \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() <=>                                                                  \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() <=> other);                                                          \
 			}                                                                                      \
@@ -2051,12 +1989,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t += u; }*/ {      \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() +=                                                               \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() +=                                                           \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() += other);                                                   \
 			}                                                                                      \
@@ -2066,12 +2003,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t -= u; }*/ {      \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() -=                                                               \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() -=                                                           \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() -= other);                                                   \
 			}                                                                                      \
@@ -2081,12 +2017,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t *= u; }*/ {      \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() *=                                                               \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() *=                                                           \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() *= other);                                                   \
 			}                                                                                      \
@@ -2096,12 +2031,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t /= u; }*/ {      \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() /=                                                               \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() /=                                                           \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() /= other);                                                   \
 			}                                                                                      \
@@ -2111,12 +2045,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t %= u; }*/ {      \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() %=                                                               \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() %=                                                           \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() %= other);                                                   \
 			}                                                                                      \
@@ -2126,12 +2059,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t &= u; }*/ {      \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() &=                                                               \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() &=                                                           \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() &= other);                                                   \
 			}                                                                                      \
@@ -2141,12 +2073,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t |= u; }*/ {      \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() |=                                                               \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() |=                                                           \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() |= other);                                                   \
 			}                                                                                      \
@@ -2156,12 +2087,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t ^= u; }*/ {      \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() ^=                                                               \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() ^=                                                           \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() ^= other);                                                   \
 			}                                                                                      \
@@ -2171,12 +2101,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t <<= u; }*/ {     \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() <<=                                                              \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() <<=                                                          \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() <<= other);                                                  \
 			}                                                                                      \
@@ -2186,12 +2115,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		    _ElemRight&&                                                                           \
 		        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t >>= u; }*/ {     \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    *this = get() >>=                                                              \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (*this = get() >>=                                                          \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return *this = (get() >>= other);                                                  \
 			}                                                                                      \
@@ -2222,19 +2150,19 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		}                                                                                          \
 	};                                                                                             \
 	accessSpecifier:                                                                               \
-	static dllAccessSpecifier __Property_##propertyName<> propertyName;
+	static dllAccessSpecifier $Property_##propertyName<> propertyName;
 
 #define ADV_EXTENSION_PROPERTY_GETTER_SETTER(propertyName, getterFunc, setterFunc, ...)            \
-	namespace __properties {                                                                       \
+	namespace $properties {                                                                        \
 		template <class _ParentType, class _PropertyType = __VA_ARGS__>                            \
-		struct __Property_##propertyName {                                                         \
+		struct $Property_##propertyName {                                                          \
 			_ParentType parent;                                                                    \
-			using __property_underlying_type = _PropertyType;                                      \
-			using __self                     = typename Builtin::SelfProxyType<_PropertyType>;     \
-			using __class                    = typename Builtin::ClassProxyType<_PropertyType>;    \
+			using $property_underlying_type = _PropertyType;                                       \
+			using $self                     = typename Builtin::SelfProxyType<_PropertyType>;      \
+			using $class                    = typename Builtin::ClassProxyType<_PropertyType>;     \
 			FORCE_INLINE constexpr __VA_ARGS__ get() const { return getterFunc(parent); }          \
 			FORCE_INLINE constexpr operator __VA_ARGS__() const { return get(); }                  \
-			FORCE_INLINE constexpr decltype(auto) __ref() const { return get(); }                  \
+			FORCE_INLINE constexpr decltype(auto) $ref() const { return get(); }                   \
                                                                                                    \
 			FORCE_INLINE constexpr decltype(auto) operator+() const requires                       \
 			    requires(_PropertyType t) {                                                        \
@@ -2254,12 +2182,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			template <class _ElemRight>                                                            \
 			FORCE_INLINE constexpr decltype(auto) operator+(_ElemRight&& other) const {            \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (get() +                                                                \
-					        static_cast<                                                           \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    get() +                                                                    \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return (get() + other);                                                        \
 				}                                                                                  \
@@ -2267,12 +2195,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			template <class _ElemRight>                                                            \
 			FORCE_INLINE constexpr decltype(auto) operator-(_ElemRight&& other) const {            \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (get() -                                                                \
-					        static_cast<                                                           \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    get() -                                                                    \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return (get() - other);                                                        \
 				}                                                                                  \
@@ -2280,12 +2208,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			template <class _ElemRight>                                                            \
 			FORCE_INLINE constexpr decltype(auto) operator*(_ElemRight&& other) const {            \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (get() *                                                                \
-					        static_cast<                                                           \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    get() *                                                                    \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return (get() * other);                                                        \
 				}                                                                                  \
@@ -2293,12 +2221,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			template <class _ElemRight>                                                            \
 			FORCE_INLINE constexpr decltype(auto) operator/(_ElemRight&& other) const {            \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (get() /                                                                \
-					        static_cast<                                                           \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    get() /                                                                    \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return (get() / other);                                                        \
 				}                                                                                  \
@@ -2306,12 +2234,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			template <class _ElemRight>                                                            \
 			FORCE_INLINE constexpr decltype(auto) operator%(_ElemRight&& other) const {            \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (get() %                                                                \
-					        static_cast<                                                           \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    get() %                                                                    \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return (get() % other);                                                        \
 				}                                                                                  \
@@ -2319,12 +2247,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			template <class _ElemRight>                                                            \
 			FORCE_INLINE constexpr decltype(auto) operator&(_ElemRight&& other) const {            \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (get() &                                                                \
-					        static_cast<                                                           \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    get() &                                                                    \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return (get() & other);                                                        \
 				}                                                                                  \
@@ -2332,12 +2260,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			template <class _ElemRight>                                                            \
 			FORCE_INLINE constexpr decltype(auto) operator|(_ElemRight&& other) const {            \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (get() |                                                                \
-					        static_cast<                                                           \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    get() |                                                                    \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return (get() | other);                                                        \
 				}                                                                                  \
@@ -2345,12 +2273,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			template <class _ElemRight>                                                            \
 			FORCE_INLINE constexpr decltype(auto) operator^(_ElemRight&& other) const {            \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (get() ^                                                                \
-					        static_cast<                                                           \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    get() ^                                                                    \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return (get() ^ other);                                                        \
 				}                                                                                  \
@@ -2358,10 +2286,10 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			template <class _ElemRight>                                                            \
 			FORCE_INLINE constexpr decltype(auto) operator<<(_ElemRight&& other) const {           \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
 					return (get() << static_cast<                                                  \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
+					            typename std::decay_t<_ElemRight>::$property_underlying_type>(     \
 					            std::forward<_ElemRight>(other)));                                 \
 				} else {                                                                           \
 					return (get() << other);                                                       \
@@ -2370,24 +2298,24 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			template <class _ElemRight>                                                            \
 			FORCE_INLINE constexpr decltype(auto) operator>>(_ElemRight&& other) const {           \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (get() >>                                                               \
-					        static_cast<                                                           \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    get() >>                                                                   \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return (get() >> other);                                                       \
 				}                                                                                  \
 			}                                                                                      \
 			template <class... _ElemRight>                                                         \
 			FORCE_INLINE constexpr decltype(auto) _operator_subscript(_ElemRight&&... other) {     \
-				return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);      \
+				return get().$ref()._operator_subscript(std::forward<_ElemRight>(other)...);       \
 			}                                                                                      \
 			template <class... _ElemRight>                                                         \
 			FORCE_INLINE constexpr decltype(auto) _operator_subscript(                             \
 			    _ElemRight&&... other) const {                                                     \
-				return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);      \
+				return get().$ref()._operator_subscript(std::forward<_ElemRight>(other)...);       \
 			}                                                                                      \
 			template <class... Args>                                                               \
 			FORCE_INLINE constexpr decltype(auto) operator()(Args&&... other) {                    \
@@ -2400,7 +2328,7 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			template <class Ch>                                                                    \
 			friend FORCE_INLINE constexpr decltype(auto) operator<<(                               \
 			    std::basic_ostream<Ch>& stream,                                                    \
-			    const __Property_##propertyName<_PropertyType>& elem) {                            \
+			    const $Property_##propertyName<_PropertyType>& elem) {                             \
 				return stream << elem.get();                                                       \
 			}                                                                                      \
 			FORCE_INLINE constexpr decltype(auto) operator*() requires requires(_PropertyType t) { \
@@ -2410,12 +2338,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			template <class _ElemRight>                                                            \
 			FORCE_INLINE constexpr decltype(auto) operator==(_ElemRight&& other) const {           \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (get() ==                                                               \
-					        static_cast<                                                           \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    get() ==                                                                   \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return (get() == other);                                                       \
 				}                                                                                  \
@@ -2423,12 +2351,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			template <class _ElemRight>                                                            \
 			FORCE_INLINE constexpr decltype(auto) operator!=(_ElemRight&& other) const {           \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (get() !=                                                               \
-					        static_cast<                                                           \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    get() !=                                                                   \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return (get() != other);                                                       \
 				}                                                                                  \
@@ -2436,12 +2364,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			template <class _ElemRight>                                                            \
 			FORCE_INLINE constexpr int operator<=>(_ElemRight&& other) const {                     \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (get() <=>                                                              \
-					        static_cast<                                                           \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    get() <=>                                                                  \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return (get() <=> other);                                                      \
 				}                                                                                  \
@@ -2460,11 +2388,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			    _ElemRight&&                                                                       \
 			        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t += u; }*/ {  \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (*this = get() += static_cast<                                          \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    *this = get() +=                                                           \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return *this = (get() += other);                                               \
 				}                                                                                  \
@@ -2474,11 +2403,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			    _ElemRight&&                                                                       \
 			        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t -= u; }*/ {  \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (*this = get() -= static_cast<                                          \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    *this = get() -=                                                           \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return *this = (get() -= other);                                               \
 				}                                                                                  \
@@ -2488,11 +2418,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			    _ElemRight&&                                                                       \
 			        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t *= u; }*/ {  \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (*this = get() *= static_cast<                                          \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    *this = get() *=                                                           \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return *this = (get() *= other);                                               \
 				}                                                                                  \
@@ -2502,11 +2433,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			    _ElemRight&&                                                                       \
 			        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t /= u; }*/ {  \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (*this = get() /= static_cast<                                          \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    *this = get() /=                                                           \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return *this = (get() /= other);                                               \
 				}                                                                                  \
@@ -2516,11 +2448,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			    _ElemRight&&                                                                       \
 			        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t %= u; }*/ {  \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (*this = get() %= static_cast<                                          \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    *this = get() %=                                                           \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return *this = (get() %= other);                                               \
 				}                                                                                  \
@@ -2530,11 +2463,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			    _ElemRight&&                                                                       \
 			        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t &= u; }*/ {  \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (*this = get() &= static_cast<                                          \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    *this = get() &=                                                           \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return *this = (get() &= other);                                               \
 				}                                                                                  \
@@ -2544,11 +2478,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			    _ElemRight&&                                                                       \
 			        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t |= u; }*/ {  \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (*this = get() |= static_cast<                                          \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    *this = get() |=                                                           \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return *this = (get() |= other);                                               \
 				}                                                                                  \
@@ -2558,11 +2493,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			    _ElemRight&&                                                                       \
 			        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t ^= u; }*/ {  \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (*this = get() ^= static_cast<                                          \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    *this = get() ^=                                                           \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return *this = (get() ^= other);                                               \
 				}                                                                                  \
@@ -2572,11 +2508,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			    _ElemRight&&                                                                       \
 			        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t <<= u; }*/ { \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (*this = get() <<= static_cast<                                         \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    *this = get() <<=                                                          \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return *this = (get() <<= other);                                              \
 				}                                                                                  \
@@ -2586,11 +2523,12 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 			    _ElemRight&&                                                                       \
 			        other) /*requires requires(_PropertyType t, _ElemRight u) { t = t >>= u; }*/ { \
 				if constexpr (requires {                                                           \
-					              typename std::decay_t<_ElemRight>::__property_underlying_type;   \
+					              typename std::decay_t<_ElemRight>::$property_underlying_type;    \
 				              }) {                                                                 \
-					return (*this = get() >>= static_cast<                                         \
-					            typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-					            std::forward<_ElemRight>(other)));                                 \
+					return (                                                                       \
+					    *this = get() >>=                                                          \
+					    static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+					        std::forward<_ElemRight>(other)));                                     \
 				} else {                                                                           \
 					return *this = (get() >>= other);                                              \
 				}                                                                                  \
@@ -2630,18 +2568,18 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
                                                                                                    \
    private:                                                                                        \
 	template <class _PropertyType = __VA_ARGS__, class _ParentType = ADV_PROPERTY_SELF>            \
-	struct __Property_##propertyName {                                                             \
-		using __property_underlying_type = _PropertyType;                                          \
-		using __parent_type              = _ParentType;                                            \
-		using __self                     = typename Builtin::SelfProxyType<_PropertyType>;         \
-		using __class                    = typename Builtin::ClassProxyType<_PropertyType>;        \
-		dllAccessSpecifier __property_underlying_type& get() const;                                \
+	struct $Property_##propertyName {                                                              \
+		using $property_underlying_type = _PropertyType;                                           \
+		using $parent_type              = _ParentType;                                             \
+		using $self                     = typename Builtin::SelfProxyType<_PropertyType>;          \
+		using $class                    = typename Builtin::ClassProxyType<_PropertyType>;         \
+		dllAccessSpecifier $property_underlying_type& get() const;                                 \
 		FORCE_INLINE constexpr operator _PropertyType() const { return get(); }                    \
-		FORCE_INLINE constexpr decltype(auto) __ref() const {                                      \
+		FORCE_INLINE constexpr decltype(auto) $ref() const {                                       \
 			if constexpr (std::is_same_v<_PropertyType, bool>) {                                   \
 				return get();                                                                      \
 			} else {                                                                               \
-				return get().__ref();                                                              \
+				return get().$ref();                                                               \
 			}                                                                                      \
 		}                                                                                          \
                                                                                                    \
@@ -2663,12 +2601,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator+(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() +                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() +                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() + other);                                                            \
 			}                                                                                      \
@@ -2676,12 +2613,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator-(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() -                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() -                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() - other);                                                            \
 			}                                                                                      \
@@ -2689,12 +2625,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator*(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() *                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() *                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() * other);                                                            \
 			}                                                                                      \
@@ -2702,12 +2637,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator/(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() /                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() /                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() / other);                                                            \
 			}                                                                                      \
@@ -2715,12 +2649,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator%(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() %                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() %                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() % other);                                                            \
 			}                                                                                      \
@@ -2728,12 +2661,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator&(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() &                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() &                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() & other);                                                            \
 			}                                                                                      \
@@ -2741,12 +2673,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator|(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() |                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() |                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() | other);                                                            \
 			}                                                                                      \
@@ -2754,12 +2685,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator^(_ElemRight&& other) const {                \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() ^                                                                        \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() ^                                                                    \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() ^ other);                                                            \
 			}                                                                                      \
@@ -2767,11 +2697,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator<<(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
 				return (                                                                           \
 				    get()                                                                          \
-				    << static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>( \
+				    << static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>(  \
 				           std::forward<_ElemRight>(other)));                                      \
 			} else {                                                                               \
 				return (get() << other);                                                           \
@@ -2780,23 +2710,22 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator>>(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() >>                                                                       \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() >>                                                                   \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() >> other);                                                           \
 			}                                                                                      \
 		}                                                                                          \
 		template <class... _ElemRight>                                                             \
 		FORCE_INLINE constexpr decltype(auto) _operator_subscript(_ElemRight&&... other) {         \
-			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);          \
+			return get().$ref()._operator_subscript(std::forward<_ElemRight>(other)...);           \
 		}                                                                                          \
 		template <class... _ElemRight>                                                             \
 		FORCE_INLINE constexpr decltype(auto) _operator_subscript(_ElemRight&&... other) const {   \
-			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);          \
+			return get().$ref()._operator_subscript(std::forward<_ElemRight>(other)...);           \
 		}                                                                                          \
 		template <class... Args>                                                                   \
 		FORCE_INLINE constexpr decltype(auto) operator()(Args&&... other) {                        \
@@ -2808,8 +2737,7 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		}                                                                                          \
 		template <class Ch>                                                                        \
 		friend FORCE_INLINE constexpr decltype(auto) operator<<(                                   \
-		    std::basic_ostream<Ch>& stream,                                                        \
-		    const __Property_##propertyName<_PropertyType>& elem) {                                \
+		    std::basic_ostream<Ch>& stream, const $Property_##propertyName<_PropertyType>& elem) { \
 			return stream << elem.get();                                                           \
 		}                                                                                          \
 		FORCE_INLINE constexpr decltype(auto) operator*() requires requires(_PropertyType t) {     \
@@ -2819,12 +2747,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator==(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() ==                                                                       \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() ==                                                                   \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() == other);                                                           \
 			}                                                                                      \
@@ -2832,12 +2759,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr decltype(auto) operator!=(_ElemRight&& other) const {               \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() !=                                                                       \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() !=                                                                   \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() != other);                                                           \
 			}                                                                                      \
@@ -2845,12 +2771,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		template <class _ElemRight>                                                                \
 		FORCE_INLINE constexpr int operator<=>(_ElemRight&& other) const {                         \
 			if constexpr (requires {                                                               \
-				              typename std::decay_t<_ElemRight>::__property_underlying_type;       \
+				              typename std::decay_t<_ElemRight>::$property_underlying_type;        \
 			              }) {                                                                     \
-				return (                                                                           \
-				    get() <=>                                                                      \
-				    static_cast<typename std::decay_t<_ElemRight>::__property_underlying_type>(    \
-				        std::forward<_ElemRight>(other)));                                         \
+				return (get() <=>                                                                  \
+				        static_cast<typename std::decay_t<_ElemRight>::$property_underlying_type>( \
+				            std::forward<_ElemRight>(other)));                                     \
 			} else {                                                                               \
 				return (get() <=> other);                                                          \
 			}                                                                                      \
@@ -2861,7 +2786,7 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		}                                                                                          \
 	};                                                                                             \
 	accessSpecifier:                                                                               \
-	static dllAccessSpecifier __Property_##propertyName<> propertyName;
+	static dllAccessSpecifier $Property_##propertyName<> propertyName;
 
 #define ADV_CHECK_REF_STRUCT(Type, ...)                                                            \
 	static_assert(!std::is_base_of_v<Builtin::RefStruct, ##__VA_ARGS__>,                           \
@@ -2887,10 +2812,10 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 	              " cannot be inherited. A class can inherit only one superclass and multiple "    \
 	              "interfaces. Structs and interfaces can implement multiple interfaces.");
 #define ADV_CHECK_FOR_CONCRETE(Type)                                                               \
-	static_assert(!std::is_abstract_v<__Class_##Type>,                                             \
+	static_assert(!std::is_abstract_v<$Class_##Type>,                                              \
 	              "Type " #Type " does not implement all of its abstract bases");
 #define ADV_CHECK_FOR_ABSTRACT(Type)                                                               \
-	static_assert(std::is_abstract_v<__Class_##Type>,                                              \
+	static_assert(std::is_abstract_v<$Class_##Type>,                                               \
 	              "Abstract type " #Type " does not have abstract members");
 #define ADV_CHECK_STATIC_CLASS(Type, ...)                                                          \
 	static_assert(std::is_base_of_v<Builtin::StaticClass, ##__VA_ARGS__>,                          \
@@ -2903,13 +2828,11 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
                                                                                                    \
    public:                                                                                         \
 	##__VA_ARGS__() = delete;                                                                      \
-	##__VA_ARGS__(Builtin::Object* obj, __vtable const* vtable)                                    \
-	    : ___super {obj}, _vtable {vtable} {}                                                      \
-	##__VA_ARGS__(##__VA_ARGS__ const& copy) : ___super {copy._obj}, _vtable {copy._vtable} {      \
+	##__VA_ARGS__(Builtin::Object* obj, $vtable const* vtable) : $super {obj}, _vtable {vtable} {} \
+	##__VA_ARGS__(##__VA_ARGS__ const& copy) : $super {copy._obj}, _vtable {copy._vtable} {        \
 		Builtin::Retain(_obj);                                                                     \
 	}                                                                                              \
-	##__VA_ARGS__(##__VA_ARGS__&& moved) noexcept                                                  \
-	    : ___super {moved._obj}, _vtable {moved._vtable} {                                         \
+	##__VA_ARGS__(##__VA_ARGS__&& moved) noexcept : $super {moved._obj}, _vtable {moved._vtable} { \
 		moved._obj    = nullptr;                                                                   \
 		moved._vtable = nullptr;                                                                   \
 	}                                                                                              \
@@ -2934,7 +2857,7 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 	}                                                                                              \
                                                                                                    \
    protected:                                                                                      \
-	##__VA_ARGS__(decltype(nullptr)) noexcept : ___super {nullptr}, _vtable {nullptr} {}           \
+	##__VA_ARGS__(decltype(nullptr)) noexcept : $super {nullptr}, _vtable {nullptr} {}             \
 	##__VA_ARGS__& operator=(decltype(nullptr)) {                                                  \
 		if (_obj)                                                                                  \
 			Builtin::Release(_obj);                                                                \
@@ -2953,15 +2876,14 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
                                                                                                    \
    public:                                                                                         \
 	##__VA_ARGS__() = delete;                                                                      \
-	##__VA_ARGS__(##__VA_ARGS__ const& copy) : ___super {copy._obj}, _vtable {copy._vtable} {      \
+	##__VA_ARGS__(##__VA_ARGS__ const& copy) : $super {copy._obj}, _vtable {copy._vtable} {        \
 		Builtin::UnownedRetain(_obj);                                                              \
 	}                                                                                              \
-	##__VA_ARGS__(##__VA_ARGS__&& moved) noexcept                                                  \
-	    : ___super {moved._obj}, _vtable {moved._vtable} {                                         \
+	##__VA_ARGS__(##__VA_ARGS__&& moved) noexcept : $super {moved._obj}, _vtable {moved._vtable} { \
 		moved._obj    = nullptr;                                                                   \
 		moved._vtable = nullptr;                                                                   \
 	}                                                                                              \
-	##__VA_ARGS__(__strong_ref const& copy) : ___super {copy._obj}, _vtable {copy._vtable} {       \
+	##__VA_ARGS__($strong_ref const& copy) : $super {copy._obj}, _vtable {copy._vtable} {          \
 		Builtin::UnownedRetain(_obj);                                                              \
 	}                                                                                              \
 	##__VA_ARGS__& operator=(##__VA_ARGS__ const& copy) {                                          \
@@ -2983,7 +2905,7 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		moved._vtable = nullptr;                                                                   \
 		return *this;                                                                              \
 	}                                                                                              \
-	##__VA_ARGS__& operator=(__strong_ref const& copy) {                                           \
+	##__VA_ARGS__& operator=($strong_ref const& copy) {                                            \
 		if (copy._obj != _obj) {                                                                   \
 			Builtin::UnownedRelease(_obj);                                                         \
 			_obj    = copy._obj;                                                                   \
@@ -2992,13 +2914,13 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		}                                                                                          \
 		return *this;                                                                              \
 	}                                                                                              \
-	FORCE_INLINE operator __strong_ref() const {                                                   \
+	FORCE_INLINE operator $strong_ref() const {                                                    \
 		UnownedCheck(_obj);                                                                        \
-		return __strong_ref(_obj, _vtable);                                                        \
+		return $strong_ref(_obj, _vtable);                                                         \
 	}                                                                                              \
                                                                                                    \
    protected:                                                                                      \
-	##__VA_ARGS__(decltype(nullptr)) noexcept : ___super {nullptr}, _vtable {nullptr} {}           \
+	##__VA_ARGS__(decltype(nullptr)) noexcept : $super {nullptr}, _vtable {nullptr} {}             \
 	##__VA_ARGS__& operator=(decltype(nullptr)) {                                                  \
 		if (_obj)                                                                                  \
 			Builtin::UnownedRelease(_obj);                                                         \
@@ -3016,19 +2938,18 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 #define ADV_INTERFACE_WEAK_COMMON_CTORS(...)                                                       \
                                                                                                    \
    public:                                                                                         \
-	##__VA_ARGS__() : ___super {nullptr}, _vtable {nullptr} {}                                     \
-	##__VA_ARGS__(##__VA_ARGS__ const& copy) : ___super {copy._obj}, _vtable {copy._vtable} {      \
+	##__VA_ARGS__() : $super {nullptr}, _vtable {nullptr} {}                                       \
+	##__VA_ARGS__(##__VA_ARGS__ const& copy) : $super {copy._obj}, _vtable {copy._vtable} {        \
 		if (_obj)                                                                                  \
 			_obj->incrementWeak();                                                                 \
 	}                                                                                              \
-	##__VA_ARGS__(##__VA_ARGS__&& moved) noexcept                                                  \
-	    : ___super {moved._obj}, _vtable {moved._vtable} {                                         \
+	##__VA_ARGS__(##__VA_ARGS__&& moved) noexcept : $super {moved._obj}, _vtable {moved._vtable} { \
 		moved._obj    = nullptr;                                                                   \
 		moved._vtable = nullptr;                                                                   \
 	}                                                                                              \
-	##__VA_ARGS__(__strong_ref const& strong)                                                      \
-	    : ___super {formWeakRef(strong._obj)}, _vtable {strong._vtable} {}                         \
-	##__VA_ARGS__(decltype(nullptr)) : ___super {nullptr}, _vtable {nullptr} {}                    \
+	##__VA_ARGS__($strong_ref const& strong)                                                       \
+	    : $super {formWeakRef(strong._obj)}, _vtable {strong._vtable} {}                           \
+	##__VA_ARGS__(decltype(nullptr)) : $super {nullptr}, _vtable {nullptr} {}                      \
 	##__VA_ARGS__& operator=(##__VA_ARGS__ const& copy) {                                          \
 		if (copy._obj != _obj) {                                                                   \
 			if (_obj)                                                                              \
@@ -3040,7 +2961,7 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		}                                                                                          \
 		return *this;                                                                              \
 	}                                                                                              \
-	##__VA_ARGS__& operator=(__strong_ref const& strong) {                                         \
+	##__VA_ARGS__& operator=($strong_ref const& strong) {                                          \
 		if (!_obj || strong._obj != _obj->unsafeGetObject()) {                                     \
 			if (_obj)                                                                              \
 				_obj->decrementWeak();                                                             \
@@ -3060,17 +2981,17 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		moved._vtable = nullptr;                                                                   \
 		return *this;                                                                              \
 	}                                                                                              \
-	FORCE_INLINE Builtin::OptionalStrongRef<__strong_ref> pin() const {                            \
+	FORCE_INLINE Builtin::OptionalStrongRef<$strong_ref> pin() const {                             \
 		if (_obj) {                                                                                \
 			auto ptr = _obj->tryRetain();                                                          \
 			if (ptr) {                                                                             \
-				return __strong_ref(ptr, _vtable);                                                 \
+				return $strong_ref(ptr, _vtable);                                                  \
 			}                                                                                      \
 			return nullptr;                                                                        \
 		}                                                                                          \
 		return nullptr;                                                                            \
 	}                                                                                              \
-	FORCE_INLINE __strong_ref operator*() const { return *pin(); }                                 \
+	FORCE_INLINE $strong_ref operator*() const { return *pin(); }                                  \
 	##__VA_ARGS__& operator=(decltype(nullptr)) {                                                  \
 		if (_obj) {                                                                                \
 			_obj->decrementWeak();                                                                 \
@@ -3090,7 +3011,7 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 	FORCE_INLINE explicit operator bool() const noexcept { return IsValid(); }                     \
 	template <class __OptionalFunc>                                                                \
 	auto AndThen(__OptionalFunc&& func) const {                                                    \
-		using return_type = std::invoke_result_t<__OptionalFunc, __strong_ref const&>;             \
+		using return_type = std::invoke_result_t<__OptionalFunc, $strong_ref const&>;              \
 		auto strong       = pin();                                                                 \
 		if constexpr (std::is_void_v<return_type>) {                                               \
 			if (strong.IsValid())                                                                  \
@@ -3103,9 +3024,9 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		}                                                                                          \
 	}                                                                                              \
 	template <class __OptionalValueOr>                                                             \
-	__strong_ref ValueOr(__OptionalValueOr&& func) const {                                         \
+	$strong_ref ValueOr(__OptionalValueOr&& func) const {                                          \
 		using return_type = std::invoke_result_t<__OptionalValueOr>;                               \
-		static_assert(std::is_convertible_v<return_type, __strong_ref>,                            \
+		static_assert(std::is_convertible_v<return_type, $strong_ref>,                             \
 		              "Default value must be convertible to left side of the expression");         \
 		auto strong = pin();                                                                       \
 		if (strong.IsValid())                                                                      \
@@ -3113,9 +3034,9 @@ __static_get##PROPERTY<__VA_ARGS__>::get(); }());                               
 		return std::invoke(std::forward<__OptionalValueOr>(func));                                 \
 	}                                                                                              \
 	template <class F>                                                                             \
-	__weak_ref& AssignIfNull(F&& func) {                                                           \
+	$weak_ref& AssignIfNull(F&& func) {                                                            \
 		using return_type = std::invoke_result_t<F>;                                               \
-		static_assert(std::is_assignable_v<__weak_ref, return_type>,                               \
+		static_assert(std::is_assignable_v<$weak_ref, return_type>,                                \
 		              "Default value must be convertible to left side of the expression");         \
 		if (!IsValid())                                                                            \
 			*this = std::invoke(std::forward<F>(func));                                            \
@@ -3142,8 +3063,8 @@ namespace Test1::Test2 {
 		}
 
 	   public:
-		inline decltype(auto) __ref() noexcept { return *this; }
-		inline decltype(auto) __ref() const noexcept { return *this; }
+		inline decltype(auto) $ref() noexcept { return *this; }
+		inline decltype(auto) $ref() const noexcept { return *this; }
 	};
 
 	// Class2 GClass2;
@@ -3168,8 +3089,8 @@ namespace Test1::Test2 {
 		}
 
 	   public:
-		inline decltype(auto) __ref() noexcept { return *this; }
-		inline decltype(auto) __ref() const noexcept { return *this; }
+		inline decltype(auto) $ref() noexcept { return *this; }
+		inline decltype(auto) $ref() const noexcept { return *this; }
 	};
 
 }  // namespace Test1::Test2

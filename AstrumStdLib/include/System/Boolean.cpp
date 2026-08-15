@@ -17,38 +17,43 @@ namespace System {
 
 
 
-static_assert(Builtin::usize(sizeof (Boolean)) == Builtin::i32(1), "bool should be 1 byte");
-static_assert(Builtin::TypeIs<Boolean, IComparable<Boolean>>(), "bool should implement IComparable<bool>");
-static_assert(Builtin::TypeIs<Boolean, IEquatable<Boolean>>(), "bool should implement IEquatable<bool>");
-static_assert(Builtin::TypeIs<Boolean, ISelfComparable>(), "bool should implement ISelfComparable");
-static_assert(Builtin::TypeIs<Boolean, ISelfEquatable>(), "bool should implement ISelfEquatable");
+#line 76 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
+	static_assert(Builtin::usize(sizeof (Boolean)) == Builtin::i32(1), "bool should be 1 byte");
+#line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
+	static_assert(Builtin::TypeIs<Boolean, IComparable<Boolean>>(), "bool should implement IComparable<bool>");
+#line 78 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
+	static_assert(Builtin::TypeIs<Boolean, IEquatable<Boolean>>(), "bool should implement IEquatable<bool>");
+#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
+	static_assert(Builtin::TypeIs<Boolean, ISelfComparable>(), "bool should implement ISelfComparable");
+#line 80 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
+	static_assert(Builtin::TypeIs<Boolean, ISelfEquatable>(), "bool should implement ISelfEquatable");
 #ifdef ADV_UNITTEST
 	#line 82 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-	static bool __Test_8ad5e102028f9d27 = [](){
+	static bool $Test_8ad5e102028f9d27 = [](){
 		#line 83 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-		ADV_ASSERT((ADV_UPCS(HashCode)(Builtin::Boolean(true).__ref()) == Builtin::u32(1U)), "true.HashCode==1u");
+		ADV_ASSERT((ADV_UPCS(HashCode)(Builtin::Boolean(true).$ref()) == Builtin::u32(1U)), "true.HashCode==1u");
 		#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-		ADV_ASSERT((ADV_UPCS(HashCode)(Builtin::Boolean(false).__ref()) == Builtin::u32(0U)), "false.HashCode==0u");
+		ADV_ASSERT((ADV_UPCS(HashCode)(Builtin::Boolean(false).$ref()) == Builtin::u32(0U)), "false.HashCode==0u");
 		#line 85 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 		Builtin::Nullable<Builtin::ObjectRef> o = Builtin::Boolean(true); 
 		return true;
 	}();
 	#endif	
-} namespace __extensions { using namespace System;
+} namespace $extensions { using namespace System;
 #line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-	auto _operator_eq_eq_mul(__extension_Boolean_10_Boolean const& __this LIFETIMEBOUND, Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> obj)  -> const bool
+	auto _operator_eq_eq_mul($extension_Boolean_10_Boolean const& $this LIFETIMEBOUND, Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> obj)  -> const bool
 	{
 		#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 		{
 			#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-			auto __tmp0 = Builtin::Cast<false, __extension_Boolean_10_Boolean>(obj);
+			auto __tmp0 = Builtin::Cast<false, $extension_Boolean_10_Boolean>(obj);
 			#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 			if ((__tmp0.IsValid())) {
 				#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 				const auto& obj = *__tmp0;
 				
 				#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-				return __this == obj;
+				return $this == obj;
 			}
 		}
 		#line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
@@ -56,21 +61,21 @@ static_assert(Builtin::TypeIs<Boolean, ISelfEquatable>(), "bool should implement
 	}
 	
 } namespace System{
-} namespace __extensions { using namespace System;
+} namespace $extensions { using namespace System;
 #line 39 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-	auto _operator_lt_eq_gt_mul(__extension_Boolean_38_Boolean const& __this LIFETIMEBOUND, Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> obj)  -> const Builtin::i32
+	auto _operator_lt_eq_gt_mul($extension_Boolean_38_Boolean const& $this LIFETIMEBOUND, Builtin::In<Builtin::Nullable<Builtin::ObjectRef>> obj)  -> const Builtin::i32
 	{
 		#line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 		{
 			#line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-			auto __tmp0 = Builtin::Cast<false, __extension_Boolean_38_Boolean>(obj);
+			auto __tmp0 = Builtin::Cast<false, $extension_Boolean_38_Boolean>(obj);
 			#line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 			if ((__tmp0.IsValid())) {
 				#line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 				const auto& obj = *__tmp0;
 				
 				#line 42 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-				if (__this == obj) {
+				if ($this == obj) {
 					#line 42 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 					return Builtin::i32(0);
 				}

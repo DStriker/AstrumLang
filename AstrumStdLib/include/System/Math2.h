@@ -15,26 +15,28 @@
 #include "UInt128.h"
 
 namespace System {
-namespace __Unsafe {} namespace __Math_Protected__Unsafe {}
+namespace __Unsafe {} namespace __Math$Protected__Unsafe {}
 //###############################################################################
 //# Type forward declarations
 //###############################################################################
 class Math;
+} namespace $extensions {
+} namespace System {
 //###############################################################################
 //# Type definitions
 //###############################################################################
 #line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 	struct Math : public Builtin::StaticClass {
-		public: using __self = Math;
+		public: using $self = Math;
 		#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		private: using IsqrtData = std::tuple<Builtin::u8, Builtin::u8>;
 		private: Math() = default;
 		#line 34 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-		private: template<__ImplementsInterface_IFixedWidthInteger T> inline constexpr static auto _isqrtFirstStage(T num)  -> const std::tuple<Builtin::u8, Builtin::u8>;
+		private: template<$ImplementsInterface_IFixedWidthInteger T> inline constexpr static auto _isqrtFirstStage(T num)  -> const std::tuple<Builtin::u8, Builtin::u8>;
 		#line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-		private: template<__ImplementsInterface_IFixedWidthInteger T, __ImplementsInterface_IFixedWidthInteger U> inline constexpr static auto _isqrtMiddleStage(T num, auto root, auto rem)  -> const std::tuple<U, U>;
+		private: template<$ImplementsInterface_IFixedWidthInteger T, $ImplementsInterface_IFixedWidthInteger U> inline constexpr static auto _isqrtMiddleStage(T num, auto root, auto rem)  -> const std::tuple<U, U>;
 		#line 70 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-		private: template<__ImplementsInterface_IFixedWidthInteger T> inline constexpr static auto _isqrtLastStage(T num, auto root, auto rem)  -> const T;
+		private: template<$ImplementsInterface_IFixedWidthInteger T> inline constexpr static auto _isqrtLastStage(T num, auto root, auto rem)  -> const T;
 		#line 90 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		public: inline constexpr static auto Isqrt8(Builtin::u8 num) noexcept -> const Builtin::u8;
 		#line 92 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
@@ -58,7 +60,7 @@ class Math;
 			while ((n <=> Builtin::i32(256)) < 0) 
 			{
 				#line 23 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-				ADV_UFCS(_operator_subscript)(result.__ref(), n) = std::make_tuple(Builtin::Cast<true, Builtin::u8>(rootN), Builtin::Cast<true, Builtin::u8>((n - ADV_UFCS(_operator_xor_xor)(rootN, Builtin::u32(2U)))));
+				ADV_UFCS(_operator_subscript)(result.$ref(), Builtin::Cast<true, Builtin::i32>(n)) = std::make_tuple(Builtin::Cast<true, Builtin::u8>(rootN), Builtin::Cast<true, Builtin::u8>((n - ADV_UFCS(_operator_xor_xor)(rootN, Builtin::u32(2U)))));
 				#line 24 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 				n++;
 				#line 25 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
@@ -80,7 +82,7 @@ class Math;
 //###############################################################################
 
 #line 34 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-	template<__ImplementsInterface_IFixedWidthInteger T> inline constexpr auto Math::_isqrtFirstStage(T num)  -> const std::tuple<Builtin::u8, Builtin::u8>
+	template<$ImplementsInterface_IFixedWidthInteger T> inline constexpr auto Math::_isqrtFirstStage(T num)  -> const std::tuple<Builtin::u8, Builtin::u8>
 	{
 		#line 36 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		ADV_ASSERT((num != Builtin::i32(0)), "num!=0");
@@ -89,10 +91,10 @@ class Math;
 		#line 39 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		num >>= Builtin::Cast<true, Builtin::i32>(SHIFT);
 		#line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-		return ADV_UFCS(_operator_subscript)(_isqrtLookupTable.__ref(), Builtin::Cast<true, Builtin::usize>(num));
+		return ADV_UFCS(_operator_subscript)(_isqrtLookupTable.$ref(), Builtin::Cast<true, Builtin::i32>(num));
 	}
 #line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-	template<__ImplementsInterface_IFixedWidthInteger T, __ImplementsInterface_IFixedWidthInteger U> inline constexpr auto Math::_isqrtMiddleStage(T num, auto root, auto rem)  -> const std::tuple<U, U>
+	template<$ImplementsInterface_IFixedWidthInteger T, $ImplementsInterface_IFixedWidthInteger U> inline constexpr auto Math::_isqrtMiddleStage(T num, auto root, auto rem)  -> const std::tuple<U, U>
 	{
 		#line 45 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		ADV_ASSERT((root != Builtin::i32(0)), "root!=0");
@@ -135,7 +137,7 @@ class Math;
 		return std::make_tuple(s, r);
 	}
 #line 70 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-	template<__ImplementsInterface_IFixedWidthInteger T> inline constexpr auto Math::_isqrtLastStage(T num, auto root, auto rem)  -> const T
+	template<$ImplementsInterface_IFixedWidthInteger T> inline constexpr auto Math::_isqrtLastStage(T num, auto root, auto rem)  -> const T
 	{
 		#line 72 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		ADV_ASSERT((root != Builtin::i32(0)), "root!=0");
@@ -169,7 +171,7 @@ class Math;
 	inline constexpr auto Math::Isqrt8(Builtin::u8 num) noexcept -> const Builtin::u8
 	{
 		#line 90 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-		ADV_EXPRESSION_BODY(std::get<0>(ADV_UFCS(_operator_subscript)(_isqrtLookupTable.__ref(), Builtin::Cast<true, Builtin::usize>(num)))); 
+		ADV_EXPRESSION_BODY(std::get<0>(ADV_UFCS(_operator_subscript)(_isqrtLookupTable.$ref(), Builtin::Cast<true, Builtin::i32>(num)))); 
 	}
 #line 92 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 	inline constexpr auto Math::Isqrt16(Builtin::u16 num)  -> const Builtin::u16
@@ -180,7 +182,7 @@ class Math;
 			return Isqrt8(Builtin::Cast<true, Builtin::u8>(num));
 		}
 		#line 98 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-		const Builtin::Auto<decltype(ADV_UPCS(LeadingZeroCount)(num.__ref()) & EVEN_MAKING_BITMASK)> normShift = ADV_UPCS(LeadingZeroCount)(num.__ref()) & EVEN_MAKING_BITMASK; 
+		const Builtin::Auto<decltype(ADV_UPCS(LeadingZeroCount)(num.$ref()) & EVEN_MAKING_BITMASK)> normShift = ADV_UPCS(LeadingZeroCount)(num.$ref()) & EVEN_MAKING_BITMASK; 
 		#line 99 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		num <<= normShift;
 		#line 101 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
@@ -201,7 +203,7 @@ class Math;
 			return Isqrt16(Builtin::Cast<true, Builtin::u16>(num));
 		}
 		#line 114 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-		const Builtin::Auto<decltype(ADV_UPCS(LeadingZeroCount)(num.__ref()) & EVEN_MAKING_BITMASK)> normShift = ADV_UPCS(LeadingZeroCount)(num.__ref()) & EVEN_MAKING_BITMASK; 
+		const Builtin::Auto<decltype(ADV_UPCS(LeadingZeroCount)(num.$ref()) & EVEN_MAKING_BITMASK)> normShift = ADV_UPCS(LeadingZeroCount)(num.$ref()) & EVEN_MAKING_BITMASK; 
 		#line 115 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		num <<= normShift;
 		#line 117 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
@@ -224,7 +226,7 @@ class Math;
 			return Isqrt32(Builtin::Cast<true, Builtin::u32>(num));
 		}
 		#line 131 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-		const Builtin::Auto<decltype(ADV_UPCS(LeadingZeroCount)(num.__ref()) & EVEN_MAKING_BITMASK)> normShift = ADV_UPCS(LeadingZeroCount)(num.__ref()) & EVEN_MAKING_BITMASK; 
+		const Builtin::Auto<decltype(ADV_UPCS(LeadingZeroCount)(num.$ref()) & EVEN_MAKING_BITMASK)> normShift = ADV_UPCS(LeadingZeroCount)(num.$ref()) & EVEN_MAKING_BITMASK; 
 		#line 132 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		num <<= normShift;
 		#line 134 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
@@ -249,7 +251,7 @@ class Math;
 			return Isqrt64(Builtin::Cast<true, Builtin::u64>(num));
 		}
 		#line 149 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-		const Builtin::Auto<decltype(ADV_UPCS(LeadingZeroCount)(num.__ref()) & EVEN_MAKING_BITMASK)> normShift = ADV_UPCS(LeadingZeroCount)(num.__ref()) & EVEN_MAKING_BITMASK; 
+		const Builtin::Auto<decltype(ADV_UPCS(LeadingZeroCount)(num.$ref()) & EVEN_MAKING_BITMASK)> normShift = ADV_UPCS(LeadingZeroCount)(num.$ref()) & EVEN_MAKING_BITMASK; 
 		#line 150 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		num <<= Builtin::Cast<true, Builtin::i32>(normShift);
 		#line 152 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"

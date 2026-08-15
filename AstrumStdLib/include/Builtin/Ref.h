@@ -6,51 +6,51 @@ namespace Builtin {
 
 	template <class T>
 	struct MutableRef : public RefStruct {
-		using __ref_underlying_type = Auto<T>;
-		using Type                  = __ref_underlying_type;
+		using $ref_underlying_type = Auto<T>;
+		using Type                 = $ref_underlying_type;
 
 	   private:
-		__ref_underlying_type* ptr = nullptr;
+		$ref_underlying_type* ptr = nullptr;
 
-		constexpr __ref_underlying_type& get() const {
+		constexpr $ref_underlying_type& get() const {
 			if (ptr != nullptr)
 				LIKELY { return *ptr; }
 			throw NullReferenceException {};
 			return *ptr;
 		}
 
-		using __selfRef = MutableRef<T>;
+		using $selfRef = MutableRef<T>;
 
 	   public:
-		using __self  = typename Builtin::SelfProxyType<__ref_underlying_type>;
-		using __class = typename Builtin::ClassProxyType<__ref_underlying_type>;
+		using $self  = typename Builtin::SelfProxyType<$ref_underlying_type>;
+		using $class = typename Builtin::ClassProxyType<$ref_underlying_type>;
 
-		constexpr decltype(auto) __ref() const noexcept { return get(); }
+		constexpr decltype(auto) $ref() const noexcept { return get(); }
 
-		constexpr MutableRef() noexcept                 = default;
-		constexpr MutableRef(const __selfRef&) noexcept = default;
-		constexpr MutableRef(__selfRef&&) noexcept      = default;
-		MutableRef(decltype(nullptr))                   = delete;
+		constexpr MutableRef() noexcept                = default;
+		constexpr MutableRef(const $selfRef&) noexcept = default;
+		constexpr MutableRef($selfRef&&) noexcept      = default;
+		MutableRef(decltype(nullptr))                  = delete;
 
-		constexpr explicit MutableRef(__ref_underlying_type& ref) noexcept
+		constexpr explicit MutableRef($ref_underlying_type& ref) noexcept
 		    : ptr {std::addressof(ref)} {}
-		explicit MutableRef(const __ref_underlying_type& ref)  = delete;
-		explicit MutableRef(__ref_underlying_type&& ref)       = delete;
-		explicit MutableRef(const __ref_underlying_type&& ref) = delete;
+		explicit MutableRef(const $ref_underlying_type& ref)  = delete;
+		explicit MutableRef($ref_underlying_type&& ref)       = delete;
+		explicit MutableRef(const $ref_underlying_type&& ref) = delete;
 
-		constexpr __selfRef& operator=(const __selfRef&) noexcept = default;
-		constexpr __selfRef& operator=(__selfRef&&) noexcept = default;
-		constexpr __selfRef& operator=(const __selfRef&) const = delete;
-		constexpr __selfRef& operator=(__selfRef&&) const = delete;
+		constexpr $selfRef& operator=(const $selfRef&) noexcept = default;
+		constexpr $selfRef& operator=($selfRef&&) noexcept = default;
+		constexpr $selfRef& operator=(const $selfRef&) const = delete;
+		constexpr $selfRef& operator=($selfRef&&) const = delete;
 		template <class U>
-		constexpr const __selfRef& operator=(U&& val) const
-		    noexcept(std::is_nothrow_assignable_v<__ref_underlying_type, U>) requires(
-		        std::is_assignable_v<__ref_underlying_type, U>) {
+		constexpr const $selfRef& operator=(U&& val) const
+		    noexcept(std::is_nothrow_assignable_v<$ref_underlying_type, U>) requires(
+		        std::is_assignable_v<$ref_underlying_type, U>) {
 			get() = std::forward<U>(val);
 			return *this;
 		}
 
-		constexpr operator __ref_underlying_type&() const { return get(); }
+		constexpr operator $ref_underlying_type&() const { return get(); }
 
 		FORCE_INLINE constexpr decltype(auto) operator+() const requires requires(T t) { t = +t; }
 		{ return +get(); }
@@ -60,9 +60,9 @@ namespace Builtin {
 		{ return ~get(); }
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator+(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() +
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() + other);
@@ -70,9 +70,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator-(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() -
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() - other);
@@ -80,9 +80,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator*(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() *
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() * other);
@@ -90,9 +90,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator/(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() /
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() / other);
@@ -100,9 +100,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator%(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() %
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() % other);
@@ -110,9 +110,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator&(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() &
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() & other);
@@ -120,9 +120,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator|(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() |
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() | other);
@@ -130,9 +130,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator^(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() ^
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() ^ other);
@@ -140,9 +140,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator<<(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (
-				    get() << static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				    get() << static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				        std::forward<_ElemRight>(other)));
 			} else {
 				return (get() << other);
@@ -150,9 +150,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator>>(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() >>
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() >> other);
@@ -160,11 +160,11 @@ namespace Builtin {
 		}
 		template <class... _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) _operator_subscript(_ElemRight&&... other) {
-			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);
+			return get().$ref()._operator_subscript(std::forward<_ElemRight>(other)...);
 		}
 		template <class... _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) _operator_subscript(_ElemRight&&... other) const {
-			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);
+			return get().$ref()._operator_subscript(std::forward<_ElemRight>(other)...);
 		}
 		template <class... Args>
 		FORCE_INLINE constexpr decltype(auto) operator()(Args&&... other) {
@@ -183,9 +183,9 @@ namespace Builtin {
 		{ return *get(); }
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator==(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() ==
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() == other);
@@ -193,9 +193,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator!=(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() !=
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() != other);
@@ -203,9 +203,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr int operator<=>(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() <=>
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() <=> other);
@@ -218,9 +218,9 @@ namespace Builtin {
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator+=(_ElemRight&& other) const
 		/*requires requires(T t, _ElemRight u) { t = t += u; }*/ {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() +=
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() += other);
@@ -229,9 +229,9 @@ namespace Builtin {
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator-=(_ElemRight&& other) const
 		/*requires requires(T t, _ElemRight u) { t = t -= u; }*/ {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() -=
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() -= other);
@@ -240,9 +240,9 @@ namespace Builtin {
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator*=(_ElemRight&& other) const
 		/*requires requires(T t, _ElemRight u) { t = t *= u; }*/ {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() *=
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() *= other);
@@ -251,9 +251,9 @@ namespace Builtin {
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator/=(_ElemRight&& other) const
 		/*requires requires(T t, _ElemRight u) { t = t /= u; }*/ {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() /=
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() /= other);
@@ -262,9 +262,9 @@ namespace Builtin {
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator%=(_ElemRight&& other) const
 		/*requires requires(T t, _ElemRight u) { t = t %= u; }*/ {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() %=
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() %= other);
@@ -273,9 +273,9 @@ namespace Builtin {
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator&=(_ElemRight&& other) const
 		/*requires requires(T t, _ElemRight u) { t = t &= u; }*/ {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() &=
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() &= other);
@@ -284,9 +284,9 @@ namespace Builtin {
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator|=(_ElemRight&& other) const
 		/*requires requires(T t, _ElemRight u) { t = t |= u; }*/ {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() |=
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() |= other);
@@ -295,9 +295,9 @@ namespace Builtin {
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator^=(_ElemRight&& other) const
 		/*requires requires(T t, _ElemRight u) { t = t ^= u; }*/ {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() ^=
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() ^= other);
@@ -306,9 +306,9 @@ namespace Builtin {
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator<<=(_ElemRight&& other) const
 		/*requires requires(T t, _ElemRight u) { t = t <<= u; }*/ {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() <<=
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() <<= other);
@@ -317,9 +317,9 @@ namespace Builtin {
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator>>=(_ElemRight&& other) const
 		/*requires requires(T t, _ElemRight u) { t = t >>= u; }*/ {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() >>=
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() >>= other);
@@ -339,53 +339,53 @@ namespace Builtin {
 
 	template <class T>
 	struct Ref : public RefStruct {
-		using __ref_underlying_type = Auto<T>;
-		using Type                  = __ref_underlying_type;
+		using $ref_underlying_type = Auto<T>;
+		using Type                 = $ref_underlying_type;
 
 	   private:
-		const __ref_underlying_type* ptr = nullptr;
+		const $ref_underlying_type* ptr = nullptr;
 
-		constexpr const __ref_underlying_type& get() const {
+		constexpr const $ref_underlying_type& get() const {
 			if (ptr != nullptr)
 				LIKELY { return *ptr; }
 			throw NullReferenceException {};
 			return *ptr;
 		}
 
-		using __selfRef = Ref<T>;
+		using $selfRef = Ref<T>;
 
 	   public:
-		using __self  = typename Builtin::SelfProxyType<__ref_underlying_type>;
-		using __class = typename Builtin::ClassProxyType<__ref_underlying_type>;
+		using $self  = typename Builtin::SelfProxyType<$ref_underlying_type>;
+		using $class = typename Builtin::ClassProxyType<$ref_underlying_type>;
 
-		constexpr decltype(auto) __ref() const noexcept { return get(); }
+		constexpr decltype(auto) $ref() const noexcept { return get(); }
 
-		constexpr Ref() noexcept                 = default;
-		constexpr Ref(const __selfRef&) noexcept = default;
-		constexpr Ref(__selfRef&&) noexcept      = default;
-		Ref(decltype(nullptr))                   = delete;
+		constexpr Ref() noexcept                = default;
+		constexpr Ref(const $selfRef&) noexcept = default;
+		constexpr Ref($selfRef&&) noexcept      = default;
+		Ref(decltype(nullptr))                  = delete;
 
 		constexpr Ref(MutableRef<T> ref) noexcept
-		    : ptr {std::bit_cast<const __ref_underlying_type*>(ref)} {}
-		constexpr Ref(__ref_underlying_type& ref) noexcept : ptr {std::addressof(ref)} {}
-		constexpr Ref(const __ref_underlying_type& ref) noexcept : ptr {std::addressof(ref)} {}
-		Ref(__ref_underlying_type&& ref)       = delete;
-		Ref(const __ref_underlying_type&& ref) = delete;
+		    : ptr {std::bit_cast<const $ref_underlying_type*>(ref)} {}
+		constexpr Ref($ref_underlying_type& ref) noexcept : ptr {std::addressof(ref)} {}
+		constexpr Ref(const $ref_underlying_type& ref) noexcept : ptr {std::addressof(ref)} {}
+		Ref($ref_underlying_type&& ref)       = delete;
+		Ref(const $ref_underlying_type&& ref) = delete;
 
-		constexpr __selfRef& operator=(const __selfRef&) noexcept = default;
-		constexpr __selfRef& operator=(__selfRef&&) noexcept = default;
-		constexpr __selfRef& operator=(__ref_underlying_type& val) noexcept {
+		constexpr $selfRef& operator=(const $selfRef&) noexcept = default;
+		constexpr $selfRef& operator=($selfRef&&) noexcept = default;
+		constexpr $selfRef& operator                       =($ref_underlying_type& val) noexcept {
+            ptr = std::addressof(val);
+            return *this;
+		}
+		constexpr $selfRef& operator=(const $ref_underlying_type& val) noexcept {
 			ptr = std::addressof(val);
 			return *this;
 		}
-		constexpr __selfRef& operator=(const __ref_underlying_type& val) noexcept {
-			ptr = std::addressof(val);
-			return *this;
-		}
-		__selfRef& operator=(__ref_underlying_type&&) = delete;
-		__selfRef& operator=(const __ref_underlying_type&&) = delete;
+		$selfRef& operator=($ref_underlying_type&&) = delete;
+		$selfRef& operator=(const $ref_underlying_type&&) = delete;
 
-		constexpr operator const __ref_underlying_type&() const { return get(); }
+		constexpr operator const $ref_underlying_type&() const { return get(); }
 
 		FORCE_INLINE constexpr decltype(auto) operator+() const requires requires(T t) { t = +t; }
 		{ return +get(); }
@@ -395,9 +395,9 @@ namespace Builtin {
 		{ return ~get(); }
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator+(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() +
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() + other);
@@ -405,9 +405,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator-(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() -
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() - other);
@@ -415,9 +415,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator*(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() *
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() * other);
@@ -425,9 +425,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator/(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() /
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() / other);
@@ -435,9 +435,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator%(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() %
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() % other);
@@ -445,9 +445,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator&(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() &
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() & other);
@@ -455,9 +455,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator|(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() |
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() | other);
@@ -465,9 +465,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator^(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() ^
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() ^ other);
@@ -475,9 +475,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator<<(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (
-				    get() << static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				    get() << static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				        std::forward<_ElemRight>(other)));
 			} else {
 				return (get() << other);
@@ -485,9 +485,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator>>(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() >>
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() >> other);
@@ -495,11 +495,11 @@ namespace Builtin {
 		}
 		template <class... _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) _operator_subscript(_ElemRight&&... other) {
-			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);
+			return get().$ref()._operator_subscript(std::forward<_ElemRight>(other)...);
 		}
 		template <class... _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) _operator_subscript(_ElemRight&&... other) const {
-			return get().__ref()._operator_subscript(std::forward<_ElemRight>(other)...);
+			return get().$ref()._operator_subscript(std::forward<_ElemRight>(other)...);
 		}
 		template <class... Args>
 		FORCE_INLINE constexpr decltype(auto) operator()(Args&&... other) {
@@ -518,9 +518,9 @@ namespace Builtin {
 		{ return *get(); }
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator==(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() ==
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() == other);
@@ -528,9 +528,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr decltype(auto) operator!=(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() !=
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() != other);
@@ -538,9 +538,9 @@ namespace Builtin {
 		}
 		template <class _ElemRight>
 		FORCE_INLINE constexpr int operator<=>(_ElemRight&& other) const {
-			if constexpr (requires { typename std::decay_t<_ElemRight>::__ref_underlying_type; }) {
+			if constexpr (requires { typename std::decay_t<_ElemRight>::$ref_underlying_type; }) {
 				return (get() <=>
-				        static_cast<typename std::decay_t<_ElemRight>::__ref_underlying_type>(
+				        static_cast<typename std::decay_t<_ElemRight>::$ref_underlying_type>(
 				            std::forward<_ElemRight>(other)));
 			} else {
 				return (get() <=> other);
@@ -560,32 +560,32 @@ namespace Builtin {
 namespace std {
 	template <class T>
 	inline constexpr auto addressof(Builtin::MutableRef<T> ref) noexcept {
-		return std::bit_cast<typename Builtin::MutableRef<T>::__ref_underlying_type*>(ref);
+		return std::bit_cast<typename Builtin::MutableRef<T>::$ref_underlying_type*>(ref);
 	}
 
 	template <class T>
 	inline constexpr auto addressof(Builtin::Ref<T> ref) noexcept {
-		return std::bit_cast<const typename Builtin::Ref<T>::__ref_underlying_type*>(ref);
+		return std::bit_cast<const typename Builtin::Ref<T>::$ref_underlying_type*>(ref);
 	}
 }  // namespace std
 
-namespace __extensions {
+namespace $extensions {
 	template <typename T>
-	struct __proxy {
-		using __self                     = typename std::decay_t<T>::__self;
-		using __class                    = typename std::decay_t<T>::__class;
-		using __property_underlying_type = __self;
+	struct $proxy {
+		using $self                     = typename std::remove_cvref_t<T>::$self;
+		using $class                    = typename std::remove_cvref_t<T>::$class;
+		using $property_underlying_type = $self;
 
 		T val;
 
-		inline constexpr operator __self() const { return val; }
-		inline constexpr operator __self&() { return val; }
-		inline constexpr operator Builtin::MutableRef<__self>() {
-			return Builtin::MutableRef<__self>(val);
+		inline constexpr operator $self() const { return val; }
+		inline constexpr operator $self&() { return val; }
+		inline constexpr operator Builtin::MutableRef<$self>() {
+			return Builtin::MutableRef<$self>(val);
 		}
 	};
-}  // namespace __extensions
+}  // namespace $extensions
 
 inline bool _operator_ne_eq_mul(auto lhs, auto rhs) {
-	return !_operator_eq_eq_mul(__extensions::__proxy {lhs}, rhs);
+	return !_operator_eq_eq_mul($extensions::$proxy {lhs}, rhs);
 }

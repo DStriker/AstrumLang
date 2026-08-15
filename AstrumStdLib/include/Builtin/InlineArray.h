@@ -4,8 +4,10 @@
 #include "Types.h"
 
 namespace Builtin {
+	template <size_t S, class T, bool IsConstStrArray>
+	class $Class_InlineArray;
 	template <class T>
-	class __Class_Basic;
+	class $Class_Basic;
 
 	template <size_t S, class T, bool IsConstStrArray = false>
 	class InlineArray : public Struct {
@@ -16,13 +18,13 @@ namespace Builtin {
 		              "Inline array doesn't support ref structs");
 
 	   public:
-		using __self                   = InlineArray<S, T, IsConstStrArray>;
-		using __class                  = __Class_Basic<__self>;
+		using $self                    = InlineArray<S, T, IsConstStrArray>;
+		using $class                   = $Class_InlineArray<S, T, IsConstStrArray>;
 		using ElementType              = T;
 		static constexpr size_t Length = S;
 
-		constexpr __self& __ref() noexcept { return *this; }
-		constexpr const __self& __ref() const noexcept { return *this; }
+		constexpr $self& $ref() noexcept { return *this; }
+		constexpr const $self& $ref() const noexcept { return *this; }
 
 		constexpr InlineArray() {
 			for (int i = 0; i < S; i++) { arr[i] = T {}; }
@@ -52,7 +54,7 @@ namespace Builtin {
 		constexpr T& GetDataReference() noexcept { return arr[0]; }
 		constexpr const T& GetDataReference() const noexcept { return arr[0]; }
 
-		constexpr bool operator==(const __self& other) const noexcept {
+		constexpr bool operator==(const $self& other) const noexcept {
 			for (int i = 0; i < S; i++) {
 				if (arr[i] != other[i])
 					return false;
@@ -61,23 +63,23 @@ namespace Builtin {
 		}
 
 		template <bool IsConst = true>
-		class __Class_Iterator;
+		class $Class_Iterator;
 
 		template <bool IsConst = true>
 		struct Iterator : public Struct {
 			using ElementType = T;
-			using __self      = Iterator<IsConst>;
-			using __class     = __Class_Iterator<IsConst>;
-			constexpr __self& __ref() noexcept { return *this; }
-			constexpr const __self& __ref() const noexcept { return *this; }
+			using $self       = Iterator<IsConst>;
+			using $class      = $Class_Iterator<IsConst>;
+			constexpr $self& $ref() noexcept { return *this; }
+			constexpr const $self& $ref() const noexcept { return *this; }
 
 		   private:
 			using PtrType = std::conditional_t<IsConst, const T*, T*>;
 			PtrType ptr;
 			size_t index = size_t(-1);
 
-
 		   public:
+			constexpr Iterator() noexcept = default;
 			constexpr Iterator(PtrType ref) noexcept : ptr(ref) {}
 
 			constexpr bool MoveNext() noexcept {
@@ -96,16 +98,16 @@ namespace Builtin {
 		};
 
 		template <bool IsConst>
-		class __Class_Iterator : public ValueType {
+		class $Class_Iterator : public ValueType {
 			Iterator<IsConst> __value;
 
 		   public:
-			using __self       = Iterator<IsConst>;
-			using __underlying = __self;
-			__Class_Iterator(const __underlying& value) noexcept(
-			    std::is_nothrow_copy_constructible_v<__underlying>)
+			using $self        = Iterator<IsConst>;
+			using $underlying = $self;
+			$Class_Iterator(const $underlying& value) noexcept(
+			    std::is_nothrow_copy_constructible_v<$underlying>)
 			    : __value {value} {}
-			operator __underlying() const noexcept { return __value; }
+			operator $underlying() const noexcept { return __value; }
 
 			constexpr bool MoveNext() noexcept { return __value.MoveNext(); }
 
@@ -114,16 +116,31 @@ namespace Builtin {
 				return __value.GetCurrentRef();
 			}
 		};
+
+		auto Iterate() noexcept {
+			return Iterator<false>(
+			    &GetDataReference());
+		}
+		auto Iterate() const noexcept {
+			return Iterator<true>(&GetDataReference());
+		}
 	};
 
-	template <class T, size_t S, bool IsConstStr>
-	auto Iterate(InlineArray<S, T, IsConstStr>& arr) noexcept {
-		return typename InlineArray<S, T, IsConstStr>::Iterator<false>(&arr.GetDataReference());
-	}
-	template <class T, size_t S, bool IsConstStr>
-	auto Iterate(const InlineArray<S, T, IsConstStr>& arr) noexcept {
-		return typename InlineArray<S, T, IsConstStr>::Iterator<true>(&arr.GetDataReference());
-	}
+	template <size_t S, class T, bool IsConstStrArray>
+	class $Class_InlineArray : public ValueType {
+		InlineArray<S, T, IsConstStrArray> __value;
+
+	   public:
+		using $self       = InlineArray<S, T, IsConstStrArray>;
+		using $underlying = InlineArray<S, T, IsConstStrArray>;
+		$Class_InlineArray(const $underlying& value) noexcept(
+		    std::is_nothrow_copy_constructible_v<$underlying>)
+		    : __value {value} {}
+		operator $underlying() const noexcept { return __value; }
+
+		auto Iterate() noexcept { return __value.Iterate(); }
+		auto Iterate() const noexcept { return __value.Iterate(); }
+	};
 
 	template <class T, size_t S, size_t... I>
 	constexpr InlineArray<S, std::remove_cv_t<T>> _to_array_lvalue_impl(T (&arr)[S],
@@ -139,13 +156,13 @@ namespace Builtin {
 
 	template <size_t S, size_t... I>
 	constexpr InlineArray<S, Str, true> _to_array_lvalue_impl_str(Str (&arr)[S],
-	                                                                    std::index_sequence<I...>) {
+	                                                              std::index_sequence<I...>) {
 		return {arr[I]...};
 	}
 
 	template <size_t S, size_t... I>
 	constexpr InlineArray<S, Str, true> _to_array_rvalue_impl_str(Str(&&arr)[S],
-	                                                                    std::index_sequence<I...>) {
+	                                                              std::index_sequence<I...>) {
 		return {std::move(arr[I])...};
 	}
 
@@ -183,11 +200,11 @@ namespace Builtin {
 		std::initializer_list<T> initList;
 
 	   public:
-		using __self  = InitializerList<T>;
-		using __class = __Class_Basic<__self>;
+		using $self  = InitializerList<T>;
+		using $class = $Class_Basic<$self>;
 
-		constexpr auto& __ref() noexcept { return *this; }
-		constexpr const auto& __ref() const noexcept { return *this; }
+		constexpr auto& $ref() noexcept { return *this; }
+		constexpr const auto& $ref() const noexcept { return *this; }
 		constexpr InitializerList(std::initializer_list<T> lst) noexcept : initList(lst) {}
 
 		constexpr operator std::initializer_list<T>() const noexcept { return initList; }
@@ -205,11 +222,11 @@ namespace Builtin {
 
 	   public:
 		using ElementType = T;
-		using __self      = InitializerListIterator<T>;
-		using __class     = __Class_Basic<__self>;
+		using $self       = InitializerListIterator<T>;
+		using $class      = $Class_Basic<$self>;
 
-		constexpr auto& __ref() noexcept { return *this; }
-		constexpr const auto& __ref() const noexcept { return *this; }
+		constexpr auto& $ref() noexcept { return *this; }
+		constexpr const auto& $ref() const noexcept { return *this; }
 		constexpr explicit InitializerListIterator(Builtin::InitializerList<T> initList) noexcept
 		    : begin {initList.begin()}, length {initList.size()} {}
 
@@ -236,6 +253,7 @@ namespace Builtin {
 			return true;
 		}
 	};
+
 }  // namespace Builtin
 
 template <class T>

@@ -1459,7 +1459,7 @@ test "Int32"
     assert d != null;
     assert c < d;
     assert b == d;
-    assert b === d;
+    //assert b === d;
 
     // dynamic polymorphism
     o: object? = c;

@@ -11,65 +11,65 @@ namespace System {
 	
 	
 
-#line 65 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-	static_assert(Builtin::usize(sizeof(Builtin::InlineArray<Builtin::i32(5), Builtin::i32>)) == Builtin::i32(20), "Fixed array should be sizeof(T) * S bytes");
-#line 66 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-	static_assert(Builtin::TypeIs<Builtin::InlineArray<Builtin::i32(5), Builtin::i32>, ISelfEquatable>(), "Fixed array should implement ISelfEquatable");
-#line 67 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-	static_assert(Builtin::TypeIs<Builtin::InlineArray<Builtin::i32(5), Builtin::i32>, IAbstractSequence>(), "Fixed array should implement IAbstractSequence");
 #line 68 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-	static_assert(Builtin::TypeIs<Builtin::InlineArray<Builtin::i32(5), Builtin::i32>, ISequence<Builtin::i32>>(), "Fixed array should implement ISequence<T>");
+	static_assert(Builtin::usize(sizeof(Builtin::InlineArray<Builtin::i32(5), Builtin::i32>)) == Builtin::i32(20), "Fixed array should be sizeof(T) * S bytes");
 #line 69 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-	static_assert(Builtin::TypeIs<typename InlineArray<i32,5>::Iterator<Builtin::Boolean(true)>, IAbstractIterator>(), "Fixed array iterator should implement IAbstractIterator");
+	static_assert(Builtin::TypeIs<Builtin::InlineArray<Builtin::i32(5), Builtin::i32>, ISelfEquatable>(), "Fixed array should implement ISelfEquatable");
 #line 70 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-	static_assert(Builtin::TypeIs<typename InlineArray<i32,5>::Iterator<Builtin::Boolean(true)>, IIterator<Builtin::i32>>(), "Fixed array iterator should implement IIterator<T>");
+	static_assert(Builtin::TypeIs<Builtin::InlineArray<Builtin::i32(5), Builtin::i32>, IAbstractSequence>(), "Fixed array should implement IAbstractSequence");
 #line 71 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-	static_assert(Builtin::TypeIs<typename InlineArray<i32,5>::Iterator<Builtin::Boolean(false)>, IAbstractIterator>(), "Fixed array iterator should implement IAbstractIterator");
+	static_assert(Builtin::TypeIs<Builtin::InlineArray<Builtin::i32(5), Builtin::i32>, ISequence<Builtin::i32>>(), "Fixed array should implement ISequence<T>");
 #line 72 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-	static_assert(Builtin::TypeIs<typename InlineArray<i32,5>::Iterator<Builtin::Boolean(false)>, IIterator<Builtin::i32>>(), "Fixed array iterator should implement IIterator<T>");
+	static_assert(Builtin::TypeIs<typename InlineArray<i32,5>::template Iterator<Builtin::Boolean(true)>, IAbstractIterator>(), "Fixed array iterator should implement IAbstractIterator");
 #line 73 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-	static_assert(Builtin::TypeIs<typename InlineArray<i32,5>::Iterator<Builtin::Boolean(false)>, IAbstractRefIterator>(), "Fixed array iterator should implement IAbstractRefIterator");
+	static_assert(Builtin::TypeIs<typename InlineArray<i32,5>::template Iterator<Builtin::Boolean(true)>, IIterator<Builtin::i32>>(), "Fixed array iterator should implement IIterator<T>");
 #line 74 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-	static_assert(Builtin::TypeIs<typename InlineArray<i32,5>::Iterator<Builtin::Boolean(false)>, IRefIterator<Builtin::i32>>(), "Fixed array iterator should implement IRefIterator<T>");
+	static_assert(Builtin::TypeIs<typename InlineArray<i32,5>::template Iterator<Builtin::Boolean(false)>, IAbstractIterator>(), "Fixed array iterator should implement IAbstractIterator");
+#line 75 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	static_assert(Builtin::TypeIs<typename InlineArray<i32,5>::template Iterator<Builtin::Boolean(false)>, IIterator<Builtin::i32>>(), "Fixed array iterator should implement IIterator<T>");
+#line 76 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	static_assert(Builtin::TypeIs<typename InlineArray<i32,5>::template Iterator<Builtin::Boolean(false)>, IAbstractRefIterator>(), "Fixed array iterator should implement IAbstractRefIterator");
+#line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	static_assert(Builtin::TypeIs<typename InlineArray<i32,5>::template Iterator<Builtin::Boolean(false)>, IRefIterator<Builtin::i32>>(), "Fixed array iterator should implement IRefIterator<T>");
 #ifdef ADV_UNITTEST
-	#line 76 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-	static bool __Test_02e41e24b701f471 = [](){
-		#line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		auto arr = Builtin::ToInlineArray<Builtin::i32>({Builtin::i32(Builtin::i32(1)), Builtin::i32(Builtin::i32(2)), Builtin::i32(Builtin::i32(3)), Builtin::i32(Builtin::i32(4)), Builtin::i32(Builtin::i32(5))}); 
-		#line 78 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		ADV_ASSERT((ADV_UPCS(Length)(arr.__ref()) == Builtin::i32(5)), "arr.Length==5");
-		#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		auto sp = ADV_UFCS(_operator_subscript)(arr.__ref(), System::IndexRange(System::Index::Start, ADV_UFCS(_operator_xor)(Builtin::u32(1U)), false)); 
+	#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	static bool $Test_02e41e24b701f471 = [](){
 		#line 80 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		ADV_ASSERT((ADV_UPCS(Length)(sp.__ref()) == Builtin::i32(4)), "sp.Length==4");
+		auto arr = Builtin::ToInlineArray<Builtin::i32>({Builtin::i32(Builtin::i32(1)), Builtin::i32(Builtin::i32(2)), Builtin::i32(Builtin::i32(3)), Builtin::i32(Builtin::i32(4)), Builtin::i32(Builtin::i32(5))}); 
 		#line 81 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_subscript)(sp.__ref(), Builtin::i32(0)) == Builtin::i32(1)), "sp[0]==1");
+		ADV_ASSERT((ADV_UPCS(Length)(arr.$ref()) == Builtin::i32(5)), "arr.Length==5");
 		#line 82 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_subscript)(sp.__ref(), Builtin::i32(1)) == Builtin::i32(2)), "sp[1]==2");
+		auto sp = ADV_UFCS(_operator_subscript)(arr.$ref(), System::IndexRange(System::Index::Start, ADV_UFCS(_operator_xor)(Builtin::u32(1U)), false)); 
 		#line 83 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_subscript)(sp.__ref(), Builtin::i32(2)) == Builtin::i32(3)), "sp[2]==3");
+		ADV_ASSERT((ADV_UPCS(Length)(sp.$ref()) == Builtin::i32(4)), "sp.Length==4");
 		#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_subscript)(sp.__ref(), Builtin::i32(3)) == Builtin::i32(4)), "sp[3]==4");
+		ADV_ASSERT((ADV_UFCS(_operator_subscript)(sp.$ref(), Builtin::i32(0)) == Builtin::i32(1)), "sp[0]==1");
 		#line 85 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		sp = Builtin::MutableRef(arr);
+		ADV_ASSERT((ADV_UFCS(_operator_subscript)(sp.$ref(), Builtin::i32(1)) == Builtin::i32(2)), "sp[1]==2");
 		#line 86 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		ADV_ASSERT((ADV_UPCS(Length)(sp.__ref()) == Builtin::i32(5)), "sp.Length==5");
+		ADV_ASSERT((ADV_UFCS(_operator_subscript)(sp.$ref(), Builtin::i32(2)) == Builtin::i32(3)), "sp[2]==3");
 		#line 87 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		ADV_UFCS(_operator_subscript)(arr.__ref(), ADV_UFCS(_operator_xor)(Builtin::u32(1U))) = Builtin::i32(6);
+		ADV_ASSERT((ADV_UFCS(_operator_subscript)(sp.$ref(), Builtin::i32(3)) == Builtin::i32(4)), "sp[3]==4");
 		#line 88 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_subscript)(arr.__ref(), ADV_UFCS(_operator_xor)(Builtin::u32(1U))) == Builtin::i32(6)), "arr[^1u]==6");
+		sp = Builtin::MutableRef(arr);
 		#line 89 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_subscript)(arr.__ref(), Builtin::i32(4)) == Builtin::i32(6)), "arr[4]==6");
+		ADV_ASSERT((ADV_UPCS(Length)(sp.$ref()) == Builtin::i32(5)), "sp.Length==5");
 		#line 90 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		auto arr2 = Builtin::ToInlineArray<Builtin::i32>({Builtin::i32(Builtin::i32(1)), Builtin::i32(Builtin::i32(2)), Builtin::i32(Builtin::i32(3)), Builtin::i32(Builtin::i32(4)), Builtin::i32(Builtin::i32(6))}); 
+		ADV_UFCS(_operator_subscript)(arr.$ref(), ADV_UFCS(_operator_xor)(Builtin::u32(1U))) = Builtin::i32(6);
 		#line 91 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		ADV_ASSERT((arr == arr2), "arr==arr2");
+		ADV_ASSERT((ADV_UFCS(_operator_subscript)(arr.$ref(), ADV_UFCS(_operator_xor)(Builtin::u32(1U))) == Builtin::i32(6)), "arr[^1u]==6");
 		#line 92 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		System::Span<Builtin::i32> sp2 = arr2; 
+		ADV_ASSERT((ADV_UFCS(_operator_subscript)(arr.$ref(), Builtin::i32(4)) == Builtin::i32(6)), "arr[4]==6");
 		#line 93 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		ADV_ASSERT((ADV_UPCS(Length)(sp2.__ref()) == Builtin::i32(5)), "sp2.Length==5");
+		auto arr2 = Builtin::ToInlineArray<Builtin::i32>({Builtin::i32(Builtin::i32(1)), Builtin::i32(Builtin::i32(2)), Builtin::i32(Builtin::i32(3)), Builtin::i32(Builtin::i32(4)), Builtin::i32(Builtin::i32(6))}); 
 		#line 94 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		ADV_ASSERT((ADV_UFCS(_operator_subscript)(sp2.__ref(), Builtin::i32(4)) == Builtin::i32(6)), "sp2[4]==6");
+		ADV_ASSERT((arr == arr2), "arr==arr2");
+		#line 95 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		System::Span<Builtin::i32> sp2 = arr2; 
+		#line 96 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		ADV_ASSERT((ADV_UPCS(Length)(sp2.$ref()) == Builtin::i32(5)), "sp2.Length==5");
+		#line 97 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		ADV_ASSERT((ADV_UFCS(_operator_subscript)(sp2.$ref(), Builtin::i32(4)) == Builtin::i32(6)), "sp2[4]==6");
 		return true;
 	}();
 	#endif	

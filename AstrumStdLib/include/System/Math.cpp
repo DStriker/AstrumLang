@@ -8,13 +8,13 @@ namespace System {
 	
 	#ifdef ADV_UNITTEST
 	#line 163 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-	static bool __Test_f1b1d0c85a5ef097 = [](){
+	static bool $Test_f1b1d0c85a5ef097 = [](){
 		#line 164 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		ADV_ASSERT((ADV_USPCS(MaxValue, Builtin::i32)() == Builtin::i32(2147483647)), "i32.MaxValue==2147483647");
 		#line 165 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-		ADV_ASSERT((ADV_UFCS(IsMultipleOf)(Builtin::i32(120).__ref(), Builtin::i16(12))), "120.IsMultipleOf(12i16)");
+		ADV_ASSERT((ADV_UFCS(IsMultipleOf)(Builtin::i32(120).$ref(), Builtin::i16(12))), "120.IsMultipleOf(12i16)");
 		#line 166 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-		ADV_ASSERT((ADV_UFCS(Max)(Builtin::i32(120).__ref(), Builtin::i32(115)) == Builtin::i32(120)), "120.Max(115)==120");
+		ADV_ASSERT((ADV_UFCS(Max)(Builtin::i32(120).$ref(), Builtin::i32(115)) == Builtin::i32(120)), "120.Max(115)==120");
 		#line 168 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		auto f = ADV_USFCS((Math), Isqrt8)(Builtin::u8(250U)); 
 		#line 169 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"

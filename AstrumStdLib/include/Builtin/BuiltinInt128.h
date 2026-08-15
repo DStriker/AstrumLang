@@ -28,11 +28,10 @@ template <class T, class U>
 inline constexpr T UnsafeCast(Builtin::FastInt<U> value) noexcept;
 #endif
 
-
 namespace Builtin {
 	class Int128;
-	class __Class_Int128;
-	class __Class_UInt128;
+	class $Class_Int128;
+	class $Class_UInt128;
 	constexpr uint64_t Int128Low64(Int128 v) noexcept;
 	constexpr i64 Int128High64(Int128 v) noexcept;
 
@@ -142,14 +141,14 @@ namespace Builtin {
 
 	class alignas(16) UInt128 : public Struct {
 	   public:
-		using __self       = UInt128;
-		using __underlying = UInt128;
-		using __class      = __Class_UInt128;
+		using $self                   = UInt128;
+		using $underlying             = UInt128;
+		using $class                  = $Class_UInt128;
 		using Unsigned                = UInt128;
 		using DivisibleArithmeticType = double;
 
-		constexpr decltype(auto) __ref() noexcept { return *this; }
-		constexpr decltype(auto) __ref() const noexcept { return *this; }
+		constexpr decltype(auto) $ref() noexcept { return *this; }
+		constexpr decltype(auto) $ref() const noexcept { return *this; }
 
 		constexpr UInt128() noexcept : _low(0), _high(0) {}
 		constexpr UInt128(u64 high, u64 low) noexcept : _low(low), _high(high) {}
@@ -214,8 +213,8 @@ namespace Builtin {
 		//	return *this = UInt128(value);
 		//}
 
-		//constexpr UInt128(const UInt128& value) noexcept = default;
-		//constexpr UInt128& operator=(const UInt128& value) noexcept = default;
+		// constexpr UInt128(const UInt128& value) noexcept = default;
+		// constexpr UInt128& operator=(const UInt128& value) noexcept = default;
 
 		constexpr UInt128& operator=(unsigned value) noexcept { return *this = UInt128(value); }
 
@@ -438,9 +437,7 @@ namespace Builtin {
 			return _low;
 		}
 #ifdef __FLT16_MAX__
-		constexpr explicit operator _Float16() const noexcept {
-			return static_cast<float>(*this);
-		}
+		constexpr explicit operator _Float16() const noexcept { return static_cast<float>(*this); }
 #endif
 		constexpr operator float() const noexcept {
 			constexpr float pow_2_64 = 18446744073709551616.0f;
@@ -1268,7 +1265,7 @@ namespace Builtin {
 			return *this;
 		}
 
-		template<class U>
+		template <class U>
 		constexpr UInt128& operator+=(U other) RELEASE_NOEXCEPT {
 			*this = *this + other;
 			return *this;
@@ -2244,14 +2241,14 @@ namespace Builtin {
 
 	class alignas(16) Int128 : public Struct {
 	   public:
-		using __self       = Int128;
-		using __underlying = Int128;
-		using __class      = __Class_Int128;
+		using $self                   = Int128;
+		using $underlying             = Int128;
+		using $class                  = $Class_Int128;
 		using Unsigned                = UInt128;
 		using DivisibleArithmeticType = double;
 
-		constexpr decltype(auto) __ref() noexcept { return *this; }
-		constexpr decltype(auto) __ref() const noexcept { return *this; }
+		constexpr decltype(auto) $ref() noexcept { return *this; }
+		constexpr decltype(auto) $ref() const noexcept { return *this; }
 
 		constexpr Int128() noexcept : _low(0), _high(0) {}
 		constexpr Int128(i64 high, u64 low) noexcept : _low(low), _high(high) {}
@@ -2301,8 +2298,8 @@ namespace Builtin {
 		// explicit Int128(Float32 value) : Int128((float)value) {}
 		// explicit Int128(Float64 value) : Int128((double)value) {}
 
-		//constexpr Int128(const Int128& value) noexcept = default;
-		//constexpr Int128& operator=(const Int128& value) noexcept = default;
+		// constexpr Int128(const Int128& value) noexcept = default;
+		// constexpr Int128& operator=(const Int128& value) noexcept = default;
 
 		constexpr Int128& operator=(int value) noexcept { return *this = Int128(value); }
 
@@ -3071,9 +3068,9 @@ namespace Builtin {
 			Int128 result(__Details::BitCastToSigned(unsignedResult.High64()),
 			              unsignedResult.Low64());
 #ifdef Builtin_OVERFLOW_CHECKS
-			UInt128 leftUnsigned = *this < 0 ? UInt128(~*this) + 1 : UInt128(*this);
+			UInt128 leftUnsigned  = *this < 0 ? UInt128(~*this) + 1 : UInt128(*this);
 			UInt128 rightUnsigned = rhs < 0 ? UInt128(~rhs) + 1 : UInt128(rhs);
-			unsignedResult = leftUnsigned * rightUnsigned;
+			unsignedResult        = leftUnsigned * rightUnsigned;
 			if ((*this < 0) ^ (rhs < 0)) {
 				if (unsignedResult > INT128MIN_TO_UINT128)
 					throw IntegerOverflowException();
@@ -3453,7 +3450,7 @@ namespace Builtin {
 			return __int128(*this) / rhs;
 #else
 			bool isNegative = false;
-			auto lhs = *this;
+			auto lhs        = *this;
 			stripNegative(lhs, isNegative);
 			stripNegative(rhs, isNegative);
 
@@ -3483,11 +3480,11 @@ namespace Builtin {
 			return __int128(*this) / rhs;
 #else
 			bool isNegative = false;
-			auto lhs = *this;
+			auto lhs        = *this;
 			stripNegative(lhs, isNegative);
 			if constexpr (std::is_signed_v<OtherT>) {
 				if (rhs < 0) {
-					rhs = -rhs;
+					rhs        = -rhs;
 					isNegative = !isNegative;
 				}
 			}
@@ -3567,7 +3564,7 @@ namespace Builtin {
 			return __int128(*this) % __int128(rhs);
 #else
 			bool isNegative = false;
-			auto lhs = *this;
+			auto lhs        = *this;
 			stripNegative(lhs, isNegative);
 			if ((rhs._high & (1ull << 63)) != 0) {
 				rhs = -rhs;
@@ -3959,7 +3956,7 @@ namespace Builtin {
 
 	inline constexpr UInt128::UInt128(Int128 value) RELEASE_NOEXCEPT
 	    : _low(Int128Low64(value)),
-	      _high(static_cast<uint64_t>((int64_t)Int128High64(value))) {
+	      _high(static_cast<uint64_t>((int64_t) Int128High64(value))) {
 #ifdef Builtin_OVERFLOW_CHECKS
 		if (value < 0)
 			throw IntegerOverflowException();
@@ -4137,9 +4134,7 @@ namespace Builtin {
 	template <>
 	class NegationHelper<u128, false> {
 	   public:
-		NODISCARD constexpr static u128 NegativeThrow(u128 t) {
-			return ~t+1u;
-		}
+		NODISCARD constexpr static u128 NegativeThrow(u128 t) { return ~t + 1u; }
 
 		NODISCARD constexpr static bool Negative(u128 t, u128& out) {
 			out = ~t + 1u;
@@ -4185,7 +4180,7 @@ namespace Builtin {
 #ifdef MSVC
 			if (!std::is_constant_evaluated()) {
 				u64 carry;
-				const uint64_t low = _umul128(a.Low64(), b.Low64(), (uint64_t*)&carry);
+				const uint64_t low = _umul128(a.Low64(), b.Low64(), (uint64_t*) &carry);
 				u64 high;
 				u64 high2;
 				bool overflowed = !SafeMultiply(a.Low64(), b.High64(), high);
@@ -4240,7 +4235,7 @@ namespace Builtin {
 #ifdef MSVC
 			if (!std::is_constant_evaluated()) {
 				u64 carry;
-				const uint64_t low = _umul128(a.Low64(), b.Low64(), (uint64_t*)&carry);
+				const uint64_t low = _umul128(a.Low64(), b.Low64(), (uint64_t*) &carry);
 				u64 high;
 				u64 high2;
 				bool overflowed = !SafeMultiply(a.Low64(), b.High64(), high);
@@ -4298,7 +4293,7 @@ namespace Builtin {
 #ifdef MSVC
 			if (!std::is_constant_evaluated()) {
 				u64 carry;
-				const uint64_t low = _umul128(a.Low64(), b.Low64(), (uint64_t*)&carry);
+				const uint64_t low = _umul128(a.Low64(), b.Low64(), (uint64_t*) &carry);
 				u64 high;
 				u64 high2;
 				bool overflowed = !SafeMultiply(a.Low64(), b.High64(), high);
@@ -4586,8 +4581,7 @@ namespace Builtin {
 	template <>
 	class LargeIntRegMultiply<i128, i128> {
 	   public:
-		NODISCARD CONSTEXPR_MULTIPLY static bool RegMultiply(i128 a, i128 b,
-		                                                     i128* ret) noexcept {
+		NODISCARD CONSTEXPR_MULTIPLY static bool RegMultiply(i128 a, i128 b, i128* ret) noexcept {
 			constexpr UInt128 INT128MIN_TO_UINT128 = UInt128(uint64_t(INT64_MIN), 0u);
 			constexpr UInt128 INT128MAX_TO_UINT128 = UInt128(uint64_t(INT64_MAX), UINT64_MAX);
 #if USE_INTRINSICS
@@ -4645,9 +4639,9 @@ namespace Builtin {
 			            a00 * b00);
 			*ret =
 			    Int128(__Details::BitCastToSigned(unsignedResult.High64()), unsignedResult.Low64());
-			UInt128 leftUnsigned = a < 0 ? UInt128(~a) + 1 : UInt128(a);
+			UInt128 leftUnsigned  = a < 0 ? UInt128(~a) + 1 : UInt128(a);
 			UInt128 rightUnsigned = b < 0 ? UInt128(~b) + 1 : UInt128(b);
-			bool overflowed = !SafeMultiply(leftUnsigned, rightUnsigned, unsignedResult);
+			bool overflowed       = !SafeMultiply(leftUnsigned, rightUnsigned, unsignedResult);
 			if ((a < 0) ^ (b < 0)) {
 				if (unsignedResult > INT128MIN_TO_UINT128)
 					overflowed = true;
@@ -4720,9 +4714,9 @@ namespace Builtin {
 			            a00 * b00);
 			*ret =
 			    Int128(__Details::BitCastToSigned(unsignedResult.High64()), unsignedResult.Low64());
-			UInt128 leftUnsigned = a < 0 ? UInt128(~a) + 1 : UInt128(a);
+			UInt128 leftUnsigned  = a < 0 ? UInt128(~a) + 1 : UInt128(a);
 			UInt128 rightUnsigned = b < 0 ? UInt128(~b) + 1 : UInt128(b);
-			bool overflowed = !SafeMultiply(leftUnsigned, rightUnsigned, unsignedResult);
+			bool overflowed       = !SafeMultiply(leftUnsigned, rightUnsigned, unsignedResult);
 			if ((a < 0) ^ (b < 0)) {
 				if (unsignedResult > INT128MIN_TO_UINT128)
 					overflowed = true;
@@ -4795,9 +4789,9 @@ namespace Builtin {
 			            a00 * b00);
 			*ret =
 			    Int128(__Details::BitCastToSigned(unsignedResult.High64()), unsignedResult.Low64());
-			UInt128 leftUnsigned = a < 0 ? UInt128(~a) + 1 : UInt128(a);
+			UInt128 leftUnsigned  = a < 0 ? UInt128(~a) + 1 : UInt128(a);
 			UInt128 rightUnsigned = b < 0 ? UInt128(~b) + 1 : UInt128(b);
-			bool overflowed = !SafeMultiply(leftUnsigned, rightUnsigned, unsignedResult);
+			bool overflowed       = !SafeMultiply(leftUnsigned, rightUnsigned, unsignedResult);
 			if ((a < 0) ^ (b < 0)) {
 				if (unsignedResult > INT128MIN_TO_UINT128)
 					overflowed = true;
@@ -5406,7 +5400,7 @@ namespace Builtin {
 #else
 			uint64_t aLow = (uint64_t) t.Low64();
 			uint64_t bLow = (uint64_t) u.Low64();
-			uint64_t low = aLow + bLow;
+			uint64_t low  = aLow + bLow;
 			uint64_t high = (uint64_t) t.High64() + (uint64_t) u.High64();
 			if (low < aLow)
 				high++;
@@ -5444,7 +5438,7 @@ namespace Builtin {
 #else
 			uint64_t aLow = (uint64_t) t.Low64();
 			uint64_t bLow = (uint64_t) u.Low64();
-			uint64_t low = aLow + bLow;
+			uint64_t low  = aLow + bLow;
 			uint64_t high = (uint64_t) t.High64() + (uint64_t) u.High64();
 			if (low < aLow)
 				high++;
@@ -5483,7 +5477,7 @@ namespace Builtin {
 #else
 			uint64_t aLow = (uint64_t) t.Low64();
 			uint64_t bLow = (uint64_t) u.Low64();
-			uint64_t low = aLow + bLow;
+			uint64_t low  = aLow + bLow;
 			uint64_t high = (uint64_t) t.High64() + (uint64_t) u.High64();
 			if (low < aLow)
 				high++;
@@ -5580,8 +5574,7 @@ namespace Builtin {
 			return safe && tmp <= std::numeric_limits<T>::max();
 		}
 
-		NODISCARD constexpr static SaturatingStatus AdditionSat(T t, U u,
-		                                                        T& result) noexcept {
+		NODISCARD constexpr static SaturatingStatus AdditionSat(T t, U u, T& result) noexcept {
 			u128 tmp;
 			if (u < 0) {
 				tmp = AbsValueHelper<U, AbsMethodHelper<U>::method>::Abs(u);
@@ -5645,8 +5638,8 @@ namespace Builtin {
 #else
 			uint64_t aLow = (uint64_t) t.Low64();
 			uint64_t bLow = (uint64_t) u.Low64();
-			uint64_t low = aLow + bLow;
-			int64_t high = (int64_t) t.High64() + (int64_t) u.High64();
+			uint64_t low  = aLow + bLow;
+			int64_t high  = (int64_t) t.High64() + (int64_t) u.High64();
 			if (low < aLow)
 				high++;
 			result = Int128(high, low);
@@ -5654,8 +5647,7 @@ namespace Builtin {
 #endif
 		}
 
-		NODISCARD constexpr static SaturatingStatus AdditionSat(T t, Int128 u,
-		                                                        T& result) noexcept {
+		NODISCARD constexpr static SaturatingStatus AdditionSat(T t, Int128 u, T& result) noexcept {
 #if USE_INTRINSICS
 #ifdef MSVC
 			if (!std::is_constant_evaluated()) {
@@ -5683,11 +5675,11 @@ namespace Builtin {
 #else
 			uint64_t aLow = (uint64_t) t.Low64();
 			uint64_t bLow = (uint64_t) u.Low64();
-			uint64_t low = aLow + bLow;
-			int64_t high = (int64_t) t.High64() + (int64_t) u.High64();
+			uint64_t low  = aLow + bLow;
+			int64_t high  = (int64_t) t.High64() + (int64_t) u.High64();
 			if (low < aLow)
 				high++;
-			result = Int128(high, low);
+			result        = Int128(high, low);
 #endif
 			if (u > 0 && result < t)
 				return Saturating_Overflow;
@@ -5722,11 +5714,11 @@ namespace Builtin {
 #else
 			uint64_t aLow = (uint64_t) t.Low64();
 			uint64_t bLow = (uint64_t) u.Low64();
-			uint64_t low = aLow + bLow;
-			int64_t high = (int64_t) t.High64() + (int64_t) u.High64();
+			uint64_t low  = aLow + bLow;
+			int64_t high  = (int64_t) t.High64() + (int64_t) u.High64();
 			if (low < aLow)
 				high++;
-			result = Int128(high, low);
+			result        = Int128(high, low);
 #endif
 			if (u > 0 && result < t || u < 0 && result > t)
 				throw IntegerOverflowException();
@@ -5889,16 +5881,15 @@ namespace Builtin {
 	template <class T, class U>
 	class SubtractionHelper<T, U, SubtractionState_Uint128Uint> {
 	   public:
-		NODISCARD constexpr static bool Subtract(UInt128 t, UInt128 u,
-		                                         UInt128& result) noexcept {
+		NODISCARD constexpr static bool Subtract(UInt128 t, UInt128 u, UInt128& result) noexcept {
 #if USE_INTRINSICS
 #ifdef MSVC
 			if (!std::is_constant_evaluated()) {
 				uint64_t high;
 				uint64_t low;
 				auto carry = _subborrow_u64(0, t.Low64(), u.Low64(), &low);
-				carry  = _subborrow_u64(carry, t.High64(), u.High64(), &high);
-				result = UInt128(high, low);
+				carry      = _subborrow_u64(carry, t.High64(), u.High64(), &high);
+				result     = UInt128(high, low);
 				return carry == 0;
 			}
 			uint64_t high = (uint64_t) t.High64() - (uint64_t) u.High64();
@@ -5913,7 +5904,7 @@ namespace Builtin {
 #endif
 #else
 			uint64_t high = (uint64_t) t.High64() - (uint64_t) u.High64();
-			uint64_t low = (uint64_t) t.Low64() - (uint64_t) u.Low64();
+			uint64_t low  = (uint64_t) t.Low64() - (uint64_t) u.Low64();
 			if (t.Low64() < u.Low64())
 				high--;
 			result = UInt128(high, low);
@@ -5929,8 +5920,8 @@ namespace Builtin {
 				uint64_t high;
 				uint64_t low;
 				auto carry = _subborrow_u64(0, t.Low64(), u.Low64(), &low);
-				carry  = _subborrow_u64(carry, t.High64(), u.High64(), &high);
-				result = UInt128(high, low);
+				carry      = _subborrow_u64(carry, t.High64(), u.High64(), &high);
+				result     = UInt128(high, low);
 				return carry ? Saturating_Underflow : Saturating_NoOverflow;
 			}
 			uint64_t high = (uint64_t) t.High64() - (uint64_t) u.High64();
@@ -5947,7 +5938,7 @@ namespace Builtin {
 #endif
 #else
 			uint64_t high = (uint64_t) t.High64() - (uint64_t) u.High64();
-			uint64_t low = (uint64_t) t.Low64() - (uint64_t) u.Low64();
+			uint64_t low  = (uint64_t) t.Low64() - (uint64_t) u.Low64();
 			if (t.Low64() < u.Low64())
 				high--;
 			result = UInt128(high, low);
@@ -5962,8 +5953,8 @@ namespace Builtin {
 				uint64_t high;
 				uint64_t low;
 				auto carry = _subborrow_u64(0, t.Low64(), u.Low64(), &low);
-				carry  = _subborrow_u64(carry, t.High64(), u.High64(), &high);
-				result = UInt128(high, low);
+				carry      = _subborrow_u64(carry, t.High64(), u.High64(), &high);
+				result     = UInt128(high, low);
 				if (carry)
 					throw IntegerOverflowException();
 				return;
@@ -5982,7 +5973,7 @@ namespace Builtin {
 #endif
 #else
 			uint64_t high = (uint64_t) t.High64() - (uint64_t) u.High64();
-			uint64_t low = (uint64_t) t.Low64() - (uint64_t) u.Low64();
+			uint64_t low  = (uint64_t) t.Low64() - (uint64_t) u.Low64();
 			if (t.Low64() < u.Low64())
 				high--;
 			result = UInt128(high, low);
@@ -5995,8 +5986,7 @@ namespace Builtin {
 	template <class T, class U>
 	class SubtractionHelper<T, U, SubtractionState_Int128Int> {
 	   public:
-		NODISCARD constexpr static bool Subtract(Int128 t, Int128 u,
-		                                         Int128& result) noexcept {
+		NODISCARD constexpr static bool Subtract(Int128 t, Int128 u, Int128& result) noexcept {
 #if USE_INTRINSICS
 #ifdef MSVC
 			if (!std::is_constant_evaluated()) {
@@ -6055,7 +6045,7 @@ namespace Builtin {
 			uint64_t low = (uint64_t) t.Low64() - (uint64_t) u.Low64();
 			if (t.Low64() < u.Low64())
 				high--;
-			result = Int128(high, low);
+			result       = Int128(high, low);
 #endif
 			if (u > 0 && result > t)
 				return Saturating_Underflow;
@@ -6656,7 +6646,7 @@ template <class T, class U>
 inline constexpr T UnsafeCast(Builtin::FastInt<U> value) noexcept {
 	if constexpr (std::is_same_v<T, Builtin::UInt128>) {
 		if constexpr (std::numeric_limits<U>::is_signed) {
-			auto low = UnsafeCast<Builtin::u64>(value);
+			auto low  = UnsafeCast<Builtin::u64>(value);
 			auto high = 0ull;
 			if (value < 0)
 				high = ~high;
@@ -6666,7 +6656,7 @@ inline constexpr T UnsafeCast(Builtin::FastInt<U> value) noexcept {
 		}
 	} else if constexpr (std::is_same_v<T, Builtin::Int128>) {
 		if constexpr (std::numeric_limits<U>::is_signed) {
-			auto low = UnsafeCast<Builtin::u64>(value);
+			auto low  = UnsafeCast<Builtin::u64>(value);
 			auto high = 0ll;
 			if (value < 0)
 				high = ~high;

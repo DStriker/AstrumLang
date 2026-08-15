@@ -4,11 +4,11 @@
 namespace Builtin::Unsafe {
 	template <class T>
 	struct __RawPtr : public Struct {
-		using __self  = __RawPtr<T>;
-		using __class = __Class_Basic<__self>;
+		using $self  = __RawPtr<T>;
+		using $class = $Class_Basic<$self>;
 
-		constexpr decltype(auto) __ref() noexcept { return *this; }
-		constexpr decltype(auto) __ref() const noexcept { return *this; }
+		constexpr decltype(auto) $ref() noexcept { return *this; }
+		constexpr decltype(auto) $ref() const noexcept { return *this; }
 		constexpr __RawPtr() noexcept = default;
 		constexpr __RawPtr(T* _value) noexcept : value(_value) {}
 		constexpr __RawPtr(decltype(nullptr)) noexcept : value {nullptr} {}
@@ -150,11 +150,11 @@ namespace Builtin::Unsafe {
 
 	template <class T>
 	struct __VolatileRawPtr : public Struct {
-		using __self = __VolatileRawPtr<T>;
-		using __class = __Class_Basic<__self>;
+		using $self = __VolatileRawPtr<T>;
+		using $class = $Class_Basic<$self>;
 
-		constexpr decltype(auto) __ref() noexcept { return *this; }
-		constexpr decltype(auto) __ref() const noexcept { return *this; }
+		constexpr decltype(auto) $ref() noexcept { return *this; }
+		constexpr decltype(auto) $ref() const noexcept { return *this; }
 		constexpr __VolatileRawPtr() noexcept = default;
 		constexpr __VolatileRawPtr(volatile T* _value) noexcept : value(_value) {}
 		constexpr __VolatileRawPtr(decltype(nullptr)) noexcept : value {nullptr} {}

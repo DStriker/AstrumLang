@@ -60,6 +60,9 @@ public extension <T, S: usize> T[S] {
         return Span<T>.UnsafeCreate(Unsafe.Add(this.GetDataReference(), 
             range.Start.Offset(S) as usize), range.Length(S));
     }
+
+    AsSpan: T[&] ==> this;
+    mut AsMutableSpan: () -> T[&mut] ==> this;
 }
 
 static assert(sizeof(i32[5]) == 20, "Fixed array should be sizeof(T) * S bytes");

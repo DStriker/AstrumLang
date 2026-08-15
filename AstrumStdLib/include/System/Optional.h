@@ -7,25 +7,29 @@
 #include "IEquatable.h"
 
 namespace System {
-namespace __Unsafe {} namespace __Optional_Protected__Unsafe {}
+namespace __Unsafe {} namespace __Optional$Protected__Unsafe {}
 //###############################################################################
 //# Type forward declarations
 //###############################################################################
 template<class T> class Optional;
 template<class T> class OptionalRef;
+} namespace $extensions {
+template<class __TT> struct $static_InvalidOperationException;
+template<class __TT> struct $static_getInvalidOperationException;
+} namespace System {
 //###############################################################################
 //# Type definitions
 //###############################################################################
-template<class T> class __Class_Optional;
+template<class T> class $Class_Optional;
 	#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 	template<class T> struct Optional final : public Builtin::Struct {
-		public: using __self = Optional<T>;
-		public: using __class = __Class_Optional<T>;
-		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
+		public: using $self = Optional<T>;
+		public: using $class = $Class_Optional<T>;
+		public: FORCE_INLINE constexpr decltype(auto) $ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) $ref() const noexcept { return *this; }
 		#line 11 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		private: T p_Value; ADV_CHECK_REF_STRUCT("T", T);
 		#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		private: inline constexpr auto setValue(const T& value) -> __self&;
+		private: inline constexpr auto setValue(const T& value) -> $self&;
 		#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		public: inline constexpr auto getValue() const  -> T;
 		#line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
@@ -33,7 +37,7 @@ template<class T> class __Class_Optional;
 		#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		private: bool p_HasValue = Builtin::Boolean(false); ADV_CHECK_REF_STRUCT("bool", bool);
 		#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		private: inline auto setHasValue(const bool& value) -> __self&;
+		private: inline auto setHasValue(const bool& value) -> $self&;
 		#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		public: inline auto getHasValue() const  -> bool;
 		#line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
@@ -55,13 +59,13 @@ template<class T> class __Class_Optional;
 		#line 52 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		public: template<class F> inline auto ValueOr(F&& func) const  -> const std::remove_cvref_t<T>;
 		#line 64 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		public: template<class F> inline auto AssignIfNull(F&& func) const  LIFETIMEBOUND -> __self&;
+		public: template<class F> inline auto AssignIfNull(F&& func) const  LIFETIMEBOUND -> $self&;
 		#line 73 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		public: inline constexpr auto operator==(__self rhs) const  -> const bool;
+		public: inline constexpr auto operator==($self rhs) const  -> const bool;
 		#line 82 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		public: inline constexpr auto operator==(decltype(nullptr) __var_82_24) const  -> const bool;
 		#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		public: inline constexpr auto operator<=>(__self rhs) const  -> const Builtin::i32;
+		public: inline constexpr auto operator<=>($self rhs) const  -> const Builtin::i32;
 		#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		public: static constexpr auto __IS_ADV_NULLABLE = Builtin::Boolean(true);
 		#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
@@ -73,13 +77,13 @@ template<class T> class __Class_Optional;
 	
 	#line 98 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 	template<class T> struct [[clang::annotate("ref_struct")]] OptionalRef final : public Builtin::RefStruct {
-		public: using __self = OptionalRef<T>;
-		public: using __class = __self;
-		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
+		public: using $self = OptionalRef<T>;
+		public: using $class = $self;
+		public: FORCE_INLINE constexpr decltype(auto) $ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) $ref() const noexcept { return *this; }
 		#line 103 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		private: T p_Value;
 		#line 109 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		private: inline constexpr auto setValue(const T& value) -> __self&;
+		private: inline constexpr auto setValue(const T& value) -> $self&;
 		#line 104 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		public: inline constexpr auto getValue() const  -> T;
 		#line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
@@ -87,7 +91,7 @@ template<class T> class __Class_Optional;
 		#line 111 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		private: bool p_HasValue = Builtin::Boolean(false);
 		#line 111 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		private: inline auto setHasValue(const bool& value) -> __self&;
+		private: inline auto setHasValue(const bool& value) -> $self&;
 		#line 111 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		public: inline auto getHasValue() const  -> bool;
 		#line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
@@ -109,13 +113,13 @@ template<class T> class __Class_Optional;
 		#line 144 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		public: template<class F> inline auto ValueOr(F&& func) const  -> const std::remove_cvref_t<T>;
 		#line 156 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		public: template<class F> inline auto AssignIfNull(F&& func) const  LIFETIMEBOUND -> __self&;
+		public: template<class F> inline auto AssignIfNull(F&& func) const  LIFETIMEBOUND -> $self&;
 		#line 165 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		public: inline constexpr auto operator==(__self rhs) const  -> const bool;
+		public: inline constexpr auto operator==($self rhs) const  -> const bool;
 		#line 174 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		public: inline constexpr auto operator==(decltype(nullptr) __var_174_24) const  -> const bool;
 		#line 176 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		public: inline constexpr auto operator<=>(__self rhs) const  -> const Builtin::i32;
+		public: inline constexpr auto operator<=>($self rhs) const  -> const Builtin::i32;
 		#line 101 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		public: static constexpr auto __IS_ADV_NULLABLE = Builtin::Boolean(true);
 		#line 100 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
@@ -126,21 +130,20 @@ template<class T> class __Class_Optional;
 	
 	
 	#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-	template<class T> class __Class_Optional final : public Builtin::ValueType
+	template<class T> class $Class_Optional final : public Builtin::ValueType
 	{
 		#line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		public: using __underlying = Optional<T>; using __self = __underlying;
-		__self __value;
-		__Class_Optional(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>) : __value{value} {}
-		operator __underlying() const noexcept { return __value; }
+		public: using $underlying = Optional<T>; using $self = $underlying;
+		$self __value;
+		$Class_Optional(const $underlying& value) noexcept(std::is_nothrow_copy_constructible_v<$underlying>) : __value{value} {}
+		operator $underlying() const noexcept { return __value; }
 		auto getValue() const -> T { return __value.getValue(); }
 		auto getHasValue() const -> bool { return __value.getHasValue(); }
 		auto IsValid() const noexcept -> bool const { ADV_EXPRESSION_BODY(__value.IsValid()); }
 		auto operator*() const  -> T const { ADV_EXPRESSION_BODY(__value.operator*()); }
-		operator bool() const noexcept { return static_cast<bool>(__value); }
-		auto operator==(__self rhs) const  -> bool const { ADV_EXPRESSION_BODY(__value.operator==(rhs)); }
+		auto operator==($self rhs) const  -> bool const { ADV_EXPRESSION_BODY(__value.operator==(rhs)); }
 		auto operator==(decltype(nullptr) __var_82_24) const  -> bool const { ADV_EXPRESSION_BODY(__value.operator==(__var_82_24)); }
-		auto operator<=>(__self rhs) const  -> Builtin::i32 const { ADV_EXPRESSION_BODY(__value.operator<=>(rhs)); }
+		auto operator<=>($self rhs) const  -> Builtin::i32 const { ADV_EXPRESSION_BODY(__value.operator<=>(rhs)); }
 		
 	};
 	
@@ -149,7 +152,7 @@ template<class T> class __Class_Optional;
 //###############################################################################
 
 #line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-	template<class T> inline constexpr auto Optional<T>::setValue(const T& value) -> __self& 
+	template<class T> inline constexpr auto Optional<T>::setValue(const T& value) -> $self& 
 	{
 		#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		p_Value = value;
@@ -169,7 +172,7 @@ template<class T> class __Class_Optional;
 	}
 	
 #line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-	template<class T> inline auto Optional<T>::setHasValue(const bool& value) -> __self& { p_HasValue = value; return *this;}
+	template<class T> inline auto Optional<T>::setHasValue(const bool& value) -> $self& { p_HasValue = value; return *this;}
 	
 #line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 	template<class T> inline auto Optional<T>::getHasValue() const  -> bool { return p_HasValue; }
@@ -210,7 +213,7 @@ template<class T> class __Class_Optional;
 	template<class T> template<class F> inline auto Optional<T>::AndThen(F&& func) const  -> decltype(auto)
 	{
 		#line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		using TResult = typename std::invoke_result_t<F, T>;
+		using TResult = typename std::template invoke_result_t<F, T>;
 		#line 42 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		if constexpr (std::is_void_v<TResult>) {
 			#line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
@@ -238,7 +241,7 @@ template<class T> class __Class_Optional;
 		#line 54 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		using TOrigin = std::remove_cvref_t<T>;
 		#line 55 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		using TResult = typename std::invoke_result_t<F>;
+		using TResult = typename std::template invoke_result_t<F>;
 		#line 56 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		static_assert(std::convertible_to<T, TOrigin>, "T must be convertible to TOrigin");
 		#line 57 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
@@ -252,10 +255,10 @@ template<class T> class __Class_Optional;
 		return std::invoke(std::forward<decltype(func)>(func));
 	}
 #line 64 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-	template<class T> template<class F> inline auto Optional<T>::AssignIfNull(F&& func) const  -> __self&
+	template<class T> template<class F> inline auto Optional<T>::AssignIfNull(F&& func) const  -> $self&
 	{
 		#line 66 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		using TResult = typename std::invoke_result_t<F>;
+		using TResult = typename std::template invoke_result_t<F>;
 		#line 67 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		static_assert(std::convertible_to<TResult, T>, "TResult must be convertible to T");
 		#line 68 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
@@ -267,17 +270,17 @@ template<class T> class __Class_Optional;
 		return (*this);
 	}
 #line 73 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-	template<class T> inline constexpr auto Optional<T>::operator==(__self rhs) const  -> const bool
+	template<class T> inline constexpr auto Optional<T>::operator==($self rhs) const  -> const bool
 	{
 		#line 75 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		static_assert(Builtin::TypeIs<T, ISelfEquatable>(), "T must implement ISelfEquatable");
 		#line 76 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		if (HasValue && ADV_UPCS(HasValue)(rhs.__ref())) {
+		if (HasValue && ADV_UPCS(HasValue)(rhs.$ref())) {
 			#line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-			return Value == ADV_UPCS(Value)(rhs.__ref());
+			return Value == ADV_UPCS(Value)(rhs.$ref());
 		}
 		#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		return HasValue == ADV_UPCS(HasValue)(rhs.__ref());
+		return HasValue == ADV_UPCS(HasValue)(rhs.$ref());
 	}
 #line 82 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 	template<class T> inline constexpr auto Optional<T>::operator==(decltype(nullptr) __var_82_24) const  -> const bool
@@ -286,22 +289,22 @@ template<class T> class __Class_Optional;
 		ADV_EXPRESSION_BODY(!HasValue); 
 	}
 #line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-	template<class T> inline constexpr auto Optional<T>::operator<=>(__self rhs) const  -> const Builtin::i32
+	template<class T> inline constexpr auto Optional<T>::operator<=>($self rhs) const  -> const Builtin::i32
 	{
 		#line 86 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		static_assert(Builtin::TypeIs<T, ISelfComparable>(), "T must implement ISelfComparable");
 		#line 87 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		if (HasValue) {
 			#line 88 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-			if (ADV_UPCS(HasValue)(rhs.__ref())) {
+			if (ADV_UPCS(HasValue)(rhs.$ref())) {
 				#line 89 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-				return (Value <=> ADV_UPCS(Value)(rhs.__ref()));
+				return (Value <=> ADV_UPCS(Value)(rhs.$ref()));
 			}
 			#line 90 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 			return Builtin::i32(1);
 		}
 		#line 92 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		if (ADV_UPCS(HasValue)(rhs.__ref())) {
+		if (ADV_UPCS(HasValue)(rhs.$ref())) {
 			#line 93 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 			return Builtin::i32(-1);
 		}
@@ -309,7 +312,7 @@ template<class T> class __Class_Optional;
 		return Builtin::i32(0);
 	}
 #line 109 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-	template<class T> inline constexpr auto OptionalRef<T>::setValue(const T& value) -> __self& 
+	template<class T> inline constexpr auto OptionalRef<T>::setValue(const T& value) -> $self& 
 	{
 		#line 109 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		p_Value = value;
@@ -329,7 +332,7 @@ template<class T> class __Class_Optional;
 	}
 	
 #line 111 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-	template<class T> inline auto OptionalRef<T>::setHasValue(const bool& value) -> __self& { p_HasValue = value; return *this;}
+	template<class T> inline auto OptionalRef<T>::setHasValue(const bool& value) -> $self& { p_HasValue = value; return *this;}
 	
 #line 111 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 	template<class T> inline auto OptionalRef<T>::getHasValue() const  -> bool { return p_HasValue; }
@@ -370,7 +373,7 @@ template<class T> class __Class_Optional;
 	template<class T> template<class F> inline auto OptionalRef<T>::AndThen(F&& func) const  -> decltype(auto)
 	{
 		#line 133 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		using TResult = typename std::invoke_result_t<F, T>;
+		using TResult = typename std::template invoke_result_t<F, T>;
 		#line 134 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		if constexpr (std::is_void_v<TResult>) {
 			#line 135 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
@@ -398,7 +401,7 @@ template<class T> class __Class_Optional;
 		#line 146 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		using TOrigin = std::remove_cvref_t<T>;
 		#line 147 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		using TResult = typename std::invoke_result_t<F>;
+		using TResult = typename std::template invoke_result_t<F>;
 		#line 148 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		static_assert(std::convertible_to<T, TOrigin>, "T must be convertible to TOrigin");
 		#line 149 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
@@ -412,10 +415,10 @@ template<class T> class __Class_Optional;
 		return std::invoke(std::forward<decltype(func)>(func));
 	}
 #line 156 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-	template<class T> template<class F> inline auto OptionalRef<T>::AssignIfNull(F&& func) const  -> __self&
+	template<class T> template<class F> inline auto OptionalRef<T>::AssignIfNull(F&& func) const  -> $self&
 	{
 		#line 158 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		using TResult = typename std::invoke_result_t<F>;
+		using TResult = typename std::template invoke_result_t<F>;
 		#line 159 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		static_assert(std::convertible_to<TResult, T>, "TResult must be convertible to T");
 		#line 160 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
@@ -427,17 +430,17 @@ template<class T> class __Class_Optional;
 		return (*this);
 	}
 #line 165 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-	template<class T> inline constexpr auto OptionalRef<T>::operator==(__self rhs) const  -> const bool
+	template<class T> inline constexpr auto OptionalRef<T>::operator==($self rhs) const  -> const bool
 	{
 		#line 167 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		static_assert(Builtin::TypeIs<T, ISelfEquatable>(), "T must implement ISelfEquatable");
 		#line 168 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		if (HasValue && ADV_UPCS(HasValue)(rhs.__ref())) {
+		if (HasValue && ADV_UPCS(HasValue)(rhs.$ref())) {
 			#line 169 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-			return Value == ADV_UPCS(Value)(rhs.__ref());
+			return Value == ADV_UPCS(Value)(rhs.$ref());
 		}
 		#line 171 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		return HasValue == ADV_UPCS(HasValue)(rhs.__ref());
+		return HasValue == ADV_UPCS(HasValue)(rhs.$ref());
 	}
 #line 174 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 	template<class T> inline constexpr auto OptionalRef<T>::operator==(decltype(nullptr) __var_174_24) const  -> const bool
@@ -446,22 +449,22 @@ template<class T> class __Class_Optional;
 		ADV_EXPRESSION_BODY(!HasValue); 
 	}
 #line 176 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-	template<class T> inline constexpr auto OptionalRef<T>::operator<=>(__self rhs) const  -> const Builtin::i32
+	template<class T> inline constexpr auto OptionalRef<T>::operator<=>($self rhs) const  -> const Builtin::i32
 	{
 		#line 178 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		static_assert(Builtin::TypeIs<T, ISelfComparable>(), "T must implement ISelfComparable");
 		#line 179 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		if (HasValue) {
 			#line 180 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-			if (ADV_UPCS(HasValue)(rhs.__ref())) {
+			if (ADV_UPCS(HasValue)(rhs.$ref())) {
 				#line 181 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-				return (Value <=> ADV_UPCS(Value)(rhs.__ref()));
+				return (Value <=> ADV_UPCS(Value)(rhs.$ref()));
 			}
 			#line 182 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 			return Builtin::i32(1);
 		}
 		#line 184 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		if (ADV_UPCS(HasValue)(rhs.__ref())) {
+		if (ADV_UPCS(HasValue)(rhs.$ref())) {
 			#line 185 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 			return Builtin::i32(-1);
 		}

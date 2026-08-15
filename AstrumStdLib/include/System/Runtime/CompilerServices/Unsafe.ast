@@ -139,7 +139,7 @@ public static class Unsafe {
     public Destroy: <T> (ref dest: T) ==
     {
         type TOrigin = decay(T);
-        unsafe cpp "dest.__ref().~TOrigin();";
+        unsafe cpp "dest.$ref().~TOrigin();";
     }
     // Manually calls a destructor for value of type T at the given location.
     // This function is unsafe because it does not perform any type and bounds checking.
@@ -148,7 +148,7 @@ public static class Unsafe {
     public Destroy: <T> (dest: &T) ==
     {
         type TOrigin = decay(T);
-        unsafe cpp "dest.__ref().~TOrigin();";
+        unsafe cpp "dest.$ref().~TOrigin();";
     }
     // Manually calls a destructor for value of type T at the given location.
     // This function is unsafe because it does not perform any type and bounds checking.

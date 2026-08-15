@@ -11,19 +11,21 @@ using namespace System::Collections;
 using namespace System::Collections;
 
 namespace System {
-namespace __Unsafe {} namespace __CharIterator_Protected__Unsafe {}
+namespace __Unsafe {} namespace __CharIterator$Protected__Unsafe {}
 //###############################################################################
 //# Type forward declarations
 //###############################################################################
 class CharIterator;
+} namespace $extensions {
+} namespace System {
 //###############################################################################
 //# Type definitions
 //###############################################################################
 #line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 	struct [[clang::annotate("ref_struct")]] CharIterator final : public Builtin::RefStruct {
-		public: using __self = CharIterator;
-		public: using __class = __self;
-		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
+		public: using $self = CharIterator;
+		public: using $class = $self;
+		public: FORCE_INLINE constexpr decltype(auto) $ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) $ref() const noexcept { return *this; }
 		#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 		public: using ElementType = Builtin::char32;
 		public: CharIterator() = default;
@@ -66,7 +68,7 @@ class CharIterator;
 #line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 	inline constexpr CharIterator::CharIterator(Builtin::Str data) noexcept : 
 	#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-	_data{ADV_USFCS((Span<Builtin::u8>), UnsafeCreate)(ADV_UFCS(GetDataReference)(data.__ref()), ADV_UFCS(GetByteLength)(data.__ref()))}, 
+	_data{ADV_USFCS((Span<Builtin::u8>), UnsafeCreate)(ADV_UFCS(GetDataReference)(data.$ref()), ADV_UFCS(GetByteLength)(data.$ref()))}, 
 	#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 	_nextIndex{Builtin::u32(0U)}, 
 	#line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
@@ -77,41 +79,41 @@ class CharIterator;
 	inline constexpr auto CharIterator::MoveNext()  -> const bool
 	{
 		#line 22 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-		if ((_nextIndex <=> ADV_UPCS(Length)(_data.__ref())) >= 0) {
+		if ((_nextIndex <=> ADV_UPCS(Length)(_data.$ref())) >= 0) {
 			#line 23 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 			return Builtin::Boolean(false);
 		}
 		#line 26 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-		_current = ADV_UFCS(_operator_subscript)(_data.__ref(), Builtin::UncheckedTag{}, _nextIndex++);
+		_current = ADV_UFCS(_operator_subscript)(_data.$ref(), Builtin::UncheckedTag{}, _nextIndex++);
 		#line 27 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-		if (ADV_UPCS(IsAscii)(_current.__ref())) {
+		if (ADV_UPCS(IsAscii)(_current.$ref())) {
 			#line 28 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 			return Builtin::Boolean(true);
 		}
 		#line 32 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-		if (!ADV_UPCS(IsUtf8CodePointBoundary)(Builtin::u8{_current}.__ref())) {
+		if (!ADV_UPCS(IsUtf8CodePointBoundary)(Builtin::u8{_current}.$ref())) {
 			#line 33 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 			Builtin::Throw(Builtin::InvalidOperationException{});
 		}
 		#line 36 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-		const Builtin::Auto<decltype(ADV_UFCS(_operator_subscript)(TrailingBytes.__ref(), Builtin::UncheckedTag{}, _current))> trailingBytes = ADV_UFCS(_operator_subscript)(TrailingBytes.__ref(), Builtin::UncheckedTag{}, _current); 
+		const Builtin::Auto<decltype(ADV_UFCS(_operator_subscript)(TrailingBytes.$ref(), Builtin::UncheckedTag{}, _current))> trailingBytes = ADV_UFCS(_operator_subscript)(TrailingBytes.$ref(), Builtin::UncheckedTag{}, _current); 
 		#line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-		if ((_nextIndex + trailingBytes <=> ADV_UPCS(Length)(_data.__ref())) > 0) {
+		if ((_nextIndex + trailingBytes <=> ADV_UPCS(Length)(_data.$ref())) > 0) {
 			#line 38 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 			return Builtin::Boolean(true);
 		}
 		#line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 		Builtin::Auto<decltype(Builtin::Cast<true, Builtin::u32>(_current))> currentChar = Builtin::Cast<true, Builtin::u32>(_current); 
 		#line 42 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-		{ auto __for_init_42 = System::Range<Builtin::Auto<decltype(trailingBytes)>, false>({}, trailingBytes); auto __for_iter_42 = ADV_UFCS(Iterate)(__for_init_42.__ref()); while(__for_iter_42.__ref().MoveNext()) {
-		auto&& i = __for_iter_42.__ref().GetCurrent(); {
+		{ auto $for_init_42 = System::Range<Builtin::Auto<decltype(trailingBytes)>, false>({}, trailingBytes); auto $for_iter_42 = ADV_UFCS(Iterate)($for_init_42.$ref()); while($for_iter_42.$ref().MoveNext()) {
+		auto&& i = $for_iter_42.$ref().GetCurrent(); {
 			#line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 			currentChar <<= Builtin::i32(6);
 			#line 44 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-			currentChar += ADV_UFCS(_operator_subscript)(_data.__ref(), Builtin::UncheckedTag{}, _nextIndex++);
+			currentChar += ADV_UFCS(_operator_subscript)(_data.$ref(), Builtin::UncheckedTag{}, _nextIndex++);
 		}}}
 		#line 47 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-		currentChar -= ADV_UFCS(_operator_subscript)(Offsets.__ref(), Builtin::UncheckedTag{}, trailingBytes);
+		currentChar -= ADV_UFCS(_operator_subscript)(Offsets.$ref(), Builtin::UncheckedTag{}, trailingBytes);
 		#line 48 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 		_current = Builtin::Cast<true, Builtin::char32>(currentChar);
 		#line 50 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
@@ -127,7 +129,7 @@ class CharIterator;
 	inline constexpr auto CharIterator::GetCurrent() const  -> const Builtin::char32
 	{
 		#line 55 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-		ADV_EXPRESSION_BODY(ADV_UPCS(_current)((*this).__ref())); 
+		ADV_EXPRESSION_BODY(ADV_UPCS(_current)((*this).$ref())); 
 	}
 #line 57 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 	inline constexpr auto CharIterator::Iterate() const  -> const CharIterator

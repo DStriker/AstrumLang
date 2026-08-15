@@ -4,7 +4,7 @@
 namespace Builtin {
 	
 	template <class T>
-	class __Class_SafeInt;
+	class $Class_SafeInt;
 	
 	template <class T>
 	struct alignas(T) SafeInt : public Struct {
@@ -13,14 +13,14 @@ namespace Builtin {
 		friend struct SafeInt;
 		constexpr SafeInt() noexcept = default;
 
-		using __self = SafeInt<T>;
-		using __class = __Class_SafeInt<T>;
-		using __underlying = T;
+		using $self = SafeInt<T>;
+		using $class = $Class_SafeInt<T>;
+		using $underlying = T;
 		using Unsigned = SafeInt<std::make_unsigned_t<T>>;
 		using DivisibleArithmeticType = double;
 
-		constexpr __self& __ref() noexcept { return *this; }
-		constexpr const __self& __ref() const noexcept { return *this; }
+		constexpr $self& $ref() noexcept { return *this; }
+		constexpr const $self& $ref() const noexcept { return *this; }
 		/*constexpr SafeInt(const T& i) noexcept : value(i) {
 		    static_assert(__details::NumericType<T>::isInt, "T must be integer");
 		}*/

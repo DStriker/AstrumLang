@@ -5,22 +5,22 @@
 
 namespace Builtin {
 	template <class T>
-	class __Class_Basic;
+	class $Class_Basic;
 
 	template <class T>
 	struct alignas(T) Float : public Struct {
 		static_assert(std::is_floating_point<T>::value, "T must be a floating point type");
 		template <class U>
 		friend struct Float;
-		using __self       = Float<T>;
-		using __class      = __Class_Basic<Float<T>>;
-		using __underlying = T;
+		using $self       = Float<T>;
+		using $class      = $Class_Basic<Float<T>>;
+		using $underlying = T;
 		using BitsType =
 		    std::conditional_t<sizeof(T) == 4, u32, std::conditional_t<sizeof(T) == 8, u64, u128>>;
 		using DivisibleArithmeticType = Float<T>;
 
-		constexpr __self& __ref() noexcept { return *this; }
-		constexpr const __self& __ref() const noexcept { return *this; }
+		constexpr $self& $ref() noexcept { return *this; }
+		constexpr const $self& $ref() const noexcept { return *this; }
 
 		constexpr Float() noexcept = default;
 		constexpr Float(float f) noexcept : value(f) {}
@@ -1046,61 +1046,61 @@ namespace Builtin {
 		constexpr int operator<=>(i8 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
 
 		friend constexpr int operator<=>(i8 lhs, Float<T> rhs) noexcept {
-			return static_cast<__self>(lhs) <=> rhs.value;
+			return static_cast<$self>(lhs) <=> rhs.value;
 		}
 
 		constexpr int operator<=>(i16 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
 
 		friend constexpr int operator<=>(i16 lhs, Float<T> rhs) noexcept {
-			return static_cast<__self>(lhs) <=> rhs.value;
+			return static_cast<$self>(lhs) <=> rhs.value;
 		}
 
 		constexpr int operator<=>(i32 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
 
 		friend constexpr int operator<=>(i32 lhs, Float<T> rhs) noexcept {
-			return static_cast<__self>(lhs) <=> rhs.value;
+			return static_cast<$self>(lhs) <=> rhs.value;
 		}
 
 		constexpr int operator<=>(i64 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
 
 		friend constexpr int operator<=>(i64 lhs, Float<T> rhs) noexcept {
-			return static_cast<__self>(lhs) <=> rhs.value;
+			return static_cast<$self>(lhs) <=> rhs.value;
 		}
 
 		constexpr int operator<=>(i128 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
 
 		friend constexpr int operator<=>(i128 lhs, Float<T> rhs) noexcept {
-			return static_cast<__self>(lhs) <=> rhs.value;
+			return static_cast<$self>(lhs) <=> rhs.value;
 		}
 
 		constexpr int operator<=>(u8 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
 
 		friend constexpr int operator<=>(u8 lhs, Float<T> rhs) noexcept {
-			return static_cast<__self>(lhs) <=> rhs.value;
+			return static_cast<$self>(lhs) <=> rhs.value;
 		}
 
 		constexpr int operator<=>(u16 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
 
 		friend constexpr int operator<=>(u16 lhs, Float<T> rhs) noexcept {
-			return static_cast<__self>(lhs) <=> rhs.value;
+			return static_cast<$self>(lhs) <=> rhs.value;
 		}
 
 		constexpr int operator<=>(u32 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
 
 		friend constexpr int operator<=>(u32 lhs, Float<T> rhs) noexcept {
-			return static_cast<__self>(lhs) <=> rhs.value;
+			return static_cast<$self>(lhs) <=> rhs.value;
 		}
 
 		constexpr int operator<=>(u64 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
 
 		friend constexpr int operator<=>(u64 lhs, Float<T> rhs) noexcept {
-			return static_cast<__self>(lhs) <=> rhs.value;
+			return static_cast<$self>(lhs) <=> rhs.value;
 		}
 
 		constexpr int operator<=>(u128 rhs) const noexcept { return *this <=> static_cast<T>(rhs); }
 
 		friend constexpr int operator<=>(u128 lhs, Float<T> rhs) noexcept {
-			return static_cast<__self>(lhs) <=> rhs.value;
+			return static_cast<$self>(lhs) <=> rhs.value;
 		}
 
 	   private:
@@ -1109,14 +1109,14 @@ namespace Builtin {
 
 #ifndef __FLT16_MAX__
 	struct alignas(uint16_t) Float16 : public Struct {
-		using __self                  = Float16;
-		using __class                 = __Class_Basic<Float16>;
-		using __underlying            = Float16;
+		using $self                   = Float16;
+		using $class                  = $Class_Basic<Float16>;
+		using $underlying             = Float16;
 		using BitsType                = u16;
 		using DivisibleArithmeticType = Float16;
 
-		constexpr __self& __ref() noexcept { return *this; }
-		constexpr const __self& __ref() const noexcept { return *this; }
+		constexpr $self& $ref() noexcept { return *this; }
+		constexpr const $self& $ref() const noexcept { return *this; }
 
 		constexpr Float16() noexcept                 = default;
 		constexpr Float16(const Float16& f) noexcept = default;
@@ -1750,14 +1750,14 @@ namespace Builtin {
 
 #ifndef __SIZEOF_FLOAT128__
 	struct alignas(16) Float128 : public Struct {
-		using __self                  = Float128;
-		using __class                 = __Class_Basic<Float128>;
-		using __underlying            = Float128;
+		using $self                   = Float128;
+		using $class                  = $Class_Basic<Float128>;
+		using $underlying             = Float128;
 		using BitsType                = u128;
 		using DivisibleArithmeticType = Float128;
 
-		constexpr __self& __ref() noexcept { return *this; }
-		constexpr const __self& __ref() const noexcept { return *this; }
+		constexpr $self& $ref() noexcept { return *this; }
+		constexpr const $self& $ref() const noexcept { return *this; }
 
 		constexpr Float128() noexcept = default;
 		// constexpr Float128(const Float128& f) noexcept = default;
@@ -3589,7 +3589,7 @@ inline constexpr T UnsafeCast(Builtin::Float<U> value) noexcept {
 		return T::NarrowFromFloat((U) value);
 	}
 
-	return static_cast<typename T::__underlying>((U) value);
+	return static_cast<typename T::$underlying>((U) value);
 }
 
 #ifndef __FLT16_MAX__
@@ -3599,7 +3599,7 @@ inline constexpr T UnsafeCast(Builtin::Float16 value) noexcept {
 		return T::NarrowFromFloat((float) value);
 	}
 
-	return static_cast<typename T::__underlying>((float) value);
+	return static_cast<typename T::$underlying>((float) value);
 }
 #endif  // !1
 
@@ -3610,6 +3610,6 @@ inline constexpr T UnsafeCast(Builtin::Float128 value) noexcept {
 		return T::NarrowFromFloat((double) value);
 	}
 
-	return static_cast<typename T::__underlying>((double) value);
+	return static_cast<typename T::$underlying>((double) value);
 }
 #endif  // !1

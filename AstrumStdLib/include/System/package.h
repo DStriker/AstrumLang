@@ -27,7 +27,6 @@
 #include "IValueEnumerable.h"
 #include "Math.h"
 #include "MidpointRounding.h"
-#include "MutableSpan.h"
 #include "Optional.h"
 #include "Ordering.h"
 #include "Range.h"

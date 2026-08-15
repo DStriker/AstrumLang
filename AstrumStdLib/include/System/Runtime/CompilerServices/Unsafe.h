@@ -5,17 +5,19 @@
 #include "ASTRUMSTD_export.h"
 
 namespace System::Runtime::CompilerServices {
-namespace __Unsafe {} namespace __Unsafe_Protected__Unsafe {}
+namespace __Unsafe {} namespace __Unsafe$Protected__Unsafe {}
 //###############################################################################
 //# Type forward declarations
 //###############################################################################
 class Unsafe;
+} namespace $extensions {
+} namespace System::Runtime::CompilerServices {
 //###############################################################################
 //# Type definitions
 //###############################################################################
 #line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 	struct Unsafe : public Builtin::StaticClass {
-		public: using __self = Unsafe;
+		public: using $self = Unsafe;
 		private: Unsafe() = default;
 		#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 		public: template<class T> inline constexpr static auto Add(Builtin::MutableRef<T> __src__, Builtin::usize offset)  -> const Builtin::MutableRef<T>;
@@ -97,9 +99,9 @@ class Unsafe;
 	{
 		T& src = __src__;
 		#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard9{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard9{};
 			#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-			return Builtin::MutableRef(ADV_UFCS(_operator_subscript)(((__RawPtr(std::addressof(src)))).__ref(), offset));
+			return Builtin::MutableRef(ADV_UFCS(_operator_subscript)(((__RawPtr(std::addressof(src)))).$ref(), offset));
 		}
 		return {};
 	}
@@ -107,9 +109,9 @@ class Unsafe;
 	template<class T> requires(std::is_lvalue_reference_v<T>) inline constexpr auto Unsafe::Add(T&& src, Builtin::usize offset)  -> const Builtin::Ref<T>
 	{
 		#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard19{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard19{};
 			#line 20 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-			return ADV_UFCS(_operator_subscript)(((__RawPtr(std::addressof(src)))).__ref(), offset);
+			return ADV_UFCS(_operator_subscript)(((__RawPtr(std::addressof(src)))).$ref(), offset);
 		}
 		return {};
 	}
@@ -118,7 +120,7 @@ class Unsafe;
 	{
 		T& src = __src__;
 		#line 29 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard29{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard29{};
 			#line 30 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			return Builtin::MutableRef((*(UnsafePointerCast<std::remove_cvref_t<T>>(UnsafePointerCast<Builtin::u8>((__RawPtr(std::addressof(src)))) + offset))));
 		}
@@ -128,7 +130,7 @@ class Unsafe;
 	template<class T> requires(std::is_lvalue_reference_v<T>) inline constexpr auto Unsafe::AddByteOffset(T&& src, Builtin::usize offset)  -> const Builtin::Ref<T>
 	{
 		#line 39 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard39{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard39{};
 			#line 40 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			return (*(UnsafePointerCast<std::remove_cvref_t<T>>(UnsafePointerCast<Builtin::u8>((__RawPtr(std::addressof(src)))) + offset)));
 		}
@@ -138,7 +140,7 @@ class Unsafe;
 	template<class T> inline constexpr auto Unsafe::AddressOf(const T& src)  -> const Builtin::usize
 	{
 		#line 47 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard47{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard47{};
 			#line 48 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			return UnsafeCastToUsize((__RawPtr(std::addressof(src))));
 		}
@@ -148,7 +150,7 @@ class Unsafe;
 	template<class T> inline constexpr auto Unsafe::AreSame(const T& a, const T& b)  -> const bool
 	{
 		#line 55 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard55{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard55{};
 			#line 56 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			return (__RawPtr(std::addressof(a))) == (__RawPtr(std::addressof(b)));
 		}
@@ -159,7 +161,7 @@ class Unsafe;
 	{
 		TFrom& src = __src__;
 		#line 65 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard65{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard65{};
 			#line 66 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			return Builtin::MutableRef((*(UnsafePointerCast<TTo>((__RawPtr(std::addressof(src)))))));
 		}
@@ -169,7 +171,7 @@ class Unsafe;
 	template<class TTo, class TFrom> requires(std::is_lvalue_reference_v<TFrom>) inline constexpr auto Unsafe::As(TFrom&& src)  -> const Builtin::Ref<TTo>
 	{
 		#line 76 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard76{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard76{};
 			#line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			return Builtin::MutableRef((*(UnsafePointerCast<TTo>((__RawPtr(std::addressof(src)))))));
 		}
@@ -179,7 +181,7 @@ class Unsafe;
 	template<class T> requires(std::is_lvalue_reference_v<T>) inline constexpr auto Unsafe::AsMutableRef(T&& src)  -> const Builtin::MutableRef<std::remove_cvref_t<T>>
 	{
 		#line 85 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard85{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard85{};
 			#line 86 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			return Builtin::MutableRef((*(UnsafePointerCast<std::remove_cvref_t<T>>((__RawPtr(std::addressof(src)))))));
 		}
@@ -195,7 +197,7 @@ class Unsafe;
 	template<class T> requires(std::is_lvalue_reference_v<T>) inline constexpr auto Unsafe::ByteOffset(T&& origin, T&& target)  -> const Builtin::isize
 	{
 		#line 98 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard98{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard98{};
 			#line 99 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			return ((__RawPtr(std::addressof(target))) - (__RawPtr(std::addressof(origin)))) * Builtin::usize(sizeof(std::remove_cvref_t<T>));
 		}
@@ -206,7 +208,7 @@ class Unsafe;
 	{
 		Builtin::u8& dest = __dest__;
 		#line 108 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard108{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard108{};
 			#line 109 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			auto ptr = new (std::addressof(dest)) T(std::forward<Args>(args)...);
 			#line 110 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
@@ -219,7 +221,7 @@ class Unsafe;
 	{
 		TTo& dest = __dest__;
 		#line 120 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard120{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard120{};
 			#line 121 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			std::memcpy((__RawPtr(std::addressof(dest))), (__RawPtr(std::addressof(src))), Builtin::usize(sizeof (TFrom)));
 		}
@@ -229,7 +231,7 @@ class Unsafe;
 	{
 		Builtin::u8& dest = __dest__;
 		#line 130 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard130{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard130{};
 			#line 131 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			std::memmove((__RawPtr(std::addressof(dest))), (__RawPtr(std::addressof(src))), bytesCount);
 		}
@@ -241,7 +243,7 @@ class Unsafe;
 		#line 141 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 		using TOrigin = std::remove_cvref_t<T>;
 		#line 142 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		dest.__ref().~TOrigin();
+		dest.$ref().~TOrigin();
 	}
 #line 148 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 	template<class T> inline constexpr auto Unsafe::Destroy(Builtin::Ref<T> dest)  -> void
@@ -249,7 +251,7 @@ class Unsafe;
 		#line 150 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 		using TOrigin = std::remove_cvref_t<T>;
 		#line 151 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		dest.__ref().~TOrigin();
+		dest.$ref().~TOrigin();
 	}
 #line 157 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 	template<class T> requires(std::is_lvalue_reference_v<T>) inline constexpr auto Unsafe::Destroy(T&& dest)  -> void
@@ -264,7 +266,7 @@ class Unsafe;
 	{
 		Builtin::u8& start = __start__;
 		#line 168 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard168{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard168{};
 			#line 169 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			std::memset((__RawPtr(std::addressof(start))), initialValue, bytesCount);
 		}
@@ -273,7 +275,7 @@ class Unsafe;
 	template<class T> inline constexpr auto Unsafe::IsAddressGreaterThan(const T& lhs, const T& rhs)  -> const bool
 	{
 		#line 176 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard176{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard176{};
 			#line 177 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			return (UnsafeCastToUsize((__RawPtr(std::addressof(lhs)))) <=> UnsafeCastToUsize((__RawPtr(std::addressof(rhs))))) > 0;
 		}
@@ -283,7 +285,7 @@ class Unsafe;
 	template<class T> inline constexpr auto Unsafe::IsAddressGreaterThanOrEqualTo(const T& lhs, const T& rhs)  -> const bool
 	{
 		#line 184 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard184{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard184{};
 			#line 185 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			return (UnsafeCastToUsize((__RawPtr(std::addressof(lhs)))) <=> UnsafeCastToUsize((__RawPtr(std::addressof(rhs))))) >= 0;
 		}
@@ -293,7 +295,7 @@ class Unsafe;
 	template<class T> inline constexpr auto Unsafe::IsAddressLessThan(const T& lhs, const T& rhs)  -> const bool
 	{
 		#line 192 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard192{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard192{};
 			#line 193 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			return (UnsafeCastToUsize((__RawPtr(std::addressof(lhs)))) <=> UnsafeCastToUsize((__RawPtr(std::addressof(rhs))))) < 0;
 		}
@@ -303,7 +305,7 @@ class Unsafe;
 	template<class T> inline constexpr auto Unsafe::IsAddressLessThanOrEqualTo(const T& lhs, const T& rhs)  -> const bool
 	{
 		#line 200 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard200{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard200{};
 			#line 201 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			return (UnsafeCastToUsize((__RawPtr(std::addressof(lhs)))) <=> UnsafeCastToUsize((__RawPtr(std::addressof(rhs))))) <= 0;
 		}
@@ -313,7 +315,7 @@ class Unsafe;
 	template<class T> inline constexpr auto Unsafe::IsNullRef(const T& src)  -> const bool
 	{
 		#line 208 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard208{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard208{};
 			#line 209 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			return (__RawPtr(std::addressof(src))) == nullptr;
 		}
@@ -323,29 +325,29 @@ class Unsafe;
 	template<class T> inline constexpr auto Unsafe::NullRef()  -> const Builtin::MutableRef<T>
 	{
 		#line 214 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		ADV_EXPRESSION_BODY(BitCast<typename Builtin::MutableRef<T>>(Builtin::usize(0U))); 
+		ADV_EXPRESSION_BODY(BitCast<typename Builtin::template MutableRef<T>>(Builtin::usize(0U))); 
 	}
 #line 216 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 	inline auto Unsafe::MemCmp(Builtin::Unsafe::__RawPtr<const void> lhs, Builtin::Unsafe::__RawPtr<const void> rhs, Builtin::usize count)  -> const Builtin::i32
-	{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;
+	{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe$Protected__Unsafe;
 		#line 216 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 		ADV_EXPRESSION_BODY(std::memcmp(lhs, rhs, count)); 
 	}
 #line 217 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 	inline auto Unsafe::MemCpy(Builtin::Unsafe::__RawPtr<void> dest, Builtin::Unsafe::__RawPtr<const void> src, Builtin::usize count)  -> decltype(auto)
-	{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;
+	{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe$Protected__Unsafe;
 		#line 217 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 		ADV_EXPRESSION_BODY(std::memcpy(dest, src, count)); 
 	}
 #line 218 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 	inline auto Unsafe::MemMove(Builtin::Unsafe::__RawPtr<void> dest, Builtin::Unsafe::__RawPtr<const void> src, Builtin::usize count)  -> decltype(auto)
-	{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;
+	{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe$Protected__Unsafe;
 		#line 218 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 		ADV_EXPRESSION_BODY(std::memmove(dest, src, count)); 
 	}
 #line 219 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 	inline auto Unsafe::MemSet(Builtin::Unsafe::__RawPtr<void> dest, Builtin::i32 ch, Builtin::usize count)  -> decltype(auto)
-	{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;
+	{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe$Protected__Unsafe;
 		#line 219 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 		ADV_EXPRESSION_BODY(std::memset(dest, ch, count)); 
 	}
@@ -353,7 +355,7 @@ class Unsafe;
 	template<class T> inline constexpr auto Unsafe::Read(const Builtin::u8& src)  -> const T
 	{
 		#line 226 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard226{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard226{};
 			#line 227 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			return (*(UnsafePointerCast<T>((__RawPtr(std::addressof(src))))));
 		}
@@ -364,7 +366,7 @@ class Unsafe;
 	{
 		T& src = __src__;
 		#line 236 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard236{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard236{};
 			#line 237 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			return Builtin::MutableRef((*(((__RawPtr(std::addressof(src))) - offset))));
 		}
@@ -374,7 +376,7 @@ class Unsafe;
 	template<class T> requires(std::is_lvalue_reference_v<T>) inline constexpr auto Unsafe::Subtract(T&& src, Builtin::usize offset)  -> const Builtin::Ref<T>
 	{
 		#line 246 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard246{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard246{};
 			#line 247 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			return (*(((__RawPtr(std::addressof(src))) - offset)));
 		}
@@ -385,7 +387,7 @@ class Unsafe;
 	{
 		T& src = __src__;
 		#line 256 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard256{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard256{};
 			#line 257 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			return Builtin::MutableRef((*(UnsafePointerCast<std::remove_cvref_t<T>>(UnsafePointerCast<Builtin::u8>((__RawPtr(std::addressof(src)))) - offset))));
 		}
@@ -395,7 +397,7 @@ class Unsafe;
 	template<class T> requires(std::is_lvalue_reference_v<T>) inline constexpr auto Unsafe::SubtractByteOffset(T&& src, Builtin::usize offset)  -> const Builtin::Ref<T>
 	{
 		#line 266 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard266{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard266{};
 			#line 267 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			return (*(UnsafePointerCast<std::remove_cvref_t<T>>(UnsafePointerCast<Builtin::u8>((__RawPtr(std::addressof(src)))) - offset)));
 		}
@@ -406,7 +408,7 @@ class Unsafe;
 	{
 		Builtin::u8& dest = __dest__;
 		#line 278 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
-		{	using namespace Builtin::Unsafe;	using namespace __Unsafe;	using namespace __Unsafe_Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard278{};
+		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::CompilerServices::__Unsafe;	using namespace __Unsafe$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard278{};
 			#line 279 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\CompilerServices\\Unsafe.ast"
 			(*(UnsafePointerCast<std::remove_cvref_t<T>>((__RawPtr(std::addressof(dest)))))) = val;
 		}

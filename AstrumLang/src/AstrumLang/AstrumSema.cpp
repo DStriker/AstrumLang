@@ -67,8 +67,8 @@ namespace AstrumLang {
 			if (i > 0)
 				result += ".";
 			auto type = structs[i];
-			if (i < (structs.size() - 1) && type.starts_with("__Class_"))
-				type = type.substr(8);
+			if (i < (structs.size() - 1) && type.starts_with("$Class_"))
+				type = type.substr(7);
 			result += type;
 		}
 		return result;
@@ -258,7 +258,7 @@ namespace AstrumLang {
 		StringReplace(result, "\r", "");
 		StringReplace(result, "\n", "");
 
-		return std::format("__ntuples.NamedTuple_{:016x}", StringHash(result));
+		return std::format("$ntuples.NamedTuple_{:016x}", StringHash(result));
 	}
 
 	std::string AstrumSema::getInterfaceMethodId(std::string_view name,
@@ -285,7 +285,7 @@ namespace AstrumLang {
 			result += std::to_string(test->getStart()->getLine());
 		}
 
-		return std::format("__Test_{:016x}", StringHash(result));
+		return std::format("$Test_{:016x}", StringHash(result));
 	}
 
 	std::string AstrumSema::getCustomOperatorName(std::string_view op) {
@@ -1817,7 +1817,7 @@ namespace AstrumLang {
 			if (isStr)
 				for (const auto& lit : literals) {
 					literalTable.insert(std::make_pair(
-					    std::format("__strconst_{}_{}", (void*) ctx->initializerClause(), i++),
+					    std::format("$strconst_{}_{}", (void*) ctx->initializerClause(), i++),
 					    lit));
 				}
 		}
@@ -2881,24 +2881,23 @@ namespace AstrumLang {
 			}
 		}
 
-		if (checkForCurrentPass()) {
-			if (ctx->Dot()) {
-				if (unsafeDepth == 0) {
-					auto txt = ctx->getText();
-					auto pos = txt.rfind('.');
-					if (cppParser.unsafeVariables.contains(txt)) {
+		if (ctx->Dot() && checkForCurrentPass()) {
+			if (unsafeDepth == 0) {
+				auto txt = ctx->getText();
+				auto pos = txt.rfind('.');
+				if (cppParser.unsafeVariables.contains(txt)) {
+					notifyErrorListeners("Cannot to use unsafe variable in the safe context",
+					                     ctx->idExpression()->getStart());
+				} else {
+					txt = txt.substr(0, pos);
+					if (cppParser.unsafeVariables.contains(txt))
 						notifyErrorListeners("Cannot to use unsafe variable in the safe context",
-						                     ctx->idExpression()->getStart());
-					} else {
-						txt = txt.substr(0, pos);
-						if (cppParser.unsafeVariables.contains(txt))
-							notifyErrorListeners(
-							    "Cannot to use unsafe variable in the safe context",
-							    ctx->postfixExpression()->getStart());
-					}
+						                     ctx->postfixExpression()->getStart());
 				}
-				if (auto id = ctx->idExpression()) {
-					memberIds.insert(id->getText());
+			}
+			if (auto id = ctx->idExpression()) {
+				if (auto ident = id->unqualifiedId()->Identifier()) {
+					memberIds.insert(ident->getText());
 				}
 			}
 		}
@@ -4071,7 +4070,7 @@ namespace AstrumLang {
 				name += ">";
 			}
 			if (!isStatic)
-				name = "__Class_" + name;
+				name = "$Class_" + name;
 			currentTypeWithTemplate.push(name);
 		}
 		currentAccessSpecifier.push(std::nullopt);
@@ -4091,21 +4090,21 @@ namespace AstrumLang {
 				constructorCounts.pop();
 				if (!top->templateSpecializationArgs) {
 					if (currentTypeKind.top() != TypeKind::StaticClass) {
-						forwardDeclarations.push_back({top->id + "__Unowned",
+						forwardDeclarations.push_back({top->id + "$Unowned",
 						                               top->templateParams,
 						                               top->constraints,
 						                               top->access,
 						                               {0, 0},
 						                               top->compilationCondition,
 						                               top->isUnsafe});
-						forwardDeclarations.push_back({top->id + "__Weak",
+						forwardDeclarations.push_back({top->id + "$Weak",
 						                               top->templateParams,
 						                               top->constraints,
 						                               top->access,
 						                               {0, 0},
 						                               top->compilationCondition,
 						                               top->isUnsafe});
-						forwardDeclarations.push_back({"__Class_" + top->id,
+						forwardDeclarations.push_back({"$Class_" + top->id,
 						                               top->templateParams,
 						                               top->constraints,
 						                               top->access,
@@ -4235,14 +4234,14 @@ namespace AstrumLang {
 				isPrivateTypeDefinition   = false;
 				auto& top                 = structStack.top();
 				finalizeTypeDefinition(top);
-				forwardDeclarations.push_back({top->id + "__Unowned",
+				forwardDeclarations.push_back({top->id + "$Unowned",
 				                               top->templateParams,
 				                               top->constraints,
 				                               top->access,
 				                               {0, 0},
 				                               top->compilationCondition,
 				                               top->isUnsafe});
-				forwardDeclarations.push_back({top->id + "__Weak",
+				forwardDeclarations.push_back({top->id + "$Weak",
 				                               top->templateParams,
 				                               top->constraints,
 				                               top->access,
@@ -4391,7 +4390,7 @@ namespace AstrumLang {
 				isPrivateTypeDefinition   = false;
 				auto& top                 = structStack.top();
 				finalizeTypeDefinition(top);
-				forwardDeclarations.push_back({"__Class_" + top->id,
+				forwardDeclarations.push_back({"$Class_" + top->id,
 				                               nullptr,
 				                               nullptr,
 				                               top->access,
@@ -4517,7 +4516,7 @@ namespace AstrumLang {
 			if (!structStack.empty())
 				structStack.top()->nestedStructs.push_back(def);
 			structStack.push(def);
-			currentTypeWithTemplate.push("__Class_" + name);
+			currentTypeWithTemplate.push("$Class_" + name);
 		}
 		currentAccessSpecifier.push(std::nullopt);
 
@@ -4534,21 +4533,21 @@ namespace AstrumLang {
 				if (constructorCounts.top() == 0)
 					top->isDefaultConstructible = true;
 				constructorCounts.pop();
-				forwardDeclarations.push_back({top->id + "__Unowned",
+				forwardDeclarations.push_back({top->id + "$Unowned",
 				                               top->templateParams,
 				                               top->constraints,
 				                               top->access,
 				                               {0, 0},
 				                               top->compilationCondition,
 				                               top->isUnsafe});
-				forwardDeclarations.push_back({top->id + "__Weak",
+				forwardDeclarations.push_back({top->id + "$Weak",
 				                               top->templateParams,
 				                               top->constraints,
 				                               top->access,
 				                               {0, 0},
 				                               top->compilationCondition,
 				                               top->isUnsafe});
-				forwardDeclarations.push_back({"__Class_" + top->id,
+				forwardDeclarations.push_back({"$Class_" + top->id,
 				                               top->templateParams,
 				                               top->constraints,
 				                               top->access,
@@ -4717,7 +4716,7 @@ namespace AstrumLang {
 				isPrivateTypeDefinition   = false;
 				auto& top                 = structStack.top();
 				finalizeTypeDefinition(top);
-				forwardDeclarations.push_back({"__Class_" + top->id,
+				forwardDeclarations.push_back({"$Class_" + top->id,
 				                               top->templateParams,
 				                               top->constraints,
 				                               top->access,
@@ -6052,7 +6051,7 @@ namespace AstrumLang {
 			std::string id;
 			bool isOperator = false;
 			if (isMain) {
-				id = "__Astrum_Main";
+				id = "$Astrum_Main";
 			} else if (ctx->Identifier()) {
 				id = ctx->Identifier()->getText();
 			} else if (ctx->simpleTemplateId()) {
@@ -6988,7 +6987,7 @@ namespace AstrumLang {
 			std::string id = structStack.top()->id;
 			if (currentTypeKind.top() == TypeKind::Class ||
 			    currentTypeKind.top() == TypeKind::EnumClass)
-				id = "__Class_" + id;
+				id = "$Class_" + id;
 
 			auto lastTparams     = getLastTypeTemplateParams();
 			auto lastSpec        = getLastTypeTemplateSpecializationArgs();
@@ -7214,7 +7213,7 @@ namespace AstrumLang {
 
 		std::string id = "~" + structStack.top()->id;
 		if (currentTypeKind.top() == TypeKind::Class)
-			id.insert(1, "__Class_");
+			id.insert(1, "$Class_");
 		auto lastTparams     = getLastTypeTemplateParams();
 		auto lastSpec        = getLastTypeTemplateSpecializationArgs();
 		auto lastConstraints = getLastTypeConstraints();
@@ -8293,7 +8292,7 @@ namespace AstrumLang {
 			std::string id = structStack.top()->id;
 			if (currentTypeKind.top() == TypeKind::Class ||
 			    currentTypeKind.top() == TypeKind::EnumClass)
-				id = "__Class_" + id;
+				id = "$Class_" + id;
 
 			auto lastTparams     = getLastTypeTemplateParams();
 			auto lastSpec        = getLastTypeTemplateSpecializationArgs();
@@ -8386,7 +8385,7 @@ namespace AstrumLang {
 			std::string id = "~" + structStack.top()->id;
 			if (currentTypeKind.top() == TypeKind::Class ||
 			    currentTypeKind.top() == TypeKind::EnumClass)
-				id = "__Class_" + id;
+				id = "$Class_" + id;
 
 			auto lastTparams     = getLastTypeTemplateParams();
 			auto lastSpec        = getLastTypeTemplateSpecializationArgs();

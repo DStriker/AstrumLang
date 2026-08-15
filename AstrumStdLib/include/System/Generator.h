@@ -7,12 +7,14 @@
 using namespace System::Collections;
 
 namespace System {
-namespace __Unsafe {} namespace __Generator_Protected__Unsafe {}
+namespace __Unsafe {} namespace __Generator$Protected__Unsafe {}
+} namespace $extensions {
+} namespace System {
 //###############################################################################
 //# Global type aliases
 //###############################################################################
 #line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Generator.ast"
-template<class T> using Generator = typename Builtin::Generator<T>;
+template<class T> using Generator = typename Builtin::template Generator<T>;
 //###############################################################################
 //# Free function declarations
 //###############################################################################

@@ -9,11 +9,13 @@ using namespace X86;
 using namespace Arm;
 
 namespace System::Runtime::Intrinsics {
-namespace __Unsafe {} namespace __SimdInstructionSet_Protected__Unsafe {}
+namespace __Unsafe {} namespace __SimdInstructionSet$Protected__Unsafe {}
 //###############################################################################
 //# Type forward declarations
 //###############################################################################
 class SimdInstructionSet;
+} namespace $extensions {
+} namespace System::Runtime::Intrinsics {
 //###############################################################################
 //# Global type aliases
 //###############################################################################
@@ -34,7 +36,7 @@ using CpuFeatureSet = CommonCpuFeatureSet;
 //###############################################################################
 #line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdInstructionSet.ast"
 	struct SimdInstructionSet : public Builtin::StaticClass {
-		public: using __self = SimdInstructionSet;
+		public: using $self = SimdInstructionSet;
 		private: SimdInstructionSet() = default;
 		#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdInstructionSet.ast"
 		public: inline static auto getIsRuntimeAvailable()  -> bool;

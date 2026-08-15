@@ -5,21 +5,23 @@
 #include "ASTRUMSTD_export.h"
 
 namespace System::Globalization {
-namespace __Unsafe {} namespace __UnicodeCategory_Protected__Unsafe {}
+namespace __Unsafe {} namespace __UnicodeCategory$Protected__Unsafe {}
 //###############################################################################
 //# Type forward declarations
 //###############################################################################
 class UnicodeCategory;
-class __Class_UnicodeCategory;
+class $Class_UnicodeCategory;
+} namespace $extensions {
+} namespace System::Globalization {
 //###############################################################################
 //# Type definitions
 //###############################################################################
-class __Class_UnicodeCategory;
+class $Class_UnicodeCategory;
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\UnicodeCategory.ast"
 	struct UnicodeCategory final : public Builtin::Enum {
-		public: using __self = UnicodeCategory;
-		public: using __class = __Class_UnicodeCategory;
-		public: FORCE_INLINE constexpr decltype(auto) __ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) __ref() const noexcept { return *this; }
+		public: using $self = UnicodeCategory;
+		public: using $class = $Class_UnicodeCategory;
+		public: FORCE_INLINE constexpr decltype(auto) $ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) $ref() const noexcept { return *this; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\UnicodeCategory.ast"
 		private: Builtin::i32 __value;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\UnicodeCategory.ast"
@@ -38,8 +40,8 @@ class __Class_UnicodeCategory;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\UnicodeCategory.ast"
 		public: constexpr operator bool() const noexcept { return static_cast<bool>(__value); } 
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\UnicodeCategory.ast"
-		public: constexpr bool operator ==(const __self& that) const noexcept { return __value == that.__value; } 
-		public: constexpr auto operator <=>(const __self& that) const noexcept { return __value <=> that.__value; } 
+		public: constexpr bool operator ==(const $self& that) const noexcept { return __value == that.__value; } 
+		public: constexpr auto operator <=>(const $self& that) const noexcept { return __value <=> that.__value; } 
 		#line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\UnicodeCategory.ast"
 		public: static ASTRUMSTD_HIDDEN const UnicodeCategory UppercaseLetter;
 		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\UnicodeCategory.ast"
@@ -104,7 +106,7 @@ class __Class_UnicodeCategory;
 		public: constexpr operator Builtin::i32() const noexcept { return __value; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\UnicodeCategory.ast"
 		private: constexpr UnicodeCategory(Builtin::i32 value) : __value(value) {}
-		public: static constexpr __self FromValue(Builtin::i32 rawValue) { return __self(rawValue); }
+		public: static constexpr $self FromValue(Builtin::i32 rawValue) { return $self(rawValue); }
 		
 	};
 	
@@ -234,13 +236,13 @@ class __Class_UnicodeCategory;
 	
 	
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\UnicodeCategory.ast"
-	class __Class_UnicodeCategory final : public Builtin::ValueType
+	class $Class_UnicodeCategory final : public Builtin::ValueType
 	{
 		#line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\UnicodeCategory.ast"
-		public: using __underlying = UnicodeCategory; using __self = __underlying;
-		__self __value;
-		__Class_UnicodeCategory(const __underlying& value) noexcept(std::is_nothrow_copy_constructible_v<__underlying>) : __value{value} {}
-		operator __underlying() const noexcept { return __value; }
+		public: using $underlying = UnicodeCategory; using $self = $underlying;
+		$self __value;
+		$Class_UnicodeCategory(const $underlying& value) noexcept(std::is_nothrow_copy_constructible_v<$underlying>) : __value{value} {}
+		operator $underlying() const noexcept { return __value; }
 		
 	};
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\UnicodeCategory.ast"
