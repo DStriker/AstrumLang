@@ -1846,6 +1846,117 @@ namespace AstrumLang {
 			out << "public: static constexpr int __variants = " << i << ";\n"
 			    << std::string(depth, '\t');
 		} else if (type->kind == TypeKind::Union) {
+			// union member structures
+			for (const auto& constant : type->constants) {
+				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
+				    << std::string(depth, '\t');
+				if (auto clause = constant.unionEnumerator) {
+					if (!clause->Identifier().empty()) {
+						// named union members
+						out << "public: struct ";
+						if (type->attributes) {
+							for (auto attr : type->attributes->attributeSpecifier()) {
+								auto attrName = attr->Identifier()->getText();
+								if (attrName == "Deprecated") {
+									out << "[[deprecated";
+									if (attr->attributeArgumentClause())
+										out << "("
+										    << attr->attributeArgumentClause()
+										           ->expressionList()
+										           ->getText()
+										    << ")";
+									out << "]] ";
+								} else if (attrName == "Unused") {
+									out << "[[maybe_unused]] ";
+								} else {
+									printAttributeSpecifier(attr);
+									out << " ";
+								}
+							}
+						}
+						out << constant.id
+						    << " : Builtin::Struct { decltype(auto) $ref() const noexcept { return "
+						       "*this; }\n"
+						    << std::string(++depth, '\t');
+						auto types = clause->theTypeId();
+						auto ids   = clause->Identifier();
+						for (size_t i = 0, size = types.size(); i < size; ++i) {
+							printTypeId(types[i]);
+							out << " " << ids[i]->getText() << "; ";
+							out << "ADV_CHECK_REF_STRUCT(";
+							auto t = types[i]->getText();
+							StringReplace(t, "\"", "\\\"");
+							out << "\"" << t << "\", ";
+							printTypeId(types[i]);
+							out << ");\n" << std::string(depth, '\t');
+						}
+						out << constant.id << "() = default; ";
+						out << constant.id << "(";
+						bool first = true;
+						for (size_t i = 0, size = types.size(); i < size; ++i) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printTypeId(types[i]);
+							out << " _" << ids[i]->getText();
+						}
+						out << ") : ";
+						first = true;
+						for (size_t i = 0, size = types.size(); i < size; ++i) {
+							if (!first)
+								out << ", ";
+							first = false;
+							out << ids[i]->getText();
+							out << "{_" << ids[i]->getText() << "}";
+						}
+						out << " {}\n" << std::string(depth, '\t');
+						out << "bool operator==(const " << constant.id
+						    << "& that) const noexcept { return ";
+						for (size_t i = 0, size = types.size(); i < size; ++i) {
+							if (i > 0)
+								out << " && ";
+							out << ids[i]->getText() << " == that." << ids[i]->getText();
+						}
+						out << "; }";
+						out << "\n"
+						    << std::string(--depth, '\t') << "};\n"
+						    << std::string(depth, '\t');
+					} else {
+						// anonymous union members
+						out << "public: using " << constant.id << " = ";
+						auto types = clause->theTypeId();
+						if (types.size() == 1) {
+							printTypeId(types[0]);
+							out << "; ADV_CHECK_REF_STRUCT(";
+							auto t = types[0]->getText();
+							StringReplace(t, "\"", "\\\"");
+							out << "\"" << t << "\", ";
+							printTypeId(types[0]);
+							out << ")";
+						} else {
+							out << "std::tuple<";
+							bool first = true;
+							for (auto t : types) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printTypeId(t);
+							}
+							out << ">";
+						}
+
+						out << ";\n" << std::string(depth, '\t');
+					}
+				} else {
+					// empty union members
+					out << "private: struct __UnionType_" << constant.id
+					    << " : Builtin::Struct { constexpr bool operator==(const __UnionType_"
+					    << constant.id << " &) const noexcept { return true; } ";
+					out << "}; public: static constexpr __UnionType_" << constant.id << " "
+					    << constant.id << "{};\n"
+					    << std::string(depth, '\t');
+				}
+			}
 			// union data
 			out << "private: union {\n" << std::string(++depth, '\t');
 			for (const auto& constant : type->constants) {
@@ -3679,95 +3790,7 @@ namespace AstrumLang {
 					out << CompilerSettings::get().dllName << "_API";
 				}
 				out << " const $self " << constant.id << ";\n" << std::string(depth, '\t');
-			} else if (type->kind == TypeKind::Union) {
-				out << "#line " << constant.pos.line << " \"" << fullFilename << ".ast\"\n"
-				    << std::string(depth, '\t');
-				if (auto clause = constant.unionEnumerator) {
-					if (!clause->Identifier().empty()) {
-						// named union members
-						out << "public: struct ";
-						if (type->attributes) {
-							for (auto attr : type->attributes->attributeSpecifier()) {
-								auto attrName = attr->Identifier()->getText();
-								if (attrName == "Deprecated") {
-									out << "[[deprecated";
-									if (attr->attributeArgumentClause())
-										out << "("
-										    << attr->attributeArgumentClause()
-										           ->expressionList()
-										           ->getText()
-										    << ")";
-									out << "]] ";
-								} else if (attrName == "Unused") {
-									out << "[[maybe_unused]] ";
-								} else {
-									printAttributeSpecifier(attr);
-									out << " ";
-								}
-							}
-						}
-						out << constant.id
-						    << " { decltype(auto) $ref() const noexcept { return *this; }\n"
-						    << std::string(++depth, '\t');
-						auto types = clause->theTypeId();
-						auto ids   = clause->Identifier();
-						for (size_t i = 0, size = types.size(); i < size; ++i) {
-							printTypeId(types[i]);
-							out << " " << ids[i]->getText() << "; ";
-							out << "ADV_CHECK_REF_STRUCT(";
-							auto t = types[i]->getText();
-							StringReplace(t, "\"", "\\\"");
-							out << "\"" << t << "\", ";
-							printTypeId(types[i]);
-							out << ");\n" << std::string(depth, '\t');
-						}
-						out << "bool operator==(const " << constant.id
-						    << "& that) const noexcept { return ";
-						for (size_t i = 0, size = types.size(); i < size; ++i) {
-							if (i > 0)
-								out << " && ";
-							out << ids[i]->getText() << " == that." << ids[i]->getText();
-						}
-						out << "; }";
-						out << "\n"
-						    << std::string(--depth, '\t') << "};\n"
-						    << std::string(depth, '\t');
-					} else {
-						// anonymous union members
-						out << "public: using " << constant.id << " = ";
-						auto types = clause->theTypeId();
-						if (types.size() == 1) {
-							printTypeId(types[0]);
-							out << "; ADV_CHECK_REF_STRUCT(";
-							auto t = types[0]->getText();
-							StringReplace(t, "\"", "\\\"");
-							out << "\"" << t << "\", ";
-							printTypeId(types[0]);
-							out << ")";
-						} else {
-							out << "std::tuple<";
-							bool first = true;
-							for (auto t : types) {
-								if (!first)
-									out << ", ";
-								first = false;
-								printTypeId(t);
-							}
-							out << ">";
-						}
-
-						out << ";\n" << std::string(depth, '\t');
-					}
-				} else {
-					// empty union members
-					out << "private: struct __UnionType_" << constant.id
-					    << "{ constexpr bool operator==(const __UnionType_" << constant.id
-					    << " &) const noexcept { return true; } ";
-					out << "}; public: static constexpr __UnionType_" << constant.id << " "
-					    << constant.id << "{};\n"
-					    << std::string(depth, '\t');
-				}
-			} else {
+			} else if (type->kind != TypeKind::Union) {
 				if (!constant.compilationCondition.empty()) {
 					out << "#if " << constant.compilationCondition << std::endl
 					    << std::string(depth, '\t');
@@ -12824,6 +12847,8 @@ namespace AstrumLang {
 			printEnumDefinition(type);
 		} else if (auto type = ctx->enumClassDefinition()) {
 			printEnumClassDefinition(type);
+		} else if (auto type = ctx->unionDefinition()) {
+			printUnionDefinition(type);
 		} else if (auto func = ctx->functionDefinition()) {
 			printFunctionDefinition(func);
 		} else if (auto ext = ctx->externVariableDeclaration()) {
@@ -14811,6 +14836,23 @@ namespace AstrumLang {
 	void AstrumCodegen::printEnumClassMemberSpecification(
 	    AstrumParser::EnumClassMemberSpecificationContext* ctx) {
 		for (auto decl : ctx->structMemberDeclaration()) { printStructMemberDeclaration(decl); }
+	}
+
+	void AstrumCodegen::printUnionDefinition(AstrumParser::UnionDefinitionContext* ctx) {
+		if (isStructDeclaration || functionBody)
+			return;
+
+		sema.typeset.insert(ctx->unionHead()->Identifier()->getText());
+		sema.symbolContexts.push(sema.symbolContexts.top());
+		if (ctx->unionMemberSpecification()) {
+			printUnionMemberSpecification(ctx->unionMemberSpecification());
+		}
+		sema.symbolContexts.pop();
+	}
+
+	void AstrumCodegen::printUnionMemberSpecification(
+	    AstrumParser::UnionMemberSpecificationContext* ctx) {
+		for (auto decl : ctx->enumMemberDeclaration()) { printEnumMemberDeclaration(decl); }
 	}
 
 	void AstrumCodegen::printAttributeSpecifierSeq(
@@ -19498,7 +19540,9 @@ namespace AstrumLang {
 			} else {
 				out << "Builtin::Is";
 				if (auto type = pattern->theTypeId()) {
-					out << "<typename ";
+					out << "<";
+					if (type->getText().find(".") != std::string::npos)
+						out << "typename ";
 					printTypeId(type);
 					out << ">(";
 					if (isDeconstruction) {
@@ -21119,7 +21163,7 @@ namespace AstrumLang {
 			}
 		}
 
-		if (ctx->Question())
+		if (ctx->Question() && !isWeak)
 			out << "Builtin::Nullable<";
 		if (ctx->typeSpecifierSeq()) {
 			printTypeSpecifierSeq(ctx->typeSpecifierSeq());
@@ -21127,7 +21171,7 @@ namespace AstrumLang {
 			printTypeId(ctx->theTypeId());
 		}
 
-		if (ctx->Question())
+		if (ctx->Question() && !isWeak)
 			out << ">";
 
 		out << std::string(brackets, '>');

@@ -347,9 +347,7 @@ namespace Builtin {
 
 		ObjectRef$Unowned(const Object& ref) : _obj {(Object*) &ref} { UnownedRetain(_obj); }
 
-		ObjectRef$Unowned(const ObjectRef$Unowned& copy) : _obj {copy._obj} {
-			UnownedRetain(_obj);
-		}
+		ObjectRef$Unowned(const ObjectRef$Unowned& copy) : _obj {copy._obj} { UnownedRetain(_obj); }
 
 		ObjectRef$Unowned(ObjectRef$Unowned&& moved) noexcept : _obj {moved._obj} {
 			moved._obj = nullptr;
@@ -411,7 +409,7 @@ namespace Builtin {
 	class OptionalUnownedRef;
 	template <class T>
 	class OptionalFunctionRef;
-	template <class T>
+	/*template <class T>
 	using Nullable = std::conditional_t<
 	    std::is_base_of_v<ObjectRef, T>, OptionalStrongRef<T>,
 	    std::conditional_t<
@@ -423,7 +421,15 @@ namespace Builtin {
 	                std::conditional_t<
 	                    IsNullable<T>, T,
 	                    std::conditional_t<std::is_base_of_v<RefStruct, T>, System::OptionalRef<T>,
-	                                       System::Optional<T>>>>>>>;
+	                                       System::Optional<T>>>>>>>;*/
+	template <class T>
+	using Nullable = std::conditional_t<
+	    std::is_base_of_v<ObjectRef, T>, OptionalStrongRef<T>,
+	    std::conditional_t<
+	        std::is_base_of_v<ObjectRef$Unowned, T>, OptionalUnownedRef<T>,
+	        std::conditional_t<std::is_base_of_v<FuncBase, T>, OptionalFunctionRef<T>,
+	                           std::conditional_t<std::is_base_of_v<RefStruct, T>,
+	                                              System::OptionalRef<T>, System::Optional<T>>>>>;
 
 	template <class T>
 	class OptionalStrongRef {
@@ -432,11 +438,12 @@ namespace Builtin {
 	   public:
 		static_assert(std::is_base_of_v<ObjectRef, T>);
 		static constexpr bool __IS_ADV_NULLABLE = true;
-		using $class                           = typename T::$class;
-		using $self                            = T;
-		using $strong_ref                      = OptionalStrongRef<T>;
-		using $unowned_ref                     = OptionalUnownedRef<typename T::$unowned_ref>;
-		using $weak_ref                        = typename T::$weak_ref;
+		using $class                            = typename T::$class;
+		using $self                             = T;
+		using $strong_ref                       = OptionalStrongRef<T>;
+		using $unowned_ref                      = OptionalUnownedRef<typename T::$unowned_ref>;
+		using $weak_ref                         = typename T::$weak_ref;
+		using ElementType                       = T;
 		template <class U>
 		friend class OptionalStrongRef;
 		template <class U>
@@ -471,10 +478,10 @@ namespace Builtin {
 		    : ref(std::forward<U>(other)) {}
 		template <class U>
 		requires(std::same_as<T, ObjectRef>) OptionalStrongRef(const System::Optional<U>& other) {
-			if (!other.IsValid()) {
+			if (!other.IsValidFlatten()) {
 				ref = nullptr;
 			} else {
-				ref = *other;
+				ref = *other.Flatten();
 			}
 		}
 
@@ -533,10 +540,10 @@ namespace Builtin {
 		template <class U>
 		requires(std::same_as<T, ObjectRef>) OptionalStrongRef& operator=(
 		    const System::Optional<U>& other) {
-			if (!other.IsValid()) {
+			if (!other.IsValidFlatten()) {
 				ref = nullptr;
 			} else {
-				ref = *other;
+				ref = *other.Flatten();
 			}
 			return *this;
 		}
@@ -581,6 +588,9 @@ namespace Builtin {
 		FORCE_INLINE explicit operator bool() const noexcept { return ref._obj != nullptr; }
 
 		FORCE_INLINE bool IsValid() const noexcept { return ref._obj != nullptr; }
+
+		FORCE_INLINE auto Flatten() const { return *this; }
+		FORCE_INLINE bool IsValidFlatten() const { return IsValid(); }
 
 		template <class F>
 		auto AndThen(F&& func) & {
@@ -682,11 +692,12 @@ namespace Builtin {
 	   public:
 		static_assert(std::is_base_of_v<ObjectRef$Unowned, T>);
 		static constexpr bool __IS_ADV_NULLABLE = true;
-		using $class                           = typename T::$class;
-		using $self                            = T::$strong_ref;
-		using $strong_ref                      = OptionalStrongRef<typename T::$strong_ref>;
-		using $unowned_ref                     = OptionalUnownedRef<T>;
-		using $weak_ref                        = typename T::$weak_ref;
+		using $class                            = typename T::$class;
+		using $self                             = T::$strong_ref;
+		using $strong_ref                       = OptionalStrongRef<typename T::$strong_ref>;
+		using $unowned_ref                      = OptionalUnownedRef<T>;
+		using $weak_ref                         = typename T::$weak_ref;
+		using ElementType                       = T;
 		template <class U>
 		friend class OptionalStrongRef;
 		template <class U>
@@ -767,6 +778,8 @@ namespace Builtin {
 		FORCE_INLINE explicit operator bool() const noexcept { return ref._obj != nullptr; }
 
 		FORCE_INLINE bool IsValid() const noexcept { return ref._obj != nullptr; }
+		FORCE_INLINE auto Flatten() const { return *this; }
+		FORCE_INLINE bool IsValidFlatten() const { return IsValid(); }
 
 		template <class F>
 		auto AndThen(F&& func) & {
@@ -869,10 +882,10 @@ namespace Builtin {
 		static ObjectSideTable* formWeakRef(Object* obj) { return obj->_refCounts.formWeakRef(); }
 
 	   public:
-		using $class                           = Object;
-		using $strong_ref                      = ObjectRef;
-		using $unowned_ref                     = ObjectRef$Unowned;
-		using $weak_ref                        = ObjectRef$Weak;
+		using $class                            = Object;
+		using $strong_ref                       = ObjectRef;
+		using $unowned_ref                      = ObjectRef$Unowned;
+		using $weak_ref                         = ObjectRef$Weak;
 		static constexpr bool __IS_ADV_NULLABLE = true;
 
 		FORCE_INLINE decltype(auto) $ref() const noexcept { return *this; }
@@ -887,8 +900,7 @@ namespace Builtin {
 			moved._obj = nullptr;
 		}
 
-		ObjectRef$Weak(const $strong_ref& strong)
-		    : _obj {strong._obj->_refCounts.formWeakRef()} {}
+		ObjectRef$Weak(const $strong_ref& strong) : _obj {strong._obj->_refCounts.formWeakRef()} {}
 
 		ObjectRef$Weak(decltype(nullptr)) : _obj {nullptr} {}
 
@@ -977,6 +989,11 @@ namespace Builtin {
 			return false;
 		}
 
+		FORCE_INLINE auto Flatten() const { return *this; }
+		FORCE_INLINE bool IsValidFlatten() const {
+			return IsValid();
+		}
+
 		template <class F>
 		auto AndThen(F&& func) const {
 			using return_type = std::invoke_result_t<F, const $strong_ref&>;
@@ -1013,6 +1030,8 @@ namespace Builtin {
 			return *this;
 		}
 	};
+
+	using WeakObjectRef = ObjectRef$Weak;
 
 	class InterfaceRef : public ObjectRef {
 	   public:
@@ -1172,8 +1191,9 @@ namespace Builtin {
 			return GetObjectReference(&lhs) == GetObjectReference(&rhs);
 		} else if constexpr (isLeftNullable && isRightNullable) {
 			if constexpr (isLeftSystemOptional && isRightSystemOptional) {
-				return (!lhs.IsValid() && !rhs.IsValid()) ||
-				       (lhs.IsValid() && rhs.IsValid() && sizeof(lhs) == sizeof(rhs) && *lhs == *rhs);
+				return (!lhs.IsValidFlatten() && !rhs.IsValidFlatten()) ||
+				       (lhs.IsValidFlatten() && rhs.IsValidFlatten() &&
+				        *lhs.Flatten() == *rhs.Flatten());
 			} else if constexpr (!isLeftSystemOptional && !isRightSystemOptional) {
 				return lhs.IsValid() == rhs.IsValid() &&
 				       (!lhs.IsValid() || getObjectReference(lhs) == getObjectReference(rhs));
@@ -1183,11 +1203,11 @@ namespace Builtin {
 		} else if constexpr (isLeftNullable && !isLeftSystemOptional && isRightObject) {
 			return lhs.IsValid() && getObjectReference(lhs) == GetObjectReference(&rhs);
 		} /*else if constexpr (requires {
-			std::declval<leftType>() == std::declval<rightType>(); }) {
-			return lhs == rhs;
+		    std::declval<leftType>() == std::declval<rightType>(); }) {
+		    return lhs == rhs;
 		}*/
-		else if constexpr(sizeof(lhs) == sizeof(rhs)) {
-            //return std::memcmp(&lhs, &rhs, sizeof(lhs)) == 0;
+		else if constexpr (sizeof(lhs) == sizeof(rhs)) {
+			// return std::memcmp(&lhs, &rhs, sizeof(lhs)) == 0;
 			return lhs == rhs;
 		}
 
@@ -1229,8 +1249,7 @@ namespace Builtin {
 			    std::forward<T>(value));
 		} else if constexpr (isOutputInterfaceType) {
 			if constexpr (isInputInterfaceType) {
-				if constexpr (std::derived_from<typename inputType::$vtable,
-				                                typename U::$vtable>) {
+				if constexpr (std::derived_from<typename inputType::$vtable, typename U::$vtable>) {
 					return std::forward<T>(value);
 				} else /*if constexpr (std::derived_from<typename U::$vtable, typename
 				          inputType::$vtable>)*/
@@ -1343,7 +1362,7 @@ namespace Builtin {
 		if constexpr (std::same_as<inputType, U> || std::derived_from<inputType, U>) {
 			return true;
 		} else if constexpr (isInputOptionalType) {
-			if (!value.IsValid()) {
+			if (!value.IsValidFlatten()) {
 				return std::same_as<inputType, decltype(nullptr)>;
 			}
 
@@ -1354,8 +1373,7 @@ namespace Builtin {
 			return Is<std::decay_t<decltype(*(std::declval<U>()))>, T>(std::forward<T>(value));
 		} else if constexpr (isOutputInterfaceType) {
 			if constexpr (isInputInterfaceType) {
-				if constexpr (std::derived_from<typename inputType::$vtable,
-				                                typename U::$vtable>) {
+				if constexpr (std::derived_from<typename inputType::$vtable, typename U::$vtable>) {
 					return true;
 				} else /*if constexpr (std::derived_from<typename U::$vtable, typename
 				          inputType::$vtable>)*/
@@ -1584,7 +1602,7 @@ namespace Builtin {
 		static_assert(!IsInterface<T>, "Cannot to create instance of the interface type");
 		static_assert(!std::is_abstract_v<T::$class>,
 		              "Cannot to create instance of the abstract class");
-		using __type  = T;
+		using __type = T;
 		using $class = typename T::$class;
 		alignas($class) unsigned char obj[sizeof($class)];
 
@@ -1623,7 +1641,7 @@ namespace Builtin {
 		              "Too little memory for initialization of this type");
 		static_assert(Memory % 8 == 0, "Memory size must be multiple of 8");
 
-		using __type  = T;
+		using __type = T;
 		using $class = typename T::$class;
 
 		alignas($class) unsigned char obj[sizeof($class)];
@@ -1633,7 +1651,7 @@ namespace Builtin {
 		requires std::is_constructible_v<$class, MemorySpace, Args...> StackallocWithExtraMemory(
 		    Args&&... args) {
 			new (obj) $class(MemorySpace {Memory - static_cast<unsigned>(sizeof($class))},
-			                  std::forward<Args>(args)...);
+			                 std::forward<Args>(args)...);
 		}
 
 		template <class... Args>
@@ -1726,6 +1744,19 @@ namespace Builtin {
 	template <class T>
 	using ClassProxyType = typename TClass<T>::type;
 
+	template <class T>
+	struct TNullableElementType {
+		using type = std::decay_t<T>;
+	};
+
+	template <IsNullable T>
+	struct TNullableElementType<T> {
+		using type = std::decay_t<T>::ElementType;
+	};
+
+	template <class T>
+	using NullableElementType = typename TNullableElementType<T>::type;
+
 	struct UncheckedTag {};
 	struct FakeTypeTag {};
 
@@ -1745,7 +1776,7 @@ namespace Builtin {
 	template <typename... Ts>
 	using TypeListHead = typename TTypeListHead<Ts...>::type;
 
-	template<class T>
+	template <class T>
 	inline constexpr bool IsBitwiseEquatable = std::has_unique_object_representations_v<T>;
 
 #ifdef Builtin_OVERFLOW_CHECKS
@@ -1813,12 +1844,10 @@ namespace Builtin {
 #define ADV_CLASS_STRONG_COMMON_CTORS(...)                                                         \
                                                                                                    \
    public:                                                                                         \
-	##__VA_ARGS__(const $class& ref);                                                             \
-	##__VA_ARGS__(##__VA_ARGS__ const& copy) : $super {copy._obj} { Builtin::Retain(_obj); }     \
-	##__VA_ARGS__(##__VA_ARGS__&& moved) noexcept : $super {moved._obj} {                        \
-		moved._obj = nullptr;                                                                      \
-	}                                                                                              \
-	##__VA_ARGS__& operator=($class const& ref);                                                  \
+	##__VA_ARGS__(const $class& ref);                                                              \
+	##__VA_ARGS__(##__VA_ARGS__ const& copy) : $super {copy._obj} { Builtin::Retain(_obj); }       \
+	##__VA_ARGS__(##__VA_ARGS__&& moved) noexcept : $super {moved._obj} { moved._obj = nullptr; }  \
+	##__VA_ARGS__& operator=($class const& ref);                                                   \
 	##__VA_ARGS__& operator=(##__VA_ARGS__ const& copy) {                                          \
 		if (copy._obj != _obj) {                                                                   \
 			Builtin::Release(_obj);                                                                \
@@ -1837,7 +1866,7 @@ namespace Builtin {
 	}                                                                                              \
                                                                                                    \
    protected:                                                                                      \
-	##__VA_ARGS__(decltype(nullptr)) noexcept : $super {nullptr} {}                              \
+	##__VA_ARGS__(decltype(nullptr)) noexcept : $super {nullptr} {}                                \
 	##__VA_ARGS__& operator=(decltype(nullptr)) {                                                  \
 		if (_obj)                                                                                  \
 			Builtin::Release(_obj);                                                                \
@@ -1853,7 +1882,7 @@ namespace Builtin {
 	__VA_ARGS__(const $class& ref) : $super {ref} {}
 
 #define ADV_CLASS_STRONG_ASSIGN_REF(...)                                                           \
-	operator=(const $class& ref) {                                                                \
+	operator=(const $class& ref) {                                                                 \
 		if (&ref != _obj) {                                                                        \
 			Builtin::Release(_obj);                                                                \
 			_obj = (Builtin::Object*) &ref;                                                        \
@@ -1865,17 +1894,13 @@ namespace Builtin {
 #define ADV_CLASS_UNOWNED_COMMON_CTORS(...)                                                        \
                                                                                                    \
    public:                                                                                         \
-	##__VA_ARGS__(const $class& ref);                                                             \
-	##__VA_ARGS__(##__VA_ARGS__ const& copy) : $super {copy._obj} {                              \
+	##__VA_ARGS__(const $class& ref);                                                              \
+	##__VA_ARGS__(##__VA_ARGS__ const& copy) : $super {copy._obj} {                                \
 		Builtin::UnownedRetain(_obj);                                                              \
 	}                                                                                              \
-	##__VA_ARGS__($strong_ref const& copy) : $super {copy._obj} {                               \
-		Builtin::UnownedRetain(_obj);                                                              \
-	}                                                                                              \
-	##__VA_ARGS__(##__VA_ARGS__&& moved) noexcept : $super {moved._obj} {                        \
-		moved._obj = nullptr;                                                                      \
-	}                                                                                              \
-	##__VA_ARGS__& operator=(const $class& ref);                                                  \
+	##__VA_ARGS__($strong_ref const& copy) : $super {copy._obj} { Builtin::UnownedRetain(_obj); }  \
+	##__VA_ARGS__(##__VA_ARGS__&& moved) noexcept : $super {moved._obj} { moved._obj = nullptr; }  \
+	##__VA_ARGS__& operator=(const $class& ref);                                                   \
 	##__VA_ARGS__& operator=(##__VA_ARGS__ const& copy) {                                          \
 		if (copy._obj != _obj) {                                                                   \
 			Builtin::UnownedRelease(_obj);                                                         \
@@ -1884,7 +1909,7 @@ namespace Builtin {
 		}                                                                                          \
 		return *this;                                                                              \
 	}                                                                                              \
-	##__VA_ARGS__& operator=($strong_ref const& copy) {                                           \
+	##__VA_ARGS__& operator=($strong_ref const& copy) {                                            \
 		if (copy._obj != _obj) {                                                                   \
 			Builtin::UnownedRelease(_obj);                                                         \
 			_obj = copy._obj;                                                                      \
@@ -1900,10 +1925,10 @@ namespace Builtin {
 		moved._obj = nullptr;                                                                      \
 		return *this;                                                                              \
 	}                                                                                              \
-	FORCE_INLINE operator $strong_ref() const { return $ref(); }                                 \
+	FORCE_INLINE operator $strong_ref() const { return $ref(); }                                   \
                                                                                                    \
    protected:                                                                                      \
-	##__VA_ARGS__(decltype(nullptr)) noexcept : $super {nullptr} {}                              \
+	##__VA_ARGS__(decltype(nullptr)) noexcept : $super {nullptr} {}                                \
 	##__VA_ARGS__& operator=(decltype(nullptr)) {                                                  \
 		if (_obj)                                                                                  \
 			Builtin::UnownedRelease(_obj);                                                         \
@@ -1919,7 +1944,7 @@ namespace Builtin {
 	__VA_ARGS__(const $class& ref) : $super {ref} {}
 
 #define ADV_CLASS_UNOWNED_ASSIGN_REF(...)                                                          \
-	operator=(const $class& ref) {                                                                \
+	operator=(const $class& ref) {                                                                 \
 		if (&ref != _obj) {                                                                        \
 			Builtin::UnownedRelease(_obj);                                                         \
 			_obj = (Builtin::Object*) &ref;                                                        \
@@ -1931,18 +1956,16 @@ namespace Builtin {
 #define ADV_CLASS_WEAK_COMMON_CTORS(...)                                                           \
                                                                                                    \
    public:                                                                                         \
-	##__VA_ARGS__(const $class& ref);                                                             \
-	##__VA_ARGS__() : $super {nullptr} {}                                                        \
-	##__VA_ARGS__(##__VA_ARGS__ const& copy) : $super {copy._obj} {                              \
+	##__VA_ARGS__(const $class& ref);                                                              \
+	##__VA_ARGS__() : $super {nullptr} {}                                                          \
+	##__VA_ARGS__(##__VA_ARGS__ const& copy) : $super {copy._obj} {                                \
 		if (_obj)                                                                                  \
 			_obj->incrementWeak();                                                                 \
 	}                                                                                              \
-	##__VA_ARGS__(##__VA_ARGS__&& moved) noexcept : $super {moved._obj} {                        \
-		moved._obj = nullptr;                                                                      \
-	}                                                                                              \
-	##__VA_ARGS__($strong_ref const& strong) : $super {formWeakRef(strong._obj)} {}             \
-	##__VA_ARGS__(decltype(nullptr)) : $super {nullptr} {}                                       \
-	##__VA_ARGS__& operator=(const $class& ref);                                                  \
+	##__VA_ARGS__(##__VA_ARGS__&& moved) noexcept : $super {moved._obj} { moved._obj = nullptr; }  \
+	##__VA_ARGS__($strong_ref const& strong) : $super {formWeakRef(strong._obj)} {}                \
+	##__VA_ARGS__(decltype(nullptr)) : $super {nullptr} {}                                         \
+	##__VA_ARGS__& operator=(const $class& ref);                                                   \
 	##__VA_ARGS__& operator=(##__VA_ARGS__ const& copy) {                                          \
 		if (copy._obj != _obj) {                                                                   \
 			if (_obj)                                                                              \
@@ -1953,7 +1976,7 @@ namespace Builtin {
 		}                                                                                          \
 		return *this;                                                                              \
 	}                                                                                              \
-	##__VA_ARGS__& operator=($strong_ref const& strong) {                                         \
+	##__VA_ARGS__& operator=($strong_ref const& strong) {                                          \
 		if (!_obj || strong._obj != _obj->unsafeGetObject()) {                                     \
 			if (_obj)                                                                              \
 				_obj->decrementWeak();                                                             \
@@ -1970,17 +1993,17 @@ namespace Builtin {
 		moved._obj = nullptr;                                                                      \
 		return *this;                                                                              \
 	}                                                                                              \
-	FORCE_INLINE Builtin::OptionalStrongRef<$strong_ref> pin() const {                            \
+	FORCE_INLINE Builtin::OptionalStrongRef<$strong_ref> pin() const {                             \
 		if (_obj) {                                                                                \
 			auto ptr = _obj->tryRetain();                                                          \
 			if (ptr) {                                                                             \
-				return $strong_ref(ptr);                                                          \
+				return $strong_ref(ptr);                                                           \
 			}                                                                                      \
 			return nullptr;                                                                        \
 		}                                                                                          \
 		return nullptr;                                                                            \
 	}                                                                                              \
-	FORCE_INLINE $strong_ref operator*() const { return *pin(); }                                 \
+	FORCE_INLINE $strong_ref operator*() const { return *pin(); }                                  \
 	##__VA_ARGS__& operator=(decltype(nullptr)) {                                                  \
 		if (_obj) {                                                                                \
 			_obj->decrementWeak();                                                                 \
@@ -1999,7 +2022,7 @@ namespace Builtin {
 	FORCE_INLINE explicit operator bool() const noexcept { return IsValid(); }                     \
 	template <class __OptionalFunc>                                                                \
 	auto AndThen(__OptionalFunc&& func) const {                                                    \
-		using return_type = std::invoke_result_t<__OptionalFunc, $strong_ref const&>;             \
+		using return_type = std::invoke_result_t<__OptionalFunc, $strong_ref const&>;              \
 		auto strong       = pin();                                                                 \
 		if constexpr (std::is_void_v<return_type>) {                                               \
 			if (strong.IsValid())                                                                  \
@@ -2012,9 +2035,9 @@ namespace Builtin {
 		}                                                                                          \
 	}                                                                                              \
 	template <class __OptionalValueOr>                                                             \
-	$strong_ref ValueOr(__OptionalValueOr&& func) const {                                         \
+	$strong_ref ValueOr(__OptionalValueOr&& func) const {                                          \
 		using return_type = std::invoke_result_t<__OptionalValueOr>;                               \
-		static_assert(std::is_convertible_v<return_type, $strong_ref>,                            \
+		static_assert(std::is_convertible_v<return_type, $strong_ref>,                             \
 		              "Default value must be convertible to left side of the expression");         \
 		auto strong = pin();                                                                       \
 		if (strong.IsValid())                                                                      \
@@ -2022,9 +2045,9 @@ namespace Builtin {
 		return std::invoke(std::forward<__OptionalValueOr>(func));                                 \
 	}                                                                                              \
 	template <class F>                                                                             \
-	$weak_ref& AssignIfNull(F&& func) {                                                           \
+	$weak_ref& AssignIfNull(F&& func) {                                                            \
 		using return_type = std::invoke_result_t<F>;                                               \
-		static_assert(std::is_assignable_v<$weak_ref, return_type>,                               \
+		static_assert(std::is_assignable_v<$weak_ref, return_type>,                                \
 		              "Default value must be convertible to left side of the expression");         \
 		if (!IsValid())                                                                            \
 			*this = std::invoke(std::forward<F>(func));                                            \
@@ -2035,7 +2058,7 @@ namespace Builtin {
 	__VA_ARGS__(const $class& ref) : $super {formWeakRef((Builtin::Object*) &ref)} {}
 
 #define ADV_CLASS_WEAK_ASSIGN_REF(...)                                                             \
-	operator=(const $class& ref) {                                                                \
+	operator=(const $class& ref) {                                                                 \
 		if (!_obj || (Builtin::Object*) &ref != _obj->unsafeGetObject()) {                         \
 			if (_obj)                                                                              \
 				_obj->decrementWeak();                                                             \

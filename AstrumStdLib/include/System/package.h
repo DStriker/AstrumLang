@@ -30,6 +30,7 @@
 #include "Optional.h"
 #include "Ordering.h"
 #include "Range.h"
+#include "Result.h"
 #include "Span.h"
 #include "Str.h"
 #include "StringComparison.h"

@@ -1,0 +1,55 @@
+package System;
+
+public import Optional;
+
+public union <T, E> Result {
+    Ok(T),
+    Err(error: E);
+
+    operator!: () -> T => this as T;
+
+    AndThen: <F> (forward func: F) -> forward = 
+    {
+        type TResult = std.invoke_result_t<F, T>;
+        static if type TResult is void {
+            if (let result := this as? T)
+                std.invoke(forward func, result);
+        } else {
+            if (let result := this as? T)
+                return std.invoke(forward func, result) as TResult?;
+            return null;
+        }
+    }
+
+    ValueOr: <F> (forward func: F) -> decay(T) = 
+    {
+        type TOrigin = decay(T);
+        type TResult = std.invoke_result_t<F>;
+        static assert(type T is operator TOrigin, "T must be convertible to TOrigin");
+        static assert(type TResult is operator TOrigin, "TResult must be convertible to TOrigin");
+        if let result := this as? T {
+            return result;
+        }
+
+        return std.invoke(forward func);
+    }
+}
+
+public extension <T, E> Result {
+    HasValue: bool => this is T;
+    Value: T => this as T;
+    Error: E => (this as self.Err).>error;
+}
+
+test "Result" {
+    type TResult = Result<usize, usize>;
+    r: TResult = 12345uz;
+    assert r == 12345uz;
+    assert r.Value == 12345;
+    assert r.HasValue;
+    r = TResult::Err(456u);
+    assert r.Error == 456u;
+    assert not r.HasValue;
+    u: usize = r ?? 346uz;
+    assert u == 346u;
+}

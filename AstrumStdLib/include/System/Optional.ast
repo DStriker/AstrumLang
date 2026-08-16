@@ -5,8 +5,12 @@ public import IEquatable;
 
 public struct <T> Optional
 {
-    static assert(type T is struct or type T is enum, "T must be a struct or an enum");
+    static assert(type T is struct or type T is enum
+                  or type T is Builtin.OptionalStrongRef
+                  or type T is Builtin.OptionalUnownedRef or type T is Builtin.WeakObjectRef
+                  or type T is Builtin.OptionalFunctionRef, "T must be a struct, an enum, an union or optional reference type");
     public const __IS_ADV_NULLABLE :== true;
+    public type ElementType = Builtin.NullableElementType<T>;
 
     public Value: T {
         get == {
@@ -33,6 +37,141 @@ public struct <T> Optional
 
     public operator!: () -> T ==> Value;
     public operator bool noexcept ==> HasValue;
+
+    public Flatten: () -> ElementType? == {
+        static if Builtin.IsNullable<T> {
+            if HasValue {
+                return Value.Flatten();
+            }
+            return null;
+        } else {
+            return this;
+        }
+    }
+    public IsValidFlatten: () -> bool == {
+        static if Builtin.IsNullable<T> {
+            if HasValue {
+                return Value.IsValidFlatten();
+            }
+            return false;
+        } else {
+            return IsValid();
+        }
+    }
+
+    //public operator T ==> Value;
+
+    public AndThen: <F> (forward func: F) -> forward = 
+    {
+        type TResult = std.invoke_result_t<F, T>;
+        static if type TResult is void {
+            if (HasValue)
+                std.invoke(forward func, Value);
+        } else {
+            if (HasValue)
+                return std.invoke(forward func, Value) as TResult?;
+            return null;
+        }
+    }
+
+    public ValueOr: <F> (forward func: F) -> decay(T) = 
+    {
+        type TOrigin = decay(T);
+        type TResult = std.invoke_result_t<F>;
+        static assert(type T is operator TOrigin, "T must be convertible to TOrigin");
+        static assert(type TResult is operator TOrigin, "TResult must be convertible to TOrigin");
+        if (HasValue)
+            return Value;
+
+        return std.invoke(forward func);
+    }
+
+    public mut AssignIfNull: <F> (forward func: F) -> ref self =
+    {
+        type TResult = std.invoke_result_t<F>;
+        static assert(type TResult is operator T, "TResult must be convertible to T");
+        if (!HasValue)
+            Value = std.invoke(forward func);
+        return this;
+    }
+
+    public operator==: (rhs: self) -> bool ==
+    {
+        static assert(type T is ISelfEquatable, "T must implement ISelfEquatable");
+        if HasValue && rhs.HasValue {
+            return Value == rhs.Value;
+        }
+        return HasValue == rhs.HasValue;
+    }
+
+    public operator==: (_: decltype(null)) -> bool ==> !HasValue;
+
+    public operator<=>: (rhs: self) -> i32 ==
+    {
+        static assert(type T is ISelfComparable, "T must implement ISelfComparable");
+        if HasValue {
+            if (rhs.HasValue)
+                return (Value <=> rhs.Value);
+            return 1;
+        }
+        if (rhs.HasValue)
+            return -1;
+        return 0;
+    }
+}
+
+public ref struct <T> OptionalRef
+{
+    static assert(type T is ref struct, "T must be a ref struct");
+    public const __IS_ADV_NULLABLE :== true;
+    public type ElementType = Builtin.NullableElementType<T>;
+
+    public Value: T {
+        get == {
+            if (!HasValue)
+                throw Builtin.InvalidOperationException();
+            return field;
+        }
+        private set == { field = value; }
+    }
+    public HasValue: bool = false { get; private set; }
+
+    public this() == default;
+
+    public implicit this<U>(value: U) where type U is operator T == {
+        Value = value;
+        HasValue = true;
+    }
+
+    public implicit this(_: decltype(null)) == {
+        HasValue = false;
+    }
+
+    public IsValid: () -> bool noexcept ==> HasValue;
+
+    public operator!: () -> T ==> Value;
+    public operator bool noexcept ==> HasValue;
+
+    public Flatten: () -> ElementType? == {
+        static if Builtin.IsNullable<T> {
+            if HasValue {
+                return Value.Flatten();
+            }
+            return null;
+        } else {
+            return this;
+        }
+    }
+    public IsValidFlatten: () -> bool == {
+        static if Builtin.IsNullable<T> {
+            if HasValue {
+                return Value.IsValidFlatten();
+            }
+            return false;
+        } else {
+            return IsValid();
+        }
+    }
 
     //public operator T ==> Value;
 
@@ -95,94 +234,16 @@ public struct <T> Optional
     }
 }
 
-public ref struct <T> OptionalRef
-{
-    static assert(type T is ref struct, "T must be a ref struct");
-    public const __IS_ADV_NULLABLE :== true;
-
-    public Value: T {
-        get == {
-            if (!HasValue)
-                throw Builtin.InvalidOperationException();
-            return field;
-        }
-        private set == { field = value; }
-    }
-    public HasValue: bool = false { get; private set; }
-
-    public this() == default;
-
-    public implicit this<U>(value: U) where type U is operator T == {
-        Value = value;
-        HasValue = true;
-    }
-
-    public implicit this(_: decltype(null)) == {
-        HasValue = false;
-    }
-
-    public IsValid: () -> bool noexcept ==> HasValue;
-
-    public operator!: () -> T ==> Value;
-    public operator bool noexcept ==> HasValue;
-
-    //public operator T ==> Value;
-
-    public AndThen: <F> (forward func: F) -> forward = 
-    {
-        type TResult = std.invoke_result_t<F, T>;
-        static if type TResult is void {
-            if (HasValue)
-                std.invoke(forward func, Value);
-        } else {
-            if (HasValue)
-                return std.invoke(forward func, Value) as TResult?;
-            return null;
-        }
-    }
-
-    public ValueOr: <F> (forward func: F) -> decay(T) = 
-    {
-        type TOrigin = decay(T);
-        type TResult = std.invoke_result_t<F>;
-        static assert(type T is operator TOrigin, "T must be convertible to TOrigin");
-        static assert(type TResult is operator TOrigin, "TResult must be convertible to TOrigin");
-        if (HasValue)
-            return Value;
-
-        return std.invoke(forward func);
-    }
-
-    public AssignIfNull: <F> (forward func: F) -> ref self =
-    {
-        type TResult = std.invoke_result_t<F>;
-        static assert(type TResult is operator T, "TResult must be convertible to T");
-        if (!HasValue)
-            Value = std.invoke(forward func);
-        return this;
-    }
-
-    public operator==: (rhs: self) -> bool ==
-    {
-        static assert(type T is ISelfEquatable, "T must implement ISelfEquatable");
-        if HasValue && rhs.HasValue {
-            return Value == rhs.Value;
-        }
-        return HasValue == rhs.HasValue;
-    }
-
-    public operator==: (_: decltype(null)) -> bool ==> !HasValue;
-
-    public operator<=>: (rhs: self) -> i32 ==
-    {
-        static assert(type T is ISelfComparable, "T must implement ISelfComparable");
-        if HasValue {
-            if (rhs.HasValue)
-                return (Value <=> rhs.Value);
-            return 1;
-        }
-        if (rhs.HasValue)
-            return -1;
-        return 0;
-    }
+test "Optional" {
+    i1: i32? = 5;
+    type I32 = i32?;
+    oi1: I32? = 123;
+    assert oi1.IsValid();
+    assert oi1!.IsValid();
+    assert oi1.Flatten()! == 123;
+    obj: object? = oi1;
+    type OObject = object?;
+    ooi1: OObject? = 12345;
+    assert ooi1.IsValid();
+    assert ooi1!.IsValid();
 }

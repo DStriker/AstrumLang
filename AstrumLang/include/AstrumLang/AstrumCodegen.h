@@ -205,6 +205,8 @@ namespace AstrumLang {
 		void printEnumClassEnumerator(AstrumParser::ClassEnumeratorDefinitionContext* ctx);
 		void printEnumClassMemberSpecification(
 		    AstrumParser::EnumClassMemberSpecificationContext* ctx);
+		void printUnionDefinition(AstrumParser::UnionDefinitionContext* ctx);
+		void printUnionMemberSpecification(AstrumParser::UnionMemberSpecificationContext* ctx);
 		void printAttributeSpecifierSeq(AstrumParser::AttributeSpecifierSeqContext* ctx);
 		void printAttributeSpecifier(AstrumParser::AttributeSpecifierContext* ctx);
 		void printAttributeArgumentClause(AstrumParser::AttributeArgumentClauseContext* ctx);

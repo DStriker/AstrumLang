@@ -344,8 +344,9 @@ namespace Builtin {
 	   public:
 		static_assert(std::is_base_of_v<FuncBase, T>);
 		static constexpr bool __IS_ADV_NULLABLE = true;
-		using $class                           = typename T::$class;
-		using $self                            = T;
+		using $class                            = typename T::$class;
+		using $self                             = T;
+		using ElementType                       = T;
 		template <class U>
 		friend class OptionalFunctionRef;
 
@@ -414,17 +415,19 @@ namespace Builtin {
 
 		FORCE_INLINE explicit operator bool() const noexcept { return !ref.isEmpty(); }
 
-		FORCE_INLINE bool isValid() const noexcept { return !ref.isEmpty(); }
+		FORCE_INLINE bool IsValid() const noexcept { return !ref.isEmpty(); }
+		FORCE_INLINE auto Flatten() const { return *this; }
+		FORCE_INLINE bool IsValidFlatten() const { return IsValid(); }
 
 		template <class F>
 		auto andThen(F&& func) & {
 			using return_type = std::invoke_result_t<F, const T&>;
 			if constexpr (std::is_void_v<return_type>) {
-				if (isValid())
+				if (IsValid())
 					std::invoke(std::forward<F>(func), ref);
 			} else {
 				using wrapped_type = Nullable<return_type>;
-				if (!isValid())
+				if (!IsValid())
 					return wrapped_type(nullptr);
 				return wrapped_type(std::invoke(std::forward<F>(func), ref));
 			}
@@ -434,11 +437,11 @@ namespace Builtin {
 		auto andThen(F&& func) const& {
 			using return_type = std::invoke_result_t<F, const T&>;
 			if constexpr (std::is_void_v<return_type>) {
-				if (isValid())
+				if (IsValid())
 					std::invoke(std::forward<F>(func), ref);
 			} else {
 				using wrapped_type = Nullable<return_type>;
-				if (!isValid())
+				if (!IsValid())
 					return wrapped_type(nullptr);
 				return wrapped_type(std::invoke(std::forward<F>(func), ref));
 			}
@@ -448,11 +451,11 @@ namespace Builtin {
 		auto andThen(F&& func) && {
 			using return_type = std::invoke_result_t<F, const T&>;
 			if constexpr (std::is_void_v<return_type>) {
-				if (isValid())
+				if (IsValid())
 					std::invoke(std::forward<F>(func), std::move(ref));
 			} else {
 				using wrapped_type = Nullable<return_type>;
-				if (!isValid())
+				if (!IsValid())
 					return wrapped_type(nullptr);
 				return wrapped_type(std::invoke(std::forward<F>(func), std::move(ref)));
 			}
@@ -462,11 +465,11 @@ namespace Builtin {
 		auto andThen(F&& func) const&& {
 			using return_type = std::invoke_result_t<F, const T&>;
 			if constexpr (std::is_void_v<return_type>) {
-				if (isValid())
+				if (IsValid())
 					std::invoke(std::forward<F>(func), std::move(ref));
 			} else {
 				using wrapped_type = Nullable<return_type>;
-				if (!isValid())
+				if (!IsValid())
 					return wrapped_type(nullptr);
 				return wrapped_type(std::invoke(std::forward<F>(func), std::move(ref)));
 			}
@@ -480,7 +483,7 @@ namespace Builtin {
 			              "Must be able to convert const T& to remove_cv_t<T>");
 			static_assert(std::is_convertible_v<U, X>,
 			              "Default value must be convertible to left side of the expression");
-			if (isValid())
+			if (IsValid())
 				return ref;
 			return std::invoke(std::forward<F>(func));
 		}
@@ -493,7 +496,7 @@ namespace Builtin {
 			              "Must be able to convert T to remove_cv_t<T>");
 			static_assert(std::is_convertible_v<U, X>,
 			              "Default value must be convertible to left side of the expression");
-			if (isValid())
+			if (IsValid())
 				return std::move(ref);
 			return std::invoke(std::forward<F>(func));
 		}
@@ -503,7 +506,7 @@ namespace Builtin {
 			using return_type = std::invoke_result_t<F>;
 			static_assert(std::is_assignable_v<T, return_type>,
 			              "Default value must be convertible to left side of the expression");
-			if (!isValid())
+			if (!IsValid())
 				ref = std::invoke(std::forward<F>(func));
 			return *this;
 		}
