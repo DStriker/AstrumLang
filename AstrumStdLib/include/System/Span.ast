@@ -56,6 +56,12 @@ public ref struct <T> Span: ISelfEquatable, IAbstractSequence, ISequence<T> {
     public this[index: Index] -> const ref T == {
         return Unsafe.Add(_data, index.Offset(_length) as usize);
     }
+    Get: (index: usize) -> T? == {
+        if index >= _length {
+            return null;
+        }
+        return Unsafe.Add(_data, index);
+    }
     public this[range: IndexRange] -> self == {
         let start := range.Start.Offset(_length) as usize;
         let len := range.Length(_length);
@@ -232,6 +238,12 @@ public ref struct <T> MutableSpan: ISelfEquatable, IAbstractSequence, ISequence<
     @Unchecked
     public this[index: Index] -> &mut T == {
         return Unsafe.Add(_data, index.Offset(_length) as usize);
+    }
+    Get: (index: usize) -> T? == {
+        if index >= _length {
+            return null;
+        }
+        return Unsafe.Add(_data, index);
     }
     public this[range: IndexRange] -> self == {
         let start := range.Start.Offset(_length) as usize;

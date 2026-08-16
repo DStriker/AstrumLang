@@ -27,38 +27,41 @@ template<class T, size_t S> using InlineArray = Builtin::InlineArray<S, T>;
 	#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> [[clang::annotate("UserAttr: Unchecked")]] inline constexpr T& _operator_subscript($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this , Builtin::UncheckedTag, Index index) { return getAt($this, Builtin::UncheckedTag{}, index); }
 	#line 22 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S> inline constexpr auto Get($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this LIFETIMEBOUND, Builtin::usize index)  -> const Builtin::Nullable<T>;
+	#line 28 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr const T& getAt($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this LIFETIMEBOUND, Index index);
-	#line 22 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	#line 28 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr const T& _operator_subscript($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this LIFETIMEBOUND, Index index) { return getAt($this, index); }
-	#line 31 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	#line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr const T& getAt($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this LIFETIMEBOUND, Builtin::UncheckedTag, Index index);
-	#line 31 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	#line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> [[clang::annotate("UserAttr: Unchecked")]] inline constexpr const T& _operator_subscript($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this LIFETIMEBOUND, Builtin::UncheckedTag, Index index) { return getAt($this, Builtin::UncheckedTag{}, index); }
-	#line 35 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	#line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr System::MutableSpan<T> getAt($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this , IndexRange range);
-	#line 35 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	#line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr System::MutableSpan<T> _operator_subscript($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this , IndexRange range) { return getAt($this, range); }
-	#line 45 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	#line 51 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr System::MutableSpan<T> getAt($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this , Builtin::UncheckedTag, IndexRange range);
-	#line 45 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	#line 51 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> [[clang::annotate("UserAttr: Unchecked")]] inline constexpr System::MutableSpan<T> _operator_subscript($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this , Builtin::UncheckedTag, IndexRange range) { return getAt($this, Builtin::UncheckedTag{}, range); }
-	#line 49 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	#line 55 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr const System::Span<T> getAt($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this LIFETIMEBOUND, IndexRange range);
-	#line 49 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	#line 55 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr const System::Span<T> _operator_subscript($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this LIFETIMEBOUND, IndexRange range) { return getAt($this, range); }
-	#line 59 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-	template<class T, size_t S> inline constexpr const System::Span<T> getAt($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this LIFETIMEBOUND, Builtin::UncheckedTag, IndexRange range);
-	#line 59 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-	template<class T, size_t S> [[clang::annotate("UserAttr: Unchecked")]] inline constexpr const System::Span<T> _operator_subscript($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this LIFETIMEBOUND, Builtin::UncheckedTag, IndexRange range) { return getAt($this, Builtin::UncheckedTag{}, range); }
 	#line 65 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S> inline constexpr const System::Span<T> getAt($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this LIFETIMEBOUND, Builtin::UncheckedTag, IndexRange range);
+	#line 65 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S> [[clang::annotate("UserAttr: Unchecked")]] inline constexpr const System::Span<T> _operator_subscript($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this LIFETIMEBOUND, Builtin::UncheckedTag, IndexRange range) { return getAt($this, Builtin::UncheckedTag{}, range); }
+	#line 71 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr auto AsMutableSpan($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this )  -> System::MutableSpan<T>;
 	#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr auto getLength($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this ) -> const Builtin::usize;
-	#line 64 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	#line 70 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr auto getAsSpan($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this ) -> const System::Span<T>;
 	} namespace System{
 using $extensions::getAt; using $extensions::_operator_subscript;
 using $extensions::getAt; using $extensions::_operator_subscript;
+using $extensions::Get;
 using $extensions::getAt; using $extensions::_operator_subscript;
 using $extensions::getAt; using $extensions::_operator_subscript;
 using $extensions::getAt; using $extensions::_operator_subscript;
@@ -112,76 +115,90 @@ template<class __TT> struct $static_getLength;
 	}
 	} namespace $extensions { using namespace System;
 #line 22 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-	template<class T, size_t S> inline constexpr const T& getAt($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this LIFETIMEBOUND, Index index)
+	template<class T, size_t S> inline constexpr auto Get($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this LIFETIMEBOUND, Builtin::usize index)  -> const Builtin::Nullable<T>
 	{
 		#line 23 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		if ((index <=> S) >= 0) {
+			#line 24 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+			return nullptr;
+		}
+		#line 26 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		return ADV_USFCS((Unsafe), Add)(Builtin::MutableRef(ADV_UFCS(GetDataReference)($this.$ref())), index);
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 28 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S> inline constexpr const T& getAt($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this LIFETIMEBOUND, Index index)
+	{
+		#line 29 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		const Builtin::Auto<decltype(Builtin::Cast<true, Builtin::usize>(ADV_UFCS(Offset)(index.$ref(), S)))> realIndex = Builtin::Cast<true, Builtin::usize>(ADV_UFCS(Offset)(index.$ref(), S)); 
-		#line 25 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		#line 31 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		if ((realIndex <=> S) >= 0) {
-			#line 26 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+			#line 32 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 			Builtin::Throw(Builtin::IndexOutOfRangeException{});
 		}
-		#line 28 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		#line 34 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		return ADV_USFCS((Unsafe), Add)(ADV_UFCS(GetDataReference)($this.$ref()), realIndex);
 	}
 	} namespace $extensions { using namespace System;
-#line 31 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+#line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr const T& getAt($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this LIFETIMEBOUND, Builtin::UncheckedTag, Index index)
 	{
-		#line 32 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		#line 38 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		return ADV_USFCS((Unsafe), Add)(ADV_UFCS(GetDataReference)($this.$ref()), Builtin::Cast<true, Builtin::usize>(ADV_UFCS(Offset)(index.$ref(), S)));
 	}
 	} namespace $extensions { using namespace System;
-#line 35 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+#line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr System::MutableSpan<T> getAt($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this , IndexRange range)
 	{
-		#line 36 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		#line 42 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		const Builtin::Auto<decltype(Builtin::Cast<true, Builtin::usize>(ADV_UFCS(Offset)(ADV_UPCS(Start)(range.$ref()).$ref(), S)))> start = Builtin::Cast<true, Builtin::usize>(ADV_UFCS(Offset)(ADV_UPCS(Start)(range.$ref()).$ref(), S)); 
-		#line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		#line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		const Builtin::Auto<decltype(ADV_UFCS(Length)(range.$ref(), S))> len = ADV_UFCS(Length)(range.$ref(), S); 
-		#line 39 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		#line 45 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		if (((start + len) <=> S) > 0) {
-			#line 40 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+			#line 46 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 			Builtin::Throw(Builtin::IndexOutOfRangeException{});
 		}
-		#line 42 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		#line 48 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		return ADV_USFCS((MutableSpan<T>), UnsafeCreate)(ADV_USFCS((Unsafe), Add)(Builtin::MutableRef(ADV_UFCS(GetDataReference)($this.$ref())), start), len);
 	}
 	} namespace $extensions { using namespace System;
-#line 45 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+#line 51 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr System::MutableSpan<T> getAt($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this , Builtin::UncheckedTag, IndexRange range)
 	{
-		#line 46 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		#line 52 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		return ADV_USFCS((MutableSpan<T>), UnsafeCreate)(ADV_USFCS((Unsafe), Add)(Builtin::MutableRef(ADV_UFCS(GetDataReference)($this.$ref())), Builtin::Cast<true, Builtin::usize>(ADV_UFCS(Offset)(ADV_UPCS(Start)(range.$ref()).$ref(), S))), ADV_UFCS(Length)(range.$ref(), S));
 	}
 	} namespace $extensions { using namespace System;
-#line 49 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+#line 55 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr const System::Span<T> getAt($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this LIFETIMEBOUND, IndexRange range)
 	{
-		#line 50 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		#line 56 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		const Builtin::Auto<decltype(Builtin::Cast<true, Builtin::usize>(ADV_UFCS(Offset)(ADV_UPCS(Start)(range.$ref()).$ref(), S)))> start = Builtin::Cast<true, Builtin::usize>(ADV_UFCS(Offset)(ADV_UPCS(Start)(range.$ref()).$ref(), S)); 
-		#line 51 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		#line 57 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		const Builtin::Auto<decltype(ADV_UFCS(Length)(range.$ref(), S))> len = ADV_UFCS(Length)(range.$ref(), S); 
-		#line 53 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		#line 59 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		if (((start + len) <=> S) > 0) {
-			#line 54 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+			#line 60 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 			Builtin::Throw(Builtin::IndexOutOfRangeException{});
 		}
-		#line 56 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		#line 62 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		return ADV_USFCS((Span<T>), UnsafeCreate)(ADV_USFCS((Unsafe), Add)(ADV_UFCS(GetDataReference)($this.$ref()), start), len);
 	}
 	} namespace $extensions { using namespace System;
-#line 59 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+#line 65 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr const System::Span<T> getAt($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this LIFETIMEBOUND, Builtin::UncheckedTag, IndexRange range)
 	{
-		#line 60 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		#line 66 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		return ADV_USFCS((Span<T>), UnsafeCreate)(ADV_USFCS((Unsafe), Add)(ADV_UFCS(GetDataReference)($this.$ref()), Builtin::Cast<true, Builtin::usize>(ADV_UFCS(Offset)(ADV_UPCS(Start)(range.$ref()).$ref(), S))), ADV_UFCS(Length)(range.$ref(), S));
 	}
 	} namespace $extensions { using namespace System;
-#line 65 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+#line 71 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr auto AsMutableSpan($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this )  -> System::MutableSpan<T>
 	{
-		#line 65 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		#line 71 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		ADV_EXPRESSION_BODY($this); 
 	}
 	
@@ -195,10 +212,10 @@ template<class __TT> struct $static_getLength;
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 64 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+#line 70 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr auto getAsSpan($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this ) -> const System::Span<T>
 	{
-		#line 64 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		#line 70 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		ADV_EXPRESSION_BODY($this); 
 	}
 	} namespace System{

@@ -1,23 +1,28 @@
 package System;
 
 public import Optional;
+import UInt64;
 
 public union <T, E> Result {
     Ok(T),
     Err(error: E);
 
     operator!: () -> T => this as T;
+    operator bool noexcept => (this as? T).HasValue;
 
     AndThen: <F> (forward func: F) -> forward = 
     {
         type TResult = std.invoke_result_t<F, T>;
         static if type TResult is void {
-            if (let result := this as? T)
+            if let result := this as? T {
                 std.invoke(forward func, result);
+            }
         } else {
-            if (let result := this as? T)
+            if let result := this as? T {
                 return std.invoke(forward func, result) as TResult?;
-            return null;
+            }
+            res: TResult? = null;
+            return res;
         }
     }
 
@@ -47,9 +52,14 @@ test "Result" {
     assert r == 12345uz;
     assert r.Value == 12345;
     assert r.HasValue;
+    if let res := r {
+        assert res == 12345;
+    }
+    assert r?.NextPow2 == 16384u;
     r = TResult::Err(456u);
     assert r.Error == 456u;
     assert not r.HasValue;
+    assert r?.NextPow2 == null;
     u: usize = r ?? 346uz;
     assert u == 346u;
 }

@@ -9,6 +9,7 @@ public import IMultiplyOperators;
 public import ISubtractionOperators;
 public import IUnaryNegationOperators;
 public import IUnaryPlusOperators;
+public import System.Optional;
 
 public interface INumberBase:
     IAdditiveArithmetic,

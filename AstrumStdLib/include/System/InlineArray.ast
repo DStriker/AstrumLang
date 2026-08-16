@@ -19,6 +19,12 @@ public extension <T, S: usize> T[S] {
     mut this[index: Index] -> ref T == {
         return Unsafe.Add(&this.GetDataReference(), index.Offset(S) as usize);
     }
+    Get: (index: usize) -> T? == {
+        if index >= S {
+            return null;
+        }
+        return Unsafe.Add(&this.GetDataReference(), index);
+    }
     this[index: Index] -> const ref T == {
         let realIndex := index.Offset(S) as usize;
 

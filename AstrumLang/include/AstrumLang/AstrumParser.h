@@ -3531,6 +3531,7 @@ public:
     FunctionDefinitionContext *functionDefinition();
     AttributeSpecifierSeqContext *attributeSpecifierSeq();
     AccessSpecifierContext *accessSpecifier();
+    ConversionFunctionContext *conversionFunction();
     PropertyContext *property();
     FriendDeclarationContext *friendDeclaration();
 

@@ -14809,6 +14809,8 @@ namespace AstrumLang {
 	    AstrumParser::EnumMemberDeclarationContext* ctx) {
 		if (ctx->functionDefinition()) {
 			printFunctionDefinition(ctx->functionDefinition());
+		} else if (ctx->conversionFunction()) {
+			printConversionFunction(ctx->conversionFunction());
 		} else if (ctx->property()) {
 			printProperty(ctx->property());
 		}
@@ -17238,8 +17240,10 @@ namespace AstrumLang {
 				}
 			} else if (func.isForwardReturn) {
 				out << "decltype(auto)";
+				isVoidReturn = true;
 			} else if (ctx->returnType() && ctx->returnType()->Ref()) {
 				out << "auto";
+				isVoidReturn = true;
 			} else if (ctx->shortFunctionBody() && func.id != "operator delete") {
 				out << "decltype(auto)";
 			} else if (isMainFunction) {
@@ -17444,8 +17448,10 @@ namespace AstrumLang {
 					}
 				} else if (func.isForwardReturn) {
 					out << "decltype(auto)";
+					isVoidReturn = true;
 				} else if (ctx->returnType() && ctx->returnType()->Ref()) {
 					out << "auto";
+					isVoidReturn = true;
 				} else if (ctx->shortFunctionBody() && func.id != "operator delete") {
 					out << "decltype(auto)";
 				} else {
@@ -18565,7 +18571,10 @@ namespace AstrumLang {
 								}
 							}
 						}
-						out << id;
+						if (id == "_")
+							out << "auto";
+						else
+							out << id;
 					}
 				} else {
 					out << type->getText();
@@ -20886,7 +20895,7 @@ namespace AstrumLang {
 				}
 			}
 			isMutable = list->Mutable();
-		} else {
+		} else if (functionBody && !ctx->lambdaBody()->AssignArrow()) {
 			out << "&";
 		}
 		out << "] ";
@@ -20916,7 +20925,7 @@ namespace AstrumLang {
 			if (ret->Forward()) {
 				out << "decltype(auto)";
 			} else {
-				if (ret->Const() || !ret->Ref()) {
+				if (ret->Const()) {
 					out << "const ";
 				}
 				if (ret->theTypeId()) {
@@ -20929,6 +20938,7 @@ namespace AstrumLang {
 			out << " ";
 		} else {
 			isVoidReturn = true;
+			//out << "-> const auto ";
 		}
 		if (ctx->constraintClause()) {
 			printConstraintClause(ctx->constraintClause());

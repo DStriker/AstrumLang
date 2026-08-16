@@ -14,7 +14,7 @@ namespace Builtin {
 
 		virtual bool operator==(const AbstractCallable& other) const noexcept { return false; }
 
-		~AbstractCallable() { std::cout << "Callable deinit\n"; }
+		~AbstractCallable() { /*std::cout << "Callable deinit\n";*/ }
 	};
 
 	template <class TResult, class... TArgs>
@@ -234,18 +234,30 @@ namespace Builtin {
 			other.kind            = STATIC;
 		}
 
+		template <typename F>
+		static TResult staticFunctorWrapper(TArgs... args) {
+			F f;
+			return f(std::forward<TArgs>(args)...);
+		}
+
 		template <class F>
 		requires(std::is_invocable_r_v<TResult, F, TArgs...>) void init(F&& func) {
-			if constexpr (std::is_convertible_v<F, FunctionPointer>) {
+			using TFunc = std::decay_t<F>;
+			if constexpr (std::is_convertible_v<TFunc, FunctionPointer>) {
 				kind            = STATIC;
 				functionPointer = static_cast<FunctionPointer>(std::forward<F>(func));
 				std::cout << "STATIC\n";
-			} else if constexpr (std::is_convertible_v<F, ConstFunctionPointer>) {
+			} else if constexpr (std::is_convertible_v<TFunc, ConstFunctionPointer>) {
 				kind            = STATIC;
 				functionPointer = reinterpret_cast<FunctionPointer>(std::forward<F>(func));
 				std::cout << "STATIC\n";
-			} else {
-				using TClosure = ClosureWrapper<std::decay_t<F>, TResult, TArgs...>;
+			} else if constexpr (std::is_empty_v<TFunc>) {
+				kind            = STATIC;
+				functionPointer = &staticFunctorWrapper<TFunc>;
+				std::cout << "STATIC\n";
+			}
+			else {
+				using TClosure = ClosureWrapper<TFunc, TResult, TArgs...>;
 				kind           = CLOSURE;
 				new (&closure) ClosureRef(new (::operator new(sizeof(TClosure)))
 				                              TClosure(std::forward<F>(func)));
@@ -299,7 +311,7 @@ namespace Builtin {
 			return *this;
 		}
 
-		TResult operator()(TArgs... args) const {
+		TResult operator()(TArgs&&... args) const {
 			if (isEmpty()) {
 				throw std::runtime_error("Call a null function");
 			}
@@ -311,7 +323,7 @@ namespace Builtin {
 			return closure.Call(std::forward<TArgs>(args)...);
 		}
 
-		TResult Invoke(TArgs... args) const { return operator()(std::forward<TArgs>(args)...); }
+		TResult Invoke(TArgs&&... args) const { return operator()(std::forward<TArgs>(args)...); }
 
 		bool isEmpty() const noexcept { return kind == STATIC && functionPointer == nullptr; }
 

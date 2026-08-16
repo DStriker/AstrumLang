@@ -3,6 +3,7 @@
 #include "Char.h"
 #include "CharIterator.h"
 #include "Decimal.h"
+#include "Delegates.h"
 #include "Float128.h"
 #include "Float128_Exp.h"
 #include "Float128_Log.h"

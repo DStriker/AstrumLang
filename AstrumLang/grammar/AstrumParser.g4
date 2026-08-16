@@ -1000,6 +1000,7 @@ enumMemberSpecification
 
 enumMemberDeclaration
     : attributeSpecifierSeq? accessSpecifier? functionDefinition
+    | attributeSpecifierSeq? accessSpecifier? conversionFunction
     | property
     | friendDeclaration
     ;

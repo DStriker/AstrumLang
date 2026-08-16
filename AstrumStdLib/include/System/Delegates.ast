@@ -1,0 +1,17 @@
+package System;
+
+public type Action<Ts...> = (in Ts...) -> void;
+public type Predicate<T> = (in T) -> bool;
+public type Comparator<T> = (in T, in T) -> i32;
+public type EqualityComparer<T> = (in T, in T) -> bool;
+
+public const DefaultComparator :== (lhs, rhs) => lhs <=> rhs;
+public const DefaultEqualityComparer :== (lhs, rhs) => lhs == rhs;
+
+test {
+    f: Comparator<i32> = DefaultComparator;
+    e: EqualityComparer<i32> = DefaultEqualityComparer;
+
+    assert f(1, 2) == -1;
+    assert e(1, 1);
+}
