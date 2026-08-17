@@ -5,7 +5,7 @@ public import IEquatable;
 
 public struct <T> Optional
 {
-    static assert(type T is struct or type T is enum
+    static assert(type T is struct or type T is enum or type T is union
                   or type T is Builtin.OptionalStrongRef
                   or type T is Builtin.OptionalUnownedRef or type T is Builtin.WeakObjectRef
                   or type T is Builtin.OptionalFunctionRef, "T must be a struct, an enum, an union or optional reference type");

@@ -10,7 +10,7 @@ namespace __Unsafe {} namespace __Delegates$Protected__Unsafe {}
 //# Global type aliases
 //###############################################################################
 #line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Delegates.ast"
-template<class... Ts> using Action = Builtin::FunctionRef<void(Builtin::In<Ts>...)>;
+template<class... Ts> using Action = Builtin::FunctionRef<void(Ts...)>;
 #line 4 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Delegates.ast"
 template<class T> using Predicate = Builtin::FunctionRef<bool (Builtin::In<T>)>;
 #line 5 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Delegates.ast"

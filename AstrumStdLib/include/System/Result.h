@@ -37,11 +37,12 @@ template<class T, class E> class $Class_Result;
 			
 		};
 		enum : unsigned char {
-			_TAG__Ok, _TAG__Err
-		} __union_internal_tag;
+			_TAGUNINITIALIZED_, _TAG__Ok, _TAG__Err
+ 		} __union_internal_tag;
 		public:
 		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Result.ast"
 		static constexpr int __variants = 2;
+		Result() : __union_internal_tag{ _TAGUNINITIALIZED_ } {};
 		#line 7 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Result.ast"
 		Result(Builtin::In<Ok> value) : __union_internal_tag{ _TAG__Ok } { new (&_Ok) Ok(value); }
 		#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Result.ast"

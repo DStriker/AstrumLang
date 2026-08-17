@@ -246,22 +246,19 @@ namespace Builtin {
 			if constexpr (std::is_convertible_v<TFunc, FunctionPointer>) {
 				kind            = STATIC;
 				functionPointer = static_cast<FunctionPointer>(std::forward<F>(func));
-				std::cout << "STATIC\n";
 			} else if constexpr (std::is_convertible_v<TFunc, ConstFunctionPointer>) {
 				kind            = STATIC;
 				functionPointer = reinterpret_cast<FunctionPointer>(std::forward<F>(func));
-				std::cout << "STATIC\n";
 			} else if constexpr (std::is_empty_v<TFunc>) {
 				kind            = STATIC;
 				functionPointer = &staticFunctorWrapper<TFunc>;
-				std::cout << "STATIC\n";
 			}
 			else {
 				using TClosure = ClosureWrapper<TFunc, TResult, TArgs...>;
 				kind           = CLOSURE;
 				new (&closure) ClosureRef(new (::operator new(sizeof(TClosure)))
 				                              TClosure(std::forward<F>(func)));
-				std::cout << "CLOSURE\n";
+				assert(false); //TODO: delete after debug
 			}
 		}
 
@@ -311,7 +308,7 @@ namespace Builtin {
 			return *this;
 		}
 
-		TResult operator()(TArgs&&... args) const {
+		TResult operator()(TArgs... args) const {
 			if (isEmpty()) {
 				throw std::runtime_error("Call a null function");
 			}
@@ -323,7 +320,7 @@ namespace Builtin {
 			return closure.Call(std::forward<TArgs>(args)...);
 		}
 
-		TResult Invoke(TArgs&&... args) const { return operator()(std::forward<TArgs>(args)...); }
+		TResult Invoke(TArgs... args) const { return operator()(std::forward<TArgs>(args)...); }
 
 		bool isEmpty() const noexcept { return kind == STATIC && functionPointer == nullptr; }
 

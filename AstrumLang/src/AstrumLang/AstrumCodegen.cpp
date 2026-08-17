@@ -1977,20 +1977,20 @@ namespace AstrumLang {
 				out << ": unsigned short ";
 			}
 			out << "{\n" << std::string(++depth, '\t');
-			bool first = true;
+			out << "_TAGUNINITIALIZED_";
 			for (const auto& constant : type->constants) {
-				if (!first)
-					out << ", ";
-				first = false;
+				out << ", ";
 				out << "_TAG__" << constant.id;
 			}
-			out << "\n"
+			out << "\n "
 			    << std::string(--depth, '\t') << "} __union_internal_tag;\n"
 			    << std::string(depth, '\t');
 			out << "public:\n" << std::string(depth, '\t');
 			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
 			out << "static constexpr int __variants = " << type->constants.size() << ";\n"
+			    << std::string(depth, '\t');
+			out << type->id << "() : __union_internal_tag{ _TAGUNINITIALIZED_ } {};\n"
 			    << std::string(depth, '\t');
 			// value initialization
 			for (const auto& constant : type->constants) {
@@ -2123,7 +2123,7 @@ namespace AstrumLang {
 			out << "#line 9999 \"" << fullFilename << ".ast\"\n" << std::string(depth, '\t');
 			out << "public: template<class __SomeT> bool Is() const noexcept {\n"
 			    << std::string(++depth, '\t');
-			first = true;
+			bool first = true;
 			for (const auto& constant : type->constants) {
 				if (!first)
 					out << "else ";

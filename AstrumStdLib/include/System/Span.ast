@@ -1,6 +1,8 @@
 package System;
 
 public import Range;
+public import Result;
+public import Delegates;
 public import System.Runtime.CompilerServices.Unsafe;
 import System.Runtime.Intrinsics.Simd;
 
@@ -176,6 +178,86 @@ public ref struct <T> Span: ISelfEquatable, IAbstractSequence, ISequence<T> {
     }
 
     public operator in: (in ref val: T) -> bool ==> Contains(val);
+
+    // Searches an entire sorted span for a value using the default comparator
+    // Returns the index of the value if found, otherwise returns the index where the value should be inserted
+    // (next element that is larger than val if such element exists or length of the span otherwise)
+    public BinarySearch: (in ref val: T) -> Result<usize, usize> {
+        static assert(type T is ISelfComparable, 
+            "Binary search available only for comparable types. Use overload with custom comparator instead.");
+        return BinarySearch(val, DefaultComparator);
+    }
+    // Searches an entire sorted span for a value using the specified comparator
+    // Returns the index of the value if found, otherwise returns the index where the value should be inserted
+    // (next element that is larger than val if such element exists or length of the span otherwise)
+    public BinarySearch: (in ref val: T, compare: Comparator<T>) -> Result<usize, usize> {
+        type TResult = Result<usize, usize>;
+        if _length == 0 {
+            return TResult::Err(0u);
+        }
+
+        lo: usize;
+        hi := _length - 1;
+
+        while lo <= hi {
+            let index := (hi + lo) >> 1;
+            let cmp := compare(val, Unsafe.Add(_data, index));
+            switch cmp {
+                0 => return index;
+                >0 => lo = index + 1;
+                _ => hi = index - 1;
+            }
+        }
+
+        return TResult::Err(lo);
+    }
+
+    // Finds the length of any common prefix shared between this and the other span
+    // Returns index of the first mismatched element
+    // Returns 0 if there is no shared prefix
+    // Returns null if both sequences are equal including its length
+    public Mismatch: (other: T[&]) -> usize? {
+        let isSameLength := _length == other.Length;
+        let length := _length.Min(other.Length);
+        const simdSupported :== version(X86) or version(ARM);
+        static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+            // SIMD path
+            const size :== sizeof(T);
+            let index := SpanHelpers::Mismatch(this.AsBytes, other.AsBytes, length * size) \ size;
+            if index < length or not isSameLength {
+                return index;
+            }
+        } else {
+            // Regular path
+            for i in ..length {
+                if this[@Unchecked i] != other[@Unchecked i] {
+                    return i;
+                }
+            }
+            if not isSameLength {
+                return length;
+            }
+        }
+        return null;
+    }
+
+    // Finds the length of any common prefix shared between this and the other span using the given EqualityComparer
+    // Returns index of the first mismatched element
+    // Returns 0 if there is no shared prefix
+    // Returns null if both sequences are equal including its length
+    public Mismatch: (other: T[&], equals: EqualityComparer<T>) -> usize? {
+        let isSameLength := _length == other.Length;
+        let length := _length.Min(other.Length);
+        for i in ..length {
+            if not equals(this[@Unchecked i], other[@Unchecked i]) {
+                return i;
+            }
+        }
+        if not isSameLength {
+            return length;
+        }
+        return null;
+    }
 }
 
 public extension <T> Span {
@@ -326,6 +408,37 @@ public ref struct <T> MutableSpan: ISelfEquatable, IAbstractSequence, ISequence<
         return this.AsSpan.Contains(val);
     }
     public operator in: (in ref val: T) -> bool ==> Contains(val);
+
+    // Searches an entire sorted span for a value using the default comparator
+    // Returns the index of the value if found, otherwise returns the index where the value should be inserted
+    // (next element that is larger than val if such element exists or length of the span otherwise)
+    public BinarySearch: (in ref val: T) -> Result<usize, usize> {
+        static assert(type T is ISelfComparable, 
+            "Binary search available only for comparable types. Use overload with custom comparator instead.");
+        return BinarySearch(val, DefaultComparator);
+    }
+    // Searches an entire sorted span for a value using the specified comparator
+    // Returns the index of the value if found, otherwise returns the index where the value should be inserted
+    // (next element that is larger than val if such element exists or length of the span otherwise)
+    public BinarySearch: (in ref val: T, compare: Comparator<T>) -> Result<usize, usize> {
+        return this.AsSpan.>BinarySearch(val, compare);
+    }
+
+    // Finds the length of any common prefix shared between this and the other span
+    // Returns index of the first mismatched element
+    // Returns 0 if there is no shared prefix
+    // Returns null if both sequences are equal including its length
+    public Mismatch: (other: T[&]) -> usize? {
+        return this.AsSpan.Mismatch(other);
+    }
+
+    // Finds the length of any common prefix shared between this and the other span using the given EqualityComparer
+    // Returns index of the first mismatched element
+    // Returns 0 if there is no shared prefix
+    // Returns null if both sequences are equal including its length
+    public Mismatch: (other: T[&], equals: EqualityComparer<T>) -> usize? {
+        return this.AsSpan.Mismatch(other, equals);
+    }
 }
 
 public extension <T> MutableSpan {
@@ -439,6 +552,54 @@ public static class SpanHelpers {
             return Simd.RuntimeDispatch<SpanContains<u64>, Neon, Avx512F, Avx2, Sse42, Sse2>(data, val);
         }
     }
+
+    public Mismatch: (left: byte[&], right: byte[&], length: usize) -> usize {
+        //assert left.Length <= length and right.Length <= length;
+        index: usize;
+
+        if length < 16u {
+            index = length % 4u;
+            if index {
+                if left[@Unchecked 0] != right[@Unchecked 0] {
+                    return 0u;
+                }
+
+                if index > 1u {
+                    if left[@Unchecked 1] != right[@Unchecked 1] {
+                        return 1u;
+                    }
+
+                    if index > 2u and left[@Unchecked 2] != right[@Unchecked 2] {
+                        return 2u;
+                    }
+                }
+            }
+
+            while index <= length - 4u {
+                if left[@Unchecked index] != right[@Unchecked index] {
+                    return index;
+                }
+                if left[@Unchecked index + 1u] != right[@Unchecked index + 1u] {
+                    return index + 1u;
+                }
+                if left[@Unchecked index + 2u] != right[@Unchecked index + 2u] {
+                    return index + 2u;
+                }
+                if left[@Unchecked index + 3u] != right[@Unchecked index + 3u] {
+                    return index + 3u;
+                }
+
+                index += 4u;
+            }
+            return length;
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanMismatch, Neon, Sse2>(left, right, length);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanMismatch, Neon, Avx2, Sse2>(left, right, length);
+        } else {
+            return Simd.RuntimeDispatch<SpanMismatch, Neon, Avx512BW, Avx2, Sse2>(left, right, length);
+        }
+    }
 }
 
 private static class <T> SpanContains {
@@ -462,6 +623,30 @@ private static class <T> SpanContains {
             }
         }
         return false;
+    }
+}
+
+private static class SpanMismatch {
+    public Invoke: <Arch> (left: byte[&], right: byte[&], length: usize) -> usize {
+        type TVector = SimdVector<byte, Arch>;
+        type TMask = SimdMask<byte, Arch>;
+        const vecSize :== TVector::Length;
+        let vecLast := length - vecSize;
+        index: usize;
+        maskVec: TMask;
+        while index < vecLast {
+            maskVec = TVector::LoadUnsafe(left[@Unchecked index]) !=^ TVector::LoadUnsafe(right[@Unchecked index]);
+            if let i := maskVec.FirstSet {
+                return index + i;
+            }
+            index += vecSize;
+        }
+        index = vecLast;
+        maskVec = TVector::LoadUnsafe(left[@Unchecked index]) !=^ TVector::LoadUnsafe(right[@Unchecked index]);
+        if let i := maskVec.FirstSet {
+            return index + i;
+        }
+        return length;
     }
 }
 
@@ -500,6 +685,26 @@ test "Span" {
     assert 3 in sp;
     assert 13 in sp;
     assert 26 not in sp;
+
+    sp = arrwide[..16u];
+    result := sp.BinarySearch(10);
+    switch result {
+        usize => assert result == 9;
+        _ => assert false;
+    }
+    result = sp.BinarySearch(20);
+    switch result {
+        usize => assert false;
+        _ => assert result.Error == 16u;
+    }
+
+    arrv: i32[_] = [1,2,3,4,5,8,9];
+    assert sp.Mismatch(arrv) == 5u;
+    arrv2: i32[_] = [2,3,4,5];
+    assert sp.Mismatch(arrv2) == 0u;
+    arrv3: i32[_] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1, 2];
+    assert sp.Mismatch(arrv3) == 16u;
+    assert sp.Mismatch(sp) == null;
 
     let spm: i32[&mut] = MutableSpan<i32>.UnsafeCreate(&arr[1], 3u);
     assert spm.Length == 3;

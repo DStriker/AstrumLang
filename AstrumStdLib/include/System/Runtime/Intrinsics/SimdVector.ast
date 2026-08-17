@@ -772,22 +772,26 @@ public struct <T, Arch> SimdMask
     public Any: bool => Arch::Any(this);
     public None: bool => not Any;
     public Count: usize => Builtin.PopCount(ScalarMask as u64);
-    public FirstSet: usize? = {
-        const unusedBits :== 64uz - Length;
-        const lowMask :== Length < 64 ? (1u64 << i32(Length % 64)) - 1 : ~u64(0);
-        let index := Builtin.LeadingZeroCount(u64(ScalarMask));
+}
+
+public extension <T, Arch> SimdMask {
+    FirstSet: usize? = {
+        const length :== self::Length;
+        const unusedBits :== 64uz - length;
+        const lowMask :== length < 64 ? (1u64 << i32(length % 64)) - 1 : ~u64(0);
+        let index := Builtin.LeadingZeroCount(u64(this.ScalarMask));
         if index >= 64 {
             return null;
         }
         return index - unusedBits;
     }
-    public LastSet: usize? = {
-        const stop :== Length < 64 ? (1u64 << i32(Length % 64)) : 0u64;
-        let index := Builtin.TrailingZeroCount(u64(ScalarMask) | stop);
-        if index >= Length {
+    LastSet: usize? = {
+        const length :== self::Length;
+        const stop :== length < 64 ? (1u64 << i32(length % 64)) : 0u64;
+        let index := Builtin.TrailingZeroCount(u64(this.ScalarMask) | stop);
+        if index >= length {
             return null;
         }
-        return Length - 1 - index;
+        return length - 1 - index;
     }
 }
-

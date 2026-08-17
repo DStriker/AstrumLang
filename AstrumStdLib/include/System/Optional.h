@@ -71,7 +71,7 @@ template<class T> class $Class_Optional;
 		#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 		public: static constexpr auto __IS_ADV_NULLABLE = Builtin::Boolean(true);
 		#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
-		static_assert(Builtin::IsStructType<T> || std::is_base_of_v<Builtin::Enum, T> || Builtin::TypeIs<T, typename Builtin::OptionalStrongRef>() || Builtin::TypeIs<T, typename Builtin::OptionalUnownedRef>() || Builtin::TypeIs<T, typename Builtin::WeakObjectRef>() || Builtin::TypeIs<T, typename Builtin::OptionalFunctionRef>(), "T must be a struct, an enum, an union or optional reference type");
+		static_assert(Builtin::IsStructType<T> || std::is_base_of_v<Builtin::Enum, T> || std::is_base_of_v<Builtin::Union, T> || Builtin::TypeIs<T, typename Builtin::OptionalStrongRef>() || Builtin::TypeIs<T, typename Builtin::OptionalUnownedRef>() || Builtin::TypeIs<T, typename Builtin::WeakObjectRef>() || Builtin::TypeIs<T, typename Builtin::OptionalFunctionRef>(), "T must be a struct, an enum, an union or optional reference type");
 		template <size_t I, class T> friend auto& get(Optional<T>&);
 		template <size_t I, class T> friend const auto& get(const Optional<T>&);
 		
@@ -303,7 +303,6 @@ template<class __TT> struct $static_getHasValue;
 				return nullptr;
 			}
 		}
-		return {};
 	}
 #line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 	template<class T> template<class F> inline auto Optional<T>::ValueOr(F&& func) const  -> const std::remove_cvref_t<T>
@@ -505,7 +504,6 @@ template<class __TT> struct $static_getHasValue;
 				return nullptr;
 			}
 		}
-		return {};
 	}
 #line 191 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Optional.ast"
 	template<class T> template<class F> inline auto OptionalRef<T>::ValueOr(F&& func) const  -> const std::remove_cvref_t<T>

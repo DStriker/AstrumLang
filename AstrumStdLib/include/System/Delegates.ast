@@ -1,6 +1,6 @@
 package System;
 
-public type Action<Ts...> = (in Ts...) -> void;
+public type Action<Ts...> = (Ts...) -> void;
 public type Predicate<T> = (in T) -> bool;
 public type Comparator<T> = (in T, in T) -> i32;
 public type EqualityComparer<T> = (in T, in T) -> bool;
