@@ -216,7 +216,19 @@ struct ___dependent_false : std::false_type {};
 			} else                                                                                 \
 				return MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(                                  \
 				    $extensions::$proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...);               \
-		} else if constexpr (requires {                                                            \
+		} /*else if constexpr (requires {                                                            \
+			                     [&](Obj&& obj, Args&&... params) {                                \
+				                     using namespace $extensions;                                  \
+				                     return MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(             \
+				                         ADV_FORWARD(obj), ADV_FORWARD(params)...);                \
+			                     }(ADV_FORWARD(obj), ADV_FORWARD(params)...);                      \
+		                     }) {                                                                  \
+			return [&](Obj&& obj, Args&&... params) {                                              \
+				using namespace $extensions;                                                       \
+				return MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(ADV_FORWARD(obj),                 \
+				                                                 ADV_FORWARD(params)...);          \
+			}(ADV_FORWARD(obj), ADV_FORWARD(params)...);                                           \
+		}*/ else if constexpr (requires {                                                            \
 			                     obj.ADV_UFCS_REMPARENS QUAL TEMPKW __VA_ARGS__(                   \
 			                         ADV_FORWARD(params)...);                                      \
 		                     }) {                                                                  \
@@ -225,7 +237,8 @@ struct ___dependent_false : std::false_type {};
 			ADV_FORWARD(obj).ADV_UFCS_REMPARENS QUAL TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);   \
 			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                                              \
 			($extensions::$proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...);                      \
-			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(ADV_FORWARD(obj), ADV_FORWARD(params)...);   \
+			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                                              \
+			(ADV_FORWARD(obj), ADV_FORWARD(params)...);                                            \
 		} else if constexpr (requires {                                                            \
 			                     MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                         \
 			                     (obj, ADV_FORWARD(params)...);                                    \
@@ -235,14 +248,16 @@ struct ___dependent_false : std::false_type {};
 			ADV_FORWARD(obj).ADV_UFCS_REMPARENS QUAL TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);   \
 			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                                              \
 			($extensions::$proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...);                      \
-			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(ADV_FORWARD(obj), ADV_FORWARD(params)...);   \
+			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                                              \
+			(ADV_FORWARD(obj), ADV_FORWARD(params)...);                                            \
 		} else {                                                                                   \
 			static_assert(___dependent_false<Obj>::value,                                          \
 			              "Method " #__VA_ARGS__ " not found by UFCS system for received object"); \
 			ADV_FORWARD(obj).ADV_UFCS_REMPARENS QUAL TEMPKW __VA_ARGS__(ADV_FORWARD(params)...);   \
 			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                                              \
 			($extensions::$proxy {ADV_FORWARD(obj)}, ADV_FORWARD(params)...);                      \
-			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)(ADV_FORWARD(obj), ADV_FORWARD(params)...);   \
+			MVFW(ADV_UFCS_REMPARENS QUAL __VA_ARGS__)                                              \
+			(ADV_FORWARD(obj), ADV_FORWARD(params)...);                                            \
 		}                                                                                          \
 	}
 

@@ -1340,7 +1340,7 @@ namespace Builtin {
 
 	template <template <typename...> class Template, typename SourceType>
 	constexpr auto Is(SourceType&&) {
-		return is_instance_of_v<SourceType, Template>;
+		return is_instance_of_v<std::decay_t<SourceType>, Template>;
 	}
 
 	template <class U, class T>
@@ -1497,9 +1497,14 @@ namespace Builtin {
 		}
 	}
 
-	template <typename SourceType, template <typename...> class Template>
+	template <typename SourceType, template <class...> class Template>
 	constexpr bool TypeIs() {
-		return is_instance_of_v<SourceType, Template>;
+		if constexpr (requires { typename std::decay_t<SourceType>::$property_underlying_type; })
+		{
+			return is_instance_of_v<typename std::decay_t<SourceType>::$property_underlying_type, Template>;
+		} else {
+			return is_instance_of_v<typename std::decay_t<SourceType>, Template>;
+		}
 	}
 
 	template <class T>
@@ -1778,6 +1783,11 @@ namespace Builtin {
 
 	template <class T>
 	inline constexpr bool IsBitwiseEquatable = std::has_unique_object_representations_v<T>;
+
+	template<class T>
+	inline constexpr bool IsTriviallyCopyable = std::is_trivially_copyable_v<T>;
+	template <class T>
+	inline constexpr bool IsTriviallyMovable = std::is_trivially_move_constructible_v<T>;
 
 #ifdef Builtin_OVERFLOW_CHECKS
 	template <class T>

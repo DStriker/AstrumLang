@@ -771,10 +771,10 @@ public struct <T, Arch> SimdMask
     public All: bool => Arch::All(this);
     public Any: bool => Arch::Any(this);
     public None: bool => not Any;
-    public Count: usize => Builtin.PopCount(ScalarMask as u64);
 }
 
 public extension <T, Arch> SimdMask {
+    Count: usize => Builtin.PopCount(u64(this.ScalarMask));
     FirstSet: usize? = {
         const length :== self::Length;
         const unusedBits :== 64uz - length;

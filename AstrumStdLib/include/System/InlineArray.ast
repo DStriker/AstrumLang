@@ -66,9 +66,8 @@ public extension <T, S: usize> T[S] {
         return Span<T>.UnsafeCreate(Unsafe.Add(this.GetDataReference(), 
             range.Start.Offset(S) as usize), range.Length(S));
     }
-
-    AsSpan: T[&] ==> this;
-    mut AsMutableSpan: () -> T[&mut] ==> this;
+    AsSpan: () -> Span<T> ==> this;
+    mut AsMutableSpan: () -> MutableSpan<T> ==> MutableSpan<T>(&this);
 }
 
 static assert(sizeof(i32[5]) == 20, "Fixed array should be sizeof(T) * S bytes");
@@ -98,7 +97,7 @@ test "InlineArray" {
     assert arr[4] == 6;
     arr2: i32[_] = [1, 2, 3, 4, 6];
     assert arr == arr2;
-    sp2: i32[&] = arr2;
+    sp2: i32[&] = arr2.AsSpan();
     assert sp2.Length == 5;
     assert sp2[4] == 6;
 

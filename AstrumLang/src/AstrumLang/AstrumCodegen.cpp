@@ -1982,8 +1982,7 @@ namespace AstrumLang {
 				out << ", ";
 				out << "_TAG__" << constant.id;
 			}
-			out << "\n "
-			    << std::string(--depth, '\t') << "} __union_internal_tag;\n"
+			out << "\n " << std::string(--depth, '\t') << "} __union_internal_tag;\n"
 			    << std::string(depth, '\t');
 			out << "public:\n" << std::string(depth, '\t');
 			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
@@ -6221,11 +6220,15 @@ namespace AstrumLang {
 				if (method.isStatic) {
 					out << " { { [] { using namespace $extensions; ";
 					if (method.returnType)
-						out << "return";
-					out << " $static_" << method.id << "<typename __AnyType::$self>::get(";
+						out << "return ";
+					if (method.isStatic) {
+						out << "$static_" << method.id << "<typename __AnyType::$self>::get(";
+					} else {
+						out << method.id << "(std::declval<typename __AnyType::$self>()";
+					}
 				} else {
 					out << "(typename __AnyType::$self t) { {" << method.id
-					    << "($extensions::$proxy<typename __AnyType::$self>{t}";
+					    << "($extensions::$proxy{t}";
 				}
 				if (method.indexerParams) {
 					if (isUnchecked) {
@@ -9248,10 +9251,6 @@ namespace AstrumLang {
 		if (type->templateParams) {
 			printTemplateParams(type->templateParams);
 			out << " ";
-			if (type->constraints) {
-				printConstraintClause(type->constraints);
-				out << " ";
-			}
 		}
 		out << "using $extension_" << filename << "_" << type->pos.line << "_" << type->id << " = ";
 		bool needTParams = type->templateParams && type->id.find("_tspec_") == std::string::npos;
@@ -9262,6 +9261,7 @@ namespace AstrumLang {
 				needTParams = false;
 			}
 		} else {
+			currentExtensionName = "std::decay_t<" + type->id + ">::$self";
 			out << type->id;
 		}
 
@@ -9269,7 +9269,8 @@ namespace AstrumLang {
 			auto parent =
 			    static_cast<AstrumParser::ExtensionHeadContext*>(type->templateParams->parent);
 			if (parent->theTypeId()) {
-				currentTemplateParams = type->templateParams;
+				if (type->extensionType)
+					currentTemplateParams = type->templateParams;
 				out << "<";
 				bool first = true;
 				for (auto param : type->templateParams->templateParamDeclaration()) {
@@ -9318,6 +9319,10 @@ namespace AstrumLang {
 				if (type->templateParams) {
 					printTemplateParams(type->templateParams);
 					out << " ";
+					if (type->constraints) {
+						printConstraintClause(type->constraints);
+						out << " ";
+					}
 				}
 				isUnsafe = func.isUnsafe;
 				if (func.attributes) {
@@ -9484,9 +9489,29 @@ namespace AstrumLang {
 				out << "); }\n" << std::string(depth, '\t');
 				continue;
 			}
-			if (type->templateParams) {
-				printTemplateParams(type->templateParams);
-				out << " ";
+			if (type->templateParams || func.templateParams) {
+				out << "template<";
+				bool first                 = true;
+				isTemplateParamDeclaration = true;
+				if (type->templateParams) {
+					for (auto decl : type->templateParams->templateParamDeclaration()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printTemplateParamDeclaration(decl);
+					}
+				}
+				if (func.templateParams) {
+					for (auto decl : func.templateParams->templateParamDeclaration()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printTemplateParamDeclaration(decl);
+					}
+				}
+
+				out << "> ";
+				isTemplateParamDeclaration = false;
 			}
 			isUnsafe = func.isUnsafe;
 			if (isUnsafe) {
@@ -9498,10 +9523,7 @@ namespace AstrumLang {
 			}
 
 			isFunctionDeclaration = true;
-			if (func.templateParams) {
-				printTemplateParams(func.templateParams);
-				out << " ";
-			} else if (func.templateSpecializationArgs) {
+			if (func.templateSpecializationArgs) {
 				out << "template<> ";
 			}
 			if (func.attributes) {
@@ -9597,23 +9619,27 @@ namespace AstrumLang {
 			}
 			out << "(";
 			if (!func.isConstructor && !func.isStatic) {
-				out << "$extension_" << filename << "_" << type->pos.line << "_" << type->id;
-				if (type->templateParams) {
-					out << "<";
-					bool first = true;
-					for (auto param : type->templateParams->templateParamDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(param->Identifier());
-						if (param->Ellipsis())
-							out << "...";
+				if (type->extensionType) {
+					out << "$extension_" << filename << "_" << type->pos.line << "_" << type->id;
+					if (type->templateParams) {
+						out << "<";
+						bool first = true;
+						for (auto param : type->templateParams->templateParamDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(param->Identifier());
+							if (param->Ellipsis())
+								out << "...";
+						}
+						out << ">";
 					}
-					out << ">";
+					out << " ";
+					if (!func.isMutating)
+						out << "const";
+				} else {
+					out << type->id << "&";
 				}
-				out << " ";
-				if (!func.isMutating)
-					out << "const";
 				out << "& $this ";
 				if (!func.isMutating)
 					out << "LIFETIMEBOUND";
@@ -9646,48 +9672,53 @@ namespace AstrumLang {
 			out << " ";
 			if (func.exceptionSpecification)
 				printExceptionSpecification(func.exceptionSpecification);
-			out << " -> ";
-			if (func.isAutoReturn) {
-				out << "auto";
-			} else if (func.returnType || func.isConstructor) {
-				if (func.returnType)
-					currentType = func.returnType->getText();
-				if (!func.isMutating && (!func.isRefReturn || func.isConstReturn))
-					out << "const ";
-				if (func.isConstructor) {
-					out << "decltype(auto)";
-				} else if (func.returnType->getText() == "self") {
-					out << "typename $extension_" << filename << "_" << type->pos.line << "_"
-					    << type->id;
-					if (type->templateParams && !type->id.empty()) {
-						out << "<";
-						bool first = true;
-						for (auto param : type->templateParams->templateParamDeclaration()) {
-							if (!first)
-								out << ", ";
-							first = false;
-							printIdentifier(param->Identifier());
-							if (param->Ellipsis())
-								out << "...";
+			if (!func.isAutoReturn) {
+				out << " -> ";
+				if (func.returnType || func.isConstructor) {
+					if (func.returnType)
+						currentType = func.returnType->getText();
+					if (!func.isMutating && (!func.isRefReturn || func.isConstReturn))
+						out << "const ";
+					if (func.isConstructor) {
+						out << "decltype(auto)";
+					} else if (func.returnType->getText() == "self") {
+						out << "typename $extension_" << filename << "_" << type->pos.line << "_"
+						    << type->id;
+						if (type->templateParams && !type->id.empty()) {
+							out << "<";
+							bool first = true;
+							for (auto param : type->templateParams->templateParamDeclaration()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printIdentifier(param->Identifier());
+								if (param->Ellipsis())
+									out << "...";
+							}
+							out << ">";
 						}
-						out << ">";
+						if (type->kind == TypeKind::Class && func.isRefReturn) {
+							out << "::$class";
+						}
+					} else {
+						printTypeId(func.returnType);
+						currentType = func.returnType->getText();
 					}
-					if (type->kind == TypeKind::Class && func.isRefReturn) {
-						out << "::$class";
-					}
-				} else {
-					printTypeId(func.returnType);
-					currentType = func.returnType->getText();
-				}
 
-				if (func.isRefReturn)
-					out << "&";
-			} else if (func.isForwardReturn) {
-				out << "decltype(auto)";
-			} else if (func.expression) {
-				out << "decltype(auto)";
-			} else {
-				out << "void";
+					if (func.isRefReturn)
+						out << "&";
+				} else if (func.isForwardReturn) {
+					out << "decltype(auto)";
+				} else if (func.expression) {
+					out << "decltype(auto)";
+				} else {
+					out << "void";
+				}
+			}
+			if (type->constraints) {
+				out << " ";
+				printConstraintClause(type->constraints);
+				out << " ";
 			}
 
 			out << ";";
@@ -9695,6 +9726,334 @@ namespace AstrumLang {
 				out << " };";
 			}
 			out << std::endl << std::string(depth, '\t');
+			if (type->extensionType && type->templateParams && !func.isConstructor &&
+			    !func.isStatic) {
+				out << "template<";
+				bool first                 = true;
+				isTemplateParamDeclaration = true;
+				for (auto decl : type->templateParams->templateParamDeclaration()) {
+					if (!first)
+						out << ", ";
+					first = false;
+					printTemplateParamDeclaration(decl);
+				}
+				if (func.templateParams) {
+					for (auto decl : func.templateParams->templateParamDeclaration()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printTemplateParamDeclaration(decl);
+					}
+				}
+
+				out << "> ";
+				isTemplateParamDeclaration = false;
+				isUnsafe                   = func.isUnsafe;
+				if (isUnsafe) {
+					out << "[[clang::annotate(\"unsafe\")]] ";
+				}
+
+				if (func.varargs >= 0) {
+					out << "[[clang::annotate(\"varargs:" << (int) func.varargs << "\")]] ";
+				}
+
+				isFunctionDeclaration = true;
+				if (func.attributes) {
+					for (auto attr : func.attributes->attributeSpecifier()) {
+						auto attrName = attr->Identifier()->getText();
+						if (attrName == "Deprecated") {
+							out << "[[deprecated";
+							if (attr->attributeArgumentClause())
+								out << "("
+								    << attr->attributeArgumentClause()->expressionList()->getText()
+								    << ")";
+							out << "]] ";
+						} else if (attrName == "Unused") {
+							out << "[[maybe_unused]] ";
+						} else if (attrName == "NoDiscard") {
+							out << "[[nodiscard]] ";
+						} else if (attrName == "NoReturn") {
+							out << "[[noreturn]] ";
+						} else if (attrName == "ForceInline") {
+							out << "FORCE_INLINE ";
+						} else if (attrName == "NoInline") {
+							out << "NOINLINE ";
+						} else {
+							printAttributeSpecifier(attr);
+							out << " ";
+						}
+					}
+				}
+
+				if (func.isConsteval) {
+					out << "inline consteval ";
+				} else if (func.isConstexpr) {
+					out << "inline constexpr ";
+				} else if (func.isInline) {
+					out << "inline ";
+				}
+
+				out << "auto ";
+				out << func.id;
+				if (func.templateSpecializationArgs) {
+					out << "<";
+					printTemplateArgumentList(func.templateSpecializationArgs);
+					out << ">";
+				}
+				out << "(";
+				out << "$proxy<$extension_" << filename << "_" << type->pos.line << "_" << type->id;
+				out << "<";
+				first = true;
+				for (auto param : type->templateParams->templateParamDeclaration()) {
+					if (!first)
+						out << ", ";
+					first = false;
+					printIdentifier(param->Identifier());
+					if (param->Ellipsis())
+						out << "...";
+				}
+				out << ">> ";
+				if (!func.isMutating)
+					out << "const";
+				out << "& $this ";
+				if (!func.isMutating)
+					out << "LIFETIMEBOUND";
+				if (func.params && func.params->paramDeclClause()) {
+					out << ", ";
+					printParamDeclClause(func.params->paramDeclClause());
+				}
+				out << ")";
+				isVariadicTemplate    = false;
+				isFunctionDeclaration = false;
+				out << " ";
+				if (func.exceptionSpecification)
+					printExceptionSpecification(func.exceptionSpecification);
+				if (!func.isAutoReturn) {
+					out << " -> ";
+					if (func.returnType) {
+						currentType = func.returnType->getText();
+						if (!func.isMutating && (!func.isRefReturn || func.isConstReturn))
+							out << "const ";
+						if (func.isConstructor) {
+							out << "decltype(auto)";
+						} else if (func.returnType->getText() == "self") {
+							out << "typename $extension_" << filename << "_" << type->pos.line
+							    << "_" << type->id;
+							if (type->templateParams && !type->id.empty()) {
+								out << "<";
+								bool first = true;
+								for (auto param :
+								     type->templateParams->templateParamDeclaration()) {
+									if (!first)
+										out << ", ";
+									first = false;
+									printIdentifier(param->Identifier());
+									if (param->Ellipsis())
+										out << "...";
+								}
+								out << ">";
+							}
+							if (type->kind == TypeKind::Class && func.isRefReturn) {
+								out << "::$class";
+							}
+						} else {
+							printTypeId(func.returnType);
+							currentType = func.returnType->getText();
+						}
+
+						if (func.isRefReturn)
+							out << "&";
+					} else if (func.isForwardReturn) {
+						out << "decltype(auto)";
+					} else if (func.expression) {
+						out << "decltype(auto)";
+					} else {
+						out << "void";
+					}
+				}
+				if (type->constraints) {
+					out << " ";
+					printConstraintClause(type->constraints);
+					out << " ";
+				}
+
+				out << " { return " << func.id << "($this.val";
+				if (func.params && func.params->paramDeclClause()) {
+					for (auto p :
+					     func.params->paramDeclClause()->paramDeclList()->paramDeclaration()) {
+						out << ", ";
+						printIdentifier(p->Identifier());
+					}
+					if (func.params->paramDeclClause()->Ellipsis())
+					{
+						out << "...";
+					}
+				}
+				out << "); } ";
+
+				out << "template<";
+				first                 = true;
+				isTemplateParamDeclaration = true;
+				for (auto decl : type->templateParams->templateParamDeclaration()) {
+					if (!first)
+						out << ", ";
+					first = false;
+					printTemplateParamDeclaration(decl);
+				}
+				if (func.templateParams) {
+					for (auto decl : func.templateParams->templateParamDeclaration()) {
+						if (!first)
+							out << ", ";
+						first = false;
+						printTemplateParamDeclaration(decl);
+					}
+				}
+
+				out << "> ";
+				isTemplateParamDeclaration = false;
+				isUnsafe                   = func.isUnsafe;
+				if (isUnsafe) {
+					out << "[[clang::annotate(\"unsafe\")]] ";
+				}
+
+				if (func.varargs >= 0) {
+					out << "[[clang::annotate(\"varargs:" << (int) func.varargs << "\")]] ";
+				}
+
+				isFunctionDeclaration = true;
+				if (func.attributes) {
+					for (auto attr : func.attributes->attributeSpecifier()) {
+						auto attrName = attr->Identifier()->getText();
+						if (attrName == "Deprecated") {
+							out << "[[deprecated";
+							if (attr->attributeArgumentClause())
+								out << "("
+								    << attr->attributeArgumentClause()->expressionList()->getText()
+								    << ")";
+							out << "]] ";
+						} else if (attrName == "Unused") {
+							out << "[[maybe_unused]] ";
+						} else if (attrName == "NoDiscard") {
+							out << "[[nodiscard]] ";
+						} else if (attrName == "NoReturn") {
+							out << "[[noreturn]] ";
+						} else if (attrName == "ForceInline") {
+							out << "FORCE_INLINE ";
+						} else if (attrName == "NoInline") {
+							out << "NOINLINE ";
+						} else {
+							printAttributeSpecifier(attr);
+							out << " ";
+						}
+					}
+				}
+
+				if (func.isConsteval) {
+					out << "inline consteval ";
+				} else if (func.isConstexpr) {
+					out << "inline constexpr ";
+				} else if (func.isInline) {
+					out << "inline ";
+				}
+
+				out << "auto ";
+				out << func.id;
+				if (func.templateSpecializationArgs) {
+					out << "<";
+					printTemplateArgumentList(func.templateSpecializationArgs);
+					out << ">";
+				}
+				out << "(";
+				out << "$proxy<$extension_" << filename << "_" << type->pos.line << "_" << type->id;
+				out << "<";
+				first = true;
+				for (auto param : type->templateParams->templateParamDeclaration()) {
+					if (!first)
+						out << ", ";
+					first = false;
+					printIdentifier(param->Identifier());
+					if (param->Ellipsis())
+						out << "...";
+				}
+				out << ">&> ";
+				if (!func.isMutating)
+					out << "const";
+				out << "& $this ";
+				if (!func.isMutating)
+					out << "LIFETIMEBOUND";
+				if (func.params && func.params->paramDeclClause()) {
+					out << ", ";
+					printParamDeclClause(func.params->paramDeclClause());
+				}
+				out << ")";
+				isVariadicTemplate    = false;
+				isFunctionDeclaration = false;
+				out << " ";
+				if (func.exceptionSpecification)
+					printExceptionSpecification(func.exceptionSpecification);
+				if (!func.isAutoReturn) {
+					out << " -> ";
+					if (func.returnType) {
+						currentType = func.returnType->getText();
+						if (!func.isMutating && (!func.isRefReturn || func.isConstReturn))
+							out << "const ";
+						if (func.isConstructor) {
+							out << "decltype(auto)";
+						} else if (func.returnType->getText() == "self") {
+							out << "typename $extension_" << filename << "_" << type->pos.line
+							    << "_" << type->id;
+							if (type->templateParams && !type->id.empty()) {
+								out << "<";
+								bool first = true;
+								for (auto param :
+								     type->templateParams->templateParamDeclaration()) {
+									if (!first)
+										out << ", ";
+									first = false;
+									printIdentifier(param->Identifier());
+									if (param->Ellipsis())
+										out << "...";
+								}
+								out << ">";
+							}
+							if (type->kind == TypeKind::Class && func.isRefReturn) {
+								out << "::$class";
+							}
+						} else {
+							printTypeId(func.returnType);
+							currentType = func.returnType->getText();
+						}
+
+						if (func.isRefReturn)
+							out << "&";
+					} else if (func.isForwardReturn) {
+						out << "decltype(auto)";
+					} else if (func.expression) {
+						out << "decltype(auto)";
+					} else {
+						out << "void";
+					}
+				}
+				if (type->constraints) {
+					out << " ";
+					printConstraintClause(type->constraints);
+					out << " ";
+				}
+
+				out << " { return " << func.id << "($this.val";
+				if (func.params && func.params->paramDeclClause()) {
+					for (auto p :
+					     func.params->paramDeclClause()->paramDeclList()->paramDeclaration()) {
+						out << ", ";
+						printIdentifier(p->Identifier());
+					}
+					if (func.params->paramDeclClause()->Ellipsis()) {
+						out << "...";
+					}
+				}
+				out << "); } ";
+				out << std::endl << std::string(depth, '\t');
+			}
 			if (func.id == "operator++" || func.id == "operator--") {
 				if (type->templateParams) {
 					printTemplateParams(type->templateParams);
@@ -9773,13 +10132,29 @@ namespace AstrumLang {
 				}
 				out << ";" << std::endl << std::string(depth, '\t');
 			} else if (func.isCommutative) {
-				if (type->templateParams) {
-					printTemplateParams(type->templateParams);
-					out << " ";
-				}
-				if (func.templateParams) {
-					printTemplateParams(func.templateParams);
-					out << " ";
+				if (type->templateParams || func.templateParams) {
+					out << "template<";
+					bool first                 = true;
+					isTemplateParamDeclaration = true;
+					if (type->templateParams) {
+						for (auto decl : type->templateParams->templateParamDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printTemplateParamDeclaration(decl);
+						}
+					}
+					if (func.templateParams) {
+						for (auto decl : func.templateParams->templateParamDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printTemplateParamDeclaration(decl);
+						}
+					}
+
+					out << "> ";
+					isTemplateParamDeclaration = false;
 				}
 				if (func.attributes) {
 					for (auto attr : func.attributes->attributeSpecifier()) {
@@ -9898,6 +10273,10 @@ namespace AstrumLang {
 			if (type->templateParams) {
 				printTemplateParams(type->templateParams);
 				out << " ";
+				if (type->constraints) {
+					printConstraintClause(type->constraints);
+					out << " ";
+				}
 			}
 			if (!type->templateParams && prop.isStatic) {
 				/* out << "template<class __TT> requires std::same_as<__TT, $extension_"
@@ -9946,21 +10325,26 @@ namespace AstrumLang {
 				out << prop.id;
 			out << "(";
 			if (!prop.isStatic) {
-				out << "$extension_" << filename << "_" << type->pos.line << "_" << type->id;
-				if (type->templateParams) {
-					out << "<";
-					bool first = true;
-					for (auto param : type->templateParams->templateParamDeclaration()) {
-						if (!first)
-							out << ", ";
-						first = false;
-						printIdentifier(param->Identifier());
-						if (param->Ellipsis())
-							out << "...";
+				if (type->extensionType) {
+					out << "$extension_" << filename << "_" << type->pos.line << "_" << type->id;
+					if (type->templateParams) {
+						out << "<";
+						bool first = true;
+						for (auto param : type->templateParams->templateParamDeclaration()) {
+							if (!first)
+								out << ", ";
+							first = false;
+							printIdentifier(param->Identifier());
+							if (param->Ellipsis())
+								out << "...";
+						}
+						out << ">";
 					}
-					out << ">";
+					out << " const";
+				} else {
+					out << type->id << "&";
 				}
-				out << " const& $this ";
+				out << "& $this ";
 				if (prop.isRef)
 					out << "LIFETIMEBOUND";
 			}
@@ -10115,7 +10499,7 @@ namespace AstrumLang {
 				isClearModule =
 				    sema.globalVariables.size() == 0 && sema.globalFunctions.size() == 0;
 				for (const auto& t : sema.globalStructs) {
-					if (type->kind != TypeKind::Interface) {
+					if (t->kind != TypeKind::Interface) {
 						isClearModule = false;
 						break;
 					}
@@ -10731,8 +11115,12 @@ namespace AstrumLang {
 				if (type->templateParams) {
 					auto parent = static_cast<AstrumParser::ExtensionHeadContext*>(
 					    type->templateParams->parent);
-					if (parent->theTypeId())
-						currentTemplateParams = type->templateParams;
+					if (type->extensionType) {
+						if (parent->theTypeId())
+							currentTemplateParams = type->templateParams;
+					} else {
+						currentExtensionName = "std::decay_t<" + type->id + ">::$self";
+					}
 				}
 
 				currentTemplateSpecArgs = type->templateSpecializationArgs;
@@ -10774,6 +11162,10 @@ namespace AstrumLang {
 						if (type->templateParams) {
 							printTemplateParams(type->templateParams);
 							out << " ";
+							if (type->constraints) {
+								printConstraintClause(type->constraints);
+								out << " ";
+							}
 						}
 						isUnsafe = func.isUnsafe;
 						if (isUnsafe) {
@@ -10830,19 +11222,36 @@ namespace AstrumLang {
 						out << "\n" << std::string(depth, '\t');
 						continue;
 					}
-					if (type->templateParams) {
-						printTemplateParams(type->templateParams);
-						out << " ";
+					if (type->templateParams || func.templateParams) {
+						out << "template<";
+						bool first                 = true;
+						isTemplateParamDeclaration = true;
+						if (type->templateParams) {
+							for (auto decl : type->templateParams->templateParamDeclaration()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printTemplateParamDeclaration(decl);
+							}
+						}
+						if (func.templateParams) {
+							for (auto decl : func.templateParams->templateParamDeclaration()) {
+								if (!first)
+									out << ", ";
+								first = false;
+								printTemplateParamDeclaration(decl);
+							}
+						}
+
+						out << "> ";
+						isTemplateParamDeclaration = false;
 					}
 					isUnsafe = func.isUnsafe;
 					if (isUnsafe) {
 						out << "[[clang::annotate(\"unsafe\")]] ";
 					}
 
-					if (func.templateParams) {
-						printTemplateParams(func.templateParams);
-						out << " ";
-					} else if (func.templateSpecializationArgs) {
+					if (func.templateSpecializationArgs) {
 						out << "template<> ";
 					}
 
@@ -10893,24 +11302,29 @@ namespace AstrumLang {
 					}
 					out << "(";
 					if (!func.isConstructor && !func.isStatic) {
-						out << "$extension_" << filename << "_" << type->pos.line << "_"
-						    << type->id;
-						if (type->templateParams) {
-							out << "<";
-							bool first = true;
-							for (auto param : type->templateParams->templateParamDeclaration()) {
-								if (!first)
-									out << ", ";
-								first = false;
-								printIdentifier(param->Identifier());
-								if (param->Ellipsis())
-									out << "...";
+						if (type->extensionType) {
+							out << "$extension_" << filename << "_" << type->pos.line << "_"
+							    << type->id;
+							if (type->templateParams) {
+								out << "<";
+								bool first = true;
+								for (auto param :
+								     type->templateParams->templateParamDeclaration()) {
+									if (!first)
+										out << ", ";
+									first = false;
+									printIdentifier(param->Identifier());
+									if (param->Ellipsis())
+										out << "...";
+								}
+								out << ">";
 							}
-							out << ">";
+							out << " ";
+							if (!func.isMutating)
+								out << "const";
+						} else {
+							out << type->id << "&";
 						}
-						out << " ";
-						if (!func.isMutating)
-							out << "const";
 						out << "& $this ";
 						if (!func.isMutating)
 							out << "LIFETIMEBOUND";
@@ -10943,49 +11357,54 @@ namespace AstrumLang {
 					out << " ";
 					if (func.exceptionSpecification)
 						printExceptionSpecification(func.exceptionSpecification);
-					out << " -> ";
-					if (func.isAutoReturn) {
-						out << "auto";
-					} else if (func.returnType || func.isConstructor) {
-						if (func.returnType)
-							currentType = func.returnType->getText();
-						if (!func.isMutating && (!func.isRefReturn || func.isConstReturn))
-							out << "const ";
-						if (func.isConstructor) {
-							out << "decltype(auto)";
-						} else if (func.returnType->getText() == "self") {
-							out << "typename $extension_" << filename << "_" << type->pos.line
-							    << "_" << type->id;
-							if (type->templateParams) {
-								out << "<";
-								bool first = true;
-								for (auto param :
-								     type->templateParams->templateParamDeclaration()) {
-									if (!first)
-										out << ", ";
-									first = false;
-									printIdentifier(param->Identifier());
-									if (param->Ellipsis())
-										out << "...";
+					if (!func.isAutoReturn) {
+						out << " -> ";
+						if (func.returnType || func.isConstructor) {
+							if (func.returnType)
+								currentType = func.returnType->getText();
+							if (!func.isMutating && (!func.isRefReturn || func.isConstReturn))
+								out << "const ";
+							if (func.isConstructor) {
+								out << "decltype(auto)";
+							} else if (func.returnType->getText() == "self") {
+								out << "typename $extension_" << filename << "_" << type->pos.line
+								    << "_" << type->id;
+								if (type->templateParams) {
+									out << "<";
+									bool first = true;
+									for (auto param :
+									     type->templateParams->templateParamDeclaration()) {
+										if (!first)
+											out << ", ";
+										first = false;
+										printIdentifier(param->Identifier());
+										if (param->Ellipsis())
+											out << "...";
+									}
+									out << ">";
 								}
-								out << ">";
+								if (type->kind == TypeKind::Class && func.isRefReturn) {
+									out << "::$class";
+								}
+							} else {
+								printTypeId(func.returnType);
 							}
-							if (type->kind == TypeKind::Class && func.isRefReturn) {
-								out << "::$class";
-							}
-						} else {
-							printTypeId(func.returnType);
-						}
 
-						if (func.isRefReturn)
-							out << "&";
-					} else if (func.isForwardReturn) {
-						out << "decltype(auto)";
-					} else if (func.expression) {
-						out << "decltype(auto)";
-					} else {
-						out << "void";
-						isVoidReturn = true;
+							if (func.isRefReturn)
+								out << "&";
+						} else if (func.isForwardReturn) {
+							out << "decltype(auto)";
+						} else if (func.expression) {
+							out << "decltype(auto)";
+						} else {
+							out << "void";
+							isVoidReturn = true;
+						}
+					}
+					if (type->constraints) {
+						out << " ";
+						printConstraintClause(type->constraints);
+						out << " ";
 					}
 
 					auto parent =
@@ -11054,9 +11473,29 @@ namespace AstrumLang {
 						    << "(); return copy; }" << std::endl
 						    << std::string(depth, '\t');
 					} else if (func.isCommutative) {
-						if (type->templateParams) {
-							printTemplateParams(type->templateParams);
-							out << " ";
+						if (type->templateParams || func.templateParams) {
+							out << "template<";
+							bool first                 = true;
+							isTemplateParamDeclaration = true;
+							if (type->templateParams) {
+								for (auto decl : type->templateParams->templateParamDeclaration()) {
+									if (!first)
+										out << ", ";
+									first = false;
+									printTemplateParamDeclaration(decl);
+								}
+							}
+							if (func.templateParams) {
+								for (auto decl : func.templateParams->templateParamDeclaration()) {
+									if (!first)
+										out << ", ";
+									first = false;
+									printTemplateParamDeclaration(decl);
+								}
+							}
+
+							out << "> ";
+							isTemplateParamDeclaration = false;
 						}
 						isFunctionDeclaration = true;
 						if (func.isConsteval) {
@@ -11159,6 +11598,10 @@ namespace AstrumLang {
 					if (type->templateParams) {
 						printTemplateParams(type->templateParams);
 						out << " ";
+						if (type->constraints) {
+							printConstraintClause(type->constraints);
+							out << " ";
+						}
 					}
 					if (!type->templateParams && prop.isStatic) {
 						/*out << "template<class __TT> requires std::same_as<__TT, $extension_"
@@ -11201,22 +11644,28 @@ namespace AstrumLang {
 					}
 					out << "(";
 					if (!prop.isStatic) {
-						out << "$extension_" << filename << "_" << type->pos.line << "_"
-						    << type->id;
-						if (type->templateParams) {
-							out << "<";
-							bool first = true;
-							for (auto param : type->templateParams->templateParamDeclaration()) {
-								if (!first)
-									out << ", ";
-								first = false;
-								printIdentifier(param->Identifier());
-								if (param->Ellipsis())
-									out << "...";
+						if (type->extensionType) {
+							out << "$extension_" << filename << "_" << type->pos.line << "_"
+							    << type->id;
+							if (type->templateParams) {
+								out << "<";
+								bool first = true;
+								for (auto param :
+								     type->templateParams->templateParamDeclaration()) {
+									if (!first)
+										out << ", ";
+									first = false;
+									printIdentifier(param->Identifier());
+									if (param->Ellipsis())
+										out << "...";
+								}
+								out << ">";
 							}
-							out << ">";
+							out << " const ";
+						} else {
+							out << type->id << "&";
 						}
-						out << " const& $this ";
+						out << "& $this ";
 						if (prop.isRef)
 							out << "LIFETIMEBOUND";
 					}
@@ -20938,7 +21387,7 @@ namespace AstrumLang {
 			out << " ";
 		} else {
 			isVoidReturn = true;
-			//out << "-> const auto ";
+			// out << "-> const auto ";
 		}
 		if (ctx->constraintClause()) {
 			printConstraintClause(ctx->constraintClause());

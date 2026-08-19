@@ -3,6 +3,13 @@
 
 #include "Types.h"
 
+namespace System {
+	template <class T>
+	struct Span;
+	template <class T>
+	struct MutableSpan;
+}  // namespace System
+
 namespace Builtin {
 	template <size_t S, class T, bool IsConstStrArray>
 	class $Class_InlineArray;
@@ -21,6 +28,8 @@ namespace Builtin {
 		using $self                    = InlineArray<S, T, IsConstStrArray>;
 		using $class                   = $Class_InlineArray<S, T, IsConstStrArray>;
 		using ElementType              = T;
+		using SpanType                 = System::Span<T>;
+		using MutableSpanType          = System::MutableSpan<T>;
 		static constexpr size_t Length = S;
 
 		constexpr $self& $ref() noexcept { return *this; }
@@ -102,7 +111,7 @@ namespace Builtin {
 			Iterator<IsConst> __value;
 
 		   public:
-			using $self        = Iterator<IsConst>;
+			using $self       = Iterator<IsConst>;
 			using $underlying = $self;
 			$Class_Iterator(const $underlying& value) noexcept(
 			    std::is_nothrow_copy_constructible_v<$underlying>)
@@ -117,14 +126,15 @@ namespace Builtin {
 			}
 		};
 
-		auto Iterate() noexcept {
-			return Iterator<false>(
-			    &GetDataReference());
-		}
-		auto Iterate() const noexcept {
-			return Iterator<true>(&GetDataReference());
-		}
+		auto Iterate() noexcept { return Iterator<false>(&GetDataReference()); }
+		auto Iterate() const noexcept { return Iterator<true>(&GetDataReference()); }
 	};
+
+	template <class T>
+	inline constexpr bool IsInlineArray = std::false_type {};
+
+	template <auto S, class T, auto IsConstStrArray>
+	inline constexpr bool IsInlineArray<InlineArray<S, T, IsConstStrArray>> = std::true_type {};
 
 	template <size_t S, class T, bool IsConstStrArray>
 	class $Class_InlineArray : public ValueType {

@@ -5,9 +5,11 @@ public import Result;
 public import Delegates;
 public import System.Runtime.CompilerServices.Unsafe;
 import System.Runtime.Intrinsics.Simd;
+import InlineArray;
 
 public ref struct <T> Span: ISelfEquatable, IAbstractSequence, ISequence<T> {
     public type ElementType = T;
+    public type SpanType = self;
 
     private _data: &T;
     private _length: usize;
@@ -89,6 +91,14 @@ public ref struct <T> Span: ISelfEquatable, IAbstractSequence, ISequence<T> {
         if start + length >= _length {
             throw Builtin.IndexOutOfRangeException();
         }
+        return self(Unsafe.Add(_data, start), length);
+    }
+
+    public SliceUnchecked: (start: usize) -> self == {
+        return self(Unsafe.Add(_data, start), _length - start);
+    }
+
+    public SliceUnchecked: (start: usize, length: usize) -> self == {
         return self(Unsafe.Add(_data, start), length);
     }
 
@@ -179,85 +189,161 @@ public ref struct <T> Span: ISelfEquatable, IAbstractSequence, ISequence<T> {
 
     public operator in: (in ref val: T) -> bool ==> Contains(val);
 
-    // Searches an entire sorted span for a value using the default comparator
-    // Returns the index of the value if found, otherwise returns the index where the value should be inserted
-    // (next element that is larger than val if such element exists or length of the span otherwise)
-    public BinarySearch: (in ref val: T) -> Result<usize, usize> {
-        static assert(type T is ISelfComparable, 
-            "Binary search available only for comparable types. Use overload with custom comparator instead.");
-        return BinarySearch(val, DefaultComparator);
-    }
-    // Searches an entire sorted span for a value using the specified comparator
-    // Returns the index of the value if found, otherwise returns the index where the value should be inserted
-    // (next element that is larger than val if such element exists or length of the span otherwise)
-    public BinarySearch: (in ref val: T, compare: Comparator<T>) -> Result<usize, usize> {
-        type TResult = Result<usize, usize>;
-        if _length == 0 {
-            return TResult::Err(0u);
-        }
+    // Searches for the specified value using the given EqualityComparer and returns true if found
+    public Contains: (in ref val: T, equals: EqualityComparer<T>) -> bool => IndexOf(val, equals) != null;
 
-        lo: usize;
-        hi := _length - 1;
+    // Searches for the specified subspan and returns true if found
+    public Contains: (val: T[&]) -> bool => IndexOf(val) != null;
+    public operator in: (val: T[&]) -> bool => Contains(val);
 
-        while lo <= hi {
-            let index := (hi + lo) >> 1;
-            let cmp := compare(val, Unsafe.Add(_data, index));
-            switch cmp {
-                0 => return index;
-                >0 => lo = index + 1;
-                _ => hi = index - 1;
-            }
-        }
+    // Searches for the specified subspan using the given EqualityComparer and returns true if found
+    public Contains: (val: T[&], equals: EqualityComparer<T>) -> bool => IndexOf(val, equals) != null;
 
-        return TResult::Err(lo);
-    }
-
-    // Finds the length of any common prefix shared between this and the other span
-    // Returns index of the first mismatched element
-    // Returns 0 if there is no shared prefix
-    // Returns null if both sequences are equal including its length
-    public Mismatch: (other: T[&]) -> usize? {
-        let isSameLength := _length == other.Length;
-        let length := _length.Min(other.Length);
-        const simdSupported :== version(X86) or version(ARM);
-        static if simdSupported and Builtin.IsBitwiseEquatable<T> {
-            // SIMD path
-            const size :== sizeof(T);
-            let index := SpanHelpers::Mismatch(this.AsBytes, other.AsBytes, length * size) \ size;
-            if index < length or not isSameLength {
-                return index;
-            }
-        } else {
-            // Regular path
-            for i in ..length {
-                if this[@Unchecked i] != other[@Unchecked i] {
-                    return i;
+    // Counts the number of times the specified val occurs in the span
+    public Count: (in ref val: T) -> usize == {
+        static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+        if consteval {
+            result: usize;
+            for i in this {
+                if i == val {
+                    ++result;
                 }
             }
-            if not isSameLength {
-                return length;
+            return result;
+        } else {
+            if version(X86 or ARM) {
+                static if Builtin.IsBitwiseEquatable<T> {
+                    // SIMD path
+                    static if sizeof(T) == 1 {
+                        return SpanHelpers.CountBytes(Span<byte>::UnsafeCreate(Unsafe.As<byte>(_data), _length), 
+                            Unsafe.BitCast<byte>(val));
+                    } else static if sizeof(T) == 2 {
+                        return SpanHelpers.CountWords(Span<u16>::UnsafeCreate(Unsafe.As<u16>(_data), _length), 
+                            Unsafe.BitCast<u16>(val));
+                    } else static if sizeof(T) == 4 {
+                        return SpanHelpers.CountDwords(Span<u32>::UnsafeCreate(Unsafe.As<u32>(_data), _length), 
+                            Unsafe.BitCast<u32>(val));
+                    } else static if sizeof(T) == 8 {
+                        return SpanHelpers.CountQwords(Span<u64>::UnsafeCreate(Unsafe.As<u64>(_data), _length), 
+                            Unsafe.BitCast<u64>(val));
+                    }
+                } else {
+                    // Regular path
+                    return SpanHelpers.CountGeneralCase(this, val);
+                }
+            } else {
+                return SpanHelpers.CountGeneralCase(this, val);
             }
         }
-        return null;
     }
 
-    // Finds the length of any common prefix shared between this and the other span using the given EqualityComparer
-    // Returns index of the first mismatched element
-    // Returns 0 if there is no shared prefix
-    // Returns null if both sequences are equal including its length
-    public Mismatch: (other: T[&], equals: EqualityComparer<T>) -> usize? {
-        let isSameLength := _length == other.Length;
-        let length := _length.Min(other.Length);
-        for i in ..length {
-            if not equals(this[@Unchecked i], other[@Unchecked i]) {
-                return i;
+    // Counts the number of times the specified val occurs in the span using the given EqualityComparer
+    public Count: (in ref val: T, equals: EqualityComparer<T>) -> usize {
+        count: usize;
+        for i in this {
+            if equals(i, val) {
+                ++count;
             }
         }
-        if not isSameLength {
-            return length;
-        }
-        return null;
+        return count;
     }
+
+    // Counts the number of times the specified val occurs in the span
+    public Count: (val: T[&]) -> usize == {
+        static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+        switch val.Length {
+            0u => return 0u;
+            1u => return Count(val[@Unchecked 0]);
+            _ => {
+                count: usize;
+                span := this;
+                pos := span.IndexOf(val);
+                while pos {
+                    span = span[(pos! + val.Length)..];
+                    pos = span.IndexOf(val);
+                    ++count;
+                }
+                return count;
+            }
+        }
+    }
+
+    // Counts the number of times the specified val occurs in the span using the given EqualityComparer
+    public Count: (val: T[&], equals: EqualityComparer<T>) -> usize {
+        switch val.Length {
+            0u => return 0u;
+            1u => return Count(val[@Unchecked 0], equals);
+            _ => {
+                count: usize;
+                span := this;
+                pos := span.IndexOf(val, equals);
+                while pos {
+                    span = span[(pos! + val.Length)..];
+                    pos = span.IndexOf(val, equals);
+                    ++count;
+                }
+                return count;
+            }
+        }
+    }
+
+    // Returns true if the both sequences are equal
+    public SequenceEquals: (other: T[&]) -> bool == {
+        static assert(type T is ISelfEquatable, "SequenceEquals available only for ISelfEquatable types");
+        if (this == other)
+            return true;
+        if (_length != other._length)
+            return false;
+        if consteval {
+            for i in .._length {
+                if this[@Unchecked i] != other[@Unchecked i] {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            if version(X86 or ARM) {
+                static if Builtin.IsBitwiseEquatable<T> {
+                    // SIMD path
+                    static if sizeof(T) == 1 {
+                        return SpanHelpers.SequenceEqualsByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(_data), _length), 
+                            Span<byte>::UnsafeCreate(Unsafe.As<byte>(other._data), other._length));
+                    } else static if sizeof(T) == 2 {
+                        return SpanHelpers.SequenceEqualsWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(_data), _length), 
+                            Span<u16>::UnsafeCreate(Unsafe.As<u16>(other._data), other._length));
+                    } else static if sizeof(T) == 4 {
+                        return SpanHelpers.SequenceEqualsDword(Span<u32>::UnsafeCreate(Unsafe.As<u32>(_data), _length), 
+                            Span<u32>::UnsafeCreate(Unsafe.As<u32>(other._data), other._length));
+                    } else static if sizeof(T) == 8 {
+                        return SpanHelpers.SequenceEqualsQword(Span<u64>::UnsafeCreate(Unsafe.As<u64>(_data), _length), 
+                            Span<u64>::UnsafeCreate(Unsafe.As<u64>(other._data), other._length));
+                    }
+                } else {
+                    // Regular path
+                    return SpanHelpers.SequenceEqualsGeneralCase(this, other);
+                }
+            } else {
+                return SpanHelpers.SequenceEqualsGeneralCase(this, other);
+            }
+        }
+    }
+
+    // Returns true if the both sequences are equal
+    public SequenceEquals: (other: T[&], equals: EqualityComparer<T>) -> bool {
+        if (this == other)
+            return true;
+        if (_length != other._length)
+            return false;
+
+        for i in .._length {
+            if not equals(this[@Unchecked i], other[@Unchecked i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+    public operator==*: (other: T[&]) -> bool ==> SequenceEquals(other);
 }
 
 public extension <T> Span {
@@ -270,11 +356,15 @@ public extension <T> Span {
             return Span<byte>(UnsafePointerCast<byte>(this.GetDataReference()&), this.Length * sizeof(T));
         }
     }
-    AsSpan: Span<T> ==> this;
+    
+    AsSpan: () -> Span<T> ==> this;
 }
 
 public ref struct <T> MutableSpan: ISelfEquatable, IAbstractSequence, ISequence<T> {
     public type ElementType = T;
+    public type SpanType = Span<T>;
+    public type MutableSpanType = self;
+    public type ImmutableType = Span<T>;
 
     private _data: &mut T;
     private _length: usize;
@@ -354,6 +444,13 @@ public ref struct <T> MutableSpan: ISelfEquatable, IAbstractSequence, ISequence<
         }
         return self(Unsafe.Add(_data, start), length);
     }
+    public SliceUnchecked: (start: usize) -> self == {
+        return self(Unsafe.Add(_data, start), _length - start);
+    }
+
+    public SliceUnchecked: (start: usize, length: usize) -> self == {
+        return self(Unsafe.Add(_data, start), length);
+    }
 
     public operator==: (other: self) -> bool noexcept == {
         return _length == other._length and Unsafe.AreSame(_data, other._data);
@@ -405,40 +502,57 @@ public ref struct <T> MutableSpan: ISelfEquatable, IAbstractSequence, ISequence<
 
     // Searches for the specified value and returns true if found
     public Contains: (in ref val: T) -> bool == {
-        return this.AsSpan.Contains(val);
+        return this.AsSpan().>Contains(val);
     }
+
     public operator in: (in ref val: T) -> bool ==> Contains(val);
 
-    // Searches an entire sorted span for a value using the default comparator
-    // Returns the index of the value if found, otherwise returns the index where the value should be inserted
-    // (next element that is larger than val if such element exists or length of the span otherwise)
-    public BinarySearch: (in ref val: T) -> Result<usize, usize> {
-        static assert(type T is ISelfComparable, 
-            "Binary search available only for comparable types. Use overload with custom comparator instead.");
-        return BinarySearch(val, DefaultComparator);
-    }
-    // Searches an entire sorted span for a value using the specified comparator
-    // Returns the index of the value if found, otherwise returns the index where the value should be inserted
-    // (next element that is larger than val if such element exists or length of the span otherwise)
-    public BinarySearch: (in ref val: T, compare: Comparator<T>) -> Result<usize, usize> {
-        return this.AsSpan.>BinarySearch(val, compare);
+    // Searches for the specified value using the given EqualityComparer and returns true if found
+    public Contains: (in ref val: T, equals: EqualityComparer<T>) -> bool {
+        return this.AsSpan().>Contains(val, equals);
     }
 
-    // Finds the length of any common prefix shared between this and the other span
-    // Returns index of the first mismatched element
-    // Returns 0 if there is no shared prefix
-    // Returns null if both sequences are equal including its length
-    public Mismatch: (other: T[&]) -> usize? {
-        return this.AsSpan.Mismatch(other);
+    // Searches for the specified subspan and returns true if found
+    public Contains: (val: T[&]) -> bool {
+        return this.AsSpan().>Contains(val);
+    }
+    public operator in: (val: T[&]) -> bool => Contains(val);
+
+    // Searches for the specified subspan using the given EqualityComparer and returns true if found
+    public Contains: (val: T[&], equals: EqualityComparer<T>) -> bool {
+        return this.AsSpan().>Contains(val, equals);
     }
 
-    // Finds the length of any common prefix shared between this and the other span using the given EqualityComparer
-    // Returns index of the first mismatched element
-    // Returns 0 if there is no shared prefix
-    // Returns null if both sequences are equal including its length
-    public Mismatch: (other: T[&], equals: EqualityComparer<T>) -> usize? {
-        return this.AsSpan.Mismatch(other, equals);
+    // Counts the number of times the specified val occurs in the span
+    public Count: (in ref val: T) -> usize == {
+        return this.AsSpan().>Count(val);
     }
+
+    // Counts the number of times the specified val occurs in the span using the given EqualityComparer
+    public Count: (in ref val: T, equals: EqualityComparer<T>) -> usize {
+        return this.AsSpan().>Count(val, equals);
+    }
+
+    // Counts the number of times the specified val occurs in the span
+    public Count: (val: T[&]) -> usize == {
+        return this.AsSpan().>Count(val);
+    }
+
+    // Counts the number of times the specified val occurs in the span using the given EqualityComparer
+    public Count: (val: T[&], equals: EqualityComparer<T>) -> usize {
+        return this.AsSpan().>Count(val, equals);
+    }
+
+    // Returns true if the both sequences are equal
+    public SequenceEquals: (other: T[&]) -> bool == {
+        return this.AsSpan().>SequenceEquals(other);
+    }
+
+    // Returns true if the both sequences are equal
+    public SequenceEquals: (other: T[&], equals: EqualityComparer<T>) -> bool {
+        return this.AsSpan().>SequenceEquals(other, equals);
+    }
+    public operator==*: (other: T[&]) -> bool ==> SequenceEquals(other);
 }
 
 public extension <T> MutableSpan {
@@ -451,11 +565,359 @@ public extension <T> MutableSpan {
             return MutableSpan<byte>(UnsafePointerCast<byte>(this.GetDataReference()&), this.Length * sizeof(T));
         }
     }
-    AsSpan: Span<T> ==> this;
+    AsSpan: () -> Span<T> ==> this;
     AsMutableSpan: () -> MutableSpan<T> ==> this;
 }
 
-public static class SpanHelpers {
+public interface ISpanConvertible {
+    type SpanType;
+}
+public interface IMutableSpanConvertible: ISpanConvertible {
+    type MutableSpanType;
+}
+
+// General Array algorithms API
+public extension <TLeft> where type TLeft is ISpanConvertible {
+    // Copies data to the destination span
+    // Throws InvalidArgumentException if the destination span is not large enough to contain all elements
+    CopyTo: <TDest> (forward dest: TDest) {
+        type TLeftReal = decay(TLeft);
+        type TDestReal = decay(TDest);
+        type T = TLeftReal.ElementType;
+        static assert(type TDestReal is IMutableSpanConvertible, "TDest should be mutable array-like type");
+        static assert(type T == TDestReal.ElementType, "ElementType mismatch");
+        let src: T[&] = this;
+        let dst: T[&mut] = dest;
+        if src.Length > dst.Length {
+            throw Builtin.InvalidArgumentException();
+        }
+
+        static if Builtin.IsTriviallyCopyable<T> {
+            Unsafe.CopyBlock(dst.GetDataReference(), src.GetDataReference(), src.Length * sizeof(T));
+        } else {
+            for i in ..src.Length {
+                dst[@Unchecked i] = src[@Unchecked i];
+            }
+        }
+    }
+
+    // Moves data to the destination span
+    // Throws InvalidArgumentException if the destination span is not large enough to contain all elements
+    MoveTo: <TDest> (forward dest: TDest) {
+        type TLeftReal = decay(TLeft);
+        type TDestReal = decay(TDest);
+        type T = TLeftReal.ElementType;
+        static assert(type TDestReal is IMutableSpanConvertible, "TDest should be mutable array-like type");
+        static assert(type T == TDestReal.ElementType, "ElementType mismatch");
+        let src: T[&] = this;
+        let dst: T[&mut] = dest;
+        if src.Length > dst.Length {
+            throw Builtin.InvalidArgumentException();
+        }
+
+        static if Builtin.IsTriviallyCopyable<T> {
+            Unsafe.CopyBlock(dst.GetDataReference(), src.GetDataReference(), src.Length * sizeof(T));
+        } else {
+            for i in ..src.Length {
+                dst[@Unchecked i] = move (src[@Unchecked i]);
+            }
+        }
+    }
+    // Searches an entire sorted span for a value using the default comparator
+    // Returns the index of the value if found, otherwise returns the index where the value should be inserted
+    // (next element that is larger than val if such element exists or length of the span otherwise)
+    BinarySearch: <TValue> (forward val: TValue) -> Result<usize, usize> {
+        type TLeftReal = decay(TLeft);
+        type T = TLeftReal.ElementType;
+        static assert(type T is ISelfComparable, 
+            "Binary search available only for comparable types. Use overload with custom comparator instead.");
+        return this.BinarySearch(forward val, DefaultComparator);
+    }
+    // Searches an entire sorted span for a value using the specified comparator
+    // Returns the index of the value if found, otherwise returns the index where the value should be inserted
+    // (next element that is larger than val if such element exists or length of the span otherwise)
+    BinarySearch: <TValue, TComparer> (forward val: TValue, compare: TComparer) -> Result<usize, usize> {
+        type TResult = Result<usize, usize>;
+        type TLeftReal = decay(TLeft);
+        type TValueReal = decay(TValue);
+        type TComparerReal = decay(TComparer);
+        type T = TLeftReal.ElementType;
+        static assert(type TValueReal is operator T, "ElementType mismatch");
+        static assert(type TComparerReal is operator Comparator<T>, "TComparer should be Comparator<T>");
+        let span: T[&] = this;
+        let length := span.Length;
+        if length == 0 {
+            return TResult::Err(0u);
+        }
+
+        lo: usize;
+        hi := length - 1;
+
+        while lo <= hi {
+            let index := (hi + lo) >> 1;
+            let cmp: i32 = compare(forward val, span[@Unchecked index]);
+            switch cmp {
+                0 => return index;
+                >0 => lo = index + 1;
+                _ => hi = index - 1;
+            }
+        }
+
+        return TResult::Err(lo);
+    }
+
+    // Finds the length of any common prefix shared between this and the other span
+    // Returns index of the first mismatched element
+    // Returns 0 if there is no shared prefix
+    // Returns null if both sequences are equal including its length
+    Mismatch: <TRight> (forward otherArray: TRight) -> usize?
+    {
+        type TLeftReal = decay(TLeft);
+        type TRightReal = decay(TRight);
+        type T = TLeftReal.ElementType;
+        static assert(type TRightReal is ISpanConvertible, "TRight should be array-like type");
+        static assert(type T == TRightReal.ElementType, "ElementType mismatch");
+        static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+        let spanLeft: T[&] = this;
+        let spanRight: T[&] = otherArray;
+        let isSameLength := spanLeft.Length == spanRight.Length;
+        let length := spanLeft.Length.Min(spanRight.Length);
+        const simdSupported :== version(X86) or version(ARM);
+        static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+            // SIMD path
+            const size :== sizeof(T);
+            let index := SpanHelpers.Mismatch(spanLeft.AsBytes, spanRight.AsBytes, length * size) \ size;
+            if index < length or not isSameLength {
+                return index;
+            }
+        } else {
+            // Regular path
+            for i in ..length {
+                if spanLeft[@Unchecked i] != spanRight[@Unchecked i] {
+                    return i;
+                }
+            }
+            if not isSameLength {
+                return length;
+            }
+        }
+        return null;
+    }
+
+    // Finds the length of any common prefix shared between this and the other span using the given EqualityComparer
+    // Returns index of the first mismatched element
+    // Returns 0 if there is no shared prefix
+    // Returns null if both sequences are equal including its length
+    Mismatch: <TRight, TComparer> (otherArray: TRight, equals: TComparer) -> usize? {
+        type TLeftReal = decay(TLeft);
+        type TRightReal = decay(TRight);
+        type TComparerReal = decay(TComparer);
+        type T = TLeftReal.ElementType;
+        static assert(type TRightReal is ISpanConvertible, "TRight should be array-like type");
+        static assert(type T == TRightReal.ElementType, "ElementType mismatch");
+        static assert(type TComparerReal is operator EqualityComparer<T>, "TComparer should be EqualityComparer<T>");
+        let spanLeft: T[&] = this;
+        let spanRight: T[&] = otherArray;
+        let isSameLength := spanLeft.Length == spanRight.Length;
+        let length := spanLeft.Length.Min(spanRight.Length);
+        for i in ..length {
+            if not equals(spanLeft[@Unchecked i], spanRight[@Unchecked i]) {
+                return i;
+            }
+        }
+        if not isSameLength {
+            return length;
+        }
+        return null;
+    }
+
+    // Searches for the specified value and returns the index of its first occurrence. If not found, returns null.
+    IndexOf: <TValue> (forward val: TValue) -> usize? == {
+        type TLeftReal = decay(TLeft);
+        type TValueReal = decay(TValue);
+        type T = TLeftReal.ElementType;
+        static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+        span: T[&] = this;
+        static if type TValueReal is operator Span<T> {
+            valSpan: T[&] = val;
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                static if sizeof(T) == 1 {
+                    return SpanHelpers.IndexOfInternal(span.AsBytes, valSpan.AsBytes);
+                } else static if sizeof(T) == 2 {
+                    return SpanHelpers.IndexOfInternal(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span.GetDataReference()), span.Length), 
+                        Span<u16>::UnsafeCreate(Unsafe.As<u16>(valSpan.GetDataReference()), valSpan.Length));
+                }
+            }
+            return SpanHelpers.IndexOfInternal(span, valSpan);
+        } else static if type TValueReal is operator T {
+            if consteval {
+                index: usize;
+                for i in span {
+                    if i == val {
+                        return index;
+                    }
+                    ++index;
+                }
+                return null;
+            } else {
+                if version(X86 or ARM) {
+                    static if Builtin.IsBitwiseEquatable<T> {
+                        // SIMD path
+                        static if sizeof(T) == 1 {
+                            return SpanHelpers.IndexOfByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(val));
+                        } else static if sizeof(T) == 2 {
+                            return SpanHelpers.IndexOfWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(val));
+                        } else static if sizeof(T) == 4 {
+                            return SpanHelpers.IndexOfDword(Span<u32>::UnsafeCreate(Unsafe.As<u32>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u32>(val));
+                        } else static if sizeof(T) == 8 {
+                            return SpanHelpers.IndexOfQword(Span<u64>::UnsafeCreate(Unsafe.As<u64>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u64>(val));
+                        }
+                    } else {
+                        // Regular path
+                        return SpanHelpers.IndexOfGeneralCase(span, val);
+                    }
+                } else {
+                    return SpanHelpers.IndexOfGeneralCase(span, val);
+                }
+            }
+        } else {
+            static assert(false, "TValue should be ElementType or Span<ElementType>");
+        }
+    }
+
+    // Searches for the specified value and returns the index of its first occurrence using the given EqualityComparer.
+    // If not found, returns null.
+    IndexOf: <TValue, TComparer> (forward val: TValue, equals: TComparer) -> usize? {
+        type TLeftReal = decay(TLeft);
+        type TValueReal = decay(TValue);
+        type TComparerReal = decay(TComparer);
+        type T = TLeftReal.ElementType;
+        static assert(type TComparerReal is operator EqualityComparer<T>, "TComparer should be EqualityComparer<T>");
+        span: T[&] = this;
+        static if type TValueReal is operator Span<T> {
+            let valSpan: T[&] = val;
+            if valSpan.Length == 0u {
+                return 0u;
+            }
+
+            totalIndex: usize;
+            while not span.IsEmpty {
+                if let pos := span.IndexOf(valSpan[@Unchecked 0], equals) {
+                    span = span[@Unchecked (pos + 1u)..];
+                    if span.StartsWith(valSpan[@Unchecked 1u..], equals) {
+                        return totalIndex + pos;
+                    }
+                    totalIndex += pos + 1u;
+                } else {
+                    break;
+                }
+            }
+        } else static if type TValueReal is operator T {
+            let length := span.Length;
+            for i in ..length {
+                if equals(span[@Unchecked i], val) {
+                    return i;
+                }
+            }
+        } else {
+            static assert(false, "TValue should be ElementType or Span<ElementType>");
+        }
+        
+        return null;
+    }
+
+    // Returns true the specified value appears at the start of the span.
+    StartsWith: <TValue> (forward val: TValue) -> bool == {
+        type TLeftReal = decay(TLeft);
+        type TValueReal = decay(TValue);
+        type T = TLeftReal.ElementType;
+        static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+        let span: T[&] = this;
+        static if type TValueReal is operator Span<T> {
+            let valSpan: T[&] = val;
+            let valueLength := valSpan.Length;
+            static if Builtin.IsBitwiseEquatable<T> {
+                return valueLength <= span.Length and SpanHelpers.SequenceEqualsByte(span[..valueLength].AsBytes, valSpan.AsBytes);
+            } else {
+                return valueLength <= span.Length and span[..valueLength].SequenceEquals(valSpan);
+            }
+        } else static if type TValueReal is operator T { 
+            return not span.IsEmpty and span[@Unchecked 0] == val;
+        } else {
+            static assert(false, "TValue should be ElementType or Span<ElementType>");
+        }
+    }
+
+    // Returns true the specified value appears at the start of the span.
+    StartsWith: <TValue, TComparer> (forward val: TValue, equals: TComparer) -> bool {
+        type TLeftReal = decay(TLeft);
+        type TValueReal = decay(TValue);
+        type TComparerReal = decay(TComparer);
+        type T = TLeftReal.ElementType;
+        static assert(type TComparerReal is operator EqualityComparer<T>, "TComparer should be EqualityComparer<T>");
+        let span: T[&] = this;
+        static if type TValueReal is operator Span<T> {
+            let valSpan: T[&] = val;
+            let valueLength := valSpan.Length;
+            return valueLength <= span.Length and span[..valueLength].SequenceEquals(valSpan, equals);
+        } else static if type TValueReal is operator T { 
+            return not span.IsEmpty and equals(span[@Unchecked 0], val);
+        } else {
+            static assert(false, "TValue should be ElementType or Span<ElementType>");
+        }
+    }
+
+    // Returns true the specified value appears at the end of the span.
+    EndsWith: <TValue> (forward val: TValue) -> bool == {
+        type TLeftReal = decay(TLeft);
+        type TValueReal = decay(TValue);
+        type T = TLeftReal.ElementType;
+        static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+        let span: T[&] = this;
+        static if type TValueReal is operator Span<T> {
+            let valSpan: T[&] = val;
+            let valueLength := valSpan.Length;
+            let spanLength := span.Length;
+            static if Builtin.IsBitwiseEquatable<T> {
+                return valueLength <= spanLength and SpanHelpers.SequenceEqualsByte(span[(spanLength - valueLength)..].AsBytes,
+                    valSpan.AsBytes);
+            } else {
+                return valueLength <= spanLength and span[(spanLength - valueLength)..].SequenceEquals(valSpan);
+            }
+        } else static if type TValueReal is operator T { 
+            return not span.IsEmpty and span[@Unchecked ^1u] == val;
+        } else {
+            static assert(false, "TValue should be ElementType or Span<ElementType>");
+        }
+    }
+
+    // Returns true the specified value appears at the end of the span.
+    EndsWith: <TValue, TComparer> (forward val: TValue, equals: TComparer) -> bool {
+        type TLeftReal = decay(TLeft);
+        type TValueReal = decay(TValue);
+        type TComparerReal = decay(TComparer);
+        type T = TLeftReal.ElementType;
+        static assert(type TComparerReal is operator EqualityComparer<T>, "TComparer should be EqualityComparer<T>");
+        let span: T[&] = this;
+        static if type TValueReal is operator Span<T> {
+            let valSpan: T[&] = val;
+            let valueLength := valSpan.Length;
+            let spanLength := span.Length;
+            return valueLength <= spanLength and span[(spanLength - valueLength)..].SequenceEquals(valSpan, equals);
+        } else static if type TValueReal is operator T { 
+            return not span.IsEmpty and equals(span[@Unchecked ^1u], val);
+        } else {
+            static assert(false, "TValue should be ElementType or Span<ElementType>");
+        }
+    }
+}
+
+protected static class SpanHelpers {
     public ContainsGeneralCase: <T> (data: T[&], val: T) -> bool {
         length := data.Length;
         offset: i32;
@@ -553,6 +1015,68 @@ public static class SpanHelpers {
         }
     }
 
+    public CountGeneralCase: <T> (data: T[&], val: T) -> usize {
+        count: usize;
+        for i in data {
+            if i == val {
+                ++count;
+            }
+        }
+        return count;
+    }
+
+    public CountBytes: (data: byte[&], val: byte) -> usize {
+        let length := data.Length;
+        if length < 16u {
+            return CountGeneralCase(data, val);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanCount<byte>, Neon, Sse2>(data, val);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanCount<byte>, Neon, Avx2, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanCount<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val);
+        }
+    }
+
+    public CountWords: (data: u16[&], val: u16) -> usize {
+        let length := data.Length;
+        if length < 8u {
+            return CountGeneralCase(data, val);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanCount<u16>, Neon, Sse2>(data, val);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanCount<u16>, Neon, Avx2, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanCount<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val);
+        }
+    }
+
+    public CountDwords: (data: u32[&], val: u32) -> usize {
+        let length := data.Length;
+        if length < 4u {
+            return CountGeneralCase(data, val);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanCount<u32>, Neon, Avx512VL128, Sse2>(data, val);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanCount<u32>, Neon, Avx512VL256, Avx2, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanCount<u32>, Neon, Avx512F, Avx2, Sse2>(data, val);
+        }
+    }
+
+    public CountQwords: (data: u64[&], val: u64) -> usize {
+        let length := data.Length;
+        if length < 2u {
+            return CountGeneralCase(data, val);
+        } else if length < 4u {
+            return Simd.RuntimeDispatch<SpanCount<u64>, Neon, Avx512VL128, Sse42, Sse2>(data, val);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanCount<u64>, Neon, Avx512VL256, Avx2, Sse42, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanCount<u64>, Neon, Avx512F, Avx2, Sse42, Sse2>(data, val);
+        }
+    }
+
     public Mismatch: (left: byte[&], right: byte[&], length: usize) -> usize {
         //assert left.Length <= length and right.Length <= length;
         index: usize;
@@ -598,6 +1122,263 @@ public static class SpanHelpers {
             return Simd.RuntimeDispatch<SpanMismatch, Neon, Avx2, Sse2>(left, right, length);
         } else {
             return Simd.RuntimeDispatch<SpanMismatch, Neon, Avx512BW, Avx2, Sse2>(left, right, length);
+        }
+    }
+
+    public IndexOfGeneralCase: <T> (data: T[&], val: T) -> usize? {
+        length := data.Length;
+        index: usize;
+        while length >= 8u {
+            length -= 8u;
+
+            if data[@Unchecked index] == val
+            {
+                return index;
+            }
+            if data[@Unchecked index + 1u] == val
+            {
+                return index + 1u;
+            }
+            if data[@Unchecked index + 2u] == val
+            {
+                return index + 2u;
+            }
+            if data[@Unchecked index + 3u] == val
+            {
+                return index + 3u;
+            }
+            if data[@Unchecked index + 4u] == val
+            {
+                return index + 4u;
+            }
+            if data[@Unchecked index + 5u] == val
+            {
+                return index + 5u;
+            }
+            if data[@Unchecked index + 6u] == val
+            {
+                return index + 6u;
+            }
+            if data[@Unchecked index + 7u] == val
+            {
+                return index + 7u;
+            }
+
+            index += 8;
+        }
+
+        while length >= 4u {
+            length -= 4u;
+
+            if data[@Unchecked index] == val
+            {
+                return index;
+            }
+            if data[@Unchecked index + 1u] == val
+            {
+                return index + 1u;
+            }
+            if data[@Unchecked index + 2u] == val
+            {
+                return index + 2u;
+            }
+            if data[@Unchecked index + 3u] == val
+            {
+                return index + 3u;
+            }
+
+            index += 4;
+        }
+
+        while length > 0 {
+            --length;
+            if data[@Unchecked index] == val {
+                return index;
+            }
+            ++index;
+        }
+        return null;
+    }
+
+    public IndexOfByte: (data: byte[&], val: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            return IndexOfGeneralCase(data, val);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOf<byte>, Neon, Sse2>(data, val);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanIndexOf<byte>, Neon, Avx2, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOf<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val);
+        }
+    }
+
+    public IndexOfWord: (data: u16[&], val: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            return IndexOfGeneralCase(data, val);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanIndexOf<u16>, Neon, Sse2>(data, val);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOf<u16>, Neon, Avx2, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOf<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val);
+        }
+    }
+
+    public IndexOfDword: (data: u32[&], val: u32) -> usize? {
+        let length := data.Length;
+        if length < 4u {
+            return IndexOfGeneralCase(data, val);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanIndexOf<u32>, Neon, Avx512VL128, Sse2>(data, val);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanIndexOf<u32>, Neon, Avx512VL256, Avx2, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOf<u32>, Neon, Avx512F, Avx2, Sse2>(data, val);
+        }
+    }
+
+    public IndexOfQword: (data: u64[&], val: u64) -> usize? {
+        let length := data.Length;
+        if length < 2u {
+            return IndexOfGeneralCase(data, val);
+        } else if length < 4u {
+            return Simd.RuntimeDispatch<SpanIndexOf<u64>, Neon, Avx512VL128, Sse42, Sse2>(data, val);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanIndexOf<u64>, Neon, Avx512VL256, Avx2, Sse42, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOf<u64>, Neon, Avx512F, Avx2, Sse42, Sse2>(data, val);
+        }
+    }
+
+    public IndexOfInternal: <T> (data: T[&], val: T[&]) -> usize? {
+        let dataLength := data.Length;
+        let valueLength := val.Length;
+        if valueLength == 0 {
+            return 0u;
+        }
+
+        let valueHead := val[@Unchecked 0];
+        let valueTail := val[@Unchecked 1u..];
+        let valueTailLength := valueLength - 1u;
+        index: usize;
+
+        for {
+            assert index <= dataLength;
+            let remainingLength := dataLength -% index -% valueTailLength;
+            if remainingLength.NarrowToIsize() <= 0 {
+                break;
+            }
+
+            if let relativeIndex := data.SliceUnchecked(index, remainingLength).IndexOf(valueHead) {
+                index += relativeIndex;
+            } else {
+                break;
+            }
+
+            if data.SliceUnchecked(index + 1u, valueTailLength).SequenceEquals(valueTail) {
+                return index;
+            }
+            ++index;
+        }
+        return null;
+    }
+
+    public SequenceEqualsGeneralCase: <T> (lhs: T[&], rhs: T[&]) -> bool {
+        length := lhs.Length;
+        offset: i32;
+        while length >= 8u {
+            length -= 8u;
+
+            if lhs[@Unchecked offset] != rhs[@Unchecked offset] or
+                lhs[@Unchecked offset + 1] != rhs[@Unchecked offset + 1] or
+                lhs[@Unchecked offset + 2] != rhs[@Unchecked offset + 2] or
+                lhs[@Unchecked offset + 3] != rhs[@Unchecked offset + 3] or
+                lhs[@Unchecked offset + 4] != rhs[@Unchecked offset + 4] or
+                lhs[@Unchecked offset + 5] != rhs[@Unchecked offset + 5] or
+                lhs[@Unchecked offset + 6] != rhs[@Unchecked offset + 6] or
+                lhs[@Unchecked offset + 7] != rhs[@Unchecked offset + 7]
+            {
+                return false;
+            }
+
+            offset += 8;
+        }
+
+        while length >= 4u {
+            length -= 4u;
+
+            if lhs[@Unchecked offset] != rhs[@Unchecked offset] or
+                lhs[@Unchecked offset + 1] != rhs[@Unchecked offset + 1] or
+                lhs[@Unchecked offset + 2] != rhs[@Unchecked offset + 2] or
+                lhs[@Unchecked offset + 3] != rhs[@Unchecked offset + 3]
+            {
+                return false;
+            }
+
+            offset += 4;
+        }
+
+        while length > 0 {
+            --length;
+            if lhs[@Unchecked offset] != rhs[@Unchecked offset] {
+                return false;
+            }
+            ++offset;
+        }
+        return true;
+    }
+
+    public SequenceEqualsByte: (lhs: byte[&], rhs: byte[&]) -> bool {
+        let length := lhs.Length;
+        if length < 16u {
+            return SequenceEqualsGeneralCase(lhs, rhs);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanSequenceEquals<byte>, Neon, Sse2>(lhs, rhs);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanSequenceEquals<byte>, Neon, Avx2, Sse2>(lhs, rhs);
+        } else {
+            return Simd.RuntimeDispatch<SpanSequenceEquals<byte>, Neon, Avx512BW, Avx2, Sse2>(lhs, rhs);
+        }
+    }
+
+    public SequenceEqualsWord: (lhs: u16[&], rhs: u16[&]) -> bool {
+        let length := lhs.Length;
+        if length < 8u {
+            return SequenceEqualsGeneralCase(lhs, rhs);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanSequenceEquals<u16>, Neon, Sse2>(lhs, rhs);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanSequenceEquals<u16>, Neon, Avx2, Sse2>(lhs, rhs);
+        } else {
+            return Simd.RuntimeDispatch<SpanSequenceEquals<u16>, Neon, Avx512BW, Avx2, Sse2>(lhs, rhs);
+        }
+    }
+
+    public SequenceEqualsDword: (lhs: u32[&], rhs: u32[&]) -> bool {
+        let length := lhs.Length;
+        if length < 4u {
+            return SequenceEqualsGeneralCase(lhs, rhs);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanSequenceEquals<u32>, Neon, Avx512VL128, Sse2>(lhs, rhs);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanSequenceEquals<u32>, Neon, Avx512VL256, Avx2, Sse2>(lhs, rhs);
+        } else {
+            return Simd.RuntimeDispatch<SpanSequenceEquals<u32>, Neon, Avx512F, Avx2, Sse2>(lhs, rhs);
+        }
+    }
+
+    public SequenceEqualsQword: (lhs: u64[&], rhs: u64[&]) -> bool {
+        let length := lhs.Length;
+        if length < 2u {
+            return SequenceEqualsGeneralCase(lhs, rhs);
+        } else if length < 4u {
+            return Simd.RuntimeDispatch<SpanSequenceEquals<u64>, Neon, Avx512VL128, Sse42, Sse2>(lhs, rhs);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanSequenceEquals<u64>, Neon, Avx512VL256, Avx2, Sse42, Sse2>(lhs, rhs);
+        } else {
+            return Simd.RuntimeDispatch<SpanSequenceEquals<u64>, Neon, Avx512F, Avx2, Sse42, Sse2>(lhs, rhs);
         }
     }
 }
@@ -650,9 +1431,89 @@ private static class SpanMismatch {
     }
 }
 
+private static class <T> SpanCount {
+    public Invoke: <Arch> (data: T[&], val: T) -> usize {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let length := data.Length;
+        let vecLast := length - vecSize;
+        let values := TVector::Create(val);
+        currentVec: TVector;
+        currentMask: TMask;
+        count: usize;
+        i: usize;
+        for ; i < vecLast; i += vecSize {
+            currentVec = TVector::LoadUnsafe(data[@Unchecked i]);
+            currentMask = currentVec ==^ values;
+            count += currentMask.Count;
+        }
+        mask := (TVector::LoadUnsafe(data[@Unchecked vecLast]) ==^ values).ScalarMask;
+        let offset := i - vecLast;
+        mask <<= i32((sizeof(mask) * 8) - vecSize + offset);
+        count += mask.PopCount;
+        return count;
+    }
+}
+
+private static class <T> SpanIndexOf {
+    public Invoke: <Arch> (data: T[&], val: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := count - vecSize;
+        let values := TVector::Create(val);
+        current: TVector;
+        currentMask: TMask;
+        for i := 0u; i <= vecLast; i += vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i]);
+            currentMask = current ==^ values;
+            if let index := currentMask.FirstSet {
+                return index;
+            }
+        }
+        if not count.IsMultipleOf(vecSize) {
+            current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
+            currentMask = current ==^ values;
+            if let index := currentMask.FirstSet {
+                return index;
+            }
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanSequenceEquals {
+    public Invoke: <Arch> (lhs: T[&], rhs: T[&]) -> bool {
+        type TVector = SimdVector<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := lhs.Length;
+        let vecLast := count - vecSize;
+        currentLeft: TVector;
+        currentRight: TVector;
+        for i := 0u; i <= vecLast; i += vecSize {
+            currentLeft = TVector::LoadUnsafe(lhs[@Unchecked i]);
+            currentRight = TVector::LoadUnsafe(rhs[@Unchecked i]);
+            if not currentLeft.EqualsAll(currentRight) {
+                return false;
+            }
+        }
+        if not count.IsMultipleOf(vecSize) {
+            currentLeft = TVector::LoadUnsafe(lhs[@Unchecked vecLast]);
+            currentRight = TVector::LoadUnsafe(rhs[@Unchecked vecLast]);
+            if not currentLeft.EqualsAll(currentRight) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
 static assert(sizeof(i32[&]) == sizeof(usize) * 2, "Span should be 2 pointers wide");
 static assert(type i32[&] is ISelfEquatable, "i32[&] should be ISelfEquatable");
 static assert(type i32[&] is IEquatable<i32[&]>, "i32[&] should be IEquatable<i32[&]>");
+static assert(type i32[&] is ISpanConvertible, "i32[&] should be ISpanConvertible>");
 
 static assert(sizeof(i32[&mut]) == sizeof(usize) * 2, "MutableSpan should be 2 pointers wide");
 static assert(type i32[&mut] is ISelfEquatable, "i32[&mut] should be ISelfEquatable");
@@ -700,11 +1561,37 @@ test "Span" {
 
     arrv: i32[_] = [1,2,3,4,5,8,9];
     assert sp.Mismatch(arrv) == 5u;
+    assert sp.Mismatch(arrv, DefaultEqualityComparer) == 5u;
     arrv2: i32[_] = [2,3,4,5];
     assert sp.Mismatch(arrv2) == 0u;
     arrv3: i32[_] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1, 2];
-    assert sp.Mismatch(arrv3) == 16u;
+    assert arrv3.Mismatch(sp) == 16u;
+    assert arrv3.AsMutableSpan().Mismatch(sp) == 16u;
     assert sp.Mismatch(sp) == null;
+    assert sp.Count(15) == 1u;
+    assert sp.Count(18) == 0u;
+    assert arrv3[..].Count(sp[..2u]) == 2u;
+    arrv3 = [1,2,2,2,6,7,8,9,2,2,2,2,2,2,2,2,2,2];
+    sp = arrv3;
+    assert sp.Count(2) == 13u;
+    arrv3 = [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2];
+    assert sp.Count(2) == 18u;
+
+    assert sp.SequenceEquals(sp);
+    arrv3 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1, 2];
+    assert not sp.SequenceEquals(arrv2);
+    sp = arrwide[..16u];
+    assert sp.SequenceEquals(arrv3[..^2u]);
+    assert sp.StartsWith(1);
+    assert not sp.StartsWith(3);
+    assert arrv3[..].StartsWith(sp);
+    assert not arrv3[1u..].StartsWith(sp);
+    
+    assert sp.IndexOf(2) == 1u;
+    assert sp.IndexOf(23) == null;
+    assert sp.IndexOf(8) == 7u;
+    assert sp.IndexOf(arrv3[5u..10u]) == 5u;
+    assert sp.IndexOf(arrv3) == null;
 
     let spm: i32[&mut] = MutableSpan<i32>.UnsafeCreate(&arr[1], 3u);
     assert spm.Length == 3;
