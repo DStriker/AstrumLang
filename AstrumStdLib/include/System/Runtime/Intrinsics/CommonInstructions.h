@@ -17,10 +17,6 @@ namespace __Unsafe {} namespace __CommonInstructions$Protected__Unsafe {}
 //# Type forward declarations
 //###############################################################################
 class CommonInstructions;
-} namespace $extensions {
-template<class __TT> struct $static_FromBits;
-template<class __TT> struct $static_getFromBits;
-} namespace System::Runtime::Intrinsics {
 //###############################################################################
 //# Type definitions
 //###############################################################################
@@ -602,7 +598,119 @@ template<class __TT> struct $static_getFromBits;
 		
 	};
 	
-	//###############################################################################
+	} namespace $extensions {
+template<class __TT> struct $static_RemPiO2;
+template<class __TT> struct $static_getRemPiO2;
+template<class __TT> struct $static_IsInfinity;
+template<class __TT> struct $static_getIsInfinity;
+template<class __TT> struct $static_FromBits;
+template<class __TT> struct $static_getFromBits;
+template<class __TT> struct $static_AllBitsSet;
+template<class __TT> struct $static_getAllBitsSet;
+template<class __TT> struct $static_memcpy;
+template<class __TT> struct $static_getmemcpy;
+template<class __TT> struct $static_Zero;
+template<class __TT> struct $static_getZero;
+template<class __TT> struct $static_buffer;
+template<class __TT> struct $static_getbuffer;
+template<class __TT> struct $static_Ln;
+template<class __TT> struct $static_getLn;
+template<class __TT> struct $static_FusedMultiplyAdd;
+template<class __TT> struct $static_getFusedMultiplyAdd;
+template<class __TT> struct $static_ToNative;
+template<class __TT> struct $static_getToNative;
+template<class __TT> struct $static_Store;
+template<class __TT> struct $static_getStore;
+template<class __TT> struct $static_StoreAligned;
+template<class __TT> struct $static_getStoreAligned;
+template<class __TT> struct $static_Any;
+template<class __TT> struct $static_getAny;
+template<class __TT> struct $static_DivisionByZeroException;
+template<class __TT> struct $static_getDivisionByZeroException;
+template<class __TT> struct $static_MinPositiveValue;
+template<class __TT> struct $static_getMinPositiveValue;
+template<class __TT> struct $static_Max;
+template<class __TT> struct $static_getMax;
+template<class __TT> struct $static_Min;
+template<class __TT> struct $static_getMin;
+template<class __TT> struct $static_RoundTiesEven;
+template<class __TT> struct $static_getRoundTiesEven;
+template<class __TT> struct $static_IntegerOverflowException;
+template<class __TT> struct $static_getIntegerOverflowException;
+template<class __TT> struct $static_MinValue;
+template<class __TT> struct $static_getMinValue;
+template<class __TT> struct $static_MinusOne;
+template<class __TT> struct $static_getMinusOne;
+template<class __TT> struct $static_LessThanOrEqualAll;
+template<class __TT> struct $static_getLessThanOrEqualAll;
+template<class __TT> struct $static_FusedNegatedMultiplyAdd;
+template<class __TT> struct $static_getFusedNegatedMultiplyAdd;
+template<class __TT> struct $static_AsInt32;
+template<class __TT> struct $static_getAsInt32;
+template<class __TT> struct $static_Truncate;
+template<class __TT> struct $static_getTruncate;
+template<class __TT> struct $static_LessThanAny;
+template<class __TT> struct $static_getLessThanAny;
+template<class __TT> struct $static_Exp;
+template<class __TT> struct $static_getExp;
+template<class __TT> struct $static_Ceil;
+template<class __TT> struct $static_getCeil;
+template<class __TT> struct $static_InvalidArgumentException;
+template<class __TT> struct $static_getInvalidArgumentException;
+template<class __TT> struct $static_Abs;
+template<class __TT> struct $static_getAbs;
+template<class __TT> struct $static_Hypot;
+template<class __TT> struct $static_getHypot;
+template<class __TT> struct $static_CopySign;
+template<class __TT> struct $static_getCopySign;
+template<class __TT> struct $static_NaN;
+template<class __TT> struct $static_getNaN;
+template<class __TT> struct $static_Sqrt;
+template<class __TT> struct $static_getSqrt;
+template<class __TT> struct $static_FusedMultiplySub;
+template<class __TT> struct $static_getFusedMultiplySub;
+template<class __TT> struct $static_Asin;
+template<class __TT> struct $static_getAsin;
+template<class __TT> struct $static_Pi;
+template<class __TT> struct $static_getPi;
+template<class __TT> struct $static_IsInteger;
+template<class __TT> struct $static_getIsInteger;
+template<class __TT> struct $static_Reciprocal;
+template<class __TT> struct $static_getReciprocal;
+template<class __TT> struct $static_Sign;
+template<class __TT> struct $static_getSign;
+template<class __TT> struct $static_LnP1;
+template<class __TT> struct $static_getLnP1;
+template<class __TT> struct $static_All;
+template<class __TT> struct $static_getAll;
+template<class __TT> struct $static_Midpoint;
+template<class __TT> struct $static_getMidpoint;
+template<class __TT> struct $static_IsPositiveInfinity;
+template<class __TT> struct $static_getIsPositiveInfinity;
+template<class __TT> struct $static_IsNaN;
+template<class __TT> struct $static_getIsNaN;
+template<class __TT> struct $static_NegativeInfinity;
+template<class __TT> struct $static_getNegativeInfinity;
+template<class __TT> struct $static_PositiveInfinity;
+template<class __TT> struct $static_getPositiveInfinity;
+template<class __TT> struct $static_One;
+template<class __TT> struct $static_getOne;
+template<class __TT> struct $static_AsFloat32;
+template<class __TT> struct $static_getAsFloat32;
+template<class __TT> struct $static_IsOddInteger;
+template<class __TT> struct $static_getIsOddInteger;
+template<class __TT> struct $static_AsInt64;
+template<class __TT> struct $static_getAsInt64;
+template<class __TT> struct $static_AsFloat64;
+template<class __TT> struct $static_getAsFloat64;
+template<class __TT> struct $static_IsPositive;
+template<class __TT> struct $static_getIsPositive;
+template<class __TT> struct $static_IsZero;
+template<class __TT> struct $static_getIsZero;
+template<class __TT> struct $static_Floor;
+template<class __TT> struct $static_getFloor;
+} namespace System::Runtime::Intrinsics {
+//###############################################################################
 //# Function definitions
 //###############################################################################
 
@@ -1348,7 +1456,7 @@ template<class __TT> struct $static_getFromBits;
 		#line 396 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		{	using namespace Builtin::Unsafe;	using namespace System::Runtime::Intrinsics::__Unsafe;	using namespace __CommonInstructions$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard396{};
 			#line 397 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			SimdVector<T, Arch> res{}; 
+			SimdMask<T, Arch> res{}; 
 			#line 398 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			Builtin::Auto<decltype(UnsafePointerCast<Builtin::u64>((__RawPtr(std::addressof(vec)))))> ptr1 = UnsafePointerCast<Builtin::u64>((__RawPtr(std::addressof(vec)))); 
 			#line 399 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"

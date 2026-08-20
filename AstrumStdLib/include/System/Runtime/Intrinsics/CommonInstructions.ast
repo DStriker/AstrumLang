@@ -394,7 +394,7 @@ public static class CommonInstructions: SimdInstructionSet {
         }
         BitwiseNot: <T, Arch> (in ref vec: SimdMask<T, Arch>) -> SimdMask<T, Arch> {
             unsafe {
-                res: SimdVector<T, Arch>;
+                res: SimdMask<T, Arch>;
                 ptr1 := UnsafePointerCast<u64>(vec&);
                 ptr2 := UnsafePointerCast<u64>(res&);
                 ptr2[0] = ~ptr1[0];

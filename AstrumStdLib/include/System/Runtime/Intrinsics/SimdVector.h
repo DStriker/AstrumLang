@@ -945,10 +945,13 @@ using $extensions::getSinCos;
 	template<class T, class Arch> inline auto getFirstSet($extension_SimdVector_776_SimdMask<T, Arch> const& $this ) -> const Builtin::Nullable<Builtin::usize>;
 	#line 788 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 	template<class T, class Arch> inline auto getLastSet($extension_SimdVector_776_SimdMask<T, Arch> const& $this ) -> const Builtin::Nullable<Builtin::usize>;
+	#line 798 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
+	template<class T, class Arch> inline auto getLeadingZeros($extension_SimdVector_776_SimdMask<T, Arch> const& $this ) -> const Builtin::Nullable<Builtin::usize>;
 	} namespace System::Runtime::Intrinsics{
 using $extensions::getCount;
 using $extensions::getFirstSet;
 using $extensions::getLastSet;
+using $extensions::getLeadingZeros;
 
 	
 	#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
@@ -1344,10 +1347,10 @@ template<class __TT> struct $static_Zero;
 template<class __TT> struct $static_getZero;
 template<class __TT> struct $static_ScalarMask;
 template<class __TT> struct $static_getScalarMask;
-template<class __TT> struct $static_LeadingZeroCount;
-template<class __TT> struct $static_getLeadingZeroCount;
 template<class __TT> struct $static_TrailingZeroCount;
 template<class __TT> struct $static_getTrailingZeroCount;
+template<class __TT> struct $static_LeadingZeroCount;
+template<class __TT> struct $static_getLeadingZeroCount;
 template<class __TT> struct $static_data;
 template<class __TT> struct $static_getdata;
 template<class __TT> struct $static_UnsafeNarrowToInteger;
@@ -3629,7 +3632,7 @@ ADV_WARNING_POP
 	
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 633 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getAsInt8($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdVector<Builtin::i8, Arch>
+	template<class T, class Arch> inline auto getAsInt8($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdVector<Builtin::i8, Arch>
 	{
 		#line 633 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(Arch::template BitwiseCast<Builtin::i8>($this)); 
@@ -3637,7 +3640,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 634 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getAsInt16($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdVector<Builtin::i16, Arch>
+	template<class T, class Arch> inline auto getAsInt16($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdVector<Builtin::i16, Arch>
 	{
 		#line 634 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(Arch::template BitwiseCast<Builtin::i16>($this)); 
@@ -3645,7 +3648,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 635 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getAsInt32($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdVector<Builtin::i32, Arch>
+	template<class T, class Arch> inline auto getAsInt32($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdVector<Builtin::i32, Arch>
 	{
 		#line 635 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(Arch::template BitwiseCast<Builtin::i32>($this)); 
@@ -3653,7 +3656,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 636 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getAsInt64($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdVector<Builtin::i64, Arch>
+	template<class T, class Arch> inline auto getAsInt64($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdVector<Builtin::i64, Arch>
 	{
 		#line 636 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(Arch::template BitwiseCast<Builtin::i64>($this)); 
@@ -3661,7 +3664,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 637 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getAsUInt8($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdVector<Builtin::u8, Arch>
+	template<class T, class Arch> inline auto getAsUInt8($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdVector<Builtin::u8, Arch>
 	{
 		#line 637 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(Arch::template BitwiseCast<Builtin::u8>($this)); 
@@ -3669,7 +3672,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 638 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getAsUInt16($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdVector<Builtin::u16, Arch>
+	template<class T, class Arch> inline auto getAsUInt16($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdVector<Builtin::u16, Arch>
 	{
 		#line 638 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(Arch::template BitwiseCast<Builtin::u16>($this)); 
@@ -3677,7 +3680,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 639 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getAsUInt32($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdVector<Builtin::u32, Arch>
+	template<class T, class Arch> inline auto getAsUInt32($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdVector<Builtin::u32, Arch>
 	{
 		#line 639 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(Arch::template BitwiseCast<Builtin::u32>($this)); 
@@ -3685,7 +3688,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 640 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getAsUInt64($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdVector<Builtin::u64, Arch>
+	template<class T, class Arch> inline auto getAsUInt64($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdVector<Builtin::u64, Arch>
 	{
 		#line 640 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(Arch::template BitwiseCast<Builtin::u64>($this)); 
@@ -3693,7 +3696,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 641 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getAsFloat32($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdVector<Builtin::f32, Arch>
+	template<class T, class Arch> inline auto getAsFloat32($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdVector<Builtin::f32, Arch>
 	{
 		#line 641 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(Arch::template BitwiseCast<Builtin::f32>($this)); 
@@ -3701,7 +3704,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 642 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getAsFloat64($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdVector<Builtin::f64, Arch>
+	template<class T, class Arch> inline auto getAsFloat64($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdVector<Builtin::f64, Arch>
 	{
 		#line 642 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(Arch::template BitwiseCast<Builtin::f64>($this)); 
@@ -3709,7 +3712,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 645 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getIsNaN($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdMask<T, Arch>
+	template<class T, class Arch> inline auto getIsNaN($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdMask<T, Arch>
 	{
 		#line 645 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(Arch::IsNaN($this)); 
@@ -3717,7 +3720,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 646 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getIsInfinity($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdMask<T, Arch>
+	template<class T, class Arch> inline auto getIsInfinity($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdMask<T, Arch>
 	{
 		#line 646 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(Arch::IsInfinity($this)); 
@@ -3725,7 +3728,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 647 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getIsFinite($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdMask<T, Arch>
+	template<class T, class Arch> inline auto getIsFinite($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdMask<T, Arch>
 	{
 		#line 647 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(Arch::IsFinite($this)); 
@@ -3733,7 +3736,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 648 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getIsPositiveInfinity($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdMask<T, Arch>
+	template<class T, class Arch> inline auto getIsPositiveInfinity($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdMask<T, Arch>
 	{
 		#line 648 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_eq_eq_xor)($this, ADV_USPCS(PositiveInfinity, T)())); 
@@ -3741,7 +3744,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 649 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getIsNegativeInfinity($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdMask<T, Arch>
+	template<class T, class Arch> inline auto getIsNegativeInfinity($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdMask<T, Arch>
 	{
 		#line 649 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_eq_eq_xor)($this, ADV_USPCS(NegativeInfinity, T)())); 
@@ -3749,7 +3752,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 650 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getIsPositive($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdMask<T, Arch>
+	template<class T, class Arch> inline auto getIsPositive($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdMask<T, Arch>
 	{
 		#line 650 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_gt_eq_xor)($this, ADV_USPCS(Zero, $extension_SimdVector_630_SimdVector<T, Arch>)())); 
@@ -3757,7 +3760,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 651 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getIsNegative($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdMask<T, Arch>
+	template<class T, class Arch> inline auto getIsNegative($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdMask<T, Arch>
 	{
 		#line 651 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_lt_xor)($this, ADV_USPCS(Zero, $extension_SimdVector_630_SimdVector<T, Arch>)())); 
@@ -3765,7 +3768,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 652 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getIsZero($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdMask<T, Arch>
+	template<class T, class Arch> inline auto getIsZero($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdMask<T, Arch>
 	{
 		#line 652 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_eq_eq_xor)($this, ADV_USPCS(Zero, $extension_SimdVector_630_SimdVector<T, Arch>)())); 
@@ -3773,7 +3776,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 653 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getIsInteger($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdMask<T, Arch>
+	template<class T, class Arch> inline auto getIsInteger($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdMask<T, Arch>
 	{
 		#line 653 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(Arch::IsInteger($this)); 
@@ -3781,7 +3784,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 654 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getIsEvenInteger($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdMask<T, Arch>
+	template<class T, class Arch> inline auto getIsEvenInteger($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdMask<T, Arch>
 	{
 		#line 654 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(Arch::IsEvenInteger($this)); 
@@ -3789,7 +3792,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 655 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getIsOddInteger($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const SimdMask<T, Arch>
+	template<class T, class Arch> inline auto getIsOddInteger($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const SimdMask<T, Arch>
 	{
 		#line 655 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(Arch::IsOddInteger($this)); 
@@ -3797,7 +3800,7 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 657 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getSinCos($extension_SimdVector_630_SimdVector<T, Arch> const& $this ) -> const std::tuple<$extension_SimdVector_630_SimdVector<T, Arch>, $extension_SimdVector_630_SimdVector<T, Arch>>
+	template<class T, class Arch> inline auto getSinCos($extension_SimdVector_630_SimdVector<T, Arch> const & $this ) -> const std::tuple<$extension_SimdVector_630_SimdVector<T, Arch>, $extension_SimdVector_630_SimdVector<T, Arch>>
 	{
 		#line 657 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(Arch::SinCos($this)); 
@@ -3809,7 +3812,7 @@ ADV_WARNING_POP
 	
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 777 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getCount($extension_SimdVector_776_SimdMask<T, Arch> const& $this ) -> const Builtin::usize
+	template<class T, class Arch> inline auto getCount($extension_SimdVector_776_SimdMask<T, Arch> const & $this ) -> const Builtin::usize
 	{
 		#line 777 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		ADV_EXPRESSION_BODY(Builtin::PopCount(Builtin::u64{ADV_UPCS(ScalarMask)($this.$ref())})); 
@@ -3817,42 +3820,63 @@ ADV_WARNING_POP
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 778 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getFirstSet($extension_SimdVector_776_SimdMask<T, Arch> const& $this ) -> const Builtin::Nullable<Builtin::usize>
+	template<class T, class Arch> inline auto getFirstSet($extension_SimdVector_776_SimdMask<T, Arch> const & $this ) -> const Builtin::Nullable<Builtin::usize>
 	{
 		#line 779 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		constexpr Builtin::Auto<decltype($extension_SimdVector_776_SimdMask<T, Arch>::Length)> length = $extension_SimdVector_776_SimdMask<T, Arch>::Length;
 		#line 780 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-		constexpr Builtin::Auto<decltype(Builtin::usize(64U) - length)> unusedBits = Builtin::usize(64U) - length;
+		constexpr Builtin::Auto<decltype((length <=> Builtin::i32(64)) < 0 ? (Builtin::u64(1ULL) << Builtin::i32{length % Builtin::i32(64)}) : Builtin::u64(0ULL))> stop = (length <=> Builtin::i32(64)) < 0 ? (Builtin::u64(1ULL) << Builtin::i32{length % Builtin::i32(64)}) : Builtin::u64(0ULL);
 		#line 781 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-		constexpr Builtin::Auto<decltype((length <=> Builtin::i32(64)) < 0 ? (Builtin::u64(1ULL) << Builtin::i32{length % Builtin::i32(64)}) - Builtin::i32(1) : ADV_UFCS(_operator_not)(Builtin::u64{Builtin::i32(0)}))> lowMask = (length <=> Builtin::i32(64)) < 0 ? (Builtin::u64(1ULL) << Builtin::i32{length % Builtin::i32(64)}) - Builtin::i32(1) : ADV_UFCS(_operator_not)(Builtin::u64{Builtin::i32(0)});
+		const Builtin::Auto<decltype(Builtin::TrailingZeroCount(Builtin::u64{ADV_UPCS(ScalarMask)($this.$ref())} | stop))> index = Builtin::TrailingZeroCount(Builtin::u64{ADV_UPCS(ScalarMask)($this.$ref())} | stop); 
 		#line 782 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-		const Builtin::Auto<decltype(Builtin::LeadingZeroCount(Builtin::u64{ADV_UPCS(ScalarMask)($this.$ref())}))> index = Builtin::LeadingZeroCount(Builtin::u64{ADV_UPCS(ScalarMask)($this.$ref())}); 
-		#line 783 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-		if ((index <=> Builtin::i32(64)) >= 0) {
-			#line 784 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
+		if ((index <=> length) >= 0) {
+			#line 783 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 			return nullptr;
 		}
 		#line 786 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-		return index - unusedBits;
+		return index;
 	}
 	} namespace System::Runtime::Intrinsics{
 } namespace $extensions { using namespace System::Runtime::Intrinsics;
 #line 788 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-	template<class T, class Arch> inline auto getLastSet($extension_SimdVector_776_SimdMask<T, Arch> const& $this ) -> const Builtin::Nullable<Builtin::usize>
+	template<class T, class Arch> inline auto getLastSet($extension_SimdVector_776_SimdMask<T, Arch> const & $this ) -> const Builtin::Nullable<Builtin::usize>
 	{
 		#line 789 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		constexpr Builtin::Auto<decltype($extension_SimdVector_776_SimdMask<T, Arch>::Length)> length = $extension_SimdVector_776_SimdMask<T, Arch>::Length;
 		#line 790 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-		constexpr Builtin::Auto<decltype((length <=> Builtin::i32(64)) < 0 ? (Builtin::u64(1ULL) << Builtin::i32{length % Builtin::i32(64)}) : Builtin::u64(0ULL))> stop = (length <=> Builtin::i32(64)) < 0 ? (Builtin::u64(1ULL) << Builtin::i32{length % Builtin::i32(64)}) : Builtin::u64(0ULL);
+		constexpr Builtin::Auto<decltype(Builtin::usize(64U) - length)> unusedBits = Builtin::usize(64U) - length;
 		#line 791 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-		const Builtin::Auto<decltype(Builtin::TrailingZeroCount(Builtin::u64{ADV_UPCS(ScalarMask)($this.$ref())} | stop))> index = Builtin::TrailingZeroCount(Builtin::u64{ADV_UPCS(ScalarMask)($this.$ref())} | stop); 
+		constexpr Builtin::Auto<decltype((length <=> Builtin::i32(64)) < 0 ? (Builtin::u64(1ULL) << Builtin::i32{length % Builtin::i32(64)}) - Builtin::i32(1) : ADV_UFCS(_operator_not)(Builtin::u64{Builtin::i32(0)}))> lowMask = (length <=> Builtin::i32(64)) < 0 ? (Builtin::u64(1ULL) << Builtin::i32{length % Builtin::i32(64)}) - Builtin::i32(1) : ADV_UFCS(_operator_not)(Builtin::u64{Builtin::i32(0)});
 		#line 792 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-		if ((index <=> length) >= 0) {
-			#line 793 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
+		const Builtin::Auto<decltype(Builtin::LeadingZeroCount(Builtin::u64{ADV_UPCS(ScalarMask)($this.$ref())}))> index = Builtin::LeadingZeroCount(Builtin::u64{ADV_UPCS(ScalarMask)($this.$ref())}); 
+		#line 793 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
+		if ((index <=> Builtin::i32(64)) >= 0) {
+			#line 794 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 			return nullptr;
 		}
-		#line 795 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
-		return length - Builtin::i32(1) - index;
+		#line 796 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
+		return length - Builtin::i32(1) - (index - unusedBits);
+	}
+	} namespace System::Runtime::Intrinsics{
+} namespace $extensions { using namespace System::Runtime::Intrinsics;
+#line 798 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
+	template<class T, class Arch> inline auto getLeadingZeros($extension_SimdVector_776_SimdMask<T, Arch> const & $this ) -> const Builtin::Nullable<Builtin::usize>
+	{
+		#line 799 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
+		constexpr Builtin::Auto<decltype($extension_SimdVector_776_SimdMask<T, Arch>::Length)> length = $extension_SimdVector_776_SimdMask<T, Arch>::Length;
+		#line 800 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
+		constexpr Builtin::Auto<decltype(Builtin::usize(64U) - length)> unusedBits = Builtin::usize(64U) - length;
+		#line 801 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
+		constexpr Builtin::Auto<decltype((length <=> Builtin::i32(64)) < 0 ? (Builtin::u64(1ULL) << Builtin::i32{length % Builtin::i32(64)}) - Builtin::i32(1) : ADV_UFCS(_operator_not)(Builtin::u64{Builtin::i32(0)}))> lowMask = (length <=> Builtin::i32(64)) < 0 ? (Builtin::u64(1ULL) << Builtin::i32{length % Builtin::i32(64)}) - Builtin::i32(1) : ADV_UFCS(_operator_not)(Builtin::u64{Builtin::i32(0)});
+		#line 802 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
+		const Builtin::Auto<decltype(Builtin::LeadingZeroCount(Builtin::u64{ADV_UPCS(ScalarMask)($this.$ref())}))> index = Builtin::LeadingZeroCount(Builtin::u64{ADV_UPCS(ScalarMask)($this.$ref())}); 
+		#line 803 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
+		if ((index <=> Builtin::i32(64)) >= 0) {
+			#line 804 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
+			return nullptr;
+		}
+		#line 806 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
+		return index - unusedBits;
 	}
 	} namespace System::Runtime::Intrinsics{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"

@@ -777,6 +777,26 @@ public extension <T, Arch> SimdMask {
     Count: usize => Builtin.PopCount(u64(this.ScalarMask));
     FirstSet: usize? = {
         const length :== self::Length;
+        const stop :== length < 64 ? (1u64 << i32(length % 64)) : 0u64;
+        let index := Builtin.TrailingZeroCount(u64(this.ScalarMask) | stop);
+        if index >= length {
+            return null;
+        }
+        //return length - 1 - index;
+        return index;
+    }
+    LastSet: usize? = {
+        const length :== self::Length;
+        const unusedBits :== 64uz - length;
+        const lowMask :== length < 64 ? (1u64 << i32(length % 64)) - 1 : ~u64(0);
+        let index := Builtin.LeadingZeroCount(u64(this.ScalarMask));
+        if index >= 64 {
+            return null;
+        }
+        return length - 1 - (index - unusedBits);
+    }
+    LeadingZeros: usize? = {
+        const length :== self::Length;
         const unusedBits :== 64uz - length;
         const lowMask :== length < 64 ? (1u64 << i32(length % 64)) - 1 : ~u64(0);
         let index := Builtin.LeadingZeroCount(u64(this.ScalarMask));
@@ -784,14 +804,5 @@ public extension <T, Arch> SimdMask {
             return null;
         }
         return index - unusedBits;
-    }
-    LastSet: usize? = {
-        const length :== self::Length;
-        const stop :== length < 64 ? (1u64 << i32(length % 64)) : 0u64;
-        let index := Builtin.TrailingZeroCount(u64(this.ScalarMask) | stop);
-        if index >= length {
-            return null;
-        }
-        return length - 1 - index;
     }
 }

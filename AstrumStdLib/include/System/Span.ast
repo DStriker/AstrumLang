@@ -831,6 +831,437 @@ public extension <TLeft> where type TLeft is ISpanConvertible {
         return null;
     }
 
+    // Searches for the first index of any of the specified values from span.
+    // If not found, returns null.
+    IndexOfAny: <TValues> (forward val: TValues) -> usize? {
+        type TLeftReal = decay(TLeft);
+        type TValuesReal = decay(TValues);
+        type T = TLeftReal.ElementType;
+        let span: T[&] = this;
+        static if type TValuesReal is ISpanConvertible {
+            static assert(type T == TValuesReal.ElementType, "ElementType mismatch");
+            static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+            let values: T[&] = val;
+            let valuesLength := values.Length;
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                static if sizeof(T) == 1 {
+                    return switch valuesLength -> usize? {
+                        0 => null,
+                        1 => SpanHelpers.IndexOfByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0])),
+                        2 => SpanHelpers.IndexOfAnyByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0]), Unsafe.BitCast<byte>(values[@Unchecked 1])),
+                        3 => SpanHelpers.IndexOfAnyByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0]), Unsafe.BitCast<byte>(values[@Unchecked 1]),
+                                Unsafe.BitCast<byte>(values[@Unchecked 2])),
+                        4 => SpanHelpers.IndexOfAnyByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0]), Unsafe.BitCast<byte>(values[@Unchecked 1]), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 2]), Unsafe.BitCast<byte>(values[@Unchecked 3])),
+                        5 => SpanHelpers.IndexOfAnyByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0]), Unsafe.BitCast<byte>(values[@Unchecked 1]), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 2]), Unsafe.BitCast<byte>(values[@Unchecked 3]),
+                                Unsafe.BitCast<byte>(values[@Unchecked 4])),
+                        _ => SpanHelpers.IndexOfAnyInternal(span, values)
+                    };
+                } else static if sizeof(T) == 2 {
+                    return switch valuesLength -> usize? {
+                        0 => null,
+                        1 => SpanHelpers.IndexOfWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0])),
+                        2 => SpanHelpers.IndexOfAnyWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0]), Unsafe.BitCast<u16>(values[@Unchecked 1])),
+                        3 => SpanHelpers.IndexOfAnyWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0]), Unsafe.BitCast<u16>(values[@Unchecked 1]),
+                                Unsafe.BitCast<u16>(values[@Unchecked 2])),
+                        4 => SpanHelpers.IndexOfAnyWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0]), Unsafe.BitCast<u16>(values[@Unchecked 1]), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 2]), Unsafe.BitCast<u16>(values[@Unchecked 3])),
+                        5 => SpanHelpers.IndexOfAnyWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0]), Unsafe.BitCast<u16>(values[@Unchecked 1]), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 2]), Unsafe.BitCast<u16>(values[@Unchecked 3]),
+                                Unsafe.BitCast<u16>(values[@Unchecked 4])),
+                        _ => SpanHelpers.IndexOfAnyInternal(span, values)
+                    };
+                }
+            }
+            
+            return SpanHelpers.IndexOfAnyInternal(span, values);
+        } else static if type TValuesReal == Range<T, true> {
+            static assert(type T is ISelfComparable, "Search values in range is available only for ISelfComparable types");
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                // SIMD path
+                static if sizeof(T) == 1 {
+                    return SpanHelpers.IndexOfAnyInRangeByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                        Unsafe.BitCast<byte>(val.GetStart()), Unsafe.BitCast<byte>(val.GetEnd()));
+                } else static if sizeof(T) == 2 {
+                    return SpanHelpers.IndexOfAnyInRangeWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                        Unsafe.BitCast<u16>(val.GetStart()), Unsafe.BitCast<u16>(val.GetEnd()));
+                } else static if sizeof(T) == 4 {
+                    return SpanHelpers.IndexOfAnyInRangeDword(Span<u32>::UnsafeCreate(Unsafe.As<u32>(span[@Unchecked 0]), span.Length), 
+                        Unsafe.BitCast<u32>(val.GetStart()), Unsafe.BitCast<u32>(val.GetEnd()));
+                } else static if sizeof(T) == 8 {
+                    return SpanHelpers.IndexOfAnyInRangeQword(Span<u64>::UnsafeCreate(Unsafe.As<u64>(span[@Unchecked 0]), span.Length), 
+                        Unsafe.BitCast<u64>(val.GetStart()), Unsafe.BitCast<u64>(val.GetEnd()));
+                }
+            } else {
+                // Regular path
+                return SpanHelpers.IndexOfAnyInRangeGeneralCase(span, val.Start, val.End);
+            }
+        } else {
+            static assert(false, "val should be inclusive range or array-like type");
+        }
+        return null;
+    }
+
+    ContainsAny: <TValues> (forward val: TValues) -> bool => this.IndexOfAny(forward val) != null;
+
+    // Searches for the first index of any of the specified values
+    // If not found, returns null.
+    IndexOfAny: <T1, T2> (forward val1: T1, forward val2: T2) -> usize? {
+        type TLeftReal = decay(TLeft);
+        type T1Real = decay(T1);
+        type T2Real = decay(T2);
+        type T = TLeftReal.ElementType;
+        let span: T[&] = this;
+        static if type T2Real is operator EqualityComparer<T> {
+            static assert(type T1Real is ISpanConvertible, "T1 should be an array-like type");
+            static assert(type T == T1Real.ElementType, "ElementType mismatch");
+            let values: T[&] = val1;
+            let length := span.Length;
+            let valuesLength := values.Length;
+            for i in ..length {
+                for j in ..valuesLength {
+                    if val2(span[@Unchecked i], values[@Unchecked j]) {
+                        return i;
+                    }
+                }
+            }
+        } else static if type T2Real is operator T {
+            static assert(type T1Real is operator T, "ElementType mismatch");
+            static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                static if sizeof(T) == 1 {
+                    return SpanHelpers.IndexOfAnyByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(val1), Unsafe.BitCast<byte>(val2));
+                } else static if sizeof(T) == 2 {
+                    return SpanHelpers.IndexOfAnyWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(val1), Unsafe.BitCast<u16>(val2));
+                }
+            }
+            
+            return SpanHelpers.IndexOfAnyGeneralCase(span, val1, val2);
+        } else {
+            static assert(false, "T1 should be ElementType or Span<ElementType>");
+        }
+        return null;
+    }
+    
+    ContainsAny: <T1, T2> (forward val1: T1, forward val2: T2) -> bool => this.IndexOfAny(forward val1, forward val2) != null;
+
+    // Searches for the first index of any of the specified values
+    // If not found, returns null.
+    IndexOfAny: <T1, T2, T3> (forward val1: T1, forward val2: T2, forward val3: T3) -> usize? {
+        type TLeftReal = decay(TLeft);
+        type T1Real = decay(T1);
+        type T2Real = decay(T2);
+        type T3Real = decay(T3);
+        type T = TLeftReal.ElementType;
+        let span: T[&] = this;
+        static if type T3Real is operator EqualityComparer<T> {
+            static assert(type T1Real is operator T, "ElementType mismatch");
+            static assert(type T2Real is operator T, "ElementType mismatch");
+            let length := span.Length;
+            for i in ..length {
+                let val := span[@Unchecked i];
+                if val3(val, val1) or val3(val, val2) {
+                    return i;
+                }
+            }
+        } else static if type T3Real is operator T {
+            static assert(type T1Real is operator T, "ElementType mismatch");
+            static assert(type T2Real is operator T, "ElementType mismatch");
+            static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                static if sizeof(T) == 1 {
+                    return SpanHelpers.IndexOfAnyByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(val1), Unsafe.BitCast<byte>(val2),
+                                Unsafe.BitCast<byte>(val3));
+                } else static if sizeof(T) == 2 {
+                    return SpanHelpers.IndexOfAnyWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(val1), Unsafe.BitCast<u16>(val2),
+                                Unsafe.BitCast<u16>(val3));
+                }
+            }
+            
+            return SpanHelpers.IndexOfAnyGeneralCase(span, val1, val2, val3);
+        } else {
+            static assert(false, "T1, T2, T3 should be ElementType");
+        }
+        return null;
+    }
+
+    ContainsAny: <T1, T2, T3> (forward val1: T1, forward val2: T2, forward val3: T3) -> bool 
+        => this.IndexOfAny(forward val1, forward val2, forward val3) != null;
+
+    // Searches for the first index of any of the specified values
+    // If not found, returns null.
+    IndexOfAny: <T1, T2, T3, TComparer> (forward val1: T1, forward val2: T2, forward val3: T3, equals: TComparer) -> usize? {
+        type TLeftReal = decay(TLeft);
+        type T1Real = decay(T1);
+        type T2Real = decay(T2);
+        type T3Real = decay(T3);
+        type T4Real = decay(TComparer);
+        type T = TLeftReal.ElementType;
+        static assert(type T1Real is operator T, "ElementType mismatch");
+        static assert(type T2Real is operator T, "ElementType mismatch");
+        static assert(type T3Real is operator T, "ElementType mismatch");
+        static assert(type T4Real is operator EqualityComparer<T>, "TComparer should be EqualityComparer<T>");
+        let span: T[&] = this;
+        let length := span.Length;
+        for i in ..length {
+            let val := span[@Unchecked i];
+            if equals(val, val1) or equals(val, val2) or equals(val, val3) {
+                return i;
+            }
+        }
+        return null;
+    }
+
+    ContainsAny: <T1, T2, T3, TComparer> (forward val1: T1, forward val2: T2, forward val3: T3, equals: TComparer) -> bool 
+        => this.IndexOfAny(forward val1, forward val2, forward val3, equals) != null;
+
+    // Searches for the first index of any value other than of the specified values.
+    // If not found, returns null.
+    IndexOfAnyExcept: <TValues> (forward val: TValues) -> usize? {
+        type TLeftReal = decay(TLeft);
+        type TValuesReal = decay(TValues);
+        type T = TLeftReal.ElementType;
+        static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+        let span: T[&] = this;
+        static if type TValuesReal is ISpanConvertible {
+            static assert(type T == TValuesReal.ElementType, "ElementType mismatch");
+            let values: T[&] = val;
+            let valuesLength := values.Length;
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                static if sizeof(T) == 1 {
+                    return switch valuesLength -> usize? {
+                        0 => null,
+                        1 => SpanHelpers.IndexOfAnyExceptByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0])),
+                        2 => SpanHelpers.IndexOfAnyExceptByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0]), Unsafe.BitCast<byte>(values[@Unchecked 1])),
+                        3 => SpanHelpers.IndexOfAnyExceptByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0]), Unsafe.BitCast<byte>(values[@Unchecked 1]),
+                                Unsafe.BitCast<byte>(values[@Unchecked 2])),
+                        4 => SpanHelpers.IndexOfAnyExceptByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0]), Unsafe.BitCast<byte>(values[@Unchecked 1]), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 2]), Unsafe.BitCast<byte>(values[@Unchecked 3])),
+                        5 => SpanHelpers.IndexOfAnyExceptByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0]), Unsafe.BitCast<byte>(values[@Unchecked 1]), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 2]), Unsafe.BitCast<byte>(values[@Unchecked 3]),
+                                Unsafe.BitCast<byte>(values[@Unchecked 4])),
+                        _ => SpanHelpers.IndexOfAnyExceptInternal(span, values)
+                    };
+                } else static if sizeof(T) == 2 {
+                    return switch valuesLength -> usize? {
+                        0 => null,
+                        1 => SpanHelpers.IndexOfAnyExceptWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0])),
+                        2 => SpanHelpers.IndexOfAnyExceptWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0]), Unsafe.BitCast<u16>(values[@Unchecked 1])),
+                        3 => SpanHelpers.IndexOfAnyExceptWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0]), Unsafe.BitCast<u16>(values[@Unchecked 1]),
+                                Unsafe.BitCast<u16>(values[@Unchecked 2])),
+                        4 => SpanHelpers.IndexOfAnyExceptWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0]), Unsafe.BitCast<u16>(values[@Unchecked 1]), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 2]), Unsafe.BitCast<u16>(values[@Unchecked 3])),
+                        5 => SpanHelpers.IndexOfAnyExceptWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0]), Unsafe.BitCast<u16>(values[@Unchecked 1]), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 2]), Unsafe.BitCast<u16>(values[@Unchecked 3]),
+                                Unsafe.BitCast<u16>(values[@Unchecked 4])),
+                        _ => SpanHelpers.IndexOfAnyExceptInternal(span, values)
+                    };
+                }
+            }
+            
+            return SpanHelpers.IndexOfAnyExceptInternal(span, values);
+        } else static if type TValuesReal is operator T {
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                static if sizeof(T) == 1 {
+                    return SpanHelpers.IndexOfAnyExceptByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(val));
+                } else static if sizeof(T) == 2 {
+                    return SpanHelpers.IndexOfAnyExceptWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(val));
+                }
+            }
+            
+            return SpanHelpers.IndexOfAnyExceptGeneralCase(span, val);
+        } else static if type TValuesReal == Range<T, true> {
+            static assert(type T is ISelfComparable, "Search values in range is available only for ISelfComparable types");
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                // SIMD path
+                static if sizeof(T) == 1 {
+                    return SpanHelpers.IndexOfAnyExceptInRangeByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                        Unsafe.BitCast<byte>(val.GetStart()), Unsafe.BitCast<byte>(val.GetEnd()));
+                } else static if sizeof(T) == 2 {
+                    return SpanHelpers.IndexOfAnyExceptInRangeWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                        Unsafe.BitCast<u16>(val.GetStart()), Unsafe.BitCast<u16>(val.GetEnd()));
+                } else static if sizeof(T) == 4 {
+                    return SpanHelpers.IndexOfAnyExceptInRangeDword(Span<u32>::UnsafeCreate(Unsafe.As<u32>(span[@Unchecked 0]), span.Length), 
+                        Unsafe.BitCast<u32>(val.GetStart()), Unsafe.BitCast<u32>(val.GetEnd()));
+                } else static if sizeof(T) == 8 {
+                    return SpanHelpers.IndexOfAnyExceptInRangeQword(Span<u64>::UnsafeCreate(Unsafe.As<u64>(span[@Unchecked 0]), span.Length), 
+                        Unsafe.BitCast<u64>(val.GetStart()), Unsafe.BitCast<u64>(val.GetEnd()));
+                }
+            } else {
+                // Regular path
+                return SpanHelpers.IndexOfAnyExceptInRangeGeneralCase(span, val.Start, val.End);
+            }
+        } else {
+            static assert(false, "val should be ElementType or array-like type");
+        }
+        return null;
+    }
+
+    ContainsAnyExcept: <T1> (forward val: T1) -> bool 
+        => this.IndexOfAnyExcept(forward val) != null;
+
+    // Searches for the first index of any value other than of the specified values.
+    // If not found, returns null.
+    IndexOfAnyExcept: <T1, T2> (forward val1: T1, forward val2: T2) -> usize? {
+        type TLeftReal = decay(TLeft);
+        type T1Real = decay(T1);
+        type T2Real = decay(T2);
+        type T = TLeftReal.ElementType;
+        let span: T[&] = this;
+        static if type T2Real is operator EqualityComparer<T> {
+            static if type T1Real is ISpanConvertible {
+                static assert(type T == T1Real.ElementType, "ElementType mismatch");
+                let values: T[&] = val1;
+                let length := span.Length;
+                let valuesLength := values.Length;
+                outer:
+                for i in ..length {
+                    for j in ..valuesLength {
+                        if val2(span[@Unchecked i], values[@Unchecked j]) {
+                            continue outer;
+                        }
+                    }
+                    return i;
+                }
+            } else static if type T1Real is operator T {
+                let length := span.Length;
+                for i in ..length {
+                    if not val2(span[@Unchecked i], val1) {
+                        return i;
+                    }
+                }
+            }
+        } else static if type T2Real is operator T {
+            static assert(type T1Real is operator T, "ElementType mismatch");
+            static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                static if sizeof(T) == 1 {
+                    return SpanHelpers.IndexOfAnyExceptByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(val1), Unsafe.BitCast<byte>(val2));
+                } else static if sizeof(T) == 2 {
+                    return SpanHelpers.IndexOfAnyExceptWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(val1), Unsafe.BitCast<u16>(val2));
+                }
+            }
+            
+            return SpanHelpers.IndexOfAnyExceptGeneralCase(span, val1, val2);
+        } else {
+            static assert(false, "T1 should be ElementType or Span<ElementType>");
+        }
+        return null;
+    }
+
+    ContainsAnyExcept: <T1, T2> (forward val1: T1, forward val2: T2) -> bool 
+        => this.IndexOfAnyExcept(forward val1, forward val2) != null;
+
+    // Searches for the first index of any value other than of the specified values.
+    // If not found, returns null.
+    IndexOfAnyExcept: <T1, T2, T3> (forward val1: T1, forward val2: T2, forward val3: T3) -> usize? {
+        type TLeftReal = decay(TLeft);
+        type T1Real = decay(T1);
+        type T2Real = decay(T2);
+        type T3Real = decay(T3);
+        type T = TLeftReal.ElementType;
+        let span: T[&] = this;
+        static if type T3Real is operator EqualityComparer<T> {
+            static assert(type T1Real is operator T, "ElementType mismatch");
+            static assert(type T2Real is operator T, "ElementType mismatch");
+            let length := span.Length;
+            for i in ..length {
+                let val := span[@Unchecked i];
+                if (not val3(val, val1)) and (not val3(val, val2)) {
+                    return i;
+                }
+            }
+        } else static if type T3Real is operator T {
+            static assert(type T1Real is operator T, "ElementType mismatch");
+            static assert(type T2Real is operator T, "ElementType mismatch");
+            static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                static if sizeof(T) == 1 {
+                    return SpanHelpers.IndexOfAnyExceptByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(val1), Unsafe.BitCast<byte>(val2),
+                                Unsafe.BitCast<byte>(val3));
+                } else static if sizeof(T) == 2 {
+                    return SpanHelpers.IndexOfAnyExceptWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(val1), Unsafe.BitCast<u16>(val2),
+                                Unsafe.BitCast<u16>(val3));
+                }
+            }
+            
+            return SpanHelpers.IndexOfAnyExceptGeneralCase(span, val1, val2, val3);
+        } else {
+            static assert(false, "T1, T2, T3 should be ElementType");
+        }
+        return null;
+    }
+
+    ContainsAnyExcept: <T1, T2, T3> (forward val1: T1, forward val2: T2, forward val3: T3) -> bool 
+        => this.IndexOfAnyExcept(forward val1, forward val2, forward val3) != null;
+
+    // Searches for the first index of any value other than of the specified values.
+    // If not found, returns null.
+    IndexOfAnyExcept: <T1, T2, T3, TComparer> (forward val1: T1, forward val2: T2, forward val3: T3, equals: TComparer) -> usize? {
+        type TLeftReal = decay(TLeft);
+        type T1Real = decay(T1);
+        type T2Real = decay(T2);
+        type T3Real = decay(T3);
+        type T4Real = decay(TComparer);
+        type T = TLeftReal.ElementType;
+        static assert(type T1Real is operator T, "ElementType mismatch");
+        static assert(type T2Real is operator T, "ElementType mismatch");
+        static assert(type T3Real is operator T, "ElementType mismatch");
+        static assert(type T4Real is operator EqualityComparer<T>, "TComparer should be EqualityComparer<T>");
+        let span: T[&] = this;
+        let length := span.Length;
+        for i in ..length {
+            let val := span[@Unchecked i];
+            if (not equals(val, val1)) and (not equals(val, val2)) and (not equals(val, val3)) {
+                return i;
+            }
+        }
+        return null;
+    }
+
+    ContainsAnyExcept: <T1, T2, T3, TComparer> (forward val1: T1, forward val2: T2, forward val3: T3, equals: TComparer) -> bool 
+        => this.IndexOfAnyExcept(forward val1, forward val2, forward val3, equals) != null;
+
     // Returns true the specified value appears at the start of the span.
     StartsWith: <TValue> (forward val: TValue) -> bool == {
         type TLeftReal = decay(TLeft);
@@ -918,7 +1349,7 @@ public extension <TLeft> where type TLeft is ISpanConvertible {
 }
 
 protected static class SpanHelpers {
-    public ContainsGeneralCase: <T> (data: T[&], val: T) -> bool {
+    public ContainsGeneralCase: <T> (data: T[&], in ref val: T) -> bool {
         length := data.Length;
         offset: i32;
         while length >= 8u {
@@ -1125,7 +1556,7 @@ protected static class SpanHelpers {
         }
     }
 
-    public IndexOfGeneralCase: <T> (data: T[&], val: T) -> usize? {
+    public IndexOfGeneralCase: <T> (data: T[&], in ref val: T) -> usize? {
         length := data.Length;
         index: usize;
         while length >= 8u {
@@ -1283,6 +1714,867 @@ protected static class SpanHelpers {
             ++index;
         }
         return null;
+    }
+
+    public IndexOfAnyInternal: <T> (data: T[&], val: T[&]) -> usize? {
+        let dataLength := data.Length;
+        let valueLength := val.Length;
+        if valueLength == 0 {
+            return null;
+        }
+
+        for i in ..dataLength {
+            let candidate := data[@Unchecked i];
+            for j in ..valueLength {
+                if candidate == val[@Unchecked j] {
+                    return i;
+                }
+            }
+        }
+        return null;
+    }
+
+    public IndexOfAnyGeneralCase: <T> (data: T[&], in ref val1: T, in ref val2: T) -> usize? {
+        length := data.Length;
+        index: usize;
+        while length >= 8u {
+            length -= 8u;
+
+            lookup := data[@Unchecked index];
+            if lookup == val1 or lookup == val2
+            {
+                return index;
+            }
+            lookup = data[@Unchecked index + 1u];
+            if lookup == val1 or lookup == val2
+            {
+                return index + 1u;
+            }
+            lookup = data[@Unchecked index + 2u];
+            if lookup == val1 or lookup == val2
+            {
+                return index + 2u;
+            }
+            lookup = data[@Unchecked index + 3u];
+            if lookup == val1 or lookup == val2
+            {
+                return index + 3u;
+            }
+            lookup = data[@Unchecked index + 4u];
+            if lookup == val1 or lookup == val2
+            {
+                return index + 4u;
+            }
+            lookup = data[@Unchecked index + 5u];
+            if lookup == val1 or lookup == val2
+            {
+                return index + 5u;
+            }
+            lookup = data[@Unchecked index + 6u];
+            if lookup == val1 or lookup == val2
+            {
+                return index + 6u;
+            }
+            lookup = data[@Unchecked index + 7u];
+            if lookup == val1 or lookup == val2
+            {
+                return index + 7u;
+            }
+
+            index += 8;
+        }
+
+        while length >= 4u {
+            length -= 4u;
+
+            lookup := data[@Unchecked index];
+            if lookup == val1 or lookup == val2
+            {
+                return index;
+            }
+            lookup = data[@Unchecked index + 1u];
+            if lookup == val1 or lookup == val2
+            {
+                return index + 1u;
+            }
+            lookup = data[@Unchecked index + 2u];
+            if lookup == val1 or lookup == val2
+            {
+                return index + 2u;
+            }
+            lookup = data[@Unchecked index + 3u];
+            if lookup == val1 or lookup == val2
+            {
+                return index + 3u;
+            }
+
+            index += 4;
+        }
+
+        while length > 0 {
+            --length;
+            lookup := data[@Unchecked index];
+            if lookup == val1 or lookup == val2 {
+                return index;
+            }
+            ++index;
+        }
+        return null;
+    }
+
+    public IndexOfAnyGeneralCase: <T> (data: T[&], in ref val1: T, in ref val2: T, in ref val3: T) -> usize? {
+        length := data.Length;
+        index: usize;
+        while length >= 8u {
+            length -= 8u;
+
+            lookup := data[@Unchecked index];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index;
+            }
+            lookup = data[@Unchecked index + 1u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index + 1u;
+            }
+            lookup = data[@Unchecked index + 2u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index + 2u;
+            }
+            lookup = data[@Unchecked index + 3u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index + 3u;
+            }
+            lookup = data[@Unchecked index + 4u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index + 4u;
+            }
+            lookup = data[@Unchecked index + 5u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index + 5u;
+            }
+            lookup = data[@Unchecked index + 6u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index + 6u;
+            }
+            lookup = data[@Unchecked index + 7u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index + 7u;
+            }
+
+            index += 8;
+        }
+
+        while length >= 4u {
+            length -= 4u;
+
+            lookup := data[@Unchecked index];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index;
+            }
+            lookup = data[@Unchecked index + 1u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index + 1u;
+            }
+            lookup = data[@Unchecked index + 2u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index + 2u;
+            }
+            lookup = data[@Unchecked index + 3u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index + 3u;
+            }
+
+            index += 4;
+        }
+
+        while length > 0 {
+            --length;
+            lookup := data[@Unchecked index];
+            if lookup == val1 or lookup == val2 or lookup == val3 {
+                return index;
+            }
+            ++index;
+        }
+        return null;
+    }
+
+    public IndexOfAnyInRangeGeneralCase: <T> (data: T[&], in ref start: T, in ref end: T) -> usize? {
+        length := data.Length;
+        index: usize;
+        for i in ..length {
+            let &current := data[@Unchecked i];
+            if current in start..=end {
+                return i;
+            }
+        }
+        return null;
+    }
+
+    public IndexOfAnyByte: (data: byte[&], val1: byte, val2: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            return IndexOfAnyGeneralCase(data, val1, val2);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAny2<byte>, Neon, Sse2>(data, val1, val2);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanIndexOfAny2<byte>, Neon, Avx2, Sse2>(data, val1, val2);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAny2<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2);
+        }
+    }
+
+    public IndexOfAnyByte: (data: byte[&], val1: byte, val2: byte, val3: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            return IndexOfAnyGeneralCase(data, val1, val2, val3);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAny3<byte>, Neon, Sse2>(data, val1, val2, val3);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanIndexOfAny3<byte>, Neon, Avx2, Sse2>(data, val1, val2, val3);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAny3<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3);
+        }
+    }
+
+    public IndexOfAnyByte: (data: byte[&], val1: byte, val2: byte, val3: byte, val4: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            let values: byte[_] = [val1,val2,val3,val4];
+            return IndexOfAnyInternal<byte>(data, values);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAny4<byte>, Neon, Sse2>(data, val1, val2, val3, val4);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanIndexOfAny4<byte>, Neon, Avx2, Sse2>(data, val1, val2, val3, val4);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAny4<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3, val4);
+        }
+    }
+
+    public IndexOfAnyByte: (data: byte[&], val1: byte, val2: byte, val3: byte, val4: byte, val5: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            let values: byte[_] = [val1,val2,val3,val4,val5];
+            return IndexOfAnyInternal<byte>(data, values);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAny5<byte>, Neon, Sse2>(data, val1, val2, val3, val4, val5);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanIndexOfAny5<byte>, Neon, Avx2, Sse2>(data, val1, val2, val3, val4, val5);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAny5<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3, val4, val5);
+        }
+    }
+
+    public IndexOfAnyWord: (data: u16[&], val1: u16, val2: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            return IndexOfAnyGeneralCase(data, val1, val2);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanIndexOfAny2<u16>, Neon, Sse2>(data, val1, val2);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAny2<u16>, Neon, Avx2, Sse2>(data, val1, val2);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAny2<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2);
+        }
+    }
+
+    public IndexOfAnyWord: (data: u16[&], val1: u16, val2: u16, val3: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            return IndexOfAnyGeneralCase(data, val1, val2, val3);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanIndexOfAny3<u16>, Neon, Sse2>(data, val1, val2, val3);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAny3<u16>, Neon, Avx2, Sse2>(data, val1, val2, val3);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAny3<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3);
+        }
+    }
+
+    public IndexOfAnyWord: (data: u16[&], val1: u16, val2: u16, val3: u16, val4: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            let values: u16[_] = [val1,val2,val3,val4];
+            return IndexOfAnyInternal<u16>(data, values);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanIndexOfAny4<u16>, Neon, Sse2>(data, val1, val2, val3, val4);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAny4<u16>, Neon, Avx2, Sse2>(data, val1, val2, val3, val4);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAny4<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3, val4);
+        }
+    }
+
+    public IndexOfAnyWord: (data: u16[&], val1: u16, val2: u16, val3: u16, val4: u16, val5: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            let values: u16[_] = [val1,val2,val3,val4,val5];
+            return IndexOfAnyInternal<u16>(data, values);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanIndexOfAny5<u16>, Neon, Sse2>(data, val1, val2, val3, val4, val5);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAny5<u16>, Neon, Avx2, Sse2>(data, val1, val2, val3, val4, val5);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAny5<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3, val4, val5);
+        }
+    }
+
+    public IndexOfAnyExceptInternal: <T> (data: T[&], val: T[&]) -> usize? {
+        let dataLength := data.Length;
+        let valueLength := val.Length;
+        if valueLength == 0 {
+            return null;
+        }
+
+        outer:
+        for i in ..dataLength {
+            let candidate := data[@Unchecked i];
+            for j in ..valueLength {
+                if candidate == val[@Unchecked j] {
+                    continue outer;
+                }
+            }
+            return i;
+        }
+        return null;
+    }
+
+    public IndexOfAnyExceptGeneralCase: <T> (data: T[&], in ref val: T) -> usize? {
+        length := data.Length;
+        index: usize;
+        while length >= 8u {
+            length -= 8u;
+
+            if data[@Unchecked index] != val
+            {
+                return index;
+            }
+            if data[@Unchecked index + 1u] != val
+            {
+                return index + 1u;
+            }
+            if data[@Unchecked index + 2u] != val
+            {
+                return index + 2u;
+            }
+            if data[@Unchecked index + 3u] != val
+            {
+                return index + 3u;
+            }
+            if data[@Unchecked index + 4u] != val
+            {
+                return index + 4u;
+            }
+            if data[@Unchecked index + 5u] != val
+            {
+                return index + 5u;
+            }
+            if data[@Unchecked index + 6u] != val
+            {
+                return index + 6u;
+            }
+            if data[@Unchecked index + 7u] != val
+            {
+                return index + 7u;
+            }
+
+            index += 8;
+        }
+
+        while length >= 4u {
+            length -= 4u;
+
+            if data[@Unchecked index] != val
+            {
+                return index;
+            }
+            if data[@Unchecked index + 1u] != val
+            {
+                return index + 1u;
+            }
+            if data[@Unchecked index + 2u] != val
+            {
+                return index + 2u;
+            }
+            if data[@Unchecked index + 3u] != val
+            {
+                return index + 3u;
+            }
+
+            index += 4;
+        }
+
+        while length > 0 {
+            --length;
+            if data[@Unchecked index] != val {
+                return index;
+            }
+            ++index;
+        }
+        return null;
+    }
+
+    public IndexOfAnyExceptGeneralCase: <T> (data: T[&], in ref val1: T, in ref val2: T) -> usize? {
+        length := data.Length;
+        index: usize;
+        while length >= 8u {
+            length -= 8u;
+
+            lookup := data[@Unchecked index];
+            if lookup != val1 and lookup != val2
+            {
+                return index;
+            }
+            lookup = data[@Unchecked index + 1u];
+            if lookup != val1 and lookup != val2
+            {
+                return index + 1u;
+            }
+            lookup = data[@Unchecked index + 2u];
+            if lookup != val1 and lookup != val2
+            {
+                return index + 2u;
+            }
+            lookup = data[@Unchecked index + 3u];
+            if lookup != val1 and lookup != val2
+            {
+                return index + 3u;
+            }
+            lookup = data[@Unchecked index + 4u];
+            if lookup != val1 and lookup != val2
+            {
+                return index + 4u;
+            }
+            lookup = data[@Unchecked index + 5u];
+            if lookup != val1 and lookup != val2
+            {
+                return index + 5u;
+            }
+            lookup = data[@Unchecked index + 6u];
+            if lookup != val1 and lookup != val2
+            {
+                return index + 6u;
+            }
+            lookup = data[@Unchecked index + 7u];
+            if lookup != val1 and lookup != val2
+            {
+                return index + 7u;
+            }
+
+            index += 8;
+        }
+
+        while length >= 4u {
+            length -= 4u;
+
+            lookup := data[@Unchecked index];
+            if lookup != val1 and lookup != val2
+            {
+                return index;
+            }
+            lookup = data[@Unchecked index + 1u];
+            if lookup != val1 and lookup != val2
+            {
+                return index + 1u;
+            }
+            lookup = data[@Unchecked index + 2u];
+            if lookup != val1 and lookup != val2
+            {
+                return index + 2u;
+            }
+            lookup = data[@Unchecked index + 3u];
+            if lookup != val1 and lookup != val2
+            {
+                return index + 3u;
+            }
+
+            index += 4;
+        }
+
+        while length > 0 {
+            --length;
+            lookup := data[@Unchecked index];
+            if lookup != val1 and lookup != val2 {
+                return index;
+            }
+            ++index;
+        }
+        return null;
+    }
+
+    public IndexOfAnyExceptGeneralCase: <T> (data: T[&], in ref val1: T, in ref val2: T, in ref val3: T) -> usize? {
+        length := data.Length;
+        index: usize;
+        while length >= 8u {
+            length -= 8u;
+
+            lookup := data[@Unchecked index];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index;
+            }
+            lookup = data[@Unchecked index + 1u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index + 1u;
+            }
+            lookup = data[@Unchecked index + 2u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index + 2u;
+            }
+            lookup = data[@Unchecked index + 3u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index + 3u;
+            }
+            lookup = data[@Unchecked index + 4u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index + 4u;
+            }
+            lookup = data[@Unchecked index + 5u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index + 5u;
+            }
+            lookup = data[@Unchecked index + 6u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index + 6u;
+            }
+            lookup = data[@Unchecked index + 7u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index + 7u;
+            }
+
+            index += 8;
+        }
+
+        while length >= 4u {
+            length -= 4u;
+
+            lookup := data[@Unchecked index];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index;
+            }
+            lookup = data[@Unchecked index + 1u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index + 1u;
+            }
+            lookup = data[@Unchecked index + 2u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index + 2u;
+            }
+            lookup = data[@Unchecked index + 3u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index + 3u;
+            }
+
+            index += 4;
+        }
+
+        while length > 0 {
+            --length;
+            lookup := data[@Unchecked index];
+            if lookup != val1 and lookup != val2 and lookup != val3 {
+                return index;
+            }
+            ++index;
+        }
+        return null;
+    }
+
+    public IndexOfAnyExceptInRangeGeneralCase: <T> (data: T[&], in ref start: T, in ref end: T) -> usize? {
+        length := data.Length;
+        index: usize;
+        for i in ..length {
+            let &current := data[@Unchecked i];
+            if current not in start..=end {
+                return i;
+            }
+        }
+        return null;
+    }
+
+    public IndexOfAnyExceptByte: (data: byte[&], val: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            return IndexOfAnyExceptGeneralCase(data, val);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept1<byte>, Neon, Sse2>(data, val);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept1<byte>, Neon, Avx2, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept1<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val);
+        }
+    }
+
+    public IndexOfAnyExceptWord: (data: u16[&], val: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            return IndexOfAnyExceptGeneralCase(data, val);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept1<u16>, Neon, Sse2>(data, val);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept1<u16>, Neon, Avx2, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept1<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val);
+        }
+    }
+
+    public IndexOfAnyExceptDword: (data: u32[&], val: u32) -> usize? {
+        let length := data.Length;
+        if length < 4u {
+            return IndexOfAnyExceptGeneralCase(data, val);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept1<u32>, Neon, Avx512VL128, Sse2>(data, val);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept1<u32>, Neon, Avx512VL256, Avx2, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept1<u32>, Neon, Avx512F, Avx2, Sse2>(data, val);
+        }
+    }
+
+    public IndexOfAnyExceptQword: (data: u64[&], val: u64) -> usize? {
+        let length := data.Length;
+        if length < 2u {
+            return IndexOfAnyExceptGeneralCase(data, val);
+        } else if length < 4u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept1<u64>, Neon, Avx512VL128, Sse42, Sse2>(data, val);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept1<u64>, Neon, Avx512VL256, Avx2, Sse42, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept1<u64>, Neon, Avx512F, Avx2, Sse42, Sse2>(data, val);
+        }
+    }
+
+    public IndexOfAnyExceptByte: (data: byte[&], val1: byte, val2: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            return IndexOfAnyExceptGeneralCase(data, val1, val2);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept2<byte>, Neon, Sse2>(data, val1, val2);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept2<byte>, Neon, Avx2, Sse2>(data, val1, val2);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept2<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2);
+        }
+    }
+
+    public IndexOfAnyExceptByte: (data: byte[&], val1: byte, val2: byte, val3: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            return IndexOfAnyExceptGeneralCase(data, val1, val2, val3);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept3<byte>, Neon, Sse2>(data, val1, val2, val3);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept3<byte>, Neon, Avx2, Sse2>(data, val1, val2, val3);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept3<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3);
+        }
+    }
+
+    public IndexOfAnyExceptByte: (data: byte[&], val1: byte, val2: byte, val3: byte, val4: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            let values: byte[_] = [val1,val2,val3,val4];
+            return IndexOfAnyExceptInternal<byte>(data, values);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept4<byte>, Neon, Sse2>(data, val1, val2, val3, val4);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept4<byte>, Neon, Avx2, Sse2>(data, val1, val2, val3, val4);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept4<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3, val4);
+        }
+    }
+
+    public IndexOfAnyExceptByte: (data: byte[&], val1: byte, val2: byte, val3: byte, val4: byte, val5: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            let values: byte[_] = [val1,val2,val3,val4,val5];
+            return IndexOfAnyExceptInternal<byte>(data, values);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept5<byte>, Neon, Sse2>(data, val1, val2, val3, val4, val5);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept5<byte>, Neon, Avx2, Sse2>(data, val1, val2, val3, val4, val5);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept5<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3, val4, val5);
+        }
+    }
+
+    public IndexOfAnyExceptWord: (data: u16[&], val1: u16, val2: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            return IndexOfAnyExceptGeneralCase(data, val1, val2);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept2<u16>, Neon, Sse2>(data, val1, val2);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept2<u16>, Neon, Avx2, Sse2>(data, val1, val2);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept2<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2);
+        }
+    }
+
+    public IndexOfAnyExceptWord: (data: u16[&], val1: u16, val2: u16, val3: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            return IndexOfAnyExceptGeneralCase(data, val1, val2, val3);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept3<u16>, Neon, Sse2>(data, val1, val2, val3);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept3<u16>, Neon, Avx2, Sse2>(data, val1, val2, val3);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept3<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3);
+        }
+    }
+
+    public IndexOfAnyExceptWord: (data: u16[&], val1: u16, val2: u16, val3: u16, val4: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            let values: u16[_] = [val1,val2,val3,val4];
+            return IndexOfAnyExceptInternal<u16>(data, values);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept4<u16>, Neon, Sse2>(data, val1, val2, val3, val4);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept4<u16>, Neon, Avx2, Sse2>(data, val1, val2, val3, val4);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept4<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3, val4);
+        }
+    }
+
+    public IndexOfAnyExceptWord: (data: u16[&], val1: u16, val2: u16, val3: u16, val4: u16, val5: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            let values: u16[_] = [val1,val2,val3,val4,val5];
+            return IndexOfAnyExceptInternal<u16>(data, values);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept5<u16>, Neon, Sse2>(data, val1, val2, val3, val4, val5);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept5<u16>, Neon, Avx2, Sse2>(data, val1, val2, val3, val4, val5);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExcept5<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3, val4, val5);
+        }
+    }
+
+    public IndexOfAnyInRangeByte: (data: byte[&], start: byte, end: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            return IndexOfAnyInRangeGeneralCase(data, start, end);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyInRange<byte>, Neon, Sse2>(data, start, end);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyInRange<byte>, Neon, Avx2, Sse2>(data, start, end);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyInRange<byte>, Neon, Avx512BW, Avx2, Sse2>(data, start, end);
+        }
+    }
+
+    public IndexOfAnyInRangeWord: (data: u16[&], start: u16, end: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            return IndexOfAnyInRangeGeneralCase(data, start, end);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyInRange<u16>, Neon, Sse2>(data, start, end);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyInRange<u16>, Neon, Avx2, Sse2>(data, start, end);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyInRange<u16>, Neon, Avx512BW, Avx2, Sse2>(data, start, end);
+        }
+    }
+
+    public IndexOfAnyInRangeDword: (data: u32[&], start: u32, end: u32) -> usize? {
+        let length := data.Length;
+        if length < 4u {
+            return IndexOfAnyInRangeGeneralCase(data, start, end);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyInRange<u32>, Neon, Avx512VL128, Sse2>(data, start, end);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyInRange<u32>, Neon, Avx512VL256, Avx2, Sse2>(data, start, end);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyInRange<u32>, Neon, Avx512F, Avx2, Sse2>(data, start, end);
+        }
+    }
+
+    public IndexOfAnyInRangeQword: (data: u64[&], start: u64, end: u64) -> usize? {
+        let length := data.Length;
+        if length < 2u {
+            return IndexOfAnyInRangeGeneralCase(data, start, end);
+        } else if length < 4u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyInRange<u64>, Neon, Avx512VL128, Sse42, Sse2>(data, start, end);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyInRange<u64>, Neon, Avx512VL256, Avx2, Sse42, Sse2>(data, start, end);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyInRange<u64>, Neon, Avx512F, Avx2, Sse42, Sse2>(data, start, end);
+        }
+    }
+
+    public IndexOfAnyExceptInRangeByte: (data: byte[&], start: byte, end: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            return IndexOfAnyExceptInRangeGeneralCase(data, start, end);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExceptInRange<byte>, Neon, Sse2>(data, start, end);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExceptInRange<byte>, Neon, Avx2, Sse2>(data, start, end);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExceptInRange<byte>, Neon, Avx512BW, Avx2, Sse2>(data, start, end);
+        }
+    }
+
+    public IndexOfAnyExceptInRangeWord: (data: u16[&], start: u16, end: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            return IndexOfAnyExceptInRangeGeneralCase(data, start, end);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExceptInRange<u16>, Neon, Sse2>(data, start, end);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExceptInRange<u16>, Neon, Avx2, Sse2>(data, start, end);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExceptInRange<u16>, Neon, Avx512BW, Avx2, Sse2>(data, start, end);
+        }
+    }
+
+    public IndexOfAnyExceptInRangeDword: (data: u32[&], start: u32, end: u32) -> usize? {
+        let length := data.Length;
+        if length < 4u {
+            return IndexOfAnyExceptInRangeGeneralCase(data, start, end);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExceptInRange<u32>, Neon, Avx512VL128, Sse2>(data, start, end);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExceptInRange<u32>, Neon, Avx512VL256, Avx2, Sse2>(data, start, end);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExceptInRange<u32>, Neon, Avx512F, Avx2, Sse2>(data, start, end);
+        }
+    }
+
+    public IndexOfAnyExceptInRangeQword: (data: u64[&], start: u64, end: u64) -> usize? {
+        let length := data.Length;
+        if length < 2u {
+            return IndexOfAnyExceptInRangeGeneralCase(data, start, end);
+        } else if length < 4u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExceptInRange<u64>, Neon, Avx512VL128, Sse42, Sse2>(data, start, end);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExceptInRange<u64>, Neon, Avx512VL256, Avx2, Sse42, Sse2>(data, start, end);
+        } else {
+            return Simd.RuntimeDispatch<SpanIndexOfAnyExceptInRange<u64>, Neon, Avx512F, Avx2, Sse42, Sse2>(data, start, end);
+        }
     }
 
     public SequenceEqualsGeneralCase: <T> (lhs: T[&], rhs: T[&]) -> bool {
@@ -1449,8 +2741,7 @@ private static class <T> SpanCount {
             count += currentMask.Count;
         }
         mask := (TVector::LoadUnsafe(data[@Unchecked vecLast]) ==^ values).ScalarMask;
-        let offset := i - vecLast;
-        mask <<= i32((sizeof(mask) * 8) - vecSize + offset);
+        mask >>= i - vecLast;
         count += mask.PopCount;
         return count;
     }
@@ -1469,15 +2760,349 @@ private static class <T> SpanIndexOf {
         for i := 0u; i <= vecLast; i += vecSize {
             current = TVector::LoadUnsafe(data[@Unchecked i]);
             currentMask = current ==^ values;
-            if let index := currentMask.FirstSet {
-                return index;
+            if let index := currentMask.LeadingZeros {
+                return index + i;
             }
         }
         if not count.IsMultipleOf(vecSize) {
             current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
             currentMask = current ==^ values;
-            if let index := currentMask.FirstSet {
-                return index;
+            if let index := currentMask.LeadingZeros {
+                return index + vecLast;
+            }
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanIndexOfAny2 {
+    public Invoke: <Arch> (data: T[&], val1: T, val2: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := count - vecSize;
+        let values1 := TVector::Create(val1);
+        let values2 := TVector::Create(val2);
+        current: TVector;
+        currentMask: TMask;
+        for i := 0u; i <= vecLast; i += vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i]);
+            currentMask = (current ==^ values1) | (current ==^ values2);
+            if let index := currentMask.LeadingZeros {
+                return index + i;
+            }
+        }
+        if not count.IsMultipleOf(vecSize) {
+            current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
+            currentMask = (current ==^ values1) | (current ==^ values2);
+            if let index := currentMask.LeadingZeros {
+                return index + vecLast;
+            }
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanIndexOfAny3 {
+    public Invoke: <Arch> (data: T[&], val1: T, val2: T, val3: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := count - vecSize;
+        let values1 := TVector::Create(val1);
+        let values2 := TVector::Create(val2);
+        let values3 := TVector::Create(val3);
+        current: TVector;
+        currentMask: TMask;
+        for i := 0u; i <= vecLast; i += vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i]);
+            currentMask = (current ==^ values1) | (current ==^ values2) | (current ==^ values3);
+            if let index := currentMask.LeadingZeros {
+                return index + i;
+            }
+        }
+        if not count.IsMultipleOf(vecSize) {
+            current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
+            currentMask = (current ==^ values1) | (current ==^ values2) | (current ==^ values3);
+            if let index := currentMask.LeadingZeros {
+                return index + vecLast;
+            }
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanIndexOfAny4 {
+    public Invoke: <Arch> (data: T[&], val1: T, val2: T, val3: T, val4: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := count - vecSize;
+        let values1 := TVector::Create(val1);
+        let values2 := TVector::Create(val2);
+        let values3 := TVector::Create(val3);
+        let values4 := TVector::Create(val4);
+        current: TVector;
+        currentMask: TMask;
+        for i := 0u; i <= vecLast; i += vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i]);
+            currentMask = (current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4);
+            if let index := currentMask.LeadingZeros {
+                return index + i;
+            }
+        }
+        if not count.IsMultipleOf(vecSize) {
+            current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
+            currentMask = (current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4);
+            if let index := currentMask.LeadingZeros {
+                return index + vecLast;
+            }
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanIndexOfAny5 {
+    public Invoke: <Arch> (data: T[&], val1: T, val2: T, val3: T, val4: T, val5: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := count - vecSize;
+        let values1 := TVector::Create(val1);
+        let values2 := TVector::Create(val2);
+        let values3 := TVector::Create(val3);
+        let values4 := TVector::Create(val4);
+        let values5 := TVector::Create(val5);
+        current: TVector;
+        currentMask: TMask;
+        for i := 0u; i <= vecLast; i += vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i]);
+            currentMask = (current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4) | 
+                          (current ==^ values5);
+            if let index := currentMask.LeadingZeros {
+                return index + i;
+            }
+        }
+        if not count.IsMultipleOf(vecSize) {
+            current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
+            currentMask = (current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4) | 
+                          (current ==^ values5);
+            if let index := currentMask.LeadingZeros {
+                return index + vecLast;
+            }
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanIndexOfAnyExcept1 {
+    public Invoke: <Arch> (data: T[&], val: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := count - vecSize;
+        let values := TVector::Create(val);
+        current: TVector;
+        currentMask: TMask;
+        for i := 0u; i <= vecLast; i += vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i]);
+            currentMask = current !=^ values;
+            if let index := currentMask.LeadingZeros {
+                return index + i;
+            }
+        }
+        if not count.IsMultipleOf(vecSize) {
+            current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
+            currentMask = current !=^ values;
+            if let index := currentMask.LeadingZeros {
+                return index + vecLast;
+            }
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanIndexOfAnyExcept2 {
+    public Invoke: <Arch> (data: T[&], val1: T, val2: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := count - vecSize;
+        let values1 := TVector::Create(val1);
+        let values2 := TVector::Create(val2);
+        current: TVector;
+        currentMask: TMask;
+        for i := 0u; i <= vecLast; i += vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i]);
+            currentMask = ~((current ==^ values1) | (current ==^ values2));
+            if let index := currentMask.LeadingZeros {
+                return index + i;
+            }
+        }
+        if not count.IsMultipleOf(vecSize) {
+            current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
+            currentMask = ~((current ==^ values1) | (current ==^ values2));
+            if let index := currentMask.LeadingZeros {
+                return index + vecLast;
+            }
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanIndexOfAnyExcept3 {
+    public Invoke: <Arch> (data: T[&], val1: T, val2: T, val3: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := count - vecSize;
+        let values1 := TVector::Create(val1);
+        let values2 := TVector::Create(val2);
+        let values3 := TVector::Create(val3);
+        current: TVector;
+        currentMask: TMask;
+        for i := 0u; i <= vecLast; i += vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i]);
+            currentMask = ~((current ==^ values1) | (current ==^ values2) | (current ==^ values3));
+            if let index := currentMask.LeadingZeros {
+                return index + i;
+            }
+        }
+        if not count.IsMultipleOf(vecSize) {
+            current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
+            currentMask = ~((current ==^ values1) | (current ==^ values2) | (current ==^ values3));
+            if let index := currentMask.LeadingZeros {
+                return index + vecLast;
+            }
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanIndexOfAnyExcept4 {
+    public Invoke: <Arch> (data: T[&], val1: T, val2: T, val3: T, val4: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := count - vecSize;
+        let values1 := TVector::Create(val1);
+        let values2 := TVector::Create(val2);
+        let values3 := TVector::Create(val3);
+        let values4 := TVector::Create(val4);
+        current: TVector;
+        currentMask: TMask;
+        for i := 0u; i <= vecLast; i += vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i]);
+            currentMask = ~((current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4));
+            if let index := currentMask.LeadingZeros {
+                return index + i;
+            }
+        }
+        if not count.IsMultipleOf(vecSize) {
+            current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
+            currentMask = ~((current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4));
+            if let index := currentMask.LeadingZeros {
+                return index + vecLast;
+            }
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanIndexOfAnyExcept5 {
+    public Invoke: <Arch> (data: T[&], val1: T, val2: T, val3: T, val4: T, val5: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := count - vecSize;
+        let values1 := TVector::Create(val1);
+        let values2 := TVector::Create(val2);
+        let values3 := TVector::Create(val3);
+        let values4 := TVector::Create(val4);
+        let values5 := TVector::Create(val5);
+        current: TVector;
+        currentMask: TMask;
+        for i := 0u; i <= vecLast; i += vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i]);
+            currentMask = ~((current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4) | 
+                          (current ==^ values5));
+            if let index := currentMask.LeadingZeros {
+                return index + i;
+            }
+        }
+        if not count.IsMultipleOf(vecSize) {
+            current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
+            currentMask = ~((current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4) | 
+                          (current ==^ values5));
+            if let index := currentMask.LeadingZeros {
+                return index + vecLast;
+            }
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanIndexOfAnyInRange {
+    public Invoke: <Arch> (data: T[&], start: T, end: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := count - vecSize;
+        let low := TVector::Create(start);
+        let range := TVector::Create(end - start);
+        current: TVector;
+        currentMask: TMask;
+        for i := 0u; i <= vecLast; i += vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i]) -% low;
+            currentMask = current <=^ range;
+            if let index := currentMask.LeadingZeros {
+                return index + i;
+            }
+        }
+        if not count.IsMultipleOf(vecSize) {
+            current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
+            currentMask = (current -% low) <=^ range;
+            if let index := currentMask.LeadingZeros {
+                return index + vecLast;
+            }
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanIndexOfAnyExceptInRange {
+    public Invoke: <Arch> (data: T[&], start: T, end: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := count - vecSize;
+        let low := TVector::Create(start);
+        let range := TVector::Create(end - start);
+        current: TVector;
+        currentMask: TMask;
+        for i := 0u; i <= vecLast; i += vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i]);
+            currentMask = ~((current -% low) <=^ range);
+            if let index := currentMask.LeadingZeros {
+                return index + i;
+            }
+        }
+        if not count.IsMultipleOf(vecSize) {
+            current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
+            currentMask = ~((current -% low) <=^ range);
+            if let index := currentMask.LeadingZeros {
+                return index + vecLast;
             }
         }
         return null;
@@ -1571,11 +3196,14 @@ test "Span" {
     assert sp.Count(15) == 1u;
     assert sp.Count(18) == 0u;
     assert arrv3[..].Count(sp[..2u]) == 2u;
-    arrv3 = [1,2,2,2,6,7,8,9,2,2,2,2,2,2,2,2,2,2];
+    arrv3 = [1,2,2,2,3,7,8,9,2,2,4,2,2,2,2,5,2,3];
     sp = arrv3;
-    assert sp.Count(2) == 13u;
+    assert sp.Count(2) == 10u;
+    assert sp.IndexOf(2) == 1u;
+    assert sp.IndexOf(3) == 4u;
     arrv3 = [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2];
     assert sp.Count(2) == 18u;
+    assert sp.IndexOf(2) == 0u;
 
     assert sp.SequenceEquals(sp);
     arrv3 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1, 2];
@@ -1592,6 +3220,21 @@ test "Span" {
     assert sp.IndexOf(8) == 7u;
     assert sp.IndexOf(arrv3[5u..10u]) == 5u;
     assert sp.IndexOf(arrv3) == null;
+
+    assert sp.IndexOfAny(3, 5) == 2u;
+    assert sp.IndexOfAny(3, 5, 7) == 2u;
+    assert sp.IndexOfAny(3, 5, 7, DefaultEqualityComparer) == 2u;
+    assert sp.IndexOfAny(20, 30) == null;
+    assert sp.IndexOfAny(arrv2) == 1u;
+    assert sp.IndexOfAny(5..=10) == 4u;
+    assert sp.IndexOfAny(50..=100) == null;
+    assert sp.IndexOfAnyExcept(1) == 1u;
+    assert sp.IndexOfAnyExcept(1,2,3) == 3u;
+    assert sp.IndexOfAnyExcept(1,2,3,DefaultEqualityComparer) == 3u;
+    assert sp.IndexOfAnyExcept(arrv2) == 0u;
+    assert sp.IndexOfAnyExcept(arrv3) == null;
+    assert sp.IndexOfAnyExcept(..=10) == 10u;
+    assert sp.IndexOfAnyExcept(..=16) == null;
 
     let spm: i32[&mut] = MutableSpan<i32>.UnsafeCreate(&arr[1], 3u);
     assert spm.Length == 3;
