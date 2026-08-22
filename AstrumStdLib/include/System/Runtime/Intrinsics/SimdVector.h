@@ -947,11 +947,14 @@ using $extensions::getSinCos;
 	template<class T, class Arch> inline auto getLastSet($extension_SimdVector_776_SimdMask<T, Arch> const& $this ) -> const Builtin::Nullable<Builtin::usize>;
 	#line 798 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 	template<class T, class Arch> inline auto getLeadingZeros($extension_SimdVector_776_SimdMask<T, Arch> const& $this ) -> const Builtin::Nullable<Builtin::usize>;
+	#line 808 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
+	template<class T, class Arch> inline auto getTrailingZeros($extension_SimdVector_776_SimdMask<T, Arch> const& $this ) -> const Builtin::Nullable<Builtin::usize>;
 	} namespace System::Runtime::Intrinsics{
 using $extensions::getCount;
 using $extensions::getFirstSet;
 using $extensions::getLastSet;
 using $extensions::getLeadingZeros;
+using $extensions::getTrailingZeros;
 
 	
 	#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
@@ -1351,6 +1354,8 @@ template<class __TT> struct $static_TrailingZeroCount;
 template<class __TT> struct $static_getTrailingZeroCount;
 template<class __TT> struct $static_LeadingZeroCount;
 template<class __TT> struct $static_getLeadingZeroCount;
+template<class __TT> struct $static_FirstSet;
+template<class __TT> struct $static_getFirstSet;
 template<class __TT> struct $static_data;
 template<class __TT> struct $static_getdata;
 template<class __TT> struct $static_UnsafeNarrowToInteger;
@@ -1389,8 +1394,6 @@ template<class __TT> struct $static_IsZero;
 template<class __TT> struct $static_getIsZero;
 template<class __TT> struct $static_Count;
 template<class __TT> struct $static_getCount;
-template<class __TT> struct $static_FirstSet;
-template<class __TT> struct $static_getFirstSet;
 template<class __TT> struct $static_LastSet;
 template<class __TT> struct $static_getLastSet;
 } namespace System::Runtime::Intrinsics {
@@ -3877,6 +3880,14 @@ ADV_WARNING_POP
 		}
 		#line 806 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
 		return index - unusedBits;
+	}
+	} namespace System::Runtime::Intrinsics{
+} namespace $extensions { using namespace System::Runtime::Intrinsics;
+#line 808 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
+	template<class T, class Arch> inline auto getTrailingZeros($extension_SimdVector_776_SimdMask<T, Arch> const & $this ) -> const Builtin::Nullable<Builtin::usize>
+	{
+		#line 809 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"
+		return ADV_UPCS(FirstSet)($this.$ref());
 	}
 	} namespace System::Runtime::Intrinsics{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\SimdVector.ast"

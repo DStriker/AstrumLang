@@ -59,6 +59,21 @@ template<class T, size_t S> using InlineArray = Builtin::InlineArray<S, T>;
 	#line 70 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr auto AsMutableSpan($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this )  -> MutableSpan<T>;
 	template<class T, size_t S> inline constexpr auto AsMutableSpan($proxy<$extension_InlineArray_7_T_brack_S_brack_<T, S>> & $this )  -> MutableSpan<T> { return AsMutableSpan($this.val); } template<class T, size_t S> inline constexpr auto AsMutableSpan($proxy<$extension_InlineArray_7_T_brack_S_brack_<T, S>&> & $this )  -> MutableSpan<T> { return AsMutableSpan($this.val); } 
+	#line 72 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S> inline auto Clear($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this )  -> decltype(auto);
+	template<class T, size_t S> inline auto Clear($proxy<$extension_InlineArray_7_T_brack_S_brack_<T, S>> & $this )  -> decltype(auto) { return Clear($this.val); } template<class T, size_t S> inline auto Clear($proxy<$extension_InlineArray_7_T_brack_S_brack_<T, S>&> & $this )  -> decltype(auto) { return Clear($this.val); } 
+	#line 73 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S> inline auto Fill($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this , T&& val)  -> decltype(auto);
+	template<class T, size_t S> inline auto Fill($proxy<$extension_InlineArray_7_T_brack_S_brack_<T, S>> & $this , T&& val)  -> decltype(auto) { return Fill($this.val, val); } template<class T, size_t S> inline auto Fill($proxy<$extension_InlineArray_7_T_brack_S_brack_<T, S>&> & $this , T&& val)  -> decltype(auto) { return Fill($this.val, val); } 
+	#line 74 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S> inline auto Replace($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this , T&& oldValue, T&& newValue)  -> decltype(auto);
+	template<class T, size_t S> inline auto Replace($proxy<$extension_InlineArray_7_T_brack_S_brack_<T, S>> & $this , T&& oldValue, T&& newValue)  -> decltype(auto) { return Replace($this.val, oldValue, newValue); } template<class T, size_t S> inline auto Replace($proxy<$extension_InlineArray_7_T_brack_S_brack_<T, S>&> & $this , T&& oldValue, T&& newValue)  -> decltype(auto) { return Replace($this.val, oldValue, newValue); } 
+	#line 75 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S> inline auto Replace($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this , T&& oldValue, T&& newValue, EqualityComparer<T> equals)  -> decltype(auto);
+	template<class T, size_t S> inline auto Replace($proxy<$extension_InlineArray_7_T_brack_S_brack_<T, S>> & $this , T&& oldValue, T&& newValue, EqualityComparer<T> equals)  -> decltype(auto) { return Replace($this.val, oldValue, newValue, equals); } template<class T, size_t S> inline auto Replace($proxy<$extension_InlineArray_7_T_brack_S_brack_<T, S>&> & $this , T&& oldValue, T&& newValue, EqualityComparer<T> equals)  -> decltype(auto) { return Replace($this.val, oldValue, newValue, equals); } 
+	#line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S> inline auto Reverse($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this )  -> decltype(auto);
+	template<class T, size_t S> inline auto Reverse($proxy<$extension_InlineArray_7_T_brack_S_brack_<T, S>> & $this )  -> decltype(auto) { return Reverse($this.val); } template<class T, size_t S> inline auto Reverse($proxy<$extension_InlineArray_7_T_brack_S_brack_<T, S>&> & $this )  -> decltype(auto) { return Reverse($this.val); } 
 	#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline constexpr auto getLength($extension_InlineArray_7_T_brack_S_brack_<T, S> const& $this ) -> const Builtin::usize;
 	} namespace System{
@@ -73,9 +88,16 @@ using $extensions::getAt; using $extensions::_operator_subscript;
 using $extensions::getAt; using $extensions::_operator_subscript;
 using $extensions::AsSpan;
 using $extensions::AsMutableSpan;
+using $extensions::Clear;
+using $extensions::Fill;
+using $extensions::Replace;
+using $extensions::Replace;
+using $extensions::Reverse;
 using $extensions::getLength;
 
 	} namespace $extensions {
+template<class __TT> struct $static_Clear;
+template<class __TT> struct $static_getClear;
 template<class __TT> struct $static_Offset;
 template<class __TT> struct $static_getOffset;
 template<class __TT> struct $static_IndexOutOfRangeException;
@@ -84,12 +106,20 @@ template<class __TT> struct $static_GetDataReference;
 template<class __TT> struct $static_getGetDataReference;
 template<class __TT> struct $static_Add;
 template<class __TT> struct $static_getAdd;
-template<class __TT> struct $static_UnsafeCreate;
-template<class __TT> struct $static_getUnsafeCreate;
 template<class __TT> struct $static_Start;
 template<class __TT> struct $static_getStart;
+template<class __TT> struct $static_UnsafeCreate;
+template<class __TT> struct $static_getUnsafeCreate;
 template<class __TT> struct $static_Length;
 template<class __TT> struct $static_getLength;
+template<class __TT> struct $static_AsMutableSpan;
+template<class __TT> struct $static_getAsMutableSpan;
+template<class __TT> struct $static_Fill;
+template<class __TT> struct $static_getFill;
+template<class __TT> struct $static_Replace;
+template<class __TT> struct $static_getReplace;
+template<class __TT> struct $static_Reverse;
+template<class __TT> struct $static_getReverse;
 template<class __TT> struct $static_AsSpan;
 template<class __TT> struct $static_getAsSpan;
 } namespace System {
@@ -214,6 +244,51 @@ template<class __TT> struct $static_getAsSpan;
 	{
 		#line 70 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		ADV_EXPRESSION_BODY(MutableSpan<T>{Builtin::MutableRef($this)}); 
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 72 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S> inline auto Clear($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this )  -> decltype(auto)
+	{
+		#line 72 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		ADV_EXPRESSION_BODY(ADV_UFCS(AsMutableSpan)($this.$ref()).$ref().Clear()); 
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 73 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S> inline auto Fill($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this , T&& val)  -> decltype(auto)
+	{
+		#line 73 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		ADV_EXPRESSION_BODY(ADV_UFCS(Fill)(ADV_UFCS(AsMutableSpan)($this.$ref()).$ref(), std::forward<decltype(val)>(val))); 
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 74 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S> inline auto Replace($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this , T&& oldValue, T&& newValue)  -> decltype(auto)
+	{
+		#line 74 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		ADV_EXPRESSION_BODY(ADV_UFCS(Replace)(ADV_UFCS(AsMutableSpan)($this.$ref()).$ref(), std::forward<decltype(oldValue)>(oldValue), std::forward<decltype(newValue)>(newValue))); 
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 75 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S> inline auto Replace($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this , T&& oldValue, T&& newValue, EqualityComparer<T> equals)  -> decltype(auto)
+	{
+		#line 76 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		ADV_EXPRESSION_BODY(ADV_UFCS(Replace)(ADV_UFCS(AsMutableSpan)($this.$ref()).$ref(), std::forward<decltype(oldValue)>(oldValue), std::forward<decltype(newValue)>(newValue), equals)); 
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S> inline auto Reverse($extension_InlineArray_7_T_brack_S_brack_<T, S> & $this )  -> decltype(auto)
+	{
+		#line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		ADV_EXPRESSION_BODY(ADV_UFCS(Reverse)(ADV_UFCS(AsMutableSpan)($this.$ref()).$ref())); 
 	}
 	
 } namespace System{

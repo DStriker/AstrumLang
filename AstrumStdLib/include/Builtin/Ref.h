@@ -38,14 +38,13 @@ namespace Builtin {
 		explicit MutableRef($ref_underlying_type&& ref)       = delete;
 		explicit MutableRef(const $ref_underlying_type&& ref) = delete;
 
+		constexpr $selfRef& operator=($selfRef&) noexcept = default;
 		constexpr $selfRef& operator=(const $selfRef&) noexcept = default;
 		constexpr $selfRef& operator=($selfRef&&) noexcept = default;
-		constexpr $selfRef& operator=(const $selfRef&) const = delete;
-		constexpr $selfRef& operator=($selfRef&&) const = delete;
 		template <class U>
 		constexpr const $selfRef& operator=(U&& val) const
 		    noexcept(std::is_nothrow_assignable_v<$ref_underlying_type, U>) requires(
-		        std::is_assignable_v<$ref_underlying_type, U>) {
+		        !std::is_same_v<std::decay_t<U>, $selfRef> && std::is_assignable_v<$ref_underlying_type, U>) {
 			get() = std::forward<U>(val);
 			return *this;
 		}

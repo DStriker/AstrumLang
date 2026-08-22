@@ -149,7 +149,10 @@ where type T is IValueEnumerable or type T is IRangeCustomIterator
 public extension <T, IsClosed: bool> Range {
     Start: T ==> this.GetStart();
     End: T ==> this.GetEnd();
-    Reversed: self.ReverseIterator ==> {this};
+    Reversed: self.ReverseIterator == {
+        type TIterator = self.ReverseIterator;
+        return TIterator(this);
+    }
 
     Length: T ==> this.End - this.Start;
     IsEmpty: bool ==> this.Length == 0;
@@ -313,6 +316,7 @@ test "Range" {
     assert irange.End == Index.FromStart(6u);
     assert not irange.IsClosed;
     assert irange.Length(10u) == 4u;
+    rrange := (..20).Reversed;
 
     assert 0 in ..12;
     assert 11 in ..12;

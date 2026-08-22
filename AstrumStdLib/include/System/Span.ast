@@ -109,6 +109,16 @@ public ref struct <T> Span: ISelfEquatable, IAbstractSequence, ISequence<T> {
     public GetLength: () -> usize noexcept ==> _length;
     public GetDataReference: () -> &T noexcept ==> _data;
 
+    // Returns true if two sequences overlap in memory.
+    public Overlaps: (in ref other: self) -> bool noexcept == {
+        if this.IsEmpty or other.IsEmpty {
+            return false;
+        }
+
+        let offset := Unsafe::ByteOffset(_data, other.>_data).NarrowToUsize();
+        return offset < (_length * sizeof(T)) or offset > UnsafeCast<usize>(-(isize(other._length * sizeof(T))));
+    }
+
     public ref struct Iterator: IAbstractIterator, IIterator<T> {
         public type ElementType = T;
 
@@ -145,6 +155,44 @@ public ref struct <T> Span: ISelfEquatable, IAbstractSequence, ISequence<T> {
         }
     }
     public Iterate: () -> Iterator ==> Iterator(this);
+
+    public ref struct ReverseIterator: IAbstractIterator, IIterator<T>, IAbstractSequence, ISequence<T> {
+        public type ElementType = T;
+
+        private _ref: &T;
+        private _length: usize;
+        private _index: usize;
+        friend Span<T>;
+
+        public this(span: Span<T>) noexcept == {
+            this._ref = span.GetDataReference();
+            this._length = span.Length;
+            this._index = _length;
+        }
+
+        public mut MoveNext: () -> bool noexcept == {
+            let newIndex := _index -% 1uz;
+            if newIndex < _length {
+                _index = newIndex;
+                return true;
+            }
+            return false;
+        }
+
+        public mut Reset: () noexcept == {
+            _index = _length;
+        }
+
+        public GetCurrent: () -> T == {
+            return Unsafe.Add(_ref, _index);
+        }
+
+        public GetCurrentRef: () -> const ref T == {
+            return Unsafe.Add(_ref, _index);
+        }
+
+        public Iterate: () -> self ==> this;
+    }
 
     public static UnsafeCreate: (in ref data: T, length: usize) -> self == {
         return self(data, length);
@@ -349,6 +397,10 @@ public ref struct <T> Span: ISelfEquatable, IAbstractSequence, ISequence<T> {
 public extension <T> Span {
     Length: usize ==> this.GetLength();
     IsEmpty: bool ==> this.GetLength() == 0u;
+    Reversed: self.ReverseIterator == {
+        type TIterator = self.ReverseIterator;
+        return TIterator(this);
+    }
 
     AsBytes: Span<byte> ==
     {
@@ -452,6 +504,17 @@ public ref struct <T> MutableSpan: ISelfEquatable, IAbstractSequence, ISequence<
         return self(Unsafe.Add(_data, start), length);
     }
 
+    // Returns true if two sequences overlap in memory.
+    public Overlaps: (in ref other: T[&]) -> bool noexcept == {
+        if this.IsEmpty or other.IsEmpty {
+            return false;
+        }
+
+        let constSpan: T[&] = this;
+        let offset := Unsafe::ByteOffset(constSpan.GetDataReference(), other.GetDataReference()).NarrowToUsize();
+        return offset < (_length * sizeof(T)) or offset > UnsafeCast<usize>(-(isize(other._length * sizeof(T))));
+    }
+
     public operator==: (other: self) -> bool noexcept == {
         return _length == other._length and Unsafe.AreSame(_data, other._data);
     }
@@ -496,6 +559,44 @@ public ref struct <T> MutableSpan: ISelfEquatable, IAbstractSequence, ISequence<
     }
     public Iterate: () -> Iterator ==> Iterator(this);
     
+    public ref struct ReverseIterator: IAbstractIterator, IIterator<T>, IAbstractSequence, ISequence<T> {
+        public type ElementType = T;
+
+        private _ref: &mut T;
+        private _length: usize;
+        private _index: usize;
+        friend MutableSpan<T>;
+
+        public this(span: MutableSpan<T>) noexcept == {
+            this._ref = span.GetDataReference();
+            this._length = span.Length;
+            this._index = _length;
+        }
+
+        public mut MoveNext: () -> bool noexcept == {
+            let newIndex := _index -% 1uz;
+            if newIndex < _length {
+                _index = newIndex;
+                return true;
+            }
+            return false;
+        }
+
+        public mut Reset: () noexcept == {
+            _index = _length;
+        }
+
+        public GetCurrent: () -> T == {
+            return Unsafe.Add(_ref, _index);
+        }
+
+        public GetCurrentRef: () -> ref T == {
+            return Unsafe.Add(_ref, _index);
+        }
+        
+        public Iterate: () -> self ==> this;
+    }
+
     public static UnsafeCreate: (ref data: T, length: usize) -> self == {
         return self(&data, length);
     }
@@ -543,6 +644,17 @@ public ref struct <T> MutableSpan: ISelfEquatable, IAbstractSequence, ISequence<
         return this.AsSpan().>Count(val, equals);
     }
 
+    // Sets the items in the span to the default value
+    public Clear: () {
+        static if Builtin.IsBitwiseEquatable<T> {
+            Unsafe.InitBlock(Unsafe.As<byte>(_data), 0u8, _length * sizeof(T));
+        } else {
+            for &i in this {
+                i = T();
+            }
+        }
+    }
+
     // Returns true if the both sequences are equal
     public SequenceEquals: (other: T[&]) -> bool == {
         return this.AsSpan().>SequenceEquals(other);
@@ -558,6 +670,10 @@ public ref struct <T> MutableSpan: ISelfEquatable, IAbstractSequence, ISequence<
 public extension <T> MutableSpan {
     Length: usize ==> this.GetLength();
     IsEmpty: bool ==> this.GetLength() == 0u;
+    Reversed: self.ReverseIterator == {
+        type TIterator = self.ReverseIterator;
+        return TIterator(this);
+    }
 
     AsBytes: MutableSpan<byte> ==
     {
@@ -601,28 +717,6 @@ public extension <TLeft> where type TLeft is ISpanConvertible {
         }
     }
 
-    // Moves data to the destination span
-    // Throws InvalidArgumentException if the destination span is not large enough to contain all elements
-    MoveTo: <TDest> (forward dest: TDest) {
-        type TLeftReal = decay(TLeft);
-        type TDestReal = decay(TDest);
-        type T = TLeftReal.ElementType;
-        static assert(type TDestReal is IMutableSpanConvertible, "TDest should be mutable array-like type");
-        static assert(type T == TDestReal.ElementType, "ElementType mismatch");
-        let src: T[&] = this;
-        let dst: T[&mut] = dest;
-        if src.Length > dst.Length {
-            throw Builtin.InvalidArgumentException();
-        }
-
-        static if Builtin.IsTriviallyCopyable<T> {
-            Unsafe.CopyBlock(dst.GetDataReference(), src.GetDataReference(), src.Length * sizeof(T));
-        } else {
-            for i in ..src.Length {
-                dst[@Unchecked i] = move (src[@Unchecked i]);
-            }
-        }
-    }
     // Searches an entire sorted span for a value using the default comparator
     // Returns the index of the value if found, otherwise returns the index where the value should be inserted
     // (next element that is larger than val if such element exists or length of the span otherwise)
@@ -1262,6 +1356,552 @@ public extension <TLeft> where type TLeft is ISpanConvertible {
     ContainsAnyExcept: <T1, T2, T3, TComparer> (forward val1: T1, forward val2: T2, forward val3: T3, equals: TComparer) -> bool 
         => this.IndexOfAnyExcept(forward val1, forward val2, forward val3, equals) != null;
 
+    // Searches for the specified value and returns the index of its last occurrence. If not found, returns null.
+    LastIndexOf: <TValue> (forward val: TValue) -> usize? == {
+        type TLeftReal = decay(TLeft);
+        type TValueReal = decay(TValue);
+        type T = TLeftReal.ElementType;
+        static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+        span: T[&] = this;
+        static if type TValueReal is operator Span<T> {
+            valSpan: T[&] = val;
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                static if sizeof(T) == 1 {
+                    return SpanHelpers.LastIndexOfInternal(span.AsBytes, valSpan.AsBytes);
+                } else static if sizeof(T) == 2 {
+                    return SpanHelpers.LastIndexOfInternal(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span.GetDataReference()), span.Length), 
+                        Span<u16>::UnsafeCreate(Unsafe.As<u16>(valSpan.GetDataReference()), valSpan.Length));
+                }
+            }
+            return SpanHelpers.LastIndexOfInternal(span, valSpan);
+        } else static if type TValueReal is operator T {
+            if consteval {
+                let length := span.Length;
+                for i := isize(length) - 1u; i >= 0; --i {
+                    if span[@Unchecked i as usize] == val {
+                        return i as usize;
+                    }
+                }
+                return null;
+            } else {
+                if version(X86 or ARM) {
+                    static if Builtin.IsBitwiseEquatable<T> {
+                        // SIMD path
+                        static if sizeof(T) == 1 {
+                            return SpanHelpers.LastIndexOfByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(val));
+                        } else static if sizeof(T) == 2 {
+                            return SpanHelpers.LastIndexOfWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(val));
+                        } else static if sizeof(T) == 4 {
+                            return SpanHelpers.LastIndexOfDword(Span<u32>::UnsafeCreate(Unsafe.As<u32>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u32>(val));
+                        } else static if sizeof(T) == 8 {
+                            return SpanHelpers.LastIndexOfQword(Span<u64>::UnsafeCreate(Unsafe.As<u64>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u64>(val));
+                        }
+                    } else {
+                        // Regular path
+                        return SpanHelpers.LastIndexOfGeneralCase(span, val);
+                    }
+                } else {
+                    return SpanHelpers.LastIndexOfGeneralCase(span, val);
+                }
+            }
+        } else {
+            static assert(false, "TValue should be ElementType or Span<ElementType>");
+        }
+    }
+
+    // Searches for the specified value and returns the index of its last occurrence using the given EqualityComparer.
+    // If not found, returns null.
+    LastIndexOf: <TValue, TComparer> (forward val: TValue, equals: TComparer) -> usize? {
+        type TLeftReal = decay(TLeft);
+        type TValueReal = decay(TValue);
+        type TComparerReal = decay(TComparer);
+        type T = TLeftReal.ElementType;
+        static assert(type TComparerReal is operator EqualityComparer<T>, "TComparer should be EqualityComparer<T>");
+        span: T[&] = this;
+        static if type TValueReal is operator Span<T> {
+            let valSpan: T[&] = val;
+            if valSpan.Length == 0u {
+                return span.Length;
+            }
+
+            while not span.IsEmpty {
+                if let pos := span.LastIndexOf(valSpan[@Unchecked 0], equals) {
+                    if span[@Unchecked (pos + 1u)..].StartsWith(valSpan[@Unchecked 1u..], equals) {
+                        return pos;
+                    }
+                    span = span[@Unchecked ..pos];
+                } else {
+                    break;
+                }
+            }
+        } else static if type TValueReal is operator T {
+            let length := span.Length;
+            for i := isize(length) - 1u; i >= 0; --i {
+                if equals(span[@Unchecked i as usize], val) {
+                    return i as usize;
+                }
+            }
+        } else {
+            static assert(false, "TValue should be ElementType or Span<ElementType>");
+        }
+        
+        return null;
+    }
+
+    // Searches for the last index of any of the specified values from span.
+    // If not found, returns null.
+    LastIndexOfAny: <TValues> (forward val: TValues) -> usize? {
+        type TLeftReal = decay(TLeft);
+        type TValuesReal = decay(TValues);
+        type T = TLeftReal.ElementType;
+        let span: T[&] = this;
+        static if type TValuesReal is ISpanConvertible {
+            static assert(type T == TValuesReal.ElementType, "ElementType mismatch");
+            static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+            let values: T[&] = val;
+            let valuesLength := values.Length;
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                static if sizeof(T) == 1 {
+                    return switch valuesLength -> usize? {
+                        0 => null,
+                        1 => SpanHelpers.LastIndexOfByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0])),
+                        2 => SpanHelpers.LastIndexOfAnyByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0]), Unsafe.BitCast<byte>(values[@Unchecked 1])),
+                        3 => SpanHelpers.LastIndexOfAnyByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0]), Unsafe.BitCast<byte>(values[@Unchecked 1]),
+                                Unsafe.BitCast<byte>(values[@Unchecked 2])),
+                        4 => SpanHelpers.LastIndexOfAnyByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0]), Unsafe.BitCast<byte>(values[@Unchecked 1]), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 2]), Unsafe.BitCast<byte>(values[@Unchecked 3])),
+                        5 => SpanHelpers.LastIndexOfAnyByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0]), Unsafe.BitCast<byte>(values[@Unchecked 1]), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 2]), Unsafe.BitCast<byte>(values[@Unchecked 3]),
+                                Unsafe.BitCast<byte>(values[@Unchecked 4])),
+                        _ => SpanHelpers.LastIndexOfAnyInternal(span, values)
+                    };
+                } else static if sizeof(T) == 2 {
+                    return switch valuesLength -> usize? {
+                        0 => null,
+                        1 => SpanHelpers.LastIndexOfWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0])),
+                        2 => SpanHelpers.LastIndexOfAnyWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0]), Unsafe.BitCast<u16>(values[@Unchecked 1])),
+                        3 => SpanHelpers.LastIndexOfAnyWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0]), Unsafe.BitCast<u16>(values[@Unchecked 1]),
+                                Unsafe.BitCast<u16>(values[@Unchecked 2])),
+                        4 => SpanHelpers.LastIndexOfAnyWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0]), Unsafe.BitCast<u16>(values[@Unchecked 1]), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 2]), Unsafe.BitCast<u16>(values[@Unchecked 3])),
+                        5 => SpanHelpers.LastIndexOfAnyWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0]), Unsafe.BitCast<u16>(values[@Unchecked 1]), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 2]), Unsafe.BitCast<u16>(values[@Unchecked 3]),
+                                Unsafe.BitCast<u16>(values[@Unchecked 4])),
+                        _ => SpanHelpers.LastIndexOfAnyInternal(span, values)
+                    };
+                }
+            }
+            
+            return SpanHelpers.LastIndexOfAnyInternal(span, values);
+        } else static if type TValuesReal == Range<T, true> {
+            static assert(type T is ISelfComparable, "Search values in range is available only for ISelfComparable types");
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                // SIMD path
+                static if sizeof(T) == 1 {
+                    return SpanHelpers.LastIndexOfAnyInRangeByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                        Unsafe.BitCast<byte>(val.GetStart()), Unsafe.BitCast<byte>(val.GetEnd()));
+                } else static if sizeof(T) == 2 {
+                    return SpanHelpers.LastIndexOfAnyInRangeWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                        Unsafe.BitCast<u16>(val.GetStart()), Unsafe.BitCast<u16>(val.GetEnd()));
+                } else static if sizeof(T) == 4 {
+                    return SpanHelpers.LastIndexOfAnyInRangeDword(Span<u32>::UnsafeCreate(Unsafe.As<u32>(span[@Unchecked 0]), span.Length), 
+                        Unsafe.BitCast<u32>(val.GetStart()), Unsafe.BitCast<u32>(val.GetEnd()));
+                } else static if sizeof(T) == 8 {
+                    return SpanHelpers.LastIndexOfAnyInRangeQword(Span<u64>::UnsafeCreate(Unsafe.As<u64>(span[@Unchecked 0]), span.Length), 
+                        Unsafe.BitCast<u64>(val.GetStart()), Unsafe.BitCast<u64>(val.GetEnd()));
+                }
+            } else {
+                // Regular path
+                return SpanHelpers.LastIndexOfAnyInRangeGeneralCase(span, val.Start, val.End);
+            }
+        } else {
+            static assert(false, "val should be inclusive range or array-like type");
+        }
+        return null;
+    }
+
+    // Searches for the last index of any of the specified values
+    // If not found, returns null.
+    LastIndexOfAny: <T1, T2> (forward val1: T1, forward val2: T2) -> usize? {
+        type TLeftReal = decay(TLeft);
+        type T1Real = decay(T1);
+        type T2Real = decay(T2);
+        type T = TLeftReal.ElementType;
+        let span: T[&] = this;
+        static if type T2Real is operator EqualityComparer<T> {
+            static assert(type T1Real is ISpanConvertible, "T1 should be an array-like type");
+            static assert(type T == T1Real.ElementType, "ElementType mismatch");
+            let values: T[&] = val1;
+            let length := span.Length;
+            let valuesLength := values.Length;
+            for i := isize(length) - 1u; i >= 0; --i {
+                for j in ..valuesLength {
+                    if val2(span[@Unchecked i as usize], values[@Unchecked j]) {
+                        return i as usize;
+                    }
+                }
+            }
+        } else static if type T2Real is operator T {
+            static assert(type T1Real is operator T, "ElementType mismatch");
+            static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                static if sizeof(T) == 1 {
+                    return SpanHelpers.LastIndexOfAnyByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(val1), Unsafe.BitCast<byte>(val2));
+                } else static if sizeof(T) == 2 {
+                    return SpanHelpers.LastIndexOfAnyWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(val1), Unsafe.BitCast<u16>(val2));
+                }
+            }
+            
+            return SpanHelpers.LastIndexOfAnyGeneralCase(span, val1, val2);
+        } else {
+            static assert(false, "T1 should be ElementType or Span<ElementType>");
+        }
+        return null;
+    }
+
+    // Searches for the last index of any of the specified values
+    // If not found, returns null.
+    LastIndexOfAny: <T1, T2, T3> (forward val1: T1, forward val2: T2, forward val3: T3) -> usize? {
+        type TLeftReal = decay(TLeft);
+        type T1Real = decay(T1);
+        type T2Real = decay(T2);
+        type T3Real = decay(T3);
+        type T = TLeftReal.ElementType;
+        let span: T[&] = this;
+        static if type T3Real is operator EqualityComparer<T> {
+            static assert(type T1Real is operator T, "ElementType mismatch");
+            static assert(type T2Real is operator T, "ElementType mismatch");
+            let length := span.Length;
+            for i := isize(length) - 1u; i >= 0; --i {
+                let val := span[@Unchecked i as usize];
+                if val3(val, val1) or val3(val, val2) {
+                    return i as usize;
+                }
+            }
+        } else static if type T3Real is operator T {
+            static assert(type T1Real is operator T, "ElementType mismatch");
+            static assert(type T2Real is operator T, "ElementType mismatch");
+            static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                static if sizeof(T) == 1 {
+                    return SpanHelpers.LastIndexOfAnyByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(val1), Unsafe.BitCast<byte>(val2),
+                                Unsafe.BitCast<byte>(val3));
+                } else static if sizeof(T) == 2 {
+                    return SpanHelpers.LastIndexOfAnyWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(val1), Unsafe.BitCast<u16>(val2),
+                                Unsafe.BitCast<u16>(val3));
+                }
+            }
+            
+            return SpanHelpers.LastIndexOfAnyGeneralCase(span, val1, val2, val3);
+        } else {
+            static assert(false, "T1, T2, T3 should be ElementType");
+        }
+        return null;
+    }
+
+    // Searches for the last index of any of the specified values
+    // If not found, returns null.
+    LastIndexOfAny: <T1, T2, T3, TComparer> (forward val1: T1, forward val2: T2, forward val3: T3, equals: TComparer) -> usize? {
+        type TLeftReal = decay(TLeft);
+        type T1Real = decay(T1);
+        type T2Real = decay(T2);
+        type T3Real = decay(T3);
+        type T4Real = decay(TComparer);
+        type T = TLeftReal.ElementType;
+        static assert(type T1Real is operator T, "ElementType mismatch");
+        static assert(type T2Real is operator T, "ElementType mismatch");
+        static assert(type T3Real is operator T, "ElementType mismatch");
+        static assert(type T4Real is operator EqualityComparer<T>, "TComparer should be EqualityComparer<T>");
+        let span: T[&] = this;
+        let length := span.Length;
+        for i := isize(length) - 1u; i >= 0; --i {
+            let val := span[@Unchecked i as usize];
+            if equals(val, val1) or equals(val, val2) or equals(val, val3) {
+                return i as usize;
+            }
+        }
+        return null;
+    }
+
+    // Searches for the last index of any value other than of the specified values.
+    // If not found, returns null.
+    LastIndexOfAnyExcept: <TValues> (forward val: TValues) -> usize? {
+        type TLeftReal = decay(TLeft);
+        type TValuesReal = decay(TValues);
+        type T = TLeftReal.ElementType;
+        static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+        let span: T[&] = this;
+        static if type TValuesReal is ISpanConvertible {
+            static assert(type T == TValuesReal.ElementType, "ElementType mismatch");
+            let values: T[&] = val;
+            let valuesLength := values.Length;
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                static if sizeof(T) == 1 {
+                    return switch valuesLength -> usize? {
+                        0 => null,
+                        1 => SpanHelpers.LastIndexOfAnyExceptByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0])),
+                        2 => SpanHelpers.LastIndexOfAnyExceptByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0]), Unsafe.BitCast<byte>(values[@Unchecked 1])),
+                        3 => SpanHelpers.LastIndexOfAnyExceptByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0]), Unsafe.BitCast<byte>(values[@Unchecked 1]),
+                                Unsafe.BitCast<byte>(values[@Unchecked 2])),
+                        4 => SpanHelpers.LastIndexOfAnyExceptByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0]), Unsafe.BitCast<byte>(values[@Unchecked 1]), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 2]), Unsafe.BitCast<byte>(values[@Unchecked 3])),
+                        5 => SpanHelpers.LastIndexOfAnyExceptByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 0]), Unsafe.BitCast<byte>(values[@Unchecked 1]), 
+                                Unsafe.BitCast<byte>(values[@Unchecked 2]), Unsafe.BitCast<byte>(values[@Unchecked 3]),
+                                Unsafe.BitCast<byte>(values[@Unchecked 4])),
+                        _ => SpanHelpers.LastIndexOfAnyExceptInternal(span, values)
+                    };
+                } else static if sizeof(T) == 2 {
+                    return switch valuesLength -> usize? {
+                        0 => null,
+                        1 => SpanHelpers.LastIndexOfAnyExceptWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0])),
+                        2 => SpanHelpers.LastIndexOfAnyExceptWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0]), Unsafe.BitCast<u16>(values[@Unchecked 1])),
+                        3 => SpanHelpers.LastIndexOfAnyExceptWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0]), Unsafe.BitCast<u16>(values[@Unchecked 1]),
+                                Unsafe.BitCast<u16>(values[@Unchecked 2])),
+                        4 => SpanHelpers.LastIndexOfAnyExceptWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0]), Unsafe.BitCast<u16>(values[@Unchecked 1]), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 2]), Unsafe.BitCast<u16>(values[@Unchecked 3])),
+                        5 => SpanHelpers.LastIndexOfAnyExceptWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 0]), Unsafe.BitCast<u16>(values[@Unchecked 1]), 
+                                Unsafe.BitCast<u16>(values[@Unchecked 2]), Unsafe.BitCast<u16>(values[@Unchecked 3]),
+                                Unsafe.BitCast<u16>(values[@Unchecked 4])),
+                        _ => SpanHelpers.LastIndexOfAnyExceptInternal(span, values)
+                    };
+                }
+            }
+            
+            return SpanHelpers.LastIndexOfAnyExceptInternal(span, values);
+        } else static if type TValuesReal is operator T {
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                static if sizeof(T) == 1 {
+                    return SpanHelpers.LastIndexOfAnyExceptByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(val));
+                } else static if sizeof(T) == 2 {
+                    return SpanHelpers.LastIndexOfAnyExceptWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(val));
+                }
+            }
+            
+            return SpanHelpers.LastIndexOfAnyExceptGeneralCase(span, val);
+        } else static if type TValuesReal == Range<T, true> {
+            static assert(type T is ISelfComparable, "Search values in range is available only for ISelfComparable types");
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                // SIMD path
+                static if sizeof(T) == 1 {
+                    return SpanHelpers.LastIndexOfAnyExceptInRangeByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                        Unsafe.BitCast<byte>(val.GetStart()), Unsafe.BitCast<byte>(val.GetEnd()));
+                } else static if sizeof(T) == 2 {
+                    return SpanHelpers.LastIndexOfAnyExceptInRangeWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                        Unsafe.BitCast<u16>(val.GetStart()), Unsafe.BitCast<u16>(val.GetEnd()));
+                } else static if sizeof(T) == 4 {
+                    return SpanHelpers.LastIndexOfAnyExceptInRangeDword(Span<u32>::UnsafeCreate(Unsafe.As<u32>(span[@Unchecked 0]), span.Length), 
+                        Unsafe.BitCast<u32>(val.GetStart()), Unsafe.BitCast<u32>(val.GetEnd()));
+                } else static if sizeof(T) == 8 {
+                    return SpanHelpers.LastIndexOfAnyExceptInRangeQword(Span<u64>::UnsafeCreate(Unsafe.As<u64>(span[@Unchecked 0]), span.Length), 
+                        Unsafe.BitCast<u64>(val.GetStart()), Unsafe.BitCast<u64>(val.GetEnd()));
+                }
+            } else {
+                // Regular path
+                return SpanHelpers.LastIndexOfAnyExceptInRangeGeneralCase(span, val.Start, val.End);
+            }
+        } else {
+            static assert(false, "val should be ElementType or array-like type");
+        }
+        return null;
+    }
+
+    // Searches for the last index of any value other than of the specified values.
+    // If not found, returns null.
+    LastIndexOfAnyExcept: <T1, T2> (forward val1: T1, forward val2: T2) -> usize? {
+        type TLeftReal = decay(TLeft);
+        type T1Real = decay(T1);
+        type T2Real = decay(T2);
+        type T = TLeftReal.ElementType;
+        let span: T[&] = this;
+        static if type T2Real is operator EqualityComparer<T> {
+            static if type T1Real is ISpanConvertible {
+                static assert(type T == T1Real.ElementType, "ElementType mismatch");
+                let values: T[&] = val1;
+                let length := span.Length;
+                let valuesLength := values.Length;
+                outer:
+                for i := isize(length) - 1u; i >= 0; --i {
+                    for j in ..valuesLength {
+                        if val2(span[@Unchecked i as usize], values[@Unchecked j]) {
+                            continue outer;
+                        }
+                    }
+                    return i as usize;
+                }
+            } else static if type T1Real is operator T {
+                let length := span.Length;
+                for i := isize(length) - 1u; i >= 0; --i {
+                    if not val2(span[@Unchecked i as usize], val1) {
+                        return i as usize;
+                    }
+                }
+            }
+        } else static if type T2Real is operator T {
+            static assert(type T1Real is operator T, "ElementType mismatch");
+            static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                static if sizeof(T) == 1 {
+                    return SpanHelpers.LastIndexOfAnyExceptByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(val1), Unsafe.BitCast<byte>(val2));
+                } else static if sizeof(T) == 2 {
+                    return SpanHelpers.LastIndexOfAnyExceptWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(val1), Unsafe.BitCast<u16>(val2));
+                }
+            }
+            
+            return SpanHelpers.LastIndexOfAnyExceptGeneralCase(span, val1, val2);
+        } else {
+            static assert(false, "T1 should be ElementType or Span<ElementType>");
+        }
+        return null;
+    }
+
+    // Searches for the last index of any value other than of the specified values.
+    // If not found, returns null.
+    LastIndexOfAnyExcept: <T1, T2, T3> (forward val1: T1, forward val2: T2, forward val3: T3) -> usize? {
+        type TLeftReal = decay(TLeft);
+        type T1Real = decay(T1);
+        type T2Real = decay(T2);
+        type T3Real = decay(T3);
+        type T = TLeftReal.ElementType;
+        let span: T[&] = this;
+        static if type T3Real is operator EqualityComparer<T> {
+            static assert(type T1Real is operator T, "ElementType mismatch");
+            static assert(type T2Real is operator T, "ElementType mismatch");
+            let length := span.Length;
+            for i := isize(length) - 1u; i >= 0; --i {
+                let val := span[@Unchecked i as usize];
+                if (not val3(val, val1)) and (not val3(val, val2)) {
+                    return i as usize;
+                }
+            }
+        } else static if type T3Real is operator T {
+            static assert(type T1Real is operator T, "ElementType mismatch");
+            static assert(type T2Real is operator T, "ElementType mismatch");
+            static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+            const simdSupported :== version(X86) or version(ARM);
+            static if simdSupported and Builtin.IsBitwiseEquatable<T> {
+                static if sizeof(T) == 1 {
+                    return SpanHelpers.LastIndexOfAnyExceptByte(Span<byte>::UnsafeCreate(Unsafe.As<byte>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<byte>(val1), Unsafe.BitCast<byte>(val2),
+                                Unsafe.BitCast<byte>(val3));
+                } else static if sizeof(T) == 2 {
+                    return SpanHelpers.LastIndexOfAnyExceptWord(Span<u16>::UnsafeCreate(Unsafe.As<u16>(span[@Unchecked 0]), span.Length), 
+                                Unsafe.BitCast<u16>(val1), Unsafe.BitCast<u16>(val2),
+                                Unsafe.BitCast<u16>(val3));
+                }
+            }
+            
+            return SpanHelpers.LastIndexOfAnyExceptGeneralCase(span, val1, val2, val3);
+        } else {
+            static assert(false, "T1, T2, T3 should be ElementType");
+        }
+        return null;
+    }
+
+    // Searches for the last index of any value other than of the specified values.
+    // If not found, returns null.
+    LastIndexOfAnyExcept: <T1, T2, T3, TComparer> (forward val1: T1, forward val2: T2, forward val3: T3, equals: TComparer) -> usize? {
+        type TLeftReal = decay(TLeft);
+        type T1Real = decay(T1);
+        type T2Real = decay(T2);
+        type T3Real = decay(T3);
+        type T4Real = decay(TComparer);
+        type T = TLeftReal.ElementType;
+        static assert(type T1Real is operator T, "ElementType mismatch");
+        static assert(type T2Real is operator T, "ElementType mismatch");
+        static assert(type T3Real is operator T, "ElementType mismatch");
+        static assert(type T4Real is operator EqualityComparer<T>, "TComparer should be EqualityComparer<T>");
+        let span: T[&] = this;
+        let length := span.Length;
+        for i := isize(length) - 1u; i >= 0; --i {
+            let val := span[@Unchecked i as usize];
+            if (not equals(val, val1)) and (not equals(val, val2)) and (not equals(val, val3)) {
+                return i as usize;
+            }
+        }
+        return null;
+    }
+
+    // Counts the number of times any of the specified values occurs in the span.
+    CountAny: <TSpan> (forward val: TSpan) -> usize {
+        type TLeftReal = decay(TLeft);
+        type TSpanReal = decay(TSpan);
+        type T = TLeftReal.ElementType;
+        static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+        static assert(type TSpanReal is ISpanConvertible, "TSpan should be an array-like type");
+        static assert(type T == TSpanReal.ElementType, "ElementType mismatch");
+        span: T[&] = this;
+        let values: T[&] = val;
+        count: usize;
+        pos := span.IndexOfAny(values);
+        while pos {
+            ++count;
+            span = span[@Unchecked (pos! + 1)..];
+            pos = span.IndexOfAny(values);
+        }
+        return count;
+    }
+
+    // Counts the number of times any of the specified values occurs in the span.
+    CountAny: <TSpan, TComparer> (forward val: TSpan, equals: TComparer) -> usize {
+        type TLeftReal = decay(TLeft);
+        type TSpanReal = decay(TSpan);
+        type T = TLeftReal.ElementType;
+        static assert(type TComparer is operator EqualityComparer<T>, "TComparer should be EqualityComparer<T>");
+        static assert(type TSpanReal is ISpanConvertible, "TSpan should be an array-like type");
+        static assert(type T == TSpanReal.ElementType, "ElementType mismatch");
+        span: T[&] = this;
+        let values: T[&] = val;
+        count: usize;
+        pos := span.IndexOfAny(values, equals);
+        while pos {
+            ++count;
+            span = span[@Unchecked (pos! + 1)..];
+            pos = span.IndexOfAny(values, equals);
+        }
+        return count;
+    }
+
     // Returns true the specified value appears at the start of the span.
     StartsWith: <TValue> (forward val: TValue) -> bool == {
         type TLeftReal = decay(TLeft);
@@ -1345,6 +1985,127 @@ public extension <TLeft> where type TLeft is ISpanConvertible {
         } else {
             static assert(false, "TValue should be ElementType or Span<ElementType>");
         }
+    }
+}
+
+public extension <TLeft> where type TLeft is IMutableSpanConvertible {
+    // Moves data to the destination span
+    // Throws InvalidArgumentException if the destination span is not large enough to contain all elements
+    mut MoveTo: <TDest> (forward dest: TDest) {
+        type TLeftReal = decay(TLeft);
+        type TDestReal = decay(TDest);
+        type T = TLeftReal.ElementType;
+        static assert(type TDestReal is IMutableSpanConvertible, "TDest should be mutable array-like type");
+        static assert(type T == TDestReal.ElementType, "ElementType mismatch");
+        let src: T[&mut] = this;
+        let dst: T[&mut] = dest;
+        if src.Length > dst.Length {
+            throw Builtin.InvalidArgumentException();
+        }
+
+        static if Builtin.IsTriviallyCopyable<T> {
+            Unsafe.CopyBlock(dst.GetDataReference(), src.GetDataReference(), src.Length * sizeof(T));
+        } else {
+            for i in ..src.Length {
+                dst[@Unchecked i] = move (src[@Unchecked i]);
+            }
+        }
+    }
+
+    // Replaces all occurrences of oldValue with newValue.
+    mut Replace: <TValue> (forward oldValue: TValue, forward newValue: TValue) {
+        type TLeftReal = decay(TLeft);
+        type TValueReal = decay(TValue);
+        type T = TLeftReal.ElementType;
+        static assert(type TValueReal is operator T, "ElementType mismatch");
+        static assert(type T is ISelfEquatable, "Replace available only for ISelfEquatable types");
+        let buf: T[&mut] = this;
+        let length := buf.Length;
+        if version(X86 or ARM) {
+            static if Builtin.IsBitwiseEquatable<T> {
+                // SIMD path
+                static if sizeof(T) == 1 {
+                    return SpanHelpers.ReplaceByte(MutableSpan<byte>::UnsafeCreate(Unsafe.As<byte>(&buf[@Unchecked 0]), length), 
+                        Unsafe.BitCast<byte>(oldValue), Unsafe.BitCast<byte>(newValue));
+                } else static if sizeof(T) == 2 {
+                    return SpanHelpers.ReplaceWord(MutableSpan<u16>::UnsafeCreate(Unsafe.As<u16>(&buf[@Unchecked 0]), length), 
+                        Unsafe.BitCast<u16>(oldValue), Unsafe.BitCast<u16>(newValue));
+                } else static if sizeof(T) == 4 {
+                    return SpanHelpers.ReplaceDword(MutableSpan<u32>::UnsafeCreate(Unsafe.As<u32>(&buf[@Unchecked 0]), length), 
+                        Unsafe.BitCast<u32>(oldValue), Unsafe.BitCast<u32>(newValue));
+                } else static if sizeof(T) == 8 {
+                    return SpanHelpers.ReplaceQword(MutableSpan<u64>::UnsafeCreate(Unsafe.As<u64>(&buf[@Unchecked 0]), length), 
+                        Unsafe.BitCast<u64>(oldValue), Unsafe.BitCast<u64>(newValue));
+                }
+            } else {
+                // Regular path
+                return SpanHelpers.ReplaceGeneralCase(buf, oldValue, newValue);
+            }
+        } else {
+            return SpanHelpers.ReplaceGeneralCase(buf, oldValue, newValue);
+        }
+    }
+
+    // Replaces all occurrences of oldValue with newValue using given EqualityComparer.
+    mut Replace: <TValue, TComparer> (forward oldValue: TValue, forward newValue: TValue, equals: TComparer) {
+        type TLeftReal = decay(TLeft);
+        type TValueReal = decay(TValue);
+        type TComparerReal = decay(TComparer);
+        type T = TLeftReal.ElementType;
+        static assert(type TValue is operator T, "ElementType mismatch");
+        static assert(type TComparerReal is operator EqualityComparer<T>, "TComparer should be EqualityComparer<T>");
+        let buf: T[&mut] = this;
+        for &i in buf {
+            if equals(i, oldValue) {
+                i = newValue;
+            }
+        }
+    }
+
+    // Fills the elements of this span with a specified value
+    mut Fill: <TValue> (forward val: TValue) {
+        type TLeftReal = decay(TLeft);
+        type TValueReal = decay(TValue);
+        type T = TLeftReal.ElementType;
+        static assert(type TValueReal is operator T, "ElementType mismatch");
+        let buf: T[&mut] = this;
+        static if Builtin.IsBitwiseEquatable<T> and sizeof(T) == 1 {
+            Unsafe.InitBlock(Unsafe.As<byte>(&buf[@Unchecked 0]), Unsafe.BitCast<byte>(val), buf.Length);
+        } else {
+            for &i in buf {
+                i = val;
+            }
+        }
+    }
+
+    // Reverses the sequence of the elements in the entire span
+    mut Reverse: () {
+        type TLeftReal = decay(TLeft);
+        type T = TLeftReal.ElementType;
+        let buf: T[&mut] = this;
+        let length := buf.Length;
+        if length < 2u {
+            return;
+        }
+
+        const simdSupported :== version(X86) or version(ARM);
+        static if simdSupported and Builtin.IsTriviallyCopyable<T> {
+            static if sizeof(T) == 1 {
+                SpanHelpers.ReverseBytes(MutableSpan<byte>::UnsafeCreate(Unsafe.As<byte>(&buf[@Unchecked 0]), length));
+                return;
+            } else static if sizeof(T) == 2 {
+                SpanHelpers.ReverseWords(MutableSpan<u16>::UnsafeCreate(Unsafe.As<u16>(&buf[@Unchecked 0]), length));
+                return;
+            } else static if sizeof(T) == 4 {
+                SpanHelpers.ReverseDwords(MutableSpan<u32>::UnsafeCreate(Unsafe.As<u32>(&buf[@Unchecked 0]), length));
+                return;
+            } else static if sizeof(T) == 8 {
+                SpanHelpers.ReverseQwords(MutableSpan<u64>::UnsafeCreate(Unsafe.As<u64>(&buf[@Unchecked 0]), length));
+                return;
+            }
+        }
+
+        SpanHelpers.ReverseGeneralCase(buf);
     }
 }
 
@@ -2577,6 +3338,1087 @@ protected static class SpanHelpers {
         }
     }
 
+    public LastIndexOfGeneralCase: <T> (data: T[&], in ref val: T) -> usize? {
+        length := data.Length;
+        index := length - 1u;
+        while length >= 8u {
+            length -= 8u;
+
+            if data[@Unchecked index] == val
+            {
+                return index;
+            }
+            if data[@Unchecked index - 1u] == val
+            {
+                return index - 1u;
+            }
+            if data[@Unchecked index - 2u] == val
+            {
+                return index - 2u;
+            }
+            if data[@Unchecked index - 3u] == val
+            {
+                return index - 3u;
+            }
+            if data[@Unchecked index - 4u] == val
+            {
+                return index - 4u;
+            }
+            if data[@Unchecked index - 5u] == val
+            {
+                return index - 5u;
+            }
+            if data[@Unchecked index - 6u] == val
+            {
+                return index - 6u;
+            }
+            if data[@Unchecked index - 7u] == val
+            {
+                return index - 7u;
+            }
+
+            index -%= 8;
+        }
+
+        while length >= 4u {
+            length -= 4u;
+
+            if data[@Unchecked index] == val
+            {
+                return index;
+            }
+            if data[@Unchecked index - 1u] == val
+            {
+                return index - 1u;
+            }
+            if data[@Unchecked index - 2u] == val
+            {
+                return index - 2u;
+            }
+            if data[@Unchecked index - 3u] == val
+            {
+                return index - 3u;
+            }
+
+            index -%= 4;
+        }
+
+        while length > 0 {
+            --length;
+            if data[@Unchecked index] == val {
+                return index;
+            }
+            --%index;
+        }
+        return null;
+    }
+
+    public LastIndexOfByte: (data: byte[&], val: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            return LastIndexOfGeneralCase(data, val);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOf<byte>, Neon, Sse2>(data, val);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanLastIndexOf<byte>, Neon, Avx2, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOf<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val);
+        }
+    }
+
+    public LastIndexOfWord: (data: u16[&], val: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            return LastIndexOfGeneralCase(data, val);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanLastIndexOf<u16>, Neon, Sse2>(data, val);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOf<u16>, Neon, Avx2, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOf<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val);
+        }
+    }
+
+    public LastIndexOfDword: (data: u32[&], val: u32) -> usize? {
+        let length := data.Length;
+        if length < 4u {
+            return LastIndexOfGeneralCase(data, val);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanLastIndexOf<u32>, Neon, Avx512VL128, Sse2>(data, val);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanLastIndexOf<u32>, Neon, Avx512VL256, Avx2, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOf<u32>, Neon, Avx512F, Avx2, Sse2>(data, val);
+        }
+    }
+
+    public LastIndexOfQword: (data: u64[&], val: u64) -> usize? {
+        let length := data.Length;
+        if length < 2u {
+            return LastIndexOfGeneralCase(data, val);
+        } else if length < 4u {
+            return Simd.RuntimeDispatch<SpanLastIndexOf<u64>, Neon, Avx512VL128, Sse42, Sse2>(data, val);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanLastIndexOf<u64>, Neon, Avx512VL256, Avx2, Sse42, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOf<u64>, Neon, Avx512F, Avx2, Sse42, Sse2>(data, val);
+        }
+    }
+
+    public LastIndexOfInternal: <T> (data: T[&], val: T[&]) -> usize? {
+        let dataLength := data.Length;
+        let valueLength := val.Length;
+        if valueLength == 0 {
+            return dataLength;
+        }
+
+        let valueHead := val[@Unchecked 0];
+        let valueTail := val[@Unchecked 1u..];
+        let valueTailLength := valueLength - 1u;
+        if valueTailLength == 0 {
+            return data.LastIndexOf(valueHead);
+        }
+
+        index: usize;
+
+        for {
+            assert index <= dataLength;
+            let remainingLength := dataLength -% index -% valueTailLength;
+            if remainingLength.NarrowToIsize() <= 0 {
+                break;
+            }
+
+            if let relativeIndex := data[@Unchecked ..remainingLength].LastIndexOf(valueHead) {
+                if data.SliceUnchecked(relativeIndex + 1, valueTailLength).SequenceEquals(valueTail) {
+                    return relativeIndex;
+                }
+                index += remainingLength - relativeIndex;
+            } else {
+                break;
+            }
+        }
+        return null;
+    }
+
+    public LastIndexOfAnyInternal: <T> (data: T[&], val: T[&]) -> usize? {
+        let dataLength := data.Length;
+        let valueLength := val.Length;
+        if valueLength == 0 {
+            return null;
+        }
+
+        for i := isize(dataLength) - 1; i >= 0; --i {
+            let candidate := data[@Unchecked i as usize];
+            for j in ..valueLength {
+                if candidate == val[@Unchecked j] {
+                    return i as usize;
+                }
+            }
+        }
+        return null;
+    }
+
+    public LastIndexOfAnyGeneralCase: <T> (data: T[&], in ref val1: T, in ref val2: T) -> usize? {
+        length := data.Length;
+        index := length - 1u;
+        while length >= 8u {
+            length -= 8u;
+
+            lookup := data[@Unchecked index];
+            if lookup == val1 or lookup == val2
+            {
+                return index;
+            }
+            lookup = data[@Unchecked index - 1u];
+            if lookup == val1 or lookup == val2
+            {
+                return index - 1u;
+            }
+            lookup = data[@Unchecked index - 2u];
+            if lookup == val1 or lookup == val2
+            {
+                return index - 2u;
+            }
+            lookup = data[@Unchecked index - 3u];
+            if lookup == val1 or lookup == val2
+            {
+                return index - 3u;
+            }
+            lookup = data[@Unchecked index - 4u];
+            if lookup == val1 or lookup == val2
+            {
+                return index - 4u;
+            }
+            lookup = data[@Unchecked index - 5u];
+            if lookup == val1 or lookup == val2
+            {
+                return index - 5u;
+            }
+            lookup = data[@Unchecked index - 6u];
+            if lookup == val1 or lookup == val2
+            {
+                return index - 6u;
+            }
+            lookup = data[@Unchecked index - 7u];
+            if lookup == val1 or lookup == val2
+            {
+                return index - 7u;
+            }
+
+            index -%= 8;
+        }
+
+        while length >= 4u {
+            length -= 4u;
+
+            lookup := data[@Unchecked index];
+            if lookup == val1 or lookup == val2
+            {
+                return index;
+            }
+            lookup = data[@Unchecked index - 1u];
+            if lookup == val1 or lookup == val2
+            {
+                return index - 1u;
+            }
+            lookup = data[@Unchecked index - 2u];
+            if lookup == val1 or lookup == val2
+            {
+                return index - 2u;
+            }
+            lookup = data[@Unchecked index - 3u];
+            if lookup == val1 or lookup == val2
+            {
+                return index - 3u;
+            }
+
+            index -%= 4;
+        }
+
+        while length > 0 {
+            --length;
+            lookup := data[@Unchecked index];
+            if lookup == val1 or lookup == val2 {
+                return index;
+            }
+            --%index;
+        }
+        return null;
+    }
+
+    public LastIndexOfAnyGeneralCase: <T> (data: T[&], in ref val1: T, in ref val2: T, in ref val3: T) -> usize? {
+        length := data.Length;
+        index := length - 1u;
+        while length >= 8u {
+            length -= 8u;
+
+            lookup := data[@Unchecked index];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index;
+            }
+            lookup = data[@Unchecked index - 1u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index - 1u;
+            }
+            lookup = data[@Unchecked index - 2u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index - 2u;
+            }
+            lookup = data[@Unchecked index - 3u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index - 3u;
+            }
+            lookup = data[@Unchecked index - 4u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index - 4u;
+            }
+            lookup = data[@Unchecked index - 5u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index - 5u;
+            }
+            lookup = data[@Unchecked index - 6u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index - 6u;
+            }
+            lookup = data[@Unchecked index - 7u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index - 7u;
+            }
+
+            index -%= 8;
+        }
+
+        while length >= 4u {
+            length -= 4u;
+
+            lookup := data[@Unchecked index];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index;
+            }
+            lookup = data[@Unchecked index - 1u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index - 1u;
+            }
+            lookup = data[@Unchecked index - 2u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index - 2u;
+            }
+            lookup = data[@Unchecked index - 3u];
+            if lookup == val1 or lookup == val2 or lookup == val3
+            {
+                return index - 3u;
+            }
+
+            index -%= 4;
+        }
+
+        while length > 0 {
+            --length;
+            lookup := data[@Unchecked index];
+            if lookup == val1 or lookup == val2 or lookup == val3 {
+                return index;
+            }
+            --%index;
+        }
+        return null;
+    }
+
+    public LastIndexOfAnyInRangeGeneralCase: <T> (data: T[&], in ref start: T, in ref end: T) -> usize? {
+        length := data.Length;
+        for i := isize(length) - 1; i >= 0; --i {
+            let &current := data[@Unchecked i as usize];
+            if current in start..=end {
+                return i as usize;
+            }
+        }
+        return null;
+    }
+
+    public LastIndexOfAnyByte: (data: byte[&], val1: byte, val2: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            return LastIndexOfAnyGeneralCase(data, val1, val2);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny2<byte>, Neon, Sse2>(data, val1, val2);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny2<byte>, Neon, Avx2, Sse2>(data, val1, val2);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny2<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2);
+        }
+    }
+
+    public LastIndexOfAnyByte: (data: byte[&], val1: byte, val2: byte, val3: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            return LastIndexOfAnyGeneralCase(data, val1, val2, val3);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny3<byte>, Neon, Sse2>(data, val1, val2, val3);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny3<byte>, Neon, Avx2, Sse2>(data, val1, val2, val3);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny3<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3);
+        }
+    }
+
+    public LastIndexOfAnyByte: (data: byte[&], val1: byte, val2: byte, val3: byte, val4: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            let values: byte[_] = [val1,val2,val3,val4];
+            return LastIndexOfAnyInternal<byte>(data, values);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny4<byte>, Neon, Sse2>(data, val1, val2, val3, val4);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny4<byte>, Neon, Avx2, Sse2>(data, val1, val2, val3, val4);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny4<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3, val4);
+        }
+    }
+
+    public LastIndexOfAnyByte: (data: byte[&], val1: byte, val2: byte, val3: byte, val4: byte, val5: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            let values: byte[_] = [val1,val2,val3,val4,val5];
+            return LastIndexOfAnyInternal<byte>(data, values);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny5<byte>, Neon, Sse2>(data, val1, val2, val3, val4, val5);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny5<byte>, Neon, Avx2, Sse2>(data, val1, val2, val3, val4, val5);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny5<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3, val4, val5);
+        }
+    }
+
+    public LastIndexOfAnyWord: (data: u16[&], val1: u16, val2: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            return LastIndexOfAnyGeneralCase(data, val1, val2);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny2<u16>, Neon, Sse2>(data, val1, val2);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny2<u16>, Neon, Avx2, Sse2>(data, val1, val2);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny2<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2);
+        }
+    }
+
+    public LastIndexOfAnyWord: (data: u16[&], val1: u16, val2: u16, val3: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            return LastIndexOfAnyGeneralCase(data, val1, val2, val3);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny3<u16>, Neon, Sse2>(data, val1, val2, val3);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny3<u16>, Neon, Avx2, Sse2>(data, val1, val2, val3);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny3<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3);
+        }
+    }
+
+    public LastIndexOfAnyWord: (data: u16[&], val1: u16, val2: u16, val3: u16, val4: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            let values: u16[_] = [val1,val2,val3,val4];
+            return LastIndexOfAnyInternal<u16>(data, values);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny4<u16>, Neon, Sse2>(data, val1, val2, val3, val4);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny4<u16>, Neon, Avx2, Sse2>(data, val1, val2, val3, val4);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny4<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3, val4);
+        }
+    }
+
+    public LastIndexOfAnyWord: (data: u16[&], val1: u16, val2: u16, val3: u16, val4: u16, val5: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            let values: u16[_] = [val1,val2,val3,val4,val5];
+            return LastIndexOfAnyInternal<u16>(data, values);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny5<u16>, Neon, Sse2>(data, val1, val2, val3, val4, val5);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny5<u16>, Neon, Avx2, Sse2>(data, val1, val2, val3, val4, val5);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAny5<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3, val4, val5);
+        }
+    }
+
+    public LastIndexOfAnyExceptInternal: <T> (data: T[&], val: T[&]) -> usize? {
+        let dataLength := data.Length;
+        let valueLength := val.Length;
+        if valueLength == 0 {
+            return null;
+        }
+
+        outer:
+        for i := isize(dataLength) - 1; i >= 0; --i {
+            let candidate := data[@Unchecked i as usize];
+            for j in ..valueLength {
+                if candidate == val[@Unchecked j] {
+                    continue outer;
+                }
+            }
+            return i as usize;
+        }
+        return null;
+    }
+
+    public LastIndexOfAnyExceptGeneralCase: <T> (data: T[&], in ref val: T) -> usize? {
+        length := data.Length;
+        index := length - 1u;
+        while length >= 8u {
+            length -= 8u;
+
+            if data[@Unchecked index] != val
+            {
+                return index;
+            }
+            if data[@Unchecked index - 1u] != val
+            {
+                return index - 1u;
+            }
+            if data[@Unchecked index - 2u] != val
+            {
+                return index - 2u;
+            }
+            if data[@Unchecked index - 3u] != val
+            {
+                return index - 3u;
+            }
+            if data[@Unchecked index - 4u] != val
+            {
+                return index - 4u;
+            }
+            if data[@Unchecked index - 5u] != val
+            {
+                return index - 5u;
+            }
+            if data[@Unchecked index - 6u] != val
+            {
+                return index - 6u;
+            }
+            if data[@Unchecked index - 7u] != val
+            {
+                return index - 7u;
+            }
+
+            index -%= 8;
+        }
+
+        while length >= 4u {
+            length -= 4u;
+
+            if data[@Unchecked index] != val
+            {
+                return index;
+            }
+            if data[@Unchecked index - 1u] != val
+            {
+                return index - 1u;
+            }
+            if data[@Unchecked index - 2u] != val
+            {
+                return index - 2u;
+            }
+            if data[@Unchecked index - 3u] != val
+            {
+                return index - 3u;
+            }
+
+            index -%= 4;
+        }
+
+        while length > 0 {
+            --length;
+            if data[@Unchecked index] != val {
+                return index;
+            }
+            --%index;
+        }
+        return null;
+    }
+
+    public LastIndexOfAnyExceptGeneralCase: <T> (data: T[&], in ref val1: T, in ref val2: T) -> usize? {
+        length := data.Length;
+        index := length - 1u;
+        while length >= 8u {
+            length -= 8u;
+
+            lookup := data[@Unchecked index];
+            if lookup != val1 and lookup != val2
+            {
+                return index;
+            }
+            lookup = data[@Unchecked index - 1u];
+            if lookup != val1 and lookup != val2
+            {
+                return index - 1u;
+            }
+            lookup = data[@Unchecked index - 2u];
+            if lookup != val1 and lookup != val2
+            {
+                return index - 2u;
+            }
+            lookup = data[@Unchecked index - 3u];
+            if lookup != val1 and lookup != val2
+            {
+                return index - 3u;
+            }
+            lookup = data[@Unchecked index - 4u];
+            if lookup != val1 and lookup != val2
+            {
+                return index - 4u;
+            }
+            lookup = data[@Unchecked index - 5u];
+            if lookup != val1 and lookup != val2
+            {
+                return index - 5u;
+            }
+            lookup = data[@Unchecked index - 6u];
+            if lookup != val1 and lookup != val2
+            {
+                return index - 6u;
+            }
+            lookup = data[@Unchecked index - 7u];
+            if lookup != val1 and lookup != val2
+            {
+                return index - 7u;
+            }
+
+            index -%= 8;
+        }
+
+        while length >= 4u {
+            length -= 4u;
+
+            lookup := data[@Unchecked index];
+            if lookup != val1 and lookup != val2
+            {
+                return index;
+            }
+            lookup = data[@Unchecked index - 1u];
+            if lookup != val1 and lookup != val2
+            {
+                return index - 1u;
+            }
+            lookup = data[@Unchecked index - 2u];
+            if lookup != val1 and lookup != val2
+            {
+                return index - 2u;
+            }
+            lookup = data[@Unchecked index - 3u];
+            if lookup != val1 and lookup != val2
+            {
+                return index - 3u;
+            }
+
+            index -%= 4;
+        }
+
+        while length > 0 {
+            --length;
+            lookup := data[@Unchecked index];
+            if lookup != val1 and lookup != val2 {
+                return index;
+            }
+            --%index;
+        }
+        return null;
+    }
+
+    public LastIndexOfAnyExceptGeneralCase: <T> (data: T[&], in ref val1: T, in ref val2: T, in ref val3: T) -> usize? {
+        length := data.Length;
+        index := length - 1u;
+        while length >= 8u {
+            length -= 8u;
+
+            lookup := data[@Unchecked index];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index;
+            }
+            lookup = data[@Unchecked index - 1u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index - 1u;
+            }
+            lookup = data[@Unchecked index - 2u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index - 2u;
+            }
+            lookup = data[@Unchecked index - 3u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index - 3u;
+            }
+            lookup = data[@Unchecked index - 4u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index - 4u;
+            }
+            lookup = data[@Unchecked index - 5u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index - 5u;
+            }
+            lookup = data[@Unchecked index - 6u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index - 6u;
+            }
+            lookup = data[@Unchecked index - 7u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index - 7u;
+            }
+
+            index -%= 8;
+        }
+
+        while length >= 4u {
+            length -= 4u;
+
+            lookup := data[@Unchecked index];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index;
+            }
+            lookup = data[@Unchecked index - 1u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index - 1u;
+            }
+            lookup = data[@Unchecked index - 2u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index - 2u;
+            }
+            lookup = data[@Unchecked index - 3u];
+            if lookup != val1 and lookup != val2 and lookup != val3
+            {
+                return index - 3u;
+            }
+
+            index -%= 4;
+        }
+
+        while length > 0 {
+            --length;
+            lookup := data[@Unchecked index];
+            if lookup != val1 and lookup != val2 and lookup != val3 {
+                return index;
+            }
+            --%index;
+        }
+        return null;
+    }
+
+    public LastIndexOfAnyExceptInRangeGeneralCase: <T> (data: T[&], in ref start: T, in ref end: T) -> usize? {
+        let length := data.Length;
+        for i := isize(length) - 1; i >= 0; --i {
+            let &current := data[@Unchecked i as usize];
+            if current not in start..=end {
+                return i as usize;
+            }
+        }
+        return null;
+    }
+
+    public LastIndexOfAnyExceptByte: (data: byte[&], val: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            return LastIndexOfAnyExceptGeneralCase(data, val);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept1<byte>, Neon, Sse2>(data, val);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept1<byte>, Neon, Avx2, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept1<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val);
+        }
+    }
+
+    public LastIndexOfAnyExceptWord: (data: u16[&], val: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            return LastIndexOfAnyExceptGeneralCase(data, val);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept1<u16>, Neon, Sse2>(data, val);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept1<u16>, Neon, Avx2, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept1<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val);
+        }
+    }
+
+    public LastIndexOfAnyExceptDword: (data: u32[&], val: u32) -> usize? {
+        let length := data.Length;
+        if length < 4u {
+            return LastIndexOfAnyExceptGeneralCase(data, val);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept1<u32>, Neon, Avx512VL128, Sse2>(data, val);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept1<u32>, Neon, Avx512VL256, Avx2, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept1<u32>, Neon, Avx512F, Avx2, Sse2>(data, val);
+        }
+    }
+
+    public LastIndexOfAnyExceptQword: (data: u64[&], val: u64) -> usize? {
+        let length := data.Length;
+        if length < 2u {
+            return LastIndexOfAnyExceptGeneralCase(data, val);
+        } else if length < 4u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept1<u64>, Neon, Avx512VL128, Sse42, Sse2>(data, val);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept1<u64>, Neon, Avx512VL256, Avx2, Sse42, Sse2>(data, val);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept1<u64>, Neon, Avx512F, Avx2, Sse42, Sse2>(data, val);
+        }
+    }
+
+    public LastIndexOfAnyExceptByte: (data: byte[&], val1: byte, val2: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            return LastIndexOfAnyExceptGeneralCase(data, val1, val2);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept2<byte>, Neon, Sse2>(data, val1, val2);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept2<byte>, Neon, Avx2, Sse2>(data, val1, val2);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept2<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2);
+        }
+    }
+
+    public LastIndexOfAnyExceptByte: (data: byte[&], val1: byte, val2: byte, val3: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            return LastIndexOfAnyExceptGeneralCase(data, val1, val2, val3);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept3<byte>, Neon, Sse2>(data, val1, val2, val3);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept3<byte>, Neon, Avx2, Sse2>(data, val1, val2, val3);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept3<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3);
+        }
+    }
+
+    public LastIndexOfAnyExceptByte: (data: byte[&], val1: byte, val2: byte, val3: byte, val4: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            let values: byte[_] = [val1,val2,val3,val4];
+            return LastIndexOfAnyExceptInternal<byte>(data, values);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept4<byte>, Neon, Sse2>(data, val1, val2, val3, val4);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept4<byte>, Neon, Avx2, Sse2>(data, val1, val2, val3, val4);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept4<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3, val4);
+        }
+    }
+
+    public LastIndexOfAnyExceptByte: (data: byte[&], val1: byte, val2: byte, val3: byte, val4: byte, val5: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            let values: byte[_] = [val1,val2,val3,val4,val5];
+            return LastIndexOfAnyExceptInternal<byte>(data, values);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept5<byte>, Neon, Sse2>(data, val1, val2, val3, val4, val5);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept5<byte>, Neon, Avx2, Sse2>(data, val1, val2, val3, val4, val5);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept5<byte>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3, val4, val5);
+        }
+    }
+
+    public LastIndexOfAnyExceptWord: (data: u16[&], val1: u16, val2: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            return LastIndexOfAnyExceptGeneralCase(data, val1, val2);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept2<u16>, Neon, Sse2>(data, val1, val2);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept2<u16>, Neon, Avx2, Sse2>(data, val1, val2);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept2<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2);
+        }
+    }
+
+    public LastIndexOfAnyExceptWord: (data: u16[&], val1: u16, val2: u16, val3: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            return LastIndexOfAnyExceptGeneralCase(data, val1, val2, val3);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept3<u16>, Neon, Sse2>(data, val1, val2, val3);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept3<u16>, Neon, Avx2, Sse2>(data, val1, val2, val3);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept3<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3);
+        }
+    }
+
+    public LastIndexOfAnyExceptWord: (data: u16[&], val1: u16, val2: u16, val3: u16, val4: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            let values: u16[_] = [val1,val2,val3,val4];
+            return LastIndexOfAnyExceptInternal<u16>(data, values);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept4<u16>, Neon, Sse2>(data, val1, val2, val3, val4);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept4<u16>, Neon, Avx2, Sse2>(data, val1, val2, val3, val4);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept4<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3, val4);
+        }
+    }
+
+    public LastIndexOfAnyExceptWord: (data: u16[&], val1: u16, val2: u16, val3: u16, val4: u16, val5: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            let values: u16[_] = [val1,val2,val3,val4,val5];
+            return LastIndexOfAnyExceptInternal<u16>(data, values);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept5<u16>, Neon, Sse2>(data, val1, val2, val3, val4, val5);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept5<u16>, Neon, Avx2, Sse2>(data, val1, val2, val3, val4, val5);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExcept5<u16>, Neon, Avx512BW, Avx2, Sse2>(data, val1, val2, val3, val4, val5);
+        }
+    }
+
+    public LastIndexOfAnyInRangeByte: (data: byte[&], start: byte, end: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            return LastIndexOfAnyInRangeGeneralCase(data, start, end);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyInRange<byte>, Neon, Sse2>(data, start, end);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyInRange<byte>, Neon, Avx2, Sse2>(data, start, end);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyInRange<byte>, Neon, Avx512BW, Avx2, Sse2>(data, start, end);
+        }
+    }
+
+    public LastIndexOfAnyInRangeWord: (data: u16[&], start: u16, end: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            return LastIndexOfAnyInRangeGeneralCase(data, start, end);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyInRange<u16>, Neon, Sse2>(data, start, end);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyInRange<u16>, Neon, Avx2, Sse2>(data, start, end);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyInRange<u16>, Neon, Avx512BW, Avx2, Sse2>(data, start, end);
+        }
+    }
+
+    public LastIndexOfAnyInRangeDword: (data: u32[&], start: u32, end: u32) -> usize? {
+        let length := data.Length;
+        if length < 4u {
+            return LastIndexOfAnyInRangeGeneralCase(data, start, end);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyInRange<u32>, Neon, Avx512VL128, Sse2>(data, start, end);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyInRange<u32>, Neon, Avx512VL256, Avx2, Sse2>(data, start, end);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyInRange<u32>, Neon, Avx512F, Avx2, Sse2>(data, start, end);
+        }
+    }
+
+    public LastIndexOfAnyInRangeQword: (data: u64[&], start: u64, end: u64) -> usize? {
+        let length := data.Length;
+        if length < 2u {
+            return LastIndexOfAnyInRangeGeneralCase(data, start, end);
+        } else if length < 4u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyInRange<u64>, Neon, Avx512VL128, Sse42, Sse2>(data, start, end);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyInRange<u64>, Neon, Avx512VL256, Avx2, Sse42, Sse2>(data, start, end);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyInRange<u64>, Neon, Avx512F, Avx2, Sse42, Sse2>(data, start, end);
+        }
+    }
+
+    public LastIndexOfAnyExceptInRangeByte: (data: byte[&], start: byte, end: byte) -> usize? {
+        let length := data.Length;
+        if length < 16u {
+            return LastIndexOfAnyExceptInRangeGeneralCase(data, start, end);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExceptInRange<byte>, Neon, Sse2>(data, start, end);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExceptInRange<byte>, Neon, Avx2, Sse2>(data, start, end);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExceptInRange<byte>, Neon, Avx512BW, Avx2, Sse2>(data, start, end);
+        }
+    }
+
+    public LastIndexOfAnyExceptInRangeWord: (data: u16[&], start: u16, end: u16) -> usize? {
+        let length := data.Length;
+        if length < 8u {
+            return LastIndexOfAnyExceptInRangeGeneralCase(data, start, end);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExceptInRange<u16>, Neon, Sse2>(data, start, end);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExceptInRange<u16>, Neon, Avx2, Sse2>(data, start, end);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExceptInRange<u16>, Neon, Avx512BW, Avx2, Sse2>(data, start, end);
+        }
+    }
+
+    public LastIndexOfAnyExceptInRangeDword: (data: u32[&], start: u32, end: u32) -> usize? {
+        let length := data.Length;
+        if length < 4u {
+            return LastIndexOfAnyExceptInRangeGeneralCase(data, start, end);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExceptInRange<u32>, Neon, Avx512VL128, Sse2>(data, start, end);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExceptInRange<u32>, Neon, Avx512VL256, Avx2, Sse2>(data, start, end);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExceptInRange<u32>, Neon, Avx512F, Avx2, Sse2>(data, start, end);
+        }
+    }
+
+    public LastIndexOfAnyExceptInRangeQword: (data: u64[&], start: u64, end: u64) -> usize? {
+        let length := data.Length;
+        if length < 2u {
+            return LastIndexOfAnyExceptInRangeGeneralCase(data, start, end);
+        } else if length < 4u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExceptInRange<u64>, Neon, Avx512VL128, Sse42, Sse2>(data, start, end);
+        } else if length < 8u {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExceptInRange<u64>, Neon, Avx512VL256, Avx2, Sse42, Sse2>(data, start, end);
+        } else {
+            return Simd.RuntimeDispatch<SpanLastIndexOfAnyExceptInRange<u64>, Neon, Avx512F, Avx2, Sse42, Sse2>(data, start, end);
+        }
+    }
+
+    public ReplaceGeneralCase: <T> (buf: T[&mut], in ref oldValue: T, in ref newValue: T) {
+        for &i in buf {
+            if i == oldValue {
+                i = newValue;
+            }
+        }
+    }
+
+    public ReplaceByte: (buf: byte[&mut], oldValue: byte, newValue: byte) {
+        let length := buf.Length;
+        if length < 16u {
+            ReplaceGeneralCase(buf, oldValue, newValue);
+        } else if length < 32u {
+            Simd.RuntimeDispatch<SpanReplace<byte>, Neon, Sse42, Sse2>(buf, oldValue, newValue);
+        } else if length < 64u {
+            Simd.RuntimeDispatch<SpanReplace<byte>, Neon, Avx2, Sse42, Sse2>(buf, oldValue, newValue);
+        } else {
+            Simd.RuntimeDispatch<SpanReplace<byte>, Neon, Avx512BW, Avx2, Sse42, Sse2>(buf, oldValue, newValue);
+        }
+    }
+
+    public ReplaceWord: (buf: u16[&mut], oldValue: u16, newValue: u16) {
+        let length := buf.Length;
+        if length < 8u {
+            ReplaceGeneralCase(buf, oldValue, newValue);
+        } else if length < 16u {
+            Simd.RuntimeDispatch<SpanReplace<u16>, Neon, Sse42, Sse2>(buf, oldValue, newValue);
+        } else if length < 32u {
+            Simd.RuntimeDispatch<SpanReplace<u16>, Neon, Avx2, Sse42, Sse2>(buf, oldValue, newValue);
+        } else {
+            Simd.RuntimeDispatch<SpanReplace<u16>, Neon, Avx512BW, Avx2, Sse42, Sse2>(buf, oldValue, newValue);
+        }
+    }
+
+    public ReplaceDword: (buf: u32[&mut], oldValue: u32, newValue: u32) {
+        let length := buf.Length;
+        if length < 4u {
+            ReplaceGeneralCase(buf, oldValue, newValue);
+        } else if length < 8u {
+            Simd.RuntimeDispatch<SpanReplace<u32>, Neon, Avx512VL128, Sse42, Sse2>(buf, oldValue, newValue);
+        } else if length < 16u {
+            Simd.RuntimeDispatch<SpanReplace<u32>, Neon, Avx512VL256, Avx2, Sse42, Sse2>(buf, oldValue, newValue);
+        } else {
+            Simd.RuntimeDispatch<SpanReplace<u32>, Neon, Avx512F, Avx2, Sse42, Sse2>(buf, oldValue, newValue);
+        }
+    }
+
+    public ReplaceQword: (buf: u64[&mut], oldValue: u64, newValue: u64) {
+        let length := buf.Length;
+        if length < 2u {
+            ReplaceGeneralCase(buf, oldValue, newValue);
+        } else if length < 4u {
+            Simd.RuntimeDispatch<SpanReplace<u64>, Neon, Avx512VL128, Sse42, Sse2>(buf, oldValue, newValue);
+        } else if length < 8u {
+            Simd.RuntimeDispatch<SpanReplace<u64>, Neon, Avx512VL256, Avx2, Sse42, Sse2>(buf, oldValue, newValue);
+        } else {
+            Simd.RuntimeDispatch<SpanReplace<u64>, Neon, Avx512F, Avx2, Sse42, Sse2>(buf, oldValue, newValue);
+        }
+    }
+
     public SequenceEqualsGeneralCase: <T> (lhs: T[&], rhs: T[&]) -> bool {
         length := lhs.Length;
         offset: i32;
@@ -2673,6 +4515,71 @@ protected static class SpanHelpers {
             return Simd.RuntimeDispatch<SpanSequenceEquals<u64>, Neon, Avx512F, Avx2, Sse42, Sse2>(lhs, rhs);
         }
     }
+
+    public ReverseGeneralCase: <T> (buf: T[&mut]) {
+        assert buf.Length >= 2u;
+        first: &mut T = &buf[@Unchecked 0];
+        last: &mut T = &buf[@Unchecked ^1u];
+        do {
+            let tmp := T(first);
+            first = T(last);
+            last = tmp;
+            first = Unsafe.Add(first, 1u);
+            last = Unsafe.Subtract(last, 1u);
+        } while Unsafe.IsAddressLessThan(first, last);
+    }
+
+    public ReverseBytes: (buf: byte[&mut]) {
+        let length := buf.Length;
+        if length < 32u {
+            ReverseGeneralCase(buf);
+        } else if length < 48u {
+            Simd.RuntimeDispatch<SpanReverse<byte>, Neon64, Neon, Sse42, Sse2>(buf);
+        } else if length < 128u {
+            Simd.RuntimeDispatch<SpanReverse<byte>, Neon64, Neon, Avx2, Sse42, Sse2>(buf);
+        } else {
+            Simd.RuntimeDispatch<SpanReverse<byte>, Neon64, Neon, Avx512Vbmi, Avx2, Sse42, Sse2>(buf);
+        }
+    }
+
+    public ReverseWords: (buf: u16[&mut]) {
+        let length := buf.Length;
+        if length < 16u {
+            ReverseGeneralCase(buf);
+        } else if length < 24u {
+            Simd.RuntimeDispatch<SpanReverse<u16>, Neon64, Neon, Sse42, Sse2>(buf);
+        } else if length < 64u {
+            Simd.RuntimeDispatch<SpanReverse<u16>, Neon64, Neon, Avx2, Sse42, Sse2>(buf);
+        } else {
+            Simd.RuntimeDispatch<SpanReverse<u16>, Neon64, Neon, Avx512BW, Avx2, Sse42, Sse2>(buf);
+        }
+    }
+
+    public ReverseDwords: (buf: u32[&mut]) {
+        let length := buf.Length;
+        if length < 8u {
+            ReverseGeneralCase(buf);
+        } else if length < 16u {
+            Simd.RuntimeDispatch<SpanReverse<u32>, Neon64, Neon, Sse42, Sse2>(buf);
+        } else if length < 32u {
+            Simd.RuntimeDispatch<SpanReverse<u32>, Neon64, Neon, Avx, Sse42, Sse2>(buf);
+        } else {
+            Simd.RuntimeDispatch<SpanReverse<u32>, Neon64, Neon, Avx512F, Avx, Sse42, Sse2>(buf);
+        }
+    }
+
+    public ReverseQwords: (buf: u64[&mut]) {
+        let length := buf.Length;
+        if length < 4u {
+            ReverseGeneralCase(buf);
+        } else if length < 8u {
+            Simd.RuntimeDispatch<SpanReverse<u64>, Neon64, Neon, Sse42, Sse2>(buf);
+        } else if length < 16u {
+            Simd.RuntimeDispatch<SpanReverse<u64>, Neon64, Neon, Avx, Sse42, Sse2>(buf);
+        } else {
+            Simd.RuntimeDispatch<SpanReverse<u64>, Neon64, Neon, Avx512F, Avx, Sse42, Sse2>(buf);
+        }
+    }
 }
 
 private static class <T> SpanContains {
@@ -2741,7 +4648,10 @@ private static class <T> SpanCount {
             count += currentMask.Count;
         }
         mask := (TVector::LoadUnsafe(data[@Unchecked vecLast]) ==^ values).ScalarMask;
-        mask >>= i - vecLast;
+        if i > vecLast {
+            //mask <<= 64u - vecSize + (i - vecLast);
+            mask >>= i - vecLast;
+        }
         count += mask.PopCount;
         return count;
     }
@@ -2760,14 +4670,14 @@ private static class <T> SpanIndexOf {
         for i := 0u; i <= vecLast; i += vecSize {
             current = TVector::LoadUnsafe(data[@Unchecked i]);
             currentMask = current ==^ values;
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + i;
             }
         }
         if not count.IsMultipleOf(vecSize) {
             current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
             currentMask = current ==^ values;
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + vecLast;
             }
         }
@@ -2789,14 +4699,14 @@ private static class <T> SpanIndexOfAny2 {
         for i := 0u; i <= vecLast; i += vecSize {
             current = TVector::LoadUnsafe(data[@Unchecked i]);
             currentMask = (current ==^ values1) | (current ==^ values2);
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + i;
             }
         }
         if not count.IsMultipleOf(vecSize) {
             current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
             currentMask = (current ==^ values1) | (current ==^ values2);
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + vecLast;
             }
         }
@@ -2819,14 +4729,14 @@ private static class <T> SpanIndexOfAny3 {
         for i := 0u; i <= vecLast; i += vecSize {
             current = TVector::LoadUnsafe(data[@Unchecked i]);
             currentMask = (current ==^ values1) | (current ==^ values2) | (current ==^ values3);
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + i;
             }
         }
         if not count.IsMultipleOf(vecSize) {
             current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
             currentMask = (current ==^ values1) | (current ==^ values2) | (current ==^ values3);
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + vecLast;
             }
         }
@@ -2850,14 +4760,14 @@ private static class <T> SpanIndexOfAny4 {
         for i := 0u; i <= vecLast; i += vecSize {
             current = TVector::LoadUnsafe(data[@Unchecked i]);
             currentMask = (current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4);
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + i;
             }
         }
         if not count.IsMultipleOf(vecSize) {
             current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
             currentMask = (current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4);
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + vecLast;
             }
         }
@@ -2883,7 +4793,7 @@ private static class <T> SpanIndexOfAny5 {
             current = TVector::LoadUnsafe(data[@Unchecked i]);
             currentMask = (current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4) | 
                           (current ==^ values5);
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + i;
             }
         }
@@ -2891,7 +4801,7 @@ private static class <T> SpanIndexOfAny5 {
             current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
             currentMask = (current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4) | 
                           (current ==^ values5);
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + vecLast;
             }
         }
@@ -2912,14 +4822,14 @@ private static class <T> SpanIndexOfAnyExcept1 {
         for i := 0u; i <= vecLast; i += vecSize {
             current = TVector::LoadUnsafe(data[@Unchecked i]);
             currentMask = current !=^ values;
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + i;
             }
         }
         if not count.IsMultipleOf(vecSize) {
             current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
             currentMask = current !=^ values;
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + vecLast;
             }
         }
@@ -2941,14 +4851,14 @@ private static class <T> SpanIndexOfAnyExcept2 {
         for i := 0u; i <= vecLast; i += vecSize {
             current = TVector::LoadUnsafe(data[@Unchecked i]);
             currentMask = ~((current ==^ values1) | (current ==^ values2));
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + i;
             }
         }
         if not count.IsMultipleOf(vecSize) {
             current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
             currentMask = ~((current ==^ values1) | (current ==^ values2));
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + vecLast;
             }
         }
@@ -2971,14 +4881,14 @@ private static class <T> SpanIndexOfAnyExcept3 {
         for i := 0u; i <= vecLast; i += vecSize {
             current = TVector::LoadUnsafe(data[@Unchecked i]);
             currentMask = ~((current ==^ values1) | (current ==^ values2) | (current ==^ values3));
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + i;
             }
         }
         if not count.IsMultipleOf(vecSize) {
             current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
             currentMask = ~((current ==^ values1) | (current ==^ values2) | (current ==^ values3));
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + vecLast;
             }
         }
@@ -3002,14 +4912,14 @@ private static class <T> SpanIndexOfAnyExcept4 {
         for i := 0u; i <= vecLast; i += vecSize {
             current = TVector::LoadUnsafe(data[@Unchecked i]);
             currentMask = ~((current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4));
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + i;
             }
         }
         if not count.IsMultipleOf(vecSize) {
             current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
             currentMask = ~((current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4));
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + vecLast;
             }
         }
@@ -3035,7 +4945,7 @@ private static class <T> SpanIndexOfAnyExcept5 {
             current = TVector::LoadUnsafe(data[@Unchecked i]);
             currentMask = ~((current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4) | 
                           (current ==^ values5));
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + i;
             }
         }
@@ -3043,7 +4953,7 @@ private static class <T> SpanIndexOfAnyExcept5 {
             current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
             currentMask = ~((current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4) | 
                           (current ==^ values5));
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + vecLast;
             }
         }
@@ -3065,14 +4975,14 @@ private static class <T> SpanIndexOfAnyInRange {
         for i := 0u; i <= vecLast; i += vecSize {
             current = TVector::LoadUnsafe(data[@Unchecked i]) -% low;
             currentMask = current <=^ range;
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + i;
             }
         }
         if not count.IsMultipleOf(vecSize) {
             current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
             currentMask = (current -% low) <=^ range;
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + vecLast;
             }
         }
@@ -3094,18 +5004,529 @@ private static class <T> SpanIndexOfAnyExceptInRange {
         for i := 0u; i <= vecLast; i += vecSize {
             current = TVector::LoadUnsafe(data[@Unchecked i]);
             currentMask = ~((current -% low) <=^ range);
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + i;
             }
         }
         if not count.IsMultipleOf(vecSize) {
             current = TVector::LoadUnsafe(data[@Unchecked vecLast]);
             currentMask = ~((current -% low) <=^ range);
-            if let index := currentMask.LeadingZeros {
+            if let index := currentMask.FirstSet {
                 return index + vecLast;
             }
         }
         return null;
+    }
+}
+
+private static class <T> SpanLastIndexOf {
+    public Invoke: <Arch> (data: T[&], val: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := isize(count) - vecSize;
+        let values := TVector::Create(val);
+        current: TVector;
+        currentMask: TMask;
+        for i := vecLast; i > 0; i -= vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i as usize]);
+            currentMask = current ==^ values;
+            if let index := currentMask.LastSet {
+                return index + i;
+            }
+        }
+        current = TVector::LoadUnsafe(data[@Unchecked 0]);
+        currentMask = current ==^ values;
+        if let index := currentMask.LastSet {
+            return index;
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanLastIndexOfAny2 {
+    public Invoke: <Arch> (data: T[&], val1: T, val2: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := isize(count) - vecSize;
+        let values1 := TVector::Create(val1);
+        let values2 := TVector::Create(val2);
+        current: TVector;
+        currentMask: TMask;
+        for i := vecLast; i > 0; i -= vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i as usize]);
+            currentMask = (current ==^ values1) | (current ==^ values2);
+            if let index := currentMask.LastSet {
+                return index + i;
+            }
+        }
+        current = TVector::LoadUnsafe(data[@Unchecked 0]);
+        currentMask = (current ==^ values1) | (current ==^ values2);
+        if let index := currentMask.LastSet {
+            return index;
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanLastIndexOfAny3 {
+    public Invoke: <Arch> (data: T[&], val1: T, val2: T, val3: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := isize(count) - vecSize;
+        let values1 := TVector::Create(val1);
+        let values2 := TVector::Create(val2);
+        let values3 := TVector::Create(val3);
+        current: TVector;
+        currentMask: TMask;
+        for i := vecLast; i > 0; i -= vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i as usize]);
+            currentMask = (current ==^ values1) | (current ==^ values2) | (current ==^ values3);
+            if let index := currentMask.LastSet {
+                return index + i;
+            }
+        }
+        current = TVector::LoadUnsafe(data[@Unchecked 0]);
+        currentMask = (current ==^ values1) | (current ==^ values2) | (current ==^ values3);
+        if let index := currentMask.LastSet {
+            return index;
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanLastIndexOfAny4 {
+    public Invoke: <Arch> (data: T[&], val1: T, val2: T, val3: T, val4: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := isize(count) - vecSize;
+        let values1 := TVector::Create(val1);
+        let values2 := TVector::Create(val2);
+        let values3 := TVector::Create(val3);
+        let values4 := TVector::Create(val4);
+        current: TVector;
+        currentMask: TMask;
+        for i := vecLast; i > 0; i -= vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i as usize]);
+            currentMask = (current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4);
+            if let index := currentMask.LastSet {
+                return index + i;
+            }
+        }
+        current = TVector::LoadUnsafe(data[@Unchecked 0]);
+        currentMask = (current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4);
+        if let index := currentMask.LastSet {
+            return index;
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanLastIndexOfAny5 {
+    public Invoke: <Arch> (data: T[&], val1: T, val2: T, val3: T, val4: T, val5: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := isize(count) - vecSize;
+        let values1 := TVector::Create(val1);
+        let values2 := TVector::Create(val2);
+        let values3 := TVector::Create(val3);
+        let values4 := TVector::Create(val4);
+        let values5 := TVector::Create(val5);
+        current: TVector;
+        currentMask: TMask;
+        for i := vecLast; i > 0; i -= vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i as usize]);
+            currentMask = (current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4) | 
+                          (current ==^ values5);
+            if let index := currentMask.LastSet {
+                return index + i;
+            }
+        }
+        current = TVector::LoadUnsafe(data[@Unchecked 0]);
+        currentMask = (current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4) | 
+                        (current ==^ values5);
+        if let index := currentMask.LastSet {
+            return index;
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanLastIndexOfAnyExcept1 {
+    public Invoke: <Arch> (data: T[&], val: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := isize(count) - vecSize;
+        let values := TVector::Create(val);
+        current: TVector;
+        currentMask: TMask;
+        for i := vecLast; i > 0; i -= vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i as usize]);
+            currentMask = current !=^ values;
+            if let index := currentMask.LastSet {
+                return index + i;
+            }
+        }
+        current = TVector::LoadUnsafe(data[@Unchecked 0]);
+        currentMask = current !=^ values;
+        if let index := currentMask.LastSet {
+            return index;
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanLastIndexOfAnyExcept2 {
+    public Invoke: <Arch> (data: T[&], val1: T, val2: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := isize(count) - vecSize;
+        let values1 := TVector::Create(val1);
+        let values2 := TVector::Create(val2);
+        current: TVector;
+        currentMask: TMask;
+        for i := vecLast; i > 0; i -= vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i as usize]);
+            currentMask = ~((current ==^ values1) | (current ==^ values2));
+            if let index := currentMask.LastSet {
+                return index + i;
+            }
+        }
+        current = TVector::LoadUnsafe(data[@Unchecked 0]);
+        currentMask = ~((current ==^ values1) | (current ==^ values2));
+        if let index := currentMask.LastSet {
+            return index;
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanLastIndexOfAnyExcept3 {
+    public Invoke: <Arch> (data: T[&], val1: T, val2: T, val3: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := isize(count) - vecSize;
+        let values1 := TVector::Create(val1);
+        let values2 := TVector::Create(val2);
+        let values3 := TVector::Create(val3);
+        current: TVector;
+        currentMask: TMask;
+        for i := vecLast; i > 0; i -= vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i as usize]);
+            currentMask = ~((current ==^ values1) | (current ==^ values2) | (current ==^ values3));
+            if let index := currentMask.LastSet {
+                return index + i;
+            }
+        }
+        current = TVector::LoadUnsafe(data[@Unchecked 0]);
+        currentMask = ~((current ==^ values1) | (current ==^ values2) | (current ==^ values3));
+        if let index := currentMask.LastSet {
+            return index;
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanLastIndexOfAnyExcept4 {
+    public Invoke: <Arch> (data: T[&], val1: T, val2: T, val3: T, val4: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := isize(count) - vecSize;
+        let values1 := TVector::Create(val1);
+        let values2 := TVector::Create(val2);
+        let values3 := TVector::Create(val3);
+        let values4 := TVector::Create(val4);
+        current: TVector;
+        currentMask: TMask;
+        for i := vecLast; i > 0; i -= vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i as usize]);
+            currentMask = ~((current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4));
+            if let index := currentMask.LastSet {
+                return index + i;
+            }
+        }
+        current = TVector::LoadUnsafe(data[@Unchecked 0]);
+        currentMask = ~((current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4));
+        if let index := currentMask.LastSet {
+            return index;
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanLastIndexOfAnyExcept5 {
+    public Invoke: <Arch> (data: T[&], val1: T, val2: T, val3: T, val4: T, val5: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := isize(count) - vecSize;
+        let values1 := TVector::Create(val1);
+        let values2 := TVector::Create(val2);
+        let values3 := TVector::Create(val3);
+        let values4 := TVector::Create(val4);
+        let values5 := TVector::Create(val5);
+        current: TVector;
+        currentMask: TMask;
+        for i := vecLast; i > 0; i -= vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i as usize]);
+            currentMask = ~((current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4) | 
+                          (current ==^ values5));
+            if let index := currentMask.LastSet {
+                return index + i;
+            }
+        }
+        current = TVector::LoadUnsafe(data[@Unchecked 0]);
+        currentMask = ~((current ==^ values1) | (current ==^ values2) | (current ==^ values3) | (current ==^ values4) | 
+                        (current ==^ values5));
+        if let index := currentMask.LastSet {
+            return index;
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanLastIndexOfAnyInRange {
+    public Invoke: <Arch> (data: T[&], start: T, end: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := isize(count) - vecSize;
+        let low := TVector::Create(start);
+        let range := TVector::Create(end - start);
+        current: TVector;
+        currentMask: TMask;
+        for i := vecLast; i > 0; i -= vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i as usize]) -% low;
+            currentMask = current <=^ range;
+            if let index := currentMask.LastSet {
+                return index + i;
+            }
+        }
+        current = TVector::LoadUnsafe(data[@Unchecked 0]);
+        currentMask = (current -% low) <=^ range;
+        if let index := currentMask.LastSet {
+            return index;
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanLastIndexOfAnyExceptInRange {
+    public Invoke: <Arch> (data: T[&], start: T, end: T) -> usize? {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := data.Length;
+        let vecLast := isize(count) - vecSize;
+        let low := TVector::Create(start);
+        let range := TVector::Create(end - start);
+        current: TVector;
+        currentMask: TMask;
+        for i := vecLast; i > 0; i -= vecSize {
+            current = TVector::LoadUnsafe(data[@Unchecked i as usize]);
+            currentMask = ~((current -% low) <=^ range);
+            if let index := currentMask.LastSet {
+                return index + i;
+            }
+        }
+        current = TVector::LoadUnsafe(data[@Unchecked 0]);
+        currentMask = ~((current -% low) <=^ range);
+        if let index := currentMask.LastSet {
+            return index;
+        }
+        return null;
+    }
+}
+
+private static class <T> SpanReplace {
+    public Invoke: <Arch> (buf: T[&mut], oldValue: T, newValue: T) {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := buf.Length;
+        let vecLast := count - vecSize;
+        let oldValues := TVector::Create(oldValue);
+        let newValues := TVector::Create(newValue);
+        original: TVector;
+        currentMask: TMask;
+        result: TVector;
+        for i := 0u; i < vecLast; i += vecSize {
+            original = TVector::LoadUnsafe(buf[@Unchecked i]);
+            currentMask = original ==^ oldValues;
+            result = TVector::ConditionalSelect(currentMask, newValues, original);
+            result.StoreUnsafe(&buf[@Unchecked i]);
+        }
+        original = TVector::LoadUnsafe(buf[@Unchecked vecLast]);
+        currentMask = original ==^ oldValues;
+        result = TVector::ConditionalSelect(currentMask, newValues, original);
+        result.StoreUnsafe(&buf[@Unchecked vecLast]);
+    }
+}
+
+private static class <T> SpanReverse {
+    public Invoke: <Arch> (buf: T[&mut]) {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        let count := buf.Length;
+        remainder := count as isize;
+        offset: isize;
+        lastOffset := remainder - vecSize;
+
+        do {
+            tmpFirst := TVector::LoadUnsafe(buf[@Unchecked offset as usize]);
+            tmpLast := TVector::LoadUnsafe(buf[@Unchecked lastOffset as usize]);
+
+            static if sizeof(T) == 1 {
+                static if type Arch == Avx512Vbmi {
+                    tmpFirst = Avx512Vbmi::Swizzle(tmpFirst, TVector::Create(
+                        63u8, 62u8, 61u8, 60u8, 59u8, 58u8, 57u8, 56u8, 55u8, 54u8, 53u8, 52u8, 51u8, 50u8, 49u8, 48u8,
+                        47u8, 46u8, 45u8, 44u8, 43u8, 42u8, 41u8, 40u8, 39u8, 38u8, 37u8, 36u8, 35u8, 34u8, 33u8, 32u8,
+                        31u8, 30u8, 29u8, 28u8, 27u8, 26u8, 25u8, 24u8, 23u8, 22u8, 21u8, 20u8, 19u8, 18u8, 17u8, 16u8,
+                        15u8, 14u8, 13u8, 12u8, 11u8, 10u8, 9u8, 8u8, 7u8, 6u8, 5u8, 4u8, 3u8, 2u8, 1u8, 0u8));
+                    tmpLast = Avx512Vbmi::Swizzle(tmpLast, TVector::Create(
+                        63u8, 62u8, 61u8, 60u8, 59u8, 58u8, 57u8, 56u8, 55u8, 54u8, 53u8, 52u8, 51u8, 50u8, 49u8, 48u8,
+                        47u8, 46u8, 45u8, 44u8, 43u8, 42u8, 41u8, 40u8, 39u8, 38u8, 37u8, 36u8, 35u8, 34u8, 33u8, 32u8,
+                        31u8, 30u8, 29u8, 28u8, 27u8, 26u8, 25u8, 24u8, 23u8, 22u8, 21u8, 20u8, 19u8, 18u8, 17u8, 16u8,
+                        15u8, 14u8, 13u8, 12u8, 11u8, 10u8, 9u8, 8u8, 7u8, 6u8, 5u8, 4u8, 3u8, 2u8, 1u8, 0u8));
+                } else static if type Arch == Avx2 {
+                    tmpFirst = Avx2::Swizzle(tmpFirst, TVector::Create(
+                        31u8, 30u8, 29u8, 28u8, 27u8, 26u8, 25u8, 24u8, 23u8, 22u8, 21u8, 20u8, 19u8, 18u8, 17u8, 16u8,
+                        15u8, 14u8, 13u8, 12u8, 11u8, 10u8, 9u8, 8u8, 7u8, 6u8, 5u8, 4u8, 3u8, 2u8, 1u8, 0u8
+                    ));
+                    tmpLast = Avx2::Swizzle(tmpLast, TVector::Create(
+                        31u8, 30u8, 29u8, 28u8, 27u8, 26u8, 25u8, 24u8, 23u8, 22u8, 21u8, 20u8, 19u8, 18u8, 17u8, 16u8,
+                        15u8, 14u8, 13u8, 12u8, 11u8, 10u8, 9u8, 8u8, 7u8, 6u8, 5u8, 4u8, 3u8, 2u8, 1u8, 0u8
+                    ));
+                } else static if type Arch == Sse42 {
+                    tmpFirst = Sse42::Swizzle(tmpFirst, TVector::Create(
+                        15u8, 14u8, 13u8, 12u8, 11u8, 10u8, 9u8, 8u8, 7u8, 6u8, 5u8, 4u8, 3u8, 2u8, 1u8, 0u8));
+                    tmpLast = Sse42::Swizzle(tmpLast, TVector::Create(
+                        15u8, 14u8, 13u8, 12u8, 11u8, 10u8, 9u8, 8u8, 7u8, 6u8, 5u8, 4u8, 3u8, 2u8, 1u8, 0u8));
+                } else static if type Arch == Sse2 {
+                    tmpFirst = Sse2::Swizzle(tmpFirst, TVector::Create(
+                        15u8, 14u8, 13u8, 12u8, 11u8, 10u8, 9u8, 8u8, 7u8, 6u8, 5u8, 4u8, 3u8, 2u8, 1u8, 0u8));
+                    tmpLast = Sse2::Swizzle(tmpLast, TVector::Create(
+                        15u8, 14u8, 13u8, 12u8, 11u8, 10u8, 9u8, 8u8, 7u8, 6u8, 5u8, 4u8, 3u8, 2u8, 1u8, 0u8));
+                } else static if type Arch == Neon64 {
+                    tmpFirst = Neon64::Swizzle(tmpFirst, TVector::Create(
+                        15u8, 14u8, 13u8, 12u8, 11u8, 10u8, 9u8, 8u8, 7u8, 6u8, 5u8, 4u8, 3u8, 2u8, 1u8, 0u8));
+                    tmpLast = Neon64::Swizzle(tmpLast, TVector::Create(
+                        15u8, 14u8, 13u8, 12u8, 11u8, 10u8, 9u8, 8u8, 7u8, 6u8, 5u8, 4u8, 3u8, 2u8, 1u8, 0u8));
+                } else static if type Arch == Neon {
+                    tmpFirst = Neon::Swizzle(tmpFirst, TVector::Create(
+                        15u8, 14u8, 13u8, 12u8, 11u8, 10u8, 9u8, 8u8, 7u8, 6u8, 5u8, 4u8, 3u8, 2u8, 1u8, 0u8));
+                    tmpLast = Neon::Swizzle(tmpLast, TVector::Create(
+                        15u8, 14u8, 13u8, 12u8, 11u8, 10u8, 9u8, 8u8, 7u8, 6u8, 5u8, 4u8, 3u8, 2u8, 1u8, 0u8));
+                }
+            } else static if sizeof(T) == 2 {
+                static if type Arch == Avx512BW {
+                    tmpFirst = Avx512BW::Swizzle(tmpFirst, TVector::Create(
+                        31u16, 30u16, 29u16, 28u16, 27u16, 26u16, 25u16, 24u16, 23u16, 22u16, 21u16, 20u16, 19u16, 18u16, 17u16, 16u16,
+                        15u16, 14u16, 13u16, 12u16, 11u16, 10u16, 9u16, 8u16, 7u16, 6u16, 5u16, 4u16, 3u16, 2u16, 1u16, 0u16));
+                    tmpLast = Avx512BW::Swizzle(tmpLast, TVector::Create(
+                        31u16, 30u16, 29u16, 28u16, 27u16, 26u16, 25u16, 24u16, 23u16, 22u16, 21u16, 20u16, 19u16, 18u16, 17u16, 16u16,
+                        15u16, 14u16, 13u16, 12u16, 11u16, 10u16, 9u16, 8u16, 7u16, 6u16, 5u16, 4u16, 3u16, 2u16, 1u16, 0u16));
+                } else static if type Arch == Avx2 {
+                    tmpFirst = Avx2::Swizzle(tmpFirst, TVector::Create(
+                        15u16, 14u16, 13u16, 12u16, 11u16, 10u16, 9u16, 8u16, 7u16, 6u16, 5u16, 4u16, 3u16, 2u16, 1u16, 0u16
+                    ));
+                    tmpLast = Avx2::Swizzle(tmpLast, TVector::Create(
+                        15u16, 14u16, 13u16, 12u16, 11u16, 10u16, 9u16, 8u16, 7u16, 6u16, 5u16, 4u16, 3u16, 2u16, 1u16, 0u16
+                    ));
+                } else static if type Arch == Sse42 {
+                    tmpFirst = Sse42::Swizzle(tmpFirst, TVector::Create(
+                        7u16, 6u16, 5u16, 4u16, 3u16, 2u16, 1u16, 0u16));
+                    tmpLast = Sse42::Swizzle(tmpLast, TVector::Create(
+                        7u16, 6u16, 5u16, 4u16, 3u16, 2u16, 1u16, 0u16));
+                } else static if type Arch == Sse2 {
+                    tmpFirst = Sse2::Swizzle(tmpFirst, TVector::Create(
+                        7u16, 6u16, 5u16, 4u16, 3u16, 2u16, 1u16, 0u16));
+                    tmpLast = Sse2::Swizzle(tmpLast, TVector::Create(
+                        7u16, 6u16, 5u16, 4u16, 3u16, 2u16, 1u16, 0u16));
+                } else static if type Arch == Neon64 {
+                    tmpFirst = Neon64::Swizzle(tmpFirst, TVector::Create(
+                        7u16, 6u16, 5u16, 4u16, 3u16, 2u16, 1u16, 0u16));
+                    tmpLast = Neon64::Swizzle(tmpLast, TVector::Create(
+                        7u16, 6u16, 5u16, 4u16, 3u16, 2u16, 1u16, 0u16));
+                } else static if type Arch == Neon {
+                    tmpFirst = Neon::Swizzle(tmpFirst, TVector::Create(
+                        7u16, 6u16, 5u16, 4u16, 3u16, 2u16, 1u16, 0u16));
+                    tmpLast = Neon::Swizzle(tmpLast, TVector::Create(
+                        7u16, 6u16, 5u16, 4u16, 3u16, 2u16, 1u16, 0u16));
+                }
+            } else static if sizeof(T) == 4 {
+                static if type Arch == Avx512F {
+                    tmpFirst = Avx512F::Swizzle<15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0>(tmpFirst);
+                    tmpLast = Avx512F::Swizzle<15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0>(tmpLast);
+                } else static if type Arch == Avx {
+                    tmpFirst = Avx::Swizzle<7, 6, 5, 4, 3, 2, 1, 0>(tmpFirst);
+                    tmpLast = Avx::Swizzle<7, 6, 5, 4, 3, 2, 1, 0>(tmpLast);
+                } else static if type Arch == Sse42 {
+                    tmpFirst = Sse42::Swizzle<3, 2, 1, 0>(tmpFirst);
+                    tmpLast = Sse42::Swizzle<3, 2, 1, 0>(tmpLast);
+                } else static if type Arch == Sse2 {
+                    tmpFirst = Sse2::Swizzle<3, 2, 1, 0>(tmpFirst);
+                    tmpLast = Sse2::Swizzle<3, 2, 1, 0>(tmpLast);
+                } else static if type Arch == Neon64 {
+                    tmpFirst = Neon64::Swizzle<3, 2, 1, 0>(tmpFirst);
+                    tmpLast = Neon64::Swizzle<3, 2, 1, 0>(tmpLast);
+                } else static if type Arch == Neon {
+                    tmpFirst = Neon::Swizzle<3, 2, 1, 0>(tmpFirst);
+                    tmpLast = Neon::Swizzle<3, 2, 1, 0>(tmpLast);
+                }
+            } else static if sizeof(T) == 8 {
+                static if type Arch == Avx512F {
+                    tmpFirst = Avx512F::Swizzle<7, 6, 5, 4, 3, 2, 1, 0>(tmpFirst);
+                    tmpLast = Avx512F::Swizzle<7, 6, 5, 4, 3, 2, 1, 0>(tmpLast);
+                } else static if type Arch == Avx {
+                    tmpFirst = Avx::Swizzle<3, 2, 1, 0>(tmpFirst);
+                    tmpLast = Avx::Swizzle<3, 2, 1, 0>(tmpLast);
+                } else static if type Arch == Sse42 {
+                    tmpFirst = Sse42::Swizzle<1, 0>(tmpFirst);
+                    tmpLast = Sse42::Swizzle<1, 0>(tmpLast);
+                } else static if type Arch == Sse2 {
+                    tmpFirst = Sse2::Swizzle<1, 0>(tmpFirst);
+                    tmpLast = Sse2::Swizzle<1, 0>(tmpLast);
+                } else static if type Arch == Neon64 {
+                    tmpFirst = Neon64::Swizzle<1, 0>(tmpFirst);
+                    tmpLast = Neon64::Swizzle<1, 0>(tmpLast);
+                } else static if type Arch == Neon {
+                    tmpFirst = Neon::Swizzle<1, 0>(tmpFirst);
+                    tmpLast = Neon::Swizzle<1, 0>(tmpLast);
+                }
+            }
+
+            tmpLast.StoreUnsafe(&buf[@Unchecked offset as usize]);
+            tmpFirst.StoreUnsafe(&buf[@Unchecked lastOffset as usize]);
+
+            offset += vecSize;
+            lastOffset -= vecSize;
+        } while lastOffset >= offset;
+        remainder = lastOffset + vecSize - offset;
+
+        if remainder > 1 {
+            SpanHelpers.ReverseGeneralCase(buf.SliceUnchecked(offset as usize, remainder as usize));
+        }
     }
 }
 
@@ -3196,14 +5617,17 @@ test "Span" {
     assert sp.Count(15) == 1u;
     assert sp.Count(18) == 0u;
     assert arrv3[..].Count(sp[..2u]) == 2u;
-    arrv3 = [1,2,2,2,3,7,8,9,2,2,4,2,2,2,2,5,2,3];
+    arrv3 = [1,2,2,2,3,7,8,9,2,2,4,3,2,2,2,5,2,2];
     sp = arrv3;
     assert sp.Count(2) == 10u;
     assert sp.IndexOf(2) == 1u;
     assert sp.IndexOf(3) == 4u;
+    assert sp.LastIndexOf(2) == 17u;
+    assert sp.LastIndexOf(3) == 11u;
     arrv3 = [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2];
     assert sp.Count(2) == 18u;
     assert sp.IndexOf(2) == 0u;
+    assert sp.LastIndexOf(2) == 17u;
 
     assert sp.SequenceEquals(sp);
     arrv3 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1, 2];
@@ -3220,6 +5644,12 @@ test "Span" {
     assert sp.IndexOf(8) == 7u;
     assert sp.IndexOf(arrv3[5u..10u]) == 5u;
     assert sp.IndexOf(arrv3) == null;
+    assert sp.LastIndexOf(2) == 1u;
+    assert sp.LastIndexOf(23) == null;
+    assert sp.LastIndexOf(8) == 7u;
+    assert sp.LastIndexOf(arrv3[5u..10u]) == 5u;
+    assert arrv3.LastIndexOf(sp[..2u]) == 16u;
+    assert sp.LastIndexOf(arrv3) == null;
 
     assert sp.IndexOfAny(3, 5) == 2u;
     assert sp.IndexOfAny(3, 5, 7) == 2u;
@@ -3236,7 +5666,60 @@ test "Span" {
     assert sp.IndexOfAnyExcept(..=10) == 10u;
     assert sp.IndexOfAnyExcept(..=16) == null;
 
-    let spm: i32[&mut] = MutableSpan<i32>.UnsafeCreate(&arr[1], 3u);
+    assert sp.LastIndexOfAny(3, 5) == 4u;
+    assert sp.LastIndexOfAny(3, 5, 7) == 6u;
+    assert sp.LastIndexOfAny(3, 5, 7, DefaultEqualityComparer) == 6u;
+    assert sp.LastIndexOfAny(20, 30) == null;
+    assert sp.LastIndexOfAny(arrv2) == 4u;
+    assert sp.LastIndexOfAny(5..=10) == 9u;
+    assert sp.LastIndexOfAny(50..=100) == null;
+    assert sp.LastIndexOfAnyExcept(16) == 14u;
+    assert sp.LastIndexOfAnyExcept(14,15,16) == 12u;
+    assert sp.LastIndexOfAnyExcept(14,15,16,DefaultEqualityComparer) == 12u;
+    assert sp.LastIndexOfAnyExcept(arrv2) == 15u;
+    assert sp.LastIndexOfAnyExcept(arrv3) == null;
+    assert sp.LastIndexOfAnyExcept(10..=20) == 8u;
+    assert sp.LastIndexOfAnyExcept(..=16) == null;
+
+    assert sp.CountAny(arrv2) == 4u;
+    assert sp[5u..].Overlaps(arrwide);
+    assert not sp.Overlaps(arrv2);
+
+    index := 1u;
+    for i in sp.Reversed {
+        assert i == sp[^index];
+        ++index;
+    }
+
+    arrwide.Replace(5,25);
+    assert arrwide.IndexOf(5) == null;
+    assert arrwide.IndexOf(25) == 4u;
+    assert arrwide.LastIndexOf(25) == 20u;
+    arrwide.Replace(25,5);
+    assert arrwide.IndexOf(25) == null;
+    assert arrwide.IndexOf(5) == 4u;
+    assert arrwide.LastIndexOf(5) == 20u;
+
+    arrwide.Reverse();
+    assert arrwide[0] == 15;
+    assert arrwide[15] == 16;
+    assert arrwide[^1u] == 1;
+
+    bytes: byte[_] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1, 2, 1, 2, 3, 4, 5, 6, 7, 8, 9, 
+        10, 11, 12, 13, 14, 15, 16, 1, 2, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1, 2];
+    bytes.Reverse();
+    assert bytes[0] == 2u8;
+    assert bytes[^1u] == 1u8;
+
+    arrwide.Clear();
+    assert arrwide.IndexOfAnyExcept(0) == null;
+    arrwide.Fill(6);
+    arrwide[..].Fill(6);
+    assert arrwide.IndexOf(6) == 0u;
+    assert arrwide.LastIndexOf(6) == 30u;
+    assert arrwide.IndexOfAnyExcept(6) == null;
+
+    spm: i32[&mut] = MutableSpan<i32>.UnsafeCreate(&arr[1], 3u);
     assert spm.Length == 3;
     assert not spm.IsEmpty;
     spm[0] = 20;

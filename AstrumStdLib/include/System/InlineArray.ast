@@ -68,6 +68,13 @@ public extension <T, S: usize> T[S] {
     }
     AsSpan: () -> Span<T> ==> this;
     mut AsMutableSpan: () -> MutableSpan<T> ==> MutableSpan<T>(&this);
+
+    mut Clear: () => this.AsMutableSpan().>Clear();
+    mut Fill: (forward val: T) => this.AsMutableSpan().Fill(forward val);
+    mut Replace: (forward oldValue: T, forward newValue: T) => this.AsMutableSpan().Replace(forward oldValue, forward newValue);
+    mut Replace: (forward oldValue: T, forward newValue: T, equals: EqualityComparer<T>) 
+        => this.AsMutableSpan().Replace(forward oldValue, forward newValue, equals);
+    mut Reverse: () => this.AsMutableSpan().Reverse();
 }
 
 static assert(sizeof(i32[5]) == 20, "Fixed array should be sizeof(T) * S bytes");
@@ -95,7 +102,7 @@ test "InlineArray" {
     arr[^1u] = 6;
     assert arr[^1u] == 6;
     assert arr[4] == 6;
-    arr2: i32[_] = [1, 2, 3, 4, 6];
+    let arr2: i32[_] = [1, 2, 3, 4, 6];
     assert arr == arr2;
     sp2: i32[&] = arr2.AsSpan();
     assert sp2.Length == 5;
