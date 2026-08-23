@@ -3,6 +3,7 @@ package System;
 public import Span;
 
 public type InlineArray<T, S: usize> = T[S];
+public type InitializerList<T> = Builtin.InitializerList<T>;
 
 public extension <T, S: usize> T[S] {
     Length: usize ==> S;
@@ -75,6 +76,11 @@ public extension <T, S: usize> T[S] {
     mut Replace: (forward oldValue: T, forward newValue: T, equals: EqualityComparer<T>) 
         => this.AsMutableSpan().Replace(forward oldValue, forward newValue, equals);
     mut Reverse: () => this.AsMutableSpan().Reverse();
+    mut Sort: () => this.AsMutableSpan().Sort();
+    mut SortByDescending: () => this.AsMutableSpan().SortByDescending();
+    mut Sort: <TRight> (forward right: TRight) => this.AsMutableSpan().Sort(forward right);
+    mut Sort: <TValue, TComparer> (forward right: TValue, compare: TComparer)
+        => this.AsMutableSpan().Sort(forward right, compare);
 }
 
 static assert(sizeof(i32[5]) == 20, "Fixed array should be sizeof(T) * S bytes");

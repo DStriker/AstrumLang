@@ -15,6 +15,74 @@ namespace Builtin {
 	class $Class_InlineArray;
 	template <class T>
 	class $Class_Basic;
+	
+	template <class T>
+	struct InitializerList : public Struct {
+	   private:
+		std::initializer_list<T> initList;
+
+	   public:
+		using $self  = InitializerList<T>;
+		using $class = $Class_Basic<$self>;
+
+		constexpr auto& $ref() noexcept { return *this; }
+		constexpr const auto& $ref() const noexcept { return *this; }
+		constexpr InitializerList(std::initializer_list<T> lst) noexcept : initList(lst) {}
+
+		constexpr operator std::initializer_list<T>() const noexcept { return initList; }
+		constexpr const T* begin() const noexcept { return initList.begin(); }
+		constexpr const T* end() const noexcept { return initList.end(); }
+		constexpr size_t size() const noexcept { return initList.size(); }
+
+		struct Iterator : public Struct {
+		   private:
+			const T* begin = nullptr;
+			size_t length;
+			size_t index = ~size_t {0u};
+
+		   public:
+			using ElementType = T;
+			using $self       = Iterator;
+			using $class      = $Class_Basic<$self>;
+
+			constexpr auto& $ref() noexcept { return *this; }
+			constexpr const auto& $ref() const noexcept { return *this; }
+			constexpr explicit Iterator(
+			    Builtin::InitializerList<T> initList) noexcept;
+
+			constexpr void Reset() noexcept { index = -1; }
+
+			constexpr const T GetCurrent() const {
+				if (index >= length)
+					throw InvalidOperationException();
+				return begin[index];
+			}
+			constexpr const T& GetCurrentRef() const {
+				if (index >= length)
+					throw InvalidOperationException();
+				return begin[index];
+			}
+
+			constexpr bool MoveNext() noexcept {
+				const auto nextIndex = index + 1;
+				if (nextIndex >= length) {
+					index = length;
+					return false;
+				}
+				index = nextIndex;
+				return true;
+			}
+		};
+
+		constexpr auto Iterate() const noexcept {
+			return Iterator {*this};
+		}
+	};
+
+	template<class T>
+	inline constexpr InitializerList<T>::Iterator::Iterator(
+	    InitializerList<T> initList) noexcept
+	    : begin {initList.begin()}, length {initList.size()} {}
 
 	template <size_t S, class T, bool IsConstStrArray = false>
 	class InlineArray : public Struct {
@@ -39,7 +107,10 @@ namespace Builtin {
 			for (int i = 0; i < S; i++) { arr[i] = T {}; }
 		}
 
-		constexpr InlineArray(std::initializer_list<T> il) { std::move(il.begin(), il.end(), arr); }
+		constexpr InlineArray(std::initializer_list<T> il) {
+			std::move(il.begin(), il.end(), arr);
+		}
+		constexpr InlineArray(Builtin::InitializerList<T> il) { std::move(il.begin(), il.end(), arr); }
 
 		constexpr T& operator[](i32 i) {
 			const size_t index = size_t(i);
@@ -204,69 +275,4 @@ namespace Builtin {
 		return _to_array_rvalue_impl_str(std::move(arr), std::make_index_sequence<S> {});
 	}
 
-	template <class T>
-	struct InitializerList : public Struct {
-	   private:
-		std::initializer_list<T> initList;
-
-	   public:
-		using $self  = InitializerList<T>;
-		using $class = $Class_Basic<$self>;
-
-		constexpr auto& $ref() noexcept { return *this; }
-		constexpr const auto& $ref() const noexcept { return *this; }
-		constexpr InitializerList(std::initializer_list<T> lst) noexcept : initList(lst) {}
-
-		constexpr operator std::initializer_list<T>() const noexcept { return initList; }
-		constexpr const T* begin() const noexcept { return initList.begin(); }
-		constexpr const T* end() const noexcept { return initList.end(); }
-		constexpr size_t size() const noexcept { return initList.size(); }
-	};
-
-	template <class T>
-	struct InitializerListIterator : public Struct {
-	   private:
-		const T* begin = nullptr;
-		size_t length;
-		size_t index = ~size_t {0u};
-
-	   public:
-		using ElementType = T;
-		using $self       = InitializerListIterator<T>;
-		using $class      = $Class_Basic<$self>;
-
-		constexpr auto& $ref() noexcept { return *this; }
-		constexpr const auto& $ref() const noexcept { return *this; }
-		constexpr explicit InitializerListIterator(Builtin::InitializerList<T> initList) noexcept
-		    : begin {initList.begin()}, length {initList.size()} {}
-
-		constexpr void Reset() noexcept { index = -1; }
-
-		constexpr const T GetCurrent() const {
-			if (index >= length)
-				throw InvalidOperationException();
-			return begin[index];
-		}
-		constexpr const T& GetCurrentRef() const {
-			if (index >= length)
-				throw InvalidOperationException();
-			return begin[index];
-		}
-
-		constexpr bool MoveNext() noexcept {
-			const auto nextIndex = index + 1;
-			if (nextIndex >= length) {
-				index = length;
-				return false;
-			}
-			index = nextIndex;
-			return true;
-		}
-	};
-
 }  // namespace Builtin
-
-template <class T>
-constexpr auto Iterate(Builtin::InitializerList<T> initList) noexcept {
-	return Builtin::InitializerListIterator {initList};
-}

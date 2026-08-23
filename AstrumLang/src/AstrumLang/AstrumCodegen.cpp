@@ -19368,7 +19368,15 @@ namespace AstrumLang {
 		} else if (auto init = ctx->bracedInitList()) {
 			printBracedInitList(init);
 		} else if (auto coll = ctx->collectionExpression()) {
+			bool b = !isAutoSizeArrayDeclaration;
+			if (b)
+			{
+				out << "Builtin::InitializerList(";
+			}
 			printCollectionExpression(coll);
+			if (b) {
+				out << ")";
+			}
 		}
 		if (ctx->Ellipsis()) {
 			out << "...";
@@ -21133,7 +21141,7 @@ namespace AstrumLang {
 		} else if (auto primary = ctx->primaryExpression()) {
 			printPrimaryExpression(primary);
 		} else if (ctx->Move()) {
-			out << "std::move(";
+			out << "Builtin::Move(";
 			printPostfixExpression(ctx->postfixExpression());
 			out << ")";
 		} else if (ctx->Forward()) {

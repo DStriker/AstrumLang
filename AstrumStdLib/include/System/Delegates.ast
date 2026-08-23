@@ -6,6 +6,8 @@ public type Comparator<T> = (in T, in T) -> i32;
 public type EqualityComparer<T> = (in T, in T) -> bool;
 
 public const DefaultComparator :== (lhs, rhs) => lhs <=> rhs;
+public const DefaultAscendingComparator :== (lhs, rhs) => lhs <=> rhs;
+public const DefaultDescendingComparator :== (lhs, rhs) => rhs <=> lhs;
 public const DefaultEqualityComparer :== (lhs, rhs) => lhs == rhs;
 
 test {

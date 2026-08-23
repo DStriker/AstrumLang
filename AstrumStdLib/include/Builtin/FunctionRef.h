@@ -14,7 +14,8 @@ namespace Builtin {
 
 		virtual bool operator==(const AbstractCallable& other) const noexcept { return false; }
 
-		~AbstractCallable() { /*std::cout << "Callable deinit\n";*/ }
+		~AbstractCallable() { /*std::cout << "Callable deinit\n";*/
+		}
 	};
 
 	template <class TResult, class... TArgs>
@@ -188,6 +189,7 @@ namespace Builtin {
 
 	template <class TResult, class... TArgs>
 	class FunctionRef<TResult(TArgs...)> : public FuncBase {
+		using $self                = FunctionRef<TResult(TArgs...)>;
 		using Signature            = TResult(TArgs...);
 		using FunctionPointer      = TResult (*)(TArgs...);
 		using ConstFunctionPointer = std::add_const_t<TResult> (*)(TArgs...);
@@ -252,13 +254,12 @@ namespace Builtin {
 			} else if constexpr (std::is_empty_v<TFunc>) {
 				kind            = STATIC;
 				functionPointer = &staticFunctorWrapper<TFunc>;
-			}
-			else {
+			} else {
 				using TClosure = ClosureWrapper<TFunc, TResult, TArgs...>;
 				kind           = CLOSURE;
 				new (&closure) ClosureRef(new (::operator new(sizeof(TClosure)))
 				                              TClosure(std::forward<F>(func)));
-				assert(false); //TODO: delete after debug
+				assert(false);  // TODO: delete after debug
 			}
 		}
 
@@ -274,17 +275,26 @@ namespace Builtin {
 			return std::is_invocable_r_v<TResult, F, TArgs...>;
 		}
 
+		FunctionRef(FunctionRef& other) { copy(other); }
 		FunctionRef(const FunctionRef& other) { copy(other); }
 
 		FunctionRef(FunctionRef&& other) noexcept { move(std::move(other)); }
 
 		template <class F>
-		requires(std::is_invocable_r_v<TResult, F, TArgs...>) FunctionRef(F&& func) {
+		requires(!std::is_same_v<std::decay_t<F>, $self> && std::is_invocable_r_v<TResult, F, TArgs...>)
+		    FunctionRef(F&& func) {
 			init(std::forward<F>(func));
 		}
 
 		~FunctionRef() { destroy(); }
 
+		FunctionRef& operator=(FunctionRef& other) {
+			if (this != &other) {
+				destroy();
+				copy(other);
+			}
+			return *this;
+		}
 		FunctionRef& operator=(const FunctionRef& other) {
 			if (this != &other) {
 				destroy();
@@ -302,7 +312,9 @@ namespace Builtin {
 		}
 
 		template <class F>
-		requires(std::is_invocable_r_v<TResult, F, TArgs...>) FunctionRef& operator=(F&& func) {
+		requires(!std::is_same_v<std::decay_t<F>, $self> &&
+		         std::is_invocable_r_v<TResult, F, TArgs...>) FunctionRef&
+		operator=(F&& func) {
 			destroy();
 			init(std::forward<F>(func));
 			return *this;

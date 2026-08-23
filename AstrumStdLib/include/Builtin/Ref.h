@@ -44,7 +44,8 @@ namespace Builtin {
 		template <class U>
 		constexpr const $selfRef& operator=(U&& val) const
 		    noexcept(std::is_nothrow_assignable_v<$ref_underlying_type, U>) requires(
-		        !std::is_same_v<std::decay_t<U>, $selfRef> && std::is_assignable_v<$ref_underlying_type, U>) {
+		        !std::is_same_v<std::decay_t<U>, $selfRef> &&
+		        std::is_assignable_v<$ref_underlying_type, U>) {
 			get() = std::forward<U>(val);
 			return *this;
 		}
@@ -554,6 +555,20 @@ namespace Builtin {
 	Ref(T&) -> Ref<Auto<T>>;
 	template <class T>
 	Ref(const T&) -> Ref<Auto<T>>;
+
+	template <class T>
+	inline constexpr decltype(auto) Move(T&& arg) noexcept(
+	    !is_instance_of_v<std::decay_t<T>, MutableRef>) {
+		if constexpr (is_instance_of_v<std::decay_t<T>, Ref>) {
+			static_assert(false, "Cannot to get rvalue-reference from immutable ref");
+		} else if constexpr (is_instance_of_v<std::decay_t<T>, MutableRef>) {
+			ADV_WARNING_DISABLE(4172, );
+			return std::move(static_cast<std::remove_reference_t<typename std::decay_t<T>::Type>&>(arg));
+			ADV_WARNING_POP;
+		} else {
+			return std::move(arg);
+		}
+	}
 }  // namespace Builtin
 
 namespace std {

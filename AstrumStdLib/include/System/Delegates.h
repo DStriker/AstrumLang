@@ -23,6 +23,10 @@ template<class T> using EqualityComparer = Builtin::FunctionRef<bool (Builtin::I
 #line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Delegates.ast"
 inline constexpr auto DefaultComparator = [] (auto lhs, auto rhs) { ADV_EXPRESSION_BODY(lhs <=> rhs); };
 #line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Delegates.ast"
+inline constexpr auto DefaultAscendingComparator = [] (auto lhs, auto rhs) { ADV_EXPRESSION_BODY(lhs <=> rhs); };
+#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Delegates.ast"
+inline constexpr auto DefaultDescendingComparator = [] (auto lhs, auto rhs) { ADV_EXPRESSION_BODY(rhs <=> lhs); };
+#line 11 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Delegates.ast"
 inline constexpr auto DefaultEqualityComparer = [] (auto lhs, auto rhs) { ADV_EXPRESSION_BODY(lhs == rhs); };
 } namespace $extensions {
 } namespace System {

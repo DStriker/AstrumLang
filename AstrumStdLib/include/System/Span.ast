@@ -504,6 +504,33 @@ public ref struct <T> MutableSpan: ISelfEquatable, IAbstractSequence, ISequence<
         return self(Unsafe.Add(_data, start), length);
     }
 
+    public operator$=: (initializer: Builtin.InitializerList<T>) -> self {
+        let count := initializer.size();
+        if _length < count {
+            throw Builtin.InvalidArgumentException();
+        }
+        index: usize;
+        for i in initializer {
+            this[@Unchecked index++] = i;
+        }
+        return this;
+    }
+
+    public operator$=: (other: T[&]) -> self {
+        let count := other.>_length;
+        if _length < count {
+            throw Builtin.InvalidArgumentException();
+        }
+        static if Builtin.IsTriviallyCopyable<T> {
+            Unsafe.CopyBlock(_data, other._data, count * sizeof(T));
+        } else {
+            for i in ..count {
+                this[@Unchecked i] = other[@Unchecked i];
+            }
+        }
+        return this;
+    }
+
     // Returns true if two sequences overlap in memory.
     public Overlaps: (in ref other: T[&]) -> bool noexcept == {
         if this.IsEmpty or other.IsEmpty {
@@ -1986,6 +2013,54 @@ public extension <TLeft> where type TLeft is ISpanConvertible {
             static assert(false, "TValue should be ElementType or Span<ElementType>");
         }
     }
+
+    // Determines the relative order of the sequences being compared
+    SequenceCompare: <TSpan> (forward right: TSpan) -> i32 {
+        type TLeftReal = decay(TLeft);
+        type TSpanReal = decay(TSpan);
+        type T = TLeftReal.ElementType;
+        static assert(type T is ISelfComparable, "Search available only for ISelfComparable types");
+        static assert(type TSpanReal is ISpanConvertible, "TSpan should be an array-like type");
+        static assert(type T == TSpanReal.ElementType, "ElementType mismatch");
+        let leftSpan: T[&] = this;
+        let rightSpan: T[&] = right;
+        if Unsafe.AreSame(leftSpan.GetDataReference(), rightSpan.GetDataReference()) {
+            return leftSpan.Length <=> rightSpan.Length;
+        }
+        let length := leftSpan.Length < rightSpan.Length ? leftSpan.Length : rightSpan.Length;
+        const simdSupported :== version(X86) or version(ARM);
+        static if simdSupported {
+            static if type T is u8 {
+                return SpanHelpers.SequenceCompareByte(leftSpan, rightSpan, length);
+            } else static if type T is u16 {
+                return SpanHelpers.SequenceCompareWord(leftSpan, rightSpan, length);
+            }
+        }
+        
+        return SpanHelpers.SequenceCompareGeneralCase(leftSpan, rightSpan, length);
+    }
+
+    // Determines the relative order of the sequences being compared
+    SequenceCompare: <TSpan, TComparer> (forward right: TSpan, compare: TComparer) -> usize {
+        type TLeftReal = decay(TLeft);
+        type TSpanReal = decay(TSpan);
+        type T = TLeftReal.ElementType;
+        static assert(type TComparer is operator Comparator<T>, "TComparer should be Comparator<T>");
+        static assert(type TSpanReal is ISpanConvertible, "TSpan should be an array-like type");
+        static assert(type T == TSpanReal.ElementType, "ElementType mismatch");
+        let leftSpan: T[&] = this;
+        let rightSpan: T[&] = right;
+        let length := leftSpan.Length < rightSpan.Length ? leftSpan.Length : rightSpan.Length;
+        for i in ..length {
+            let result := compare(leftSpan[@Unchecked i], rightSpan[@Unchecked i]);
+            if result != 0 {
+                return result;
+            }
+        }
+        return leftSpan.Length <=> rightSpan.Length;
+    }
+
+    operator <=>*: <TSpan> (forward right: TSpan) -> i32 => this.SequenceCompare(forward right);
 }
 
 public extension <TLeft> where type TLeft is IMutableSpanConvertible {
@@ -2106,6 +2181,78 @@ public extension <TLeft> where type TLeft is IMutableSpanConvertible {
         }
 
         SpanHelpers.ReverseGeneralCase(buf);
+    }
+
+    // Sorts the elements in the entire span using the default comparator
+    mut Sort: () {
+        type TLeftReal = decay(TLeft);
+        type T = TLeftReal.ElementType;
+        static assert(type T is ISelfComparable, "Sort available only for ISelfComparable types");
+        return this.Sort(DefaultComparator);
+    }
+
+    // Sorts the elements in the entire span by descending
+    mut SortByDescending: () {
+        type TLeftReal = decay(TLeft);
+        type T = TLeftReal.ElementType;
+        static assert(type T is ISelfComparable, "Sort available only for ISelfComparable types");
+        return this.Sort(DefaultDescendingComparator);
+    }
+
+    // Variant 1: Sorts the elements in the entire span using the given comparator
+    // Variant 2: Sorts a pair of spans (one containing the keys and the other containing the corresponding items) 
+    // based on the keys in the first span
+    mut Sort: <TRight> (forward right: TRight) {
+        type TLeftReal = decay(TLeft);
+        type TRightReal = decay(TRight);
+        type T = TLeftReal.ElementType;
+        let buf: T[&mut] = this;
+        if buf.Length < 2 {
+            return;
+        }
+        static if type TRightReal is IMutableSpanConvertible {
+            type TKey = T;
+            type TValue = TRightReal.ElementType;
+            static assert(type TKey is ISelfComparable, "Sort available only for ISelfComparable types");
+            return this.Sort(forward right, DefaultComparator);
+        } else static if type TRightReal is operator Comparator<T> {
+            try {
+                SpanHelpers.Sort(buf, right);
+            } catch e: Builtin.IndexOutOfRangeException {
+                throw Builtin.InvalidArgumentException();
+            } /*catch ... {
+                throw Builtin.InvalidOperationException();
+            }*/
+        } else {
+            static assert(false, "TRight should be Comparator<T> or mutable array-like type");
+        }
+    }
+
+    // Sorts a pair of spans (one containing the keys and the other containing the corresponding items) 
+    // based on the keys in the first span using the given comparator
+    mut Sort: <TRight, TComparer> (forward val: TRight, compare: TComparer) {
+        type TLeftReal = decay(TLeft);
+        type TRightReal = decay(TRight);
+        type TComparerReal = decay(TComparer);
+        static assert(type TRightReal is IMutableSpanConvertible, "TRight should be a mutable array-like type");
+        type TKey = TLeftReal.ElementType;
+        type TValue = TRightReal.ElementType;
+        static assert(type TComparerReal is operator Comparator<TKey>, "TComparer should be Comparator<T>");
+        let keys: TKey[&mut] = this;
+        let values: TValue[&mut] = val;
+        if keys.Length < 2 {
+            return;
+        }
+        if keys.Length != values.Length {
+            throw Builtin.InvalidArgumentException();
+        }
+        try {
+            SpanHelpers.Sort(keys, values, compare);
+        } catch e: Builtin.IndexOutOfRangeException {
+            throw Builtin.InvalidArgumentException();
+        } catch ... {
+            throw Builtin.InvalidOperationException();
+        }
     }
 }
 
@@ -4516,14 +4663,48 @@ protected static class SpanHelpers {
         }
     }
 
+    public SequenceCompareGeneralCase: <T> (lhs: T[&], rhs: T[&], length: usize) -> i32 {
+        for i in ..length {
+            let result := lhs[@Unchecked i] <=> rhs[@Unchecked i];
+            if result != 0 {
+                return result;
+            }
+        }
+        return lhs.Length <=> rhs.Length;
+    }
+
+    public SequenceCompareByte: (lhs: byte[&], rhs: byte[&], length: usize) -> i32 {
+        if length < 16u {
+            return SequenceCompareGeneralCase(lhs, rhs, length);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanSequenceCompare<byte>, Neon, Sse2>(lhs, rhs, length);
+        } else if length < 64u {
+            return Simd.RuntimeDispatch<SpanSequenceCompare<byte>, Neon, Avx2, Sse2>(lhs, rhs, length);
+        } else {
+            return Simd.RuntimeDispatch<SpanSequenceCompare<byte>, Neon, Avx512BW, Avx2, Sse2>(lhs, rhs, length);
+        }
+    }
+
+    public SequenceCompareWord: (lhs: u16[&], rhs: u16[&], length: usize) -> i32 {
+        if length < 8u {
+            return SequenceCompareGeneralCase(lhs, rhs, length);
+        } else if length < 16u {
+            return Simd.RuntimeDispatch<SpanSequenceCompare<u16>, Neon, Sse2>(lhs, rhs, length);
+        } else if length < 32u {
+            return Simd.RuntimeDispatch<SpanSequenceCompare<u16>, Neon, Avx2, Sse2>(lhs, rhs, length);
+        } else {
+            return Simd.RuntimeDispatch<SpanSequenceCompare<u16>, Neon, Avx512BW, Avx2, Sse2>(lhs, rhs, length);
+        }
+    }
+
     public ReverseGeneralCase: <T> (buf: T[&mut]) {
         assert buf.Length >= 2u;
         first: &mut T = &buf[@Unchecked 0];
         last: &mut T = &buf[@Unchecked ^1u];
         do {
-            let tmp := T(first);
-            first = T(last);
-            last = tmp;
+            let tmp := move first;
+            first = move last;
+            last = move tmp;
             first = Unsafe.Add(first, 1u);
             last = Unsafe.Subtract(last, 1u);
         } while Unsafe.IsAddressLessThan(first, last);
@@ -4579,6 +4760,250 @@ protected static class SpanHelpers {
         } else {
             Simd.RuntimeDispatch<SpanReverse<u64>, Neon64, Neon, Avx512F, Avx, Sse42, Sse2>(buf);
         }
+    }
+
+    public Sort: <T> (buf: T[&mut], compare: Comparator<T>) {
+        IntroSort(buf, (buf.Length.Log2 + 1u) * 2u, compare);
+    }
+
+    public Sort: <TKey, TValue> (keys: TKey[&mut], values: TValue[&mut], compare: Comparator<TKey>) {
+        IntroSort(keys, values, (keys.Length.Log2 + 1u) * 2u, compare);
+    }
+
+    private IntroSort: <T> (buf: T[&mut], depthLimit: usize, compare: Comparator<T>) {
+        const SORT_SIZE_THRESHOLD :== 16u;
+        partitionSize := buf.Length;
+        while partitionSize > 1u {
+            if partitionSize <= SORT_SIZE_THRESHOLD {
+                if partitionSize == 2u {
+                    SwapIfGreater(buf, compare, 0u, 1u);
+                    return;
+                }
+                if partitionSize == 3u {
+                    SwapIfGreater(buf, compare, 0u, 1u);
+                    SwapIfGreater(buf, compare, 0u, 2u);
+                    SwapIfGreater(buf, compare, 1u, 2u);
+                    return;
+                }
+
+                InsertionSort(buf[@Unchecked ..partitionSize], compare);
+                return;
+            }
+            if depthLimit == 0 {
+                HeapSort(buf[@Unchecked ..partitionSize], compare);
+                return;
+            }
+            --depthLimit;
+            let p := PickPivotAndPartition(buf[@Unchecked ..partitionSize], compare);
+            IntroSort(buf[(p + 1u)..partitionSize], depthLimit, compare);
+            partitionSize = p;
+        }
+    }
+
+    private PickPivotAndPartition: <T> (buf: T[&mut], compare: Comparator<T>) -> usize {
+        assert buf.Length >= 16u;
+        let hi := buf.Length - 1u;
+        let mid := hi >> 1; // median-of-three
+        SwapIfGreater(buf, compare, 0u, mid);
+        SwapIfGreater(buf, compare, 0u, hi);
+        SwapIfGreater(buf, compare, mid, hi);
+        let pivot := buf[@Unchecked mid];
+        Swap(buf, mid, hi - 1u);
+        left: usize;
+        right := hi - 1u;
+        while left < right {
+            while (compare(buf[++left], pivot) < 0) ;
+            while (compare(pivot, buf[--right]) < 0) ;
+            if left >= right {
+                break;
+            }
+            Swap(buf, left, right);
+        }
+        if left != (hi - 1u) {
+            Swap(buf, left, hi - 1u);
+        }
+        return left;
+    }
+
+    private InsertionSort: <T> (buf: T[&mut], compare: Comparator<T>) {
+        let length := buf.Length - 1u;
+        for i in ..length {
+            tmp := move (buf[@Unchecked i + 1u]);
+            j := i;
+            while j < length and compare(tmp, buf[@Unchecked j]) < 0 {
+                buf[@Unchecked j + 1u] = move (buf[@Unchecked j]);
+                --%j;
+            }
+            ++%j;
+            buf[@Unchecked j] = move tmp;
+        }
+    }
+
+    private HeapSort: <T> (buf: T[&mut], compare: Comparator<T>) {
+        let length := buf.Length;
+        for i := length >> 1; i > 0; --i {
+            HeapDown(buf, i, length, compare);
+        }
+        for i := length; i > 1; --i {
+            Swap(buf, 0u, i - 1u);
+            HeapDown(buf, 1u, i - 1u, compare);
+        }
+    }
+
+    private HeapDown: <T> (buf: T[&mut], i: usize, n: usize, compare: Comparator<T>) {
+        let tmp := move buf[@Unchecked i - 1u];
+        while i <= (n >> 1) {
+            child := i * 2u;
+            if child < n and compare(buf[@Unchecked child - 1u], buf[@Unchecked child]) < 0 {
+                ++child;
+            }
+            if compare(tmp, buf[@Unchecked child - 1u]) >= 0 {
+                break;
+            }
+            buf[@Unchecked i - 1u] = move (buf[@Unchecked child - 1u]);
+            i = child;
+        }
+        buf[@Unchecked i - 1u] = move tmp;
+    }
+
+    private SwapIfGreater: <T> (buf: T[&mut], compare: Comparator<T>, i: usize, j: usize) {
+        assert i != j;
+        if compare(buf[@Unchecked i], buf[@Unchecked j]) > 0 {
+            let tmp := move (buf[@Unchecked i]);
+            buf[@Unchecked i] = move (buf[@Unchecked j]);
+            buf[@Unchecked j] = move tmp;
+        }
+    }
+
+    private Swap: <T> (buf: T[&mut], i: usize, j: usize) {
+        assert i != j;
+        let tmp := move (buf[@Unchecked i]);
+        buf[@Unchecked i] = move (buf[@Unchecked j]);
+        buf[@Unchecked j] = move tmp;
+    }
+
+    private IntroSort: <TKey, TValue> (keys: TKey[&mut], values: TValue[&mut], depthLimit: usize, compare: Comparator<TKey>) {
+        const SORT_SIZE_THRESHOLD :== 16u;
+        partitionSize := keys.Length;
+        while partitionSize > 1u {
+            if partitionSize <= SORT_SIZE_THRESHOLD {
+                if partitionSize == 2u {
+                    SwapIfGreater(keys, values, compare, 0u, 1u);
+                    return;
+                }
+                if partitionSize == 3u {
+                    SwapIfGreater(keys, values, compare, 0u, 1u);
+                    SwapIfGreater(keys, values, compare, 0u, 2u);
+                    SwapIfGreater(keys, values, compare, 1u, 2u);
+                    return;
+                }
+
+                InsertionSort(keys[@Unchecked ..partitionSize], values[@Unchecked ..partitionSize], compare);
+                return;
+            }
+            if depthLimit == 0 {
+                HeapSort(keys[@Unchecked ..partitionSize], values[@Unchecked ..partitionSize], compare);
+                return;
+            }
+            --depthLimit;
+            let p := PickPivotAndPartition(keys[@Unchecked ..partitionSize], values[@Unchecked ..partitionSize], compare);
+            IntroSort(keys[(p + 1u)..partitionSize], values[(p + 1u)..partitionSize], depthLimit, compare);
+            partitionSize = p;
+        }
+    }
+
+    private PickPivotAndPartition: <TKey, TValue> (keys: TKey[&mut], values: TValue[&mut], compare: Comparator<TKey>) -> usize {
+        assert keys.Length >= 16u;
+        let hi := keys.Length - 1u;
+        let mid := hi >> 1; // median-of-three
+        SwapIfGreater(keys, values, compare, 0u, mid);
+        SwapIfGreater(keys, values, compare, 0u, hi);
+        SwapIfGreater(keys, values, compare, mid, hi);
+        let pivot := keys[@Unchecked mid];
+        Swap(keys, values, mid, hi - 1u);
+        left: usize;
+        right := hi - 1u;
+        while left < right {
+            while (compare(keys[++left], pivot) < 0) ;
+            while (compare(pivot, keys[--right]) < 0) ;
+            if left >= right {
+                break;
+            }
+            Swap(keys, values, left, right);
+        }
+        if left != (hi - 1u) {
+            Swap(keys, values, left, hi - 1u);
+        }
+        return left;
+    }
+
+    private InsertionSort: <TKey, TValue> (keys: TKey[&mut], values: TValue[&mut], compare: Comparator<TKey>) {
+        let length := keys.Length - 1u;
+        for i in ..length {
+            tmpKey := move (keys[@Unchecked i + 1u]);
+            tmpVal := move (values[@Unchecked i + 1u]);
+            j := i;
+            while j < length and compare(tmpKey, keys[@Unchecked j]) < 0 {
+                keys[@Unchecked j + 1u] = move (keys[@Unchecked j]);
+                values[@Unchecked j + 1u] = move (values[@Unchecked j]);
+                --%j;
+            }
+            ++%j;
+            keys[@Unchecked j] = move tmpKey;
+            values[@Unchecked j] = move tmpVal;
+        }
+    }
+
+    private HeapSort: <TKey, TValue> (keys: TKey[&mut], values: TValue[&mut], compare: Comparator<TKey>) {
+        let length := keys.Length;
+        for i := length >> 1; i > 0; --i {
+            HeapDown(keys, values, i, length, compare);
+        }
+        for i := length; i > 1; --i {
+            Swap(keys, values, 0u, i - 1u);
+            HeapDown(keys, values, 1u, i - 1u, compare);
+        }
+    }
+
+    private HeapDown: <TKey, TValue> (keys: TKey[&mut], values: TValue[&mut], i: usize, n: usize, compare: Comparator<TKey>) {
+        let tmpKey := move (keys[@Unchecked i - 1u]);
+        let tmpVal := move (values[@Unchecked i - 1u]);
+        while i <= (n >> 1) {
+            child := i * 2u;
+            if child < n and compare(keys[@Unchecked child - 1u], keys[@Unchecked child]) < 0 {
+                ++child;
+            }
+            if compare(tmpKey, keys[@Unchecked child - 1u]) >= 0 {
+                break;
+            }
+            keys[@Unchecked i - 1u] = move (keys[@Unchecked child - 1u]);
+            values[@Unchecked i - 1u] = move (values[@Unchecked child - 1u]);
+            i = child;
+        }
+        keys[@Unchecked i - 1u] = move tmpKey;
+        values[@Unchecked i - 1u] = move tmpVal;
+    }
+
+    private SwapIfGreater: <TKey, TValue> (keys: TKey[&mut], values: TValue[&mut], compare: Comparator<TKey>, i: usize, j: usize) {
+        assert i != j;
+        if compare(keys[@Unchecked i], keys[@Unchecked j]) > 0 {
+            let tmpKey := move (keys[@Unchecked i]);
+            keys[@Unchecked i] = move (keys[@Unchecked j]);
+            keys[@Unchecked j] = move tmpKey;
+            let tmpVal := move (values[@Unchecked i]);
+            values[@Unchecked i] = move (values[@Unchecked j]);
+            values[@Unchecked j] = move tmpVal;
+        }
+    }
+
+    private Swap: <TKey, TValue> (keys: TKey[&mut], values: TValue[&mut], i: usize, j: usize) {
+        assert i != j;
+        let tmpKey := move (keys[@Unchecked i]);
+        keys[@Unchecked i] = move (keys[@Unchecked j]);
+        keys[@Unchecked j] = move tmpKey;
+        let tmpVal := move (values[@Unchecked i]);
+        values[@Unchecked i] = move (values[@Unchecked j]);
+        values[@Unchecked j] = move tmpVal;
     }
 }
 
@@ -5556,6 +5981,46 @@ private static class <T> SpanSequenceEquals {
     }
 }
 
+private static class <T> SpanSequenceCompare {
+    public Invoke: <Arch> (lhs: T[&], rhs: T[&], length: usize) -> i32 {
+        type TVector = SimdVector<T, Arch>;
+        type TMask = SimdMask<T, Arch>;
+        const vecSize :== TVector::Length;
+        length -= vecSize;
+        currentLeft: TVector;
+        currentRight: TVector;
+        offset: usize;
+        matches: TMask;
+        processDifference := () {
+            let diffs := ~matches;
+            if let index := diffs.FirstSet {
+                offset += index;
+            }
+            let result := lhs[@Unchecked offset] <=> rhs[@Unchecked offset];
+            assert result != 0;
+            return result;
+        };
+        while length > offset {
+            currentLeft = TVector::LoadUnsafe(lhs[@Unchecked offset]);
+            currentRight = TVector::LoadUnsafe(rhs[@Unchecked offset]);
+            matches = currentLeft ==^ currentRight;
+            if matches.All {
+                offset += vecSize;
+                continue;
+            }
+            return processDifference();
+        }
+        offset = length;
+        currentLeft = TVector::LoadUnsafe(lhs[@Unchecked offset]);
+        currentRight = TVector::LoadUnsafe(rhs[@Unchecked offset]);
+        matches = currentLeft ==^ currentRight;
+        if matches.All {
+            return (lhs.Length -% rhs.Length).NarrowToInt32();
+        }
+        return processDifference();
+    }
+}
+
 static assert(sizeof(i32[&]) == sizeof(usize) * 2, "Span should be 2 pointers wide");
 static assert(type i32[&] is ISelfEquatable, "i32[&] should be ISelfEquatable");
 static assert(type i32[&] is IEquatable<i32[&]>, "i32[&] should be IEquatable<i32[&]>");
@@ -5634,6 +6099,9 @@ test "Span" {
     assert not sp.SequenceEquals(arrv2);
     sp = arrwide[..16u];
     assert sp.SequenceEquals(arrv3[..^2u]);
+    assert sp.SequenceCompare(arrv3[..^2u]) == 0;
+    assert sp <* arrv3;
+    assert sp[1u..] >* arrv3[..^1u];
     assert sp.StartsWith(1);
     assert not sp.StartsWith(3);
     assert arrv3[..].StartsWith(sp);
@@ -5691,6 +6159,13 @@ test "Span" {
         ++index;
     }
 
+    arrwide[3u..8u] $= [8, 12, 14, 11, 9];
+    assert arrwide[3] == 8;
+    assert arrwide[4] == 12;
+    assert arrwide[5] == 14;
+    assert arrwide[6] == 11;
+    assert arrwide[7] == 9;
+    arrwide[3u..8u] $= [4, 5, 6, 7, 8];
     arrwide.Replace(5,25);
     assert arrwide.IndexOf(5) == null;
     assert arrwide.IndexOf(25) == 4u;
@@ -5705,11 +6180,28 @@ test "Span" {
     assert arrwide[15] == 16;
     assert arrwide[^1u] == 1;
 
+    arrwide.Sort();
+    assert arrwide[0] == 1;
+    assert arrwide[1] == 1;
+    assert arrwide[2] == 2;
+    assert arrwide[^3u] == 15;
+    assert arrwide[^2u] == 15;
+    assert arrwide[^1u] == 16;
+    arrwide.SortByDescending();
+    assert arrwide[0] == 16;
+    assert arrwide[1] == 15;
+    assert arrwide[2] == 15;
+    assert arrwide[^3u] == 2;
+    assert arrwide[^2u] == 1;
+    assert arrwide[^1u] == 1;
+
     bytes: byte[_] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1, 2, 1, 2, 3, 4, 5, 6, 7, 8, 9, 
         10, 11, 12, 13, 14, 15, 16, 1, 2, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1, 2];
     bytes.Reverse();
     assert bytes[0] == 2u8;
     assert bytes[^1u] == 1u8;
+
+    bytes[..31u].Sort(arrwide[..]);
 
     arrwide.Clear();
     assert arrwide.IndexOfAnyExcept(0) == null;
