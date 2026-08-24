@@ -3698,9 +3698,12 @@ namespace AstrumLang {
 			if (field.isVolatile) {
 				out << "volatile ";
 			}
+			bool isBool = false;
 			if (auto t = field.type) {
-				symbolTable[id] = t->getText();
+				auto txt        = t->getText();
+				symbolTable[id] = txt;
 				isDeclaration   = true;
+				isBool          = txt == "bool";
 				if (!t->singleTypeId().empty()) {
 					if (auto postfix = t->singleTypeId(0)->typePostfix()) {
 						isArrayDeclaration = !postfix->arrayDeclarator().empty();
@@ -3733,6 +3736,8 @@ namespace AstrumLang {
 					out << "{ ";
 					printInitializerList(init);
 					out << " }";
+				} else if (isBool && field.bitWidth == 0) {
+					out << "{}";
 				}
 			}
 			if (field.bitWidth > 0) {

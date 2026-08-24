@@ -276,7 +276,9 @@ namespace Builtin {
 		}
 
 		FunctionRef(FunctionRef& other) { copy(other); }
-		FunctionRef(const FunctionRef& other) { copy(other); }
+		FunctionRef(const FunctionRef& other) {
+			copy(other);
+		}
 
 		FunctionRef(FunctionRef&& other) noexcept { move(std::move(other)); }
 

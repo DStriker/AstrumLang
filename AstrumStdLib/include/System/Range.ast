@@ -10,6 +10,7 @@ Range: ISelfEquatable, IAbstractSequence, ISequence<T>
 where type T is IValueEnumerable or type T is IRangeCustomIterator
 {
     public type ElementType = T;
+    public const IsClosedRange :== IsClosed;
     private _start, _end: T;
 
     public this() == default;

@@ -392,6 +392,27 @@ public ref struct <T> Span: ISelfEquatable, IAbstractSequence, ISequence<T> {
         return true;
     }
     public operator==*: (other: T[&]) -> bool ==> SequenceEquals(other);
+
+    // Removes all leading occurrences of a specified element from the span
+    public TrimStart: (in ref val: T) -> self ==> this[(SpanHelpers.TrimStartCount(this, val))..];
+    // Removes all leading occurrences of a specified elements from the span
+    public TrimStart: (vals: T[&]) -> self ==> this[(SpanHelpers,TrimStartCount(this, vals))..];
+    // Removes all trailing occurrences of a specified element from the span
+    public TrimEnd: (in ref val: T) -> self ==> this[..(SpanHelpers,TrimEndCount(this, val, 0u))];
+    // Removes all trailing occurrences of a specified elements from the span
+    public TrimEnd: (vals: T[&]) -> self ==> this[..(SpanHelpers.TrimEndCount(this, vals, 0u))];
+    // Removes all leading and trailing occurrences of a specified element from the span
+    public Trim: (in ref val: T) -> self == {
+        let start := SpanHelpers.TrimStartCount(this, val);
+        let length := SpanHelpers.TrimEndCount(this, val, start);
+        return SliceUnchecked(start, length);
+    }
+    // Removes all leading and trailing occurrences of a specified elements from the span
+    public Trim: (vals: T[&]) -> self == {
+        let start := SpanHelpers.TrimStartCount(this, vals);
+        let length := SpanHelpers.TrimEndCount(this, vals, start);
+        return SliceUnchecked(start, length);
+    }
 }
 
 public extension <T> Span {
@@ -692,6 +713,27 @@ public ref struct <T> MutableSpan: ISelfEquatable, IAbstractSequence, ISequence<
         return this.AsSpan().>SequenceEquals(other, equals);
     }
     public operator==*: (other: T[&]) -> bool ==> SequenceEquals(other);
+
+    // Removes all leading occurrences of a specified element from the span
+    public TrimStart: (in ref val: T) -> self ==> this[(SpanHelpers.TrimStartCount(this.AsSpan(), val))..];
+    // Removes all leading occurrences of a specified elements from the span
+    public TrimStart: (vals: T[&]) -> self ==> this[(SpanHelpers.TrimStartCount(this.AsSpan(), vals))..];
+    // Removes all trailing occurrences of a specified element from the span
+    public TrimEnd: (in ref val: T) -> self ==> this[..(SpanHelpers.TrimEndCount(this.AsSpan(), val, 0u))];
+    // Removes all trailing occurrences of a specified elements from the span
+    public TrimEnd: (vals: T[&]) -> self ==> this[..(SpanHelpers.TrimEndCount(this.AsSpan(), vals, 0u))];
+    // Removes all leading and trailing occurrences of a specified element from the span
+    public Trim: (in ref val: T) -> self == {
+        let start := SpanHelpers.TrimStartCount(this.AsSpan(), val);
+        let length := SpanHelpers.TrimEndCount(this.AsSpan(), val, start);
+        return SliceUnchecked(start, length);
+    }
+    // Removes all leading and trailing occurrences of a specified elements from the span
+    public Trim: (vals: T[&]) -> self == {
+        let start := SpanHelpers.TrimStartCount(this.AsSpan(), vals);
+        let length := SpanHelpers.TrimEndCount(this.AsSpan(), vals, start);
+        return SliceUnchecked(start, length);
+    }
 }
 
 public extension <T> MutableSpan {
@@ -710,6 +752,77 @@ public extension <T> MutableSpan {
     }
     AsSpan: () -> Span<T> ==> this;
     AsMutableSpan: () -> MutableSpan<T> ==> this;
+}
+
+public ref struct <T> Spliterator: IAbstractIterator, IIterator<Span<T>>, IAbstractSequence, ISequence<Span<T>> {
+    static assert(type T is ISelfEquatable, "Type T should implement ISelfEquatable");
+    public type ElementType = T[&];
+
+    private {
+        _src: T[&];
+        _separator: T?;
+        _separatorBuffer: T[&];
+        _startCurrent: usize;
+        _endCurrent: usize;
+        _startNext: usize;
+        _isBuffer: bool;
+        _isAny: bool;
+    }
+
+    public this(src: T[&], in ref separator: T) == {
+        _src = src;
+        _separator = separator;
+    }
+
+    public this(src: T[&], separators: T[&]) == {
+        _src = src;
+        _separatorBuffer = separators;
+        _isAny = true;
+    }
+
+    public this(src: T[&], separators: T[&], single: bool) == {
+        assert single;
+        _src = src;
+        _separatorBuffer = separators;
+        _isBuffer = true;
+    }
+
+    public mut MoveNext: () -> bool == {
+        separatorIndex: usize?;
+        separatorLength: usize;
+        if _isAny {
+            separatorIndex = _src[@Unchecked _startNext..].IndexOfAny(_separatorBuffer);
+            separatorLength = 1u;
+        } else if _isBuffer {
+            separatorIndex = _src[@Unchecked _startNext..].IndexOf(_separatorBuffer);
+            separatorLength = _separatorBuffer.Length;
+        } else if _separator {
+            separatorIndex = _src[@Unchecked _startNext..].IndexOf(_separator!);
+            separatorLength = 1u;
+        } else {
+            return false;
+        }
+
+        _startCurrent = _startNext;
+        if separatorIndex {
+            _endCurrent = _startCurrent + separatorIndex!;
+            _startNext = _endCurrent + separatorLength;
+        } else {
+            _endCurrent = _src.Length;
+            _startNext = _src.Length;
+            _separator = null;
+            _isBuffer = false;
+            _isAny = false;
+        }
+
+        return true;
+    }
+
+    public GetCurrent: () -> T[&] ==> _src[@Unchecked _startCurrent.._endCurrent];
+
+    public GetSource: () -> T[&] ==> _src;
+    
+    public Iterate: () -> self ==> this;
 }
 
 public interface ISpanConvertible {
@@ -2061,6 +2174,39 @@ public extension <TLeft> where type TLeft is ISpanConvertible {
     }
 
     operator <=>*: <TSpan> (forward right: TSpan) -> i32 => this.SequenceCompare(forward right);
+
+    // Returns an iterator within a split span using the provided separator.
+    Split: <TRight> (forward right: TRight) -> _ == {
+        type TLeftReal = decay(TLeft);
+        type TRightReal = decay(TRight);
+        type T = TLeftReal.ElementType;
+        static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+
+        let src: T[&] = this;
+        static if type TRightReal is ISpanConvertible {
+            static assert(type T == TRightReal.ElementType, "ElementType mismatch");
+            let separators: T[&] = right;
+            return Spliterator<T>(src, separators, true);
+        } else static if type TRightReal is operator T {
+            return Spliterator<T>(src, right);
+        } else {
+            static assert(false, "Type TRight should be T or array-like type");
+        }
+        return Spliterator<T>();
+    }
+
+    // Returns an iterator within a split span using any of the provided separators.
+    SplitAny: <TRight> (forward right: TRight) -> _ == {
+        type TLeftReal = decay(TLeft);
+        type TRightReal = decay(TRight);
+        type T = TLeftReal.ElementType;
+        static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+        static assert(type TRightReal is ISpanConvertible, "TRight should be an array-like type");
+        static assert(type T == TRightReal.ElementType, "ElementType mismatch");
+        let src: T[&] = this;
+        let separators: T[&] = right;
+        return Spliterator<T>(src, separators);
+    }
 }
 
 public extension <TLeft> where type TLeft is IMutableSpanConvertible {
@@ -2220,9 +2366,9 @@ public extension <TLeft> where type TLeft is IMutableSpanConvertible {
                 SpanHelpers.Sort(buf, right);
             } catch e: Builtin.IndexOutOfRangeException {
                 throw Builtin.InvalidArgumentException();
-            } /*catch ... {
+            } catch ... {
                 throw Builtin.InvalidOperationException();
-            }*/
+            }
         } else {
             static assert(false, "TRight should be Comparator<T> or mutable array-like type");
         }
@@ -4762,6 +4908,54 @@ protected static class SpanHelpers {
         }
     }
 
+    public TrimStartCount: <T> (span: T[&], in ref val: T) -> usize == {
+        static assert(type T is ISelfEquatable, "TrimStart available only for ISelfEquatable types");
+        start: usize;
+        for i in span {
+            if i != val {
+                break;
+            }
+            ++start;
+        }
+        return start;
+    }
+
+    public TrimStartCount: <T> (span: T[&], vals: T[&]) -> usize == {
+        static assert(type T is ISelfEquatable, "TrimStart available only for ISelfEquatable types");
+        start: usize;
+        for i in span {
+            if i not in vals {
+                break;
+            }
+            ++start;
+        }
+        return start;
+    }
+
+    public TrimEndCount: <T> (span: T[&], in ref val: T, start: usize) -> usize == {
+        static assert(type T is ISelfEquatable, "TrimStart available only for ISelfEquatable types");
+        end := span.Length;
+        for i in span.Reversed {
+            if i != val {
+                break;
+            }
+            --end;
+        }
+        return end - start;
+    }
+
+    public TrimEndCount: <T> (span: T[&], vals: T[&], start: usize) -> usize == {
+        static assert(type T is ISelfEquatable, "TrimStart available only for ISelfEquatable types");
+        end := span.Length;
+        for i in span.Reversed {
+            if i not in vals {
+                break;
+            }
+            --end;
+        }
+        return end - start;
+    }
+
     public Sort: <T> (buf: T[&mut], compare: Comparator<T>) {
         IntroSort(buf, (buf.Length.Log2 + 1u) * 2u, compare);
     }
@@ -6084,11 +6278,27 @@ test "Span" {
     assert arrv3[..].Count(sp[..2u]) == 2u;
     arrv3 = [1,2,2,2,3,7,8,9,2,2,4,3,2,2,2,5,2,2];
     sp = arrv3;
+    assert sp.Trim(2).Length == 16u;
     assert sp.Count(2) == 10u;
     assert sp.IndexOf(2) == 1u;
     assert sp.IndexOf(3) == 4u;
     assert sp.LastIndexOf(2) == 17u;
     assert sp.LastIndexOf(3) == 11u;
+    count: i32;
+    for i in sp.Split(2) {
+        ++count;
+    }
+    assert count == 11;
+    count = 0;
+    for i in sp.Split(sp[1u..3u]) {
+        ++count;
+    }
+    assert count == 5;
+    count = 0;
+    for i in sp.SplitAny(sp[3u..5u]) {
+        ++count;
+    }
+    assert count == 13;
     arrv3 = [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2];
     assert sp.Count(2) == 18u;
     assert sp.IndexOf(2) == 0u;
