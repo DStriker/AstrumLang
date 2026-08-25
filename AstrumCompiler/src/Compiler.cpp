@@ -540,7 +540,7 @@ namespace AstrumLang {
 			}
 
 			cmd +=
-			    R"( /GS /Zc:wchar_t /Gm- /MP /Zi /Zc:inline /fp:precise /D ""_CONSOLE"" /D ""_UNICODE"" /D ""UNICODE"" /errorReport:prompt /WX- /Zc:forScope /Gd /std:c++latest /constexpr:steps 100000000 /wd4005 /wd4584 /we4172 /wd4190 /we4297 /we4715 /we26447 /we26815 /we26816 /external:W0 /utf-8)";
+			    R"( /GS /Zc:wchar_t /Gm- /MP /Zi /Zc:inline /fp:precise /D ""_CONSOLE"" /D ""_UNICODE"" /D ""UNICODE"" /errorReport:prompt /WX- /Zc:forScope /Gd /std:c++latest /constexpr:steps 100000000 /wd4005 /wd4584 /we4172 /wd4190 /we4297 /we4715 /we26447 /we26815 /we26816 /external:W0 /utf-8 /bigobj)";
 			if (CompilerSettings::get().debugBuild) {
 				cmd += R"( /Fo"obj\\Debug\\")";
 			} else {

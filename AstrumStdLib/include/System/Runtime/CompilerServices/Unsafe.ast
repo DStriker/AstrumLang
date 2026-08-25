@@ -132,6 +132,16 @@ public static class Unsafe {
         }
     }
 
+    // Copies bytesCount bytes from src to dest. If src and dest overlap, the behavior is undefined.
+    // This function is unsafe because it does not perform any type and bounds checking.
+    // Accessing an invalid memory location is UNDEFINED BEHAVIOR.
+    public CopyBlockNonOverlapping: (ref dest: byte, src: &byte, bytesCount: usize) =
+    {
+        unsafe {
+            std.memcpy(dest&, src&, bytesCount);
+        }
+    }
+
     // Manually calls a destructor for value of type T at the given location.
     // This function is unsafe because it does not perform any type and bounds checking.
     // Accessing an invalid memory location is UNDEFINED BEHAVIOR.
@@ -265,6 +275,28 @@ public static class Unsafe {
     {
         unsafe {
             return UnsafePointerCast<decay(T)>(UnsafePointerCast<byte>(src&) - offset)*;
+        }
+    }
+
+    // Swaps two values of type T.
+    public Swap: <T> (ref x: T, ref y: T) == {
+        let tmp := move x;
+        x = move y;
+        y = move tmp;
+    }
+
+    // Swaps two values of type T.
+    public SwapSequence: <T> (ref x: T, ref y: T, length: usize) == {
+        unsafe {
+            px := x&;
+            py := y&;
+            for i := 0; i < length; ++i {
+                let tmp := move (px*);
+                px* = move (py*);
+                py* = move tmp;
+                ++px;
+                ++py;
+            }
         }
     }
 

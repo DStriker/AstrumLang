@@ -72,10 +72,13 @@ public extension <T, S: usize> T[S] {
 
     mut Clear: () => this.AsMutableSpan().>Clear();
     mut Fill: (forward val: T) => this.AsMutableSpan().Fill(forward val);
+    mut Generate: <TGenerator> (forward generate: TGenerator) => this.AsMutableSpan().Generate(forward generate);
     mut Replace: (forward oldValue: T, forward newValue: T) => this.AsMutableSpan().Replace(forward oldValue, forward newValue);
     mut Replace: (forward oldValue: T, forward newValue: T, equals: EqualityComparer<T>) 
         => this.AsMutableSpan().Replace(forward oldValue, forward newValue, equals);
     mut Reverse: () => this.AsMutableSpan().Reverse();
+    mut RotateLeft: (count: usize) => this.AsMutableSpan().RotateLeft(count);
+    mut RotateRight: (count: usize) => this.AsMutableSpan().RotateRight(count);
     mut Sort: () => this.AsMutableSpan().Sort();
     mut SortByDescending: () => this.AsMutableSpan().SortByDescending();
     mut Sort: <TRight> (forward right: TRight) => this.AsMutableSpan().Sort(forward right);

@@ -68,24 +68,33 @@ template<class T> using InitializerList = typename Builtin::template Initializer
 	template<class T, size_t S> inline auto Fill($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this , T&& val)  -> decltype(auto);
 	template<class T, size_t S> inline auto Fill($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>> & $this , T&& val)  -> decltype(auto) { return Fill($this.val, val); } template<class T, size_t S> inline auto Fill($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>&> & $this , T&& val)  -> decltype(auto) { return Fill($this.val, val); } 
 	#line 75 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S, class TGenerator> inline auto Generate($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this , TGenerator&& generate)  -> decltype(auto);
+	template<class T, size_t S, class TGenerator> inline auto Generate($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>> & $this , TGenerator&& generate)  -> decltype(auto) { return Generate($this.val, generate); } template<class T, size_t S, class TGenerator> inline auto Generate($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>&> & $this , TGenerator&& generate)  -> decltype(auto) { return Generate($this.val, generate); } 
+	#line 76 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline auto Replace($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this , T&& oldValue, T&& newValue)  -> decltype(auto);
 	template<class T, size_t S> inline auto Replace($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>> & $this , T&& oldValue, T&& newValue)  -> decltype(auto) { return Replace($this.val, oldValue, newValue); } template<class T, size_t S> inline auto Replace($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>&> & $this , T&& oldValue, T&& newValue)  -> decltype(auto) { return Replace($this.val, oldValue, newValue); } 
-	#line 76 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	#line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline auto Replace($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this , T&& oldValue, T&& newValue, EqualityComparer<T> equals)  -> decltype(auto);
 	template<class T, size_t S> inline auto Replace($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>> & $this , T&& oldValue, T&& newValue, EqualityComparer<T> equals)  -> decltype(auto) { return Replace($this.val, oldValue, newValue, equals); } template<class T, size_t S> inline auto Replace($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>&> & $this , T&& oldValue, T&& newValue, EqualityComparer<T> equals)  -> decltype(auto) { return Replace($this.val, oldValue, newValue, equals); } 
-	#line 78 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline auto Reverse($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this )  -> decltype(auto);
 	template<class T, size_t S> inline auto Reverse($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>> & $this )  -> decltype(auto) { return Reverse($this.val); } template<class T, size_t S> inline auto Reverse($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>&> & $this )  -> decltype(auto) { return Reverse($this.val); } 
-	#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	#line 80 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S> inline auto RotateLeft($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this , Builtin::usize count)  -> decltype(auto);
+	template<class T, size_t S> inline auto RotateLeft($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>> & $this , Builtin::usize count)  -> decltype(auto) { return RotateLeft($this.val, count); } template<class T, size_t S> inline auto RotateLeft($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>&> & $this , Builtin::usize count)  -> decltype(auto) { return RotateLeft($this.val, count); } 
+	#line 81 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S> inline auto RotateRight($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this , Builtin::usize count)  -> decltype(auto);
+	template<class T, size_t S> inline auto RotateRight($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>> & $this , Builtin::usize count)  -> decltype(auto) { return RotateRight($this.val, count); } template<class T, size_t S> inline auto RotateRight($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>&> & $this , Builtin::usize count)  -> decltype(auto) { return RotateRight($this.val, count); } 
+	#line 82 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline auto Sort($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this )  -> decltype(auto);
 	template<class T, size_t S> inline auto Sort($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>> & $this )  -> decltype(auto) { return Sort($this.val); } template<class T, size_t S> inline auto Sort($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>&> & $this )  -> decltype(auto) { return Sort($this.val); } 
-	#line 80 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	#line 83 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline auto SortByDescending($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this )  -> decltype(auto);
 	template<class T, size_t S> inline auto SortByDescending($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>> & $this )  -> decltype(auto) { return SortByDescending($this.val); } template<class T, size_t S> inline auto SortByDescending($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>&> & $this )  -> decltype(auto) { return SortByDescending($this.val); } 
-	#line 81 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S, class TRight> inline auto Sort($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this , TRight&& right)  -> decltype(auto);
 	template<class T, size_t S, class TRight> inline auto Sort($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>> & $this , TRight&& right)  -> decltype(auto) { return Sort($this.val, right); } template<class T, size_t S, class TRight> inline auto Sort($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>&> & $this , TRight&& right)  -> decltype(auto) { return Sort($this.val, right); } 
-	#line 82 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	#line 85 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S, class TValue, class TComparer> inline auto Sort($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this , TValue&& right, TComparer compare)  -> decltype(auto);
 	template<class T, size_t S, class TValue, class TComparer> inline auto Sort($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>> & $this , TValue&& right, TComparer compare)  -> decltype(auto) { return Sort($this.val, right, compare); } template<class T, size_t S, class TValue, class TComparer> inline auto Sort($proxy<$extension_InlineArray_8_T_brack_S_brack_<T, S>&> & $this , TValue&& right, TComparer compare)  -> decltype(auto) { return Sort($this.val, right, compare); } 
 	#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
@@ -104,9 +113,12 @@ using $extensions::AsSpan;
 using $extensions::AsMutableSpan;
 using $extensions::Clear;
 using $extensions::Fill;
+using $extensions::Generate;
 using $extensions::Replace;
 using $extensions::Replace;
 using $extensions::Reverse;
+using $extensions::RotateLeft;
+using $extensions::RotateRight;
 using $extensions::Sort;
 using $extensions::SortByDescending;
 using $extensions::Sort;
@@ -134,10 +146,16 @@ template<class __TT> struct $static_AsMutableSpan;
 template<class __TT> struct $static_getAsMutableSpan;
 template<class __TT> struct $static_Fill;
 template<class __TT> struct $static_getFill;
+template<class __TT> struct $static_Generate;
+template<class __TT> struct $static_getGenerate;
 template<class __TT> struct $static_Replace;
 template<class __TT> struct $static_getReplace;
 template<class __TT> struct $static_Reverse;
 template<class __TT> struct $static_getReverse;
+template<class __TT> struct $static_RotateLeft;
+template<class __TT> struct $static_getRotateLeft;
+template<class __TT> struct $static_RotateRight;
+template<class __TT> struct $static_getRotateRight;
 template<class __TT> struct $static_Sort;
 template<class __TT> struct $static_getSort;
 template<class __TT> struct $static_SortByDescending;
@@ -289,63 +307,90 @@ template<class __TT> struct $static_getAsSpan;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 75 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-	template<class T, size_t S> inline auto Replace($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this , T&& oldValue, T&& newValue)  -> decltype(auto)
+	template<class T, size_t S, class TGenerator> inline auto Generate($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this , TGenerator&& generate)  -> decltype(auto)
 	{
 		#line 75 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		ADV_EXPRESSION_BODY(ADV_UFCS(Replace)(ADV_UFCS(AsMutableSpan)($this.$ref()).$ref(), std::forward<decltype(oldValue)>(oldValue), std::forward<decltype(newValue)>(newValue))); 
+		ADV_EXPRESSION_BODY(ADV_UFCS(Generate)(ADV_UFCS(AsMutableSpan)($this.$ref()).$ref(), std::forward<decltype(generate)>(generate))); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 76 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S> inline auto Replace($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this , T&& oldValue, T&& newValue)  -> decltype(auto)
+	{
+		#line 76 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		ADV_EXPRESSION_BODY(ADV_UFCS(Replace)(ADV_UFCS(AsMutableSpan)($this.$ref()).$ref(), std::forward<decltype(oldValue)>(oldValue), std::forward<decltype(newValue)>(newValue))); 
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline auto Replace($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this , T&& oldValue, T&& newValue, EqualityComparer<T> equals)  -> decltype(auto)
 	{
-		#line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		#line 78 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(Replace)(ADV_UFCS(AsMutableSpan)($this.$ref()).$ref(), std::forward<decltype(oldValue)>(oldValue), std::forward<decltype(newValue)>(newValue), equals)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 78 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 	template<class T, size_t S> inline auto Reverse($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this )  -> decltype(auto)
 	{
-		#line 78 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(Reverse)(ADV_UFCS(AsMutableSpan)($this.$ref()).$ref())); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-	template<class T, size_t S> inline auto Sort($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this )  -> decltype(auto)
-	{
-		#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		ADV_EXPRESSION_BODY(ADV_UFCS(Sort)(ADV_UFCS(AsMutableSpan)($this.$ref()).$ref())); 
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
 #line 80 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-	template<class T, size_t S> inline auto SortByDescending($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this )  -> decltype(auto)
+	template<class T, size_t S> inline auto RotateLeft($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this , Builtin::usize count)  -> decltype(auto)
 	{
 		#line 80 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		ADV_EXPRESSION_BODY(ADV_UFCS(SortByDescending)(ADV_UFCS(AsMutableSpan)($this.$ref()).$ref())); 
+		ADV_EXPRESSION_BODY(ADV_UFCS(RotateLeft)(ADV_UFCS(AsMutableSpan)($this.$ref()).$ref(), count)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 81 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-	template<class T, size_t S, class TRight> inline auto Sort($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this , TRight&& right)  -> decltype(auto)
+	template<class T, size_t S> inline auto RotateRight($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this , Builtin::usize count)  -> decltype(auto)
 	{
 		#line 81 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-		ADV_EXPRESSION_BODY(ADV_UFCS(Sort)(ADV_UFCS(AsMutableSpan)($this.$ref()).$ref(), std::forward<decltype(right)>(right))); 
+		ADV_EXPRESSION_BODY(ADV_UFCS(RotateRight)(ADV_UFCS(AsMutableSpan)($this.$ref()).$ref(), count)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 82 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
-	template<class T, size_t S, class TValue, class TComparer> inline auto Sort($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this , TValue&& right, TComparer compare)  -> decltype(auto)
+	template<class T, size_t S> inline auto Sort($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this )  -> decltype(auto)
+	{
+		#line 82 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		ADV_EXPRESSION_BODY(ADV_UFCS(Sort)(ADV_UFCS(AsMutableSpan)($this.$ref()).$ref())); 
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 83 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S> inline auto SortByDescending($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this )  -> decltype(auto)
 	{
 		#line 83 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		ADV_EXPRESSION_BODY(ADV_UFCS(SortByDescending)(ADV_UFCS(AsMutableSpan)($this.$ref()).$ref())); 
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S, class TRight> inline auto Sort($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this , TRight&& right)  -> decltype(auto)
+	{
+		#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+		ADV_EXPRESSION_BODY(ADV_UFCS(Sort)(ADV_UFCS(AsMutableSpan)($this.$ref()).$ref(), std::forward<decltype(right)>(right))); 
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 85 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
+	template<class T, size_t S, class TValue, class TComparer> inline auto Sort($extension_InlineArray_8_T_brack_S_brack_<T, S> & $this , TValue&& right, TComparer compare)  -> decltype(auto)
+	{
+		#line 86 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\InlineArray.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(Sort)(ADV_UFCS(AsMutableSpan)($this.$ref()).$ref(), std::forward<decltype(right)>(right), compare)); 
 	}
 	

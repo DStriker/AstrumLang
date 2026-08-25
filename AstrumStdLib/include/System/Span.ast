@@ -413,6 +413,11 @@ public ref struct <T> Span: ISelfEquatable, IAbstractSequence, ISequence<T> {
         let length := SpanHelpers.TrimEndCount(this, vals, start);
         return SliceUnchecked(start, length);
     }
+
+    // Splits a span into two spans at the specified index
+    public SplitAt: (splitIndex: usize) -> (self, self) == {
+        return (this[..splitIndex], this[splitIndex..]);
+    }
 }
 
 public extension <T> Span {
@@ -734,6 +739,11 @@ public ref struct <T> MutableSpan: ISelfEquatable, IAbstractSequence, ISequence<
         let length := SpanHelpers.TrimEndCount(this.AsSpan(), vals, start);
         return SliceUnchecked(start, length);
     }
+
+    // Splits a span into two spans at the specified index
+    public SplitAt: (splitIndex: usize) -> (self, self) == {
+        return (this[..splitIndex], this[splitIndex..]);
+    }
 }
 
 public extension <T> MutableSpan {
@@ -821,6 +831,187 @@ public ref struct <T> Spliterator: IAbstractIterator, IIterator<Span<T>>, IAbstr
     public GetCurrent: () -> T[&] ==> _src[@Unchecked _startCurrent.._endCurrent];
 
     public GetSource: () -> T[&] ==> _src;
+    
+    public Iterate: () -> self ==> this;
+}
+
+public ref struct <T> ReverseSpliterator: IAbstractIterator, IIterator<Span<T>>, IAbstractSequence, ISequence<Span<T>> {
+    static assert(type T is ISelfEquatable, "Type T should implement ISelfEquatable");
+    public type ElementType = T[&];
+
+    private {
+        _src: T[&];
+        _separator: T?;
+        _separatorBuffer: T[&];
+        _startCurrent: usize;
+        _endCurrent: usize;
+        _endNext: usize;
+        _isBuffer: bool;
+        _isAny: bool;
+    }
+
+    public this(src: T[&], in ref separator: T) == {
+        _src = src;
+        _separator = separator;
+        _endNext = src.Length;
+    }
+
+    public this(src: T[&], separators: T[&]) == {
+        _src = src;
+        _separatorBuffer = separators;
+        _endNext = src.Length;
+        _isAny = true;
+    }
+
+    public this(src: T[&], separators: T[&], single: bool) == {
+        assert single;
+        _src = src;
+        _separatorBuffer = separators;
+        _endNext = src.Length;
+        _isBuffer = true;
+    }
+
+    public mut MoveNext: () -> bool == {
+        separatorIndex: usize?;
+        separatorLength: usize;
+        if _isAny {
+            separatorIndex = _src[@Unchecked .._endNext].LastIndexOfAny(_separatorBuffer);
+            separatorLength = 1u;
+        } else if _isBuffer {
+            separatorIndex = _src[@Unchecked .._endNext].LastIndexOf(_separatorBuffer);
+            separatorLength = _separatorBuffer.Length;
+        } else if _separator {
+            separatorIndex = _src[@Unchecked .._endNext].LastIndexOf(_separator!);
+            separatorLength = 1u;
+        } else {
+            return false;
+        }
+
+        _endCurrent = _endNext;
+        if separatorIndex {
+            _endNext = separatorIndex!;
+            _startCurrent = _endNext + separatorLength;
+        } else {
+            _endCurrent = _src.Length;
+            _endNext = _src.Length;
+            _separator = null;
+            _isBuffer = false;
+            _isAny = false;
+        }
+
+        return true;
+    }
+
+    public GetCurrent: () -> T[&] ==> _src[@Unchecked _startCurrent.._endCurrent];
+
+    public GetSource: () -> T[&] ==> _src;
+    
+    public Iterate: () -> self ==> this;
+}
+
+public ref struct <T> SlidingIterator: IAbstractIterator, IIterator<Span<T>>, IAbstractSequence, ISequence<Span<T>> {
+    public type ElementType = T[&];
+
+    private {
+        _remaining, _currentWindow: T[&];
+        _windowSize: usize;
+    }
+
+    public this(src: T[&], windowSize: usize) == {
+        _remaining = src;
+        _windowSize = windowSize;
+
+        if windowSize == 0 {
+            throw Builtin.InvalidArgumentException();
+        }
+    }
+
+    public mut MoveNext: () -> bool == {
+        if _windowSize > _remaining.Length {
+            return false;
+        }
+
+        _currentWindow = _remaining[@Unchecked .._windowSize];
+        _remaining = _remaining[@Unchecked 1u..];
+
+        return true;
+    }
+
+    public GetCurrent: () -> T[&] ==> _currentWindow;
+
+    public GetRemainingData: () -> T[&] ==> _remaining;
+    
+    public Iterate: () -> self ==> this;
+}
+
+public ref struct <T> ChunkIterator: IAbstractIterator, IIterator<Span<T>>, IAbstractSequence, ISequence<Span<T>> {
+    public type ElementType = T[&];
+
+    private {
+        _remaining, _currentChunk: T[&];
+        _chunkSize: usize;
+    }
+
+    public this(src: T[&], chunkSize: usize) == {
+        _remaining = src;
+        _chunkSize = chunkSize;
+
+        if chunkSize == 0 {
+            throw Builtin.InvalidArgumentException();
+        }
+    }
+
+    public mut MoveNext: () -> bool == {
+        if _remaining.IsEmpty {
+            return false;
+        }
+
+        let currentLength := _chunkSize.Min(_remaining.Length);
+        _currentChunk = _remaining[@Unchecked ..currentLength];
+        _remaining = _remaining[@Unchecked currentLength..];
+
+        return true;
+    }
+
+    public GetCurrent: () -> T[&] ==> _currentChunk;
+
+    public GetRemainingData: () -> T[&] ==> _remaining;
+    
+    public Iterate: () -> self ==> this;
+}
+
+public ref struct <T> ReverseChunkIterator: IAbstractIterator, IIterator<Span<T>>, IAbstractSequence, ISequence<Span<T>> {
+    public type ElementType = T[&];
+
+    private {
+        _remaining, _currentChunk: T[&];
+        _chunkSize: usize;
+    }
+
+    public this(src: T[&], chunkSize: usize) == {
+        _remaining = src;
+        _chunkSize = chunkSize;
+
+        if chunkSize == 0 {
+            throw Builtin.InvalidArgumentException();
+        }
+    }
+
+    public mut MoveNext: () -> bool == {
+        if _remaining.IsEmpty {
+            return false;
+        }
+
+        let splitIndex := _remaining.Length - _chunkSize.Min(_remaining.Length);
+        _currentChunk = _remaining[@Unchecked splitIndex..];
+        _remaining = _remaining[@Unchecked ..splitIndex];
+
+        return true;
+    }
+
+    public GetCurrent: () -> T[&] ==> _currentChunk;
+
+    public GetRemainingData: () -> T[&] ==> _remaining;
     
     public Iterate: () -> self ==> this;
 }
@@ -2207,6 +2398,108 @@ public extension <TLeft> where type TLeft is ISpanConvertible {
         let separators: T[&] = right;
         return Spliterator<T>(src, separators);
     }
+
+    // Returns a reverse iterator within a split span using the provided separator.
+    SplitReversed: <TRight> (forward right: TRight) -> _ == {
+        type TLeftReal = decay(TLeft);
+        type TRightReal = decay(TRight);
+        type T = TLeftReal.ElementType;
+        static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+
+        let src: T[&] = this;
+        static if type TRightReal is ISpanConvertible {
+            static assert(type T == TRightReal.ElementType, "ElementType mismatch");
+            let separators: T[&] = right;
+            return ReverseSpliterator<T>(src, separators, true);
+        } else static if type TRightReal is operator T {
+            return ReverseSpliterator<T>(src, right);
+        } else {
+            static assert(false, "Type TRight should be T or array-like type");
+        }
+        return ReverseSpliterator<T>();
+    }
+
+    // Returns a reverse iterator within a split span using any of the provided separators.
+    SplitAnyReversed: <TRight> (forward right: TRight) -> _ == {
+        type TLeftReal = decay(TLeft);
+        type TRightReal = decay(TRight);
+        type T = TLeftReal.ElementType;
+        static assert(type T is ISelfEquatable, "Search available only for ISelfEquatable types");
+        static assert(type TRightReal is ISpanConvertible, "TRight should be an array-like type");
+        static assert(type T == TRightReal.ElementType, "ElementType mismatch");
+        let src: T[&] = this;
+        let separators: T[&] = right;
+        return ReverseSpliterator<T>(src, separators);
+    }
+
+    // Returns an iterator over all contiguous windows of windowSize length. The windows overlap. 
+    // If the span is shorter than siwindowSizeze, the iterator returns no values.
+    // Throws InvalidArgumentException if windowSize is 0
+    Sliding: (windowSize: usize) -> _ == {
+        type TLeftReal = decay(TLeft);
+        type T = TLeftReal.ElementType;
+        let src: T[&] = this;
+        return SlidingIterator<T>(src, windowSize);
+    }
+
+    // Returns an iterator over chunk_size elements of the span at a time, starting at the beginning of the slice.
+    // Chunks are non-overlapping.
+    // Throws InvalidArgumentException if chunkSize is 0
+    Chunks: (chunkSize: usize) -> _ == {
+        type TLeftReal = decay(TLeft);
+        type T = TLeftReal.ElementType;
+        let src: T[&] = this;
+        return ChunkIterator<T>(src, chunkSize);
+    }
+
+    // Returns an reverse iterator over chunk_size elements of the span at a time, starting at the beginning of the slice.
+    // Chunks are non-overlapping.
+    // Throws InvalidArgumentException if chunkSize is 0
+    ChunksReversed: (chunkSize: usize) -> _ == {
+        type TLeftReal = decay(TLeft);
+        type T = TLeftReal.ElementType;
+        let src: T[&] = this;
+        return ReverseChunkIterator<T>(src, chunkSize);
+    }
+
+    // Returns true if the span is sorted using a default comparator
+    IsSorted: bool {
+        type TLeftReal = decay(TLeft);
+        type T = TLeftReal.ElementType;
+        static assert(type T is ISelfComparable, "IsSorted available only for ISelfComparable types");
+        return this.IsSorted(DefaultComparator);
+    }
+
+    // Returns true if the span is sorted using the given comparator
+    IsSorted: <TComparer> (forward compare: TComparer) -> bool {
+        type TLeftReal = decay(TLeft);
+        type TComparerReal = decay(TComparer);
+        type T = TLeftReal.ElementType;
+        static assert(type TComparerReal is operator Comparator<T>, "TComparer should be a Comparator<T>");
+        const chunkSize :== 33u;
+        let span: T[&] = this;
+        let length := span.Length;
+        check := (currentChunk: T[&]) {
+            for adjacents in currentChunk.Sliding(2u) {
+                if compare(adjacents[@Unchecked 0], adjacents[@Unchecked 1]) > 0 {
+                    return false;
+                }
+            }
+            return true;
+        };
+        if length < chunkSize {
+            return check(span);
+        }
+        i := 0u;
+        while i < length - chunkSize {
+            let chunk := span.SliceUnchecked(i, chunkSize);
+            if not check(chunk) {
+                return false;
+            }
+            i += (chunkSize - 1);
+        }
+        return check(span[@Unchecked i..]);
+    }
 }
 
 public extension <TLeft> where type TLeft is IMutableSpanConvertible {
@@ -2296,6 +2589,18 @@ public extension <TLeft> where type TLeft is IMutableSpanConvertible {
             for &i in buf {
                 i = val;
             }
+        }
+    }
+
+    // Fills the span with an elements returned by calling generator repeatedly
+    mut Generate: <TGenerator> (forward generate: TGenerator) {
+        type TLeftReal = decay(TLeft);
+        type TGeneratorReal = decay(TGenerator);
+        type T = TLeftReal.ElementType;
+        static assert(type TGeneratorReal is operator GeneratorFunc<T>, "TGenerator should be GeneratorFunc<T>");
+        let buf: T[&mut] = this;
+        for &i in buf {
+            i = generate();
         }
     }
 
@@ -2399,6 +2704,34 @@ public extension <TLeft> where type TLeft is IMutableSpanConvertible {
         } catch ... {
             throw Builtin.InvalidOperationException();
         }
+    }
+
+    // Rotates the span in-place such that the first mid elements of the span move to the end 
+    // while the last span.Length - mid elements move to the front
+    // Throws InvalidArgumentException if mid > span.Length
+    mut RotateLeft: (mid: usize) {
+        type TLeftReal = decay(TLeft);
+        type T = TLeftReal.ElementType;
+        let span: T[&mut] = this;
+        if mid > span.Length {
+            throw Builtin.InvalidArgumentException();
+        }
+        let k := span.Length - mid;
+        SpanHelpers.Rotate(span, mid, k);
+    }
+
+    // Rotates the span in-place such that the first span.Length - k elements of the span move to the end 
+    // while the last k elements move to the front
+    // Throws InvalidArgumentException if k > span.Length
+    mut RotateRight: (k: usize) {
+        type TLeftReal = decay(TLeft);
+        type T = TLeftReal.ElementType;
+        let span: T[&mut] = this;
+        if k > span.Length {
+            throw Builtin.InvalidArgumentException();
+        }
+        let mid := span.Length - k;
+        SpanHelpers.Rotate(span, mid, k);
     }
 }
 
@@ -5199,6 +5532,95 @@ protected static class SpanHelpers {
         values[@Unchecked i] = move (values[@Unchecked j]);
         values[@Unchecked j] = move tmpVal;
     }
+
+    public Rotate: <T> (span: T[&mut], left: usize, right: usize) {
+        if left == 0 or right == 0 {
+            return;
+        }
+
+        const items :== 256u \ sizeof(T);
+        if left.Min(right) <= items {
+            type TBuffer = T[items];
+            buf := TBuffer::UnsafeCreateUninitialized();
+
+            if left <= right {
+                Unsafe.CopyBlockNonOverlapping(Unsafe.As<byte>(&buf), Unsafe.As<byte>(span[@Unchecked 0]), left * sizeof(T));
+                Unsafe.CopyBlock(Unsafe.As<byte>(&span[@Unchecked 0]), Unsafe.As<byte>(span[@Unchecked left]), right * sizeof(T));
+                Unsafe.CopyBlockNonOverlapping(Unsafe.As<byte>(&span[@Unchecked right]), Unsafe.As<byte>(buf), left * sizeof(T));
+            } else {
+                Unsafe.CopyBlockNonOverlapping(Unsafe.As<byte>(&buf), Unsafe.As<byte>(span[@Unchecked left]), right * sizeof(T));
+                Unsafe.CopyBlock(Unsafe.As<byte>(&span[@Unchecked right]), Unsafe.As<byte>(span[@Unchecked 0]), left * sizeof(T));
+                Unsafe.CopyBlockNonOverlapping(Unsafe.As<byte>(&span[@Unchecked 0]), Unsafe.As<byte>(buf), right * sizeof(T));
+            }
+        } else if (left + right) < 24u or sizeof(T) > 32u {
+            tmp := span[@Unchecked 0];
+            i := right;
+            gcd := right;
+            for {
+                tmp2 := span[@Unchecked i];
+                span[@Unchecked i] = move tmp;
+                tmp = move tmp2;
+                if i >= left {
+                    i -= left;
+                    if i == 0 {
+                        span[@Unchecked 0] = move tmp;
+                        break;
+                    }
+                    if i < gcd {
+                        gcd = i;
+                    }
+                } else {
+                    i += right;
+                }
+            }
+            start := 1u;
+            while start < gcd {
+                tmp = span[@Unchecked start];
+                i = start + right;
+                for {
+                    tmp2 := span[@Unchecked i];
+                    span[@Unchecked i] = move tmp;
+                    tmp = move tmp2;
+                    if i >= left {
+                        i -= left;
+                        if i == start {
+                            span[@Unchecked start] = move tmp;
+                            break;
+                        }
+                    } else {
+                        i += right;
+                    }
+                }
+                ++start;
+            }
+        } else {
+            mid := left;
+            for {
+                if left >= right {
+                    for {
+                        Unsafe.SwapSequence(&span[@Unchecked mid], &span[@Unchecked mid - right], right);
+                        mid -= right;
+                        left -= right;
+                        if left < right {
+                            break;
+                        }
+                    }
+                } else {
+                    for {
+                        Unsafe.SwapSequence(&span[@Unchecked mid], &span[@Unchecked mid - left], left);
+                        mid += left;
+                        right -= left;
+                        if right < left {
+                            break;
+                        }
+                    }
+                }
+                if left == 0 or right == 0 {
+                    return;
+                }
+            }
+        }
+    }
 }
 
 private static class <T> SpanContains {
@@ -6299,6 +6721,37 @@ test "Span" {
         ++count;
     }
     assert count == 13;
+    count = 0;
+    for i in sp.SplitReversed(2) {
+        ++count;
+    }
+    assert count == 11;
+    count = 0;
+    for i in sp.SplitReversed(sp[1u..3u]) {
+        ++count;
+    }
+    assert count == 5;
+    count = 0;
+    for i in sp.SplitAnyReversed(sp[3u..5u]) {
+        ++count;
+    }
+    assert count == 13;
+    count = 0;
+    for i in sp.Sliding(2u) {
+        ++count;
+    }
+    assert count == 17;
+    count = 0;
+    for i in sp.Chunks(4u) {
+        ++count;
+    }
+    assert count == 5;
+    count = 0;
+    for i in sp.ChunksReversed(4u) {
+        ++count;
+    }
+    assert count == 5;
+    assert not sp.IsSorted;
     arrv3 = [2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2];
     assert sp.Count(2) == 18u;
     assert sp.IndexOf(2) == 0u;
@@ -6308,6 +6761,7 @@ test "Span" {
     arrv3 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 1, 2];
     assert not sp.SequenceEquals(arrv2);
     sp = arrwide[..16u];
+    assert sp.IsSorted;
     assert sp.SequenceEquals(arrv3[..^2u]);
     assert sp.SequenceCompare(arrv3[..^2u]) == 0;
     assert sp <* arrv3;
@@ -6390,7 +6844,9 @@ test "Span" {
     assert arrwide[15] == 16;
     assert arrwide[^1u] == 1;
 
+    assert not arrwide.IsSorted;
     arrwide.Sort();
+    assert arrwide.IsSorted;
     assert arrwide[0] == 1;
     assert arrwide[1] == 1;
     assert arrwide[2] == 2;
@@ -6398,6 +6854,7 @@ test "Span" {
     assert arrwide[^2u] == 15;
     assert arrwide[^1u] == 16;
     arrwide.SortByDescending();
+    assert arrwide.IsSorted(DefaultDescendingComparator);
     assert arrwide[0] == 16;
     assert arrwide[1] == 15;
     assert arrwide[2] == 15;
@@ -6420,6 +6877,21 @@ test "Span" {
     assert arrwide.IndexOf(6) == 0u;
     assert arrwide.LastIndexOf(6) == 30u;
     assert arrwide.IndexOfAnyExcept(6) == null;
+    arrwide.Generate([n = 0] mut () => n++);
+    assert arrwide[0] == 0;
+    assert arrwide[1] == 1;
+    assert arrwide[2] == 2;
+    assert arrwide[30] == 30;
+    arrwide.RotateLeft(5u);
+    assert arrwide[0] == 5;
+    assert arrwide[1] == 6;
+    assert arrwide[2] == 7;
+    assert arrwide[30] == 4;
+    arrwide.RotateRight(5u);
+    assert arrwide[0] == 0;
+    assert arrwide[1] == 1;
+    assert arrwide[2] == 2;
+    assert arrwide[30] == 30;
 
     spm: i32[&mut] = MutableSpan<i32>.UnsafeCreate(&arr[1], 3u);
     assert spm.Length == 3;

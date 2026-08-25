@@ -15,7 +15,7 @@ namespace Builtin {
 	class $Class_InlineArray;
 	template <class T>
 	class $Class_Basic;
-	
+
 	template <class T>
 	struct InitializerList : public Struct {
 	   private:
@@ -47,8 +47,7 @@ namespace Builtin {
 
 			constexpr auto& $ref() noexcept { return *this; }
 			constexpr const auto& $ref() const noexcept { return *this; }
-			constexpr explicit Iterator(
-			    Builtin::InitializerList<T> initList) noexcept;
+			constexpr explicit Iterator(Builtin::InitializerList<T> initList) noexcept;
 
 			constexpr void Reset() noexcept { index = -1; }
 
@@ -74,14 +73,11 @@ namespace Builtin {
 			}
 		};
 
-		constexpr auto Iterate() const noexcept {
-			return Iterator {*this};
-		}
+		constexpr auto Iterate() const noexcept { return Iterator {*this}; }
 	};
 
-	template<class T>
-	inline constexpr InitializerList<T>::Iterator::Iterator(
-	    InitializerList<T> initList) noexcept
+	template <class T>
+	inline constexpr InitializerList<T>::Iterator::Iterator(InitializerList<T> initList) noexcept
 	    : begin {initList.begin()}, length {initList.size()} {}
 
 	template <size_t S, class T, bool IsConstStrArray = false>
@@ -91,6 +87,10 @@ namespace Builtin {
 		static_assert((IsConstStrArray && std::is_same_v<T, Str>) ||
 		                  !std::is_base_of_v<Builtin::RefStruct, T>,
 		              "Inline array doesn't support ref structs");
+
+		struct UninitTag {};
+
+		constexpr InlineArray(UninitTag) {}
 
 	   public:
 		using $self                    = InlineArray<S, T, IsConstStrArray>;
@@ -107,10 +107,12 @@ namespace Builtin {
 			for (int i = 0; i < S; i++) { arr[i] = T {}; }
 		}
 
-		constexpr InlineArray(std::initializer_list<T> il) {
+		constexpr InlineArray(std::initializer_list<T> il) { std::move(il.begin(), il.end(), arr); }
+		constexpr InlineArray(Builtin::InitializerList<T> il) {
 			std::move(il.begin(), il.end(), arr);
 		}
-		constexpr InlineArray(Builtin::InitializerList<T> il) { std::move(il.begin(), il.end(), arr); }
+
+		static constexpr $self UnsafeCreateUninitialized() noexcept { return $self(UninitTag {}); }
 
 		constexpr T& operator[](i32 i) {
 			const size_t index = size_t(i);
@@ -143,13 +145,10 @@ namespace Builtin {
 		}
 
 		template <bool IsConst = true>
-		class $Class_Iterator;
-
-		template <bool IsConst = true>
-		struct Iterator : public Struct {
+		struct Iterator : public RefStruct {
 			using ElementType = T;
 			using $self       = Iterator<IsConst>;
-			using $class      = $Class_Iterator<IsConst>;
+			using $class      = $self;
 			constexpr $self& $ref() noexcept { return *this; }
 			constexpr const $self& $ref() const noexcept { return *this; }
 
@@ -177,24 +176,36 @@ namespace Builtin {
 			constexpr decltype(auto) GetCurrentRef() const { return ptr[index]; }
 		};
 
-		template <bool IsConst>
-		class $Class_Iterator : public ValueType {
-			Iterator<IsConst> __value;
+		template <bool IsConst = true>
+		struct ReverseIterator : public RefStruct {
+			using ElementType = T;
+			using $self       = ReverseIterator<IsConst>;
+			using $class      = $self;
+			constexpr $self& $ref() noexcept { return *this; }
+			constexpr const $self& $ref() const noexcept { return *this; }
+
+		   private:
+			using PtrType = std::conditional_t<IsConst, const T*, T*>;
+			PtrType ptr;
+			size_t index = S;
 
 		   public:
-			using $self       = Iterator<IsConst>;
-			using $underlying = $self;
-			$Class_Iterator(const $underlying& value) noexcept(
-			    std::is_nothrow_copy_constructible_v<$underlying>)
-			    : __value {value} {}
-			operator $underlying() const noexcept { return __value; }
+			constexpr ReverseIterator() noexcept = default;
+			constexpr ReverseIterator(PtrType ref) noexcept : ptr(ref) {}
 
-			constexpr bool MoveNext() noexcept { return __value.MoveNext(); }
-
-			constexpr const T GetCurrent() const noexcept { return __value.GetCurrent(); }
-			constexpr decltype(auto) GetCurrentRef() const noexcept {
-				return __value.GetCurrentRef();
+			constexpr bool MoveNext() noexcept {
+				const auto newIndex = index - 1;
+				if (newIndex < S) {
+					index = newIndex;
+					return true;
+				}
+				return false;
 			}
+
+			constexpr void Reset() noexcept { index = S; }
+
+			constexpr const T GetCurrent() const { return ptr[index]; }
+			constexpr decltype(auto) GetCurrentRef() const { return ptr[index]; }
 		};
 
 		auto Iterate() noexcept { return Iterator<false>(&GetDataReference()); }
@@ -276,3 +287,17 @@ namespace Builtin {
 	}
 
 }  // namespace Builtin
+
+namespace $extensions {
+	template <class T, size_t S>
+	inline constexpr auto getReversed(Builtin::InlineArray<S, T> const& $this) noexcept {
+		return
+		    typename Builtin::InlineArray<S, T>::ReverseIterator<true>(&$this.GetDataReference());
+	}
+
+	template <class T, size_t S>
+	inline constexpr auto getReversed(Builtin::InlineArray<S, T>& $this) noexcept {
+		return
+		    typename Builtin::InlineArray<S, T>::ReverseIterator<false>(&$this.GetDataReference());
+	}
+}  // namespace $extensions
