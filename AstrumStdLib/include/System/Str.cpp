@@ -7,9 +7,9 @@ namespace System {
 //###############################################################################
 //# Global compile-time constants
 //###############################################################################
-inline constexpr Builtin::Str $strconst_0x14f17bc8d40_0 = "Begin ";
-inline constexpr Builtin::Str $strconst_0x14f17bc8d40_1 = " Middle ";
-inline constexpr Builtin::Str $strconst_0x14f17bc8d40_2 = " End";
+inline constexpr Builtin::Str $strconst_0x2988ebbfce0_0 = "Begin ";
+inline constexpr Builtin::Str $strconst_0x2988ebbfce0_1 = " Middle ";
+inline constexpr Builtin::Str $strconst_0x2988ebbfce0_2 = " End";
 #line 134 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 inline constexpr Builtin::Str cs = Builtin::Str{"Hello, моя Лерка ❤😆"};
 #line 135 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
@@ -17,7 +17,7 @@ inline constexpr auto test1 = Builtin::Str{"PART 1"};
 #line 136 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 inline constexpr auto test2 = Builtin::Str{"PART 2"};
 #line 137 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-inline constexpr auto $global_buffer_0000014F17989600 = Builtin::CompileTimeStringConcat<$strconst_0x14f17989600_0, test1, $strconst_0x14f17989600_1, test2, $strconst_0x14f17989600_2>(); inline constexpr auto test3 = Builtin::Str($global_buffer_0000014F17989600.data(), $global_buffer_0000014F17989600.size() - 1);
+inline constexpr auto $global_buffer_000002988DAE0E00 = Builtin::CompileTimeStringConcat<$strconst_0x2988dae0e00_0, test1, $strconst_0x2988dae0e00_1, test2, $strconst_0x2988dae0e00_2>(); inline constexpr auto test3 = Builtin::Str($global_buffer_000002988DAE0E00.data(), $global_buffer_000002988DAE0E00.size() - 1);
 #line 139 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 inline constexpr Builtin::InlineArray<3, Builtin::Str, true> arr = Builtin::ToInlineArrayStr({Builtin::Str(Builtin::Str{"Hello"}), Builtin::Str(Builtin::Str{"world"}), Builtin::Str(Builtin::Str{"!"})});
 
@@ -62,7 +62,7 @@ inline constexpr Builtin::InlineArray<3, Builtin::Str, true> arr = Builtin::ToIn
 		#line 150 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_ASSERT((ADV_UPCS(ByteLength)(Builtin::Str{"My dog is wolf!"}.$ref()) == Builtin::i32(15)), "\"My dog is wolf!\".ByteLength==15");
 		#line 151 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		constexpr auto $local_buffer_0000014F17BC8D40 = Builtin::CompileTimeStringConcat<$strconst_0x14f17bc8d40_0, test1, $strconst_0x14f17bc8d40_1, test2, $strconst_0x14f17bc8d40_2>(); constexpr auto s3 = Builtin::Str($local_buffer_0000014F17BC8D40.data(), $local_buffer_0000014F17BC8D40.size() - 1);
+		constexpr auto $local_buffer_000002988EBBFCE0 = Builtin::CompileTimeStringConcat<$strconst_0x2988ebbfce0_0, test1, $strconst_0x2988ebbfce0_1, test2, $strconst_0x2988ebbfce0_2>(); constexpr auto s3 = Builtin::Str($local_buffer_000002988EBBFCE0.data(), $local_buffer_000002988EBBFCE0.size() - 1);
 		#line 152 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_ASSERT((ADV_UPCS(ByteLength)(s3.$ref()) == Builtin::i32(30)), "s3.ByteLength==30");
 		#line 153 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"

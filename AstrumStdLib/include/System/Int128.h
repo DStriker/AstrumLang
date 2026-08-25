@@ -14,68 +14,6 @@
 
 namespace System {
 namespace __Unsafe {} namespace __Int128$Protected__Unsafe {}
-} namespace $extensions {
-template<class __TT> struct $static_Low64;
-template<class __TT> struct $static_getLow64;
-template<class __TT> struct $static_PopCount;
-template<class __TT> struct $static_getPopCount;
-template<class __TT> struct $static_High64;
-template<class __TT> struct $static_getHigh64;
-template<class __TT> struct $static_IsNegative;
-template<class __TT> struct $static_getIsNegative;
-template<class __TT> struct $static_IsPositive;
-template<class __TT> struct $static_getIsPositive;
-template<class __TT> struct $static_IsNormal;
-template<class __TT> struct $static_getIsNormal;
-template<class __TT> struct $static_MinimalBitWidth;
-template<class __TT> struct $static_getMinimalBitWidth;
-template<class __TT> struct $static_MinusOne;
-template<class __TT> struct $static_getMinusOne;
-template<class __TT> struct $static_AllBitsSet;
-template<class __TT> struct $static_getAllBitsSet;
-template<class __TT> struct $static_BitWidth;
-template<class __TT> struct $static_getBitWidth;
-template<class __TT> struct $static_LeadingZeroCount;
-template<class __TT> struct $static_getLeadingZeroCount;
-template<class __TT> struct $static_CheckedLog2;
-template<class __TT> struct $static_getCheckedLog2;
-template<class __TT> struct $static_InvalidOperationException;
-template<class __TT> struct $static_getInvalidOperationException;
-template<class __TT> struct $static_DivAssign;
-template<class __TT> struct $static_getDivAssign;
-template<class __TT> struct $static_CheckedLog10;
-template<class __TT> struct $static_getCheckedLog10;
-template<class __TT> struct $static_TrailingZeroCount;
-template<class __TT> struct $static_getTrailingZeroCount;
-template<class __TT> struct $static_Isqrt128;
-template<class __TT> struct $static_getIsqrt128;
-template<class __TT> struct $static_MaxValue;
-template<class __TT> struct $static_getMaxValue;
-template<class __TT> struct $static_CheckedIsqrt;
-template<class __TT> struct $static_getCheckedIsqrt;
-template<class __TT> struct $static_ByteSwapped;
-template<class __TT> struct $static_getByteSwapped;
-template<class __TT> struct $static_Log2;
-template<class __TT> struct $static_getLog2;
-template<class __TT> struct $static_One;
-template<class __TT> struct $static_getOne;
-template<class __TT> struct $static_IsLittleEndian;
-template<class __TT> struct $static_getIsLittleEndian;
-template<class __TT> struct $static_IsBigEndian;
-template<class __TT> struct $static_getIsBigEndian;
-template<class __TT> struct $static_ReverseBits64u;
-template<class __TT> struct $static_getReverseBits64u;
-template<class __TT> struct $static_ReverseBits64;
-template<class __TT> struct $static_getReverseBits64;
-template<class __TT> struct $static_LeadingOneCount;
-template<class __TT> struct $static_getLeadingOneCount;
-template<class __TT> struct $static_MinValue;
-template<class __TT> struct $static_getMinValue;
-template<class __TT> struct $static_IsSigned;
-template<class __TT> struct $static_getIsSigned;
-template<class __TT> struct $static_MaxDigitCount;
-template<class __TT> struct $static_getMaxDigitCount;
-} namespace System {
 //###############################################################################
 //# Global type aliases
 //###############################################################################
@@ -219,8 +157,12 @@ using $extensions::ToChar;
 	#line 229 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	inline constexpr auto _operator_div_lt_eq($extension_Int128_198_i128 & $this , auto rhs)  -> typename $extension_Int128_198_i128&;
 	#line 231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mod_lt($extension_Int128_198_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_198_i128;
+	#line 239 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_mod_lt_eq($extension_Int128_198_i128 & $this , auto rhs)  -> typename $extension_Int128_198_i128&;
+	#line 241 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	template<class T> inline constexpr auto _operator_div_gt($extension_Int128_198_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_198_i128;
-	#line 245 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	#line 255 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	inline constexpr auto _operator_div_gt_eq($extension_Int128_198_i128 & $this , auto rhs)  -> typename $extension_Int128_198_i128&;
 	#line 198 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_198_i128, IDivisibleArithmetic, IDivisibleArithmetic, $extension_Int128_198_i128);
@@ -230,127 +172,129 @@ using $extensions::_operator_div_not;
 using $extensions::_operator_div_not_eq;
 using $extensions::_operator_div_lt;
 using $extensions::_operator_div_lt_eq;
+using $extensions::_operator_mod_lt;
+using $extensions::_operator_mod_lt_eq;
 using $extensions::_operator_div_gt;
 using $extensions::_operator_div_gt_eq;
 
 		} namespace $extensions { using namespace System;
-#line 248 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	using $extension_Int128_248_i128 = Builtin::i128;
-	#line 248 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+#line 258 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	using $extension_Int128_258_i128 = Builtin::i128;
+	#line 258 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	ADV_CHECK_INTERFACE(IIntegerDivisibleArithmetic, IIntegerDivisibleArithmetic);
-	#line 250 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl($extension_Int128_248_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_248_i128;
-	#line 252 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_eq($extension_Int128_248_i128 & $this , T rhs)  -> typename $extension_Int128_248_i128&;
-	#line 257 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_bsl($extension_Int128_248_i128 const& $this LIFETIMEBOUND, T rhs)  -> const Builtin::Nullable<$extension_Int128_248_i128>;
-	#line 248 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_248_i128, IIntegerDivisibleArithmetic, IIntegerDivisibleArithmetic, $extension_Int128_248_i128);
+	#line 260 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl($extension_Int128_258_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_258_i128;
+	#line 262 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_eq($extension_Int128_258_i128 & $this , T rhs)  -> typename $extension_Int128_258_i128&;
+	#line 267 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_bsl($extension_Int128_258_i128 const& $this LIFETIMEBOUND, T rhs)  -> const Builtin::Nullable<$extension_Int128_258_i128>;
+	#line 258 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_258_i128, IIntegerDivisibleArithmetic, IIntegerDivisibleArithmetic, $extension_Int128_258_i128);
 	} namespace System{
 using $extensions::_operator_bsl;
 using $extensions::_operator_bsl_eq;
 using $extensions::_operator_bsl_bsl;
 
 		} namespace $extensions { using namespace System;
-#line 268 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	using $extension_Int128_268_i128 = Builtin::i128;
-	#line 268 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+#line 278 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	using $extension_Int128_278_i128 = Builtin::i128;
+	#line 278 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	ADV_CHECK_INTERFACE(IIntegerPowerArithmetic, IIntegerPowerArithmetic);
-	#line 271 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor($extension_Int128_268_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp)  -> const typename $extension_Int128_268_i128;
-	#line 303 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_eq($extension_Int128_268_i128 & $this , Builtin::u32 exp)  -> typename $extension_Int128_268_i128&;
-	#line 268 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_268_i128, IIntegerPowerArithmetic, IIntegerPowerArithmetic, $extension_Int128_268_i128);
+	#line 281 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor($extension_Int128_278_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp)  -> const typename $extension_Int128_278_i128;
+	#line 313 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_eq($extension_Int128_278_i128 & $this , Builtin::u32 exp)  -> typename $extension_Int128_278_i128&;
+	#line 278 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_278_i128, IIntegerPowerArithmetic, IIntegerPowerArithmetic, $extension_Int128_278_i128);
 	} namespace System{
 using $extensions::_operator_xor_xor;
 using $extensions::_operator_xor_xor_eq;
 
 		} namespace $extensions { using namespace System;
-#line 306 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	using $extension_Int128_306_i128 = Builtin::i128;
-	#line 306 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	ADV_CHECK_INTERFACE(INumberBase, INumberBase);
-	#line 330 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	ASTRUMSTD_API auto MaxMagnitude($extension_Int128_306_i128 const& $this LIFETIMEBOUND, $extension_Int128_306_i128 rhs)  -> const typename $extension_Int128_306_i128;
-	#line 359 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline auto MaxMagnitudeNumber($extension_Int128_306_i128 const& $this LIFETIMEBOUND, $extension_Int128_306_i128 rhs)  -> const typename $extension_Int128_306_i128;
-	#line 361 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	ASTRUMSTD_API auto MinMagnitude($extension_Int128_306_i128 const& $this LIFETIMEBOUND, $extension_Int128_306_i128 rhs)  -> const typename $extension_Int128_306_i128;
-	#line 390 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline auto MinMagnitudeNumber($extension_Int128_306_i128 const& $this LIFETIMEBOUND, $extension_Int128_306_i128 rhs)  -> const typename $extension_Int128_306_i128;
-	#line 392 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	ASTRUMSTD_API auto Parse($extension_Int128_306_i128 const& $this LIFETIMEBOUND, Builtin::Str input)  -> const typename $extension_Int128_306_i128;
-	#line 397 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	ASTRUMSTD_API auto TryParse($extension_Int128_306_i128 const& $this LIFETIMEBOUND, Builtin::Str input) noexcept -> const Builtin::Nullable<$extension_Int128_306_i128>;
-	#line 404 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToInt8($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i8;
-	#line 405 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToUInt8($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u8;
-	#line 406 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToInt16($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i16;
-	#line 407 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToUInt16($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u16;
-	#line 408 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToInt32($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i32;
-	#line 409 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToUInt32($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u32;
-	#line 410 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToInt64($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i64;
-	#line 411 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToUInt64($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u64;
-	#line 412 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToInt128($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i128;
-	#line 413 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToUInt128($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u128;
-	#line 414 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToIsize($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::isize;
-	#line 415 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToUsize($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::usize;
-	#line 307 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class __TT> struct $static_getOne; template<> struct $static_getOne<$extension_Int128_306_i128> { static inline constexpr auto get() -> const $extension_Int128_306_i128; };
-	#line 308 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class __TT> struct $static_getZero; template<> struct $static_getZero<$extension_Int128_306_i128> { static inline constexpr auto get() -> const $extension_Int128_306_i128; };
-	#line 309 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class __TT> struct $static_getRadix; template<> struct $static_getRadix<$extension_Int128_306_i128> { static inline constexpr auto get() -> const Builtin::i32; };
-	#line 311 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getAbs($extension_Int128_306_i128 const& $this ) -> const $extension_Int128_306_i128;
-	#line 312 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsCanonical($extension_Int128_306_i128 const& $this ) -> const bool;
-	#line 313 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsComplexNumber($extension_Int128_306_i128 const& $this ) -> const bool;
-	#line 314 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsEvenInteger($extension_Int128_306_i128 const& $this ) -> const bool;
-	#line 315 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsFinite($extension_Int128_306_i128 const& $this ) -> const bool;
+#line 316 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	using $extension_Int128_316_i128 = Builtin::i128;
 	#line 316 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsImaginaryNumber($extension_Int128_306_i128 const& $this ) -> const bool;
+	ADV_CHECK_INTERFACE(INumberBase, INumberBase);
+	#line 340 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	ASTRUMSTD_API auto MaxMagnitude($extension_Int128_316_i128 const& $this LIFETIMEBOUND, $extension_Int128_316_i128 rhs)  -> const typename $extension_Int128_316_i128;
+	#line 369 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline auto MaxMagnitudeNumber($extension_Int128_316_i128 const& $this LIFETIMEBOUND, $extension_Int128_316_i128 rhs)  -> const typename $extension_Int128_316_i128;
+	#line 371 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	ASTRUMSTD_API auto MinMagnitude($extension_Int128_316_i128 const& $this LIFETIMEBOUND, $extension_Int128_316_i128 rhs)  -> const typename $extension_Int128_316_i128;
+	#line 400 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline auto MinMagnitudeNumber($extension_Int128_316_i128 const& $this LIFETIMEBOUND, $extension_Int128_316_i128 rhs)  -> const typename $extension_Int128_316_i128;
+	#line 402 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	ASTRUMSTD_API auto Parse($extension_Int128_316_i128 const& $this LIFETIMEBOUND, Builtin::Str input)  -> const typename $extension_Int128_316_i128;
+	#line 407 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	ASTRUMSTD_API auto TryParse($extension_Int128_316_i128 const& $this LIFETIMEBOUND, Builtin::Str input) noexcept -> const Builtin::Nullable<$extension_Int128_316_i128>;
+	#line 414 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToInt8($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i8;
+	#line 415 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToUInt8($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u8;
+	#line 416 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToInt16($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i16;
+	#line 417 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToUInt16($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u16;
+	#line 418 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToInt32($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i32;
+	#line 419 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToUInt32($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u32;
+	#line 420 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToInt64($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i64;
+	#line 421 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToUInt64($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u64;
+	#line 422 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToInt128($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i128;
+	#line 423 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToUInt128($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u128;
+	#line 424 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToIsize($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::isize;
+	#line 425 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToUsize($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::usize;
 	#line 317 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsInfinity($extension_Int128_306_i128 const& $this ) -> const bool;
+	template<class __TT> struct $static_getOne; template<> struct $static_getOne<$extension_Int128_316_i128> { static inline constexpr auto get() -> const $extension_Int128_316_i128; };
 	#line 318 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsInteger($extension_Int128_306_i128 const& $this ) -> const bool;
+	template<class __TT> struct $static_getZero; template<> struct $static_getZero<$extension_Int128_316_i128> { static inline constexpr auto get() -> const $extension_Int128_316_i128; };
 	#line 319 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsNaN($extension_Int128_306_i128 const& $this ) -> const bool;
-	#line 320 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsNegative($extension_Int128_306_i128 const& $this ) -> const bool;
+	template<class __TT> struct $static_getRadix; template<> struct $static_getRadix<$extension_Int128_316_i128> { static inline constexpr auto get() -> const Builtin::i32; };
 	#line 321 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsNegativeInfinity($extension_Int128_306_i128 const& $this ) -> const bool;
+	inline constexpr auto getAbs($extension_Int128_316_i128 const& $this ) -> const $extension_Int128_316_i128;
 	#line 322 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsNormal($extension_Int128_306_i128 const& $this ) -> const bool;
+	inline constexpr auto getIsCanonical($extension_Int128_316_i128 const& $this ) -> const bool;
 	#line 323 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsOddInteger($extension_Int128_306_i128 const& $this ) -> const bool;
+	inline constexpr auto getIsComplexNumber($extension_Int128_316_i128 const& $this ) -> const bool;
 	#line 324 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsPositive($extension_Int128_306_i128 const& $this ) -> const bool;
+	inline constexpr auto getIsEvenInteger($extension_Int128_316_i128 const& $this ) -> const bool;
 	#line 325 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsPositiveInfinity($extension_Int128_306_i128 const& $this ) -> const bool;
+	inline constexpr auto getIsFinite($extension_Int128_316_i128 const& $this ) -> const bool;
 	#line 326 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsRealNumber($extension_Int128_306_i128 const& $this ) -> const bool;
+	inline constexpr auto getIsImaginaryNumber($extension_Int128_316_i128 const& $this ) -> const bool;
 	#line 327 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsSubnormal($extension_Int128_306_i128 const& $this ) -> const bool;
+	inline constexpr auto getIsInfinity($extension_Int128_316_i128 const& $this ) -> const bool;
 	#line 328 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsZero($extension_Int128_306_i128 const& $this ) -> const bool;
-	#line 306 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_306_i128, INumberBase, INumberBase, $extension_Int128_306_i128);
+	inline constexpr auto getIsInteger($extension_Int128_316_i128 const& $this ) -> const bool;
+	#line 329 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsNaN($extension_Int128_316_i128 const& $this ) -> const bool;
+	#line 330 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsNegative($extension_Int128_316_i128 const& $this ) -> const bool;
+	#line 331 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsNegativeInfinity($extension_Int128_316_i128 const& $this ) -> const bool;
+	#line 332 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsNormal($extension_Int128_316_i128 const& $this ) -> const bool;
+	#line 333 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsOddInteger($extension_Int128_316_i128 const& $this ) -> const bool;
+	#line 334 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsPositive($extension_Int128_316_i128 const& $this ) -> const bool;
+	#line 335 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsPositiveInfinity($extension_Int128_316_i128 const& $this ) -> const bool;
+	#line 336 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsRealNumber($extension_Int128_316_i128 const& $this ) -> const bool;
+	#line 337 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsSubnormal($extension_Int128_316_i128 const& $this ) -> const bool;
+	#line 338 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsZero($extension_Int128_316_i128 const& $this ) -> const bool;
+	#line 316 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_316_i128, INumberBase, INumberBase, $extension_Int128_316_i128);
 	} namespace System{
 using $extensions::MaxMagnitude;
 using $extensions::MaxMagnitudeNumber;
@@ -393,38 +337,38 @@ using $extensions::getIsSubnormal;
 using $extensions::getIsZero;
 
 		} namespace $extensions { using namespace System;
-#line 418 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	using $extension_Int128_418_i128 = Builtin::i128;
-	#line 418 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+#line 428 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	using $extension_Int128_428_i128 = Builtin::i128;
+	#line 428 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	ADV_CHECK_INTERFACE(ISignedNumber, ISignedNumber);
-	#line 419 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class __TT> struct $static_getMinusOne; template<> struct $static_getMinusOne<$extension_Int128_418_i128> { static inline constexpr auto get() -> const $extension_Int128_418_i128; };
-	#line 418 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_418_i128, ISignedNumber, ISignedNumber, $extension_Int128_418_i128);
+	#line 429 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class __TT> struct $static_getMinusOne; template<> struct $static_getMinusOne<$extension_Int128_428_i128> { static inline constexpr auto get() -> const $extension_Int128_428_i128; };
+	#line 428 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_428_i128, ISignedNumber, ISignedNumber, $extension_Int128_428_i128);
 	} namespace System{
 using $extensions::$static_getMinusOne;
 
 		} namespace $extensions { using namespace System;
-#line 422 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	using $extension_Int128_422_i128 = Builtin::i128;
-	#line 422 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+#line 432 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	using $extension_Int128_432_i128 = Builtin::i128;
+	#line 432 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	ADV_CHECK_INTERFACE(INumber, INumber);
-	#line 436 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	ASTRUMSTD_API auto CopySign($extension_Int128_422_i128 const& $this LIFETIMEBOUND, $extension_Int128_422_i128 sign)  -> const typename $extension_Int128_422_i128;
-	#line 454 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto Max($extension_Int128_422_i128 const& $this LIFETIMEBOUND, $extension_Int128_422_i128 rhs) noexcept -> const typename $extension_Int128_422_i128;
-	#line 455 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto MaxNumber($extension_Int128_422_i128 const& $this LIFETIMEBOUND, $extension_Int128_422_i128 rhs) noexcept -> const typename $extension_Int128_422_i128;
-	#line 456 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto Min($extension_Int128_422_i128 const& $this LIFETIMEBOUND, $extension_Int128_422_i128 rhs) noexcept -> const typename $extension_Int128_422_i128;
-	#line 457 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto MinNumber($extension_Int128_422_i128 const& $this LIFETIMEBOUND, $extension_Int128_422_i128 rhs) noexcept -> const typename $extension_Int128_422_i128;
-	#line 458 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto Clamp($extension_Int128_422_i128 const& $this LIFETIMEBOUND, $extension_Int128_422_i128 min, $extension_Int128_422_i128 max)  -> const typename $extension_Int128_422_i128;
-	#line 423 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getSign($extension_Int128_422_i128 const& $this ) -> const Builtin::i32;
-	#line 422 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_422_i128, INumber, INumber, $extension_Int128_422_i128);
+	#line 446 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	ASTRUMSTD_API auto CopySign($extension_Int128_432_i128 const& $this LIFETIMEBOUND, $extension_Int128_432_i128 sign)  -> const typename $extension_Int128_432_i128;
+	#line 464 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto Max($extension_Int128_432_i128 const& $this LIFETIMEBOUND, $extension_Int128_432_i128 rhs) noexcept -> const typename $extension_Int128_432_i128;
+	#line 465 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto MaxNumber($extension_Int128_432_i128 const& $this LIFETIMEBOUND, $extension_Int128_432_i128 rhs) noexcept -> const typename $extension_Int128_432_i128;
+	#line 466 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto Min($extension_Int128_432_i128 const& $this LIFETIMEBOUND, $extension_Int128_432_i128 rhs) noexcept -> const typename $extension_Int128_432_i128;
+	#line 467 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto MinNumber($extension_Int128_432_i128 const& $this LIFETIMEBOUND, $extension_Int128_432_i128 rhs) noexcept -> const typename $extension_Int128_432_i128;
+	#line 468 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto Clamp($extension_Int128_432_i128 const& $this LIFETIMEBOUND, $extension_Int128_432_i128 min, $extension_Int128_432_i128 max)  -> const typename $extension_Int128_432_i128;
+	#line 433 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getSign($extension_Int128_432_i128 const& $this ) -> const Builtin::i32;
+	#line 432 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_432_i128, INumber, INumber, $extension_Int128_432_i128);
 	} namespace System{
 using $extensions::CopySign;
 using $extensions::Max;
@@ -435,32 +379,32 @@ using $extensions::Clamp;
 using $extensions::getSign;
 
 		} namespace $extensions { using namespace System;
-#line 472 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	using $extension_Int128_472_i128 = Builtin::i128;
-	#line 472 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+#line 482 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	using $extension_Int128_482_i128 = Builtin::i128;
+	#line 482 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	ADV_CHECK_INTERFACE(IBinaryNumber, IBinaryNumber);
-	#line 550 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto CheckedLog($extension_Int128_472_i128 const& $this LIFETIMEBOUND, $extension_Int128_472_i128 base) noexcept -> const Builtin::Nullable<$extension_Int128_472_i128>;
-	#line 584 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	ASTRUMSTD_API auto Log($extension_Int128_472_i128 const& $this LIFETIMEBOUND, $extension_Int128_472_i128 base)  -> const typename $extension_Int128_472_i128;
+	#line 560 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto CheckedLog($extension_Int128_482_i128 const& $this LIFETIMEBOUND, $extension_Int128_482_i128 base) noexcept -> const Builtin::Nullable<$extension_Int128_482_i128>;
 	#line 594 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto Midpoint($extension_Int128_472_i128 const& $this LIFETIMEBOUND, $extension_Int128_472_i128 rhs) noexcept -> const typename $extension_Int128_472_i128;
-	#line 602 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto IsMultipleOf($extension_Int128_472_i128 const& $this LIFETIMEBOUND, $extension_Int128_472_i128 rhs) noexcept -> const bool;
-	#line 474 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class __TT> struct $static_getAllBitsSet; template<> struct $static_getAllBitsSet<$extension_Int128_472_i128> { static inline constexpr auto get() -> const $extension_Int128_472_i128; };
-	#line 477 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsPow2($extension_Int128_472_i128 const& $this ) -> const bool;
-	#line 481 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getCheckedLog2($extension_Int128_472_i128 const& $this ) -> const Builtin::Nullable<$extension_Int128_472_i128>;
+	ASTRUMSTD_API auto Log($extension_Int128_482_i128 const& $this LIFETIMEBOUND, $extension_Int128_482_i128 base)  -> const typename $extension_Int128_482_i128;
+	#line 604 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto Midpoint($extension_Int128_482_i128 const& $this LIFETIMEBOUND, $extension_Int128_482_i128 rhs) noexcept -> const typename $extension_Int128_482_i128;
+	#line 612 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto IsMultipleOf($extension_Int128_482_i128 const& $this LIFETIMEBOUND, $extension_Int128_482_i128 rhs) noexcept -> const bool;
+	#line 484 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class __TT> struct $static_getAllBitsSet; template<> struct $static_getAllBitsSet<$extension_Int128_482_i128> { static inline constexpr auto get() -> const $extension_Int128_482_i128; };
+	#line 487 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsPow2($extension_Int128_482_i128 const& $this ) -> const bool;
 	#line 491 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getLog2($extension_Int128_472_i128 const& $this ) -> const $extension_Int128_472_i128;
+	inline constexpr auto getCheckedLog2($extension_Int128_482_i128 const& $this ) -> const Builtin::Nullable<$extension_Int128_482_i128>;
 	#line 501 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getCheckedLog10($extension_Int128_472_i128 const& $this ) -> const Builtin::Nullable<$extension_Int128_472_i128>;
-	#line 540 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getLog10($extension_Int128_472_i128 const& $this ) -> const $extension_Int128_472_i128;
-	#line 472 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_472_i128, IBinaryNumber, IBinaryNumber, $extension_Int128_472_i128);
+	inline constexpr auto getLog2($extension_Int128_482_i128 const& $this ) -> const $extension_Int128_482_i128;
+	#line 511 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getCheckedLog10($extension_Int128_482_i128 const& $this ) -> const Builtin::Nullable<$extension_Int128_482_i128>;
+	#line 550 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getLog10($extension_Int128_482_i128 const& $this ) -> const $extension_Int128_482_i128;
+	#line 482 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_482_i128, IBinaryNumber, IBinaryNumber, $extension_Int128_482_i128);
 	} namespace System{
 using $extensions::CheckedLog;
 using $extensions::Log;
@@ -474,200 +418,200 @@ using $extensions::getCheckedLog10;
 using $extensions::getLog10;
 
 		} namespace $extensions { using namespace System;
-#line 616 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	using $extension_Int128_616_i128 = Builtin::i128;
-	#line 616 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+#line 626 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	using $extension_Int128_626_i128 = Builtin::i128;
+	#line 626 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	ADV_CHECK_INTERFACE(ICheckedArithmetic, ICheckedArithmetic);
-	#line 619 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_add_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>;
-	#line 628 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_add_qst_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&;
-	#line 639 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_add_ne($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_616_i128;
-	#line 646 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_add_ne_eq($extension_Int128_616_i128 & $this , T rhs)  -> typename $extension_Int128_616_i128&;
-	#line 650 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_add_mod($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_616_i128;
-	#line 657 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_add_mod_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&;
-	#line 661 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_add_or($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_616_i128;
-	#line 668 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_add_or_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&;
-	#line 672 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_add_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int128_616_i128, bool>;
-	#line 680 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_qst($extension_Int128_616_i128 & $this )  -> typename $extension_Int128_616_i128&;
-	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_qst_postfix($extension_Int128_616_i128 & $this)  -> decltype(auto);
-	#line 683 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_ne($extension_Int128_616_i128 & $this )  -> typename $extension_Int128_616_i128&;
-	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_ne_postfix($extension_Int128_616_i128 & $this)  -> decltype(auto);
-	#line 686 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_mod($extension_Int128_616_i128 & $this )  -> typename $extension_Int128_616_i128&;
-	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_mod_postfix($extension_Int128_616_i128 & $this)  -> decltype(auto);
-	#line 689 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_or($extension_Int128_616_i128 & $this )  -> typename $extension_Int128_616_i128&;
-	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_or_postfix($extension_Int128_616_i128 & $this)  -> decltype(auto);
+	#line 629 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_add_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>;
+	#line 638 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_add_qst_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&;
+	#line 649 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_add_ne($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_626_i128;
+	#line 656 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_add_ne_eq($extension_Int128_626_i128 & $this , T rhs)  -> typename $extension_Int128_626_i128&;
+	#line 660 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_add_mod($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_626_i128;
+	#line 667 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_add_mod_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&;
+	#line 671 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_add_or($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_626_i128;
+	#line 678 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_add_or_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&;
+	#line 682 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_add_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int128_626_i128, bool>;
+	#line 690 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_qst($extension_Int128_626_i128 & $this )  -> typename $extension_Int128_626_i128&;
+	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_qst_postfix($extension_Int128_626_i128 & $this)  -> decltype(auto);
 	#line 693 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto CarryingAdd($extension_Int128_616_i128 const& $this LIFETIMEBOUND, $extension_Int128_616_i128 rhs, bool carry) noexcept -> const std::tuple<$extension_Int128_616_i128, bool>;
-	#line 702 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto BorrowingSub($extension_Int128_616_i128 const& $this LIFETIMEBOUND, $extension_Int128_616_i128 rhs, bool carry) noexcept -> const std::tuple<$extension_Int128_616_i128, bool>;
-	#line 711 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_sub_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>;
-	#line 720 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_sub_qst_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&;
-	#line 731 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_sub_ne($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_616_i128;
-	#line 738 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_sub_ne_eq($extension_Int128_616_i128 & $this , T rhs)  -> typename $extension_Int128_616_i128&;
-	#line 742 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_sub_mod($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_616_i128;
-	#line 749 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_sub_mod_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&;
-	#line 753 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_sub_or($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_616_i128;
-	#line 760 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_sub_or_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&;
-	#line 764 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_sub_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int128_616_i128, bool>;
-	#line 772 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_qst($extension_Int128_616_i128 & $this )  -> typename $extension_Int128_616_i128&;
-	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_qst_postfix($extension_Int128_616_i128 & $this)  -> decltype(auto);
-	#line 775 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_ne($extension_Int128_616_i128 & $this )  -> typename $extension_Int128_616_i128&;
-	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_ne_postfix($extension_Int128_616_i128 & $this)  -> decltype(auto);
-	#line 778 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_mod($extension_Int128_616_i128 & $this )  -> typename $extension_Int128_616_i128&;
-	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_mod_postfix($extension_Int128_616_i128 & $this)  -> decltype(auto);
-	#line 781 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_or($extension_Int128_616_i128 & $this )  -> typename $extension_Int128_616_i128&;
-	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_or_postfix($extension_Int128_616_i128 & $this)  -> decltype(auto);
+	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_ne($extension_Int128_626_i128 & $this )  -> typename $extension_Int128_626_i128&;
+	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_ne_postfix($extension_Int128_626_i128 & $this)  -> decltype(auto);
+	#line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_mod($extension_Int128_626_i128 & $this )  -> typename $extension_Int128_626_i128&;
+	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_mod_postfix($extension_Int128_626_i128 & $this)  -> decltype(auto);
+	#line 699 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_or($extension_Int128_626_i128 & $this )  -> typename $extension_Int128_626_i128&;
+	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_or_postfix($extension_Int128_626_i128 & $this)  -> decltype(auto);
+	#line 703 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto CarryingAdd($extension_Int128_626_i128 const& $this LIFETIMEBOUND, $extension_Int128_626_i128 rhs, bool carry) noexcept -> const std::tuple<$extension_Int128_626_i128, bool>;
+	#line 712 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto BorrowingSub($extension_Int128_626_i128 const& $this LIFETIMEBOUND, $extension_Int128_626_i128 rhs, bool carry) noexcept -> const std::tuple<$extension_Int128_626_i128, bool>;
+	#line 721 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_sub_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>;
+	#line 730 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_sub_qst_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&;
+	#line 741 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_sub_ne($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_626_i128;
+	#line 748 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_sub_ne_eq($extension_Int128_626_i128 & $this , T rhs)  -> typename $extension_Int128_626_i128&;
+	#line 752 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_sub_mod($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_626_i128;
+	#line 759 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_sub_mod_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&;
+	#line 763 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_sub_or($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_626_i128;
+	#line 770 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_sub_or_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&;
+	#line 774 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_sub_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int128_626_i128, bool>;
+	#line 782 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_qst($extension_Int128_626_i128 & $this )  -> typename $extension_Int128_626_i128&;
+	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_qst_postfix($extension_Int128_626_i128 & $this)  -> decltype(auto);
 	#line 785 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mul_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>;
-	#line 794 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mul_qst_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&;
-	#line 805 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mul_ne($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_616_i128;
-	#line 812 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mul_ne_eq($extension_Int128_616_i128 & $this , T rhs)  -> typename $extension_Int128_616_i128&;
-	#line 816 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mul_mod($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_616_i128;
-	#line 823 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mul_mod_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&;
-	#line 827 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mul_or($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_616_i128;
-	#line 834 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mul_or_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&;
-	#line 838 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mul_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int128_616_i128, bool>;
-	#line 847 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline auto _operator_mul_gt($extension_Int128_616_i128 const& $this LIFETIMEBOUND, $extension_Int128_616_i128 rhs) noexcept -> const std::tuple<Builtin::u128, Builtin::i128>;
-	#line 856 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline auto CarryingMul($extension_Int128_616_i128 const& $this LIFETIMEBOUND, $extension_Int128_616_i128 rhs, $extension_Int128_616_i128 carry) noexcept -> const std::tuple<Builtin::u128, Builtin::i128>;
-	#line 864 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>;
-	#line 873 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_qst_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&;
-	#line 885 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_ne($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_616_i128;
-	#line 892 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_ne_eq($extension_Int128_616_i128 & $this , T rhs)  -> typename $extension_Int128_616_i128&;
-	#line 897 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_mod($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_616_i128;
-	#line 904 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_mod_eq($extension_Int128_616_i128 & $this , T rhs)  -> typename $extension_Int128_616_i128&;
-	#line 909 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_or($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_616_i128;
-	#line 916 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_or_eq($extension_Int128_616_i128 & $this , T rhs)  -> typename $extension_Int128_616_i128&;
-	#line 921 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int128_616_i128, bool>;
-	#line 930 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_bsl_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>;
+	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_ne($extension_Int128_626_i128 & $this )  -> typename $extension_Int128_626_i128&;
+	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_ne_postfix($extension_Int128_626_i128 & $this)  -> decltype(auto);
+	#line 788 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_mod($extension_Int128_626_i128 & $this )  -> typename $extension_Int128_626_i128&;
+	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_mod_postfix($extension_Int128_626_i128 & $this)  -> decltype(auto);
+	#line 791 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_or($extension_Int128_626_i128 & $this )  -> typename $extension_Int128_626_i128&;
+	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_or_postfix($extension_Int128_626_i128 & $this)  -> decltype(auto);
+	#line 795 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mul_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>;
+	#line 804 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mul_qst_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&;
+	#line 815 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mul_ne($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_626_i128;
+	#line 822 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mul_ne_eq($extension_Int128_626_i128 & $this , T rhs)  -> typename $extension_Int128_626_i128&;
+	#line 826 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mul_mod($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_626_i128;
+	#line 833 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mul_mod_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&;
+	#line 837 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mul_or($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_626_i128;
+	#line 844 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mul_or_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&;
+	#line 848 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mul_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int128_626_i128, bool>;
+	#line 857 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline auto _operator_mul_gt($extension_Int128_626_i128 const& $this LIFETIMEBOUND, $extension_Int128_626_i128 rhs) noexcept -> const std::tuple<Builtin::u128, Builtin::i128>;
+	#line 866 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline auto CarryingMul($extension_Int128_626_i128 const& $this LIFETIMEBOUND, $extension_Int128_626_i128 rhs, $extension_Int128_626_i128 carry) noexcept -> const std::tuple<Builtin::u128, Builtin::i128>;
+	#line 874 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>;
+	#line 883 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_qst_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&;
+	#line 895 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_ne($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_626_i128;
+	#line 902 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_ne_eq($extension_Int128_626_i128 & $this , T rhs)  -> typename $extension_Int128_626_i128&;
+	#line 907 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_mod($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_626_i128;
+	#line 914 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_mod_eq($extension_Int128_626_i128 & $this , T rhs)  -> typename $extension_Int128_626_i128&;
+	#line 919 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_or($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_626_i128;
+	#line 926 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_or_eq($extension_Int128_626_i128 & $this , T rhs)  -> typename $extension_Int128_626_i128&;
+	#line 931 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int128_626_i128, bool>;
 	#line 940 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_bsl_qst_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&;
-	#line 951 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>;
-	#line 960 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mod_qst_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&;
-	#line 972 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mod_ne($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_616_i128;
-	#line 979 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mod_ne_eq($extension_Int128_616_i128 & $this , T rhs)  -> typename $extension_Int128_616_i128&;
-	#line 984 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mod_mod($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_616_i128;
-	#line 991 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mod_mod_eq($extension_Int128_616_i128 & $this , T rhs)  -> typename $extension_Int128_616_i128&;
-	#line 996 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mod_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int128_616_i128, bool>;
-	#line 1005 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_sub_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>;
+	template<class T> inline constexpr auto _operator_bsl_bsl_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>;
+	#line 950 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_bsl_qst_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&;
+	#line 961 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>;
+	#line 970 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mod_qst_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&;
+	#line 982 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mod_ne($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_626_i128;
+	#line 989 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mod_ne_eq($extension_Int128_626_i128 & $this , T rhs)  -> typename $extension_Int128_626_i128&;
+	#line 994 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mod_mod($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_626_i128;
+	#line 1001 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mod_mod_eq($extension_Int128_626_i128 & $this , T rhs)  -> typename $extension_Int128_626_i128&;
+	#line 1006 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mod_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int128_626_i128, bool>;
 	#line 1015 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_sub_ne($extension_Int128_616_i128 const& $this LIFETIMEBOUND)  -> const typename $extension_Int128_616_i128;
-	#line 1022 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_sub_mod($extension_Int128_616_i128 const& $this LIFETIMEBOUND)  -> const typename $extension_Int128_616_i128;
-	#line 1030 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_sub_or($extension_Int128_616_i128 const& $this LIFETIMEBOUND)  -> const typename $extension_Int128_616_i128;
-	#line 1038 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_sub_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND)  -> const std::tuple<$extension_Int128_616_i128, bool>;
-	#line 1046 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_lt_lt_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>;
-	#line 1054 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_lt_lt_qst_eq($extension_Int128_616_i128 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int128_616_i128&;
-	#line 1062 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_lt_lt_ne($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount)  -> const typename $extension_Int128_616_i128;
-	#line 1070 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_lt_lt_ne_eq($extension_Int128_616_i128 & $this , Builtin::i32 amount)  -> typename $extension_Int128_616_i128&;
+	inline constexpr auto _operator_sub_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>;
+	#line 1025 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_sub_ne($extension_Int128_626_i128 const& $this LIFETIMEBOUND)  -> const typename $extension_Int128_626_i128;
+	#line 1032 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_sub_mod($extension_Int128_626_i128 const& $this LIFETIMEBOUND)  -> const typename $extension_Int128_626_i128;
+	#line 1040 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_sub_or($extension_Int128_626_i128 const& $this LIFETIMEBOUND)  -> const typename $extension_Int128_626_i128;
+	#line 1048 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_sub_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND)  -> const std::tuple<$extension_Int128_626_i128, bool>;
+	#line 1056 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_lt_lt_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>;
+	#line 1064 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_lt_lt_qst_eq($extension_Int128_626_i128 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int128_626_i128&;
 	#line 1072 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_lt_lt_mod($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const typename $extension_Int128_616_i128;
-	#line 1075 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_lt_lt_mod_eq($extension_Int128_616_i128 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int128_616_i128&;
-	#line 1077 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_lt_lt_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const std::tuple<$extension_Int128_616_i128, bool>;
+	inline constexpr auto _operator_lt_lt_ne($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount)  -> const typename $extension_Int128_626_i128;
 	#line 1080 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_gt_gt_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>;
-	#line 1088 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_gt_gt_qst_eq($extension_Int128_616_i128 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int128_616_i128&;
-	#line 1096 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_gt_gt_ne($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount)  -> const typename $extension_Int128_616_i128;
-	#line 1104 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_gt_gt_ne_eq($extension_Int128_616_i128 & $this , Builtin::i32 amount)  -> typename $extension_Int128_616_i128&;
+	inline constexpr auto _operator_lt_lt_ne_eq($extension_Int128_626_i128 & $this , Builtin::i32 amount)  -> typename $extension_Int128_626_i128&;
+	#line 1082 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_lt_lt_mod($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const typename $extension_Int128_626_i128;
+	#line 1085 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_lt_lt_mod_eq($extension_Int128_626_i128 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int128_626_i128&;
+	#line 1087 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_lt_lt_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const std::tuple<$extension_Int128_626_i128, bool>;
+	#line 1090 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_gt_gt_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>;
+	#line 1098 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_gt_gt_qst_eq($extension_Int128_626_i128 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int128_626_i128&;
 	#line 1106 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_gt_gt_mod($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const typename $extension_Int128_616_i128;
-	#line 1109 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_gt_gt_mod_eq($extension_Int128_616_i128 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int128_616_i128&;
-	#line 1111 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_gt_gt_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const std::tuple<$extension_Int128_616_i128, bool>;
+	inline constexpr auto _operator_gt_gt_ne($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount)  -> const typename $extension_Int128_626_i128;
+	#line 1114 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_gt_gt_ne_eq($extension_Int128_626_i128 & $this , Builtin::i32 amount)  -> typename $extension_Int128_626_i128&;
 	#line 1116 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>;
-	#line 1145 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_qst_eq($extension_Int128_616_i128 & $this , Builtin::u32 exp) noexcept -> typename $extension_Int128_616_i128&;
-	#line 1153 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_ne($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp)  -> const typename $extension_Int128_616_i128;
-	#line 1174 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_ne_eq($extension_Int128_616_i128 & $this , Builtin::u32 exp)  -> typename $extension_Int128_616_i128&;
-	#line 1176 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_mod($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const typename $extension_Int128_616_i128;
-	#line 1208 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_mod_eq($extension_Int128_616_i128 & $this , Builtin::u32 exp) noexcept -> typename $extension_Int128_616_i128&;
-	#line 1210 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_or($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const typename $extension_Int128_616_i128;
-	#line 1219 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_or_eq($extension_Int128_616_i128 & $this , Builtin::u32 exp) noexcept -> typename $extension_Int128_616_i128&;
-	#line 1221 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const std::tuple<$extension_Int128_616_i128, bool>;
-	#line 1252 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getCheckedAbs($extension_Int128_616_i128 const& $this ) -> const Builtin::Nullable<$extension_Int128_616_i128>;
-	#line 1255 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getStrictAbs($extension_Int128_616_i128 const& $this ) -> const $extension_Int128_616_i128;
-	#line 1258 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getWrappingAbs($extension_Int128_616_i128 const& $this ) -> const $extension_Int128_616_i128;
-	#line 1261 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getSaturatingAbs($extension_Int128_616_i128 const& $this ) -> const $extension_Int128_616_i128;
-	#line 1264 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getOverflowingAbs($extension_Int128_616_i128 const& $this ) -> const std::tuple<$extension_Int128_616_i128, bool>;
-	#line 616 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_616_i128, ICheckedArithmetic, ICheckedArithmetic, $extension_Int128_616_i128);
+	inline constexpr auto _operator_gt_gt_mod($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const typename $extension_Int128_626_i128;
+	#line 1119 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_gt_gt_mod_eq($extension_Int128_626_i128 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int128_626_i128&;
+	#line 1121 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_gt_gt_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const std::tuple<$extension_Int128_626_i128, bool>;
+	#line 1126 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>;
+	#line 1155 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_qst_eq($extension_Int128_626_i128 & $this , Builtin::u32 exp) noexcept -> typename $extension_Int128_626_i128&;
+	#line 1163 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_ne($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp)  -> const typename $extension_Int128_626_i128;
+	#line 1184 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_ne_eq($extension_Int128_626_i128 & $this , Builtin::u32 exp)  -> typename $extension_Int128_626_i128&;
+	#line 1186 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_mod($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const typename $extension_Int128_626_i128;
+	#line 1218 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_mod_eq($extension_Int128_626_i128 & $this , Builtin::u32 exp) noexcept -> typename $extension_Int128_626_i128&;
+	#line 1220 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_or($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const typename $extension_Int128_626_i128;
+	#line 1229 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_or_eq($extension_Int128_626_i128 & $this , Builtin::u32 exp) noexcept -> typename $extension_Int128_626_i128&;
+	#line 1231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const std::tuple<$extension_Int128_626_i128, bool>;
+	#line 1262 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getCheckedAbs($extension_Int128_626_i128 const& $this ) -> const Builtin::Nullable<$extension_Int128_626_i128>;
+	#line 1265 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getStrictAbs($extension_Int128_626_i128 const& $this ) -> const $extension_Int128_626_i128;
+	#line 1268 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getWrappingAbs($extension_Int128_626_i128 const& $this ) -> const $extension_Int128_626_i128;
+	#line 1271 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getSaturatingAbs($extension_Int128_626_i128 const& $this ) -> const $extension_Int128_626_i128;
+	#line 1274 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getOverflowingAbs($extension_Int128_626_i128 const& $this ) -> const std::tuple<$extension_Int128_626_i128, bool>;
+	#line 626 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_626_i128, ICheckedArithmetic, ICheckedArithmetic, $extension_Int128_626_i128);
 	} namespace System{
 using $extensions::_operator_add_qst;
 using $extensions::_operator_add_qst_eq;
@@ -761,40 +705,40 @@ using $extensions::getSaturatingAbs;
 using $extensions::getOverflowingAbs;
 
 		} namespace $extensions { using namespace System;
-#line 1273 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	using $extension_Int128_1273_i128 = Builtin::i128;
-	#line 1273 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	ADV_CHECK_INTERFACE(IBinaryInteger, IBinaryInteger);
-	#line 1324 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NextMultipleOf($extension_Int128_1273_i128 const& $this LIFETIMEBOUND, $extension_Int128_1273_i128 rhs)  -> const typename $extension_Int128_1273_i128;
-	#line 1340 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto CheckedNextMultipleOf($extension_Int128_1273_i128 const& $this LIFETIMEBOUND, $extension_Int128_1273_i128 rhs) noexcept -> const Builtin::Nullable<$extension_Int128_1273_i128>;
-	#line 1274 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class __TT> struct $static_getIsSigned; template<> struct $static_getIsSigned<$extension_Int128_1273_i128> { static inline constexpr auto get() -> const bool; };
-	#line 1276 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getTrailingZeroCount($extension_Int128_1273_i128 const& $this ) -> const Builtin::u32;
+#line 1283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	using $extension_Int128_1283_i128 = Builtin::i128;
 	#line 1283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getTrailingOneCount($extension_Int128_1273_i128 const& $this ) -> const Builtin::u32;
+	ADV_CHECK_INTERFACE(IBinaryInteger, IBinaryInteger);
+	#line 1334 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NextMultipleOf($extension_Int128_1283_i128 const& $this LIFETIMEBOUND, $extension_Int128_1283_i128 rhs)  -> const typename $extension_Int128_1283_i128;
+	#line 1350 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto CheckedNextMultipleOf($extension_Int128_1283_i128 const& $this LIFETIMEBOUND, $extension_Int128_1283_i128 rhs) noexcept -> const Builtin::Nullable<$extension_Int128_1283_i128>;
 	#line 1284 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getByteCount($extension_Int128_1273_i128 const& $this ) -> const Builtin::u32;
-	#line 1285 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getMinimalBitWidth($extension_Int128_1273_i128 const& $this ) -> const Builtin::u32;
-	#line 1289 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	ASTRUMSTD_API auto getCheckedIsqrt($extension_Int128_1273_i128 const& $this ) -> const Builtin::Nullable<$extension_Int128_1273_i128>;
-	#line 1301 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline auto getIsqrt($extension_Int128_1273_i128 const& $this ) -> const $extension_Int128_1273_i128;
-	#line 1310 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getLog2Ceiling($extension_Int128_1273_i128 const& $this ) -> const $extension_Int128_1273_i128;
-	#line 1361 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getPrevPow2($extension_Int128_1273_i128 const& $this ) -> const $extension_Int128_1273_i128;
-	#line 1372 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getNextPow2($extension_Int128_1273_i128 const& $this ) -> const $extension_Int128_1273_i128;
-	#line 1384 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getCheckedNextPow2($extension_Int128_1273_i128 const& $this ) -> const Builtin::Nullable<$extension_Int128_1273_i128>;
-	#line 1396 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getWrappingNextPow2($extension_Int128_1273_i128 const& $this ) -> const $extension_Int128_1273_i128;
-	#line 1273 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_1273_i128, IBinaryInteger, IBinaryInteger, $extension_Int128_1273_i128);
+	template<class __TT> struct $static_getIsSigned; template<> struct $static_getIsSigned<$extension_Int128_1283_i128> { static inline constexpr auto get() -> const bool; };
+	#line 1286 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getTrailingZeroCount($extension_Int128_1283_i128 const& $this ) -> const Builtin::u32;
+	#line 1293 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getTrailingOneCount($extension_Int128_1283_i128 const& $this ) -> const Builtin::u32;
+	#line 1294 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getByteCount($extension_Int128_1283_i128 const& $this ) -> const Builtin::u32;
+	#line 1295 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getMinimalBitWidth($extension_Int128_1283_i128 const& $this ) -> const Builtin::u32;
+	#line 1299 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	ASTRUMSTD_API auto getCheckedIsqrt($extension_Int128_1283_i128 const& $this ) -> const Builtin::Nullable<$extension_Int128_1283_i128>;
+	#line 1311 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline auto getIsqrt($extension_Int128_1283_i128 const& $this ) -> const $extension_Int128_1283_i128;
+	#line 1320 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getLog2Ceiling($extension_Int128_1283_i128 const& $this ) -> const $extension_Int128_1283_i128;
+	#line 1371 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getPrevPow2($extension_Int128_1283_i128 const& $this ) -> const $extension_Int128_1283_i128;
+	#line 1382 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getNextPow2($extension_Int128_1283_i128 const& $this ) -> const $extension_Int128_1283_i128;
+	#line 1394 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getCheckedNextPow2($extension_Int128_1283_i128 const& $this ) -> const Builtin::Nullable<$extension_Int128_1283_i128>;
+	#line 1406 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getWrappingNextPow2($extension_Int128_1283_i128 const& $this ) -> const $extension_Int128_1283_i128;
+	#line 1283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_1283_i128, IBinaryInteger, IBinaryInteger, $extension_Int128_1283_i128);
 	} namespace System{
 using $extensions::NextMultipleOf;
 using $extensions::CheckedNextMultipleOf;
@@ -812,36 +756,36 @@ using $extensions::getCheckedNextPow2;
 using $extensions::getWrappingNextPow2;
 
 		} namespace $extensions { using namespace System;
-#line 1407 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	using $extension_Int128_1407_i128 = Builtin::i128;
-	#line 1407 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+#line 1417 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	using $extension_Int128_1417_i128 = Builtin::i128;
+	#line 1417 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	ADV_CHECK_INTERFACE(IFixedWidthInteger, IFixedWidthInteger);
-	#line 1447 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto RotateLeft($extension_Int128_1407_i128 const& $this LIFETIMEBOUND, Builtin::i32 shiftAmount) noexcept -> const typename $extension_Int128_1407_i128;
-	#line 1448 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto RotateRight($extension_Int128_1407_i128 const& $this LIFETIMEBOUND, Builtin::i32 shiftAmount) noexcept -> const typename $extension_Int128_1407_i128;
-	#line 1408 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class __TT> struct $static_getBitWidth; template<> struct $static_getBitWidth<$extension_Int128_1407_i128> { static inline constexpr auto get() -> const Builtin::u32; };
-	#line 1410 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getLeadingZeroCount($extension_Int128_1407_i128 const& $this ) -> const Builtin::u32;
+	#line 1457 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto RotateLeft($extension_Int128_1417_i128 const& $this LIFETIMEBOUND, Builtin::i32 shiftAmount) noexcept -> const typename $extension_Int128_1417_i128;
+	#line 1458 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto RotateRight($extension_Int128_1417_i128 const& $this LIFETIMEBOUND, Builtin::i32 shiftAmount) noexcept -> const typename $extension_Int128_1417_i128;
 	#line 1418 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getLeadingOneCount($extension_Int128_1407_i128 const& $this ) -> const Builtin::u32;
-	#line 1419 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getPopCount($extension_Int128_1407_i128 const& $this ) -> const Builtin::u32;
+	template<class __TT> struct $static_getBitWidth; template<> struct $static_getBitWidth<$extension_Int128_1417_i128> { static inline constexpr auto get() -> const Builtin::u32; };
 	#line 1420 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getZeroCount($extension_Int128_1407_i128 const& $this ) -> const Builtin::u32;
-	#line 1421 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getByteSwapped($extension_Int128_1407_i128 const& $this ) -> const $extension_Int128_1407_i128;
-	#line 1422 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getBigEndian($extension_Int128_1407_i128 const& $this ) -> const $extension_Int128_1407_i128;
+	inline constexpr auto getLeadingZeroCount($extension_Int128_1417_i128 const& $this ) -> const Builtin::u32;
+	#line 1428 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getLeadingOneCount($extension_Int128_1417_i128 const& $this ) -> const Builtin::u32;
 	#line 1429 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getLittleEndian($extension_Int128_1407_i128 const& $this ) -> const $extension_Int128_1407_i128;
-	#line 1436 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getReverseBits($extension_Int128_1407_i128 const& $this ) -> const $extension_Int128_1407_i128;
-	#line 1438 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getShortestBitLength($extension_Int128_1407_i128 const& $this ) -> const Builtin::u32;
-	#line 1407 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_1407_i128, IFixedWidthInteger, IFixedWidthInteger, $extension_Int128_1407_i128);
+	inline constexpr auto getPopCount($extension_Int128_1417_i128 const& $this ) -> const Builtin::u32;
+	#line 1430 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getZeroCount($extension_Int128_1417_i128 const& $this ) -> const Builtin::u32;
+	#line 1431 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getByteSwapped($extension_Int128_1417_i128 const& $this ) -> const $extension_Int128_1417_i128;
+	#line 1432 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getBigEndian($extension_Int128_1417_i128 const& $this ) -> const $extension_Int128_1417_i128;
+	#line 1439 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getLittleEndian($extension_Int128_1417_i128 const& $this ) -> const $extension_Int128_1417_i128;
+	#line 1446 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getReverseBits($extension_Int128_1417_i128 const& $this ) -> const $extension_Int128_1417_i128;
+	#line 1448 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getShortestBitLength($extension_Int128_1417_i128 const& $this ) -> const Builtin::u32;
+	#line 1417 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_1417_i128, IFixedWidthInteger, IFixedWidthInteger, $extension_Int128_1417_i128);
 	} namespace System{
 using $extensions::RotateLeft;
 using $extensions::RotateRight;
@@ -857,24 +801,24 @@ using $extensions::getReverseBits;
 using $extensions::getShortestBitLength;
 
 		} namespace $extensions { using namespace System;
-#line 1452 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	using $extension_Int128_1452_i128 = Builtin::i128;
-	#line 1452 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+#line 1462 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	using $extension_Int128_1462_i128 = Builtin::i128;
+	#line 1462 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	ADV_CHECK_INTERFACE(IBinaryIntegerFormatInfo, IBinaryIntegerFormatInfo);
-	#line 1460 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto IsGreaterThanAsUnsigned($extension_Int128_1452_i128 const& $this LIFETIMEBOUND, $extension_Int128_1452_i128 rhs) noexcept -> const bool;
-	#line 1453 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class __TT> struct $static_getMaxDigitCount; template<> struct $static_getMaxDigitCount<$extension_Int128_1452_i128> { static inline constexpr auto get() -> const Builtin::i32; };
-	#line 1454 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class __TT> struct $static_getMaxHexDigitCount; template<> struct $static_getMaxHexDigitCount<$extension_Int128_1452_i128> { static inline constexpr auto get() -> const Builtin::i32; };
-	#line 1455 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class __TT> struct $static_getMaxValueDiv10; template<> struct $static_getMaxValueDiv10<$extension_Int128_1452_i128> { static inline constexpr auto get() -> const $extension_Int128_1452_i128; };
-	#line 1457 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getMultiplyBy10($extension_Int128_1452_i128 const& $this ) -> const $extension_Int128_1452_i128;
-	#line 1458 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getMultiplyBy16($extension_Int128_1452_i128 const& $this ) -> const $extension_Int128_1452_i128;
-	#line 1452 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_1452_i128, IBinaryIntegerFormatInfo, IBinaryIntegerFormatInfo, $extension_Int128_1452_i128);
+	#line 1470 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto IsGreaterThanAsUnsigned($extension_Int128_1462_i128 const& $this LIFETIMEBOUND, $extension_Int128_1462_i128 rhs) noexcept -> const bool;
+	#line 1463 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class __TT> struct $static_getMaxDigitCount; template<> struct $static_getMaxDigitCount<$extension_Int128_1462_i128> { static inline constexpr auto get() -> const Builtin::i32; };
+	#line 1464 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class __TT> struct $static_getMaxHexDigitCount; template<> struct $static_getMaxHexDigitCount<$extension_Int128_1462_i128> { static inline constexpr auto get() -> const Builtin::i32; };
+	#line 1465 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class __TT> struct $static_getMaxValueDiv10; template<> struct $static_getMaxValueDiv10<$extension_Int128_1462_i128> { static inline constexpr auto get() -> const $extension_Int128_1462_i128; };
+	#line 1467 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getMultiplyBy10($extension_Int128_1462_i128 const& $this ) -> const $extension_Int128_1462_i128;
+	#line 1468 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getMultiplyBy16($extension_Int128_1462_i128 const& $this ) -> const $extension_Int128_1462_i128;
+	#line 1462 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int128_1462_i128, IBinaryIntegerFormatInfo, IBinaryIntegerFormatInfo, $extension_Int128_1462_i128);
 	} namespace System{
 using $extensions::IsGreaterThanAsUnsigned;
 using $extensions::$static_getMaxDigitCount;
@@ -883,7 +827,225 @@ using $extensions::$static_getMaxValueDiv10;
 using $extensions::getMultiplyBy10;
 using $extensions::getMultiplyBy16;
 
-	//###############################################################################
+	} namespace $extensions {
+template<class __TT> struct $static_Low64;
+template<class __TT> struct $static_getLow64;
+template<class __TT> struct $static_WideningMul128;
+template<class __TT> struct $static_getWideningMul128;
+template<class __TT> struct $static_SaturatingSubtract;
+template<class __TT> struct $static_getSaturatingSubtract;
+template<class __TT> struct $static_DivExact;
+template<class __TT> struct $static_getDivExact;
+template<class __TT> struct $static_PopCount;
+template<class __TT> struct $static_getPopCount;
+template<class __TT> struct $static_High64;
+template<class __TT> struct $static_getHigh64;
+template<class __TT> struct $static_IsNegative;
+template<class __TT> struct $static_getIsNegative;
+template<class __TT> struct $static_IsPositive;
+template<class __TT> struct $static_getIsPositive;
+template<class __TT> struct $static_IsNormal;
+template<class __TT> struct $static_getIsNormal;
+template<class __TT> struct $static_SaturatingAdd;
+template<class __TT> struct $static_getSaturatingAdd;
+template<class __TT> struct $static_MinimalBitWidth;
+template<class __TT> struct $static_getMinimalBitWidth;
+template<class __TT> struct $static_MinusOne;
+template<class __TT> struct $static_getMinusOne;
+template<class __TT> struct $static_BitWidth;
+template<class __TT> struct $static_getBitWidth;
+template<class __TT> struct $static_AllBitsSet;
+template<class __TT> struct $static_getAllBitsSet;
+template<class __TT> struct $static_LeadingZeroCount;
+template<class __TT> struct $static_getLeadingZeroCount;
+template<class __TT> struct $static_CheckedLog2;
+template<class __TT> struct $static_getCheckedLog2;
+template<class __TT> struct $static_IsPositiveInfinity;
+template<class __TT> struct $static_getIsPositiveInfinity;
+template<class __TT> struct $static_InvalidOperationException;
+template<class __TT> struct $static_getInvalidOperationException;
+template<class __TT> struct $static_Max;
+template<class __TT> struct $static_getMax;
+template<class __TT> struct $static_DivAssign;
+template<class __TT> struct $static_getDivAssign;
+template<class __TT> struct $static_CheckedLog10;
+template<class __TT> struct $static_getCheckedLog10;
+template<class __TT> struct $static_SafeNegate;
+template<class __TT> struct $static_getSafeNegate;
+template<class __TT> struct $static_TrailingZeroCount;
+template<class __TT> struct $static_getTrailingZeroCount;
+template<class __TT> struct $static_Isqrt128;
+template<class __TT> struct $static_getIsqrt128;
+template<class __TT> struct $static_MaxValue;
+template<class __TT> struct $static_getMaxValue;
+template<class __TT> struct $static_CarryingMul128;
+template<class __TT> struct $static_getCarryingMul128;
+template<class __TT> struct $static_SaturatingMultiply;
+template<class __TT> struct $static_getSaturatingMultiply;
+template<class __TT> struct $static_CheckedIsqrt;
+template<class __TT> struct $static_getCheckedIsqrt;
+template<class __TT> struct $static_ByteSwapped;
+template<class __TT> struct $static_getByteSwapped;
+template<class __TT> struct $static_MaxMagnitude;
+template<class __TT> struct $static_getMaxMagnitude;
+template<class __TT> struct $static_Log2;
+template<class __TT> struct $static_getLog2;
+template<class __TT> struct $static_One;
+template<class __TT> struct $static_getOne;
+template<class __TT> struct $static_IsLittleEndian;
+template<class __TT> struct $static_getIsLittleEndian;
+template<class __TT> struct $static_ByteCount;
+template<class __TT> struct $static_getByteCount;
+template<class __TT> struct $static_IsBigEndian;
+template<class __TT> struct $static_getIsBigEndian;
+template<class __TT> struct $static_SafeDivExact;
+template<class __TT> struct $static_getSafeDivExact;
+template<class __TT> struct $static_BorrowingSub;
+template<class __TT> struct $static_getBorrowingSub;
+template<class __TT> struct $static_ReverseBits64u;
+template<class __TT> struct $static_getReverseBits64u;
+template<class __TT> struct $static_CarryingAdd;
+template<class __TT> struct $static_getCarryingAdd;
+template<class __TT> struct $static_ReverseBits64;
+template<class __TT> struct $static_getReverseBits64;
+template<class __TT> struct $static_LeadingOneCount;
+template<class __TT> struct $static_getLeadingOneCount;
+template<class __TT> struct $static_StrictMultiply;
+template<class __TT> struct $static_getStrictMultiply;
+template<class __TT> struct $static_MinValue;
+template<class __TT> struct $static_getMinValue;
+template<class __TT> struct $static_IsSigned;
+template<class __TT> struct $static_getIsSigned;
+template<class __TT> struct $static_WrappingMultiply;
+template<class __TT> struct $static_getWrappingMultiply;
+template<class __TT> struct $static_MaxDigitCount;
+template<class __TT> struct $static_getMaxDigitCount;
+template<class __TT> struct $static_SafeSubtract;
+template<class __TT> struct $static_getSafeSubtract;
+template<class __TT> struct $static_IntegerOverflowException;
+template<class __TT> struct $static_getIntegerOverflowException;
+template<class __TT> struct $static_ToUInt8;
+template<class __TT> struct $static_getToUInt8;
+template<class __TT> struct $static_StrictSubtract;
+template<class __TT> struct $static_getStrictSubtract;
+template<class __TT> struct $static_Div;
+template<class __TT> struct $static_getDiv;
+template<class __TT> struct $static_MinMagnitude;
+template<class __TT> struct $static_getMinMagnitude;
+template<class __TT> struct $static_Min;
+template<class __TT> struct $static_getMin;
+template<class __TT> struct $static_CheckedLog;
+template<class __TT> struct $static_getCheckedLog;
+template<class __TT> struct $static_SafeAdd;
+template<class __TT> struct $static_getSafeAdd;
+template<class __TT> struct $static_StrictAdd;
+template<class __TT> struct $static_getStrictAdd;
+template<class __TT> struct $static_WrappingAdd;
+template<class __TT> struct $static_getWrappingAdd;
+template<class __TT> struct $static_MultiplyBy10;
+template<class __TT> struct $static_getMultiplyBy10;
+template<class __TT> struct $static_WrappingSubtract;
+template<class __TT> struct $static_getWrappingSubtract;
+template<class __TT> struct $static_HashCode;
+template<class __TT> struct $static_getHashCode;
+template<class __TT> struct $static_SafeMultiply;
+template<class __TT> struct $static_getSafeMultiply;
+template<class __TT> struct $static_SafeDivide;
+template<class __TT> struct $static_getSafeDivide;
+template<class __TT> struct $static_StrictModulus;
+template<class __TT> struct $static_getStrictModulus;
+template<class __TT> struct $static_StrictDivide;
+template<class __TT> struct $static_getStrictDivide;
+template<class __TT> struct $static_WrappingDivide;
+template<class __TT> struct $static_getWrappingDivide;
+template<class __TT> struct $static_SaturatingDivide;
+template<class __TT> struct $static_getSaturatingDivide;
+template<class __TT> struct $static_SafeModulus;
+template<class __TT> struct $static_getSafeModulus;
+template<class __TT> struct $static_WrappingModulus;
+template<class __TT> struct $static_getWrappingModulus;
+template<class __TT> struct $static_StrictNegate;
+template<class __TT> struct $static_getStrictNegate;
+template<class __TT> struct $static_WrappingNegate;
+template<class __TT> struct $static_getWrappingNegate;
+template<class __TT> struct $static_SaturatingNegate;
+template<class __TT> struct $static_getSaturatingNegate;
+template<class __TT> struct $static_UncheckedShiftLeft;
+template<class __TT> struct $static_getUncheckedShiftLeft;
+template<class __TT> struct $static_UncheckedShiftRight;
+template<class __TT> struct $static_getUncheckedShiftRight;
+template<class __TT> struct $static_NarrowToUInt128;
+template<class __TT> struct $static_getNarrowToUInt128;
+template<class __TT> struct $static_ToInt32;
+template<class __TT> struct $static_getToInt32;
+template<class __TT> struct $static_NarrowToUInt64;
+template<class __TT> struct $static_getNarrowToUInt64;
+template<class __TT> struct $static_Abs;
+template<class __TT> struct $static_getAbs;
+template<class __TT> struct $static_CheckedAbs;
+template<class __TT> struct $static_getCheckedAbs;
+template<class __TT> struct $static_StrictAbs;
+template<class __TT> struct $static_getStrictAbs;
+template<class __TT> struct $static_WrappingAbs;
+template<class __TT> struct $static_getWrappingAbs;
+template<class __TT> struct $static_SaturatingAbs;
+template<class __TT> struct $static_getSaturatingAbs;
+template<class __TT> struct $static_OverflowingAbs;
+template<class __TT> struct $static_getOverflowingAbs;
+template<class __TT> struct $static_IsFinite;
+template<class __TT> struct $static_getIsFinite;
+template<class __TT> struct $static_IsInteger;
+template<class __TT> struct $static_getIsInteger;
+template<class __TT> struct $static_IsCanonical;
+template<class __TT> struct $static_getIsCanonical;
+template<class __TT> struct $static_IsComplexNumber;
+template<class __TT> struct $static_getIsComplexNumber;
+template<class __TT> struct $static_IsRealNumber;
+template<class __TT> struct $static_getIsRealNumber;
+template<class __TT> struct $static_IsImaginaryNumber;
+template<class __TT> struct $static_getIsImaginaryNumber;
+template<class __TT> struct $static_IsEvenInteger;
+template<class __TT> struct $static_getIsEvenInteger;
+template<class __TT> struct $static_IsOddInteger;
+template<class __TT> struct $static_getIsOddInteger;
+template<class __TT> struct $static_IsInfinity;
+template<class __TT> struct $static_getIsInfinity;
+template<class __TT> struct $static_IsNegativeInfinity;
+template<class __TT> struct $static_getIsNegativeInfinity;
+template<class __TT> struct $static_IsNaN;
+template<class __TT> struct $static_getIsNaN;
+template<class __TT> struct $static_IsSubnormal;
+template<class __TT> struct $static_getIsSubnormal;
+template<class __TT> struct $static_IsZero;
+template<class __TT> struct $static_getIsZero;
+template<class __TT> struct $static_Sign;
+template<class __TT> struct $static_getSign;
+template<class __TT> struct $static_CopySign;
+template<class __TT> struct $static_getCopySign;
+template<class __TT> struct $static_MaxNumber;
+template<class __TT> struct $static_getMaxNumber;
+template<class __TT> struct $static_MinNumber;
+template<class __TT> struct $static_getMinNumber;
+template<class __TT> struct $static_Clamp;
+template<class __TT> struct $static_getClamp;
+template<class __TT> struct $static_Log2Ceiling;
+template<class __TT> struct $static_getLog2Ceiling;
+template<class __TT> struct $static_Log10;
+template<class __TT> struct $static_getLog10;
+template<class __TT> struct $static_Log;
+template<class __TT> struct $static_getLog;
+template<class __TT> struct $static_Midpoint;
+template<class __TT> struct $static_getMidpoint;
+template<class __TT> struct $static_NextMultipleOf;
+template<class __TT> struct $static_getNextMultipleOf;
+template<class __TT> struct $static_IsMultipleOf;
+template<class __TT> struct $static_getIsMultipleOf;
+template<class __TT> struct $static_MultiplyBy16;
+template<class __TT> struct $static_getMultiplyBy16;
+template<class __TT> struct $static_CarryingMul;
+template<class __TT> struct $static_getCarryingMul;
+} namespace System {
+//###############################################################################
 //# Function definitions
 //###############################################################################
 
@@ -991,7 +1153,7 @@ using $extensions::getMultiplyBy16;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 67 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getHashCode($extension_Int128_21_i128 const& $this ) -> const Builtin::u64
+	inline constexpr auto getHashCode($extension_Int128_21_i128 const & $this ) -> const Builtin::u64
 	{
 		#line 69 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		auto finalize = [&] (Builtin::u64 input) 
@@ -1322,25 +1484,49 @@ using $extensions::getMultiplyBy16;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_div_gt($extension_Int128_198_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_198_i128
+	template<class T> inline constexpr auto _operator_mod_lt($extension_Int128_198_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_198_i128
 	{
 		#line 233 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		const Builtin::Auto<decltype($this % rhs)> result = $this % rhs; 
+		#line 234 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		const Builtin::Auto<decltype(ADV_UFCS(_operator_gt_gt_gt)((result ^ rhs), Builtin::i32{ADV_USPCS(BitWidth, $extension_Int128_198_i128)() - Builtin::i32(1)}))> signDiff = ADV_UFCS(_operator_gt_gt_gt)((result ^ rhs), Builtin::i32{ADV_USPCS(BitWidth, $extension_Int128_198_i128)() - Builtin::i32(1)}); 
+		#line 235 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		const Builtin::Auto<decltype((result != Builtin::i32(0)) & (signDiff != Builtin::i32(0)))> needAdjust = (result != Builtin::i32(0)) & (signDiff != Builtin::i32(0)); 
+		#line 236 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return result + (needAdjust ? rhs : T{});
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 239 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_mod_lt_eq($extension_Int128_198_i128 & $this , auto rhs)  -> typename $extension_Int128_198_i128&
+	{
+		#line 239 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY($this = $extension_Int128_198_i128{ADV_UFCS(_operator_mod_lt)($this, rhs)}); 
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 241 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_div_gt($extension_Int128_198_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_198_i128
+	{
+		#line 243 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if constexpr (Builtin::TypeIs<T, IBinaryInteger>()) {
-			#line 234 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 244 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			const auto& [div, rem] = ADV_UFCS(_operator_div_mod)($this, rhs);
-			#line 235 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 245 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			if (rem == Builtin::i32(0)) {
-				#line 236 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 246 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				return div;
 			}
-			#line 238 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 248 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			Builtin::Auto<decltype(Builtin::i32(1) + (($this ^ rhs) >> (ADV_USPCS(BitWidth, $extension_Int128_198_i128)() - Builtin::i32(1))))> correction = Builtin::i32(1) + (($this ^ rhs) >> (ADV_USPCS(BitWidth, $extension_Int128_198_i128)() - Builtin::i32(1))); 
-			#line 239 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 249 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return div + correction;
 		} else {
-			#line 240 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 250 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			{
-				#line 241 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 251 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				return Builtin::Cast<true, $extension_Int128_198_i128>((ADV_UFCS(_operator_div_gt)(Builtin::f64{$this}, rhs)));
 			}
 		}
@@ -1349,10 +1535,10 @@ using $extensions::getMultiplyBy16;
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 245 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+#line 255 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	inline constexpr auto _operator_div_gt_eq($extension_Int128_198_i128 & $this , auto rhs)  -> typename $extension_Int128_198_i128&
 	{
-		#line 245 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 255 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this = $extension_Int128_198_i128{ADV_UFCS(_operator_div_gt)($this, rhs)}); 
 	}
 	
@@ -1360,35 +1546,35 @@ using $extensions::getMultiplyBy16;
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	
 } namespace $extensions { using namespace System;
-#line 250 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl($extension_Int128_248_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_248_i128
+#line 260 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl($extension_Int128_258_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_258_i128
 	{
-		#line 250 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 260 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(Div)($this.$ref(), rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 252 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_eq($extension_Int128_248_i128 & $this , T rhs)  -> typename $extension_Int128_248_i128&
+#line 262 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_eq($extension_Int128_258_i128 & $this , T rhs)  -> typename $extension_Int128_258_i128&
 	{
-		#line 252 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 262 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(DivAssign)($this.$ref(), rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 257 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_bsl($extension_Int128_248_i128 const& $this LIFETIMEBOUND, T rhs)  -> const Builtin::Nullable<$extension_Int128_248_i128>
+#line 267 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_bsl($extension_Int128_258_i128 const& $this LIFETIMEBOUND, T rhs)  -> const Builtin::Nullable<$extension_Int128_258_i128>
 	{
-		#line 260 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_248_i128 result{}; 
-		#line 261 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 270 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_258_i128 result{}; 
+		#line 271 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (Builtin::DivExact($this, rhs, result)) {
-			#line 262 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 272 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return result;
 		}
-		#line 264 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 274 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return nullptr;
 	}
 	
@@ -1396,54 +1582,54 @@ using $extensions::getMultiplyBy16;
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	
 } namespace $extensions { using namespace System;
-#line 271 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor($extension_Int128_268_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp)  -> const typename $extension_Int128_268_i128
+#line 281 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor($extension_Int128_278_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp)  -> const typename $extension_Int128_278_i128
 	{
-		#line 273 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (exp == Builtin::i32(0)) [[unlikely]] {
-			#line 275 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 285 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return Builtin::i32(1);
 		}
-		#line 278 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 288 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype($this)> base = $this; 
-		#line 279 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 289 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype(Builtin::i128(1LL))> result = Builtin::i128(1LL); 
-		#line 281 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 291 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (std::is_constant_evaluated()) {
-			#line 282 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 292 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			while ((exp <=> Builtin::i32(1)) > 0) 
 			{
-				#line 283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 293 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				if ((exp & Builtin::i32(1)) == Builtin::i32(1)) {
-					#line 284 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+					#line 294 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 					result *= base;
 				}
-				#line 286 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 296 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				ADV_UFCS(DivAssign)(exp.$ref(), Builtin::i32(2));
-				#line 287 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 297 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				base *= base;
 			}
-			#line 289 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 299 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return result * base;
 		} else {
-			#line 290 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 300 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			{
-				#line 291 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 301 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				for (;;) 
 				{
-					#line 292 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+					#line 302 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 					if ((exp & Builtin::i32(1)) == Builtin::i32(1)) {
-						#line 293 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+						#line 303 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 						result *= base;
-						#line 294 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+						#line 304 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 						if (exp == Builtin::i32(1)) {
-							#line 295 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+							#line 305 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 							return result;
 						}
 					}
-					#line 297 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+					#line 307 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 					ADV_UFCS(DivAssign)(exp.$ref(), Builtin::i32(2));
-					#line 298 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+					#line 308 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 					base *= base;
 				}
 			}
@@ -1453,10 +1639,10 @@ using $extensions::getMultiplyBy16;
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 303 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_eq($extension_Int128_268_i128 & $this , Builtin::u32 exp)  -> typename $extension_Int128_268_i128&
+#line 313 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_eq($extension_Int128_278_i128 & $this , Builtin::u32 exp)  -> typename $extension_Int128_278_i128&
 	{
-		#line 303 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 313 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_xor_xor)($this, exp)); 
 	}
 	
@@ -1464,286 +1650,206 @@ using $extensions::getMultiplyBy16;
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	
 } namespace $extensions { using namespace System;
-#line 359 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline auto MaxMagnitudeNumber($extension_Int128_306_i128 const& $this LIFETIMEBOUND, $extension_Int128_306_i128 rhs)  -> const typename $extension_Int128_306_i128
+#line 369 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline auto MaxMagnitudeNumber($extension_Int128_316_i128 const& $this LIFETIMEBOUND, $extension_Int128_316_i128 rhs)  -> const typename $extension_Int128_316_i128
 	{
-		#line 359 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 369 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(MaxMagnitude)($this.$ref(), rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 390 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline auto MinMagnitudeNumber($extension_Int128_306_i128 const& $this LIFETIMEBOUND, $extension_Int128_306_i128 rhs)  -> const typename $extension_Int128_306_i128
+#line 400 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline auto MinMagnitudeNumber($extension_Int128_316_i128 const& $this LIFETIMEBOUND, $extension_Int128_316_i128 rhs)  -> const typename $extension_Int128_316_i128
 	{
-		#line 390 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 400 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(MinMagnitude)($this.$ref(), rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 404 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToInt8($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i8
+#line 414 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToInt8($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i8
 	{
-		#line 404 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 414 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::i8>($this)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 405 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToUInt8($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u8
+#line 415 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToUInt8($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u8
 	{
-		#line 405 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 415 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::u8>($this)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 406 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToInt16($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i16
+#line 416 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToInt16($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i16
 	{
-		#line 406 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 416 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::i16>($this)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 407 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToUInt16($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u16
+#line 417 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToUInt16($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u16
 	{
-		#line 407 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 417 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::u16>($this)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 408 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToInt32($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i32
+#line 418 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToInt32($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i32
 	{
-		#line 408 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 418 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::i32>($this)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 409 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToUInt32($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u32
+#line 419 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToUInt32($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u32
 	{
-		#line 409 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 419 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::u32>($this)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 410 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToInt64($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i64
+#line 420 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToInt64($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i64
 	{
-		#line 410 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 420 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::i64>($this)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 411 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToUInt64($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u64
+#line 421 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToUInt64($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u64
 	{
-		#line 411 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 421 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::u64>($this)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 412 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToInt128($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i128
+#line 422 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToInt128($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::i128
 	{
-		#line 412 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 422 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 413 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToUInt128($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u128
+#line 423 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToUInt128($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::u128
 	{
-		#line 413 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 423 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::u128>($this)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 414 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToIsize($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::isize
+#line 424 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToIsize($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::isize
 	{
-		#line 414 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 424 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::isize>($this)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 415 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NarrowToUsize($extension_Int128_306_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::usize
+#line 425 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NarrowToUsize($extension_Int128_316_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::usize
 	{
-		#line 415 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 425 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(UnsafeCast<Builtin::usize>($this)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 307 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto $static_getOne<$extension_Int128_306_i128>::get() -> const $extension_Int128_306_i128
+#line 317 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto $static_getOne<$extension_Int128_316_i128>::get() -> const $extension_Int128_316_i128
 	{
-		#line 307 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 317 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(Builtin::i128(1LL)); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 308 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto $static_getZero<$extension_Int128_306_i128>::get() -> const $extension_Int128_306_i128
+#line 318 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto $static_getZero<$extension_Int128_316_i128>::get() -> const $extension_Int128_316_i128
 	{
-		#line 308 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 318 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(Builtin::i128(0LL)); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 309 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto $static_getRadix<$extension_Int128_306_i128>::get() -> const Builtin::i32
+#line 319 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto $static_getRadix<$extension_Int128_316_i128>::get() -> const Builtin::i32
 	{
-		#line 309 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 319 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(Builtin::i32(2)); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 311 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getAbs($extension_Int128_306_i128 const& $this ) -> const $extension_Int128_306_i128
+#line 321 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getAbs($extension_Int128_316_i128 const & $this ) -> const $extension_Int128_316_i128
 	{
-		#line 311 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 321 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsNegative)($this.$ref()) ? -$this : $this); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 312 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsCanonical($extension_Int128_306_i128 const& $this ) -> const bool
-	{
-		#line 312 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 313 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsComplexNumber($extension_Int128_306_i128 const& $this ) -> const bool
-	{
-		#line 313 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 314 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsEvenInteger($extension_Int128_306_i128 const& $this ) -> const bool
-	{
-		#line 314 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY((ADV_UFCS(Low64)($this.$ref()) & Builtin::u32(1U)) == Builtin::i32(0)); 
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 315 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsFinite($extension_Int128_306_i128 const& $this ) -> const bool
-	{
-		#line 315 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 316 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsImaginaryNumber($extension_Int128_306_i128 const& $this ) -> const bool
-	{
-		#line 316 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 317 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsInfinity($extension_Int128_306_i128 const& $this ) -> const bool
-	{
-		#line 317 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 318 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsInteger($extension_Int128_306_i128 const& $this ) -> const bool
-	{
-		#line 318 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 319 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsNaN($extension_Int128_306_i128 const& $this ) -> const bool
-	{
-		#line 319 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 320 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsNegative($extension_Int128_306_i128 const& $this ) -> const bool
-	{
-		#line 320 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY((ADV_UFCS(High64)($this.$ref()) <=> Builtin::i32(0)) < 0); 
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 321 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsNegativeInfinity($extension_Int128_306_i128 const& $this ) -> const bool
-	{
-		#line 321 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
 #line 322 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsNormal($extension_Int128_306_i128 const& $this ) -> const bool
+	inline constexpr auto getIsCanonical($extension_Int128_316_i128 const & $this ) -> const bool
 	{
 		#line 322 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY($this != Builtin::i32(0)); 
+		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 323 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsOddInteger($extension_Int128_306_i128 const& $this ) -> const bool
+	inline constexpr auto getIsComplexNumber($extension_Int128_316_i128 const & $this ) -> const bool
 	{
 		#line 323 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY((ADV_UFCS(Low64)($this.$ref()) & Builtin::u32(1U)) != Builtin::i32(0)); 
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 324 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsPositive($extension_Int128_306_i128 const& $this ) -> const bool
-	{
-		#line 324 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY((ADV_UFCS(High64)($this.$ref()) <=> Builtin::i32(0)) >= 0); 
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 325 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsPositiveInfinity($extension_Int128_306_i128 const& $this ) -> const bool
-	{
-		#line 325 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 326 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsRealNumber($extension_Int128_306_i128 const& $this ) -> const bool
+#line 324 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsEvenInteger($extension_Int128_316_i128 const & $this ) -> const bool
 	{
-		#line 326 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 324 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY((ADV_UFCS(Low64)($this.$ref()) & Builtin::u32(1U)) == Builtin::i32(0)); 
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 325 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsFinite($extension_Int128_316_i128 const & $this ) -> const bool
+	{
+		#line 325 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
+#line 326 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsImaginaryNumber($extension_Int128_316_i128 const & $this ) -> const bool
+	{
+		#line 326 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
 #line 327 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsSubnormal($extension_Int128_306_i128 const& $this ) -> const bool
+	inline constexpr auto getIsInfinity($extension_Int128_316_i128 const & $this ) -> const bool
 	{
 		#line 327 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
@@ -1751,307 +1857,387 @@ using $extensions::getMultiplyBy16;
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 328 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsZero($extension_Int128_306_i128 const& $this ) -> const bool
+	inline constexpr auto getIsInteger($extension_Int128_316_i128 const & $this ) -> const bool
 	{
 		#line 328 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 329 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsNaN($extension_Int128_316_i128 const & $this ) -> const bool
+	{
+		#line 329 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 330 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsNegative($extension_Int128_316_i128 const & $this ) -> const bool
+	{
+		#line 330 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY((ADV_UFCS(High64)($this.$ref()) <=> Builtin::i32(0)) < 0); 
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 331 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsNegativeInfinity($extension_Int128_316_i128 const & $this ) -> const bool
+	{
+		#line 331 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 332 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsNormal($extension_Int128_316_i128 const & $this ) -> const bool
+	{
+		#line 332 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY($this != Builtin::i32(0)); 
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 333 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsOddInteger($extension_Int128_316_i128 const & $this ) -> const bool
+	{
+		#line 333 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY((ADV_UFCS(Low64)($this.$ref()) & Builtin::u32(1U)) != Builtin::i32(0)); 
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 334 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsPositive($extension_Int128_316_i128 const & $this ) -> const bool
+	{
+		#line 334 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY((ADV_UFCS(High64)($this.$ref()) <=> Builtin::i32(0)) >= 0); 
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 335 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsPositiveInfinity($extension_Int128_316_i128 const & $this ) -> const bool
+	{
+		#line 335 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 336 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsRealNumber($extension_Int128_316_i128 const & $this ) -> const bool
+	{
+		#line 336 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 337 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsSubnormal($extension_Int128_316_i128 const & $this ) -> const bool
+	{
+		#line 337 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 338 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsZero($extension_Int128_316_i128 const & $this ) -> const bool
+	{
+		#line 338 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this == Builtin::i32(0)); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	
 } namespace $extensions { using namespace System;
-#line 419 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto $static_getMinusOne<$extension_Int128_418_i128>::get() -> const $extension_Int128_418_i128
+#line 429 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto $static_getMinusOne<$extension_Int128_428_i128>::get() -> const $extension_Int128_428_i128
 	{
-		#line 419 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 429 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(Builtin::i128(-1LL)); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	
 } namespace $extensions { using namespace System;
-#line 454 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto Max($extension_Int128_422_i128 const& $this LIFETIMEBOUND, $extension_Int128_422_i128 rhs) noexcept -> const typename $extension_Int128_422_i128
+#line 464 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto Max($extension_Int128_432_i128 const& $this LIFETIMEBOUND, $extension_Int128_432_i128 rhs) noexcept -> const typename $extension_Int128_432_i128
 	{
-		#line 454 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 464 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY((($this <=> rhs) >= 0) ? $this : rhs); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 455 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto MaxNumber($extension_Int128_422_i128 const& $this LIFETIMEBOUND, $extension_Int128_422_i128 rhs) noexcept -> const typename $extension_Int128_422_i128
+#line 465 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto MaxNumber($extension_Int128_432_i128 const& $this LIFETIMEBOUND, $extension_Int128_432_i128 rhs) noexcept -> const typename $extension_Int128_432_i128
 	{
-		#line 455 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 465 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(Max)($this.$ref(), rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 456 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto Min($extension_Int128_422_i128 const& $this LIFETIMEBOUND, $extension_Int128_422_i128 rhs) noexcept -> const typename $extension_Int128_422_i128
+#line 466 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto Min($extension_Int128_432_i128 const& $this LIFETIMEBOUND, $extension_Int128_432_i128 rhs) noexcept -> const typename $extension_Int128_432_i128
 	{
-		#line 456 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 466 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY((($this <=> rhs) <= 0) ? $this : rhs); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 457 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto MinNumber($extension_Int128_422_i128 const& $this LIFETIMEBOUND, $extension_Int128_422_i128 rhs) noexcept -> const typename $extension_Int128_422_i128
+#line 467 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto MinNumber($extension_Int128_432_i128 const& $this LIFETIMEBOUND, $extension_Int128_432_i128 rhs) noexcept -> const typename $extension_Int128_432_i128
 	{
-		#line 457 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 467 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(Min)($this.$ref(), rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 458 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto Clamp($extension_Int128_422_i128 const& $this LIFETIMEBOUND, $extension_Int128_422_i128 min, $extension_Int128_422_i128 max)  -> const typename $extension_Int128_422_i128
+#line 468 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto Clamp($extension_Int128_432_i128 const& $this LIFETIMEBOUND, $extension_Int128_432_i128 min, $extension_Int128_432_i128 max)  -> const typename $extension_Int128_432_i128
 	{
-		#line 460 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 470 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if ((min <=> max) > 0) {
-			#line 461 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 471 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			Builtin::Throw(Builtin::InvalidOperationException{});
 		}
-		#line 464 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 474 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype($this)> result = $this; 
-		#line 465 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 475 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		result = ADV_UFCS(Max)(result.$ref(), min);
-		#line 466 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 476 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		result = ADV_UFCS(Min)(result.$ref(), max);
-		#line 468 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 478 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return result;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 423 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getSign($extension_Int128_422_i128 const& $this ) -> const Builtin::i32
+#line 433 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getSign($extension_Int128_432_i128 const & $this ) -> const Builtin::i32
 	{
-		#line 425 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 435 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (ADV_UPCS(IsNegative)($this.$ref())) {
-			#line 426 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 436 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return Builtin::i32(-1);
 		}
-		#line 429 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 439 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (ADV_UPCS(IsNormal)($this.$ref())) {
-			#line 430 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 440 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return Builtin::i32(1);
 		}
-		#line 433 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 443 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return Builtin::i32(0);
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	
 } namespace $extensions { using namespace System;
-#line 550 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto CheckedLog($extension_Int128_472_i128 const& $this LIFETIMEBOUND, $extension_Int128_472_i128 base) noexcept -> const Builtin::Nullable<$extension_Int128_472_i128>
+#line 560 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto CheckedLog($extension_Int128_482_i128 const& $this LIFETIMEBOUND, $extension_Int128_482_i128 base) noexcept -> const Builtin::Nullable<$extension_Int128_482_i128>
 	{
-		#line 552 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 562 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (($this <=> Builtin::i32(0)) <= 0 || (base <=> Builtin::i32(1)) <= 0) {
-			#line 553 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 563 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return nullptr;
 		}
-		#line 556 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 566 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (std::is_constant_evaluated()) {
-			#line 557 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 567 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			if (base == Builtin::i32(2)) {
-				#line 558 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 568 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				return ADV_UPCS(CheckedLog2)($this.$ref());
 			}
-			#line 560 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 570 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			if (base == Builtin::i32(10)) {
-				#line 561 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 571 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				return ADV_UPCS(CheckedLog10)($this.$ref());
 			}
 		}
-		#line 565 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 575 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (($this <=> base) < 0) {
-			#line 566 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 576 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return Builtin::i32(0);
 		}
-		#line 569 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 579 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype(ADV_UFCS(_operator_bsl)(ADV_UPCS(Log2)($this.$ref()), (ADV_UPCS(Log2)(base.$ref()) + Builtin::i32(1))))> n = ADV_UFCS(_operator_bsl)(ADV_UPCS(Log2)($this.$ref()), (ADV_UPCS(Log2)(base.$ref()) + Builtin::i32(1))); 
-		#line 570 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 580 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype(ADV_UFCS(_operator_xor_xor)(base, (Builtin::Cast<true, Builtin::u32>(n))))> r = ADV_UFCS(_operator_xor_xor)(base, (Builtin::Cast<true, Builtin::u32>(n))); 
-		#line 572 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 582 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		const Builtin::Auto<decltype(ADV_UFCS(_operator_bsl)($this, base))> baseRatio = ADV_UFCS(_operator_bsl)($this, base); 
-		#line 573 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 583 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		while ((r <=> baseRatio) <= 0) 
 		{
-			#line 574 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 584 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			++n;
-			#line 575 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 585 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			r *= base;
 		}
-		#line 578 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 588 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return n;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 594 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto Midpoint($extension_Int128_472_i128 const& $this LIFETIMEBOUND, $extension_Int128_472_i128 rhs) noexcept -> const typename $extension_Int128_472_i128
+#line 604 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto Midpoint($extension_Int128_482_i128 const& $this LIFETIMEBOUND, $extension_Int128_482_i128 rhs) noexcept -> const typename $extension_Int128_482_i128
 	{
-		#line 596 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 606 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		const Builtin::Auto<decltype((($this ^ rhs) >> Builtin::i32(1)) + ($this & rhs))> result = (($this ^ rhs) >> Builtin::i32(1)) + ($this & rhs); 
-		#line 597 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 607 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		const Builtin::Auto<decltype((result <=> Builtin::i32(0)) < 0)> correction = (result <=> Builtin::i32(0)) < 0; 
-		#line 598 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		return result + ((Builtin::Cast<true, $extension_Int128_472_i128>(correction)) & ($this ^ rhs));
+		#line 608 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return result + ((Builtin::Cast<true, $extension_Int128_482_i128>(correction)) & ($this ^ rhs));
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 602 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto IsMultipleOf($extension_Int128_472_i128 const& $this LIFETIMEBOUND, $extension_Int128_472_i128 rhs) noexcept -> const bool
+#line 612 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto IsMultipleOf($extension_Int128_482_i128 const& $this LIFETIMEBOUND, $extension_Int128_482_i128 rhs) noexcept -> const bool
 	{
-		#line 604 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 614 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (rhs == Builtin::i32(0)) {
-			#line 605 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 615 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return $this == Builtin::i32(0);
 		}
-		#line 608 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 618 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (rhs == Builtin::i32(-1)) {
-			#line 609 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 619 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return Builtin::Boolean(true);
 		}
-		#line 612 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 622 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return $this % rhs == Builtin::i32(0);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 474 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto $static_getAllBitsSet<$extension_Int128_472_i128>::get() -> const $extension_Int128_472_i128
+#line 484 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto $static_getAllBitsSet<$extension_Int128_482_i128>::get() -> const $extension_Int128_482_i128
 	{
-		#line 474 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 484 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_USPCS(MinusOne, Builtin::i128)()); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 477 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getIsPow2($extension_Int128_472_i128 const& $this ) -> const bool
+#line 487 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getIsPow2($extension_Int128_482_i128 const & $this ) -> const bool
 	{
-		#line 477 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 487 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsPositive)($this.$ref()) && ADV_UPCS(PopCount)($this.$ref()) == Builtin::i32(1)); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 481 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getCheckedLog2($extension_Int128_472_i128 const& $this ) -> const Builtin::Nullable<$extension_Int128_472_i128>
+#line 491 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getCheckedLog2($extension_Int128_482_i128 const & $this ) -> const Builtin::Nullable<$extension_Int128_482_i128>
 	{
-		#line 483 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 493 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (($this <=> Builtin::i32(0)) <= 0) {
-			#line 484 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 494 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return nullptr;
 		}
-		#line 487 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		return Builtin::Cast<true, $extension_Int128_472_i128>((ADV_USPCS(BitWidth, $extension_Int128_472_i128)() - Builtin::i32(1) - ADV_UPCS(LeadingZeroCount)($this.$ref())));
+		#line 497 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return Builtin::Cast<true, $extension_Int128_482_i128>((ADV_USPCS(BitWidth, $extension_Int128_482_i128)() - Builtin::i32(1) - ADV_UPCS(LeadingZeroCount)($this.$ref())));
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 491 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getLog2($extension_Int128_472_i128 const& $this ) -> const $extension_Int128_472_i128
+#line 501 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getLog2($extension_Int128_482_i128 const & $this ) -> const $extension_Int128_482_i128
 	{
-		#line 493 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 503 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (const auto result = ADV_UPCS(CheckedLog2)($this.$ref())) {
 			{
-				#line 493 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 503 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				auto __tmp0 = *result; const auto& result = __tmp0;
 				
-				#line 494 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 504 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				return result;
 			}
 		}
-		#line 496 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 506 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Throw(Builtin::InvalidOperationException{});
 		return {};
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 501 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getCheckedLog10($extension_Int128_472_i128 const& $this ) -> const Builtin::Nullable<$extension_Int128_472_i128>
+#line 511 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getCheckedLog10($extension_Int128_482_i128 const & $this ) -> const Builtin::Nullable<$extension_Int128_482_i128>
 	{
-		#line 503 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 513 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (($this <=> Builtin::i32(0)) <= 0) {
-			#line 504 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 514 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return nullptr;
 		}
-		#line 507 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 517 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		constexpr Builtin::u32 C1 = Builtin::u32(0b01100000000000000000U) - Builtin::i32(10);
-		#line 508 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 518 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		constexpr Builtin::u32 C2 = Builtin::u32(0b10000000000000000000U) - Builtin::i32(100);
-		#line 509 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 519 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		constexpr Builtin::u32 C3 = Builtin::u32(0b11100000000000000000U) - Builtin::i32(1000);
-		#line 510 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 520 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		constexpr Builtin::u32 C4 = Builtin::u32(0b10000000000000000000U) - Builtin::i32(10000);
-		#line 511 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 521 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype(Builtin::i32(0))> log = Builtin::i32(0); 
-		#line 512 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 522 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype(Builtin::Cast<true, Builtin::u128>($this))> val1 = Builtin::Cast<true, Builtin::u128>($this); 
-		#line 513 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 523 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if ((val1 <=> Builtin::ParseInt128("100000000000000000000000000000000")) >= 0) {
-			#line 514 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 524 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			ADV_UFCS(DivAssign)(val1.$ref(), Builtin::ParseUInt128("100000000000000000000000000000000"));
-			#line 515 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 525 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			log += Builtin::i32(32);
-			#line 516 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 526 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			if ((val1 <=> Builtin::i32(100000)) >= 0) {
-				#line 517 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 527 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				ADV_UFCS(DivAssign)(val1.$ref(), Builtin::u32(100000U));
-				#line 518 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 528 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				log += Builtin::i32(5);
 			}
-			#line 520 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 530 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			const Builtin::Auto<decltype(Builtin::Cast<true, Builtin::u32>(val1))> val = Builtin::Cast<true, Builtin::u32>(val1); 
-			#line 521 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 531 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return log + ((((val + C1) & (val + C2)) ^ ((val + C3) & (val + C4))) >> Builtin::i32(17));
 		}
-		#line 523 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 533 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if ((val1 <=> Builtin::i64(10000000000000000LL)) >= 0) {
-			#line 524 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 534 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			ADV_UFCS(DivAssign)(val1.$ref(), Builtin::u64(10000000000000000ULL));
-			#line 525 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 535 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			log += Builtin::i32(16);
 		}
-		#line 527 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 537 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if ((val1 <=> Builtin::i64(10000000000LL)) >= 0) {
-			#line 528 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 538 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			ADV_UFCS(DivAssign)(val1.$ref(), Builtin::u64(10000000000ULL));
-			#line 529 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 539 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			log += Builtin::i32(10);
 		}
-		#line 531 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 541 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if ((val1 <=> Builtin::i32(100000)) >= 0) {
-			#line 532 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 542 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			ADV_UFCS(DivAssign)(val1.$ref(), Builtin::u32(100000U));
-			#line 533 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 543 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			log += Builtin::i32(5);
 		}
-		#line 535 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 545 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		const Builtin::Auto<decltype(Builtin::Cast<true, Builtin::u32>(val1))> val = Builtin::Cast<true, Builtin::u32>(val1); 
-		#line 536 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 546 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return log + ((((val + C1) & (val + C2)) ^ ((val + C3) & (val + C4))) >> Builtin::i32(17));
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 540 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getLog10($extension_Int128_472_i128 const& $this ) -> const $extension_Int128_472_i128
+#line 550 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getLog10($extension_Int128_482_i128 const & $this ) -> const $extension_Int128_482_i128
 	{
-		#line 542 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 552 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (const auto result = ADV_UPCS(CheckedLog10)($this.$ref())) {
 			{
-				#line 542 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 552 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				auto __tmp0 = *result; const auto& result = __tmp0;
 				
-				#line 543 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 553 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				return result;
 			}
 		}
-		#line 545 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 555 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Throw(Builtin::InvalidOperationException{});
 		return {};
 	}
@@ -2059,1059 +2245,1059 @@ using $extensions::getMultiplyBy16;
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	
 } namespace $extensions { using namespace System;
-#line 619 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_add_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>
+#line 629 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_add_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>
 	{
-		#line 621 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 631 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator +? implemented only for integer types");
-		#line 622 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 623 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 632 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 633 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (Builtin::SafeAdd($this, rhs, result)) {
-			#line 624 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 634 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return result;
 		}
-		#line 626 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 636 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return nullptr;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 628 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_add_qst_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&
+#line 638 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_add_qst_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&
 	{
-		#line 630 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 640 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator +?= implemented only for integer types");
-		#line 631 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 641 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (const auto result = ADV_UFCS(_operator_add_qst)($this, rhs)) {
 			{
-				#line 631 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 641 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				auto __tmp0 = *result; const auto& result = __tmp0;
 				
-				#line 632 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 642 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				$this = result;
 			}
 		}
-		#line 634 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 644 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return $this;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 639 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_add_ne($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_616_i128
+#line 649 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_add_ne($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_626_i128
 	{
-		#line 641 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 651 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator +! implemented only for integer types");
-		#line 642 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 643 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 652 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 653 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::StrictAdd($this, rhs, result);
-		#line 644 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 654 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return result;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 646 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_add_ne_eq($extension_Int128_616_i128 & $this , T rhs)  -> typename $extension_Int128_616_i128&
+#line 656 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_add_ne_eq($extension_Int128_626_i128 & $this , T rhs)  -> typename $extension_Int128_626_i128&
 	{
-		#line 646 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 656 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_add_ne)($this, rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 650 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_add_mod($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_616_i128
+#line 660 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_add_mod($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_626_i128
 	{
-		#line 652 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 662 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator +% implemented only for integer types");
-		#line 653 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 654 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 663 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 664 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::WrappingAdd($this, rhs, result);
-		#line 655 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 665 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return result;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 657 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_add_mod_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&
+#line 667 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_add_mod_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&
 	{
-		#line 657 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 667 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_add_mod)($this, rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 661 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_add_or($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_616_i128
+#line 671 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_add_or($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_626_i128
 	{
-		#line 663 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 673 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator +| implemented only for integer types");
-		#line 664 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 665 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 674 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 675 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::SaturatingAdd($this, rhs, result);
-		#line 666 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 676 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return result;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 668 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_add_or_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&
+#line 678 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_add_or_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&
 	{
-		#line 668 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 678 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_add_or)($this, rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 672 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_add_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int128_616_i128, bool>
+#line 682 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_add_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int128_626_i128, bool>
 	{
-		#line 673 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 683 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator +%? implemented only for integer types");
-		#line 674 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 675 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 684 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 685 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype(!Builtin::SafeAdd($this, rhs, result))> overflowed = !Builtin::SafeAdd($this, rhs, result); 
-		#line 676 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 686 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return std::make_tuple(result, overflowed);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 680 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_add_add_qst($extension_Int128_616_i128 & $this )  -> typename $extension_Int128_616_i128&
+#line 690 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_add_add_qst($extension_Int128_626_i128 & $this )  -> typename $extension_Int128_626_i128&
 	{
-		#line 680 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 690 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_add_qst_eq)($this, Builtin::i128(1LL))); 
 	}
-	inline constexpr auto _operator_add_add_qst_postfix($extension_Int128_616_i128 & $this)  -> decltype(auto) { auto copy = $this; ADV_UFCS(_operator_add_add_qst)($this); return copy; }
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 683 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_add_add_ne($extension_Int128_616_i128 & $this )  -> typename $extension_Int128_616_i128&
-	{
-		#line 683 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_add_ne_eq)($this, Builtin::i128(1LL))); 
-	}
-	inline constexpr auto _operator_add_add_ne_postfix($extension_Int128_616_i128 & $this)  -> decltype(auto) { auto copy = $this; ADV_UFCS(_operator_add_add_ne)($this); return copy; }
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 686 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_add_add_mod($extension_Int128_616_i128 & $this )  -> typename $extension_Int128_616_i128&
-	{
-		#line 686 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_add_mod_eq)($this, Builtin::i128(1LL))); 
-	}
-	inline constexpr auto _operator_add_add_mod_postfix($extension_Int128_616_i128 & $this)  -> decltype(auto) { auto copy = $this; ADV_UFCS(_operator_add_add_mod)($this); return copy; }
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 689 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_add_add_or($extension_Int128_616_i128 & $this )  -> typename $extension_Int128_616_i128&
-	{
-		#line 689 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_add_or_eq)($this, Builtin::i128(1LL))); 
-	}
-	inline constexpr auto _operator_add_add_or_postfix($extension_Int128_616_i128 & $this)  -> decltype(auto) { auto copy = $this; ADV_UFCS(_operator_add_add_or)($this); return copy; }
+	inline constexpr auto _operator_add_add_qst_postfix($extension_Int128_626_i128 & $this)  -> decltype(auto) { auto copy = $this; ADV_UFCS(_operator_add_add_qst)($this); return copy; }
 	
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 693 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto CarryingAdd($extension_Int128_616_i128 const& $this LIFETIMEBOUND, $extension_Int128_616_i128 rhs, bool carry) noexcept -> const std::tuple<$extension_Int128_616_i128, bool>
+	inline constexpr auto _operator_add_add_ne($extension_Int128_626_i128 & $this )  -> typename $extension_Int128_626_i128&
 	{
-		#line 695 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
+		#line 693 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_add_ne_eq)($this, Builtin::i128(1LL))); 
+	}
+	inline constexpr auto _operator_add_add_ne_postfix($extension_Int128_626_i128 & $this)  -> decltype(auto) { auto copy = $this; ADV_UFCS(_operator_add_add_ne)($this); return copy; }
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_add_add_mod($extension_Int128_626_i128 & $this )  -> typename $extension_Int128_626_i128&
+	{
 		#line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		Builtin::Auto<decltype(Builtin::CarryingAdd($this, rhs, carry, result))> overflowed = Builtin::CarryingAdd($this, rhs, carry, result); 
-		#line 697 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		return std::make_tuple(result, overflowed);
+		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_add_mod_eq)($this, Builtin::i128(1LL))); 
 	}
+	inline constexpr auto _operator_add_add_mod_postfix($extension_Int128_626_i128 & $this)  -> decltype(auto) { auto copy = $this; ADV_UFCS(_operator_add_add_mod)($this); return copy; }
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 702 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto BorrowingSub($extension_Int128_616_i128 const& $this LIFETIMEBOUND, $extension_Int128_616_i128 rhs, bool carry) noexcept -> const std::tuple<$extension_Int128_616_i128, bool>
+#line 699 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_add_add_or($extension_Int128_626_i128 & $this )  -> typename $extension_Int128_626_i128&
 	{
-		#line 704 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
+		#line 699 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_add_or_eq)($this, Builtin::i128(1LL))); 
+	}
+	inline constexpr auto _operator_add_add_or_postfix($extension_Int128_626_i128 & $this)  -> decltype(auto) { auto copy = $this; ADV_UFCS(_operator_add_add_or)($this); return copy; }
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 703 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto CarryingAdd($extension_Int128_626_i128 const& $this LIFETIMEBOUND, $extension_Int128_626_i128 rhs, bool carry) noexcept -> const std::tuple<$extension_Int128_626_i128, bool>
+	{
 		#line 705 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		Builtin::Auto<decltype(Builtin::BorrowingSub($this, rhs, carry, result))> overflowed = Builtin::BorrowingSub($this, rhs, carry, result); 
+		$extension_Int128_626_i128 result{}; 
 		#line 706 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		Builtin::Auto<decltype(Builtin::CarryingAdd($this, rhs, carry, result))> overflowed = Builtin::CarryingAdd($this, rhs, carry, result); 
+		#line 707 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return std::make_tuple(result, overflowed);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 711 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_sub_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>
+#line 712 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto BorrowingSub($extension_Int128_626_i128 const& $this LIFETIMEBOUND, $extension_Int128_626_i128 rhs, bool carry) noexcept -> const std::tuple<$extension_Int128_626_i128, bool>
 	{
-		#line 713 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator -? implemented only for integer types");
 		#line 714 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
+		$extension_Int128_626_i128 result{}; 
 		#line 715 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		Builtin::Auto<decltype(Builtin::BorrowingSub($this, rhs, carry, result))> overflowed = Builtin::BorrowingSub($this, rhs, carry, result); 
+		#line 716 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return std::make_tuple(result, overflowed);
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 721 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_sub_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>
+	{
+		#line 723 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator -? implemented only for integer types");
+		#line 724 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 725 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (Builtin::SafeSubtract($this, rhs, result)) {
-			#line 716 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 726 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return result;
 		}
-		#line 718 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 728 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return nullptr;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 720 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_sub_qst_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&
+#line 730 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_sub_qst_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&
 	{
-		#line 722 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 732 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator -?= implemented only for integer types");
-		#line 723 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 733 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (const auto result = ADV_UFCS(_operator_sub_qst)($this, rhs)) {
 			{
-				#line 723 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 733 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				auto __tmp0 = *result; const auto& result = __tmp0;
 				
-				#line 724 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 734 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				$this = result;
 			}
 		}
-		#line 726 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 736 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return $this;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 731 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_sub_ne($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_616_i128
+#line 741 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_sub_ne($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_626_i128
 	{
-		#line 733 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 743 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator -! implemented only for integer types");
-		#line 734 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 735 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 744 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 745 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::StrictSubtract($this, rhs, result);
-		#line 736 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 746 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return result;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 738 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_sub_ne_eq($extension_Int128_616_i128 & $this , T rhs)  -> typename $extension_Int128_616_i128&
+#line 748 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_sub_ne_eq($extension_Int128_626_i128 & $this , T rhs)  -> typename $extension_Int128_626_i128&
 	{
-		#line 738 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 748 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_sub_ne)($this, rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 742 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_sub_mod($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_616_i128
+#line 752 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_sub_mod($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_626_i128
 	{
-		#line 744 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 754 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator -% implemented only for integer types");
-		#line 745 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 746 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 755 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 756 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::WrappingSubtract($this, rhs, result);
-		#line 747 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 757 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return result;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 749 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_sub_mod_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&
+#line 759 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_sub_mod_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&
 	{
-		#line 749 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 759 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_sub_mod)($this, rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 753 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_sub_or($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_616_i128
+#line 763 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_sub_or($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_626_i128
 	{
-		#line 755 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 765 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator -| implemented only for integer types");
-		#line 756 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 757 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 766 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 767 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::SaturatingSubtract($this, rhs, result);
-		#line 758 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 768 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return result;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 760 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_sub_or_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&
+#line 770 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_sub_or_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&
 	{
-		#line 760 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 770 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_sub_or)($this, rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 764 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_sub_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int128_616_i128, bool>
+#line 774 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_sub_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int128_626_i128, bool>
 	{
-		#line 765 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 775 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator -%? implemented only for integer types");
-		#line 766 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 767 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 776 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 777 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype(!Builtin::SafeSubtract($this, rhs, result))> overflowed = !Builtin::SafeSubtract($this, rhs, result); 
-		#line 768 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 778 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return std::make_tuple(result, overflowed);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 772 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_sub_sub_qst($extension_Int128_616_i128 & $this )  -> typename $extension_Int128_616_i128&
+#line 782 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_sub_sub_qst($extension_Int128_626_i128 & $this )  -> typename $extension_Int128_626_i128&
 	{
-		#line 772 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 782 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_sub_qst_eq)($this, Builtin::i128(1LL))); 
 	}
-	inline constexpr auto _operator_sub_sub_qst_postfix($extension_Int128_616_i128 & $this)  -> decltype(auto) { auto copy = $this; ADV_UFCS(_operator_sub_sub_qst)($this); return copy; }
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 775 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_sub_sub_ne($extension_Int128_616_i128 & $this )  -> typename $extension_Int128_616_i128&
-	{
-		#line 775 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_sub_ne_eq)($this, Builtin::i128(1LL))); 
-	}
-	inline constexpr auto _operator_sub_sub_ne_postfix($extension_Int128_616_i128 & $this)  -> decltype(auto) { auto copy = $this; ADV_UFCS(_operator_sub_sub_ne)($this); return copy; }
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 778 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_sub_sub_mod($extension_Int128_616_i128 & $this )  -> typename $extension_Int128_616_i128&
-	{
-		#line 778 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_sub_mod_eq)($this, Builtin::i128(1LL))); 
-	}
-	inline constexpr auto _operator_sub_sub_mod_postfix($extension_Int128_616_i128 & $this)  -> decltype(auto) { auto copy = $this; ADV_UFCS(_operator_sub_sub_mod)($this); return copy; }
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 781 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_sub_sub_or($extension_Int128_616_i128 & $this )  -> typename $extension_Int128_616_i128&
-	{
-		#line 781 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_sub_or_eq)($this, Builtin::i128(1LL))); 
-	}
-	inline constexpr auto _operator_sub_sub_or_postfix($extension_Int128_616_i128 & $this)  -> decltype(auto) { auto copy = $this; ADV_UFCS(_operator_sub_sub_or)($this); return copy; }
+	inline constexpr auto _operator_sub_sub_qst_postfix($extension_Int128_626_i128 & $this)  -> decltype(auto) { auto copy = $this; ADV_UFCS(_operator_sub_sub_qst)($this); return copy; }
 	
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 785 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mul_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>
+	inline constexpr auto _operator_sub_sub_ne($extension_Int128_626_i128 & $this )  -> typename $extension_Int128_626_i128&
 	{
-		#line 787 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator *? implemented only for integer types");
+		#line 785 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_sub_ne_eq)($this, Builtin::i128(1LL))); 
+	}
+	inline constexpr auto _operator_sub_sub_ne_postfix($extension_Int128_626_i128 & $this)  -> decltype(auto) { auto copy = $this; ADV_UFCS(_operator_sub_sub_ne)($this); return copy; }
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 788 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_sub_sub_mod($extension_Int128_626_i128 & $this )  -> typename $extension_Int128_626_i128&
+	{
 		#line 788 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 789 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_sub_mod_eq)($this, Builtin::i128(1LL))); 
+	}
+	inline constexpr auto _operator_sub_sub_mod_postfix($extension_Int128_626_i128 & $this)  -> decltype(auto) { auto copy = $this; ADV_UFCS(_operator_sub_sub_mod)($this); return copy; }
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 791 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_sub_sub_or($extension_Int128_626_i128 & $this )  -> typename $extension_Int128_626_i128&
+	{
+		#line 791 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_sub_or_eq)($this, Builtin::i128(1LL))); 
+	}
+	inline constexpr auto _operator_sub_sub_or_postfix($extension_Int128_626_i128 & $this)  -> decltype(auto) { auto copy = $this; ADV_UFCS(_operator_sub_sub_or)($this); return copy; }
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 795 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mul_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>
+	{
+		#line 797 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator *? implemented only for integer types");
+		#line 798 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 799 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (Builtin::SafeMultiply($this, rhs, result)) {
-			#line 790 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 800 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return result;
 		}
-		#line 792 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 802 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return nullptr;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 794 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mul_qst_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&
+#line 804 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mul_qst_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&
 	{
-		#line 796 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 806 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator *?= implemented only for integer types");
-		#line 797 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 807 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (const auto result = ADV_UFCS(_operator_mul_qst)($this, rhs)) {
 			{
-				#line 797 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 807 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				auto __tmp0 = *result; const auto& result = __tmp0;
 				
-				#line 798 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 808 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				$this = result;
 			}
 		}
-		#line 800 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 810 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return $this;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 805 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mul_ne($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_616_i128
+#line 815 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mul_ne($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_626_i128
 	{
-		#line 807 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 817 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator *! implemented only for integer types");
-		#line 808 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 809 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 818 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 819 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::StrictMultiply($this, rhs, result);
-		#line 810 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 820 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return result;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 812 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mul_ne_eq($extension_Int128_616_i128 & $this , T rhs)  -> typename $extension_Int128_616_i128&
+#line 822 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mul_ne_eq($extension_Int128_626_i128 & $this , T rhs)  -> typename $extension_Int128_626_i128&
 	{
-		#line 812 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 822 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_mul_ne)($this, rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 816 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mul_mod($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_616_i128
+#line 826 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mul_mod($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_626_i128
 	{
-		#line 818 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 828 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator *% implemented only for integer types");
-		#line 819 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 820 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 829 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 830 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::WrappingMultiply($this, rhs, result);
-		#line 821 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 831 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return result;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 823 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mul_mod_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&
+#line 833 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mul_mod_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&
 	{
-		#line 823 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 833 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_mul_mod)($this, rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 827 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mul_or($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_616_i128
+#line 837 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mul_or($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const typename $extension_Int128_626_i128
 	{
-		#line 829 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 839 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator *| implemented only for integer types");
-		#line 830 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 831 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 840 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 841 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::SaturatingMultiply($this, rhs, result);
-		#line 832 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 842 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return result;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 834 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mul_or_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&
+#line 844 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mul_or_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&
 	{
-		#line 834 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 844 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_mul_or)($this, rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 838 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mul_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int128_616_i128, bool>
+#line 848 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mul_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int128_626_i128, bool>
 	{
-		#line 839 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 849 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator *%? implemented only for integer types");
-		#line 840 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 841 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 850 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 851 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype(!Builtin::SafeMultiply($this, rhs, result))> overflowed = !Builtin::SafeMultiply($this, rhs, result); 
-		#line 842 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 852 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return std::make_tuple(result, overflowed);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 847 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline auto _operator_mul_gt($extension_Int128_616_i128 const& $this LIFETIMEBOUND, $extension_Int128_616_i128 rhs) noexcept -> const std::tuple<Builtin::u128, Builtin::i128>
+#line 857 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline auto _operator_mul_gt($extension_Int128_626_i128 const& $this LIFETIMEBOUND, $extension_Int128_626_i128 rhs) noexcept -> const std::tuple<Builtin::u128, Builtin::i128>
 	{
-		#line 849 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		const auto& [low, high] = Builtin::WideningMul128($this, rhs);
-		#line 850 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		return std::make_tuple(low, high);
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 856 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline auto CarryingMul($extension_Int128_616_i128 const& $this LIFETIMEBOUND, $extension_Int128_616_i128 rhs, $extension_Int128_616_i128 carry) noexcept -> const std::tuple<Builtin::u128, Builtin::i128>
-	{
-		#line 858 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		const auto& [low, high] = Builtin::CarryingMul128($this, rhs, carry);
 		#line 859 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		const auto& [low, high] = Builtin::WideningMul128($this, rhs);
+		#line 860 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return std::make_tuple(low, high);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 864 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>
+#line 866 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline auto CarryingMul($extension_Int128_626_i128 const& $this LIFETIMEBOUND, $extension_Int128_626_i128 rhs, $extension_Int128_626_i128 carry) noexcept -> const std::tuple<Builtin::u128, Builtin::i128>
 	{
-		#line 866 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator \\? implemented only for integer types");
-		#line 867 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
 		#line 868 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		const auto& [low, high] = Builtin::CarryingMul128($this, rhs, carry);
+		#line 869 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return std::make_tuple(low, high);
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 874 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>
+	{
+		#line 876 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator \\? implemented only for integer types");
+		#line 877 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 878 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (Builtin::SafeDivide($this, rhs, result)) {
-			#line 869 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 879 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return result;
 		}
-		#line 871 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 881 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return nullptr;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 873 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_qst_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&
+#line 883 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_qst_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&
 	{
-		#line 875 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 885 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator \\?= implemented only for integer types");
-		#line 876 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 886 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (const auto result = ADV_UFCS(_operator_bsl_qst)($this, rhs)) {
 			{
-				#line 876 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 886 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				auto __tmp0 = *result; const auto& result = __tmp0;
 				
-				#line 877 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 887 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				$this = result;
 			}
 		}
-		#line 879 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 889 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return $this;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 885 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_ne($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_616_i128
+#line 895 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_ne($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_626_i128
 	{
-		#line 887 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 897 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator \\! implemented only for integer types");
-		#line 888 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 889 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 898 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 899 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::StrictDivide($this, rhs, result);
-		#line 890 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 900 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return result;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 892 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_ne_eq($extension_Int128_616_i128 & $this , T rhs)  -> typename $extension_Int128_616_i128&
+#line 902 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_ne_eq($extension_Int128_626_i128 & $this , T rhs)  -> typename $extension_Int128_626_i128&
 	{
-		#line 892 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 902 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_bsl_ne)($this, rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 897 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_mod($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_616_i128
+#line 907 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_mod($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_626_i128
 	{
-		#line 899 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 909 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator \\% implemented only for integer types");
-		#line 900 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 901 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 910 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 911 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::WrappingDivide($this, rhs, result);
-		#line 902 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 912 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return result;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 904 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_mod_eq($extension_Int128_616_i128 & $this , T rhs)  -> typename $extension_Int128_616_i128&
+#line 914 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_mod_eq($extension_Int128_626_i128 & $this , T rhs)  -> typename $extension_Int128_626_i128&
 	{
-		#line 904 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 914 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_bsl_mod)($this, rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 909 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_or($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_616_i128
+#line 919 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_or($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_626_i128
 	{
-		#line 911 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 921 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator \\| implemented only for integer types");
-		#line 912 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 913 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 922 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 923 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::SaturatingDivide($this, rhs, result);
-		#line 914 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 924 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return result;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 916 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_or_eq($extension_Int128_616_i128 & $this , T rhs)  -> typename $extension_Int128_616_i128&
+#line 926 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_or_eq($extension_Int128_626_i128 & $this , T rhs)  -> typename $extension_Int128_626_i128&
 	{
-		#line 916 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 926 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_bsl_or)($this, rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 921 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int128_616_i128, bool>
-	{
-		#line 922 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator \\%? implemented only for integer types");
-		#line 923 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 924 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		Builtin::Auto<decltype(!Builtin::SafeDivide($this, rhs, result))> overflowed = !Builtin::SafeDivide($this, rhs, result); 
-		#line 925 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		return std::make_tuple(result, overflowed);
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 930 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_bsl_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>
+#line 931 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int128_626_i128, bool>
 	{
 		#line 932 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator \\\\? implemented only for integer types");
+		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator \\%? implemented only for integer types");
 		#line 933 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
+		$extension_Int128_626_i128 result{}; 
 		#line 934 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		if (Builtin::SafeDivExact($this, rhs, result)) {
-			#line 935 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-			return result;
-		}
-		#line 937 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		return nullptr;
+		Builtin::Auto<decltype(!Builtin::SafeDivide($this, rhs, result))> overflowed = !Builtin::SafeDivide($this, rhs, result); 
+		#line 935 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return std::make_tuple(result, overflowed);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 940 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_bsl_bsl_qst_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&
+	template<class T> inline constexpr auto _operator_bsl_bsl_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>
 	{
 		#line 942 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator \\\\?= implemented only for integer types");
+		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator \\\\? implemented only for integer types");
 		#line 943 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		if (const auto result = ADV_UFCS(_operator_bsl_bsl_qst)($this, rhs)) {
-			{
-				#line 943 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-				auto __tmp0 = *result; const auto& result = __tmp0;
-				
-				#line 944 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-				$this = result;
-			}
-		}
-		#line 946 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		return $this;
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 951 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>
-	{
-		#line 953 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator %? implemented only for integer types");
-		#line 954 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 955 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		if (Builtin::SafeModulus($this, rhs, result)) {
-			#line 956 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 944 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		if (Builtin::SafeDivExact($this, rhs, result)) {
+			#line 945 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return result;
 		}
-		#line 958 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 947 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return nullptr;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 960 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mod_qst_eq($extension_Int128_616_i128 & $this , T rhs) noexcept -> typename $extension_Int128_616_i128&
+#line 950 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_bsl_bsl_qst_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&
 	{
-		#line 962 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator %?= implemented only for integer types");
-		#line 963 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		if (const auto result = ADV_UFCS(_operator_mod_qst)($this, rhs)) {
+		#line 952 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator \\\\?= implemented only for integer types");
+		#line 953 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		if (const auto result = ADV_UFCS(_operator_bsl_bsl_qst)($this, rhs)) {
 			{
-				#line 963 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 953 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				auto __tmp0 = *result; const auto& result = __tmp0;
 				
-				#line 964 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 954 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				$this = result;
 			}
 		}
-		#line 966 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 956 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return $this;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 972 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mod_ne($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_616_i128
+#line 961 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>
 	{
-		#line 974 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator %! implemented only for integer types");
-		#line 975 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
+		#line 963 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator %? implemented only for integer types");
+		#line 964 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 965 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		if (Builtin::SafeModulus($this, rhs, result)) {
+			#line 966 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			return result;
+		}
+		#line 968 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return nullptr;
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 970 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mod_qst_eq($extension_Int128_626_i128 & $this , T rhs) noexcept -> typename $extension_Int128_626_i128&
+	{
+		#line 972 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator %?= implemented only for integer types");
+		#line 973 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		if (const auto result = ADV_UFCS(_operator_mod_qst)($this, rhs)) {
+			{
+				#line 973 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				auto __tmp0 = *result; const auto& result = __tmp0;
+				
+				#line 974 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				$this = result;
+			}
+		}
 		#line 976 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return $this;
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 982 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mod_ne($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_626_i128
+	{
+		#line 984 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator %! implemented only for integer types");
+		#line 985 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 986 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::StrictModulus($this, rhs, result);
-		#line 977 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 987 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return result;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 979 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mod_ne_eq($extension_Int128_616_i128 & $this , T rhs)  -> typename $extension_Int128_616_i128&
+#line 989 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mod_ne_eq($extension_Int128_626_i128 & $this , T rhs)  -> typename $extension_Int128_626_i128&
 	{
-		#line 979 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 989 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_mod_ne)($this, rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 984 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mod_mod($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_616_i128
+#line 994 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mod_mod($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int128_626_i128
 	{
-		#line 986 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 996 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator %% implemented only for integer types");
-		#line 987 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 988 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 997 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 998 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::WrappingModulus($this, rhs, result);
-		#line 989 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return result;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 991 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mod_mod_eq($extension_Int128_616_i128 & $this , T rhs)  -> typename $extension_Int128_616_i128&
+#line 1001 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mod_mod_eq($extension_Int128_626_i128 & $this , T rhs)  -> typename $extension_Int128_626_i128&
 	{
-		#line 991 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1001 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_mod_mod)($this, rhs)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 996 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	template<class T> inline constexpr auto _operator_mod_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int128_616_i128, bool>
-	{
-		#line 997 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator %%? implemented only for integer types");
-		#line 998 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		Builtin::Auto<decltype(!Builtin::SafeModulus($this, rhs, result))> overflowed = !Builtin::SafeModulus($this, rhs, result); 
-		#line 1000 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		return std::make_tuple(result, overflowed);
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 1005 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_sub_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>
+#line 1006 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	template<class T> inline constexpr auto _operator_mod_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int128_626_i128, bool>
 	{
 		#line 1007 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
+		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator %%? implemented only for integer types");
 		#line 1008 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		if (Builtin::SafeNegate($this, result)) {
-			#line 1009 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-			return result;
-		}
-		#line 1011 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		return nullptr;
+		$extension_Int128_626_i128 result{}; 
+		#line 1009 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		Builtin::Auto<decltype(!Builtin::SafeModulus($this, rhs, result))> overflowed = !Builtin::SafeModulus($this, rhs, result); 
+		#line 1010 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return std::make_tuple(result, overflowed);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 1015 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_sub_ne($extension_Int128_616_i128 const& $this LIFETIMEBOUND)  -> const typename $extension_Int128_616_i128
+	inline constexpr auto _operator_sub_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>
 	{
 		#line 1017 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
+		$extension_Int128_626_i128 result{}; 
 		#line 1018 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		if (Builtin::SafeNegate($this, result)) {
+			#line 1019 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			return result;
+		}
+		#line 1021 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return nullptr;
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 1025 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_sub_ne($extension_Int128_626_i128 const& $this LIFETIMEBOUND)  -> const typename $extension_Int128_626_i128
+	{
+		#line 1027 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 1028 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::StrictNegate($this, result);
-		#line 1019 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1029 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return result;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 1022 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_sub_mod($extension_Int128_616_i128 const& $this LIFETIMEBOUND)  -> const typename $extension_Int128_616_i128
+#line 1032 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_sub_mod($extension_Int128_626_i128 const& $this LIFETIMEBOUND)  -> const typename $extension_Int128_626_i128
 	{
-		#line 1024 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 1025 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		Builtin::WrappingNegate($this, result);
-		#line 1026 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		return result;
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 1030 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_sub_or($extension_Int128_616_i128 const& $this LIFETIMEBOUND)  -> const typename $extension_Int128_616_i128
-	{
-		#line 1032 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 1033 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		Builtin::SaturatingNegate($this, result);
 		#line 1034 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 1035 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		Builtin::WrappingNegate($this, result);
+		#line 1036 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return result;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 1038 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_sub_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND)  -> const std::tuple<$extension_Int128_616_i128, bool>
+#line 1040 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_sub_or($extension_Int128_626_i128 const& $this LIFETIMEBOUND)  -> const typename $extension_Int128_626_i128
 	{
-		#line 1040 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_616_i128 result{}; 
-		#line 1041 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		Builtin::Auto<decltype(!Builtin::SafeNegate($this, result))> overflowed = !Builtin::SafeNegate($this, result); 
 		#line 1042 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 1043 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		Builtin::SaturatingNegate($this, result);
+		#line 1044 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return result;
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 1048 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_sub_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND)  -> const std::tuple<$extension_Int128_626_i128, bool>
+	{
+		#line 1050 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_626_i128 result{}; 
+		#line 1051 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		Builtin::Auto<decltype(!Builtin::SafeNegate($this, result))> overflowed = !Builtin::SafeNegate($this, result); 
+		#line 1052 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return std::make_tuple(result, overflowed);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 1046 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_lt_lt_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>
+#line 1056 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_lt_lt_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>
 	{
-		#line 1048 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		if ((amount <=> Builtin::i32(0)) >= 0 && (amount <=> ADV_USPCS(BitWidth, $extension_Int128_616_i128)()) < 0) {
-			#line 1049 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1058 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		if ((amount <=> Builtin::i32(0)) >= 0 && (amount <=> ADV_USPCS(BitWidth, $extension_Int128_626_i128)()) < 0) {
+			#line 1059 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return Builtin::UncheckedShiftLeft($this, amount);
 		}
-		#line 1051 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1061 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return nullptr;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 1054 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_lt_lt_qst_eq($extension_Int128_616_i128 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int128_616_i128&
+#line 1064 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_lt_lt_qst_eq($extension_Int128_626_i128 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int128_626_i128&
 	{
-		#line 1056 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		if ((amount <=> Builtin::i32(0)) >= 0 && (amount <=> ADV_USPCS(BitWidth, $extension_Int128_616_i128)()) < 0) {
-			#line 1057 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1066 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		if ((amount <=> Builtin::i32(0)) >= 0 && (amount <=> ADV_USPCS(BitWidth, $extension_Int128_626_i128)()) < 0) {
+			#line 1067 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return $this <<= amount;
 		}
-		#line 1059 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1069 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return $this;
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 1062 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_lt_lt_ne($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount)  -> const typename $extension_Int128_616_i128
-	{
-		#line 1064 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		if ((amount <=> Builtin::i32(0)) >= 0 && (amount <=> ADV_USPCS(BitWidth, $extension_Int128_616_i128)()) < 0) {
-			#line 1065 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-			return Builtin::UncheckedShiftLeft($this, amount);
-		}
-		#line 1067 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		Builtin::Throw(Builtin::IntegerOverflowException{});
-		return {};
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 1070 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_lt_lt_ne_eq($extension_Int128_616_i128 & $this , Builtin::i32 amount)  -> typename $extension_Int128_616_i128&
-	{
-		#line 1070 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_lt_lt_ne)($this, amount)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 1072 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_lt_lt_mod($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const typename $extension_Int128_616_i128
+	inline constexpr auto _operator_lt_lt_ne($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount)  -> const typename $extension_Int128_626_i128
 	{
-		#line 1072 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(Builtin::UncheckedShiftLeft($this, amount & (ADV_USPCS(BitWidth, $extension_Int128_616_i128)() - Builtin::i32(1)))); 
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 1075 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_lt_lt_mod_eq($extension_Int128_616_i128 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int128_616_i128&
-	{
-		#line 1075 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_lt_lt_mod)($this, amount)); 
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 1077 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_lt_lt_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const std::tuple<$extension_Int128_616_i128, bool>
-	{
+		#line 1074 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		if ((amount <=> Builtin::i32(0)) >= 0 && (amount <=> ADV_USPCS(BitWidth, $extension_Int128_626_i128)()) < 0) {
+			#line 1075 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			return Builtin::UncheckedShiftLeft($this, amount);
+		}
 		#line 1077 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(std::make_tuple(ADV_UFCS(_operator_lt_lt_mod)($this, amount), (amount <=> Builtin::i32(0)) < 0 || (amount <=> ADV_USPCS(BitWidth, $extension_Int128_616_i128)()) >= 0)); 
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 1080 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_gt_gt_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>
-	{
-		#line 1082 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		if ((amount <=> Builtin::i32(0)) >= 0 && (amount <=> ADV_USPCS(BitWidth, $extension_Int128_616_i128)()) < 0) {
-			#line 1083 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-			return $this >> amount;
-		}
-		#line 1085 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		return nullptr;
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 1088 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_gt_gt_qst_eq($extension_Int128_616_i128 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int128_616_i128&
-	{
-		#line 1090 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		if ((amount <=> Builtin::i32(0)) >= 0 && (amount <=> ADV_USPCS(BitWidth, $extension_Int128_616_i128)()) < 0) {
-			#line 1091 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-			return $this >>= amount;
-		}
-		#line 1093 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		return $this;
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 1096 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_gt_gt_ne($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount)  -> const typename $extension_Int128_616_i128
-	{
-		#line 1098 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		if ((amount <=> Builtin::i32(0)) >= 0 && (amount <=> ADV_USPCS(BitWidth, $extension_Int128_616_i128)()) < 0) {
-			#line 1099 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-			return $this >> amount;
-		}
-		#line 1101 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Throw(Builtin::IntegerOverflowException{});
 		return {};
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 1104 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_gt_gt_ne_eq($extension_Int128_616_i128 & $this , Builtin::i32 amount)  -> typename $extension_Int128_616_i128&
+#line 1080 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_lt_lt_ne_eq($extension_Int128_626_i128 & $this , Builtin::i32 amount)  -> typename $extension_Int128_626_i128&
 	{
-		#line 1104 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_gt_gt_ne)($this, amount)); 
+		#line 1080 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_lt_lt_ne)($this, amount)); 
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 1082 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_lt_lt_mod($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const typename $extension_Int128_626_i128
+	{
+		#line 1082 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY(Builtin::UncheckedShiftLeft($this, amount & (ADV_USPCS(BitWidth, $extension_Int128_626_i128)() - Builtin::i32(1)))); 
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 1085 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_lt_lt_mod_eq($extension_Int128_626_i128 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int128_626_i128&
+	{
+		#line 1085 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_lt_lt_mod)($this, amount)); 
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 1087 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_lt_lt_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const std::tuple<$extension_Int128_626_i128, bool>
+	{
+		#line 1087 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY(std::make_tuple(ADV_UFCS(_operator_lt_lt_mod)($this, amount), (amount <=> Builtin::i32(0)) < 0 || (amount <=> ADV_USPCS(BitWidth, $extension_Int128_626_i128)()) >= 0)); 
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 1090 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_gt_gt_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>
+	{
+		#line 1092 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		if ((amount <=> Builtin::i32(0)) >= 0 && (amount <=> ADV_USPCS(BitWidth, $extension_Int128_626_i128)()) < 0) {
+			#line 1093 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			return $this >> amount;
+		}
+		#line 1095 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return nullptr;
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 1098 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_gt_gt_qst_eq($extension_Int128_626_i128 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int128_626_i128&
+	{
+		#line 1100 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		if ((amount <=> Builtin::i32(0)) >= 0 && (amount <=> ADV_USPCS(BitWidth, $extension_Int128_626_i128)()) < 0) {
+			#line 1101 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			return $this >>= amount;
+		}
+		#line 1103 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return $this;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 1106 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_gt_gt_mod($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const typename $extension_Int128_616_i128
+	inline constexpr auto _operator_gt_gt_ne($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount)  -> const typename $extension_Int128_626_i128
 	{
-		#line 1106 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(Builtin::UncheckedShiftRight($this, amount & (ADV_USPCS(BitWidth, $extension_Int128_616_i128)() - Builtin::i32(1)))); 
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 1109 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_gt_gt_mod_eq($extension_Int128_616_i128 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int128_616_i128&
-	{
-		#line 1109 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_gt_gt_mod)($this, amount)); 
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 1111 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_gt_gt_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const std::tuple<$extension_Int128_616_i128, bool>
-	{
+		#line 1108 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		if ((amount <=> Builtin::i32(0)) >= 0 && (amount <=> ADV_USPCS(BitWidth, $extension_Int128_626_i128)()) < 0) {
+			#line 1109 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			return $this >> amount;
+		}
 		#line 1111 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(std::make_tuple(ADV_UFCS(_operator_gt_gt_mod)($this, amount), (amount <=> Builtin::i32(0)) < 0 || (amount <=> ADV_USPCS(BitWidth, $extension_Int128_616_i128)()) >= 0)); 
+		Builtin::Throw(Builtin::IntegerOverflowException{});
+		return {};
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 1114 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_gt_gt_ne_eq($extension_Int128_626_i128 & $this , Builtin::i32 amount)  -> typename $extension_Int128_626_i128&
+	{
+		#line 1114 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_gt_gt_ne)($this, amount)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 1116 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const Builtin::Nullable<$extension_Int128_616_i128>
+	inline constexpr auto _operator_gt_gt_mod($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const typename $extension_Int128_626_i128
 	{
-		#line 1118 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1116 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY(Builtin::UncheckedShiftRight($this, amount & (ADV_USPCS(BitWidth, $extension_Int128_626_i128)() - Builtin::i32(1)))); 
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 1119 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_gt_gt_mod_eq($extension_Int128_626_i128 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int128_626_i128&
+	{
+		#line 1119 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_gt_gt_mod)($this, amount)); 
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 1121 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_gt_gt_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const std::tuple<$extension_Int128_626_i128, bool>
+	{
+		#line 1121 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY(std::make_tuple(ADV_UFCS(_operator_gt_gt_mod)($this, amount), (amount <=> Builtin::i32(0)) < 0 || (amount <=> ADV_USPCS(BitWidth, $extension_Int128_626_i128)()) >= 0)); 
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 1126 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const Builtin::Nullable<$extension_Int128_626_i128>
+	{
+		#line 1128 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (exp == Builtin::i32(0)) [[unlikely]] {
-			#line 1120 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1130 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return Builtin::i128(1LL);
 		}
-		#line 1123 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1133 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype($this)> base = $this; 
-		#line 1124 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1134 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype(Builtin::i128(1LL))> result = Builtin::i128(1LL); 
-		#line 1126 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1136 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		for (;;) 
 		{
-			#line 1127 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1137 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			if ((exp & Builtin::i32(1)) == Builtin::i32(1)) {
-				#line 1128 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1138 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				if (const auto mul = ADV_UFCS(_operator_mul_qst)(result, base)) {
 					{
-						#line 1128 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+						#line 1138 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 						auto __tmp0 = *mul; const auto& mul = __tmp0;
 						
-						#line 1129 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+						#line 1139 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 						result = mul;
 					}
 				} else {
-					#line 1130 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+					#line 1140 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 					{
-						#line 1131 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+						#line 1141 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 						return nullptr;
 					}
 				}
-				#line 1133 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1143 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				if (exp == Builtin::i32(1)) {
-					#line 1134 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+					#line 1144 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 					return result;
 				}
 			}
-			#line 1136 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1146 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			ADV_UFCS(DivAssign)(exp.$ref(), Builtin::i32(2));
-			#line 1137 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1147 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			if (const auto mul = ADV_UFCS(_operator_mul_qst)(base, base)) {
 				{
-					#line 1137 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+					#line 1147 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 					auto __tmp0 = *mul; const auto& mul = __tmp0;
 					
-					#line 1138 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+					#line 1148 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 					base = mul;
 				}
 			} else {
-				#line 1139 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1149 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				{
-					#line 1140 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+					#line 1150 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 					return nullptr;
 				}
 			}
@@ -3121,53 +3307,53 @@ using $extensions::getMultiplyBy16;
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 1145 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_qst_eq($extension_Int128_616_i128 & $this , Builtin::u32 exp) noexcept -> typename $extension_Int128_616_i128&
+#line 1155 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_qst_eq($extension_Int128_626_i128 & $this , Builtin::u32 exp) noexcept -> typename $extension_Int128_626_i128&
 	{
-		#line 1147 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1157 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (auto result = ADV_UFCS(_operator_xor_xor_qst)($this, exp)) {
 			{
-				#line 1147 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1157 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				auto __tmp0 = *result; const auto& result = __tmp0;
 				
-				#line 1148 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1158 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				return $this = result;
 			}
 		}
-		#line 1150 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1160 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return $this;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 1153 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_ne($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp)  -> const typename $extension_Int128_616_i128
+#line 1163 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_ne($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp)  -> const typename $extension_Int128_626_i128
 	{
-		#line 1155 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1165 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (exp == Builtin::i32(0)) [[unlikely]] {
-			#line 1157 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1167 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return Builtin::i32(1);
 		}
-		#line 1160 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1170 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype($this)> base = $this; 
-		#line 1161 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1171 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype(Builtin::i128(1LL))> result = Builtin::i128(1LL); 
-		#line 1163 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1173 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		for (;;) 
 		{
-			#line 1164 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1174 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			if ((exp & Builtin::i32(1)) == Builtin::i32(1)) {
-				#line 1165 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1175 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				ADV_UFCS(_operator_mul_ne_eq)(result, base);
-				#line 1166 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1176 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				if (exp == Builtin::i32(1)) {
-					#line 1167 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+					#line 1177 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 					return result;
 				}
 			}
-			#line 1169 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1179 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			ADV_UFCS(DivAssign)(exp.$ref(), Builtin::i32(2));
-			#line 1170 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1180 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			ADV_UFCS(_operator_mul_ne_eq)(base, base);
 		}
 		return {};
@@ -3175,63 +3361,63 @@ using $extensions::getMultiplyBy16;
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 1174 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_ne_eq($extension_Int128_616_i128 & $this , Builtin::u32 exp)  -> typename $extension_Int128_616_i128&
+#line 1184 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_ne_eq($extension_Int128_626_i128 & $this , Builtin::u32 exp)  -> typename $extension_Int128_626_i128&
 	{
-		#line 1174 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1184 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_xor_xor_ne)($this, exp)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 1176 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_mod($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const typename $extension_Int128_616_i128
+#line 1186 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_mod($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const typename $extension_Int128_626_i128
 	{
-		#line 1178 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1188 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (exp == Builtin::i32(0)) [[unlikely]] {
-			#line 1180 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1190 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return Builtin::i128(1LL);
 		}
-		#line 1183 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1193 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype($this)> base = $this; 
-		#line 1184 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1194 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype(Builtin::i128(1LL))> result = Builtin::i128(1LL); 
-		#line 1186 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1196 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (std::is_constant_evaluated()) {
-			#line 1187 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1197 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			while ((exp <=> Builtin::i32(1)) > 0) 
 			{
-				#line 1188 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1198 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				if ((exp & Builtin::i32(1)) == Builtin::i32(1)) {
-					#line 1189 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+					#line 1199 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 					ADV_UFCS(_operator_mul_mod_eq)(result, base);
 				}
-				#line 1191 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1201 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				ADV_UFCS(DivAssign)(exp.$ref(), Builtin::i32(2));
-				#line 1192 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1202 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				ADV_UFCS(_operator_mul_mod_eq)(base, base);
 			}
-			#line 1194 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1204 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return ADV_UFCS(_operator_mul_mod)(result, base);
 		} else {
-			#line 1195 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1205 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			{
-				#line 1196 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1206 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				for (;;) 
 				{
-					#line 1197 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+					#line 1207 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 					if ((exp & Builtin::i32(1)) == Builtin::i32(1)) {
-						#line 1198 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+						#line 1208 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 						ADV_UFCS(_operator_mul_mod_eq)(result, base);
-						#line 1199 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+						#line 1209 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 						if (exp == Builtin::i32(1)) {
-							#line 1200 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+							#line 1210 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 							return result;
 						}
 					}
-					#line 1202 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+					#line 1212 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 					ADV_UFCS(DivAssign)(exp.$ref(), Builtin::i32(2));
-					#line 1203 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+					#line 1213 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 					ADV_UFCS(_operator_mul_mod_eq)(base, base);
 				}
 			}
@@ -3241,85 +3427,85 @@ using $extensions::getMultiplyBy16;
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 1208 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_mod_eq($extension_Int128_616_i128 & $this , Builtin::u32 exp) noexcept -> typename $extension_Int128_616_i128&
+#line 1218 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_mod_eq($extension_Int128_626_i128 & $this , Builtin::u32 exp) noexcept -> typename $extension_Int128_626_i128&
 	{
-		#line 1208 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1218 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_xor_xor_mod)($this, exp)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 1210 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_or($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const typename $extension_Int128_616_i128
+#line 1220 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_or($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const typename $extension_Int128_626_i128
 	{
-		#line 1212 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1222 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (const auto result = ADV_UFCS(_operator_xor_xor_qst)($this, exp)) {
 			{
-				#line 1212 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1222 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				auto __tmp0 = *result; const auto& result = __tmp0;
 				
-				#line 1213 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1223 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				return result;
 			}
 		}
-		#line 1216 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		return (ADV_UPCS(IsNegative)($this.$ref()) && exp % Builtin::i32(2) == Builtin::i32(1)) ? ADV_USPCS(MinValue, $extension_Int128_616_i128)() : ADV_USPCS(MaxValue, $extension_Int128_616_i128)();
+		#line 1226 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return (ADV_UPCS(IsNegative)($this.$ref()) && exp % Builtin::i32(2) == Builtin::i32(1)) ? ADV_USPCS(MinValue, $extension_Int128_626_i128)() : ADV_USPCS(MaxValue, $extension_Int128_626_i128)();
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 1219 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_or_eq($extension_Int128_616_i128 & $this , Builtin::u32 exp) noexcept -> typename $extension_Int128_616_i128&
+#line 1229 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_or_eq($extension_Int128_626_i128 & $this , Builtin::u32 exp) noexcept -> typename $extension_Int128_626_i128&
 	{
-		#line 1219 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1229 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY($this = ADV_UFCS(_operator_xor_xor_or)($this, exp)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 1221 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto _operator_xor_xor_mod_qst($extension_Int128_616_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const std::tuple<$extension_Int128_616_i128, bool>
+#line 1231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto _operator_xor_xor_mod_qst($extension_Int128_626_i128 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const std::tuple<$extension_Int128_626_i128, bool>
 	{
-		#line 1223 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1233 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (exp == Builtin::i32(0)) [[unlikely]] {
-			#line 1225 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1235 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return std::make_tuple(Builtin::i128(1LL), Builtin::Boolean(false));
 		}
-		#line 1228 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1238 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype($this)> base = $this; 
-		#line 1229 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1239 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype(Builtin::i128(1LL))> result = Builtin::i128(1LL); 
-		#line 1230 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1240 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype(Builtin::Boolean(false))> overflowed = Builtin::Boolean(false); 
-		#line 1231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1241 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype(std::make_tuple(Builtin::i128(0LL), Builtin::Boolean(false)))> tmp = std::make_tuple(Builtin::i128(0LL), Builtin::Boolean(false)); 
-		#line 1233 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1243 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		for (;;) 
 		{
-			#line 1234 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1244 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			if ((exp & Builtin::i32(1)) == Builtin::i32(1)) {
-				#line 1235 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1245 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				tmp = ADV_UFCS(_operator_mul_mod_qst)(result, base);
-				#line 1236 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1246 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				if (exp == Builtin::i32(1)) {
-					#line 1237 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+					#line 1247 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 					std::get<1>(tmp) |= overflowed;
-					#line 1238 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+					#line 1248 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 					return tmp;
 				}
-				#line 1240 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1250 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				result = std::get<0>(tmp);
-				#line 1241 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1251 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				overflowed |= std::get<1>(tmp);
 			}
-			#line 1243 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1253 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			ADV_UFCS(DivAssign)(exp.$ref(), Builtin::i32(2));
-			#line 1244 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1254 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			tmp = ADV_UFCS(_operator_mul_mod_qst)(base, base);
-			#line 1245 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1255 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			base = std::get<0>(tmp);
-			#line 1246 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1256 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			overflowed |= std::get<1>(tmp);
 		}
 		return {};
@@ -3327,411 +3513,411 @@ using $extensions::getMultiplyBy16;
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 1252 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getCheckedAbs($extension_Int128_616_i128 const& $this ) -> const Builtin::Nullable<$extension_Int128_616_i128>
+#line 1262 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getCheckedAbs($extension_Int128_626_i128 const & $this ) -> const Builtin::Nullable<$extension_Int128_626_i128>
 	{
-		#line 1252 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1262 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsNegative)($this.$ref()) ? ADV_UFCS(_operator_sub_qst)($this) : $this); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1255 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getStrictAbs($extension_Int128_616_i128 const& $this ) -> const $extension_Int128_616_i128
+#line 1265 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getStrictAbs($extension_Int128_626_i128 const & $this ) -> const $extension_Int128_626_i128
 	{
-		#line 1255 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1265 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsNegative)($this.$ref()) ? ADV_UFCS(_operator_sub_ne)($this) : $this); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1258 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getWrappingAbs($extension_Int128_616_i128 const& $this ) -> const $extension_Int128_616_i128
+#line 1268 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getWrappingAbs($extension_Int128_626_i128 const & $this ) -> const $extension_Int128_626_i128
 	{
-		#line 1258 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1268 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsNegative)($this.$ref()) ? ADV_UFCS(_operator_sub_mod)($this) : $this); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1261 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getSaturatingAbs($extension_Int128_616_i128 const& $this ) -> const $extension_Int128_616_i128
+#line 1271 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getSaturatingAbs($extension_Int128_626_i128 const & $this ) -> const $extension_Int128_626_i128
 	{
-		#line 1261 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1271 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsNegative)($this.$ref()) ? ADV_UFCS(_operator_sub_or)($this) : $this); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1264 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getOverflowingAbs($extension_Int128_616_i128 const& $this ) -> const std::tuple<$extension_Int128_616_i128, bool>
+#line 1274 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getOverflowingAbs($extension_Int128_626_i128 const & $this ) -> const std::tuple<$extension_Int128_626_i128, bool>
 	{
-		#line 1266 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1276 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (ADV_UPCS(IsNegative)($this.$ref())) {
-			#line 1267 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1277 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return ADV_UFCS(_operator_sub_mod_qst)($this);
 		}
-		#line 1269 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1279 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return std::make_tuple($this, Builtin::Boolean(false));
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	
 } namespace $extensions { using namespace System;
-#line 1324 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto NextMultipleOf($extension_Int128_1273_i128 const& $this LIFETIMEBOUND, $extension_Int128_1273_i128 rhs)  -> const typename $extension_Int128_1273_i128
+#line 1334 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto NextMultipleOf($extension_Int128_1283_i128 const& $this LIFETIMEBOUND, $extension_Int128_1283_i128 rhs)  -> const typename $extension_Int128_1283_i128
 	{
-		#line 1326 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1336 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (rhs == Builtin::i32(-1)) {
-			#line 1327 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1337 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return $this;
 		}
-		#line 1330 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1340 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		const Builtin::Auto<decltype($this % rhs)> remainder = $this % rhs; 
-		#line 1331 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1341 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		const Builtin::Auto<decltype(((remainder <=> Builtin::i32(0)) > 0 && (rhs <=> Builtin::i32(0)) < 0) || ((remainder <=> Builtin::i32(0)) < 0 && (rhs <=> Builtin::i32(0)) > 0) ? remainder + rhs : remainder)> mod = ((remainder <=> Builtin::i32(0)) > 0 && (rhs <=> Builtin::i32(0)) < 0) || ((remainder <=> Builtin::i32(0)) < 0 && (rhs <=> Builtin::i32(0)) > 0) ? remainder + rhs : remainder; 
-		#line 1334 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1344 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return mod == Builtin::i32(0) ? $this : $this + (rhs - mod);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 1340 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto CheckedNextMultipleOf($extension_Int128_1273_i128 const& $this LIFETIMEBOUND, $extension_Int128_1273_i128 rhs) noexcept -> const Builtin::Nullable<$extension_Int128_1273_i128>
+#line 1350 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto CheckedNextMultipleOf($extension_Int128_1283_i128 const& $this LIFETIMEBOUND, $extension_Int128_1283_i128 rhs) noexcept -> const Builtin::Nullable<$extension_Int128_1283_i128>
 	{
-		#line 1342 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1352 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (rhs == Builtin::i32(-1)) {
-			#line 1343 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1353 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return $this;
 		}
-		#line 1346 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		$extension_Int128_1273_i128 remainder{}; 
-		#line 1347 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1356 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		$extension_Int128_1283_i128 remainder{}; 
+		#line 1357 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (const auto r = ADV_UFCS(_operator_mod_qst)($this, rhs)) {
 			{
-				#line 1347 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1357 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				auto __tmp0 = *r; const auto& r = __tmp0;
 				
-				#line 1348 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1358 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				remainder = r;
 			}
 		} else {
-			#line 1349 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1359 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return nullptr;
 		}
-		#line 1351 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1361 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		const Builtin::Auto<decltype(((remainder <=> Builtin::i32(0)) > 0 && (rhs <=> Builtin::i32(0)) < 0) || ((remainder <=> Builtin::i32(0)) < 0 && (rhs <=> Builtin::i32(0)) > 0) ? remainder + rhs : remainder)> mod = ((remainder <=> Builtin::i32(0)) > 0 && (rhs <=> Builtin::i32(0)) < 0) || ((remainder <=> Builtin::i32(0)) < 0 && (rhs <=> Builtin::i32(0)) > 0) ? remainder + rhs : remainder; 
-		#line 1354 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1364 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (mod == Builtin::i32(0)) {
-			#line 1355 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1365 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return $this;
 		}
-		#line 1357 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1367 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return ADV_UFCS(_operator_add_qst)($this, (rhs - mod));
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 1274 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto $static_getIsSigned<$extension_Int128_1273_i128>::get() -> const bool
+#line 1284 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto $static_getIsSigned<$extension_Int128_1283_i128>::get() -> const bool
 	{
-		#line 1274 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1284 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1276 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getTrailingZeroCount($extension_Int128_1273_i128 const& $this ) -> const Builtin::u32
+#line 1286 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getTrailingZeroCount($extension_Int128_1283_i128 const & $this ) -> const Builtin::u32
 	{
-		#line 1278 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1288 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (ADV_UFCS(Low64)($this.$ref()) == Builtin::i32(0)) {
-			#line 1279 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1289 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return ADV_UPCS(TrailingZeroCount)(ADV_UFCS(High64)($this.$ref()).$ref()) + Builtin::u32(64U);
 		}
-		#line 1281 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1291 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return ADV_UPCS(TrailingZeroCount)(ADV_UFCS(Low64)($this.$ref()).$ref());
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getTrailingOneCount($extension_Int128_1273_i128 const& $this ) -> const Builtin::u32
+#line 1293 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getTrailingOneCount($extension_Int128_1283_i128 const & $this ) -> const Builtin::u32
 	{
-		#line 1283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1293 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(TrailingZeroCount)((ADV_UFCS(_operator_not)($this)).$ref())); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1284 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getByteCount($extension_Int128_1273_i128 const& $this ) -> const Builtin::u32
+#line 1294 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getByteCount($extension_Int128_1283_i128 const & $this ) -> const Builtin::u32
 	{
-		#line 1284 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u32>(Builtin::usize(sizeof($extension_Int128_1273_i128)))); 
+		#line 1294 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u32>(Builtin::usize(sizeof($extension_Int128_1283_i128)))); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1285 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getMinimalBitWidth($extension_Int128_1273_i128 const& $this ) -> const Builtin::u32
+#line 1295 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getMinimalBitWidth($extension_Int128_1283_i128 const & $this ) -> const Builtin::u32
 	{
-		#line 1285 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(ADV_USPCS(BitWidth, $extension_Int128_1273_i128)() - ADV_UPCS(LeadingZeroCount)($this.$ref())); 
+		#line 1295 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY(ADV_USPCS(BitWidth, $extension_Int128_1283_i128)() - ADV_UPCS(LeadingZeroCount)($this.$ref())); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1301 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline auto getIsqrt($extension_Int128_1273_i128 const& $this ) -> const $extension_Int128_1273_i128
+#line 1311 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline auto getIsqrt($extension_Int128_1283_i128 const & $this ) -> const $extension_Int128_1283_i128
 	{
-		#line 1302 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1312 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (const auto result = ADV_UPCS(CheckedIsqrt)($this.$ref())) {
 			{
-				#line 1302 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1312 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				auto __tmp0 = *result; const auto& result = __tmp0;
 				
-				#line 1303 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+				#line 1313 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 				return result;
 			}
 		}
-		#line 1305 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1315 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Throw(Builtin::InvalidOperationException{});
 		return {};
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1310 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getLog2Ceiling($extension_Int128_1273_i128 const& $this ) -> const $extension_Int128_1273_i128
+#line 1320 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getLog2Ceiling($extension_Int128_1283_i128 const & $this ) -> const $extension_Int128_1283_i128
 	{
-		#line 1312 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1322 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		Builtin::Auto<decltype(ADV_UPCS(Log2)($this.$ref()))> result = ADV_UPCS(Log2)($this.$ref()); 
-		#line 1313 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1323 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (ADV_UPCS(PopCount)($this.$ref()) != Builtin::i32(1)) {
-			#line 1314 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1324 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			++result;
 		}
-		#line 1317 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1327 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return result;
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1361 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getPrevPow2($extension_Int128_1273_i128 const& $this ) -> const $extension_Int128_1273_i128
+#line 1371 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getPrevPow2($extension_Int128_1283_i128 const & $this ) -> const $extension_Int128_1283_i128
 	{
-		#line 1363 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1373 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (($this <=> Builtin::i32(1)) <= 0) {
-			#line 1364 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1374 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return Builtin::i32(0);
 		}
-		#line 1367 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		return ADV_USPCS(One, $extension_Int128_1273_i128)() << (ADV_UPCS(MinimalBitWidth)($this.$ref()) - Builtin::i32(1));
+		#line 1377 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return ADV_USPCS(One, $extension_Int128_1283_i128)() << (ADV_UPCS(MinimalBitWidth)($this.$ref()) - Builtin::i32(1));
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1372 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getNextPow2($extension_Int128_1273_i128 const& $this ) -> const $extension_Int128_1273_i128
+#line 1382 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getNextPow2($extension_Int128_1283_i128 const & $this ) -> const $extension_Int128_1283_i128
 	{
-		#line 1374 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1384 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (($this <=> Builtin::i32(1)) <= 0) {
-			#line 1375 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1385 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return Builtin::i32(0);
 		}
-		#line 1378 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1388 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		const Builtin::Auto<decltype($this - Builtin::i32(1))> p = $this - Builtin::i32(1); 
-		#line 1379 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		return (ADV_USPCS(AllBitsSet, $extension_Int128_1273_i128)() >> ADV_UPCS(LeadingZeroCount)(p.$ref())) + Builtin::i32(1);
+		#line 1389 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return (ADV_USPCS(AllBitsSet, $extension_Int128_1283_i128)() >> ADV_UPCS(LeadingZeroCount)(p.$ref())) + Builtin::i32(1);
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1384 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getCheckedNextPow2($extension_Int128_1273_i128 const& $this ) -> const Builtin::Nullable<$extension_Int128_1273_i128>
+#line 1394 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getCheckedNextPow2($extension_Int128_1283_i128 const & $this ) -> const Builtin::Nullable<$extension_Int128_1283_i128>
 	{
-		#line 1386 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1396 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (($this <=> Builtin::i32(1)) <= 0) {
-			#line 1387 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1397 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return Builtin::i128(0LL);
 		}
-		#line 1390 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1400 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		const Builtin::Auto<decltype($this - Builtin::i32(1))> p = $this - Builtin::i32(1); 
-		#line 1391 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		return ADV_UFCS(_operator_add_qst)((ADV_USPCS(AllBitsSet, $extension_Int128_1273_i128)() >> ADV_UPCS(LeadingZeroCount)(p.$ref())), Builtin::i128(1LL));
+		#line 1401 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return ADV_UFCS(_operator_add_qst)((ADV_USPCS(AllBitsSet, $extension_Int128_1283_i128)() >> ADV_UPCS(LeadingZeroCount)(p.$ref())), Builtin::i128(1LL));
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1396 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getWrappingNextPow2($extension_Int128_1273_i128 const& $this ) -> const $extension_Int128_1273_i128
+#line 1406 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getWrappingNextPow2($extension_Int128_1283_i128 const & $this ) -> const $extension_Int128_1283_i128
 	{
-		#line 1398 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1408 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (($this <=> Builtin::i32(1)) <= 0) {
-			#line 1399 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1409 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return Builtin::i32(0);
 		}
-		#line 1402 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1412 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		const Builtin::Auto<decltype($this - Builtin::i32(1))> p = $this - Builtin::i32(1); 
-		#line 1403 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		return ADV_UFCS(_operator_add_mod)((ADV_USPCS(AllBitsSet, $extension_Int128_1273_i128)() >> ADV_UPCS(LeadingZeroCount)(p.$ref())), Builtin::i128(1LL));
+		#line 1413 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return ADV_UFCS(_operator_add_mod)((ADV_USPCS(AllBitsSet, $extension_Int128_1283_i128)() >> ADV_UPCS(LeadingZeroCount)(p.$ref())), Builtin::i128(1LL));
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	
 } namespace $extensions { using namespace System;
-#line 1447 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto RotateLeft($extension_Int128_1407_i128 const& $this LIFETIMEBOUND, Builtin::i32 shiftAmount) noexcept -> const typename $extension_Int128_1407_i128
+#line 1457 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto RotateLeft($extension_Int128_1417_i128 const& $this LIFETIMEBOUND, Builtin::i32 shiftAmount) noexcept -> const typename $extension_Int128_1417_i128
 	{
-		#line 1447 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY(($this << shiftAmount) | (ADV_UFCS(_operator_gt_gt_gt)($this, Builtin::i32{ADV_USPCS(BitWidth, $extension_Int128_1407_i128)() - shiftAmount}))); 
+		#line 1457 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY(($this << shiftAmount) | (ADV_UFCS(_operator_gt_gt_gt)($this, Builtin::i32{ADV_USPCS(BitWidth, $extension_Int128_1417_i128)() - shiftAmount}))); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 1448 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto RotateRight($extension_Int128_1407_i128 const& $this LIFETIMEBOUND, Builtin::i32 shiftAmount) noexcept -> const typename $extension_Int128_1407_i128
+#line 1458 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto RotateRight($extension_Int128_1417_i128 const& $this LIFETIMEBOUND, Builtin::i32 shiftAmount) noexcept -> const typename $extension_Int128_1417_i128
 	{
-		#line 1448 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		ADV_EXPRESSION_BODY((ADV_UFCS(_operator_gt_gt_gt)($this, Builtin::i32{shiftAmount})) | ($this << (ADV_USPCS(BitWidth, $extension_Int128_1407_i128)() - shiftAmount))); 
+		#line 1458 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		ADV_EXPRESSION_BODY((ADV_UFCS(_operator_gt_gt_gt)($this, Builtin::i32{shiftAmount})) | ($this << (ADV_USPCS(BitWidth, $extension_Int128_1417_i128)() - shiftAmount))); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 1408 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto $static_getBitWidth<$extension_Int128_1407_i128>::get() -> const Builtin::u32
+#line 1418 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto $static_getBitWidth<$extension_Int128_1417_i128>::get() -> const Builtin::u32
 	{
-		#line 1408 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1418 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(Builtin::u32(128U)); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1410 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getLeadingZeroCount($extension_Int128_1407_i128 const& $this ) -> const Builtin::u32
+#line 1420 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getLeadingZeroCount($extension_Int128_1417_i128 const & $this ) -> const Builtin::u32
 	{
-		#line 1412 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1422 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (ADV_UFCS(High64)($this.$ref()) == Builtin::i32(0)) {
-			#line 1413 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			#line 1423 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 			return Builtin::u32(64U) + Builtin::LeadingZeroCount(ADV_UFCS(Low64)($this.$ref()));
 		}
-		#line 1416 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1426 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return Builtin::LeadingZeroCount(ADV_UFCS(High64)($this.$ref()));
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1418 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getLeadingOneCount($extension_Int128_1407_i128 const& $this ) -> const Builtin::u32
+#line 1428 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getLeadingOneCount($extension_Int128_1417_i128 const & $this ) -> const Builtin::u32
 	{
-		#line 1418 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1428 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(LeadingZeroCount)((ADV_UFCS(_operator_not)($this)).$ref())); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1419 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getPopCount($extension_Int128_1407_i128 const& $this ) -> const Builtin::u32
+#line 1429 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getPopCount($extension_Int128_1417_i128 const & $this ) -> const Builtin::u32
 	{
-		#line 1419 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1429 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(Builtin::PopCount(ADV_UFCS(High64)($this.$ref())) + Builtin::PopCount(ADV_UFCS(Low64)($this.$ref()))); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1420 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getZeroCount($extension_Int128_1407_i128 const& $this ) -> const Builtin::u32
+#line 1430 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getZeroCount($extension_Int128_1417_i128 const & $this ) -> const Builtin::u32
 	{
-		#line 1420 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1430 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(PopCount)((ADV_UFCS(_operator_not)($this)).$ref())); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1421 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getByteSwapped($extension_Int128_1407_i128 const& $this ) -> const $extension_Int128_1407_i128
+#line 1431 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getByteSwapped($extension_Int128_1417_i128 const & $this ) -> const $extension_Int128_1417_i128
 	{
-		#line 1421 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1431 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(Builtin::i128{Builtin::Cast<true, Builtin::i64>(ADV_UPCS(ByteSwapped)(ADV_UFCS(Low64)($this.$ref()).$ref())), Builtin::Cast<true, Builtin::u64>(ADV_UPCS(ByteSwapped)(ADV_UFCS(High64)($this.$ref()).$ref()))}); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1422 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getBigEndian($extension_Int128_1407_i128 const& $this ) -> const $extension_Int128_1407_i128
+#line 1432 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getBigEndian($extension_Int128_1417_i128 const & $this ) -> const $extension_Int128_1417_i128
 	{
-		#line 1424 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		if constexpr (Builtin::IsLittleEndian()) {
-			#line 1425 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-			return ADV_UPCS(ByteSwapped)($this.$ref());
-		}
-		#line 1427 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		return $this;
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 1429 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getLittleEndian($extension_Int128_1407_i128 const& $this ) -> const $extension_Int128_1407_i128
-	{
-		#line 1431 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		if constexpr (Builtin::IsBigEndian()) {
-			#line 1432 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-			return ADV_UPCS(ByteSwapped)($this.$ref());
-		}
 		#line 1434 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		if constexpr (Builtin::IsLittleEndian()) {
+			#line 1435 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			return ADV_UPCS(ByteSwapped)($this.$ref());
+		}
+		#line 1437 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		return $this;
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1436 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getReverseBits($extension_Int128_1407_i128 const& $this ) -> const $extension_Int128_1407_i128
+#line 1439 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getLittleEndian($extension_Int128_1417_i128 const & $this ) -> const $extension_Int128_1417_i128
 	{
-		#line 1436 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1441 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		if constexpr (Builtin::IsBigEndian()) {
+			#line 1442 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			return ADV_UPCS(ByteSwapped)($this.$ref());
+		}
+		#line 1444 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return $this;
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 1446 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getReverseBits($extension_Int128_1417_i128 const & $this ) -> const $extension_Int128_1417_i128
+	{
+		#line 1446 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(Builtin::i128{Builtin::Cast<true, Builtin::i64>(Builtin::ReverseBits64u(ADV_UFCS(Low64)($this.$ref()))), Builtin::Cast<true, Builtin::u64>(Builtin::ReverseBits64(ADV_UFCS(High64)($this.$ref())))}); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1438 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getShortestBitLength($extension_Int128_1407_i128 const& $this ) -> const Builtin::u32
+#line 1448 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getShortestBitLength($extension_Int128_1417_i128 const & $this ) -> const Builtin::u32
 	{
-		#line 1440 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1450 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		if (($this <=> Builtin::i32(0)) >= 0) {
-			#line 1441 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-			return ADV_USPCS(BitWidth, $extension_Int128_1407_i128)() - ADV_UPCS(LeadingZeroCount)($this.$ref());
+			#line 1451 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+			return ADV_USPCS(BitWidth, $extension_Int128_1417_i128)() - ADV_UPCS(LeadingZeroCount)($this.$ref());
 		}
-		#line 1444 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-		return ADV_USPCS(BitWidth, $extension_Int128_1407_i128)() + Builtin::u32(1U) - ADV_UPCS(LeadingOneCount)($this.$ref());
+		#line 1454 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		return ADV_USPCS(BitWidth, $extension_Int128_1417_i128)() + Builtin::u32(1U) - ADV_UPCS(LeadingOneCount)($this.$ref());
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 	
 } namespace $extensions { using namespace System;
-#line 1460 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto IsGreaterThanAsUnsigned($extension_Int128_1452_i128 const& $this LIFETIMEBOUND, $extension_Int128_1452_i128 rhs) noexcept -> const bool
+#line 1470 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto IsGreaterThanAsUnsigned($extension_Int128_1462_i128 const& $this LIFETIMEBOUND, $extension_Int128_1462_i128 rhs) noexcept -> const bool
 	{
-		#line 1460 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1470 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY((ADV_UFCS(NarrowToUInt128)($this.$ref()) <=> ADV_UFCS(NarrowToUInt128)(rhs.$ref())) > 0); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 1453 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto $static_getMaxDigitCount<$extension_Int128_1452_i128>::get() -> const Builtin::i32
+#line 1463 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto $static_getMaxDigitCount<$extension_Int128_1462_i128>::get() -> const Builtin::i32
 	{
-		#line 1453 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1463 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(Builtin::i32(39)); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1454 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto $static_getMaxHexDigitCount<$extension_Int128_1452_i128>::get() -> const Builtin::i32
+#line 1464 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto $static_getMaxHexDigitCount<$extension_Int128_1462_i128>::get() -> const Builtin::i32
 	{
-		#line 1454 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1464 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(Builtin::i32(32)); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1455 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto $static_getMaxValueDiv10<$extension_Int128_1452_i128>::get() -> const $extension_Int128_1452_i128
+#line 1465 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto $static_getMaxValueDiv10<$extension_Int128_1462_i128>::get() -> const $extension_Int128_1462_i128
 	{
-		#line 1455 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1465 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_bsl)(ADV_USPCS(MaxValue, Builtin::i128)(), Builtin::i32(10))); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1457 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getMultiplyBy10($extension_Int128_1452_i128 const& $this ) -> const $extension_Int128_1452_i128
+#line 1467 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getMultiplyBy10($extension_Int128_1462_i128 const & $this ) -> const $extension_Int128_1462_i128
 	{
-		#line 1457 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1467 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_mul_mod)($this, Builtin::i128(10LL))); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 1458 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
-	inline constexpr auto getMultiplyBy16($extension_Int128_1452_i128 const& $this ) -> const $extension_Int128_1452_i128
+#line 1468 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+	inline constexpr auto getMultiplyBy16($extension_Int128_1462_i128 const & $this ) -> const $extension_Int128_1462_i128
 	{
-		#line 1458 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
+		#line 1468 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int128.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_mul_mod)($this, Builtin::i128(16LL))); 
 	}
 	} namespace System{

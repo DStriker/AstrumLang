@@ -14,106 +14,6 @@ using namespace System::Globalization;
 
 namespace System {
 namespace __Unsafe {} namespace __Char$Protected__Unsafe {}
-} namespace $extensions {
-template<class __TT> struct $static_IsAsciiLetterLower;
-template<class __TT> struct $static_getIsAsciiLetterLower;
-template<class __TT> struct $static_IsAsciiDigit;
-template<class __TT> struct $static_getIsAsciiDigit;
-template<class __TT> struct $static_CodepointValue;
-template<class __TT> struct $static_getCodepointValue;
-template<class __TT> struct $static_Is64BitTarget;
-template<class __TT> struct $static_getIs64BitTarget;
-template<class __TT> struct $static_GetUnicodeCategory;
-template<class __TT> struct $static_getGetUnicodeCategory;
-template<class __TT> struct $static_NarrowToUInt32;
-template<class __TT> struct $static_getNarrowToUInt32;
-template<class __TT> struct $static_NarrowToInt64;
-template<class __TT> struct $static_getNarrowToInt64;
-template<class __TT> struct $static_ParagraphSeparator;
-template<class __TT> struct $static_getParagraphSeparator;
-template<class __TT> struct $static_IsAscii;
-template<class __TT> struct $static_getIsAscii;
-template<class __TT> struct $static_IsAsciiLetter;
-template<class __TT> struct $static_getIsAsciiLetter;
-template<class __TT> struct $static_SpaceSeparator;
-template<class __TT> struct $static_getSpaceSeparator;
-template<class __TT> struct $static_IsAsciiLetterUpper;
-template<class __TT> struct $static_getIsAsciiLetterUpper;
-template<class __TT> struct $static_IsAsciiLetterOrDigit;
-template<class __TT> struct $static_getIsAsciiLetterOrDigit;
-template<class __TT> struct $static_MaxUtf8Length;
-template<class __TT> struct $static_getMaxUtf8Length;
-template<class __TT> struct $static_Value;
-template<class __TT> struct $static_getValue;
-template<class __TT> struct $static_ConnectorPunctuation;
-template<class __TT> struct $static_getConnectorPunctuation;
-template<class __TT> struct $static_MathSymbol;
-template<class __TT> struct $static_getMathSymbol;
-template<class __TT> struct $static_IsAsciiSeparator;
-template<class __TT> struct $static_getIsAsciiSeparator;
-template<class __TT> struct $static_OtherPunctuation;
-template<class __TT> struct $static_getOtherPunctuation;
-template<class __TT> struct $static_IsLatin1;
-template<class __TT> struct $static_getIsLatin1;
-template<class __TT> struct $static_IsAsciiPunctuation;
-template<class __TT> struct $static_getIsAsciiPunctuation;
-template<class __TT> struct $static_OtherSymbol;
-template<class __TT> struct $static_getOtherSymbol;
-template<class __TT> struct $static_IsAsciiSymbol;
-template<class __TT> struct $static_getIsAsciiSymbol;
-template<class __TT> struct $static_IsAsciiWhiteSpace;
-template<class __TT> struct $static_getIsAsciiWhiteSpace;
-template<class __TT> struct $static_NarrowToInt8;
-template<class __TT> struct $static_getNarrowToInt8;
-template<class __TT> struct $static_GetIsWhitespace;
-template<class __TT> struct $static_getGetIsWhitespace;
-template<class __TT> struct $static_LowercaseLetter;
-template<class __TT> struct $static_getLowercaseLetter;
-template<class __TT> struct $static_FromValue;
-template<class __TT> struct $static_getFromValue;
-template<class __TT> struct $static_OtherLetter;
-template<class __TT> struct $static_getOtherLetter;
-template<class __TT> struct $static_MaxUtf16Length;
-template<class __TT> struct $static_getMaxUtf16Length;
-template<class __TT> struct $static_IsHexDigitUpper;
-template<class __TT> struct $static_getIsHexDigitUpper;
-template<class __TT> struct $static_IsValid;
-template<class __TT> struct $static_getIsValid;
-template<class __TT> struct $static_GetStrongBidiCategory;
-template<class __TT> struct $static_getGetStrongBidiCategory;
-template<class __TT> struct $static_GetNumericValue;
-template<class __TT> struct $static_getGetNumericValue;
-template<class __TT> struct $static_MinusOne;
-template<class __TT> struct $static_getMinusOne;
-template<class __TT> struct $static_IsHexDigitLower;
-template<class __TT> struct $static_getIsHexDigitLower;
-template<class __TT> struct $static_DecimalDigitNumber;
-template<class __TT> struct $static_getDecimalDigitNumber;
-template<class __TT> struct $static_IsBinDigit;
-template<class __TT> struct $static_getIsBinDigit;
-template<class __TT> struct $static_IsOctDigit;
-template<class __TT> struct $static_getIsOctDigit;
-template<class __TT> struct $static_ToUpperNeutral;
-template<class __TT> struct $static_getToUpperNeutral;
-template<class __TT> struct $static_IsHexDigit;
-template<class __TT> struct $static_getIsHexDigit;
-template<class __TT> struct $static_UppercaseLetter;
-template<class __TT> struct $static_getUppercaseLetter;
-template<class __TT> struct $static_TitlecaseLetter;
-template<class __TT> struct $static_getTitlecaseLetter;
-template<class __TT> struct $static_IsBmp;
-template<class __TT> struct $static_getIsBmp;
-template<class __TT> struct $static_ToUpperAscii;
-template<class __TT> struct $static_getToUpperAscii;
-template<class __TT> struct $static_ToLowerAscii;
-template<class __TT> struct $static_getToLowerAscii;
-template<class __TT> struct $static_ToLowerNeutral;
-template<class __TT> struct $static_getToLowerNeutral;
-template<class __TT> struct $static_IsHighSurrogate;
-template<class __TT> struct $static_getIsHighSurrogate;
-template<class __TT> struct $static_IsLowSurrogate;
-template<class __TT> struct $static_getIsLowSurrogate;
-} namespace System {
 //###############################################################################
 //# Global type aliases
 //###############################################################################
@@ -551,6 +451,186 @@ namespace __Char$Protected { inline constexpr Builtin::InlineArray<256, Builtin:
 namespace __Char$Protected { inline constexpr UIntRange32 HighSurrogateRange = System::Range<Builtin::Auto<decltype(Builtin::u32(0xdc00U))>, false>(Builtin::u32(0xd800U), Builtin::u32(0xdc00U)); }
 #line 532 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 namespace __Char$Protected { inline constexpr UIntRange32 LowSurrogateRange = System::Range<Builtin::Auto<decltype(Builtin::u32(0xe000U))>, false>(Builtin::u32(0xdc00U), Builtin::u32(0xe000U)); }
+} namespace $extensions {
+template<class __TT> struct $static_IsAsciiLetterLower;
+template<class __TT> struct $static_getIsAsciiLetterLower;
+template<class __TT> struct $static_IsAsciiDigit;
+template<class __TT> struct $static_getIsAsciiDigit;
+template<class __TT> struct $static_Is64BitTarget;
+template<class __TT> struct $static_getIs64BitTarget;
+template<class __TT> struct $static_CodepointValue;
+template<class __TT> struct $static_getCodepointValue;
+template<class __TT> struct $static_IsLetterLower;
+template<class __TT> struct $static_getIsLetterLower;
+template<class __TT> struct $static_GetUnicodeCategory;
+template<class __TT> struct $static_getGetUnicodeCategory;
+template<class __TT> struct $static_NarrowToUInt32;
+template<class __TT> struct $static_getNarrowToUInt32;
+template<class __TT> struct $static_NarrowToInt64;
+template<class __TT> struct $static_getNarrowToInt64;
+template<class __TT> struct $static_IsAsciiLetter;
+template<class __TT> struct $static_getIsAsciiLetter;
+template<class __TT> struct $static_ParagraphSeparator;
+template<class __TT> struct $static_getParagraphSeparator;
+template<class __TT> struct $static_IsAscii;
+template<class __TT> struct $static_getIsAscii;
+template<class __TT> struct $static_SpaceSeparator;
+template<class __TT> struct $static_getSpaceSeparator;
+template<class __TT> struct $static_IsAsciiLetterUpper;
+template<class __TT> struct $static_getIsAsciiLetterUpper;
+template<class __TT> struct $static_IsAsciiLetterOrDigit;
+template<class __TT> struct $static_getIsAsciiLetterOrDigit;
+template<class __TT> struct $static_MaxUtf8Length;
+template<class __TT> struct $static_getMaxUtf8Length;
+template<class __TT> struct $static_Value;
+template<class __TT> struct $static_getValue;
+template<class __TT> struct $static_ConnectorPunctuation;
+template<class __TT> struct $static_getConnectorPunctuation;
+template<class __TT> struct $static_MathSymbol;
+template<class __TT> struct $static_getMathSymbol;
+template<class __TT> struct $static_IsPunctuation;
+template<class __TT> struct $static_getIsPunctuation;
+template<class __TT> struct $static_IsAsciiSeparator;
+template<class __TT> struct $static_getIsAsciiSeparator;
+template<class __TT> struct $static_OtherPunctuation;
+template<class __TT> struct $static_getOtherPunctuation;
+template<class __TT> struct $static_IsLatin1;
+template<class __TT> struct $static_getIsLatin1;
+template<class __TT> struct $static_IsAsciiPunctuation;
+template<class __TT> struct $static_getIsAsciiPunctuation;
+template<class __TT> struct $static_IsLetterOrDigit;
+template<class __TT> struct $static_getIsLetterOrDigit;
+template<class __TT> struct $static_OtherSymbol;
+template<class __TT> struct $static_getOtherSymbol;
+template<class __TT> struct $static_IntegerOverflowException;
+template<class __TT> struct $static_getIntegerOverflowException;
+template<class __TT> struct $static_IsAsciiSymbol;
+template<class __TT> struct $static_getIsAsciiSymbol;
+template<class __TT> struct $static_IsAsciiWhiteSpace;
+template<class __TT> struct $static_getIsAsciiWhiteSpace;
+template<class __TT> struct $static_NarrowToInt8;
+template<class __TT> struct $static_getNarrowToInt8;
+template<class __TT> struct $static_GetIsWhitespace;
+template<class __TT> struct $static_getGetIsWhitespace;
+template<class __TT> struct $static_LowercaseLetter;
+template<class __TT> struct $static_getLowercaseLetter;
+template<class __TT> struct $static_FromValue;
+template<class __TT> struct $static_getFromValue;
+template<class __TT> struct $static_FromScalar;
+template<class __TT> struct $static_getFromScalar;
+template<class __TT> struct $static_IsLetter;
+template<class __TT> struct $static_getIsLetter;
+template<class __TT> struct $static_OtherLetter;
+template<class __TT> struct $static_getOtherLetter;
+template<class __TT> struct $static_MaxUtf16Length;
+template<class __TT> struct $static_getMaxUtf16Length;
+template<class __TT> struct $static_IsLetterTitle;
+template<class __TT> struct $static_getIsLetterTitle;
+template<class __TT> struct $static_IsHexDigitUpper;
+template<class __TT> struct $static_getIsHexDigitUpper;
+template<class __TT> struct $static_IsValid;
+template<class __TT> struct $static_getIsValid;
+template<class __TT> struct $static_GetStrongBidiCategory;
+template<class __TT> struct $static_getGetStrongBidiCategory;
+template<class __TT> struct $static_GetNumericValue;
+template<class __TT> struct $static_getGetNumericValue;
+template<class __TT> struct $static_MinusOne;
+template<class __TT> struct $static_getMinusOne;
+template<class __TT> struct $static_IsHexDigitLower;
+template<class __TT> struct $static_getIsHexDigitLower;
+template<class __TT> struct $static_DecimalDigitNumber;
+template<class __TT> struct $static_getDecimalDigitNumber;
+template<class __TT> struct $static_IsBinDigit;
+template<class __TT> struct $static_getIsBinDigit;
+template<class __TT> struct $static_InvalidOperationException;
+template<class __TT> struct $static_getInvalidOperationException;
+template<class __TT> struct $static_IsOctDigit;
+template<class __TT> struct $static_getIsOctDigit;
+template<class __TT> struct $static_ToUpperNeutral;
+template<class __TT> struct $static_getToUpperNeutral;
+template<class __TT> struct $static_IsHexDigit;
+template<class __TT> struct $static_getIsHexDigit;
+template<class __TT> struct $static_UppercaseLetter;
+template<class __TT> struct $static_getUppercaseLetter;
+template<class __TT> struct $static_Length;
+template<class __TT> struct $static_getLength;
+template<class __TT> struct $static_TitlecaseLetter;
+template<class __TT> struct $static_getTitlecaseLetter;
+template<class __TT> struct $static_InvalidArgumentException;
+template<class __TT> struct $static_getInvalidArgumentException;
+template<class __TT> struct $static_IsBmp;
+template<class __TT> struct $static_getIsBmp;
+template<class __TT> struct $static_IsAsciiPrintable;
+template<class __TT> struct $static_getIsAsciiPrintable;
+template<class __TT> struct $static_ToUpperAscii;
+template<class __TT> struct $static_getToUpperAscii;
+template<class __TT> struct $static_ToLowerAscii;
+template<class __TT> struct $static_getToLowerAscii;
+template<class __TT> struct $static_ToLowerNeutral;
+template<class __TT> struct $static_getToLowerNeutral;
+template<class __TT> struct $static_IsHighSurrogate;
+template<class __TT> struct $static_getIsHighSurrogate;
+template<class __TT> struct $static_IsLowSurrogate;
+template<class __TT> struct $static_getIsLowSurrogate;
+template<class __TT> struct $static_Start;
+template<class __TT> struct $static_getStart;
+template<class __TT> struct $static_ToInt32;
+template<class __TT> struct $static_getToInt32;
+template<class __TT> struct $static_IsDigit;
+template<class __TT> struct $static_getIsDigit;
+template<class __TT> struct $static_IsLetterUpper;
+template<class __TT> struct $static_getIsLetterUpper;
+template<class __TT> struct $static_IsIdentifierChar;
+template<class __TT> struct $static_getIsIdentifierChar;
+template<class __TT> struct $static_IsControl;
+template<class __TT> struct $static_getIsControl;
+template<class __TT> struct $static_IsSeparator;
+template<class __TT> struct $static_getIsSeparator;
+template<class __TT> struct $static_IsSymbol;
+template<class __TT> struct $static_getIsSymbol;
+template<class __TT> struct $static_IsWhiteSpace;
+template<class __TT> struct $static_getIsWhiteSpace;
+template<class __TT> struct $static_ToLower;
+template<class __TT> struct $static_getToLower;
+template<class __TT> struct $static_ToUpper;
+template<class __TT> struct $static_getToUpper;
+template<class __TT> struct $static_FromDigit;
+template<class __TT> struct $static_getFromDigit;
+template<class __TT> struct $static_ToAsciiChar;
+template<class __TT> struct $static_getToAsciiChar;
+template<class __TT> struct $static_SmallF;
+template<class __TT> struct $static_getSmallF;
+template<class __TT> struct $static_LineFeed;
+template<class __TT> struct $static_getLineFeed;
+template<class __TT> struct $static_OtherNumber;
+template<class __TT> struct $static_getOtherNumber;
+template<class __TT> struct $static_CharUnicodeCategory;
+template<class __TT> struct $static_getCharUnicodeCategory;
+template<class __TT> struct $static_CurrencySymbol;
+template<class __TT> struct $static_getCurrencySymbol;
+template<class __TT> struct $static_ModifierSymbol;
+template<class __TT> struct $static_getModifierSymbol;
+template<class __TT> struct $static_OpenPunctuation;
+template<class __TT> struct $static_getOpenPunctuation;
+template<class __TT> struct $static_DashPunctuation;
+template<class __TT> struct $static_getDashPunctuation;
+template<class __TT> struct $static_ModifierLetter;
+template<class __TT> struct $static_getModifierLetter;
+template<class __TT> struct $static_LetterNumber;
+template<class __TT> struct $static_getLetterNumber;
+template<class __TT> struct $static_NumericValue;
+template<class __TT> struct $static_getNumericValue;
+template<class __TT> struct $static_ToLowerInvariant;
+template<class __TT> struct $static_getToLowerInvariant;
+template<class __TT> struct $static_ToUpperInvariant;
+template<class __TT> struct $static_getToUpperInvariant;
+template<class __TT> struct $static_BidiCategory;
+template<class __TT> struct $static_getBidiCategory;
+template<class __TT> struct $static_StrongLeftToRight;
+template<class __TT> struct $static_getStrongLeftToRight;
+template<class __TT> struct $static_StrongRightToLeft;
+template<class __TT> struct $static_getStrongRightToLeft;
+} namespace System {
 //###############################################################################
 //# Function definitions
 //###############################################################################
@@ -613,7 +693,7 @@ namespace __Char$Protected {
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAscii($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsAscii($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(($this <=> Builtin::u8(0x7FU)) <= 0); 
@@ -621,7 +701,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiDigit($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsAsciiDigit($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_in)(System::Range<Builtin::Auto<decltype(Builtin::u8('9'))>, true>(Builtin::u8('0'), Builtin::u8('9')), $this)); 
@@ -629,7 +709,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsDigit($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsDigit($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAsciiDigit)($this.$ref())); 
@@ -637,7 +717,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsBinDigit($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsBinDigit($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 19 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_in)(System::Range<Builtin::Auto<decltype(Builtin::u8('2'))>, false>(Builtin::u8('0'), Builtin::u8('2')), $this)); 
@@ -645,7 +725,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 20 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsOctDigit($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsOctDigit($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 20 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_in)(System::Range<Builtin::Auto<decltype(Builtin::u8('8'))>, false>(Builtin::u8('0'), Builtin::u8('8')), $this)); 
@@ -653,7 +733,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 21 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsHexDigit($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsHexDigit($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 23 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if constexpr (Builtin::Is64BitTarget()) {
@@ -677,7 +757,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 33 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsHexDigitUpper($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsHexDigitUpper($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 33 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY((ADV_UFCS(NarrowToUInt32)((Builtin::i32{$this} - Builtin::u8('0')).$ref()) <=> Builtin::i32(9)) <= 0 || (ADV_UFCS(NarrowToUInt32)((Builtin::i32{$this} - Builtin::u8('A')).$ref()) <=> (Builtin::u8('F') - Builtin::u8('A'))) <= 0); 
@@ -685,7 +765,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 35 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsHexDigitLower($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsHexDigitLower($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 35 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY((ADV_UFCS(NarrowToUInt32)((Builtin::i32{$this} - Builtin::u8('0')).$ref()) <=> Builtin::i32(9)) <= 0 || (ADV_UFCS(NarrowToUInt32)((Builtin::i32{$this} - Builtin::u8('a')).$ref()) <=> (Builtin::u8('f') - Builtin::u8('a'))) <= 0); 
@@ -693,7 +773,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiLetter($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsAsciiLetter($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY((ADV_UFCS(NarrowToUInt32)((Builtin::i32{$this | Builtin::u8(0x20U)} - Builtin::u8('a')).$ref()) <=> Builtin::u8('z') - Builtin::u8('a')) <= 0); 
@@ -701,7 +781,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 38 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsLetter($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsLetter($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 38 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAsciiLetter)($this.$ref())); 
@@ -709,7 +789,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 39 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiLetterUpper($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsAsciiLetterUpper($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 39 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_in)(System::Range<Builtin::Auto<decltype(Builtin::u8('Z'))>, true>(Builtin::u8('A'), Builtin::u8('Z')), $this)); 
@@ -717,7 +797,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 40 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsLetterUpper($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsLetterUpper($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 40 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAsciiLetterUpper)($this.$ref())); 
@@ -725,7 +805,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiLetterLower($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsAsciiLetterLower($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_in)(System::Range<Builtin::Auto<decltype(Builtin::u8('z'))>, true>(Builtin::u8('a'), Builtin::u8('z')), $this)); 
@@ -733,7 +813,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 42 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsLetterLower($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsLetterLower($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 42 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAsciiLetterLower)($this.$ref())); 
@@ -741,7 +821,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiLetterOrDigit($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsAsciiLetterOrDigit($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAsciiLetter)($this.$ref()) || ADV_UPCS(IsAsciiDigit)($this.$ref())); 
@@ -749,7 +829,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 44 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsLetterOrDigit($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsLetterOrDigit($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 44 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAsciiLetterOrDigit)($this.$ref())); 
@@ -757,7 +837,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 45 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsIdentifierChar($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsIdentifierChar($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 45 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAsciiLetterOrDigit)($this.$ref()) || $this == Builtin::u8('_')); 
@@ -765,7 +845,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 46 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiControl($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsAsciiControl($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 46 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(($this <=> Builtin::u8(0x1FU)) <= 0); 
@@ -773,7 +853,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 47 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsControl($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsControl($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 47 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(((ADV_UFCS(_operator_and_not)((Builtin::u32{$this} + Builtin::i32(1)), Builtin::u32(0x80U))) <=> Builtin::u32(0x20U)) <= 0); 
@@ -781,7 +861,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 48 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiPunctuation($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsAsciiPunctuation($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 48 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAscii)($this.$ref()) && ADV_UFCS(_operator_in)(System::Range<Builtin::Auto<decltype(ADV_UPCS(Value)(ADV_USPCS(OtherPunctuation, UnicodeCategory)().$ref()))>, true>(ADV_UPCS(Value)(ADV_USPCS(ConnectorPunctuation, UnicodeCategory)().$ref()), ADV_UPCS(Value)(ADV_USPCS(OtherPunctuation, UnicodeCategory)().$ref())), ADV_UPCS(Value)(__Char$Protected::GetLatin1UnicodeCategory($this).$ref()))); 
@@ -789,7 +869,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 51 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsPunctuation($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsPunctuation($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 51 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAsciiPunctuation)($this.$ref())); 
@@ -797,7 +877,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 52 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiSeparator($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsAsciiSeparator($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 52 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY($this == Builtin::u32(0x20U)); 
@@ -805,7 +885,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 53 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsSeparator($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsSeparator($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 53 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAsciiSeparator)($this.$ref())); 
@@ -813,7 +893,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 54 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiSymbol($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsAsciiSymbol($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 54 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAscii)($this.$ref()) && ADV_UFCS(_operator_in)(System::Range<Builtin::Auto<decltype(ADV_UPCS(Value)(ADV_USPCS(OtherSymbol, UnicodeCategory)().$ref()))>, true>(ADV_UPCS(Value)(ADV_USPCS(MathSymbol, UnicodeCategory)().$ref()), ADV_UPCS(Value)(ADV_USPCS(OtherSymbol, UnicodeCategory)().$ref())), ADV_UPCS(Value)(__Char$Protected::GetLatin1UnicodeCategory($this).$ref()))); 
@@ -821,7 +901,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 56 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsSymbol($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsSymbol($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 56 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAsciiSymbol)($this.$ref())); 
@@ -829,7 +909,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 57 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiWhiteSpace($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsAsciiWhiteSpace($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 57 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAscii)($this.$ref()) && __Char$Protected::IsWhiteSpaceLatin1($this)); 
@@ -837,7 +917,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 58 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsWhiteSpace($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsWhiteSpace($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 58 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAsciiWhiteSpace)($this.$ref())); 
@@ -845,7 +925,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 59 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiPrintable($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsAsciiPrintable($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 59 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_in)(System::Range<Builtin::Auto<decltype(Builtin::u8('~'))>, true>(Builtin::u8('!'), Builtin::u8('~')), $this)); 
@@ -853,7 +933,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 60 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsUtf8CodePointBoundary($extension_Char_15_byte const& $this ) -> const bool
+	inline constexpr auto getIsUtf8CodePointBoundary($extension_Char_15_byte const & $this ) -> const bool
 	{
 		#line 61 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if ($this == Builtin::u8(0U)) {
@@ -866,7 +946,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 66 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getToLower($extension_Char_15_byte const& $this ) -> const $extension_Char_15_byte
+	inline constexpr auto getToLower($extension_Char_15_byte const & $this ) -> const $extension_Char_15_byte
 	{
 		#line 66 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAsciiLetterUpper)($this.$ref()) ? ($this + Builtin::u8(32U)) : $this); 
@@ -874,7 +954,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 67 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getToUpper($extension_Char_15_byte const& $this ) -> const $extension_Char_15_byte
+	inline constexpr auto getToUpper($extension_Char_15_byte const & $this ) -> const $extension_Char_15_byte
 	{
 		#line 67 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAsciiLetterLower)($this.$ref()) ? ($this - Builtin::u8(32U)) : $this); 
@@ -882,7 +962,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 85 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getToAsciiChar($extension_Char_15_byte const& $this ) -> const Builtin::Nullable<AsciiChar>
+	inline constexpr auto getToAsciiChar($extension_Char_15_byte const & $this ) -> const Builtin::Nullable<AsciiChar>
 	{
 		#line 87 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if (ADV_UPCS(IsAscii)($this.$ref())) {
@@ -1021,7 +1101,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 154 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getAsAscii($extension_Char_99_char const& $this ) -> const Builtin::Nullable<AsciiChar>
+	inline constexpr auto getAsAscii($extension_Char_99_char const & $this ) -> const Builtin::Nullable<AsciiChar>
 	{
 		#line 156 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if (ADV_UPCS(IsAscii)($this.$ref())) {
@@ -1034,7 +1114,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 162 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getHashCode($extension_Char_99_char const& $this ) -> const Builtin::u64
+	inline constexpr auto getHashCode($extension_Char_99_char const & $this ) -> const Builtin::u64
 	{
 		#line 162 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u64>($this)); 
@@ -1042,7 +1122,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 165 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAscii($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsAscii($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 165 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(($this <=> Builtin::char32(U'\u007F')) <= 0); 
@@ -1050,7 +1130,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 167 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsLatin1($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsLatin1($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 167 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(($this <=> Builtin::char32(U'\u00FF')) <= 0); 
@@ -1058,7 +1138,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 169 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsBmp($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsBmp($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 169 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(($this <=> Builtin::char32(U'\uFFFF')) <= 0); 
@@ -1066,7 +1146,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 170 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getPlane($extension_Char_99_char const& $this ) -> const Builtin::u32
+	inline constexpr auto getPlane($extension_Char_99_char const & $this ) -> const Builtin::u32
 	{
 		#line 170 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY((Builtin::Cast<true, Builtin::u32>($this)) >> Builtin::i32(16)); 
@@ -1074,7 +1154,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 172 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getUtf16Length($extension_Char_99_char const& $this ) -> const Builtin::u32
+	inline constexpr auto getUtf16Length($extension_Char_99_char const & $this ) -> const Builtin::u32
 	{
 		#line 174 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		Builtin::Auto<decltype(Builtin::Cast<true, Builtin::u32>($this))> result = Builtin::Cast<true, Builtin::u32>($this); 
@@ -1092,7 +1172,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 182 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getUtf8Length($extension_Char_99_char const& $this ) -> const Builtin::u32
+	inline constexpr auto getUtf8Length($extension_Char_99_char const & $this ) -> const Builtin::u32
 	{
 		#line 184 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		Builtin::Auto<decltype(Builtin::Cast<true, Builtin::u32>($this))> result = Builtin::Cast<true, Builtin::u32>($this); 
@@ -1116,7 +1196,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 195 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getCodepointValue($extension_Char_99_char const& $this ) -> const Builtin::u32
+	inline constexpr auto getCodepointValue($extension_Char_99_char const & $this ) -> const Builtin::u32
 	{
 		#line 195 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u32>($this)); 
@@ -1124,7 +1204,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 197 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsValid($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsValid($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 197 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY((ADV_UPCS(CodepointValue)($this.$ref()) <=> Builtin::u32(0x10FFFFU)) <= 0); 
@@ -1132,7 +1212,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 200 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline auto getCharUnicodeCategory($extension_Char_99_char const& $this ) -> const UnicodeCategory
+	inline auto getCharUnicodeCategory($extension_Char_99_char const & $this ) -> const UnicodeCategory
 	{
 		#line 202 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if (ADV_UPCS(IsLatin1)($this.$ref())) {
@@ -1147,7 +1227,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 211 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline auto getBidiCategory($extension_Char_99_char const& $this ) -> const StrongBidiCategory
+	inline auto getBidiCategory($extension_Char_99_char const & $this ) -> const StrongBidiCategory
 	{
 		#line 211 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_USFCS((CharUnicodeInfo), GetStrongBidiCategory)(Builtin::Cast<true, Builtin::u32>($this))); 
@@ -1155,7 +1235,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 215 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline auto getNumericValue($extension_Char_99_char const& $this ) -> const Builtin::Nullable<Builtin::f64>
+	inline auto getNumericValue($extension_Char_99_char const & $this ) -> const Builtin::Nullable<Builtin::f64>
 	{
 		#line 217 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if (ADV_UPCS(IsAscii)($this.$ref())) {
@@ -1182,7 +1262,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 232 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiControl($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsAsciiControl($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 232 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_in)(System::Range<Builtin::Auto<decltype(Builtin::char32(U'\u001F'))>, true>(Builtin::char32(U'\0'), Builtin::char32(U'\u001F')), $this)); 
@@ -1190,7 +1270,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 234 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsControl($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsControl($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 234 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(((ADV_UFCS(_operator_and_not)((Builtin::u32{$this} + Builtin::i32(1)), Builtin::u32(0x80U))) <=> Builtin::u32(0x20U)) <= 0); 
@@ -1198,7 +1278,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 236 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiDigit($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsAsciiDigit($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 236 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAscii)($this.$ref()) && ADV_UPCS(IsAsciiDigit)(Builtin::u8{$this}.$ref())); 
@@ -1206,7 +1286,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 238 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline auto getIsDigit($extension_Char_99_char const& $this ) -> const bool
+	inline auto getIsDigit($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 240 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if (ADV_UPCS(IsAscii)($this.$ref())) {
@@ -1219,7 +1299,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 246 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsBinDigit($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsBinDigit($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 246 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAscii)($this.$ref()) && ADV_UPCS(IsBinDigit)(Builtin::u8{$this}.$ref())); 
@@ -1227,7 +1307,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 248 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsOctDigit($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsOctDigit($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 248 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAscii)($this.$ref()) && ADV_UPCS(IsOctDigit)(Builtin::u8{$this}.$ref())); 
@@ -1235,7 +1315,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 250 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsHexDigit($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsHexDigit($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 250 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAscii)($this.$ref()) && ADV_UPCS(IsHexDigit)(Builtin::u8{$this}.$ref())); 
@@ -1243,7 +1323,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 251 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsHexDigitUpper($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsHexDigitUpper($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 251 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAscii)($this.$ref()) && ADV_UPCS(IsHexDigitUpper)(Builtin::u8{$this}.$ref())); 
@@ -1251,7 +1331,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 252 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsHexDigitLower($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsHexDigitLower($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 252 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAscii)($this.$ref()) && ADV_UPCS(IsHexDigitLower)(Builtin::u8{$this}.$ref())); 
@@ -1259,7 +1339,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 253 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiLetter($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsAsciiLetter($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 253 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAscii)($this.$ref()) && ADV_UPCS(IsAsciiLetter)(Builtin::u8{$this}.$ref())); 
@@ -1267,7 +1347,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 255 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline auto getIsLetter($extension_Char_99_char const& $this ) -> const bool
+	inline auto getIsLetter($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 257 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if (ADV_UPCS(IsAscii)($this.$ref())) {
@@ -1280,7 +1360,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 263 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiLetterUpper($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsAsciiLetterUpper($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 263 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAscii)($this.$ref()) && ADV_UPCS(IsAsciiLetterUpper)(Builtin::u8{$this}.$ref())); 
@@ -1288,7 +1368,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 265 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline auto getIsLetterUpper($extension_Char_99_char const& $this ) -> const bool
+	inline auto getIsLetterUpper($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 267 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if (ADV_UPCS(IsAscii)($this.$ref())) {
@@ -1301,7 +1381,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 272 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiLetterLower($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsAsciiLetterLower($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 272 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAscii)($this.$ref()) && ADV_UPCS(IsAsciiLetterLower)(Builtin::u8{$this}.$ref())); 
@@ -1309,7 +1389,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 274 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline auto getIsLetterLower($extension_Char_99_char const& $this ) -> const bool
+	inline auto getIsLetterLower($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 276 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if (ADV_UPCS(IsAscii)($this.$ref())) {
@@ -1322,7 +1402,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 282 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline auto getIsLetterTitle($extension_Char_99_char const& $this ) -> const bool
+	inline auto getIsLetterTitle($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 282 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_USFCS((CharUnicodeInfo), GetUnicodeCategory)(Builtin::Cast<true, Builtin::u32>($this)) == ADV_USPCS(TitlecaseLetter, UnicodeCategory)()); 
@@ -1330,7 +1410,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiLetterOrDigit($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsAsciiLetterOrDigit($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAscii)($this.$ref()) && ADV_UPCS(IsAsciiLetterOrDigit)(Builtin::u8{$this}.$ref())); 
@@ -1338,7 +1418,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 285 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline auto getIsLetterOrDigit($extension_Char_99_char const& $this ) -> const bool
+	inline auto getIsLetterOrDigit($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 287 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if (ADV_UPCS(IsAscii)($this.$ref())) {
@@ -1353,7 +1433,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 295 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsIdentifierChar($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsIdentifierChar($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 295 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAsciiLetterOrDigit)($this.$ref()) || $this == Builtin::char32(U'_')); 
@@ -1361,7 +1441,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 296 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiPunctuation($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsAsciiPunctuation($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 296 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAscii)($this.$ref()) && ADV_UPCS(IsAsciiPunctuation)(Builtin::u8{$this}.$ref())); 
@@ -1369,7 +1449,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 298 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline auto getIsPunctuation($extension_Char_99_char const& $this ) -> const bool
+	inline auto getIsPunctuation($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 298 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_in)(System::Range<Builtin::Auto<decltype(ADV_UPCS(Value)(ADV_USPCS(OtherPunctuation, UnicodeCategory)().$ref()))>, true>(ADV_UPCS(Value)(ADV_USPCS(ConnectorPunctuation, UnicodeCategory)().$ref()), ADV_UPCS(Value)(ADV_USPCS(OtherPunctuation, UnicodeCategory)().$ref())), ADV_UPCS(Value)(ADV_USFCS((CharUnicodeInfo), GetUnicodeCategory)(Builtin::Cast<true, Builtin::u32>($this)).$ref()))); 
@@ -1377,7 +1457,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 300 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiSeparator($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsAsciiSeparator($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 300 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAscii)($this.$ref()) && ADV_UPCS(IsAsciiSeparator)(Builtin::u8{$this}.$ref())); 
@@ -1385,7 +1465,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 301 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline auto getIsSeparator($extension_Char_99_char const& $this ) -> const bool
+	inline auto getIsSeparator($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 301 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_in)(System::Range<Builtin::Auto<decltype(ADV_UPCS(Value)(ADV_USPCS(ParagraphSeparator, UnicodeCategory)().$ref()))>, true>(ADV_UPCS(Value)(ADV_USPCS(SpaceSeparator, UnicodeCategory)().$ref()), ADV_UPCS(Value)(ADV_USPCS(ParagraphSeparator, UnicodeCategory)().$ref())), ADV_UPCS(Value)(ADV_USFCS((CharUnicodeInfo), GetUnicodeCategory)(Builtin::Cast<true, Builtin::u32>($this)).$ref()))); 
@@ -1393,7 +1473,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 303 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiSymbol($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsAsciiSymbol($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 303 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAscii)($this.$ref()) && ADV_UPCS(IsAsciiSymbol)(Builtin::u8{$this}.$ref())); 
@@ -1401,7 +1481,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 304 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline auto getIsSymbol($extension_Char_99_char const& $this ) -> const bool
+	inline auto getIsSymbol($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 304 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_in)(System::Range<Builtin::Auto<decltype(ADV_UPCS(Value)(ADV_USPCS(OtherSymbol, UnicodeCategory)().$ref()))>, true>(ADV_UPCS(Value)(ADV_USPCS(MathSymbol, UnicodeCategory)().$ref()), ADV_UPCS(Value)(ADV_USPCS(OtherSymbol, UnicodeCategory)().$ref())), ADV_UPCS(Value)(ADV_USFCS((CharUnicodeInfo), GetUnicodeCategory)(Builtin::Cast<true, Builtin::u32>($this)).$ref()))); 
@@ -1409,7 +1489,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 306 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiWhiteSpace($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsAsciiWhiteSpace($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 306 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAscii)($this.$ref()) && ADV_UPCS(IsAsciiWhiteSpace)(Builtin::u8{$this}.$ref())); 
@@ -1417,7 +1497,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 307 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline auto getIsWhiteSpace($extension_Char_99_char const& $this ) -> const bool
+	inline auto getIsWhiteSpace($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 309 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if (ADV_UPCS(IsAscii)($this.$ref())) {
@@ -1430,7 +1510,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 314 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsAsciiPrintable($extension_Char_99_char const& $this ) -> const bool
+	inline constexpr auto getIsAsciiPrintable($extension_Char_99_char const & $this ) -> const bool
 	{
 		#line 314 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_in)(System::Range<Builtin::Auto<decltype(Builtin::char32(U'~'))>, true>(Builtin::char32(U'!'), Builtin::char32(U'~')), $this)); 
@@ -1438,7 +1518,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 315 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getToLowerAscii($extension_Char_99_char const& $this ) -> const $extension_Char_99_char
+	inline constexpr auto getToLowerAscii($extension_Char_99_char const & $this ) -> const $extension_Char_99_char
 	{
 		#line 315 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAsciiLetterUpper)($this.$ref()) ? $extension_Char_99_char{ADV_UPCS(CodepointValue)($this.$ref()) + Builtin::u32(32U)} : $this); 
@@ -1446,7 +1526,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 316 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getToUpperAscii($extension_Char_99_char const& $this ) -> const $extension_Char_99_char
+	inline constexpr auto getToUpperAscii($extension_Char_99_char const & $this ) -> const $extension_Char_99_char
 	{
 		#line 316 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAsciiLetterLower)($this.$ref()) ? $extension_Char_99_char{ADV_UPCS(CodepointValue)($this.$ref()) - Builtin::u32(32U)} : $this); 
@@ -1454,7 +1534,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 318 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline auto getToUpper($extension_Char_99_char const& $this ) -> const $extension_Char_99_char
+	inline auto getToUpper($extension_Char_99_char const & $this ) -> const $extension_Char_99_char
 	{
 		#line 320 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if (ADV_UPCS(IsAscii)($this.$ref())) {
@@ -1467,7 +1547,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 329 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline auto getToUpperInvariant($extension_Char_99_char const& $this ) -> const $extension_Char_99_char
+	inline auto getToUpperInvariant($extension_Char_99_char const & $this ) -> const $extension_Char_99_char
 	{
 		#line 331 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if (ADV_UPCS(IsAscii)($this.$ref())) {
@@ -1480,7 +1560,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 337 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline auto getToLower($extension_Char_99_char const& $this ) -> const $extension_Char_99_char
+	inline auto getToLower($extension_Char_99_char const & $this ) -> const $extension_Char_99_char
 	{
 		#line 339 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if (ADV_UPCS(IsAscii)($this.$ref())) {
@@ -1493,7 +1573,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 349 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline auto getToLowerInvariant($extension_Char_99_char const& $this ) -> const $extension_Char_99_char
+	inline auto getToLowerInvariant($extension_Char_99_char const & $this ) -> const $extension_Char_99_char
 	{
 		#line 351 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		if (ADV_UPCS(IsAscii)($this.$ref())) {
@@ -1773,7 +1853,7 @@ namespace __Char$Protected {
 	
 } namespace $extensions { using namespace System;
 #line 535 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsHighSurrogate($extension_Char_534_u16 const& $this ) -> const bool
+	inline constexpr auto getIsHighSurrogate($extension_Char_534_u16 const & $this ) -> const bool
 	{
 		#line 535 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_in)(__Char$Protected::HighSurrogateRange, $this)); 
@@ -1781,7 +1861,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 536 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsLowSurrogate($extension_Char_534_u16 const& $this ) -> const bool
+	inline constexpr auto getIsLowSurrogate($extension_Char_534_u16 const & $this ) -> const bool
 	{
 		#line 536 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_in)(__Char$Protected::LowSurrogateRange, $this)); 
@@ -1789,7 +1869,7 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 537 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto getIsSurrogate($extension_Char_534_u16 const& $this ) -> const bool
+	inline constexpr auto getIsSurrogate($extension_Char_534_u16 const & $this ) -> const bool
 	{
 		#line 537 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsHighSurrogate)($this.$ref()) || ADV_UPCS(IsLowSurrogate)($this.$ref())); 

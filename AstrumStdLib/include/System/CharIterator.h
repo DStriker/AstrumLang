@@ -16,8 +16,6 @@ namespace __Unsafe {} namespace __CharIterator$Protected__Unsafe {}
 //# Type forward declarations
 //###############################################################################
 class CharIterator;
-} namespace $extensions {
-} namespace System {
 //###############################################################################
 //# Type definitions
 //###############################################################################
@@ -61,7 +59,25 @@ class CharIterator;
 	#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(CharIterator, IIterator, IIterator<Builtin::char32>, CharIterator);
 	
-	//###############################################################################
+	} namespace $extensions {
+template<class __TT> struct $static__current;
+template<class __TT> struct $static_get_current;
+template<class __TT> struct $static_UnsafeCreate;
+template<class __TT> struct $static_getUnsafeCreate;
+template<class __TT> struct $static_GetDataReference;
+template<class __TT> struct $static_getGetDataReference;
+template<class __TT> struct $static_Length;
+template<class __TT> struct $static_getLength;
+template<class __TT> struct $static_GetByteLength;
+template<class __TT> struct $static_getGetByteLength;
+template<class __TT> struct $static_IsAscii;
+template<class __TT> struct $static_getIsAscii;
+template<class __TT> struct $static_IsUtf8CodePointBoundary;
+template<class __TT> struct $static_getIsUtf8CodePointBoundary;
+template<class __TT> struct $static_InvalidOperationException;
+template<class __TT> struct $static_getInvalidOperationException;
+} namespace System {
+//###############################################################################
 //# Function definitions
 //###############################################################################
 

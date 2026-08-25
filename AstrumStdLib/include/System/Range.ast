@@ -44,7 +44,13 @@ where type T is IValueEnumerable or type T is IRangeCustomIterator
             this._end = range.End;
         }
 
-        public mut MoveNext: () -> bool ==
+        public this(in ref range: Range<T, IsClosed>, step: usize) == {
+            this._current = range.Start;
+            this._end = range.End;
+            this._step = step;
+        }
+
+        public mut MoveNext: () -> bool == 
         {
             switch _state {
                 1 => {
@@ -56,16 +62,7 @@ where type T is IValueEnumerable or type T is IRangeCustomIterator
                     }
                 }
                 2 => {
-                    static if IsClosed {
-                        if _current != _end {
-                            StepForward();
-                            return true;
-                        }
-                    } else {
-                        if StepForward() != _end {
-                            return true;
-                        }
-                    }
+                    return StepForward();
                 }
             }
             
@@ -75,24 +72,93 @@ where type T is IValueEnumerable or type T is IRangeCustomIterator
 
         public GetCurrent: () -> T ==> _current;
 
-        private mut StepForward: () -> T ==
+        private mut StepForward: () -> bool ==
         {
             static if type T is IValueEnumerable {
-                return ++_current;
+                ++_current;
             } else {
-                return _current = _current.RangeStepForward(1u);
+                _current = _current.RangeStepForward(1u);
+            }
+            static if IsClosed {
+                return _current <= _end;
+            } else {
+                return _current < _end;
             }
         }
     }
 
+    public struct StepByIterator: IAbstractIterator, IIterator<T> {
+        public type ElementType = T;
+        private _current, _end: T;
+        private _step: usize = 1u;
+        private _state: i32 = 1;
+
+        public this(in ref range: Range<T, IsClosed>) == {
+            this._current = range.Start;
+            this._end = range.End;
+        }
+
+        public this(in ref range: Range<T, IsClosed>, step: usize) == {
+            this._current = range.Start;
+            this._end = range.End;
+            this._step = step;
+        }
+
+        public mut MoveNext: () -> bool == 
+        {
+            switch _state {
+                1 => {
+                    this._state = 2;
+                    static if not IsClosed {
+                        return _current != _end;
+                    } else {
+                        return true;
+                    }
+                }
+                2 => {
+                    return StepForward();
+                }
+            }
+            
+            this._state = -1;
+            return false;
+        }
+
+        public GetCurrent: () -> T ==> _current;
+
+        private mut StepForward: () -> bool ==
+        {
+            static if type T is IValueEnumerable {
+                _current += T(_step);
+            } else {
+                _current = _current.RangeStepForward(_step);
+            }
+            static if IsClosed {
+                return _current <= _end;
+            } else {
+                return _current < _end;
+            }
+        }
+        public Iterate: () -> self ==> this;
+    }
+
+    public StepBy: (step: usize) -> StepByIterator ==> StepByIterator(this, step);
+
     public struct ReverseIterator: IAbstractSequence, ISequence<T>, IAbstractIterator, IIterator<T> {
         public type ElementType = T;
         private _current, _end: T;
+        private _step: usize = 1u;
         private _state: i32 = 1;
 
         public this(in ref range: Range<T, IsClosed>) == {
             this._current = range.End;
             this._end = range.Start;
+        }
+
+        public this(start: T, end: T, step: usize) == {
+            this._current = start;
+            this._end = end;
+            this._step = step;
         }
 
         public Iterate: () -> self ==> this;
@@ -103,17 +169,18 @@ where type T is IValueEnumerable or type T is IRangeCustomIterator
                 1 => {
                     this._state = 2;
                     static if not IsClosed {
-                        StepBackward();
-                        return _current != _end;
+                        return StepBackward(1u);
+                        //return _current != _end;
                     } else {
                         return true;
                     }
                 }
                 2 => {
-                    if _current != _end {
+                    return StepBackward(_step);
+                    /*if _current != _end {
                         StepBackward();
                         return true;
-                    }
+                    }*/
                 }
             }
             
@@ -123,13 +190,16 @@ where type T is IValueEnumerable or type T is IRangeCustomIterator
 
         public GetCurrent: () -> T ==> _current;
 
-        private mut StepBackward: () ==
+        public StepBy: (step: usize) -> self ==> self(_current, _end, step);
+
+        private mut StepBackward: (step: usize) -> bool ==
         {
             static if type T is IValueEnumerable {
-                --_current;
+                _current -= T(step);
             } else {
-                _current = _current.RangeStepBackward(1u);
+                _current = _current.RangeStepBackward(step);
             }
+            return _current >= _end;
         }
     }
 
@@ -317,7 +387,7 @@ test "Range" {
     assert irange.End == Index.FromStart(6u);
     assert not irange.IsClosed;
     assert irange.Length(10u) == 4u;
-    rrange := (..20).Reversed;
+    rrange := (..20);
 
     assert 0 in ..12;
     assert 11 in ..12;

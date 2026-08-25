@@ -8,18 +8,6 @@
 
 namespace System {
 namespace __Unsafe {} namespace __Str$Protected__Unsafe {}
-} namespace $extensions {
-template<class __TT> struct $static_Length;
-template<class __TT> struct $static_getLength;
-template<class __TT> struct $static_GetByteLength;
-template<class __TT> struct $static_getGetByteLength;
-template<class __TT> struct $static_UnsafeCreate;
-template<class __TT> struct $static_getUnsafeCreate;
-template<class __TT> struct $static_GetDataReference;
-template<class __TT> struct $static_getGetDataReference;
-template<class __TT> struct $static_Chars;
-template<class __TT> struct $static_getChars;
-} namespace System {
 //###############################################################################
 //# Type definitions
 //###############################################################################
@@ -59,9 +47,41 @@ using $extensions::getCharCount;
 	//###############################################################################
 //# Global compile-time constants
 //###############################################################################
-inline constexpr Builtin::Str $strconst_0x14f17989600_0 = "Begin ";
-inline constexpr Builtin::Str $strconst_0x14f17989600_1 = " Middle ";
-inline constexpr Builtin::Str $strconst_0x14f17989600_2 = " End";
+inline constexpr Builtin::Str $strconst_0x2988dae0e00_0 = "Begin ";
+inline constexpr Builtin::Str $strconst_0x2988dae0e00_1 = " Middle ";
+inline constexpr Builtin::Str $strconst_0x2988dae0e00_2 = " End";
+} namespace $extensions {
+template<class __TT> struct $static_GetByteLength;
+template<class __TT> struct $static_getGetByteLength;
+template<class __TT> struct $static_Length;
+template<class __TT> struct $static_getLength;
+template<class __TT> struct $static_UnsafeCreate;
+template<class __TT> struct $static_getUnsafeCreate;
+template<class __TT> struct $static_Start;
+template<class __TT> struct $static_getStart;
+template<class __TT> struct $static_ByteLength;
+template<class __TT> struct $static_getByteLength;
+template<class __TT> struct $static_GetDataReference;
+template<class __TT> struct $static_getGetDataReference;
+template<class __TT> struct $static_Chars;
+template<class __TT> struct $static_getChars;
+template<class __TT> struct $static_Offset;
+template<class __TT> struct $static_getOffset;
+template<class __TT> struct $static_IndexOutOfRangeException;
+template<class __TT> struct $static_getIndexOutOfRangeException;
+template<class __TT> struct $static_IsUtf8CodePointBoundary;
+template<class __TT> struct $static_getIsUtf8CodePointBoundary;
+template<class __TT> struct $static_Bytes;
+template<class __TT> struct $static_getBytes;
+template<class __TT> struct $static_Substring;
+template<class __TT> struct $static_getSubstring;
+template<class __TT> struct $static_InvalidArgumentException;
+template<class __TT> struct $static_getInvalidArgumentException;
+template<class __TT> struct $static_Add;
+template<class __TT> struct $static_getAdd;
+template<class __TT> struct $static_CharCount;
+template<class __TT> struct $static_getCharCount;
+} namespace System {
 //###############################################################################
 //# Function definitions
 //###############################################################################
@@ -138,7 +158,7 @@ inline constexpr Builtin::Str $strconst_0x14f17989600_2 = " End";
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getByteLength($extension_Str_6_str const& $this ) -> const Builtin::usize
+	inline constexpr auto getByteLength($extension_Str_6_str const & $this ) -> const Builtin::usize
 	{
 		#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(GetByteLength)($this.$ref())); 
@@ -146,7 +166,7 @@ inline constexpr Builtin::Str $strconst_0x14f17989600_2 = " End";
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getBytes($extension_Str_6_str const& $this ) -> const System::Span<Builtin::u8>
+	inline constexpr auto getBytes($extension_Str_6_str const & $this ) -> const System::Span<Builtin::u8>
 	{
 		#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_USFCS((Span<Builtin::u8>), UnsafeCreate)(ADV_UFCS(GetDataReference)($this.$ref()), ADV_UFCS(GetByteLength)($this.$ref()))); 
@@ -154,7 +174,7 @@ inline constexpr Builtin::Str $strconst_0x14f17989600_2 = " End";
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getChars($extension_Str_6_str const& $this ) -> const CharIterator
+	inline constexpr auto getChars($extension_Str_6_str const & $this ) -> const CharIterator
 	{
 		#line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(CharIterator{$this}); 
@@ -162,7 +182,7 @@ inline constexpr Builtin::Str $strconst_0x14f17989600_2 = " End";
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 39 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getCharCount($extension_Str_6_str const& $this ) -> const Builtin::usize
+	inline constexpr auto getCharCount($extension_Str_6_str const & $this ) -> const Builtin::usize
 	{
 		#line 40 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		Builtin::usize count{}; 

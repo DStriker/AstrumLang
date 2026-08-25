@@ -16,8 +16,6 @@ namespace __Unsafe {} namespace __CharUnicodeInfo$Protected__Unsafe {}
 //# Type forward declarations
 //###############################################################################
 class CharUnicodeInfo;
-} namespace $extensions {
-} namespace System::Globalization {
 //###############################################################################
 //# Type definitions
 //###############################################################################
@@ -68,7 +66,29 @@ class CharUnicodeInfo;
 		
 	};
 	
-	//###############################################################################
+	} namespace $extensions {
+template<class __TT> struct $static_IsNegative;
+template<class __TT> struct $static_getIsNegative;
+template<class __TT> struct $static_FromValue;
+template<class __TT> struct $static_getFromValue;
+template<class __TT> struct $static_FromBits;
+template<class __TT> struct $static_getFromBits;
+template<class __TT> struct $static_LittleEndian;
+template<class __TT> struct $static_getLittleEndian;
+template<class __TT> struct $static_StrongLeftToRight;
+template<class __TT> struct $static_getStrongLeftToRight;
+template<class __TT> struct $static_NarrowToInt8;
+template<class __TT> struct $static_getNarrowToInt8;
+template<class __TT> struct $static_NarrowToUInt16;
+template<class __TT> struct $static_getNarrowToUInt16;
+template<class __TT> struct $static_Other;
+template<class __TT> struct $static_getOther;
+template<class __TT> struct $static_StrongRightToLeft;
+template<class __TT> struct $static_getStrongRightToLeft;
+template<class __TT> struct $static_ByteSwapped;
+template<class __TT> struct $static_getByteSwapped;
+} namespace System::Globalization {
+//###############################################################################
 //# Function definitions
 //###############################################################################
 

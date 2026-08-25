@@ -14,8 +14,6 @@ namespace __Unsafe {} namespace __SimdInstructionSet$Protected__Unsafe {}
 //# Type forward declarations
 //###############################################################################
 class SimdInstructionSet;
-} namespace $extensions {
-} namespace System::Runtime::Intrinsics {
 //###############################################################################
 //# Global type aliases
 //###############################################################################
@@ -55,7 +53,9 @@ using CpuFeatureSet = CommonCpuFeatureSet;
 		
 	};
 	
-	//###############################################################################
+	} namespace $extensions {
+} namespace System::Runtime::Intrinsics {
+//###############################################################################
 //# Function definitions
 //###############################################################################
 

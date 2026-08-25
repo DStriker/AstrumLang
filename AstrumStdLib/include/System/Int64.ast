@@ -195,6 +195,16 @@ public extension i64: IDivisibleArithmetic {
     }
     // floor division and assign
     mut operator/<=: (rhs) -> ref self ==> this = self(this /< rhs);
+    // floor modulo
+    operator%<: <T> (rhs: T) -> self ==
+    {
+        let result := this % rhs;
+        let signDiff := (result ^ rhs) >>> i32(self.BitWidth - 1);
+        let needAdjust := (result != 0) & (signDiff != 0);
+        return result + (needAdjust ? rhs : T());
+    }
+    // floor modulo and assign
+    mut operator%<=: (rhs) -> ref self ==> this = self(this %< rhs);
     // division with rounding up (ceil division)
     operator/>: <T> (rhs: T) -> self ==
     {
