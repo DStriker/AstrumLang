@@ -19,67 +19,67 @@ class IndexRange;
 //###############################################################################
 //# Global type aliases
 //###############################################################################
-#line 268 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-template<class T> using ClosedRange = Range<T, Builtin::Boolean(true)>;
-#line 270 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using IntRange8 = Range<Builtin::i8>;
 #line 271 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using IntRange16 = Range<Builtin::i16>;
-#line 272 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using IntRange32 = Range<Builtin::i32>;
+template<class T> using ClosedRange = Range<T, Builtin::Boolean(true)>;
 #line 273 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using IntRange64 = Range<Builtin::i64>;
+using IntRange8 = Range<Builtin::i8>;
 #line 274 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using IntRange128 = Range<Builtin::i128>;
+using IntRange16 = Range<Builtin::i16>;
 #line 275 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using IntRange = Range<Builtin::isize>;
+using IntRange32 = Range<Builtin::i32>;
 #line 276 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using UIntRange8 = Range<Builtin::u8>;
+using IntRange64 = Range<Builtin::i64>;
 #line 277 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using UIntRange16 = Range<Builtin::u16>;
+using IntRange128 = Range<Builtin::i128>;
 #line 278 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using UIntRange32 = Range<Builtin::u32>;
+using IntRange = Range<Builtin::isize>;
 #line 279 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using UIntRange64 = Range<Builtin::u64>;
+using UIntRange8 = Range<Builtin::u8>;
 #line 280 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using UIntRange128 = Range<Builtin::u128>;
+using UIntRange16 = Range<Builtin::u16>;
 #line 281 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using UIntRange = Range<Builtin::usize>;
+using UIntRange32 = Range<Builtin::u32>;
 #line 282 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using ByteRange = Range<Builtin::u8>;
+using UIntRange64 = Range<Builtin::u64>;
 #line 283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using FloatRange32 = Range<Builtin::f32>;
+using UIntRange128 = Range<Builtin::u128>;
 #line 284 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using FloatRange64 = Range<Builtin::f64>;
+using UIntRange = Range<Builtin::usize>;
+#line 285 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+using ByteRange = Range<Builtin::u8>;
 #line 286 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using IntClosedRange8 = ClosedRange<Builtin::i8>;
+using FloatRange32 = Range<Builtin::f32>;
 #line 287 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using IntClosedRange16 = ClosedRange<Builtin::i16>;
-#line 288 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using IntClosedRange32 = ClosedRange<Builtin::i32>;
+using FloatRange64 = Range<Builtin::f64>;
 #line 289 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using IntClosedRange64 = ClosedRange<Builtin::i64>;
+using IntClosedRange8 = ClosedRange<Builtin::i8>;
 #line 290 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using IntClosedRange128 = ClosedRange<Builtin::i128>;
+using IntClosedRange16 = ClosedRange<Builtin::i16>;
 #line 291 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using IntClosedRange = ClosedRange<Builtin::isize>;
+using IntClosedRange32 = ClosedRange<Builtin::i32>;
 #line 292 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using UIntClosedRange8 = ClosedRange<Builtin::u8>;
+using IntClosedRange64 = ClosedRange<Builtin::i64>;
 #line 293 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using UIntClosedRange16 = ClosedRange<Builtin::u16>;
+using IntClosedRange128 = ClosedRange<Builtin::i128>;
 #line 294 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using UIntClosedRange32 = ClosedRange<Builtin::u32>;
+using IntClosedRange = ClosedRange<Builtin::isize>;
 #line 295 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using UIntClosedRange64 = ClosedRange<Builtin::u64>;
+using UIntClosedRange8 = ClosedRange<Builtin::u8>;
 #line 296 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using UIntClosedRange128 = ClosedRange<Builtin::u128>;
+using UIntClosedRange16 = ClosedRange<Builtin::u16>;
 #line 297 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using UIntClosedRange = ClosedRange<Builtin::usize>;
+using UIntClosedRange32 = ClosedRange<Builtin::u32>;
 #line 298 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using ByteClosedRange = ClosedRange<Builtin::u8>;
+using UIntClosedRange64 = ClosedRange<Builtin::u64>;
 #line 299 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-using FloatClosedRange32 = ClosedRange<Builtin::f32>;
+using UIntClosedRange128 = ClosedRange<Builtin::u128>;
 #line 300 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+using UIntClosedRange = ClosedRange<Builtin::usize>;
+#line 301 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+using ByteClosedRange = ClosedRange<Builtin::u8>;
+#line 302 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+using FloatClosedRange32 = ClosedRange<Builtin::f32>;
+#line 303 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 using FloatClosedRange64 = ClosedRange<Builtin::f64>;
 //###############################################################################
 //# Type definitions
@@ -287,7 +287,7 @@ template<class T, bool IsClosed> requires(Builtin::TypeIs<T, IValueEnumerable>()
 		
 		#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		public: using ElementType = T;
-		#line 209 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 212 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		public: inline constexpr auto getHashCode() const  -> Builtin::u64;
 		#line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_PROPERTY_GETTER(public, HashCode, getHashCode, Builtin::u64);
@@ -301,11 +301,11 @@ template<class T, bool IsClosed> requires(Builtin::TypeIs<T, IValueEnumerable>()
 		public: inline constexpr auto Iterate() const  -> const Iterator;
 		#line 145 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		public: inline constexpr auto StepBy(Builtin::usize step) const  -> const StepByIterator;
-		#line 206 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 209 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		public: inline constexpr auto operator==(const $self& other) const  -> const bool;
-		#line 216 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 219 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		public: inline constexpr auto GetStart() const noexcept -> const T;
-		#line 217 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 220 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		public: inline constexpr auto GetEnd() const noexcept -> const T;
 		#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		private: T _start; ADV_CHECK_REF_STRUCT("T", T);
@@ -319,36 +319,36 @@ template<class T, bool IsClosed> requires(Builtin::TypeIs<T, IValueEnumerable>()
 	};
 	
 		} namespace $extensions { using namespace System;
-#line 220 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> using $extension_Range_220_Range = Range<T, IsClosed>;
+#line 223 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> using $extension_Range_223_Range = Range<T, IsClosed>;
+	#line 234 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto Contains($extension_Range_223_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<T> val)  -> const bool;
+	template<class T, bool IsClosed> inline constexpr auto Contains($proxy<$extension_Range_223_Range<T, IsClosed>> const& $this LIFETIMEBOUND, Builtin::In<T> val)  -> const bool { return Contains($this.val, val); } template<class T, bool IsClosed> inline constexpr auto Contains($proxy<$extension_Range_223_Range<T, IsClosed>&> const& $this LIFETIMEBOUND, Builtin::In<T> val)  -> const bool { return Contains($this.val, val); } 
+	#line 242 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto Contains($extension_Range_223_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(true)>> range)  -> const bool;
+	template<class T, bool IsClosed> inline constexpr auto Contains($proxy<$extension_Range_223_Range<T, IsClosed>> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(true)>> range)  -> const bool { return Contains($this.val, range); } template<class T, bool IsClosed> inline constexpr auto Contains($proxy<$extension_Range_223_Range<T, IsClosed>&> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(true)>> range)  -> const bool { return Contains($this.val, range); } 
+	#line 254 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto Contains($extension_Range_223_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(false)>> range)  -> const bool;
+	template<class T, bool IsClosed> inline constexpr auto Contains($proxy<$extension_Range_223_Range<T, IsClosed>> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(false)>> range)  -> const bool { return Contains($this.val, range); } template<class T, bool IsClosed> inline constexpr auto Contains($proxy<$extension_Range_223_Range<T, IsClosed>&> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(false)>> range)  -> const bool { return Contains($this.val, range); } 
+	#line 266 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto _operator_in($extension_Range_223_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<T> val)  -> const bool;
+	template<class T, bool IsClosed> inline constexpr auto _operator_in($proxy<$extension_Range_223_Range<T, IsClosed>> const& $this LIFETIMEBOUND, Builtin::In<T> val)  -> const bool { return _operator_in($this.val, val); } template<class T, bool IsClosed> inline constexpr auto _operator_in($proxy<$extension_Range_223_Range<T, IsClosed>&> const& $this LIFETIMEBOUND, Builtin::In<T> val)  -> const bool { return _operator_in($this.val, val); } 
+	#line 267 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto _operator_in($extension_Range_223_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(true)>> range)  -> const bool;
+	template<class T, bool IsClosed> inline constexpr auto _operator_in($proxy<$extension_Range_223_Range<T, IsClosed>> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(true)>> range)  -> const bool { return _operator_in($this.val, range); } template<class T, bool IsClosed> inline constexpr auto _operator_in($proxy<$extension_Range_223_Range<T, IsClosed>&> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(true)>> range)  -> const bool { return _operator_in($this.val, range); } 
+	#line 268 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto _operator_in($extension_Range_223_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(false)>> range)  -> const bool;
+	template<class T, bool IsClosed> inline constexpr auto _operator_in($proxy<$extension_Range_223_Range<T, IsClosed>> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(false)>> range)  -> const bool { return _operator_in($this.val, range); } template<class T, bool IsClosed> inline constexpr auto _operator_in($proxy<$extension_Range_223_Range<T, IsClosed>&> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(false)>> range)  -> const bool { return _operator_in($this.val, range); } 
+	#line 224 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto getStart($extension_Range_223_Range<T, IsClosed> const& $this ) -> const T;
+	#line 225 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto getEnd($extension_Range_223_Range<T, IsClosed> const& $this ) -> const T;
+	#line 226 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto getReversed($extension_Range_223_Range<T, IsClosed> const& $this ) -> const typename $extension_Range_223_Range<T, IsClosed>::ReverseIterator;
 	#line 231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto Contains($extension_Range_220_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<T> val)  -> const bool;
-	template<class T, bool IsClosed> inline constexpr auto Contains($proxy<$extension_Range_220_Range<T, IsClosed>> const& $this LIFETIMEBOUND, Builtin::In<T> val)  -> const bool { return Contains($this.val, val); } template<class T, bool IsClosed> inline constexpr auto Contains($proxy<$extension_Range_220_Range<T, IsClosed>&> const& $this LIFETIMEBOUND, Builtin::In<T> val)  -> const bool { return Contains($this.val, val); } 
-	#line 239 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto Contains($extension_Range_220_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(true)>> range)  -> const bool;
-	template<class T, bool IsClosed> inline constexpr auto Contains($proxy<$extension_Range_220_Range<T, IsClosed>> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(true)>> range)  -> const bool { return Contains($this.val, range); } template<class T, bool IsClosed> inline constexpr auto Contains($proxy<$extension_Range_220_Range<T, IsClosed>&> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(true)>> range)  -> const bool { return Contains($this.val, range); } 
-	#line 251 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto Contains($extension_Range_220_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(false)>> range)  -> const bool;
-	template<class T, bool IsClosed> inline constexpr auto Contains($proxy<$extension_Range_220_Range<T, IsClosed>> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(false)>> range)  -> const bool { return Contains($this.val, range); } template<class T, bool IsClosed> inline constexpr auto Contains($proxy<$extension_Range_220_Range<T, IsClosed>&> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(false)>> range)  -> const bool { return Contains($this.val, range); } 
-	#line 263 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto _operator_in($extension_Range_220_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<T> val)  -> const bool;
-	template<class T, bool IsClosed> inline constexpr auto _operator_in($proxy<$extension_Range_220_Range<T, IsClosed>> const& $this LIFETIMEBOUND, Builtin::In<T> val)  -> const bool { return _operator_in($this.val, val); } template<class T, bool IsClosed> inline constexpr auto _operator_in($proxy<$extension_Range_220_Range<T, IsClosed>&> const& $this LIFETIMEBOUND, Builtin::In<T> val)  -> const bool { return _operator_in($this.val, val); } 
-	#line 264 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto _operator_in($extension_Range_220_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(true)>> range)  -> const bool;
-	template<class T, bool IsClosed> inline constexpr auto _operator_in($proxy<$extension_Range_220_Range<T, IsClosed>> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(true)>> range)  -> const bool { return _operator_in($this.val, range); } template<class T, bool IsClosed> inline constexpr auto _operator_in($proxy<$extension_Range_220_Range<T, IsClosed>&> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(true)>> range)  -> const bool { return _operator_in($this.val, range); } 
-	#line 265 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto _operator_in($extension_Range_220_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(false)>> range)  -> const bool;
-	template<class T, bool IsClosed> inline constexpr auto _operator_in($proxy<$extension_Range_220_Range<T, IsClosed>> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(false)>> range)  -> const bool { return _operator_in($this.val, range); } template<class T, bool IsClosed> inline constexpr auto _operator_in($proxy<$extension_Range_220_Range<T, IsClosed>&> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(false)>> range)  -> const bool { return _operator_in($this.val, range); } 
-	#line 221 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto getStart($extension_Range_220_Range<T, IsClosed> const& $this ) -> const T;
-	#line 222 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto getEnd($extension_Range_220_Range<T, IsClosed> const& $this ) -> const T;
-	#line 223 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto getReversed($extension_Range_220_Range<T, IsClosed> const& $this ) -> const typename $extension_Range_220_Range<T, IsClosed>::ReverseIterator;
-	#line 228 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto getLength($extension_Range_220_Range<T, IsClosed> const& $this ) -> const T;
-	#line 229 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto getIsEmpty($extension_Range_220_Range<T, IsClosed> const& $this ) -> const bool;
+	template<class T, bool IsClosed> inline constexpr auto getLength($extension_Range_223_Range<T, IsClosed> const& $this ) -> const T;
+	#line 232 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto getIsEmpty($extension_Range_223_Range<T, IsClosed> const& $this ) -> const bool;
 	} namespace System{
 using $extensions::Contains;
 using $extensions::Contains;
@@ -363,30 +363,30 @@ using $extensions::getLength;
 using $extensions::getIsEmpty;
 
 	class $Class_IndexRange;
-	#line 302 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	#line 305 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	struct IndexRange final : public Builtin::Struct {
 		public: using $self = IndexRange;
 		public: using $class = $Class_IndexRange;
 		public: FORCE_INLINE constexpr decltype(auto) $ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) $ref() const noexcept { return *this; }
-		#line 307 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 310 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		public: inline constexpr IndexRange()  = default;
-		#line 308 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 311 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		public: inline constexpr IndexRange(Index start, Index end, bool isClosed = Builtin::Boolean(false)) ;
-		#line 314 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 317 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		public: template<class T, bool IsClosed> requires(std::convertible_to<T, Index>) inline constexpr  IndexRange(const Range<T, IsClosed>& range) ;
-		#line 320 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-		public: inline constexpr auto operator==(const $self& other) const  -> const bool;
 		#line 323 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		public: inline constexpr auto operator==(const $self& other) const  -> const bool;
+		#line 326 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		public: inline constexpr auto GetStart() const noexcept -> const Index;
-		#line 324 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 327 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		public: inline constexpr auto GetEnd() const noexcept -> const Index;
-		#line 325 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 328 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		public: inline constexpr auto GetIsClosed() const noexcept -> const bool;
-		#line 304 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 307 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		private: Index _start; ADV_CHECK_REF_STRUCT("Index", Index);
-		#line 304 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 307 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		private: Index _end; ADV_CHECK_REF_STRUCT("Index", Index);
-		#line 305 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 308 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		private: bool _isClosed{}; ADV_CHECK_REF_STRUCT("bool", bool);
 		template <size_t I> friend auto& get(IndexRange&);
 		template <size_t I> friend const auto& get(const IndexRange&);
@@ -394,26 +394,26 @@ using $extensions::getIsEmpty;
 	};
 	
 		} namespace $extensions { using namespace System;
-#line 328 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	using $extension_Range_328_IndexRange = IndexRange;
-	#line 333 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	inline constexpr auto Length($extension_Range_328_IndexRange const& $this LIFETIMEBOUND, Builtin::usize size)  -> const Builtin::usize;
-	#line 343 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class __TT> struct $static_StartAt; template<> struct $static_StartAt<$extension_Range_328_IndexRange> { static inline constexpr auto get(Index start)  -> const typename $extension_Range_328_IndexRange; };
-	#line 344 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class __TT> struct $static_EndAt; template<> struct $static_EndAt<$extension_Range_328_IndexRange> { static inline constexpr auto get(Index end)  -> const typename $extension_Range_328_IndexRange; };
-	#line 345 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class __TT> struct $static_InclusiveEndAt; template<> struct $static_InclusiveEndAt<$extension_Range_328_IndexRange> { static inline constexpr auto get(Index end)  -> const typename $extension_Range_328_IndexRange; };
-	#line 329 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	inline constexpr auto getStart($extension_Range_328_IndexRange const& $this ) -> const Index;
-	#line 330 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	inline constexpr auto getEnd($extension_Range_328_IndexRange const& $this ) -> const Index;
-	#line 331 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	inline constexpr auto getIsClosed($extension_Range_328_IndexRange const& $this ) -> const bool;
+#line 331 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	using $extension_Range_331_IndexRange = IndexRange;
 	#line 336 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	inline constexpr auto getHashCode($extension_Range_328_IndexRange const& $this ) -> const Builtin::u64;
+	inline constexpr auto Length($extension_Range_331_IndexRange const& $this LIFETIMEBOUND, Builtin::usize size)  -> const Builtin::usize;
 	#line 346 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class __TT> struct $static_getAll; template<> struct $static_getAll<$extension_Range_328_IndexRange> { static inline constexpr auto get() -> const $extension_Range_328_IndexRange; };
+	template<class __TT> struct $static_StartAt; template<> struct $static_StartAt<$extension_Range_331_IndexRange> { static inline constexpr auto get(Index start)  -> const typename $extension_Range_331_IndexRange; };
+	#line 347 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class __TT> struct $static_EndAt; template<> struct $static_EndAt<$extension_Range_331_IndexRange> { static inline constexpr auto get(Index end)  -> const typename $extension_Range_331_IndexRange; };
+	#line 348 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class __TT> struct $static_InclusiveEndAt; template<> struct $static_InclusiveEndAt<$extension_Range_331_IndexRange> { static inline constexpr auto get(Index end)  -> const typename $extension_Range_331_IndexRange; };
+	#line 332 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	inline constexpr auto getStart($extension_Range_331_IndexRange const& $this ) -> const Index;
+	#line 333 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	inline constexpr auto getEnd($extension_Range_331_IndexRange const& $this ) -> const Index;
+	#line 334 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	inline constexpr auto getIsClosed($extension_Range_331_IndexRange const& $this ) -> const bool;
+	#line 339 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	inline constexpr auto getHashCode($extension_Range_331_IndexRange const& $this ) -> const Builtin::u64;
+	#line 349 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class __TT> struct $static_getAll; template<> struct $static_getAll<$extension_Range_331_IndexRange> { static inline constexpr auto get() -> const $extension_Range_331_IndexRange; };
 	} namespace System{
 using $extensions::Length;
 using $extensions::$static_StartAt;
@@ -453,10 +453,10 @@ using $extensions::$static_getAll;
 	};
 	
 
-	#line 302 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	#line 305 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	class $Class_IndexRange final : public Builtin::ValueType
 	{
-		#line 302 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 305 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_CHECK_INTERFACE(ISelfEquatable, ISelfEquatable);
 		#line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		public: using $underlying = IndexRange; using $self = $underlying;
@@ -466,9 +466,9 @@ using $extensions::$static_getAll;
 		auto operator==(const $self& other) const  -> bool const { ADV_EXPRESSION_BODY(__value.operator==(other)); }
 		
 	};
-	#line 302 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	#line 305 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	ADV_CHECK_FOR_CONCRETE(IndexRange);
-	#line 302 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	#line 305 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(IndexRange, ISelfEquatable, ISelfEquatable, IndexRange);
 	
 } namespace $extensions {
@@ -840,102 +840,107 @@ template<class __TT> struct $static_getFromEnd;
 	template<class T, bool IsClosed> requires(Builtin::TypeIs<T, IValueEnumerable>() || Builtin::TypeIs<T, IRangeCustomIterator>()) inline constexpr auto Range<T, IsClosed>::ReverseIterator::StepBackward(Builtin::usize step)  -> const bool
 	{
 		#line 197 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-		if constexpr (Builtin::TypeIs<T, IValueEnumerable>()) {
+		if (_current == _end) {
 			#line 198 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+			return Builtin::Boolean(false);
+		}
+		#line 200 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		if constexpr (Builtin::TypeIs<T, IValueEnumerable>()) {
+			#line 201 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 			_current -= T{step};
 		} else {
-			#line 199 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+			#line 202 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 			{
-				#line 200 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+				#line 203 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 				_current = ADV_UFCS(RangeStepBackward)(_current.$ref(), step);
 			}
 		}
-		#line 202 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 205 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		return (_current <=> _end) >= 0;
 	}
-#line 206 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+#line 209 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	template<class T, bool IsClosed> requires(Builtin::TypeIs<T, IValueEnumerable>() || Builtin::TypeIs<T, IRangeCustomIterator>()) inline constexpr auto Range<T, IsClosed>::operator==(const $self& other) const  -> const bool
 	{
-		#line 207 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 210 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(_start)((*this).$ref()) == ADV_UPCS(_start)(other.$ref()) && ADV_UPCS(_end)((*this).$ref()) == ADV_UPCS(_end)(other.$ref())); 
 	}
-#line 209 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+#line 212 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	template<class T, bool IsClosed> requires(Builtin::TypeIs<T, IValueEnumerable>() || Builtin::TypeIs<T, IRangeCustomIterator>()) inline constexpr auto Range<T, IsClosed>::getHashCode() const  -> Builtin::u64 
 	{
-		#line 211 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 214 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(HashCode)(ADV_UPCS(Start)((*this).$ref()).$ref()))> startHash = ADV_UPCS(HashCode)(ADV_UPCS(Start)((*this).$ref()).$ref()); 
-		#line 212 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 215 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(HashCode)(ADV_UPCS(End)((*this).$ref()).$ref()))> endHash = ADV_UPCS(HashCode)(ADV_UPCS(End)((*this).$ref()).$ref()); 
-		#line 213 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 216 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		return startHash ^ (ADV_UFCS(_operator_add_mod)(ADV_UFCS(_operator_add_mod)(ADV_UFCS(_operator_add_mod)(endHash, Builtin::u32(0x9e3779b9U)), (startHash << Builtin::i32(6))), (startHash >> Builtin::i32(2))));
 	}
 	
-#line 216 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+#line 219 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	template<class T, bool IsClosed> requires(Builtin::TypeIs<T, IValueEnumerable>() || Builtin::TypeIs<T, IRangeCustomIterator>()) inline constexpr auto Range<T, IsClosed>::GetStart() const noexcept -> const T
 	{
-		#line 216 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 219 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_EXPRESSION_BODY(_start); 
 	}
-#line 217 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+#line 220 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	template<class T, bool IsClosed> requires(Builtin::TypeIs<T, IValueEnumerable>() || Builtin::TypeIs<T, IRangeCustomIterator>()) inline constexpr auto Range<T, IsClosed>::GetEnd() const noexcept -> const T
 	{
-		#line 217 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 220 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_EXPRESSION_BODY(_end); 
 	}
-#line 308 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+#line 311 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	inline constexpr IndexRange::IndexRange(Index start, Index end, bool isClosed)  : 
-	#line 309 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	#line 312 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	_start{start}, 
-	#line 310 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	#line 313 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	_end{end}, 
-	#line 311 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	#line 314 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	_isClosed{isClosed}
 	{
 	}
-#line 314 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+#line 317 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	template<class T, bool IsClosed> requires(std::convertible_to<T, Index>) inline constexpr IndexRange::IndexRange(const Range<T, IsClosed>& range)  :
-	#line 317 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	#line 320 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	IndexRange(Builtin::Cast<true, Index>(ADV_UPCS(Start)(range.$ref())), Builtin::Cast<true, Index>(ADV_UPCS(End)(range.$ref())), IsClosed)
 	{
 	}
-#line 320 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+#line 323 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	inline constexpr auto IndexRange::operator==(const $self& other) const  -> const bool
 	{
-		#line 321 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 324 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(_start)((*this).$ref()) == ADV_UPCS(_start)(other.$ref()) && ADV_UPCS(_end)((*this).$ref()) == ADV_UPCS(_end)(other.$ref()) && ADV_UPCS(_isClosed)((*this).$ref()) == ADV_UPCS(_isClosed)(other.$ref())); 
 	}
-#line 323 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+#line 326 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	inline constexpr auto IndexRange::GetStart() const noexcept -> const Index
 	{
-		#line 323 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 326 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_EXPRESSION_BODY(_start); 
 	}
-#line 324 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+#line 327 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	inline constexpr auto IndexRange::GetEnd() const noexcept -> const Index
 	{
-		#line 324 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 327 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_EXPRESSION_BODY(_end); 
 	}
-#line 325 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+#line 328 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	inline constexpr auto IndexRange::GetIsClosed() const noexcept -> const bool
 	{
-		#line 325 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 328 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_EXPRESSION_BODY(_isClosed); 
 	}
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	
 } namespace $extensions { using namespace System;
-#line 231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto Contains($extension_Range_220_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<T> val)  -> const bool
+#line 234 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto Contains($extension_Range_223_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<T> val)  -> const bool
 	{
-		#line 233 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 236 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		if constexpr (IsClosed) {
-			#line 234 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+			#line 237 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 			return (ADV_UPCS(Start)($this.$ref()) <=> val) <= 0 && (val <=> ADV_UPCS(End)($this.$ref())) <= 0;
 		} else {
-			#line 235 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+			#line 238 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 			{
-				#line 236 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+				#line 239 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 				return (ADV_UPCS(Start)($this.$ref()) <=> val) <= 0 && (val <=> ADV_UPCS(End)($this.$ref())) < 0;
 			}
 		}
@@ -944,24 +949,24 @@ template<class __TT> struct $static_getFromEnd;
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 239 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto Contains($extension_Range_220_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(true)>> range)  -> const bool
+#line 242 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto Contains($extension_Range_223_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(true)>> range)  -> const bool
 	{
-		#line 241 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 244 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		if constexpr (IsClosed) {
-			#line 242 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+			#line 245 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 			return (ADV_UPCS(Start)($this.$ref()) <=> ADV_UPCS(Start)(range.$ref())) <= 0 && (ADV_UPCS(End)(range.$ref()) <=> ADV_UPCS(End)($this.$ref())) <= 0;
 		} else {
-			#line 243 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+			#line 246 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 			{
-				#line 244 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+				#line 247 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 				if constexpr (Builtin::TypeIs<T, IValueEnumerable>()) {
-					#line 245 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+					#line 248 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 					return (ADV_UPCS(Start)($this.$ref()) <=> ADV_UPCS(Start)(range.$ref())) <= 0 && (ADV_UPCS(End)(range.$ref()) <=> (ADV_UPCS(End)($this.$ref()) - Builtin::i32(1))) <= 0;
 				} else {
-					#line 246 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+					#line 249 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 					{
-						#line 247 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+						#line 250 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 						return (ADV_UPCS(Start)($this.$ref()) <=> ADV_UPCS(Start)(range.$ref())) <= 0 && (ADV_UPCS(End)(range.$ref()) <=> ADV_UFCS(RangeStepBackward)(ADV_UPCS(End)($this.$ref()).$ref(), Builtin::u32(1U))) <= 0;
 					}
 				}
@@ -972,26 +977,26 @@ template<class __TT> struct $static_getFromEnd;
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 251 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto Contains($extension_Range_220_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(false)>> range)  -> const bool
+#line 254 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto Contains($extension_Range_223_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(false)>> range)  -> const bool
 	{
-		#line 253 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 256 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		if constexpr (IsClosed) {
-			#line 254 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+			#line 257 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 			if constexpr (Builtin::TypeIs<T, IValueEnumerable>()) {
-				#line 255 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+				#line 258 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 				return (ADV_UPCS(Start)($this.$ref()) <=> ADV_UPCS(Start)(range.$ref())) <= 0 && ((ADV_UPCS(End)(range.$ref()) - Builtin::i32(1)) <=> ADV_UPCS(End)($this.$ref())) <= 0;
 			} else {
-				#line 256 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+				#line 259 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 				{
-					#line 257 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+					#line 260 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 					return (ADV_UPCS(Start)($this.$ref()) <=> ADV_UPCS(Start)(range.$ref())) <= 0 && (ADV_UFCS(RangeStepBackward)(ADV_UPCS(End)(range.$ref()).$ref(), Builtin::u32(1U)) <=> ADV_UPCS(End)($this.$ref())) <= 0;
 				}
 			}
 		} else {
-			#line 259 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+			#line 262 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 			{
-				#line 260 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+				#line 263 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 				return (ADV_UPCS(Start)($this.$ref()) <=> ADV_UPCS(Start)(range.$ref())) <= 0 && (ADV_UPCS(End)(range.$ref()) <=> ADV_UPCS(End)($this.$ref())) <= 0;
 			}
 		}
@@ -1000,71 +1005,71 @@ template<class __TT> struct $static_getFromEnd;
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 263 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto _operator_in($extension_Range_220_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<T> val)  -> const bool
+#line 266 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto _operator_in($extension_Range_223_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<T> val)  -> const bool
 	{
-		#line 263 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 266 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(Contains)($this.$ref(), val)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 264 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto _operator_in($extension_Range_220_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(true)>> range)  -> const bool
+#line 267 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto _operator_in($extension_Range_223_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(true)>> range)  -> const bool
 	{
-		#line 264 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 267 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(Contains)($this.$ref(), range)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 265 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto _operator_in($extension_Range_220_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(false)>> range)  -> const bool
+#line 268 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto _operator_in($extension_Range_223_Range<T, IsClosed> const& $this LIFETIMEBOUND, Builtin::In<Range<T, Builtin::Boolean(false)>> range)  -> const bool
 	{
-		#line 265 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 268 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(Contains)($this.$ref(), range)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 221 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto getStart($extension_Range_220_Range<T, IsClosed> const & $this ) -> const T
+#line 224 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto getStart($extension_Range_223_Range<T, IsClosed> const & $this ) -> const T
 	{
-		#line 221 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 224 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(GetStart)($this.$ref())); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 222 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto getEnd($extension_Range_220_Range<T, IsClosed> const & $this ) -> const T
+#line 225 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto getEnd($extension_Range_223_Range<T, IsClosed> const & $this ) -> const T
 	{
-		#line 222 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 225 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(GetEnd)($this.$ref())); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 223 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto getReversed($extension_Range_220_Range<T, IsClosed> const & $this ) -> const typename $extension_Range_220_Range<T, IsClosed>::ReverseIterator
+#line 226 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto getReversed($extension_Range_223_Range<T, IsClosed> const & $this ) -> const typename $extension_Range_223_Range<T, IsClosed>::ReverseIterator
 	{
-		#line 224 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-		using TIterator = typename $extension_Range_220_Range<T, IsClosed>::ReverseIterator;
-		#line 225 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 227 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		using TIterator = typename $extension_Range_223_Range<T, IsClosed>::ReverseIterator;
+		#line 228 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		return TIterator{$this};
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 228 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto getLength($extension_Range_220_Range<T, IsClosed> const & $this ) -> const T
+#line 231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto getLength($extension_Range_223_Range<T, IsClosed> const & $this ) -> const T
 	{
-		#line 228 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(End)($this.$ref()) - ADV_UPCS(Start)($this.$ref())); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 229 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	template<class T, bool IsClosed> inline constexpr auto getIsEmpty($extension_Range_220_Range<T, IsClosed> const & $this ) -> const bool
+#line 232 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	template<class T, bool IsClosed> inline constexpr auto getIsEmpty($extension_Range_223_Range<T, IsClosed> const & $this ) -> const bool
 	{
-		#line 229 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 232 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Length)($this.$ref()) == Builtin::i32(0)); 
 	}
 	} namespace System{
@@ -1073,83 +1078,83 @@ template<class __TT> struct $static_getFromEnd;
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 	
 } namespace $extensions { using namespace System;
-#line 333 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	inline constexpr auto Length($extension_Range_328_IndexRange const& $this LIFETIMEBOUND, Builtin::usize size)  -> const Builtin::usize
+#line 336 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	inline constexpr auto Length($extension_Range_331_IndexRange const& $this LIFETIMEBOUND, Builtin::usize size)  -> const Builtin::usize
 	{
-		#line 333 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 336 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_EXPRESSION_BODY(Builtin::usize{ADV_UFCS(Offset)(ADV_UPCS(End)($this.$ref()).$ref(), size) - ADV_UFCS(Offset)(ADV_UPCS(Start)($this.$ref()).$ref(), size) + Builtin::i32{ADV_UPCS(IsClosed)($this.$ref())}}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 343 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	inline constexpr auto $static_StartAt<$extension_Range_328_IndexRange>::get(Index start)  -> const typename $extension_Range_328_IndexRange
+#line 346 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	inline constexpr auto $static_StartAt<$extension_Range_331_IndexRange>::get(Index start)  -> const typename $extension_Range_331_IndexRange
 	{
-		#line 343 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-		ADV_EXPRESSION_BODY($extension_Range_328_IndexRange{start, ADV_USPCS(End, Index)(), Builtin::Boolean(false)}); 
+		#line 346 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		ADV_EXPRESSION_BODY($extension_Range_331_IndexRange{start, ADV_USPCS(End, Index)(), Builtin::Boolean(false)}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 344 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	inline constexpr auto $static_EndAt<$extension_Range_328_IndexRange>::get(Index end)  -> const typename $extension_Range_328_IndexRange
+#line 347 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	inline constexpr auto $static_EndAt<$extension_Range_331_IndexRange>::get(Index end)  -> const typename $extension_Range_331_IndexRange
 	{
-		#line 344 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-		ADV_EXPRESSION_BODY($extension_Range_328_IndexRange{ADV_USPCS(Start, Index)(), end, Builtin::Boolean(false)}); 
+		#line 347 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		ADV_EXPRESSION_BODY($extension_Range_331_IndexRange{ADV_USPCS(Start, Index)(), end, Builtin::Boolean(false)}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 345 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	inline constexpr auto $static_InclusiveEndAt<$extension_Range_328_IndexRange>::get(Index end)  -> const typename $extension_Range_328_IndexRange
+#line 348 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	inline constexpr auto $static_InclusiveEndAt<$extension_Range_331_IndexRange>::get(Index end)  -> const typename $extension_Range_331_IndexRange
 	{
-		#line 345 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-		ADV_EXPRESSION_BODY($extension_Range_328_IndexRange{ADV_USPCS(Start, Index)(), end, Builtin::Boolean(true)}); 
+		#line 348 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		ADV_EXPRESSION_BODY($extension_Range_331_IndexRange{ADV_USPCS(Start, Index)(), end, Builtin::Boolean(true)}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 329 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	inline constexpr auto getStart($extension_Range_328_IndexRange const & $this ) -> const Index
+#line 332 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	inline constexpr auto getStart($extension_Range_331_IndexRange const & $this ) -> const Index
 	{
-		#line 329 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 332 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(GetStart)($this.$ref())); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 330 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	inline constexpr auto getEnd($extension_Range_328_IndexRange const & $this ) -> const Index
+#line 333 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	inline constexpr auto getEnd($extension_Range_331_IndexRange const & $this ) -> const Index
 	{
-		#line 330 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 333 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(GetEnd)($this.$ref())); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 331 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	inline constexpr auto getIsClosed($extension_Range_328_IndexRange const & $this ) -> const bool
+#line 334 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	inline constexpr auto getIsClosed($extension_Range_331_IndexRange const & $this ) -> const bool
 	{
-		#line 331 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 334 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(GetIsClosed)($this.$ref())); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 336 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	inline constexpr auto getHashCode($extension_Range_328_IndexRange const & $this ) -> const Builtin::u64
+#line 339 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	inline constexpr auto getHashCode($extension_Range_331_IndexRange const & $this ) -> const Builtin::u64
 	{
-		#line 338 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 341 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(HashCode)(ADV_UPCS(Start)($this.$ref()).$ref()))> startHash = ADV_UPCS(HashCode)(ADV_UPCS(Start)($this.$ref()).$ref()); 
-		#line 339 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 342 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(HashCode)(ADV_UPCS(End)($this.$ref()).$ref()))> endHash = ADV_UPCS(HashCode)(ADV_UPCS(End)($this.$ref()).$ref()); 
-		#line 340 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		#line 343 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
 		return startHash ^ ADV_UFCS(_operator_mul_mod)((ADV_UFCS(_operator_add_mod)(ADV_UFCS(_operator_add_mod)(ADV_UFCS(_operator_add_mod)(endHash, Builtin::u32(0x9e3779b9U)), (startHash << Builtin::i32(6))), (startHash >> Builtin::i32(2)))), (ADV_UFCS(_operator_xor_xor)(Builtin::u64(23ULL), Builtin::u32{ADV_UPCS(IsClosed)($this.$ref())})));
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 346 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-	inline constexpr auto $static_getAll<$extension_Range_328_IndexRange>::get() -> const $extension_Range_328_IndexRange
+#line 349 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+	inline constexpr auto $static_getAll<$extension_Range_331_IndexRange>::get() -> const $extension_Range_331_IndexRange
 	{
-		#line 346 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
-		ADV_EXPRESSION_BODY($extension_Range_328_IndexRange{ADV_USPCS(Start, Index)(), ADV_USPCS(End, Index)(), Builtin::Boolean(false)}); 
+		#line 349 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"
+		ADV_EXPRESSION_BODY($extension_Range_331_IndexRange{ADV_USPCS(Start, Index)(), ADV_USPCS(End, Index)(), Builtin::Boolean(false)}); 
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Range.ast"

@@ -49,21 +49,13 @@ namespace Builtin {
 			if (result != 0) {
 				return result;
 			}
-			if (len < other.len) {
-				return -1;
-			}
-			if (len > other.len) {
-				return 1;
-			}
-			return 0;
+			return size_t(len) - size_t(other.len);
 		}
 
 	   private:
 		const char* chars;
 		usize len;
 	};
-
-	inline constexpr Str testStr = "12345 ffk34";
 
 	template <class... Args>
 	struct StringInterpolation {

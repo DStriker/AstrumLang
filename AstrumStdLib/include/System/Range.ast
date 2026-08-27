@@ -194,6 +194,9 @@ where type T is IValueEnumerable or type T is IRangeCustomIterator
 
         private mut StepBackward: (step: usize) -> bool ==
         {
+            if _current == _end {
+                return false;
+            }
             static if type T is IValueEnumerable {
                 _current -= T(step);
             } else {

@@ -1849,6 +1849,23 @@ public static class CommonInstructions: SimdInstructionSet {
                 return result;
             }
         }
+
+        Shuffle: <Arch> (in ref vec: SimdVector<byte, Arch>, in ref mask: SimdVector<byte, Arch>) -> SimdVector<byte, Arch> {
+            type TVector = SimdVector<byte, Arch>;
+            const size :== i32(TVector::Length);
+            bufVec: BufferedVector<byte, size>;
+            bufMask: BufferedVector<byte, size>;
+            bufResult: BufferedVector<byte, size>;
+            for i in ..size {
+                bufVec.>buffer[@Unchecked i] = vec[i as usize];
+                bufMask.>buffer[@Unchecked i] = mask[i as usize];
+                bufResult.>buffer[@Unchecked i] = (bufMask.>buffer[@Unchecked i] & 0x80) == 0 ? 
+                                                bufVec.>buffer[@Unchecked bufMask.>buffer[@Unchecked i] & 15] : 0u8;
+            }
+            unsafe {
+                return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);
+            }
+        }
     }
 
     protected type FloatInt<T> = type T is f32 ? i32 : i64;

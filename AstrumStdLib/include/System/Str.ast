@@ -2,6 +2,25 @@ package System;
 
 public import CharIterator;
 public import StringComparison;
+public import System.Text.Utf8;
+
+public type Utf8ValidationError = (index: usize, length: usize);
+
+public extension byte[&] {
+    // Returns true if the byte sequence is a valid ASCII string.
+    IsAscii: bool == {
+        if consteval {
+            for b in this {
+                if b not in ..=127u8 {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            return not this.ContainsAnyExcept(..=127u8);
+        }
+    }
+}
 
 public extension str {
     // Returns the number of UTF-8 bytes in the string.
@@ -68,9 +87,9 @@ public extension str {
         }
         return str.UnsafeCreate(this.Bytes[@Unchecked start], length);
     }
-/*
+
     Equals: (other: str) -> bool ==> this == other;
-    Equals: (other: str, comparison: StringComparison) -> bool =
+    /*Equals: (other: str, comparison: StringComparison) -> bool =
     {
         if this === other {
             return true;
@@ -112,7 +131,40 @@ public extension str {
         };
     }*/
     
-    //Contains: (val: str) -> bool ==> ;
+    // Converts the raw bytes to a str with validation
+    // Retuns the converted str or Utf8ValidationError if bytes contains invalid UTF-8
+    static TryFromUtf8: (bytes: byte[&]) -> self? == {
+        return null;
+    }
+    // Converts the raw bytes to a str with validation
+    // Throws InvalidArgumentException if bytes contains invalid UTF-8
+    static FromUtf8: (bytes: byte[&]) -> self == {
+        if let s := str.TryFromUtf8(bytes) {
+            return s;
+        }
+        throw Builtin.InvalidArgumentException();
+    }
+
+    // Converts the raw bytes to a str without encoding validation
+    // This is unsafe and should only be used when you are sure the bytes are valid UTF-8
+    static FromUtf8Unchecked: (bytes: byte[&]) -> self noexcept == {
+        return Unsafe.As<self>(bytes);
+    }
+
+    // Returns true if str contains only ASCII characters.
+    IsAscii: bool ==> this.Bytes.IsAscii;
+    // Returns true if str contains the given byte.
+    Contains: (val: byte) -> bool ==> this.Bytes.Contains(val);
+    operator in: (val: byte) -> bool ==> this.Bytes.Contains(val);
+    // Returns true if str contains the given character.
+    Contains: (val: char) -> bool == {
+        if val.IsAscii {
+            return this.Bytes.Contains(val as byte);
+        }
+        buf: byte[4u];
+        return /*this.Contains(val.ToUtf8(buf))*/false;
+    }
+    operator in: (val: char) -> bool ==> this.Contains(val);
     // HashCode
     // IndexOf, IndexOfAny
     // LastIndexOf, LastIndexOfAny
@@ -124,6 +176,7 @@ public extension str {
     // StartsWith
     // Trim
 }
+
 
 static assert(sizeof(str) == sizeof(usize) * 2, "str should be 2 pointers wide");
 static assert(type str is ISelfEquatable, "str should be ISelfEquatable");
@@ -153,6 +206,10 @@ test "Str" {
     assert s[1u..^1u] == "ello, world";
     assert "Help".Substring(2u) == "lp";
     assert s.Substring(1u, 11u) == "ello, world";
+    assert b'w' in s;
+    assert b'f' not in s;
+    assert s.IsAscii;
+    assert not cs.IsAscii;
 
     let switched := switch s {
         "Help" => "help",

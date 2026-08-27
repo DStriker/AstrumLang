@@ -4861,6 +4861,7 @@ namespace AstrumLang {
 			StringReplace(mangledName, ")", "_paren_");
 			StringReplace(mangledName, "?", "_quest_");
 			StringReplace(mangledName, ",", "_comma_");
+			StringReplace(mangledName, "&", "_and_");
 			StringReplace(mangledName, " ", "_");
 
 			auto def = std::make_shared<StructDefinition>(
