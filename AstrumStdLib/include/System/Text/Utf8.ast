@@ -17,6 +17,56 @@ public static class Utf8 {
         }
     }
 
+    public WriteChar: (c: char, dst: byte[&mut]) -> byte[&mut] == {
+        let length := GetLength(c);
+        if dst.Length < length {
+            throw Builtin.InvalidArgumentException(); // InsufficientBuffer
+        }
+
+        let output := dst[@Unchecked ..length];
+
+        if length == 1 {
+            dst[@Unchecked 0] = c as byte;
+            return output;
+        }
+
+        let codepoint: u32 = c;
+        let last1 := byte(codepoint & 0x3Fu) | 0b1000_0000_u8;
+        let last2 := byte((codepoint >> 6) & 0x3Fu) | 0b1000_0000_u8;
+        let last3 := byte((codepoint >> 12) & 0x3Fu) | 0b1000_0000_u8;
+        let last4 := byte((codepoint >> 18) & 0x3Fu) | 0b1111_0000_u8;
+
+        switch length {
+            2 => {
+                dst[@Unchecked 0] = last2 | 0b1100_0000_u8;
+                dst[@Unchecked 1] = last1;
+            }
+            3 => {
+                dst[@Unchecked 0] = last3 | 0b1110_0000_u8;
+                dst[@Unchecked 1] = last2;
+                dst[@Unchecked 2] = last1;
+            }
+            _ => {
+                dst[@Unchecked 0] = last4;
+                dst[@Unchecked 1] = last3;
+                dst[@Unchecked 2] = last2;
+                dst[@Unchecked 3] = last1;
+            }
+        }
+
+        return output;
+    }
+
+    public GetLength: (c: char) -> usize == {
+        let codepoint: u32 = c;
+        return switch codepoint {
+            <0x80u => 1u,
+            <0x800u => 2u,
+            <0x10000u => 3u,
+            _ => 4u
+        };
+    }
+
     private IsValidScalar: (bytes: byte[&]) -> bool == {
         // based on Bjoern Hoehrmann`s Decoder
         const table: byte[_] == [

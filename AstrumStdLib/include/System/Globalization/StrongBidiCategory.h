@@ -11,8 +11,6 @@ namespace __Unsafe {} namespace __StrongBidiCategory$Protected__Unsafe {}
 //###############################################################################
 class StrongBidiCategory;
 class $Class_StrongBidiCategory;
-} namespace $extensions {
-} namespace System::Globalization {
 //###############################################################################
 //# Type definitions
 //###############################################################################
@@ -86,6 +84,8 @@ class $Class_StrongBidiCategory;
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\StrongBidiCategory.ast"
 	ADV_CHECK_FOR_CONCRETE(StrongBidiCategory);
 	
+} namespace $extensions {
+} namespace System::Globalization {
 //###############################################################################
 //# Function definitions
 //###############################################################################

@@ -58,7 +58,7 @@ inline void print(Builtin::char32 ch) {
 }
 
 inline void print(Builtin::Str v) {
-	std::cout << (const char*)&v.GetDataReference() << "\n";
+	std::cout << std::string_view(v.UnsafeGetRawDataPointer(), v.GetByteLength()) << "\n";
 }
 
 inline void print(const std::string& v) { std::cout << v << "\n"; }

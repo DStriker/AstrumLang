@@ -1533,6 +1533,7 @@ literal
     | CharacterLiteral
     | StringLiteral
     | MultilineStringLiteral
+    | HexStringLiteral
     | interpolatedStringLiteral
     | Null
     ;

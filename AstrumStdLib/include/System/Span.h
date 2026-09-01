@@ -1657,6 +1657,10 @@ template<class __TT> struct $static_StartsWith;
 template<class __TT> struct $static_getStartsWith;
 template<class __TT> struct $static_ContainsGeneralCase;
 template<class __TT> struct $static_getContainsGeneralCase;
+template<class __TT> struct $static_IndexOfAnyInRangeByte;
+template<class __TT> struct $static_getIndexOfAnyInRangeByte;
+template<class __TT> struct $static_IndexOf;
+template<class __TT> struct $static_getIndexOf;
 template<class __TT> struct $static_Min;
 template<class __TT> struct $static_getMin;
 template<class __TT> struct $static_CountBytes;
@@ -1681,10 +1685,6 @@ template<class __TT> struct $static_IndexOfAnyInRangeGeneralCase;
 template<class __TT> struct $static_getIndexOfAnyInRangeGeneralCase;
 template<class __TT> struct $static_CountGeneralCase;
 template<class __TT> struct $static_getCountGeneralCase;
-template<class __TT> struct $static_IndexOfAnyInRangeByte;
-template<class __TT> struct $static_getIndexOfAnyInRangeByte;
-template<class __TT> struct $static_IndexOf;
-template<class __TT> struct $static_getIndexOf;
 template<class __TT> struct $static_IndexOfAnyInRangeQword;
 template<class __TT> struct $static_getIndexOfAnyInRangeQword;
 template<class __TT> struct $static_IndexOfInternal;
@@ -2302,13 +2302,13 @@ template<class __TT> struct $static_getRotateRight;
 	template<class T> inline auto Span<T>::Contains(const T& val, EqualityComparer<T> equals) const  -> const bool
 	{
 		#line 241 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-		ADV_EXPRESSION_BODY(IndexOf(val, equals) != nullptr); 
+		ADV_EXPRESSION_BODY(ADV_UFCS(IndexOf)((*this).$ref(), val, equals) != nullptr); 
 	}
 #line 244 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 	template<class T> inline auto Span<T>::Contains(System::Span<T> val) const  -> const bool
 	{
 		#line 244 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-		ADV_EXPRESSION_BODY(IndexOf(val) != nullptr); 
+		ADV_EXPRESSION_BODY(ADV_UFCS(IndexOf)((*this).$ref(), val) != nullptr); 
 	}
 #line 245 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 	template<class T> inline auto Span<T>::_operator_in(System::Span<T> val) const  -> const bool
@@ -2320,7 +2320,7 @@ template<class __TT> struct $static_getRotateRight;
 	template<class T> inline auto Span<T>::Contains(System::Span<T> val, EqualityComparer<T> equals) const  -> const bool
 	{
 		#line 248 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-		ADV_EXPRESSION_BODY(IndexOf(val, equals) != nullptr); 
+		ADV_EXPRESSION_BODY(ADV_UFCS(IndexOf)((*this).$ref(), val, equals) != nullptr); 
 	}
 #line 251 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 	template<class T> inline constexpr auto Span<T>::Count(const T& val) const  -> const Builtin::usize
@@ -2614,13 +2614,13 @@ template<class __TT> struct $static_getRotateRight;
 	template<class T> inline constexpr auto Span<T>::TrimStart(System::Span<T> vals) const  -> const $self
 	{
 		#line 399 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_subscript)((*this).$ref(), System::IndexRange(std::make_tuple(__Span$Protected::SpanHelpers, TrimStartCount((*this), vals)), System::Index::End, false))); 
+		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_subscript)((*this).$ref(), System::IndexRange((ADV_USFCS((__Span$Protected::SpanHelpers), TrimStartCount)((*this), vals)), System::Index::End, false))); 
 	}
 #line 401 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 	template<class T> inline constexpr auto Span<T>::TrimEnd(const T& val) const  -> const $self
 	{
 		#line 401 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_subscript)((*this).$ref(), System::Range<Builtin::Auto<decltype(std::make_tuple(__Span$Protected::SpanHelpers, TrimEndCount((*this), val, Builtin::u32(0U))))>, false>({}, std::make_tuple(__Span$Protected::SpanHelpers, TrimEndCount((*this), val, Builtin::u32(0U)))))); 
+		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_subscript)((*this).$ref(), System::Range<Builtin::Auto<decltype((ADV_USFCS((__Span$Protected::SpanHelpers), TrimEndCount)((*this), val, Builtin::u32(0U))))>, false>({}, (ADV_USFCS((__Span$Protected::SpanHelpers), TrimEndCount)((*this), val, Builtin::u32(0U)))))); 
 	}
 #line 403 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 	template<class T> inline constexpr auto Span<T>::TrimEnd(System::Span<T> vals) const  -> const $self
@@ -3401,9 +3401,9 @@ template<class __TT> struct $static_getRotateRight;
 			#line 894 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 			{
 				#line 895 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-				_endCurrent = ADV_UPCS(Length)(_src.$ref());
+				_startCurrent = Builtin::u32(0U);
 				#line 896 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-				_endNext = ADV_UPCS(Length)(_src.$ref());
+				_endNext = Builtin::u32(0U);
 				#line 897 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 				_separator = nullptr;
 				#line 898 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
@@ -4535,7 +4535,7 @@ namespace __Span$Protected {
 			#line 3968 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 			Builtin::Auto<decltype(ADV_UPCS(Length)(data.$ref()))> length = ADV_UPCS(Length)(data.$ref()); 
 			#line 3969 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-			Builtin::Auto<decltype(length - Builtin::u32(1U))> index = length - Builtin::u32(1U); 
+			Builtin::Auto<decltype(ADV_UFCS(_operator_sub_mod)(length, Builtin::u32(1U)))> index = ADV_UFCS(_operator_sub_mod)(length, Builtin::u32(1U)); 
 			#line 3970 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 			while ((length <=> Builtin::u32(8U)) >= 0) 
 			{
@@ -4732,7 +4732,7 @@ namespace __Span$Protected {
 			#line 4148 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 			Builtin::Auto<decltype(ADV_UPCS(Length)(data.$ref()))> length = ADV_UPCS(Length)(data.$ref()); 
 			#line 4149 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-			Builtin::Auto<decltype(length - Builtin::u32(1U))> index = length - Builtin::u32(1U); 
+			Builtin::Auto<decltype(ADV_UFCS(_operator_sub_mod)(length, Builtin::u32(1U)))> index = ADV_UFCS(_operator_sub_mod)(length, Builtin::u32(1U)); 
 			#line 4150 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 			while ((length <=> Builtin::u32(8U)) >= 0) 
 			{
@@ -4859,7 +4859,7 @@ namespace __Span$Protected {
 			#line 4236 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 			Builtin::Auto<decltype(ADV_UPCS(Length)(data.$ref()))> length = ADV_UPCS(Length)(data.$ref()); 
 			#line 4237 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-			Builtin::Auto<decltype(length - Builtin::u32(1U))> index = length - Builtin::u32(1U); 
+			Builtin::Auto<decltype(ADV_UFCS(_operator_sub_mod)(length, Builtin::u32(1U)))> index = ADV_UFCS(_operator_sub_mod)(length, Builtin::u32(1U)); 
 			#line 4238 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 			while ((length <=> Builtin::u32(8U)) >= 0) 
 			{
@@ -5041,7 +5041,7 @@ namespace __Span$Protected {
 			#line 4463 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 			Builtin::Auto<decltype(ADV_UPCS(Length)(data.$ref()))> length = ADV_UPCS(Length)(data.$ref()); 
 			#line 4464 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-			Builtin::Auto<decltype(length - Builtin::u32(1U))> index = length - Builtin::u32(1U); 
+			Builtin::Auto<decltype(ADV_UFCS(_operator_sub_mod)(length, Builtin::u32(1U)))> index = ADV_UFCS(_operator_sub_mod)(length, Builtin::u32(1U)); 
 			#line 4465 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 			while ((length <=> Builtin::u32(8U)) >= 0) 
 			{
@@ -5142,7 +5142,7 @@ namespace __Span$Protected {
 			#line 4538 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 			Builtin::Auto<decltype(ADV_UPCS(Length)(data.$ref()))> length = ADV_UPCS(Length)(data.$ref()); 
 			#line 4539 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-			Builtin::Auto<decltype(length - Builtin::u32(1U))> index = length - Builtin::u32(1U); 
+			Builtin::Auto<decltype(ADV_UFCS(_operator_sub_mod)(length, Builtin::u32(1U)))> index = ADV_UFCS(_operator_sub_mod)(length, Builtin::u32(1U)); 
 			#line 4540 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 			while ((length <=> Builtin::u32(8U)) >= 0) 
 			{
@@ -5269,7 +5269,7 @@ namespace __Span$Protected {
 			#line 4626 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 			Builtin::Auto<decltype(ADV_UPCS(Length)(data.$ref()))> length = ADV_UPCS(Length)(data.$ref()); 
 			#line 4627 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
-			Builtin::Auto<decltype(length - Builtin::u32(1U))> index = length - Builtin::u32(1U); 
+			Builtin::Auto<decltype(ADV_UFCS(_operator_sub_mod)(length, Builtin::u32(1U)))> index = ADV_UFCS(_operator_sub_mod)(length, Builtin::u32(1U)); 
 			#line 4628 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Span.ast"
 			while ((length <=> Builtin::u32(8U)) >= 0) 
 			{

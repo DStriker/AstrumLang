@@ -11,8 +11,6 @@ namespace __Unsafe {} namespace __UnicodeCategory$Protected__Unsafe {}
 //###############################################################################
 class UnicodeCategory;
 class $Class_UnicodeCategory;
-} namespace $extensions {
-} namespace System::Globalization {
 //###############################################################################
 //# Type definitions
 //###############################################################################
@@ -248,6 +246,8 @@ class $Class_UnicodeCategory;
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\UnicodeCategory.ast"
 	ADV_CHECK_FOR_CONCRETE(UnicodeCategory);
 	
+} namespace $extensions {
+} namespace System::Globalization {
 //###############################################################################
 //# Function definitions
 //###############################################################################

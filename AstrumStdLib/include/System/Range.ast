@@ -44,12 +44,6 @@ where type T is IValueEnumerable or type T is IRangeCustomIterator
             this._end = range.End;
         }
 
-        public this(in ref range: Range<T, IsClosed>, step: usize) == {
-            this._current = range.Start;
-            this._end = range.End;
-            this._step = step;
-        }
-
         public mut MoveNext: () -> bool == 
         {
             switch _state {
@@ -62,7 +56,10 @@ where type T is IValueEnumerable or type T is IRangeCustomIterator
                     }
                 }
                 2 => {
-                    return StepForward();
+                    let result := StepForward();
+                    if result {
+                        return true;
+                    }
                 }
             }
             
@@ -92,11 +89,6 @@ where type T is IValueEnumerable or type T is IRangeCustomIterator
         private _current, _end: T;
         private _step: usize = 1u;
         private _state: i32 = 1;
-
-        public this(in ref range: Range<T, IsClosed>) == {
-            this._current = range.Start;
-            this._end = range.End;
-        }
 
         public this(in ref range: Range<T, IsClosed>, step: usize) == {
             this._current = range.Start;
@@ -390,7 +382,6 @@ test "Range" {
     assert irange.End == Index.FromStart(6u);
     assert not irange.IsClosed;
     assert irange.Length(10u) == 4u;
-    rrange := (..20);
 
     assert 0 in ..12;
     assert 11 in ..12;

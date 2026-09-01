@@ -1,7 +1,7 @@
+#include "Span.h"
 #include "System/Runtime/Intrinsics/Simd.h"
 using namespace System::Runtime::Intrinsics;
 #include "InlineArray.h"
-#include "Span.h"
 
 namespace System {
 template<class T> class SpanContains;

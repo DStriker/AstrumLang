@@ -238,14 +238,14 @@ public ref struct <T> Span: ISelfEquatable, IAbstractSequence, ISequence<T> {
     public operator in: (in ref val: T) -> bool ==> Contains(val);
 
     // Searches for the specified value using the given EqualityComparer and returns true if found
-    public Contains: (in ref val: T, equals: EqualityComparer<T>) -> bool => IndexOf(val, equals) != null;
+    public Contains: (in ref val: T, equals: EqualityComparer<T>) -> bool => this.IndexOf(val, equals) != null;
 
     // Searches for the specified subspan and returns true if found
-    public Contains: (val: T[&]) -> bool => IndexOf(val) != null;
+    public Contains: (val: T[&]) -> bool => this.IndexOf(val) != null;
     public operator in: (val: T[&]) -> bool => Contains(val);
 
     // Searches for the specified subspan using the given EqualityComparer and returns true if found
-    public Contains: (val: T[&], equals: EqualityComparer<T>) -> bool => IndexOf(val, equals) != null;
+    public Contains: (val: T[&], equals: EqualityComparer<T>) -> bool => this.IndexOf(val, equals) != null;
 
     // Counts the number of times the specified val occurs in the span
     public Count: (in ref val: T) -> usize == {
@@ -396,9 +396,9 @@ public ref struct <T> Span: ISelfEquatable, IAbstractSequence, ISequence<T> {
     // Removes all leading occurrences of a specified element from the span
     public TrimStart: (in ref val: T) -> self ==> this[(SpanHelpers.TrimStartCount(this, val))..];
     // Removes all leading occurrences of a specified elements from the span
-    public TrimStart: (vals: T[&]) -> self ==> this[(SpanHelpers,TrimStartCount(this, vals))..];
+    public TrimStart: (vals: T[&]) -> self ==> this[(SpanHelpers.TrimStartCount(this, vals))..];
     // Removes all trailing occurrences of a specified element from the span
-    public TrimEnd: (in ref val: T) -> self ==> this[..(SpanHelpers,TrimEndCount(this, val, 0u))];
+    public TrimEnd: (in ref val: T) -> self ==> this[..(SpanHelpers.TrimEndCount(this, val, 0u))];
     // Removes all trailing occurrences of a specified elements from the span
     public TrimEnd: (vals: T[&]) -> self ==> this[..(SpanHelpers.TrimEndCount(this, vals, 0u))];
     // Removes all leading and trailing occurrences of a specified element from the span
@@ -892,8 +892,8 @@ public ref struct <T> ReverseSpliterator: IAbstractIterator, IIterator<Span<T>>,
             _endNext = separatorIndex!;
             _startCurrent = _endNext + separatorLength;
         } else {
-            _endCurrent = _src.Length;
-            _endNext = _src.Length;
+            _startCurrent = 0u;
+            _endNext = 0u;
             _separator = null;
             _isBuffer = false;
             _isAny = false;
@@ -3966,7 +3966,7 @@ protected static class SpanHelpers {
 
     public LastIndexOfGeneralCase: <T> (data: T[&], in ref val: T) -> usize? {
         length := data.Length;
-        index := length - 1u;
+        index := length -% 1u;
         while length >= 8u {
             length -= 8u;
 
@@ -4146,7 +4146,7 @@ protected static class SpanHelpers {
 
     public LastIndexOfAnyGeneralCase: <T> (data: T[&], in ref val1: T, in ref val2: T) -> usize? {
         length := data.Length;
-        index := length - 1u;
+        index := length -% 1u;
         while length >= 8u {
             length -= 8u;
 
@@ -4234,7 +4234,7 @@ protected static class SpanHelpers {
 
     public LastIndexOfAnyGeneralCase: <T> (data: T[&], in ref val1: T, in ref val2: T, in ref val3: T) -> usize? {
         length := data.Length;
-        index := length - 1u;
+        index := length -% 1u;
         while length >= 8u {
             length -= 8u;
 
@@ -4461,7 +4461,7 @@ protected static class SpanHelpers {
 
     public LastIndexOfAnyExceptGeneralCase: <T> (data: T[&], in ref val: T) -> usize? {
         length := data.Length;
-        index := length - 1u;
+        index := length -% 1u;
         while length >= 8u {
             length -= 8u;
 
@@ -4536,7 +4536,7 @@ protected static class SpanHelpers {
 
     public LastIndexOfAnyExceptGeneralCase: <T> (data: T[&], in ref val1: T, in ref val2: T) -> usize? {
         length := data.Length;
-        index := length - 1u;
+        index := length -% 1u;
         while length >= 8u {
             length -= 8u;
 
@@ -4624,7 +4624,7 @@ protected static class SpanHelpers {
 
     public LastIndexOfAnyExceptGeneralCase: <T> (data: T[&], in ref val1: T, in ref val2: T, in ref val3: T) -> usize? {
         length := data.Length;
-        index := length - 1u;
+        index := length -% 1u;
         while length >= 8u {
             length -= 8u;
 

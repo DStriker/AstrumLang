@@ -68,9 +68,10 @@ public struct <T> Optional
             if (HasValue)
                 std.invoke(forward func, Value);
         } else {
+            type TResultOpt = Builtin.Nullable<TResult>;
             if (HasValue)
-                return std.invoke(forward func, Value) as TResult?;
-            return null;
+                return std.invoke(forward func, Value) as TResultOpt;
+            return TResultOpt();
         }
     }
 
@@ -182,9 +183,10 @@ public ref struct <T> OptionalRef
             if (HasValue)
                 std.invoke(forward func, Value);
         } else {
+            type TResultOpt = Builtin.Nullable<TResult>;
             if (HasValue)
-                return std.invoke(forward func, Value) as TResult?;
-            return null;
+                return std.invoke(forward func, Value) as TResultOpt;
+            return TResultOpt();
         }
     }
 

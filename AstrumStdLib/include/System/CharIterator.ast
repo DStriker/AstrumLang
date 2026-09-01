@@ -7,6 +7,7 @@ public import System.Collections.IIterator;
 
 public ref struct CharIterator: IAbstractSequence, ISequence<char>, IAbstractIterator, IIterator<char> {
     public type ElementType = char;
+    public type ReverseIterator = ReverseCharIterator;
 
     private _data: byte[&];
     private _nextIndex: usize;
@@ -33,7 +34,7 @@ public ref struct CharIterator: IAbstractSequence, ISequence<char>, IAbstractIte
             throw Builtin.InvalidOperationException();
         }
 
-        let trailingBytes := TrailingBytes[@Unchecked _current];
+        let trailingBytes := byte(_current).Utf8TrailingByteCount;
         if _nextIndex + trailingBytes > _data.Length {
             return true;
         }
@@ -54,21 +55,152 @@ public ref struct CharIterator: IAbstractSequence, ISequence<char>, IAbstractIte
 
     public GetCurrent: () -> char ==> this._current;
 
-    public Iterate: () -> CharIterator ==> this;
+    public GetData: () -> byte[&] ==> this._data;
+    public GetRemainingByteLength: () -> usize ==> _data.Length - _nextIndex;
 
-    private const TrailingBytes: byte[_] == [
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-        2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5
-    ];
+    public Iterate: () -> self ==> this;
 
     private const Offsets: u32[_] == [
         0x00000000, 0x00003080, 0x000E2080,
 		0x03C82080, 0xFA082080, 0x82082080
     ];
+}
+
+public ref struct CharIndicesIterator: IAbstractSequence, ISequence<(usize, char)>, IAbstractIterator, IIterator<(usize, char)> {
+    public type ElementType = (usize, char);
+    public type ReverseIterator = ReverseCharIndicesIterator;
+
+    private _offset: usize;
+    private _nextOffset: usize;
+    private _iterator: CharIterator;
+
+    public this(data: str) noexcept == {
+        this._offset = 0u;
+        this._nextOffset = 0u;
+        this._iterator = CharIterator(data);
+    }
+
+    public mut MoveNext: () -> bool == {
+        let oldLen := _iterator.GetRemainingByteLength();
+        if _iterator.MoveNext() {
+            _offset = _nextOffset;
+            _nextOffset +%= oldLen - _iterator.GetRemainingByteLength();
+            return true;
+        }
+
+        return false;
+    }
+
+    public mut Reset: () == {
+        _offset = usize.MaxValue;
+        _iterator.Reset();
+    }
+
+    public GetCurrent: () -> (usize, char) ==> (_offset, _iterator.GetCurrent());
+
+    public GetData: () -> byte[&] ==> this.>_iterator.>GetData();
+    public GetRemainingByteLength: () -> usize ==> _iterator.GetRemainingByteLength();
+
+    public Iterate: () -> self ==> this;
+}
+
+public ref struct ReverseCharIterator: IAbstractSequence, ISequence<char>, IAbstractIterator, IIterator<char> {
+    public type ElementType = char;
+
+    private _data: byte[&];
+    private _nextIndex: usize;
+    private _current: char;
+
+    public this(data: str) noexcept == {
+        this._data = Span<byte>.UnsafeCreate(data.GetDataReference(), data.GetByteLength());
+        this._nextIndex = data.GetByteLength() -% 1u;
+        this._current = '\0';
+    }
+
+    public mut MoveNext: () -> bool == {
+        if _nextIndex >= _data.Length {
+            return false;
+        }
+
+        let last := _data[@Unchecked _nextIndex--%];
+        if last.IsAscii {
+            _current = last;
+            return true;
+        }
+
+        let third := _data[@Unchecked _nextIndex--%];
+        codepoint: u32 = third & (0x7Fu >> 2);
+        if third.NarrowToInt8() < (-64) {
+            let second := _data[@Unchecked _nextIndex--%];
+            codepoint = second & (0x7Fu >> 3);
+            if second.NarrowToInt8() < (-64) {
+                let first := _data[@Unchecked _nextIndex--%];
+                if not first.IsUtf8CodePointBoundary {
+                    throw Builtin.InvalidOperationException();
+                }
+                codepoint = first & (0x7Fu >> 4);
+                codepoint = (codepoint << 6) | (second & 0x3Fu);
+            }
+            codepoint = (codepoint << 6) | (third & 0x3Fu);
+        }
+        codepoint = (codepoint << 6) | (last & 0x3Fu);
+        _current = codepoint as char;
+
+        return true;
+    }
+
+    public mut Reset: () ==> _nextIndex = _data.Length - 1u;
+
+    public GetCurrent: () -> char ==> this._current;
+
+    public GetRemainingByteLength: () -> usize ==> _nextIndex +% 1u;
+
+    public Iterate: () -> self ==> this;
+}
+
+public ref struct ReverseCharIndicesIterator: IAbstractSequence, ISequence<(usize, char)>, IAbstractIterator, IIterator<(usize, char)> {
+    public type ElementType = (usize, char);
+
+    private _offset: usize;
+    private _iterator: ReverseCharIterator;
+
+    public this(data: str) noexcept == {
+        this._offset = data.GetByteLength();
+        this._iterator = ReverseCharIterator(data);
+    }
+
+    public mut MoveNext: () -> bool == {
+        let oldLen := _iterator.GetRemainingByteLength();
+        if _iterator.MoveNext() {
+            _offset -= oldLen - _iterator.GetRemainingByteLength();
+            return true;
+        }
+
+        return false;
+    }
+
+    public mut Reset: () == {
+        _offset = usize.MaxValue;
+        _iterator.Reset();
+    }
+
+    public GetCurrent: () -> (usize, char) ==> (_offset, _iterator.GetCurrent());
+
+    public GetRemainingByteLength: () -> usize ==> _iterator.GetRemainingByteLength();
+
+    public Iterate: () -> self ==> this;
+}
+
+public extension CharIterator {
+    Reversed: self.ReverseIterator == {
+        type TIterator = self.ReverseIterator;
+        return TIterator(Unsafe.BitCast<str>(this.GetData()));
+    }
+}
+
+public extension CharIndicesIterator {
+    Reversed: self.ReverseIterator == {
+        type TIterator = self.ReverseIterator;
+        return TIterator(Unsafe.BitCast<str>(this.GetData()));
+    }
 }

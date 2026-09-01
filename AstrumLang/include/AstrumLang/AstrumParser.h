@@ -5106,6 +5106,7 @@ public:
     antlr4::tree::TerminalNode *CharacterLiteral();
     antlr4::tree::TerminalNode *StringLiteral();
     antlr4::tree::TerminalNode *MultilineStringLiteral();
+    antlr4::tree::TerminalNode *HexStringLiteral();
     InterpolatedStringLiteralContext *interpolatedStringLiteral();
     antlr4::tree::TerminalNode *Null();
 

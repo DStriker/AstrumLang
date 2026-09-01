@@ -1860,7 +1860,7 @@ public static class CommonInstructions: SimdInstructionSet {
                 bufVec.>buffer[@Unchecked i] = vec[i as usize];
                 bufMask.>buffer[@Unchecked i] = mask[i as usize];
                 bufResult.>buffer[@Unchecked i] = (bufMask.>buffer[@Unchecked i] & 0x80) == 0 ? 
-                                                bufVec.>buffer[@Unchecked bufMask.>buffer[@Unchecked i] & 15] : 0u8;
+                                              bufVec.>buffer[@Unchecked bufMask.>buffer[@Unchecked i] & 15] : 0u8;
             }
             unsafe {
                 return TVector::LoadAligned(bufResult.>buffer[@Unchecked 0]&);

@@ -10,8 +10,6 @@ namespace __Unsafe {} namespace __StaticBitset$Protected__Unsafe {}
 //# Type forward declarations
 //###############################################################################
 template<class KeyType> class StaticBitset;
-} namespace $extensions {
-} namespace System::Runtime::Intrinsics {
 //###############################################################################
 //# Type definitions
 //###############################################################################
@@ -57,6 +55,8 @@ template<class KeyType> class $Class_StaticBitset;
 		
 	};
 	
+} namespace $extensions {
+} namespace System::Runtime::Intrinsics {
 //###############################################################################
 //# Function definitions
 //###############################################################################

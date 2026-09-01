@@ -1,10 +1,12 @@
 package System;
 
 public import CharIterator;
+public import StringSpliterator;
 public import StringComparison;
 public import System.Text.Utf8;
 
-public type Utf8ValidationError = (index: usize, length: usize);
+public type Str = str;
+public type ByteSpan = byte[&];
 
 public extension byte[&] {
     // Returns true if the byte sequence is a valid ASCII string.
@@ -22,10 +24,19 @@ public extension byte[&] {
     }
 }
 
+public extension char {
+    ToUtf8: (dst: byte[&mut]) -> str == {
+        return str.FromUtf8Unchecked(Utf8.WriteChar(this, dst));
+    }
+}
+
 public extension str {
     // Returns the number of UTF-8 bytes in the string.
     // For number of chars or grapheme clusters, use the appropriate methods.
     ByteLength: usize ==> this.GetByteLength();
+
+    // Returns true if the string is empty.
+    IsEmpty: bool ==> this.ByteLength == 0;
 
     // Represents a string as byte array, efficient for ASCII text processing.
     Bytes: byte[&] ==> Span<byte>.UnsafeCreate(this.GetDataReference(), this.GetByteLength());
@@ -52,8 +63,58 @@ public extension str {
             range.Length(this.ByteLength));
     }
 
+    // Returns true if the byte at the given index is a first byte in a UTF-8 sequence.
+    IsUtf8CodePointBoundary: (index: usize) -> bool == {
+        let length := this.ByteLength;
+        return index == length or index < length and this.Bytes[@Unchecked index].IsUtf8CodePointBoundary;
+    }
+
+    // Finds the closest byte not exceeding index where byte.IsUtf8CodePointBoundary
+    FloorIndexToUtf8CodePointBoundary: (index: usize) -> usize == {
+        let bytes := this.Bytes;
+        let length := this.ByteLength;
+        if index >= length {
+            return length;
+        }
+        if bytes[@Unchecked index].IsUtf8CodePointBoundary {
+            return index;
+        }
+
+        assert index >= 1u;
+        if bytes[@Unchecked index - 1u].IsUtf8CodePointBoundary {
+            return index - 1u;
+        }
+        assert index >= 2u;
+        if bytes[@Unchecked index - 2u].IsUtf8CodePointBoundary {
+            return index - 2u;
+        }
+        assert index >= 3u;
+        assert bytes[@Unchecked index - 3u].IsUtf8CodePointBoundary;
+        return index - 3u;
+    }
+
+    // Finds the closest byte not below index where byte.IsUtf8CodePointBoundary
+    CeilIndexToUtf8CodePointBoundary: (index: usize) -> usize == {
+        let bytes := this.Bytes;
+        let length := this.ByteLength;
+        if index >= length {
+            return length;
+        }
+        i := index;
+        while not bytes[@Unchecked i].IsUtf8CodePointBoundary {
+            ++i;
+            if i >= length {
+                break;
+            }
+        }
+        assert i <= index + 3u;
+        return i;
+    }
+
     // Returns a sequence of Unicode codepoints from the string.
     Chars: CharIterator ==> CharIterator(this);
+    // Returns a sequence of Unicode codepoints from the string with its byte offsets.
+    CharsWithOffsets: CharIndicesIterator ==> CharIndicesIterator(this);
     // Returns the number of Unicode codepoints in the string.
     CharCount: usize == {
         count: usize;
@@ -130,10 +191,45 @@ public extension str {
             _ => throw Builtin.InvalidArgumentException()
         };
     }*/
+    // Returns true if ASCII string is equal to other ASCII string ignoring case.
+    EqualsAsciiIgnoreCase: (other: str) -> bool == {
+        if this.ByteLength != other.ByteLength {
+            return false;
+        }
+        let length := this.ByteLength;
+        let thisBytes := this.Bytes;
+        let otherBytes := other.Bytes;
+        for i in ..length {
+            if thisBytes[@Unchecked i].ToLower != otherBytes[@Unchecked i].ToLower {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Compares ASCII string to other ASCII string ignoring case.
+    CompareAsciiIgnoreCase: (other: str) -> i32 == {
+        if this.ByteLength != other.ByteLength {
+            return this.ByteLength <=> other.ByteLength;
+        }
+        let length := this.ByteLength;
+        let thisBytes := this.Bytes;
+        let otherBytes := other.Bytes;
+        for i in ..length {
+            if thisBytes[@Unchecked i].ToLower != otherBytes[@Unchecked i].ToLower {
+                return thisBytes[@Unchecked i].ToLower <=> otherBytes[@Unchecked i].ToLower;
+            }
+        }
+        return 0;
+    }
     
     // Converts the raw bytes to a str with validation
     // Retuns the converted str or Utf8ValidationError if bytes contains invalid UTF-8
     static TryFromUtf8: (bytes: byte[&]) -> self? == {
+        @Likely
+        if Utf8.IsValid(bytes) {
+            return str.FromUtf8Unchecked(bytes);
+        }
         return null;
     }
     // Converts the raw bytes to a str with validation
@@ -154,29 +250,669 @@ public extension str {
     // Returns true if str contains only ASCII characters.
     IsAscii: bool ==> this.Bytes.IsAscii;
     // Returns true if str contains the given byte.
-    Contains: (val: byte) -> bool ==> this.Bytes.Contains(val);
+    Contains: (val: byte) -> bool == {
+        if not val.IsAscii {
+            throw Builtin.InvalidArgumentException();
+        }
+        return this.Bytes.Contains(val);
+    }
     operator in: (val: byte) -> bool ==> this.Bytes.Contains(val);
     // Returns true if str contains the given character.
-    Contains: (val: char) -> bool == {
+    Contains: (val: char) -> bool => this.IndexOf(val) != null;
+    operator in: (val: char) -> bool => this.Contains(val);
+    // Returns true if str contains the given substring.
+    Contains: (val: str) -> bool => this.Bytes.Contains(val.Bytes);
+    operator in: (val: str) -> bool => this.Contains(val);
+
+    // Returns true if str contains any of the given bytes.
+    ContainsAny: (bytes: byte[&]) -> bool = {
+        if not bytes.IsAscii {
+            throw Builtin.InvalidArgumentException();
+        }
+        return this.Bytes.ContainsAny(bytes);
+    }
+    // Returns true if str contains any of the given characters.
+    ContainsAny: (chars: char[&]) -> bool = {
+        for c in this.Chars {
+            if c in chars {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // Returns true if str contains any character by filter.
+    ContainsAny: (filter: Predicate<char>) -> bool = {
+        for c in this.Chars {
+            if filter(c) {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    // Returns an index of the first occurrence of the given byte.
+    // Returns null if nothing found
+    IndexOf: (val: byte) -> usize? == { 
+        if not val.IsAscii {
+            throw Builtin.InvalidArgumentException();
+        }
+        return this.Bytes.IndexOf(val);
+    }
+    // Returns an index of the first occurrence of the given character.
+    // Returns null if nothing found
+    IndexOf: (val: char) -> usize? = {
         if val.IsAscii {
-            return this.Bytes.Contains(val as byte);
+            return this.Bytes.IndexOf(val as byte);
         }
         buf: byte[4u];
-        return /*this.Contains(val.ToUtf8(buf))*/false;
+        return this.IndexOf(val.ToUtf8(&buf));
     }
-    operator in: (val: char) -> bool ==> this.Contains(val);
-    // HashCode
-    // IndexOf, IndexOfAny
-    // LastIndexOf, LastIndexOfAny
+    // Returns an index of the first occurrence of the given substring.
+    // Returns null if nothing found
+    IndexOf: (val: str) -> usize? => this.Bytes.IndexOf(val.Bytes);
+    // Returns an index of the first occurrence of the any of given bytes.
+    // Returns null if nothing found
+    IndexOfAny: (val: byte[&]) -> usize? = { 
+        if not val.IsAscii {
+            throw Builtin.InvalidArgumentException();
+        }
+        return this.Bytes.IndexOfAny(val);
+    }
+    // Returns an index of the first occurrence of the any of given characters.
+    // Returns null if nothing found
+    IndexOfAny: (val: char[&]) -> usize? = {
+        for offset, c in this.CharsWithOffsets {
+            if c in val {
+                return offset;
+            }
+        }
+        return null;
+    }
+    // Returns an index of the first occurrence of the any character by given filter.
+    // Returns null if nothing found
+    IndexOfAny: (filter: Predicate<char>) -> usize? = {
+        for offset, c in this.CharsWithOffsets {
+            if filter(c) {
+                return offset;
+            }
+        }
+        return null;
+    }
+    // Returns an index of the last occurrence of the given byte.
+    // Returns null if nothing found
+    LastIndexOf: (val: byte) -> usize? == { 
+        if not val.IsAscii {
+            throw Builtin.InvalidArgumentException();
+        }
+        return this.Bytes.LastIndexOf(val);
+    }
+    // Returns an index of the last occurrence of the given character.
+    // Returns null if nothing found
+    LastIndexOf: (val: char) -> usize? = {
+        if val.IsAscii {
+            return this.Bytes.LastIndexOf(val as byte);
+        }
+        buf: byte[4u];
+        return this.LastIndexOf(val.ToUtf8(&buf));
+    }
+    // Returns an index of the last occurrence of the given substring.
+    // Returns null if nothing found
+    LastIndexOf: (val: str) -> usize? => this.Bytes.LastIndexOf(val.Bytes);
+    // Returns an index of the last occurrence of the any of given bytes.
+    // Returns null if nothing found
+    LastIndexOfAny: (val: byte[&]) -> usize? = {
+        if not val.IsAscii {
+            throw Builtin.InvalidArgumentException();
+        }
+        return this.Bytes.LastIndexOfAny(val);
+    }
+    // Returns an index of the last occurrence of the any of given characters.
+    // Returns null if nothing found
+    LastIndexOfAny: (val: char[&]) -> usize? = {
+        for offset, c in this.CharsWithOffsets.Reversed {
+            if c in val {
+                return offset;
+            }
+        }
+        return null;
+    }
+    // Returns an index of the last occurrence of the any character by given filter.
+    // Returns null if nothing found
+    LastIndexOfAny: (filter: Predicate<char>) -> usize? = {
+        for offset, c in this.CharsWithOffsets {
+            if filter(c) {
+                return offset;
+            }
+        }
+        return null;
+    }
+    // Returns a substring before the first occurrence of the given substring.
+    // Returns an original string if nothing found
+    SubstringBefore: (val: str) -> str = {
+        if let index := this.IndexOf(val) {
+            return this[@Unchecked ..index];
+        }
+        return this;
+    }
+    // Returns a substring before the last occurrence of the given substring.
+    // Returns an original string if nothing found
+    SubstringBeforeLast: (val: str) -> str = {
+        if let index := this.LastIndexOf(val) {
+            return this[@Unchecked ..index];
+        }
+        return this;
+    }
+    // Returns a substring after the first occurrence of the given substring.
+    // Returns null if nothing found
+    SubstringAfter: (val: str) -> str? = {
+        if let index := this.IndexOf(val) {
+            return this[@Unchecked (index + val.ByteLength)..];
+        }
+        return null;
+    }
+    // Returns a substring after the last occurrence of the given substring.
+    // Returns null if nothing found
+    SubstringAfterLast: (val: str) -> str? = {
+        if let index := this.LastIndexOf(val) {
+            return this[@Unchecked (index + val.ByteLength)..];
+        }
+        return null;
+    }
+    // Returns a substring between two identical substrings by the first occurrence of the given delimiter substring.
+    // Returns null if nothing found
+    SubstringBetween: (tag: str) -> str? = {
+        if let after := this.SubstringAfter(tag) {
+            return after.SubstringBefore(tag);
+        }
+        return null;
+    }
+    // Returns a substring between two identical substrings by the last occurrence of the given delimiter substring.
+    // Returns null if nothing found
+    SubstringBetweenLast: (tag: str) -> str? = {
+        if let indexClose := this.LastIndexOf(tag) {
+            if let indexOpen := this[@Unchecked ..indexClose].LastIndexOf(tag) {
+                return this[@Unchecked (indexOpen + tag.ByteLength)..indexClose];
+            }
+        }
+        return null;
+    }
+    // Returns a substring between open and close substrings by the first occurrence of the given open substring.
+    // Returns null if nothing found
+    SubstringBetween: (open: str, close: str) -> str? = {
+        return this.SubstringAfter(open)?.SubstringBefore(close);
+    }
+    // Returns a substring between open and close substrings by the last occurrence of the given open substring.
+    // Returns null if nothing found
+    SubstringBetweenLast: (open: str, close: str) -> str? = {
+        return this.SubstringAfterLast(open)?.SubstringBefore(close);
+    }
+
+    // Returns an iterator of substrings between open and close substrings.
+    SubstringsBetween: (open: str, close: str) -> SubstringIterator => SubstringIterator(this, open, close);
+    // Returns a reverse iterator of substrings between open and close substrings.
+    SubstringsBetweenReversed: (open: str, close: str) -> ReverseSubstringIterator => ReverseSubstringIterator(this, open, close);
+
+    // Returns the number of occurrences of the given ASCII character.
+    Count: (val: byte) -> usize == {
+        if not val.IsAscii {
+            throw Builtin.InvalidArgumentException();
+        }
+        return this.Bytes.Count(val);
+    }
+    // Returns the number of occurrences of the given substring.
+    Count: (val: str) -> usize => this.Bytes.Count(val.Bytes);
     // IsNormalized
-    // IsWhiteSpace
-    // IsUpper, IsLower
+    // Returns true if str contains only ASCII whitespace characters
+    IsAsciiWhiteSpace: bool == {
+        for b in this.Bytes {
+            if not b.IsAsciiWhiteSpace {
+                return false;
+            }
+        }
+        return true;
+    }
+    // Returns true if str contains only whitespace characters
+    IsWhiteSpace: bool == {
+        for c in this.Chars {
+            if not c.IsWhiteSpace {
+                return false;
+            }
+        }
+        return true;
+    }
+    // Returns true if str contains only upper-case characters
+    IsAsciiUpper: bool == {
+        for b in this.Bytes {
+            if not b.IsAscii or (b.IsAsciiLetter and not b.IsLetterUpper) {
+                return false;
+            }
+        }
+        return not this.IsEmpty;
+    }
+    // Returns true if str contains only upper-case characters
+    IsUpper: bool == {
+        for c in this.Chars {
+            if c.IsLetter and not c.IsLetterUpper {
+                return false;
+            }
+        }
+        return not this.IsEmpty;
+    }
+    // Returns true if str contains only lower-case characters
+    IsAsciiLower: bool == {
+        for b in this.Bytes {
+            if not b.IsAscii or (b.IsAsciiLetter and not b.IsLetterLower) {
+                return false;
+            }
+        }
+        return not this.IsEmpty;
+    }
+    // Returns true if str contains only lower-case characters
+    IsLower: bool == {
+        for c in this.Chars {
+            if c.IsLetter and not c.IsLetterLower {
+                return false;
+            }
+        }
+        return not this.IsEmpty;
+    }
+    // Returns true if str contains only ASCII letters
+    IsAsciiAlphabetic: bool == {
+        for b in this.Bytes {
+            if not b.IsAsciiLetter {
+                return false;
+            }
+        }
+        return not this.IsEmpty;
+    }
+    // Returns true if str contains only letters
+    IsAlphabetic: bool == {
+        for c in this.Chars {
+            if not c.IsLetter {
+                return false;
+            }
+        }
+        return not this.IsEmpty;
+    }
+    // Returns true if str contains only ASCII letters and digits
+    IsAsciiAlphanumeric: bool == {
+        for b in this.Bytes {
+            if not b.IsAsciiLetterOrDigit {
+                return false;
+            }
+        }
+        return not this.IsEmpty;
+    }
+    // Returns true if str contains only letters and digits
+    IsAlphanumeric: bool == {
+        for c in this.Chars {
+            if not c.IsLetterOrDigit {
+                return false;
+            }
+        }
+        return not this.IsEmpty;
+    }
+    // Returns true if str contains only decimal digits
+    IsNumeric: bool == {
+        for b in this.Bytes {
+            if not b.IsAsciiDigit {
+                return false;
+            }
+        }
+        return not this.IsEmpty;
+    }
+    // Returns true if str contains only decimal digits and decimal point
+    IsDecimal: bool == {
+        for b in this.Bytes {
+            if not b.IsAsciiDigit and b != b'.' and b != b',' {
+                return false;
+            }
+        }
+        return not this.IsEmpty;
+    }
+    // Returns true if str contains only hex digits
+    IsHexadecimal: bool == {
+        for c in this.Bytes {
+            if not c.IsHexDigit {
+                return false;
+            }
+        }
+        return not this.IsEmpty;
+    }
+    // Returns true if str is valid identifier
+    IsValidIdentifier: bool == {
+        if this.ByteLength == 0u {
+            return false;
+        }
+        let bytes := this.Bytes;
+        if not bytes[@Unchecked 0].IsIdentifierStartChar {
+            return false;
+        }
+        for b in bytes {
+            if not b.IsIdentifierChar {
+                return false;
+            }
+        }
+        return true;
+    }
+    // Returns true if str contains only ASCII printable characters
+    IsAsciiPrintable: bool == {
+        for b in this.Bytes {
+            if not b.IsAsciiPrintable {
+                return false;
+            }
+        }
+        return not this.IsEmpty;
+    }
     // Normalize
-    // Split
-    // StartsWith
-    // Trim
+
+    // Returns an iterator over substrings of this string span, separated by given byte
+    Split: (val: byte, options: StringSplitOptions = StringSplitOptions::None) -> StringSpliterator 
+        => StringSpliterator(this, val, options);
+    // Returns an iterator over substrings of this string span, separated by given byte, with iterations limit
+    Split: (val: byte, maxCount: usize, options: StringSplitOptions = StringSplitOptions::None) -> StringSpliterator 
+        => StringSpliterator(this, val, maxCount, options);
+    // Returns an iterator over substrings of this string span, separated by given substring
+    Split: (val: str, options: StringSplitOptions = StringSplitOptions::None) -> StringSpliterator 
+        => StringSpliterator(this, val.Bytes, true, options);
+    // Returns an iterator over substrings of this string span, separated by given substring, with iterations limit
+    Split: (val: str, maxCount: usize, options: StringSplitOptions = StringSplitOptions::None) -> StringSpliterator 
+        => StringSpliterator(this, val.Bytes, true, maxCount, options);
+    // Returns an iterator over substrings of this string span, separated by any of given ASCII characters
+    SplitAny: (vals: byte[&], options: StringSplitOptions = StringSplitOptions::None) -> StringSpliterator 
+        => StringSpliterator(this, vals, options);
+    // Returns an iterator over substrings of this string span, separated by any of given ASCII characters, with iterations limit
+    SplitAny: (vals: byte[&], maxCount: usize, options: StringSplitOptions = StringSplitOptions::None) -> StringSpliterator 
+        => StringSpliterator(this, vals, maxCount, options);
+    // Returns an iterator over substrings of this string span, separated by given filter of characters
+    SplitAny: (filter: Predicate<char>, options: StringSplitOptions = StringSplitOptions::None) -> StringSpliterator 
+        => StringSpliterator(this, filter, options);
+    // Returns an iterator over substrings of this string span, separated by given filter of characters
+    SplitAny: (filter: Predicate<char>, maxCount: usize, options: StringSplitOptions = StringSplitOptions::None) -> StringSpliterator 
+        => StringSpliterator(this, filter, maxCount, options);
+
+    // Returns a reversed iterator over substrings of this string span, separated by given byte
+    SplitReversed: (val: byte, options: StringSplitOptions = StringSplitOptions::None) -> StringReverseSpliterator 
+        => StringReverseSpliterator(this, val, options);
+    // Returns a reversed iterator over substrings of this string span, separated by given byte, with iterations limit
+    SplitReversed: (val: byte, maxCount: usize, options: StringSplitOptions = StringSplitOptions::None) -> StringReverseSpliterator 
+        => StringReverseSpliterator(this, val, maxCount, options);
+    // Returns a reversed iterator over substrings of this string span, separated by given substring
+    SplitReversed: (val: str, options: StringSplitOptions = StringSplitOptions::None) -> StringReverseSpliterator 
+        => StringReverseSpliterator(this, val.Bytes, true, options);
+    // Returns a reversed iterator over substrings of this string span, separated by given substring, with iterations limit
+    SplitReversed: (val: str, maxCount: usize, options: StringSplitOptions = StringSplitOptions::None) -> StringReverseSpliterator 
+        => StringReverseSpliterator(this, val.Bytes, true, maxCount, options);
+    // Returns a reversed iterator over substrings of this string span, separated by any of given ASCII characters
+    SplitAnyReversed: (vals: byte[&], options: StringSplitOptions = StringSplitOptions::None) -> StringReverseSpliterator 
+        => StringReverseSpliterator(this, vals, options);
+    // Returns a reversed iterator over substrings of this string span, separated by any of given ASCII characters, with iterations limit
+    SplitAnyReversed: (vals: byte[&], maxCount: usize, options: StringSplitOptions = StringSplitOptions::None) -> StringReverseSpliterator 
+        => StringReverseSpliterator(this, vals, maxCount, options);
+    // Returns a reversed iterator over substrings of this string span, separated by given filter of characters
+    SplitAnyReversed: (filter: Predicate<char>, options: StringSplitOptions = StringSplitOptions::None) -> StringReverseSpliterator 
+        => StringReverseSpliterator(this, filter, options);
+    // Returns a reversed iterator over substrings of this string span, separated by given filter of characters
+    SplitAnyReversed: (filter: Predicate<char>, maxCount: usize, options: StringSplitOptions = StringSplitOptions::None) -> StringReverseSpliterator 
+        => StringReverseSpliterator(this, filter, maxCount, options);
+    // Returns an iterator over substrings of this string span, separated by any amount of ASCII whitespace characters
+    SplitWhitespace: StringSpliterator 
+        => StringSpliterator(this, "".Bytes, StringSplitOptions::SkipEmptyEntries);
+    // Returns a reversed iterator over substrings of this string span, separated by any amount of ASCII whitespace characters
+    SplitWhitespaceReversed: StringReverseSpliterator 
+        => StringReverseSpliterator(this, "".Bytes, StringSplitOptions::SkipEmptyEntries);
+    // Returns an iterator over lines of this string span
+    Lines: StringSpliterator => this.Lines(StringSplitOptions::None);
+    // Returns a reversed iterator over lines of this string span
+    LinesReversed: StringReverseSpliterator => this.LinesReversed(StringSplitOptions::None);
+    // Returns an iterator over lines of this string span with additional options
+    Lines: (options: StringSplitOptions) -> StringSpliterator
+        => StringSpliterator(this, "\r\n".Bytes, options | StringSplitOptions::ProcessLineEndingAsSingleChar);
+    // Returns a reversed iterator over lines of this string span with additional options
+    LinesReversed: (options: StringSplitOptions) -> StringReverseSpliterator
+        => StringReverseSpliterator(this, "\r\n".Bytes, options | StringSplitOptions::ProcessLineEndingAsSingleChar);
+    // Returns true if str starts with given byte
+    StartsWith: (val: byte) -> bool == {
+        if not val.IsAscii {
+            throw Builtin.InvalidArgumentException();
+        }
+        return this.Bytes.StartsWith(val);
+    }
+    // Returns true if str starts with given character
+    StartsWith: (val: char) -> bool => this.IndexOf(val) == 0u;
+    // Returns true if str starts with given substring
+    StartsWith: (val: str) -> bool => this.Bytes.StartsWith(val.Bytes);
+    // Returns true if str starts with character by given filter
+    StartsWith: (filter: Predicate<char>) -> bool = {
+        for c in this.Chars {
+            if filter(c) {
+                return true;
+            }
+            return false;
+        }
+    }
+    // Returns true if str ends with given byte
+    EndsWith: (val: byte) -> bool == {
+        if not val.IsAscii {
+            throw Builtin.InvalidArgumentException();
+        }
+        return this.Bytes.EndsWith(val);
+    }
+    // Returns true if str ends with given character
+    EndsWith: (val: char) -> bool = {
+        if val.IsAscii {
+            return this.Bytes.EndsWith(val as byte);
+        }
+        buf: byte[4u];
+        return this.EndsWith(val.ToUtf8(&buf));
+    }
+    // Returns true if str ends with given substring
+    EndsWith: (val: str) -> bool => this.Bytes.EndsWith(val.Bytes);
+    // Returns true if str ends with character by given filter
+    EndsWith: (filter: Predicate<char>) -> bool = {
+        for c in this.Chars.Reversed {
+            if filter(c) {
+                return true;
+            }
+            return false;
+        }
+    }
+    // Returns a string span with leading ASCII whitespace removed
+    TrimAsciiStart: self == {
+        let bytes := this.Bytes;
+        let length := bytes.Length;
+        start: usize;
+        for ; start < length; start++ {
+            if not bytes[@Unchecked start].IsAsciiWhiteSpace {
+                break;
+            }
+        }
+        return start < length ? this[@Unchecked start..] : self();
+    }
+    // Returns a string span with trailing ASCII whitespace removed
+    TrimAsciiEnd: self == {
+        let bytes := this.Bytes;
+        let length := bytes.Length;
+        end := length - 1u;
+        for ; end < length; end--% {
+            if not bytes[@Unchecked end].IsAsciiWhiteSpace {
+                break;
+            }
+        }
+        return end < length ? this[@Unchecked ..=end] : self();
+    }
+    // Returns a string span with leading and trailing ASCII whitespace removed
+    TrimAscii: self ==> this.TrimAsciiStart.TrimAsciiEnd;
+    // Returns a string span with leading whitespace removed
+    TrimStart: self = {
+        for offset, c in this.CharsWithOffsets {
+            if not c.IsWhiteSpace {
+                return this[@Unchecked offset..];
+            }
+        }
+        return {};
+    }
+    // Returns a string span with trailing whitespace removed
+    TrimEnd: self = {
+        prevOffset := this.ByteLength;
+        for offset, c in this.CharsWithOffsets.Reversed {
+            if not c.IsWhiteSpace {
+                return this[@Unchecked ..prevOffset];
+            }
+            prevOffset = offset;
+        }
+        return {};
+    }
+    // Returns a string span with leading and trailing whitespace removed
+    Trim: self => this.TrimStart.TrimEnd;
+    // Returns a string span with leading byte removed
+    TrimStart: (val: byte) -> self == {
+        if not val.IsAscii {
+            throw Builtin.InvalidArgumentException();
+        }
+        return str.FromUtf8Unchecked(this.Bytes.TrimStart(val));
+    }
+    // Returns a string span with trailing byte removed
+    TrimEnd: (val: byte) -> self == {
+        if not val.IsAscii {
+            throw Builtin.InvalidArgumentException();
+        }
+        return str.FromUtf8Unchecked(this.Bytes.TrimEnd(val));
+    }
+    // Returns a string span with leading and trailing byte removed
+    Trim: (val: byte) -> self ==> this.TrimStart(val).TrimEnd(val);
+    // Returns a string span with leading character removed
+    TrimStart: (val: char) -> self = {
+        for offset, c in this.CharsWithOffsets {
+            if c != val {
+                return this[@Unchecked offset..];
+            }
+        }
+        return {};
+    }
+    // Returns a string span with trailing character removed
+    TrimEnd: (val: char) -> self = {
+        prevOffset := this.ByteLength;
+        for offset, c in this.CharsWithOffsets.Reversed {
+            if c != val {
+                return this[@Unchecked ..prevOffset];
+            }
+            prevOffset = offset;
+        }
+        return {};
+    }
+    // Returns a string span with leading and trailing character removed
+    Trim: (val: char) -> self => this.TrimStart(val).TrimEnd(val);
+    // Returns a string span with leading given characters removed
+    TrimStart: (val: char[&]) -> self = {
+        for offset, c in this.CharsWithOffsets {
+            if c not in val {
+                return this[@Unchecked offset..];
+            }
+        }
+        return {};
+    }
+    // Returns a string span with trailing given characters removed
+    TrimEnd: (val: char[&]) -> self = {
+        prevOffset := this.ByteLength;
+        for offset, c in this.CharsWithOffsets.Reversed {
+            if c not in val {
+                return this[@Unchecked ..prevOffset];
+            }
+            prevOffset = offset;
+        }
+        return {};
+    }
+    // Returns a string span with leading and trailing given characters removed
+    Trim: (val: char[&]) -> self => this.TrimStart(val).TrimEnd(val);
+    // Returns a string span with leading given characters by filter removed
+    TrimStart: (filter: Predicate<char>) -> self = {
+        for offset, c in this.CharsWithOffsets {
+            if not filter(c) {
+                return this[@Unchecked offset..];
+            }
+        }
+        return {};
+    }
+    // Returns a string span with trailing given characters by filter removed
+    TrimEnd: (filter: Predicate<char>) -> self = {
+        prevOffset := this.ByteLength;
+        for offset, c in this.CharsWithOffsets.Reversed {
+            if not filter(c) {
+                return this[@Unchecked ..prevOffset];
+            }
+            prevOffset = offset;
+        }
+        return {};
+    }
+    // Returns a string span with leading and trailing characters by filter removed
+    Trim: (filter: Predicate<char>) -> self => this.TrimStart(filter).TrimEnd(filter);
 }
 
+public ref struct SubstringIterator: IAbstractSequence, ISequence<str>, IAbstractIterator, IIterator<str> {
+    public type ElementType = str;
+
+    private _data: str;
+    private _open: str;
+    private _close: str;
+    private _current: str;
+
+    public this(data: str, open: str, close: str) noexcept = {
+        this._data = data;
+        this._open = open;
+        this._close = close;
+    }
+
+    public mut MoveNext: () -> bool = {
+        if let index := _data.IndexOf(_open) {
+            _data = _data[@Unchecked (index + _open.ByteLength)..];
+            if let index2 := _data.IndexOf(_close) {
+                _current = _data[@Unchecked ..index2];
+                _data = _data[@Unchecked (index2 + _close.ByteLength)..];
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public GetCurrent: () -> str => this._current;
+
+    public Iterate: () -> self => this;
+}
+
+public ref struct ReverseSubstringIterator: IAbstractSequence, ISequence<str>, IAbstractIterator, IIterator<str> {
+    public type ElementType = str;
+
+    private _data: str;
+    private _open: str;
+    private _close: str;
+    private _current: str;
+
+    public this(data: str, open: str, close: str) noexcept = {
+        this._data = data;
+        this._open = open;
+        this._close = close;
+    }
+
+    public mut MoveNext: () -> bool = {
+        if let index := _data.LastIndexOf(_open) {
+            let tmp := _data[@Unchecked (index + _open.ByteLength)..];
+            if let index2 := tmp.IndexOf(_close) {
+                _current = tmp[@Unchecked ..index2];
+                _data = _data[@Unchecked ..index];
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public GetCurrent: () -> str => this._current;
+
+    public Iterate: () -> self => this;
+}
 
 static assert(sizeof(str) == sizeof(usize) * 2, "str should be 2 pointers wide");
 static assert(type str is ISelfEquatable, "str should be ISelfEquatable");
@@ -210,6 +946,266 @@ test "Str" {
     assert b'f' not in s;
     assert s.IsAscii;
     assert not cs.IsAscii;
+
+    assert 'w' in s;
+    assert 'я' not in s;
+    assert '😆' in cs;
+    assert "world" in s;
+    assert "❤😆" in cs;
+    assert "car" not in s;
+
+    assert s.ContainsAny("wld".Bytes);
+    assert not s.ContainsAny("abc".Bytes);
+    chars: char[_] = [ 'w', 'l', 'd', '😆' ];
+    assert cs.ContainsAny(chars);
+    chars = [ 'a', 'b', 'c', 'd' ];
+    assert not cs.ContainsAny(chars);
+
+    assert s.IndexOf(b'l') == 2u;
+    assert s.IndexOf(b'a') == null;
+    assert s.IndexOf('l') == 2u;
+    assert cs.IndexOf('😆') == 28u;
+    assert cs.IndexOf('😁') == null;
+    assert s.IndexOf("world") == 7u;
+    assert s.IndexOf("what") == null;
+    assert s.IndexOfAny("dlb".Bytes) == 2u;
+    assert s.IndexOfAny("qmu".Bytes) == null;
+    assert s.IndexOfAny(chars) == 11u;
+
+    assert s.LastIndexOf(b'l') == 10u;
+    assert s.LastIndexOf(b'a') == null;
+    assert s.LastIndexOf('l') == 10u;
+    assert cs.LastIndexOf('😆') == 28u;
+    assert cs.LastIndexOf('😁') == null;
+    assert s.LastIndexOf("world") == 7u;
+    assert s.LastIndexOf("what") == null;
+    assert s.LastIndexOfAny("dlb".Bytes) == 11u;
+    assert s.LastIndexOfAny("qmu".Bytes) == null;
+    assert s.LastIndexOfAny(chars) == 11u;
+
+    assert s.StartsWith(b'H');
+    assert s.StartsWith('H');
+    assert s.StartsWith("Hello");
+    assert not s.StartsWith("World");
+    assert s.EndsWith(b'!');
+    assert s.EndsWith('!');
+    assert s.EndsWith("world!");
+    assert not s.EndsWith("World");
+
+    assert s.Count(b'l') == 3u;
+    assert "part1|-|part2|-|part3|-|part4".Count("|-|") == 3u;
+
+    assert s.SubstringBefore(", ") == "Hello";
+    assert s.SubstringAfter(", ") == "world!";
+    assert s.SubstringBefore("123") == s;
+    assert s.SubstringAfter("123") == null;
+    assert s.SubstringAfter("!")!.IsEmpty;
+    assert "some text<tag>payload<tag>some text".SubstringBefore("<tag>") == "some text";
+    assert "some text<tag>payload<tag>some text".SubstringBeforeLast("<tag>") == "some text<tag>payload";
+    assert "<tag>payload<tag>some text".SubstringBefore("<tag>").IsEmpty;
+    assert "some text<tag>payload<tag>some text".SubstringAfter("<tag>") == "payload<tag>some text";
+    assert "some text<tag>payload<tag>some text".SubstringAfterLast("<tag>") == "some text";
+    assert "payload<tag>".SubstringAfter("<tag>")!.IsEmpty;
+    assert "some text<tag>payload<tag>some text<tag>payload2<tag>something".SubstringBetween("<tag>") == "payload";
+    assert "some text<tag>payload<tag>some text<tag>payload2<tag>something".SubstringBetweenLast("<tag>") == "payload2";
+    assert "some text<open>payload<close>some text<open>payload2<close>something"
+        .SubstringBetween("<open>", "<close>") == "payload";
+    assert "some text<open>payload<close>some text<open>payload2<close>something"
+        .SubstringBetweenLast("<open>", "<close>") == "payload2";
+
+    count: usize;
+    for ss in "some text<open>payload<close>some text<open>payload2<close>something<open>payload3<close>"
+        .SubstringsBetween("<open>", "<close>") 
+    {
+        ++count;
+    }
+    assert count == 3u;
+    count = 0u;
+    for ss in "some text<open>payload<close>some text<open>payload2<close>something<open>payload3<close>"
+        .SubstringsBetweenReversed("<open>", "<close>") 
+    {
+        ++count;
+    }
+    assert count == 3u;
+    count = 0u;
+    for ss in s.Split(b'o') {
+        ++count;
+    }
+    assert count == 3u;
+    count = 0u;
+    for ss in s.SplitReversed(b'o') {
+        ++count;
+    }
+    assert count == 3u;
+    count = 0u;
+    
+    for ss in ":hlslsl::dkdkf \t:  \t\n:\ndkfks:  dfffk:"
+        .Split(b':') 
+    {
+        ++count;
+    }
+    assert count == 8u;
+    count = 0u;
+    for ss in ":hlslsl::dkdkf \t:  \t\n:\ndkfks:  dfffk:"
+        .SplitReversed(b':') 
+    {
+        ++count;
+    }
+    assert count == 8u;
+    count = 0u;
+    
+    for ss in ":hlslsl::dkdkf \t:  \t\n:\ndkfks:  dfffk:"
+        .Split(b':', StringSplitOptions::SkipEmptyEntries | StringSplitOptions::TrimEntries) 
+    {
+        ++count;
+    }
+    assert count == 4u;
+    count = 0u;
+    for ss in ":hlslsl::dkdkf \t:  \t\n:\ndkfks:  dfffk:"
+        .SplitReversed(b':', StringSplitOptions::SkipEmptyEntries | StringSplitOptions::TrimEntries) 
+    {
+        ++count;
+    }
+    assert count == 4u;
+    count = 0u;
+    
+    for ss in ":hlslsl::dkdkf \t:  \t\n:\ndkfks:  dfffk:"
+        .Split(b':', 3u, StringSplitOptions::SkipEmptyEntries | StringSplitOptions::TrimEntries) 
+    {
+        ++count;
+    }
+    assert count == 3u;
+    count = 0u;
+    for ss in ":hlslsl::dkdkf \t:  \t\n:\ndkfks:  dfffk:"
+        .SplitReversed(b':', 3u, StringSplitOptions::SkipEmptyEntries | StringSplitOptions::TrimEntries) 
+    {
+        ++count;
+    }
+    assert count == 3u;
+
+    count = 0u;
+    for ss in ":|:hlslsl:::|::|:dkdkf \t:|:  \t\n:|:\ndkfks::|:  dfffk:|:"
+        .Split(":|:", StringSplitOptions::SkipEmptyEntries | StringSplitOptions::TrimEntries) 
+    {
+        ++count;
+    }
+    assert count == 4u;
+    count = 0u;
+    for ss in ":|:hlslsl:::|::|:dkdkf \t:|:  \t\n:|:\ndkfks::|:  dfffk:|:"
+        .SplitReversed(":|:", StringSplitOptions::SkipEmptyEntries | StringSplitOptions::TrimEntries) 
+    {
+        ++count;
+    }
+    assert count == 4u;
+
+    count = 0u;
+    for ss in ":|:hlslsl:::|::|:dkdkf \t:|:  \t\n:|:\ndkfks::|:  dfffk:|:"
+        .SplitAny(":|k".Bytes, StringSplitOptions::SkipEmptyEntries | StringSplitOptions::TrimEntries) 
+    {
+        ++count;
+    }
+    assert count == 8u;
+    count = 0u;
+    for ss in ":|:hlslsl:::|::|:dkdkf \t:|:  \t\n:|:\ndkfks::|:  dfffk:|:"
+        .SplitAnyReversed(":|k".Bytes, StringSplitOptions::SkipEmptyEntries | StringSplitOptions::TrimEntries) 
+    {
+        ++count;
+    }
+    assert count == 8u;
+
+    count = 0u;
+    for ss in ":|:hlslsl:::|::|:dkdkf \t:|:  \t\n:|:\ndkfks::|:  dfffk:|:"
+        .SplitAny(c => c.IsPunctuation or c.IsSymbol, StringSplitOptions::SkipEmptyEntries | StringSplitOptions::TrimEntries) 
+    {
+        ++count;
+    }
+    assert count == 4u;
+    count = 0u;
+    for ss in ":|:hlslsl:::|::|:dkdkf \t:|:  \t\n:|:\ndkfks::|:  dfffk:|:"
+        .SplitAnyReversed(c => c.IsPunctuation or c.IsSymbol, StringSplitOptions::SkipEmptyEntries | StringSplitOptions::TrimEntries) 
+    {
+        ++count;
+    }
+    assert count == 4u;
+
+    count = 0u;
+    for ss in " Mary   had\ta little  \n\t lamb".SplitWhitespace {
+        ++count;
+    }
+    assert count == 5u;
+    count = 0u;
+    for ss in " Mary   had\ta little  \n\t lamb".SplitWhitespaceReversed {
+        ++count;
+    }
+    assert count == 5u;
+
+    count = 0u;
+    for ss in "some line\r\nsome\ttext\nany more text\rend\r\n".Lines {
+        ++count;
+    }
+    assert count == 5u;
+    count = 0u;
+    for ss in "some line\r\nsome\ttext\nany more text\rend\r\n".LinesReversed {
+        ++count;
+    }
+    assert count == 5u;
+
+    count = 0u;
+    for ss in "\nsome line\r\n  some\ttext\n\n  \t\n\tany more text\rend  \r\n"
+        .Lines(StringSplitOptions::SkipEmptyEntries | StringSplitOptions::TrimEntries) {
+        ++count;
+    }
+    assert count == 4u;
+    count = 0u;
+    for ss in "\nsome line\r\n  some\ttext\n\n  \t\n\tany more text\rend  \r\n"
+        .LinesReversed(StringSplitOptions::SkipEmptyEntries | StringSplitOptions::TrimEntries) {
+        ++count;
+    }
+    assert count == 4u;
+
+    assert s.Trim == s;
+    assert s.TrimAscii == s;
+    spaces := " \t \n  some text \t\n\r\n ";
+    assert spaces.TrimAscii == "some text";
+    assert spaces.Trim == "some text";
+    assert spaces.TrimAsciiStart == "some text \t\n\r\n ";
+    assert spaces.TrimStart == "some text \t\n\r\n ";
+    assert spaces.TrimAsciiEnd == " \t \n  some text";
+    assert spaces.TrimEnd == " \t \n  some text";
+    assert spaces.Trim(' ') == "\t \n  some text \t\n\r\n";
+    assert cs.Trim('😆') == "Hello, моя Лерка ❤";
+    assert cs.Trim(chars) == cs;
+    assert cs.Trim(c => not c.IsAscii or c.IsWhiteSpace) == "Hello,";
+
+    assert not s.IsWhiteSpace;
+    assert " \r\n \t ".IsWhiteSpace;
+    assert " \r\n \t ".IsAsciiWhiteSpace;
+    assert not s.IsAlphabetic;
+    assert not s.IsAlphanumeric;
+    assert not s.IsNumeric;
+    assert not s.IsDecimal;
+    assert not s.IsHexadecimal;
+    assert not s.IsValidIdentifier;
+    assert "abcdef".IsAlphabetic;
+    assert "abc123".IsAlphanumeric;
+    assert "123".IsNumeric;
+    assert "123.456".IsDecimal;
+    assert "123def".IsHexadecimal;
+    assert "abc".IsValidIdentifier;
+    assert "abc123".IsValidIdentifier;
+    assert "_abc_123".IsValidIdentifier;
+    assert not "123abc".IsValidIdentifier;
+
+    assert cs.IsUtf8CodePointBoundary(25u);
+    assert not cs.IsUtf8CodePointBoundary(26u);
+    assert cs.FloorIndexToUtf8CodePointBoundary(25u) == 25u;
+    assert cs.FloorIndexToUtf8CodePointBoundary(26u) == 25u;
+    assert cs.CeilIndexToUtf8CodePointBoundary(25u) == 25u;
+    assert cs.CeilIndexToUtf8CodePointBoundary(26u) == 28u;
+
+    assert str.TryFromUtf8(cs.Bytes) == cs;
+    bytes: byte[_] = [0x20u8, 0x20u8, 0x20u8, 0x20u8, 0xEDu8, 0xA0u8, 0x80u8, 0x20u8];
+    assert str.TryFromUtf8(bytes) == null;
 
     let switched := switch s {
         "Help" => "help",

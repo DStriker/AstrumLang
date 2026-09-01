@@ -13,8 +13,6 @@ class CommonCpuFeatureSet;
 class CommonCpuFeatureSet$Unowned;
 class CommonCpuFeatureSet$Weak;
 class $Class_CommonCpuFeatureSet;
-} namespace $extensions {
-} namespace System::Runtime::Intrinsics {
 //###############################################################################
 //# Type definitions
 //###############################################################################
@@ -372,6 +370,8 @@ namespace System::Runtime::Intrinsics {
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonCpuFeatureSet.ast"
 	ADV_CHECK_FOR_CONCRETE(CommonCpuFeatureSet);
 	
+} namespace $extensions {
+} namespace System::Runtime::Intrinsics {
 //###############################################################################
 //# Function definitions
 //###############################################################################

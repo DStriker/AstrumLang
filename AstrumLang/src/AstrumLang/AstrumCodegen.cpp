@@ -9889,15 +9889,14 @@ namespace AstrumLang {
 						out << ", ";
 						printIdentifier(p->Identifier());
 					}
-					if (func.params->paramDeclClause()->Ellipsis())
-					{
+					if (func.params->paramDeclClause()->Ellipsis()) {
 						out << "...";
 					}
 				}
 				out << "); } ";
 
 				out << "template<";
-				first                 = true;
+				first                      = true;
 				isTemplateParamDeclaration = true;
 				for (auto decl : type->templateParams->templateParamDeclaration()) {
 					if (!first)
@@ -13112,6 +13111,11 @@ namespace AstrumLang {
 			out << "#include \"" << CompilerSettings::get().dllName << "_export.h\"\n";
 		}
 
+		//.cpp header
+		out.switchTo(false);
+		out << "#include \"" << filename << ".h\"\n";
+
+		out.switchTo(true);
 		for (auto decl : sema.ast->importDeclaration()) {
 			if (decl->moduleName() && decl->moduleName()->nestedPackageName()) {
 				auto name = decl->moduleName()->nestedPackageName()->getText();
@@ -13131,9 +13135,7 @@ namespace AstrumLang {
 		    << "namespace __Unsafe {} namespace __" << filename << "$Protected__Unsafe {}"
 		    << std::endl;
 
-		//.cpp header
 		out.switchTo(false);
-		out << "#include \"" << filename << ".h\"\n";
 		if (!sema.packageName.empty()) {
 			out << "\nnamespace " << sema.packageName << " {\n";
 		}
@@ -19374,8 +19376,7 @@ namespace AstrumLang {
 			printBracedInitList(init);
 		} else if (auto coll = ctx->collectionExpression()) {
 			bool b = !isAutoSizeArrayDeclaration;
-			if (b)
-			{
+			if (b) {
 				out << "Builtin::InitializerList(";
 			}
 			printCollectionExpression(coll);
@@ -21963,6 +21964,9 @@ namespace AstrumLang {
 		} else if (auto literal = ctx->MultilineStringLiteral()) {
 			auto txt = literal->getText();
 			printMultilineStringLiteral(std::move(txt));
+		} else if (auto literal = ctx->HexStringLiteral()) {
+			auto txt = literal->getText();
+			printHexStringLiteral(std::move(txt));
 		} else if (ctx->interpolatedStringLiteral()) {
 			printInterpolatedStringLiteral(ctx->interpolatedStringLiteral());
 		}
@@ -22349,6 +22353,22 @@ namespace AstrumLang {
 		if (currentDeclaration && !currentDeclaration->theTypeId()) {
 			out << ")";
 		}
+	}
+
+	void AstrumCodegen::printHexStringLiteral(std::string txt) {
+		txt = txt.substr(txt.find('"') + 1);
+		txt = txt.substr(0, txt.find('"'));
+		StringReplace(txt, " ", "");
+		StringReplace(txt, "\t", "");
+		auto Length = txt.length() / 2 + txt.length() % 2;
+		out << "System::Span<Builtin::u8>((const Builtin::u8*)\"";
+		for (int i = 0; i < txt.length(); ++i) {
+			if ((i & 0x1) == 0) {
+				out << "\\x";
+			}
+			out << txt[i];
+		}
+		out << "\", " << Length << "u)";
 	}
 
 	void AstrumCodegen::printDeclvalExpression(AstrumParser::DeclvalExpressionContext* ctx) {

@@ -328,6 +328,7 @@ namespace AstrumLang {
 		void printStringLiteral(std::string txt);
 		void printMultilineStringLiteral(std::string txt);
 		void printInterpolatedStringLiteral(AstrumParser::InterpolatedStringLiteralContext* ctx);
+		void printHexStringLiteral(std::string txt);
 		void printDeclvalExpression(AstrumParser::DeclvalExpressionContext* ctx);
 	};
 }  // namespace AstrumLang

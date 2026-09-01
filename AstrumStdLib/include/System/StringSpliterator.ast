@@ -1,0 +1,378 @@
+package System;
+
+public import CharIterator;
+
+@Flags
+public enum StringSplitOptions {
+    None = 0,
+    SkipEmptyEntries = 1,
+    TrimEntries = 2,
+    ProcessLineEndingAsSingleChar = 4
+}
+
+public ref struct StringSpliterator: IAbstractIterator, IIterator<str>, IAbstractSequence, ISequence<str> {
+    public type ElementType = str;
+
+    private {
+        _src: byte[&];
+        _separatorByte: byte?;
+        _separatorBytes: byte[&];
+        _separatorFilter: (Predicate<char>)?;
+        _options: StringSplitOptions;
+        _startCurrent: usize;
+        _endCurrent: usize;
+        _startNext: usize;
+        _count: usize;
+        _maxCount: usize = usize.MaxValue;
+        _isBuffer: bool;
+        _isAny: bool;
+        _isFilter: bool;
+    }
+
+    public const ASCII_WHITESPACES :== " \t\r\n\f";
+
+    public this(src: str, separator: byte, options: StringSplitOptions = StringSplitOptions::None) = {
+        _src = Span<byte>.UnsafeCreate(src.GetDataReference(), src.GetByteLength());
+        _separatorByte = separator;
+        _options = options;
+        if not separator.IsAscii {
+            throw Builtin.InvalidArgumentException();
+        }
+    }
+
+    public this(src: str, separator: byte, maxCount: usize, options: StringSplitOptions = StringSplitOptions::None) = {
+        _src = Span<byte>.UnsafeCreate(src.GetDataReference(), src.GetByteLength());
+        _separatorByte = separator;
+        _options = options;
+        _maxCount = maxCount;
+        if not separator.IsAscii {
+            throw Builtin.InvalidArgumentException();
+        }
+    }
+
+    public this(src: str, separators: byte[&], options: StringSplitOptions = StringSplitOptions::None) = {
+        _src = Span<byte>.UnsafeCreate(src.GetDataReference(), src.GetByteLength());
+        _separatorBytes = separators;
+        _options = options;
+        _isAny = true;
+        if separators.IsEmpty {
+            _separatorBytes = Span<byte>.UnsafeCreate(ASCII_WHITESPACES.GetDataReference(), 5u);
+        } else {
+            for s in separators {
+                if not s.IsAscii {
+                    throw Builtin.InvalidArgumentException();
+                }
+            }
+        }
+    }
+
+    public this(src: str, separators: byte[&], maxCount: usize, options: StringSplitOptions = StringSplitOptions::None) = {
+        _src = Span<byte>.UnsafeCreate(src.GetDataReference(), src.GetByteLength());
+        _separatorBytes = separators;
+        _options = options;
+        _maxCount = maxCount;
+        _isAny = true;
+        if separators.IsEmpty {
+            _separatorBytes = Span<byte>.UnsafeCreate(ASCII_WHITESPACES.GetDataReference(), 5u);
+        } else {
+            for s in separators {
+                if not s.IsAscii {
+                    throw Builtin.InvalidArgumentException();
+                }
+            }
+        }
+    }
+
+    public this(src: str, separatorString: byte[&], single: bool, options: StringSplitOptions = StringSplitOptions::None) = {
+        assert single;
+        _src = Span<byte>.UnsafeCreate(src.GetDataReference(), src.GetByteLength());
+        _separatorBytes = separatorString;
+        _options = options;
+        _isBuffer = true;
+    }
+
+    public this(src: str, separatorString: byte[&], single: bool, maxCount: usize, options: StringSplitOptions = StringSplitOptions::None) = {
+        assert single;
+        _src = Span<byte>.UnsafeCreate(src.GetDataReference(), src.GetByteLength());
+        _separatorBytes = separatorString;
+        _options = options;
+        _maxCount = maxCount;
+        _isBuffer = true;
+    }
+
+    public this(src: str, filter: Predicate<char>, options: StringSplitOptions = StringSplitOptions::None) = {
+        _src = Span<byte>.UnsafeCreate(src.GetDataReference(), src.GetByteLength());
+        _separatorFilter = filter;
+        _options = options;
+        _isFilter = true;
+    }
+
+    public this(src: str, filter: Predicate<char>, maxCount: usize, options: StringSplitOptions = StringSplitOptions::None) = {
+        _src = Span<byte>.UnsafeCreate(src.GetDataReference(), src.GetByteLength());
+        _separatorFilter = filter;
+        _options = options;
+        _maxCount = maxCount;
+        _isFilter = true;
+    }
+
+    public mut MoveNext: () -> bool {
+        separatorIndex: usize?;
+        separatorLength: usize;
+        let needTrim := _options.HasFlag(StringSplitOptions::TrimEntries);
+        let skipEmpty := _options.HasFlag(StringSplitOptions::SkipEmptyEntries);
+        let processLineEndingAsSingle := _options.HasFlag(StringSplitOptions::ProcessLineEndingAsSingleChar);
+        
+        if _isAny {
+            separatorLength = 1u;
+            separatorIndex = _src[@Unchecked _startNext..].IndexOfAny(_separatorBytes);
+        } else if _isBuffer {
+            separatorLength = _separatorBytes.Length;
+            separatorIndex = _src[@Unchecked _startNext..].IndexOf(_separatorBytes);
+        } else if _isFilter {
+            separatorLength = 1u;
+            for offset, c in CharIndicesIterator(Unsafe.BitCast<str>(_src[@Unchecked _startNext..])) {
+                if _separatorFilter!(c) {
+                    separatorIndex = offset;
+                    break;
+                }
+            }
+        } else if _separatorByte {
+            separatorLength = 1u;
+            separatorIndex = _src[@Unchecked _startNext..].IndexOf(_separatorByte!);
+        } else {
+            return false;
+        }
+
+        reset: () {
+            _endCurrent = _src.Length;
+            _startNext = _src.Length;
+            _separatorByte = null;
+            _isBuffer = false;
+            _isAny = false;
+            _isFilter = false;
+        };
+        _startCurrent = _startNext;
+        if separatorIndex {
+            _endCurrent = _startCurrent + separatorIndex!;
+            _startNext = _endCurrent + separatorLength;
+            if processLineEndingAsSingle and _endCurrent < (_src.Length - 1u) and _src[@Unchecked _endCurrent] == b'\r'
+                and _src[@Unchecked _endCurrent + 1u] == b'\n' 
+            {
+                ++_startNext;
+            }
+            if needTrim {
+                let spaces := Span<byte>.UnsafeCreate(ASCII_WHITESPACES.GetDataReference(), ASCII_WHITESPACES.GetByteLength());
+                trimmed := _src[@Unchecked _startCurrent.._endCurrent].TrimStart(spaces);
+                _startCurrent += (_endCurrent - _startCurrent) - trimmed.Length;
+                trimmed = _src[@Unchecked _startCurrent.._endCurrent].TrimEnd(spaces);
+                _endCurrent -= (_endCurrent - _startCurrent) - trimmed.Length;
+            }
+            if skipEmpty and _endCurrent - _startCurrent == 0u {
+                return MoveNext();
+            }
+
+            if ++_count == _maxCount {
+                reset();
+            }
+        } else {
+            reset();
+            return not skipEmpty or _endCurrent - _startCurrent > 0u;
+        }
+
+        return true;
+    }
+
+    public GetCurrent: () -> str = {
+        let bytes := _src[@Unchecked _startCurrent.._endCurrent];
+        return Unsafe.BitCast<str>(bytes);
+    }
+    
+    public Iterate: () -> self => this;
+}
+
+public ref struct StringReverseSpliterator: IAbstractIterator, IIterator<str>, IAbstractSequence, ISequence<str> {
+    public type ElementType = str;
+
+    private {
+        _src: byte[&];
+        _separatorByte: byte?;
+        _separatorBytes: byte[&];
+        _separatorFilter: (Predicate<char>)?;
+        _options: StringSplitOptions;
+        _startCurrent: usize;
+        _endCurrent: usize;
+        _endNext: usize;
+        _count: usize;
+        _maxCount: usize = usize.MaxValue;
+        _isBuffer: bool;
+        _isAny: bool;
+        _isFilter: bool;
+    }
+
+    public const ASCII_WHITESPACES :== " \t\r\n\f";
+
+    public this(src: str, separator: byte, options: StringSplitOptions = StringSplitOptions::None) = {
+        _src = Span<byte>.UnsafeCreate(src.GetDataReference(), src.GetByteLength());
+        _separatorByte = separator;
+        _options = options;
+        _endNext = src.GetByteLength();
+        if not separator.IsAscii {
+            throw Builtin.InvalidArgumentException();
+        }
+    }
+
+    public this(src: str, separator: byte, maxCount: usize, options: StringSplitOptions = StringSplitOptions::None) = {
+        _src = Span<byte>.UnsafeCreate(src.GetDataReference(), src.GetByteLength());
+        _separatorByte = separator;
+        _options = options;
+        _endNext = src.GetByteLength();
+        _maxCount = maxCount;
+        if not separator.IsAscii {
+            throw Builtin.InvalidArgumentException();
+        }
+    }
+
+    public this(src: str, separators: byte[&], options: StringSplitOptions = StringSplitOptions::None) = {
+        _src = Span<byte>.UnsafeCreate(src.GetDataReference(), src.GetByteLength());
+        _separatorBytes = separators;
+        _options = options;
+        _endNext = src.GetByteLength();
+        _isAny = true;
+        if separators.IsEmpty {
+            _separatorBytes = Span<byte>.UnsafeCreate(ASCII_WHITESPACES.GetDataReference(), 5u);
+        } else {
+            for s in separators {
+                if not s.IsAscii {
+                    throw Builtin.InvalidArgumentException();
+                }
+            }
+        }
+    }
+
+    public this(src: str, separators: byte[&], maxCount: usize, options: StringSplitOptions = StringSplitOptions::None) = {
+        _src = Span<byte>.UnsafeCreate(src.GetDataReference(), src.GetByteLength());
+        _separatorBytes = separators;
+        _options = options;
+        _endNext = src.GetByteLength();
+        _maxCount = maxCount;
+        _isAny = true;
+        if separators.IsEmpty {
+            _separatorBytes = Span<byte>.UnsafeCreate(ASCII_WHITESPACES.GetDataReference(), 5u);
+        } else {
+            for s in separators {
+                if not s.IsAscii {
+                    throw Builtin.InvalidArgumentException();
+                }
+            }
+        }
+    }
+
+    public this(src: str, filter: Predicate<char>, options: StringSplitOptions = StringSplitOptions::None) = {
+        _src = Span<byte>.UnsafeCreate(src.GetDataReference(), src.GetByteLength());
+        _separatorFilter = filter;
+        _options = options;
+        _endNext = src.GetByteLength();
+        _isFilter = true;
+    }
+
+    public this(src: str, filter: Predicate<char>, maxCount: usize, options: StringSplitOptions = StringSplitOptions::None) = {
+        _src = Span<byte>.UnsafeCreate(src.GetDataReference(), src.GetByteLength());
+        _separatorFilter = filter;
+        _options = options;
+        _endNext = src.GetByteLength();
+        _maxCount = maxCount;
+        _isFilter = true;
+    }
+
+    public this(src: str, separatorString: byte[&], single: bool, options: StringSplitOptions = StringSplitOptions::None) = {
+        assert single;
+        _src = Span<byte>.UnsafeCreate(src.GetDataReference(), src.GetByteLength());
+        _separatorBytes = separatorString;
+        _options = options;
+        _endNext = src.GetByteLength();
+        _isBuffer = true;
+    }
+
+    public this(src: str, separatorString: byte[&], single: bool, maxCount: usize, options: StringSplitOptions = StringSplitOptions::None) = {
+        assert single;
+        _src = Span<byte>.UnsafeCreate(src.GetDataReference(), src.GetByteLength());
+        _separatorBytes = separatorString;
+        _options = options;
+        _endNext = src.GetByteLength();
+        _maxCount = maxCount;
+        _isBuffer = true;
+    }
+
+    public mut MoveNext: () -> bool {
+        separatorIndex: usize?;
+        separatorLength: usize;
+        let needTrim := _options.HasFlag(StringSplitOptions::TrimEntries);
+        let skipEmpty := _options.HasFlag(StringSplitOptions::SkipEmptyEntries);
+        let processLineEndingAsSingle := _options.HasFlag(StringSplitOptions::ProcessLineEndingAsSingleChar);
+        if _isAny {
+            separatorIndex = _src[@Unchecked .._endNext].LastIndexOfAny(_separatorBytes);
+            separatorLength = 1u;
+        } else if _isBuffer {
+            separatorIndex = _src[@Unchecked .._endNext].LastIndexOf(_separatorBytes);
+            separatorLength = _separatorBytes.Length;
+        } else if _isFilter {
+            separatorLength = 1u;
+            for offset, c in ReverseCharIndicesIterator(Unsafe.BitCast<str>(_src[@Unchecked .._endNext])) {
+                if _separatorFilter!(c) {
+                    separatorIndex = offset;
+                    break;
+                }
+            }
+        }  else if _separatorByte {
+            separatorIndex = _src[@Unchecked .._endNext].LastIndexOf(_separatorByte!);
+            separatorLength = 1u;
+        } else {
+            return false;
+        }
+
+        reset: () {
+            _startCurrent = 0u;
+            _endNext = 0u;
+            _separatorByte = null;
+            _isBuffer = false;
+            _isAny = false;
+            _isFilter = false;
+        };
+        _endCurrent = _endNext;
+        if separatorIndex {
+            _endNext = separatorIndex!;
+            _startCurrent = _endNext + separatorLength;
+            if processLineEndingAsSingle and _endNext > 0u and _src[@Unchecked _endNext] == b'\n'
+                and _src[@Unchecked _endNext - 1u] == b'\r' 
+            {
+                --_endNext;
+            }
+            if needTrim {
+                let spaces := Span<byte>.UnsafeCreate(ASCII_WHITESPACES.GetDataReference(), ASCII_WHITESPACES.GetByteLength());
+                trimmed := _src[@Unchecked _startCurrent.._endCurrent].TrimStart(spaces);
+                _startCurrent += (_endCurrent - _startCurrent) - trimmed.Length;
+                trimmed = _src[@Unchecked _startCurrent.._endCurrent].TrimEnd(spaces);
+                _endCurrent -= (_endCurrent - _startCurrent) - trimmed.Length;
+            }
+            if skipEmpty and _endCurrent - _startCurrent == 0u {
+                return MoveNext();
+            }
+
+            if ++_count == _maxCount {
+                reset();
+            }
+        } else {
+            reset();
+            return not skipEmpty or _endCurrent - _startCurrent > 0u;
+        }
+
+        return true;
+    }
+
+    public GetCurrent: () -> str = {
+        let bytes := _src[@Unchecked _startCurrent.._endCurrent];
+        return Unsafe.BitCast<str>(bytes);
+    }
+    
+    public Iterate: () -> self => this;
+}

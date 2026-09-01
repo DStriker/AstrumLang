@@ -337,6 +337,7 @@ namespace Builtin {
 		TResult Invoke(TArgs... args) const { return operator()(std::forward<TArgs>(args)...); }
 
 		bool isEmpty() const noexcept { return kind == STATIC && functionPointer == nullptr; }
+		FORCE_INLINE explicit operator bool() const noexcept { return !isEmpty(); }
 
 		bool operator==(const FunctionRef& other) const noexcept {
 			return kind == other.kind &&

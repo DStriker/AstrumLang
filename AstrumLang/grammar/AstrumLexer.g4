@@ -520,7 +520,7 @@ fragment Unsignedsuffix: 'u';
 
 fragment Cchar: ~ ['\\\r\n] | Escapesequence | Universalcharactername;
 
-fragment Escapesequence: Simpleescapesequence | Octalescapesequence | Hexadecimalescapesequence;
+fragment Escapesequence: Simpleescapesequence;
 
 fragment Simpleescapesequence:
     '\\\''
@@ -535,15 +535,8 @@ fragment Simpleescapesequence:
     | '\\' ('\r' '\n'? | '\n')
     | '\\t'
     | '\\v'
+    | '\\0'
 ;
-
-fragment Octalescapesequence:
-    '\\' OCTALDIGIT
-    | '\\' OCTALDIGIT OCTALDIGIT
-    | '\\' OCTALDIGIT OCTALDIGIT OCTALDIGIT
-;
-
-fragment Hexadecimalescapesequence: '\\x' HEXADECIMALDIGIT+;
 
 fragment Fractionalconstant: Digitsequence? '.' Digitsequence | Digitsequence '.';
 

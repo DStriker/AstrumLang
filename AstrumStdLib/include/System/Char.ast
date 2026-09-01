@@ -22,7 +22,7 @@ public extension byte {
     {
         static if Builtin.Is64BitTarget() {
             let i := u64(this) - b'0';
-            let shift := 18428868213665201664u << (i as i32);
+            let shift := 18428868213665201664u <<\ (i as u32);
             let mask := i -% 64;
 
             return (shift & mask).NarrowToInt64() < 0;
@@ -42,6 +42,7 @@ public extension byte {
     IsLetterLower: bool ==> this.IsAsciiLetterLower;
     IsAsciiLetterOrDigit: bool ==> this.IsAsciiLetter or this.IsAsciiDigit;
     IsLetterOrDigit: bool ==> this.IsAsciiLetterOrDigit;
+    IsIdentifierStartChar: bool ==> this.IsAsciiLetter or this == b'_';
     IsIdentifierChar: bool ==> this.IsAsciiLetterOrDigit or this == b'_';
     IsAsciiControl: bool ==> this <= 0x1Fu8;
     IsControl: bool ==> ((u32(this) + 1) &~ 0x80u) <= 0x20u;
@@ -65,6 +66,20 @@ public extension byte {
     }
     ToLower: self ==> this.IsAsciiLetterUpper ? (this + 32u8) : this;
     ToUpper: self ==> this.IsAsciiLetterLower ? (this - 32u8) : this;
+
+    Utf8TrailingByteCount: usize == {
+        const TrailingBytes: byte[_] == [
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+            2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5
+        ];
+        return TrailingBytes[@Unchecked this];
+    }
 
     static FromDigit: (num: u32, radix: u32) -> self? ==
     {
