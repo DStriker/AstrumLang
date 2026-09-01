@@ -1,0 +1,190 @@
+package System.Globalization;
+
+public import System.CharIterator;
+
+public ref struct TextElementIterator: IAbstractSequence, ISequence<str>, IAbstractIterator, IIterator<str> {
+    public type ElementType = str;
+    friend TextElementIndicesIterator;
+
+    private _data: byte[&];
+    private _currentTextElementOffset: usize;
+    private _nextTextElementOffset: usize;
+
+    public this(data: str) noexcept = {
+        this._data = Span<byte>.UnsafeCreate(data.GetDataReference(), data.GetByteLength());
+    }
+    
+    public mut MoveNext: () -> bool {
+        _currentTextElementOffset = _nextTextElementOffset;
+
+        if _currentTextElementOffset >= _data.Length {
+            return false;
+        }
+
+        // Consume first codepoint
+        charIterator := CharIndicesIterator(Unsafe.BitCast<str>(_data[@Unchecked _currentTextElementOffset..]));
+        currentBreakType: GraphemeClusterBreakType;
+        nextStep := () {
+            if charIterator.MoveNext() {
+                currentBreakType = CharUnicodeInfo.GetGraphemeClusterBreakType(charIterator.GetCurrent().1);
+                return true;
+            } 
+            currentBreakType = ::Other;
+            return false;
+        };
+        nextStep();
+        let hasPrepend := currentBreakType == ::Prepend;
+
+        // Setup next offset during exit the current iteration
+        defer {
+            let textElementLength: usize = charIterator.GetCurrent().0;
+            if textElementLength == usize.MaxValue {
+                _nextTextElementOffset = _data.Length;
+            } else {
+                _nextTextElementOffset = _currentTextElementOffset + textElementLength;
+            }
+        }
+
+        // Skip prepends
+        while currentBreakType == ::Prepend and nextStep() {}
+
+        // Process line endings after prepends
+        if hasPrepend {
+            if currentBreakType == ::Control
+            or currentBreakType == ::CR
+            or currentBreakType == ::LF
+            {
+                return true;
+            }
+        }
+
+        // Check next codepoint
+        prevBreakType := currentBreakType;
+        nextStep();
+
+        // Main scanner loop
+        stateMachine: {
+            switch (prevBreakType) {
+                ::CR => {
+                    if currentBreakType == ::LF {
+                        // \r\n is a single grapheme
+                        nextStep();
+                    }
+                }
+                ::L => {
+                    switch currentBreakType {
+                        ::L => {
+                            nextStep();
+                            continue stateMachine;
+                        }
+                        ::V => {
+                            nextStep();
+                            prevBreakType = ::V;
+                            continue stateMachine;
+                        }
+                        ::LV => {
+                            nextStep();
+                            prevBreakType = ::LV;
+                            continue stateMachine;
+                        }
+                        ::LVT => {
+                            nextStep();
+                            prevBreakType = ::LVT;
+                            continue stateMachine;
+                        }
+                        _ => {} // Do nothing for rest
+                    }
+                }
+                ::LV or ::V => {
+                    switch currentBreakType {
+                        ::V => {
+                            nextStep();
+                            prevBreakType = ::V;
+                            continue stateMachine;
+                        }
+                        ::T => {
+                            nextStep();
+                            prevBreakType = ::T;
+                            continue stateMachine;
+                        }
+                        _ => {} // Do nothing for rest
+                    }
+                }
+                ::LVT or ::T => {
+                    switch currentBreakType {
+                        ::T => {
+                            nextStep();
+                            prevBreakType = ::T;
+                            continue stateMachine;
+                        }
+                        _ => {} // Do nothing for rest
+                    }
+                }
+                ::ExtendedPictograph => {
+                    // Emojis and other combining characters
+                    // Skip extenders
+                    while currentBreakType == ::Extend and nextStep() {}
+
+                    // Check for additional combinators
+                    if currentBreakType == ::ZWJ {
+                        nextStep();
+                        if currentBreakType == ::ExtendedPictograph {
+                            nextStep();
+                            continue stateMachine;
+                        }
+                    }
+                }
+                ::RegionalIndicator => {
+                    // Flag is a single grapheme with two codepoints
+                    if currentBreakType == ::RegionalIndicator {
+                        nextStep();
+                    }
+                }
+                _ => {} // Do nothing for LF and control characters
+            }
+        }
+
+        // Include tail
+        while (currentBreakType == ::Extend 
+        or currentBreakType == ::ZWJ
+        or currentBreakType == ::SpacingMark)
+        and nextStep() {}
+
+        return true;
+    }
+
+    public mut Reset: () = {
+        _currentTextElementOffset = 0u;
+        _nextTextElementOffset = 0u;
+    }
+
+    public GetCurrent: () -> str => Unsafe.BitCast<str>(_data[@Unchecked _currentTextElementOffset.._nextTextElementOffset]);
+
+    public GetData: () -> byte[&] => this._data;
+    public GetRemainingByteLength: () -> usize => _data.Length - _nextTextElementOffset;
+
+    public Iterate: () -> self => this;
+
+}
+
+public ref struct TextElementIndicesIterator: IAbstractSequence, ISequence<(usize, str)>, IAbstractIterator, IIterator<(usize, str)> {
+    public type ElementType = (usize, str);
+
+    private _iterator: TextElementIterator;
+
+    public this(data: str) noexcept = {
+        this._iterator = TextElementIterator(data);
+    }
+    
+    public mut MoveNext: () -> bool => _iterator.>MoveNext();
+
+    public mut Reset: () => _iterator.>Reset();
+
+    public GetCurrent: () -> (usize, str) => (_iterator._currentTextElementOffset, _iterator.>GetCurrent());
+
+    public GetData: () -> byte[&] => _iterator.>GetData();
+    public GetRemainingByteLength: () -> usize => _iterator.>GetRemainingByteLength();
+
+    public Iterate: () -> self => this;
+
+}

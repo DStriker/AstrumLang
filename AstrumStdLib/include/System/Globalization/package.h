@@ -1,3 +1,5 @@
 #include "CharUnicodeInfo.h"
+#include "GraphemeClusterBreakType.h"
 #include "StrongBidiCategory.h"
+#include "TextElementIterator.h"
 #include "UnicodeCategory.h"

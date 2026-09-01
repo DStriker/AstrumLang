@@ -1,0 +1,19 @@
+package System.Globalization;
+
+public enum GraphemeClusterBreakType: u8 {
+    Other,
+    CR,
+    LF,
+    Control,
+    Extend,
+    ZWJ,
+    RegionalIndicator,
+    Prepend,
+    SpacingMark,
+    L,
+    V,
+    T,
+    LV,
+    LVT,
+    ExtendedPictograph
+}

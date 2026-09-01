@@ -14409,8 +14409,10 @@ namespace AstrumLang {
 		if (auto iter = ctx->iterationStatement()) {
 			printIterationStatement(iter);
 		} else if (auto select = ctx->selectionStatement()) {
+			out << "CONTINUE_" << label << ": ";
 			printSelectionStatement(select);
 		} else if (auto compound = ctx->compoundStatement()) {
+			out << "CONTINUE_" << label << ": ";
 			printCompoundStatement(compound);
 		}
 		currentLabel = prevLabel;
@@ -21173,31 +21175,31 @@ namespace AstrumLang {
 		if (auto id = ctx->idExpression()) {
 			if (ctx->Doublecolon()) {
 				if (currentIs) {
-					out << "decltype(";
+					out << "std::decay_t<decltype(";
 					printThreeWayComparisonExpression(currentIs->threeWayComparisonExpression(0));
-					out << ")";
+					out << ")>";
 				} else if (currentEquality && !currentEquality->equalityExpression().empty()) {
-					out << "decltype(";
+					out << "std::decay_t<decltype(";
 					printEqualityExpression(currentEquality->equalityExpression(0));
-					out << ")";
+					out << ")>";
 				} else if (!switchStatements.empty()) {
 					switchProcessedVariants.top().first++;
-					out << "decltype(";
+					out << "std::decay_t<decltype(";
 					printThreeWayComparisonExpression(
 					    switchStatements.top()->threeWayComparisonExpression());
-					out << ")";
+					out << ")>";
 				} else if (!switchExpressions.empty()) {
 					switchProcessedVariants.top().first++;
-					out << "decltype(";
+					out << "std::decay_t<decltype(";
 					printThreeWayComparisonExpression(
 					    switchExpressions.top()->threeWayComparisonExpression());
-					out << ")";
+					out << ")>";
+				} else if (currentAssignment) {
+					out << "std::decay_t<decltype(";
+					printLogicalOrExpression(currentAssignment->logicalOrExpression());
+					out << ")>";
 				} else if (currentDeclaration) {
 					printTypeId(currentDeclaration->theTypeId());
-				} else if (currentAssignment) {
-					out << "decltype(";
-					printLogicalOrExpression(currentAssignment->logicalOrExpression());
-					out << ")";
 				}
 				out << "::";
 			}

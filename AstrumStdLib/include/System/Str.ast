@@ -4,6 +4,7 @@ public import CharIterator;
 public import StringSpliterator;
 public import StringComparison;
 public import System.Text.Utf8;
+public import System.Globalization.TextElementIterator;
 
 public type Str = str;
 public type ByteSpan = byte[&];
@@ -124,7 +125,19 @@ public extension str {
 
         return count;
     }
-    // GraphemeClusters
+    // Returns a sequence of graphemes (visualized characters) from the string.
+    TextElements: TextElementIterator => TextElementIterator(this);
+    // Returns a sequence of graphemes (visualized characters) from the string with its byte offsets.
+    TextElementsWithOffsets: TextElementIndicesIterator => TextElementIndicesIterator(this);
+    // Returns the number of graphemes (visualized characters) in the string.
+    TextElementCount: usize = {
+        count: usize;
+        for c in this.TextElements {
+            ++count;
+        }
+
+        return count;
+    }
 
     // Returns a slice of string in given char range starting from start to the end of the string
     Substring: (start: usize) -> self == {
@@ -946,6 +959,8 @@ test "Str" {
     assert b'f' not in s;
     assert s.IsAscii;
     assert not cs.IsAscii;
+
+    assert "Hello, Café 🤷🏽‍♀️🌍🇵🇷".TextElementCount == 15u;
 
     assert 'w' in s;
     assert 'я' not in s;

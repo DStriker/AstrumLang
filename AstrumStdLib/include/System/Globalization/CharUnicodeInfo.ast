@@ -1,5 +1,6 @@
 package System.Globalization;
 
+public import GraphemeClusterBreakType;
 public import UnicodeCategory;
 public import StrongBidiCategory;
 public import System.Float64;
@@ -60,6 +61,13 @@ public static class CharUnicodeInfo {
                category == StrongBidiCategory.StrongLeftToRight or
                category == StrongBidiCategory.StrongRightToLeft;
         return category;
+    }
+
+    public inline GetGraphemeClusterBreakType: (codepoint: u32) -> GraphemeClusterBreakType
+    {
+        let offset := GetNumericGraphemeTableOffset(codepoint);
+        let breakType := GraphemeSegmentationValues[@Unchecked offset];
+        return GraphemeClusterBreakType.FromValue(breakType);
     }
 
     private inline GetCategoryCasingTableOffset: (codepoint: u32) -> usize

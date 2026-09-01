@@ -88,6 +88,7 @@ public ref struct CharIndicesIterator: IAbstractSequence, ISequence<(usize, char
             return true;
         }
 
+        _offset = usize.MaxValue;
         return false;
     }
 
@@ -176,6 +177,7 @@ public ref struct ReverseCharIndicesIterator: IAbstractSequence, ISequence<(usiz
             return true;
         }
 
+        _offset = usize.MaxValue;
         return false;
     }
 

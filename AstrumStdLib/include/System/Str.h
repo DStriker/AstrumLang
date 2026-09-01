@@ -8,6 +8,8 @@
 #include "StringComparison.h"
 #include "System/Text/Utf8.h"
 using namespace System::Text;
+#include "System/Globalization/TextElementIterator.h"
+using namespace System::Globalization;
 
 namespace System {
 namespace __Unsafe {} namespace __Str$Protected__Unsafe {}
@@ -19,268 +21,274 @@ class ReverseSubstringIterator;
 //###############################################################################
 //# Global type aliases
 //###############################################################################
-#line 8 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-using Str = Builtin::Str;
 #line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+using Str = Builtin::Str;
+#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 using ByteSpan = System::Span<Builtin::u8>;
 //###############################################################################
 //# Type definitions
 //###############################################################################
 	} namespace $extensions { using namespace System;
-#line 11 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	using $extension_Str_11_byte_brack__and__brack_ = System::Span<Builtin::u8>;
-	#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAscii($extension_Str_11_byte_brack__and__brack_ const& $this ) -> const bool;
+#line 12 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	using $extension_Str_12_byte_brack__and__brack_ = System::Span<Builtin::u8>;
+	#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAscii($extension_Str_12_byte_brack__and__brack_ const& $this ) -> const bool;
 	} namespace System{
 using $extensions::getIsAscii;
 
 		} namespace $extensions { using namespace System;
-#line 27 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	using $extension_Str_27_char = Builtin::char32;
-	#line 28 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto ToUtf8($extension_Str_27_char const& $this LIFETIMEBOUND, System::MutableSpan<Builtin::u8> dst)  -> const Builtin::Str;
+#line 28 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	using $extension_Str_28_char = Builtin::char32;
+	#line 29 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto ToUtf8($extension_Str_28_char const& $this LIFETIMEBOUND, System::MutableSpan<Builtin::u8> dst)  -> const Builtin::Str;
 	} namespace System{
 using $extensions::ToUtf8;
 
 		} namespace $extensions { using namespace System;
-#line 33 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	using $extension_Str_33_str = Builtin::Str;
-	#line 46 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr const $extension_Str_33_str getAt($extension_Str_33_str const& $this LIFETIMEBOUND, IndexRange range);
-	#line 46 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr const $extension_Str_33_str _operator_subscript($extension_Str_33_str const& $this LIFETIMEBOUND, IndexRange range) { return getAt($this, range); }
-	#line 61 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr const $extension_Str_33_str getAt($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::UncheckedTag, IndexRange range);
-	#line 61 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	[[clang::annotate("UserAttr: Unchecked")]] inline constexpr const $extension_Str_33_str _operator_subscript($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::UncheckedTag, IndexRange range) { return getAt($this, Builtin::UncheckedTag{}, range); }
-	#line 67 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto IsUtf8CodePointBoundary($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::usize index)  -> const bool;
-	#line 73 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto FloorIndexToUtf8CodePointBoundary($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::usize index)  -> const Builtin::usize;
-	#line 97 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto CeilIndexToUtf8CodePointBoundary($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::usize index)  -> const Builtin::usize;
-	#line 130 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto Substring($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::usize start)  -> const typename $extension_Str_33_str;
-	#line 140 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto Substring($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::usize start, Builtin::usize length)  -> const typename $extension_Str_33_str;
-	#line 152 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto Equals($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str other)  -> const bool;
-	#line 195 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto EqualsAsciiIgnoreCase($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str other)  -> const bool;
-	#line 211 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto CompareAsciiIgnoreCase($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str other)  -> const Builtin::i32;
-	#line 228 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	template<class __TT> struct $static_TryFromUtf8; template<> struct $static_TryFromUtf8<$extension_Str_33_str> { static inline constexpr auto get(System::Span<Builtin::u8> bytes)  -> const Builtin::Nullable<$extension_Str_33_str>; };
-	#line 237 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	template<class __TT> struct $static_FromUtf8; template<> struct $static_FromUtf8<$extension_Str_33_str> { static inline constexpr auto get(System::Span<Builtin::u8> bytes)  -> const typename $extension_Str_33_str; };
-	#line 246 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	template<class __TT> struct $static_FromUtf8Unchecked; template<> struct $static_FromUtf8Unchecked<$extension_Str_33_str> { static inline constexpr auto get(System::Span<Builtin::u8> bytes) noexcept -> const typename $extension_Str_33_str; };
-	#line 253 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto Contains($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const bool;
+#line 34 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	using $extension_Str_34_str = Builtin::Str;
+	#line 47 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr const $extension_Str_34_str getAt($extension_Str_34_str const& $this LIFETIMEBOUND, IndexRange range);
+	#line 47 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr const $extension_Str_34_str _operator_subscript($extension_Str_34_str const& $this LIFETIMEBOUND, IndexRange range) { return getAt($this, range); }
+	#line 62 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr const $extension_Str_34_str getAt($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::UncheckedTag, IndexRange range);
+	#line 62 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	[[clang::annotate("UserAttr: Unchecked")]] inline constexpr const $extension_Str_34_str _operator_subscript($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::UncheckedTag, IndexRange range) { return getAt($this, Builtin::UncheckedTag{}, range); }
+	#line 68 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto IsUtf8CodePointBoundary($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::usize index)  -> const bool;
+	#line 74 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto FloorIndexToUtf8CodePointBoundary($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::usize index)  -> const Builtin::usize;
+	#line 98 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto CeilIndexToUtf8CodePointBoundary($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::usize index)  -> const Builtin::usize;
+	#line 143 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto Substring($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::usize start)  -> const typename $extension_Str_34_str;
+	#line 153 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto Substring($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::usize start, Builtin::usize length)  -> const typename $extension_Str_34_str;
+	#line 165 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto Equals($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str other)  -> const bool;
+	#line 208 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto EqualsAsciiIgnoreCase($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str other)  -> const bool;
+	#line 224 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto CompareAsciiIgnoreCase($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str other)  -> const Builtin::i32;
+	#line 241 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	template<class __TT> struct $static_TryFromUtf8; template<> struct $static_TryFromUtf8<$extension_Str_34_str> { static inline constexpr auto get(System::Span<Builtin::u8> bytes)  -> const Builtin::Nullable<$extension_Str_34_str>; };
+	#line 250 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	template<class __TT> struct $static_FromUtf8; template<> struct $static_FromUtf8<$extension_Str_34_str> { static inline constexpr auto get(System::Span<Builtin::u8> bytes)  -> const typename $extension_Str_34_str; };
 	#line 259 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto _operator_in($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const bool;
-	#line 261 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Contains($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const bool;
-	#line 262 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto _operator_in($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const bool;
-	#line 264 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Contains($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const bool;
-	#line 265 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto _operator_in($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const bool;
-	#line 268 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto ContainsAny($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> bytes)  -> const bool;
+	template<class __TT> struct $static_FromUtf8Unchecked; template<> struct $static_FromUtf8Unchecked<$extension_Str_34_str> { static inline constexpr auto get(System::Span<Builtin::u8> bytes) noexcept -> const typename $extension_Str_34_str; };
+	#line 266 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto Contains($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const bool;
+	#line 272 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto _operator_in($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const bool;
+	#line 274 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Contains($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const bool;
 	#line 275 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto ContainsAny($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> chars)  -> const bool;
-	#line 285 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto ContainsAny($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const bool;
-	#line 296 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto IndexOf($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const Builtin::Nullable<Builtin::usize>;
-	#line 304 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto IndexOf($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const Builtin::Nullable<Builtin::usize>;
-	#line 313 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto IndexOf($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Nullable<Builtin::usize>;
-	#line 316 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto IndexOfAny($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> val)  -> const Builtin::Nullable<Builtin::usize>;
-	#line 324 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto IndexOfAny($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const Builtin::Nullable<Builtin::usize>;
-	#line 334 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto IndexOfAny($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const Builtin::Nullable<Builtin::usize>;
-	#line 344 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto LastIndexOf($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const Builtin::Nullable<Builtin::usize>;
-	#line 352 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto LastIndexOf($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const Builtin::Nullable<Builtin::usize>;
-	#line 361 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto LastIndexOf($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Nullable<Builtin::usize>;
-	#line 364 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto LastIndexOfAny($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> val)  -> const Builtin::Nullable<Builtin::usize>;
-	#line 372 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto LastIndexOfAny($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const Builtin::Nullable<Builtin::usize>;
-	#line 382 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto LastIndexOfAny($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const Builtin::Nullable<Builtin::usize>;
-	#line 392 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringBefore($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Str;
-	#line 400 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringBeforeLast($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Str;
-	#line 408 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringAfter($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Nullable<Builtin::Str>;
-	#line 416 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringAfterLast($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Nullable<Builtin::Str>;
-	#line 424 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringBetween($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str tag)  -> const Builtin::Nullable<Builtin::Str>;
-	#line 432 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringBetweenLast($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str tag)  -> const Builtin::Nullable<Builtin::Str>;
-	#line 442 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringBetween($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str open, Builtin::Str close)  -> const Builtin::Nullable<Builtin::Str>;
-	#line 447 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringBetweenLast($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str open, Builtin::Str close)  -> const Builtin::Nullable<Builtin::Str>;
-	#line 452 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringsBetween($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str open, Builtin::Str close)  -> const SubstringIterator;
-	#line 454 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringsBetweenReversed($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str open, Builtin::Str close)  -> const ReverseSubstringIterator;
-	#line 457 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto Count($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const Builtin::usize;
-	#line 464 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Count($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::usize;
-	#line 611 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Split($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val, StringSplitOptions options = StringSplitOptions::None)  -> const StringSpliterator;
-	#line 614 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Split($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val, Builtin::usize maxCount, StringSplitOptions options = StringSplitOptions::None)  -> const StringSpliterator;
-	#line 617 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Split($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val, StringSplitOptions options = StringSplitOptions::None)  -> const StringSpliterator;
-	#line 620 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Split($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val, Builtin::usize maxCount, StringSplitOptions options = StringSplitOptions::None)  -> const StringSpliterator;
-	#line 623 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitAny($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> vals, StringSplitOptions options = StringSplitOptions::None)  -> const StringSpliterator;
-	#line 626 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitAny($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> vals, Builtin::usize maxCount, StringSplitOptions options = StringSplitOptions::None)  -> const StringSpliterator;
-	#line 629 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitAny($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter, StringSplitOptions options = StringSplitOptions::None)  -> const StringSpliterator;
-	#line 632 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitAny($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter, Builtin::usize maxCount, StringSplitOptions options = StringSplitOptions::None)  -> const StringSpliterator;
-	#line 636 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitReversed($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val, StringSplitOptions options = StringSplitOptions::None)  -> const StringReverseSpliterator;
-	#line 639 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitReversed($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val, Builtin::usize maxCount, StringSplitOptions options = StringSplitOptions::None)  -> const StringReverseSpliterator;
-	#line 642 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitReversed($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val, StringSplitOptions options = StringSplitOptions::None)  -> const StringReverseSpliterator;
-	#line 645 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitReversed($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val, Builtin::usize maxCount, StringSplitOptions options = StringSplitOptions::None)  -> const StringReverseSpliterator;
-	#line 648 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitAnyReversed($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> vals, StringSplitOptions options = StringSplitOptions::None)  -> const StringReverseSpliterator;
-	#line 651 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitAnyReversed($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> vals, Builtin::usize maxCount, StringSplitOptions options = StringSplitOptions::None)  -> const StringReverseSpliterator;
-	#line 654 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitAnyReversed($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter, StringSplitOptions options = StringSplitOptions::None)  -> const StringReverseSpliterator;
-	#line 657 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitAnyReversed($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter, Builtin::usize maxCount, StringSplitOptions options = StringSplitOptions::None)  -> const StringReverseSpliterator;
-	#line 670 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Lines($extension_Str_33_str const& $this LIFETIMEBOUND, StringSplitOptions options)  -> const StringSpliterator;
-	#line 673 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto LinesReversed($extension_Str_33_str const& $this LIFETIMEBOUND, StringSplitOptions options)  -> const StringReverseSpliterator;
-	#line 676 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto StartsWith($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const bool;
-	#line 683 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto StartsWith($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const bool;
-	#line 685 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto StartsWith($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const bool;
-	#line 687 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto StartsWith($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const bool;
-	#line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto EndsWith($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const bool;
-	#line 703 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto EndsWith($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const bool;
-	#line 711 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto EndsWith($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const bool;
-	#line 713 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto EndsWith($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const bool;
-	#line 770 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto TrimStart($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const typename $extension_Str_33_str;
-	#line 777 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto TrimEnd($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const typename $extension_Str_33_str;
-	#line 784 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto Trim($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const typename $extension_Str_33_str;
-	#line 786 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto TrimStart($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const typename $extension_Str_33_str;
-	#line 795 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto TrimEnd($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const typename $extension_Str_33_str;
-	#line 806 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Trim($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const typename $extension_Str_33_str;
-	#line 808 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto TrimStart($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const typename $extension_Str_33_str;
-	#line 817 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto TrimEnd($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const typename $extension_Str_33_str;
-	#line 828 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Trim($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const typename $extension_Str_33_str;
-	#line 830 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto TrimStart($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const typename $extension_Str_33_str;
-	#line 839 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto TrimEnd($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const typename $extension_Str_33_str;
-	#line 850 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Trim($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const typename $extension_Str_33_str;
-	#line 36 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getByteLength($extension_Str_33_str const& $this ) -> const Builtin::usize;
-	#line 39 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsEmpty($extension_Str_33_str const& $this ) -> const bool;
-	#line 42 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getBytes($extension_Str_33_str const& $this ) -> const System::Span<Builtin::u8>;
-	#line 115 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getChars($extension_Str_33_str const& $this ) -> const CharIterator;
-	#line 117 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getCharsWithOffsets($extension_Str_33_str const& $this ) -> const CharIndicesIterator;
-	#line 119 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getCharCount($extension_Str_33_str const& $this ) -> const Builtin::usize;
-	#line 251 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAscii($extension_Str_33_str const& $this ) -> const bool;
+	inline auto _operator_in($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const bool;
+	#line 277 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Contains($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const bool;
+	#line 278 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto _operator_in($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const bool;
+	#line 281 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto ContainsAny($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> bytes)  -> const bool;
+	#line 288 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto ContainsAny($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> chars)  -> const bool;
+	#line 298 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto ContainsAny($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const bool;
+	#line 309 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto IndexOf($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const Builtin::Nullable<Builtin::usize>;
+	#line 317 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto IndexOf($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const Builtin::Nullable<Builtin::usize>;
+	#line 326 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto IndexOf($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Nullable<Builtin::usize>;
+	#line 329 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto IndexOfAny($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> val)  -> const Builtin::Nullable<Builtin::usize>;
+	#line 337 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto IndexOfAny($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const Builtin::Nullable<Builtin::usize>;
+	#line 347 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto IndexOfAny($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const Builtin::Nullable<Builtin::usize>;
+	#line 357 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto LastIndexOf($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const Builtin::Nullable<Builtin::usize>;
+	#line 365 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto LastIndexOf($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const Builtin::Nullable<Builtin::usize>;
+	#line 374 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto LastIndexOf($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Nullable<Builtin::usize>;
+	#line 377 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto LastIndexOfAny($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> val)  -> const Builtin::Nullable<Builtin::usize>;
+	#line 385 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto LastIndexOfAny($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const Builtin::Nullable<Builtin::usize>;
+	#line 395 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto LastIndexOfAny($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const Builtin::Nullable<Builtin::usize>;
+	#line 405 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringBefore($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Str;
+	#line 413 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringBeforeLast($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Str;
+	#line 421 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringAfter($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Nullable<Builtin::Str>;
+	#line 429 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringAfterLast($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Nullable<Builtin::Str>;
+	#line 437 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringBetween($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str tag)  -> const Builtin::Nullable<Builtin::Str>;
+	#line 445 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringBetweenLast($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str tag)  -> const Builtin::Nullable<Builtin::Str>;
+	#line 455 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringBetween($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str open, Builtin::Str close)  -> const Builtin::Nullable<Builtin::Str>;
+	#line 460 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringBetweenLast($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str open, Builtin::Str close)  -> const Builtin::Nullable<Builtin::Str>;
+	#line 465 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringsBetween($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str open, Builtin::Str close)  -> const SubstringIterator;
 	#line 467 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAsciiWhiteSpace($extension_Str_33_str const& $this ) -> const bool;
-	#line 476 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsWhiteSpace($extension_Str_33_str const& $this ) -> const bool;
-	#line 485 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAsciiUpper($extension_Str_33_str const& $this ) -> const bool;
-	#line 494 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsUpper($extension_Str_33_str const& $this ) -> const bool;
-	#line 503 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAsciiLower($extension_Str_33_str const& $this ) -> const bool;
-	#line 512 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsLower($extension_Str_33_str const& $this ) -> const bool;
-	#line 521 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAsciiAlphabetic($extension_Str_33_str const& $this ) -> const bool;
-	#line 530 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAlphabetic($extension_Str_33_str const& $this ) -> const bool;
-	#line 539 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAsciiAlphanumeric($extension_Str_33_str const& $this ) -> const bool;
-	#line 548 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAlphanumeric($extension_Str_33_str const& $this ) -> const bool;
-	#line 557 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsNumeric($extension_Str_33_str const& $this ) -> const bool;
-	#line 566 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsDecimal($extension_Str_33_str const& $this ) -> const bool;
-	#line 575 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsHexadecimal($extension_Str_33_str const& $this ) -> const bool;
-	#line 584 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsValidIdentifier($extension_Str_33_str const& $this ) -> const bool;
-	#line 600 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAsciiPrintable($extension_Str_33_str const& $this ) -> const bool;
-	#line 660 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto getSplitWhitespace($extension_Str_33_str const& $this ) -> const StringSpliterator;
-	#line 663 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto getSplitWhitespaceReversed($extension_Str_33_str const& $this ) -> const StringReverseSpliterator;
-	#line 666 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto getLines($extension_Str_33_str const& $this ) -> const StringSpliterator;
-	#line 668 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto getLinesReversed($extension_Str_33_str const& $this ) -> const StringReverseSpliterator;
-	#line 722 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getTrimAsciiStart($extension_Str_33_str const& $this ) -> const $extension_Str_33_str;
-	#line 734 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getTrimAsciiEnd($extension_Str_33_str const& $this ) -> const $extension_Str_33_str;
-	#line 746 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getTrimAscii($extension_Str_33_str const& $this ) -> const $extension_Str_33_str;
-	#line 748 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto getTrimStart($extension_Str_33_str const& $this ) -> const $extension_Str_33_str;
-	#line 757 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto getTrimEnd($extension_Str_33_str const& $this ) -> const $extension_Str_33_str;
-	#line 768 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto getTrim($extension_Str_33_str const& $this ) -> const $extension_Str_33_str;
+	inline auto SubstringsBetweenReversed($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str open, Builtin::Str close)  -> const ReverseSubstringIterator;
+	#line 470 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto Count($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const Builtin::usize;
+	#line 477 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Count($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::usize;
+	#line 624 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Split($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val, StringSplitOptions options = StringSplitOptions::None)  -> const StringSpliterator;
+	#line 627 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Split($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val, Builtin::usize maxCount, StringSplitOptions options = StringSplitOptions::None)  -> const StringSpliterator;
+	#line 630 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Split($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val, StringSplitOptions options = StringSplitOptions::None)  -> const StringSpliterator;
+	#line 633 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Split($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val, Builtin::usize maxCount, StringSplitOptions options = StringSplitOptions::None)  -> const StringSpliterator;
+	#line 636 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitAny($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> vals, StringSplitOptions options = StringSplitOptions::None)  -> const StringSpliterator;
+	#line 639 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitAny($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> vals, Builtin::usize maxCount, StringSplitOptions options = StringSplitOptions::None)  -> const StringSpliterator;
+	#line 642 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitAny($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter, StringSplitOptions options = StringSplitOptions::None)  -> const StringSpliterator;
+	#line 645 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitAny($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter, Builtin::usize maxCount, StringSplitOptions options = StringSplitOptions::None)  -> const StringSpliterator;
+	#line 649 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitReversed($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val, StringSplitOptions options = StringSplitOptions::None)  -> const StringReverseSpliterator;
+	#line 652 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitReversed($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val, Builtin::usize maxCount, StringSplitOptions options = StringSplitOptions::None)  -> const StringReverseSpliterator;
+	#line 655 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitReversed($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val, StringSplitOptions options = StringSplitOptions::None)  -> const StringReverseSpliterator;
+	#line 658 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitReversed($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val, Builtin::usize maxCount, StringSplitOptions options = StringSplitOptions::None)  -> const StringReverseSpliterator;
+	#line 661 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitAnyReversed($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> vals, StringSplitOptions options = StringSplitOptions::None)  -> const StringReverseSpliterator;
+	#line 664 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitAnyReversed($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> vals, Builtin::usize maxCount, StringSplitOptions options = StringSplitOptions::None)  -> const StringReverseSpliterator;
+	#line 667 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitAnyReversed($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter, StringSplitOptions options = StringSplitOptions::None)  -> const StringReverseSpliterator;
+	#line 670 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitAnyReversed($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter, Builtin::usize maxCount, StringSplitOptions options = StringSplitOptions::None)  -> const StringReverseSpliterator;
+	#line 683 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Lines($extension_Str_34_str const& $this LIFETIMEBOUND, StringSplitOptions options)  -> const StringSpliterator;
+	#line 686 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto LinesReversed($extension_Str_34_str const& $this LIFETIMEBOUND, StringSplitOptions options)  -> const StringReverseSpliterator;
+	#line 689 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto StartsWith($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const bool;
+	#line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto StartsWith($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const bool;
+	#line 698 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto StartsWith($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const bool;
+	#line 700 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto StartsWith($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const bool;
+	#line 709 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto EndsWith($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const bool;
+	#line 716 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto EndsWith($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const bool;
+	#line 724 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto EndsWith($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const bool;
+	#line 726 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto EndsWith($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const bool;
+	#line 783 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto TrimStart($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const typename $extension_Str_34_str;
+	#line 790 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto TrimEnd($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const typename $extension_Str_34_str;
+	#line 797 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto Trim($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const typename $extension_Str_34_str;
+	#line 799 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto TrimStart($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const typename $extension_Str_34_str;
+	#line 808 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto TrimEnd($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const typename $extension_Str_34_str;
+	#line 819 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Trim($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const typename $extension_Str_34_str;
+	#line 821 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto TrimStart($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const typename $extension_Str_34_str;
+	#line 830 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto TrimEnd($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const typename $extension_Str_34_str;
+	#line 841 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Trim($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const typename $extension_Str_34_str;
+	#line 843 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto TrimStart($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const typename $extension_Str_34_str;
+	#line 852 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto TrimEnd($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const typename $extension_Str_34_str;
+	#line 863 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Trim($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const typename $extension_Str_34_str;
+	#line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getByteLength($extension_Str_34_str const& $this ) -> const Builtin::usize;
+	#line 40 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsEmpty($extension_Str_34_str const& $this ) -> const bool;
+	#line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getBytes($extension_Str_34_str const& $this ) -> const System::Span<Builtin::u8>;
+	#line 116 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getChars($extension_Str_34_str const& $this ) -> const CharIterator;
+	#line 118 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getCharsWithOffsets($extension_Str_34_str const& $this ) -> const CharIndicesIterator;
+	#line 120 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getCharCount($extension_Str_34_str const& $this ) -> const Builtin::usize;
+	#line 129 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getTextElements($extension_Str_34_str const& $this ) -> const TextElementIterator;
+	#line 131 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getTextElementsWithOffsets($extension_Str_34_str const& $this ) -> const TextElementIndicesIterator;
+	#line 133 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getTextElementCount($extension_Str_34_str const& $this ) -> const Builtin::usize;
+	#line 264 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAscii($extension_Str_34_str const& $this ) -> const bool;
+	#line 480 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAsciiWhiteSpace($extension_Str_34_str const& $this ) -> const bool;
+	#line 489 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsWhiteSpace($extension_Str_34_str const& $this ) -> const bool;
+	#line 498 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAsciiUpper($extension_Str_34_str const& $this ) -> const bool;
+	#line 507 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsUpper($extension_Str_34_str const& $this ) -> const bool;
+	#line 516 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAsciiLower($extension_Str_34_str const& $this ) -> const bool;
+	#line 525 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsLower($extension_Str_34_str const& $this ) -> const bool;
+	#line 534 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAsciiAlphabetic($extension_Str_34_str const& $this ) -> const bool;
+	#line 543 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAlphabetic($extension_Str_34_str const& $this ) -> const bool;
+	#line 552 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAsciiAlphanumeric($extension_Str_34_str const& $this ) -> const bool;
+	#line 561 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAlphanumeric($extension_Str_34_str const& $this ) -> const bool;
+	#line 570 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsNumeric($extension_Str_34_str const& $this ) -> const bool;
+	#line 579 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsDecimal($extension_Str_34_str const& $this ) -> const bool;
+	#line 588 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsHexadecimal($extension_Str_34_str const& $this ) -> const bool;
+	#line 597 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsValidIdentifier($extension_Str_34_str const& $this ) -> const bool;
+	#line 613 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAsciiPrintable($extension_Str_34_str const& $this ) -> const bool;
+	#line 673 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getSplitWhitespace($extension_Str_34_str const& $this ) -> const StringSpliterator;
+	#line 676 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getSplitWhitespaceReversed($extension_Str_34_str const& $this ) -> const StringReverseSpliterator;
+	#line 679 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getLines($extension_Str_34_str const& $this ) -> const StringSpliterator;
+	#line 681 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getLinesReversed($extension_Str_34_str const& $this ) -> const StringReverseSpliterator;
+	#line 735 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getTrimAsciiStart($extension_Str_34_str const& $this ) -> const $extension_Str_34_str;
+	#line 747 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getTrimAsciiEnd($extension_Str_34_str const& $this ) -> const $extension_Str_34_str;
+	#line 759 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getTrimAscii($extension_Str_34_str const& $this ) -> const $extension_Str_34_str;
+	#line 761 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getTrimStart($extension_Str_34_str const& $this ) -> const $extension_Str_34_str;
+	#line 770 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getTrimEnd($extension_Str_34_str const& $this ) -> const $extension_Str_34_str;
+	#line 781 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getTrim($extension_Str_34_str const& $this ) -> const $extension_Str_34_str;
 	} namespace System{
 using $extensions::getAt; using $extensions::_operator_subscript;
 using $extensions::getAt; using $extensions::_operator_subscript;
@@ -372,6 +380,9 @@ using $extensions::getBytes;
 using $extensions::getChars;
 using $extensions::getCharsWithOffsets;
 using $extensions::getCharCount;
+using $extensions::getTextElements;
+using $extensions::getTextElementsWithOffsets;
+using $extensions::getTextElementCount;
 using $extensions::getIsAscii;
 using $extensions::getIsAsciiWhiteSpace;
 using $extensions::getIsWhiteSpace;
@@ -399,89 +410,91 @@ using $extensions::getTrimStart;
 using $extensions::getTrimEnd;
 using $extensions::getTrim;
 
-	#line 853 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	#line 866 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 	struct [[clang::annotate("ref_struct")]] SubstringIterator final : public Builtin::RefStruct {
 		public: using $self = SubstringIterator;
 		public: using $class = $self;
 		public: FORCE_INLINE constexpr decltype(auto) $ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) $ref() const noexcept { return *this; }
-		#line 854 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 867 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		public: using ElementType = Builtin::Str;
 		public: SubstringIterator() = default;
-		#line 861 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 874 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		public: inline SubstringIterator(Builtin::Str data, Builtin::Str open, Builtin::Str close) noexcept;
-		#line 867 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		public: inline auto MoveNext()  -> const bool;
 		#line 880 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		public: inline auto MoveNext()  -> const bool;
+		#line 893 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		public: inline auto GetCurrent() const  -> const Builtin::Str;
-		#line 882 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 895 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		public: inline auto Iterate() const  -> const $self;
-		#line 856 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 869 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		private: Builtin::Str _data;
-		#line 857 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 870 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		private: Builtin::Str _open;
-		#line 858 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 871 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		private: Builtin::Str _close;
-		#line 859 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 872 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		private: Builtin::Str _current;
 		
 	};
 	
-	#line 853 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	#line 866 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(SubstringIterator, IAbstractSequence, IAbstractSequence, SubstringIterator);
-	#line 853 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	#line 866 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(SubstringIterator, ISequence, ISequence<Builtin::Str>, SubstringIterator);
-	#line 853 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	#line 866 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(SubstringIterator, IAbstractIterator, IAbstractIterator, SubstringIterator);
-	#line 853 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	#line 866 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(SubstringIterator, IIterator, IIterator<Builtin::Str>, SubstringIterator);
 	
-	#line 885 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	#line 898 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 	struct [[clang::annotate("ref_struct")]] ReverseSubstringIterator final : public Builtin::RefStruct {
 		public: using $self = ReverseSubstringIterator;
 		public: using $class = $self;
 		public: FORCE_INLINE constexpr decltype(auto) $ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) $ref() const noexcept { return *this; }
-		#line 886 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 899 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		public: using ElementType = Builtin::Str;
 		public: ReverseSubstringIterator() = default;
-		#line 893 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 906 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		public: inline ReverseSubstringIterator(Builtin::Str data, Builtin::Str open, Builtin::Str close) noexcept;
-		#line 899 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		public: inline auto MoveNext()  -> const bool;
 		#line 912 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		public: inline auto MoveNext()  -> const bool;
+		#line 925 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		public: inline auto GetCurrent() const  -> const Builtin::Str;
-		#line 914 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 927 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		public: inline auto Iterate() const  -> const $self;
-		#line 888 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 901 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		private: Builtin::Str _data;
-		#line 889 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 902 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		private: Builtin::Str _open;
-		#line 890 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 903 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		private: Builtin::Str _close;
-		#line 891 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 904 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		private: Builtin::Str _current;
 		
 	};
 	
-	#line 885 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	#line 898 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(ReverseSubstringIterator, IAbstractSequence, IAbstractSequence, ReverseSubstringIterator);
-	#line 885 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	#line 898 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(ReverseSubstringIterator, ISequence, ISequence<Builtin::Str>, ReverseSubstringIterator);
-	#line 885 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	#line 898 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(ReverseSubstringIterator, IAbstractIterator, IAbstractIterator, ReverseSubstringIterator);
-	#line 885 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	#line 898 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(ReverseSubstringIterator, IIterator, IIterator<Builtin::Str>, ReverseSubstringIterator);
 	
 	//###############################################################################
 //# Global compile-time constants
 //###############################################################################
-inline constexpr Builtin::Str $strconst_0x1d1412edc30_0 = "Begin ";
-inline constexpr Builtin::Str $strconst_0x1d1412edc30_1 = " Middle ";
-inline constexpr Builtin::Str $strconst_0x1d1412edc30_2 = " End";
+inline constexpr Builtin::Str $strconst_0x18cee72ff10_0 = "Begin ";
+inline constexpr Builtin::Str $strconst_0x18cee72ff10_1 = " Middle ";
+inline constexpr Builtin::Str $strconst_0x18cee72ff10_2 = " End";
 } namespace $extensions {
 template<class __TT> struct $static_Start;
 template<class __TT> struct $static_getStart;
 template<class __TT> struct $static_UnsafeCreate;
 template<class __TT> struct $static_getUnsafeCreate;
+template<class __TT> struct $static_TextElements;
+template<class __TT> struct $static_getTextElements;
 template<class __TT> struct $static_ByteLength;
 template<class __TT> struct $static_getByteLength;
 template<class __TT> struct $static_ContainsAnyExcept;
@@ -490,8 +503,6 @@ template<class __TT> struct $static_GetByteLength;
 template<class __TT> struct $static_getGetByteLength;
 template<class __TT> struct $static_Length;
 template<class __TT> struct $static_getLength;
-template<class __TT> struct $static_Bytes;
-template<class __TT> struct $static_getBytes;
 template<class __TT> struct $static_GetDataReference;
 template<class __TT> struct $static_getGetDataReference;
 template<class __TT> struct $static_Offset;
@@ -506,6 +517,8 @@ template<class __TT> struct $static_IsAsciiLetter;
 template<class __TT> struct $static_getIsAsciiLetter;
 template<class __TT> struct $static_IsAscii;
 template<class __TT> struct $static_getIsAscii;
+template<class __TT> struct $static_Bytes;
+template<class __TT> struct $static_getBytes;
 template<class __TT> struct $static_IsAsciiWhiteSpace;
 template<class __TT> struct $static_getIsAsciiWhiteSpace;
 template<class __TT> struct $static_IsWhiteSpace;
@@ -528,6 +541,8 @@ template<class __TT> struct $static_IsAsciiLetterOrDigit;
 template<class __TT> struct $static_getIsAsciiLetterOrDigit;
 template<class __TT> struct $static_IsLetterOrDigit;
 template<class __TT> struct $static_getIsLetterOrDigit;
+template<class __TT> struct $static_TextElementCount;
+template<class __TT> struct $static_getTextElementCount;
 template<class __TT> struct $static_IsAsciiDigit;
 template<class __TT> struct $static_getIsAsciiDigit;
 template<class __TT> struct $static_IsHexDigit;
@@ -550,12 +565,12 @@ template<class __TT> struct $static_SubstringAfterLast;
 template<class __TT> struct $static_getSubstringAfterLast;
 template<class __TT> struct $static_CharsWithOffsets;
 template<class __TT> struct $static_getCharsWithOffsets;
-template<class __TT> struct $static_SubstringBefore;
-template<class __TT> struct $static_getSubstringBefore;
-template<class __TT> struct $static_SubstringsBetween;
-template<class __TT> struct $static_getSubstringsBetween;
 template<class __TT> struct $static_SubstringBeforeLast;
 template<class __TT> struct $static_getSubstringBeforeLast;
+template<class __TT> struct $static_SubstringsBetween;
+template<class __TT> struct $static_getSubstringsBetween;
+template<class __TT> struct $static_SubstringBefore;
+template<class __TT> struct $static_getSubstringBefore;
 template<class __TT> struct $static_Reversed;
 template<class __TT> struct $static_getReversed;
 template<class __TT> struct $static_TrimEnd;
@@ -586,8 +601,6 @@ template<class __TT> struct $static_Add;
 template<class __TT> struct $static_getAdd;
 template<class __TT> struct $static_ToLower;
 template<class __TT> struct $static_getToLower;
-template<class __TT> struct $static_Split;
-template<class __TT> struct $static_getSplit;
 template<class __TT> struct $static_ToUtf8;
 template<class __TT> struct $static_getToUtf8;
 template<class __TT> struct $static_SubstringAfter;
@@ -604,10 +617,14 @@ template<class __TT> struct $static_StartsWith;
 template<class __TT> struct $static_getStartsWith;
 template<class __TT> struct $static__current;
 template<class __TT> struct $static_get_current;
+template<class __TT> struct $static_TextElementsWithOffsets;
+template<class __TT> struct $static_getTextElementsWithOffsets;
 template<class __TT> struct $static_SubstringBetween;
 template<class __TT> struct $static_getSubstringBetween;
 template<class __TT> struct $static_SubstringsBetweenReversed;
 template<class __TT> struct $static_getSubstringsBetweenReversed;
+template<class __TT> struct $static_Split;
+template<class __TT> struct $static_getSplit;
 template<class __TT> struct $static_SplitReversed;
 template<class __TT> struct $static_getSplitReversed;
 template<class __TT> struct $static_SplitAny;
@@ -645,131 +662,131 @@ template<class __TT> struct $static_getCeilIndexToUtf8CodePointBoundary;
 //# Function definitions
 //###############################################################################
 
-#line 861 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+#line 874 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 	inline SubstringIterator::SubstringIterator(Builtin::Str data, Builtin::Str open, Builtin::Str close) noexcept : 
-	#line 862 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	#line 875 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 	_data{data}, 
-	#line 863 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	#line 876 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 	_open{open}, 
-	#line 864 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	#line 877 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 	_close{close}
 	{
-	}
-#line 867 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringIterator::MoveNext()  -> const bool
-	{
-		#line 868 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		if (const auto index = ADV_UFCS(IndexOf)(_data.$ref(), _open)) {
-			{
-				#line 868 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				auto __tmp0 = *index; const auto& index = __tmp0;
-				
-				#line 869 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				_data = ADV_UFCS(_operator_subscript)(_data.$ref(), Builtin::UncheckedTag{}, System::IndexRange((index + ADV_UPCS(ByteLength)(_open.$ref())), System::Index::End, false));
-				#line 870 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				if (const auto index2 = ADV_UFCS(IndexOf)(_data.$ref(), _close)) {
-					{
-						#line 870 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-						auto __tmp0 = *index2; const auto& index2 = __tmp0;
-						
-						#line 871 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-						_current = ADV_UFCS(_operator_subscript)(_data.$ref(), Builtin::UncheckedTag{}, System::Range<Builtin::Auto<decltype(index2)>, false>({}, index2));
-						#line 872 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-						_data = ADV_UFCS(_operator_subscript)(_data.$ref(), Builtin::UncheckedTag{}, System::IndexRange((index2 + ADV_UPCS(ByteLength)(_close.$ref())), System::Index::End, false));
-						#line 873 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-						return Builtin::Boolean(true);
-					}
-				}
-			}
-		}
-		#line 877 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return Builtin::Boolean(false);
 	}
 #line 880 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringIterator::GetCurrent() const  -> const Builtin::Str
+	inline auto SubstringIterator::MoveNext()  -> const bool
 	{
-		#line 880 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		ADV_EXPRESSION_BODY(ADV_UPCS(_current)((*this).$ref())); 
-	}
-#line 882 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringIterator::Iterate() const  -> const $self
-	{
-		#line 882 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		ADV_EXPRESSION_BODY((*this)); 
-	}
-#line 893 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline ReverseSubstringIterator::ReverseSubstringIterator(Builtin::Str data, Builtin::Str open, Builtin::Str close) noexcept : 
-	#line 894 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	_data{data}, 
-	#line 895 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	_open{open}, 
-	#line 896 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	_close{close}
-	{
-	}
-#line 899 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto ReverseSubstringIterator::MoveNext()  -> const bool
-	{
-		#line 900 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		if (const auto index = ADV_UFCS(LastIndexOf)(_data.$ref(), _open)) {
+		#line 881 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		if (const auto index = ADV_UFCS(IndexOf)(_data.$ref(), _open)) {
 			{
-				#line 900 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 881 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				auto __tmp0 = *index; const auto& index = __tmp0;
 				
-				#line 901 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				const Builtin::Auto<decltype(ADV_UFCS(_operator_subscript)(_data.$ref(), Builtin::UncheckedTag{}, System::IndexRange((index + ADV_UPCS(ByteLength)(_open.$ref())), System::Index::End, false)))> tmp = ADV_UFCS(_operator_subscript)(_data.$ref(), Builtin::UncheckedTag{}, System::IndexRange((index + ADV_UPCS(ByteLength)(_open.$ref())), System::Index::End, false)); 
-				#line 902 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				if (const auto index2 = ADV_UFCS(IndexOf)(tmp.$ref(), _close)) {
+				#line 882 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				_data = ADV_UFCS(_operator_subscript)(_data.$ref(), Builtin::UncheckedTag{}, System::IndexRange((index + ADV_UPCS(ByteLength)(_open.$ref())), System::Index::End, false));
+				#line 883 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				if (const auto index2 = ADV_UFCS(IndexOf)(_data.$ref(), _close)) {
 					{
-						#line 902 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+						#line 883 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 						auto __tmp0 = *index2; const auto& index2 = __tmp0;
 						
-						#line 903 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-						_current = ADV_UFCS(_operator_subscript)(tmp.$ref(), Builtin::UncheckedTag{}, System::Range<Builtin::Auto<decltype(index2)>, false>({}, index2));
-						#line 904 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-						_data = ADV_UFCS(_operator_subscript)(_data.$ref(), Builtin::UncheckedTag{}, System::Range<Builtin::Auto<decltype(index)>, false>({}, index));
-						#line 905 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+						#line 884 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+						_current = ADV_UFCS(_operator_subscript)(_data.$ref(), Builtin::UncheckedTag{}, System::Range<Builtin::Auto<decltype(index2)>, false>({}, index2));
+						#line 885 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+						_data = ADV_UFCS(_operator_subscript)(_data.$ref(), Builtin::UncheckedTag{}, System::IndexRange((index2 + ADV_UPCS(ByteLength)(_close.$ref())), System::Index::End, false));
+						#line 886 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 						return Builtin::Boolean(true);
 					}
 				}
 			}
 		}
-		#line 909 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 890 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return Builtin::Boolean(false);
 	}
-#line 912 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto ReverseSubstringIterator::GetCurrent() const  -> const Builtin::Str
+#line 893 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringIterator::GetCurrent() const  -> const Builtin::Str
 	{
-		#line 912 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 893 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(_current)((*this).$ref())); 
 	}
-#line 914 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+#line 895 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringIterator::Iterate() const  -> const $self
+	{
+		#line 895 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		ADV_EXPRESSION_BODY((*this)); 
+	}
+#line 906 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline ReverseSubstringIterator::ReverseSubstringIterator(Builtin::Str data, Builtin::Str open, Builtin::Str close) noexcept : 
+	#line 907 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	_data{data}, 
+	#line 908 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	_open{open}, 
+	#line 909 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	_close{close}
+	{
+	}
+#line 912 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto ReverseSubstringIterator::MoveNext()  -> const bool
+	{
+		#line 913 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		if (const auto index = ADV_UFCS(LastIndexOf)(_data.$ref(), _open)) {
+			{
+				#line 913 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				auto __tmp0 = *index; const auto& index = __tmp0;
+				
+				#line 914 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				const Builtin::Auto<decltype(ADV_UFCS(_operator_subscript)(_data.$ref(), Builtin::UncheckedTag{}, System::IndexRange((index + ADV_UPCS(ByteLength)(_open.$ref())), System::Index::End, false)))> tmp = ADV_UFCS(_operator_subscript)(_data.$ref(), Builtin::UncheckedTag{}, System::IndexRange((index + ADV_UPCS(ByteLength)(_open.$ref())), System::Index::End, false)); 
+				#line 915 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				if (const auto index2 = ADV_UFCS(IndexOf)(tmp.$ref(), _close)) {
+					{
+						#line 915 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+						auto __tmp0 = *index2; const auto& index2 = __tmp0;
+						
+						#line 916 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+						_current = ADV_UFCS(_operator_subscript)(tmp.$ref(), Builtin::UncheckedTag{}, System::Range<Builtin::Auto<decltype(index2)>, false>({}, index2));
+						#line 917 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+						_data = ADV_UFCS(_operator_subscript)(_data.$ref(), Builtin::UncheckedTag{}, System::Range<Builtin::Auto<decltype(index)>, false>({}, index));
+						#line 918 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+						return Builtin::Boolean(true);
+					}
+				}
+			}
+		}
+		#line 922 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return Builtin::Boolean(false);
+	}
+#line 925 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto ReverseSubstringIterator::GetCurrent() const  -> const Builtin::Str
+	{
+		#line 925 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		ADV_EXPRESSION_BODY(ADV_UPCS(_current)((*this).$ref())); 
+	}
+#line 927 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 	inline auto ReverseSubstringIterator::Iterate() const  -> const $self
 	{
-		#line 914 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 927 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY((*this)); 
 	}
 } namespace $extensions { using namespace System;
-#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAscii($extension_Str_11_byte_brack__and__brack_ const & $this ) -> const bool
+#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAscii($extension_Str_12_byte_brack__and__brack_ const & $this ) -> const bool
 	{
-		#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (std::is_constant_evaluated()) {
-			#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			{ auto $for_init_15 = $this; auto $for_iter_15 = ADV_UFCS(Iterate)($for_init_15.$ref()); while($for_iter_15.$ref().MoveNext()) {
-			auto&& b = $for_iter_15.$ref().GetCurrent(); {
-				#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 16 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			{ auto $for_init_16 = $this; auto $for_iter_16 = ADV_UFCS(Iterate)($for_init_16.$ref()); while($for_iter_16.$ref().MoveNext()) {
+			auto&& b = $for_iter_16.$ref().GetCurrent(); {
+				#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				if (!ADV_UFCS(_operator_in)(System::Range<Builtin::Auto<decltype(Builtin::u8(127U))>, true>({}, Builtin::u8(127U)), b)) {
-					#line 17 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+					#line 18 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 					return Builtin::Boolean(false);
 				}
 			}}}
-			#line 20 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 21 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			return Builtin::Boolean(true);
 		} else {
-			#line 21 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 22 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			{
-				#line 22 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 23 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return !ADV_UFCS(ContainsAnyExcept)($this.$ref(), System::Range<Builtin::Auto<decltype(Builtin::u8(127U))>, true>({}, Builtin::u8(127U)));
 			}
 		}
@@ -779,10 +796,10 @@ template<class __TT> struct $static_getCeilIndexToUtf8CodePointBoundary;
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 	
 } namespace $extensions { using namespace System;
-#line 28 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto ToUtf8($extension_Str_27_char const& $this LIFETIMEBOUND, System::MutableSpan<Builtin::u8> dst)  -> const Builtin::Str
+#line 29 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto ToUtf8($extension_Str_28_char const& $this LIFETIMEBOUND, System::MutableSpan<Builtin::u8> dst)  -> const Builtin::Str
 	{
-		#line 29 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 30 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_USFCS((Builtin::Str), FromUtf8Unchecked)(ADV_USFCS((Utf8), WriteChar)($this, dst));
 	}
 	
@@ -790,945 +807,945 @@ template<class __TT> struct $static_getCeilIndexToUtf8CodePointBoundary;
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 	
 } namespace $extensions { using namespace System;
-#line 46 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr const $extension_Str_33_str getAt($extension_Str_33_str const& $this LIFETIMEBOUND, IndexRange range)
+#line 47 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr const $extension_Str_34_str getAt($extension_Str_34_str const& $this LIFETIMEBOUND, IndexRange range)
 	{
-		#line 47 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		const Builtin::Auto<decltype(ADV_UPCS(ByteLength)($this.$ref()))> strLen = ADV_UPCS(ByteLength)($this.$ref()); 
 		#line 48 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		const Builtin::Auto<decltype(Builtin::Cast<true, Builtin::usize>(ADV_UFCS(Offset)(ADV_UPCS(Start)(range.$ref()).$ref(), strLen)))> start = Builtin::Cast<true, Builtin::usize>(ADV_UFCS(Offset)(ADV_UPCS(Start)(range.$ref()).$ref(), strLen)); 
+		const Builtin::Auto<decltype(ADV_UPCS(ByteLength)($this.$ref()))> strLen = ADV_UPCS(ByteLength)($this.$ref()); 
 		#line 49 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		const Builtin::Auto<decltype(Builtin::Cast<true, Builtin::usize>(ADV_UFCS(Offset)(ADV_UPCS(Start)(range.$ref()).$ref(), strLen)))> start = Builtin::Cast<true, Builtin::usize>(ADV_UFCS(Offset)(ADV_UPCS(Start)(range.$ref()).$ref(), strLen)); 
+		#line 50 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		const Builtin::Auto<decltype(ADV_UFCS(Length)(range.$ref(), strLen))> len = ADV_UFCS(Length)(range.$ref(), strLen); 
-		#line 51 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 52 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (((start + len) <=> strLen) > 0) {
-			#line 52 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 53 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			Builtin::Throw(Builtin::IndexOutOfRangeException{});
 		}
-		#line 54 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 55 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (!ADV_UPCS(IsUtf8CodePointBoundary)(ADV_UFCS(_operator_subscript)(ADV_UPCS(Bytes)($this.$ref()).$ref(), Builtin::UncheckedTag{}, start).$ref()) || !ADV_UPCS(IsUtf8CodePointBoundary)(ADV_UFCS(_operator_subscript)(ADV_UPCS(Bytes)($this.$ref()).$ref(), Builtin::UncheckedTag{}, start + len).$ref())) {
-			#line 56 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 57 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			Builtin::Throw(Builtin::InvalidArgumentException{});
 		}
-		#line 58 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 59 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_USFCS((Builtin::Str), UnsafeCreate)(ADV_UFCS(_operator_subscript)(ADV_UPCS(Bytes)($this.$ref()).$ref(), Builtin::UncheckedTag{}, start), len);
 	}
 	} namespace $extensions { using namespace System;
-#line 61 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr const $extension_Str_33_str getAt($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::UncheckedTag, IndexRange range)
+#line 62 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr const $extension_Str_34_str getAt($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::UncheckedTag, IndexRange range)
 	{
-		#line 62 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 63 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_USFCS((Builtin::Str), UnsafeCreate)(ADV_USFCS((Unsafe), Add)(ADV_UFCS(GetDataReference)($this.$ref()), Builtin::Cast<true, Builtin::usize>(ADV_UFCS(Offset)(ADV_UPCS(Start)(range.$ref()).$ref(), ADV_UPCS(ByteLength)($this.$ref())))), ADV_UFCS(Length)(range.$ref(), ADV_UPCS(ByteLength)($this.$ref())));
 	}
 	} namespace $extensions { using namespace System;
-#line 67 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto IsUtf8CodePointBoundary($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::usize index)  -> const bool
+#line 68 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto IsUtf8CodePointBoundary($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::usize index)  -> const bool
 	{
-		#line 68 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		const Builtin::Auto<decltype(ADV_UPCS(ByteLength)($this.$ref()))> length = ADV_UPCS(ByteLength)($this.$ref()); 
 		#line 69 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		const Builtin::Auto<decltype(ADV_UPCS(ByteLength)($this.$ref()))> length = ADV_UPCS(ByteLength)($this.$ref()); 
+		#line 70 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return index == length || (index <=> length) < 0 && ADV_UPCS(IsUtf8CodePointBoundary)(ADV_UFCS(_operator_subscript)(ADV_UPCS(Bytes)($this.$ref()).$ref(), Builtin::UncheckedTag{}, index).$ref());
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 73 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto FloorIndexToUtf8CodePointBoundary($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::usize index)  -> const Builtin::usize
+#line 74 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto FloorIndexToUtf8CodePointBoundary($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::usize index)  -> const Builtin::usize
 	{
-		#line 74 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		const Builtin::Auto<decltype(ADV_UPCS(Bytes)($this.$ref()))> bytes = ADV_UPCS(Bytes)($this.$ref()); 
 		#line 75 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		const Builtin::Auto<decltype(ADV_UPCS(ByteLength)($this.$ref()))> length = ADV_UPCS(ByteLength)($this.$ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(Bytes)($this.$ref()))> bytes = ADV_UPCS(Bytes)($this.$ref()); 
 		#line 76 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		const Builtin::Auto<decltype(ADV_UPCS(ByteLength)($this.$ref()))> length = ADV_UPCS(ByteLength)($this.$ref()); 
+		#line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if ((index <=> length) >= 0) {
-			#line 77 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 78 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			return length;
 		}
-		#line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 80 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (ADV_UPCS(IsUtf8CodePointBoundary)(ADV_UFCS(_operator_subscript)(bytes.$ref(), Builtin::UncheckedTag{}, index).$ref())) {
-			#line 80 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 81 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			return index;
 		}
-		#line 83 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		ADV_ASSERT(((index <=> Builtin::u32(1U)) >= 0), "index>=1u");
 		#line 84 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		ADV_ASSERT(((index <=> Builtin::u32(1U)) >= 0), "index>=1u");
+		#line 85 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (ADV_UPCS(IsUtf8CodePointBoundary)(ADV_UFCS(_operator_subscript)(bytes.$ref(), Builtin::UncheckedTag{}, index - Builtin::u32(1U)).$ref())) {
-			#line 85 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 86 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			return index - Builtin::u32(1U);
 		}
-		#line 87 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		ADV_ASSERT(((index <=> Builtin::u32(2U)) >= 0), "index>=2u");
 		#line 88 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		ADV_ASSERT(((index <=> Builtin::u32(2U)) >= 0), "index>=2u");
+		#line 89 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (ADV_UPCS(IsUtf8CodePointBoundary)(ADV_UFCS(_operator_subscript)(bytes.$ref(), Builtin::UncheckedTag{}, index - Builtin::u32(2U)).$ref())) {
-			#line 89 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 90 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			return index - Builtin::u32(2U);
 		}
-		#line 91 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		ADV_ASSERT(((index <=> Builtin::u32(3U)) >= 0), "index>=3u");
 		#line 92 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		ADV_ASSERT((ADV_UPCS(IsUtf8CodePointBoundary)(ADV_UFCS(_operator_subscript)(bytes.$ref(), Builtin::UncheckedTag{}, index - Builtin::u32(3U)).$ref())), "bytes[@Uncheckedindex-3u].IsUtf8CodePointBoundary");
+		ADV_ASSERT(((index <=> Builtin::u32(3U)) >= 0), "index>=3u");
 		#line 93 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		ADV_ASSERT((ADV_UPCS(IsUtf8CodePointBoundary)(ADV_UFCS(_operator_subscript)(bytes.$ref(), Builtin::UncheckedTag{}, index - Builtin::u32(3U)).$ref())), "bytes[@Uncheckedindex-3u].IsUtf8CodePointBoundary");
+		#line 94 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return index - Builtin::u32(3U);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 97 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto CeilIndexToUtf8CodePointBoundary($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::usize index)  -> const Builtin::usize
+#line 98 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto CeilIndexToUtf8CodePointBoundary($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::usize index)  -> const Builtin::usize
 	{
-		#line 98 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		const Builtin::Auto<decltype(ADV_UPCS(Bytes)($this.$ref()))> bytes = ADV_UPCS(Bytes)($this.$ref()); 
 		#line 99 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		const Builtin::Auto<decltype(ADV_UPCS(ByteLength)($this.$ref()))> length = ADV_UPCS(ByteLength)($this.$ref()); 
+		const Builtin::Auto<decltype(ADV_UPCS(Bytes)($this.$ref()))> bytes = ADV_UPCS(Bytes)($this.$ref()); 
 		#line 100 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		const Builtin::Auto<decltype(ADV_UPCS(ByteLength)($this.$ref()))> length = ADV_UPCS(ByteLength)($this.$ref()); 
+		#line 101 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if ((index <=> length) >= 0) {
-			#line 101 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 102 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			return length;
 		}
-		#line 103 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		Builtin::Auto<decltype(index)> i = index; 
 		#line 104 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		Builtin::Auto<decltype(index)> i = index; 
+		#line 105 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		while (!ADV_UPCS(IsUtf8CodePointBoundary)(ADV_UFCS(_operator_subscript)(bytes.$ref(), Builtin::UncheckedTag{}, i).$ref())) 
 		{
-			#line 105 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			++i;
 			#line 106 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			++i;
+			#line 107 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			if ((i <=> length) >= 0) {
-				#line 107 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 108 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				break;
 			}
 		}
-		#line 110 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		ADV_ASSERT(((i <=> index + Builtin::u32(3U)) <= 0), "i<=index+3u");
 		#line 111 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		ADV_ASSERT(((i <=> index + Builtin::u32(3U)) <= 0), "i<=index+3u");
+		#line 112 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return i;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 130 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto Substring($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::usize start)  -> const typename $extension_Str_33_str
+#line 143 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto Substring($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::usize start)  -> const typename $extension_Str_34_str
 	{
-		#line 131 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 144 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if ((start <=> ADV_UPCS(ByteLength)($this.$ref())) >= 0) {
-			#line 132 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 145 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			Builtin::Throw(Builtin::IndexOutOfRangeException{});
 		}
-		#line 134 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 147 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (!ADV_UPCS(IsUtf8CodePointBoundary)(ADV_UFCS(_operator_subscript)(ADV_UPCS(Bytes)($this.$ref()).$ref(), Builtin::UncheckedTag{}, start).$ref())) {
-			#line 135 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 148 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			Builtin::Throw(Builtin::InvalidArgumentException{});
 		}
-		#line 137 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 150 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_USFCS((Builtin::Str), UnsafeCreate)(ADV_UFCS(_operator_subscript)(ADV_UPCS(Bytes)($this.$ref()).$ref(), Builtin::UncheckedTag{}, start), ADV_UPCS(ByteLength)($this.$ref()) - start);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 140 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto Substring($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::usize start, Builtin::usize length)  -> const typename $extension_Str_33_str
+#line 153 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto Substring($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::usize start, Builtin::usize length)  -> const typename $extension_Str_34_str
 	{
-		#line 141 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 154 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		const Builtin::Auto<decltype(start + length)> end = start + length; 
-		#line 142 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 155 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if ((end <=> ADV_UPCS(ByteLength)($this.$ref())) > 0) {
-			#line 143 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 156 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			Builtin::Throw(Builtin::IndexOutOfRangeException{});
 		}
-		#line 145 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 158 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (!ADV_UPCS(IsUtf8CodePointBoundary)(ADV_UFCS(_operator_subscript)(ADV_UPCS(Bytes)($this.$ref()).$ref(), Builtin::UncheckedTag{}, start).$ref()) || !ADV_UPCS(IsUtf8CodePointBoundary)(ADV_UFCS(_operator_subscript)(ADV_UPCS(Bytes)($this.$ref()).$ref(), Builtin::UncheckedTag{}, end).$ref())) {
-			#line 147 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 160 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			Builtin::Throw(Builtin::InvalidArgumentException{});
 		}
-		#line 149 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 162 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_USFCS((Builtin::Str), UnsafeCreate)(ADV_UFCS(_operator_subscript)(ADV_UPCS(Bytes)($this.$ref()).$ref(), Builtin::UncheckedTag{}, start), length);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 152 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto Equals($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str other)  -> const bool
+#line 165 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto Equals($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str other)  -> const bool
 	{
-		#line 152 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 165 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY($this == other); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 195 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto EqualsAsciiIgnoreCase($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str other)  -> const bool
+#line 208 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto EqualsAsciiIgnoreCase($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str other)  -> const bool
 	{
-		#line 196 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 209 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (ADV_UPCS(ByteLength)($this.$ref()) != ADV_UPCS(ByteLength)(other.$ref())) {
-			#line 197 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 210 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			return Builtin::Boolean(false);
 		}
-		#line 199 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 212 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(ByteLength)($this.$ref()))> length = ADV_UPCS(ByteLength)($this.$ref()); 
-		#line 200 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 213 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Bytes)($this.$ref()))> thisBytes = ADV_UPCS(Bytes)($this.$ref()); 
-		#line 201 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 214 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Bytes)(other.$ref()))> otherBytes = ADV_UPCS(Bytes)(other.$ref()); 
-		#line 202 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_202 = System::Range<Builtin::Auto<decltype(length)>, false>({}, length); auto $for_iter_202 = ADV_UFCS(Iterate)($for_init_202.$ref()); while($for_iter_202.$ref().MoveNext()) {
-		auto&& i = $for_iter_202.$ref().GetCurrent(); {
-			#line 203 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 215 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_215 = System::Range<Builtin::Auto<decltype(length)>, false>({}, length); auto $for_iter_215 = ADV_UFCS(Iterate)($for_init_215.$ref()); while($for_iter_215.$ref().MoveNext()) {
+		auto&& i = $for_iter_215.$ref().GetCurrent(); {
+			#line 216 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			if (ADV_UPCS(ToLower)(ADV_UFCS(_operator_subscript)(thisBytes.$ref(), Builtin::UncheckedTag{}, i).$ref()) != ADV_UPCS(ToLower)(ADV_UFCS(_operator_subscript)(otherBytes.$ref(), Builtin::UncheckedTag{}, i).$ref())) {
-				#line 204 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 217 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return Builtin::Boolean(false);
 			}
 		}}}
-		#line 207 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 220 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return Builtin::Boolean(true);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 211 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto CompareAsciiIgnoreCase($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str other)  -> const Builtin::i32
+#line 224 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto CompareAsciiIgnoreCase($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str other)  -> const Builtin::i32
 	{
-		#line 212 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 225 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (ADV_UPCS(ByteLength)($this.$ref()) != ADV_UPCS(ByteLength)(other.$ref())) {
-			#line 213 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 226 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			return ADV_UPCS(ByteLength)($this.$ref()) <=> ADV_UPCS(ByteLength)(other.$ref());
 		}
-		#line 215 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 228 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(ByteLength)($this.$ref()))> length = ADV_UPCS(ByteLength)($this.$ref()); 
-		#line 216 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 229 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Bytes)($this.$ref()))> thisBytes = ADV_UPCS(Bytes)($this.$ref()); 
-		#line 217 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 230 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Bytes)(other.$ref()))> otherBytes = ADV_UPCS(Bytes)(other.$ref()); 
-		#line 218 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_218 = System::Range<Builtin::Auto<decltype(length)>, false>({}, length); auto $for_iter_218 = ADV_UFCS(Iterate)($for_init_218.$ref()); while($for_iter_218.$ref().MoveNext()) {
-		auto&& i = $for_iter_218.$ref().GetCurrent(); {
-			#line 219 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_231 = System::Range<Builtin::Auto<decltype(length)>, false>({}, length); auto $for_iter_231 = ADV_UFCS(Iterate)($for_init_231.$ref()); while($for_iter_231.$ref().MoveNext()) {
+		auto&& i = $for_iter_231.$ref().GetCurrent(); {
+			#line 232 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			if (ADV_UPCS(ToLower)(ADV_UFCS(_operator_subscript)(thisBytes.$ref(), Builtin::UncheckedTag{}, i).$ref()) != ADV_UPCS(ToLower)(ADV_UFCS(_operator_subscript)(otherBytes.$ref(), Builtin::UncheckedTag{}, i).$ref())) {
-				#line 220 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 233 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return ADV_UPCS(ToLower)(ADV_UFCS(_operator_subscript)(thisBytes.$ref(), Builtin::UncheckedTag{}, i).$ref()) <=> ADV_UPCS(ToLower)(ADV_UFCS(_operator_subscript)(otherBytes.$ref(), Builtin::UncheckedTag{}, i).$ref());
 			}
 		}}}
-		#line 223 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 236 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return Builtin::i32(0);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 228 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto $static_TryFromUtf8<$extension_Str_33_str>::get(System::Span<Builtin::u8> bytes)  -> const Builtin::Nullable<$extension_Str_33_str>
+#line 241 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto $static_TryFromUtf8<$extension_Str_34_str>::get(System::Span<Builtin::u8> bytes)  -> const Builtin::Nullable<$extension_Str_34_str>
 	{
-		#line 229 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 242 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (ADV_USFCS((Utf8), IsValid)(bytes)) [[likely]] {
-			#line 231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 244 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			return ADV_USFCS((Builtin::Str), FromUtf8Unchecked)(bytes);
 		}
-		#line 233 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 246 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return nullptr;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 237 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto $static_FromUtf8<$extension_Str_33_str>::get(System::Span<Builtin::u8> bytes)  -> const typename $extension_Str_33_str
+#line 250 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto $static_FromUtf8<$extension_Str_34_str>::get(System::Span<Builtin::u8> bytes)  -> const typename $extension_Str_34_str
 	{
-		#line 238 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 251 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (const auto s = ADV_USFCS((Builtin::Str), TryFromUtf8)(bytes)) {
 			{
-				#line 238 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 251 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				auto __tmp0 = *s; const auto& s = __tmp0;
 				
-				#line 239 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 252 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return s;
 			}
 		}
-		#line 241 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 254 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		Builtin::Throw(Builtin::InvalidArgumentException{});
 		return {};
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 246 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto $static_FromUtf8Unchecked<$extension_Str_33_str>::get(System::Span<Builtin::u8> bytes) noexcept -> const typename $extension_Str_33_str
+#line 259 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto $static_FromUtf8Unchecked<$extension_Str_34_str>::get(System::Span<Builtin::u8> bytes) noexcept -> const typename $extension_Str_34_str
 	{
-		#line 247 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return ADV_USFCS_TEMPLATE((Unsafe), As<$extension_Str_33_str>)(bytes);
+		#line 260 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return ADV_USFCS_TEMPLATE((Unsafe), As<$extension_Str_34_str>)(bytes);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 253 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto Contains($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const bool
+#line 266 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto Contains($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const bool
 	{
-		#line 254 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 267 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (!ADV_UPCS(IsAscii)(val.$ref())) {
-			#line 255 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 268 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			Builtin::Throw(Builtin::InvalidArgumentException{});
 		}
-		#line 257 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 270 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_UFCS(Contains)(ADV_UPCS(Bytes)($this.$ref()).$ref(), val);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 259 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto _operator_in($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const bool
+#line 272 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto _operator_in($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const bool
 	{
-		#line 259 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 272 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(Contains)(ADV_UPCS(Bytes)($this.$ref()).$ref(), val)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 261 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Contains($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const bool
+#line 274 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Contains($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const bool
 	{
-		#line 261 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 274 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(IndexOf)($this.$ref(), val) != nullptr); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 262 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto _operator_in($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const bool
+#line 275 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto _operator_in($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const bool
 	{
-		#line 262 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 275 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(Contains)($this.$ref(), val)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 264 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Contains($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const bool
+#line 277 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Contains($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const bool
 	{
-		#line 264 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 277 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(Contains)(ADV_UPCS(Bytes)($this.$ref()).$ref(), ADV_UPCS(Bytes)(val.$ref()))); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 265 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto _operator_in($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const bool
+#line 278 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto _operator_in($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const bool
 	{
-		#line 265 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 278 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(Contains)($this.$ref(), val)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 268 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto ContainsAny($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> bytes)  -> const bool
+#line 281 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto ContainsAny($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> bytes)  -> const bool
 	{
-		#line 269 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 282 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (!ADV_UPCS(IsAscii)(bytes.$ref())) {
-			#line 270 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 283 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			Builtin::Throw(Builtin::InvalidArgumentException{});
 		}
-		#line 272 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 285 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_UFCS(ContainsAny)(ADV_UPCS(Bytes)($this.$ref()).$ref(), bytes);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 275 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto ContainsAny($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> chars)  -> const bool
+#line 288 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto ContainsAny($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> chars)  -> const bool
 	{
-		#line 276 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_276 = ADV_UPCS(Chars)($this.$ref()); auto $for_iter_276 = ADV_UFCS(Iterate)($for_init_276.$ref()); while($for_iter_276.$ref().MoveNext()) {
-		auto&& c = $for_iter_276.$ref().GetCurrent(); {
-			#line 277 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 289 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_289 = ADV_UPCS(Chars)($this.$ref()); auto $for_iter_289 = ADV_UFCS(Iterate)($for_init_289.$ref()); while($for_iter_289.$ref().MoveNext()) {
+		auto&& c = $for_iter_289.$ref().GetCurrent(); {
+			#line 290 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			if (ADV_UFCS(_operator_in)(chars, c)) {
-				#line 278 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 291 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return Builtin::Boolean(true);
 			}
 		}}}
-		#line 281 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 294 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return Builtin::Boolean(false);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 285 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto ContainsAny($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const bool
+#line 298 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto ContainsAny($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const bool
 	{
-		#line 286 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_286 = ADV_UPCS(Chars)($this.$ref()); auto $for_iter_286 = ADV_UFCS(Iterate)($for_init_286.$ref()); while($for_iter_286.$ref().MoveNext()) {
-		auto&& c = $for_iter_286.$ref().GetCurrent(); {
-			#line 287 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 299 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_299 = ADV_UPCS(Chars)($this.$ref()); auto $for_iter_299 = ADV_UFCS(Iterate)($for_init_299.$ref()); while($for_iter_299.$ref().MoveNext()) {
+		auto&& c = $for_iter_299.$ref().GetCurrent(); {
+			#line 300 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			if (filter(c)) {
-				#line 288 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 301 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return Builtin::Boolean(true);
 			}
 		}}}
-		#line 291 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 304 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return Builtin::Boolean(false);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 296 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto IndexOf($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const Builtin::Nullable<Builtin::usize>
+#line 309 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto IndexOf($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const Builtin::Nullable<Builtin::usize>
 	{
-		#line 297 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 310 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (!ADV_UPCS(IsAscii)(val.$ref())) {
-			#line 298 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 311 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			Builtin::Throw(Builtin::InvalidArgumentException{});
 		}
-		#line 300 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 313 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_UFCS(IndexOf)(ADV_UPCS(Bytes)($this.$ref()).$ref(), val);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 304 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto IndexOf($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const Builtin::Nullable<Builtin::usize>
+#line 317 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto IndexOf($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const Builtin::Nullable<Builtin::usize>
 	{
-		#line 305 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 318 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (ADV_UPCS(IsAscii)(val.$ref())) {
-			#line 306 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 319 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			return ADV_UFCS(IndexOf)(ADV_UPCS(Bytes)($this.$ref()).$ref(), Builtin::Cast<true, Builtin::u8>(val));
 		}
-		#line 308 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 321 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		Builtin::InlineArray<Builtin::u32(4U), Builtin::u8> buf{}; 
-		#line 309 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 322 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_UFCS(IndexOf)($this.$ref(), ADV_UFCS(ToUtf8)(val.$ref(), Builtin::MutableRef(buf)));
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 313 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto IndexOf($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Nullable<Builtin::usize>
+#line 326 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto IndexOf($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Nullable<Builtin::usize>
 	{
-		#line 313 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 326 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(IndexOf)(ADV_UPCS(Bytes)($this.$ref()).$ref(), ADV_UPCS(Bytes)(val.$ref()))); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 316 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto IndexOfAny($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> val)  -> const Builtin::Nullable<Builtin::usize>
+#line 329 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto IndexOfAny($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> val)  -> const Builtin::Nullable<Builtin::usize>
 	{
-		#line 317 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 330 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (!ADV_UPCS(IsAscii)(val.$ref())) {
-			#line 318 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 331 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			Builtin::Throw(Builtin::InvalidArgumentException{});
 		}
-		#line 320 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 333 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_UFCS(IndexOfAny)(ADV_UPCS(Bytes)($this.$ref()).$ref(), val);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 324 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto IndexOfAny($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const Builtin::Nullable<Builtin::usize>
+#line 337 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto IndexOfAny($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const Builtin::Nullable<Builtin::usize>
 	{
-		#line 325 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_325 = ADV_UPCS(CharsWithOffsets)($this.$ref()); auto $for_iter_325 = ADV_UFCS(Iterate)($for_init_325.$ref()); while($for_iter_325.$ref().MoveNext()) {
-		auto&& [offset, c] = $for_iter_325.$ref().GetCurrent(); {
-			#line 326 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 338 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_338 = ADV_UPCS(CharsWithOffsets)($this.$ref()); auto $for_iter_338 = ADV_UFCS(Iterate)($for_init_338.$ref()); while($for_iter_338.$ref().MoveNext()) {
+		auto&& [offset, c] = $for_iter_338.$ref().GetCurrent(); {
+			#line 339 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			if (ADV_UFCS(_operator_in)(val, c)) {
-				#line 327 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 340 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return offset;
 			}
 		}}}
-		#line 330 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 343 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return nullptr;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 334 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto IndexOfAny($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const Builtin::Nullable<Builtin::usize>
+#line 347 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto IndexOfAny($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const Builtin::Nullable<Builtin::usize>
 	{
-		#line 335 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_335 = ADV_UPCS(CharsWithOffsets)($this.$ref()); auto $for_iter_335 = ADV_UFCS(Iterate)($for_init_335.$ref()); while($for_iter_335.$ref().MoveNext()) {
-		auto&& [offset, c] = $for_iter_335.$ref().GetCurrent(); {
-			#line 336 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 348 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_348 = ADV_UPCS(CharsWithOffsets)($this.$ref()); auto $for_iter_348 = ADV_UFCS(Iterate)($for_init_348.$ref()); while($for_iter_348.$ref().MoveNext()) {
+		auto&& [offset, c] = $for_iter_348.$ref().GetCurrent(); {
+			#line 349 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			if (filter(c)) {
-				#line 337 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 350 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return offset;
 			}
 		}}}
-		#line 340 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 353 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return nullptr;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 344 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto LastIndexOf($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const Builtin::Nullable<Builtin::usize>
+#line 357 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto LastIndexOf($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const Builtin::Nullable<Builtin::usize>
 	{
-		#line 345 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 358 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (!ADV_UPCS(IsAscii)(val.$ref())) {
-			#line 346 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 359 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			Builtin::Throw(Builtin::InvalidArgumentException{});
 		}
-		#line 348 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 361 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_UFCS(LastIndexOf)(ADV_UPCS(Bytes)($this.$ref()).$ref(), val);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 352 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto LastIndexOf($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const Builtin::Nullable<Builtin::usize>
+#line 365 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto LastIndexOf($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const Builtin::Nullable<Builtin::usize>
 	{
-		#line 353 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 366 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (ADV_UPCS(IsAscii)(val.$ref())) {
-			#line 354 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 367 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			return ADV_UFCS(LastIndexOf)(ADV_UPCS(Bytes)($this.$ref()).$ref(), Builtin::Cast<true, Builtin::u8>(val));
 		}
-		#line 356 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 369 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		Builtin::InlineArray<Builtin::u32(4U), Builtin::u8> buf{}; 
-		#line 357 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 370 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_UFCS(LastIndexOf)($this.$ref(), ADV_UFCS(ToUtf8)(val.$ref(), Builtin::MutableRef(buf)));
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 361 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto LastIndexOf($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Nullable<Builtin::usize>
+#line 374 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto LastIndexOf($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Nullable<Builtin::usize>
 	{
-		#line 361 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 374 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(LastIndexOf)(ADV_UPCS(Bytes)($this.$ref()).$ref(), ADV_UPCS(Bytes)(val.$ref()))); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 364 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto LastIndexOfAny($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> val)  -> const Builtin::Nullable<Builtin::usize>
+#line 377 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto LastIndexOfAny($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> val)  -> const Builtin::Nullable<Builtin::usize>
 	{
-		#line 365 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 378 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (!ADV_UPCS(IsAscii)(val.$ref())) {
-			#line 366 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 379 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			Builtin::Throw(Builtin::InvalidArgumentException{});
 		}
-		#line 368 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 381 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_UFCS(LastIndexOfAny)(ADV_UPCS(Bytes)($this.$ref()).$ref(), val);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 372 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto LastIndexOfAny($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const Builtin::Nullable<Builtin::usize>
+#line 385 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto LastIndexOfAny($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const Builtin::Nullable<Builtin::usize>
 	{
-		#line 373 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_373 = ADV_UPCS(Reversed)(ADV_UPCS(CharsWithOffsets)($this.$ref()).$ref()); auto $for_iter_373 = ADV_UFCS(Iterate)($for_init_373.$ref()); while($for_iter_373.$ref().MoveNext()) {
-		auto&& [offset, c] = $for_iter_373.$ref().GetCurrent(); {
-			#line 374 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 386 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_386 = ADV_UPCS(Reversed)(ADV_UPCS(CharsWithOffsets)($this.$ref()).$ref()); auto $for_iter_386 = ADV_UFCS(Iterate)($for_init_386.$ref()); while($for_iter_386.$ref().MoveNext()) {
+		auto&& [offset, c] = $for_iter_386.$ref().GetCurrent(); {
+			#line 387 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			if (ADV_UFCS(_operator_in)(val, c)) {
-				#line 375 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 388 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return offset;
 			}
 		}}}
-		#line 378 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 391 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return nullptr;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 382 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto LastIndexOfAny($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const Builtin::Nullable<Builtin::usize>
+#line 395 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto LastIndexOfAny($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const Builtin::Nullable<Builtin::usize>
 	{
-		#line 383 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_383 = ADV_UPCS(CharsWithOffsets)($this.$ref()); auto $for_iter_383 = ADV_UFCS(Iterate)($for_init_383.$ref()); while($for_iter_383.$ref().MoveNext()) {
-		auto&& [offset, c] = $for_iter_383.$ref().GetCurrent(); {
-			#line 384 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (filter(c)) {
-				#line 385 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				return offset;
-			}
-		}}}
-		#line 388 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return nullptr;
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 392 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringBefore($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Str
-	{
-		#line 393 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		if (const auto index = ADV_UFCS(IndexOf)($this.$ref(), val)) {
-			{
-				#line 393 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				auto __tmp0 = *index; const auto& index = __tmp0;
-				
-				#line 394 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				return ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::Range<Builtin::Auto<decltype(index)>, false>({}, index));
-			}
-		}
 		#line 396 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return $this;
+		{ auto $for_init_396 = ADV_UPCS(CharsWithOffsets)($this.$ref()); auto $for_iter_396 = ADV_UFCS(Iterate)($for_init_396.$ref()); while($for_iter_396.$ref().MoveNext()) {
+		auto&& [offset, c] = $for_iter_396.$ref().GetCurrent(); {
+			#line 397 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (filter(c)) {
+				#line 398 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				return offset;
+			}
+		}}}
+		#line 401 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return nullptr;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 400 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringBeforeLast($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Str
+#line 405 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringBefore($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Str
 	{
-		#line 401 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		if (const auto index = ADV_UFCS(LastIndexOf)($this.$ref(), val)) {
+		#line 406 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		if (const auto index = ADV_UFCS(IndexOf)($this.$ref(), val)) {
 			{
-				#line 401 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 406 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				auto __tmp0 = *index; const auto& index = __tmp0;
 				
-				#line 402 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 407 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::Range<Builtin::Auto<decltype(index)>, false>({}, index));
 			}
 		}
-		#line 404 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 409 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return $this;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 408 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringAfter($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Nullable<Builtin::Str>
+#line 413 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringBeforeLast($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Str
 	{
-		#line 409 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		if (const auto index = ADV_UFCS(IndexOf)($this.$ref(), val)) {
-			{
-				#line 409 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				auto __tmp0 = *index; const auto& index = __tmp0;
-				
-				#line 410 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				return ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::IndexRange((index + ADV_UPCS(ByteLength)(val.$ref())), System::Index::End, false));
-			}
-		}
-		#line 412 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return nullptr;
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 416 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringAfterLast($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Nullable<Builtin::Str>
-	{
-		#line 417 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 414 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (const auto index = ADV_UFCS(LastIndexOf)($this.$ref(), val)) {
 			{
-				#line 417 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 414 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				auto __tmp0 = *index; const auto& index = __tmp0;
 				
-				#line 418 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 415 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				return ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::Range<Builtin::Auto<decltype(index)>, false>({}, index));
+			}
+		}
+		#line 417 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return $this;
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 421 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringAfter($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Nullable<Builtin::Str>
+	{
+		#line 422 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		if (const auto index = ADV_UFCS(IndexOf)($this.$ref(), val)) {
+			{
+				#line 422 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				auto __tmp0 = *index; const auto& index = __tmp0;
+				
+				#line 423 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::IndexRange((index + ADV_UPCS(ByteLength)(val.$ref())), System::Index::End, false));
 			}
 		}
-		#line 420 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 425 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return nullptr;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 424 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringBetween($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str tag)  -> const Builtin::Nullable<Builtin::Str>
+#line 429 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringAfterLast($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::Nullable<Builtin::Str>
 	{
-		#line 425 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 430 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		if (const auto index = ADV_UFCS(LastIndexOf)($this.$ref(), val)) {
+			{
+				#line 430 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				auto __tmp0 = *index; const auto& index = __tmp0;
+				
+				#line 431 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				return ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::IndexRange((index + ADV_UPCS(ByteLength)(val.$ref())), System::Index::End, false));
+			}
+		}
+		#line 433 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return nullptr;
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 437 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringBetween($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str tag)  -> const Builtin::Nullable<Builtin::Str>
+	{
+		#line 438 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (const auto after = ADV_UFCS(SubstringAfter)($this.$ref(), tag)) {
 			{
-				#line 425 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 438 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				auto __tmp0 = *after; const auto& after = __tmp0;
 				
-				#line 426 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 439 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return ADV_UFCS(SubstringBefore)(after.$ref(), tag);
 			}
 		}
-		#line 428 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 441 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return nullptr;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 432 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringBetweenLast($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str tag)  -> const Builtin::Nullable<Builtin::Str>
+#line 445 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringBetweenLast($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str tag)  -> const Builtin::Nullable<Builtin::Str>
 	{
-		#line 433 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 446 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (const auto indexClose = ADV_UFCS(LastIndexOf)($this.$ref(), tag)) {
 			{
-				#line 433 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 446 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				auto __tmp0 = *indexClose; const auto& indexClose = __tmp0;
 				
-				#line 434 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 447 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				if (const auto indexOpen = ADV_UFCS(LastIndexOf)(ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::Range<Builtin::Auto<decltype(indexClose)>, false>({}, indexClose)).$ref(), tag)) {
 					{
-						#line 434 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+						#line 447 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 						auto __tmp0 = *indexOpen; const auto& indexOpen = __tmp0;
 						
-						#line 435 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+						#line 448 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 						return ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::Range<Builtin::Auto<decltype(indexClose)>, false>((indexOpen + ADV_UPCS(ByteLength)(tag.$ref())), indexClose));
 					}
 				}
 			}
 		}
-		#line 438 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 451 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return nullptr;
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 442 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringBetween($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str open, Builtin::Str close)  -> const Builtin::Nullable<Builtin::Str>
+#line 455 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringBetween($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str open, Builtin::Str close)  -> const Builtin::Nullable<Builtin::Str>
 	{
-		#line 443 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 456 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_UFCS(SubstringAfter)($this.$ref(), open).AndThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(ADV_UFCS(SubstringBefore)(value.$ref(), close)); });
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 447 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringBetweenLast($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str open, Builtin::Str close)  -> const Builtin::Nullable<Builtin::Str>
+#line 460 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringBetweenLast($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str open, Builtin::Str close)  -> const Builtin::Nullable<Builtin::Str>
 	{
-		#line 448 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 461 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_UFCS(SubstringAfterLast)($this.$ref(), open).AndThen([&](const auto& value) FORCE_INLINE_LAMBDA_CLANG FORCE_INLINE_LAMBDA { ADV_EXPRESSION_BODY(ADV_UFCS(SubstringBefore)(value.$ref(), close)); });
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 452 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringsBetween($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str open, Builtin::Str close)  -> const SubstringIterator
+#line 465 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringsBetween($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str open, Builtin::Str close)  -> const SubstringIterator
 	{
-		#line 452 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 465 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(SubstringIterator{$this, open, close}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 454 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SubstringsBetweenReversed($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str open, Builtin::Str close)  -> const ReverseSubstringIterator
+#line 467 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SubstringsBetweenReversed($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str open, Builtin::Str close)  -> const ReverseSubstringIterator
 	{
-		#line 454 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 467 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ReverseSubstringIterator{$this, open, close}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 457 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto Count($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const Builtin::usize
+#line 470 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto Count($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const Builtin::usize
 	{
-		#line 458 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 471 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (!ADV_UPCS(IsAscii)(val.$ref())) {
-			#line 459 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 472 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			Builtin::Throw(Builtin::InvalidArgumentException{});
 		}
-		#line 461 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 474 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_UFCS(Count)(ADV_UPCS(Bytes)($this.$ref()).$ref(), val);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 464 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Count($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::usize
+#line 477 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Count($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const Builtin::usize
 	{
-		#line 464 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 477 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(Count)(ADV_UPCS(Bytes)($this.$ref()).$ref(), ADV_UPCS(Bytes)(val.$ref()))); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 611 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Split($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val, StringSplitOptions options)  -> const StringSpliterator
+#line 624 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Split($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val, StringSplitOptions options)  -> const StringSpliterator
 	{
-		#line 612 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 625 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringSpliterator{$this, val, options}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 614 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Split($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val, Builtin::usize maxCount, StringSplitOptions options)  -> const StringSpliterator
+#line 627 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Split($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val, Builtin::usize maxCount, StringSplitOptions options)  -> const StringSpliterator
 	{
-		#line 615 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 628 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringSpliterator{$this, val, maxCount, options}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 617 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Split($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val, StringSplitOptions options)  -> const StringSpliterator
+#line 630 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Split($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val, StringSplitOptions options)  -> const StringSpliterator
 	{
-		#line 618 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 631 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringSpliterator{$this, ADV_UPCS(Bytes)(val.$ref()), Builtin::Boolean(true), options}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 620 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Split($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val, Builtin::usize maxCount, StringSplitOptions options)  -> const StringSpliterator
+#line 633 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Split($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val, Builtin::usize maxCount, StringSplitOptions options)  -> const StringSpliterator
 	{
-		#line 621 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 634 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringSpliterator{$this, ADV_UPCS(Bytes)(val.$ref()), Builtin::Boolean(true), maxCount, options}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 623 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitAny($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> vals, StringSplitOptions options)  -> const StringSpliterator
+#line 636 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitAny($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> vals, StringSplitOptions options)  -> const StringSpliterator
 	{
-		#line 624 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 637 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringSpliterator{$this, vals, options}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 626 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitAny($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> vals, Builtin::usize maxCount, StringSplitOptions options)  -> const StringSpliterator
+#line 639 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitAny($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> vals, Builtin::usize maxCount, StringSplitOptions options)  -> const StringSpliterator
 	{
-		#line 627 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 640 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringSpliterator{$this, vals, maxCount, options}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 629 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitAny($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter, StringSplitOptions options)  -> const StringSpliterator
+#line 642 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitAny($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter, StringSplitOptions options)  -> const StringSpliterator
 	{
-		#line 630 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 643 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringSpliterator{$this, filter, options}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 632 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitAny($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter, Builtin::usize maxCount, StringSplitOptions options)  -> const StringSpliterator
+#line 645 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitAny($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter, Builtin::usize maxCount, StringSplitOptions options)  -> const StringSpliterator
 	{
-		#line 633 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 646 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringSpliterator{$this, filter, maxCount, options}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 636 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitReversed($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val, StringSplitOptions options)  -> const StringReverseSpliterator
+#line 649 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitReversed($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val, StringSplitOptions options)  -> const StringReverseSpliterator
 	{
-		#line 637 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 650 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringReverseSpliterator{$this, val, options}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 639 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitReversed($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val, Builtin::usize maxCount, StringSplitOptions options)  -> const StringReverseSpliterator
+#line 652 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitReversed($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val, Builtin::usize maxCount, StringSplitOptions options)  -> const StringReverseSpliterator
 	{
-		#line 640 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 653 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringReverseSpliterator{$this, val, maxCount, options}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 642 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitReversed($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val, StringSplitOptions options)  -> const StringReverseSpliterator
+#line 655 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitReversed($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val, StringSplitOptions options)  -> const StringReverseSpliterator
 	{
-		#line 643 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 656 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringReverseSpliterator{$this, ADV_UPCS(Bytes)(val.$ref()), Builtin::Boolean(true), options}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 645 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitReversed($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val, Builtin::usize maxCount, StringSplitOptions options)  -> const StringReverseSpliterator
+#line 658 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitReversed($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val, Builtin::usize maxCount, StringSplitOptions options)  -> const StringReverseSpliterator
 	{
-		#line 646 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 659 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringReverseSpliterator{$this, ADV_UPCS(Bytes)(val.$ref()), Builtin::Boolean(true), maxCount, options}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 648 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitAnyReversed($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> vals, StringSplitOptions options)  -> const StringReverseSpliterator
+#line 661 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitAnyReversed($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> vals, StringSplitOptions options)  -> const StringReverseSpliterator
 	{
-		#line 649 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 662 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringReverseSpliterator{$this, vals, options}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 651 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitAnyReversed($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> vals, Builtin::usize maxCount, StringSplitOptions options)  -> const StringReverseSpliterator
+#line 664 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitAnyReversed($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::u8> vals, Builtin::usize maxCount, StringSplitOptions options)  -> const StringReverseSpliterator
 	{
-		#line 652 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 665 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringReverseSpliterator{$this, vals, maxCount, options}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 654 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitAnyReversed($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter, StringSplitOptions options)  -> const StringReverseSpliterator
+#line 667 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitAnyReversed($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter, StringSplitOptions options)  -> const StringReverseSpliterator
 	{
-		#line 655 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 668 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringReverseSpliterator{$this, filter, options}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 657 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto SplitAnyReversed($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter, Builtin::usize maxCount, StringSplitOptions options)  -> const StringReverseSpliterator
+#line 670 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto SplitAnyReversed($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter, Builtin::usize maxCount, StringSplitOptions options)  -> const StringReverseSpliterator
 	{
-		#line 658 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 671 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringReverseSpliterator{$this, filter, maxCount, options}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 670 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Lines($extension_Str_33_str const& $this LIFETIMEBOUND, StringSplitOptions options)  -> const StringSpliterator
+#line 683 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Lines($extension_Str_34_str const& $this LIFETIMEBOUND, StringSplitOptions options)  -> const StringSpliterator
 	{
-		#line 671 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 684 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringSpliterator{$this, ADV_UPCS(Bytes)(Builtin::Str{"\r\n"}.$ref()), options | StringSplitOptions::ProcessLineEndingAsSingleChar}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 673 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto LinesReversed($extension_Str_33_str const& $this LIFETIMEBOUND, StringSplitOptions options)  -> const StringReverseSpliterator
+#line 686 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto LinesReversed($extension_Str_34_str const& $this LIFETIMEBOUND, StringSplitOptions options)  -> const StringReverseSpliterator
 	{
-		#line 674 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 687 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringReverseSpliterator{$this, ADV_UPCS(Bytes)(Builtin::Str{"\r\n"}.$ref()), options | StringSplitOptions::ProcessLineEndingAsSingleChar}); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 676 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto StartsWith($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const bool
+#line 689 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto StartsWith($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const bool
 	{
-		#line 677 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 690 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (!ADV_UPCS(IsAscii)(val.$ref())) {
-			#line 678 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 691 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			Builtin::Throw(Builtin::InvalidArgumentException{});
 		}
-		#line 680 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 693 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_UFCS(StartsWith)(ADV_UPCS(Bytes)($this.$ref()).$ref(), val);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 683 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto StartsWith($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const bool
+#line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto StartsWith($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const bool
 	{
-		#line 683 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(IndexOf)($this.$ref(), val) == Builtin::u32(0U)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 685 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto StartsWith($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const bool
+#line 698 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto StartsWith($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const bool
 	{
-		#line 685 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 698 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(StartsWith)(ADV_UPCS(Bytes)($this.$ref()).$ref(), ADV_UPCS(Bytes)(val.$ref()))); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 687 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto StartsWith($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const bool
+#line 700 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto StartsWith($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const bool
 	{
-		#line 688 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_688 = ADV_UPCS(Chars)($this.$ref()); auto $for_iter_688 = ADV_UFCS(Iterate)($for_init_688.$ref()); while($for_iter_688.$ref().MoveNext()) {
-		auto&& c = $for_iter_688.$ref().GetCurrent(); {
-			#line 689 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 701 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_701 = ADV_UPCS(Chars)($this.$ref()); auto $for_iter_701 = ADV_UFCS(Iterate)($for_init_701.$ref()); while($for_iter_701.$ref().MoveNext()) {
+		auto&& c = $for_iter_701.$ref().GetCurrent(); {
+			#line 702 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			if (filter(c)) {
-				#line 690 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 703 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return Builtin::Boolean(true);
 			}
-			#line 692 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 705 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			return Builtin::Boolean(false);
 		}}}
 		return {};
@@ -1736,57 +1753,57 @@ template<class __TT> struct $static_getCeilIndexToUtf8CodePointBoundary;
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto EndsWith($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const bool
+#line 709 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto EndsWith($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const bool
 	{
-		#line 697 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 710 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (!ADV_UPCS(IsAscii)(val.$ref())) {
-			#line 698 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 711 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			Builtin::Throw(Builtin::InvalidArgumentException{});
 		}
-		#line 700 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 713 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_UFCS(EndsWith)(ADV_UPCS(Bytes)($this.$ref()).$ref(), val);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 703 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto EndsWith($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const bool
+#line 716 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto EndsWith($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const bool
 	{
-		#line 704 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 717 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (ADV_UPCS(IsAscii)(val.$ref())) {
-			#line 705 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 718 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			return ADV_UFCS(EndsWith)(ADV_UPCS(Bytes)($this.$ref()).$ref(), Builtin::Cast<true, Builtin::u8>(val));
 		}
-		#line 707 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 720 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		Builtin::InlineArray<Builtin::u32(4U), Builtin::u8> buf{}; 
-		#line 708 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 721 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_UFCS(EndsWith)($this.$ref(), ADV_UFCS(ToUtf8)(val.$ref(), Builtin::MutableRef(buf)));
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 711 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto EndsWith($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const bool
+#line 724 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto EndsWith($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::Str val)  -> const bool
 	{
-		#line 711 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 724 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(EndsWith)(ADV_UPCS(Bytes)($this.$ref()).$ref(), ADV_UPCS(Bytes)(val.$ref()))); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 713 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto EndsWith($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const bool
+#line 726 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto EndsWith($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const bool
 	{
-		#line 714 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_714 = ADV_UPCS(Reversed)(ADV_UPCS(Chars)($this.$ref()).$ref()); auto $for_iter_714 = ADV_UFCS(Iterate)($for_init_714.$ref()); while($for_iter_714.$ref().MoveNext()) {
-		auto&& c = $for_iter_714.$ref().GetCurrent(); {
-			#line 715 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 727 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_727 = ADV_UPCS(Reversed)(ADV_UPCS(Chars)($this.$ref()).$ref()); auto $for_iter_727 = ADV_UFCS(Iterate)($for_init_727.$ref()); while($for_iter_727.$ref().MoveNext()) {
+		auto&& c = $for_iter_727.$ref().GetCurrent(); {
+			#line 728 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			if (filter(c)) {
-				#line 716 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 729 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return Builtin::Boolean(true);
 			}
-			#line 718 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 731 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			return Builtin::Boolean(false);
 		}}}
 		return {};
@@ -1794,649 +1811,681 @@ template<class __TT> struct $static_getCeilIndexToUtf8CodePointBoundary;
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 770 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto TrimStart($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const typename $extension_Str_33_str
+#line 783 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto TrimStart($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const typename $extension_Str_34_str
 	{
-		#line 771 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 784 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (!ADV_UPCS(IsAscii)(val.$ref())) {
-			#line 772 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 785 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			Builtin::Throw(Builtin::InvalidArgumentException{});
 		}
-		#line 774 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 787 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_USFCS((Builtin::Str), FromUtf8Unchecked)(ADV_UFCS(TrimStart)(ADV_UPCS(Bytes)($this.$ref()).$ref(), val));
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 777 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto TrimEnd($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const typename $extension_Str_33_str
+#line 790 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto TrimEnd($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const typename $extension_Str_34_str
 	{
-		#line 778 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 791 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		if (!ADV_UPCS(IsAscii)(val.$ref())) {
-			#line 779 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 792 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			Builtin::Throw(Builtin::InvalidArgumentException{});
 		}
-		#line 781 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 794 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return ADV_USFCS((Builtin::Str), FromUtf8Unchecked)(ADV_UFCS(TrimEnd)(ADV_UPCS(Bytes)($this.$ref()).$ref(), val));
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 784 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto Trim($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const typename $extension_Str_33_str
+#line 797 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto Trim($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::u8 val)  -> const typename $extension_Str_34_str
 	{
-		#line 784 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 797 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(TrimEnd)(ADV_UFCS(TrimStart)($this.$ref(), val).$ref(), val)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 786 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto TrimStart($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const typename $extension_Str_33_str
+#line 799 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto TrimStart($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const typename $extension_Str_34_str
 	{
-		#line 787 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_787 = ADV_UPCS(CharsWithOffsets)($this.$ref()); auto $for_iter_787 = ADV_UFCS(Iterate)($for_init_787.$ref()); while($for_iter_787.$ref().MoveNext()) {
-		auto&& [offset, c] = $for_iter_787.$ref().GetCurrent(); {
-			#line 788 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 800 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_800 = ADV_UPCS(CharsWithOffsets)($this.$ref()); auto $for_iter_800 = ADV_UFCS(Iterate)($for_init_800.$ref()); while($for_iter_800.$ref().MoveNext()) {
+		auto&& [offset, c] = $for_iter_800.$ref().GetCurrent(); {
+			#line 801 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			if (c != val) {
-				#line 789 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 802 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::IndexRange(offset, System::Index::End, false));
 			}
 		}}}
-		#line 792 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 805 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return {  };
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 795 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto TrimEnd($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const typename $extension_Str_33_str
-	{
-		#line 796 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		Builtin::Auto<decltype(ADV_UPCS(ByteLength)($this.$ref()))> prevOffset = ADV_UPCS(ByteLength)($this.$ref()); 
-		#line 797 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_797 = ADV_UPCS(Reversed)(ADV_UPCS(CharsWithOffsets)($this.$ref()).$ref()); auto $for_iter_797 = ADV_UFCS(Iterate)($for_init_797.$ref()); while($for_iter_797.$ref().MoveNext()) {
-		auto&& [offset, c] = $for_iter_797.$ref().GetCurrent(); {
-			#line 798 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (c != val) {
-				#line 799 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				return ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::Range<Builtin::Auto<decltype(prevOffset)>, false>({}, prevOffset));
-			}
-			#line 801 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			prevOffset = offset;
-		}}}
-		#line 803 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return {  };
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 806 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Trim($extension_Str_33_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const typename $extension_Str_33_str
-	{
-		#line 806 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		ADV_EXPRESSION_BODY(ADV_UFCS(TrimEnd)(ADV_UFCS(TrimStart)($this.$ref(), val).$ref(), val)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 808 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto TrimStart($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const typename $extension_Str_33_str
+	inline auto TrimEnd($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const typename $extension_Str_34_str
 	{
 		#line 809 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_809 = ADV_UPCS(CharsWithOffsets)($this.$ref()); auto $for_iter_809 = ADV_UFCS(Iterate)($for_init_809.$ref()); while($for_iter_809.$ref().MoveNext()) {
-		auto&& [offset, c] = $for_iter_809.$ref().GetCurrent(); {
-			#line 810 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (!ADV_UFCS(_operator_in)(val, c)) {
-				#line 811 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				return ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::IndexRange(offset, System::Index::End, false));
-			}
-		}}}
-		#line 814 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return {  };
-	}
-	
-} namespace System{
-} namespace $extensions { using namespace System;
-#line 817 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto TrimEnd($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const typename $extension_Str_33_str
-	{
-		#line 818 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		Builtin::Auto<decltype(ADV_UPCS(ByteLength)($this.$ref()))> prevOffset = ADV_UPCS(ByteLength)($this.$ref()); 
-		#line 819 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_819 = ADV_UPCS(Reversed)(ADV_UPCS(CharsWithOffsets)($this.$ref()).$ref()); auto $for_iter_819 = ADV_UFCS(Iterate)($for_init_819.$ref()); while($for_iter_819.$ref().MoveNext()) {
-		auto&& [offset, c] = $for_iter_819.$ref().GetCurrent(); {
-			#line 820 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (!ADV_UFCS(_operator_in)(val, c)) {
-				#line 821 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 810 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_810 = ADV_UPCS(Reversed)(ADV_UPCS(CharsWithOffsets)($this.$ref()).$ref()); auto $for_iter_810 = ADV_UFCS(Iterate)($for_init_810.$ref()); while($for_iter_810.$ref().MoveNext()) {
+		auto&& [offset, c] = $for_iter_810.$ref().GetCurrent(); {
+			#line 811 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (c != val) {
+				#line 812 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::Range<Builtin::Auto<decltype(prevOffset)>, false>({}, prevOffset));
 			}
-			#line 823 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 814 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			prevOffset = offset;
 		}}}
-		#line 825 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 816 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return {  };
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 828 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Trim($extension_Str_33_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const typename $extension_Str_33_str
+#line 819 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Trim($extension_Str_34_str const& $this LIFETIMEBOUND, Builtin::char32 val)  -> const typename $extension_Str_34_str
 	{
-		#line 828 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 819 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(TrimEnd)(ADV_UFCS(TrimStart)($this.$ref(), val).$ref(), val)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 830 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto TrimStart($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const typename $extension_Str_33_str
+#line 821 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto TrimStart($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const typename $extension_Str_34_str
 	{
-		#line 831 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_831 = ADV_UPCS(CharsWithOffsets)($this.$ref()); auto $for_iter_831 = ADV_UFCS(Iterate)($for_init_831.$ref()); while($for_iter_831.$ref().MoveNext()) {
-		auto&& [offset, c] = $for_iter_831.$ref().GetCurrent(); {
-			#line 832 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (!filter(c)) {
-				#line 833 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 822 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_822 = ADV_UPCS(CharsWithOffsets)($this.$ref()); auto $for_iter_822 = ADV_UFCS(Iterate)($for_init_822.$ref()); while($for_iter_822.$ref().MoveNext()) {
+		auto&& [offset, c] = $for_iter_822.$ref().GetCurrent(); {
+			#line 823 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (!ADV_UFCS(_operator_in)(val, c)) {
+				#line 824 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::IndexRange(offset, System::Index::End, false));
 			}
 		}}}
-		#line 836 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 827 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return {  };
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 839 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto TrimEnd($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const typename $extension_Str_33_str
+#line 830 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto TrimEnd($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const typename $extension_Str_34_str
 	{
-		#line 840 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 831 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		Builtin::Auto<decltype(ADV_UPCS(ByteLength)($this.$ref()))> prevOffset = ADV_UPCS(ByteLength)($this.$ref()); 
-		#line 841 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_841 = ADV_UPCS(Reversed)(ADV_UPCS(CharsWithOffsets)($this.$ref()).$ref()); auto $for_iter_841 = ADV_UFCS(Iterate)($for_init_841.$ref()); while($for_iter_841.$ref().MoveNext()) {
-		auto&& [offset, c] = $for_iter_841.$ref().GetCurrent(); {
-			#line 842 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (!filter(c)) {
-				#line 843 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 832 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_832 = ADV_UPCS(Reversed)(ADV_UPCS(CharsWithOffsets)($this.$ref()).$ref()); auto $for_iter_832 = ADV_UFCS(Iterate)($for_init_832.$ref()); while($for_iter_832.$ref().MoveNext()) {
+		auto&& [offset, c] = $for_iter_832.$ref().GetCurrent(); {
+			#line 833 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (!ADV_UFCS(_operator_in)(val, c)) {
+				#line 834 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::Range<Builtin::Auto<decltype(prevOffset)>, false>({}, prevOffset));
 			}
-			#line 845 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 836 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			prevOffset = offset;
 		}}}
-		#line 847 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 838 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return {  };
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 850 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto Trim($extension_Str_33_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const typename $extension_Str_33_str
+#line 841 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Trim($extension_Str_34_str const& $this LIFETIMEBOUND, System::Span<Builtin::char32> val)  -> const typename $extension_Str_34_str
 	{
-		#line 850 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 841 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		ADV_EXPRESSION_BODY(ADV_UFCS(TrimEnd)(ADV_UFCS(TrimStart)($this.$ref(), val).$ref(), val)); 
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 843 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto TrimStart($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const typename $extension_Str_34_str
+	{
+		#line 844 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_844 = ADV_UPCS(CharsWithOffsets)($this.$ref()); auto $for_iter_844 = ADV_UFCS(Iterate)($for_init_844.$ref()); while($for_iter_844.$ref().MoveNext()) {
+		auto&& [offset, c] = $for_iter_844.$ref().GetCurrent(); {
+			#line 845 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (!filter(c)) {
+				#line 846 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				return ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::IndexRange(offset, System::Index::End, false));
+			}
+		}}}
+		#line 849 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return {  };
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 852 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto TrimEnd($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const typename $extension_Str_34_str
+	{
+		#line 853 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		Builtin::Auto<decltype(ADV_UPCS(ByteLength)($this.$ref()))> prevOffset = ADV_UPCS(ByteLength)($this.$ref()); 
+		#line 854 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_854 = ADV_UPCS(Reversed)(ADV_UPCS(CharsWithOffsets)($this.$ref()).$ref()); auto $for_iter_854 = ADV_UFCS(Iterate)($for_init_854.$ref()); while($for_iter_854.$ref().MoveNext()) {
+		auto&& [offset, c] = $for_iter_854.$ref().GetCurrent(); {
+			#line 855 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (!filter(c)) {
+				#line 856 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				return ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::Range<Builtin::Auto<decltype(prevOffset)>, false>({}, prevOffset));
+			}
+			#line 858 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			prevOffset = offset;
+		}}}
+		#line 860 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return {  };
+	}
+	
+} namespace System{
+} namespace $extensions { using namespace System;
+#line 863 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto Trim($extension_Str_34_str const& $this LIFETIMEBOUND, Predicate<Builtin::char32> filter)  -> const typename $extension_Str_34_str
+	{
+		#line 863 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(TrimEnd)(ADV_UFCS(TrimStart)($this.$ref(), filter).$ref(), filter)); 
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
-#line 36 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getByteLength($extension_Str_33_str const & $this ) -> const Builtin::usize
+#line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getByteLength($extension_Str_34_str const & $this ) -> const Builtin::usize
 	{
-		#line 36 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 37 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(GetByteLength)($this.$ref())); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 39 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsEmpty($extension_Str_33_str const & $this ) -> const bool
+#line 40 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsEmpty($extension_Str_34_str const & $this ) -> const bool
 	{
-		#line 39 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 40 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(ByteLength)($this.$ref()) == Builtin::i32(0)); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 42 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getBytes($extension_Str_33_str const & $this ) -> const System::Span<Builtin::u8>
+#line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getBytes($extension_Str_34_str const & $this ) -> const System::Span<Builtin::u8>
 	{
-		#line 42 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_USFCS((Span<Builtin::u8>), UnsafeCreate)(ADV_UFCS(GetDataReference)($this.$ref()), ADV_UFCS(GetByteLength)($this.$ref()))); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 115 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getChars($extension_Str_33_str const & $this ) -> const CharIterator
+#line 116 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getChars($extension_Str_34_str const & $this ) -> const CharIterator
 	{
-		#line 115 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 116 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(CharIterator{$this}); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 117 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getCharsWithOffsets($extension_Str_33_str const & $this ) -> const CharIndicesIterator
+#line 118 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getCharsWithOffsets($extension_Str_34_str const & $this ) -> const CharIndicesIterator
 	{
-		#line 117 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 118 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(CharIndicesIterator{$this}); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 119 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getCharCount($extension_Str_33_str const & $this ) -> const Builtin::usize
+#line 120 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getCharCount($extension_Str_34_str const & $this ) -> const Builtin::usize
 	{
-		#line 120 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		Builtin::usize count{}; 
 		#line 121 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_121 = ADV_UPCS(Chars)($this.$ref()); auto $for_iter_121 = ADV_UFCS(Iterate)($for_init_121.$ref()); while($for_iter_121.$ref().MoveNext()) {
-		auto&& c = $for_iter_121.$ref().GetCurrent(); {
-			#line 122 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		Builtin::usize count{}; 
+		#line 122 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_122 = ADV_UPCS(Chars)($this.$ref()); auto $for_iter_122 = ADV_UFCS(Iterate)($for_init_122.$ref()); while($for_iter_122.$ref().MoveNext()) {
+		auto&& c = $for_iter_122.$ref().GetCurrent(); {
+			#line 123 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			++count;
 		}}}
-		#line 125 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 126 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return count;
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 251 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAscii($extension_Str_33_str const & $this ) -> const bool
+#line 129 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getTextElements($extension_Str_34_str const & $this ) -> const TextElementIterator
 	{
-		#line 251 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 129 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		ADV_EXPRESSION_BODY(TextElementIterator{$this}); 
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 131 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getTextElementsWithOffsets($extension_Str_34_str const & $this ) -> const TextElementIndicesIterator
+	{
+		#line 131 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		ADV_EXPRESSION_BODY(TextElementIndicesIterator{$this}); 
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 133 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getTextElementCount($extension_Str_34_str const & $this ) -> const Builtin::usize
+	{
+		#line 134 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		Builtin::usize count{}; 
+		#line 135 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_135 = ADV_UPCS(TextElements)($this.$ref()); auto $for_iter_135 = ADV_UFCS(Iterate)($for_init_135.$ref()); while($for_iter_135.$ref().MoveNext()) {
+		auto&& c = $for_iter_135.$ref().GetCurrent(); {
+			#line 136 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			++count;
+		}}}
+		#line 139 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return count;
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 264 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAscii($extension_Str_34_str const & $this ) -> const bool
+	{
+		#line 264 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsAscii)(ADV_UPCS(Bytes)($this.$ref()).$ref())); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 467 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAsciiWhiteSpace($extension_Str_33_str const & $this ) -> const bool
+#line 480 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAsciiWhiteSpace($extension_Str_34_str const & $this ) -> const bool
 	{
-		#line 468 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_468 = ADV_UPCS(Bytes)($this.$ref()); auto $for_iter_468 = ADV_UFCS(Iterate)($for_init_468.$ref()); while($for_iter_468.$ref().MoveNext()) {
-		auto&& b = $for_iter_468.$ref().GetCurrent(); {
-			#line 469 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 481 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_481 = ADV_UPCS(Bytes)($this.$ref()); auto $for_iter_481 = ADV_UFCS(Iterate)($for_init_481.$ref()); while($for_iter_481.$ref().MoveNext()) {
+		auto&& b = $for_iter_481.$ref().GetCurrent(); {
+			#line 482 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			if (!ADV_UPCS(IsAsciiWhiteSpace)(b.$ref())) {
-				#line 470 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 483 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return Builtin::Boolean(false);
 			}
 		}}}
-		#line 473 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return Builtin::Boolean(true);
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 476 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsWhiteSpace($extension_Str_33_str const & $this ) -> const bool
-	{
-		#line 477 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_477 = ADV_UPCS(Chars)($this.$ref()); auto $for_iter_477 = ADV_UFCS(Iterate)($for_init_477.$ref()); while($for_iter_477.$ref().MoveNext()) {
-		auto&& c = $for_iter_477.$ref().GetCurrent(); {
-			#line 478 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (!ADV_UPCS(IsWhiteSpace)(c.$ref())) {
-				#line 479 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				return Builtin::Boolean(false);
-			}
-		}}}
-		#line 482 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return Builtin::Boolean(true);
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 485 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAsciiUpper($extension_Str_33_str const & $this ) -> const bool
-	{
 		#line 486 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_486 = ADV_UPCS(Bytes)($this.$ref()); auto $for_iter_486 = ADV_UFCS(Iterate)($for_init_486.$ref()); while($for_iter_486.$ref().MoveNext()) {
-		auto&& b = $for_iter_486.$ref().GetCurrent(); {
-			#line 487 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (!ADV_UPCS(IsAscii)(b.$ref()) || (ADV_UPCS(IsAsciiLetter)(b.$ref()) && !ADV_UPCS(IsLetterUpper)(b.$ref()))) {
-				#line 488 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				return Builtin::Boolean(false);
-			}
-		}}}
-		#line 491 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return !ADV_UPCS(IsEmpty)($this.$ref());
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 494 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsUpper($extension_Str_33_str const & $this ) -> const bool
-	{
-		#line 495 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_495 = ADV_UPCS(Chars)($this.$ref()); auto $for_iter_495 = ADV_UFCS(Iterate)($for_init_495.$ref()); while($for_iter_495.$ref().MoveNext()) {
-		auto&& c = $for_iter_495.$ref().GetCurrent(); {
-			#line 496 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (ADV_UPCS(IsLetter)(c.$ref()) && !ADV_UPCS(IsLetterUpper)(c.$ref())) {
-				#line 497 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				return Builtin::Boolean(false);
-			}
-		}}}
-		#line 500 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return !ADV_UPCS(IsEmpty)($this.$ref());
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 503 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAsciiLower($extension_Str_33_str const & $this ) -> const bool
-	{
-		#line 504 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_504 = ADV_UPCS(Bytes)($this.$ref()); auto $for_iter_504 = ADV_UFCS(Iterate)($for_init_504.$ref()); while($for_iter_504.$ref().MoveNext()) {
-		auto&& b = $for_iter_504.$ref().GetCurrent(); {
-			#line 505 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (!ADV_UPCS(IsAscii)(b.$ref()) || (ADV_UPCS(IsAsciiLetter)(b.$ref()) && !ADV_UPCS(IsLetterLower)(b.$ref()))) {
-				#line 506 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				return Builtin::Boolean(false);
-			}
-		}}}
-		#line 509 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return !ADV_UPCS(IsEmpty)($this.$ref());
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 512 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsLower($extension_Str_33_str const & $this ) -> const bool
-	{
-		#line 513 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_513 = ADV_UPCS(Chars)($this.$ref()); auto $for_iter_513 = ADV_UFCS(Iterate)($for_init_513.$ref()); while($for_iter_513.$ref().MoveNext()) {
-		auto&& c = $for_iter_513.$ref().GetCurrent(); {
-			#line 514 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (ADV_UPCS(IsLetter)(c.$ref()) && !ADV_UPCS(IsLetterLower)(c.$ref())) {
-				#line 515 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				return Builtin::Boolean(false);
-			}
-		}}}
-		#line 518 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return !ADV_UPCS(IsEmpty)($this.$ref());
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 521 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAsciiAlphabetic($extension_Str_33_str const & $this ) -> const bool
-	{
-		#line 522 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_522 = ADV_UPCS(Bytes)($this.$ref()); auto $for_iter_522 = ADV_UFCS(Iterate)($for_init_522.$ref()); while($for_iter_522.$ref().MoveNext()) {
-		auto&& b = $for_iter_522.$ref().GetCurrent(); {
-			#line 523 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (!ADV_UPCS(IsAsciiLetter)(b.$ref())) {
-				#line 524 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				return Builtin::Boolean(false);
-			}
-		}}}
-		#line 527 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return !ADV_UPCS(IsEmpty)($this.$ref());
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 530 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAlphabetic($extension_Str_33_str const & $this ) -> const bool
-	{
-		#line 531 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_531 = ADV_UPCS(Chars)($this.$ref()); auto $for_iter_531 = ADV_UFCS(Iterate)($for_init_531.$ref()); while($for_iter_531.$ref().MoveNext()) {
-		auto&& c = $for_iter_531.$ref().GetCurrent(); {
-			#line 532 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (!ADV_UPCS(IsLetter)(c.$ref())) {
-				#line 533 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				return Builtin::Boolean(false);
-			}
-		}}}
-		#line 536 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return !ADV_UPCS(IsEmpty)($this.$ref());
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 539 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAsciiAlphanumeric($extension_Str_33_str const & $this ) -> const bool
-	{
-		#line 540 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_540 = ADV_UPCS(Bytes)($this.$ref()); auto $for_iter_540 = ADV_UFCS(Iterate)($for_init_540.$ref()); while($for_iter_540.$ref().MoveNext()) {
-		auto&& b = $for_iter_540.$ref().GetCurrent(); {
-			#line 541 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (!ADV_UPCS(IsAsciiLetterOrDigit)(b.$ref())) {
-				#line 542 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				return Builtin::Boolean(false);
-			}
-		}}}
-		#line 545 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return !ADV_UPCS(IsEmpty)($this.$ref());
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 548 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAlphanumeric($extension_Str_33_str const & $this ) -> const bool
-	{
-		#line 549 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_549 = ADV_UPCS(Chars)($this.$ref()); auto $for_iter_549 = ADV_UFCS(Iterate)($for_init_549.$ref()); while($for_iter_549.$ref().MoveNext()) {
-		auto&& c = $for_iter_549.$ref().GetCurrent(); {
-			#line 550 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (!ADV_UPCS(IsLetterOrDigit)(c.$ref())) {
-				#line 551 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				return Builtin::Boolean(false);
-			}
-		}}}
-		#line 554 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return !ADV_UPCS(IsEmpty)($this.$ref());
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 557 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsNumeric($extension_Str_33_str const & $this ) -> const bool
-	{
-		#line 558 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_558 = ADV_UPCS(Bytes)($this.$ref()); auto $for_iter_558 = ADV_UFCS(Iterate)($for_init_558.$ref()); while($for_iter_558.$ref().MoveNext()) {
-		auto&& b = $for_iter_558.$ref().GetCurrent(); {
-			#line 559 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (!ADV_UPCS(IsAsciiDigit)(b.$ref())) {
-				#line 560 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				return Builtin::Boolean(false);
-			}
-		}}}
-		#line 563 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return !ADV_UPCS(IsEmpty)($this.$ref());
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 566 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsDecimal($extension_Str_33_str const & $this ) -> const bool
-	{
-		#line 567 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_567 = ADV_UPCS(Bytes)($this.$ref()); auto $for_iter_567 = ADV_UFCS(Iterate)($for_init_567.$ref()); while($for_iter_567.$ref().MoveNext()) {
-		auto&& b = $for_iter_567.$ref().GetCurrent(); {
-			#line 568 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (!ADV_UPCS(IsAsciiDigit)(b.$ref()) && b != Builtin::u8('.') && b != Builtin::u8(',')) {
-				#line 569 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				return Builtin::Boolean(false);
-			}
-		}}}
-		#line 572 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return !ADV_UPCS(IsEmpty)($this.$ref());
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 575 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsHexadecimal($extension_Str_33_str const & $this ) -> const bool
-	{
-		#line 576 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_576 = ADV_UPCS(Bytes)($this.$ref()); auto $for_iter_576 = ADV_UFCS(Iterate)($for_init_576.$ref()); while($for_iter_576.$ref().MoveNext()) {
-		auto&& c = $for_iter_576.$ref().GetCurrent(); {
-			#line 577 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (!ADV_UPCS(IsHexDigit)(c.$ref())) {
-				#line 578 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				return Builtin::Boolean(false);
-			}
-		}}}
-		#line 581 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return !ADV_UPCS(IsEmpty)($this.$ref());
-	}
-	} namespace System{
-} namespace $extensions { using namespace System;
-#line 584 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsValidIdentifier($extension_Str_33_str const & $this ) -> const bool
-	{
-		#line 585 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		if (ADV_UPCS(ByteLength)($this.$ref()) == Builtin::u32(0U)) {
-			#line 586 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			return Builtin::Boolean(false);
-		}
-		#line 588 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		const Builtin::Auto<decltype(ADV_UPCS(Bytes)($this.$ref()))> bytes = ADV_UPCS(Bytes)($this.$ref()); 
-		#line 589 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		if (!ADV_UPCS(IsIdentifierStartChar)(ADV_UFCS(_operator_subscript)(bytes.$ref(), Builtin::UncheckedTag{}, Builtin::i32(0)).$ref())) {
-			#line 590 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			return Builtin::Boolean(false);
-		}
-		#line 592 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_592 = bytes; auto $for_iter_592 = ADV_UFCS(Iterate)($for_init_592.$ref()); while($for_iter_592.$ref().MoveNext()) {
-		auto&& b = $for_iter_592.$ref().GetCurrent(); {
-			#line 593 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (!ADV_UPCS(IsIdentifierChar)(b.$ref())) {
-				#line 594 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-				return Builtin::Boolean(false);
-			}
-		}}}
-		#line 597 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return Builtin::Boolean(true);
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 600 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getIsAsciiPrintable($extension_Str_33_str const & $this ) -> const bool
+#line 489 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsWhiteSpace($extension_Str_34_str const & $this ) -> const bool
 	{
-		#line 601 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_601 = ADV_UPCS(Bytes)($this.$ref()); auto $for_iter_601 = ADV_UFCS(Iterate)($for_init_601.$ref()); while($for_iter_601.$ref().MoveNext()) {
-		auto&& b = $for_iter_601.$ref().GetCurrent(); {
-			#line 602 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-			if (!ADV_UPCS(IsAsciiPrintable)(b.$ref())) {
-				#line 603 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 490 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_490 = ADV_UPCS(Chars)($this.$ref()); auto $for_iter_490 = ADV_UFCS(Iterate)($for_init_490.$ref()); while($for_iter_490.$ref().MoveNext()) {
+		auto&& c = $for_iter_490.$ref().GetCurrent(); {
+			#line 491 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (!ADV_UPCS(IsWhiteSpace)(c.$ref())) {
+				#line 492 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return Builtin::Boolean(false);
 			}
 		}}}
-		#line 606 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 495 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return Builtin::Boolean(true);
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 498 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAsciiUpper($extension_Str_34_str const & $this ) -> const bool
+	{
+		#line 499 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_499 = ADV_UPCS(Bytes)($this.$ref()); auto $for_iter_499 = ADV_UFCS(Iterate)($for_init_499.$ref()); while($for_iter_499.$ref().MoveNext()) {
+		auto&& b = $for_iter_499.$ref().GetCurrent(); {
+			#line 500 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (!ADV_UPCS(IsAscii)(b.$ref()) || (ADV_UPCS(IsAsciiLetter)(b.$ref()) && !ADV_UPCS(IsLetterUpper)(b.$ref()))) {
+				#line 501 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				return Builtin::Boolean(false);
+			}
+		}}}
+		#line 504 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return !ADV_UPCS(IsEmpty)($this.$ref());
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 660 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto getSplitWhitespace($extension_Str_33_str const & $this ) -> const StringSpliterator
+#line 507 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsUpper($extension_Str_34_str const & $this ) -> const bool
 	{
-		#line 661 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 508 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_508 = ADV_UPCS(Chars)($this.$ref()); auto $for_iter_508 = ADV_UFCS(Iterate)($for_init_508.$ref()); while($for_iter_508.$ref().MoveNext()) {
+		auto&& c = $for_iter_508.$ref().GetCurrent(); {
+			#line 509 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (ADV_UPCS(IsLetter)(c.$ref()) && !ADV_UPCS(IsLetterUpper)(c.$ref())) {
+				#line 510 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				return Builtin::Boolean(false);
+			}
+		}}}
+		#line 513 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return !ADV_UPCS(IsEmpty)($this.$ref());
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 516 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAsciiLower($extension_Str_34_str const & $this ) -> const bool
+	{
+		#line 517 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_517 = ADV_UPCS(Bytes)($this.$ref()); auto $for_iter_517 = ADV_UFCS(Iterate)($for_init_517.$ref()); while($for_iter_517.$ref().MoveNext()) {
+		auto&& b = $for_iter_517.$ref().GetCurrent(); {
+			#line 518 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (!ADV_UPCS(IsAscii)(b.$ref()) || (ADV_UPCS(IsAsciiLetter)(b.$ref()) && !ADV_UPCS(IsLetterLower)(b.$ref()))) {
+				#line 519 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				return Builtin::Boolean(false);
+			}
+		}}}
+		#line 522 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return !ADV_UPCS(IsEmpty)($this.$ref());
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 525 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsLower($extension_Str_34_str const & $this ) -> const bool
+	{
+		#line 526 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_526 = ADV_UPCS(Chars)($this.$ref()); auto $for_iter_526 = ADV_UFCS(Iterate)($for_init_526.$ref()); while($for_iter_526.$ref().MoveNext()) {
+		auto&& c = $for_iter_526.$ref().GetCurrent(); {
+			#line 527 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (ADV_UPCS(IsLetter)(c.$ref()) && !ADV_UPCS(IsLetterLower)(c.$ref())) {
+				#line 528 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				return Builtin::Boolean(false);
+			}
+		}}}
+		#line 531 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return !ADV_UPCS(IsEmpty)($this.$ref());
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 534 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAsciiAlphabetic($extension_Str_34_str const & $this ) -> const bool
+	{
+		#line 535 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_535 = ADV_UPCS(Bytes)($this.$ref()); auto $for_iter_535 = ADV_UFCS(Iterate)($for_init_535.$ref()); while($for_iter_535.$ref().MoveNext()) {
+		auto&& b = $for_iter_535.$ref().GetCurrent(); {
+			#line 536 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (!ADV_UPCS(IsAsciiLetter)(b.$ref())) {
+				#line 537 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				return Builtin::Boolean(false);
+			}
+		}}}
+		#line 540 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return !ADV_UPCS(IsEmpty)($this.$ref());
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 543 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAlphabetic($extension_Str_34_str const & $this ) -> const bool
+	{
+		#line 544 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_544 = ADV_UPCS(Chars)($this.$ref()); auto $for_iter_544 = ADV_UFCS(Iterate)($for_init_544.$ref()); while($for_iter_544.$ref().MoveNext()) {
+		auto&& c = $for_iter_544.$ref().GetCurrent(); {
+			#line 545 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (!ADV_UPCS(IsLetter)(c.$ref())) {
+				#line 546 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				return Builtin::Boolean(false);
+			}
+		}}}
+		#line 549 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return !ADV_UPCS(IsEmpty)($this.$ref());
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 552 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAsciiAlphanumeric($extension_Str_34_str const & $this ) -> const bool
+	{
+		#line 553 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_553 = ADV_UPCS(Bytes)($this.$ref()); auto $for_iter_553 = ADV_UFCS(Iterate)($for_init_553.$ref()); while($for_iter_553.$ref().MoveNext()) {
+		auto&& b = $for_iter_553.$ref().GetCurrent(); {
+			#line 554 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (!ADV_UPCS(IsAsciiLetterOrDigit)(b.$ref())) {
+				#line 555 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				return Builtin::Boolean(false);
+			}
+		}}}
+		#line 558 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return !ADV_UPCS(IsEmpty)($this.$ref());
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 561 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAlphanumeric($extension_Str_34_str const & $this ) -> const bool
+	{
+		#line 562 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_562 = ADV_UPCS(Chars)($this.$ref()); auto $for_iter_562 = ADV_UFCS(Iterate)($for_init_562.$ref()); while($for_iter_562.$ref().MoveNext()) {
+		auto&& c = $for_iter_562.$ref().GetCurrent(); {
+			#line 563 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (!ADV_UPCS(IsLetterOrDigit)(c.$ref())) {
+				#line 564 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				return Builtin::Boolean(false);
+			}
+		}}}
+		#line 567 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return !ADV_UPCS(IsEmpty)($this.$ref());
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 570 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsNumeric($extension_Str_34_str const & $this ) -> const bool
+	{
+		#line 571 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_571 = ADV_UPCS(Bytes)($this.$ref()); auto $for_iter_571 = ADV_UFCS(Iterate)($for_init_571.$ref()); while($for_iter_571.$ref().MoveNext()) {
+		auto&& b = $for_iter_571.$ref().GetCurrent(); {
+			#line 572 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (!ADV_UPCS(IsAsciiDigit)(b.$ref())) {
+				#line 573 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				return Builtin::Boolean(false);
+			}
+		}}}
+		#line 576 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return !ADV_UPCS(IsEmpty)($this.$ref());
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 579 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsDecimal($extension_Str_34_str const & $this ) -> const bool
+	{
+		#line 580 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_580 = ADV_UPCS(Bytes)($this.$ref()); auto $for_iter_580 = ADV_UFCS(Iterate)($for_init_580.$ref()); while($for_iter_580.$ref().MoveNext()) {
+		auto&& b = $for_iter_580.$ref().GetCurrent(); {
+			#line 581 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (!ADV_UPCS(IsAsciiDigit)(b.$ref()) && b != Builtin::u8('.') && b != Builtin::u8(',')) {
+				#line 582 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				return Builtin::Boolean(false);
+			}
+		}}}
+		#line 585 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return !ADV_UPCS(IsEmpty)($this.$ref());
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 588 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsHexadecimal($extension_Str_34_str const & $this ) -> const bool
+	{
+		#line 589 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_589 = ADV_UPCS(Bytes)($this.$ref()); auto $for_iter_589 = ADV_UFCS(Iterate)($for_init_589.$ref()); while($for_iter_589.$ref().MoveNext()) {
+		auto&& c = $for_iter_589.$ref().GetCurrent(); {
+			#line 590 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (!ADV_UPCS(IsHexDigit)(c.$ref())) {
+				#line 591 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				return Builtin::Boolean(false);
+			}
+		}}}
+		#line 594 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return !ADV_UPCS(IsEmpty)($this.$ref());
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 597 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsValidIdentifier($extension_Str_34_str const & $this ) -> const bool
+	{
+		#line 598 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		if (ADV_UPCS(ByteLength)($this.$ref()) == Builtin::u32(0U)) {
+			#line 599 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			return Builtin::Boolean(false);
+		}
+		#line 601 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		const Builtin::Auto<decltype(ADV_UPCS(Bytes)($this.$ref()))> bytes = ADV_UPCS(Bytes)($this.$ref()); 
+		#line 602 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		if (!ADV_UPCS(IsIdentifierStartChar)(ADV_UFCS(_operator_subscript)(bytes.$ref(), Builtin::UncheckedTag{}, Builtin::i32(0)).$ref())) {
+			#line 603 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			return Builtin::Boolean(false);
+		}
+		#line 605 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_605 = bytes; auto $for_iter_605 = ADV_UFCS(Iterate)($for_init_605.$ref()); while($for_iter_605.$ref().MoveNext()) {
+		auto&& b = $for_iter_605.$ref().GetCurrent(); {
+			#line 606 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (!ADV_UPCS(IsIdentifierChar)(b.$ref())) {
+				#line 607 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				return Builtin::Boolean(false);
+			}
+		}}}
+		#line 610 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return Builtin::Boolean(true);
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 613 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getIsAsciiPrintable($extension_Str_34_str const & $this ) -> const bool
+	{
+		#line 614 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_614 = ADV_UPCS(Bytes)($this.$ref()); auto $for_iter_614 = ADV_UFCS(Iterate)($for_init_614.$ref()); while($for_iter_614.$ref().MoveNext()) {
+		auto&& b = $for_iter_614.$ref().GetCurrent(); {
+			#line 615 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			if (!ADV_UPCS(IsAsciiPrintable)(b.$ref())) {
+				#line 616 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				return Builtin::Boolean(false);
+			}
+		}}}
+		#line 619 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return !ADV_UPCS(IsEmpty)($this.$ref());
+	}
+	} namespace System{
+} namespace $extensions { using namespace System;
+#line 673 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getSplitWhitespace($extension_Str_34_str const & $this ) -> const StringSpliterator
+	{
+		#line 674 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringSpliterator{$this, ADV_UPCS(Bytes)(Builtin::Str{""}.$ref()), StringSplitOptions::SkipEmptyEntries}); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 663 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto getSplitWhitespaceReversed($extension_Str_33_str const & $this ) -> const StringReverseSpliterator
+#line 676 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getSplitWhitespaceReversed($extension_Str_34_str const & $this ) -> const StringReverseSpliterator
 	{
-		#line 664 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 677 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(StringReverseSpliterator{$this, ADV_UPCS(Bytes)(Builtin::Str{""}.$ref()), StringSplitOptions::SkipEmptyEntries}); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 666 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto getLines($extension_Str_33_str const & $this ) -> const StringSpliterator
+#line 679 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getLines($extension_Str_34_str const & $this ) -> const StringSpliterator
 	{
-		#line 666 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 679 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(Lines)($this.$ref(), StringSplitOptions::None)); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 668 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto getLinesReversed($extension_Str_33_str const & $this ) -> const StringReverseSpliterator
+#line 681 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getLinesReversed($extension_Str_34_str const & $this ) -> const StringReverseSpliterator
 	{
-		#line 668 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 681 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(LinesReversed)($this.$ref(), StringSplitOptions::None)); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 722 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getTrimAsciiStart($extension_Str_33_str const & $this ) -> const $extension_Str_33_str
+#line 735 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getTrimAsciiStart($extension_Str_34_str const & $this ) -> const $extension_Str_34_str
 	{
-		#line 723 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 736 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Bytes)($this.$ref()))> bytes = ADV_UPCS(Bytes)($this.$ref()); 
-		#line 724 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 737 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Length)(bytes.$ref()))> length = ADV_UPCS(Length)(bytes.$ref()); 
-		#line 725 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 738 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		Builtin::usize start{}; 
-		#line 726 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 739 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		for (; (start <=> length) < 0; start++) 
 		{
-			#line 727 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 740 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			if (!ADV_UPCS(IsAsciiWhiteSpace)(ADV_UFCS(_operator_subscript)(bytes.$ref(), Builtin::UncheckedTag{}, start).$ref())) {
-				#line 728 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 741 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				break;
 			}
 		}
-		#line 731 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return (start <=> length) < 0 ? ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::IndexRange(start, System::Index::End, false)) : $extension_Str_33_str{};
+		#line 744 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return (start <=> length) < 0 ? ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::IndexRange(start, System::Index::End, false)) : $extension_Str_34_str{};
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 734 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getTrimAsciiEnd($extension_Str_33_str const & $this ) -> const $extension_Str_33_str
+#line 747 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getTrimAsciiEnd($extension_Str_34_str const & $this ) -> const $extension_Str_34_str
 	{
-		#line 735 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 748 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Bytes)($this.$ref()))> bytes = ADV_UPCS(Bytes)($this.$ref()); 
-		#line 736 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 749 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Length)(bytes.$ref()))> length = ADV_UPCS(Length)(bytes.$ref()); 
-		#line 737 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 750 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		Builtin::Auto<decltype(length - Builtin::u32(1U))> end = length - Builtin::u32(1U); 
-		#line 738 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 751 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		for (; (end <=> length) < 0; ADV_UFCS(_operator_sub_sub_mod_postfix)(end)) 
 		{
-			#line 739 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 752 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			if (!ADV_UPCS(IsAsciiWhiteSpace)(ADV_UFCS(_operator_subscript)(bytes.$ref(), Builtin::UncheckedTag{}, end).$ref())) {
-				#line 740 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 753 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				break;
 			}
 		}
-		#line 743 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		return (end <=> length) < 0 ? ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::Range<Builtin::Auto<decltype(end)>, true>({}, end)) : $extension_Str_33_str{};
+		#line 756 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		return (end <=> length) < 0 ? ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::Range<Builtin::Auto<decltype(end)>, true>({}, end)) : $extension_Str_34_str{};
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 746 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline constexpr auto getTrimAscii($extension_Str_33_str const & $this ) -> const $extension_Str_33_str
+#line 759 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline constexpr auto getTrimAscii($extension_Str_34_str const & $this ) -> const $extension_Str_34_str
 	{
-		#line 746 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 759 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(TrimAsciiEnd)(ADV_UPCS(TrimAsciiStart)($this.$ref()).$ref())); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 748 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto getTrimStart($extension_Str_33_str const & $this ) -> const $extension_Str_33_str
+#line 761 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getTrimStart($extension_Str_34_str const & $this ) -> const $extension_Str_34_str
 	{
-		#line 749 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_749 = ADV_UPCS(CharsWithOffsets)($this.$ref()); auto $for_iter_749 = ADV_UFCS(Iterate)($for_init_749.$ref()); while($for_iter_749.$ref().MoveNext()) {
-		auto&& [offset, c] = $for_iter_749.$ref().GetCurrent(); {
-			#line 750 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 762 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_762 = ADV_UPCS(CharsWithOffsets)($this.$ref()); auto $for_iter_762 = ADV_UFCS(Iterate)($for_init_762.$ref()); while($for_iter_762.$ref().MoveNext()) {
+		auto&& [offset, c] = $for_iter_762.$ref().GetCurrent(); {
+			#line 763 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			if (!ADV_UPCS(IsWhiteSpace)(c.$ref())) {
-				#line 751 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 764 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::IndexRange(offset, System::Index::End, false));
 			}
 		}}}
-		#line 754 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 767 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return {  };
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 757 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto getTrimEnd($extension_Str_33_str const & $this ) -> const $extension_Str_33_str
+#line 770 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getTrimEnd($extension_Str_34_str const & $this ) -> const $extension_Str_34_str
 	{
-		#line 758 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 771 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		Builtin::Auto<decltype(ADV_UPCS(ByteLength)($this.$ref()))> prevOffset = ADV_UPCS(ByteLength)($this.$ref()); 
-		#line 759 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		{ auto $for_init_759 = ADV_UPCS(Reversed)(ADV_UPCS(CharsWithOffsets)($this.$ref()).$ref()); auto $for_iter_759 = ADV_UFCS(Iterate)($for_init_759.$ref()); while($for_iter_759.$ref().MoveNext()) {
-		auto&& [offset, c] = $for_iter_759.$ref().GetCurrent(); {
-			#line 760 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 772 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		{ auto $for_init_772 = ADV_UPCS(Reversed)(ADV_UPCS(CharsWithOffsets)($this.$ref()).$ref()); auto $for_iter_772 = ADV_UFCS(Iterate)($for_init_772.$ref()); while($for_iter_772.$ref().MoveNext()) {
+		auto&& [offset, c] = $for_iter_772.$ref().GetCurrent(); {
+			#line 773 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			if (!ADV_UPCS(IsWhiteSpace)(c.$ref())) {
-				#line 761 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+				#line 774 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 				return ADV_UFCS(_operator_subscript)($this.$ref(), Builtin::UncheckedTag{}, System::Range<Builtin::Auto<decltype(prevOffset)>, false>({}, prevOffset));
 			}
-			#line 763 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+			#line 776 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 			prevOffset = offset;
 		}}}
-		#line 765 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 778 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		return {  };
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
-#line 768 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-	inline auto getTrim($extension_Str_33_str const & $this ) -> const $extension_Str_33_str
+#line 781 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+	inline auto getTrim($extension_Str_34_str const & $this ) -> const $extension_Str_34_str
 	{
-		#line 768 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
+		#line 781 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(TrimEnd)(ADV_UPCS(TrimStart)($this.$ref()).$ref())); 
 	}
 	} namespace System{
