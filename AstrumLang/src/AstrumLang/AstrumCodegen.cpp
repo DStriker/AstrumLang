@@ -21516,13 +21516,17 @@ namespace AstrumLang {
 
 	void AstrumCodegen::printTypeId(AstrumParser::TheTypeIdContext* ctx) {
 		if (ctx->Static()) {
-			out << "$ImplementsInterface_";
-			if (ctx->simpleTemplateId()) {
-				printSimpleTemplateId(ctx->simpleTemplateId());
+			if (ctx->Str()) {
+				out << "Builtin::StaticStr";
 			} else {
-				printIdentifier(ctx->Identifier());
+				out << "$ImplementsInterface_";
+				if (ctx->simpleTemplateId()) {
+					printSimpleTemplateId(ctx->simpleTemplateId());
+				} else {
+					printIdentifier(ctx->Identifier());
+				}
+				out << " auto";
 			}
-			out << " auto";
 		} else if (ctx->Amp()) {
 			out << "Builtin::";
 			if (ctx->Mutable()) {

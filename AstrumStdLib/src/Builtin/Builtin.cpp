@@ -25,4 +25,5 @@ namespace Builtin {
 	int AstrumMainStartup(int argc, char** argv) {
 		return ApplicationMainPtr(/*forward arguments*/);
 	}
+
 }  // namespace Builtin

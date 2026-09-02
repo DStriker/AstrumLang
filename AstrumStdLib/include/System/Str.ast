@@ -1228,4 +1228,8 @@ test "Str" {
         _ => "unknown"
     };
     assert switched == "hello";
+
+    css: static str = cs;
+    print(css);
+    print(css.CharCount);
 }

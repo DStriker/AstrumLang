@@ -485,9 +485,9 @@ using $extensions::getTrim;
 	//###############################################################################
 //# Global compile-time constants
 //###############################################################################
-inline constexpr Builtin::Str $strconst_0x18cee72ff10_0 = "Begin ";
-inline constexpr Builtin::Str $strconst_0x18cee72ff10_1 = " Middle ";
-inline constexpr Builtin::Str $strconst_0x18cee72ff10_2 = " End";
+inline constexpr Builtin::Str $strconst_0x24b76e02ee0_0 = "Begin ";
+inline constexpr Builtin::Str $strconst_0x24b76e02ee0_1 = " Middle ";
+inline constexpr Builtin::Str $strconst_0x24b76e02ee0_2 = " End";
 } namespace $extensions {
 template<class __TT> struct $static_Start;
 template<class __TT> struct $static_getStart;
@@ -565,12 +565,12 @@ template<class __TT> struct $static_SubstringAfterLast;
 template<class __TT> struct $static_getSubstringAfterLast;
 template<class __TT> struct $static_CharsWithOffsets;
 template<class __TT> struct $static_getCharsWithOffsets;
-template<class __TT> struct $static_SubstringBeforeLast;
-template<class __TT> struct $static_getSubstringBeforeLast;
-template<class __TT> struct $static_SubstringsBetween;
-template<class __TT> struct $static_getSubstringsBetween;
 template<class __TT> struct $static_SubstringBefore;
 template<class __TT> struct $static_getSubstringBefore;
+template<class __TT> struct $static_SubstringsBetween;
+template<class __TT> struct $static_getSubstringsBetween;
+template<class __TT> struct $static_SubstringBeforeLast;
+template<class __TT> struct $static_getSubstringBeforeLast;
 template<class __TT> struct $static_Reversed;
 template<class __TT> struct $static_getReversed;
 template<class __TT> struct $static_TrimEnd;
@@ -617,8 +617,6 @@ template<class __TT> struct $static_StartsWith;
 template<class __TT> struct $static_getStartsWith;
 template<class __TT> struct $static__current;
 template<class __TT> struct $static_get_current;
-template<class __TT> struct $static_TextElementsWithOffsets;
-template<class __TT> struct $static_getTextElementsWithOffsets;
 template<class __TT> struct $static_SubstringBetween;
 template<class __TT> struct $static_getSubstringBetween;
 template<class __TT> struct $static_SubstringsBetweenReversed;

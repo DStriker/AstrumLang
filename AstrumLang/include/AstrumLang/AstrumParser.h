@@ -2579,6 +2579,7 @@ public:
     antlr4::tree::TerminalNode *Mutable();
     antlr4::tree::TerminalNode *Static();
     antlr4::tree::TerminalNode *Identifier();
+    antlr4::tree::TerminalNode *Str();
     SimpleTemplateIdContext *simpleTemplateId();
     LogicalOrExpressionContext *logicalOrExpression();
     antlr4::tree::TerminalNode *Question();

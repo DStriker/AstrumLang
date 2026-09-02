@@ -685,7 +685,7 @@ lambdaBody
 theTypeId
     : singleTypeId (VertLine singleTypeId)*
     | Amp Mutable? singleTypeId
-    | Static (Identifier | simpleTemplateId)
+    | Static (Identifier | Str | simpleTemplateId)
     | logicalOrExpression Question theTypeId Colon theTypeId
     ;
 
