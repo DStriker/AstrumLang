@@ -1934,7 +1934,7 @@ namespace AstrumLang {
 							printTypeId(types[0]);
 							out << ")";
 						} else {
-							out << "std::tuple<";
+							out << "Builtin::Tuple<";
 							bool first = true;
 							for (auto t : types) {
 								if (!first)
@@ -13930,8 +13930,10 @@ namespace AstrumLang {
 		}
 		out << ";";
 		if (sema.potentiallyDangerousAssignments.contains(ctx)) {
-			auto lhs = ctx->expression()->assignmentExpression()->logicalOrExpression()->getText();
-			out << " ADV_CHECK_REF_STRUCT_ASSIGNMENT(" << lhs << ");";
+			for (auto expr : ctx->expression()->assignmentExpression()->logicalOrExpression()) {
+				auto lhs = expr->getText();
+				out << " ADV_CHECK_REF_STRUCT_ASSIGNMENT(" << lhs << ");";
+			}
 		}
 	}
 
@@ -18976,7 +18978,7 @@ namespace AstrumLang {
 				StringReplace(id, ".", "::");
 				out << id;
 			} else {
-				out << "std::tuple<";
+				out << "Builtin::Tuple<";
 				bool first = true;
 				for (auto type : ctx->theTypeId()) {
 					if (!first)
@@ -19283,11 +19285,26 @@ namespace AstrumLang {
 			printConditionalExpression(cond);
 		} else if (auto expr = ctx->throwExpression()) {
 			printThrowExpression(expr);
+		} else if (ctx->logicalOrExpression().size() > 1) {
+			lvalue       = true;
+			isAssignment = true;
+			out << "Builtin::Tie(";
+			bool first = true;
+			for (auto expr : ctx->logicalOrExpression()) {
+				if (!first)
+					out << ", ";
+				first = false;
+				printLogicalOrExpression(expr);
+			}
+			out << ") = ";
+			lvalue = false;
+			printInitializerClause(ctx->initializerClause());
+			isAssignment = false;
 		} else {
 			lvalue = true;
 			if (ctx->assignmentOperator()->Assign())
 				isAssignment = true;
-			auto left  = ctx->logicalOrExpression()->getText();
+			auto left  = ctx->logicalOrExpression(0)->getText();
 			bool paren = false;
 			if (isAssignment && sema.uninitConstructs.contains(ctx) &&
 			    (symbolTable[left] == "#DeferredInit" || symbolTable[left] == "#Out")) {
@@ -19298,7 +19315,7 @@ namespace AstrumLang {
 				if (!functionBody)
 					ufcs += "_NONLOCAL";
 				out << ufcs << "(_operator_mul_mul_eq)(";
-				printLogicalOrExpression(ctx->logicalOrExpression());
+				printLogicalOrExpression(ctx->logicalOrExpression(0));
 				out << ", ";
 				paren = true;
 			} else if (ctx->assignmentOperator()->SignedRightShiftAssign()) {
@@ -19306,7 +19323,7 @@ namespace AstrumLang {
 				if (!functionBody)
 					ufcs += "_NONLOCAL";
 				out << ufcs << "(_operator_gt_gt_gt_eq)(";
-				printLogicalOrExpression(ctx->logicalOrExpression());
+				printLogicalOrExpression(ctx->logicalOrExpression(0));
 				out << ", ";
 				paren = true;
 			} else if (ctx->assignmentOperator()->TildeAssign()) {
@@ -19314,7 +19331,7 @@ namespace AstrumLang {
 				if (!functionBody)
 					ufcs += "_NONLOCAL";
 				out << ufcs << "(_operator_not_eq)(";
-				printLogicalOrExpression(ctx->logicalOrExpression());
+				printLogicalOrExpression(ctx->logicalOrExpression(0));
 				out << ", ";
 				paren = true;
 			} else if (ctx->assignmentOperator()->Op1()) {
@@ -19324,11 +19341,11 @@ namespace AstrumLang {
 				out << ufcs << "("
 				    << sema.getCustomOperatorName(ctx->assignmentOperator()->Op1()->getText())
 				    << ")(";
-				printLogicalOrExpression(ctx->logicalOrExpression());
+				printLogicalOrExpression(ctx->logicalOrExpression(0));
 				out << ", ";
 				paren = true;
 			} else {
-				printLogicalOrExpression(ctx->logicalOrExpression());
+				printLogicalOrExpression(ctx->logicalOrExpression(0));
 				printAssignmentOperator(ctx->assignmentOperator());
 			}
 			lvalue = false;
@@ -21005,7 +21022,7 @@ namespace AstrumLang {
 			out << ")";
 		} else if (ctx->Dot()) {
 			if (auto literal = ctx->IntegerLiteral()) {
-				out << "std::get<" << literal->getText() << ">(";
+				out << "get<" << literal->getText() << ">(";
 				printPostfixExpression(ctx->postfixExpression());
 				out << ")";
 			} else if (ctx->Type()) {
@@ -21196,7 +21213,7 @@ namespace AstrumLang {
 					out << ")>";
 				} else if (currentAssignment) {
 					out << "std::decay_t<decltype(";
-					printLogicalOrExpression(currentAssignment->logicalOrExpression());
+					printLogicalOrExpression(currentAssignment->logicalOrExpression(0));
 					out << ")>";
 				} else if (currentDeclaration) {
 					printTypeId(currentDeclaration->theTypeId());
@@ -21276,7 +21293,7 @@ namespace AstrumLang {
 
 	void AstrumCodegen::printTupleExpression(AstrumParser::TupleExpressionContext* ctx) {
 		if (!ctx->conditionalExpression().empty()) {
-			out << "std::make_tuple(";
+			out << "Builtin::MakeTuple(";
 			bool first = true;
 			for (auto expr : ctx->conditionalExpression()) {
 				if (!first)
@@ -21892,8 +21909,12 @@ namespace AstrumLang {
 		auto id                                 = StringHash(txt.c_str());
 		switch (id) {
 			case anonymousVar:
-				out << GetAnonymousVarName(
-				    {node->getSymbol()->getLine(), node->getSymbol()->getCharPositionInLine()});
+				if (lvalue && isAssignment) {
+					out << "std::ignore";
+				} else {
+					out << GetAnonymousVarName(
+					    {node->getSymbol()->getLine(), node->getSymbol()->getCharPositionInLine()});
+				}
 				break;
 			case and_eq_:
 			case asm_:

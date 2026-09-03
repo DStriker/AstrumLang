@@ -1,0 +1,40 @@
+package System;
+
+public type Tuple<Types...> = Builtin.Tuple<Types...>;
+
+test "Tuple" {
+    t: (i32, i32, str);
+    t1: (i32, i32, static str) = (12, 34, "Hello");
+    t2 := (12, 34, Builtin.StaticStr("Hello"));
+    t2 = (13, 35, Builtin.StaticStr("Bye bye"));
+    assert t1 < t2;
+    assert t2 > t1;
+    assert t2 == t2;
+    assert t1 != t2;
+    let i1, i2, s := t2;
+    let i10, i20, s1 := (12, 34, Builtin.StaticStr("Hello"));
+    assert i10 == 12;
+    assert i20 == 34;
+    assert s1 == "Hello";
+    assert t2.0 == 13;
+    assert t2.1 == 35;
+    assert t2.2 == "Bye bye";
+    let t3 := t1 + t2;
+    assert t3.0 == 12;
+    assert t3.1 == 34;
+    assert t3.2 == "Hello";
+    assert t3.3 == 13;
+    assert t3.4 == 35;
+    assert t3.5 == "Bye bye";
+    ia1 := 38;
+    ia2 := 39;
+    sa1 := "test";
+    ia1, ia2, sa1 = (12, 34, "Hello");
+    assert ia1 == 12;
+    assert ia2 == 34;
+    assert sa1 == "Hello";
+    ia1, _, sa1 = (1234, 3456, "Hello world");
+    assert ia1 == 1234;
+    assert ia2 == 34;
+    assert sa1 == "Hello world";
+}

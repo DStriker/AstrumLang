@@ -861,6 +861,8 @@ public extension str {
     }
     // Returns a string span with leading and trailing characters by filter removed
     Trim: (filter: Predicate<char>) -> self => this.TrimStart(filter).TrimEnd(filter);
+
+    HashCode: u64 ==> this.GetHashCode();
 }
 
 public ref struct SubstringIterator: IAbstractSequence, ISequence<str>, IAbstractIterator, IIterator<str> {
@@ -1228,8 +1230,4 @@ test "Str" {
         _ => "unknown"
     };
     assert switched == "hello";
-
-    css: static str = cs;
-    print(css);
-    print(css.CharCount);
 }

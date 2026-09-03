@@ -36,6 +36,7 @@
 #include "Str.h"
 #include "StringComparison.h"
 #include "StringSpliterator.h"
+#include "Tuple.h"
 #include "UInt128.h"
 #include "UInt16.h"
 #include "UInt32.h"

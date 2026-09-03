@@ -2547,10 +2547,15 @@ namespace AstrumLang {
 				auto& varDepth = initStates.top().varDepth;
 				auto lhsDepth  = varDepth.find(ident);
 				if (lhsDepth != varDepth.end()) {
-					auto lhsMutRef = assignmentDepth
-					                     ? initStates.top().mutableRefs.contains(
-					                           currentAssignment->logicalOrExpression()->getText())
-					                     : false;
+					auto lhsMutRef = false;
+					if (assignmentDepth) {
+						for (auto expr : currentAssignment->logicalOrExpression()) {
+							if (initStates.top().mutableRefs.contains(expr->getText())) {
+								lhsMutRef = true;
+								break;
+							}
+						}
+					}
 					if (lhsDepth->second > assignmentDepth && (!lhsMutRef || rhsMutRef)) {
 						potentiallyDangerousAssignment = true;
 					}
@@ -2607,21 +2612,28 @@ namespace AstrumLang {
 					    "equality operator?",
 					    ctx->assignmentOperator()->getStart());
 				if (!firstPass && functionBody && !initStates.empty()) {
-					auto txt       = ctx->logicalOrExpression()->getText();
-					auto& varDepth = initStates.top().varDepth;
-					auto lhsDepth  = varDepth.find(txt);
-					if (lhsDepth != varDepth.end()) {
-						assignmentDepth   = std::max(assignmentDepth, lhsDepth->second);
-						isLifetimeControl = true;
-					} else {
-						auto& params  = initStates.top().functionParams;
-						auto lhsParam = params.find(txt);
-						if (lhsParam != params.end()) {
-							isParamAssignment = true;
+					for (auto expr : ctx->logicalOrExpression())
+					{
+						auto txt       = expr->getText();
+						auto& varDepth = initStates.top().varDepth;
+						auto lhsDepth  = varDepth.find(txt);
+						if (lhsDepth != varDepth.end()) {
+							assignmentDepth   = std::max(assignmentDepth, lhsDepth->second);
 							isLifetimeControl = true;
+						} else {
+							auto& params  = initStates.top().functionParams;
+							auto lhsParam = params.find(txt);
+							if (lhsParam != params.end()) {
+								isParamAssignment = true;
+								isLifetimeControl = true;
+							}
 						}
 					}
 				}
+			} else if (ctx->logicalOrExpression().size() > 1) {
+				notifyErrorListeners(
+				    "Cannot to use compound assignment operators in the tuple decomposition.",
+				    ctx->assignmentOperator()->getStart());
 			}
 			lvalue = true;
 		}

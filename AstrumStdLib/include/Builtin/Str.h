@@ -43,20 +43,8 @@ namespace Builtin {
 		constexpr usize GetByteLength() const noexcept { return len; }
 		constexpr explicit operator bool() const noexcept { return chars && len; }
 
-		constexpr bool operator==(Str other) const noexcept {
-			return len == other.len && (chars == other.chars || std::char_traits<char>::compare(
-			                                                        chars, other.chars, len) == 0);
-		}
-
-		constexpr bool operator!=(Str other) const noexcept { return !(*this == other); }
-
-		constexpr int operator<=>(Str other) const noexcept {
-			const int result =
-			    std::char_traits<char>::compare(chars, other.chars, std::min(len, other.len));
-			if (result != 0) {
-				return result;
-			}
-			return size_t(len) - size_t(other.len);
+		uint64_t GetHashCode() const noexcept {
+			return std::hash<std::string_view>()(std::string_view(chars, (size_t) len));
 		}
 
 	   private:
@@ -108,23 +96,11 @@ namespace Builtin {
 		constexpr usize GetByteLength() const noexcept { return len; }
 		constexpr explicit operator bool() const noexcept { return chars && len; }
 
+		uint64_t GetHashCode() const noexcept {
+			return std::hash<std::string_view>()(std::string_view(chars, (size_t) len));
+		}
+
 		constexpr operator Str() const noexcept { return Str(chars, len); }
-
-		constexpr bool operator==(StaticStr other) const noexcept {
-			return len == other.len && (chars == other.chars || std::char_traits<char>::compare(
-			                                                        chars, other.chars, len) == 0);
-		}
-
-		constexpr bool operator!=(StaticStr other) const noexcept { return !(*this == other); }
-
-		constexpr int operator<=>(StaticStr other) const noexcept {
-			const int result =
-			    std::char_traits<char>::compare(chars, other.chars, std::min(len, other.len));
-			if (result != 0) {
-				return result;
-			}
-			return size_t(len) - size_t(other.len);
-		}
 
 	   private:
 		constexpr void ensureConstLiteral() {
@@ -137,6 +113,25 @@ namespace Builtin {
 		const char* chars;
 		usize len;
 	};
+
+	inline constexpr bool operator==(Str lhs, Str rhs) noexcept {
+		return lhs.GetByteLength() == rhs.GetByteLength() &&
+		       (lhs.UnsafeGetRawDataPointer() == rhs.UnsafeGetRawDataPointer() ||
+		        std::char_traits<char>::compare(lhs.UnsafeGetRawDataPointer(),
+		                                        rhs.UnsafeGetRawDataPointer(),
+		                                        (size_t)lhs.GetByteLength()) == 0);
+	}
+
+	inline constexpr bool operator!=(Str lhs, Str rhs) noexcept { return !(lhs == rhs); }
+
+	inline constexpr int operator<=>(Str lhs, Str rhs) noexcept {
+		const int result = std::char_traits<char>::compare(
+		    lhs.UnsafeGetRawDataPointer(), rhs.UnsafeGetRawDataPointer(), std::min((size_t)lhs.GetByteLength(), (size_t)rhs.GetByteLength()));
+		if (result != 0) {
+			return result;
+		}
+		return size_t(lhs.GetByteLength()) - size_t(rhs.GetByteLength());
+	}
 
 	template <class... Args>
 	struct StringInterpolation {

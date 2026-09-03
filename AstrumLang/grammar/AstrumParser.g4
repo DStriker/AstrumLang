@@ -471,7 +471,7 @@ constantExpression
     ;
 
 assignmentExpression
-    : logicalOrExpression assignmentOperator initializerClause
+    : logicalOrExpression (Comma logicalOrExpression)* assignmentOperator initializerClause
     | conditionalExpression
     | throwExpression
     ;

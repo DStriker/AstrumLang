@@ -1926,9 +1926,12 @@ public:
   public:
     AssignmentExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    LogicalOrExpressionContext *logicalOrExpression();
+    std::vector<LogicalOrExpressionContext *> logicalOrExpression();
+    LogicalOrExpressionContext* logicalOrExpression(size_t i);
     AssignmentOperatorContext *assignmentOperator();
     InitializerClauseContext *initializerClause();
+    std::vector<antlr4::tree::TerminalNode *> Comma();
+    antlr4::tree::TerminalNode* Comma(size_t i);
     ConditionalExpressionContext *conditionalExpression();
     ThrowExpressionContext *throwExpression();
 

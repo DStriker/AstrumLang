@@ -16,6 +16,7 @@
 #include "RawPtr.h"
 #include "Ref.h"
 #include "Str.h"
+#include "Tuple.h"
 #include "Tests.h"
 #include "Types.h"
 #include "UnsafeContext.h"
