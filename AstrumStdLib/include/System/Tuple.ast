@@ -5,14 +5,14 @@ public type Tuple<Types...> = Builtin.Tuple<Types...>;
 test "Tuple" {
     t: (i32, i32, str);
     t1: (i32, i32, static str) = (12, 34, "Hello");
-    t2 := (12, 34, Builtin.StaticStr("Hello"));
-    t2 = (13, 35, Builtin.StaticStr("Bye bye"));
+    t2 := (12, 34, "Hello");
+    t2 = (13, 35, "Bye bye");
     assert t1 < t2;
     assert t2 > t1;
     assert t2 == t2;
     assert t1 != t2;
     let i1, i2, s := t2;
-    let i10, i20, s1 := (12, 34, Builtin.StaticStr("Hello"));
+    let i10, i20, s1 := (12, 34, "Hello");
     assert i10 == 12;
     assert i20 == 34;
     assert s1 == "Hello";

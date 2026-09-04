@@ -72,7 +72,7 @@ class ReverseCharIndicesIterator;
 		public: using $class = $self;
 		public: FORCE_INLINE constexpr decltype(auto) $ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) $ref() const noexcept { return *this; }
 		#line 70 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-		public: using ElementType = std::tuple<Builtin::usize, Builtin::char32>;
+		public: using ElementType = Builtin::Tuple<Builtin::usize, Builtin::char32>;
 		#line 71 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 		public: using ReverseIterator = ReverseCharIndicesIterator;
 		public: CharIndicesIterator() = default;
@@ -83,7 +83,7 @@ class ReverseCharIndicesIterator;
 		#line 95 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 		public: inline constexpr auto Reset()  -> void;
 		#line 100 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-		public: inline constexpr auto GetCurrent() const  -> const std::tuple<Builtin::usize, Builtin::char32>;
+		public: inline constexpr auto GetCurrent() const  -> const Builtin::Tuple<Builtin::usize, Builtin::char32>;
 		#line 102 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 		public: inline constexpr auto GetData() const  -> const System::Span<Builtin::u8>;
 		#line 103 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
@@ -102,11 +102,11 @@ class ReverseCharIndicesIterator;
 	#line 69 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(CharIndicesIterator, IAbstractSequence, IAbstractSequence, CharIndicesIterator);
 	#line 69 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(CharIndicesIterator, ISequence, ISequence<std::tuple<Builtin::usize, Builtin::char32>>, CharIndicesIterator);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(CharIndicesIterator, ISequence, ISequence<Builtin::Tuple<Builtin::usize, Builtin::char32>>, CharIndicesIterator);
 	#line 69 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(CharIndicesIterator, IAbstractIterator, IAbstractIterator, CharIndicesIterator);
 	#line 69 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(CharIndicesIterator, IIterator, IIterator<std::tuple<Builtin::usize, Builtin::char32>>, CharIndicesIterator);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(CharIndicesIterator, IIterator, IIterator<Builtin::Tuple<Builtin::usize, Builtin::char32>>, CharIndicesIterator);
 	
 	#line 108 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 	struct [[clang::annotate("ref_struct")]] ReverseCharIterator final : public Builtin::RefStruct {
@@ -152,7 +152,7 @@ class ReverseCharIndicesIterator;
 		public: using $class = $self;
 		public: FORCE_INLINE constexpr decltype(auto) $ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) $ref() const noexcept { return *this; }
 		#line 163 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-		public: using ElementType = std::tuple<Builtin::usize, Builtin::char32>;
+		public: using ElementType = Builtin::Tuple<Builtin::usize, Builtin::char32>;
 		public: ReverseCharIndicesIterator() = default;
 		#line 168 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 		public: inline constexpr explicit ReverseCharIndicesIterator(Builtin::Str data) noexcept;
@@ -161,7 +161,7 @@ class ReverseCharIndicesIterator;
 		#line 184 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 		public: inline constexpr auto Reset()  -> void;
 		#line 189 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-		public: inline constexpr auto GetCurrent() const  -> const std::tuple<Builtin::usize, Builtin::char32>;
+		public: inline constexpr auto GetCurrent() const  -> const Builtin::Tuple<Builtin::usize, Builtin::char32>;
 		#line 191 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 		public: inline constexpr auto GetRemainingByteLength() const  -> const Builtin::usize;
 		#line 193 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
@@ -176,11 +176,11 @@ class ReverseCharIndicesIterator;
 	#line 162 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(ReverseCharIndicesIterator, IAbstractSequence, IAbstractSequence, ReverseCharIndicesIterator);
 	#line 162 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(ReverseCharIndicesIterator, ISequence, ISequence<std::tuple<Builtin::usize, Builtin::char32>>, ReverseCharIndicesIterator);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(ReverseCharIndicesIterator, ISequence, ISequence<Builtin::Tuple<Builtin::usize, Builtin::char32>>, ReverseCharIndicesIterator);
 	#line 162 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(ReverseCharIndicesIterator, IAbstractIterator, IAbstractIterator, ReverseCharIndicesIterator);
 	#line 162 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(ReverseCharIndicesIterator, IIterator, IIterator<std::tuple<Builtin::usize, Builtin::char32>>, ReverseCharIndicesIterator);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(ReverseCharIndicesIterator, IIterator, IIterator<Builtin::Tuple<Builtin::usize, Builtin::char32>>, ReverseCharIndicesIterator);
 	
 		} namespace $extensions { using namespace System;
 #line 196 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
@@ -362,10 +362,10 @@ template<class __TT> struct $static_getNarrowToInt8;
 		ADV_UFCS(Reset)(_iterator.$ref());
 	}
 #line 100 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-	inline constexpr auto CharIndicesIterator::GetCurrent() const  -> const std::tuple<Builtin::usize, Builtin::char32>
+	inline constexpr auto CharIndicesIterator::GetCurrent() const  -> const Builtin::Tuple<Builtin::usize, Builtin::char32>
 	{
 		#line 100 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-		ADV_EXPRESSION_BODY(std::make_tuple(_offset, ADV_UFCS(GetCurrent)(_iterator.$ref()))); 
+		ADV_EXPRESSION_BODY(Builtin::MakeTuple(_offset, ADV_UFCS(GetCurrent)(_iterator.$ref()))); 
 	}
 #line 102 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 	inline constexpr auto CharIndicesIterator::GetData() const  -> const System::Span<Builtin::u8>
@@ -504,10 +504,10 @@ template<class __TT> struct $static_getNarrowToInt8;
 		ADV_UFCS(Reset)(_iterator.$ref());
 	}
 #line 189 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-	inline constexpr auto ReverseCharIndicesIterator::GetCurrent() const  -> const std::tuple<Builtin::usize, Builtin::char32>
+	inline constexpr auto ReverseCharIndicesIterator::GetCurrent() const  -> const Builtin::Tuple<Builtin::usize, Builtin::char32>
 	{
 		#line 189 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
-		ADV_EXPRESSION_BODY(std::make_tuple(_offset, ADV_UFCS(GetCurrent)(_iterator.$ref()))); 
+		ADV_EXPRESSION_BODY(Builtin::MakeTuple(_offset, ADV_UFCS(GetCurrent)(_iterator.$ref()))); 
 	}
 #line 191 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\CharIterator.ast"
 	inline constexpr auto ReverseCharIndicesIterator::GetRemainingByteLength() const  -> const Builtin::usize

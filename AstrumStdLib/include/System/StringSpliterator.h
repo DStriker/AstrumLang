@@ -29,11 +29,11 @@ class $Class_StringSplitOptions;
 		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, Builtin::i32)
 		public: constexpr StringSplitOptions() noexcept = default;
 		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\StringSpliterator.ast"
-		private: static constexpr Builtin::Str __names[] = {"None", "SkipEmptyEntries", "TrimEntries", "ProcessLineEndingAsSingleChar"};
+		private: static constexpr Builtin::StaticStr __names[] = {"None", "SkipEmptyEntries", "TrimEntries", "ProcessLineEndingAsSingleChar"};
 		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\StringSpliterator.ast"
 		public: static constexpr int __variants = 4;
 		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\StringSpliterator.ast"
-		public: static constexpr std::span<const Builtin::Str> GetNames() noexcept { return __names; }
+		public: static constexpr std::span<const Builtin::StaticStr> GetNames() noexcept { return __names; }
 		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\StringSpliterator.ast"
 		private: static const StringSplitOptions __values[];
 		#line 6 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\StringSpliterator.ast"
@@ -148,7 +148,7 @@ class $Class_StringSplitOptions;
 		#line 29 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\StringSpliterator.ast"
 		private: bool _isFilter{};
 		#line 32 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\StringSpliterator.ast"
-		public: static constexpr auto ASCII_WHITESPACES = Builtin::Str{" \t\r\n\f"};
+		public: static constexpr auto ASCII_WHITESPACES = Builtin::StaticStr{" \t\r\n\f"};
 		
 	};
 	
@@ -218,7 +218,7 @@ class $Class_StringSplitOptions;
 		#line 209 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\StringSpliterator.ast"
 		private: bool _isFilter{};
 		#line 212 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\StringSpliterator.ast"
-		public: static constexpr auto ASCII_WHITESPACES = Builtin::Str{" \t\r\n\f"};
+		public: static constexpr auto ASCII_WHITESPACES = Builtin::StaticStr{" \t\r\n\f"};
 		
 	};
 	

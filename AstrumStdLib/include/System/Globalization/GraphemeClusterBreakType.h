@@ -26,11 +26,11 @@ class $Class_GraphemeClusterBreakType;
 		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, Builtin::u8)
 		public: constexpr GraphemeClusterBreakType() noexcept = default;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\GraphemeClusterBreakType.ast"
-		private: static constexpr Builtin::Str __names[] = {"Other", "CR", "LF", "Control", "Extend", "ZWJ", "RegionalIndicator", "Prepend", "SpacingMark", "L", "V", "T", "LV", "LVT", "ExtendedPictograph"};
+		private: static constexpr Builtin::StaticStr __names[] = {"Other", "CR", "LF", "Control", "Extend", "ZWJ", "RegionalIndicator", "Prepend", "SpacingMark", "L", "V", "T", "LV", "LVT", "ExtendedPictograph"};
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\GraphemeClusterBreakType.ast"
 		public: static constexpr int __variants = 15;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\GraphemeClusterBreakType.ast"
-		public: static constexpr std::span<const Builtin::Str> GetNames() noexcept { return __names; }
+		public: static constexpr std::span<const Builtin::StaticStr> GetNames() noexcept { return __names; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\GraphemeClusterBreakType.ast"
 		private: static const GraphemeClusterBreakType __values[];
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\GraphemeClusterBreakType.ast"

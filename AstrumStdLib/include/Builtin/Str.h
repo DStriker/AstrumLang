@@ -59,13 +59,15 @@ namespace Builtin {
 		constexpr decltype(auto) $ref() const noexcept { return *this; }
 
 		constexpr StaticStr() noexcept : chars {nullptr}, len(0) {}
-		constexpr StaticStr(Str str)
+		constexpr explicit StaticStr(Str str)
 		    : chars(str.UnsafeGetRawDataPointer()), len(str.GetByteLength()) {
 			ensureConstLiteral();
 		}
 		constexpr StaticStr(const char* _chars, usize _length) noexcept
 		    : chars(_chars), len(_length) {
+#ifdef _DEBUG
 			ensureConstLiteral();
+#endif
 		}
 		constexpr StaticStr(const u8* _chars, usize _length) noexcept
 		    : chars((const char*) _chars), len(_length) {
@@ -77,7 +79,9 @@ namespace Builtin {
 		constexpr StaticStr& operator=(StaticStr&&) noexcept = default;
 		constexpr StaticStr(const char* _chars) noexcept
 		    : chars(_chars), len(std::char_traits<char>::length(_chars)) {
+#ifdef _DEBUG
 			ensureConstLiteral();
+#endif
 		}
 
 		static constexpr StaticStr UnsafeCreate(const u8& _chars, usize _length) noexcept {
@@ -87,7 +91,9 @@ namespace Builtin {
 		constexpr StaticStr& operator=(const char* _chars) noexcept {
 			chars = _chars;
 			len   = std::char_traits<char>::length(_chars);
+#ifdef _DEBUG
 			ensureConstLiteral();
+#endif
 			return *this;
 		}
 
@@ -142,7 +148,7 @@ namespace Builtin {
 		    : formatString(formatString), args(args...) {}
 	};
 
-	template <Str const&... Strings>
+	template <StaticStr const&... Strings>
 	constexpr auto CompileTimeStringConcat() {
 		constexpr size_t total_len =
 		    (Strings.GetByteLength() + ... + 0);  // +0 for empty pack safety

@@ -26,11 +26,11 @@ class $Class_StrongBidiCategory;
 		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, Builtin::u8)
 		public: constexpr StrongBidiCategory() noexcept = default;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\StrongBidiCategory.ast"
-		private: static constexpr Builtin::Str __names[] = {"Other", "StrongLeftToRight", "StrongRightToLeft"};
+		private: static constexpr Builtin::StaticStr __names[] = {"Other", "StrongLeftToRight", "StrongRightToLeft"};
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\StrongBidiCategory.ast"
 		public: static constexpr int __variants = 3;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\StrongBidiCategory.ast"
-		public: static constexpr std::span<const Builtin::Str> GetNames() noexcept { return __names; }
+		public: static constexpr std::span<const Builtin::StaticStr> GetNames() noexcept { return __names; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\StrongBidiCategory.ast"
 		private: static const StrongBidiCategory __values[];
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\StrongBidiCategory.ast"

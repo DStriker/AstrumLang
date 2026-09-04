@@ -11,8 +11,6 @@ namespace __Unsafe {} namespace __StringComparison$Protected__Unsafe {}
 //###############################################################################
 class StringComparison;
 class $Class_StringComparison;
-} namespace $extensions {
-} namespace System {
 //###############################################################################
 //# Type definitions
 //###############################################################################
@@ -28,11 +26,11 @@ class $Class_StringComparison;
 		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, Builtin::u8)
 		public: constexpr StringComparison() noexcept = default;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\StringComparison.ast"
-		private: static constexpr Builtin::Str __names[] = {"Invariant", "InvariantIgnoreCase", "CurrentCulture", "CurrentCultureIgnoreCase", "Ordinal", "OrdinalIgnoreCase"};
+		private: static constexpr Builtin::StaticStr __names[] = {"Invariant", "InvariantIgnoreCase", "CurrentCulture", "CurrentCultureIgnoreCase", "Ordinal", "OrdinalIgnoreCase"};
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\StringComparison.ast"
 		public: static constexpr int __variants = 6;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\StringComparison.ast"
-		public: static constexpr std::span<const Builtin::Str> GetNames() noexcept { return __names; }
+		public: static constexpr std::span<const Builtin::StaticStr> GetNames() noexcept { return __names; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\StringComparison.ast"
 		private: static const StringComparison __values[];
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\StringComparison.ast"
@@ -104,6 +102,8 @@ class $Class_StringComparison;
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\StringComparison.ast"
 	ADV_CHECK_FOR_CONCRETE(StringComparison);
 	
+} namespace $extensions {
+} namespace System {
 //###############################################################################
 //# Function definitions
 //###############################################################################

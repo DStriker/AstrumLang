@@ -26,11 +26,11 @@ class $Class_UnicodeCategory;
 		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, Builtin::i32)
 		public: constexpr UnicodeCategory() noexcept = default;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\UnicodeCategory.ast"
-		private: static constexpr Builtin::Str __names[] = {"UppercaseLetter", "LowercaseLetter", "TitlecaseLetter", "ModifierLetter", "OtherLetter", "NonSpacingMark", "SpacingCombiningMark", "EnclosingMark", "DecimalDigitNumber", "LetterNumber", "OtherNumber", "SpaceSeparator", "LineSeparator", "ParagraphSeparator", "Control", "Format", "Surrogate", "PrivateUse", "ConnectorPunctuation", "DashPunctuation", "OpenPunctuation", "ClosePunctuation", "InitialQuotePunctuation", "FinalQuotePunctuation", "OtherPunctuation", "MathSymbol", "CurrencySymbol", "ModifierSymbol", "OtherSymbol", "OtherNotAssigned"};
+		private: static constexpr Builtin::StaticStr __names[] = {"UppercaseLetter", "LowercaseLetter", "TitlecaseLetter", "ModifierLetter", "OtherLetter", "NonSpacingMark", "SpacingCombiningMark", "EnclosingMark", "DecimalDigitNumber", "LetterNumber", "OtherNumber", "SpaceSeparator", "LineSeparator", "ParagraphSeparator", "Control", "Format", "Surrogate", "PrivateUse", "ConnectorPunctuation", "DashPunctuation", "OpenPunctuation", "ClosePunctuation", "InitialQuotePunctuation", "FinalQuotePunctuation", "OtherPunctuation", "MathSymbol", "CurrencySymbol", "ModifierSymbol", "OtherSymbol", "OtherNotAssigned"};
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\UnicodeCategory.ast"
 		public: static constexpr int __variants = 30;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\UnicodeCategory.ast"
-		public: static constexpr std::span<const Builtin::Str> GetNames() noexcept { return __names; }
+		public: static constexpr std::span<const Builtin::StaticStr> GetNames() noexcept { return __names; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\UnicodeCategory.ast"
 		private: static const UnicodeCategory __values[];
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\UnicodeCategory.ast"

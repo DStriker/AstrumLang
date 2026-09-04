@@ -2582,7 +2582,6 @@ public:
     antlr4::tree::TerminalNode *Mutable();
     antlr4::tree::TerminalNode *Static();
     antlr4::tree::TerminalNode *Identifier();
-    antlr4::tree::TerminalNode *Str();
     SimpleTemplateIdContext *simpleTemplateId();
     LogicalOrExpressionContext *logicalOrExpression();
     antlr4::tree::TerminalNode *Question();
@@ -2607,6 +2606,8 @@ public:
     antlr4::tree::TerminalNode *LeftParen();
     TheTypeIdContext *theTypeId();
     antlr4::tree::TerminalNode *RightParen();
+    antlr4::tree::TerminalNode *Static();
+    antlr4::tree::TerminalNode *Str();
 
 
     virtual std::any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
@@ -2868,6 +2869,7 @@ public:
     antlr4::tree::TerminalNode *Decimal();
     antlr4::tree::TerminalNode *Bool();
     antlr4::tree::TerminalNode *Str();
+    antlr4::tree::TerminalNode *Static();
     antlr4::tree::TerminalNode *Self();
     antlr4::tree::TerminalNode *Object();
     DecltypeSpecifierContext *decltypeSpecifier();

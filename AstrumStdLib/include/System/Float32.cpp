@@ -908,7 +908,7 @@ ADV_WARNING_POP
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 848 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	auto getSinPi($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	auto getSinPi($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 850 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		$extension_Float32_820_f32 result{}; 
@@ -1021,7 +1021,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 886 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	auto getCosPi($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	auto getCosPi($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 888 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		$extension_Float32_820_f32 result{}; 
@@ -1140,7 +1140,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 926 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	auto getSinCosPi($extension_Float32_820_f32 const& $this ) -> const std::tuple<$extension_Float32_820_f32, $extension_Float32_820_f32>
+	auto getSinCosPi($extension_Float32_820_f32 const & $this ) -> const Builtin::Tuple<$extension_Float32_820_f32, $extension_Float32_820_f32>
 	{
 		#line 928 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		$extension_Float32_820_f32 sin{}; 
@@ -1283,12 +1283,12 @@ ADV_WARNING_POP
 			}
 		}
 		#line 996 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		return std::make_tuple(sin, cos);
+		return Builtin::MakeTuple(sin, cos);
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	auto getTanPi($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	auto getTanPi($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 1001 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		$extension_Float32_820_f32 result{}; 

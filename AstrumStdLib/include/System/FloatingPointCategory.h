@@ -11,8 +11,6 @@ namespace __Unsafe {} namespace __FloatingPointCategory$Protected__Unsafe {}
 //###############################################################################
 class FloatingPointCategory;
 class $Class_FloatingPointCategory;
-} namespace $extensions {
-} namespace System {
 //###############################################################################
 //# Type definitions
 //###############################################################################
@@ -28,11 +26,11 @@ class $Class_FloatingPointCategory;
 		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, Builtin::u8)
 		public: constexpr FloatingPointCategory() noexcept = default;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
-		private: static constexpr Builtin::Str __names[] = {"NaN", "Infinity", "Zero", "Subnormal", "Normal"};
+		private: static constexpr Builtin::StaticStr __names[] = {"NaN", "Infinity", "Zero", "Subnormal", "Normal"};
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
 		public: static constexpr int __variants = 5;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
-		public: static constexpr std::span<const Builtin::Str> GetNames() noexcept { return __names; }
+		public: static constexpr std::span<const Builtin::StaticStr> GetNames() noexcept { return __names; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
 		private: static const FloatingPointCategory __values[];
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
@@ -98,6 +96,8 @@ class $Class_FloatingPointCategory;
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\FloatingPointCategory.ast"
 	ADV_CHECK_FOR_CONCRETE(FloatingPointCategory);
 	
+} namespace $extensions {
+} namespace System {
 //###############################################################################
 //# Function definitions
 //###############################################################################

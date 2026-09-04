@@ -147,7 +147,7 @@ using $extensions::ToChar;
 	#line 154 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	ADV_CHECK_INTERFACE(IDivisibleArithmetic, IDivisibleArithmetic);
 	#line 156 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	template<class T> inline constexpr auto _operator_div_mod($extension_Int32_154_i32 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int32_154_i32, $extension_Int32_154_i32>;
+	template<class T> inline constexpr auto _operator_div_mod($extension_Int32_154_i32 const& $this LIFETIMEBOUND, T rhs)  -> const Builtin::Tuple<$extension_Int32_154_i32, $extension_Int32_154_i32>;
 	#line 162 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	template<class T> inline constexpr auto _operator_div_not($extension_Int32_154_i32 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int32_154_i32;
 	#line 169 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
@@ -439,7 +439,7 @@ using $extensions::getLog10;
 	#line 592 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	template<class T> inline constexpr auto _operator_add_or_eq($extension_Int32_540_i32 & $this , T rhs) noexcept -> typename $extension_Int32_540_i32&;
 	#line 596 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	template<class T> inline constexpr auto _operator_add_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int32_540_i32, bool>;
+	template<class T> inline constexpr auto _operator_add_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Tuple<$extension_Int32_540_i32, bool>;
 	#line 604 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_qst($extension_Int32_540_i32 & $this )  -> typename $extension_Int32_540_i32&;
 	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_qst_postfix($extension_Int32_540_i32 & $this)  -> decltype(auto);
@@ -453,9 +453,9 @@ using $extensions::getLog10;
 	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_or($extension_Int32_540_i32 & $this )  -> typename $extension_Int32_540_i32&;
 	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_or_postfix($extension_Int32_540_i32 & $this)  -> decltype(auto);
 	#line 617 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	inline constexpr auto CarryingAdd($extension_Int32_540_i32 const& $this LIFETIMEBOUND, $extension_Int32_540_i32 rhs, bool carry) noexcept -> const std::tuple<$extension_Int32_540_i32, bool>;
+	inline constexpr auto CarryingAdd($extension_Int32_540_i32 const& $this LIFETIMEBOUND, $extension_Int32_540_i32 rhs, bool carry) noexcept -> const Builtin::Tuple<$extension_Int32_540_i32, bool>;
 	#line 626 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	inline constexpr auto BorrowingSub($extension_Int32_540_i32 const& $this LIFETIMEBOUND, $extension_Int32_540_i32 rhs, bool carry) noexcept -> const std::tuple<$extension_Int32_540_i32, bool>;
+	inline constexpr auto BorrowingSub($extension_Int32_540_i32 const& $this LIFETIMEBOUND, $extension_Int32_540_i32 rhs, bool carry) noexcept -> const Builtin::Tuple<$extension_Int32_540_i32, bool>;
 	#line 635 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	template<class T> inline constexpr auto _operator_sub_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int32_540_i32>;
 	#line 644 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
@@ -473,7 +473,7 @@ using $extensions::getLog10;
 	#line 684 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	template<class T> inline constexpr auto _operator_sub_or_eq($extension_Int32_540_i32 & $this , T rhs) noexcept -> typename $extension_Int32_540_i32&;
 	#line 688 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	template<class T> inline constexpr auto _operator_sub_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int32_540_i32, bool>;
+	template<class T> inline constexpr auto _operator_sub_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Tuple<$extension_Int32_540_i32, bool>;
 	#line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_qst($extension_Int32_540_i32 & $this )  -> typename $extension_Int32_540_i32&;
 	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_qst_postfix($extension_Int32_540_i32 & $this)  -> decltype(auto);
@@ -503,11 +503,11 @@ using $extensions::getLog10;
 	#line 758 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	template<class T> inline constexpr auto _operator_mul_or_eq($extension_Int32_540_i32 & $this , T rhs) noexcept -> typename $extension_Int32_540_i32&;
 	#line 762 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	template<class T> inline constexpr auto _operator_mul_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int32_540_i32, bool>;
+	template<class T> inline constexpr auto _operator_mul_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Tuple<$extension_Int32_540_i32, bool>;
 	#line 771 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	inline constexpr auto _operator_mul_gt($extension_Int32_540_i32 const& $this LIFETIMEBOUND, $extension_Int32_540_i32 rhs) noexcept -> const std::tuple<Builtin::u32, Builtin::i32>;
+	inline constexpr auto _operator_mul_gt($extension_Int32_540_i32 const& $this LIFETIMEBOUND, $extension_Int32_540_i32 rhs) noexcept -> const Builtin::Tuple<Builtin::u32, Builtin::i32>;
 	#line 780 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	inline constexpr auto CarryingMul($extension_Int32_540_i32 const& $this LIFETIMEBOUND, $extension_Int32_540_i32 rhs, $extension_Int32_540_i32 carry) noexcept -> const std::tuple<Builtin::u32, Builtin::i32>;
+	inline constexpr auto CarryingMul($extension_Int32_540_i32 const& $this LIFETIMEBOUND, $extension_Int32_540_i32 rhs, $extension_Int32_540_i32 carry) noexcept -> const Builtin::Tuple<Builtin::u32, Builtin::i32>;
 	#line 788 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	template<class T> inline constexpr auto _operator_bsl_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int32_540_i32>;
 	#line 797 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
@@ -525,7 +525,7 @@ using $extensions::getLog10;
 	#line 840 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	template<class T> inline constexpr auto _operator_bsl_or_eq($extension_Int32_540_i32 & $this , T rhs)  -> typename $extension_Int32_540_i32&;
 	#line 845 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	template<class T> inline constexpr auto _operator_bsl_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int32_540_i32, bool>;
+	template<class T> inline constexpr auto _operator_bsl_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs)  -> const Builtin::Tuple<$extension_Int32_540_i32, bool>;
 	#line 854 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	template<class T> inline constexpr auto _operator_bsl_bsl_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int32_540_i32>;
 	#line 864 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
@@ -543,7 +543,7 @@ using $extensions::getLog10;
 	#line 915 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	template<class T> inline constexpr auto _operator_mod_mod_eq($extension_Int32_540_i32 & $this , T rhs)  -> typename $extension_Int32_540_i32&;
 	#line 920 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	template<class T> inline constexpr auto _operator_mod_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int32_540_i32, bool>;
+	template<class T> inline constexpr auto _operator_mod_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs)  -> const Builtin::Tuple<$extension_Int32_540_i32, bool>;
 	#line 929 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	inline constexpr auto _operator_sub_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND) noexcept -> const Builtin::Nullable<$extension_Int32_540_i32>;
 	#line 939 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
@@ -553,7 +553,7 @@ using $extensions::getLog10;
 	#line 954 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	inline constexpr auto _operator_sub_or($extension_Int32_540_i32 const& $this LIFETIMEBOUND)  -> const typename $extension_Int32_540_i32;
 	#line 962 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	inline constexpr auto _operator_sub_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND)  -> const std::tuple<$extension_Int32_540_i32, bool>;
+	inline constexpr auto _operator_sub_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND)  -> const Builtin::Tuple<$extension_Int32_540_i32, bool>;
 	#line 970 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	inline constexpr auto _operator_lt_lt_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Nullable<$extension_Int32_540_i32>;
 	#line 978 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
@@ -567,7 +567,7 @@ using $extensions::getLog10;
 	#line 999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	inline constexpr auto _operator_lt_lt_mod_eq($extension_Int32_540_i32 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int32_540_i32&;
 	#line 1001 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	inline constexpr auto _operator_lt_lt_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const std::tuple<$extension_Int32_540_i32, bool>;
+	inline constexpr auto _operator_lt_lt_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Tuple<$extension_Int32_540_i32, bool>;
 	#line 1004 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	inline constexpr auto _operator_gt_gt_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Nullable<$extension_Int32_540_i32>;
 	#line 1012 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
@@ -581,7 +581,7 @@ using $extensions::getLog10;
 	#line 1033 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	inline constexpr auto _operator_gt_gt_mod_eq($extension_Int32_540_i32 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int32_540_i32&;
 	#line 1035 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	inline constexpr auto _operator_gt_gt_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const std::tuple<$extension_Int32_540_i32, bool>;
+	inline constexpr auto _operator_gt_gt_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Tuple<$extension_Int32_540_i32, bool>;
 	#line 1040 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	inline constexpr auto _operator_xor_xor_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const Builtin::Nullable<$extension_Int32_540_i32>;
 	#line 1069 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
@@ -599,7 +599,7 @@ using $extensions::getLog10;
 	#line 1143 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	inline constexpr auto _operator_xor_xor_or_eq($extension_Int32_540_i32 & $this , Builtin::u32 exp) noexcept -> typename $extension_Int32_540_i32&;
 	#line 1145 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	inline constexpr auto _operator_xor_xor_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const std::tuple<$extension_Int32_540_i32, bool>;
+	inline constexpr auto _operator_xor_xor_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const Builtin::Tuple<$extension_Int32_540_i32, bool>;
 	#line 1176 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	inline constexpr auto getCheckedAbs($extension_Int32_540_i32 const& $this ) -> const Builtin::Nullable<$extension_Int32_540_i32>;
 	#line 1179 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
@@ -609,7 +609,7 @@ using $extensions::getLog10;
 	#line 1185 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	inline constexpr auto getSaturatingAbs($extension_Int32_540_i32 const& $this ) -> const $extension_Int32_540_i32;
 	#line 1188 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	inline constexpr auto getOverflowingAbs($extension_Int32_540_i32 const& $this ) -> const std::tuple<$extension_Int32_540_i32, bool>;
+	inline constexpr auto getOverflowingAbs($extension_Int32_540_i32 const& $this ) -> const Builtin::Tuple<$extension_Int32_540_i32, bool>;
 	#line 540 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int32_540_i32, ICheckedArithmetic, ICheckedArithmetic, $extension_Int32_540_i32);
 	} namespace System{
@@ -1373,12 +1373,12 @@ template<class __TT> struct $static_getCarryingMul;
 	
 } namespace $extensions { using namespace System;
 #line 156 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	template<class T> inline constexpr auto _operator_div_mod($extension_Int32_154_i32 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int32_154_i32, $extension_Int32_154_i32>
+	template<class T> inline constexpr auto _operator_div_mod($extension_Int32_154_i32 const& $this LIFETIMEBOUND, T rhs)  -> const Builtin::Tuple<$extension_Int32_154_i32, $extension_Int32_154_i32>
 	{
 		#line 158 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator /% implemented only for integer types");
 		#line 159 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-		return std::make_tuple(ADV_UFCS(_operator_bsl)($this, rhs), $this % rhs);
+		return Builtin::MakeTuple(ADV_UFCS(_operator_bsl)($this, rhs), $this % rhs);
 	}
 	
 } namespace System{
@@ -2263,7 +2263,7 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 596 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	template<class T> inline constexpr auto _operator_add_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int32_540_i32, bool>
+	template<class T> inline constexpr auto _operator_add_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Tuple<$extension_Int32_540_i32, bool>
 	{
 		#line 597 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator +%? implemented only for integer types");
@@ -2272,7 +2272,7 @@ template<class __TT> struct $static_getCarryingMul;
 		#line 599 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		Builtin::Auto<decltype(!Builtin::SafeAdd($this, rhs, result))> overflowed = !Builtin::SafeAdd($this, rhs, result); 
 		#line 600 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-		return std::make_tuple(result, overflowed);
+		return Builtin::MakeTuple(result, overflowed);
 	}
 	
 } namespace System{
@@ -2318,27 +2318,27 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 617 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	inline constexpr auto CarryingAdd($extension_Int32_540_i32 const& $this LIFETIMEBOUND, $extension_Int32_540_i32 rhs, bool carry) noexcept -> const std::tuple<$extension_Int32_540_i32, bool>
+	inline constexpr auto CarryingAdd($extension_Int32_540_i32 const& $this LIFETIMEBOUND, $extension_Int32_540_i32 rhs, bool carry) noexcept -> const Builtin::Tuple<$extension_Int32_540_i32, bool>
 	{
 		#line 619 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		$extension_Int32_540_i32 result{}; 
 		#line 620 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		Builtin::Auto<decltype(Builtin::CarryingAdd($this, rhs, carry, result))> overflowed = Builtin::CarryingAdd($this, rhs, carry, result); 
 		#line 621 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-		return std::make_tuple(result, overflowed);
+		return Builtin::MakeTuple(result, overflowed);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 626 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	inline constexpr auto BorrowingSub($extension_Int32_540_i32 const& $this LIFETIMEBOUND, $extension_Int32_540_i32 rhs, bool carry) noexcept -> const std::tuple<$extension_Int32_540_i32, bool>
+	inline constexpr auto BorrowingSub($extension_Int32_540_i32 const& $this LIFETIMEBOUND, $extension_Int32_540_i32 rhs, bool carry) noexcept -> const Builtin::Tuple<$extension_Int32_540_i32, bool>
 	{
 		#line 628 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		$extension_Int32_540_i32 result{}; 
 		#line 629 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		Builtin::Auto<decltype(Builtin::BorrowingSub($this, rhs, carry, result))> overflowed = Builtin::BorrowingSub($this, rhs, carry, result); 
 		#line 630 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-		return std::make_tuple(result, overflowed);
+		return Builtin::MakeTuple(result, overflowed);
 	}
 	
 } namespace System{
@@ -2455,7 +2455,7 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 688 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	template<class T> inline constexpr auto _operator_sub_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int32_540_i32, bool>
+	template<class T> inline constexpr auto _operator_sub_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Tuple<$extension_Int32_540_i32, bool>
 	{
 		#line 689 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator -%? implemented only for integer types");
@@ -2464,7 +2464,7 @@ template<class __TT> struct $static_getCarryingMul;
 		#line 691 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		Builtin::Auto<decltype(!Builtin::SafeSubtract($this, rhs, result))> overflowed = !Builtin::SafeSubtract($this, rhs, result); 
 		#line 692 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-		return std::make_tuple(result, overflowed);
+		return Builtin::MakeTuple(result, overflowed);
 	}
 	
 } namespace System{
@@ -2621,7 +2621,7 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 762 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	template<class T> inline constexpr auto _operator_mul_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int32_540_i32, bool>
+	template<class T> inline constexpr auto _operator_mul_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Tuple<$extension_Int32_540_i32, bool>
 	{
 		#line 763 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator *%? implemented only for integer types");
@@ -2630,29 +2630,29 @@ template<class __TT> struct $static_getCarryingMul;
 		#line 765 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		Builtin::Auto<decltype(!Builtin::SafeMultiply($this, rhs, result))> overflowed = !Builtin::SafeMultiply($this, rhs, result); 
 		#line 766 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-		return std::make_tuple(result, overflowed);
+		return Builtin::MakeTuple(result, overflowed);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 771 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	inline constexpr auto _operator_mul_gt($extension_Int32_540_i32 const& $this LIFETIMEBOUND, $extension_Int32_540_i32 rhs) noexcept -> const std::tuple<Builtin::u32, Builtin::i32>
+	inline constexpr auto _operator_mul_gt($extension_Int32_540_i32 const& $this LIFETIMEBOUND, $extension_Int32_540_i32 rhs) noexcept -> const Builtin::Tuple<Builtin::u32, Builtin::i32>
 	{
 		#line 773 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		const auto& [low, high] = Builtin::WideningMul32($this, rhs);
 		#line 774 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-		return std::make_tuple(low, high);
+		return Builtin::MakeTuple(low, high);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 780 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	inline constexpr auto CarryingMul($extension_Int32_540_i32 const& $this LIFETIMEBOUND, $extension_Int32_540_i32 rhs, $extension_Int32_540_i32 carry) noexcept -> const std::tuple<Builtin::u32, Builtin::i32>
+	inline constexpr auto CarryingMul($extension_Int32_540_i32 const& $this LIFETIMEBOUND, $extension_Int32_540_i32 rhs, $extension_Int32_540_i32 carry) noexcept -> const Builtin::Tuple<Builtin::u32, Builtin::i32>
 	{
 		#line 782 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		const auto& [low, high] = Builtin::CarryingMul32($this, rhs, carry);
 		#line 783 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-		return std::make_tuple(low, high);
+		return Builtin::MakeTuple(low, high);
 	}
 	
 } namespace System{
@@ -2769,7 +2769,7 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 845 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	template<class T> inline constexpr auto _operator_bsl_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int32_540_i32, bool>
+	template<class T> inline constexpr auto _operator_bsl_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs)  -> const Builtin::Tuple<$extension_Int32_540_i32, bool>
 	{
 		#line 846 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator \\%? implemented only for integer types");
@@ -2778,7 +2778,7 @@ template<class __TT> struct $static_getCarryingMul;
 		#line 848 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		Builtin::Auto<decltype(!Builtin::SafeDivide($this, rhs, result))> overflowed = !Builtin::SafeDivide($this, rhs, result); 
 		#line 849 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-		return std::make_tuple(result, overflowed);
+		return Builtin::MakeTuple(result, overflowed);
 	}
 	
 } namespace System{
@@ -2910,7 +2910,7 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 920 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	template<class T> inline constexpr auto _operator_mod_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int32_540_i32, bool>
+	template<class T> inline constexpr auto _operator_mod_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, T rhs)  -> const Builtin::Tuple<$extension_Int32_540_i32, bool>
 	{
 		#line 921 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator %%? implemented only for integer types");
@@ -2919,7 +2919,7 @@ template<class __TT> struct $static_getCarryingMul;
 		#line 923 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		Builtin::Auto<decltype(!Builtin::SafeModulus($this, rhs, result))> overflowed = !Builtin::SafeModulus($this, rhs, result); 
 		#line 924 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-		return std::make_tuple(result, overflowed);
+		return Builtin::MakeTuple(result, overflowed);
 	}
 	
 } namespace System{
@@ -2980,14 +2980,14 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 962 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	inline constexpr auto _operator_sub_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND)  -> const std::tuple<$extension_Int32_540_i32, bool>
+	inline constexpr auto _operator_sub_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND)  -> const Builtin::Tuple<$extension_Int32_540_i32, bool>
 	{
 		#line 964 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		$extension_Int32_540_i32 result{}; 
 		#line 965 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		Builtin::Auto<decltype(!Builtin::SafeNegate($this, result))> overflowed = !Builtin::SafeNegate($this, result); 
 		#line 966 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-		return std::make_tuple(result, overflowed);
+		return Builtin::MakeTuple(result, overflowed);
 	}
 	
 } namespace System{
@@ -3063,10 +3063,10 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 1001 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	inline constexpr auto _operator_lt_lt_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const std::tuple<$extension_Int32_540_i32, bool>
+	inline constexpr auto _operator_lt_lt_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Tuple<$extension_Int32_540_i32, bool>
 	{
 		#line 1001 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-		ADV_EXPRESSION_BODY(std::make_tuple(ADV_UFCS(_operator_lt_lt_mod)($this, amount), (amount <=> Builtin::i32(0)) < 0 || (amount <=> ADV_USPCS(BitWidth, $extension_Int32_540_i32)()) >= 0)); 
+		ADV_EXPRESSION_BODY(Builtin::MakeTuple(ADV_UFCS(_operator_lt_lt_mod)($this, amount), (amount <=> Builtin::i32(0)) < 0 || (amount <=> ADV_USPCS(BitWidth, $extension_Int32_540_i32)()) >= 0)); 
 	}
 	
 } namespace System{
@@ -3142,10 +3142,10 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 1035 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	inline constexpr auto _operator_gt_gt_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const std::tuple<$extension_Int32_540_i32, bool>
+	inline constexpr auto _operator_gt_gt_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Tuple<$extension_Int32_540_i32, bool>
 	{
 		#line 1035 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-		ADV_EXPRESSION_BODY(std::make_tuple(ADV_UFCS(_operator_gt_gt_mod)($this, amount), (amount <=> Builtin::i32(0)) < 0 || (amount <=> ADV_USPCS(BitWidth, $extension_Int32_540_i32)()) >= 0)); 
+		ADV_EXPRESSION_BODY(Builtin::MakeTuple(ADV_UFCS(_operator_gt_gt_mod)($this, amount), (amount <=> Builtin::i32(0)) < 0 || (amount <=> ADV_USPCS(BitWidth, $extension_Int32_540_i32)()) >= 0)); 
 	}
 	
 } namespace System{
@@ -3371,12 +3371,12 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 1145 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	inline constexpr auto _operator_xor_xor_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const std::tuple<$extension_Int32_540_i32, bool>
+	inline constexpr auto _operator_xor_xor_mod_qst($extension_Int32_540_i32 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const Builtin::Tuple<$extension_Int32_540_i32, bool>
 	{
 		#line 1147 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		if (exp == Builtin::i32(0)) [[unlikely]] {
 			#line 1149 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-			return std::make_tuple(Builtin::i32(1), Builtin::Boolean(false));
+			return Builtin::MakeTuple(Builtin::i32(1), Builtin::Boolean(false));
 		}
 		#line 1152 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		Builtin::Auto<decltype($this)> base = $this; 
@@ -3385,7 +3385,7 @@ template<class __TT> struct $static_getCarryingMul;
 		#line 1154 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		Builtin::Auto<decltype(Builtin::Boolean(false))> overflowed = Builtin::Boolean(false); 
 		#line 1155 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-		Builtin::Auto<decltype(std::make_tuple(Builtin::i32(0), Builtin::Boolean(false)))> tmp = std::make_tuple(Builtin::i32(0), Builtin::Boolean(false)); 
+		Builtin::Auto<decltype(Builtin::MakeTuple(Builtin::i32(0), Builtin::Boolean(false)))> tmp = Builtin::MakeTuple(Builtin::i32(0), Builtin::Boolean(false)); 
 		#line 1157 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		for (;;) 
 		{
@@ -3396,23 +3396,23 @@ template<class __TT> struct $static_getCarryingMul;
 				#line 1160 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 				if (exp == Builtin::i32(1)) {
 					#line 1161 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-					std::get<1>(tmp) |= overflowed;
+					get<1>(tmp) |= overflowed;
 					#line 1162 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 					return tmp;
 				}
 				#line 1164 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-				result = std::get<0>(tmp);
+				result = get<0>(tmp);
 				#line 1165 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-				overflowed |= std::get<1>(tmp);
+				overflowed |= get<1>(tmp);
 			}
 			#line 1167 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 			ADV_UFCS(DivAssign)(exp.$ref(), Builtin::i32(2));
 			#line 1168 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 			tmp = ADV_UFCS(_operator_mul_mod_qst)(base, base);
 			#line 1169 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-			base = std::get<0>(tmp);
+			base = get<0>(tmp);
 			#line 1170 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-			overflowed |= std::get<1>(tmp);
+			overflowed |= get<1>(tmp);
 		}
 		return {};
 	}
@@ -3452,7 +3452,7 @@ template<class __TT> struct $static_getCarryingMul;
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1188 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-	inline constexpr auto getOverflowingAbs($extension_Int32_540_i32 const & $this ) -> const std::tuple<$extension_Int32_540_i32, bool>
+	inline constexpr auto getOverflowingAbs($extension_Int32_540_i32 const & $this ) -> const Builtin::Tuple<$extension_Int32_540_i32, bool>
 	{
 		#line 1190 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
 		if (ADV_UPCS(IsNegative)($this.$ref())) {
@@ -3460,7 +3460,7 @@ template<class __TT> struct $static_getCarryingMul;
 			return ADV_UFCS(_operator_sub_mod_qst)($this);
 		}
 		#line 1193 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"
-		return std::make_tuple($this, Builtin::Boolean(false));
+		return Builtin::MakeTuple($this, Builtin::Boolean(false));
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int32.ast"

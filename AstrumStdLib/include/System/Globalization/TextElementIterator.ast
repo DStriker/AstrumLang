@@ -167,8 +167,8 @@ public ref struct TextElementIterator: IAbstractSequence, ISequence<str>, IAbstr
 
 }
 
-public ref struct TextElementIndicesIterator: IAbstractSequence, ISequence<IndexRange>, IAbstractIterator, IIterator<IndexRange> {
-    public type ElementType = IndexRange;
+public ref struct TextElementIndicesIterator: IAbstractSequence, ISequence<(usize, str)>, IAbstractIterator, IIterator<(usize, str)> {
+    public type ElementType = (usize, str);
 
     private _iterator: TextElementIterator;
 
@@ -180,7 +180,7 @@ public ref struct TextElementIndicesIterator: IAbstractSequence, ISequence<Index
 
     public mut Reset: () => _iterator.>Reset();
 
-    public GetCurrent: () -> IndexRange => (_iterator._currentTextElementOffset)..(_iterator._nextTextElementOffset);
+    public GetCurrent: () -> (usize, str) => (_iterator._currentTextElementOffset, _iterator.GetCurrent());
 
     public GetData: () -> byte[&] => _iterator.>GetData();
     public GetRemainingByteLength: () -> usize => _iterator.>GetRemainingByteLength();

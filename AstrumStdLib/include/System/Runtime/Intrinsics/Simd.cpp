@@ -1,6 +1,6 @@
+#include "Simd.h"
 #include "System/Span.h"
 using namespace System;
-#include "Simd.h"
 
 namespace System::Runtime::Intrinsics {
 class SumTest;

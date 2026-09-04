@@ -333,11 +333,11 @@ class Utf8ValidatorSimd;
 	#line 302 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Text\\Utf8.ast"
 	static bool $Test_8ab121f0be07a770 = [](){
 		#line 303 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Text\\Utf8.ast"
-		const Builtin::Str s = Builtin::Str{"Hello, world!"}; 
+		const Builtin::Str s = Builtin::StaticStr{"Hello, world!"}; 
 		#line 304 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Text\\Utf8.ast"
-		const Builtin::Str cs = Builtin::Str{"Hello, мой друг ❤😆"}; 
+		const Builtin::Str cs = Builtin::StaticStr{"Hello, мой друг ❤😆"}; 
 		#line 305 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Text\\Utf8.ast"
-		const Builtin::Str test3 = Builtin::Str{"Begin PART 1 Middle PART 2 End"}; 
+		const Builtin::Str test3 = Builtin::StaticStr{"Begin PART 1 Middle PART 2 End"}; 
 		#line 306 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Text\\Utf8.ast"
 		ADV_ASSERT((ADV_USFCS((Utf8), IsValid)(ADV_USFCS((Span<Builtin::u8>), UnsafeCreate)(ADV_UFCS(GetDataReference)(s.$ref()), ADV_UFCS(GetByteLength)(s.$ref())))), "Utf8.IsValid(Span<byte>.UnsafeCreate(s.GetDataReference(),s.GetByteLength()))");
 		#line 307 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Text\\Utf8.ast"

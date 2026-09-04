@@ -1,6 +1,5 @@
-#include "Float128.h"
-#include "InlineArray.h"
 #include "Decimal.h"
+#include "InlineArray.h"
 
 namespace System {
 union Buf12;
@@ -1733,7 +1732,7 @@ static const auto PowerOvflValues = Builtin::ToInlineArray<PowerOvfl>({{ Builtin
 		#line 1016 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		{	using namespace Builtin::Unsafe;	using namespace System::__Unsafe;	using namespace __Decimal$Protected__Unsafe;	Builtin::UnsafeContextGuard __unsafe_context_guard1016{};
 			#line 1017 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-			auto add32to96 = [&] (Builtin::u32 val) -> const bool 
+			auto add32to96 = [&] (Builtin::u32 val) -> bool 
 			{
 				#line 1018 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 				ADV_UPCS(Low64)(buf.$ref()) = ADV_UFCS(_operator_add_mod)(ADV_UPCS(Low64)(buf.$ref()), val);
@@ -2512,7 +2511,7 @@ static const auto PowerOvflValues = Builtin::ToInlineArray<PowerOvfl>({{ Builtin
 		#line 1493 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		Builtin::u32 remainder{}, sticky{}, power{}; 
 		#line 1494 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-		{{
+		CONTINUE_rounding: {{
 			#line 1495 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 			while ((scale <=> MaxScaleInt32) >= 0) 
 			{
@@ -2643,7 +2642,7 @@ static const auto PowerOvflValues = Builtin::ToInlineArray<PowerOvfl>({{ Builtin
 			#line 1567 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 			auto __tmp__valid_1566 = Builtin::Cast<false, std::decay_t<decltype(mode)>::$self>(mode);
 			#line 1567 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-			if(__tmp__valid_1566.IsValid() && Builtin::Is(*__tmp__valid_1566, decltype(mode)::ToZero))  {
+			if(__tmp__valid_1566.IsValid() && Builtin::Is(*__tmp__valid_1566, std::decay_t<decltype(mode)>::ToZero))  {
 				#line 1567 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 				const auto& mode = *__tmp__valid_1566;
 				#line 1567 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
@@ -2651,7 +2650,7 @@ static const auto PowerOvflValues = Builtin::ToInlineArray<PowerOvfl>({{ Builtin
 			}
 			else {
 				#line 1568 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-				if(__tmp__valid_1566.IsValid() && Builtin::Is(*__tmp__valid_1566, decltype(mode)::ToEven))  {
+				if(__tmp__valid_1566.IsValid() && Builtin::Is(*__tmp__valid_1566, std::decay_t<decltype(mode)>::ToEven))  {
 					#line 1568 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 					const auto& mode = *__tmp__valid_1566;
 					#line 1568 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
@@ -2672,7 +2671,7 @@ static const auto PowerOvflValues = Builtin::ToInlineArray<PowerOvfl>({{ Builtin
 				}
 				else {
 					#line 1576 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-					if(__tmp__valid_1566.IsValid() && Builtin::Is(*__tmp__valid_1566, decltype(mode)::AwayFromZero))  {
+					if(__tmp__valid_1566.IsValid() && Builtin::Is(*__tmp__valid_1566, std::decay_t<decltype(mode)>::AwayFromZero))  {
 						#line 1576 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 						const auto& mode = *__tmp__valid_1566;
 						#line 1576 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
@@ -2688,7 +2687,7 @@ static const auto PowerOvflValues = Builtin::ToInlineArray<PowerOvfl>({{ Builtin
 					}
 					else {
 						#line 1581 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-						if(__tmp__valid_1566.IsValid() && Builtin::Is(*__tmp__valid_1566, decltype(mode)::ToNegativeInfinity))  {
+						if(__tmp__valid_1566.IsValid() && Builtin::Is(*__tmp__valid_1566, std::decay_t<decltype(mode)>::ToNegativeInfinity))  {
 							#line 1581 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 							const auto& mode = *__tmp__valid_1566;
 							#line 1581 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
@@ -3062,7 +3061,7 @@ namespace __Unsafe { [[clang::annotate("unsafe")]]
 				#line 2716 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 				Builtin::u32 sticky{}, quotient{}, remainder{}; 
 				#line 2718 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-				auto divByConst = [&] (Builtin::u32 pow) -> const Builtin::u32 
+				auto divByConst = [&] (Builtin::u32 pow) -> Builtin::u32 
 				{
 					#line 2719 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 					const auto high = ADV_UFCS(_operator_subscript)(result.$ref(), hi); 
@@ -4027,7 +4026,7 @@ namespace __Unsafe { [[clang::annotate("unsafe")]]
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 1629 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getHashCode($extension_Decimal_1613_decimal const& $this ) -> const Builtin::u64
+	auto getHashCode($extension_Decimal_1613_decimal const & $this ) -> const Builtin::u64
 	{
 		#line 1631 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Bits)($this.$ref()))> bits = ADV_UPCS(Bits)($this.$ref()); 
@@ -4133,7 +4132,7 @@ namespace __Unsafe { [[clang::annotate("unsafe")]]
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 1937 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getTruncate($extension_Decimal_1932_decimal const& $this ) -> const $extension_Decimal_1932_decimal
+	auto getTruncate($extension_Decimal_1932_decimal const & $this ) -> const $extension_Decimal_1932_decimal
 	{
 		#line 1938 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Scale)($this.$ref()))> scale = ADV_UPCS(Scale)($this.$ref()); 
@@ -4148,7 +4147,7 @@ namespace __Unsafe { [[clang::annotate("unsafe")]]
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1949 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getFloor($extension_Decimal_1932_decimal const& $this ) -> const $extension_Decimal_1932_decimal
+	auto getFloor($extension_Decimal_1932_decimal const & $this ) -> const $extension_Decimal_1932_decimal
 	{
 		#line 1950 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Scale)($this.$ref()))> scale = ADV_UPCS(Scale)($this.$ref()); 
@@ -4163,7 +4162,7 @@ namespace __Unsafe { [[clang::annotate("unsafe")]]
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1961 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getCeil($extension_Decimal_1932_decimal const& $this ) -> const $extension_Decimal_1932_decimal
+	auto getCeil($extension_Decimal_1932_decimal const & $this ) -> const $extension_Decimal_1932_decimal
 	{
 		#line 1962 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Scale)($this.$ref()))> scale = ADV_UPCS(Scale)($this.$ref()); 
@@ -4178,7 +4177,7 @@ namespace __Unsafe { [[clang::annotate("unsafe")]]
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1973 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getRound($extension_Decimal_1932_decimal const& $this ) -> const $extension_Decimal_1932_decimal
+	auto getRound($extension_Decimal_1932_decimal const & $this ) -> const $extension_Decimal_1932_decimal
 	{
 		#line 1974 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Scale)($this.$ref()))> scale = ADV_UPCS(Scale)($this.$ref()); 
@@ -4193,7 +4192,7 @@ namespace __Unsafe { [[clang::annotate("unsafe")]]
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1985 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getRoundTiesEven($extension_Decimal_1932_decimal const& $this ) -> const $extension_Decimal_1932_decimal
+	auto getRoundTiesEven($extension_Decimal_1932_decimal const & $this ) -> const $extension_Decimal_1932_decimal
 	{
 		#line 1986 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Scale)($this.$ref()))> scale = ADV_UPCS(Scale)($this.$ref()); 
@@ -4269,7 +4268,7 @@ namespace __Unsafe { [[clang::annotate("unsafe")]]
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 2074 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getExp($extension_Decimal_2072_decimal const& $this ) -> const $extension_Decimal_2072_decimal
+	auto getExp($extension_Decimal_2072_decimal const & $this ) -> const $extension_Decimal_2072_decimal
 	{
 		#line 2076 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		Builtin::Auto<decltype(Builtin::i32(0))> count = Builtin::i32(0); 
@@ -4321,7 +4320,7 @@ namespace __Unsafe { [[clang::annotate("unsafe")]]
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 2118 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getLn($extension_Decimal_2116_decimal const& $this ) -> const $extension_Decimal_2116_decimal
+	auto getLn($extension_Decimal_2116_decimal const & $this ) -> const $extension_Decimal_2116_decimal
 	{
 		#line 2120 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		if (($this <=> Builtin::i32(0)) <= 0) {
@@ -4556,7 +4555,7 @@ ADV_WARNING_POP
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 2182 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getSqrt($extension_Decimal_2180_decimal const& $this ) -> const $extension_Decimal_2180_decimal
+	auto getSqrt($extension_Decimal_2180_decimal const & $this ) -> const $extension_Decimal_2180_decimal
 	{
 		#line 2184 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		if (($this <=> Builtin::i32(0)) < 0) {
@@ -4587,7 +4586,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 2279 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getSin($extension_Decimal_2277_decimal const& $this ) -> const $extension_Decimal_2277_decimal
+	auto getSin($extension_Decimal_2277_decimal const & $this ) -> const $extension_Decimal_2277_decimal
 	{
 		#line 2281 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Cos)($this.$ref()))> cos = ADV_UPCS(Cos)($this.$ref()); 
@@ -4639,7 +4638,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 2310 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getCos($extension_Decimal_2277_decimal const& $this ) -> const $extension_Decimal_2277_decimal
+	auto getCos($extension_Decimal_2277_decimal const & $this ) -> const $extension_Decimal_2277_decimal
 	{
 		#line 2312 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		Builtin::Auto<decltype($this)> x = $this; 
@@ -4693,7 +4692,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 2341 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getTan($extension_Decimal_2277_decimal const& $this ) -> const $extension_Decimal_2277_decimal
+	auto getTan($extension_Decimal_2277_decimal const & $this ) -> const $extension_Decimal_2277_decimal
 	{
 		#line 2343 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Cos)($this.$ref()))> cos = ADV_UPCS(Cos)($this.$ref()); 
@@ -4708,7 +4707,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 2357 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getAsin($extension_Decimal_2277_decimal const& $this ) -> const $extension_Decimal_2277_decimal
+	auto getAsin($extension_Decimal_2277_decimal const & $this ) -> const $extension_Decimal_2277_decimal
 	{
 		#line 2359 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		if ((ADV_UPCS(Abs)($this.$ref()) <=> Builtin::i32(1)) > 0) {
@@ -4770,7 +4769,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 2395 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getAcos($extension_Decimal_2277_decimal const& $this ) -> const $extension_Decimal_2277_decimal
+	auto getAcos($extension_Decimal_2277_decimal const & $this ) -> const $extension_Decimal_2277_decimal
 	{
 		#line 2397 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		constexpr Builtin::Auto<decltype(System::Decimal(Builtin::ParseUInt128("15707963267948966192313216916"), false, (uint8_t) 28))> HalfPi = System::Decimal(Builtin::ParseUInt128("15707963267948966192313216916"), false, (uint8_t) 28);
@@ -4795,7 +4794,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 2411 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getAtan($extension_Decimal_2277_decimal const& $this ) -> const $extension_Decimal_2277_decimal
+	auto getAtan($extension_Decimal_2277_decimal const & $this ) -> const $extension_Decimal_2277_decimal
 	{
 		#line 2413 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		return [&]() 
@@ -4828,7 +4827,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 2462 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getAcosh($extension_Decimal_2460_decimal const& $this ) -> const $extension_Decimal_2460_decimal
+	auto getAcosh($extension_Decimal_2460_decimal const & $this ) -> const $extension_Decimal_2460_decimal
 	{
 		#line 2464 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		if (($this <=> Builtin::i32(1)) < 0) {
@@ -4841,7 +4840,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 2477 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getAsinh($extension_Decimal_2460_decimal const& $this ) -> const $extension_Decimal_2460_decimal
+	auto getAsinh($extension_Decimal_2460_decimal const & $this ) -> const $extension_Decimal_2460_decimal
 	{
 		#line 2479 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		return ADV_UPCS(Ln)(($this + ADV_UPCS(Sqrt)(($this * $this + Builtin::i32(1)).$ref())).$ref());
@@ -4849,7 +4848,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 2482 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getAtanh($extension_Decimal_2460_decimal const& $this ) -> const $extension_Decimal_2460_decimal
+	auto getAtanh($extension_Decimal_2460_decimal const & $this ) -> const $extension_Decimal_2460_decimal
 	{
 		#line 2484 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		if ((ADV_UPCS(Abs)($this.$ref()) <=> Builtin::i32(1)) >= 0) {
@@ -4862,7 +4861,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 2491 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getCosh($extension_Decimal_2460_decimal const& $this ) -> const $extension_Decimal_2460_decimal
+	auto getCosh($extension_Decimal_2460_decimal const & $this ) -> const $extension_Decimal_2460_decimal
 	{
 		#line 2493 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		return (ADV_UPCS(Exp)($this.$ref()) + ADV_UPCS(Exp)((-$this).$ref())) * System::Decimal(Builtin::ParseUInt128("05"), false, (uint8_t) 1);
@@ -4870,7 +4869,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 2502 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getSinh($extension_Decimal_2460_decimal const& $this ) -> const $extension_Decimal_2460_decimal
+	auto getSinh($extension_Decimal_2460_decimal const & $this ) -> const $extension_Decimal_2460_decimal
 	{
 		#line 2504 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		return (ADV_UPCS(Exp)($this.$ref()) - ADV_UPCS(Exp)((-$this).$ref())) * System::Decimal(Builtin::ParseUInt128("05"), false, (uint8_t) 1);
@@ -4878,7 +4877,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 2507 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
-	auto getTanh($extension_Decimal_2460_decimal const& $this ) -> const $extension_Decimal_2460_decimal
+	auto getTanh($extension_Decimal_2460_decimal const & $this ) -> const $extension_Decimal_2460_decimal
 	{
 		#line 2509 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Decimal.ast"
 		return (ADV_UPCS(Exp)(($this * Builtin::i32(2)).$ref()) - Builtin::i32(1)) / (ADV_UPCS(Exp)(($this * Builtin::i32(2)).$ref()) + Builtin::i32(1));

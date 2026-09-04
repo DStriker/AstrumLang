@@ -37,7 +37,7 @@ class Simd;
 			#line 13 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\Simd.ast"
 			public: static constexpr bool RequiresAlignment = Builtin::Boolean(false);
 			#line 14 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\Simd.ast"
-			public: static constexpr Builtin::Str Name = Builtin::Str{"Unsupported"};
+			public: static constexpr Builtin::Str Name = Builtin::StaticStr{"Unsupported"};
 			
 		};
 		

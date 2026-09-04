@@ -11,8 +11,6 @@ namespace __Unsafe {} namespace __AsciiChar$Protected__Unsafe {}
 //###############################################################################
 class AsciiChar;
 class $Class_AsciiChar;
-} namespace $extensions {
-} namespace System {
 //###############################################################################
 //# Type definitions
 //###############################################################################
@@ -28,11 +26,11 @@ class $Class_AsciiChar;
 		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, Builtin::u8)
 		public: constexpr AsciiChar() noexcept = default;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\AsciiChar.ast"
-		private: static constexpr Builtin::Str __names[] = {"Null", "StartOfHeading", "StartOfText", "EndOfText", "EndOfTransmission", "Enquiry", "Acknowledge", "Bell", "Backspace", "HorizontalTab", "LineFeed", "VerticalTab", "FormFeed", "CarriageReturn", "ShiftOut", "ShiftIn", "DataLinkEscape", "DeviceControl1", "DeviceControl2", "DeviceControl3", "DeviceControl4", "NegativeAcknowledge", "SynchronousIdle", "EndOfTransmissionBlock", "Cancel", "EndOfMedium", "Substitute", "Escape", "FileSeparator", "GroupSeparator", "RecordSeparator", "UnitSeparator", "Space", "ExclamationMark", "QuotationMark", "NumberSign", "DollarSign", "PercentSign", "Ampersand", "Apostrophe", "LeftParenthesis", "RightParenthesis", "Asterisk", "PlusSign", "Comma", "HyphenMinus", "FullStop", "Solidus", "Digit0", "Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9", "Colon", "Semicolon", "LessThanSign", "EqualsSign", "GreaterThanSign", "QuestionMark", "CommercialAt", "CapitalA", "CapitalB", "CapitalC", "CapitalD", "CapitalE", "CapitalF", "CapitalG", "CapitalH", "CapitalI", "CapitalJ", "CapitalK", "CapitalL", "CapitalM", "CapitalN", "CapitalO", "CapitalP", "CapitalQ", "CapitalR", "CapitalS", "CapitalT", "CapitalU", "CapitalV", "CapitalW", "CapitalX", "CapitalY", "CapitalZ", "LeftSquareBracket", "ReverseSolidus", "RightSquareBracket", "CircumflexAccent", "LowLine", "GraveAccent", "SmallA", "SmallB", "SmallC", "SmallD", "SmallE", "SmallF", "SmallG", "SmallH", "SmallI", "SmallJ", "SmallK", "SmallL", "SmallM", "SmallN", "SmallO", "SmallP", "SmallQ", "SmallR", "SmallS", "SmallT", "SmallU", "SmallV", "SmallW", "SmallX", "SmallY", "SmallZ", "LeftCurlyBracket", "VerticalLine", "RightCurlyBracket", "Tilde", "Delete"};
+		private: static constexpr Builtin::StaticStr __names[] = {"Null", "StartOfHeading", "StartOfText", "EndOfText", "EndOfTransmission", "Enquiry", "Acknowledge", "Bell", "Backspace", "HorizontalTab", "LineFeed", "VerticalTab", "FormFeed", "CarriageReturn", "ShiftOut", "ShiftIn", "DataLinkEscape", "DeviceControl1", "DeviceControl2", "DeviceControl3", "DeviceControl4", "NegativeAcknowledge", "SynchronousIdle", "EndOfTransmissionBlock", "Cancel", "EndOfMedium", "Substitute", "Escape", "FileSeparator", "GroupSeparator", "RecordSeparator", "UnitSeparator", "Space", "ExclamationMark", "QuotationMark", "NumberSign", "DollarSign", "PercentSign", "Ampersand", "Apostrophe", "LeftParenthesis", "RightParenthesis", "Asterisk", "PlusSign", "Comma", "HyphenMinus", "FullStop", "Solidus", "Digit0", "Digit1", "Digit2", "Digit3", "Digit4", "Digit5", "Digit6", "Digit7", "Digit8", "Digit9", "Colon", "Semicolon", "LessThanSign", "EqualsSign", "GreaterThanSign", "QuestionMark", "CommercialAt", "CapitalA", "CapitalB", "CapitalC", "CapitalD", "CapitalE", "CapitalF", "CapitalG", "CapitalH", "CapitalI", "CapitalJ", "CapitalK", "CapitalL", "CapitalM", "CapitalN", "CapitalO", "CapitalP", "CapitalQ", "CapitalR", "CapitalS", "CapitalT", "CapitalU", "CapitalV", "CapitalW", "CapitalX", "CapitalY", "CapitalZ", "LeftSquareBracket", "ReverseSolidus", "RightSquareBracket", "CircumflexAccent", "LowLine", "GraveAccent", "SmallA", "SmallB", "SmallC", "SmallD", "SmallE", "SmallF", "SmallG", "SmallH", "SmallI", "SmallJ", "SmallK", "SmallL", "SmallM", "SmallN", "SmallO", "SmallP", "SmallQ", "SmallR", "SmallS", "SmallT", "SmallU", "SmallV", "SmallW", "SmallX", "SmallY", "SmallZ", "LeftCurlyBracket", "VerticalLine", "RightCurlyBracket", "Tilde", "Delete"};
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\AsciiChar.ast"
 		public: static constexpr int __variants = 128;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\AsciiChar.ast"
-		public: static constexpr std::span<const Builtin::Str> GetNames() noexcept { return __names; }
+		public: static constexpr std::span<const Builtin::StaticStr> GetNames() noexcept { return __names; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\AsciiChar.ast"
 		private: static const AsciiChar __values[];
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\AsciiChar.ast"
@@ -836,6 +834,8 @@ class $Class_AsciiChar;
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\AsciiChar.ast"
 	ADV_CHECK_FOR_CONCRETE(AsciiChar);
 	
+} namespace $extensions {
+} namespace System {
 //###############################################################################
 //# Function definitions
 //###############################################################################

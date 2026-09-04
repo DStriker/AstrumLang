@@ -10,8 +10,6 @@
 
 namespace System {
 namespace __Unsafe {} namespace __Boolean$Protected__Unsafe {}
-} namespace $extensions {
-} namespace System {
 //###############################################################################
 //# Global type aliases
 //###############################################################################
@@ -106,7 +104,13 @@ using $extensions::ToFloat64;
 using $extensions::ToByte;
 using $extensions::ToChar;
 
-	//###############################################################################
+	} namespace $extensions {
+template<class __TT> struct $static_InvalidOperationException;
+template<class __TT> struct $static_getInvalidOperationException;
+template<class __TT> struct $static_HashCode;
+template<class __TT> struct $static_getHashCode;
+} namespace System {
+//###############################################################################
 //# Function definitions
 //###############################################################################
 
@@ -140,7 +144,7 @@ using $extensions::ToChar;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 32 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
-	inline constexpr auto getHashCode($extension_Boolean_10_Boolean const& $this ) -> const Builtin::u64
+	inline constexpr auto getHashCode($extension_Boolean_10_Boolean const & $this ) -> const Builtin::u64
 	{
 		#line 32 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Boolean.ast"
 		ADV_EXPRESSION_BODY($this ? Builtin::u32(1U) : Builtin::u32(0U)); 

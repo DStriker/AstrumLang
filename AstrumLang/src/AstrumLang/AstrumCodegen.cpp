@@ -563,11 +563,11 @@ namespace AstrumLang {
 		}
 		if (firstPass) {
 			for (const auto& [id, lit] : sema.publicStringLiterals) {
-				out << "inline constexpr Builtin::Str " << id << " = " << lit << ";\n";
+				out << "inline constexpr Builtin::StaticStr " << id << " = " << lit << ";\n";
 			}
 		} else {
 			for (const auto& [id, lit] : sema.privateStringLiterals) {
-				out << "inline constexpr Builtin::Str " << id << " = " << lit << ";\n";
+				out << "inline constexpr Builtin::StaticStr " << id << " = " << lit << ";\n";
 			}
 		}
 		for (const auto& var : sema.globalConstants) {
@@ -603,7 +603,7 @@ namespace AstrumLang {
 						}
 					}
 					out << ">(); inline constexpr auto " << var.id
-					    << " = Builtin::Str($global_buffer_" << var.initializer
+					    << " = Builtin::StaticStr($global_buffer_" << var.initializer
 					    << ".data(), $global_buffer_" << var.initializer << ".size() - 1);";
 				}
 			}
@@ -1746,7 +1746,7 @@ namespace AstrumLang {
 		if (type->kind == TypeKind::Enum) {
 			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
-			out << "private: static constexpr Builtin::Str __names[] = {";
+			out << "private: static constexpr Builtin::StaticStr __names[] = {";
 			bool first = true;
 			for (const auto& constant : type->constants) {
 				if (!first)
@@ -1761,7 +1761,7 @@ namespace AstrumLang {
 			    << std::string(depth, '\t');
 			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
 			    << std::string(depth, '\t');
-			out << "public: static constexpr std::span<const Builtin::Str> GetNames() noexcept "
+			out << "public: static constexpr std::span<const Builtin::StaticStr> GetNames() noexcept "
 			       "{ return __names; }\n"
 			    << std::string(depth, '\t');
 			out << "#line " << type->pos.line << " \"" << fullFilename << ".ast\"\n"
@@ -3836,7 +3836,7 @@ namespace AstrumLang {
 								break;
 						}
 						out << "static constexpr auto " << constant.id
-						    << " = Builtin::Str($static_buffer_" << constant.initializer
+						    << " = Builtin::StaticStr($static_buffer_" << constant.initializer
 						    << ".data(), $static_buffer_" << constant.initializer
 						    << ".size() - 1);\n"
 						    << std::string(depth, '\t');
@@ -5547,7 +5547,7 @@ namespace AstrumLang {
 								break;
 						}
 						out << "static constexpr auto " << constant.id
-						    << " = Builtin::Str($static_buffer_" << constant.initializer
+						    << " = Builtin::StaticStr($static_buffer_" << constant.initializer
 						    << ".data(), $static_buffer_" << constant.initializer
 						    << ".size() - 1);\n"
 						    << std::string(depth, '\t');
@@ -7764,7 +7764,7 @@ namespace AstrumLang {
 							break;
 					}
 					out << "static constexpr auto " << constant.id
-					    << " = Builtin::Str($static_buffer_" << constant.initializer
+					    << " = Builtin::StaticStr($static_buffer_" << constant.initializer
 					    << ".data(), $static_buffer_" << constant.initializer << ".size() - 1);\n"
 					    << std::string(depth, '\t');
 					continue;
@@ -18914,7 +18914,11 @@ namespace AstrumLang {
 		} else if (ctx->Decimal()) {
 			out << "System::Decimal";
 		} else if (ctx->Str()) {
-			out << "Builtin::Str";
+			if (ctx->Static()) {
+				out << "Builtin::StaticStr";
+			} else {
+				out << "Builtin::Str";
+			}
 		} else if (ctx->Object()) {
 			out << "Builtin::ObjectRef";
 		} else if (ctx->Self()) {
@@ -19140,7 +19144,7 @@ namespace AstrumLang {
 					}
 					out << ">(); constexpr auto ";
 					printIdentifier(ctx->Identifier());
-					out << " = Builtin::Str($local_buffer_" << ctx->initializerClause()
+					out << " = Builtin::StaticStr($local_buffer_" << ctx->initializerClause()
 					    << ".data(), $local_buffer_" << ctx->initializerClause() << ".size() - 1);";
 					return;
 				}
@@ -20514,7 +20518,7 @@ namespace AstrumLang {
 			out << "Builtin::usize(sizeof ";
 			paren = true;
 		} else if (ctx->Nameof()) {
-			out << "Builtin::Str(ASTRUM_NAMEOF(";
+			out << "Builtin::StaticStr(ASTRUM_NAMEOF(";
 			paren = true;
 		} else if (ctx->refCaptureOperator()) {
 			out << "Builtin::MutableRef(";
@@ -20569,7 +20573,7 @@ namespace AstrumLang {
 			}
 			out << ")";
 		} else if (ctx->Nameof()) {
-			out << "Builtin::Str(ASTRUM_NAMEOF(";
+			out << "Builtin::StaticStr(ASTRUM_NAMEOF(";
 			if (ctx->theTypeId())
 				printTypeId(ctx->theTypeId());
 			if (ctx->expression())
@@ -21533,17 +21537,13 @@ namespace AstrumLang {
 
 	void AstrumCodegen::printTypeId(AstrumParser::TheTypeIdContext* ctx) {
 		if (ctx->Static()) {
-			if (ctx->Str()) {
-				out << "Builtin::StaticStr";
+			out << "$ImplementsInterface_";
+			if (ctx->simpleTemplateId()) {
+				printSimpleTemplateId(ctx->simpleTemplateId());
 			} else {
-				out << "$ImplementsInterface_";
-				if (ctx->simpleTemplateId()) {
-					printSimpleTemplateId(ctx->simpleTemplateId());
-				} else {
-					printIdentifier(ctx->Identifier());
-				}
-				out << " auto";
+				printIdentifier(ctx->Identifier());
 			}
+			out << " auto";
 		} else if (ctx->Amp()) {
 			out << "Builtin::";
 			if (ctx->Mutable()) {
@@ -21553,7 +21553,7 @@ namespace AstrumLang {
 			printSingleTypeId(ctx->singleTypeId(0));
 			out << ">";
 		} else if (!ctx->VertLine().empty()) {
-			out << "Union" << (ctx->VertLine().size() + 1) << "<";
+			out << "System::Union" << (ctx->VertLine().size() + 1) << "<";
 			bool first = true;
 			for (auto type : ctx->singleTypeId()) {
 				if (!first)
@@ -22263,23 +22263,12 @@ namespace AstrumLang {
 	}
 
 	void AstrumCodegen::printStringLiteral(std::string txt) {
-		// auto prefix = "u";
-		auto str = "Str";
-		/* if (txt.starts_with("u8")) {
-		    prefix = "u8";
-		    str    = "Utf8Str";
-		    txt    = txt.substr(2);
-		} else if (txt.starts_with('U')) {
-		    prefix = "U";
-		    str    = "Utf32Str";
-		    txt    = txt.substr(1);
-		}*/
 		if (txt.starts_with('"') || txt.starts_with('R')) {
-			out << "Builtin::" << str << "{" << txt << "}";
+			out << "Builtin::StaticStr{" << txt << "}";
 		} else if (txt.starts_with('`')) {
 			auto contents = txt.substr(1, txt.length() - 2);
 			StringReplace(contents, "``", "`");
-			out << "Builtin::" << str << "{"
+			out << "Builtin::StaticStr{"
 			    << "R\"_grave_(" << contents << ")_grave_\"}";
 		}
 	}
@@ -22287,7 +22276,7 @@ namespace AstrumLang {
 	void AstrumCodegen::printMultilineStringLiteral(std::string txt) {
 		auto contents = txt.substr(3, txt.length() - 6);
 		auto lines    = StringSplit(contents, '\n');
-		out << "Builtin::Str{uR\"_multi_(";
+		out << "Builtin::StaticStr{R\"_multi_(";
 		int i      = -1;
 		bool first = true;
 		for (auto& line : lines) {

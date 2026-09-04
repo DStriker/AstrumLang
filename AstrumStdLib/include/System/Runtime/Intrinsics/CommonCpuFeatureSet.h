@@ -408,7 +408,7 @@ namespace System::Runtime::Intrinsics {
 	inline auto $Class_CommonCpuFeatureSet::getManufacturerId()  -> Builtin::Str 
 	{
 		#line 9 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonCpuFeatureSet.ast"
-		ADV_EXPRESSION_BODY(Builtin::Str{"<unknown>"}); 
+		ADV_EXPRESSION_BODY(Builtin::StaticStr{"<unknown>"}); 
 	}
 	
 #line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonCpuFeatureSet.ast"

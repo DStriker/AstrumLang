@@ -162,7 +162,7 @@ using $extensions::$static_getLowercaseLetters;
 	#line 126 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 	template<class __TT> struct $static_getReplacementChar; template<> struct $static_getReplacementChar<$extension_Char_114_char> { static inline constexpr auto get() -> const $extension_Char_114_char; };
 	#line 127 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	template<class __TT> struct $static_getUnicodeVersion; template<> struct $static_getUnicodeVersion<$extension_Char_114_char> { static inline constexpr auto get() -> const std::tuple<Builtin::u8, Builtin::u8, Builtin::u8>; };
+	template<class __TT> struct $static_getUnicodeVersion; template<> struct $static_getUnicodeVersion<$extension_Char_114_char> { static inline constexpr auto get() -> const Builtin::Tuple<Builtin::u8, Builtin::u8, Builtin::u8>; };
 	#line 154 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
 	template<class __TT> struct $static_getMaxUtf8Length; template<> struct $static_getMaxUtf8Length<$extension_Char_114_char> { static inline constexpr auto get() -> const Builtin::usize; };
 	#line 155 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
@@ -1101,10 +1101,10 @@ namespace __Char$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 127 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-	inline constexpr auto $static_getUnicodeVersion<$extension_Char_114_char>::get() -> const std::tuple<Builtin::u8, Builtin::u8, Builtin::u8>
+	inline constexpr auto $static_getUnicodeVersion<$extension_Char_114_char>::get() -> const Builtin::Tuple<Builtin::u8, Builtin::u8, Builtin::u8>
 	{
 		#line 127 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Char.ast"
-		ADV_EXPRESSION_BODY(std::make_tuple(Builtin::u8(16U), Builtin::u8(0U), Builtin::u8(0U))); 
+		ADV_EXPRESSION_BODY(Builtin::MakeTuple(Builtin::u8(16U), Builtin::u8(0U), Builtin::u8(0U))); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;

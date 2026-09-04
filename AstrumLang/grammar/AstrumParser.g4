@@ -685,13 +685,14 @@ lambdaBody
 theTypeId
     : singleTypeId (VertLine singleTypeId)*
     | Amp Mutable? singleTypeId
-    | Static (Identifier | Str | simpleTemplateId)
+    | Static (Identifier | simpleTemplateId)
     | logicalOrExpression Question theTypeId Colon theTypeId
     ;
 
 singleTypeId
     : typeSpecifierSeq Question? typePostfix?
     | LeftParen theTypeId RightParen (Question typePostfix? | typePostfix)
+    | Static Str
     ;
 
 typePostfix
@@ -785,7 +786,7 @@ simpleTypeSpecifier
     | Byte
     | Decimal
     | Bool
-    | Str
+    | Static? Str
     | Self
     | Object
     | decltypeSpecifier

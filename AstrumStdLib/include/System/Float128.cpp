@@ -1,8 +1,8 @@
+#include "Float128.h"
 #include "Float128_Exp.h"
 #include "Float128_Log.h"
 #include "Float128_Pow.h"
 #include "Float128_Trig.h"
-#include "Float128.h"
 
 namespace System {
 //###############################################################################
@@ -620,7 +620,7 @@ namespace __Float128$Protected { extern const decltype(Builtin::u128(1ULL) << __
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 435 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getLog2($extension_Float128_404_f128 const& $this ) -> const $extension_Float128_404_f128
+	auto getLog2($extension_Float128_404_f128 const & $this ) -> const $extension_Float128_404_f128
 	{
 		#line 437 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return Log2Impl($this);
@@ -628,7 +628,7 @@ namespace __Float128$Protected { extern const decltype(Builtin::u128(1ULL) << __
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 442 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getLog10($extension_Float128_404_f128 const& $this ) -> const $extension_Float128_404_f128
+	auto getLog10($extension_Float128_404_f128 const & $this ) -> const $extension_Float128_404_f128
 	{
 		#line 444 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return Log10Impl($this);
@@ -645,7 +645,7 @@ namespace __Float128$Protected { extern const decltype(Builtin::u128(1ULL) << __
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 789 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getExp($extension_Float128_787_f128 const& $this ) -> const $extension_Float128_787_f128
+	auto getExp($extension_Float128_787_f128 const & $this ) -> const $extension_Float128_787_f128
 	{
 		#line 791 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return ExpImpl($this);
@@ -653,7 +653,7 @@ namespace __Float128$Protected { extern const decltype(Builtin::u128(1ULL) << __
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 794 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getExp2($extension_Float128_787_f128 const& $this ) -> const $extension_Float128_787_f128
+	auto getExp2($extension_Float128_787_f128 const & $this ) -> const $extension_Float128_787_f128
 	{
 		#line 796 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return Exp2Impl($this);
@@ -661,7 +661,7 @@ namespace __Float128$Protected { extern const decltype(Builtin::u128(1ULL) << __
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 799 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getExp10($extension_Float128_787_f128 const& $this ) -> const $extension_Float128_787_f128
+	auto getExp10($extension_Float128_787_f128 const & $this ) -> const $extension_Float128_787_f128
 	{
 		#line 801 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return Exp10Impl($this);
@@ -669,7 +669,7 @@ namespace __Float128$Protected { extern const decltype(Builtin::u128(1ULL) << __
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 804 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getExpM1($extension_Float128_787_f128 const& $this ) -> const $extension_Float128_787_f128
+	auto getExpM1($extension_Float128_787_f128 const & $this ) -> const $extension_Float128_787_f128
 	{
 		#line 806 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return ExpM1Impl($this);
@@ -677,7 +677,7 @@ namespace __Float128$Protected { extern const decltype(Builtin::u128(1ULL) << __
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 816 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getLn($extension_Float128_814_f128 const& $this ) -> const $extension_Float128_814_f128
+	auto getLn($extension_Float128_814_f128 const & $this ) -> const $extension_Float128_814_f128
 	{
 		#line 818 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return LnImpl($this);
@@ -685,7 +685,7 @@ namespace __Float128$Protected { extern const decltype(Builtin::u128(1ULL) << __
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 821 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getLnP1($extension_Float128_814_f128 const& $this ) -> const $extension_Float128_814_f128
+	auto getLnP1($extension_Float128_814_f128 const & $this ) -> const $extension_Float128_814_f128
 	{
 		#line 823 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return LnP1Impl($this);
@@ -886,7 +886,7 @@ ADV_WARNING_POP
 			#line 1133 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 			const auto xl = x - xh; 
 			#line 1134 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-			return std::make_tuple(xh * xh - x * x + xh * xl * Builtin::i32(2) + xl * xl, x * x);
+			return Builtin::MakeTuple(xh * xh - x * x + xh * xl * Builtin::i32(2) + xl * xl, x * x);
 		}; 
 		#line 1137 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		Builtin::Auto<decltype($this)> x = $this; 
@@ -968,7 +968,7 @@ ADV_WARNING_POP
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 833 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getSqrt($extension_Float128_831_f128 const& $this ) -> const $extension_Float128_831_f128
+	auto getSqrt($extension_Float128_831_f128 const & $this ) -> const $extension_Float128_831_f128
 	{
 		#line 837 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		const Builtin::Auto<decltype(ADV_UPCS(Bits)($this.$ref()))> bits = ADV_UPCS(Bits)($this.$ref()); 
@@ -1079,7 +1079,7 @@ ADV_WARNING_POP
 			}
 		}
 		#line 926 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		Builtin::InlineArray<Builtin::i32(3), Builtin::u32> qs = {Builtin::u32(Builtin::u32(0U)), Builtin::u32(Builtin::u32(0U)), Builtin::u32(resultSig32)}; 
+		Builtin::InlineArray<Builtin::i32(3), Builtin::u32> qs = Builtin::InitializerList({Builtin::u32(Builtin::u32(0U)), Builtin::u32(Builtin::u32(0U)), Builtin::u32(resultSig32)}); 
 		#line 927 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		ADV_UFCS(_operator_sub_mod_eq)(rem, Builtin::u128{Builtin::u64{resultSig32} * resultSig32, Builtin::u32(0U)});
 		#line 929 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
@@ -1200,7 +1200,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 994 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getCbrt($extension_Float128_831_f128 const& $this ) -> const $extension_Float128_831_f128
+	auto getCbrt($extension_Float128_831_f128 const & $this ) -> const $extension_Float128_831_f128
 	{
 		#line 996 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		constexpr Builtin::Auto<decltype(Builtin::u32(709958130U))> B1 = Builtin::u32(709958130U);
@@ -1296,7 +1296,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1184 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getSin($extension_Float128_1182_f128 const& $this ) -> const $extension_Float128_1182_f128
+	auto getSin($extension_Float128_1182_f128 const & $this ) -> const $extension_Float128_1182_f128
 	{
 		#line 1185 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return SinImpl($this);
@@ -1304,7 +1304,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1188 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getCos($extension_Float128_1182_f128 const& $this ) -> const $extension_Float128_1182_f128
+	auto getCos($extension_Float128_1182_f128 const & $this ) -> const $extension_Float128_1182_f128
 	{
 		#line 1189 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return CosImpl($this);
@@ -1312,7 +1312,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1192 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getTan($extension_Float128_1182_f128 const& $this ) -> const $extension_Float128_1182_f128
+	auto getTan($extension_Float128_1182_f128 const & $this ) -> const $extension_Float128_1182_f128
 	{
 		#line 1193 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return TanImpl($this);
@@ -1320,7 +1320,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1202 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getAsin($extension_Float128_1182_f128 const& $this ) -> const $extension_Float128_1182_f128
+	auto getAsin($extension_Float128_1182_f128 const & $this ) -> const $extension_Float128_1182_f128
 	{
 		#line 1203 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return AsinImpl($this);
@@ -1328,7 +1328,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1206 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getAcos($extension_Float128_1182_f128 const& $this ) -> const $extension_Float128_1182_f128
+	auto getAcos($extension_Float128_1182_f128 const & $this ) -> const $extension_Float128_1182_f128
 	{
 		#line 1207 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return AcosImpl($this);
@@ -1336,7 +1336,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1210 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getAtan($extension_Float128_1182_f128 const& $this ) -> const $extension_Float128_1182_f128
+	auto getAtan($extension_Float128_1182_f128 const & $this ) -> const $extension_Float128_1182_f128
 	{
 		#line 1211 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return AtanImpl($this);
@@ -1344,7 +1344,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1214 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getAcot($extension_Float128_1182_f128 const& $this ) -> const $extension_Float128_1182_f128
+	auto getAcot($extension_Float128_1182_f128 const & $this ) -> const $extension_Float128_1182_f128
 	{
 		#line 1215 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return AtanImpl(ADV_UPCS(ReciprocalEstimate)($this.$ref()));
@@ -1352,7 +1352,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1218 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getAsec($extension_Float128_1182_f128 const& $this ) -> const $extension_Float128_1182_f128
+	auto getAsec($extension_Float128_1182_f128 const & $this ) -> const $extension_Float128_1182_f128
 	{
 		#line 1219 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return AcosImpl(ADV_UPCS(ReciprocalEstimate)($this.$ref()));
@@ -1360,7 +1360,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1222 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getAcsc($extension_Float128_1182_f128 const& $this ) -> const $extension_Float128_1182_f128
+	auto getAcsc($extension_Float128_1182_f128 const & $this ) -> const $extension_Float128_1182_f128
 	{
 		#line 1223 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return AsinImpl(ADV_UPCS(ReciprocalEstimate)($this.$ref()));
@@ -1368,7 +1368,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1226 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getSinCos($extension_Float128_1182_f128 const& $this ) -> const std::tuple<$extension_Float128_1182_f128, $extension_Float128_1182_f128>
+	auto getSinCos($extension_Float128_1182_f128 const & $this ) -> const Builtin::Tuple<$extension_Float128_1182_f128, $extension_Float128_1182_f128>
 	{
 		#line 1227 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return SinCosImpl($this);
@@ -1376,7 +1376,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1230 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getSinPi($extension_Float128_1182_f128 const& $this ) -> const $extension_Float128_1182_f128
+	auto getSinPi($extension_Float128_1182_f128 const & $this ) -> const $extension_Float128_1182_f128
 	{
 		#line 1231 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return SinPiImpl($this);
@@ -1384,7 +1384,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1234 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getCosPi($extension_Float128_1182_f128 const& $this ) -> const $extension_Float128_1182_f128
+	auto getCosPi($extension_Float128_1182_f128 const & $this ) -> const $extension_Float128_1182_f128
 	{
 		#line 1235 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return CosPiImpl($this);
@@ -1392,15 +1392,15 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1238 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getSinCosPi($extension_Float128_1182_f128 const& $this ) -> const std::tuple<$extension_Float128_1182_f128, $extension_Float128_1182_f128>
+	auto getSinCosPi($extension_Float128_1182_f128 const & $this ) -> const Builtin::Tuple<$extension_Float128_1182_f128, $extension_Float128_1182_f128>
 	{
 		#line 1240 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-		return std::make_tuple(SinPiImpl($this), CosPiImpl($this));
+		return Builtin::MakeTuple(SinPiImpl($this), CosPiImpl($this));
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1243 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getTanPi($extension_Float128_1182_f128 const& $this ) -> const $extension_Float128_1182_f128
+	auto getTanPi($extension_Float128_1182_f128 const & $this ) -> const $extension_Float128_1182_f128
 	{
 		#line 1244 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		return TanPiImpl($this);
@@ -1408,7 +1408,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1273 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getAcosh($extension_Float128_1271_f128 const& $this ) -> const $extension_Float128_1271_f128
+	auto getAcosh($extension_Float128_1271_f128 const & $this ) -> const $extension_Float128_1271_f128
 	{
 		#line 1275 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		const Builtin::Auto<decltype(__Float128$Protected::BiasedExponent($this))> exp = __Float128$Protected::BiasedExponent($this); 
@@ -1457,7 +1457,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1305 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getAsinh($extension_Float128_1271_f128 const& $this ) -> const $extension_Float128_1271_f128
+	auto getAsinh($extension_Float128_1271_f128 const & $this ) -> const $extension_Float128_1271_f128
 	{
 		#line 1307 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		const Builtin::Auto<decltype(__Float128$Protected::BiasedExponent($this))> exp = __Float128$Protected::BiasedExponent($this); 
@@ -1488,7 +1488,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1325 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getAtanh($extension_Float128_1271_f128 const& $this ) -> const $extension_Float128_1271_f128
+	auto getAtanh($extension_Float128_1271_f128 const & $this ) -> const $extension_Float128_1271_f128
 	{
 		#line 1327 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		const Builtin::Auto<decltype(__Float128$Protected::BiasedExponent($this))> exp = __Float128$Protected::BiasedExponent($this); 
@@ -1516,7 +1516,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1342 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getCosh($extension_Float128_1271_f128 const& $this ) -> const $extension_Float128_1271_f128
+	auto getCosh($extension_Float128_1271_f128 const & $this ) -> const $extension_Float128_1271_f128
 	{
 		#line 1344 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		const Builtin::Auto<decltype(__Float128$Protected::BiasedExponent($this))> exp = __Float128$Protected::BiasedExponent($this); 
@@ -1551,7 +1551,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1372 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getSinh($extension_Float128_1271_f128 const& $this ) -> const $extension_Float128_1271_f128
+	auto getSinh($extension_Float128_1271_f128 const & $this ) -> const $extension_Float128_1271_f128
 	{
 		#line 1374 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		const Builtin::Auto<decltype(__Float128$Protected::BiasedExponent($this))> exp = __Float128$Protected::BiasedExponent($this); 
@@ -1591,7 +1591,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1399 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
-	auto getTanh($extension_Float128_1271_f128 const& $this ) -> const $extension_Float128_1271_f128
+	auto getTanh($extension_Float128_1271_f128 const & $this ) -> const $extension_Float128_1271_f128
 	{
 		#line 1401 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float128.ast"
 		const Builtin::Auto<decltype(__Float128$Protected::BiasedExponent($this))> exp = __Float128$Protected::BiasedExponent($this); 

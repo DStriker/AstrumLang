@@ -380,37 +380,37 @@ class CommonInstructions;
 		#line 658 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		public: template<class T2, class T1, class Arch> static auto BitwiseCast(const SimdVector<T1, Arch>& vec)  -> const SimdVector<T2, Arch>;
 		#line 666 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		public: template<class T, class Arch> static auto OverflowingAdd(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const std::tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>;
+		public: template<class T, class Arch> static auto OverflowingAdd(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const Builtin::Tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>;
 		#line 680 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		public: template<class T, class Arch> static auto StrictAdd(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const SimdVector<T, Arch>;
 		#line 688 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		public: template<class T, class Arch> static auto Add(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const SimdVector<T, Arch>;
 		#line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		public: template<class T, class Arch> static auto OverflowingSubtract(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const std::tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>;
+		public: template<class T, class Arch> static auto OverflowingSubtract(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const Builtin::Tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>;
 		#line 710 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		public: template<class T, class Arch> static auto StrictSubtract(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const SimdVector<T, Arch>;
 		#line 718 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		public: template<class T, class Arch> static auto Subtract(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const SimdVector<T, Arch>;
 		#line 726 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		public: template<class T, class Arch> static auto OverflowingMultiply(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const std::tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>;
+		public: template<class T, class Arch> static auto OverflowingMultiply(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const Builtin::Tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>;
 		#line 736 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		public: template<class T, class Arch> static auto StrictMultiply(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const SimdVector<T, Arch>;
 		#line 744 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		public: template<class T, class Arch> static auto Multiply(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const SimdVector<T, Arch>;
 		#line 752 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		public: template<class T, class Arch> static auto OverflowingDivide(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const std::tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>;
+		public: template<class T, class Arch> static auto OverflowingDivide(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const Builtin::Tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>;
 		#line 765 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		public: template<class T, class Arch> static auto StrictDivide(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const SimdVector<T, Arch>;
 		#line 773 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		public: template<class T, class Arch> static auto Divide(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const SimdVector<T, Arch>;
 		#line 781 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		public: template<class T, class Arch> static auto OverflowingMod(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const std::tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>;
+		public: template<class T, class Arch> static auto OverflowingMod(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const Builtin::Tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>;
 		#line 794 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		public: template<class T, class Arch> static auto StrictMod(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const SimdVector<T, Arch>;
 		#line 802 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		public: template<class T, class Arch> static auto Mod(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const SimdVector<T, Arch>;
 		#line 814 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		public: template<class T, class Arch> static auto OverflowingNegate(const SimdVector<T, Arch>& vec)  -> const std::tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>;
+		public: template<class T, class Arch> static auto OverflowingNegate(const SimdVector<T, Arch>& vec)  -> const Builtin::Tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>;
 		#line 823 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		public: template<class T, class Arch> static auto StrictNegate(const SimdVector<T, Arch>& vec)  -> const SimdVector<T, Arch>;
 		#line 831 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -446,7 +446,7 @@ class CommonInstructions;
 		#line 971 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		public: template<class T, class Arch> static auto Cos(const SimdVector<T, Arch>& vec)  -> const SimdVector<T, Arch>;
 		#line 988 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		public: template<class T, class Arch> static auto SinCos(const SimdVector<T, Arch>& vec)  -> const std::tuple<SimdVector<T, Arch>, SimdVector<T, Arch>>;
+		public: template<class T, class Arch> static auto SinCos(const SimdVector<T, Arch>& vec)  -> const Builtin::Tuple<SimdVector<T, Arch>, SimdVector<T, Arch>>;
 		#line 1008 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		public: template<class T, class Arch> static auto Tan(const SimdVector<T, Arch>& vec)  -> const SimdVector<T, Arch>;
 		#line 1021 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -500,7 +500,7 @@ class CommonInstructions;
 		#line 1353 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		public: template<class T, class Arch> static auto Hypot(const SimdVector<T, Arch>& x, const SimdVector<T, Arch>& y)  -> const SimdVector<T, Arch>;
 		#line 1358 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		public: template<class T, class Arch> static auto Frexp(const SimdVector<T, Arch>& vec)  -> const std::tuple<SimdVector<T, Arch>, SimdVector<FloatInt<T>, Arch>>;
+		public: template<class T, class Arch> static auto Frexp(const SimdVector<T, Arch>& vec)  -> const Builtin::Tuple<SimdVector<T, Arch>, SimdVector<FloatInt<T>, Arch>>;
 		#line 1389 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		public: template<class T, class Arch> static auto Ldexp(const SimdVector<T, Arch>& x, SimdVector<FloatInt<T>, Arch> exp)  -> const SimdVector<T, Arch>;
 		#line 1401 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -1983,7 +1983,7 @@ template<class __TT> struct $static_getFloor;
 		return {};
 	}
 #line 666 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-	template<class T, class Arch> auto CommonInstructions::OverflowingAdd(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const std::tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>
+	template<class T, class Arch> auto CommonInstructions::OverflowingAdd(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const Builtin::Tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>
 	{
 		#line 668 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		if constexpr (Builtin::TypeIs<T, IBinaryInteger>()) {
@@ -1992,19 +1992,19 @@ template<class __TT> struct $static_getFloor;
 			#line 670 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			if constexpr (Builtin::TypeIs<T, IUnsignedNumber>()) {
 				#line 671 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				return std::make_tuple(sum, (ADV_UFCS(_operator_lt_xor)(sum, left)) | (ADV_UFCS(_operator_lt_xor)(sum, right)));
+				return Builtin::MakeTuple(sum, (ADV_UFCS(_operator_lt_xor)(sum, left)) | (ADV_UFCS(_operator_lt_xor)(sum, right)));
 			} else {
 				#line 672 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 				{
 					#line 673 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-					return std::make_tuple(sum, ADV_UFCS(_operator_lt_xor)(((sum ^ left) & (sum ^ right)), T{Builtin::i32(0)}));
+					return Builtin::MakeTuple(sum, ADV_UFCS(_operator_lt_xor)(((sum ^ left) & (sum ^ right)), T{Builtin::i32(0)}));
 				}
 			}
 		} else {
 			#line 675 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			{
 				#line 676 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				return std::make_tuple(ADV_UFCS(_operator_add_mod)(left, right), SimdMask<T, Arch>::False);
+				return Builtin::MakeTuple(ADV_UFCS(_operator_add_mod)(left, right), SimdMask<T, Arch>::False);
 			}
 		}
 		return {};
@@ -2036,7 +2036,7 @@ template<class __TT> struct $static_getFloor;
 		return {};
 	}
 #line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-	template<class T, class Arch> auto CommonInstructions::OverflowingSubtract(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const std::tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>
+	template<class T, class Arch> auto CommonInstructions::OverflowingSubtract(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const Builtin::Tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>
 	{
 		#line 698 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		if constexpr (Builtin::TypeIs<T, IBinaryInteger>()) {
@@ -2045,19 +2045,19 @@ template<class __TT> struct $static_getFloor;
 			#line 700 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			if constexpr (Builtin::TypeIs<T, IUnsignedNumber>()) {
 				#line 701 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				return std::make_tuple(diff, (ADV_UFCS(_operator_gt_xor)(diff, left)) | (ADV_UFCS(_operator_gt_xor)(diff, right)));
+				return Builtin::MakeTuple(diff, (ADV_UFCS(_operator_gt_xor)(diff, left)) | (ADV_UFCS(_operator_gt_xor)(diff, right)));
 			} else {
 				#line 702 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 				{
 					#line 703 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-					return std::make_tuple(diff, ADV_UFCS(_operator_lt_xor)(((left ^ right) & (diff ^ left)), T{Builtin::i32(0)}));
+					return Builtin::MakeTuple(diff, ADV_UFCS(_operator_lt_xor)(((left ^ right) & (diff ^ left)), T{Builtin::i32(0)}));
 				}
 			}
 		} else {
 			#line 705 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			{
 				#line 706 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				return std::make_tuple(ADV_UFCS(_operator_sub_mod)(left, right), SimdMask<T, Arch>::False);
+				return Builtin::MakeTuple(ADV_UFCS(_operator_sub_mod)(left, right), SimdMask<T, Arch>::False);
 			}
 		}
 		return {};
@@ -2089,19 +2089,19 @@ template<class __TT> struct $static_getFloor;
 		return {};
 	}
 #line 726 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-	template<class T, class Arch> auto CommonInstructions::OverflowingMultiply(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const std::tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>
+	template<class T, class Arch> auto CommonInstructions::OverflowingMultiply(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const Builtin::Tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>
 	{
 		#line 728 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		if constexpr (Builtin::TypeIs<T, IBinaryInteger>()) {
 			#line 729 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			const Builtin::Auto<decltype(ADV_UFCS(_operator_mul_mod)(left, right))> prod = ADV_UFCS(_operator_mul_mod)(left, right); 
 			#line 730 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			return std::make_tuple(prod, ADV_UFCS(_operator_ne_eq_xor)((prod / right), left));
+			return Builtin::MakeTuple(prod, ADV_UFCS(_operator_ne_eq_xor)((prod / right), left));
 		} else {
 			#line 731 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			{
 				#line 732 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				return std::make_tuple(ADV_UFCS(_operator_mul_mod)(left, right), SimdMask<T, Arch>::False);
+				return Builtin::MakeTuple(ADV_UFCS(_operator_mul_mod)(left, right), SimdMask<T, Arch>::False);
 			}
 		}
 		return {};
@@ -2133,7 +2133,7 @@ template<class __TT> struct $static_getFloor;
 		return {};
 	}
 #line 752 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-	template<class T, class Arch> auto CommonInstructions::OverflowingDivide(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const std::tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>
+	template<class T, class Arch> auto CommonInstructions::OverflowingDivide(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const Builtin::Tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>
 	{
 		#line 754 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		if (ADV_UFCS(Any)(right.$ref(), ADV_USPCS(Zero, T)())) {
@@ -2145,12 +2145,12 @@ template<class __TT> struct $static_getFloor;
 			#line 758 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			const Builtin::Auto<decltype(ADV_UFCS(_operator_bsl_mod)(left, right))> div = ADV_UFCS(_operator_bsl_mod)(left, right); 
 			#line 759 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			return std::make_tuple(div, (ADV_UFCS(_operator_eq_eq_xor)(left, ADV_USPCS(MinValue, T)())) & (ADV_UFCS(_operator_eq_eq_xor)(right, ADV_USPCS(MinusOne, T)())));
+			return Builtin::MakeTuple(div, (ADV_UFCS(_operator_eq_eq_xor)(left, ADV_USPCS(MinValue, T)())) & (ADV_UFCS(_operator_eq_eq_xor)(right, ADV_USPCS(MinusOne, T)())));
 		} else {
 			#line 760 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			{
 				#line 761 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				return std::make_tuple(ADV_UFCS(_operator_bsl_mod)(left, right), SimdMask<T, Arch>::False);
+				return Builtin::MakeTuple(ADV_UFCS(_operator_bsl_mod)(left, right), SimdMask<T, Arch>::False);
 			}
 		}
 		return {};
@@ -2182,7 +2182,7 @@ template<class __TT> struct $static_getFloor;
 		return {};
 	}
 #line 781 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-	template<class T, class Arch> auto CommonInstructions::OverflowingMod(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const std::tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>
+	template<class T, class Arch> auto CommonInstructions::OverflowingMod(const SimdVector<T, Arch>& left, const SimdVector<T, Arch>& right)  -> const Builtin::Tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>
 	{
 		#line 783 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		if (ADV_UFCS(Any)(right.$ref(), ADV_USPCS(Zero, T)())) {
@@ -2194,12 +2194,12 @@ template<class __TT> struct $static_getFloor;
 			#line 787 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			const Builtin::Auto<decltype(ADV_UFCS(_operator_mod_mod)(left, right))> div = ADV_UFCS(_operator_mod_mod)(left, right); 
 			#line 788 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			return std::make_tuple(div, (ADV_UFCS(_operator_eq_eq_xor)(left, ADV_USPCS(MinValue, T)())) & (ADV_UFCS(_operator_eq_eq_xor)(right, ADV_USPCS(MinusOne, T)())));
+			return Builtin::MakeTuple(div, (ADV_UFCS(_operator_eq_eq_xor)(left, ADV_USPCS(MinValue, T)())) & (ADV_UFCS(_operator_eq_eq_xor)(right, ADV_USPCS(MinusOne, T)())));
 		} else {
 			#line 789 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			{
 				#line 790 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				return std::make_tuple(ADV_UFCS(_operator_mod_mod)(left, right), SimdMask<T, Arch>::False);
+				return Builtin::MakeTuple(ADV_UFCS(_operator_mod_mod)(left, right), SimdMask<T, Arch>::False);
 			}
 		}
 		return {};
@@ -2240,17 +2240,17 @@ template<class __TT> struct $static_getFloor;
 		return {};
 	}
 #line 814 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-	template<class T, class Arch> auto CommonInstructions::OverflowingNegate(const SimdVector<T, Arch>& vec)  -> const std::tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>
+	template<class T, class Arch> auto CommonInstructions::OverflowingNegate(const SimdVector<T, Arch>& vec)  -> const Builtin::Tuple<SimdVector<T, Arch>, SimdMask<T, Arch>>
 	{
 		#line 816 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		if constexpr (Builtin::TypeIs<T, IBinaryInteger>() && !Builtin::TypeIs<T, IUnsignedNumber>()) {
 			#line 817 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			return std::make_tuple(ADV_UFCS(_operator_sub_mod)(vec), (ADV_UFCS(_operator_eq_eq_xor)(vec, ADV_USPCS(MinValue, T)())));
+			return Builtin::MakeTuple(ADV_UFCS(_operator_sub_mod)(vec), (ADV_UFCS(_operator_eq_eq_xor)(vec, ADV_USPCS(MinValue, T)())));
 		} else {
 			#line 818 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			{
 				#line 819 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				return std::make_tuple(ADV_UFCS(_operator_sub_mod)(vec), SimdMask<T, Arch>::False);
+				return Builtin::MakeTuple(ADV_UFCS(_operator_sub_mod)(vec), SimdMask<T, Arch>::False);
 			}
 		}
 		#line 820 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
@@ -2555,7 +2555,7 @@ template<class __TT> struct $static_getFloor;
 		return z1 ^ signBit;
 	}
 #line 988 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-	template<class T, class Arch> auto CommonInstructions::SinCos(const SimdVector<T, Arch>& vec)  -> const std::tuple<SimdVector<T, Arch>, SimdVector<T, Arch>>
+	template<class T, class Arch> auto CommonInstructions::SinCos(const SimdVector<T, Arch>& vec)  -> const Builtin::Tuple<SimdVector<T, Arch>, SimdVector<T, Arch>>
 	{
 		#line 989 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		static_assert(Builtin::TypeIs<T, IFloatingPoint>(), "SinCos only works on floating point types");
@@ -2586,7 +2586,7 @@ template<class __TT> struct $static_getFloor;
 		#line 1004 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		const Builtin::Auto<decltype(TVector::ConditionalSelect(ADV_UFCS(_operator_ne_eq_xor)(swapBit, TVector::Zero), se, ce))> z1Cos = TVector::ConditionalSelect(ADV_UFCS(_operator_ne_eq_xor)(swapBit, TVector::Zero), se, ce); 
 		#line 1005 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-		return std::make_tuple(z1Sin ^ signBitSin, z1Cos ^ signBitCos);
+		return Builtin::MakeTuple(z1Sin ^ signBitSin, z1Cos ^ signBitCos);
 	}
 #line 1008 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 	template<class T, class Arch> auto CommonInstructions::Tan(const SimdVector<T, Arch>& vec)  -> const SimdVector<T, Arch>
@@ -3217,7 +3217,7 @@ template<class __TT> struct $static_getFloor;
 		return ADV_UPCS(Sqrt)(ADV_UFCS(FusedMultiplyAdd)(x.$ref(), x, ADV_UFCS(_operator_mul_mod)(y, y)).$ref());
 	}
 #line 1358 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-	template<class T, class Arch> auto CommonInstructions::Frexp(const SimdVector<T, Arch>& vec)  -> const std::tuple<SimdVector<T, Arch>, SimdVector<typename CommonInstructions::FloatInt<T>, Arch>>
+	template<class T, class Arch> auto CommonInstructions::Frexp(const SimdVector<T, Arch>& vec)  -> const Builtin::Tuple<SimdVector<T, Arch>, SimdVector<typename CommonInstructions::FloatInt<T>, Arch>>
 	{
 		#line 1359 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 		using TVector = SimdVector<T, Arch>;
@@ -3240,7 +3240,7 @@ template<class __TT> struct $static_getFloor;
 			#line 1369 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			const Builtin::Auto<decltype(TVector::ConditionalSelect(ADV_UFCS(_operator_ne_eq_xor)(vec, TVector::Zero), x | Builtin::BitCast<Builtin::f32>(FloatConstants<T>::Mask2Frexp), TVector::Zero))> mant = TVector::ConditionalSelect(ADV_UFCS(_operator_ne_eq_xor)(vec, TVector::Zero), x | Builtin::BitCast<Builtin::f32>(FloatConstants<T>::Mask2Frexp), TVector::Zero); 
 			#line 1371 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-			return std::make_tuple(mant, exp);
+			return Builtin::MakeTuple(mant, exp);
 		} else {
 			#line 1372 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 			if constexpr (Builtin::TypeIs<T, Builtin::f64>()) {
@@ -3259,14 +3259,14 @@ template<class __TT> struct $static_getFloor;
 				#line 1380 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 				const Builtin::Auto<decltype(TVector::ConditionalSelect(ADV_UFCS(_operator_ne_eq_xor)(vec, TVector::Zero), x | Builtin::BitCast<Builtin::f64>(FloatConstants<T>::Mask2Frexp), TVector::Zero))> mant = TVector::ConditionalSelect(ADV_UFCS(_operator_ne_eq_xor)(vec, TVector::Zero), x | Builtin::BitCast<Builtin::f64>(FloatConstants<T>::Mask2Frexp), TVector::Zero); 
 				#line 1382 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-				return std::make_tuple(mant, exp);
+				return Builtin::MakeTuple(mant, exp);
 			} else {
 				#line 1383 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 				{
 					#line 1384 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
 					static_assert(Builtin::Boolean(false), "Unsupported type for Frexp");
 					#line 1385 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Runtime\\Intrinsics\\CommonInstructions.ast"
-					return std::make_tuple(TVector{}, IVector{});
+					return Builtin::MakeTuple(TVector{}, IVector{});
 				}
 			}
 		}

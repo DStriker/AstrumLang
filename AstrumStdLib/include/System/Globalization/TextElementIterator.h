@@ -64,7 +64,7 @@ class TextElementIndicesIterator;
 		public: using $class = $self;
 		public: FORCE_INLINE constexpr decltype(auto) $ref() noexcept { return *this; } FORCE_INLINE constexpr decltype(auto) $ref() const noexcept { return *this; }
 		#line 171 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"
-		public: using ElementType = IndexRange;
+		public: using ElementType = Builtin::Tuple<Builtin::usize, Builtin::Str>;
 		public: TextElementIndicesIterator() = default;
 		#line 175 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"
 		public: inline explicit TextElementIndicesIterator(Builtin::Str data) noexcept;
@@ -73,7 +73,7 @@ class TextElementIndicesIterator;
 		#line 181 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"
 		public: inline auto Reset()  -> decltype(auto);
 		#line 183 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"
-		public: inline auto GetCurrent() const  -> const IndexRange;
+		public: inline auto GetCurrent() const  -> const Builtin::Tuple<Builtin::usize, Builtin::Str>;
 		#line 185 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"
 		public: inline auto GetData() const  -> const System::Span<Builtin::u8>;
 		#line 186 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"
@@ -88,15 +88,13 @@ class TextElementIndicesIterator;
 	#line 170 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(TextElementIndicesIterator, IAbstractSequence, IAbstractSequence, TextElementIndicesIterator);
 	#line 170 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(TextElementIndicesIterator, ISequence, ISequence<IndexRange>, TextElementIndicesIterator);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(TextElementIndicesIterator, ISequence, ISequence<Builtin::Tuple<Builtin::usize, Builtin::Str>>, TextElementIndicesIterator);
 	#line 170 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(TextElementIndicesIterator, IAbstractIterator, IAbstractIterator, TextElementIndicesIterator);
 	#line 170 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"
-	ADV_CHECK_INTERFACE_IMPLEMENTATION(TextElementIndicesIterator, IIterator, IIterator<IndexRange>, TextElementIndicesIterator);
+	ADV_CHECK_INTERFACE_IMPLEMENTATION(TextElementIndicesIterator, IIterator, IIterator<Builtin::Tuple<Builtin::usize, Builtin::Str>>, TextElementIndicesIterator);
 	
 	} namespace $extensions {
-template<class __TT> struct $static__nextTextElementOffset;
-template<class __TT> struct $static_get_nextTextElementOffset;
 template<class __TT> struct $static_GetGraphemeClusterBreakType;
 template<class __TT> struct $static_getGetGraphemeClusterBreakType;
 template<class __TT> struct $static_GetData;
@@ -185,10 +183,10 @@ template<class __TT> struct $static_getGetRemainingByteLength;
 		ADV_EXPRESSION_BODY(_iterator.$ref().Reset()); 
 	}
 #line 183 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"
-	inline auto TextElementIndicesIterator::GetCurrent() const  -> const IndexRange
+	inline auto TextElementIndicesIterator::GetCurrent() const  -> const Builtin::Tuple<Builtin::usize, Builtin::Str>
 	{
 		#line 183 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"
-		ADV_EXPRESSION_BODY(System::Range<Builtin::Auto<decltype((ADV_UPCS(_nextTextElementOffset)(_iterator.$ref())))>, false>((ADV_UPCS(_currentTextElementOffset)(_iterator.$ref())), (ADV_UPCS(_nextTextElementOffset)(_iterator.$ref())))); 
+		ADV_EXPRESSION_BODY(Builtin::MakeTuple(ADV_UPCS(_currentTextElementOffset)(_iterator.$ref()), ADV_UFCS(GetCurrent)(_iterator.$ref()))); 
 	}
 #line 185 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"
 	inline auto TextElementIndicesIterator::GetData() const  -> const System::Span<Builtin::u8>

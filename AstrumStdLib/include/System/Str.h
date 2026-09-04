@@ -488,9 +488,9 @@ using $extensions::getHashCode;
 	//###############################################################################
 //# Global compile-time constants
 //###############################################################################
-inline constexpr Builtin::Str $strconst_0x20c21614c80_0 = "Begin ";
-inline constexpr Builtin::Str $strconst_0x20c21614c80_1 = " Middle ";
-inline constexpr Builtin::Str $strconst_0x20c21614c80_2 = " End";
+inline constexpr Builtin::StaticStr $strconst_0x1bb3a6dd8b0_0 = "Begin ";
+inline constexpr Builtin::StaticStr $strconst_0x1bb3a6dd8b0_1 = " Middle ";
+inline constexpr Builtin::StaticStr $strconst_0x1bb3a6dd8b0_2 = " End";
 } namespace $extensions {
 template<class __TT> struct $static_Start;
 template<class __TT> struct $static_getStart;
@@ -1691,7 +1691,7 @@ template<class __TT> struct $static_getCeilIndexToUtf8CodePointBoundary;
 	inline auto Lines($extension_Str_34_str const& $this LIFETIMEBOUND, StringSplitOptions options)  -> const StringSpliterator
 	{
 		#line 684 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		ADV_EXPRESSION_BODY(StringSpliterator{$this, ADV_UPCS(Bytes)(Builtin::Str{"\r\n"}.$ref()), options | StringSplitOptions::ProcessLineEndingAsSingleChar}); 
+		ADV_EXPRESSION_BODY(StringSpliterator{$this, ADV_UPCS(Bytes)(Builtin::StaticStr{"\r\n"}.$ref()), options | StringSplitOptions::ProcessLineEndingAsSingleChar}); 
 	}
 	
 } namespace System{
@@ -1700,7 +1700,7 @@ template<class __TT> struct $static_getCeilIndexToUtf8CodePointBoundary;
 	inline auto LinesReversed($extension_Str_34_str const& $this LIFETIMEBOUND, StringSplitOptions options)  -> const StringReverseSpliterator
 	{
 		#line 687 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		ADV_EXPRESSION_BODY(StringReverseSpliterator{$this, ADV_UPCS(Bytes)(Builtin::Str{"\r\n"}.$ref()), options | StringSplitOptions::ProcessLineEndingAsSingleChar}); 
+		ADV_EXPRESSION_BODY(StringReverseSpliterator{$this, ADV_UPCS(Bytes)(Builtin::StaticStr{"\r\n"}.$ref()), options | StringSplitOptions::ProcessLineEndingAsSingleChar}); 
 	}
 	
 } namespace System{
@@ -2365,7 +2365,7 @@ template<class __TT> struct $static_getCeilIndexToUtf8CodePointBoundary;
 	inline auto getSplitWhitespace($extension_Str_34_str const & $this ) -> const StringSpliterator
 	{
 		#line 674 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		ADV_EXPRESSION_BODY(StringSpliterator{$this, ADV_UPCS(Bytes)(Builtin::Str{""}.$ref()), StringSplitOptions::SkipEmptyEntries}); 
+		ADV_EXPRESSION_BODY(StringSpliterator{$this, ADV_UPCS(Bytes)(Builtin::StaticStr{""}.$ref()), StringSplitOptions::SkipEmptyEntries}); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
@@ -2373,7 +2373,7 @@ template<class __TT> struct $static_getCeilIndexToUtf8CodePointBoundary;
 	inline auto getSplitWhitespaceReversed($extension_Str_34_str const & $this ) -> const StringReverseSpliterator
 	{
 		#line 677 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Str.ast"
-		ADV_EXPRESSION_BODY(StringReverseSpliterator{$this, ADV_UPCS(Bytes)(Builtin::Str{""}.$ref()), StringSplitOptions::SkipEmptyEntries}); 
+		ADV_EXPRESSION_BODY(StringReverseSpliterator{$this, ADV_UPCS(Bytes)(Builtin::StaticStr{""}.$ref()), StringSplitOptions::SkipEmptyEntries}); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;

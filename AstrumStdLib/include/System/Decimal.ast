@@ -1,6 +1,6 @@
 package System;
 
-import Float128;
+public import Float128;
 import InlineArray;
 
 public struct Decimal {

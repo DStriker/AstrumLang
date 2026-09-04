@@ -11,8 +11,6 @@ namespace __Unsafe {} namespace __MidpointRounding$Protected__Unsafe {}
 //###############################################################################
 class MidpointRounding;
 class $Class_MidpointRounding;
-} namespace $extensions {
-} namespace System {
 //###############################################################################
 //# Type definitions
 //###############################################################################
@@ -28,11 +26,11 @@ class $Class_MidpointRounding;
 		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, Builtin::u8)
 		public: constexpr MidpointRounding() noexcept = default;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
-		private: static constexpr Builtin::Str __names[] = {"ToEven", "AwayFromZero", "ToZero", "ToNegativeInfinity", "ToPositiveInfinity"};
+		private: static constexpr Builtin::StaticStr __names[] = {"ToEven", "AwayFromZero", "ToZero", "ToNegativeInfinity", "ToPositiveInfinity"};
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
 		public: static constexpr int __variants = 5;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
-		public: static constexpr std::span<const Builtin::Str> GetNames() noexcept { return __names; }
+		public: static constexpr std::span<const Builtin::StaticStr> GetNames() noexcept { return __names; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
 		private: static const MidpointRounding __values[];
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
@@ -98,6 +96,8 @@ class $Class_MidpointRounding;
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\MidpointRounding.ast"
 	ADV_CHECK_FOR_CONCRETE(MidpointRounding);
 	
+} namespace $extensions {
+} namespace System {
 //###############################################################################
 //# Function definitions
 //###############################################################################

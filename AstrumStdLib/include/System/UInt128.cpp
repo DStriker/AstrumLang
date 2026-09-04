@@ -1,5 +1,5 @@
-#include "Math.h"
 #include "UInt128.h"
+#include "Math.h"
 
 namespace System {
 //###############################################################################
@@ -819,7 +819,7 @@ namespace System {
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 806 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt128.ast"
-	template<class T> auto _operator_bsl_mod_qst($extension_UInt128_522_u128 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_UInt128_522_u128, bool>
+	template<class T> auto _operator_bsl_mod_qst($extension_UInt128_522_u128 const& $this LIFETIMEBOUND, T rhs)  -> const Builtin::Tuple<$extension_UInt128_522_u128, bool>
 	{
 		#line 807 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt128.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator \\%? implemented only for integer types");
@@ -828,7 +828,7 @@ namespace System {
 		#line 809 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt128.ast"
 		Builtin::Auto<decltype(!Builtin::SafeDivide($this, rhs, result))> overflowed = !Builtin::SafeDivide($this, rhs, result); 
 		#line 810 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\UInt128.ast"
-		return std::make_tuple(result, overflowed);
+		return Builtin::MakeTuple(result, overflowed);
 	}
 	
 } namespace System{

@@ -149,7 +149,7 @@ using $extensions::ToChar;
 	#line 150 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	ADV_CHECK_INTERFACE(IDivisibleArithmetic, IDivisibleArithmetic);
 	#line 152 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	template<class T> inline constexpr auto _operator_div_mod($extension_Int8_150_i8 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int8_150_i8, $extension_Int8_150_i8>;
+	template<class T> inline constexpr auto _operator_div_mod($extension_Int8_150_i8 const& $this LIFETIMEBOUND, T rhs)  -> const Builtin::Tuple<$extension_Int8_150_i8, $extension_Int8_150_i8>;
 	#line 158 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	template<class T> inline constexpr auto _operator_div_not($extension_Int8_150_i8 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Int8_150_i8;
 	#line 165 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
@@ -441,7 +441,7 @@ using $extensions::getLog10;
 	#line 581 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	template<class T> inline constexpr auto _operator_add_or_eq($extension_Int8_529_i8 & $this , T rhs) noexcept -> typename $extension_Int8_529_i8&;
 	#line 585 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	template<class T> inline constexpr auto _operator_add_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int8_529_i8, bool>;
+	template<class T> inline constexpr auto _operator_add_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Tuple<$extension_Int8_529_i8, bool>;
 	#line 593 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_qst($extension_Int8_529_i8 & $this )  -> typename $extension_Int8_529_i8&;
 	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_qst_postfix($extension_Int8_529_i8 & $this)  -> decltype(auto);
@@ -455,9 +455,9 @@ using $extensions::getLog10;
 	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_or($extension_Int8_529_i8 & $this )  -> typename $extension_Int8_529_i8&;
 	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_add_add_or_postfix($extension_Int8_529_i8 & $this)  -> decltype(auto);
 	#line 606 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	inline constexpr auto CarryingAdd($extension_Int8_529_i8 const& $this LIFETIMEBOUND, $extension_Int8_529_i8 rhs, bool carry) noexcept -> const std::tuple<$extension_Int8_529_i8, bool>;
+	inline constexpr auto CarryingAdd($extension_Int8_529_i8 const& $this LIFETIMEBOUND, $extension_Int8_529_i8 rhs, bool carry) noexcept -> const Builtin::Tuple<$extension_Int8_529_i8, bool>;
 	#line 615 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	inline constexpr auto BorrowingSub($extension_Int8_529_i8 const& $this LIFETIMEBOUND, $extension_Int8_529_i8 rhs, bool carry) noexcept -> const std::tuple<$extension_Int8_529_i8, bool>;
+	inline constexpr auto BorrowingSub($extension_Int8_529_i8 const& $this LIFETIMEBOUND, $extension_Int8_529_i8 rhs, bool carry) noexcept -> const Builtin::Tuple<$extension_Int8_529_i8, bool>;
 	#line 624 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	template<class T> inline constexpr auto _operator_sub_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int8_529_i8>;
 	#line 633 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
@@ -475,7 +475,7 @@ using $extensions::getLog10;
 	#line 673 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	template<class T> inline constexpr auto _operator_sub_or_eq($extension_Int8_529_i8 & $this , T rhs) noexcept -> typename $extension_Int8_529_i8&;
 	#line 677 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	template<class T> inline constexpr auto _operator_sub_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int8_529_i8, bool>;
+	template<class T> inline constexpr auto _operator_sub_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Tuple<$extension_Int8_529_i8, bool>;
 	#line 685 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_qst($extension_Int8_529_i8 & $this )  -> typename $extension_Int8_529_i8&;
 	[[clang::annotate("UserAttr: Commutative")]] inline constexpr auto _operator_sub_sub_qst_postfix($extension_Int8_529_i8 & $this)  -> decltype(auto);
@@ -505,11 +505,11 @@ using $extensions::getLog10;
 	#line 747 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	template<class T> inline constexpr auto _operator_mul_or_eq($extension_Int8_529_i8 & $this , T rhs) noexcept -> typename $extension_Int8_529_i8&;
 	#line 751 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	template<class T> inline constexpr auto _operator_mul_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int8_529_i8, bool>;
+	template<class T> inline constexpr auto _operator_mul_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Tuple<$extension_Int8_529_i8, bool>;
 	#line 760 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	inline constexpr auto _operator_mul_gt($extension_Int8_529_i8 const& $this LIFETIMEBOUND, $extension_Int8_529_i8 rhs) noexcept -> const std::tuple<Builtin::u8, Builtin::i8>;
+	inline constexpr auto _operator_mul_gt($extension_Int8_529_i8 const& $this LIFETIMEBOUND, $extension_Int8_529_i8 rhs) noexcept -> const Builtin::Tuple<Builtin::u8, Builtin::i8>;
 	#line 769 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	inline constexpr auto CarryingMul($extension_Int8_529_i8 const& $this LIFETIMEBOUND, $extension_Int8_529_i8 rhs, $extension_Int8_529_i8 carry) noexcept -> const std::tuple<Builtin::u8, Builtin::i8>;
+	inline constexpr auto CarryingMul($extension_Int8_529_i8 const& $this LIFETIMEBOUND, $extension_Int8_529_i8 rhs, $extension_Int8_529_i8 carry) noexcept -> const Builtin::Tuple<Builtin::u8, Builtin::i8>;
 	#line 777 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	template<class T> inline constexpr auto _operator_bsl_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int8_529_i8>;
 	#line 786 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
@@ -527,7 +527,7 @@ using $extensions::getLog10;
 	#line 829 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	template<class T> inline constexpr auto _operator_bsl_or_eq($extension_Int8_529_i8 & $this , T rhs)  -> typename $extension_Int8_529_i8&;
 	#line 834 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	template<class T> inline constexpr auto _operator_bsl_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int8_529_i8, bool>;
+	template<class T> inline constexpr auto _operator_bsl_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs)  -> const Builtin::Tuple<$extension_Int8_529_i8, bool>;
 	#line 843 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	template<class T> inline constexpr auto _operator_bsl_bsl_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Nullable<$extension_Int8_529_i8>;
 	#line 853 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
@@ -545,7 +545,7 @@ using $extensions::getLog10;
 	#line 904 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	template<class T> inline constexpr auto _operator_mod_mod_eq($extension_Int8_529_i8 & $this , T rhs)  -> typename $extension_Int8_529_i8&;
 	#line 909 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	template<class T> inline constexpr auto _operator_mod_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int8_529_i8, bool>;
+	template<class T> inline constexpr auto _operator_mod_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs)  -> const Builtin::Tuple<$extension_Int8_529_i8, bool>;
 	#line 918 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	inline constexpr auto _operator_sub_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND) noexcept -> const Builtin::Nullable<$extension_Int8_529_i8>;
 	#line 928 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
@@ -555,7 +555,7 @@ using $extensions::getLog10;
 	#line 943 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	inline constexpr auto _operator_sub_or($extension_Int8_529_i8 const& $this LIFETIMEBOUND)  -> const typename $extension_Int8_529_i8;
 	#line 951 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	inline constexpr auto _operator_sub_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND)  -> const std::tuple<$extension_Int8_529_i8, bool>;
+	inline constexpr auto _operator_sub_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND)  -> const Builtin::Tuple<$extension_Int8_529_i8, bool>;
 	#line 959 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	inline constexpr auto _operator_lt_lt_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Nullable<$extension_Int8_529_i8>;
 	#line 967 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
@@ -569,7 +569,7 @@ using $extensions::getLog10;
 	#line 988 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	inline constexpr auto _operator_lt_lt_mod_eq($extension_Int8_529_i8 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int8_529_i8&;
 	#line 990 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	inline constexpr auto _operator_lt_lt_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const std::tuple<$extension_Int8_529_i8, bool>;
+	inline constexpr auto _operator_lt_lt_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Tuple<$extension_Int8_529_i8, bool>;
 	#line 993 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	inline constexpr auto _operator_gt_gt_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Nullable<$extension_Int8_529_i8>;
 	#line 1001 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
@@ -583,7 +583,7 @@ using $extensions::getLog10;
 	#line 1022 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	inline constexpr auto _operator_gt_gt_mod_eq($extension_Int8_529_i8 & $this , Builtin::i32 amount) noexcept -> typename $extension_Int8_529_i8&;
 	#line 1024 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	inline constexpr auto _operator_gt_gt_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const std::tuple<$extension_Int8_529_i8, bool>;
+	inline constexpr auto _operator_gt_gt_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Tuple<$extension_Int8_529_i8, bool>;
 	#line 1030 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	inline constexpr auto _operator_xor_xor_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const Builtin::Nullable<$extension_Int8_529_i8>;
 	#line 1059 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
@@ -601,7 +601,7 @@ using $extensions::getLog10;
 	#line 1133 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	inline constexpr auto _operator_xor_xor_or_eq($extension_Int8_529_i8 & $this , Builtin::u32 exp) noexcept -> typename $extension_Int8_529_i8&;
 	#line 1135 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	inline constexpr auto _operator_xor_xor_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const std::tuple<$extension_Int8_529_i8, bool>;
+	inline constexpr auto _operator_xor_xor_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const Builtin::Tuple<$extension_Int8_529_i8, bool>;
 	#line 1166 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	inline constexpr auto getCheckedAbs($extension_Int8_529_i8 const& $this ) -> const Builtin::Nullable<$extension_Int8_529_i8>;
 	#line 1169 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
@@ -611,7 +611,7 @@ using $extensions::getLog10;
 	#line 1175 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	inline constexpr auto getSaturatingAbs($extension_Int8_529_i8 const& $this ) -> const $extension_Int8_529_i8;
 	#line 1178 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	inline constexpr auto getOverflowingAbs($extension_Int8_529_i8 const& $this ) -> const std::tuple<$extension_Int8_529_i8, bool>;
+	inline constexpr auto getOverflowingAbs($extension_Int8_529_i8 const& $this ) -> const Builtin::Tuple<$extension_Int8_529_i8, bool>;
 	#line 529 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION($extension_Int8_529_i8, ICheckedArithmetic, ICheckedArithmetic, $extension_Int8_529_i8);
 	} namespace System{
@@ -1362,12 +1362,12 @@ template<class __TT> struct $static_getCarryingMul;
 	
 } namespace $extensions { using namespace System;
 #line 152 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	template<class T> inline constexpr auto _operator_div_mod($extension_Int8_150_i8 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int8_150_i8, $extension_Int8_150_i8>
+	template<class T> inline constexpr auto _operator_div_mod($extension_Int8_150_i8 const& $this LIFETIMEBOUND, T rhs)  -> const Builtin::Tuple<$extension_Int8_150_i8, $extension_Int8_150_i8>
 	{
 		#line 154 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator /% implemented only for integer types");
 		#line 155 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		return std::make_tuple(ADV_UFCS(_operator_bsl)($this, rhs), $this % rhs);
+		return Builtin::MakeTuple(ADV_UFCS(_operator_bsl)($this, rhs), $this % rhs);
 	}
 	
 } namespace System{
@@ -2239,7 +2239,7 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 585 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	template<class T> inline constexpr auto _operator_add_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int8_529_i8, bool>
+	template<class T> inline constexpr auto _operator_add_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Tuple<$extension_Int8_529_i8, bool>
 	{
 		#line 586 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator +%? implemented only for integer types");
@@ -2248,7 +2248,7 @@ template<class __TT> struct $static_getCarryingMul;
 		#line 588 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		Builtin::Auto<decltype(!Builtin::SafeAdd($this, rhs, result))> overflowed = !Builtin::SafeAdd($this, rhs, result); 
 		#line 589 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		return std::make_tuple(result, overflowed);
+		return Builtin::MakeTuple(result, overflowed);
 	}
 	
 } namespace System{
@@ -2294,27 +2294,27 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 606 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	inline constexpr auto CarryingAdd($extension_Int8_529_i8 const& $this LIFETIMEBOUND, $extension_Int8_529_i8 rhs, bool carry) noexcept -> const std::tuple<$extension_Int8_529_i8, bool>
+	inline constexpr auto CarryingAdd($extension_Int8_529_i8 const& $this LIFETIMEBOUND, $extension_Int8_529_i8 rhs, bool carry) noexcept -> const Builtin::Tuple<$extension_Int8_529_i8, bool>
 	{
 		#line 608 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		$extension_Int8_529_i8 result{}; 
 		#line 609 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		Builtin::Auto<decltype(Builtin::CarryingAdd($this, rhs, carry, result))> overflowed = Builtin::CarryingAdd($this, rhs, carry, result); 
 		#line 610 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		return std::make_tuple(result, overflowed);
+		return Builtin::MakeTuple(result, overflowed);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 615 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	inline constexpr auto BorrowingSub($extension_Int8_529_i8 const& $this LIFETIMEBOUND, $extension_Int8_529_i8 rhs, bool carry) noexcept -> const std::tuple<$extension_Int8_529_i8, bool>
+	inline constexpr auto BorrowingSub($extension_Int8_529_i8 const& $this LIFETIMEBOUND, $extension_Int8_529_i8 rhs, bool carry) noexcept -> const Builtin::Tuple<$extension_Int8_529_i8, bool>
 	{
 		#line 617 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		$extension_Int8_529_i8 result{}; 
 		#line 618 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		Builtin::Auto<decltype(Builtin::BorrowingSub($this, rhs, carry, result))> overflowed = Builtin::BorrowingSub($this, rhs, carry, result); 
 		#line 619 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		return std::make_tuple(result, overflowed);
+		return Builtin::MakeTuple(result, overflowed);
 	}
 	
 } namespace System{
@@ -2431,7 +2431,7 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 677 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	template<class T> inline constexpr auto _operator_sub_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int8_529_i8, bool>
+	template<class T> inline constexpr auto _operator_sub_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Tuple<$extension_Int8_529_i8, bool>
 	{
 		#line 678 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator -%? implemented only for integer types");
@@ -2440,7 +2440,7 @@ template<class __TT> struct $static_getCarryingMul;
 		#line 680 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		Builtin::Auto<decltype(!Builtin::SafeSubtract($this, rhs, result))> overflowed = !Builtin::SafeSubtract($this, rhs, result); 
 		#line 681 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		return std::make_tuple(result, overflowed);
+		return Builtin::MakeTuple(result, overflowed);
 	}
 	
 } namespace System{
@@ -2597,7 +2597,7 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 751 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	template<class T> inline constexpr auto _operator_mul_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs) noexcept -> const std::tuple<$extension_Int8_529_i8, bool>
+	template<class T> inline constexpr auto _operator_mul_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs) noexcept -> const Builtin::Tuple<$extension_Int8_529_i8, bool>
 	{
 		#line 752 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator *%? implemented only for integer types");
@@ -2606,29 +2606,29 @@ template<class __TT> struct $static_getCarryingMul;
 		#line 754 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		Builtin::Auto<decltype(!Builtin::SafeMultiply($this, rhs, result))> overflowed = !Builtin::SafeMultiply($this, rhs, result); 
 		#line 755 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		return std::make_tuple(result, overflowed);
+		return Builtin::MakeTuple(result, overflowed);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 760 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	inline constexpr auto _operator_mul_gt($extension_Int8_529_i8 const& $this LIFETIMEBOUND, $extension_Int8_529_i8 rhs) noexcept -> const std::tuple<Builtin::u8, Builtin::i8>
+	inline constexpr auto _operator_mul_gt($extension_Int8_529_i8 const& $this LIFETIMEBOUND, $extension_Int8_529_i8 rhs) noexcept -> const Builtin::Tuple<Builtin::u8, Builtin::i8>
 	{
 		#line 762 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		const auto& [low, high] = Builtin::WideningMul8($this, rhs);
 		#line 763 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		return std::make_tuple(low, high);
+		return Builtin::MakeTuple(low, high);
 	}
 	
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 769 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	inline constexpr auto CarryingMul($extension_Int8_529_i8 const& $this LIFETIMEBOUND, $extension_Int8_529_i8 rhs, $extension_Int8_529_i8 carry) noexcept -> const std::tuple<Builtin::u8, Builtin::i8>
+	inline constexpr auto CarryingMul($extension_Int8_529_i8 const& $this LIFETIMEBOUND, $extension_Int8_529_i8 rhs, $extension_Int8_529_i8 carry) noexcept -> const Builtin::Tuple<Builtin::u8, Builtin::i8>
 	{
 		#line 771 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		const auto& [low, high] = Builtin::CarryingMul8($this, rhs, carry);
 		#line 772 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		return std::make_tuple(low, high);
+		return Builtin::MakeTuple(low, high);
 	}
 	
 } namespace System{
@@ -2745,7 +2745,7 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 834 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	template<class T> inline constexpr auto _operator_bsl_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int8_529_i8, bool>
+	template<class T> inline constexpr auto _operator_bsl_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs)  -> const Builtin::Tuple<$extension_Int8_529_i8, bool>
 	{
 		#line 835 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator \\%? implemented only for integer types");
@@ -2754,7 +2754,7 @@ template<class __TT> struct $static_getCarryingMul;
 		#line 837 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		Builtin::Auto<decltype(!Builtin::SafeDivide($this, rhs, result))> overflowed = !Builtin::SafeDivide($this, rhs, result); 
 		#line 838 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		return std::make_tuple(result, overflowed);
+		return Builtin::MakeTuple(result, overflowed);
 	}
 	
 } namespace System{
@@ -2886,7 +2886,7 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 909 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	template<class T> inline constexpr auto _operator_mod_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Int8_529_i8, bool>
+	template<class T> inline constexpr auto _operator_mod_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, T rhs)  -> const Builtin::Tuple<$extension_Int8_529_i8, bool>
 	{
 		#line 910 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		static_assert(Builtin::TypeIs<T, IBinaryInteger>(), "Operator %%? implemented only for integer types");
@@ -2895,7 +2895,7 @@ template<class __TT> struct $static_getCarryingMul;
 		#line 912 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		Builtin::Auto<decltype(!Builtin::SafeModulus($this, rhs, result))> overflowed = !Builtin::SafeModulus($this, rhs, result); 
 		#line 913 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		return std::make_tuple(result, overflowed);
+		return Builtin::MakeTuple(result, overflowed);
 	}
 	
 } namespace System{
@@ -2956,14 +2956,14 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 951 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	inline constexpr auto _operator_sub_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND)  -> const std::tuple<$extension_Int8_529_i8, bool>
+	inline constexpr auto _operator_sub_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND)  -> const Builtin::Tuple<$extension_Int8_529_i8, bool>
 	{
 		#line 953 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		$extension_Int8_529_i8 result{}; 
 		#line 954 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		Builtin::Auto<decltype(!Builtin::SafeNegate($this, result))> overflowed = !Builtin::SafeNegate($this, result); 
 		#line 955 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		return std::make_tuple(result, overflowed);
+		return Builtin::MakeTuple(result, overflowed);
 	}
 	
 } namespace System{
@@ -3039,10 +3039,10 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 990 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	inline constexpr auto _operator_lt_lt_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const std::tuple<$extension_Int8_529_i8, bool>
+	inline constexpr auto _operator_lt_lt_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Tuple<$extension_Int8_529_i8, bool>
 	{
 		#line 990 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		ADV_EXPRESSION_BODY(std::make_tuple(ADV_UFCS(_operator_lt_lt_mod)($this, amount), (amount <=> Builtin::i32(0)) < 0 || (amount <=> ADV_USPCS(BitWidth, $extension_Int8_529_i8)()) >= 0)); 
+		ADV_EXPRESSION_BODY(Builtin::MakeTuple(ADV_UFCS(_operator_lt_lt_mod)($this, amount), (amount <=> Builtin::i32(0)) < 0 || (amount <=> ADV_USPCS(BitWidth, $extension_Int8_529_i8)()) >= 0)); 
 	}
 	
 } namespace System{
@@ -3118,10 +3118,10 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 1024 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	inline constexpr auto _operator_gt_gt_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const std::tuple<$extension_Int8_529_i8, bool>
+	inline constexpr auto _operator_gt_gt_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, Builtin::i32 amount) noexcept -> const Builtin::Tuple<$extension_Int8_529_i8, bool>
 	{
 		#line 1024 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		ADV_EXPRESSION_BODY(std::make_tuple(ADV_UFCS(_operator_gt_gt_mod)($this, amount), (amount <=> Builtin::i32(0)) < 0 || (amount <=> ADV_USPCS(BitWidth, $extension_Int8_529_i8)()) >= 0)); 
+		ADV_EXPRESSION_BODY(Builtin::MakeTuple(ADV_UFCS(_operator_gt_gt_mod)($this, amount), (amount <=> Builtin::i32(0)) < 0 || (amount <=> ADV_USPCS(BitWidth, $extension_Int8_529_i8)()) >= 0)); 
 	}
 	
 } namespace System{
@@ -3347,12 +3347,12 @@ template<class __TT> struct $static_getCarryingMul;
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 1135 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	inline constexpr auto _operator_xor_xor_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const std::tuple<$extension_Int8_529_i8, bool>
+	inline constexpr auto _operator_xor_xor_mod_qst($extension_Int8_529_i8 const& $this LIFETIMEBOUND, Builtin::u32 exp) noexcept -> const Builtin::Tuple<$extension_Int8_529_i8, bool>
 	{
 		#line 1137 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		if (exp == Builtin::i32(0)) [[unlikely]] {
 			#line 1139 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-			return std::make_tuple(Builtin::i8(1), Builtin::Boolean(false));
+			return Builtin::MakeTuple(Builtin::i8(1), Builtin::Boolean(false));
 		}
 		#line 1142 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		Builtin::Auto<decltype($this)> base = $this; 
@@ -3361,7 +3361,7 @@ template<class __TT> struct $static_getCarryingMul;
 		#line 1144 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		Builtin::Auto<decltype(Builtin::Boolean(false))> overflowed = Builtin::Boolean(false); 
 		#line 1145 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		Builtin::Auto<decltype(std::make_tuple(Builtin::i8(0), Builtin::Boolean(false)))> tmp = std::make_tuple(Builtin::i8(0), Builtin::Boolean(false)); 
+		Builtin::Auto<decltype(Builtin::MakeTuple(Builtin::i8(0), Builtin::Boolean(false)))> tmp = Builtin::MakeTuple(Builtin::i8(0), Builtin::Boolean(false)); 
 		#line 1147 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		for (;;) 
 		{
@@ -3372,23 +3372,23 @@ template<class __TT> struct $static_getCarryingMul;
 				#line 1150 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 				if (exp == Builtin::i32(1)) {
 					#line 1151 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-					std::get<1>(tmp) |= overflowed;
+					get<1>(tmp) |= overflowed;
 					#line 1152 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 					return tmp;
 				}
 				#line 1154 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-				result = std::get<0>(tmp);
+				result = get<0>(tmp);
 				#line 1155 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-				overflowed |= std::get<1>(tmp);
+				overflowed |= get<1>(tmp);
 			}
 			#line 1157 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 			ADV_UFCS(DivAssign)(exp.$ref(), Builtin::i32(2));
 			#line 1158 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 			tmp = ADV_UFCS(_operator_mul_mod_qst)(base, base);
 			#line 1159 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-			base = std::get<0>(tmp);
+			base = get<0>(tmp);
 			#line 1160 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-			overflowed |= std::get<1>(tmp);
+			overflowed |= get<1>(tmp);
 		}
 		return {};
 	}
@@ -3428,7 +3428,7 @@ template<class __TT> struct $static_getCarryingMul;
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1178 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-	inline constexpr auto getOverflowingAbs($extension_Int8_529_i8 const & $this ) -> const std::tuple<$extension_Int8_529_i8, bool>
+	inline constexpr auto getOverflowingAbs($extension_Int8_529_i8 const & $this ) -> const Builtin::Tuple<$extension_Int8_529_i8, bool>
 	{
 		#line 1180 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
 		if (ADV_UPCS(IsNegative)($this.$ref())) {
@@ -3436,7 +3436,7 @@ template<class __TT> struct $static_getCarryingMul;
 			return ADV_UFCS(_operator_sub_mod_qst)($this);
 		}
 		#line 1183 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"
-		return std::make_tuple($this, Builtin::Boolean(false));
+		return Builtin::MakeTuple($this, Builtin::Boolean(false));
 	}
 	} namespace System{
 #line 9999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Int8.ast"

@@ -1,5 +1,5 @@
-#include "Math.h"
 #include "UInt16.h"
+#include "Math.h"
 
 namespace System {
 //###############################################################################

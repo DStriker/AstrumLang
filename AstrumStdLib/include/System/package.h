@@ -42,3 +42,4 @@
 #include "UInt32.h"
 #include "UInt64.h"
 #include "UInt8.h"
+#include "Union.h"

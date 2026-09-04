@@ -27,12 +27,12 @@ class Math;
 	struct Math : public Builtin::StaticClass {
 		public: using $self = Math;
 		#line 15 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-		private: using IsqrtData = std::tuple<Builtin::u8, Builtin::u8>;
+		private: using IsqrtData = Builtin::Tuple<Builtin::u8, Builtin::u8>;
 		private: Math() = default;
 		#line 34 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-		private: template<$ImplementsInterface_IFixedWidthInteger T> inline constexpr static auto _isqrtFirstStage(T num)  -> const std::tuple<Builtin::u8, Builtin::u8>;
+		private: template<$ImplementsInterface_IFixedWidthInteger T> inline constexpr static auto _isqrtFirstStage(T num)  -> const Builtin::Tuple<Builtin::u8, Builtin::u8>;
 		#line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-		private: template<$ImplementsInterface_IFixedWidthInteger T, $ImplementsInterface_IFixedWidthInteger U> inline constexpr static auto _isqrtMiddleStage(T num, auto root, auto rem)  -> const std::tuple<U, U>;
+		private: template<$ImplementsInterface_IFixedWidthInteger T, $ImplementsInterface_IFixedWidthInteger U> inline constexpr static auto _isqrtMiddleStage(T num, auto root, auto rem)  -> const Builtin::Tuple<U, U>;
 		#line 70 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		private: template<$ImplementsInterface_IFixedWidthInteger T> inline constexpr static auto _isqrtLastStage(T num, auto root, auto rem)  -> const T;
 		#line 90 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
@@ -56,7 +56,7 @@ class Math;
 		#line 166 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		public: template<class T, class U> inline constexpr static auto CheckedAdd(T lhs, U rhs)  -> const Builtin::Nullable<std::remove_cvref_t<T>>;
 		#line 167 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-		public: template<class T, class U> inline constexpr static auto OverflowingAdd(T lhs, U rhs)  -> const std::tuple<std::remove_cvref_t<T>, bool>;
+		public: template<class T, class U> inline constexpr static auto OverflowingAdd(T lhs, U rhs)  -> const Builtin::Tuple<std::remove_cvref_t<T>, bool>;
 		#line 168 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		public: template<class T, class U> inline constexpr static auto Subtract(T lhs, U rhs)  -> const std::remove_cvref_t<T>;
 		#line 169 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
@@ -68,7 +68,7 @@ class Math;
 		#line 172 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		public: template<class T, class U> inline constexpr static auto CheckedSubtract(T lhs, U rhs)  -> const Builtin::Nullable<std::remove_cvref_t<T>>;
 		#line 173 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-		public: template<class T, class U> inline constexpr static auto OverflowingSubtract(T lhs, U rhs)  -> const std::tuple<std::remove_cvref_t<T>, bool>;
+		public: template<class T, class U> inline constexpr static auto OverflowingSubtract(T lhs, U rhs)  -> const Builtin::Tuple<std::remove_cvref_t<T>, bool>;
 		#line 174 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		public: template<class T, class U> inline constexpr static auto Multiply(T lhs, U rhs)  -> const std::remove_cvref_t<T>;
 		#line 175 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
@@ -80,7 +80,7 @@ class Math;
 		#line 178 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		public: template<class T, class U> inline constexpr static auto CheckedMultiply(T lhs, U rhs)  -> const Builtin::Nullable<std::remove_cvref_t<T>>;
 		#line 179 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-		public: template<class T, class U> inline constexpr static auto OverflowingMultiply(T lhs, U rhs)  -> const std::tuple<std::remove_cvref_t<T>, bool>;
+		public: template<class T, class U> inline constexpr static auto OverflowingMultiply(T lhs, U rhs)  -> const Builtin::Tuple<std::remove_cvref_t<T>, bool>;
 		#line 180 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		public: template<class T, class U> inline constexpr static auto IPow(T lhs, U rhs)  -> auto;
 		#line 181 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
@@ -272,7 +272,7 @@ class Math;
 			while ((n <=> Builtin::i32(256)) < 0) 
 			{
 				#line 23 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-				ADV_UFCS(_operator_subscript)(result.$ref(), Builtin::Cast<true, Builtin::i32>(n)) = std::make_tuple(Builtin::Cast<true, Builtin::u8>(rootN), Builtin::Cast<true, Builtin::u8>((n - ADV_UFCS(_operator_xor_xor)(rootN, Builtin::u32(2U)))));
+				ADV_UFCS(_operator_subscript)(result.$ref(), Builtin::Cast<true, Builtin::i32>(n)) = Builtin::MakeTuple(Builtin::Cast<true, Builtin::u8>(rootN), Builtin::Cast<true, Builtin::u8>((n - ADV_UFCS(_operator_xor_xor)(rootN, Builtin::u32(2U)))));
 				#line 24 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 				n++;
 				#line 25 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
@@ -436,7 +436,7 @@ template<class __TT> struct $static_getIsqrt128;
 //###############################################################################
 
 #line 34 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-	template<$ImplementsInterface_IFixedWidthInteger T> inline constexpr auto Math::_isqrtFirstStage(T num)  -> const std::tuple<Builtin::u8, Builtin::u8>
+	template<$ImplementsInterface_IFixedWidthInteger T> inline constexpr auto Math::_isqrtFirstStage(T num)  -> const Builtin::Tuple<Builtin::u8, Builtin::u8>
 	{
 		#line 36 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		ADV_ASSERT((num != Builtin::i32(0)), "num!=0");
@@ -448,7 +448,7 @@ template<class __TT> struct $static_getIsqrt128;
 		return ADV_UFCS(_operator_subscript)(_isqrtLookupTable.$ref(), Builtin::Cast<true, Builtin::i32>(num));
 	}
 #line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-	template<$ImplementsInterface_IFixedWidthInteger T, $ImplementsInterface_IFixedWidthInteger U> inline constexpr auto Math::_isqrtMiddleStage(T num, auto root, auto rem)  -> const std::tuple<U, U>
+	template<$ImplementsInterface_IFixedWidthInteger T, $ImplementsInterface_IFixedWidthInteger U> inline constexpr auto Math::_isqrtMiddleStage(T num, auto root, auto rem)  -> const Builtin::Tuple<U, U>
 	{
 		#line 45 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		ADV_ASSERT((root != Builtin::i32(0)), "root!=0");
@@ -488,7 +488,7 @@ template<class __TT> struct $static_getIsqrt128;
 			s--;
 		}
 		#line 68 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-		return std::make_tuple(s, r);
+		return Builtin::MakeTuple(s, r);
 	}
 #line 70 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 	template<$ImplementsInterface_IFixedWidthInteger T> inline constexpr auto Math::_isqrtLastStage(T num, auto root, auto rem)  -> const T
@@ -525,7 +525,7 @@ template<class __TT> struct $static_getIsqrt128;
 	inline constexpr auto Math::Isqrt8(Builtin::u8 num) noexcept -> const Builtin::u8
 	{
 		#line 90 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-		ADV_EXPRESSION_BODY(std::get<0>(ADV_UFCS(_operator_subscript)(_isqrtLookupTable.$ref(), Builtin::Cast<true, Builtin::i32>(num)))); 
+		ADV_EXPRESSION_BODY(get<0>(ADV_UFCS(_operator_subscript)(_isqrtLookupTable.$ref(), Builtin::Cast<true, Builtin::i32>(num)))); 
 	}
 #line 92 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 	inline constexpr auto Math::Isqrt16(Builtin::u16 num)  -> const Builtin::u16
@@ -654,7 +654,7 @@ template<class __TT> struct $static_getIsqrt128;
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_add_qst)(lhs, rhs)); 
 	}
 #line 167 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-	template<class T, class U> inline constexpr auto Math::OverflowingAdd(T lhs, U rhs)  -> const std::tuple<std::remove_cvref_t<T>, bool>
+	template<class T, class U> inline constexpr auto Math::OverflowingAdd(T lhs, U rhs)  -> const Builtin::Tuple<std::remove_cvref_t<T>, bool>
 	{
 		#line 167 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_add_mod_qst)(lhs, rhs)); 
@@ -690,7 +690,7 @@ template<class __TT> struct $static_getIsqrt128;
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_sub_qst)(lhs, rhs)); 
 	}
 #line 173 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-	template<class T, class U> inline constexpr auto Math::OverflowingSubtract(T lhs, U rhs)  -> const std::tuple<std::remove_cvref_t<T>, bool>
+	template<class T, class U> inline constexpr auto Math::OverflowingSubtract(T lhs, U rhs)  -> const Builtin::Tuple<std::remove_cvref_t<T>, bool>
 	{
 		#line 173 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_sub_mod_qst)(lhs, rhs)); 
@@ -726,7 +726,7 @@ template<class __TT> struct $static_getIsqrt128;
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_mul_qst)(lhs, rhs)); 
 	}
 #line 179 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
-	template<class T, class U> inline constexpr auto Math::OverflowingMultiply(T lhs, U rhs)  -> const std::tuple<std::remove_cvref_t<T>, bool>
+	template<class T, class U> inline constexpr auto Math::OverflowingMultiply(T lhs, U rhs)  -> const Builtin::Tuple<std::remove_cvref_t<T>, bool>
 	{
 		#line 179 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Math.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_mul_mod_qst)(lhs, rhs)); 

@@ -28,7 +28,7 @@ namespace System::Globalization {
 			#line 28 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"
 			if (ADV_UFCS(MoveNext)(charIterator.$ref())) {
 				#line 29 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"
-				currentBreakType = ADV_USFCS((CharUnicodeInfo), GetGraphemeClusterBreakType)(std::get<1>(ADV_UFCS(GetCurrent)(charIterator.$ref())));
+				currentBreakType = ADV_USFCS((CharUnicodeInfo), GetGraphemeClusterBreakType)(get<1>(ADV_UFCS(GetCurrent)(charIterator.$ref())));
 				#line 30 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"
 				return Builtin::Boolean(true);
 			}
@@ -44,7 +44,7 @@ namespace System::Globalization {
 		#line 39 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"
 		Builtin::Defer $defer_39_8{[&]() {{
 			#line 40 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"
-			const Builtin::usize textElementLength = std::get<0>(ADV_UFCS(GetCurrent)(charIterator.$ref())); 
+			const Builtin::usize textElementLength = get<0>(ADV_UFCS(GetCurrent)(charIterator.$ref())); 
 			#line 41 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"
 			if (textElementLength == ADV_USPCS(MaxValue, Builtin::usize)()) {
 				#line 42 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Globalization\\TextElementIterator.ast"

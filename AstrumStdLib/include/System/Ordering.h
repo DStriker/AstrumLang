@@ -11,8 +11,6 @@ namespace __Unsafe {} namespace __Ordering$Protected__Unsafe {}
 //###############################################################################
 class Ordering;
 class $Class_Ordering;
-} namespace $extensions {
-} namespace System {
 //###############################################################################
 //# Type definitions
 //###############################################################################
@@ -28,11 +26,11 @@ class $Class_Ordering;
 		public: constexpr auto getValue() const noexcept { return __value; } ADV_PROPERTY_GETTER(public, Value, getValue, Builtin::i32)
 		public: constexpr Ordering() noexcept = default;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
-		private: static constexpr Builtin::Str __names[] = {"Less", "Equal", "Greater"};
+		private: static constexpr Builtin::StaticStr __names[] = {"Less", "Equal", "Greater"};
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
 		public: static constexpr int __variants = 3;
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
-		public: static constexpr std::span<const Builtin::Str> GetNames() noexcept { return __names; }
+		public: static constexpr std::span<const Builtin::StaticStr> GetNames() noexcept { return __names; }
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
 		private: static const Ordering __values[];
 		#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
@@ -86,6 +84,8 @@ class $Class_Ordering;
 	#line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Ordering.ast"
 	ADV_CHECK_FOR_CONCRETE(Ordering);
 	
+} namespace $extensions {
+} namespace System {
 //###############################################################################
 //# Function definitions
 //###############################################################################

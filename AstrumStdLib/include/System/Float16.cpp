@@ -564,7 +564,7 @@ namespace System {
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 684 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	auto getSinPi($extension_Float16_656_f16 const& $this ) -> const $extension_Float16_656_f16
+	auto getSinPi($extension_Float16_656_f16 const & $this ) -> const $extension_Float16_656_f16
 	{
 		#line 686 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		return Builtin::Cast<true, Builtin::f16>(ADV_UPCS(SinPi)((Builtin::Cast<true, Builtin::f32>($this)).$ref()));
@@ -572,7 +572,7 @@ namespace System {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 689 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	auto getCosPi($extension_Float16_656_f16 const& $this ) -> const $extension_Float16_656_f16
+	auto getCosPi($extension_Float16_656_f16 const & $this ) -> const $extension_Float16_656_f16
 	{
 		#line 691 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		return Builtin::Cast<true, Builtin::f16>(ADV_UPCS(CosPi)((Builtin::Cast<true, Builtin::f32>($this)).$ref()));
@@ -580,17 +580,17 @@ namespace System {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 694 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	auto getSinCosPi($extension_Float16_656_f16 const& $this ) -> const std::tuple<$extension_Float16_656_f16, $extension_Float16_656_f16>
+	auto getSinCosPi($extension_Float16_656_f16 const & $this ) -> const Builtin::Tuple<$extension_Float16_656_f16, $extension_Float16_656_f16>
 	{
 		#line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		const auto& [sin, cos] = ADV_UPCS(SinCosPi)((Builtin::Cast<true, Builtin::f32>($this)).$ref());
 		#line 697 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-		return std::make_tuple(Builtin::Cast<true, Builtin::f16>(sin), Builtin::Cast<true, Builtin::f16>(cos));
+		return Builtin::MakeTuple(Builtin::Cast<true, Builtin::f16>(sin), Builtin::Cast<true, Builtin::f16>(cos));
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 700 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
-	auto getTanPi($extension_Float16_656_f16 const& $this ) -> const $extension_Float16_656_f16
+	auto getTanPi($extension_Float16_656_f16 const & $this ) -> const $extension_Float16_656_f16
 	{
 		#line 702 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float16.ast"
 		return Builtin::Cast<true, Builtin::f16>(ADV_UPCS(TanPi)((Builtin::Cast<true, Builtin::f32>($this)).$ref()));

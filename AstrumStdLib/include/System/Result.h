@@ -257,7 +257,7 @@ template<class __TT> struct $static_getNextPow2;
 	
 } namespace $extensions { using namespace System;
 #line 44 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Result.ast"
-	template<class T, class E> inline auto getHasValue($extension_Result_43_Result<T, E> const& $this ) -> const bool
+	template<class T, class E> inline auto getHasValue($extension_Result_43_Result<T, E> const & $this ) -> const bool
 	{
 		#line 44 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Result.ast"
 		ADV_EXPRESSION_BODY((Builtin::Is<T>($this))); 
@@ -265,7 +265,7 @@ template<class __TT> struct $static_getNextPow2;
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 45 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Result.ast"
-	template<class T, class E> inline auto getValue($extension_Result_43_Result<T, E> const& $this ) -> const T
+	template<class T, class E> inline auto getValue($extension_Result_43_Result<T, E> const & $this ) -> const T
 	{
 		#line 45 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Result.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, T>($this)); 
@@ -273,7 +273,7 @@ template<class __TT> struct $static_getNextPow2;
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 46 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Result.ast"
-	template<class T, class E> inline auto getError($extension_Result_43_Result<T, E> const& $this ) -> const E
+	template<class T, class E> inline auto getError($extension_Result_43_Result<T, E> const & $this ) -> const E
 	{
 		#line 46 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Result.ast"
 		ADV_EXPRESSION_BODY((Builtin::Cast<true, typename $extension_Result_43_Result<T, E>::Err>($this)).$ref().error); 

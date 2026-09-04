@@ -15,20 +15,6 @@ namespace __Unsafe {} namespace __Index$Protected__Unsafe {}
 //# Type forward declarations
 //###############################################################################
 class Index;
-} namespace $extensions {
-template<class __TT> struct $static_FromEnd;
-template<class __TT> struct $static_getFromEnd;
-template<class __TT> struct $static_End;
-template<class __TT> struct $static_getEnd;
-template<class __TT> struct $static_Value;
-template<class __TT> struct $static_getValue;
-template<class __TT> struct $static_IsNegative;
-template<class __TT> struct $static_getIsNegative;
-template<class __TT> struct $static_HashCode;
-template<class __TT> struct $static_getHashCode;
-template<class __TT> struct $static_Start;
-template<class __TT> struct $static_getStart;
-} namespace System {
 //###############################################################################
 //# Type definitions
 //###############################################################################
@@ -168,6 +154,34 @@ using $extensions::_operator_xor;
 	#line 10 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Index.ast"
 	ADV_CHECK_INTERFACE_IMPLEMENTATION(Index, ISelfEquatable, ISelfEquatable, Index);
 	
+} namespace $extensions {
+template<class __TT> struct $static_FromEnd;
+template<class __TT> struct $static_getFromEnd;
+template<class __TT> struct $static_End;
+template<class __TT> struct $static_getEnd;
+template<class __TT> struct $static_IsFromEnd;
+template<class __TT> struct $static_getIsFromEnd;
+template<class __TT> struct $static_IsNegative;
+template<class __TT> struct $static_getIsNegative;
+template<class __TT> struct $static_Value;
+template<class __TT> struct $static_getValue;
+template<class __TT> struct $static_HashCode;
+template<class __TT> struct $static_getHashCode;
+template<class __TT> struct $static_Start;
+template<class __TT> struct $static_getStart;
+template<class __TT> struct $static_NarrowToIsize;
+template<class __TT> struct $static_getNarrowToIsize;
+template<class __TT> struct $static_MaxValue;
+template<class __TT> struct $static_getMaxValue;
+template<class __TT> struct $static_InvalidArgumentException;
+template<class __TT> struct $static_getInvalidArgumentException;
+template<class __TT> struct $static_FromStart;
+template<class __TT> struct $static_getFromStart;
+template<class __TT> struct $static__value;
+template<class __TT> struct $static_get_value;
+template<class __TT> struct $static_ToUsize;
+template<class __TT> struct $static_getToUsize;
+} namespace System {
 //###############################################################################
 //# Function definitions
 //###############################################################################
@@ -258,7 +272,7 @@ using $extensions::_operator_xor;
 	
 } namespace $extensions { using namespace System;
 #line 79 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Index.ast"
-	inline constexpr auto getValue($extension_Index_77_Index const& $this ) -> const Builtin::usize
+	inline constexpr auto getValue($extension_Index_77_Index const & $this ) -> const Builtin::usize
 	{
 		#line 81 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Index.ast"
 		const Builtin::Auto<decltype(Builtin::BitCast<Builtin::isize>($this))> _value = Builtin::BitCast<Builtin::isize>($this); 
@@ -268,7 +282,7 @@ using $extensions::_operator_xor;
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 85 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Index.ast"
-	inline constexpr auto getIsFromEnd($extension_Index_77_Index const& $this ) -> const bool
+	inline constexpr auto getIsFromEnd($extension_Index_77_Index const & $this ) -> const bool
 	{
 		#line 85 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Index.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsNegative)(Builtin::BitCast<Builtin::isize>($this).$ref())); 
@@ -276,7 +290,7 @@ using $extensions::_operator_xor;
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 87 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Index.ast"
-	inline constexpr auto getHashCode($extension_Index_77_Index const& $this ) -> const Builtin::u64
+	inline constexpr auto getHashCode($extension_Index_77_Index const & $this ) -> const Builtin::u64
 	{
 		#line 87 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Index.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(HashCode)(Builtin::BitCast<Builtin::usize>($this).$ref())); 

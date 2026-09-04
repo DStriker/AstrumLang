@@ -14,160 +14,6 @@ using namespace System::Numerics;
 
 namespace System {
 namespace __Unsafe {} namespace __Float32$Protected__Unsafe {}
-} namespace $extensions {
-template<class __TT> struct $static_acoshf;
-template<class __TT> struct $static_getacoshf;
-template<class __TT> struct $static_FromBits;
-template<class __TT> struct $static_getFromBits;
-template<class __TT> struct $static_Bits;
-template<class __TT> struct $static_getBits;
-template<class __TT> struct $static_logf;
-template<class __TT> struct $static_getlogf;
-template<class __TT> struct $static_IsInteger;
-template<class __TT> struct $static_getIsInteger;
-template<class __TT> struct $static_atanf;
-template<class __TT> struct $static_getatanf;
-template<class __TT> struct $static_Abs;
-template<class __TT> struct $static_getAbs;
-template<class __TT> struct $static_IsFinite;
-template<class __TT> struct $static_getIsFinite;
-template<class __TT> struct $static_CosPi;
-template<class __TT> struct $static_getCosPi;
-template<class __TT> struct $static_Truncate;
-template<class __TT> struct $static_getTruncate;
-template<class __TT> struct $static_tanf;
-template<class __TT> struct $static_gettanf;
-template<class __TT> struct $static_NegativeInfinity;
-template<class __TT> struct $static_getNegativeInfinity;
-template<class __TT> struct $static_PositiveInfinity;
-template<class __TT> struct $static_getPositiveInfinity;
-template<class __TT> struct $static_NanValue;
-template<class __TT> struct $static_getNanValue;
-template<class __TT> struct $static_TanPi;
-template<class __TT> struct $static_getTanPi;
-template<class __TT> struct $static_Zero;
-template<class __TT> struct $static_getZero;
-template<class __TT> struct $static_SinPi;
-template<class __TT> struct $static_getSinPi;
-template<class __TT> struct $static_expf;
-template<class __TT> struct $static_getexpf;
-template<class __TT> struct $static_ceilf;
-template<class __TT> struct $static_getceilf;
-template<class __TT> struct $static_InvalidOperationException;
-template<class __TT> struct $static_getInvalidOperationException;
-template<class __TT> struct $static_MinValue;
-template<class __TT> struct $static_getMinValue;
-template<class __TT> struct $static_Acot;
-template<class __TT> struct $static_getAcot;
-template<class __TT> struct $static_Asin;
-template<class __TT> struct $static_getAsin;
-template<class __TT> struct $static_MaxValue;
-template<class __TT> struct $static_getMaxValue;
-template<class __TT> struct $static_sinf;
-template<class __TT> struct $static_getsinf;
-template<class __TT> struct $static_NarrowToInt32;
-template<class __TT> struct $static_getNarrowToInt32;
-template<class __TT> struct $static_Exp10;
-template<class __TT> struct $static_getExp10;
-template<class __TT> struct $static_Atan;
-template<class __TT> struct $static_getAtan;
-template<class __TT> struct $static_PopCount;
-template<class __TT> struct $static_getPopCount;
-template<class __TT> struct $static_Sin;
-template<class __TT> struct $static_getSin;
-template<class __TT> struct $static_log2f;
-template<class __TT> struct $static_getlog2f;
-template<class __TT> struct $static_Subnormal;
-template<class __TT> struct $static_getSubnormal;
-template<class __TT> struct $static_tanhf;
-template<class __TT> struct $static_gettanhf;
-template<class __TT> struct $static_log1pf;
-template<class __TT> struct $static_getlog1pf;
-template<class __TT> struct $static_log10f;
-template<class __TT> struct $static_getlog10f;
-template<class __TT> struct $static_floorf;
-template<class __TT> struct $static_getfloorf;
-template<class __TT> struct $static_truncf;
-template<class __TT> struct $static_gettruncf;
-template<class __TT> struct $static_CopySign;
-template<class __TT> struct $static_getCopySign;
-template<class __TT> struct $static_roundf;
-template<class __TT> struct $static_getroundf;
-template<class __TT> struct $static_BitWidth;
-template<class __TT> struct $static_getBitWidth;
-template<class __TT> struct $static_ilogbf;
-template<class __TT> struct $static_getilogbf;
-template<class __TT> struct $static_LeadingZeroCount;
-template<class __TT> struct $static_getLeadingZeroCount;
-template<class __TT> struct $static_coshf;
-template<class __TT> struct $static_getcoshf;
-template<class __TT> struct $static_cosf;
-template<class __TT> struct $static_getcosf;
-template<class __TT> struct $static_Tan;
-template<class __TT> struct $static_getTan;
-template<class __TT> struct $static_exp2f;
-template<class __TT> struct $static_getexp2f;
-template<class __TT> struct $static_expm1f;
-template<class __TT> struct $static_getexpm1f;
-template<class __TT> struct $static_Acsc;
-template<class __TT> struct $static_getAcsc;
-template<class __TT> struct $static_sqrtf;
-template<class __TT> struct $static_getsqrtf;
-template<class __TT> struct $static_cbrtf;
-template<class __TT> struct $static_getcbrtf;
-template<class __TT> struct $static_Cosh;
-template<class __TT> struct $static_getCosh;
-template<class __TT> struct $static_Cos;
-template<class __TT> struct $static_getCos;
-template<class __TT> struct $static_asinf;
-template<class __TT> struct $static_getasinf;
-template<class __TT> struct $static_sinhf;
-template<class __TT> struct $static_getsinhf;
-template<class __TT> struct $static_acosf;
-template<class __TT> struct $static_getacosf;
-template<class __TT> struct $static_IsOddInteger;
-template<class __TT> struct $static_getIsOddInteger;
-template<class __TT> struct $static_IsSubnormal;
-template<class __TT> struct $static_getIsSubnormal;
-template<class __TT> struct $static_Pi;
-template<class __TT> struct $static_getPi;
-template<class __TT> struct $static_NaN;
-template<class __TT> struct $static_getNaN;
-template<class __TT> struct $static_Sinh;
-template<class __TT> struct $static_getSinh;
-template<class __TT> struct $static_Acos;
-template<class __TT> struct $static_getAcos;
-template<class __TT> struct $static_Asec;
-template<class __TT> struct $static_getAsec;
-template<class __TT> struct $static_atanhf;
-template<class __TT> struct $static_getatanhf;
-template<class __TT> struct $static_asinhf;
-template<class __TT> struct $static_getasinhf;
-template<class __TT> struct $static_Tanh;
-template<class __TT> struct $static_getTanh;
-template<class __TT> struct $static_Epsilon;
-template<class __TT> struct $static_getEpsilon;
-template<class __TT> struct $static_Sqrt;
-template<class __TT> struct $static_getSqrt;
-template<class __TT> struct $static_IsNaN;
-template<class __TT> struct $static_getIsNaN;
-template<class __TT> struct $static_IsInfinity;
-template<class __TT> struct $static_getIsInfinity;
-template<class __TT> struct $static_Infinity;
-template<class __TT> struct $static_getInfinity;
-template<class __TT> struct $static_IsZero;
-template<class __TT> struct $static_getIsZero;
-template<class __TT> struct $static_Normal;
-template<class __TT> struct $static_getNormal;
-template<class __TT> struct $static_tgammaf;
-template<class __TT> struct $static_gettgammaf;
-template<class __TT> struct $static_lgammaf;
-template<class __TT> struct $static_getlgammaf;
-template<class __TT> struct $static_erff;
-template<class __TT> struct $static_geterff;
-template<class __TT> struct $static_erfcf;
-template<class __TT> struct $static_geterfcf;
-} namespace System {
 //###############################################################################
 //# Global type aliases
 //###############################################################################
@@ -297,7 +143,7 @@ using $extensions::ToChar;
 	#line 98 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ADV_CHECK_INTERFACE(IDivisibleArithmetic, IDivisibleArithmetic);
 	#line 100 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class T> inline constexpr auto _operator_div_mod($extension_Float32_98_f32 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Float32_98_f32, $extension_Float32_98_f32>;
+	template<class T> inline constexpr auto _operator_div_mod($extension_Float32_98_f32 const& $this LIFETIMEBOUND, T rhs)  -> const Builtin::Tuple<$extension_Float32_98_f32, $extension_Float32_98_f32>;
 	#line 106 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	template<class T> inline constexpr auto _operator_div_not($extension_Float32_98_f32 const& $this LIFETIMEBOUND, T rhs)  -> const typename $extension_Float32_98_f32;
 	#line 108 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
@@ -763,13 +609,13 @@ using $extensions::getCbrt;
 	#line 844 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	inline auto getAcsc($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32;
 	#line 846 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSinCos($extension_Float32_820_f32 const& $this ) -> const std::tuple<$extension_Float32_820_f32, $extension_Float32_820_f32>;
+	inline auto getSinCos($extension_Float32_820_f32 const& $this ) -> const Builtin::Tuple<$extension_Float32_820_f32, $extension_Float32_820_f32>;
 	#line 848 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ASTRUMSTD_API auto getSinPi($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32;
 	#line 886 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ASTRUMSTD_API auto getCosPi($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32;
 	#line 926 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	ASTRUMSTD_API auto getSinCosPi($extension_Float32_820_f32 const& $this ) -> const std::tuple<$extension_Float32_820_f32, $extension_Float32_820_f32>;
+	ASTRUMSTD_API auto getSinCosPi($extension_Float32_820_f32 const& $this ) -> const Builtin::Tuple<$extension_Float32_820_f32, $extension_Float32_820_f32>;
 	#line 999 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 	ASTRUMSTD_API auto getTanPi($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32;
 	#line 1042 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
@@ -1065,6 +911,312 @@ namespace __Float32$Protected { inline constexpr auto MaxTrailingSignificand = B
 namespace __Float32$Protected { inline constexpr auto TrailingSignificandLength = Builtin::i32(23); }
 #line 392 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 namespace __Float32$Protected { inline constexpr auto SignificandLength = __Float32$Protected::TrailingSignificandLength + Builtin::i32(1); }
+} namespace $extensions {
+template<class __TT> struct $static_acoshf;
+template<class __TT> struct $static_getacoshf;
+template<class __TT> struct $static_FromBits;
+template<class __TT> struct $static_getFromBits;
+template<class __TT> struct $static_Bits;
+template<class __TT> struct $static_getBits;
+template<class __TT> struct $static_logf;
+template<class __TT> struct $static_getlogf;
+template<class __TT> struct $static_IsInteger;
+template<class __TT> struct $static_getIsInteger;
+template<class __TT> struct $static_atanf;
+template<class __TT> struct $static_getatanf;
+template<class __TT> struct $static_Abs;
+template<class __TT> struct $static_getAbs;
+template<class __TT> struct $static_IsFinite;
+template<class __TT> struct $static_getIsFinite;
+template<class __TT> struct $static_CosPi;
+template<class __TT> struct $static_getCosPi;
+template<class __TT> struct $static_Truncate;
+template<class __TT> struct $static_getTruncate;
+template<class __TT> struct $static_tanf;
+template<class __TT> struct $static_gettanf;
+template<class __TT> struct $static_NegativeInfinity;
+template<class __TT> struct $static_getNegativeInfinity;
+template<class __TT> struct $static_PositiveInfinity;
+template<class __TT> struct $static_getPositiveInfinity;
+template<class __TT> struct $static_atan2f;
+template<class __TT> struct $static_getatan2f;
+template<class __TT> struct $static_NanValue;
+template<class __TT> struct $static_getNanValue;
+template<class __TT> struct $static_TanPi;
+template<class __TT> struct $static_getTanPi;
+template<class __TT> struct $static_Zero;
+template<class __TT> struct $static_getZero;
+template<class __TT> struct $static_Asinh;
+template<class __TT> struct $static_getAsinh;
+template<class __TT> struct $static_IsNegativeInfinity;
+template<class __TT> struct $static_getIsNegativeInfinity;
+template<class __TT> struct $static_SinPi;
+template<class __TT> struct $static_getSinPi;
+template<class __TT> struct $static_expf;
+template<class __TT> struct $static_getexpf;
+template<class __TT> struct $static_ExpM1;
+template<class __TT> struct $static_getExpM1;
+template<class __TT> struct $static_ceilf;
+template<class __TT> struct $static_getceilf;
+template<class __TT> struct $static_IsPositiveInfinity;
+template<class __TT> struct $static_getIsPositiveInfinity;
+template<class __TT> struct $static_InvalidOperationException;
+template<class __TT> struct $static_getInvalidOperationException;
+template<class __TT> struct $static_MinValue;
+template<class __TT> struct $static_getMinValue;
+template<class __TT> struct $static_Acot;
+template<class __TT> struct $static_getAcot;
+template<class __TT> struct $static_Asin;
+template<class __TT> struct $static_getAsin;
+template<class __TT> struct $static_MaxValue;
+template<class __TT> struct $static_getMaxValue;
+template<class __TT> struct $static_sinf;
+template<class __TT> struct $static_getsinf;
+template<class __TT> struct $static_NarrowToInt32;
+template<class __TT> struct $static_getNarrowToInt32;
+template<class __TT> struct $static_Exp10;
+template<class __TT> struct $static_getExp10;
+template<class __TT> struct $static_Atan;
+template<class __TT> struct $static_getAtan;
+template<class __TT> struct $static_PopCount;
+template<class __TT> struct $static_getPopCount;
+template<class __TT> struct $static_Sin;
+template<class __TT> struct $static_getSin;
+template<class __TT> struct $static_log2f;
+template<class __TT> struct $static_getlog2f;
+template<class __TT> struct $static_Subnormal;
+template<class __TT> struct $static_getSubnormal;
+template<class __TT> struct $static_tanhf;
+template<class __TT> struct $static_gettanhf;
+template<class __TT> struct $static_log1pf;
+template<class __TT> struct $static_getlog1pf;
+template<class __TT> struct $static_log10f;
+template<class __TT> struct $static_getlog10f;
+template<class __TT> struct $static_floorf;
+template<class __TT> struct $static_getfloorf;
+template<class __TT> struct $static_truncf;
+template<class __TT> struct $static_gettruncf;
+template<class __TT> struct $static_CopySign;
+template<class __TT> struct $static_getCopySign;
+template<class __TT> struct $static_roundf;
+template<class __TT> struct $static_getroundf;
+template<class __TT> struct $static_BitWidth;
+template<class __TT> struct $static_getBitWidth;
+template<class __TT> struct $static_ilogbf;
+template<class __TT> struct $static_getilogbf;
+template<class __TT> struct $static_Sech;
+template<class __TT> struct $static_getSech;
+template<class __TT> struct $static_LeadingZeroCount;
+template<class __TT> struct $static_getLeadingZeroCount;
+template<class __TT> struct $static_coshf;
+template<class __TT> struct $static_getcoshf;
+template<class __TT> struct $static_cosf;
+template<class __TT> struct $static_getcosf;
+template<class __TT> struct $static_Tan;
+template<class __TT> struct $static_getTan;
+template<class __TT> struct $static_exp2f;
+template<class __TT> struct $static_getexp2f;
+template<class __TT> struct $static_expm1f;
+template<class __TT> struct $static_getexpm1f;
+template<class __TT> struct $static_Acsc;
+template<class __TT> struct $static_getAcsc;
+template<class __TT> struct $static_sqrtf;
+template<class __TT> struct $static_getsqrtf;
+template<class __TT> struct $static_cbrtf;
+template<class __TT> struct $static_getcbrtf;
+template<class __TT> struct $static_Cosh;
+template<class __TT> struct $static_getCosh;
+template<class __TT> struct $static_Cos;
+template<class __TT> struct $static_getCos;
+template<class __TT> struct $static_asinf;
+template<class __TT> struct $static_getasinf;
+template<class __TT> struct $static_sinhf;
+template<class __TT> struct $static_getsinhf;
+template<class __TT> struct $static_acosf;
+template<class __TT> struct $static_getacosf;
+template<class __TT> struct $static_IsOddInteger;
+template<class __TT> struct $static_getIsOddInteger;
+template<class __TT> struct $static_IsSubnormal;
+template<class __TT> struct $static_getIsSubnormal;
+template<class __TT> struct $static_Pi;
+template<class __TT> struct $static_getPi;
+template<class __TT> struct $static_NaN;
+template<class __TT> struct $static_getNaN;
+template<class __TT> struct $static_Sinh;
+template<class __TT> struct $static_getSinh;
+template<class __TT> struct $static_Acos;
+template<class __TT> struct $static_getAcos;
+template<class __TT> struct $static_Asec;
+template<class __TT> struct $static_getAsec;
+template<class __TT> struct $static_atanhf;
+template<class __TT> struct $static_getatanhf;
+template<class __TT> struct $static_LnP1;
+template<class __TT> struct $static_getLnP1;
+template<class __TT> struct $static_asinhf;
+template<class __TT> struct $static_getasinhf;
+template<class __TT> struct $static_Tanh;
+template<class __TT> struct $static_getTanh;
+template<class __TT> struct $static_Epsilon;
+template<class __TT> struct $static_getEpsilon;
+template<class __TT> struct $static_Sqrt;
+template<class __TT> struct $static_getSqrt;
+template<class __TT> struct $static_IsNaN;
+template<class __TT> struct $static_getIsNaN;
+template<class __TT> struct $static_IsInfinity;
+template<class __TT> struct $static_getIsInfinity;
+template<class __TT> struct $static_Infinity;
+template<class __TT> struct $static_getInfinity;
+template<class __TT> struct $static_IsZero;
+template<class __TT> struct $static_getIsZero;
+template<class __TT> struct $static_Normal;
+template<class __TT> struct $static_getNormal;
+template<class __TT> struct $static_Gamma;
+template<class __TT> struct $static_getGamma;
+template<class __TT> struct $static_tgammaf;
+template<class __TT> struct $static_gettgammaf;
+template<class __TT> struct $static_lgammaf;
+template<class __TT> struct $static_getlgammaf;
+template<class __TT> struct $static_ToUsize;
+template<class __TT> struct $static_getToUsize;
+template<class __TT> struct $static_erff;
+template<class __TT> struct $static_geterff;
+template<class __TT> struct $static_erfcf;
+template<class __TT> struct $static_geterfcf;
+template<class __TT> struct $static_Round;
+template<class __TT> struct $static_getRound;
+template<class __TT> struct $static_Floor;
+template<class __TT> struct $static_getFloor;
+template<class __TT> struct $static_Ceil;
+template<class __TT> struct $static_getCeil;
+template<class __TT> struct $static_IsNegative;
+template<class __TT> struct $static_getIsNegative;
+template<class __TT> struct $static_MaxMagnitude;
+template<class __TT> struct $static_getMaxMagnitude;
+template<class __TT> struct $static_copysignf;
+template<class __TT> struct $static_getcopysignf;
+template<class __TT> struct $static_Exp10M1;
+template<class __TT> struct $static_getExp10M1;
+template<class __TT> struct $static_Ln;
+template<class __TT> struct $static_getLn;
+template<class __TT> struct $static_Is64BitTarget;
+template<class __TT> struct $static_getIs64BitTarget;
+template<class __TT> struct $static_RoundTiesEven;
+template<class __TT> struct $static_getRoundTiesEven;
+template<class __TT> struct $static_Log2;
+template<class __TT> struct $static_getLog2;
+template<class __TT> struct $static_AwayFromZero;
+template<class __TT> struct $static_getAwayFromZero;
+template<class __TT> struct $static_ToEven;
+template<class __TT> struct $static_getToEven;
+template<class __TT> struct $static_InvalidArgumentException;
+template<class __TT> struct $static_getInvalidArgumentException;
+template<class __TT> struct $static_powf;
+template<class __TT> struct $static_getpowf;
+template<class __TT> struct $static_pow;
+template<class __TT> struct $static_getpow;
+template<class __TT> struct $static_IsEvenInteger;
+template<class __TT> struct $static_getIsEvenInteger;
+template<class __TT> struct $static_Cbrt;
+template<class __TT> struct $static_getCbrt;
+template<class __TT> struct $static_sqrt;
+template<class __TT> struct $static_getsqrt;
+template<class __TT> struct $static_Atan2;
+template<class __TT> struct $static_getAtan2;
+template<class __TT> struct $static_fmaf;
+template<class __TT> struct $static_getfmaf;
+template<class __TT> struct $static_remainderf;
+template<class __TT> struct $static_getremainderf;
+template<class __TT> struct $static_Csch;
+template<class __TT> struct $static_getCsch;
+template<class __TT> struct $static_scalbnf;
+template<class __TT> struct $static_getscalbnf;
+template<class __TT> struct $static_HashCode;
+template<class __TT> struct $static_getHashCode;
+template<class __TT> struct $static_ToBoolean;
+template<class __TT> struct $static_getToBoolean;
+template<class __TT> struct $static_ToInt16;
+template<class __TT> struct $static_getToInt16;
+template<class __TT> struct $static_ToInt32;
+template<class __TT> struct $static_getToInt32;
+template<class __TT> struct $static_ToInt64;
+template<class __TT> struct $static_getToInt64;
+template<class __TT> struct $static_ToInt128;
+template<class __TT> struct $static_getToInt128;
+template<class __TT> struct $static_Atanh;
+template<class __TT> struct $static_getAtanh;
+template<class __TT> struct $static_IsCanonical;
+template<class __TT> struct $static_getIsCanonical;
+template<class __TT> struct $static_IsComplexNumber;
+template<class __TT> struct $static_getIsComplexNumber;
+template<class __TT> struct $static_IsImaginaryNumber;
+template<class __TT> struct $static_getIsImaginaryNumber;
+template<class __TT> struct $static_IsRealNumber;
+template<class __TT> struct $static_getIsRealNumber;
+template<class __TT> struct $static_IsPositive;
+template<class __TT> struct $static_getIsPositive;
+template<class __TT> struct $static_MinMagnitude;
+template<class __TT> struct $static_getMinMagnitude;
+template<class __TT> struct $static_NarrowToInt8;
+template<class __TT> struct $static_getNarrowToInt8;
+template<class __TT> struct $static_Sign;
+template<class __TT> struct $static_getSign;
+template<class __TT> struct $static_Max;
+template<class __TT> struct $static_getMax;
+template<class __TT> struct $static_Min;
+template<class __TT> struct $static_getMin;
+template<class __TT> struct $static_Clamp;
+template<class __TT> struct $static_getClamp;
+template<class __TT> struct $static_IsPow2;
+template<class __TT> struct $static_getIsPow2;
+template<class __TT> struct $static_Log10;
+template<class __TT> struct $static_getLog10;
+template<class __TT> struct $static_Midpoint;
+template<class __TT> struct $static_getMidpoint;
+template<class __TT> struct $static_IsMultipleOf;
+template<class __TT> struct $static_getIsMultipleOf;
+template<class __TT> struct $static_RoundToInt32;
+template<class __TT> struct $static_getRoundToInt32;
+template<class __TT> struct $static_RoundTiesEvenToInt32;
+template<class __TT> struct $static_getRoundTiesEvenToInt32;
+template<class __TT> struct $static_Exp;
+template<class __TT> struct $static_getExp;
+template<class __TT> struct $static_Exp2;
+template<class __TT> struct $static_getExp2;
+template<class __TT> struct $static_Exp2M1;
+template<class __TT> struct $static_getExp2M1;
+template<class __TT> struct $static_Log;
+template<class __TT> struct $static_getLog;
+template<class __TT> struct $static_Root;
+template<class __TT> struct $static_getRoot;
+template<class __TT> struct $static_Hypot;
+template<class __TT> struct $static_getHypot;
+template<class __TT> struct $static_Cot;
+template<class __TT> struct $static_getCot;
+template<class __TT> struct $static_Sec;
+template<class __TT> struct $static_getSec;
+template<class __TT> struct $static_Csc;
+template<class __TT> struct $static_getCsc;
+template<class __TT> struct $static_ToRadians;
+template<class __TT> struct $static_getToRadians;
+template<class __TT> struct $static_ToDegrees;
+template<class __TT> struct $static_getToDegrees;
+template<class __TT> struct $static_Coth;
+template<class __TT> struct $static_getCoth;
+template<class __TT> struct $static_Acosh;
+template<class __TT> struct $static_getAcosh;
+template<class __TT> struct $static_ReciprocalEstimate;
+template<class __TT> struct $static_getReciprocalEstimate;
+template<class __TT> struct $static_FusedMultiplyAdd;
+template<class __TT> struct $static_getFusedMultiplyAdd;
+template<class __TT> struct $static_Lerp;
+template<class __TT> struct $static_getLerp;
+template<class __TT> struct $static_LnGamma;
+template<class __TT> struct $static_getLnGamma;
+template<class __TT> struct $static_Erf;
+template<class __TT> struct $static_getErf;
+template<class __TT> struct $static_Erfc;
+template<class __TT> struct $static_getErfc;
+} namespace System {
 //###############################################################################
 //# Function definitions
 //###############################################################################
@@ -1166,7 +1318,7 @@ namespace __Float32$Protected {
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getBits($extension_Float32_19_f32 const& $this ) -> const Builtin::u32
+	inline constexpr auto getBits($extension_Float32_19_f32 const & $this ) -> const Builtin::u32
 	{
 		#line 43 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::BitCast<Builtin::u32>($this)); 
@@ -1190,7 +1342,7 @@ namespace __Float32$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 49 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getHashCode($extension_Float32_19_f32 const& $this ) -> const Builtin::u64
+	inline constexpr auto getHashCode($extension_Float32_19_f32 const & $this ) -> const Builtin::u64
 	{
 		#line 51 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		Builtin::Auto<decltype(ADV_UPCS(Bits)($this.$ref()))> bits = ADV_UPCS(Bits)($this.$ref()); 
@@ -1364,10 +1516,10 @@ namespace __Float32$Protected {
 	
 } namespace $extensions { using namespace System;
 #line 100 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	template<class T> inline constexpr auto _operator_div_mod($extension_Float32_98_f32 const& $this LIFETIMEBOUND, T rhs)  -> const std::tuple<$extension_Float32_98_f32, $extension_Float32_98_f32>
+	template<class T> inline constexpr auto _operator_div_mod($extension_Float32_98_f32 const& $this LIFETIMEBOUND, T rhs)  -> const Builtin::Tuple<$extension_Float32_98_f32, $extension_Float32_98_f32>
 	{
 		#line 103 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		return std::make_tuple($this / Builtin::f32{rhs}, $this % Builtin::f32{rhs});
+		return Builtin::MakeTuple($this / Builtin::f32{rhs}, $this % Builtin::f32{rhs});
 	}
 	
 } namespace System{
@@ -1726,7 +1878,7 @@ namespace __Float32$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 166 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getAbs($extension_Float32_161_f32 const& $this ) -> const $extension_Float32_161_f32
+	inline constexpr auto getAbs($extension_Float32_161_f32 const & $this ) -> const $extension_Float32_161_f32
 	{
 		#line 168 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		constexpr Builtin::Auto<decltype(Builtin::u32(0x7FFFFFFFU))> mask = Builtin::u32(0x7FFFFFFFU);
@@ -1738,7 +1890,7 @@ namespace __Float32$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 172 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsCanonical($extension_Float32_161_f32 const& $this ) -> const bool
+	inline constexpr auto getIsCanonical($extension_Float32_161_f32 const & $this ) -> const bool
 	{
 		#line 172 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Boolean(true)); 
@@ -1746,7 +1898,7 @@ namespace __Float32$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 173 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsComplexNumber($extension_Float32_161_f32 const& $this ) -> const bool
+	inline constexpr auto getIsComplexNumber($extension_Float32_161_f32 const & $this ) -> const bool
 	{
 		#line 173 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
@@ -1754,7 +1906,7 @@ namespace __Float32$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 174 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsEvenInteger($extension_Float32_161_f32 const& $this ) -> const bool
+	inline constexpr auto getIsEvenInteger($extension_Float32_161_f32 const & $this ) -> const bool
 	{
 		#line 174 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsInteger)($this.$ref()) && (ADV_UPCS(Abs)(($this % Builtin::i32(2)).$ref()) == Builtin::i32(0))); 
@@ -1762,7 +1914,7 @@ namespace __Float32$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 175 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsFinite($extension_Float32_161_f32 const& $this ) -> const bool
+	inline constexpr auto getIsFinite($extension_Float32_161_f32 const & $this ) -> const bool
 	{
 		#line 175 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(((ADV_UPCS(Bits)($this.$ref()) & Builtin::u32(0x7FFFFFFFU)) <=> Builtin::u32(0x7F800000U)) < 0); 
@@ -1770,7 +1922,7 @@ namespace __Float32$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 176 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsImaginaryNumber($extension_Float32_161_f32 const& $this ) -> const bool
+	inline constexpr auto getIsImaginaryNumber($extension_Float32_161_f32 const & $this ) -> const bool
 	{
 		#line 176 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Boolean(false)); 
@@ -1778,7 +1930,7 @@ namespace __Float32$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 177 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsInfinity($extension_Float32_161_f32 const& $this ) -> const bool
+	inline constexpr auto getIsInfinity($extension_Float32_161_f32 const & $this ) -> const bool
 	{
 		#line 177 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY((ADV_UPCS(Bits)($this.$ref()) & Builtin::u32(0x7FFFFFFFU)) == Builtin::u32(0x7F800000U)); 
@@ -1786,7 +1938,7 @@ namespace __Float32$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 178 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsInteger($extension_Float32_161_f32 const& $this ) -> const bool
+	inline constexpr auto getIsInteger($extension_Float32_161_f32 const & $this ) -> const bool
 	{
 		#line 178 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsFinite)($this.$ref()) && ($this == ADV_UPCS(Truncate)($this.$ref()))); 
@@ -1794,7 +1946,7 @@ namespace __Float32$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 179 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsNaN($extension_Float32_161_f32 const& $this ) -> const bool
+	inline constexpr auto getIsNaN($extension_Float32_161_f32 const & $this ) -> const bool
 	{
 		#line 179 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY($this != $this); 
@@ -1802,7 +1954,7 @@ namespace __Float32$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 180 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsNegative($extension_Float32_161_f32 const& $this ) -> const bool
+	inline constexpr auto getIsNegative($extension_Float32_161_f32 const & $this ) -> const bool
 	{
 		#line 180 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY((Builtin::BitCast<Builtin::i32>($this) <=> Builtin::i32(0)) < 0); 
@@ -1810,7 +1962,7 @@ namespace __Float32$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 181 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsNegativeInfinity($extension_Float32_161_f32 const& $this ) -> const bool
+	inline constexpr auto getIsNegativeInfinity($extension_Float32_161_f32 const & $this ) -> const bool
 	{
 		#line 181 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY($this == ADV_USPCS(NegativeInfinity, $extension_Float32_161_f32)()); 
@@ -1818,7 +1970,7 @@ namespace __Float32$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 182 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsNormal($extension_Float32_161_f32 const& $this ) -> const bool
+	inline constexpr auto getIsNormal($extension_Float32_161_f32 const & $this ) -> const bool
 	{
 		#line 184 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		Builtin::Auto<decltype(Builtin::BitCast<Builtin::u32>($this) & Builtin::u32(0x7FFFFFFFU))> bits = Builtin::BitCast<Builtin::u32>($this) & Builtin::u32(0x7FFFFFFFU); 
@@ -1828,7 +1980,7 @@ namespace __Float32$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 187 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsOddInteger($extension_Float32_161_f32 const& $this ) -> const bool
+	inline constexpr auto getIsOddInteger($extension_Float32_161_f32 const & $this ) -> const bool
 	{
 		#line 187 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(IsInteger)($this.$ref()) && (ADV_UPCS(Abs)(($this % Builtin::i32(2)).$ref()) == Builtin::i32(1))); 
@@ -1836,7 +1988,7 @@ namespace __Float32$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 188 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsPositive($extension_Float32_161_f32 const& $this ) -> const bool
+	inline constexpr auto getIsPositive($extension_Float32_161_f32 const & $this ) -> const bool
 	{
 		#line 188 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY((Builtin::BitCast<Builtin::i32>($this) <=> Builtin::i32(0)) >= 0); 
@@ -1844,7 +1996,7 @@ namespace __Float32$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 189 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsPositiveInfinity($extension_Float32_161_f32 const& $this ) -> const bool
+	inline constexpr auto getIsPositiveInfinity($extension_Float32_161_f32 const & $this ) -> const bool
 	{
 		#line 189 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY($this == ADV_USPCS(PositiveInfinity, $extension_Float32_161_f32)()); 
@@ -1852,7 +2004,7 @@ namespace __Float32$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 190 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsRealNumber($extension_Float32_161_f32 const& $this ) -> const bool
+	inline constexpr auto getIsRealNumber($extension_Float32_161_f32 const & $this ) -> const bool
 	{
 		#line 190 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY($this == $this); 
@@ -1860,7 +2012,7 @@ namespace __Float32$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 191 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsSubnormal($extension_Float32_161_f32 const& $this ) -> const bool
+	inline constexpr auto getIsSubnormal($extension_Float32_161_f32 const & $this ) -> const bool
 	{
 		#line 193 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		Builtin::Auto<decltype(ADV_UPCS(Bits)($this.$ref()) & Builtin::u32(0x7FFFFFFFU))> bits = ADV_UPCS(Bits)($this.$ref()) & Builtin::u32(0x7FFFFFFFU); 
@@ -1870,7 +2022,7 @@ namespace __Float32$Protected {
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 196 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsZero($extension_Float32_161_f32 const& $this ) -> const bool
+	inline constexpr auto getIsZero($extension_Float32_161_f32 const & $this ) -> const bool
 	{
 		#line 196 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY($this == ADV_USPCS(Zero, $extension_Float32_161_f32)()); 
@@ -2004,7 +2156,7 @@ namespace __Float32$Protected {
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 301 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getSign($extension_Float32_300_f32 const& $this ) -> const Builtin::i32
+	inline constexpr auto getSign($extension_Float32_300_f32 const & $this ) -> const Builtin::i32
 	{
 		#line 301 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		return [&]() 
@@ -2133,7 +2285,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 408 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getIsPow2($extension_Float32_403_f32 const& $this ) -> const bool
+	inline constexpr auto getIsPow2($extension_Float32_403_f32 const & $this ) -> const bool
 	{
 		#line 410 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		Builtin::Auto<decltype(ADV_UPCS(Bits)($this.$ref()))> bits = ADV_UPCS(Bits)($this.$ref()); 
@@ -2162,7 +2314,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 434 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLog2($extension_Float32_403_f32 const& $this ) -> const $extension_Float32_403_f32
+	inline auto getLog2($extension_Float32_403_f32 const & $this ) -> const $extension_Float32_403_f32
 	{
 		#line 434 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::log2f($this)); 
@@ -2170,7 +2322,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 438 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLog10($extension_Float32_403_f32 const& $this ) -> const $extension_Float32_403_f32
+	inline auto getLog10($extension_Float32_403_f32 const & $this ) -> const $extension_Float32_403_f32
 	{
 		#line 438 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::log10f($this)); 
@@ -2400,35 +2552,35 @@ ADV_WARNING_DISABLE(4715, -Wreturn-type)
 				#line 652 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 				auto __tmp__valid_650 = Builtin::Cast<false, std::decay_t<decltype(rounding)>::$self>(rounding);
 				#line 652 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-				if(__tmp__valid_650.IsValid() && Builtin::Is(*__tmp__valid_650, decltype(rounding)::ToEven)) {
+				if(__tmp__valid_650.IsValid() && Builtin::Is(*__tmp__valid_650, std::decay_t<decltype(rounding)>::ToEven)) {
 					#line 652 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 					const auto& rounding = *__tmp__valid_650;
 					return ADV_UPCS(RoundTiesEven)(result.$ref());
 				}
 				else {
 					#line 653 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-					if(__tmp__valid_650.IsValid() && Builtin::Is(*__tmp__valid_650, decltype(rounding)::AwayFromZero)) {
+					if(__tmp__valid_650.IsValid() && Builtin::Is(*__tmp__valid_650, std::decay_t<decltype(rounding)>::AwayFromZero)) {
 						#line 653 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 						const auto& rounding = *__tmp__valid_650;
 						return ADV_UPCS(Round)(result.$ref());
 					}
 					else {
 						#line 654 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-						if(__tmp__valid_650.IsValid() && Builtin::Is(*__tmp__valid_650, decltype(rounding)::ToZero)) {
+						if(__tmp__valid_650.IsValid() && Builtin::Is(*__tmp__valid_650, std::decay_t<decltype(rounding)>::ToZero)) {
 							#line 654 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 							const auto& rounding = *__tmp__valid_650;
 							return ADV_UPCS(Truncate)(result.$ref());
 						}
 						else {
 							#line 655 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-							if(__tmp__valid_650.IsValid() && Builtin::Is(*__tmp__valid_650, decltype(rounding)::ToNegativeInfinity)) {
+							if(__tmp__valid_650.IsValid() && Builtin::Is(*__tmp__valid_650, std::decay_t<decltype(rounding)>::ToNegativeInfinity)) {
 								#line 655 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 								const auto& rounding = *__tmp__valid_650;
 								return ADV_UPCS(Floor)(result.$ref());
 							}
 							else {
 								#line 656 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-								if(__tmp__valid_650.IsValid() && Builtin::Is(*__tmp__valid_650, decltype(rounding)::ToPositiveInfinity)) {
+								if(__tmp__valid_650.IsValid() && Builtin::Is(*__tmp__valid_650, std::decay_t<decltype(rounding)>::ToPositiveInfinity)) {
 									#line 656 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 									const auto& rounding = *__tmp__valid_650;
 									return ADV_UPCS(Ceil)(result.$ref());
@@ -2454,7 +2606,7 @@ ADV_WARNING_POP
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 504 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getFractionalPart($extension_Float32_501_f32 const& $this ) -> const $extension_Float32_501_f32
+	inline constexpr auto getFractionalPart($extension_Float32_501_f32 const & $this ) -> const $extension_Float32_501_f32
 	{
 		#line 504 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY($this - ADV_UPCS(Truncate)($this.$ref())); 
@@ -2462,7 +2614,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 509 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getCeil($extension_Float32_501_f32 const& $this ) -> const $extension_Float32_501_f32
+	inline constexpr auto getCeil($extension_Float32_501_f32 const & $this ) -> const $extension_Float32_501_f32
 	{
 		#line 511 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (std::is_constant_evaluated()) {
@@ -2482,7 +2634,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 526 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getFloor($extension_Float32_501_f32 const& $this ) -> const $extension_Float32_501_f32
+	inline constexpr auto getFloor($extension_Float32_501_f32 const & $this ) -> const $extension_Float32_501_f32
 	{
 		#line 528 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (std::is_constant_evaluated()) {
@@ -2502,7 +2654,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 543 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getTruncate($extension_Float32_501_f32 const& $this ) -> const $extension_Float32_501_f32
+	inline constexpr auto getTruncate($extension_Float32_501_f32 const & $this ) -> const $extension_Float32_501_f32
 	{
 		#line 545 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (std::is_constant_evaluated()) {
@@ -2520,7 +2672,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 559 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getRound($extension_Float32_501_f32 const& $this ) -> const $extension_Float32_501_f32
+	inline constexpr auto getRound($extension_Float32_501_f32 const & $this ) -> const $extension_Float32_501_f32
 	{
 		#line 561 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (std::is_constant_evaluated()) {
@@ -2538,7 +2690,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 575 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getRoundTiesEven($extension_Float32_501_f32 const& $this ) -> const $extension_Float32_501_f32
+	inline constexpr auto getRoundTiesEven($extension_Float32_501_f32 const & $this ) -> const $extension_Float32_501_f32
 	{
 		#line 577 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		Builtin::Auto<decltype(ADV_UPCS(Bits)($this.$ref()))> bits = ADV_UPCS(Bits)($this.$ref()); 
@@ -2586,7 +2738,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 666 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getExponentByteCount($extension_Float32_501_f32 const& $this ) -> const Builtin::u32
+	inline constexpr auto getExponentByteCount($extension_Float32_501_f32 const & $this ) -> const Builtin::u32
 	{
 		#line 666 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u32>(Builtin::usize(sizeof(Builtin::i8)))); 
@@ -2594,7 +2746,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 667 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getExponentShortestBitLength($extension_Float32_501_f32 const& $this ) -> const Builtin::u32
+	inline constexpr auto getExponentShortestBitLength($extension_Float32_501_f32 const & $this ) -> const Builtin::u32
 	{
 		#line 669 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		Builtin::Auto<decltype(__Float32$Protected::Exponent($this))> exponent = __Float32$Protected::Exponent($this); 
@@ -2614,7 +2766,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 676 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getSignificandBitLength($extension_Float32_501_f32 const& $this ) -> const Builtin::u32
+	inline constexpr auto getSignificandBitLength($extension_Float32_501_f32 const & $this ) -> const Builtin::u32
 	{
 		#line 676 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::u32(24U)); 
@@ -2622,7 +2774,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 677 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getSignificandByteCount($extension_Float32_501_f32 const& $this ) -> const Builtin::u32
+	inline constexpr auto getSignificandByteCount($extension_Float32_501_f32 const & $this ) -> const Builtin::u32
 	{
 		#line 677 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::Cast<true, Builtin::u32>(Builtin::usize(sizeof(Builtin::u32)))); 
@@ -2652,7 +2804,7 @@ ADV_WARNING_POP
 	
 } namespace $extensions { using namespace System;
 #line 688 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getExp($extension_Float32_686_f32 const& $this ) -> const $extension_Float32_686_f32
+	inline auto getExp($extension_Float32_686_f32 const & $this ) -> const $extension_Float32_686_f32
 	{
 		#line 688 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::expf($this)); 
@@ -2660,7 +2812,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 690 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getExp2($extension_Float32_686_f32 const& $this ) -> const $extension_Float32_686_f32
+	inline auto getExp2($extension_Float32_686_f32 const & $this ) -> const $extension_Float32_686_f32
 	{
 		#line 690 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::exp2f($this)); 
@@ -2668,7 +2820,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 692 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getExp10($extension_Float32_686_f32 const& $this ) -> const $extension_Float32_686_f32
+	inline auto getExp10($extension_Float32_686_f32 const & $this ) -> const $extension_Float32_686_f32
 	{
 		#line 692 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UFCS(_operator_mul_mul)(Builtin::f32(10.0f), $this)); 
@@ -2676,7 +2828,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 694 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getExpM1($extension_Float32_686_f32 const& $this ) -> const $extension_Float32_686_f32
+	inline auto getExpM1($extension_Float32_686_f32 const & $this ) -> const $extension_Float32_686_f32
 	{
 		#line 694 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::expm1f($this)); 
@@ -2684,7 +2836,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getExp2M1($extension_Float32_686_f32 const& $this ) -> const $extension_Float32_686_f32
+	inline auto getExp2M1($extension_Float32_686_f32 const & $this ) -> const $extension_Float32_686_f32
 	{
 		#line 696 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::exp2f($this) - Builtin::f32(1.0f)); 
@@ -2692,7 +2844,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 698 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getExp10M1($extension_Float32_686_f32 const& $this ) -> const $extension_Float32_686_f32
+	inline auto getExp10M1($extension_Float32_686_f32 const & $this ) -> const $extension_Float32_686_f32
 	{
 		#line 698 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Exp10)($this.$ref()) - Builtin::f32(1.0f)); 
@@ -2702,7 +2854,7 @@ ADV_WARNING_POP
 	
 } namespace $extensions { using namespace System;
 #line 703 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLn($extension_Float32_701_f32 const& $this ) -> const $extension_Float32_701_f32
+	inline auto getLn($extension_Float32_701_f32 const & $this ) -> const $extension_Float32_701_f32
 	{
 		#line 703 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::logf($this)); 
@@ -2710,7 +2862,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 705 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLnP1($extension_Float32_701_f32 const& $this ) -> const $extension_Float32_701_f32
+	inline auto getLnP1($extension_Float32_701_f32 const & $this ) -> const $extension_Float32_701_f32
 	{
 		#line 705 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::log1pf($this)); 
@@ -2718,7 +2870,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 707 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLog2P1($extension_Float32_701_f32 const& $this ) -> const $extension_Float32_701_f32
+	inline auto getLog2P1($extension_Float32_701_f32 const & $this ) -> const $extension_Float32_701_f32
 	{
 		#line 707 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::log2f($this + Builtin::f32(1.0f))); 
@@ -2726,7 +2878,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 709 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLog10P1($extension_Float32_701_f32 const& $this ) -> const $extension_Float32_701_f32
+	inline auto getLog10P1($extension_Float32_701_f32 const & $this ) -> const $extension_Float32_701_f32
 	{
 		#line 709 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::log10f($this + Builtin::f32(1.0f))); 
@@ -2736,7 +2888,7 @@ ADV_WARNING_POP
 	
 } namespace $extensions { using namespace System;
 #line 714 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSqrt($extension_Float32_712_f32 const& $this ) -> const $extension_Float32_712_f32
+	inline auto getSqrt($extension_Float32_712_f32 const & $this ) -> const $extension_Float32_712_f32
 	{
 		#line 714 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::sqrtf($this)); 
@@ -2744,7 +2896,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 716 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCbrt($extension_Float32_712_f32 const& $this ) -> const $extension_Float32_712_f32
+	inline auto getCbrt($extension_Float32_712_f32 const & $this ) -> const $extension_Float32_712_f32
 	{
 		#line 716 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::cbrtf($this)); 
@@ -2772,7 +2924,7 @@ ADV_WARNING_POP
 } namespace System{
 } namespace $extensions { using namespace System;
 #line 822 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSin($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getSin($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 822 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::sinf($this)); 
@@ -2780,7 +2932,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 824 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCos($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getCos($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 824 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::cosf($this)); 
@@ -2788,7 +2940,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 826 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getTan($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getTan($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 826 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::tanf($this)); 
@@ -2796,7 +2948,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 828 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCot($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getCot($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 828 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.0f) / ADV_UPCS(Tan)($this.$ref())); 
@@ -2804,7 +2956,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 830 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSec($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getSec($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 830 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.0f) / ADV_UPCS(Cos)($this.$ref())); 
@@ -2812,7 +2964,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 832 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCsc($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getCsc($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 832 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.0f) / ADV_UPCS(Sin)($this.$ref())); 
@@ -2820,7 +2972,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 834 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAsin($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getAsin($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 834 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::asinf($this)); 
@@ -2828,7 +2980,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 836 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcos($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getAcos($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 836 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::acosf($this)); 
@@ -2836,7 +2988,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 838 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAtan($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getAtan($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 838 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::atanf($this)); 
@@ -2844,7 +2996,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 840 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcot($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getAcot($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 840 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::atanf(Builtin::f32(1.0f) / $this)); 
@@ -2852,7 +3004,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 842 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAsec($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getAsec($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 842 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::acosf(Builtin::f32(1.0f) / $this)); 
@@ -2860,7 +3012,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 844 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcsc($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getAcsc($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 844 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::asinf(Builtin::f32(1.0f) / $this)); 
@@ -2868,15 +3020,15 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 846 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSinCos($extension_Float32_820_f32 const& $this ) -> const std::tuple<$extension_Float32_820_f32, $extension_Float32_820_f32>
+	inline auto getSinCos($extension_Float32_820_f32 const & $this ) -> const Builtin::Tuple<$extension_Float32_820_f32, $extension_Float32_820_f32>
 	{
 		#line 846 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-		ADV_EXPRESSION_BODY(std::make_tuple(ADV_UPCS(Sin)($this.$ref()), ADV_UPCS(Cos)($this.$ref()))); 
+		ADV_EXPRESSION_BODY(Builtin::MakeTuple(ADV_UPCS(Sin)($this.$ref()), ADV_UPCS(Cos)($this.$ref()))); 
 	}
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1042 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCotPi($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getCotPi($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 1042 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.0f) / ADV_UPCS(TanPi)($this.$ref())); 
@@ -2884,7 +3036,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1044 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSecPi($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getSecPi($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 1044 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.0f) / ADV_UPCS(CosPi)($this.$ref())); 
@@ -2892,7 +3044,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1046 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCscPi($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getCscPi($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 1046 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.0f) / ADV_UPCS(SinPi)($this.$ref())); 
@@ -2900,7 +3052,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1048 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAsinPi($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getAsinPi($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 1048 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Asin)($this.$ref()) / ADV_USPCS(Pi, Builtin::f32)()); 
@@ -2908,7 +3060,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1050 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcosPi($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getAcosPi($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 1050 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Acos)($this.$ref()) / ADV_USPCS(Pi, Builtin::f32)()); 
@@ -2916,7 +3068,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1052 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAtanPi($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getAtanPi($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 1052 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Atan)($this.$ref()) / ADV_USPCS(Pi, Builtin::f32)()); 
@@ -2924,7 +3076,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1054 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcotPi($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getAcotPi($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 1054 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Acot)($this.$ref()) / ADV_USPCS(Pi, Builtin::f32)()); 
@@ -2932,7 +3084,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1056 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAsecPi($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getAsecPi($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 1056 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Asec)($this.$ref()) / ADV_USPCS(Pi, Builtin::f32)()); 
@@ -2940,7 +3092,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1058 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcscPi($extension_Float32_820_f32 const& $this ) -> const $extension_Float32_820_f32
+	inline auto getAcscPi($extension_Float32_820_f32 const & $this ) -> const $extension_Float32_820_f32
 	{
 		#line 1058 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(ADV_UPCS(Acsc)($this.$ref()) / ADV_USPCS(Pi, Builtin::f32)()); 
@@ -2950,7 +3102,7 @@ ADV_WARNING_POP
 	
 } namespace $extensions { using namespace System;
 #line 1068 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcosh($extension_Float32_1066_f32 const& $this ) -> const $extension_Float32_1066_f32
+	inline auto getAcosh($extension_Float32_1066_f32 const & $this ) -> const $extension_Float32_1066_f32
 	{
 		#line 1068 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::acoshf($this)); 
@@ -2958,7 +3110,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1070 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcoth($extension_Float32_1066_f32 const& $this ) -> const $extension_Float32_1066_f32
+	inline auto getAcoth($extension_Float32_1066_f32 const & $this ) -> const $extension_Float32_1066_f32
 	{
 		#line 1070 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::atanhf(Builtin::f32(1.0f) / $this)); 
@@ -2966,7 +3118,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1072 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAcsch($extension_Float32_1066_f32 const& $this ) -> const $extension_Float32_1066_f32
+	inline auto getAcsch($extension_Float32_1066_f32 const & $this ) -> const $extension_Float32_1066_f32
 	{
 		#line 1072 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::asinhf(Builtin::f32(1.0f) / $this)); 
@@ -2974,7 +3126,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1074 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAsech($extension_Float32_1066_f32 const& $this ) -> const $extension_Float32_1066_f32
+	inline auto getAsech($extension_Float32_1066_f32 const & $this ) -> const $extension_Float32_1066_f32
 	{
 		#line 1074 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::acoshf(Builtin::f32(1.0f) / $this)); 
@@ -2982,7 +3134,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1076 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAsinh($extension_Float32_1066_f32 const& $this ) -> const $extension_Float32_1066_f32
+	inline auto getAsinh($extension_Float32_1066_f32 const & $this ) -> const $extension_Float32_1066_f32
 	{
 		#line 1076 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::asinhf($this)); 
@@ -2990,7 +3142,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1078 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getAtanh($extension_Float32_1066_f32 const& $this ) -> const $extension_Float32_1066_f32
+	inline auto getAtanh($extension_Float32_1066_f32 const & $this ) -> const $extension_Float32_1066_f32
 	{
 		#line 1078 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::atanhf($this)); 
@@ -2998,7 +3150,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1080 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCosh($extension_Float32_1066_f32 const& $this ) -> const $extension_Float32_1066_f32
+	inline auto getCosh($extension_Float32_1066_f32 const & $this ) -> const $extension_Float32_1066_f32
 	{
 		#line 1080 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::coshf($this)); 
@@ -3006,7 +3158,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1082 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCoth($extension_Float32_1066_f32 const& $this ) -> const $extension_Float32_1066_f32
+	inline auto getCoth($extension_Float32_1066_f32 const & $this ) -> const $extension_Float32_1066_f32
 	{
 		#line 1082 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.0f) / ADV_UPCS(Tanh)($this.$ref())); 
@@ -3014,7 +3166,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1084 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getCsch($extension_Float32_1066_f32 const& $this ) -> const $extension_Float32_1066_f32
+	inline auto getCsch($extension_Float32_1066_f32 const & $this ) -> const $extension_Float32_1066_f32
 	{
 		#line 1084 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.0f) / ADV_UPCS(Sinh)($this.$ref())); 
@@ -3022,7 +3174,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1086 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSech($extension_Float32_1066_f32 const& $this ) -> const $extension_Float32_1066_f32
+	inline auto getSech($extension_Float32_1066_f32 const & $this ) -> const $extension_Float32_1066_f32
 	{
 		#line 1086 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(Builtin::f32(1.0f) / ADV_UPCS(Cosh)($this.$ref())); 
@@ -3030,7 +3182,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1088 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getSinh($extension_Float32_1066_f32 const& $this ) -> const $extension_Float32_1066_f32
+	inline auto getSinh($extension_Float32_1066_f32 const & $this ) -> const $extension_Float32_1066_f32
 	{
 		#line 1088 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::sinhf($this)); 
@@ -3038,7 +3190,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1090 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getTanh($extension_Float32_1066_f32 const& $this ) -> const $extension_Float32_1066_f32
+	inline auto getTanh($extension_Float32_1066_f32 const & $this ) -> const $extension_Float32_1066_f32
 	{
 		#line 1090 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::tanhf($this)); 
@@ -3142,7 +3294,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1110 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getBitIncrement($extension_Float32_1093_f32 const& $this ) -> const $extension_Float32_1093_f32
+	inline constexpr auto getBitIncrement($extension_Float32_1093_f32 const & $this ) -> const $extension_Float32_1093_f32
 	{
 		#line 1112 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		Builtin::Auto<decltype(ADV_UPCS(Bits)($this.$ref()))> bits = ADV_UPCS(Bits)($this.$ref()); 
@@ -3164,7 +3316,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1134 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getBitDecrement($extension_Float32_1093_f32 const& $this ) -> const $extension_Float32_1093_f32
+	inline constexpr auto getBitDecrement($extension_Float32_1093_f32 const & $this ) -> const $extension_Float32_1093_f32
 	{
 		#line 1136 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		Builtin::Auto<decltype(ADV_UPCS(Bits)($this.$ref()))> bits = ADV_UPCS(Bits)($this.$ref()); 
@@ -3186,7 +3338,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1153 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getILogB($extension_Float32_1093_f32 const& $this ) -> const Builtin::i32
+	inline auto getILogB($extension_Float32_1093_f32 const & $this ) -> const Builtin::i32
 	{
 		#line 1153 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::ilogbf($this)); 
@@ -3194,7 +3346,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1155 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getReciprocalEstimate($extension_Float32_1093_f32 const& $this ) -> const $extension_Float32_1093_f32
+	inline constexpr auto getReciprocalEstimate($extension_Float32_1093_f32 const & $this ) -> const $extension_Float32_1093_f32
 	{
 		#line 1157 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (std::is_constant_evaluated()) {
@@ -3212,7 +3364,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1164 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getReciprocalSqrtEstimate($extension_Float32_1093_f32 const& $this ) -> const $extension_Float32_1093_f32
+	inline constexpr auto getReciprocalSqrtEstimate($extension_Float32_1093_f32 const & $this ) -> const $extension_Float32_1093_f32
 	{
 		#line 1166 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (std::is_constant_evaluated()) {
@@ -3230,7 +3382,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1175 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline constexpr auto getCategory($extension_Float32_1093_f32 const& $this ) -> const FloatingPointCategory
+	inline constexpr auto getCategory($extension_Float32_1093_f32 const & $this ) -> const FloatingPointCategory
 	{
 		#line 1177 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		if (ADV_UPCS(IsNaN)($this.$ref())) {
@@ -3266,7 +3418,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1201 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getGamma($extension_Float32_1093_f32 const& $this ) -> const $extension_Float32_1093_f32
+	inline auto getGamma($extension_Float32_1093_f32 const & $this ) -> const $extension_Float32_1093_f32
 	{
 		#line 1201 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::tgammaf($this)); 
@@ -3274,7 +3426,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1203 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getLnGamma($extension_Float32_1093_f32 const& $this ) -> const $extension_Float32_1093_f32
+	inline auto getLnGamma($extension_Float32_1093_f32 const & $this ) -> const $extension_Float32_1093_f32
 	{
 		#line 1203 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::lgammaf($this)); 
@@ -3282,7 +3434,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1205 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getErf($extension_Float32_1093_f32 const& $this ) -> const $extension_Float32_1093_f32
+	inline auto getErf($extension_Float32_1093_f32 const & $this ) -> const $extension_Float32_1093_f32
 	{
 		#line 1205 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::erff($this)); 
@@ -3290,7 +3442,7 @@ ADV_WARNING_POP
 	} namespace System{
 } namespace $extensions { using namespace System;
 #line 1207 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
-	inline auto getErfc($extension_Float32_1093_f32 const& $this ) -> const $extension_Float32_1093_f32
+	inline auto getErfc($extension_Float32_1093_f32 const & $this ) -> const $extension_Float32_1093_f32
 	{
 		#line 1207 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Float32.ast"
 		ADV_EXPRESSION_BODY(std::erfcf($this)); 

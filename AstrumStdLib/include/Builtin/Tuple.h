@@ -112,26 +112,26 @@ namespace Builtin {
 		}
 
 		template <class... OtherTypes>
-		auto operator+(const ValueTuple<OtherTypes...>& other) const noexcept {
+		constexpr auto operator+(const ValueTuple<OtherTypes...>& other) const noexcept {
 			using TResult = ValueTuple<Args..., OtherTypes...>;
 			return std::tuple_cat(_value, other._value);
 		}
 
 		template <size_t I>
-		friend auto& get($self& t) noexcept {
+		friend constexpr auto& get($self& t) noexcept {
 			return std::get<I>(t._value);
 		}
 		template <size_t I>
-		friend const auto& get(const $self& t) noexcept {
+		friend constexpr const auto& get(const $self& t) noexcept {
 			return std::get<I>(t._value);
 		}
 		template <size_t I>
-		friend auto&& get($self&& t) noexcept {
-			return std::get<I>(t._value);
+		friend constexpr auto&& get($self&& t) noexcept {
+			return std::get<I>(std::move(t._value));
 		}
 		template <size_t I>
-		friend const auto&& get(const $self&& t) noexcept {
-			return std::get<I>(t._value);
+		friend constexpr const auto&& get(const $self&& t) noexcept {
+			return std::get<I>(std::move(t._value));
 		}
 
 	   private:
@@ -245,26 +245,26 @@ namespace Builtin {
 		}
 
 		template <class... OtherTypes>
-		auto operator+(const ValueTuple<OtherTypes...>& other) const noexcept {
+		constexpr auto operator+(const ValueTuple<OtherTypes...>& other) const noexcept {
 			using TResult = ValueTuple<Args..., OtherTypes...>;
 			return std::tuple_cat(_value, other._value);
 		}
 
 		template <size_t I>
-		friend auto& get($self& t) noexcept {
+		friend constexpr auto& get($self& t) noexcept {
 			return std::get<I>(t._value);
 		}
 		template <size_t I>
-		friend const auto& get(const $self& t) noexcept {
+		friend constexpr const auto& get(const $self& t) noexcept {
 			return std::get<I>(t._value);
 		}
 		template <size_t I>
-		friend auto&& get($self&& t) noexcept {
-			return std::get<I>(t._value);
+		friend constexpr auto&& get($self&& t) noexcept {
+			return std::get<I>(std::move(t._value));
 		}
 		template <size_t I>
-		friend const auto&& get(const $self&& t) noexcept {
-			return std::get<I>(t._value);
+		friend constexpr const auto&& get(const $self&& t) noexcept {
+			return std::get<I>(std::move(t._value));
 		}
 
 	   private:

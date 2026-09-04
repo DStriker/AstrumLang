@@ -12,8 +12,6 @@ namespace __Unsafe {} namespace __Tuple$Protected__Unsafe {}
 #line 3 "C:\\Users\\user\\Documents\\VSProjects\\MyLanguage\\AstrumStdLib\\include\\System\\Tuple.ast"
 template<class... Types> using Tuple = typename Builtin::template Tuple<Types...>;
 } namespace $extensions {
-template<class __TT> struct $static_StaticStr;
-template<class __TT> struct $static_getStaticStr;
 } namespace System {
 //###############################################################################
 //# Function definitions

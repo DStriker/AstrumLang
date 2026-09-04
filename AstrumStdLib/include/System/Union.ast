@@ -1,0 +1,95 @@
+package System;
+
+public union <T1, T2> Union2 {
+    Item1(T1),
+    Item2(T2)
+}
+
+public union <T1, T2, T3> Union3 {
+    Item1(T1),
+    Item2(T2),
+    Item3(T3)
+}
+
+public union <T1, T2, T3, T4> Union4 {
+    Item1(T1),
+    Item2(T2),
+    Item3(T3),
+    Item4(T4)
+}
+
+public union <T1, T2, T3, T4, T5> Union5 {
+    Item1(T1),
+    Item2(T2),
+    Item3(T3),
+    Item4(T4),
+    Item5(T5)
+}
+
+public union <T1, T2, T3, T4, T5, T6> Union6 {
+    Item1(T1),
+    Item2(T2),
+    Item3(T3),
+    Item4(T4),
+    Item5(T5),
+    Item6(T6)
+}
+
+public union <T1, T2, T3, T4, T5, T6, T7> Union7 {
+    Item1(T1),
+    Item2(T2),
+    Item3(T3),
+    Item4(T4),
+    Item5(T5),
+    Item6(T6),
+    Item7(T7)
+}
+
+public union <T1, T2, T3, T4, T5, T6, T7, T8> Union8 {
+    Item1(T1),
+    Item2(T2),
+    Item3(T3),
+    Item4(T4),
+    Item5(T5),
+    Item6(T6),
+    Item7(T7),
+    Item8(T8)
+}
+
+public union <T1, T2, T3, T4, T5, T6, T7, T8, T9> Union9 {
+    Item1(T1),
+    Item2(T2),
+    Item3(T3),
+    Item4(T4),
+    Item5(T5),
+    Item6(T6),
+    Item7(T7),
+    Item8(T8),
+    Item9(T9)
+}
+
+public union <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> Union10 {
+    Item1(T1),
+    Item2(T2),
+    Item3(T3),
+    Item4(T4),
+    Item5(T5),
+    Item6(T6),
+    Item7(T7),
+    Item8(T8),
+    Item9(T9),
+    Item10(T10)
+}
+
+test "Union" {
+    u: i32 | static str = 12;
+    assert u == 12;
+    u2: i32 | f32 | static str;
+    u2 = 12;
+    assert u2 == 12;
+    u2 = 12.0f;
+    assert u2 == 12.0f;
+    u2 = "hello";
+    assert u2 != 12;
+    assert u2 == Builtin.StaticStr("hello");
+}
